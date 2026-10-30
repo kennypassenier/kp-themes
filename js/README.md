@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The eighty largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The eighty-one largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1307,3 +1307,18 @@ The dependency list, as a DependencyList controller per list. 5 files.
 | `order.js`      | Pure ordering: the rows in the order things must go, cycles set apart, and the rows as plain text.                                      |
 | `rows.js`       | The elements of the rows: a name with its mark and link, a row with its number, arrow, state and spoken form, a cycle, a group heading. |
 | `values.js`     | The selector, the event, the fixed numbers and the attributes the dependency list redraws on.                                           |
+
+## js/docpreview.js → js/docpreview/
+
+The document preview and the document glyph: a DocOpener per opener, a DocGlyph per glyph, a PreviewRun per open preview. 8 files.
+
+| File        | Does                                                                                                                                    |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `core.js`   | One open preview's state: the options, the viewer, the group it steps through and where it is, the frame, and the load that is running. |
+| `glyph.js`  | The document glyph: its name for a screen reader and its number of text lines, wired by DocGlyph or built by docGlyph().                |
+| `keys.js`   | The keys a preview adds to the shortcut engine while it is open: open, download, print, and previous / next in a group.                 |
+| `kinds.js`  | Pure: the kind of glyph a name means, the plain name of a file, and what a preview draws a file as.                                     |
+| `open.js`   | Opening a document in the viewer: the viewer shell first, then one PreviewRun that loads into it.                                       |
+| `opener.js` | An opener: a link or a button that opens its document in the preview, off with a reason when it has no file yet.                        |
+| `run.js`    | One running preview: it asks the server about the file, then shows it as a frame or a picture, or says why it cannot.                   |
+| `values.js` | The selectors, the kinds, the extension table and the fixed numbers of the document preview and the document glyph.                     |

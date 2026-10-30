@@ -67869,6 +67869,96 @@ var init_print = __esm({
   }
 });
 
+// js/docpreview/values.js
+var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
+var init_values11 = __esm({
+  "js/docpreview/values.js"() {
+    "use strict";
+    PREVIEW = "[data-kp-preview]";
+    DOC_GLYPH = ".kp-docglyph";
+    DOC_KINDS = /** @type {const} */
+    ["pdf", "doc", "sheet", "image", "text", "unknown"];
+    PREVIEW_TIMEOUT_MS = 15e3;
+    GLYPH_LINES = { min: 3, max: 7, large: 7, normal: 4 };
+    DEFAULT_ACTIONS = /** @type {const} */
+    ["open", "download"];
+    GLYPH_HOSTS = `${DOC_GLYPH}[data-kp-doc-kind], ${DOC_GLYPH}[data-kp-state]`;
+    EXTENSIONS = /** @type {Record<string, 'pdf' | 'image' | 'text'>} */
+    {
+      pdf: "pdf",
+      png: "image",
+      jpg: "image",
+      jpeg: "image",
+      gif: "image",
+      webp: "image",
+      avif: "image",
+      svg: "image",
+      txt: "text",
+      md: "text",
+      log: "text",
+      csv: "text",
+      json: "text",
+      html: "text"
+    };
+  }
+});
+
+// js/docpreview/glyph.js
+function drawGlyph(el16) {
+  const strings = getStrings();
+  const kind = (
+    /** @type {typeof DOC_KINDS[number]} */
+    DOC_KINDS.includes(
+      /** @type {any} */
+      el16.getAttribute("data-kp-doc-kind")
+    ) ? el16.getAttribute("data-kp-doc-kind") : "unknown"
+  );
+  const size2 = el16.getAttribute("data-kp-size") ?? "md";
+  const missing = el16.getAttribute("data-kp-state") === "missing";
+  const lines = Math.min(
+    GLYPH_LINES.max,
+    Math.max(GLYPH_LINES.min, Number(el16.getAttribute("data-kp-doc-lines")) || (size2 === "lg" ? GLYPH_LINES.large : GLYPH_LINES.normal))
+  );
+  el16.classList.add("kp-docglyph");
+  el16.setAttribute("data-kp-doc-kind", kind);
+  el16.style.setProperty("--kp-doc-lines", String(lines));
+  if (!el16.hasAttribute("role") && !el16.hasAttribute("aria-hidden")) {
+    el16.setAttribute("role", "img");
+    el16.setAttribute("aria-label", missing ? strings.docMissing : strings.docKindName(kind));
+  }
+}
+function docGlyph(doc, kind, options = {}) {
+  const el16 = doc.createElement("span");
+  el16.className = "kp-docglyph";
+  el16.setAttribute("data-kp-doc-kind", kind);
+  if (options.size) el16.setAttribute("data-kp-size", options.size);
+  if (options.lines) el16.setAttribute("data-kp-doc-lines", String(options.lines));
+  if (options.state) el16.setAttribute("data-kp-state", options.state);
+  drawGlyph(el16);
+  el16.dataset.kpGlyphDrawn = "";
+  return el16;
+}
+var DocGlyph;
+var init_glyph = __esm({
+  "js/docpreview/glyph.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_values11();
+    DocGlyph = class extends Controller {
+      connect() {
+        const el16 = this.host;
+        if (el16.hasAttribute("data-kp-glyph-drawn")) return;
+        el16.dataset.kpGlyphDrawn = "";
+        drawGlyph(el16);
+        this.own(() => {
+          delete el16.dataset.kpGlyphDrawn;
+        });
+      }
+    };
+  }
+});
+
 // js/viewer.js
 var viewer_exports = {};
 __export(viewer_exports, {
@@ -68096,21 +68186,7 @@ var init_viewer = __esm({
   }
 });
 
-// js/docpreview.js
-var docpreview_exports = {};
-__export(docpreview_exports, {
-  DOC_GLYPH: () => DOC_GLYPH,
-  DOC_KINDS: () => DOC_KINDS,
-  PREVIEW: () => PREVIEW,
-  PREVIEW_TIMEOUT_MS: () => PREVIEW_TIMEOUT_MS,
-  attachDocGlyphs: () => attachDocGlyphs,
-  attachDocPreviews: () => attachDocPreviews,
-  docGlyph: () => docGlyph,
-  docKindOf: () => docKindOf,
-  openDocPreview: () => openDocPreview,
-  plainFileName: () => plainFileName,
-  previewTypeOf: () => previewTypeOf
-});
+// js/docpreview/kinds.js
 function docKindOf(nameOrType) {
   const t = nameOrType.toLowerCase();
   const ext = t.includes("/") ? t : t.split("?")[0].split("#")[0].split(".").pop() ?? "";
@@ -68137,322 +68213,466 @@ function previewTypeOf(url, contentType = "") {
   if (/^text\//i.test(contentType)) return "text";
   return "pdf";
 }
-function openDocPreview(options) {
-  const doc = options.doc ?? document;
-  const strings = getStrings();
-  const locale = resolveLocale(void 0, doc.documentElement);
-  const group = options.group && options.group.length > 1 ? options.group : null;
-  let at = Math.max(0, Math.min(options.index ?? 0, (group?.length ?? 1) - 1));
-  let stopLoad = () => {
-  };
-  const actionsFor2 = (url, name) => (options.actions ?? ["open", "download"]).map((kind) => ({
-    kind,
-    href: url,
-    name,
-    ...kind === "print" ? { run: () => printFrame() } : {}
-  }));
-  let frame3 = null;
-  const printFrame = () => {
-    try {
-      frame3?.contentWindow?.focus();
-      frame3?.contentWindow?.print();
-    } catch {
-    }
-  };
-  const first = group ? group[at] : { url: options.url, title: options.title, name: options.name };
-  const viewer = openViewer({
-    title: first.title ?? options.title ?? plainFileName(first.url),
-    size: options.size ?? "wide",
-    actions: actionsFor2(first.url, first.name ?? plainFileName(first.url)),
-    className: "kp-docpreview",
-    ...options.opener !== void 0 ? { opener: options.opener } : {},
-    doc,
-    keys: [
-      {
-        keys: "o",
-        what: strings.previewKeyOpen,
-        group: strings.previewKeyGroup,
-        run: () => {
-          viewer.foot.querySelector('[data-kp-viewer-action="open"]')?.click();
-        },
-        when: () => viewer.foot.querySelector('[data-kp-viewer-action="open"]') !== null
-      },
-      {
-        keys: "d",
-        what: strings.previewKeyDownload,
-        group: strings.previewKeyGroup,
-        run: () => {
-          viewer.foot.querySelector('[data-kp-viewer-action="download"]')?.click();
-        },
-        when: () => viewer.foot.querySelector('[data-kp-viewer-action="download"]') !== null
-      },
-      {
-        keys: "p",
-        what: strings.previewKeyPrint,
-        group: strings.previewKeyGroup,
-        run: () => printFrame(),
-        when: () => frame3 !== null && (options.actions ?? []).includes("print")
-      },
-      ...group ? [
-        { keys: "ArrowLeft", what: strings.previewKeyPrevious, group: strings.previewKeyGroup, run: () => step(-1), when: () => at > 0 },
-        { keys: "ArrowRight", what: strings.previewKeyNext, group: strings.previewKeyGroup, run: () => step(1), when: () => at < (group?.length ?? 1) - 1 }
-      ] : []
-    ],
-    onClose: () => {
-      stopLoad();
-      doc.dispatchEvent(new CustomEvent("kp-preview-close", { bubbles: true, detail: { url: group ? group[at].url : options.url } }));
-    }
-  });
-  function step(by) {
-    if (!group) return;
-    const next2 = at + by;
-    if (next2 < 0 || next2 >= group.length) return;
-    at = next2;
-    load();
+var init_kinds = __esm({
+  "js/docpreview/kinds.js"() {
+    "use strict";
+    init_values11();
   }
-  function load() {
-    stopLoad();
-    const entry = group ? group[at] : { url: options.url, title: options.title, name: options.name };
-    const url = entry.url;
-    const name = entry.name ?? options.name ?? plainFileName(url);
-    const page = Math.max(1, Math.floor(options.page ?? 1));
-    viewer.setTitle(entry.title ?? options.title ?? plainFileName(url));
-    viewer.setActions(actionsFor2(url, name));
-    viewer.setPosition(group ? { index: at + 1, total: group.length } : null);
-    viewer.setFacts("");
-    viewer.setContent();
-    viewer.setState("loading");
-    frame3 = null;
-    let live4 = true;
-    let timer2 = 0;
-    stopLoad = () => {
-      live4 = false;
-      window.clearTimeout(timer2);
+});
+
+// js/docpreview/keys.js
+function previewKeys(strings, grouped, runOf) {
+  const group = strings.previewKeyGroup;
+  return [
+    { keys: "o", what: strings.previewKeyOpen, group, run: () => runOf()?.pressAction("open"), when: () => runOf()?.hasAction("open") ?? false },
+    {
+      keys: "d",
+      what: strings.previewKeyDownload,
+      group,
+      run: () => runOf()?.pressAction("download"),
+      when: () => runOf()?.hasAction("download") ?? false
+    },
+    { keys: "p", what: strings.previewKeyPrint, group, run: () => runOf()?.printFrame(), when: () => runOf()?.canPrint() ?? false },
+    ...grouped ? [
+      {
+        keys: "ArrowLeft",
+        what: strings.previewKeyPrevious,
+        group,
+        run: () => runOf()?.step(-1),
+        when: () => runOf()?.canStep(-1) ?? false
+      },
+      { keys: "ArrowRight", what: strings.previewKeyNext, group, run: () => runOf()?.step(1), when: () => runOf()?.canStep(1) ?? false }
+    ] : []
+  ];
+}
+var init_keys13 = __esm({
+  "js/docpreview/keys.js"() {
+    "use strict";
+  }
+});
+
+// js/docpreview/core.js
+var PreviewLoad, PreviewCore;
+var init_core10 = __esm({
+  "js/docpreview/core.js"() {
+    "use strict";
+    init_controller();
+    init_locale();
+    init_strings();
+    init_values11();
+    init_kinds();
+    PreviewLoad = class {
+      constructor() {
+        this.live = true;
+        this.timer = 0;
+      }
+      /** Stop counting: late answers of this load do nothing. */
+      stop() {
+        this.live = false;
+        window.clearTimeout(this.timer);
+      }
     };
-    const fail = (reason, message) => {
-      if (!live4) return;
-      stopLoad();
-      viewer.setContent();
-      viewer.setState("error", { message, retry: load });
-      doc.dispatchEvent(new CustomEvent("kp-preview-failed", { bubbles: true, detail: { url, reason } }));
-    };
-    timer2 = window.setTimeout(() => fail("timeout", strings.previewTimeout), PREVIEW_TIMEOUT_MS);
-    void (async () => {
-      let contentType = "";
-      try {
-        const head = await fetch(url, { method: "HEAD" });
-        if (!live4) return;
-        if (!head.ok) {
-          fail(`status-${head.status}`, head.status === 404 ? strings.previewGone : strings.previewServer(head.status));
-          return;
+    PreviewCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host the viewer's dialog
+       * @param {{ preview: PreviewOptions, viewer: ViewerHandle, group: PreviewEntry[] | null }} init
+       */
+      constructor(host, init) {
+        super(host, init);
+        this.preview = init.preview;
+        this.viewer = init.viewer;
+        this.group = init.group;
+        this.doc = init.preview.doc ?? document;
+        this.strings = getStrings();
+        this.locale = resolveLocale(void 0, this.doc.documentElement);
+        this.at = Math.max(0, Math.min(init.preview.index ?? 0, (init.group?.length ?? 1) - 1));
+        this.frame = null;
+        this.current = null;
+      }
+      /** The document shown now. @returns {PreviewEntry} */
+      entry() {
+        return this.group ? this.group[this.at] : { url: this.preview.url, title: this.preview.title, name: this.preview.name };
+      }
+      /**
+       * The foot's buttons for a document.
+       * @param {string} url
+       * @param {string} name
+       * @returns {import('../viewer.js').ViewerAction[]}
+       */
+      actionsFor(url, name) {
+        return (this.preview.actions ?? DEFAULT_ACTIONS).map((kind) => ({
+          kind,
+          href: url,
+          name,
+          ...kind === "print" ? { run: () => this.printFrame() } : {}
+        }));
+      }
+      /** The title of the document shown. @param {PreviewEntry} entry */
+      titleOf(entry) {
+        return entry.title ?? this.preview.title ?? plainFileName(entry.url);
+      }
+      /** Print the frame. */
+      printFrame() {
+        try {
+          this.frame?.contentWindow?.focus();
+          this.frame?.contentWindow?.print();
+        } catch {
         }
-        contentType = head.headers.get("content-type") ?? "";
+      }
+      /** Whether the foot has the button for an action. @param {string} kind */
+      hasAction(kind) {
+        return this.viewer.foot.querySelector(`[data-kp-viewer-action="${kind}"]`) !== null;
+      }
+      /** Press the foot's button for an action. @param {string} kind */
+      pressAction(kind) {
+        this.viewer.foot.querySelector(`[data-kp-viewer-action="${kind}"]`)?.click();
+      }
+      /** Whether Print is offered and there is a frame to print. */
+      canPrint() {
+        return this.frame !== null && (this.preview.actions ?? []).includes("print");
+      }
+      /** Whether there is a document `by` places away in the group. @param {number} by */
+      canStep(by) {
+        return this.group !== null && this.at + by >= 0 && this.at + by < this.group.length;
+      }
+      /** Go to the document `by` places away in the group. @param {number} by */
+      step(by) {
+        if (!this.group || !this.canStep(by)) return;
+        this.at += by;
+        this.load();
+      }
+      /** Show the document at `at`. The run overrides it. */
+      load() {
+      }
+      /** @param {HTMLIFrameElement | null} frame */
+      setFrame(frame3) {
+        this.frame = frame3;
+      }
+      /** Start a load: the one before it goes stale. @returns {PreviewLoad} */
+      beginLoad() {
+        this.stopLoad();
+        this.current = new PreviewLoad();
+        return this.current;
+      }
+      /** Stop the load that is running, if there is one. */
+      stopLoad() {
+        this.current?.stop();
+      }
+      /** The viewer was closed: stop loading, say so, and undo. */
+      closed() {
+        this.stopLoad();
+        this.doc.dispatchEvent(new CustomEvent("kp-preview-close", { bubbles: true, detail: { url: this.entry().url } }));
+        this.destroy();
+      }
+    };
+  }
+});
+
+// js/docpreview/run.js
+var FACTS_BASE, PreviewRun;
+var init_run3 = __esm({
+  "js/docpreview/run.js"() {
+    "use strict";
+    init_freshness();
+    init_locale();
+    init_values11();
+    init_kinds();
+    init_core10();
+    FACTS_BASE = 1024;
+    PreviewRun = class extends PreviewCore {
+      connect() {
+        this.own(() => this.stopLoad());
+        this.load();
+        this.doc.dispatchEvent(new CustomEvent("kp-preview-open", { bubbles: true, detail: { url: this.entry().url } }));
+      }
+      /** Show the document at `at`: title, buttons and position first, then the loading state, then what the server says. */
+      load() {
+        this.stopLoad();
+        const { viewer } = this;
+        const entry = this.entry();
+        const url = entry.url;
+        const name = entry.name ?? this.preview.name ?? plainFileName(url);
+        const page = Math.max(1, Math.floor(this.preview.page ?? 1));
+        viewer.setTitle(this.titleOf(entry));
+        viewer.setActions(this.actionsFor(url, name));
+        viewer.setPosition(this.group ? { index: this.at + 1, total: this.group.length } : null);
+        viewer.setFacts("");
+        viewer.setContent();
+        viewer.setState("loading");
+        this.setFrame(null);
+        const load = this.beginLoad();
+        load.timer = window.setTimeout(() => this.fail(load, url, "timeout", this.strings.previewTimeout), PREVIEW_TIMEOUT_MS);
+        void this.settle(load, url, page);
+      }
+      /**
+       * The load failed: say so, unless a later load made this one stale.
+       * @param {PreviewLoad} load
+       * @param {string} url
+       * @param {string} reason
+       * @param {string} message
+       */
+      fail(load, url, reason, message) {
+        if (!load.live) return;
+        load.stop();
+        this.viewer.setContent();
+        this.viewer.setState("error", { message, retry: () => this.load() });
+        this.doc.dispatchEvent(new CustomEvent("kp-preview-failed", { bubbles: true, detail: { url, reason } }));
+      }
+      /**
+       * Ask the server, then show the file.
+       * @param {PreviewLoad} load
+       * @param {string} url
+       * @param {number} page
+       */
+      async settle(load, url, page) {
+        const contentType = await this.probe(load, url);
+        if (contentType === null || !load.live) return;
+        this.show(load, url, page, contentType);
+      }
+      /**
+       * What the server says about the file: a missing one is said before a frame shows an error page.
+       * @param {PreviewLoad} load
+       * @param {string} url
+       * @returns {Promise<string | null>} the Content-Type ('' when unknown), or null when there is nothing left to show
+       */
+      async probe(load, url) {
+        const strings = this.strings;
+        let contentType = "";
+        try {
+          const head = await fetch(url, { method: "HEAD" });
+          if (!load.live) return null;
+          if (!head.ok) {
+            this.fail(load, url, `status-${head.status}`, head.status === 404 ? strings.previewGone : strings.previewServer(head.status));
+            return null;
+          }
+          contentType = head.headers.get("content-type") ?? "";
+          this.writeFacts(head, url, contentType);
+        } catch {
+        }
+        return contentType;
+      }
+      /** The facts line: kind, size and when it was made, from the HEAD answer. @param {Response} head @param {string} url @param {string} contentType */
+      writeFacts(head, url, contentType) {
+        const strings = this.strings;
         const bytes = Number(head.headers.get("content-length"));
         const made7 = Date.parse(head.headers.get("last-modified") ?? "");
         const kindWords = { pdf: "PDF", image: strings.docKindImage, text: strings.docKindText }[previewTypeOf(url, contentType)];
-        viewer.setFacts(
-          [kindWords, Number.isFinite(bytes) && bytes > 0 ? formatBytes(bytes, locale, { base: 1024 }) : "", Number.isFinite(made7) ? agoMoment(made7) : ""].filter(Boolean).join(" \xB7 ")
-        );
-      } catch {
+        const size2 = Number.isFinite(bytes) && bytes > 0 ? formatBytes(bytes, this.locale, { base: FACTS_BASE }) : "";
+        this.viewer.setFacts([kindWords, size2, Number.isFinite(made7) ? agoMoment(made7) : ""].filter(Boolean).join(" \xB7 "));
       }
-      if (!live4) return;
-      const wanted = options.type && options.type !== "auto" ? options.type : previewTypeOf(url, contentType);
-      if (wanted === "pdf" && (options.engine === "none" || /** @type {any} */
-      navigator.pdfViewerEnabled === false)) {
-        stopLoad();
-        viewer.setDesc("");
-        viewer.setState("unsupported", { message: strings.previewNoPdf });
-        return;
+      /**
+       * Show the file as a picture or a frame, or say that the browser cannot show a PDF.
+       * @param {PreviewLoad} load
+       * @param {string} url
+       * @param {number} page
+       * @param {string} contentType
+       */
+      show(load, url, page, contentType) {
+        const { viewer, preview, strings } = this;
+        const wanted = preview.type && preview.type !== "auto" ? preview.type : previewTypeOf(url, contentType);
+        if (wanted === "pdf" && (preview.engine === "none" || /** @type {any} */
+        navigator.pdfViewerEnabled === false)) {
+          load.stop();
+          viewer.setDesc("");
+          viewer.setState("unsupported", { message: strings.previewNoPdf });
+          return;
+        }
+        viewer.setDesc(wanted === "pdf" ? strings.previewShownByBrowser : "");
+        if (wanted === "image") {
+          viewer.setContent(this.imageFor(load, url));
+          return;
+        }
+        const frame3 = this.frameFor(load, url, page, wanted);
+        this.setFrame(frame3);
+        viewer.setContent(frame3);
       }
-      viewer.setDesc(wanted === "pdf" ? strings.previewShownByBrowser : "");
-      if (wanted === "image") {
-        const img = doc.createElement("img");
+      /** @param {PreviewLoad} load @param {string} url */
+      imageFor(load, url) {
+        const img = this.doc.createElement("img");
         img.className = "kp-docpreview__image";
-        img.alt = viewer.dialog.querySelector(".kp-viewer__title")?.textContent ?? "";
+        img.alt = this.viewer.dialog.querySelector(".kp-viewer__title")?.textContent ?? "";
         img.addEventListener("load", () => {
-          if (!live4) return;
-          stopLoad();
-          viewer.setState("ready");
+          if (!load.live) return;
+          load.stop();
+          this.viewer.setState("ready");
         });
-        img.addEventListener("error", () => fail("image", strings.previewImage));
+        img.addEventListener("error", () => this.fail(load, url, "image", this.strings.previewImage));
         img.src = url;
-        viewer.setContent(img);
-        return;
+        return img;
       }
-      const frameEl = doc.createElement("iframe");
-      frameEl.className = "kp-docpreview__frame";
-      frameEl.title = viewer.dialog.querySelector(".kp-viewer__title")?.textContent ?? "";
-      const sandbox = options.sandbox ?? (wanted === "text" ? "strict" : "off");
-      if (sandbox === "strict") frameEl.setAttribute("sandbox", "");
-      frameEl.addEventListener("load", () => {
-        if (!live4) return;
-        stopLoad();
-        viewer.setState("ready");
-      });
-      frameEl.src = wanted === "pdf" && page > 1 ? `${url}#page=${page}` : url;
-      frame3 = frameEl;
-      viewer.setContent(frameEl);
-    })();
+      /** @param {PreviewLoad} load @param {string} url @param {number} page @param {'pdf' | 'image' | 'text'} wanted */
+      frameFor(load, url, page, wanted) {
+        const frame3 = this.doc.createElement("iframe");
+        frame3.className = "kp-docpreview__frame";
+        frame3.title = this.viewer.dialog.querySelector(".kp-viewer__title")?.textContent ?? "";
+        const sandbox = this.preview.sandbox ?? (wanted === "text" ? "strict" : "off");
+        if (sandbox === "strict") frame3.setAttribute("sandbox", "");
+        frame3.addEventListener("load", () => {
+          if (!load.live) return;
+          load.stop();
+          this.viewer.setState("ready");
+        });
+        frame3.src = wanted === "pdf" && page > 1 ? `${url}#page=${page}` : url;
+        return frame3;
+      }
+    };
   }
-  load();
-  doc.dispatchEvent(new CustomEvent("kp-preview-open", { bubbles: true, detail: { url: first.url } }));
+});
+
+// js/docpreview/open.js
+function openDocPreview(options) {
+  const doc = options.doc ?? document;
+  const group = options.group && options.group.length > 1 ? [...options.group] : null;
+  const at = Math.max(0, Math.min(options.index ?? 0, (group?.length ?? 1) - 1));
+  const first = group ? group[at] : { url: options.url, title: options.title, name: options.name };
+  let run;
+  const viewer = openViewer({
+    title: first.title ?? options.title ?? plainFileName(first.url),
+    size: options.size ?? "wide",
+    actions: (options.actions ?? DEFAULT_ACTIONS).map((kind) => ({ kind, href: first.url, name: first.name ?? plainFileName(first.url) })),
+    className: "kp-docpreview",
+    ...options.opener !== void 0 ? { opener: options.opener } : {},
+    doc,
+    keys: previewKeys(getStrings(), group !== null, () => run),
+    onClose: () => run?.closed()
+  });
+  run = attachOne(viewer.dialog, PreviewRun, { preview: options, viewer, group });
+  if (!run) throw new Error("The document preview could not be set up; the cause was reported.");
   return viewer;
 }
-function drawGlyph(el16) {
-  const strings = getStrings();
-  const kind = (
-    /** @type {typeof DOC_KINDS[number]} */
-    DOC_KINDS.includes(
-      /** @type {any} */
-      el16.getAttribute("data-kp-doc-kind")
-    ) ? el16.getAttribute("data-kp-doc-kind") : "unknown"
-  );
-  const size2 = el16.getAttribute("data-kp-size") ?? "md";
-  const missing = el16.getAttribute("data-kp-state") === "missing";
-  const lines = Math.min(7, Math.max(3, Number(el16.getAttribute("data-kp-doc-lines")) || (size2 === "lg" ? 7 : 4)));
-  el16.classList.add("kp-docglyph");
-  el16.setAttribute("data-kp-doc-kind", kind);
-  el16.style.setProperty("--kp-doc-lines", String(lines));
-  if (!el16.hasAttribute("role") && !el16.hasAttribute("aria-hidden")) {
-    el16.setAttribute("role", "img");
-    el16.setAttribute("aria-label", missing ? strings.docMissing : strings.docKindName(kind));
+var init_open3 = __esm({
+  "js/docpreview/open.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_viewer();
+    init_values11();
+    init_kinds();
+    init_keys13();
+    init_run3();
   }
-}
+});
+
+// js/docpreview/opener.js
+var DocOpener;
+var init_opener = __esm({
+  "js/docpreview/opener.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_open3();
+    DocOpener = class extends Controller {
+      connect() {
+        const el16 = this.host;
+        if (el16.hasAttribute("data-kp-preview-attached")) return;
+        el16.dataset.kpPreviewAttached = "";
+        if ((el16.getAttribute("data-kp-preview") ?? "") === "") {
+          el16.setAttribute("aria-disabled", "true");
+          if (el16 instanceof HTMLButtonElement) el16.disabled = true;
+          if (!el16.hasAttribute("data-kp-disabled-reason")) el16.setAttribute("data-kp-disabled-reason", getStrings().previewNoFile);
+        }
+        this.listen(el16, "click", (event) => this.onClick(event));
+        this.own(() => {
+          delete el16.dataset.kpPreviewAttached;
+        });
+      }
+      /** @param {Event} event */
+      onClick(event) {
+        const el16 = this.host;
+        const url = el16.getAttribute("data-kp-preview") ?? "";
+        if (url === "" || el16.getAttribute("aria-disabled") === "true") {
+          event.preventDefault();
+          return;
+        }
+        if (event instanceof MouseEvent && (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0)) return;
+        event.preventDefault();
+        openDocPreview(this.previewOptions(url));
+      }
+      /** What the opener's attributes ask for. @param {string} url @returns {PreviewOptions} */
+      previewOptions(url) {
+        const el16 = this.host;
+        const type = (
+          /** @type {'auto' | 'pdf' | 'image' | 'text'} */
+          el16.getAttribute("data-kp-preview-type") ?? "auto"
+        );
+        const sandbox = el16.getAttribute("data-kp-preview-sandbox");
+        const title = el16.getAttribute("data-kp-preview-title") || void 0;
+        const name = el16.getAttribute("data-kp-preview-name") || void 0;
+        return {
+          url,
+          type,
+          engine: el16.getAttribute("data-kp-preview-engine") === "none" ? "none" : "native",
+          size: el16.getAttribute("data-kp-preview-size") === "full" ? "full" : "wide",
+          actions: (el16.getAttribute("data-kp-preview-actions") ?? "open download").split(/[\s,]+/).filter(Boolean),
+          ...title ? { title } : {},
+          ...name ? { name } : {},
+          page: Number(el16.getAttribute("data-kp-preview-page")) || 1,
+          ...sandbox === "strict" || sandbox === "off" ? { sandbox } : {},
+          opener: el16,
+          ...this.groupOptions()
+        };
+      }
+      /** The openers that share this one's group, as the documents the viewer steps through. @returns {Pick<PreviewOptions, 'group' | 'index'>} */
+      groupOptions() {
+        const el16 = this.host;
+        const list = el16.getAttribute("data-kp-preview-group");
+        const peers = list ? (
+          /** @type {HTMLElement[]} */
+          [...el16.ownerDocument.querySelectorAll(`[data-kp-preview-group="${CSS.escape(list)}"]`)].filter(
+            (n) => n instanceof HTMLElement && (n.getAttribute("data-kp-preview") ?? "") !== ""
+          )
+        ) : [];
+        if (peers.length < 2) return {};
+        return {
+          group: peers.map((n) => {
+            const title = n.getAttribute("data-kp-preview-title") || void 0;
+            const name = n.getAttribute("data-kp-preview-name") || void 0;
+            return { url: n.getAttribute("data-kp-preview") ?? "", ...title ? { title } : {}, ...name ? { name } : {} };
+          }),
+          index: Math.max(0, peers.indexOf(el16))
+        };
+      }
+    };
+  }
+});
+
+// js/docpreview.js
+var docpreview_exports = {};
+__export(docpreview_exports, {
+  DOC_GLYPH: () => DOC_GLYPH,
+  DOC_KINDS: () => DOC_KINDS,
+  PREVIEW: () => PREVIEW,
+  PREVIEW_TIMEOUT_MS: () => PREVIEW_TIMEOUT_MS,
+  attachDocGlyphs: () => attachDocGlyphs,
+  attachDocPreviews: () => attachDocPreviews,
+  docGlyph: () => docGlyph,
+  docKindOf: () => docKindOf,
+  openDocPreview: () => openDocPreview,
+  plainFileName: () => plainFileName,
+  previewTypeOf: () => previewTypeOf
+});
 function attachDocGlyphs(root = document) {
-  const done = [];
-  for (const found of root.querySelectorAll(`${DOC_GLYPH}[data-kp-doc-kind], ${DOC_GLYPH}[data-kp-state]`)) {
-    const el16 = (
-      /** @type {HTMLElement} */
-      found
-    );
-    if (el16.dataset.kpGlyphDrawn !== void 0) continue;
-    el16.dataset.kpGlyphDrawn = "";
-    drawGlyph(el16);
-    done.push(el16);
-  }
-  return () => {
-    for (const el16 of done) delete el16.dataset.kpGlyphDrawn;
-  };
-}
-function docGlyph(doc, kind, options = {}) {
-  const el16 = doc.createElement("span");
-  el16.className = "kp-docglyph";
-  el16.setAttribute("data-kp-doc-kind", kind);
-  if (options.size) el16.setAttribute("data-kp-size", options.size);
-  if (options.lines) el16.setAttribute("data-kp-doc-lines", String(options.lines));
-  if (options.state) el16.setAttribute("data-kp-state", options.state);
-  drawGlyph(el16);
-  el16.dataset.kpGlyphDrawn = "";
-  return el16;
+  return attachAll(root, GLYPH_HOSTS, DocGlyph);
 }
 function attachDocPreviews(root = document) {
-  const cleanups = [attachDocGlyphs(root)];
-  const strings = getStrings();
-  for (const found of root.querySelectorAll(PREVIEW)) {
-    const el16 = (
-      /** @type {HTMLElement} */
-      found
-    );
-    if (el16.dataset.kpPreviewAttached !== void 0) continue;
-    el16.dataset.kpPreviewAttached = "";
-    if ((el16.getAttribute("data-kp-preview") ?? "") === "") {
-      el16.setAttribute("aria-disabled", "true");
-      if (el16 instanceof HTMLButtonElement) el16.disabled = true;
-      if (!el16.hasAttribute("data-kp-disabled-reason")) el16.setAttribute("data-kp-disabled-reason", strings.previewNoFile);
-    }
-    const onClick = (event) => {
-      const url = el16.getAttribute("data-kp-preview") ?? "";
-      if (url === "" || el16.getAttribute("aria-disabled") === "true") {
-        event.preventDefault();
-        return;
-      }
-      if (event instanceof MouseEvent && (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0)) return;
-      event.preventDefault();
-      const list = el16.getAttribute("data-kp-preview-group");
-      const peers = list ? (
-        /** @type {HTMLElement[]} */
-        [...el16.ownerDocument.querySelectorAll(`[data-kp-preview-group="${CSS.escape(list)}"]`)].filter(
-          (n) => n instanceof HTMLElement && (n.getAttribute("data-kp-preview") ?? "") !== ""
-        )
-      ) : [];
-      const type = (
-        /** @type {'auto' | 'pdf' | 'image' | 'text'} */
-        el16.getAttribute("data-kp-preview-type") ?? "auto"
-      );
-      const sandbox = el16.getAttribute("data-kp-preview-sandbox");
-      openDocPreview({
-        url,
-        type,
-        engine: el16.getAttribute("data-kp-preview-engine") === "none" ? "none" : "native",
-        size: el16.getAttribute("data-kp-preview-size") === "full" ? "full" : "wide",
-        actions: (el16.getAttribute("data-kp-preview-actions") ?? "open download").split(/[\s,]+/).filter(Boolean),
-        ...el16.getAttribute("data-kp-preview-title") ? { title: (
-          /** @type {string} */
-          el16.getAttribute("data-kp-preview-title")
-        ) } : {},
-        ...el16.getAttribute("data-kp-preview-name") ? { name: (
-          /** @type {string} */
-          el16.getAttribute("data-kp-preview-name")
-        ) } : {},
-        page: Number(el16.getAttribute("data-kp-preview-page")) || 1,
-        ...sandbox === "strict" || sandbox === "off" ? { sandbox } : {},
-        opener: el16,
-        ...peers.length > 1 ? {
-          group: peers.map((n) => ({
-            url: n.getAttribute("data-kp-preview") ?? "",
-            ...n.getAttribute("data-kp-preview-title") ? { title: (
-              /** @type {string} */
-              n.getAttribute("data-kp-preview-title")
-            ) } : {},
-            ...n.getAttribute("data-kp-preview-name") ? { name: (
-              /** @type {string} */
-              n.getAttribute("data-kp-preview-name")
-            ) } : {}
-          })),
-          index: Math.max(0, peers.indexOf(el16))
-        } : {}
-      });
-    };
-    el16.addEventListener("click", onClick);
-    cleanups.push(() => {
-      el16.removeEventListener("click", onClick);
-      delete el16.dataset.kpPreviewAttached;
-    });
-  }
+  const stopGlyphs = attachDocGlyphs(root);
+  const stopOpeners = attachAll(root, PREVIEW, DocOpener);
   return () => {
-    for (const clean of cleanups) clean();
+    stopGlyphs();
+    stopOpeners();
   };
 }
-var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, EXTENSIONS;
 var init_docpreview = __esm({
   "js/docpreview.js"() {
     "use strict";
-    init_strings();
-    init_viewer();
-    init_freshness();
-    init_locale();
-    PREVIEW = "[data-kp-preview]";
-    DOC_GLYPH = ".kp-docglyph";
-    DOC_KINDS = /** @type {const} */
-    ["pdf", "doc", "sheet", "image", "text", "unknown"];
-    PREVIEW_TIMEOUT_MS = 15e3;
-    EXTENSIONS = /** @type {Record<string, 'pdf' | 'image' | 'text'>} */
-    {
-      pdf: "pdf",
-      png: "image",
-      jpg: "image",
-      jpeg: "image",
-      gif: "image",
-      webp: "image",
-      avif: "image",
-      svg: "image",
-      txt: "text",
-      md: "text",
-      log: "text",
-      csv: "text",
-      json: "text",
-      html: "text"
-    };
+    init_controller();
+    init_glyph();
+    init_opener();
+    init_values11();
+    init_values11();
+    init_kinds();
+    init_glyph();
+    init_open3();
   }
 });
 
@@ -69350,7 +69570,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values11 = __esm({
+var init_values12 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -69489,7 +69709,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build11 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values11();
+    init_values12();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -69503,13 +69723,13 @@ var init_build11 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core10 = __esm({
+var init_core11 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build11();
-    init_values11();
+    init_values12();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -69628,8 +69848,8 @@ var init_controller34 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build11();
-    init_core10();
-    init_values11();
+    init_core11();
+    init_values12();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -69855,8 +70075,8 @@ var init_slider = __esm({
     "use strict";
     init_controller();
     init_controller34();
-    init_values11();
-    init_values11();
+    init_values12();
+    init_values12();
   }
 });
 
@@ -77363,7 +77583,7 @@ async function submit(root) {
   }
   input.focus();
 }
-var init_run3 = __esm({
+var init_run4 = __esm({
   "js/console/run.js"() {
     "use strict";
     init_strings();
@@ -77465,7 +77685,7 @@ var init_api29 = __esm({
     init_bar2();
     init_blocks();
     init_model9();
-    init_run3();
+    init_run4();
   }
 });
 
@@ -77682,7 +77902,7 @@ var init_attach23 = __esm({
     init_constants41();
     init_history();
     init_model9();
-    init_run3();
+    init_run4();
   }
 });
 
@@ -81684,8 +81904,6 @@ export {
   CONTENTS_EVENT,
   DEFAULT_THEME,
   DISABLED_REASON,
-  DOC_GLYPH,
-  DOC_KINDS,
   EFFECTS_ATTRIBUTE,
   FILE_EVENT,
   FINISH_EVENT,
@@ -81731,10 +81949,8 @@ export {
   PIECES_ATTRIBUTE,
   PIECES_PROPERTY,
   PIECE_CARRIERS,
-  PREVIEW,
   PREVIEW_EVENT,
   PREVIEW_LEAVE_MS,
-  PREVIEW_TIMEOUT_MS,
   PRINT_ACTION,
   PRINT_EVENT,
   PRINT_SHEETS,
@@ -81966,8 +82182,6 @@ export {
   diff_exports as diffExports,
   discShare,
   discardUnsaved,
-  docGlyph,
-  docKindOf,
   docpreview_exports as docpreviewExports,
   drawSparkline,
   effects_exports as effectsExports,
@@ -82050,7 +82264,6 @@ export {
   notices_exports as noticesExports,
   noticesOf,
   openBusyCard,
-  openDocPreview,
   openSnoozePanel,
   openViewer,
   overlays_exports as overlaysExports,
@@ -82063,9 +82276,7 @@ export {
   path_trace_exports as pathTraceExports,
   patterns_exports as patternsExports,
   pipeline_exports as pipelineExports,
-  plainFileName,
   preparePrint,
-  previewTypeOf,
   print_exports as printExports,
   problems_exports as problemsExports,
   progressbar_exports as progressbarExports,
