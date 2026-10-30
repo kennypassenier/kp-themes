@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The eighty-one largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The eighty-two largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1322,3 +1322,16 @@ The document preview and the document glyph: a DocOpener per opener, a DocGlyph 
 | `opener.js` | An opener: a link or a button that opens its document in the preview, off with a reason when it has no file yet.                        |
 | `run.js`    | One running preview: it asks the server about the file, then shows it as a frame or a picture, or says why it cannot.                   |
 | `values.js` | The selectors, the kinds, the extension table and the fixed numbers of the document preview and the document glyph.                     |
+
+## js/quantity.js → js/quantity/
+
+A quantity with minus and plus, as a QuantityControl controller per control. 6 files.
+
+| File            | Does                                                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `build.js`      | The parts the markup left out (the field, the unit, the two buttons) and the names they get. Safe to run again.                                         |
+| `controller.js` | One quantity: its first paint, a held button that repeats, the keys of the spin button, and the typing that is read on Enter or when the field is left. |
+| `math.js`       | Pure: the number a quantity stands at, read from its attributes, written in the page's language, typed back in, kept on a step.                         |
+| `paint.js`      | Writing a value everywhere it shows, and changing it as a person did: the field, the unit, the spin button's numbers, the buttons.                      |
+| `read.js`       | What a quantity's markup holds: its field, whether it is off, the value it stands at, the unit for a value.                                             |
+| `values.js`     | The selector, the event and the fixed numbers of the quantity control.                                                                                  |

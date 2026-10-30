@@ -399,6 +399,7 @@
         { "path": "js/request-inspector.js", "tags": ["@component:data"], "why": "the request inspector [kpadopt5]" },
         { "path": "js/request-inspector/*.js", "tags": ["@component:data"], "why": "the request inspector [kpadopt5]" },
         { "path": "js/quantity.js", "tags": ["@component:field"], "why": "a quantity with minus and plus [kpadopt4]" },
+        { "path": "js/quantity/*.js", "tags": ["@component:field"], "why": "a quantity with minus and plus [kpadopt4]" },
         { "path": "js/hovercard.js", "tags": ["@component:overlays"], "why": "the hover card [kpadopt-tooltip-sort]" },
         { "path": "js/tabbar.js", "tags": ["@component:navigation"], "why": "the bottom tab bar [kpadopt-nav]" },
         { "path": "js/tabbar/*.js", "tags": ["@component:navigation"], "why": "the bottom tab bar [kpadopt-nav]" },
