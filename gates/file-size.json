@@ -20,6 +20,9 @@
         "note": "Kenny, 2026-10-30: a file of that size is absolutely unacceptable. These files predate the 500-line limit and are split in phase 2. The list may only shrink; a listed file may not grow.",
         "files": {
             "css/_rules.css": 692,
+            "gates/check-verdicts.test.mjs": 526,
+            "gates/gates.test.mjs": 1600,
+            "gates/site/extractors.test.mjs": 503,
             "js/anchors.js": 555,
             "js/auto-refresh.js": 596,
             "js/auto.js": 537,
@@ -59,18 +62,7 @@
             "js/toggle.js": 684,
             "js/unsaved.js": 886,
             "js/uses-map.js": 713,
-            "js/wheel.js": 653,
-            "gates/check-motion.mjs": 832,
-            "gates/check-verdicts.test.mjs": 526,
-            "gates/check-wrappers.mjs": 543,
-            "gates/gates.test.mjs": 1600,
-            "gates/generate-code-version.mjs": 507,
-            "gates/generate-compare.mjs": 624,
-            "gates/generate-site.mjs": 839,
-            "gates/site/extractors.test.mjs": 503,
-            "gates/tags.mjs": 589,
-            "gates/verdict-hashes.mjs": 552,
-            "gates/verdicts.mjs": 1800
+            "js/wheel.js": 653
         }
     }
 }
