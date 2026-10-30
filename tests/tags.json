@@ -404,6 +404,7 @@
         { "path": "js/code.js", "tags": ["@component:data"], "why": "the code and payload block [kpadopt4-data]" },
         { "path": "js/code/*.js", "tags": ["@component:data"] },
         { "path": "js/tick.js", "tags": ["@component:data"], "why": "a live number that ticks to its new value [kpadopt4-data]" },
+        { "path": "js/tick/*.js", "tags": ["@component:data"], "why": "a live number that ticks to its new value [kpadopt4-data]" },
         { "path": "js/pipeline.js", "tags": ["@component:data"], "why": "the pipeline board, a lane per stage [kpadopt4]" },
         { "path": "js/pipeline/*.js", "tags": ["@component:data"], "why": "the pipeline board, a lane per stage [kpadopt4]" },
         { "path": "js/art.js", "tags": ["@component:data"], "why": "the drawings of an empty state [kpadopt4]" },
