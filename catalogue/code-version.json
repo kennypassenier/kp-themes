@@ -49,7 +49,7 @@
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-sequencer], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
         },
         "js/forms.js": { "digest": "d52763d1b58ec95d", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },
-        "js/freshness.js": { "digest": "b0c842ef1fa88571", "when": "[data-kp-ago]" },
+        "js/freshness.js": { "digest": "9860eeec293d8074", "when": "[data-kp-ago]" },
         "js/gallery.js": { "digest": "77a6b95047fc4558", "when": "[data-kp-gallery]" },
         "js/gantt.js": { "digest": "251aff5047c2a79c", "when": "[data-kp-gantt]" },
         "js/graph.js": { "digest": "b464207ec3b9a9ad", "when": "[data-kp-graph]" },

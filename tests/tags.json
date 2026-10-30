@@ -201,6 +201,7 @@
         { "path": "js/tiles.js", "tags": ["@component:data"], "why": "tiles of one height across a board [scope-143]" },
         { "path": "js/tiles/*.js", "tags": ["@component:data"], "why": "tiles of one height across a board [scope-143]" },
         { "path": "js/freshness.js", "tags": ["@component:feedback"], "why": "the ticking freshness line [scope-143]" },
+        { "path": "js/freshness/*.js", "tags": ["@component:feedback"], "why": "the ticking freshness line [scope-143]" },
         { "path": "js/chart.js", "tags": ["@component:data"], "why": "the time chart, and a key figure's 24-hour trend [scope-143]" },
         { "path": "js/chart/*.js", "tags": ["@component:data"], "why": "the time chart, and a key figure's 24-hour trend [scope-143]" },
         { "path": "js/chart/plot/*.js", "tags": ["@component:data"], "why": "the time chart, and a key figure's 24-hour trend [scope-143]" },
