@@ -104,7 +104,10 @@ export class Viewer extends Controller {
         position.textContent = this.strings.viewerPosition(at.index, at.total);
     }
 
-    /** @type {import('../viewer.js').ViewerHandle['setState']} */
+    /**
+     * @param {'ready' | 'loading' | 'error' | 'unsupported'} next
+     * @param {{ message?: string, retry?: () => void, title?: string }} [detail]
+     */
     setState(next, detail = {}) {
         const { stage, plate } = this.parts;
         this.current = next;

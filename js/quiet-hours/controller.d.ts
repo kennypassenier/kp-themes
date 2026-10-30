@@ -1,15 +1,9 @@
 import { QuietCore } from './core.js';
 export declare class QuietHours extends QuietCore {
-    /** What the page gets back, the same object every time. */
+    /** What the page gets back, the same object every time. @type {{ value: () => import('./values.js').QuietValue, set: (next: unknown) => void }} */
     handle: {
-        value: () => {
-            days: number[];
-            through: string[];
-            on: boolean;
-            from: string;
-            to: string;
-        };
-        set: (/** @type {unknown} */ next: unknown) => void;
+        value: () => import('./values.js').QuietValue;
+        set: (next: unknown) => void;
     };
     /**
      * @param {HTMLElement} host

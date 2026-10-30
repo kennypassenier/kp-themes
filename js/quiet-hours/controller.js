@@ -13,7 +13,7 @@ export class QuietHours extends QuietCore {
      */
     constructor(host, options) {
         super(host, options);
-        /** What the page gets back, the same object every time. */
+        /** What the page gets back, the same object every time. @type {{ value: () => import('./values.js').QuietValue, set: (next: unknown) => void }} */
         this.handle = {
             value: () => ({ ...this.value, days: [...this.value.days], through: [...this.value.through] }),
             set: (/** @type {unknown} */ next) => this.write(readQuiet(next), false),

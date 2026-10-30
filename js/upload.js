@@ -49,7 +49,7 @@ export { setProgress, setDone, setError } from './upload/item.js';
  * @property {() => void} clear
  */
 
-/** The handle for an attached upload. @param {Element} element */
+/** The handle for an attached upload. @param {Element} element @returns {UploadHandle | null} */
 export function upload(element) {
     return controllerOf(element, UploadZone)?.handle ?? null;
 }

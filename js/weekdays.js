@@ -48,6 +48,7 @@ export { joinWords, weekdaySummary, monthSummary } from './weekdays/summary.js';
 /**
  * The handle of an attached picker.
  * @param {Element} element
+ * @returns {WeekdaysHandle | null}
  */
 export function weekdays(element) {
     return controllerOf(element, WeekdayPicker)?.handle ?? null;

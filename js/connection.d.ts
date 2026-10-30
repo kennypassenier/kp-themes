@@ -30,7 +30,7 @@ export type ConnectionHandle = {
  * @property {() => ConnectionState} state
  * @property {(state: ConnectionState, detail?: ConnectionDetail) => void} set
  */
-/** The handle of an attached banner. @param {Element} element */
+/** The handle of an attached banner. @param {Element} element @returns {ConnectionHandle | null} */
 export declare const connectionOf: (element: Element) => ConnectionHandle | null;
 /**
  * Report the connection from the app.

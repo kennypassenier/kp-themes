@@ -24,7 +24,7 @@ export type GridHandle = {
  * @property {(layout: readonly Tile[]) => void} apply
  * @property {() => void} refresh place tiles added after attach
  */
-/** The handle for an attached grid. @param {Element} element */
+/** The handle for an attached grid. @param {Element} element @returns {GridHandle | null} */
 export declare function grid(element: Element): GridHandle | null;
 /**
  * @param {ParentNode} root

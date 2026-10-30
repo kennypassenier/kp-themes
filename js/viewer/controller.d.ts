@@ -57,8 +57,15 @@ export declare class Viewer extends Controller {
         index: number;
         total: number;
     } | null): void;
-    /** @type {import('../viewer.js').ViewerHandle['setState']} */
-    setState(next: "error" | "loading" | "ready" | "unsupported", detail?: {}): void;
+    /**
+     * @param {'ready' | 'loading' | 'error' | 'unsupported'} next
+     * @param {{ message?: string, retry?: () => void, title?: string }} [detail]
+     */
+    setState(next: 'ready' | 'loading' | 'error' | 'unsupported', detail?: {
+        message?: string;
+        retry?: () => void;
+        title?: string;
+    }): void;
     /** The dialog closed: everything it held goes, then the page hears and the focus goes back. */
     finish(): void;
 }

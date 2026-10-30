@@ -70986,7 +70986,10 @@ var init_controller51 = __esm({
         position.hidden = false;
         position.textContent = this.strings.viewerPosition(at.index, at.total);
       }
-      /** @type {import('../viewer.js').ViewerHandle['setState']} */
+      /**
+       * @param {'ready' | 'loading' | 'error' | 'unsupported'} next
+       * @param {{ message?: string, retry?: () => void, title?: string }} [detail]
+       */
       setState(next2, detail = {}) {
         const { stage, plate } = this.parts;
         this.current = next2;

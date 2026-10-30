@@ -54,7 +54,7 @@ export { CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_
  * @property {(state: ConnectionState, detail?: ConnectionDetail) => void} set
  */
 
-/** The handle of an attached banner. @param {Element} element */
+/** The handle of an attached banner. @param {Element} element @returns {ConnectionHandle | null} */
 export const connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
 
 /**

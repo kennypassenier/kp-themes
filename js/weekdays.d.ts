@@ -31,6 +31,7 @@ export type WeekdaysHandle = {
 /**
  * The handle of an attached picker.
  * @param {Element} element
+ * @returns {WeekdaysHandle | null}
  */
 export declare function weekdays(element: Element): WeekdaysHandle | null;
 /**

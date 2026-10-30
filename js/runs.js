@@ -58,7 +58,7 @@ export { runsRelative, zoneOffset, runMoment, clockShift } from './runs/time.js'
  * @property {() => RunsState} state
  */
 
-/** The handle of an attached list. @param {Element} element */
+/** The handle of an attached list. @param {Element} element @returns {RunsHandle | null} */
 export function runs(element) {
     return controllerOf(element, RunsList)?.handle ?? null;
 }

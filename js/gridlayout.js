@@ -50,7 +50,7 @@ export { layoutOf, applyLayout } from './gridlayout/layout.js';
  * @property {() => void} refresh place tiles added after attach
  */
 
-/** The handle for an attached grid. @param {Element} element */
+/** The handle for an attached grid. @param {Element} element @returns {GridHandle | null} */
 export function grid(element) {
     return controllerOf(element, MovableGrid)?.handle ?? null;
 }

@@ -18,7 +18,7 @@ export type UploadHandle = {
  * @property {(files: File[] | FileList) => void} add
  * @property {() => void} clear
  */
-/** The handle for an attached upload. @param {Element} element */
+/** The handle for an attached upload. @param {Element} element @returns {UploadHandle | null} */
 export declare function upload(element: Element): UploadHandle | null;
 /**
  * @param {ParentNode} root

@@ -55,7 +55,7 @@ export type RunsHandle = {
  * @property {() => Run[]} runs
  * @property {() => RunsState} state
  */
-/** The handle of an attached list. @param {Element} element */
+/** The handle of an attached list. @param {Element} element @returns {RunsHandle | null} */
 export declare function runs(element: Element): RunsHandle | null;
 /**
  * Give a list its times (none: the empty state, with `reason`).
