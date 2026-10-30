@@ -1,8 +1,0 @@
-/* @part: signature: The count that is still being counted is one ruled line of the ledger, */
-/* The count that is still being counted is one ruled line of the ledger, as high as the figure it stands for and not
-   the 1.5rem of a text line, so the pill keeps its height. */
-@layer kp.signature {
-    [data-theme='formal'] .kp-toggle__bone.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        block-size: 1em;
-    }
-}

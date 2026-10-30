@@ -1,0 +1,5 @@
+/* @part: code-block: signature layer */
+    /* The tools of a code block (Pretty, Raw, Wrap, Copy) may take a second line instead of leaving the block. */
+    [data-theme='dark'] .kp-code__tools {
+        flex-wrap: wrap;
+    }

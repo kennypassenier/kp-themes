@@ -1,0 +1,54 @@
+/* @part: run-timeline: signature layer; also navbar, facet-list, week-agenda */
+    [data-theme='synthwave'] .kp-nav__sep {
+        inline-size: 2px;
+        border-inline-start: 0;
+        border-radius: 1px;
+        background: var(--kp-pink-text, var(--primary));
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 14px hsl(from var(--primary) h s l / 0.5);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 2px;
+            border-block-start: 0;
+        }
+    }
+
+    [data-theme='synthwave'] .kp-gantt__tick:is(button) {
+        border-radius: 2px;
+        text-decoration: none;
+    }
+    [data-theme='synthwave'] .kp-gantt__tick:is(button):hover {
+        color: var(--kp-core);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: hsl(from var(--primary) h s l / 0.18);
+        color: var(--kp-core);
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            0 0 10px hsl(from var(--primary) h s l / 0.6);
+        text-shadow: 0 0 6px var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: 0 0 7px hsl(from var(--kp-gantt-series) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            0 0 0 1px var(--kp-core),
+            0 0 12px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='synthwave'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 2px;
+        box-shadow: 0 0 6px hsl(from var(--kp-facet-swatch-colour, var(--primary)) h s l / 0.7);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-gantt__tick:is(button) {
+            transition: box-shadow var(--fx-duration) var(--fx-ease);
+        }
+    }

@@ -1,0 +1,42 @@
+/* @part: facet-list: signature layer; also run-timeline */
+    /* The pen hatches a section start to end at the feed, the hatch stands, and is lifted. */
+    @keyframes kp-sig-blueprint-hatch {
+        0% {
+            background-size:
+                0% 100%,
+                1px 100%,
+                1px 100%;
+            animation-timing-function: var(--kp-sig-bp-feed);
+        }
+
+        45%,
+        85% {
+            background-size:
+                100% 100%,
+                1px 100%,
+                1px 100%;
+        }
+
+        86%,
+        100% {
+            background-size:
+                0% 100%,
+                1px 100%,
+                1px 100%;
+        }
+    }
+
+    /* The chain line feeds one period along its dimension line. */
+    @keyframes kp-sig-blueprint-chain {
+        from {
+            background-position:
+                0 50%,
+                0 0;
+        }
+
+        to {
+            background-position:
+                1.375rem 50%,
+                0 0;
+        }
+    }

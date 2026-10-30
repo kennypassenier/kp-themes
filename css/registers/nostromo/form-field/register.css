@@ -1,0 +1,62 @@
+/* @part: form-field: register layer; also forms */
+    /* ── Fields: the well, the checkbox, the select ───────────────────── */
+
+    [data-theme='nostromo'] .kp-field__label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    /* The demo's own CSS colours this span with --selected (3.77 on the
+   plain background, under the 4.5 text floor — the demo's own contrast
+   section classifies that pair as a boundary application, not text; see
+   the anatomy's Tokens section). --destructive clears 6.08 in the same
+   place and keeps the same "attend to this" register. */
+    [data-theme='nostromo'] .kp-field__required {
+        color: var(--destructive);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-field__input,
+    [data-theme='nostromo'] .kp-datatable__search,
+    [data-theme='nostromo'] .kp-combobox__input,
+    [data-theme='nostromo'] .kp-palette__input {
+        background: var(--popover);
+        color: var(--foreground);
+        border: 1px solid var(--input);
+        border-radius: 0.3rem;
+    }
+
+    [data-theme='nostromo'] .kp-field__input::placeholder {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='nostromo'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='nostromo'] .kp-field__check {
+        accent-color: var(--selected);
+    }
+
+    [data-theme='nostromo'] .kp-fieldset {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] .kp-form__summary {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+

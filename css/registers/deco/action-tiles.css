@@ -1,0 +1,76 @@
+/* @part: action-tiles: signature layer; also status-rows, calm-status */
+    [data-theme='deco'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='deco'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-pad: 0.875rem 1.125rem;
+        --kp-action-title-font: var(--theme-font-display);
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.08em;
+        --kp-action-title-size: 0.9375rem;
+        --kp-action-press: 0 0;
+        --kp-action-shadow: none;
+        --kp-action-shadow-hover: none;
+        --kp-action-shadow-active: inset 1px 2px 4px hsl(from var(--kp-sig-deco-shadow, var(--background)) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-action__title {
+        color: hsl(from var(--foreground) h s l);
+    }
+    [data-theme='deco']
+        .kp-action:not(.kp-action--destructive):hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))
+        > .kp-action__title {
+        color: var(--kp-sig-deco-gold-hi);
+    }
+    [data-theme='deco'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+    }
+    /* The destructive bar gives way to the plate's own inlay; the warning is the title in ruby over a gold rule. */
+    [data-theme='deco'] .kp-action--destructive {
+        --kp-action-tone-edge: hsl(from var(--primary) h s l / 0.3);
+        --kp-action-tone-edge-hover: var(--primary);
+    }
+    [data-theme='deco'] .kp-action::after,
+    [data-theme='deco'] .kp-action--destructive::after {
+        inset: -1px;
+        inline-size: auto;
+        border-radius: 0;
+        background-color: transparent;
+    }
+    [data-theme='deco'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title {
+        justify-self: start;
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        color: var(--muted-foreground);
+    }
+    [data-theme='deco'] .kp-action:is(:disabled, [aria-disabled='true']) > .kp-action__title {
+        color: var(--muted-foreground);
+    }
+
+    /* Status rows: plates of the lobby with the inlay; square marks; a failed row's name in ruby over a gold rule. */
+    [data-theme='deco'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+        --kp-statuslist-gap: 0.625rem;
+    }
+    [data-theme='deco'] .kp-statusrow {
+        --kp-statusrow-radius: 0;
+        --kp-statusrow-pad: 0.625rem 0.875rem;
+        column-gap: 0.875rem;
+    }
+    [data-theme='deco'] .kp-statusrow__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-statusrow[data-state='failed'] .kp-statusrow__label {
+        justify-self: start;
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-statusrow[data-state='empty'] .kp-statusrow__label {
+        color: var(--muted-foreground);
+    }
+

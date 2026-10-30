@@ -1,0 +1,41 @@
+/* @part: page-header: register layer */
+    /* The footer: near-black, mono headings in the primary, links uppercase. */
+    [data-theme='cyberpunk'] .kp-footer {
+        padding: 3rem clamp(1rem, 4vw, 3rem) 2.5rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer h4 {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 0.6rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer a {
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-footer a:hover,
+    [data-theme='cyberpunk'] .kp-footer a:focus-visible {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-footer .microlabel {
+        margin-top: 2rem;
+        color: var(--muted-foreground);
+    }
+

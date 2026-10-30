@@ -1,0 +1,50 @@
+/* @part: combobox: register layer; also form-field, breadcrumb-pagination, table, forms */
+    /* ── The roots the rules above reach only by their parts ───────────── */
+
+    [data-theme='dark'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.2);
+    }
+
+    [data-theme='dark'] .kp-form {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='dark'] .kp-breadcrumb,
+    [data-theme='dark'] .kp-pagination {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-combobox,
+    [data-theme='dark'] .kp-datepicker,
+    [data-theme='dark'] .kp-colorpicker,
+    [data-theme='dark'] .kp-shortcuts {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-grid {
+        gap: 0.75rem;
+    }
+
+    [data-theme='dark'] .kp-split {
+        gap: 0;
+    }
+
+    [data-theme='dark'] .kp-toasts {
+        gap: 0.6rem;
+    }
+
+    [data-theme='dark'] .kp-health {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* ── The scrollbar joins the theme ──────────────────────────────────── */
+
+    [data-theme='dark'] {
+        scrollbar-color: var(--border-strong) var(--background);
+    }
+

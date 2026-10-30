@@ -1,0 +1,34 @@
+/* @part: bullet-rows: signature layer */
+    /* ── Bullet rows: the groove meter is the bar; the figure is a mono count on its plate ── */
+    [data-theme='titanium'] .kp-bullets__row {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-bullets__figure {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    [data-theme='titanium'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='titanium'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px);
+    }
+    [data-theme='titanium'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: var(--muted);
+        box-shadow: inset 2px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-bullets__row:has(.kp-bullets__link:active) {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration-style: dashed;
+        text-decoration-thickness: 1px;
+    }
+    [data-theme='titanium'] :is(.kp-bullets__note-title, .kp-bullets__detail) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-bullets__detail {
+        font-size: 0.6875rem;
+    }
+

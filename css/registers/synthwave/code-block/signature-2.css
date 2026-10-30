@@ -1,0 +1,7 @@
+/* @part: code-block: signature layer */
+    /* The "Show all N lines" button of a code cell in a narrow cell is shrunk below its own text by the 0.16em track: the
+       track tightens and the padding halves, so the words stand clear of both sides of the button. */
+    [data-theme='synthwave'] .kp-code--cell .kp-code__foot .kp-button {
+        letter-spacing: 0.06em;
+        padding-inline: 0.5rem;
+    }

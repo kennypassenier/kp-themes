@@ -1,0 +1,66 @@
+/* @part: visual-timer: signature layer; also countdown, range-picker */
+    /* ── Visual timer: the share left is the film laid on a ticked face, the hub the line's centre; an ended timer takes
+       the coral film round its face ── */
+    [data-theme='dark'] .kp-timer-disc {
+        --kp-timer-disc-ring: hsl(from var(--destructive) h s l / 0.8);
+        --kp-timer-disc-marks: var(--border-strong);
+    }
+    [data-theme='dark'] .kp-timer-disc__sector {
+        background: conic-gradient(from 0deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+        -webkit-mask:
+            conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0),
+            radial-gradient(circle closest-side, transparent 66%, var(--foreground) 67%);
+        -webkit-mask-composite: source-in;
+        mask:
+            conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0),
+            radial-gradient(circle closest-side, transparent 66%, var(--foreground) 67%);
+        mask-composite: intersect;
+    }
+    [data-theme='dark'] .kp-timer-disc__hub {
+        border-color: var(--card);
+        background: var(--card);
+        box-shadow: 0 0 0 1px var(--chart-1);
+    }
+    [data-theme='dark'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: 0 0 0 2px var(--destructive);
+    }
+    [data-theme='dark'] .kp-timer-disc__caption,
+    [data-theme='dark'] .kp-timer-disc__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+    }
+    [data-theme='dark'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        color: var(--destructive);
+    }
+
+    /* ── Countdown: the digits are readings in slots; the colon is the lit tick; ended is the coral film edge ── */
+    [data-theme='dark'] .kp-countdown {
+        --kp-countdown-ring: var(--destructive);
+    }
+    [data-theme='dark'] .kp-countdown__time,
+    [data-theme='dark'] .kp-countdown__digit,
+    [data-theme='dark'] .kp-countdown__name,
+    [data-theme='dark'] .kp-countdown__status {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-countdown__colon {
+        inline-size: 1ch;
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status {
+        color: var(--destructive);
+    }
+
+    /* ── Range picker: the label is a reading; the custom window's panel is dark's own popover ── */
+    [data-theme='dark'] .kp-range__label,
+    [data-theme='dark'] .kp-range__bound,
+    [data-theme='dark'] .kp-range__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='dark'] .kp-range__error {
+        box-shadow: inset 2px 0 0 var(--destructive);
+        padding-inline-start: 0.5rem;
+    }
+

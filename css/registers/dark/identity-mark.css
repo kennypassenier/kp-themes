@@ -1,0 +1,39 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* ── Identity mark: a plate of the name's own colour, its edge the film in that colour, cut on two corners ── */
+    [data-theme='dark'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        --kp-idmark-tint: 22%;
+        font-family: var(--theme-font-mono);
+        font-weight: 600;
+        letter-spacing: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-idmark--round {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut-4);
+    }
+    [data-theme='dark'] .kp-idmark--glyph {
+        clip-path: polygon(0 -30%, 130% -30%, 130% 100%, var(--kp-dk4-c) 100%, 0 calc(100% - var(--kp-dk4-c)));
+    }
+    [data-theme='dark'] .kp-idmark--glyph::after {
+        box-shadow: none;
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='dark'] .kp-idmark[data-kp-idmark-selected] {
+        box-shadow: none;
+        clip-path: none;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='dark'] .kp-idmark-group > .kp-idmark {
+        box-shadow: none;
+    }
+    [data-theme='dark'] .kp-idmark-group__more {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+

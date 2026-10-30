@@ -1,0 +1,67 @@
+/* @part: page-header: register layer; also progress-spinner-skeleton, badge, small-patterns */
+    /* The footer: blue-black, the gold wordmark. */
+    [data-theme='deco'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='deco'] .kp-footer h4 {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--sidebar-primary);
+    }
+
+    [data-theme='deco'] .kp-footer a {
+        color: var(--sidebar-foreground);
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+
+    [data-theme='deco'] .kp-footer a:hover,
+    [data-theme='deco'] .kp-footer a:focus-visible {
+        color: var(--sidebar-primary);
+    }
+
+    [data-theme='deco'] .kp-footer .microlabel {
+        color: var(--muted-foreground);
+    }
+
+    /* ── Badges, tags, status ──────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-badge,
+    [data-theme='deco'] .kp-tag {
+        border-radius: 0;
+        border: 1px solid var(--border-strong);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-health {
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-health__dot {
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-skeleton {
+        background: repeating-linear-gradient(135deg, var(--muted) 0 6px, var(--card) 6px 12px);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    /* The track is --border (the quiet hairline, not the gold boundary):
+   --border-strong shares the gold hue with --primary and reads as one
+   ring turning, not a head against a track [KT8]. */
+    [data-theme='deco'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-error {
+        color: var(--destructive);
+    }
+

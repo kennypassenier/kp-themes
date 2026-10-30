@@ -1,0 +1,54 @@
+/* @part: toast: signature layer */
+    /* Tone toasts and alerts. A toast of meaning keeps its plate and its ink
+       (the pairs the contrast gate holds), coved like the rest, its hairlines
+       in its own ink; every alert is lacquer, its tone said in its word. */
+    [data-theme='deco'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        --kp-sig-deco-arc: currentColor;
+        --kp-sig-deco-leaf-x: linear-gradient(currentColor, currentColor);
+        --kp-sig-deco-leaf-y: linear-gradient(currentColor, currentColor);
+        background-image: none;
+    }
+
+    [data-theme='deco'] .kp-toast--success {
+        background-color: var(--success);
+    }
+
+    [data-theme='deco'] .kp-toast--info {
+        background-color: var(--info);
+    }
+
+    [data-theme='deco'] .kp-toast--warning {
+        background-color: var(--warning);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--destructive, .kp-toast--error) {
+        background-color: var(--destructive);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        border-color: transparent;
+    }
+
+    /* The toast's own mark and padding: a lozenge in gold, set in the cove's
+       clear. */
+    [data-theme='deco'] .kp-toast {
+        padding-inline-start: 1.6rem;
+    }
+
+    [data-theme='deco'] .kp-toast::before {
+        z-index: 3;
+        background: var(--kp-sig-deco-gem);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        inset-block-start: calc(50% - 0.25rem);
+    }
+
+    [data-theme='deco'] .kp-toast--success::before {
+        background: var(--kp-sig-deco-gem-em);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)::before {
+        background: currentColor;
+    }
+

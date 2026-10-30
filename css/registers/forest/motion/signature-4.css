@@ -1,0 +1,70 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* Tiles · live 2 and columns · live 1, the sway → a growth ring round the
+       tile or the column whose value js/update.js changed (G8): drawn once on
+       the plate's own leaf, clockwise from the top; the figure never moves,
+       and the ring round the value itself is not drawn twice. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest']
+            :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi):has([data-kp-updating='ring']):not([aria-busy='true']) {
+            position: relative;
+        }
+
+        [data-theme='forest']
+            :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi):has([data-kp-updating='ring']):not([aria-busy='true'])::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 1.5px solid var(--primary);
+            border-radius: 0 calc(var(--kp-sig-fo-leaf) + 5px);
+            mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-forest-update-ring var(--kp-sig-fo-time) linear both;
+        }
+
+        [data-theme='forest']
+            :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi)
+            [data-kp-updating='ring']:not(.kp-state-word)::after,
+        [data-theme='forest'] :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi) .kp-state-word[data-kp-updating='ring']::before {
+            content: none;
+        }
+
+        /* Tiles · hover 3: the blaze is laid in contact time. */
+        [data-theme='forest'] .kp-tiles > .kp-card {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+
+        /* Calendar · arrival: in-month days grow up out of the ground.
+           Pad days (dates not part of selected month) do the exact opposite:
+           they wither / sink down into the ground on kp-sig-forest-pad-wither. */
+        [data-theme='forest'] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow)
+                calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) backwards;
+        }
+
+        [data-theme='forest'] .kp-calendar__grid:not([aria-busy='true']) td[data-kp-pad] > .kp-calendar__pad {
+            animation: kp-sig-forest-pad-wither var(--kp-sig-fo-time) var(--kp-sig-fo-wither)
+                calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) both;
+        }
+
+        /* Calendar · loading 1: one tree a half loop, the days of a week
+           150 ms apart. */
+        [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end calc(var(--kp-fo-col, 0) * -150ms) infinite;
+        }
+
+        /* Drawer · openclose 1, the drawer grows out of its edge (the trunk),
+           far side first, clipped at the edge, one growth on the growth curve
+           (G3); js/motion.js closes it as this growth reversed, in the same
+           time. Mirrored on a right-to-left page. */
+        [data-theme='forest'] dialog.kp-drawer {
+            animation: kp-sig-forest-edge var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] dialog.kp-drawer:dir(rtl) {
+            animation-name: kp-sig-forest-edge-rtl;
+        }
+    }
+

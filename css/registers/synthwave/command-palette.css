@@ -1,0 +1,75 @@
+/* @part: command-palette: register layer; also colour-picker, form-field, combobox, theme-menu */
+    [data-theme='synthwave'] .kp-colorpicker__swatch {
+        border: 2px solid var(--kp-hairline);
+        border-radius: var(--radius);
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='synthwave'] .kp-colorpicker__value {
+        font-family: var(--kp-mono);
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-shortcuts__row kbd {
+        font-family: var(--kp-osd);
+        border: 1px solid var(--kp-hairline);
+        border-radius: var(--radius);
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-shortcuts__group-label,
+    [data-theme='synthwave'] .kp-palette__group-label {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-theme-menu__status,
+    [data-theme='synthwave'] .kp-palette__status,
+    [data-theme='synthwave'] .kp-combobox__status {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.08em;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    /* A field, a form, a fieldset of data: the OSD rhythm between rows. */
+    [data-theme='synthwave'] .kp-field,
+    [data-theme='synthwave'] .kp-form {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+
+    [data-theme='synthwave'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    /* The data pickers and panels: a hairline frame, square. */
+    [data-theme='synthwave'] .kp-combobox,
+    [data-theme='synthwave'] .kp-datepicker,
+    [data-theme='synthwave'] .kp-colorpicker,
+    [data-theme='synthwave'] .kp-shortcuts {
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-datatable {
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-diff {
+        background: var(--sidebar-background);
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-split {
+        gap: 0;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='synthwave'] {
+        scrollbar-color: var(--primary) var(--sidebar-background);
+    }
+

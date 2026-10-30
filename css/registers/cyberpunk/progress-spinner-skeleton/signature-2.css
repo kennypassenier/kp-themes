@@ -1,0 +1,361 @@
+/* @part: progress-spinner-skeleton: signature layer; also button, month-heatmap, datatable */
+    [data-theme='cyberpunk'] .kp-progressbar__track {
+        border-radius: 0;
+        background: var(--kp-cp-void);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+                90deg,
+                hsl(from var(--primary) h s l / 0.32) 0 calc(6 * var(--kp-cp-px)),
+                transparent calc(6 * var(--kp-cp-px)) calc(10 * var(--kp-cp-px))
+            )
+            0 50% / 100% 2px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 0 0 0 2px var(--kp-cp-void);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__fill {
+        overflow: hidden;
+        background: linear-gradient(
+            to bottom,
+            var(--primary) 0 calc(50% - 1px),
+            var(--kp-cp-void) calc(50% - 1px) calc(50% + 1px),
+            var(--primary) calc(50% + 1px)
+        );
+        transition-timing-function: steps(3, jump-end);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__fill::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc(3rem * var(--kp-progressbar-scale, 1));
+        background: linear-gradient(90deg, transparent, hsl(from var(--fx-hot, var(--foreground)) h s 96% / 0.75), transparent);
+        transform: translateX(-100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head {
+        z-index: 1;
+        transition-timing-function: steps(3, jump-end);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head::before,
+    [data-theme='cyberpunk'] .kp-progressbar__head::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head::before {
+        inset-inline-end: 0;
+        inline-size: var(--kp-cp-cut);
+        background: var(--kp-cp-void);
+        clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar__head::after {
+        /* Parallel to the cut, 3px of void between them (at scale 1). */
+        inset-inline-start: calc(calc(5 * var(--kp-cp-px)) - var(--kp-cp-cut));
+        inset-block: 2px;
+        inline-size: calc(var(--kp-cp-cut) + var(--kp-cp-px));
+        background: var(--accent);
+        clip-path: polygon(0 0, calc(5 * var(--kp-cp-px)) 0, 100% 100%, calc(100% - calc(5 * var(--kp-cp-px))) 100%);
+        /* Only between the ends: an empty rail and a full face carry no packet. */
+        opacity: clamp(0, min(var(--kp-value), 1 - var(--kp-value)) * 1000, 1);
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+        content: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline-end: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(-216 * var(--kp-cp-px));
+        inline-size: calc(100% + calc(432 * var(--kp-cp-px)));
+        transform: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        --kp-cp-dash: hsl(from var(--primary) h s l / 0.6);
+        background:
+            linear-gradient(
+                    90deg,
+                    transparent calc(6 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(6 * var(--kp-cp-px)) calc(28 * var(--kp-cp-px)),
+                    transparent calc(28 * var(--kp-cp-px)) calc(36 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(36 * var(--kp-cp-px)) calc(44 * var(--kp-cp-px)),
+                    transparent calc(44 * var(--kp-cp-px)) calc(52 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(52 * var(--kp-cp-px)) calc(92 * var(--kp-cp-px)),
+                    transparent calc(92 * var(--kp-cp-px)) calc(100 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(100 * var(--kp-cp-px)) calc(114 * var(--kp-cp-px)),
+                    transparent calc(114 * var(--kp-cp-px)) calc(122 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(122 * var(--kp-cp-px)) calc(138 * var(--kp-cp-px)),
+                    transparent calc(138 * var(--kp-cp-px))
+                )
+                0 calc(3 * var(--kp-cp-px)) / calc(144 * var(--kp-cp-px)) 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent calc(4 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(4 * var(--kp-cp-px)) calc(14 * var(--kp-cp-px)),
+                    transparent calc(14 * var(--kp-cp-px)) calc(20 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(20 * var(--kp-cp-px)) calc(54 * var(--kp-cp-px)),
+                    transparent calc(54 * var(--kp-cp-px)) calc(62 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(62 * var(--kp-cp-px)) calc(68 * var(--kp-cp-px)),
+                    transparent calc(68 * var(--kp-cp-px)) calc(76 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(76 * var(--kp-cp-px)) calc(104 * var(--kp-cp-px)),
+                    transparent calc(104 * var(--kp-cp-px)) calc(112 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(112 * var(--kp-cp-px)) calc(138 * var(--kp-cp-px)),
+                    transparent calc(138 * var(--kp-cp-px))
+                )
+                0 calc(6 * var(--kp-cp-px)) / calc(144 * var(--kp-cp-px)) 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent calc(10 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(10 * var(--kp-cp-px)) calc(40 * var(--kp-cp-px)),
+                    transparent calc(40 * var(--kp-cp-px)) calc(48 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(48 * var(--kp-cp-px)) calc(60 * var(--kp-cp-px)),
+                    transparent calc(60 * var(--kp-cp-px)) calc(68 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(68 * var(--kp-cp-px)) calc(112 * var(--kp-cp-px)),
+                    transparent calc(112 * var(--kp-cp-px)) calc(120 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(120 * var(--kp-cp-px)) calc(138 * var(--kp-cp-px)),
+                    transparent calc(138 * var(--kp-cp-px))
+                )
+                0 calc(9 * var(--kp-cp-px)) / calc(144 * var(--kp-cp-px)) 2px repeat-x;
+    }
+
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+        background:
+            linear-gradient(
+                    90deg,
+                    transparent calc(58 * var(--kp-cp-px)),
+                    var(--accent) calc(58 * var(--kp-cp-px)) calc(70 * var(--kp-cp-px)),
+                    transparent calc(70 * var(--kp-cp-px))
+                )
+                0 calc(3 * var(--kp-cp-px)) / calc(216 * var(--kp-cp-px)) 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent calc(150 * var(--kp-cp-px)),
+                    var(--accent) calc(150 * var(--kp-cp-px)) calc(166 * var(--kp-cp-px)),
+                    transparent calc(166 * var(--kp-cp-px))
+                )
+                0 calc(6 * var(--kp-cp-px)) / calc(216 * var(--kp-cp-px)) 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent calc(24 * var(--kp-cp-px)),
+                    var(--accent) calc(24 * var(--kp-cp-px)) calc(32 * var(--kp-cp-px)),
+                    transparent calc(32 * var(--kp-cp-px)) calc(176 * var(--kp-cp-px)),
+                    var(--accent) calc(176 * var(--kp-cp-px)) calc(188 * var(--kp-cp-px)),
+                    transparent calc(188 * var(--kp-cp-px))
+                )
+                0 calc(9 * var(--kp-cp-px)) / calc(216 * var(--kp-cp-px)) 2px repeat-x;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-progressbar:not([data-kp-indeterminate]) .kp-progressbar__fill::after {
+            animation: kp-cp-charge 480ms steps(4, jump-end) 180ms 1 both;
+        }
+
+        [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: kp-cp-stream-144 1800ms linear infinite;
+        }
+
+        [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
+            animation: kp-cp-stream-216 1800ms linear infinite;
+        }
+    }
+
+    /* The spinner: signal bars with a glitch copy [Kenny: spinner = glitch]. Four yellow bars
+       under a cyan cap stand on one base line and move one step at a time, 300 ms a step; twice
+       in the 3 s loop the whole spinner tears: a cyan copy right and up, a red copy right and
+       down, and it snaps back. The bars are four gradient layers of the one element, their
+       heights four registered properties on four phases of the same loop. In a busy button every
+       ink is the button's own. */
+    [data-theme='cyberpunk'] .kp-spinner,
+    [data-theme='cyberpunk'] .kp-skeleton--circle {
+        --kp-sig-dur: 3000ms;
+        --kp-cp-sp-cap: var(--accent);
+        --kp-cp-sp-body: var(--primary);
+        --kp-cp-sp-c1: var(--accent);
+        --kp-cp-sp-c3: var(--destructive);
+        --kp-cp-bar: linear-gradient(var(--kp-cp-sp-cap) 0 2px, var(--kp-cp-sp-body) 2px);
+        position: relative;
+        box-sizing: border-box;
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        padding-block-end: calc(var(--kp-spinner-size, 1.25rem) * 0.08);
+        background:
+            var(--kp-cp-bar) 4.88% 100% / 18% var(--kp-cp-h1) no-repeat,
+            var(--kp-cp-bar) 34.15% 100% / 18% var(--kp-cp-h2) no-repeat,
+            var(--kp-cp-bar) 63.41% 100% / 18% var(--kp-cp-h3) no-repeat,
+            var(--kp-cp-bar) 92.68% 100% / 18% var(--kp-cp-h4) no-repeat;
+        background-origin: content-box;
+        box-shadow: none;
+        clip-path: none;
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-button .kp-spinner {
+        --kp-cp-sp-cap: currentColor;
+        --kp-cp-sp-body: currentColor;
+        --kp-cp-sp-c1: currentColor;
+        --kp-cp-sp-c3: currentColor;
+    }
+
+    [data-theme='cyberpunk'] .kp-spinner::before,
+    [data-theme='cyberpunk'] .kp-spinner::after,
+    [data-theme='cyberpunk'] .kp-skeleton--circle::before,
+    [data-theme='cyberpunk'] .kp-skeleton--circle::after {
+        content: none;
+    }
+
+    /* A round skeleton stands in for a portrait: waiting, it is the same bars with their glitch
+       copy, sized by its own box (the spinner's size property is its width). */
+    [data-theme='cyberpunk'] .kp-skeleton--circle {
+        --kp-spinner-size: var(--kp-skeleton-circle, 3rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-spinner,
+        [data-theme='cyberpunk'] .kp-skeleton--circle {
+            animation:
+                kp-sig-cyberpunk-bars-1 3000ms steps(1, end) infinite,
+                kp-sig-cyberpunk-bars-2 3000ms steps(1, end) -975ms infinite,
+                kp-sig-cyberpunk-bars-3 3000ms steps(1, end) -1950ms infinite,
+                kp-sig-cyberpunk-bars-4 3000ms steps(1, end) -2625ms infinite,
+                kp-sig-cyberpunk-tear 3000ms steps(1, end) infinite;
+        }
+    }
+
+    /* Waiting: signal loss [Kenny: loading = osd]. The waiting part dims and the word LOADING is
+       deciphered over it from noise glyphs, start to end, holds in neon (a cyan copy right and up,
+       a red copy right and down), tears sideways in a few ticks and is sliced away before it is
+       deciphered again: 1800 ms, thirty ticks of 60 ms, `steps(1)`. The word is the page's
+       machine voice and lives in the keyframes below (a CSS keyframe cannot read it from
+       js/strings.js); the reduced pose is the word standing. The progress bar and the
+       divider keep nothing of their own here: the bar's stream stands dim under the word. */
+    [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1800ms;
+        position: relative;
+        overflow: hidden;
+        block-size: 1.1rem;
+        border-radius: 0;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm, 8px)), calc(100% - var(--fx-notch-sm, 8px)) 100%, 0 100%);
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: none;
+    }
+
+    /* A block (a chart's waiting plot, its source stubs, a card's picture) keeps its own size and
+       takes the line's plate and its word. The package's pulse (css/components.css, 1600 ms
+       ease-in-out) is not this theme's picture: nothing but the word and the bars waits here. */
+    [data-theme='cyberpunk'] .kp-skeleton--block {
+        --kp-sig-dur: 1800ms;
+        position: relative;
+        overflow: hidden;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm, 8px)), calc(100% - var(--fx-notch-sm, 8px)) 100%, 0 100%);
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton--block::after {
+        content: none;
+    }
+
+    /* A day that waits keeps the bars of its spinner and stops pulsing. */
+    [data-theme='cyberpunk'] .kp-calendar__day[data-kp-tone='loading'] {
+        animation: none;
+    }
+
+    /* A busy table is one picture: the overlay's bars and words. The status line's own spinner and
+       the skeleton cells' word stand down while the overlay shows. */
+    [data-theme='cyberpunk'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-skeleton::before {
+        content: none;
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+    [data-theme='cyberpunk'] .kp-skeleton--block::before,
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate]::before,
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        /* The word comes from js/strings.js (`loadingWord`, through
+           setStrings()); the English is the fallback. */
+        content: var(--kp-loading-word-7, 'LOADING');
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        overflow: visible;
+        background: none;
+        clip-path: none;
+        color: var(--foreground);
+        font-family: var(--kp-mono);
+        font-size: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+        pointer-events: none;
+    }
+
+    /* The waiting part stands dim under its word. */
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track {
+        opacity: 0.2;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+        [data-theme='cyberpunk'] .kp-skeleton--block::before,
+        [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate]::before,
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) infinite;
+        }
+
+        /* Lines of a skeleton are read one after the other, 6 ticks apart. */
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before {
+            animation-delay: 360ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before {
+            animation-delay: 720ms;
+        }
+    }
+

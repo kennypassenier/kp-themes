@@ -1,0 +1,81 @@
+/* @part: dialog: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        /* One pair for every line of a dialog, a drawer, a tour card and a
+           palette: the clip rules the line open in 400 ms, the pen rules a
+           2 px navy rule across it in the same 400 and lifts it in 160 more.
+           A line's wait is its animation-delay (0, 60, 120 and 180 ms), which
+           js/motion.js keeps when it turns the entrance round (`--kp-lines:
+           keep`), so the frames are those the four pairs of keyframes gave
+           with the wait carried in their offsets. */
+        @keyframes kp-sig-formal-ruled-line {
+            from {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            to {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-pen {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            71.4286% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-frame {
+            0% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            54.054%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-frame-rtl {
+            0% {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+
+            54.054%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-line-rtl {
+            from {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+
+            to {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-pen-rtl {
+            0% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            71.4286% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+    }
+

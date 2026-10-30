@@ -1,0 +1,46 @@
+/* @part: small-patterns: register layer; also showing-data */
+    /* ── Text shapes ───────────────────────────────────────────────────── */
+
+    [data-theme='nostromo'] .kp-id,
+    [data-theme='nostromo'] .kp-url,
+    [data-theme='nostromo'] .kp-numeric,
+    [data-theme='nostromo'] .kp-timestamp,
+    [data-theme='nostromo'] .kp-masked,
+    [data-theme='nostromo'] .kp-truncate,
+    [data-theme='nostromo'] .kp-cell-break,
+    [data-theme='nostromo'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.01em;
+    }
+
+    [data-theme='nostromo'] .kp-timestamp,
+    [data-theme='nostromo'] .kp-id {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-copyable {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-copyable__button {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: transparent;
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+

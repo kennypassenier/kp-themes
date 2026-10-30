@@ -1,0 +1,65 @@
+/* @part: step-list: register layer; also tree-reorder-split, accordion, small-patterns */
+    /* The step list is a drafting schedule: transparent rows on the sheet,
+       dashed frames, squared marks, dimensions in the mono face. */
+    [data-theme='blueprint'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='blueprint'] .kp-steplist__item {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        border-radius: 2px;
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] .kp-steplist__item[data-state='running'] {
+        border-style: solid;
+    }
+
+    [data-theme='blueprint'] .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] .kp-timeline {
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-timeline__marker {
+        background: var(--primary);
+        border-radius: 999px;
+    }
+
+    [data-theme='blueprint'] .kp-tree {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9rem;
+    }
+
+    /* A branch's children glide open and shut on the plotter's feed
+       (js/motion.js glideGroup(), lesson 26). Shutting, the state is already
+       `aria-expanded="false"` and the group is kept drawn until the glide is
+       over, so the shut is the open played backwards. */
+    [data-theme='blueprint'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='blueprint'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The accordion [gap-12]: the drafting mono its category toggle and tree use. */
+    [data-theme='blueprint'] .kp-accordion__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9rem;
+    }
+
+    [data-theme='blueprint'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-reorder {
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: var(--card);
+    }
+

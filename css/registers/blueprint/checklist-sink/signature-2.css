@@ -1,0 +1,59 @@
+/* @part: checklist-sink: signature layer; also quote-card, gallery */
+    /* The checklist's "nothing yet" box is the sheet's empty plate (dashed frame, compass circle); its failed box is the
+       destructive alert's plate. */
+    [data-theme='blueprint'] .kp-checklist__empty:not([data-kp-checklist-failed]) {
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.45);
+        border-radius: 2px;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px;
+    }
+
+    [data-theme='blueprint'] .kp-checklist__empty:not([data-kp-checklist-failed])::before {
+        content: '';
+        display: block;
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+        margin: 0 auto 0.7rem;
+        background:
+            radial-gradient(circle closest-side, transparent calc(55% - 1px), var(--primary) calc(55% - 1px) 55%, transparent 55%),
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border: 1px solid var(--destructive);
+        border-radius: 2px;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* Retry in the checklist's failed box is a normal button in the middle, not a strip across the box (the grid stretched it). */
+    [data-theme='blueprint'] .kp-checklist__empty .kp-claim__retry {
+        justify-self: center;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* A quote card holds the height of its quote (176 px at desktop width); blueprint's empty plate (a 44 px compass, 1.25 and 1.4 rem
+       of padding) plus the card's own padding made Empty 14 px taller than Ready (kpadopt6-calm/quote-states). In this footprint
+       the compass is 2.25 rem and the padding smaller. */
+    [data-theme='blueprint'] .kp-quote .kp-card__empty {
+        padding: 0.75rem 1rem 0.9rem;
+    }
+
+    [data-theme='blueprint'] .kp-quote .kp-card__empty::before {
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.4rem;
+    }
+
+    /* A waiting gallery tile has the final tile's shape (the package says so), but this theme's skeleton line gives every
+       skeleton a fixed block size and margins, so the tiles collapsed to a strip and Loading drew 70 px in a 456 px footprint
+       (kpadopt6-media/gallery-states). The tile is square again, as the picture it waits for. */
+    [data-theme='blueprint'] .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+        margin-block: 0;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
+    }
+

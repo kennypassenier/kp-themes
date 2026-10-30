@@ -1,0 +1,41 @@
+/* @part: bullet-rows: signature layer */
+    [data-theme='synthwave'] {
+        --kp-sw4-beat: var(--kp-sw-beat, 225ms);
+        --kp-sw4-stripe: linear-gradient(to right, var(--primary), var(--accent));
+        --kp-sw4-horizon: linear-gradient(90deg, transparent, var(--kp-pink-text) 50%, transparent);
+        --kp-sw4-sun: linear-gradient(var(--kp-sun-top), var(--kp-sun-bottom));
+        --kp-art-rule: var(--primary);
+        --kp-art-line: hsl(from var(--kp-pink-text) h s l / 0.35);
+        --kp-art-ink: var(--accent);
+        --kp-art-red: var(--destructive);
+        --kp-art-stroke: 1.5px;
+    }
+
+    /* A hollow neon ring before a title or a figure: the near-white core, the bloom in the tone's ink. Set --kp-sw4-tone
+       on the part and give it the class's ::before. */
+    [data-theme='synthwave'] :is(
+            .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure,
+            .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+            .kp-action-list--lead > li[data-kp-state='failed'] .kp-action-list__title,
+            .kp-action-list--lead > li[data-kp-state='warn'] .kp-action-list__title,
+            .kp-kv__row[data-kp-state='error'] > dt,
+            .kp-formrow[data-kp-state='error'] .kp-formrow__label,
+            .kp-statusrow[data-state='warn'] .kp-statusrow__title,
+            .kp-timer[data-kp-timer-state='done'] .kp-timer__name,
+            .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__name,
+            .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label
+        )::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        margin-inline-end: 0.45em;
+        border: 2px solid var(--kp-core);
+        border-radius: 50%;
+        box-shadow:
+            0 0 5px var(--kp-sw4-tone),
+            inset 0 0 4px var(--kp-sw4-tone);
+        vertical-align: 0.05em;
+        box-sizing: border-box;
+    }
+

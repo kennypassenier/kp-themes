@@ -1,0 +1,41 @@
+/* @part: dialog: signature layer */
+    [data-theme='blueprint'] .kp-dialog::after,
+    [data-theme='blueprint'] .kp-popover:not(.kp-tooltip)::after,
+    [data-theme='blueprint'] .kp-menu-button > .kp-menu::after,
+    [data-theme='blueprint'] .kp-combobox__list::after,
+    [data-theme='blueprint'] .kp-datepicker__panel::after,
+    [data-theme='blueprint'] .kp-toast::after,
+    [data-theme='blueprint'] :is(.kp-palette, .kp-tour, .kp-nav__menu)::after,
+    [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::after {
+        --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+        --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+        /* The construction line runs 9 px outside the panel only while the pen
+           draws (--kp-bp-ink 0). Inked, the line is gone (--kp-bp-tv 0) and the box
+           folds onto the panel: left at -9px it still counted as scrollable
+           overflow, so a panel with overflow `auto` scrolled by 9 px and a panel
+           near the window's edge made the page scroll (320 px: 329). */
+        /* The construction line runs 9 px outside the panel only while the pen
+           draws (--kp-bp-ink 0). Inked, the line is gone (--kp-bp-tv 0) and the box
+           folds onto the panel: left at -9px it still counted as scrollable
+           overflow, so a panel with overflow `auto` scrolled by 9 px and a panel
+           near the window's edge made the page scroll (320 px: 329). */
+        inset: calc(-9px * (1 - var(--kp-bp-ink)));
+        visibility: visible;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 8px,
+            right 8px top 8px,
+            right 8px bottom 8px,
+            left 8px bottom 8px;
+    }
+

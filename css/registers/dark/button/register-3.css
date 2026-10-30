@@ -1,0 +1,48 @@
+/* @part: button: register layer */
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    /* Not `--primary-active` any more [scope-100]: with the hover on its own
+       token (86%), that token (78%) sat 6.2 in OKLab distance from it, under
+       the States block's floor of 10, so a press barely showed. Fourteen
+       points under the hover ground instead. */
+    [data-theme='dark'] .kp-button--primary:active:not(:disabled) {
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+        border-color: hsl(from var(--primary-hover) h s calc(l - 14));
+    }
+
+    [data-theme='dark'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── The ground [scope-16] ─────────────────────────────────────────
+       An instrument's grid, and a pool of light under the pointer. Both
+       are on the page's own texture layer, so nothing here paints over a
+       control. The light is the one thing on the page that moves without
+       being touched, and it moves only because a hand does. */
+    [data-theme='dark'] body {
+        background-image:
+            radial-gradient(
+                46rem 34rem at calc(var(--kp-px) * 100%) calc(var(--kp-py) * 100%),
+                hsl(from var(--chart-1) h s l / 0.13),
+                transparent 62%
+            ),
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem)),
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem));
+        background-attachment: fixed;
+    }
+

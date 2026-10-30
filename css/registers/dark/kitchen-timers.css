@@ -1,0 +1,21 @@
+/* @part: kitchen-timers: signature layer */
+    /* ── Kitchen timers: a slot with the film on its edge; a timer that has ended is the coral film, never a lit plate ── */
+    [data-theme='dark'] .kp-timer {
+        --kp-timer-font: var(--theme-font-mono);
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--destructive);
+        box-shadow: inset 2px 0 0 var(--destructive);
+    }
+    [data-theme='dark'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+    }
+    [data-theme='dark'] .kp-timer__time,
+    [data-theme='dark'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+    }
+

@@ -1,0 +1,41 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* Identity mark: a section drawn on the sheet: a square frame in the name's own ink with its hatch inside, the
+       letters in the lettering; a round one is the compass's circle; the current one in a list has the amber witness
+       lines at its ends and the pen's frame round it; the glyph is a small registration square. */
+    [data-theme='blueprint'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-idmark--round {
+        border-radius: 50%;
+    }
+    [data-theme='blueprint'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) {
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-idmark-c) h s l / 0.5) 0 1px, transparent 1px 5px), transparent;
+    }
+    [data-theme='blueprint'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) > .kp-idmark__letters {
+        padding: 0 0.15em;
+        background: var(--background);
+    }
+    [data-theme='blueprint'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='blueprint'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow:
+            -6px 0 0 -5px var(--accent),
+            6px 0 0 -5px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-idmark-group > :is(.kp-idmark, .kp-idmark-group__more) {
+        box-shadow: 0 0 0 2px var(--background);
+    }
+    [data-theme='blueprint'] .kp-idmark-group__more {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+

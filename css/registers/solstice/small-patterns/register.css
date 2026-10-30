@@ -1,0 +1,77 @@
+/* @part: small-patterns: register layer; also table, diff, step-list, datatable */
+    [data-theme='solstice'] .kp-copyable__button {
+        border-radius: calc(var(--radius) - 3px);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
+    /* ── Data: table, datatable, diff, timeline, tree, reorder ─────────── */
+
+    [data-theme='solstice'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    [data-theme='solstice'] .kp-table th {
+        color: var(--muted-foreground);
+        font-weight: 600;
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='solstice'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-datatable {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-diff {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-diff__line,
+    [data-theme='solstice'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is a row of embers: a finished step keeps a warm halo. */
+    [data-theme='solstice'] .kp-steplist {
+        --kp-steplist-gap: 0.5rem;
+    }
+
+    [data-theme='solstice'] .kp-steplist__item[data-state='done'] .kp-steplist__mark {
+        box-shadow: 0 0 0 3px hsl(from var(--success) h s l / 0.25);
+    }
+
+    [data-theme='solstice'] .kp-timeline {
+        border-inline-start: 2px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-timeline__when {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+    }
+

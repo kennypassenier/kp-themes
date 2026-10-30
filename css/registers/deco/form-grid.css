@@ -1,0 +1,37 @@
+/* @part: form-grid: signature layer */
+    /* Form rows: the label in spaced capitals; changed and not saved, a gold lozenge stands in the gap before the row;
+       an error is the same lozenge in ruby. */
+    [data-theme='deco'] .kp-formrow__label {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-formrow__label > small {
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+    [data-theme='deco'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='deco'] .kp-formrow[data-kp-state='error']::before {
+        inset-block: auto;
+        inset-block-start: calc((var(--kp-control-height, 2.25rem) - 0.5rem) / 2);
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.1rem);
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-formrow--top[data-kp-changed]::before,
+    [data-theme='deco'] .kp-formrow--top[data-kp-state='error']::before {
+        inset-block-start: 0.5em;
+    }
+    [data-theme='deco'] .kp-formrow[data-kp-state='error']::before {
+        background: var(--destructive);
+    }
+    [data-theme='deco'] .kp-formrows--lines > .kp-formrow {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-formrow__lock::before {
+        border-radius: 0;
+    }
+

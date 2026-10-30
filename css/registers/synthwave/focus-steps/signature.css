@@ -1,0 +1,23 @@
+/* @part: focus-steps: signature layer */
+    /* ── Cook mode: the step rises over its horizon when it changes ── */
+    [data-theme='synthwave'] .kp-focus-steps__count,
+    [data-theme='synthwave'] .kp-focus-steps__amount,
+    [data-theme='synthwave'] .kp-focus-steps__needs-title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+    }
+    [data-theme='synthwave'] .kp-focus-steps__needs-title {
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-focus-steps__needs {
+        border-radius: 0;
+        border-block-start: 2px solid var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-focus-steps__step {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+

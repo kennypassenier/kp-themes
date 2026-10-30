@@ -1,0 +1,74 @@
+/* @part: button: signature layer; also key-figures, menu-button */
+    /* ── 8 · Pointing, focus, press (G13-G16) ───────────────────────────── */
+
+    /* A control is a sticker with its flat plum peel 3 px under it. Hover
+       lifts it 2 px on its peel (5 px) and its top-end corner curls into a
+       fold of its back; a press sticks it down flat (3 px, peel 0, the fold
+       flat); focus is the dashed plum line alone, 3 px out. All on the
+       landing in the contact time; the words never turn. A button in a
+       composite (a header, a menu, a tile, an alert, the alarm) is this
+       button (G13). */
+    [data-theme='pastel'] .kp-button {
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+        translate: 0 0;
+        rotate: none;
+    }
+
+    [data-theme='pastel'] .kp-button--ghost {
+        border: 1px solid var(--border-strong);
+    }
+
+    /* The fold: the ground where the corner lifted off, the sticker's back
+       below the crease. */
+    [data-theme='pastel'] :is(.kp-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle)::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: -1px;
+        inset-inline-end: -1px;
+        inline-size: 0.95rem;
+        block-size: 0.95rem;
+        border-start-end-radius: var(--kp-sig-pa-r-ctl);
+        border-end-start-radius: 0.4rem;
+        background: linear-gradient(calc(225deg - 90deg * (1 - var(--kp-sig-pa-dir))), var(--kp-sig-pa-ground) 0 50%, var(--muted) 50% 100%);
+        box-shadow: calc(-1px * var(--kp-sig-pa-dir)) 1px 0 hsl(from var(--border-strong) h s l / 0.7);
+        scale: 0;
+        transform-origin: calc(50% + 50% * var(--kp-sig-pa-dir)) 0;
+        pointer-events: none;
+    }
+
+    /* A key figure that is a link or a toggle folds at its plate's corner. */
+    [data-theme='pastel'] :is(a.kp-kpi, .kp-kpi--toggle)::after {
+        inline-size: calc(var(--kp-sig-pa-r-plate) + 0.3rem);
+        block-size: calc(var(--kp-sig-pa-r-plate) + 0.3rem);
+        border-start-end-radius: var(--kp-sig-pa-r-plate);
+        border-end-start-radius: 0.55rem;
+        border-start-start-radius: 0;
+        inset-inline-start: auto;
+        translate: none;
+        border-width: 0;
+        background: linear-gradient(calc(225deg - 90deg * (1 - var(--kp-sig-pa-dir))), var(--kp-sig-pa-ground) 0 50%, var(--muted) 50% 100%);
+        box-shadow: calc(-1px * var(--kp-sig-pa-dir)) 1px 0 hsl(from var(--border-strong) h s l / 0.7);
+    }
+
+    [data-theme='pastel'] :is(.kp-menu__item, a.kp-kpi, .kp-kpi--toggle) {
+        position: relative;
+    }
+
+    /* A key figure that acts is a sticker: its peel, not its pass. */
+    [data-theme='pastel'] :is(a.kp-kpi, .kp-kpi--toggle) {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+        translate: 0 0;
+    }
+
+    [data-theme='pastel'] .kp-menu__item {
+        border-radius: calc(var(--kp-sig-pa-r-ctl) * 0.8);
+    }
+
+    [data-theme='pastel'] .kp-menu__item::after {
+        border-start-end-radius: calc(var(--kp-sig-pa-r-ctl) * 0.8);
+        inline-size: 0.8rem;
+        block-size: 0.8rem;
+    }
+

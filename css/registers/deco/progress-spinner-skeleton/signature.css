@@ -1,0 +1,23 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='deco'] .kp-spinner {
+        --kp-sig-dur: 3600ms;
+        position: relative;
+        border: 3px double var(--primary);
+        border-radius: 50%;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='deco'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--primary) 0 1.6px, transparent 2px), repeating-conic-gradient(var(--primary) 0 8deg, transparent 8deg 30deg);
+        mask: radial-gradient(circle, black 0 2px, transparent 2px 3.5px, black 3.5px);
+    }
+

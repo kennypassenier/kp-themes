@@ -1,0 +1,50 @@
+/* @part: visual-timer: signature layer; also range-picker, countdown */
+    /* Visual timer and countdown: the timer is a cross-section of a trunk, its annual rings on the face and a knot for
+       the hub; the time left is the green wedge. The countdown is a kraft plate with the leaf corner. */
+    [data-theme='forest'] .kp-timer-disc__face {
+        border-width: 2px;
+        background: repeating-radial-gradient(circle closest-side, var(--card) 0 5px, hsl(from var(--border-strong) h s l / 0.35) 5px 6px);
+    }
+    [data-theme='forest'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--accent-foreground);
+        --kp-timer-disc-ring: transparent;
+    }
+    [data-theme='forest'] .kp-timer-disc__sector {
+        background: conic-gradient(
+            hsl(from var(--kp-timer-disc-fill, var(--primary)) h s l / 0.88) calc(var(--kp-timer-disc-left, 1) * 360deg),
+            transparent 0
+        );
+    }
+    [data-theme='forest'] .kp-timer-disc__hub {
+        background: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+    [data-theme='forest'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: none;
+        animation: none;
+    }
+    [data-theme='forest'] .kp-countdown {
+        --kp-countdown-ring: transparent;
+        position: relative;
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] :is(.kp-timer-disc__status, .kp-countdown__status, .kp-timer-disc__caption, .kp-countdown__name) {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-timer-disc__face {
+        position: relative;
+    }
+
+    /* Range picker: the custom window in force wears the solid green ring of a pick; an invalid time the red's dashed one. */
+    [data-theme='forest'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='forest'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-range__label {
+        font-style: italic;
+    }
+

@@ -1,0 +1,54 @@
+/* @part: week-agenda: signature layer; also run-timeline */
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run) {
+        border: 2px solid var(--foreground);
+        box-shadow: 2px 2px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run):is(button):hover {
+        translate: -1px -1px;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run):is(button):active {
+        translate: 2px 2px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-week__pill[data-kp-state='next'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-week__pill:is([data-kp-state='reference'], [data-kp-state='off'], [data-kp-state='skipped']) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-week__now::before {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        --kp-gantt-fill: var(--accent);
+        --kp-gantt-ink: var(--accent-foreground);
+        background-image: none;
+        box-shadow:
+            inset -0.5rem 0 0 var(--secondary),
+            2px 2px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='running'] {
+        animation: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-start-color: var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__head, .kp-gantt__tick, .kp-gantt__lane) {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run, .kp-heat__cell, .kp-matrix__cell) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-fall),
+                transform var(--fx-duration) var(--kp-sig-br-fall),
+                box-shadow var(--fx-duration) var(--kp-sig-br-fall);
+        }
+    }

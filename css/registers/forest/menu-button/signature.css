@@ -1,0 +1,28 @@
+/* @part: menu-button: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-theme-menu__list
+            ) {
+            animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) both;
+        }
+
+        [data-theme='forest']
+            :is(
+                .kp-menu-button > .kp-menu[data-kp-menu-side='above'],
+                .kp-combobox__list[data-kp-overlay-side='above']:popover-open,
+                .kp-datepicker__panel[data-kp-overlay-side='above']:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ) {
+            animation-name: kp-sig-forest-grow;
+        }
+
+        [data-theme='forest'] .kp-combobox__list > .kp-combobox__option,
+        [data-theme='forest'] .kp-combobox__list > * {
+            animation: none !important;
+        }
+    }
+

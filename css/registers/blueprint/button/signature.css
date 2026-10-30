@@ -1,0 +1,134 @@
+/* @part: button: signature layer */
+    /* Pointing, focus and press on a control [hover, focus, press, composites].
+       Pointing sets two amber witness lines at the control's ends, overhanging its
+       top and running on below its foot to a ruler with a pointer on each end:
+       the control is read on a scale (--kp-bp-hv the lines, --kp-bp-sv the
+       scale). Focus keeps DI2's two-channel ring and the lines. A press takes
+       the dimension: the lines run on further, the scale gives way to a dimension
+       with a slash at each end, drawn in two units below the part, outside it
+       (--kp-bp-dv); the part's own ground never changes. The size is lettered on it
+       (see the dimension's own rule below). */
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button) {
+        position: relative;
+        --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+        --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
+        --kp-bp-n3: hsl(from var(--accent) h s l / var(--kp-bp-dv));
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button)::before {
+        content: '';
+        position: absolute;
+        inset-block: -0.4rem -1.4rem;
+        inset-inline: calc(var(--kp-witness-gap, 0.35rem) - 4px);
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+            linear-gradient(var(--kp-bp-n2), var(--kp-bp-n2)), repeating-linear-gradient(90deg, var(--kp-bp-n2) 0 1px, transparent 1px 5px),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0);
+        background-size:
+            1px calc(100% - 0.8rem * (1 - var(--kp-bp-dv))),
+            1px calc(100% - 0.8rem * (1 - var(--kp-bp-dv))),
+            calc(100% - 8px) 1px,
+            calc(100% - 8px) 4px,
+            9px 5px,
+            9px 5px;
+        background-position:
+            4px top,
+            calc(100% - 4px) top,
+            4px calc(100% - 0.8rem - 5px),
+            4px calc(100% - 0.8rem - 6px),
+            left bottom 0.8rem,
+            right bottom 0.8rem;
+    }
+
+    /* The dimension: a slash at each end and a line between them, broken in the
+       middle for the size, lettered in the draughtsman's hand (mono capitals
+       sloped 15 degrees, as every label of this sheet). The size is the part's
+       measured width in whole pixels, written as data-kp-press-size by
+       js/effects.js for a theme that declares --kp-press: size (CSS cannot print
+       a measured length). The box is 13 px high so the lettering is not cut by
+       the reveal's clip; its centre stays where the 7 px dimension stood. Until
+       a press has written the size (no module, or never pressed) the line runs
+       unbroken, so nothing half-lettered ever shows. */
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button)::after {
+        --kp-bp-gap: calc(4ch + 0.3rem);
+        content: attr(data-kp-press-size);
+        position: absolute;
+        inset-block-end: calc(-1.1rem - 10px);
+        block-size: 13px;
+        inset-inline: calc(var(--kp-witness-gap, 0.35rem) - 3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        clip-path: inset(0 calc((1 - var(--kp-bp-dv)) * 100%) 0 0);
+        color: var(--kp-bp-n3);
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        font-style: oblique 15deg;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-transform: none;
+        white-space: nowrap;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-n3) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-n3) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(var(--kp-bp-n3), var(--kp-bp-n3)), linear-gradient(var(--kp-bp-n3), var(--kp-bp-n3));
+        background-size:
+            7px 7px,
+            7px 7px,
+            max(0px, calc(50% - 3px - var(--kp-bp-gap) / 2)) 1px,
+            max(0px, calc(50% - 3px - var(--kp-bp-gap) / 2)) 1px;
+        background-position:
+            left center,
+            right center,
+            3px center,
+            right 3px center;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):not([data-kp-press-size])::after {
+        --kp-bp-gap: 0px;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):dir(rtl)::after {
+        clip-path: inset(0 0 0 calc((1 - var(--kp-bp-dv)) * 100%));
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):hover:not(:disabled) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):focus-visible {
+        --kp-bp-hv: 1;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):active:not(:disabled) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 0;
+        --kp-bp-dv: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] :is(.kp-button, .kp-icon-button) {
+            transition:
+                --kp-bp-hv var(--fx-duration) var(--fx-ease),
+                --kp-bp-sv var(--fx-duration) var(--fx-ease),
+                --kp-bp-dv calc(2 * var(--fx-duration)) var(--fx-ease);
+        }
+    }
+

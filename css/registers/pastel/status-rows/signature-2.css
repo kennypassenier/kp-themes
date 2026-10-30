@@ -1,0 +1,26 @@
+/* @part: status-rows: signature layer */
+    /* A check that passes with a reservation: a sticker on the warning's plate with its own peel, as the failed row's
+       reason is on the red's. The fix, written out, is a taped-in note: mint paper in a dashed edge. */
+    [data-theme='pastel'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        box-shadow: 0 2px 0 hsl(from var(--warning) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='warn'] .kp-statusrow__detail {
+        justify-self: start;
+        margin-block-start: 0.2rem;
+        padding: 0 0.45rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--warning);
+        color: var(--warning-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--warning) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-statusrow__fix {
+        padding: 0.25rem 0.7rem;
+        border: 2px dashed hsl(from var(--accent-foreground) h s l / 0.45);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: color-mix(in oklab, var(--accent) 45%, var(--card));
+        color: var(--foreground);
+    }
+

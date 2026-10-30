@@ -1,0 +1,33 @@
+/* @part: progress-spinner-skeleton: signature layer; also sidenav */
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='cyberpunk'] .kp-progressbar {
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at this bar's size: dash pitches, lane
+           offsets and stream travel are counted in it so the bar grows as one
+           drawing; 1-2px rules and frame lines stay the theme's line weight. */
+        --kp-cp-px: calc(1px * var(--kp-progressbar-scale, 1));
+        --kp-cp-void: var(--sidebar-background);
+        --kp-cp-cut: var(--kp-progressbar-height);
+    }
+
+    /* Progress: the fill and its head advance in three ticks of 60 ms (the package's knobs). */
+    [data-theme='cyberpunk'] .kp-progressbar {
+        --kp-progressbar-duration: 180ms;
+        --kp-progressbar-ease: steps(3, jump-end);
+    }
+
+    /* Contact on the parts that are not a button or a field [G1, G4]: three ticks of 60 ms,
+       never the register's smooth curve. A group of the side navigation unfolds and folds, its
+       chevron turns, on the same three ticks, the fold being the unfold's jump-start mirror; the
+       panel's own slide reads the token (js/sidenav.js turns it round for the close). */
+    [data-theme='cyberpunk'] .kp-sidenav {
+        --kp-sidenav-ease: steps(3, jump-end);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__category:not([data-kp-sidenav-expanded]) > .kp-sidenav__submenu,
+    [data-theme='cyberpunk'] .kp-sidenav__category-toggle[aria-expanded='false']::after {
+        transition-timing-function: steps(3, jump-start);
+    }
+

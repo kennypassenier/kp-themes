@@ -1,0 +1,6 @@
+/* @part: connection-path: signature layer */
+    /* The tag's "// " lead is a flex item of the badge, so a rule name that did not fit its column wrapped under it and the
+       lead stood alone on the first line. As a block the lead is part of the text and the tag wraps like words do. */
+    [data-theme='cyberpunk'] .kp-trace__rule {
+        display: block;
+    }

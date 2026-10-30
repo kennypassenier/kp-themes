@@ -1,0 +1,77 @@
+/* @part: alert: register layer; also master-detail, movable-grid */
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='brutalism'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--card);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-alert[class*='kp-alert--'] {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    /* A warning or a failure is taped off [G13]: a band of 45 degree hazard
+       stripes along its foot, 0.5 rem, in the tone's paint and the ink. The
+       tape means danger and nothing else [G16]. */
+    [data-theme='brutalism'] .kp-alert--warning,
+    [data-theme='brutalism'] .kp-alert--destructive {
+        --kp-sig-br-tone: var(--warning);
+        padding-block-end: calc(0.75rem + 0.5rem);
+        background-image: repeating-linear-gradient(45deg, var(--kp-sig-br-tone) 0 6px, var(--border-strong) 6px 12px);
+        background-position: 0 100%;
+        background-size: 100% 0.5rem;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='brutalism'] .kp-alert--destructive {
+        --kp-sig-br-tone: var(--destructive);
+    }
+
+    [data-theme='brutalism'] .kp-alert__label {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-grid__tile,
+    [data-theme='brutalism'] .kp-split__pane {
+        background: var(--card);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-grid {
+        gap: 1.25rem;
+    }
+
+    [data-theme='brutalism'] .kp-split {
+        gap: 1rem;
+    }
+
+    [data-theme='brutalism'] .kp-split__separator {
+        background: var(--border-strong);
+        inline-size: var(--kp-line);
+    }
+
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='brutalism'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: var(--kp-line);
+    }
+

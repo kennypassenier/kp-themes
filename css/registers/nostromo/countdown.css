@@ -1,0 +1,49 @@
+/* @part: countdown: signature layer */
+    /* ── Countdown: a named timer in digits on the screen ── */
+    [data-theme='nostromo'] .kp-countdown {
+        --kp-countdown-ink: var(--kp-no-phosphor);
+        --kp-countdown-size: 2.75rem;
+        --kp-countdown-ring: var(--destructive);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-countdown__name,
+    [data-theme='nostromo'] .kp-timer-disc__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-countdown__status,
+    [data-theme='nostromo'] .kp-timer-disc__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-countdown__time {
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        text-shadow: 0 0 8px hsl(from var(--sidebar-primary) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--kp-no-dim);
+        text-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+        animation: none;
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status,
+    [data-theme='nostromo'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        padding-inline: 0.4rem;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+

@@ -1,0 +1,32 @@
+/* @part: checklist-sink: signature layer */
+    /* ── Checklist: a row turns its tube up when pointed at; a ticked item sinks behind its horizon ── */
+    [data-theme='synthwave'] .kp-checklist__row {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-checklist__row:hover .kp-checklist__label {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-checklist__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-checklist__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-checklist__count,
+    [data-theme='synthwave'] .kp-checklist__status {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-checklist__item {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+

@@ -1,0 +1,21 @@
+/* @part: navbar: signature layer */
+    [data-theme='synthwave'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        padding-block-end: 2px;
+        text-decoration: none;
+        background: var(--kp-stripe) left bottom / 100% 2px no-repeat;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='synthwave']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        background-size: 100% 3px;
+        text-shadow: var(--kp-tube-pink);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='synthwave'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+            text-decoration: underline;
+        }
+    }
+

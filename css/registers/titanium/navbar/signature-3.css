@@ -1,0 +1,43 @@
+/* @part: navbar: signature layer; also motion */
+    /* A panel uncovered from its top edge down; its shadow keeps room at the sides
+       and the foot. */
+    @keyframes kp-sig-titanium-panel-cut {
+        from {
+            clip-path: inset(0 -3rem 100% -3rem);
+        }
+
+        to {
+            clip-path: inset(0 -3rem -3rem -3rem);
+        }
+    }
+
+    /* The same cut and cutter under second names, for a close that plays them
+       backwards and must restart (lesson 8). */
+    @keyframes kp-sig-titanium-panel-cut-back {
+        from {
+            clip-path: inset(0 -3rem 100% -3rem);
+        }
+
+        to {
+            clip-path: inset(0 -3rem -3rem -3rem);
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-cutter-back {
+        from {
+            opacity: 1;
+            transform: translateY(-100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-titanium-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+

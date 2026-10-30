@@ -1,0 +1,55 @@
+/* @part: card: register layer; also popover, dialog */
+    /* ── Cards, surfaces and containers ───────────────────────────────── */
+
+    /* The dossier: a bare .kp-card gets it, no data-slot needed (TH133). */
+    [data-theme='cyberpunk'] .kp-card {
+        border-radius: 0;
+        border: 1px solid var(--kp-hairline);
+        box-shadow: none;
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    /* A card that carries an emphasis reveal wears the file stamp, with the
+       label the consumer wrote from js/strings.js [AR35, KT5]: no label, no
+       stamp — a word in CSS content is a user-visible string no gate reads. */
+    [data-theme='cyberpunk'] .kp-card[data-kp-reveal='emphasis'][data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        top: 0.9rem;
+        right: 1.4rem;
+        font-family: var(--kp-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        color: var(--link);
+        border: 1px solid var(--link);
+        padding: 0.15rem 0.5rem;
+        transform: rotate(-4deg);
+    }
+
+    [data-theme='cyberpunk'] .kp-popover,
+    [data-theme='cyberpunk'] .kp-dialog,
+    [data-theme='cyberpunk'] .kp-menu,
+    [data-theme='cyberpunk'] .kp-tooltip,
+    [data-theme='cyberpunk'] .kp-toast,
+    [data-theme='cyberpunk'] .kp-alert {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-popover {
+        border-color: var(--kp-hairline);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog {
+        border: 1px solid var(--primary);
+        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    }
+

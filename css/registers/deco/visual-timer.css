@@ -1,0 +1,81 @@
+/* @part: visual-timer: signature layer; also countdown */
+    /* Visual timer and countdown. */
+    [data-theme='deco'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--kp-sig-deco-gold-lt);
+        --kp-timer-disc-marks: hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-timer-disc__face {
+        border: 1px solid hsl(from var(--primary) h s l / 0.8);
+        background-color: var(--kp-sig-deco-lac);
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.5),
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='deco'] .kp-timer-disc__sector {
+        background: conic-gradient(var(--kp-sig-deco-gold-lt) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        box-shadow: 0 0 0 1px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-timer-disc__hub {
+        inset: 45%;
+        border: 2px solid var(--kp-sig-deco-lac);
+        border-radius: 0;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-hi);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+    [data-theme='deco'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px var(--kp-sig-deco-gold-hi),
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px var(--kp-sig-deco-gold-hi);
+    }
+    [data-theme='deco'] :is(.kp-timer-disc__caption, .kp-countdown__name) {
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-countdown {
+        --kp-countdown-ink: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-countdown__time {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-countdown__colon {
+        color: var(--primary);
+    }
+    [data-theme='deco'] .kp-countdown[data-kp-countdown-state='ended'] {
+        outline: 3px double var(--kp-sig-deco-gold-hi);
+        outline-offset: 3px;
+    }
+    [data-theme='deco'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__time {
+        color: var(--kp-sig-deco-gold-hi);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        [data-theme='deco'] .kp-countdown[data-kp-countdown-state='ended'] {
+            animation: kp-sig-deco-k4-flare calc(var(--kp-sig-deco-loop) * 5 / 12) linear 1;
+        }
+    }
+    @keyframes kp-sig-deco-k4-flare {
+        0% {
+            filter: drop-shadow(0 0 0 transparent);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        30% {
+            filter: drop-shadow(0 0 0.5em var(--primary));
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+

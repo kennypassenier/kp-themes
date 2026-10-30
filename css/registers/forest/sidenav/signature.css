@@ -1,0 +1,86 @@
+/* @part: sidenav: signature layer */
+    /* The side navigation grows out of its edge like the drawer, far side
+       first, clipped at that edge, in one growth (Kenny, overlays: "each
+       grows like its family"), and goes back as that growth reversed; its
+       groups unfold in the same growth time as the accordion (pairs). */
+    [data-theme='forest'] .kp-sidenav {
+        --kp-sidenav-duration: var(--kp-sig-fo-time);
+        --kp-sidenav-ease: var(--kp-sig-fo-grow);
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav:not([data-kp-sidenav-side='end']):dir(ltr), .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        ) {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 100%);
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav[data-kp-sidenav-side='end']:dir(ltr), .kp-sidenav:not([data-kp-sidenav-side='end']):dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        ) {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav:not([data-kp-sidenav-side='end']):dir(ltr), .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        )[data-kp-sidenav-open='true'] {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0);
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav[data-kp-sidenav-side='end']:dir(ltr), .kp-sidenav:not([data-kp-sidenav-side='end']):dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        )[data-kp-sidenav-open='true'] {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    /* The panel slides with everything in it: its clip opens when the opening
+       starts and closes when the closing ends, so no content is cut away from
+       its own edge on the way (Kenny, round 5: "de content verdwijnt instant
+       als het sluiten begint, de content moet mee naar links verschuiven"). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                clip-path 0s linear,
+                inline-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+        }
+
+        [data-theme='forest']
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
+                [data-kp-sidenav-open='false'],
+                [data-kp-sidenav-slim-collapsed]:not(
+                    [data-kp-sidenav-peek='open'],
+                    [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+                )
+            ) {
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                clip-path 0s linear var(--kp-sig-fo-time),
+                inline-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+        }
+
+        /* Every backdrop comes with its plate, on the growth curve (F-25):
+           the side navigation's, the dialog's and the drawer's. */
+        [data-theme='forest'] .kp-sidenav__backdrop {
+            animation: kp-sig-forest-fade var(--kp-sig-fo-time) var(--kp-sig-fo-grow) both;
+        }
+
+        [data-theme='forest'] .kp-sidenav__backdrop[data-kp-reversing='play'] {
+            animation: kp-sig-forest-fade-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both !important;
+        }
+
+        /* The alarm's ground is transparent, but its backdrop still carries the
+           fade, so js/motion.js plays the close as that fade reversed (audit
+           row 19: it had fallen back to its own 1000 ms ease-in). */
+        [data-theme='forest'] :is(.kp-dialog, .kp-alarm)[open]::backdrop {
+            animation: kp-sig-forest-fade var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) backwards;
+        }
+    }
+

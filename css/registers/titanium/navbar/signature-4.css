@@ -1,0 +1,21 @@
+/* @part: navbar: signature layer */
+    [data-theme='titanium'] .kp-nav__sep {
+        inline-size: 3px;
+        border-inline-start: 0;
+        border-radius: 2px;
+        background: hsl(from var(--background) h s calc(l * 0.7));
+        box-shadow:
+            inset 1px 0 0 hsl(from var(--foreground) h s l / 0.1),
+            1px 0 0 hsl(from var(--foreground) h s l / 0.07);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 3px;
+            border-block-start: 0;
+            box-shadow:
+                inset 0 1px 0 hsl(from var(--foreground) h s l / 0.1),
+                0 1px 0 hsl(from var(--foreground) h s l / 0.07);
+        }
+    }
+

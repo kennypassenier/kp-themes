@@ -1,0 +1,22 @@
+/* @part: focus-steps: signature layer */
+    /* ── Cook mode: the step is laid by the pass when it changes; the ingredients are a panel with the film at its start ── */
+    [data-theme='dark'] .kp-focus-steps__count,
+    [data-theme='dark'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-focus-steps__needs {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+        box-shadow: inset 2px 0 0 var(--chart-1);
+    }
+    [data-theme='dark'] .kp-focus-steps__needs-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-focus-steps__step {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+

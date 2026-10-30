@@ -1,0 +1,56 @@
+/* @part: upload-wizard: signature layer */
+    [data-theme='synthwave'] .kp-wizard__steps {
+        gap: 0.5rem 0;
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.25rem;
+        block-size: 2px;
+        margin-inline: 0.2rem 0.45rem;
+        background: var(--kp-stripe);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps li[data-state='current']::before {
+        border: 0;
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 62%,
+                hsl(from var(--sidebar-background) h s l / 0.55) 62% 68%,
+                transparent 68% 78%,
+                hsl(from var(--sidebar-background) h s l / 0.55) 78% 84%,
+                transparent 84%
+            ),
+            var(--kp-sig-sw-sun);
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.5);
+        color: var(--sidebar-background);
+        font-weight: 700;
+    }
+

@@ -1,0 +1,46 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component; also navbar */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). A headline's
+       words are laid by the pass (kp-sig-dark-lay, below): a word's box is
+       revealed from the start edge at an even pace and stops dead at the end
+       (G1); nothing blurs, nothing splits into two wavelengths (G19). */
+    /* Scroll-bound, not time-based: the browser scrubs this by the
+       heading's own position, not a clock, so it cannot free-run and
+       cannot loop — see gates/check-motion.mjs's OUT_OF_SCOPE entry. */
+    @keyframes kp-ignite {
+        100% {
+            color: var(--primary);
+            text-decoration-color: var(--border-strong);
+        }
+    }
+
+    /* The rule draws itself from the leading edge [scope-16]. Scroll-bound
+       like the ignite above it: the browser scrubs this by the heading's
+       own position, so it cannot free-run and cannot loop. */
+    @keyframes kp-draw {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the row a step lighter than the page it sits on. */
+    [data-theme='dark'] .kp-marquee {
+        border-block: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+        background: color-mix(in srgb, var(--card) 60%, var(--background));
+        --kp-marquee: 50000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='dark'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='dark'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+    }
+

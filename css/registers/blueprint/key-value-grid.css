@@ -1,0 +1,28 @@
+/* @part: key-value-grid: signature layer */
+    [data-theme='blueprint'] :is(.kp-kv--lines > .kp-kv__row, .kp-formrows--lines > .kp-formrow) {
+        border-block-end: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left bottom / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 8px) left bottom / 100% 4px no-repeat;
+    }
+    [data-theme='blueprint'] :is(.kp-kv--lines > .kp-kv__row:last-child, .kp-formrows--lines > .kp-formrow:last-child) {
+        background: none;
+    }
+    [data-theme='blueprint'] .kp-kv {
+        --kp-glyph-changed: '\00a0\25B3';
+    }
+    [data-theme='blueprint'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--accent);
+    }
+    [data-theme='blueprint'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='blueprint'] .kp-formrow[data-kp-state='error']::before {
+        content: '\25B2';
+        inset-block: auto;
+        inset-block-start: 0.1em;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.35rem);
+        inline-size: auto;
+        background: none;
+        color: var(--destructive);
+        font-size: 0.7em;
+        line-height: 1.5;
+    }

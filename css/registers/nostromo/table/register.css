@@ -1,0 +1,73 @@
+/* @part: table: register layer; also datatable, step-list, diff */
+    /* ── Data: table, datatable, diff, timeline, tree, reorder ────────── */
+
+    [data-theme='nostromo'] .kp-table {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='nostromo'] .kp-table th {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--muted-foreground);
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='nostromo'] .kp-table tbody tr:hover {
+        background: var(--card);
+    }
+
+    [data-theme='nostromo'] .kp-datatable {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='nostromo'] .kp-datatable__sort[aria-sort] {
+        color: var(--selected);
+    }
+
+    [data-theme='nostromo'] .kp-datatable__status,
+    [data-theme='nostromo'] .kp-datatable__page {
+        color: var(--muted-foreground);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='nostromo'] .kp-diff {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] .kp-diff__line,
+    [data-theme='nostromo'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is an indicator panel: dark rows, small square lamps,
+       readout times, and the running row lit from inside. */
+    [data-theme='nostromo'] .kp-steplist {
+        --kp-steplist-mark-radius: 2px;
+    }
+
+    [data-theme='nostromo'] .kp-steplist__item {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-steplist__item[data-state='running'] {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+    }
+

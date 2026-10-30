@@ -1,0 +1,341 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also sidenav */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium']
+            :is(
+                .kp-popover[popover]:popover-open,
+                .kp-menu-button > .kp-menu:not([hidden]),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ):not(.kp-tooltip) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-popover[popover]:popover-open,
+                .kp-menu-button > .kp-menu:not([hidden]),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ):not(.kp-tooltip)::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        /* The list is cut open as its own entrance, not as the leave turned around. */
+        [data-theme='titanium'] .kp-combobox__list {
+            --kp-open: own;
+        }
+
+        /* The palette and the shortcuts sheet are dialogs: the dialog's time
+           (js/motion.js plays two thirds of it, and its close backwards). */
+        [data-theme='titanium'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: 240ms;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-dur) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] :is(.kp-palette, .kp-shortcuts)::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur) var(--kp-sig-ti-ease);
+        }
+
+        /* The tour: the card is cut open; the dim grows out of the target and the
+           ring is drawn in on the same cut, and css/components.css takes both back
+           on the curve turned round. They came in 160, 250 and 350 ms and went in
+           1000. `backwards`, not `both` (lesson 21). */
+        [data-theme='titanium'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-tour[open]:not([data-kp-tour-stepping])::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] [data-kp-tour-target] {
+            animation: kp-sig-titanium-tour-ring var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+            transition:
+                box-shadow var(--kp-sig-ti-panel) var(--kp-sig-ti-ease),
+                outline-color var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+            transition:
+                left var(--kp-sig-ti-panel) var(--kp-sig-ti-ease),
+                top var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-tour[data-kp-tour-stepping]::after {
+            animation: none;
+        }
+
+        /* The side navigation slides in the cut's band, with its backdrop: the
+           panel ran 60 ms (the contact band, `--fx-duration`) under a 220 ms
+           backdrop, so the close was not the open reversed (52 % off). */
+        [data-theme='titanium'] .kp-sidenav {
+            --kp-sidenav-duration: var(--kp-sig-ti-panel);
+        }
+
+        [data-theme='titanium'] .kp-sidenav__backdrop {
+            animation-duration: var(--kp-sig-ti-panel);
+        }
+
+        /* The backdrop is a shade over the page, not a part that arrives: js/motion.js let it
+           arrive as the theme's leave played backwards, which ran the heat colours (gold, violet,
+           blue) over the whole frame beside the panel and dropped the shade in at the end
+           (review round 1, 2026-10-13: "a splash of colour next to the bar, filling the parent
+           element, looked a bit like the loading colours"). It keeps the shade it opens with
+           while those marks are on it, so it comes with the panel's slide and goes as that
+           backwards (js/sidenav.js), the same animation both ways. */
+        [data-theme='titanium'] .kp-sidenav__backdrop:is([data-kp-leaving], [data-kp-arriving]) {
+            overflow: visible;
+            animation: kp-sidenav-backdrop var(--kp-sig-ti-panel) var(--kp-sidenav-ease, var(--fx-ease, ease)) both;
+        }
+
+        [data-theme='titanium'] .kp-sidenav__backdrop:is([data-kp-leaving], [data-kp-arriving])::after {
+            content: none;
+        }
+
+        /* The calendar's busy layers arrive as the leave played backwards and cool
+           away as they go: js/calendar.js marks a layer `[data-kp-leaving]` while
+           its state goes (`--kp-calendar-busy-leave: hold`), and the rules below
+           keep it drawn through the 400 ms of that leave. They came in by a 60 ms
+           fade and vanished at once. */
+        [data-theme='titanium'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='titanium']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]),
+        [data-theme='titanium'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            animation: kp-sig-titanium-leave-in 400ms var(--kp-sig-ti-ease) reverse backwards;
+        }
+
+        [data-theme='titanium'] .kp-calendar--busy-whole > .kp-calendar__busy {
+            position: relative;
+        }
+
+        [data-theme='titanium']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving])::after,
+        [data-theme='titanium']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(110deg, var(--warning-foreground), var(--chart-2), var(--chart-1), var(--chart-3));
+            background-size: 300% 100%;
+            mix-blend-mode: color;
+            opacity: 0;
+            animation: kp-sig-titanium-leave-2-in 400ms var(--kp-sig-ti-ease) reverse backwards;
+        }
+
+        [data-theme='titanium'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='titanium'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='titanium'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The header: the dropdown and the mega menu are cut open as a menu is and
+           cut shut as that played backwards (a second keyframes name, so the close
+           restarts); the bar holds the panel through its close. */
+        [data-theme='titanium'] .kp-nav__menu:not(.kp-nav__menu--wide) {
+            transition: none;
+        }
+
+        [data-theme='titanium'] .kp-nav__menu--wide {
+            --kp-sig-ti-hold: 0;
+            transition: --kp-sig-ti-hold var(--kp-sig-ti-panel) linear;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-ti-hold: 1;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            )::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links
+                    > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                    > .kp-nav__menu--wide
+            ) {
+            animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links
+                    > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                    > .kp-nav__menu--wide
+            )::after {
+            animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        /* The phone panel is cut open under the bar the same way (it had no motion). */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+                position: relative;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-block-end: 2px solid var(--chart-2);
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links::after {
+                animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+            }
+
+            /* Inside the open panel the lists are its own rows: no cut of their own. */
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu.kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu.kp-nav__menu::after {
+                content: none;
+            }
+        }
+    }
+
+    /* ── The side navigation and the alarm are cut open as titanium's dialog is
+       [G3; Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       uncovered from the top edge down on the theme curve, the cutter line in the
+       second oxide (`--chart-2`) running ahead of the cut; the close is that cut
+       played backwards. ── */
+    [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block-end: 2px solid var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The side navigation that slides over or pushes the page no longer
+           slides (the slide was the package's, not the cut): it stands in its
+           place from the opening's first frame, is cut open in the panel's band
+           (240 ms), is cut shut backwards and only then goes back off screen;
+           a pushed page moves with those two frames. */
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-ti-panel);
+            animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false']::after {
+            animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-ti-panel),
+                margin-inline-end 0s linear var(--kp-sig-ti-panel),
+                padding-inline-start 0s linear var(--kp-sig-ti-panel),
+                padding-inline-end 0s linear var(--kp-sig-ti-panel);
+        }
+
+        /* The alarm: the whole screen cut open from the top on the dialog's
+           time, the cutter line drawn by the scan layer's ::after (titanium
+           does not sweep the scan). The package's rise, scale and fades of the
+           panel, the headline and the reason are retired; js/motion.js keeps
+           the cut and plays it backwards to close. */
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            block-size: auto;
+            border-block-end: 2px solid var(--chart-2);
+            background: none;
+            opacity: 0;
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+

@@ -1,0 +1,81 @@
+/* @part: page-header: register layer; also badge, small-patterns, progress-spinner-skeleton */
+    /* The footer: the ink, the paper, the yellow. */
+    [data-theme='brutalism'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-footer h4 {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--sidebar-primary);
+    }
+
+    [data-theme='brutalism'] .kp-footer a {
+        color: var(--sidebar-foreground);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-bottom: var(--kp-line) solid transparent;
+    }
+
+    [data-theme='brutalism'] .kp-footer a:hover,
+    [data-theme='brutalism'] .kp-footer a:focus-visible {
+        color: var(--sidebar-primary);
+        border-bottom-color: var(--sidebar-primary);
+    }
+
+    [data-theme='brutalism'] .kp-footer .microlabel {
+        background: none;
+        box-shadow: none;
+        padding: 0.8rem 0 0;
+        border-top: var(--kp-line) solid var(--sidebar-primary);
+        color: var(--sidebar-foreground);
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        display: block;
+    }
+
+    /* ── Badges, tags, status: candy plates with black ink ────────────── */
+
+    [data-theme='brutalism'] .kp-badge,
+    [data-theme='brutalism'] .kp-tag {
+        border-radius: 0;
+        border: 2px solid var(--border-strong);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-health {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-health__dot {
+        border-radius: 0;
+        border: 2px solid var(--border-strong);
+    }
+
+    /* A skeleton is a well, the place the reading will stand [G10]: white in
+       the 2 px ink line on a 3 px shadow; the lintel is hoisted in it in
+       kp.signature. */
+    [data-theme='brutalism'] .kp-skeleton {
+        background-color: var(--card);
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-error {
+        color: var(--destructive);
+        font-weight: 700;
+    }
+

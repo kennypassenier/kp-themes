@@ -1,0 +1,65 @@
+/* @part: menu-button: register layer; also date-picker, toast, time-chart */
+    [data-theme='forest']
+        :where(
+            .kp-menu__item,
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ):is(:hover, :active):not(:disabled, [aria-disabled='true'], :focus-visible) {
+        outline-offset: -3px;
+    }
+
+    /* The row's ground: the menu entry's kraft, its words in their own ink. */
+    [data-theme='forest']
+        :where(
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ):hover:not([aria-disabled='true']) {
+        background: var(--secondary);
+    }
+
+    [data-theme='forest']
+        :where(
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle
+        ):hover:not([aria-disabled='true'], [aria-current]) {
+        color: var(--foreground);
+    }
+
+    /* A small part shows the blaze alone, no grey ground and no grey edge. */
+    /* The day grid keeps the height of a six-week month: a month of four or
+       five weeks shortened the panel under the pointer, so the field below it
+       moved on every month. */
+    [data-theme='forest'] .kp-datepicker__grid[data-kp-view='days'] {
+        min-block-size: 15.125rem;
+        align-content: start;
+    }
+
+    [data-theme='forest'] .kp-datepicker__day:hover:not([aria-selected='true']) {
+        background: none;
+    }
+
+    [data-theme='forest'] :is(.kp-chart__source, .kp-chart__show-all):hover:not([aria-pressed='true']) {
+        border-color: transparent;
+    }
+
+    /* On a toast's own plate the green would not read: the blaze takes the
+       plate's ink. */
+    [data-theme='forest'] .kp-toast :is(.kp-button, .kp-icon-button):is(:hover, :active):not(:disabled) {
+        outline-color: currentColor;
+    }
+

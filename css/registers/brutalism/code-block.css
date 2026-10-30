@@ -1,0 +1,66 @@
+/* @part: code-block: signature layer; also page-header, motion */
+    /* The code block: a slab with a yellow head like the dialog's band; keys are marked in lavender paint, the second
+       sheet; a failed read is taped off. */
+    [data-theme='brutalism'] .kp-code {
+        --kp-code-key: var(--foreground);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-code__head {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-code__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-code__meta {
+        color: inherit;
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-code__body,
+    [data-theme='brutalism'] .kp-code__note {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-code__key {
+        padding-inline: 0.15em;
+        background: var(--accent);
+        color: var(--accent-foreground, var(--foreground));
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-code__foot {
+        border-block-start: 2px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-code[data-kp-state='error'] .kp-code__note {
+        padding-block-end: calc(var(--kp-space-md, 0.75rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--muted);
+    }
+
+    /* The header line. */
+    [data-theme='brutalism'] .kp-page-header__line > .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-page-header__meta {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+
+    /* A number that ticks lands on its yellow offset, 3 px down-right of itself, and the offset is struck off in one cut
+       when the count ends (G9). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-kp-tick][data-kp-tick-state='running'] {
+            filter: drop-shadow(3px 3px 0 var(--secondary));
+        }
+    }

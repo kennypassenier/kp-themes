@@ -1,0 +1,57 @@
+/* @part: datatable: signature layer */
+    /* The rows under the busy layer are the same pair as the layer [round 2,
+       2026-10-13]: their dim and their bath came and went with `aria-busy`, at
+       once, so the open showed bathed, dimmed rows under the arriving layer and
+       the close plain rows under the leaving one (142 % off at frame 16/20).
+       The bath now stays while the layer is there, leaving included, and the dim
+       goes in the layer's own fade (the last 120 ms of its 400 ms cooling, on
+       the theme curve) and comes in as that fade backwards (the first 120 ms, on
+       the curve turned round). */
+    [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody tr:not([data-kp-skeleton-row]) {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody tr:not([data-kp-skeleton-row]) > td {
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody tr:not([data-kp-skeleton-row]) {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+
+        /* Two dims stand while a table is busy: the whole table's (css/layout.css,
+           `--kp-busy-opacity`) and its rows' (`--kp-datatable-busy-opacity`). */
+        /* The table keeps the package's resize character (outline, filter) beside it. */
+        [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 120ms var(--kp-sig-ti-ease) 280ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable[aria-busy='true']:has(> .kp-datatable__busy-overlay) {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 120ms var(--kp-sig-ti-ease-back) 0ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody {
+            transition: opacity 120ms var(--kp-sig-ti-ease) 280ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable[aria-busy='true']:has(> .kp-datatable__busy-overlay) .kp-table tbody {
+            transition: opacity 120ms var(--kp-sig-ti-ease-back) 0ms;
+        }
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows, the
+       status line's small spinner stays out (forest and cyberpunk, lesson 23): it
+       arrived on its own and was removed at once. */
+    [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+

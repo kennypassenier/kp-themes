@@ -1,0 +1,38 @@
+/* @part: key-figures: signature layer; also menu-button, combobox */
+    /* ── Notes are italic [G13; Kenny, 2026-10-07: type = notes]: what a
+       ranger writes beside the figures, in the body face. Figures and titles
+       stand upright; the mono face stays for identifiers, timestamps and log
+       lines. The change on a tile is a field note: the arrows are the
+       note's own (↑ and ↓). ── */
+    [data-theme='forest']
+        :is(.kp-kpi__delta, .kp-kpi__label, .kp-kpi__note, .kp-page-header__description, .kp-field__help, .kp-empty__body, .kp-chart__tick) {
+        font-style: italic;
+    }
+
+    [data-theme='forest'] .kp-kpi__delta[data-kp-direction='up']::before {
+        content: '↑\00a0';
+    }
+
+    [data-theme='forest'] .kp-kpi__delta[data-kp-direction='down']::before {
+        content: '↓\00a0';
+    }
+
+    /* A menu or a popover hangs from its button: it grows down out of the button's edge,
+       its far end first, like a root; placed above its button it grows up out of it (G3),
+       one growth (G4). It closes as the growth reversed (js/motion.js playClose). The
+       combobox's list and the date picker's panel grow down out of their field the same
+       way, and the React theme menu's list out of its button (Kenny, 2026-10-09 on
+       research/forest-uniformity: pairs "the list grows down out of its field", overlays
+       "each grows like its family"); a list raised into the top layer closes as that
+       growth reversed on js/motion.js's copy of it. */
+    [data-theme='forest']
+        :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip), .kp-combobox__list, .kp-datepicker__panel, .kp-theme-menu__list) {
+        --kp-sig-dur: var(--kp-sig-fo-time);
+    }
+
+    /* The list arrives as its own growth, not as the theme's leave turned
+       around, which grew it up out of its own foot (F-19). */
+    [data-theme='forest'] .kp-combobox__list {
+        --kp-open: own;
+    }
+

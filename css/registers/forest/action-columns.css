@@ -1,0 +1,33 @@
+/* @part: action-columns: signature layer */
+    /* The action list with a lead: a row is a line on the kraft ground; its state is a short painted blaze on the start
+       edge, not a bar (clay marks the trail, so a plain new row takes the green that acts); the next one has the moss
+       wash and its date in the note voice; a group's heading is a note; the payload a kraft note with the leaf corner. */
+    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next']) {
+        --kp-fo-blaze: var(--primary);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='active'] {
+        --kp-fo-blaze: var(--info-foreground);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        --kp-fo-blaze: var(--warning-foreground);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        --kp-fo-blaze: var(--destructive);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed']) {
+        border-image: linear-gradient(to bottom, transparent 0.4rem, var(--kp-fo-blaze) 0.4rem 1.7rem, transparent 1.7rem) 1;
+    }
+    [data-theme='forest'] .kp-action-list__meta,
+    [data-theme='forest'] .kp-action-list__text {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-action-list > li.kp-action-list__group {
+        font-style: italic;
+        letter-spacing: 0;
+        text-transform: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+    [data-theme='forest'] .kp-action-list__payload {
+        border-radius: 0 var(--kp-sig-fo-leaf);
+    }
+

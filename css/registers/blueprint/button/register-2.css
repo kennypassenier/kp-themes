@@ -1,0 +1,67 @@
+/* @part: button: register layer; also media, form-field */
+    [data-theme='blueprint'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        outline: 1px solid var(--border);
+        outline-offset: 3px;
+    }
+
+    [data-theme='blueprint'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='blueprint'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    /* A press never recolours the part [press, Kenny 2026-10-07 22:24: "I
+       don't like the lighter colour it gives the elements"]: the ground it
+       has pointed at is the ground it has pressed. The rules stay, because
+       `kp.register` sits after `kp.components` and a layer beats a state
+       [fix-12]; what they say is the rest ground. */
+    [data-theme='blueprint'] .kp-button:active:not(:disabled) {
+        background: var(--secondary);
+    }
+
+    [data-theme='blueprint'] .kp-button--ghost:active:not(:disabled) {
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive);
+        border-color: var(--destructive);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='blueprint'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+

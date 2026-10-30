@@ -1,0 +1,37 @@
+/* @part: button: signature layer */
+    /* The film turns on a pass: every part that is laid, taken off, pressed
+       or crossed writes the film on its own copy of the turn, so a turn of
+       one number turns every edge that wears it (and the parts inside it,
+       which inherit the number). At rest the turn is 0 and this is the
+       register's film. */
+    [data-theme='dark']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-dialog,
+            dialog.kp-drawer,
+            .kp-menu,
+            .kp-popover,
+            .kp-toast,
+            .kp-tooltip,
+            .kp-card,
+            .kp-alert,
+            .kp-kpi,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu,
+            [data-kp-leaving],
+            [data-kp-arriving]
+        ) {
+        --kp-iris: conic-gradient(
+            from calc(var(--kp-px) * 1turn + var(--kp-sig-dk-turn)),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+    }
+

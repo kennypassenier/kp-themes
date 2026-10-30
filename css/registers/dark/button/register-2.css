@@ -1,0 +1,81 @@
+/* @part: button: register layer; also toast, alert */
+    /* ── Buttons: a flat panel, an edge, no bevel ──────────────────────── */
+
+    [data-theme='dark'] .kp-button,
+    [data-theme='dark'] .kp-icon-button {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        font-weight: 600;
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='dark'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='dark'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* Hover answers a live button only [scope-100]: a disabled one took the
+       accent ground, the brackets and the label's draw-in like any other
+       (ground 17 → 28, brackets 0 → 1). Every hover rule of the instrument
+       carries the same guard. */
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] [data-kp-surface='hero'] .kp-row > .kp-button {
+        min-width: min(11rem, 100%);
+    }
+
+    [data-theme='dark'] .kp-button--primary,
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* The theme's own hover step [scope-100]: `l + 6` lifted the 93% primary
+       to about 99%, past the token that names the step (86%). */
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    [data-theme='dark'] .kp-button--ghost {
+        background: transparent;
+        border-color: transparent;
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-button--ghost:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--accent);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-button--destructive {
+        background: transparent;
+        border-color: var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-button--destructive:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='dark'] .kp-button:disabled {
+        opacity: 0.45;
+    }
+

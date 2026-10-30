@@ -1,0 +1,75 @@
+/* @part: card: register layer; also dialog */
+    /* ── Cards, panels and containers ─────────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-card {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
+    /* The dossier: the stamp is a rotated construction mark near the
+       header (`::before`, because the canonical dossier renders no stamp
+       node of its own — only `data-kp-label`); the redactions are solid
+       ink blocks the same border colour as the sheet's own hairlines,
+       cleared left to right on the trigger, staggered by 150ms apart
+       [S48, LIFT_PLAN row 6]. The block is the phrase's own background,
+       cloned onto every line the phrase takes, so a phrase that wraps is
+       covered line by line [fix-33, scope-93]; a block on an absolutely
+       positioned ::after covered none of it. The block reaches 0.05em above
+       and below and 0.1em past the mark's former padding at each end, all of
+       it padding the words make room for, so no block reaches past the line
+       it sits on. */
+    [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    [data-theme='blueprint'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        inset-block-start: 0.9rem;
+        inset-inline-end: 1.1rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 3px;
+        padding: 0.25rem 0.5rem;
+        rotate: -6deg;
+        white-space: nowrap;
+    }
+
+    [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+        background: linear-gradient(var(--border), var(--border)) right center / 0% 100% no-repeat;
+        color: inherit;
+        padding: 0.05em 0.25em;
+        border-radius: 2px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+    }
+
+    [data-theme='blueprint'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        color: transparent;
+        background-size: 100% 100%;
+    }
+
+    [data-theme='blueprint'] .kp-dialog,
+    [data-theme='blueprint'] .kp-popover,
+    [data-theme='blueprint'] .kp-menu,
+    [data-theme='blueprint'] .kp-toast,
+    [data-theme='blueprint'] .kp-tooltip,
+    [data-theme='blueprint'] .kp-confirm,
+    [data-theme='blueprint'] .kp-datepicker__panel,
+    [data-theme='blueprint'] .kp-combobox__list,
+    [data-theme='blueprint'] .kp-palette,
+    [data-theme='blueprint'] .kp-theme-menu__list {
+        background: var(--popover);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        /* An overlay sheet is a drawing laid on the drawing: its one 1 px frame
+           and no shadow (CHARACTER.md G7; --fx-shadow-offset is 0). */
+        box-shadow: none;
+    }
+

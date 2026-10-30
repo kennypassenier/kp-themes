@@ -1,0 +1,33 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @keyframes kp-sig-pastel-bug-rise-bead {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0 calc(var(--s, 9px) * -0.32);
+        }
+    }
+
+    @keyframes kp-sig-pastel-bug-step {
+        0%,
+        100% {
+            rotate: -24deg;
+        }
+
+        50% {
+            rotate: 24deg;
+        }
+    }
+
+    @keyframes kp-sig-pastel-bug-feel {
+        from {
+            rotate: -8deg;
+        }
+
+        to {
+            rotate: 8deg;
+        }
+    }
+

@@ -1,0 +1,39 @@
+/* @part: checklist-sink: signature layer */
+    /* Checklist: a row is blazed inside when pointed at; a ticked item is struck through in clay and goes quiet; the
+       rules are trails of dashes; counts are notes. */
+    [data-theme='forest'] .kp-checklist__bar {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+    }
+    [data-theme='forest'] :is(.kp-checklist__list, .kp-checklist__item) {
+        border-color: hsl(from var(--accent-foreground) h s l / 0.35);
+        border-style: dashed;
+    }
+    [data-theme='forest'] .kp-checklist__row {
+        outline: 2px dashed transparent;
+        outline-offset: -2px;
+        border-radius: var(--kp-sig-fo-part);
+    }
+    @media (hover: hover) {
+        [data-theme='forest'] .kp-checklist__row:hover {
+            background: transparent;
+            outline-color: var(--primary);
+        }
+    }
+    [data-theme='forest'] .kp-checklist__row:active {
+        outline-style: solid;
+    }
+    [data-theme='forest'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--accent-foreground);
+    }
+    [data-theme='forest'] :is(.kp-checklist__count, .kp-checklist__detail, .kp-checklist__status) {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-checklist__row {
+            transition: outline-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+

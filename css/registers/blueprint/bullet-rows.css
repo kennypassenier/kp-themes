@@ -1,0 +1,62 @@
+/* @part: bullet-rows: signature layer; also key-value-grid, form-grid */
+    /* Bullet rows: a row that leads somewhere is read on a scale when pointed at, two witness lines at its ends and no
+       wash; the detail is lettering, the figure the readout; a warning is flagged △ before its figure, a failure ▲,
+       in the tone's ink, on no plate. */
+    [data-theme='blueprint'] .kp-bullets__row {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='blueprint'] .kp-bullets__detail {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-bullets__figure {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-bullets__row:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-bullets__figure {
+        padding-inline: 0;
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        color: hsl(from var(--warning) h s 62%);
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        color: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure::before {
+        content: '\25B3\00a0';
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure::before {
+        content: '\25B2\00a0';
+        font-size: 0.8em;
+    }
+
+    /* Key-value grid and form rows: labels are lettering, values the sans (identifiers and readouts the mono); a ruled
+       line is a ruler with its ticks; a row changed and not saved carries the amber revision mark △ after its label,
+       one that could not be read the filled red flag ▲ before it. */
+    [data-theme='blueprint'] :is(.kp-kv__row > dt, .kp-formrow__aside) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-formrow__label {
+        font-weight: 600;
+    }
+    [data-theme='blueprint'] .kp-formrow__label > small {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }

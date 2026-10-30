@@ -1,0 +1,31 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    /* ── The waiting screen [loading "raster", Kenny 08/10/2026 00:05,
+       research/nostromo-character; G10] ─────────────────────────────────
+       Everything that waits is a small amber screen set into the case: dark
+       glass in a moulded bezel with its scanlines, a hum band rolling down
+       it in 10 steps, and its picture written row by row from the top in 12
+       frames under the beam (the bright edge with its fading tail), standing
+       for 6 frames and blanked for 2: 20 frames of 80 ms, 1600 ms a cycle
+       (--kp-sig-no-loop). The busy progress bar keeps its LED window and
+       its lamps compute instead (busy "led", above); a skeleton line is a glass with a line of phosphor being
+       written, the lines a panel (4 frames) apart; a block skeleton, and so
+       the time chart's plot while it loads, writes COMPUTING in its middle;
+       a loading day of the month is a glass cell; the menu's loading entry
+       and the data table's busy panel carry a glass along their foot. The
+       spinner stays the tape reel (G11) and the network graph its blips
+       (G18). Standing still (reduced motion) the picture stands written,
+       never a share. Every glass is two layers on one element: ::before the
+       glass (ground, bezel, scanlines and the hum band), ::after the
+       picture and its beam, clipped from the top; the picture takes the
+       scanlines through its mask, so the words lie under them as on the
+       tube. */
+    [data-theme='nostromo'] {
+        /* The scanlines over the glass, 1 px every 3 px, and the same lines
+           as a mask, for a picture that lies under them. */
+        --kp-sig-no-scan: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.45) 0 1px, transparent 1px 3px);
+        --kp-sig-no-scan-mask: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.55) 0 1px, var(--foreground) 1px 3px);
+        /* The hum band: a dim amber bar 40 % of the glass tall. */
+        --kp-sig-no-hum: linear-gradient(to bottom, transparent, hsl(from var(--sidebar-primary) h s l / 0.22) 60%, transparent) 0 -66.67% / 100% 40%
+            no-repeat;
+    }
+

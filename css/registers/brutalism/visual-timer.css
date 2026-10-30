@@ -1,0 +1,44 @@
+/* @part: visual-timer: signature layer */
+    /* Visual timer and countdown. */
+    [data-theme='brutalism'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--secondary);
+        --kp-timer-disc-marks: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-timer-disc__face {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-timer-disc__sector {
+        box-shadow: 0 0 0 2px var(--border-strong);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-timer-disc__marks {
+        inset: 2%;
+        background: repeating-conic-gradient(from -1.2deg, var(--border-strong) 0 2.4deg, transparent 2.4deg 30deg);
+    }
+    [data-theme='brutalism'] .kp-timer-disc__hub {
+        inset: 45%;
+        border: 3px solid var(--card);
+        border-radius: 0;
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-timer-disc[data-kp-timer-disc-state='paused'] .kp-timer-disc__sector {
+        opacity: 1;
+        --kp-timer-disc-fill: var(--accent);
+    }
+    [data-theme='brutalism'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        background: var(--secondary);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] :is(.kp-timer-disc__caption, .kp-countdown__name) {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }

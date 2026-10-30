@@ -1,0 +1,24 @@
+/* @part: showing-data: register layer; also table */
+    /* ── Text shapes: identifiers in the mono face ───────────────────── */
+
+    [data-theme='forest'] .kp-id,
+    [data-theme='forest'] .kp-url,
+    [data-theme='forest'] .kp-numeric,
+    [data-theme='forest'] .kp-timestamp,
+    [data-theme='forest'] .kp-masked,
+    [data-theme='forest'] .kp-copyable,
+    [data-theme='forest'] .kp-truncate,
+    [data-theme='forest'] .kp-cell-break {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* A truncated cell is prose with an ellipsis, not an identifier (audit row 7). */
+    [data-theme='forest'] .kp-cell-truncate {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='forest'] .kp-timestamp,
+    [data-theme='forest'] .kp-id {
+        color: var(--muted-foreground);
+    }
+

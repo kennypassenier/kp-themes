@@ -1,0 +1,75 @@
+/* @part: pipeline: signature layer */
+    /* ── The pipeline: a lane is a slot with its stage's film on the head; a card rests the line at its start; the
+       chosen card takes the film along its edge ── */
+    [data-theme='dark'] .kp-pipeline__lane {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-pipeline__head {
+        border-radius: 0;
+        border-color: transparent;
+        background:
+            linear-gradient(color-mix(in oklab, var(--kp-pipeline-tone) 16%, var(--card)), color-mix(in oklab, var(--kp-pipeline-tone) 16%, var(--card))) padding-box,
+            linear-gradient(var(--kp-pipeline-tone), var(--kp-pipeline-tone)) border-box;
+    }
+    [data-theme='dark'] .kp-pipeline__head::before,
+    [data-theme='dark'] .kp-pipeline__head::after {
+        font-family: var(--theme-font-mono);
+        color: var(--kp-pipeline-tone);
+    }
+    [data-theme='dark'] .kp-pipeline__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='dark'] .kp-pipeline__count,
+    [data-theme='dark'] .kp-pipeline__share,
+    [data-theme='dark'] .kp-pipeline__sub,
+    [data-theme='dark'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-pipeline__card {
+        position: relative;
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-pipeline__card::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-pipeline__card:hover::before,
+    [data-theme='dark'] .kp-pipeline__card[aria-current='true']::before {
+        opacity: 1;
+    }
+    [data-theme='dark'] .kp-pipeline__card[aria-current='true'] {
+        outline: 0;
+        background:
+            linear-gradient(var(--accent), var(--accent)) padding-box,
+            var(--kp-iris, var(--kp-sig-dk-line)) border-box;
+        border-color: transparent;
+    }
+    [data-theme='dark'] .kp-pipeline__mark {
+        border-radius: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(2) {
+            animation-delay: 60ms;
+        }
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(3) {
+            animation-delay: 120ms;
+        }
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(n + 4) {
+            animation-delay: 180ms;
+        }
+    }
+

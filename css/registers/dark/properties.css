@@ -1,0 +1,42 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* The numbers dark's motion is made of, registered at the top level because
+   Firefox does not register an @property inside a cascade layer; with no
+   registration every keyframe that moves one would flip between its two poses
+   instead of moving. --kp-sig-dk-turn is how far the film has turned on a
+   pass (0 at rest, a full turn is the same colour: cyan at the top);
+   --kp-sig-dk-at and --kp-sig-dk-ink are how far the line has come over a
+   changed figure and how much ink lies over the film in its letters (at
+   rest the figure is ink); --kp-sig-dk-ph is the spinner's loop, 0 to 1. */
+@property --kp-sig-dk-turn {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --kp-sig-dk-at {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 100%;
+}
+
+@property --kp-sig-dk-ink {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-dk-ph {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.2;
+}
+
+/* --kp-sig-dk-hold carries no picture: a transition on it holds the mega
+   menu's panel on screen for the pass back (js/components.js settleClosing
+   waits for the panel's transitions), as Firefox holds no `display`. */
+@property --kp-sig-dk-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+

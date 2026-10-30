@@ -1,0 +1,88 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A link in running text answers in contact time, like the bar's
+           links (F-15); the dash turning solid is a step. */
+        [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+            transition:
+                text-decoration-color var(--fx-duration) var(--fx-ease),
+                text-decoration-thickness var(--fx-duration) var(--fx-ease);
+        }
+
+        /* The switch's thumb goes back on the curve turned around. */
+        [data-theme='forest'] .kp-switch__input:not(:checked)::before {
+            transition-timing-function: var(--kp-sig-fo-wither);
+        }
+
+        /* One tree is planted per half a loop. */
+        [data-theme='forest'] .kp-spinner::after {
+            animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end infinite;
+        }
+
+        [data-theme='forest'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+
+        /* A check is set in contact time on the growth curve and cleared as
+           that played backwards: the plate turns green at once and then the
+           tick is drawn; on clearing the tick is taken back on the curve
+           turned around and the plate turns kraft once it is gone. */
+        [data-theme='forest'] .kp-field__check {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color 0s linear var(--fx-duration),
+                border-color 0s linear var(--fx-duration);
+        }
+
+        [data-theme='forest'] .kp-field__check:checked {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color 0s linear,
+                border-color 0s linear;
+        }
+
+        [data-theme='forest'] .kp-field__check::before {
+            transition: clip-path var(--fx-duration) var(--kp-sig-fo-wither);
+        }
+
+        [data-theme='forest'] .kp-field__check:checked::before {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+
+        /* A toast arrives as its leave played backwards, so that its leave
+           (the theme's, on [data-kp-leaving], below) is its arrival turned
+           around frame for frame: it grows out of its own base line,
+           turning from autumn to green. The arrival is written forwards
+           (kp-sig-forest-arrive on the growth curve: the leave's frames and
+           curve, reversed) and not as the leave with `reverse`: a table row
+           borrows the toast's entrance, and js/motion.js turns an entrance
+           round by forcing `animation-direction: reverse` on it (css/components.css),
+           which on a `reverse` entrance changes nothing. Folding a group then
+           played the rows' growth again and hid them at its end, the text
+           rising out of the ground and vanishing (Kenny, kpadopt-tooltip-sort
+           groupalways · forest, 2026-10-16). */
+        [data-theme='forest'] .kp-toast {
+            animation: kp-sig-forest-arrive var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        /* A dialog grows up out of its base line, its top edge first
+           (G3). The unopened one js/motion.js measures to learn the
+           theme's time runs one and a half growths, because it takes the
+           close as two thirds of what it reads: the opened one, which plays,
+           runs one growth, and so does its close. */
+        [data-theme='forest'] .kp-dialog {
+            animation: kp-sig-forest-grow var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        /* A tooltip hangs from the part it names: it grows down out of that
+           part, its far end first, like a root (G3). */
+        [data-theme='forest'] .kp-tooltip {
+            animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+    }
+

@@ -1,0 +1,19 @@
+/* @part: graph: signature layer */
+    [data-theme='brutalism'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: color-mix(in oklch, var(--accent) 22%, var(--background));
+        --kp-graph-load-frame: 3px solid var(--foreground);
+        --kp-graph-load-radius: 0;
+        --kp-graph-load-weight: 800;
+        --kp-graph-load-size: 12px;
+        --kp-graph-load-cap: square;
+        --kp-graph-load-edge-w: 3;
+        --kp-graph-load-edge-mix: 35%;
+        --kp-graph-load-ring: var(--foreground);
+        --kp-graph-load-ring-w: 3;
+        --kp-graph-load-core-op: 0;
+        --kp-graph-load-node-mix: 85%;
+    }
+
+    [data-theme='brutalism'] .kp-graph[data-kp-state='loading'] .kp-graph__node {
+        --kp-graph-load-ring-fill: var(--kp-graph-node-colour);
+    }

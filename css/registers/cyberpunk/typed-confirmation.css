@@ -1,0 +1,29 @@
+/* @part: typed-confirmation: signature layer */
+    [data-theme='cyberpunk'] .kp-type-confirm__loses-title {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm__name {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        color: var(--primary);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm__list,
+    [data-theme='cyberpunk'] .kp-type-confirm__input {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm[data-kp-matched] .kp-type-confirm__input {
+        border-color: var(--accent);
+        box-shadow: inset 0 0 0 1px var(--accent);
+    }
+

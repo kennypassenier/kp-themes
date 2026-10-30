@@ -1,0 +1,56 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    [data-theme='titanium'] {
+        --kp-sig-ti-fast: var(--fx-duration, 60ms);
+        /* The theme's one curve for every one-shot motion (G1) and the one
+           period every loading picture runs at (G4, the anodising bath's own
+           2200ms: Kenny picked the bath as research/titanium-loading draws
+           it, 2026-10-07 00:54). */
+        --kp-sig-ti-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+        --kp-sig-ti-loop: 2200ms;
+        /* The anodising bath (research/character-kpi r2-ti-load-1): the
+           oxide ramp gold → bronze → violet → blue → cyan → gold at 100deg,
+           260% wide. --kp-sig-ti-bath lies 32% over the plate under it, for
+           a surface; --kp-sig-ti-oxide is the film at full strength, for a
+           solid metal part. Both drift start → end on kp-sig-titanium-bath. */
+        --kp-sig-ti-bath: linear-gradient(
+                100deg,
+                color-mix(in oklab, var(--warning-foreground) 32%, transparent),
+                color-mix(in oklab, var(--chart-4) 32%, transparent) 25%,
+                color-mix(in oklab, var(--chart-2) 32%, transparent) 50%,
+                color-mix(in oklab, var(--chart-1) 32%, transparent) 72%,
+                color-mix(in oklab, var(--chart-3) 32%, transparent) 90%,
+                color-mix(in oklab, var(--warning-foreground) 32%, transparent)
+            )
+            0 0 / 260% 100%;
+        --kp-sig-ti-oxide: linear-gradient(
+                100deg,
+                var(--warning-foreground),
+                var(--chart-4) 25%,
+                var(--chart-2) 50%,
+                var(--chart-1) 72%,
+                var(--chart-3) 90%,
+                var(--warning-foreground)
+            )
+            0 0 / 260% 100%;
+        /* The heat tint (G9): the oxide band that runs over a value updated
+           in place through mix-blend-mode: color, on kp-sig-titanium-update-anodise.
+           Every titanium "live" carrier draws this one. */
+        --kp-sig-ti-heat: linear-gradient(
+                110deg,
+                transparent 15%,
+                var(--warning-foreground),
+                var(--chart-2),
+                var(--chart-1),
+                var(--chart-3),
+                transparent 85%
+            )
+            0 0 / 300% 100% no-repeat;
+        /* Which way inline-start lies, for a translate along the feed (G2). */
+        --kp-sig-ti-dir: 1;
+        --kp-sig-ti-c: 0.35rem;
+        --kp-sig-ti-weave:
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px),
+            repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px);
+        --kp-sig-ti-edge: var(--kp-tool-edge, inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14));
+    }
+

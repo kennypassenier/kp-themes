@@ -1,0 +1,23 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also key-figures */
+    /* The thumbtack (G12, Kenny's leave of 2026-10-14): from above the page,
+       larger (nearer the eye), out of nothing, pushed in on the landing (its
+       overshoot is the small press), after the part has landed; it comes
+       out first. */
+    @keyframes kp-sig-pastel-tack-in {
+        from {
+            translate: -50% -16px;
+            scale: 1.75;
+            opacity: 0;
+            box-shadow: 8px 10px 0 transparent;
+        }
+    }
+
+    @keyframes kp-sig-pastel-tack-out {
+        from {
+            translate: -50% -16px;
+            scale: 1.75;
+            opacity: 0;
+            box-shadow: 8px 10px 0 transparent;
+        }
+    }
+

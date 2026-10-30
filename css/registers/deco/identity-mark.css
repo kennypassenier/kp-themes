@@ -1,0 +1,81 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* The identity mark: lacquer with a wash of its own colour, inside a double gold inlay; round it is a jewel, the
+       double ring. The pick is the double gold ring. */
+    [data-theme='deco'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        --kp-idmark-tint: 30%;
+        border: 1px solid hsl(from var(--primary) h s l / 0.75);
+        background: color-mix(in oklab, var(--kp-idmark-c) var(--kp-idmark-tint), var(--kp-sig-deco-lac));
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45);
+        color: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        clip-path: polygon(3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px), 0 3px);
+    }
+    [data-theme='deco'] .kp-idmark--xs {
+        box-shadow: inset 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-idmark--round {
+        border-radius: 50%;
+        clip-path: none;
+    }
+    [data-theme='deco'] .kp-idmark--pattern {
+        background: color-mix(in oklab, var(--kp-idmark-c) 78%, var(--kp-sig-deco-lac));
+        --kp-idmark-ink: var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-idmark--glyph {
+        clip-path: none;
+    }
+    [data-theme='deco'] .kp-idmark--glyph::after {
+        z-index: 1;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1.5px var(--kp-sig-deco-lac);
+        rotate: 45deg;
+        scale: 0.8;
+    }
+    [data-theme='deco'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        rotate: none;
+        scale: 0.8;
+    }
+    [data-theme='deco'] .kp-idmark--glyph[data-kp-idmark-glyph='triangle']::after {
+        rotate: none;
+        scale: 1;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-idmark[data-kp-idmark-empty] {
+        border-style: dashed;
+        background: var(--kp-sig-deco-lac);
+        box-shadow: none;
+        color: var(--muted-foreground);
+    }
+    [data-theme='deco'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='deco'] .kp-idmark[data-kp-idmark-selected] {
+        clip-path: none;
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='deco'] .kp-idmark-group > .kp-idmark,
+    [data-theme='deco'] .kp-idmark-group > .kp-idmark-group__more {
+        clip-path: none;
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45),
+            0 0 0 2px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-idmark-group__more {
+        --kp-idmark-radius: 0;
+        border: 1px solid hsl(from var(--primary) h s l / 0.75);
+        border-radius: 0;
+        background: var(--kp-sig-deco-lac);
+        color: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+

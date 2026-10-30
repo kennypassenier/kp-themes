@@ -1,0 +1,115 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* Waiting surfaces that come and go with a state, this theme's way (all-themes,
+       2026-10-13): the morning mist above, played backwards to arrive. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The mist under a second name, for a part whose arrival and leave are
+           both CSS: the browser restarts an animation only when its name changes. */
+        @keyframes kp-sig-solstice-leave-back {
+            to {
+                transform: translateY(-14px);
+                filter: brightness(1.4) blur(3px);
+                opacity: 0;
+            }
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's sun) come
+           out of the mist and go into it, 540 ms; they came in by the package's
+           240 ms fade and went at once. js/calendar.js marks a layer
+           `[data-kp-leaving]` while its state goes (`--kp-calendar-busy-leave:
+           hold`, lesson 37), the general leave above plays on it, and the rules
+           below keep it drawn and placed through it. */
+        [data-theme='solstice'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='solstice']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='solstice'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-solstice-leave-back 540ms ease-in reverse backwards;
+        }
+
+        [data-theme='solstice'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='solstice'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='solstice'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* A refreshing table and the rows it keeps dim with its busy layer, in
+           the layer's 540 ms, and brighten with its leave: the dims
+           (css/layout.css `--kp-busy-opacity`, the rows'
+           `--kp-datatable-busy-opacity`) switched in one frame while the layer
+           came and went over 540 ms. One keyframe set: forwards on the mist's
+           arrival curve, backwards on its leave (the reversed `ease-out` is the
+           leave's `ease-in`). */
+        [data-theme='solstice'] .kp-datatable {
+            --kp-ss-dim: var(--kp-busy-opacity, 0.7);
+        }
+
+        [data-theme='solstice'] .kp-datatable .kp-table tbody {
+            --kp-ss-dim: var(--kp-datatable-busy-opacity, 0.55);
+        }
+
+        [data-theme='solstice'] :is(.kp-datatable[aria-busy='true'], .kp-datatable[aria-busy='true'] .kp-table tbody) {
+            animation: kp-sig-solstice-busy-dim 540ms ease-out backwards;
+        }
+
+        [data-theme='solstice']
+            :is(
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]),
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]) .kp-table tbody
+            ) {
+            animation: kp-sig-solstice-busy-dim-back 540ms ease-out reverse backwards;
+        }
+
+        @keyframes kp-sig-solstice-busy-dim {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: var(--kp-ss-dim);
+            }
+        }
+
+        @keyframes kp-sig-solstice-busy-dim-back {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: var(--kp-ss-dim);
+            }
+        }
+
+        /* The side navigation's backdrop dims in the panel's own time (the
+           register's 240 ms), not the package's literal 220 ms, so the two are
+           one picture (lesson 31 checked: no clip cuts the content). */
+        [data-theme='solstice'] .kp-sidenav__backdrop {
+            animation-duration: 240ms;
+        }
+    }
+

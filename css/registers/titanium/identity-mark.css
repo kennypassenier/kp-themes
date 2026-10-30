@@ -1,0 +1,75 @@
+/* @part: identity-mark: signature layer; also avatar */
+    [data-theme='titanium'] {
+        /* A counted figure runs one cut: 240 ms (G4). */
+        --kp-tick: 240;
+        --kp-glyph-changed: '\00a0\25aa';
+        /* The milled groove between two rows: a dark cut over a bright lip (G8). */
+        --kp-ti-groove: linear-gradient(var(--background), var(--background)) 0 100% / 100% 1px no-repeat;
+        --kp-ti-engrave: 0 1px 0 hsl(from var(--foreground) h s l / 0.12);
+        /* A pocket milled into a plate: the ground one step down, the shadow inside its top edge. */
+        --kp-ti-pocket: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.55), inset 0 0 0 1px var(--border-strong);
+    }
+
+    /* ── The identity mark: a stamped part tag; a pattern is laser-etched on bare metal ── */
+    [data-theme='titanium'] .kp-idmark {
+        --kp-sig-ti-c: calc(var(--kp-idmark-s) * 0.22);
+        --kp-idmark-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        letter-spacing: 0;
+        text-shadow: var(--kp-ti-engrave);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-idmark--round {
+        border-radius: 50%;
+        clip-path: none;
+    }
+    [data-theme='titanium'] .kp-idmark--pattern {
+        --kp-idmark-ink: var(--background);
+        background: var(--kp-sig-ti-weave), var(--kp-idmark-c);
+    }
+    [data-theme='titanium'] .kp-idmark--glyph::after {
+        box-shadow: none;
+        outline: 1.5px solid var(--card);
+    }
+    [data-theme='titanium'] .kp-idmark[data-kp-idmark-empty] {
+        box-shadow: none;
+    }
+    /* The current mark: the bare-metal ring drawn inside the cut, the second ring in the card's ground (DI2's two channels). */
+    [data-theme='titanium'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='titanium'] .kp-idmark[data-kp-idmark-selected] {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px var(--card),
+            var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-idmark-group > .kp-idmark,
+    [data-theme='titanium'] .kp-idmark-group > .kp-idmark-group__more {
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='titanium'] .kp-idmark-group__more {
+        --kp-idmark-radius: 0;
+        font-family: var(--theme-font-mono);
+        clip-path: polygon(
+            calc(var(--kp-idmark-s) * 0.22 + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-idmark-s) * 0.22 - 8px),
+            calc(100% - var(--kp-idmark-s) * 0.22 - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-idmark-s) * 0.22 + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-idmark.kp-skeleton {
+        border-color: var(--border-strong);
+        background: var(--kp-sig-ti-bath), var(--card);
+        border-radius: 0;
+    }
+

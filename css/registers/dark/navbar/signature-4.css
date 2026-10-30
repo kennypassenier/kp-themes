@@ -1,0 +1,32 @@
+/* @part: navbar: signature layer */
+    [data-theme='dark'] .kp-nav__sep {
+        position: relative;
+        inline-size: 1px;
+        border-inline-start: 0;
+        background: linear-gradient(to bottom, transparent, var(--border-strong) 25%, var(--border-strong) 75%, transparent);
+    }
+    [data-theme='dark'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 1px);
+        inset-inline-start: -2px;
+        inline-size: 5px;
+        block-size: 2px;
+        background: var(--chart-1);
+        box-shadow: 0 0 6px hsl(from var(--chart-1) h s l / 0.6);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 1px;
+            border-block-start: 0;
+            background: linear-gradient(90deg, transparent, var(--border-strong) 12%, var(--border-strong) 88%, transparent);
+        }
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -2px;
+            inset-inline-start: calc(50% - 1px);
+            inline-size: 2px;
+            block-size: 5px;
+        }
+    }
+

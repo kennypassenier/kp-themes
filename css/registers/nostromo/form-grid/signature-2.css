@@ -1,0 +1,27 @@
+/* @part: form-grid: signature layer; also countdown */
+    @container kp-formrows (max-width: 36rem) {
+        [data-theme='nostromo'] .kp-formrow {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        [data-theme='nostromo'] .kp-formrow__label {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        [data-theme='nostromo'] .kp-formrow__control,
+        [data-theme='nostromo'] .kp-formrow--wide .kp-formrow__control {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        [data-theme='nostromo'] .kp-formrow__aside {
+            grid-column: 1;
+            grid-row: 3;
+            justify-content: flex-start;
+            margin-block-start: 0.25rem;
+        }
+        [data-theme='nostromo'] .kp-formrow__aside:empty {
+            display: none;
+        }
+    }
+    [data-theme='nostromo'] .kp-countdown__colon {
+        inline-size: 1ch;
+    }

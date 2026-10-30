@@ -1,0 +1,37 @@
+/* @part: segmented-toolbar: signature layer */
+    [data-theme='synthwave'] .kp-segmented {
+        --kp-seg-radius: 2px;
+        --kp-seg-font: var(--theme-font-body);
+        --kp-seg-tracking: 0.16em;
+        --kp-seg-case: uppercase;
+        --kp-seg-thumb: linear-gradient(100deg, var(--primary), var(--accent));
+        --kp-seg-thumb-ink: var(--background);
+        --kp-seg-thumb-edge: 0 0 0 1px var(--primary);
+        --kp-seg-thumb-lift: 0 0 16px hsl(from var(--primary) h s l / 0.5);
+        --kp-chip-radius: 2px;
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--background);
+        --kp-chip-on-edge: var(--primary);
+    }
+    [data-theme='synthwave'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='synthwave'] .kp-toolbar__label {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.24em;
+    }
+    [data-theme='synthwave'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='synthwave'] .kp-kbd {
+        --kp-kbd-radius: 2px;
+        --kp-kbd-edge: var(--accent);
+        --kp-kbd-ground: transparent;
+        --kp-kbd-ink: var(--accent);
+        --kp-kbd-foot: 1px;
+        box-shadow: 0 0 8px hsl(from var(--accent) h s l / 0.35);
+    }
+    [data-theme='synthwave'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        background: linear-gradient(100deg, var(--primary), var(--accent));
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.45);
+    }

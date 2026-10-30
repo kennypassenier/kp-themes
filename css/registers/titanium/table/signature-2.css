@@ -1,0 +1,8 @@
+/* @part: table: signature layer */
+    /* A rating in a table cell: the words go under the stars, so the cell keeps its column. */
+    @media (max-width: 30rem) {
+        [data-theme='titanium'] .kp-table td .kp-rating--display .kp-rating__body {
+            grid-auto-flow: row;
+            row-gap: 0.125rem;
+        }
+    }

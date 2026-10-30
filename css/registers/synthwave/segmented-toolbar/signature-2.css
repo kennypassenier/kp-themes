@@ -1,0 +1,36 @@
+/* @part: segmented-toolbar: signature layer; also quantity */
+    /* ── Segmented tri-state chips: in is lit pink, out takes the red neon ring and a struck word ── */
+    [data-theme='synthwave'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--kp-pink-text);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.5);
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        --kp-sw4-tone: var(--destructive);
+        border-color: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-segmented__mark {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-segmented__summary {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+    }
+
+    /* ── Quantity ── */
+    [data-theme='synthwave'] .kp-quantity__field {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-quantity__input {
+        font-family: var(--kp-osd);
+        font-size: 1.25rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='synthwave'] .kp-quantity__unit {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        color: var(--accent);
+    }
+

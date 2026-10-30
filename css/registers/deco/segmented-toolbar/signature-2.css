@@ -1,0 +1,35 @@
+/* @part: segmented-toolbar: signature layer */
+    /* Three-way chips: included is emerald in a gold ring, left out is ruby. */
+    [data-theme='deco'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 50%;
+        --kp-tri-out-edge: var(--destructive);
+        --kp-tri-out-ground: var(--kp-sig-deco-lac);
+        --kp-tri-out-ink: var(--foreground);
+        --kp-glyph-check: '\2713';
+    }
+    [data-theme='deco'] .kp-segmented__mark {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark {
+        border-color: var(--primary);
+        background: var(--kp-sig-deco-emerald);
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration-color: var(--destructive);
+        text-decoration-thickness: 1px;
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--primary);
+        background: var(--destructive);
+    }
+    [data-theme='deco'] .kp-segmented__summary {
+        letter-spacing: 0.04em;
+    }
+

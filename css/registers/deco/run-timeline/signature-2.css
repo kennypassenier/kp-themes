@@ -1,0 +1,37 @@
+/* @part: run-timeline: signature layer; also facet-list, week-agenda */
+    [data-theme='deco'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='deco'] .kp-gantt__tick:is(button):hover {
+        color: var(--kp-sig-deco-gold-hi, var(--primary));
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: var(--kp-sig-deco-lac, var(--card));
+        color: var(--kp-sig-deco-gold-hi, var(--primary));
+        box-shadow:
+            inset 0 -1px 0 var(--primary),
+            inset 0 -3px 0 var(--kp-sig-deco-lac, var(--card)),
+            inset 0 -4px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow:
+            inset 0 0 0 1px var(--kp-gantt-series),
+            inset 0 0 0 2px var(--kp-sig-deco-lac, var(--card));
+    }
+    [data-theme='deco'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.4);
+    }
+    [data-theme='deco'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        outline: 1px solid hsl(from var(--primary) h s l / 0.75);
+        outline-offset: 1px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-gantt__tick:is(button) {
+            transition:
+                box-shadow var(--kp-sig-deco-contact, 160ms) var(--fx-ease),
+                color var(--kp-sig-deco-contact, 160ms) var(--fx-ease);
+        }
+    }

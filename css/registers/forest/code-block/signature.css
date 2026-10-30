@@ -1,0 +1,25 @@
+/* @part: code-block: signature layer */
+    /* Code block: a kraft plate with the leaf corner; the head is cut from the body by a trail of dashes; the line
+       numbers and the foot are notes; the text itself stays plain (no texture under running text). */
+    [data-theme='forest'] .kp-code {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-code__head {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+        border-start-end-radius: inherit;
+    }
+    [data-theme='forest'] .kp-code__foot {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-code__meta {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-code__body,
+    [data-theme='forest'] .kp-code__note {
+        border-end-start-radius: inherit;
+    }
+    [data-theme='forest'] .kp-code[data-kp-code-lines] .kp-code__line::before {
+        font-style: italic;
+    }
+

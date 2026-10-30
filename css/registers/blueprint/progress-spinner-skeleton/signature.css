@@ -1,0 +1,29 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    [data-theme='blueprint'] .kp-spinner {
+        --kp-sig-dur: 1600ms;
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        /* The centre mark, where the compass point stands. */
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 50% 50% / 1px 40% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 50% 50% / 40% 1px no-repeat;
+        animation: none;
+    }
+
+    [data-theme='blueprint'] .kp-spinner::before,
+    [data-theme='blueprint'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        border-radius: 50%;
+    }
+
+    [data-theme='blueprint'] .kp-spinner::before {
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    [data-theme='blueprint'] .kp-spinner::after {
+        border: 1.5px solid var(--primary);
+    }
+

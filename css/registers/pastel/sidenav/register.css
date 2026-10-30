@@ -1,0 +1,76 @@
+/* @part: sidenav: register layer; also media, back-to-top */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The sticker Kenny chose for this theme, now on the row you are on:
+       peeled down at a slight angle, with a hard edge under it and a soft
+       drop below that [approved 2026-09-11]. */
+    [data-theme='pastel'] .kp-sidenav {
+        --kp-sidenav-gap: 0.3rem;
+        border-radius: 1.2rem;
+    }
+
+    /* The plate's ink (0 to 1) also brings a floating panel's edge and shadow in and out. */
+    [data-theme='pastel'] .kp-sidenav[data-kp-sidenav-variant='floating'] {
+        --kp-sidenav-float-ink: var(--kp-sig-pa-ink);
+    }
+
+    [data-theme='pastel'] .kp-sidenav__header {
+        border-block-end: none;
+        padding-block-end: 0.2rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link,
+    [data-theme='pastel'] .kp-sidenav__category-toggle {
+        border-radius: 0.85rem;
+        padding-inline: 0.8rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-sidenav__link {
+            transition:
+                translate var(--fx-duration, 200ms) var(--fx-ease, ease),
+                background var(--fx-duration, 200ms) ease;
+        }
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link:hover {
+        translate: 0 -1px;
+    }
+
+    /* The row you are on is a sticker: plum with its flat peel, upright (G7,
+       G14; no soft drop). */
+    [data-theme='pastel'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 3px 0 hsl(from var(--primary) h s calc(l * 0.55));
+    }
+
+    [data-theme='pastel'] .kp-sidenav__badge {
+        color: inherit;
+        opacity: 0.75;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Rounder than everything else, and the picture sits slightly askew
+       in its frame the way a photograph in an album does. */
+    [data-theme='pastel'] .kp-to-top {
+        border-radius: 999px;
+        box-shadow: 0 3px 0 hsl(from var(--primary) h s calc(l * 0.55));
+    }
+
+    [data-theme='pastel'] .kp-media {
+        border-radius: 1.2rem;
+        border: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-media-figure > figcaption {
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='pastel'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
+

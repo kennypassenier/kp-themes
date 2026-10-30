@@ -1,0 +1,29 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    [data-theme='nostromo'] {
+        --kp-no-leds: linear-gradient(
+            90deg,
+            transparent 0 2.7027%,
+            var(--kp-sig-no-led) 0 4.0541%,
+            transparent 0 10.8108%,
+            var(--kp-sig-no-led) 0 12.1622%,
+            transparent 0 13.5135%,
+            var(--kp-sig-no-led) 0 14.8649%,
+            transparent 0 24.3243%,
+            var(--kp-sig-no-led) 0 25.6757%,
+            transparent 0 37.8378%,
+            var(--kp-sig-no-led) 0 39.1892%,
+            transparent 0 45.9459%,
+            var(--kp-sig-no-led) 0 47.2973%,
+            transparent 0 48.6486%,
+            var(--kp-sig-no-led) 0 50%,
+            transparent 0 62.1622%,
+            var(--kp-sig-no-led) 0 63.5135%,
+            transparent 0 72.973%,
+            var(--kp-sig-no-led) 0 74.3243%,
+            transparent 0 83.7838%,
+            var(--kp-sig-no-led) 0 85.1351%,
+            transparent 0 91.8919%,
+            var(--kp-sig-no-led) 0 93.2432%,
+            transparent 0
+        );
+    }

@@ -1,0 +1,30 @@
+/* @part: quantity: signature layer */
+    /* Quantity. */
+    [data-theme='brutalism'] .kp-quantity__field {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        translate: -2px -2px;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            6px 6px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        border-color: var(--border-strong);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.3rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-quantity__input {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-quantity__unit {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+

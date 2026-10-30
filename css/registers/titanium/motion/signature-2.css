@@ -1,0 +1,35 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: the machine. The box runs at an even, mechanical pace
+           inside a fine machined edge, and new content slides in like a
+           drawer. ───────────────────────────────────────────────────────── */
+        [data-theme='titanium'] {
+            --kp-size-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        [data-theme='titanium'] [data-kp-resizing] {
+            outline: 1px solid var(--border-strong);
+            outline-offset: -3px;
+            filter: brightness(1.05);
+        }
+
+        /* New content is fed in from inline-start (G2), on the theme's curve. */
+        [data-theme='titanium'] [data-kp-arriving] {
+            animation: kp-sig-titanium-size-drawer 260ms var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] [data-kp-arriving]:dir(rtl) {
+            --kp-sig-ti-dir: -1;
+        }
+
+        @keyframes kp-sig-titanium-size-drawer {
+            from {
+                opacity: 0;
+                transform: translateX(calc(-14px * var(--kp-sig-ti-dir)));
+            }
+        }
+    }
+

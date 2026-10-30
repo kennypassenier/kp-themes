@@ -1,0 +1,22 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    [data-theme='dark'] {
+        --kp-dk4-c: 0.3rem;
+        --kp-dk4-cut: polygon(0 0, calc(100% - var(--kp-dk4-c)) 0, 100% var(--kp-dk4-c), 100% 100%, var(--kp-dk4-c) 100%, 0 calc(100% - var(--kp-dk4-c)));
+        --kp-dk4-cut-4: polygon(
+            var(--kp-dk4-c) 0,
+            calc(100% - var(--kp-dk4-c)) 0,
+            100% var(--kp-dk4-c),
+            100% calc(100% - var(--kp-dk4-c)),
+            calc(100% - var(--kp-dk4-c)) 100%,
+            var(--kp-dk4-c) 100%,
+            0 calc(100% - var(--kp-dk4-c)),
+            0 var(--kp-dk4-c)
+        );
+        --kp-dk4-film: linear-gradient(90deg, var(--chart-1), var(--chart-2) 36%, var(--chart-3) 68%, var(--chart-4));
+        --kp-dk4-rest: 0 0 9px hsl(from var(--chart-1) h s l / 0.4);
+        --kp-art-rule: var(--chart-1);
+        --kp-art-line: var(--border-strong);
+        --kp-art-ink: var(--muted-foreground);
+        --kp-art-stroke: 1.5px;
+    }
+

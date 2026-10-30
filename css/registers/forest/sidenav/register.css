@@ -1,0 +1,43 @@
+/* @part: sidenav: register layer; also media, back-to-top */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar underlines where you are. A column has no under, so the
+       line stands up and becomes the trunk beside the row — the same
+       hairline, turned ninety degrees. */
+    [data-theme='forest'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='forest'] .kp-sidenav__link,
+    [data-theme='forest'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+        border-radius: 0;
+    }
+
+    [data-theme='forest'] .kp-sidenav__link[aria-current='page'] {
+        border-inline-start-color: var(--primary);
+        color: var(--primary);
+        background: none;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet: a hairline, and a caption that reads as a field note. */
+    [data-theme='forest'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='forest'] .kp-media-figure > figcaption {
+        font-style: italic;
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='forest'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+

@@ -1,0 +1,54 @@
+/* @part: alert: signature layer; also toast */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-sig-formal-leave {
+            0%,
+            28.571% {
+                clip-path: inset(-3rem);
+            }
+
+            100% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-leave-pen {
+            0% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            28.571% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-formal-leave-rtl {
+            0%,
+            28.571% {
+                clip-path: inset(-3rem);
+            }
+
+            100% {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-leave-pen-rtl {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            28.571% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+    }
+

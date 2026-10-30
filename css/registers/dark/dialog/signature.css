@@ -1,0 +1,31 @@
+/* @part: dialog: signature layer */
+    /* ── Dialog in sections, confirmation, typed confirmation ── */
+    [data-theme='dark'] .kp-dialog__heading {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='dark'] .kp-dialog__heading::before {
+        content: '[ ';
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-dialog__heading::after {
+        content: ' ]';
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-dialog__section:not(:first-child) {
+        border-block-start-color: transparent;
+        border-image: linear-gradient(90deg, var(--chart-1) 0 1.5rem, var(--border) 1.5rem) 1;
+        border-block-start-width: 1px;
+        border-block-start-style: solid;
+    }
+    [data-theme='dark'] .kp-dialog__section--danger {
+        border-inline-start: 2px solid var(--destructive);
+        border-image: none;
+        box-shadow: -2px 0 8px -4px hsl(from var(--destructive) h s l / 0.5);
+    }
+    [data-theme='dark'] .kp-confirm__dependents,
+    [data-theme='dark'] .kp-type-confirm__loses {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }

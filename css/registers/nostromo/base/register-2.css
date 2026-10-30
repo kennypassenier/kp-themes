@@ -1,0 +1,53 @@
+/* @part: base: register layer — rules that belong to no one component */
+    /* ── The headline: pop down under a clip-path, text always whole ── */
+
+    [data-theme='nostromo'] [data-kp-reveal='headline'] {
+        clip-path: inset(0 0 0 0);
+        opacity: 1;
+    }
+
+    /* ── The section rule: the shared underline keyframe, the demo's own
+   280ms and 60ms delay ─────────────────────────────────────────────── */
+
+    [data-theme='nostromo'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        block-size: 2px;
+        margin-block-start: 0.6rem;
+        background: var(--selected);
+        transform-origin: left center;
+        transform: scaleX(1);
+    }
+
+    [data-theme='nostromo'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        transform: scaleX(0);
+    }
+
+    /* ── Dividers: a perforated seam of vent dots, not a razor tear ──── */
+
+    [data-theme='nostromo'] [data-kp-divider] {
+        position: relative;
+        background: var(--muted);
+        border-block: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-kp-divider]::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, var(--border-strong) 1.1px, transparent 1.2px);
+        background-size: 14px 100%;
+        background-position: 7px center;
+        opacity: 0.55;
+    }
+
+    [data-theme='nostromo'] [data-kp-divider='alt'] {
+        background: var(--sidebar-accent);
+        border-color: var(--sidebar-background);
+    }
+
+    [data-theme='nostromo'] [data-kp-divider='alt']::before {
+        background-image: radial-gradient(circle, var(--sidebar-foreground) 1.1px, transparent 1.2px);
+        opacity: 0.35;
+    }
+

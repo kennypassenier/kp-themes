@@ -1,0 +1,58 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='dark'] .kp-progressbar {
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-cut: calc(4px * var(--kp-progressbar-scale, 1));
+        /* The indeterminate hatch: stripe and pitch grow with the bar. */
+        --kp-ps-stripe: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-ps-hatch: calc(6px * var(--kp-progressbar-scale, 1));
+        /* The film along the scale. --kp-px is the pointer's share across the
+           page (0.5 at rest, written by js/effects.js); it slides the film by
+           up to a fifth of the scale, the way the anodised edge turns with the
+           angle you look from. */
+        --kp-ps-film: linear-gradient(90deg, var(--chart-1), var(--chart-2) 36%, var(--chart-3) 68%, var(--chart-4));
+    }
+
+    [data-theme='dark'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 100% / calc(100% / var(--kp-steps)) 45% repeat-x,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(
+            var(--kp-ps-cut) 0,
+            100% 0,
+            100% calc(100% - var(--kp-ps-cut)),
+            calc(100% - var(--kp-ps-cut)) 100%,
+            0 100%,
+            0 var(--kp-ps-cut)
+        );
+    }
+
+    [data-theme='dark'] .kp-progressbar__fill {
+        inset-block: calc(2px * var(--kp-progressbar-scale, 1));
+        background: var(--kp-ps-film) calc(var(--kp-px, 0.5) * 100%) 0 / 125% 100% no-repeat;
+        transition: clip-path 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
+    [data-theme='dark'] .kp-progressbar__head {
+        inline-size: calc(6px * var(--kp-progressbar-scale, 1));
+        translate: -100% 0;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 2px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat;
+        transition: transform 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
+    [data-theme='dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
+        mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
+    }
+

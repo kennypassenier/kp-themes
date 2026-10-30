@@ -1,0 +1,93 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the
+   anchor of the theme]. Registered at the top level because Firefox does not
+   register an @property inside a cascade layer; with no registration every
+   keyframe below would flip between its two poses instead of moving.
+   --kp-bp-r is the route of a traced outline (0 to 4: a side per unit),
+   --kp-bp-rp the reading along a diagonal (0 to 1), --kp-bp-p one stroke
+   along a line (0 to 1); --kp-bp-nib is the pen down (1) or up (0),
+   --kp-bp-pv, --kp-bp-rv and --kp-bp-tv how much of the pen, of the reading
+   (witness lines and pointers) and of the construction line is on the sheet;
+   --kp-bp-hv, --kp-bp-dv and --kp-bp-sv how much of the scale, of the
+   dimension and of the pointer a hand has set on a control. */
+@property --kp-bp-r {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-rp {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-nib {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-pv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-rv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-tv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-hv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-dv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-sv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+/* --kp-bp-ink is whether a traced panel's contents are inked (1) or not yet
+   (0): the trace hides the panel's own box by `visibility`, but its contents
+   stay visible to focus and are painted by this number, so a dialog, the
+   palette and the date picker take the focus they are opened with while the
+   pen still draws (all-themes, 2026-10-13: the focus fell to <body>). */
+/* --kp-bp-hold is a clock with nothing drawn on it: the bar's mega menu is
+   held on screen until a transition on its panel has played
+   (js/components.js), and this is that transition, the length of its
+   close. */
+@property --kp-bp-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+@property --kp-bp-ink {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+

@@ -1,0 +1,56 @@
+/* @part: card: signature layer; also next-times */
+    /* A card in a state (js/card-state.js): the note fills the stage (the plate was as high as its words, in the middle of a tall
+       stage), and a failed card says it at the heading size in the middle with its Retry under it, as an empty one does
+       (kpadopt4-rows/today-states, kpadopt6-calm/quote-states, kpadopt5-lists/request-inspector). */
+    [data-theme='blueprint'] .kp-card__state {
+        align-content: stretch;
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    [data-theme='blueprint'] .kp-card__state > .kp-card__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    [data-theme='blueprint'] .kp-card__failure > .kp-alert__body {
+        flex: none;
+        justify-items: center;
+        max-inline-size: 100%;
+    }
+
+    [data-theme='blueprint'] :is(.kp-card__state-title, .kp-card__failure .kp-alert__what) {
+        font-size: var(--kp-text-lg, 1.125rem);
+    }
+
+    /* The failed title is the alert's own ink (the page's ink was dark plum on the red plate). */
+    [data-theme='blueprint'] .kp-card__failure :is(.kp-card__state-title, .kp-alert__what) {
+        color: inherit;
+    }
+
+    /* The card's Retry is the package's small button (28 px, 13 px text); a state's action is a normal-size one. */
+    [data-theme='blueprint'] .kp-card__failure > .kp-card__retry.kp-button--sm {
+        font-size: var(--kp-text-md, 1rem);
+        padding-inline: 1rem;
+    }
+
+    /* The next-times list keeps the height of three rows in every state (166 px); the empty plate with its title at the heading
+       size (two lines on a phone) needed 171 to 198 px, so Empty moved the page (kpadopt5-time/runs-states). In this footprint the
+       compass is 2 rem, the padding 0.5 rem and the tracking is tighter. */
+    [data-theme='blueprint'] .kp-runs__empty {
+        padding: 0.5rem 1rem;
+        gap: 0.25rem;
+    }
+
+    [data-theme='blueprint'] .kp-runs__empty::before {
+        inline-size: 2rem;
+        block-size: 2rem;
+        margin: 0 auto;
+    }
+
+    [data-theme='blueprint'] .kp-runs__empty-title {
+        margin: 0;
+        letter-spacing: 0.04em;
+    }

@@ -2,104 +2,249 @@
   "output": "css/dark-register.css",
   "items": [
     {
-      "open": "/* The numbers dark's motion is made of, registered at the top level because\n   Firefox does not register an @property inside a cascade layer; with no\n   registration every keyframe that moves one would flip between its two poses\n   instead of moving. --kp-sig-dk-turn is how far the film has turned on a\n   pass (0 at rest, a full turn is the same colour: cyan at the top);\n   --kp-sig-dk-at and --kp-sig-dk-ink are how far the line has come over a\n   changed figure and how much ink lies over the film in its letters (at\n   rest the figure is ink); --kp-sig-dk-ph is the spinner's loop, 0 to 1. */\n@property --kp-sig-dk-turn {\n    syntax: '<angle>';\n    inherits: true;\n    initial-value: 0deg;\n}\n\n@property --kp-sig-dk-at {\n    syntax: '<percentage>';\n    inherits: true;\n    initial-value: 100%;\n}\n\n@property --kp-sig-dk-ink {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-dk-ph {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0.2;\n}\n\n/* --kp-sig-dk-hold carries no picture: a transition on it holds the mega\n   menu's panel on screen for the pass back (js/components.js settleClosing\n   waits for the panel's transitions), as Firefox holds no `display`. */\n@property --kp-sig-dk-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
+        "tokens/register.css",
+        "card/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "time-field.css",
         "base.css",
-        "the-halo-stops-where.css",
-        "the-instruments-own-button.css",
-        "the-hooks.css",
-        "the-navbar.css",
-        "button.css",
-        "fields.css",
-        "card.css",
-        "panels.css",
-        "the-keyboard-cursor.css",
-        "the-demos-own-pieces.css"
+        "page-header/register.css",
+        "navbar/register.css",
+        "button/register-2.css",
+        "form-field/register-2.css",
+        "card/register-2.css",
+        "dialog/register.css",
+        "toast.css",
+        "menu-button.css",
+        "alert/register.css",
+        "page-header/register-2.css",
+        "small-patterns/register.css",
+        "card/register-3.css",
+        "datatable/register.css",
+        "tabs.css",
+        "combobox.css",
+        "page-header/register-3.css",
+        "card/register-4.css",
+        "motion/register.css",
+        "sidenav/register.css",
+        "button/register-3.css",
+        "card/register-5.css",
+        "dialog/register-2.css",
+        "navbar/register-2.css",
+        "alarm/register.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* dark's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/dark.css and research/signature-elements/themes/dark.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base.css",
-        "the-numbers-and-pictures.css",
-        "the-spinner.css",
-        "activity-feed.css",
-        "pointing-the-keyboard.css",
-        "the-opening-is-a-pass.css",
-        "key-figure-is-a-panel.css",
-        "the-meter-with-a-mark-this.css",
-        "dark-the-machined-channel.css",
-        "every-part-that-opens.css"
+        "progress-spinner-skeleton/signature.css",
+        "tokens/signature.css",
+        "signature.css",
+        "button/signature.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "month-heatmap/signature.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "motion/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "upload-wizard.css",
+        "state-plate.css",
+        "navbar/signature.css",
+        "button/signature-2.css",
+        "key-figures/signature.css",
+        "button/signature-3.css",
+        "state-word/signature.css",
+        "motion/signature-2.css",
+        "navbar/signature-2.css",
+        "motion/signature-3.css",
+        "state-word/signature-2.css",
+        "month-heatmap/signature-2.css",
+        "alert/signature.css",
+        "key-figures/signature-2.css",
+        "meter.css",
+        "motion/signature-4.css",
+        "navbar/signature-3.css",
+        "alarm/signature.css",
+        "sidenav/signature.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "register.css"
-    },
-    {
-      "file": "end-of-the-signature.css"
-    },
-    {
-      "file": "the-dashboard-parts/base.css"
-    },
-    {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
-    },
-    {
-      "file": "the-six-opt-in-options.css"
-    },
-    {
-      "file": "the-kpadopt4-components.css"
-    },
-    {
-      "file": "end-the-kpadopt4-data.css"
-    },
-    {
-      "open": "/* ── end the kpadopt4 rows and flows ── */\n\n/* ── The kpadopt4 secrets, time, cooking and commands in dark's own grammar [kpadopt4] ──\n   A secret is a slot with a readout; the line that runs a countdown is the line running its track (G11); a clock is the\n   film turning, the share left laid on a ticked face (G5, G19); a timer that ends is the film gone coral along its edge,\n   the plate stays near-black (G8); a step, a pick, a figure is laid by the pass (G13); words are Archivo, readings the\n   ticker mono (G18). Nothing blinks, nothing breathes. */\n@layer kp.signature {\n",
+      "open": "@layer kp.register {\n",
       "files": [
-        "secret-field.css"
+        "tabbar.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-the-kpadopt4-secrets.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "end-t56/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Dark's own (themes/dark/CHARACTER.md): a near-black plate with the film along the edge that matters, cut on two\n   opposite corners, never rounded (G6, G7); pointing rests the line at the start edge (G15); a press turns the film a\n   quarter while the line crosses the face (G17); a warning or failure is the film gone coral along its whole edge (G8);\n   what waits is swept by the comet, the line with its film tail (G10); what runs is the line running its track (G11);\n   readings in the ticker mono (G18). */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows.css",
+        "facet-list.css",
+        "heat-grid.css",
+        "week-agenda.css",
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "end-t56/end-t56.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "end-t56/end-t56-2.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Dark's own (themes/dark/CHARACTER.md): the separator is the instrument's scale stood upright, a hairline\n   fading at both ends with one lit tick at its middle in the chart cyan; lying down in the phone's list the tick stands\n   on it. A day on the axis is a slot: pointing lights its edge, pressed it is the lit plate (the accent) with the edge\n   and its glow, as a pointed tile is. A series' finished run carries the 2 px leading edge in its ink, as a week pill\n   does. The facet pattern is a square on a machined rim. */\n@layer kp.signature {\n",
+      "files": [
+        "navbar/signature-4.css",
+        "run-timeline/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "end-t56/end-t56-3.css"
+      "open": "/* ── The kpadopt4 components in dark's own grammar [kpadopt4] ──\n   Dark is a spectral instrument (themes/dark/CHARACTER.md): a near-black plate with the film along the edge that matters,\n   cut on two opposite corners and never rounded (G6, G7); the spectral line is the only light, and it passes: a part that\n   is drawn is laid by the line left to right at one pace, 660 ms linear (G1, G2, G13); pointing rests the line at the start\n   edge of the part (G15); a press turns the film a quarter (G17); a warning or failure is the film gone coral along its\n   edge and nothing else (G8); what waits is crossed by the comet (G10), what runs is the line running its track (G11);\n   readings and identifiers are in the ticker mono, words in Archivo (G18). The loading of every data area is the shared\n   busy card and the comet the register already lays; nothing here fades, scales or blinks. */\n@layer kp.signature {\n",
+      "files": [
+        "tokens/signature-2.css",
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "code-block/signature.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-4.css"
+      "open": "/* ── end the kpadopt4 data pieces ── */\n\n/* ── The kpadopt4 rows, records and flows in dark's own grammar [kpadopt4] ──\n   Rows rest the line at their start edge and are laid by the pass 60 ms apart (G2, G15); a state is the film gone to the\n   tone's colour along the edge (G8); a plate that stands alone is cut on two corners (G6); a drawing for an empty state is\n   the instrument's screen, laid by one pass left to right (G13, G19). */\n@layer kp.signature {\n",
+      "files": [
+        "action-columns.css",
+        "forms.css",
+        "small-patterns/signature.css",
+        "pipeline.css",
+        "step-list.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-5.css"
+      "open": "/* ── end the kpadopt4 rows and flows ── */\n\n/* ── The kpadopt4 secrets, time, cooking and commands in dark's own grammar [kpadopt4] ──\n   A secret is a slot with a readout; the line that runs a countdown is the line running its track (G11); a clock is the\n   film turning, the share left laid on a ticked face (G5, G19); a timer that ends is the film gone coral along its edge,\n   the plate stays near-black (G8); a step, a pick, a figure is laid by the pass (G13); words are Archivo, readings the\n   ticker mono (G18). Nothing blinks, nothing breathes. */\n@layer kp.signature {\n",
+      "files": [
+        "small-patterns/signature-2.css",
+        "dialog/signature.css",
+        "typed-confirmation.css",
+        "checklist-sink.css",
+        "kitchen-timers.css",
+        "focus-steps.css",
+        "wheel.css",
+        "uptime-strip.css",
+        "visual-timer.css",
+        "command-block.css",
+        "compare-slider.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "t56-q.css"
+      "open": "/* ── end the kpadopt4 secrets, time, cooking and commands ── */\n\n/* ── t56: the kpadopt5/6 parts inside dark ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the version badge ── */\n@layer kp.signature {\n",
+      "files": [
+        "badge.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-choose.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the gallery tile ── */\n@layer kp.signature {\n",
+      "files": [
+        "gallery.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/base.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the conversation bubble ── */\n@layer kp.signature {\n",
+      "files": [
+        "conversation.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: what has to fit a phone ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "graph-loading-r3-dk-load-3.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the quote card keeps its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "quote-card.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "open": "/* ── end t56 ── */\n\n/* ── t56-q: the failed plate wears the film, whole ── */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature-2.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "open": "/* ── t56-q: the busy card's words stay above the comet ── */\n@layer kp.signature {\n",
+      "files": [
+        "datatable/signature.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "open": "/* ── end t56-q ── */\n\n/* ── t56-q2 choose: the waiting picker's panel fits its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "usual-picker.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "open": "/* ── end t56-q2 choose ── */\n\n/* ── t56-q2 schedule: the quiet buttons have a plate ── */\n@layer kp.signature {\n",
+      "files": [
+        "weekday-picker.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── t56-q2 schedule: the snooze tiles share one grid ── */\n@layer kp.signature {\n",
+      "files": [
+        "snooze-picker.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── graph loading · shape 1 · The status board: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── graph loading · r3-dk-load-3 · A packet runs the bus (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

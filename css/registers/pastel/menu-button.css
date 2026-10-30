@@ -1,0 +1,79 @@
+/* @part: menu-button: signature layer; also button, toast */
+    [data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle):hover:not(:disabled, [aria-disabled='true']) {
+        translate: 0 -2px;
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+
+    [data-theme='pastel'] :is(.kp-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):hover:not(:disabled, [aria-disabled='true'], :active)::after {
+        scale: 1;
+    }
+
+    [data-theme='pastel'] .kp-menu__item:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    [data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle):active:not(:disabled, [aria-disabled='true']) {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+
+    [data-theme='pastel'] .kp-menu__item:active:not(:disabled, [aria-disabled='true']) {
+        translate: 0 1px;
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    /* G15, Kenny's pick: the dashed line alone, in the ring's plum, 3 px out
+       (the package's inner ring is 0 wide in pastel). A part keeps its own
+       peel or pass under it. */
+    [data-theme='pastel'] :focus-visible {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+
+    [data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+
+    [data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle):focus-visible:hover:not(:disabled, [aria-disabled='true']) {
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+
+    /* On a tone's own plate the plum line would sink in (the ring reads
+       1.34:1 on the destructive plate and 2.92:1 on the info plate): there
+       it takes the plate's ink, the words' colour, still dashed and alone
+       (measured, research/pastel-applied/_audit/MISSING.md). */
+    [data-theme='pastel']
+        :is(
+            .kp-toast--destructive,
+            .kp-toast--error,
+            .kp-toast--info,
+            .kp-alert--destructive,
+            .kp-alert--info,
+            .kp-button--primary,
+            .kp-button--destructive
+        )
+        :focus-visible {
+        outline-color: currentColor;
+    }
+
+    /* An entry in a list sits in a scrolling box: its line is 1 px out. */
+    [data-theme='pastel']
+        :is(
+            .kp-menu__item,
+            .kp-palette__option,
+            .kp-combobox__option,
+            [role='option'],
+            .kp-menu [data-kp-theme],
+            .kp-datepicker__day,
+            .kp-calendar__day,
+            .kp-tree [role='treeitem'],
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-nav__menu a
+        ):focus-visible {
+        outline-offset: 1px;
+        box-shadow: none;
+    }
+

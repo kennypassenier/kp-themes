@@ -1,0 +1,68 @@
+/* @part: small-patterns: signature layer; also dialog */
+    /* A secret: the value lies in a routed slot of wood; the time left is a grove planted along the line that withers
+       back from its end as the time runs out (whole trees go one by one); a failure is a field note. */
+    [data-theme='forest'] .kp-secret {
+        --kp-secret-drain-size: 0.625rem;
+    }
+    [data-theme='forest'] .kp-secret__value {
+        border-color: transparent;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-secret__value:not(.kp-masked) {
+        background: var(--muted);
+    }
+    [data-theme='forest'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+        box-shadow: none;
+        border-color: var(--border-strong);
+    }
+    [data-theme='forest'] .kp-secret__drain {
+        background: var(--primary);
+        mask: var(--kp-fo-trees) 0 0 / 2.1875rem 100% repeat-x;
+    }
+    [data-theme='forest'] .kp-secret__drain:dir(rtl) {
+        mask-position: 100% 0;
+    }
+    [data-theme='forest'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0.5rem;
+        border-inline-start: 0;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            animation-name: kp-sig-forest-secret-drain;
+            animation-timing-function: linear;
+        }
+    }
+    @keyframes kp-sig-forest-secret-drain {
+        from {
+            inline-size: 100%;
+        }
+        to {
+            inline-size: 0;
+        }
+    }
+
+    /* A dialog in sections: a section's rule is a trail of dashes; a danger section carries the red's painted blaze on
+       its start edge; what still depends on the thing and what would be lost are kraft notes with the leaf corner; the
+       name to type is painted with a clay line under it. */
+    [data-theme='forest'] .kp-dialog__section {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.5);
+    }
+    [data-theme='forest'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='forest'] .kp-dialog__section--danger {
+        border-inline-start-width: 4px;
+        border-image: linear-gradient(to bottom, transparent 0.25rem, var(--destructive) 0.25rem 1.75rem, transparent 1.75rem) 1;
+    }
+    [data-theme='forest'] .kp-dialog__note {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-confirm__dependents, .kp-type-confirm__loses) {
+        border-radius: 0 var(--kp-sig-fo-leaf);
+    }

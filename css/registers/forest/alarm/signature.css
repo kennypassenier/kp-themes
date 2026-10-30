@@ -1,0 +1,87 @@
+/* @part: alarm: signature layer */
+    /* The alarm · grows like the dialog; a growth ring keeps calling (Kenny,
+       2026-10-09 on research/forest-uniformity, the alarm: "a growth ring
+       instead of the glow pulse"). Its frame takes the plate's leaf and its
+       glow gives way to a ring laid just outside the frame: drawn clockwise
+       from the top on the growth curve in 550 ms, then it fades, once every
+       loop (3200 ms) after the growth, for as long as the alarm waits.
+       Standing still the ring stands whole. */
+    [data-theme='forest'] .kp-alarm::before {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+
+    [data-theme='forest'] .kp-alarm::after {
+        inset: calc(var(--kp-alarm-bar, 0.9rem) + 0.75rem - 7px) calc(0.75rem - 7px);
+        border: 1.5px solid var(--primary);
+        border-radius: 0 calc(var(--kp-sig-fo-leaf) + 7px);
+        box-shadow: none;
+        mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-forest-ground var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still'])::before,
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still'])::after {
+            animation: kp-sig-forest-alarm-ring var(--kp-sig-fo-loop) linear var(--kp-sig-fo-time) infinite both;
+        }
+    }
+
+    @keyframes kp-sig-forest-ground {
+        from {
+            background-color: transparent;
+        }
+    }
+
+    @keyframes kp-sig-forest-alarm-ring {
+        0% {
+            --kp-fo-arc: 0deg;
+            opacity: 1;
+            animation-timing-function: linear(
+                0 0%,
+                0.01 5%,
+                0.032 10%,
+                0.072 15%,
+                0.133 20%,
+                0.211 25%,
+                0.302 30%,
+                0.398 35%,
+                0.493 40%,
+                0.582 45%,
+                0.662 50%,
+                0.732 55%,
+                0.791 60%,
+                0.84 65%,
+                0.881 70%,
+                0.913 75%,
+                0.939 80%,
+                0.96 85%,
+                0.977 90%,
+                0.99 95%,
+                1 100%
+            );
+        }
+
+        17.1875% {
+            --kp-fo-arc: 360deg;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        31.25%,
+        100% {
+            --kp-fo-arc: 360deg;
+            opacity: 0;
+        }
+    }
+

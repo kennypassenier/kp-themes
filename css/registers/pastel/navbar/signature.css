@@ -1,0 +1,38 @@
+/* @part: navbar: signature layer */
+    /* ── 3 · The pass in the holder (A2: the bar's menus, a tooltip) ───── */
+
+    /* The bar's dropdown and mega menu hang in their item: the item's
+       ::after is the pass, anchored on the menu (the item scopes the name). */
+    [data-theme='pastel'] .kp-nav__links > li:has(> .kp-nav__menu) {
+        anchor-scope: --kp-sig-pa-hung;
+    }
+
+    [data-theme='pastel'] .kp-nav__links > li > .kp-nav__menu {
+        anchor-name: --kp-sig-pa-hung;
+        transform-origin: var(--kp-sig-pa-corner);
+    }
+
+    @container kp-nav (width > 40rem) {
+        [data-theme='pastel']
+            .kp-nav__links
+            > li:is(:hover, :focus-within, [data-kp-nav-menu-open], [data-kp-nav-closing]):has(> .kp-nav__menu:not(.kp-nav__menu--wide))::after,
+        [data-theme='pastel']
+            .kp-nav__links
+            > li:is([data-kp-nav-menu-open], [data-kp-nav-closing], :has(> [data-kp-nav-disclosure][aria-expanded='true'])):has(
+                > .kp-nav__menu--wide
+            )::after {
+            content: '';
+            position: absolute;
+            z-index: calc(var(--kp-z-popover, 20) - 1);
+            position-anchor: --kp-sig-pa-hung;
+            inset: auto;
+            inline-size: anchor-size(width);
+            block-size: anchor-size(height);
+            left: calc(anchor(left) + var(--kp-sig-pa-off) * var(--kp-sig-pa-dir));
+            top: calc(anchor(top) + var(--kp-sig-pa-off));
+            border-radius: var(--kp-sig-pa-r-plate);
+            background: var(--kp-sig-pa-pass-c);
+            pointer-events: none;
+        }
+    }
+

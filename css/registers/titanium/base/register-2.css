@@ -1,0 +1,28 @@
+/* @part: base: register layer — rules that belong to no one component; also table, movable-grid, master-detail, toast */
+    [data-theme='titanium'] .kp-grid {
+        gap: 0.75rem;
+    }
+
+    [data-theme='titanium'] .kp-split {
+        gap: 0;
+    }
+
+    [data-theme='titanium'] .kp-toasts {
+        gap: 0.6rem;
+    }
+
+    [data-theme='titanium'] .kp-health {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* ── The scrollbar joins the theme ──────────────────────────────────── */
+
+    [data-theme='titanium'] {
+        scrollbar-color: var(--border-strong) var(--background);
+    }
+

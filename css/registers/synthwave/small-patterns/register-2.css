@@ -1,0 +1,53 @@
+/* @part: small-patterns: register layer; also button, navbar */
+    @keyframes kp-tube-on {
+        0% {
+            color: hsl(from var(--foreground) h s l / 0.4);
+            text-shadow: none;
+        }
+
+        20% {
+            color: var(--kp-core);
+            text-shadow: var(--kp-tube-pink);
+        }
+
+        34% {
+            color: hsl(from var(--foreground) h s l / 0.5);
+            text-shadow: none;
+        }
+
+        50%,
+        100% {
+            color: var(--kp-core);
+            text-shadow: var(--kp-tube-pink);
+        }
+    }
+
+    @keyframes kp-sun-cut {
+        0% {
+            opacity: 1;
+            transform: translateX(-10%);
+        }
+
+        66% {
+            opacity: 1;
+            transform: translateX(10%);
+        }
+
+        100% {
+            opacity: 0;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-bar-in {
+        0% {
+            transform: translateY(10px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: none;
+            opacity: 1;
+        }
+    }
+

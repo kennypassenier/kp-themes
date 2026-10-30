@@ -1,0 +1,64 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: entries that are read on a scale when pointed at, two witness lines at their ends and a ruler along the
+       foot, no wash; the title and the counts are lettering. The counts on their way are sections hatched start to end
+       by the pen, standing, lifted, a loop. */
+    [data-theme='blueprint'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-facet {
+        --kp-facet-hover: transparent;
+        position: relative;
+    }
+    [data-theme='blueprint'] .kp-facet:hover {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat,
+            repeating-linear-gradient(90deg, var(--accent) 0 1px, transparent 1px 5px) 2px 100% / calc(100% - 4px) 3px no-repeat;
+    }
+    [data-theme='blueprint'] :is(.kp-facets__title, .kp-facet__count) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-facets__title {
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--primary) 0 1px, transparent 1px 5px) left center / 0% 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) left center / 1px 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) right center / 1px 100% no-repeat;
+        background-size:
+            100% 100%,
+            1px 100%,
+            1px 100%;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-blueprint-hatch var(--kp-sig-bp-loop) linear infinite;
+        }
+        [data-theme='blueprint'] .kp-facets[aria-busy='true'] li:nth-child(2) .kp-facet__count {
+            animation-delay: calc(1.5 * var(--kp-sig-bp-unit));
+        }
+        [data-theme='blueprint'] .kp-facets[aria-busy='true'] li:nth-child(n + 3) .kp-facet__count {
+            animation-delay: calc(3 * var(--kp-sig-bp-unit));
+        }
+    }
+
+    /* Heat grid and matrix: drafted cells, ruled squares in the finished line, a hatch where a state says so; pointing
+       turns a cell's line to the pen's cyan; the pin is the amber datum, dashed; names and the axis are lettering. */
+    [data-theme='blueprint'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-edge: 1px;
+        --kp-heat-cell-ink: hsl(from var(--foreground) h s l / 0.7);
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='blueprint'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='blueprint'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }

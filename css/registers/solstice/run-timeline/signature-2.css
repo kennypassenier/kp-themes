@@ -1,0 +1,33 @@
+/* @part: run-timeline: signature layer; also facet-list */
+    [data-theme='solstice'] .kp-gantt__tick:is(button) {
+        border-radius: calc(var(--radius) * 0.8) calc(var(--radius) * 0.8) 0 0;
+        text-decoration: none;
+    }
+    [data-theme='solstice'] .kp-gantt__tick:is(button):hover {
+        background: radial-gradient(ellipse 70% 90% at 50% 100%, hsl(from var(--accent) h s l / 0.35), transparent 70%);
+        color: var(--foreground);
+    }
+    [data-theme='solstice'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: radial-gradient(ellipse 85% 120% at 50% 100%, hsl(from var(--primary) h s l / 0.45), hsl(from var(--primary) h s l / 0.1) 75%);
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow:
+            inset 0 -2px 0 var(--kp-gantt-series),
+            inset 0 -8px 8px -6px hsl(from var(--kp-gantt-series) h s l / 0.55);
+    }
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 0 -2px 0 var(--accent),
+            inset 0 -8px 8px -6px hsl(from var(--accent) h s l / 0.55);
+    }
+    [data-theme='solstice'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 35%;
+        box-shadow: 0 2px 4px -1px hsl(from var(--kp-facet-swatch-colour, var(--primary)) h s l / 0.6);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-gantt__tick:is(button) {
+            transition: box-shadow var(--kp-sig-solstice-contact, var(--fx-duration)) var(--kp-sig-solstice-touch, var(--fx-ease));
+        }
+    }

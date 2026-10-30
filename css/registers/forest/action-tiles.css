@@ -1,0 +1,50 @@
+/* @part: action-tiles: signature layer; also calm-status */
+    [data-theme='forest'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='forest'] .kp-action {
+        --kp-action-radius: var(--kp-sig-fo-plate);
+        --kp-action-edge-hover: var(--border);
+        --kp-action-ground-active: var(--card);
+        --kp-action-press: 0 0;
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+    [data-theme='forest'] .kp-action__text {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])):not(:focus-visible) {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])):not(:focus-visible) {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: 1px;
+    }
+    /* Destructive: the blaze on its start edge is a short painted mark in the red, the title in the red's ink. */
+    [data-theme='forest'] .kp-action--destructive {
+        --kp-action-tone-edge: var(--border);
+        --kp-action-tone-edge-hover: var(--border);
+        --kp-action-bar: 5px;
+    }
+    [data-theme='forest'] .kp-action--destructive::after {
+        inset-block: 0.75rem auto;
+        block-size: 1.1rem;
+        border-radius: 0 1px 1px 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-action {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Status rows: kraft rows with a small part's leaf corner. A failed row's reason is a field note, a square tag on
+       the red's own pair; an empty row is a dashed outline; a loading row plants its tree in the mark. */
+    [data-theme='forest'] .kp-statuslist {
+        --kp-statuslist-gap: 0.5rem;
+    }

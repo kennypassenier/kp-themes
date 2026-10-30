@@ -1,0 +1,58 @@
+/* @part: sidenav: signature layer */
+    /* ── The side navigation is swept in as the dialog is (G3, G13), review round 3 ──
+       Kenny, 2026-10-13 22:12: "Niet de open/close animatie van dit thema". The panel that comes
+       over the page or pushes it (and the window-edge panel of research/sidenav-edge) slid in on
+       the package's 220 ms translate. It no longer slides: it stands where it opens, and the line
+       crosses it from its start edge at one pace (660 ms, linear), laying the panel behind it, as
+       the dialog's pass does; the close is the pass back, right to left, taking it off, frame for
+       frame the opening backwards (880 ms both ways, `--kp-sig-dk-time`; the close plays the
+       `-back` copies of the frames reversed, so it starts as an animation of its own). It casts no
+       halo, so the reach is none; it draws no film edge, so there is no film turn (as the alarm).
+       Shut, it stays in place and is hidden from the close's last frame. The content a push panel
+       moves (and the edge tab) travels with the line: in the 660 ms of the pass and back in the
+       last 660 ms of the close, at the line's one pace. js/sidenav.js copies the panel's
+       `translate` timing to it; the panel's own translate never changes, so that timing is only
+       the clock, written over the whole 880 ms with a held stretch (`linear()`, 660 / 880 = 75 %)
+       so the move and the pass stay one pair. A backdrop, where a page asks for one, comes and
+       goes over the same 880 ms at one pace. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            --kp-sig-dk-r: 0px;
+            translate: 0 0;
+            visibility: hidden;
+            animation: kp-sig-dark-sweep-back 880ms linear reverse forwards;
+            transition:
+                translate 880ms linear(0, 0 25%, 1),
+                visibility 0s linear 880ms,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease-back, var(--fx-ease));
+        }
+
+        [data-theme='dark'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            animation: kp-sig-dark-sweep 880ms linear backwards;
+            transition:
+                translate 880ms linear(0, 1 75%, 1),
+                visibility 0s linear,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease, var(--fx-ease));
+        }
+
+        [data-theme='dark'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line-back 880ms linear reverse forwards;
+        }
+
+        [data-theme='dark'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation: kp-sig-dark-pass-line 880ms linear backwards;
+        }
+
+        [data-theme='dark'] .kp-sidenav__backdrop {
+            animation: kp-sidenav-backdrop 880ms linear both;
+        }
+    }

@@ -1,0 +1,111 @@
+/* @part: navbar: register layer; also page-header */
+    [data-theme='forest'] .kp-spec dd {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='forest'] .kp-spec__swatch {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-spec__font[data-font='display'] {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    /* ── The navbar ──────────────────────────────────────────────────── */
+
+    [data-theme='forest'] .kp-nav-wrap {
+        background: var(--background);
+    }
+
+    [data-theme='forest'] .kp-nav {
+        background: color-mix(in srgb, var(--background) 92%, transparent);
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='forest'] .kp-nav__brand {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        font-size: 1.1rem;
+    }
+
+    [data-theme='forest'] .kp-nav__link {
+        color: var(--foreground);
+        border-bottom: 2px solid transparent;
+    }
+
+    [data-theme='forest'] .kp-nav__link:hover {
+        border-bottom-color: var(--primary);
+        color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-nav__link[aria-current] {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.35em;
+        text-decoration-color: var(--primary);
+        border-bottom-color: transparent;
+    }
+
+    [data-theme='forest'] .kp-nav__link:focus-visible {
+        color: var(--primary);
+        border-bottom-color: transparent;
+        text-decoration: none;
+    }
+
+    [data-theme='forest'] .kp-nav__link--lang {
+        text-transform: uppercase;
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
+    [data-theme='forest'] .kp-nav__link--cta {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-bottom: none;
+        padding-inline: var(--kp-space-lg, 1rem);
+    }
+
+    [data-theme='forest'] .kp-nav__link--cta:hover,
+    [data-theme='forest'] .kp-nav__link--cta:focus-visible {
+        color: var(--primary-foreground);
+        border-bottom: none;
+    }
+
+    /* The dropdown [KT14]: a bordered card, the theme's own language. */
+    [data-theme='forest'] .kp-nav__menu {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--foreground) 25%, transparent);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    [data-theme='forest'] .kp-nav__menu a {
+        color: var(--foreground);
+    }
+
+    [data-theme='forest'] .kp-nav__menu a:hover,
+    [data-theme='forest'] .kp-nav__menu a:focus-visible {
+        background: var(--secondary);
+        color: var(--foreground);
+    }
+

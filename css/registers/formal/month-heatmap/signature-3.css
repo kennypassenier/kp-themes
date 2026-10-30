@@ -1,0 +1,74 @@
+/* @part: month-heatmap: signature layer; also drawer-tour */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-sig-formal-tour-ring {
+            from {
+                outline-color: transparent;
+            }
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's
+           spinner) are ruled in as anything that arrives, and ruled off as
+           anything that leaves: js/calendar.js marks a layer
+           `[data-kp-leaving]` while its state goes (`--kp-calendar-busy-leave:
+           hold`), and the rules below keep it drawn through the leave. */
+        [data-theme='formal'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='formal']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]) {
+            animation: kp-sig-formal-ruled-in 560ms linear reverse backwards;
+        }
+
+        /* The leave's frames under a name of their own, so the leave that
+           follows starts afresh instead of taking over the finished arrival
+           of the same name (lesson 10). */
+        @keyframes kp-sig-formal-ruled-in {
+            0%,
+            28.571% {
+                clip-path: inset(-3rem);
+            }
+
+            100% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+        }
+
+        [data-theme='formal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            animation:
+                kp-sig-formal-ruled-in 560ms linear reverse backwards,
+                kp-sig-formal-loading var(--kp-sig-fm-loop) linear infinite;
+        }
+
+        [data-theme='formal'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='formal'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='formal'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+    }
+

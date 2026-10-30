@@ -1,0 +1,117 @@
+/* @part: base: register layer — rules that belong to no one component; also motion */
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='blueprint'] h1,
+    [data-theme='blueprint'] h2,
+    [data-theme='blueprint'] h3 {
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='blueprint'] [data-kp-surface] h1 {
+        max-width: 16ch;
+        margin-block: 0;
+    }
+
+    /* Microlabels: the sheet's own annotation voice. */
+    [data-theme='blueprint'] .microlabel {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    /* ── The hooks [S45]: the headline, the mark, the rule, the divider ── */
+
+    /* The headline: a plain settle, not a decipher — the text is legible
+       throughout, which is the reason `--kp-reveal-headline` is left
+       unanswered above (a non-empty value would route it through the
+       module's character-glitch default). Gated purely on
+       `[data-kp-effects]`, the same attribute the demo's own `.kp-arrive`
+       class stood in for, so a page without the module shows the headline
+       at rest and a page with it never flashes from rest to start [AR34].
+       The wrap `measure()` builds around it (see below) carries no
+       transform of its own, so this fade is unaffected by the wrap. */
+    [data-theme='blueprint'] [data-kp-surface='hero'] h1[data-kp-reveal='headline'] {
+        display: inline-block;
+        align-self: flex-start;
+        max-width: 100%;
+        position: relative;
+    }
+
+    /* The wrap `measure()` builds in place of the headline: the same
+       inline sizing, so the vertical dimension line (a child of this wrap,
+       absolutely positioned) is contained to exactly the headline's own
+       box — CSS containment, not a JS-measured height. */
+    [data-theme='blueprint'] [data-kp-measured] {
+        position: relative;
+        display: inline-block;
+        align-self: flex-start;
+        /* The frame lives INSIDE this box, with padding holding it off the
+           text. An absolutely positioned child counts toward its
+           containing block's scroll width, so brackets placed outside the
+           wrap pushed the page sideways by their own offset — nine pixels
+           at 320px, which DI11 refuses and the reflow suite caught. Moving
+           the wrap with a margin did not help, because the overflow was
+           never the wrap's position; it was the brackets' own. */
+        padding: 0.55rem 0.55rem 1.6rem;
+        max-width: 100%;
+    }
+
+    /* ── The measurement frame [scope-18] ──────────────────────────────
+       Four corner brackets around the headline's box with one readout
+       under it, printing the box's true rendered size. It replaced two
+       dimension lines on 2026-09-11: Kenny asked for those in round four
+       and then saw the command-table demo's brackets — "dan is de demo
+       hier niet voor niks geweest".
+
+       The brackets are pure CSS on four elements the module builds; the
+       readout is the only thing script writes, and it writes what it
+       measured. Nothing here is a fixed size: the brackets sit on the
+       wrap's own corners and the wrap is the headline's own box. */
+    [data-theme='blueprint'] [data-kp-measure-bracket] {
+        position: absolute;
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
+        border: 1px solid var(--border-strong);
+        opacity: 0;
+    }
+
+    [data-theme='blueprint'] [data-kp-measured='live'] [data-kp-measure-bracket] {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-kp-measure-bracket] {
+            transition: opacity var(--kp-measure-duration, 400ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='blueprint'] [data-kp-measure-bracket='tl'] {
+        inset-inline-start: 0;
+        inset-block-start: 0;
+        border-inline-end: 0;
+        border-block-end: 0;
+    }
+
+    [data-theme='blueprint'] [data-kp-measure-bracket='tr'] {
+        inset-inline-end: 0;
+        inset-block-start: 0;
+        border-inline-start: 0;
+        border-block-end: 0;
+    }
+
+    [data-theme='blueprint'] [data-kp-measure-bracket='bl'] {
+        inset-inline-start: 0;
+        inset-block-end: 1.05rem;
+        border-inline-end: 0;
+        border-block-start: 0;
+    }
+
+    [data-theme='blueprint'] [data-kp-measure-bracket='br'] {
+        inset-inline-end: 0;
+        inset-block-end: 1.05rem;
+        border-inline-start: 0;
+        border-block-start: 0;
+    }
+

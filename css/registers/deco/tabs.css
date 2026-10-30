@@ -1,0 +1,75 @@
+/* @part: tabs: register layer; also accordion, date-picker, breadcrumb-pagination, upload-wizard */
+    /* The accordion [gap-12]: the spaced capitals of its tabs, the primary colour for what is open. */
+    [data-theme='deco'] .kp-accordion__summary {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-accordion__summary::marker {
+        color: var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-reorder {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-tab {
+        border-radius: 0;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] .kp-tab[aria-selected='true'] {
+        color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-breadcrumb,
+    [data-theme='deco'] .kp-pagination {
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='deco'] .kp-pagination a[aria-current],
+    [data-theme='deco'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-wizard {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-datepicker__weekday,
+    [data-theme='deco'] .kp-datepicker__title {
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+

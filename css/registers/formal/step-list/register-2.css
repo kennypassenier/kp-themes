@@ -1,0 +1,6 @@
+/* @part: step-list: register layer */
+    [data-theme='formal'] .kp-steplist--trace > .kp-steplist__item[data-state='failed'] .kp-steplist__title {
+        text-decoration: underline double var(--destructive);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.25em;
+    }

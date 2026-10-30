@@ -1,0 +1,83 @@
+/* @part: pipeline: signature layer */
+    /* The pipeline. */
+    [data-theme='solstice'] .kp-pipeline__lane {
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(var(--kp-pipeline-tone), var(--kp-pipeline-tone)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-pipeline-tone) h s l / 0.16), transparent 40%),
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-pipeline__head {
+        border-color: transparent;
+        border-radius: calc(var(--radius) * 0.7);
+        background:
+            linear-gradient(var(--kp-pipeline-tone), var(--kp-pipeline-tone)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-pipeline-tone) h s l / 0.34), hsl(from var(--kp-pipeline-tone) h s l / 0.08));
+    }
+    [data-theme='solstice'] .kp-pipeline__name {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.0625rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-pipeline__count {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.375rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-pipeline__share {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.8125rem;
+    }
+    [data-theme='solstice'] .kp-pipeline__card {
+        border-radius: calc(var(--radius) * 0.7);
+        border-color: var(--border);
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.4), hsl(from var(--primary) h s l / 0.4)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.14), transparent 55%),
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-pipeline__card:hover {
+        border-color: var(--border);
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--primary) h s l / 0.3), transparent 80%),
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-pipeline__card:active {
+        box-shadow: inset 0 0 0.5rem hsl(from var(--primary) h s l / 0.4);
+    }
+    [data-theme='solstice'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border);
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary),
+            0 0 0.8rem hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='solstice'] .kp-pipeline__card[data-kp-dimmed] {
+        background: none;
+    }
+    [data-theme='solstice'] .kp-pipeline__title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-pipeline__mark {
+        border-radius: 50%;
+        background: linear-gradient(
+            to top,
+            hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s l / 0.55),
+            hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s l / 0.15)
+        );
+        box-shadow: 0 0 0.5rem hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s l / 0.4);
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.8125rem;
+        font-weight: 400;
+        text-transform: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-pipeline__card {
+            transition:
+                background-color var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch),
+                box-shadow var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch);
+        }
+    }

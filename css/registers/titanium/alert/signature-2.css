@@ -1,0 +1,10 @@
+/* @part: alert: signature layer */
+    [data-theme='titanium'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure, .kp-card__failure, .kp-rating__failure),
+    [data-theme='titanium'] .kp-empty[data-kp-tone='error'] {
+        outline: 2px solid hsl(from var(--destructive-foreground) h s l / 0.5);
+        outline-offset: -12px;
+        background-image: var(--kp-iris);
+        background-repeat: no-repeat;
+        background-position: 0 100%;
+        background-size: 100% 4px;
+    }

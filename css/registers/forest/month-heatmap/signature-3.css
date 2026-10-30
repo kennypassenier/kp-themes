@@ -1,0 +1,51 @@
+/* @part: month-heatmap: signature layer; also table, date-picker */
+    /* Row 16, hover answers: a day of the month, the month's title, a
+       sortable header and a tag's remove button blaze like every other part
+       pointed at (G12). The picked day keeps its green ring; the remove
+       button stays round (a wood's round part) and loses the red disc, since
+       a person's act is green (G5). The title's grey wash goes. A header is a
+       cell in a row of cells, so its ring is laid inside. */
+    [data-theme='forest']
+        :where(td:not([aria-selected='true']) > .kp-calendar__day, button.kp-datepicker__title, .kp-table th[data-kp-sort], .kp-tag__remove) {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+
+    [data-theme='forest']
+        :where(td:not([aria-selected='true']) > .kp-calendar__day, button.kp-datepicker__title, .kp-tag__remove):hover:not(
+            :disabled,
+            [aria-disabled='true'],
+            :focus-visible
+        ) {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] .kp-table th[data-kp-sort]:hover {
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='forest']
+        :where(td:not([aria-selected='true']) > .kp-calendar__day, button.kp-datepicker__title, .kp-tag__remove):active:not(
+            :disabled,
+            [aria-disabled='true'],
+            :focus-visible
+        ) {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: 1px;
+    }
+
+    [data-theme='forest'] .kp-table th[data-kp-sort]:active {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='forest'] button.kp-datepicker__title:hover,
+    [data-theme='forest'] .kp-tag__remove:hover {
+        background: none;
+        color: inherit;
+    }
+

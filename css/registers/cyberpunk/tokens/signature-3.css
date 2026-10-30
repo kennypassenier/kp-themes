@@ -1,0 +1,34 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    /* <<cfd-begin>> ─────────────────────────────────────────────────────────────────────────
+       Round 2, groups C, D and F [Kenny, 2026-10-12]: the navbar's plate and pointing, the cut
+       on every plate and control that was a rectangle, prose in the body face and the machine's
+       prefixes. Written last so it states the grammar once; the rules above it that these
+       replace were removed or are overruled by layer order. */
+
+    [data-theme='cyberpunk'] {
+        /* A cut for a part too small for the control's 8 px: a share of its own height. */
+        --kp-cp-clip-mini: polygon(
+            0 0,
+            100% 0,
+            100% calc(100% - min(var(--kp-cp-notch-sm), 38%)),
+            calc(100% - min(var(--kp-cp-notch-sm), 38%)) 100%,
+            0 100%
+        );
+        --kp-cp-wide-mini: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - min(var(--kp-cp-notch-sm), 38%) - 40px),
+            calc(100% - min(var(--kp-cp-notch-sm), 38%) - 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        /* A tab is cut at the head, the way a dossier tab is, so its selected line stays whole. */
+        --kp-cp-clip-ctl-top: polygon(0 0, calc(100% - var(--kp-cp-notch-sm)) 0, 100% var(--kp-cp-notch-sm), 100% 100%, 0 100%);
+        --kp-cp-wide-ctl-top: polygon(
+            -40px -40px,
+            calc(100% - var(--kp-cp-notch-sm) - 40px) -40px,
+            calc(100% + 40px) calc(var(--kp-cp-notch-sm) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+    }
+

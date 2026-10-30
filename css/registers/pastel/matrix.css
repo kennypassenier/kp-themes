@@ -1,0 +1,72 @@
+/* @part: matrix: signature layer; also bar-cell, run-timeline, week-agenda */
+    [data-theme='pastel'] .kp-matrix__cell.kp-skeleton {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background:
+            radial-gradient(circle, var(--kp-sig-pa-tape-stripe) 0.6px, transparent 1.1px) 0 0 / 3px 3px,
+            var(--accent);
+        -webkit-mask: radial-gradient(circle closest-side, var(--foreground) 0 calc(100% - 0.5px), transparent 100%) 50% 50% / 2.2rem 2.2rem no-repeat;
+        mask: radial-gradient(circle closest-side, var(--foreground) 0 calc(100% - 0.5px), transparent 100%) 50% 50% / 2.2rem 2.2rem no-repeat;
+    }
+    /* The head: plum with two paper eyes looking along the row. */
+    [data-theme='pastel'] .kp-matrix__line > .kp-matrix__cell.kp-skeleton:last-child {
+        background:
+            radial-gradient(circle at calc(50% + 0.3rem * var(--kp-sig-pa-dir)) 42%, var(--primary) 0 0.12rem, transparent 0.16rem),
+            radial-gradient(circle at calc(50% + 0.75rem * var(--kp-sig-pa-dir)) 42%, var(--primary) 0 0.12rem, transparent 0.16rem),
+            radial-gradient(circle at calc(50% + 0.3rem * var(--kp-sig-pa-dir)) 42%, var(--card) 0 0.3rem, transparent 0.34rem),
+            radial-gradient(circle at calc(50% + 0.75rem * var(--kp-sig-pa-dir)) 42%, var(--card) 0 0.3rem, transparent 0.34rem), var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-matrix__cell.kp-skeleton {
+            animation: kp-sig-pastel-bug-rise calc(var(--kp-sig-pa-loop) / 2) ease-in-out infinite;
+        }
+        [data-theme='pastel'] .kp-matrix__cell.kp-skeleton:nth-child(3) {
+            animation-delay: 140ms;
+        }
+        [data-theme='pastel'] .kp-matrix__cell.kp-skeleton:nth-child(4) {
+            animation-delay: 280ms;
+        }
+        [data-theme='pastel'] .kp-matrix__cell.kp-skeleton:nth-child(5) {
+            animation-delay: 420ms;
+        }
+        [data-theme='pastel'] .kp-matrix__cell.kp-skeleton:nth-child(6) {
+            animation-delay: 560ms;
+        }
+        [data-theme='pastel'] .kp-matrix__cell.kp-skeleton:nth-child(n + 7) {
+            animation-delay: 700ms;
+        }
+        [data-theme='pastel'] :is(.kp-heat__cell, .kp-matrix__cell) {
+            transition:
+                transform var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+    [data-theme='pastel'] .kp-bar-cell {
+        --kp-bar-cell-gap: 0.625rem;
+        font-variant-numeric: tabular-nums;
+    }
+    /* The figure's ghost is one pom-pom row the height of the figure's line: no skeleton gap, so a row that waits is as
+       tall as the row it waits for. */
+    [data-theme='pastel'] .kp-bar-cell__ghost.kp-skeleton {
+        margin-block: 0;
+        block-size: var(--kp-bar-cell-ghost-height, 0.625rem);
+    }
+
+    /* Week agenda and run timeline: pill stickers with a flat plum peel 2 px under them; pointing lifts a pill on its
+       peel, a press sticks it down; the next run has a plum ring; the line for now is plum with a pearl at its head. A
+       running run is washi tape, its stripes drifting start to end; a queued one a dashed pill. */
+    [data-theme='pastel'] .kp-week {
+        --kp-week-pill-radius: var(--kp-sig-pa-r-chip);
+        --kp-week-now: var(--primary);
+    }
+    /* A planned run [gaps-time-1019]: soft round dots, like a sticker sheet. */
+    [data-theme='pastel'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--kp-gantt-fill) 55%, transparent) 0 1.5px, transparent 2px);
+        background-size: 9px 9px;
+    }
+    [data-theme='pastel'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
+        --kp-gantt-bar-radius: var(--kp-sig-pa-r-chip);
+        --kp-gantt-now: var(--primary);
+    }

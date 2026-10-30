@@ -1,0 +1,24 @@
+/* @part: typed-confirmation: signature layer */
+    [data-theme='nostromo'] .kp-type-confirm__loses {
+        border: 3px solid var(--destructive);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+    }
+    [data-theme='nostromo'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-type-confirm__name {
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }

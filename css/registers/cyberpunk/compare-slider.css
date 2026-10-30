@@ -1,0 +1,30 @@
+/* @part: compare-slider: signature layer */
+    /* ── Compare slider: the divider is the reticle's line in cyan with a notched grip; the labels are prefixed ── */
+    [data-theme='cyberpunk'] .kp-compare {
+        --kp-compare-line: 2px;
+    }
+    [data-theme='cyberpunk'] .kp-compare__divider {
+        background: var(--accent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-compare__handle,
+    [data-theme='cyberpunk'] .kp-compare__grip {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-compare__label {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-compare__label--before::before {
+        content: '// ';
+    }
+    [data-theme='cyberpunk'] .kp-compare__label--after::before {
+        content: '// ';
+    }
+    [data-theme='cyberpunk'] .kp-compare__failed {
+        clip-path: var(--kp-cp-clip-ctl);
+    }

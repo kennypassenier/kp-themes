@@ -1,7 +1,38 @@
-/* @part: signature: The chart's own dot sits beside the sentence; the stop tube above it s */
-@layer kp.signature {
-    /* The chart's own dot sits beside the sentence; the stop tube above it says the same, so the dot leaves. */
-    [data-theme='synthwave'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
-        display: none;
+/* @part: signature: signature layer — rules that belong to no one component; also share-bar, motion */
+    /* ── A number that ticks: a laser is drawn under it from its centre outward in one beat, flares, and burns down,
+       3 beats once; the figure never moves ── */
+    [data-theme='synthwave'] [data-kp-tick] {
+        position: relative;
+        font-family: var(--theme-font-display);
     }
-}
+    [data-theme='synthwave'] [data-kp-tick]::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -3px;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 16px hsl(from var(--primary) h s l / 0.9);
+        opacity: 0;
+        transform: scaleX(0);
+        pointer-events: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-kp-tick][data-kp-tick-state='running']::after {
+            animation: kp-sig-synthwave-update-laser calc(3 * var(--kp-sw4-beat)) linear;
+        }
+    }
+
+    /* The rise: what arrives is uncovered from its horizon up while it climbs 0.5 rem, on the sunrise curve. */
+    @keyframes kp-sw4-rise {
+        from {
+            clip-path: inset(100% -2rem -2rem -2rem);
+            translate: 0 0.5rem;
+        }
+        to {
+            clip-path: inset(-2rem);
+            translate: 0 0;
+        }
+    }

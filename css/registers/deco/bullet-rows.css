@@ -1,0 +1,40 @@
+/* @part: bullet-rows: signature layer */
+    /* Bullet rows: gold leaf when pointed at; a figure of a tone is the figure in ruby over a gold rule (G8). */
+    [data-theme='deco'] .kp-bullets__row {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        color: var(--kp-sig-deco-champagne);
+        text-decoration: none;
+    }
+    [data-theme='deco'] .kp-bullets__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-bullets__figure {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='deco'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        background: none;
+        border-radius: 0;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+    [data-theme='deco'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        text-decoration-style: double;
+    }
+    [data-theme='deco'] .kp-bullets__note {
+        text-align: center;
+    }
+

@@ -1,0 +1,47 @@
+/* @part: bullet-rows: signature layer */
+    /* Bullet rows: the row under the hand is lifted off its footprint, yellow, named by its label; a figure's tone is
+       paint in the ink line (paper on red). */
+    [data-theme='brutalism'] .kp-bullets__row {
+        border-radius: 0;
+        border: 2px solid transparent;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 4px 4px 0 var(--border-strong);
+        translate: -2px -2px;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:active) {
+        translate: 0 0;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__detail {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-bullets__label {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-bullets__detail {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='brutalism'] .kp-bullets__figure {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='brutalism'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        background: var(--warning);
+        color: var(--border-strong);
+    }
+

@@ -1,0 +1,22 @@
+/* @part: range-picker: signature layer */
+    /* Range picker. */
+    [data-theme='solstice'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary),
+            0 0 0.8rem hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='solstice'] .kp-range__label {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-range__title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.125rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: inset 0 -2px 0 var(--destructive);
+    }
+

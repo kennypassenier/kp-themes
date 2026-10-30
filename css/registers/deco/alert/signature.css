@@ -1,0 +1,43 @@
+/* @part: alert: signature layer */
+    /* The alert: lacquer, ivory words, its label in the colour of what it
+       says (Q8: a warning is the figure in ruby over a gold rule; emerald
+       marks what is done). */
+    [data-theme='deco'] .kp-alert {
+        color: var(--foreground);
+        padding: 0.85rem 1.1rem;
+    }
+
+    [data-theme='deco'] .kp-alert__label {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-alert--success .kp-alert__label {
+        color: var(--kp-sig-deco-emerald);
+    }
+
+    [data-theme='deco'] .kp-alert--info .kp-alert__label {
+        color: var(--kp-sig-deco-champagne);
+    }
+
+    [data-theme='deco'] :is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__label {
+        /* The ruby four points lighter than --destructive (2026-10-13): the
+           plain ruby read 4.37:1 on the lacquer, under WCAG 2.2 AA's 4.5:1 for
+           a 600-weight label of this size; on a dark plate a step lighter is
+           the step that reads. */
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* A failed area says so in the ruby with the gold rule under it (G8), the same ruby as the alert's label: the lacquer
+       plate of a failure was otherwise indistinguishable from an empty one. */
+    [data-theme='deco'] .kp-alert--destructive:is(.kp-stateplate, .kp-card__failure) :is(.kp-stateplate__title, .kp-card__state-title),
+    [data-theme='deco'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+

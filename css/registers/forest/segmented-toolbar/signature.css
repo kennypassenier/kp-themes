@@ -1,0 +1,31 @@
+/* @part: segmented-toolbar: signature layer */
+    [data-theme='forest'] .kp-segmented {
+        --kp-seg-radius: 0.9rem;
+        --kp-seg-thumb: var(--primary);
+        --kp-seg-thumb-ink: var(--primary-foreground);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: 0 2px 0 hsl(from var(--primary) h s calc(l * 0.6));
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+    }
+    [data-theme='forest'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='forest'] .kp-toolbar__label {
+        letter-spacing: 0.06em;
+    }
+    [data-theme='forest'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='forest'] .kp-kbd {
+        --kp-kbd-radius: 0.3rem;
+        --kp-kbd-ground: var(--card);
+        --kp-kbd-foot: 3px;
+    }
+    /* The chosen word sits on a leaf: two rounded corners, two nearly square. */
+    [data-theme='forest'] .kp-segmented[data-kp-segmented-thumb]::before,
+    [data-theme='forest'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item[aria-checked='true'],
+    [data-theme='forest'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item[aria-pressed='true'],
+    [data-theme='forest'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        border-radius: 0.95rem 0.2rem 0.95rem 0.2rem;
+    }

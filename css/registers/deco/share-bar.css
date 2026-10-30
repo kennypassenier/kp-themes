@@ -1,0 +1,108 @@
+/* @part: share-bar: signature layer */
+    /* The share bar: the inlay doubled, two gold hairlines 3 px apart round the track, the parts flat between them set
+       apart by the lacquer, the threshold a gold lozenge on its hairline, the swatches lozenges (the jewel). */
+    [data-theme='deco'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+        --kp-stackbar-gap: 2px;
+    }
+    [data-theme='deco'] .kp-stackbar__title {
+        font-family: var(--theme-font-display);
+        font-size: 0.9375rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-stackbar__total {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-stackbar__bar {
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            0 0 0 1px hsl(from var(--primary) h s l / 0.8),
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-stackbar__seg {
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--kp-sig-deco-shadow);
+    }
+    [data-theme='deco'] .kp-stackbar__seg:dir(rtl) {
+        box-shadow: inset var(--kp-stackbar-gap, 2px) 0 0 var(--kp-sig-deco-shadow);
+    }
+    [data-theme='deco'] .kp-stackbar__seg[data-kp-stackbar-hatch],
+    [data-theme='deco'] .kp-stackbar__swatch[data-kp-stackbar-hatch] {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 3px, var(--kp-sig-deco-lac) 3px 4.5px);
+    }
+    [data-theme='deco'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--kp-sig-deco-shadow),
+            0 -1px 0 var(--kp-sig-deco-gold-hi),
+            0 1px 0 var(--kp-sig-deco-gold-hi);
+        filter: brightness(1.15);
+    }
+    [data-theme='deco'] .kp-stackbar__mark {
+        inset-block: -0.5rem;
+        inline-size: 1px;
+        background: var(--primary);
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.2rem;
+        inset-inline-start: -0.2rem;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-stackbar__bar[data-kp-over]::after {
+        content: '\25C6';
+        color: var(--destructive);
+        font-size: 0.6875rem;
+    }
+    [data-theme='deco'] .kp-stackbar__item {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
+        box-shadow: inset 0 -1px 0 var(--primary);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-stackbar__swatch {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline: 0.125rem;
+        rotate: 45deg;
+        border-radius: 0;
+        box-shadow:
+            0 0 0 1px var(--kp-sig-deco-lac),
+            0 0 0 2px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: var(--kp-sig-deco-lac);
+        box-shadow: 0 0 0 1px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-stackbar__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-stackbar__value {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-stackbar__item[data-kp-stackbar-over] .kp-stackbar__value {
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+    [data-theme='deco'] .kp-stackbar__note {
+        border-style: solid;
+        text-align: center;
+        font-family: var(--theme-font-body);
+    }
+

@@ -1,0 +1,30 @@
+/* @part: key-value-grid: signature layer */
+    /* ── The key-value grid: labels on tape, a changed value lights its lamp, a failed one sounds the klaxon ── */
+    [data-theme='nostromo'] .kp-kv__row > dt {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-kv--lines > .kp-kv__row {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-kv--lines > .kp-kv__row:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-kv__row[data-kp-changed] > dt::after {
+        content: '';
+        display: inline-block;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-inline-start: 0.5rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 4px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        vertical-align: 0.1em;
+    }
+    [data-theme='nostromo'] .kp-kv__row[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+

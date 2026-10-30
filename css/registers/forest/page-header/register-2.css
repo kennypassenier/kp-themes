@@ -1,0 +1,74 @@
+/* @part: page-header: register layer; also badge, progress-spinner-skeleton, combobox, small-patterns */
+    /* ── Footer ──────────────────────────────────────────────────────── */
+
+    [data-theme='forest'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='forest'] .kp-footer h4 {
+        font-family: var(--theme-font-display);
+        color: var(--sidebar-primary);
+    }
+
+    [data-theme='forest'] .kp-footer a {
+        color: var(--sidebar-foreground);
+        border-bottom: 1px solid transparent;
+    }
+
+    [data-theme='forest'] .kp-footer a:hover,
+    [data-theme='forest'] .kp-footer a:focus-visible {
+        border-bottom-color: var(--sidebar-primary);
+        color: var(--sidebar-primary);
+    }
+
+    [data-theme='forest'] .kp-footer .microlabel {
+        color: var(--sidebar-foreground);
+        opacity: 0.6;
+    }
+
+    [data-theme='forest'] .kp-footer .microlabel::before {
+        color: var(--sidebar-primary);
+    }
+
+    /* ── Badges, tags, status and small indicators ──────────────────── */
+
+    /* A tag is a field note [themes/forest/CHARACTER.md G13; Kenny, 2026-10-07:
+       italic for notes]: the body face in italic, the mono face stays for
+       identifiers, timestamps and log lines. */
+    [data-theme='forest'] .kp-badge,
+    [data-theme='forest'] .kp-tag {
+        font-family: var(--theme-font-body);
+        font-style: italic;
+        letter-spacing: 0.02em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='forest'] .kp-tag {
+        font-size: 0.72rem;
+    }
+
+    [data-theme='forest'] .kp-health {
+        font-family: var(--theme-font-body);
+        font-size: 0.8rem;
+    }
+
+    [data-theme='forest'] .kp-skeleton {
+        /* No stripe: block and circle are a treeline (see "Skeleton block and circle"). */
+        background: var(--muted);
+    }
+
+    [data-theme='forest'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-empty__title {
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='forest'] .kp-error {
+        font-family: var(--theme-font-body);
+        color: var(--destructive);
+    }
+

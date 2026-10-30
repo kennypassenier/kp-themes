@@ -1,0 +1,27 @@
+/* @part: key-figures: signature layer */
+    /* Key figures · tone 3, the field note: a change without a tone is a note
+       on the plain plate (the toned ones keep their status pair, the leaf
+       corner and the italic from above); a warning or failed tile keeps the
+       package's 3 px start blaze in the tone's ink (G5). */
+    [data-theme='forest'] .kp-kpi__delta:not([data-kp-tone]) {
+        padding-inline: 0.3em;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    /* Key figures · live 3, the growth ring round the changed figure: the
+       figure hugs its digits while the ring plays, so the ring is drawn round
+       the number and not across the tile. */
+    [data-theme='forest'] .kp-kpi > .kp-kpi__value[data-kp-updating='ring'] {
+        justify-self: start;
+        inline-size: fit-content;
+    }
+
+    /* Trend · loading 3, fireflies → the plot is planted too: the trend's
+       loading panel (js/chart.js draws it as a block skeleton) is not the
+       treeline here but the planting strip at the plot's foot (listed with
+       the waiting surfaces above), on the tile's own ground. */
+    [data-theme='forest'] .kp-kpi__chart .kp-chart__state[data-kp-state='loading'] {
+        background-color: transparent;
+    }
+

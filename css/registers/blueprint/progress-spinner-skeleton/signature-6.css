@@ -1,0 +1,12 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone {
+        border: 1px solid hsl(from var(--primary) h s l / 0.8);
+        background: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 4px);
+        margin: 0;
+        animation: none;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone::before,
+    [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone::after {
+        content: none;
+    }

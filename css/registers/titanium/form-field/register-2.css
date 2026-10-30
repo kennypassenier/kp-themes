@@ -1,0 +1,80 @@
+/* @part: form-field: register layer; also forms */
+    /* ── Fields: a panel and an edge, the violet as focus ──────────────── */
+
+    [data-theme='titanium'] .kp-field__label {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-field__input,
+    [data-theme='titanium'] .kp-datatable__search,
+    [data-theme='titanium'] .kp-combobox__input,
+    [data-theme='titanium'] .kp-palette__input {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='titanium'] .kp-field__input:focus,
+    [data-theme='titanium'] .kp-datatable__search:focus,
+    [data-theme='titanium'] .kp-combobox__input:focus,
+    [data-theme='titanium'] .kp-palette__input:focus {
+        border-color: var(--primary);
+    }
+
+    /* One arrow on a select, never two [fix-42]. The same three lines dark
+       carried, with the same fault: a chevron in two 6px gradients and
+       nothing taking the browser's own arrow away, so firefox drew its
+       dropmarker beside it (19 columns of ink over the select's right edge
+       against the 8 of a theme that leaves the arrow to the browser, and
+       still 8 with this register's own arrow forced off). Found by sweeping
+       all 22 themes for what Kenny reported in dark; these two were the
+       only pair, and the sweep is tests/register-dark-faults.spec.mjs. The arrow
+       goes back to the browser, which also reserves the room for it, and
+       the picker icon wears the theme where the page may take the list
+       over [KT8]. */
+    [data-theme='titanium'] select.kp-field__input::picker-icon {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='titanium'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='titanium'] .kp-field__check {
+        place-items: center;
+    }
+
+    [data-theme='titanium'] .kp-field__check:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-field__check:checked::before {
+        content: '';
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 0.1rem;
+        background: var(--primary-foreground);
+    }
+
+    [data-theme='titanium'] .kp-fieldset {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='titanium'] .kp-form__summary {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+

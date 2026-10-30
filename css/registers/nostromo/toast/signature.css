@@ -1,0 +1,29 @@
+/* @part: toast: signature layer */
+    /* What opens, arrives or leaves is drawn by the raster from its top edge
+       down in equal bands, one per 80 ms frame, and erased the same way
+       backwards (opening, leave "raster"; G2, G3, G12): a toast and a dialog
+       in 4 frames (320 ms, a panel), a tooltip in 2 (160 ms, a contact).
+       --kp-sig-no-n is the frame count of the part's draw. */
+    [data-theme='nostromo'] .kp-toast {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
+        position: relative;
+        padding-inline-start: 2rem;
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.75rem;
+        inset-block-start: calc(50% - 0.3rem);
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 2px var(--foreground),
+            0 0 6px 2px hsl(from var(--kp-sig-no-led) h s l / 0.45);
+    }
+

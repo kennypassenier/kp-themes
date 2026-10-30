@@ -1,0 +1,37 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* ── Identity mark: a plate in the name's colour, 2 px corners, the letters in the chrome display; the round mark is
+       the neon ring ── */
+    [data-theme='synthwave'] .kp-idmark {
+        --kp-idmark-radius: 2px;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        text-shadow: 0 0 4px hsl(from var(--kp-idmark-c) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-idmark--round {
+        border-width: 2px;
+        border-color: var(--kp-core);
+        background: color-mix(in oklab, var(--kp-idmark-c) 14%, var(--card));
+        box-shadow:
+            0 0 6px var(--kp-idmark-c),
+            inset 0 0 6px hsl(from var(--kp-idmark-c) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-idmark--pattern {
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        box-shadow: 0 0 5px var(--kp-idmark-c);
+    }
+    [data-theme='synthwave'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='synthwave'] .kp-idmark[data-kp-idmark-selected] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--kp-core),
+            0 0 10px 3px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-idmark-group__more {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+    }
+

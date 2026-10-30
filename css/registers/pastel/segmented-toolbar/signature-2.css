@@ -1,0 +1,49 @@
+/* @part: segmented-toolbar: signature layer; also quantity */
+    /* Three-way chips: the chip that is in is plum on its peel (the chips' own), the one that is out a dashed outline
+       with the word struck through and a red sticker for its mark; pointing lifts any of them 2 px. */
+    [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-style: dashed;
+        border-width: 2px;
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-segmented__mark {
+        border-width: 2px;
+    }
+    @media (hover: hover) {
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover {
+            box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+            translate: 0 -2px;
+        }
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri='exclude']:hover {
+            box-shadow: none;
+        }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* Quantity: the steps are pastel's own buttons; the number sits on paper with its sky pass, focus is the dashed line. */
+    [data-theme='pastel'] .kp-quantity__field {
+        border-radius: var(--kp-sig-pa-r-ctl);
+        border-color: var(--border-strong);
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-quantity__input {
+        font-weight: 700;
+    }
+

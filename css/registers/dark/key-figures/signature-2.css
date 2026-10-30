@@ -1,0 +1,80 @@
+/* @part: key-figures: signature layer; also alert */
+    /* ── A key figure is a panel, and a warning is the film gone coral [G6,
+       G7, G8; Kenny, 2026-10-09, questions 6, 7 and 8]. A tile that stands on
+       its own is cut on the same two corners as the card, with the film along
+       its edge; the plate stays near-black. A warning or a failure takes the
+       tone's colour along the whole film edge (the warning ink for a warning,
+       coral for a failure) and its change is set in that ink; there is no
+       lamp, no tinted plate and no lit number. A destructive menu entry has
+       a coral edge at its start and coral ink; a warning or failed alert is
+       the same, with its label in the tone. The strip's columns keep the
+       package's shared frames. ── */
+    [data-theme='dark'] .kp-kpi:not(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        --kp-sig-dk-tone: transparent;
+        position: relative;
+        border-color: transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel)) 0,
+            100% var(--kp-chamfer-panel),
+            100% 100%,
+            var(--kp-chamfer-panel) 100%,
+            0 calc(100% - var(--kp-chamfer-panel))
+        );
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-sig-dk-tone: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-sig-dk-tone: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        box-shadow: none;
+        --kp-sig-dk-ink-colour: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-kpi:not(.kp-kpis[data-kp-kpis-columns] > .kp-kpi):is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        border-color: transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            linear-gradient(var(--kp-sig-dk-tone), var(--kp-sig-dk-tone)) border-box;
+    }
+
+    [data-theme='dark'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: transparent;
+        color: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='destructive']:where(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='warning']:where(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        border-color: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-alert--warning {
+        --kp-sig-dk-tone: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-alert--destructive {
+        --kp-sig-dk-tone: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__label {
+        color: var(--kp-sig-dk-tone);
+    }
+

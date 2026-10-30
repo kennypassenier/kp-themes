@@ -1,0 +1,133 @@
+/* @part: navbar: signature layer */
+    /* ── Pointing answers for every other part [Kenny: the same three for all] ─────────────
+       A tab, a link of the bars, a pager, an icon button, an option, a day, a row, a sort head, a field
+       answers a pointer with the split edge, a keyboard with the four closing brackets and a press
+       with the closed circuit, the way a button and a key figure do. Where a button is cut and draws
+       them on its pseudo-elements, a square part draws them as background layers of its own (no part
+       listed here has a background image of its own), so no pseudo-element a component already uses is
+       touched. The ink of the brackets is the focus ring pair, two channels, DI2. The clocks are the
+       ones above. The brackets keep clear of a notch they sit near: the corner inset is half the notch. */
+
+    [data-theme='cyberpunk']
+        :where(
+            button,
+            summary,
+            select,
+            textarea,
+            input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+            [role='tab'],
+            [role='option'],
+            [role='treeitem'],
+            :is(th, td)[tabindex]:not([tabindex='-1']),
+            a.kp-nav__link,
+            a.kp-nav__brand,
+            a.kp-sidenav__link,
+            a.kp-kpi__link,
+            .kp-nav a,
+            .kp-sidenav a,
+            .kp-pagination a,
+            .kp-breadcrumb a,
+            .kp-footer a,
+            .kp-chart__plot,
+            .kp-kpi__chart-plot,
+            .kp-grid__tile[tabindex],
+            .kp-skip-link,
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            .kp-button,
+            input.kp-field__check,
+            a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a),
+            a.kp-url
+        ) {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-grid-a: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-i: calc(var(--kp-cp-ft) * 3px);
+        --kp-cp-fa: calc(var(--kp-cp-fp) * 9px);
+        --kp-cp-fai: calc(var(--kp-cp-fp) * 7px);
+        --kp-cp-fw: calc(var(--kp-cp-fp) * 2px);
+        --kp-cp-ntr: 0px;
+        --kp-cp-nbr: 0px;
+        --kp-cp-nbl: 0px;
+        --kp-cp-itr: max(var(--kp-cp-i), calc(var(--kp-cp-ntr) / 2));
+        --kp-cp-ibr: max(var(--kp-cp-i), calc(var(--kp-cp-nbr) / 2));
+        --kp-cp-ibl: max(var(--kp-cp-i), calc(var(--kp-cp-nbl) / 2));
+        --kp-cp-br-img:
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0);
+        --kp-cp-br-pos:
+            var(--kp-cp-i) var(--kp-cp-i), var(--kp-cp-i) var(--kp-cp-i),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)), calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr),
+            calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr), calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)), var(--kp-cp-ibl) calc(100% - var(--kp-cp-ibl)),
+            var(--kp-cp-ibl) calc(100% - var(--kp-cp-ibl)), calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibl) - var(--kp-cp-fw)),
+            calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibl) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr)) calc(100% - var(--kp-cp-ibr)), calc(100% - var(--kp-cp-ibr)) calc(100% - var(--kp-cp-ibr)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw));
+        --kp-cp-br-size:
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai);
+        --kp-cp-sq-extra-img:
+            linear-gradient(var(--destructive) 0 0), linear-gradient(var(--accent) 0 0), linear-gradient(var(--accent) 0 0),
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        --kp-cp-sq-extra-pos: 0 100%, 0 0, 100% 0, 0 0, 0 0;
+        --kp-cp-sq-extra-size: 100% var(--kp-cp-d), 100% var(--kp-cp-d), var(--kp-cp-d) 100%, 100% 100%, 100% 100%;
+        --kp-cp-sq-img: var(--kp-cp-br-img), var(--kp-cp-sq-extra-img);
+        --kp-cp-sq-pos: var(--kp-cp-br-pos), var(--kp-cp-sq-extra-pos);
+        --kp-cp-sq-size: var(--kp-cp-br-size), var(--kp-cp-sq-extra-size);
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a),
+            a.kp-url
+        ) {
+        background-image: var(--kp-cp-sq-img);
+        background-position: var(--kp-cp-sq-pos);
+        background-size: var(--kp-cp-sq-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+    }
+

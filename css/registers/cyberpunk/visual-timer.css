@@ -1,0 +1,32 @@
+/* @part: visual-timer: signature layer */
+    /* ── Visual timer: a notched face, a held sector, the reticle's core at the hub ── */
+    [data-theme='cyberpunk'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc__face {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc__hub {
+        border-radius: 0;
+        border-color: var(--card);
+        background: var(--accent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        --kp-cp4-tone: var(--destructive);
+        box-shadow: none;
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc__caption,
+    [data-theme='cyberpunk'] .kp-timer-disc__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        color: var(--destructive);
+    }
+

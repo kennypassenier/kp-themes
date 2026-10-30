@@ -1,0 +1,53 @@
+/* @part: command-palette: register layer; also theme-menu, combobox, form-field, forms */
+    [data-theme='brutalism'] .kp-shortcuts__row kbd {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+        background: var(--card);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    [data-theme='brutalism'] .kp-shortcuts__group-label,
+    [data-theme='brutalism'] .kp-palette__group-label {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-theme-menu__status,
+    [data-theme='brutalism'] .kp-palette__status,
+    [data-theme='brutalism'] .kp-combobox__status {
+        font-family: var(--theme-font-body);
+        font-size: max(0.75rem, 0.875em);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='brutalism'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.2);
+    }
+
+    [data-theme='brutalism'] .kp-form {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='brutalism'] .kp-combobox,
+    [data-theme='brutalism'] .kp-datepicker,
+    [data-theme='brutalism'] .kp-colorpicker,
+    [data-theme='brutalism'] .kp-shortcuts,
+    [data-theme='brutalism'] .kp-tabs {
+        border-radius: 0;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='brutalism'] {
+        scrollbar-color: var(--border-strong) var(--background);
+    }
+

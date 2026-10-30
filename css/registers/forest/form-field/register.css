@@ -1,0 +1,65 @@
+/* @part: form-field: register layer; also forms, switch */
+    /* ── Fields ──────────────────────────────────────────────────────── */
+
+    [data-theme='forest'] .kp-field__label {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    [data-theme='forest'] .kp-field__required {
+        font-weight: 400;
+        font-size: 0.7rem;
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+    }
+
+    /* The page ground, not the card ground: the demo's own choice, so a
+       field reads as an opening cut in the paper rather than a plate
+       sitting on it. */
+    [data-theme='forest'] .kp-field__input {
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-field__input:focus-visible {
+        border-color: var(--primary);
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='forest'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='forest'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='forest'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='forest'] .kp-field__check {
+        accent-color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-fieldset {
+        border: 1px solid var(--border);
+    }
+
+    /* The switch [gap-11]: the rounded pill on the field's ground. */
+    [data-theme='forest'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='forest'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+    }
+
+    [data-theme='forest'] .kp-form__summary {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+

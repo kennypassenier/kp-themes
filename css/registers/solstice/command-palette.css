@@ -1,0 +1,40 @@
+/* @part: command-palette: register layer; also combobox, theme-menu, form-field, forms */
+    [data-theme='solstice'] .kp-shortcuts__row kbd {
+        font-family: var(--theme-font-mono);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) - 3px);
+        background: var(--card);
+        padding: 0 0.4em;
+    }
+
+    [data-theme='solstice'] .kp-shortcuts__group-label,
+    [data-theme='solstice'] .kp-palette__group-label {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
+    [data-theme='solstice'] .kp-theme-menu__status,
+    [data-theme='solstice'] .kp-palette__status,
+    [data-theme='solstice'] .kp-combobox__status {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+    }
+
+    /* ── The roots the rules above reach only by their parts ───────────── */
+
+    [data-theme='solstice'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.6);
+    }
+
+    [data-theme='solstice'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    [data-theme='solstice'] .kp-combobox,
+    [data-theme='solstice'] .kp-datepicker,
+    [data-theme='solstice'] .kp-colorpicker,
+    [data-theme='solstice'] .kp-shortcuts,
+    [data-theme='solstice'] .kp-tabs {
+        border-radius: var(--radius);
+    }
+

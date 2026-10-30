@@ -1,0 +1,30 @@
+/* @part: status-rows: signature layer */
+    [data-theme='brutalism'] .kp-statusrow {
+        --kp-statusrow-line: var(--kp-line);
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-statusrow__mark {
+        border-width: var(--kp-line);
+    }
+    [data-theme='brutalism'] .kp-statusrow__label {
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='loading'] {
+        --kp-statusrow-ground: var(--muted);
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        padding-block-end: calc(0.5rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='empty'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+

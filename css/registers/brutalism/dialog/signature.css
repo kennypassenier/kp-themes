@@ -1,0 +1,41 @@
+/* @part: dialog: signature layer */
+    [data-theme='brutalism'] .kp-dialog::backdrop {
+        background: var(--accent);
+    }
+
+    [data-theme='brutalism'] .kp-dialog {
+        /* The drop starts 2.5 rem up-left of the footprint: on a narrow
+           screen the dialog leaves that much room on both sides, so no
+           frame of the drop is outside the window. */
+        max-inline-size: var(--kp-dialog-max-width, min(32rem, calc(100vw - 2 * var(--kp-sig-br-h-slab))));
+        /* js/motion.js measures the theme's time on an unopened probe and
+           takes a close as two thirds of what it reads: the unopened dialog
+           runs one and a half drops, the open one a drop, which is also its
+           close and its opening. */
+        --kp-sig-dur: calc(var(--kp-sig-br-dialog) * 1.5);
+        --kp-sig-br-h: var(--kp-sig-br-h-slab);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+        padding-block-start: 0;
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-br-dialog);
+    }
+
+    [data-theme='brutalism'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        margin-inline: calc(-1 * var(--kp-dialog-padding, 1.25rem));
+        padding-inline: var(--kp-dialog-padding, 1.25rem);
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-family: var(--theme-font-display);
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+

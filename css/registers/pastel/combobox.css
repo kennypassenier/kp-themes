@@ -1,0 +1,23 @@
+/* @part: combobox: register layer; also forms, master-detail */
+    [data-theme='pastel'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    [data-theme='pastel'] .kp-combobox,
+    [data-theme='pastel'] .kp-datepicker,
+    [data-theme='pastel'] .kp-colorpicker,
+    [data-theme='pastel'] .kp-shortcuts,
+    [data-theme='pastel'] .kp-tabs {
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-split {
+        gap: 0.5rem;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='pastel'] {
+        scrollbar-color: var(--border-strong) var(--muted);
+    }
+

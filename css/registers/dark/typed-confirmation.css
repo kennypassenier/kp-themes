@@ -1,0 +1,53 @@
+/* @part: typed-confirmation: signature layer; also segmented-toolbar, quantity */
+    [data-theme='dark'] .kp-type-confirm__loses {
+        border-inline-start-width: 2px;
+    }
+    [data-theme='dark'] .kp-type-confirm__name {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        box-shadow: inset 0 -1px 0 var(--chart-1);
+    }
+    [data-theme='dark'] .kp-type-confirm__list,
+    [data-theme='dark'] .kp-type-confirm__input {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-type-confirm[data-kp-matched] .kp-type-confirm__input {
+        box-shadow: inset 0 -2px 0 var(--chart-1);
+    }
+    [data-theme='dark'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    /* ── Segmented tri-state chips: the chip takes the film when it is in, the coral edge and a struck word when out ── */
+    [data-theme='dark'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: transparent;
+        background:
+            linear-gradient(var(--accent), var(--accent)) padding-box,
+            var(--kp-dk4-film) border-box;
+    }
+    [data-theme='dark'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-color: var(--destructive);
+        box-shadow: inset 2px 0 0 var(--destructive);
+    }
+    [data-theme='dark'] .kp-segmented__mark {
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-segmented__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    /* ── Quantity: a slot between two dark buttons; the reading in the ticker mono, the line under it when focused ── */
+    [data-theme='dark'] .kp-quantity__field {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-quantity__input,
+    [data-theme='dark'] .kp-quantity__unit {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        clip-path: none;
+    }
+

@@ -1,0 +1,44 @@
+/* @part: tree-reorder-split: signature layer; also datatable, motion */
+    /* One loading picture: while the busy table's layer stands over the rows, the
+       status line's small spinner stays out (forest and cyberpunk, lesson 23): it
+       arrived on its own and was removed at once, so the layer's close was not its
+       open reversed. */
+    [data-theme='synthwave'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* ── Every pair closes as its open reversed [all-themes audit, 2026-10-13;
+       lessons 11, 22, 26, 36, 38] ──────────────────────────────────────────
+       The tree's branches, the tour, and the header's dropdown, mega menu and
+       phone panel: each opens by the theme's own motion and closes as that
+       motion played backwards, in the same two beats. */
+
+    /* A tree branch's children glide open and shut (js/motion.js glideGroup());
+       shutting, the state is already `aria-expanded="false"` and the group is
+       kept drawn until the glide is over. It appeared at once and only the box
+       glided. */
+    [data-theme='synthwave'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='synthwave'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The tour: the card climbs as the dialog does, in two beats; the page's dim
+       grows out of the target and the ring is drawn in over the same two beats,
+       and css/components.css takes both back on the same sunrise curve (it is
+       its own reverse) to no shadow at all. They came in 160, 250 and 350 ms
+       and went in 1000. */
+    [data-theme='synthwave'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 450ms;
+        --kp-tour-dim-close-ease: cubic-bezier(0.65, 0, 0.35, 1);
+        /* The header's hover dropdown and its phone panel are held on screen for
+           their close (js/components.js); Firefox does not hold `display`. */
+        --kp-nav-close-time: 450ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='synthwave'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+

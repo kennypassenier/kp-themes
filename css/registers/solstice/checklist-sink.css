@@ -1,0 +1,49 @@
+/* @part: checklist-sink: signature layer */
+    /* Checklist. */
+    [data-theme='solstice'] .kp-checklist__status {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-checklist__head {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.1875rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        content: '\2600\FE0E\00a0';
+        color: var(--primary);
+    }
+    [data-theme='solstice'] .kp-checklist__label {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.0625rem;
+    }
+    [data-theme='solstice'] .kp-checklist__row {
+        border-radius: calc(var(--radius) * 0.6);
+    }
+    [data-theme='solstice'] .kp-checklist__row:hover {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.3), transparent 85%);
+    }
+    [data-theme='solstice'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--accent);
+    }
+    [data-theme='solstice'] .kp-checklist__empty {
+        border-radius: var(--radius);
+        border-color: var(--border-strong);
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.12), transparent 60%);
+        font-family: var(--theme-font-display, inherit);
+    }
+    [data-theme='solstice'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-style: solid;
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.22), transparent 80%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-checklist__row {
+            transition: background-color var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch);
+        }
+    }
+

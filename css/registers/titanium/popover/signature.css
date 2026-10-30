@@ -1,0 +1,27 @@
+/* @part: popover: signature layer */
+    [data-theme='titanium'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-ti-fast);
+        --kp-sig-ti-c: 0.4rem;
+        margin-inline-start: 0.5rem;
+        padding: 0.35rem 0.75rem;
+        border: 0;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 1px) no-repeat,
+            var(--kp-iris);
+        color: var(--foreground);
+        box-shadow: var(--kp-sig-ti-edge);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
+    }
+

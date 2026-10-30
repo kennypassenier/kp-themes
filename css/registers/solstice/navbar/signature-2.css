@@ -1,0 +1,28 @@
+/* @part: navbar: signature layer */
+    [data-theme='solstice'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: var(--border);
+    }
+    [data-theme='solstice'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 4px);
+        inset-inline-start: 0;
+        inline-size: 5px;
+        block-size: 8px;
+        background: var(--accent);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: var(--border);
+        }
+        [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -5px;
+            inset-inline-start: calc(50% - 4px);
+            inline-size: 8px;
+            block-size: 5px;
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        }
+    }
+

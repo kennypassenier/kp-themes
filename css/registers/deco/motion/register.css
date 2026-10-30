@@ -1,0 +1,77 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component; also card */
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation of this register lives here, inside the
+   no-preference guard, so a reader who asked for reduced motion never
+   receives one: the rest states above are what they get — the cartouche
+   is simply visible at scale 1, the rule is simply drawn, the redactions
+   still respond to the click but with no easing. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The cartouche assembles once, on load: the frame (Bathyscaphe's
+       inset-shadow technique, measured) scales in with the headline,
+       0.94×0.7 to 1×1, over 520ms — the demo's own literal duration, not
+       derived from --fx-duration. */
+        [data-theme='deco'] [data-kp-surface] h1[data-kp-reveal='headline'] {
+            animation: kp-cartouche-in 520ms var(--fx-ease) both;
+        }
+
+        /* The rule draws itself, reusing the base layer's own kp-rule-in
+       keyframe at the demo's literal 600ms. */
+        [data-theme='deco'][data-kp-effects] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-rule-in 600ms var(--fx-ease) 1 both;
+        }
+
+        /* The redactions clear in three steps, 140ms apart, when the
+       dossier's trigger opens the file. */
+        [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+            animation: kp-redaction-clear 320ms var(--fx-ease) both;
+        }
+
+        [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2).is-cleared {
+            animation-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3).is-cleared {
+            animation-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        /* What the demo moves on a hover: the border and ink stepping to
+       gold, one step, no colour transition mid-flight after a theme
+       switch (KT8, AR30). */
+        [data-theme='deco'] .kp-button,
+        [data-theme='deco'] .kp-nav__link {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-rule-in
+   is the base layer's, reused rather than redeclared. */
+    @keyframes kp-cartouche-in {
+        0% {
+            opacity: 0;
+            transform: scale(0.94, 0.7);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1, 1);
+        }
+    }
+
+    @keyframes kp-redaction-clear {
+        0% {
+            opacity: 0;
+            transform: translateY(2px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+

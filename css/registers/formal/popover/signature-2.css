@@ -1,0 +1,40 @@
+/* @part: popover: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip) {
+            --kp-fm-n: 1;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(2)) {
+            --kp-fm-n: 2;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(3)) {
+            --kp-fm-n: 3;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(4)) {
+            --kp-fm-n: 4;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(5)) {
+            --kp-fm-n: 5;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(6)) {
+            --kp-fm-n: 6;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(7)) {
+            --kp-fm-n: 7;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(8)) {
+            --kp-fm-n: 8;
+        }
+
+        [data-theme='formal'] :is(.kp-tooltip, .kp-combobox__list, .kp-datepicker__panel) {
+            --kp-fm-n: 1;
+        }
+
+    }
+

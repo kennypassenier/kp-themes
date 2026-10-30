@@ -1,0 +1,39 @@
+/* @part: small-patterns: signature layer */
+    [data-theme='titanium'] .kp-art > g[data-kp-art-set='titanium'] {
+        display: inline;
+    }
+    [data-theme='titanium'] .kp-art path {
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-art path {
+            stroke-dasharray: 1;
+            animation:
+                kp-sig-titanium-art-cut 400ms var(--kp-sig-ti-ease) both,
+                kp-sig-titanium-art-cool 400ms linear both;
+            animation-delay: calc(var(--kp-art-i, 0) * 80ms);
+        }
+    }
+    @keyframes kp-sig-titanium-art-cut {
+        from {
+            stroke-dashoffset: 1;
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+    @keyframes kp-sig-titanium-art-cool {
+        0% {
+            stroke: var(--warning-foreground);
+        }
+        25% {
+            stroke: var(--chart-4);
+        }
+        50% {
+            stroke: var(--chart-2);
+        }
+        75% {
+            stroke: var(--chart-1);
+        }
+    }

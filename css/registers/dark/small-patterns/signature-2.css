@@ -1,0 +1,37 @@
+/* @part: small-patterns: signature layer */
+    /* ── Secret field ── */
+    [data-theme='dark'] .kp-secret__value {
+        border-radius: 0;
+        border-color: var(--border-strong);
+        background: var(--muted);
+        clip-path: var(--kp-dk4-cut);
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        border-color: transparent;
+        background:
+            linear-gradient(var(--muted), var(--muted)) padding-box,
+            var(--kp-iris, var(--kp-sig-dk-line)) border-box;
+    }
+    [data-theme='dark'] .kp-secret {
+        --kp-secret-drain: var(--kp-dk4-film);
+    }
+    [data-theme='dark'] .kp-secret__drain {
+        background: var(--kp-dk4-film);
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='dark'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        box-shadow: inset 2px 0 0 var(--destructive);
+        padding-inline-start: 0.5rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+

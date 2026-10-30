@@ -1,0 +1,38 @@
+/* @part: small-patterns: signature layer */
+    [data-theme='brutalism'] .kp-art {
+        display: block;
+        --kp-art-stroke: 3px;
+        --kp-art-rule: var(--foreground);
+        --kp-art-line: var(--foreground);
+        --kp-art-ink: var(--foreground);
+        --kp-art-red: var(--destructive);
+    }
+    [data-theme='brutalism'] .kp-art > g[data-kp-art-set='slab'] {
+        display: inline;
+    }
+    [data-theme='brutalism'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }
+    [data-theme='brutalism'] .kp-art path.kp-art__line {
+        stroke-width: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-art path {
+            animation: kp-sig-brutalism-art-set var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 100ms);
+        }
+    }
+    @keyframes kp-sig-brutalism-art-set {
+        from {
+            translate: -10px -10px;
+            opacity: 0;
+        }
+        1% {
+            opacity: 1;
+        }
+        to {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }

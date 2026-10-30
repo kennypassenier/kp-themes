@@ -1,0 +1,30 @@
+/* @part: popover: signature layer */
+    /* The tooltip: a pill of paper, its pass in its anchor (section 3). */
+    [data-theme='pastel'] .kp-tooltip {
+        margin-block-start: 0.75rem;
+        /* Within 12px under its trigger and never over it (Kenny's phantom note,
+           2026-09-15, tests/dark-themes-notes.spec.mjs). */
+        margin-inline-start: 0.9rem;
+        padding: 0.35rem 0.9rem;
+        overflow: visible;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: none;
+    }
+
+    /* The hover card holds several lines: the chip's 999px would make it an oval (Kenny, kpadopt-tooltip-sort,
+       2026-10-16), so it is a plate like every popover. */
+    [data-theme='pastel'] .kp-tooltip[data-kp-hovercard-card] {
+        padding-block: 0.55rem;
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+
+    /* A hovered button lifts 2px (translate, no layout), and its tooltip's gap is
+       measured from where the button stands: the tooltip goes up with it, so the
+       gap stays the 12px it is at rest and never reads 14 [scope-143]. */
+    [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-button:hover:not(:disabled, [aria-disabled='true'])) > .kp-tooltip {
+        margin-block-start: calc(0.75rem - 2px);
+    }
+

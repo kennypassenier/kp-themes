@@ -1,0 +1,29 @@
+/* @part: popover: signature layer */
+    /* A tooltip is a small plate inside a rule: square (G6), its words in
+       small capitals (G18). */
+    [data-theme='formal'] .kp-tooltip {
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.65rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: 0 6px 16px -10px hsl(from var(--foreground) h s l / 0.4);
+        font-size: 0.9375rem;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='formal'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -5px;
+        inset-inline-start: 1rem;
+        inline-size: 8px;
+        block-size: 8px;
+        border-block-start: 1px solid var(--border-strong);
+        border-inline-start: 1px solid var(--border-strong);
+        background: var(--popover);
+        transform: rotate(45deg);
+    }
+

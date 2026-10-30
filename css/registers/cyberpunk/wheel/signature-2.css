@@ -1,0 +1,46 @@
+/* @part: wheel: signature layer */
+    /* ── Wheel: it turns in held ticks (a pose every 100 ms or so), never an ease; the rim is the yellow, the pointer the
+       reticle's tick in cyan ── */
+    [data-theme='cyberpunk'] .kp-wheel {
+        --kp-wheel-ease: steps(40, end);
+        --kp-wheel-pointer: var(--accent);
+        --kp-wheel-tint: 24%;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::before,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    /* No stripes of its own either: the button's two 3 px side bars and its cut-corner wedge (background layers) would
+       leave a rectangular nub on the disc's rim; the yellow stays as the colour. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        --kp-wheel-hub-shadow: none;
+        background-image: none !important;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__rim {
+        stroke: var(--primary);
+        stroke-width: 1.2;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__segment {
+        stroke: var(--background);
+    }
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button {
+        white-space: nowrap;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__label,
+    [data-theme='cyberpunk'] .kp-wheel__caption {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__outcome {
+        font-family: var(--theme-font-display);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-wheel[data-kp-wheel-won] .kp-wheel__outcome {
+            animation: kp-cp4-stutter calc(8 * var(--kp-cp4-tick)) steps(1, end);
+        }
+    }
+

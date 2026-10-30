@@ -1,0 +1,61 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component; also navbar, card */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* One monotonic wipe, never opposed: the three bands recede together
+       on a single timeline (js/effects.js adds is-calibrating for the
+       whole 740ms span; the demo's own three independently-staggered
+       transforms are approximated here as one clip-path sweep, left to
+       right, at the theme's own ease — the same triad, the same total
+       time, a different mechanism [S49 finding, recorded in
+       anatomy.md]). */
+    @keyframes kp-cal-slide {
+        0% {
+            clip-path: inset(0 0 0 0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    /* The rule: scaleX(0→1), one direction, one step. */
+    @keyframes kp-cal-rule {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* The redaction: the bar lifts right to left, the demo's own
+       direction (`clip-path: inset(0 100% 0 0)` at rest-cleared). */
+    @keyframes kp-cal-redact {
+        from {
+            background-size: calc(100% - 2px) calc(100% - 2px);
+        }
+
+        to {
+            background-size: 0% calc(100% - 2px);
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — amber between two translucent amber rules. */
+    [data-theme='solstice'] .kp-marquee {
+        color: var(--primary);
+        border-block: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 44000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='solstice'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='solstice'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        border-block-end: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+    }
+

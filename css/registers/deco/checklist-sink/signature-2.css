@@ -1,0 +1,25 @@
+/* @part: checklist-sink: signature layer */
+    @keyframes kp-sig-deco-doors {
+        0% {
+            --kp-sig-deco-p: 0;
+        }
+
+        12% {
+            --kp-sig-deco-p: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        50% {
+            --kp-sig-deco-p: 1;
+        }
+
+        62% {
+            --kp-sig-deco-p: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        100% {
+            --kp-sig-deco-p: 0;
+        }
+    }
+

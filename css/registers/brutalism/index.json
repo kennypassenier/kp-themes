@@ -2,85 +2,194 @@
   "output": "css/brutalism-register.css",
   "items": [
     {
-      "open": "/* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on\n   two registered copies, one on each mirror of the motion, so that a rise is\n   the picture's fall and a fall is that fall turned around; registered so\n   the transitions interpolate them. At the top level because Firefox does\n   not register an @property inside a layer. */\n@property --kp-sig-br-lag {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-br-lead {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* A clock with nothing drawn on it: the bar's mega menu is held on screen\n   until a transition on its panel has played (js/components.js); this is\n   that transition, the length of the panel's lift. */\n@property --kp-sig-br-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* How far the side navigation still stands above its footprint while it is\n   dropped onto it (review round 2): the panel is held up-left by this much and\n   each slab's hard shadow stays on the ground, its offset grown by it. */\n@property --kp-sig-br-lift {\n    syntax: '<length>';\n    inherits: true;\n    initial-value: 0px;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
         "base.css",
-        "the-hooks.css",
-        "the-navbar.css",
-        "button.css",
-        "fields.css",
-        "card.css",
-        "data.css",
-        "the-demos-own-pieces.css",
-        "motion-guarded.css",
-        "sidenav.css",
-        "the-thing-names-itself.css",
-        "the-alarm.css"
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "dialog/register.css",
+        "toast/register.css",
+        "menu-button.css",
+        "alert.css",
+        "page-header/register.css",
+        "showing-data.css",
+        "small-patterns/register.css",
+        "table.css",
+        "datatable/register.css",
+        "diff.css",
+        "step-list/register.css",
+        "small-patterns/register-2.css",
+        "tabs.css",
+        "command-palette.css",
+        "page-header/register-2.css",
+        "log.css",
+        "motion/register.css",
+        "navbar/register-2.css",
+        "sidenav/register.css",
+        "media.css",
+        "button/register-2.css",
+        "navbar/register-3.css",
+        "alarm.css",
+        "sidenav/register-2.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* brutalism's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/brutalism.css and research/signature-elements/themes/brutalism.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector.\n\n   Since 2026-10-07 23:44 the layer speaks the grammar Kenny decided on\n   research/brutalism-character (themes/brutalism/CHARACTER.md, G1-G18):\n   everything that happens is something weight does. What arrives is dropped\n   onto its footprint from up-left and stops dead; what leaves is lifted off\n   it; what is pointed at is inverted; what waits is a lintel hoisted in\n   hard lifts; a new value is slammed onto its yellow offset; a warning is\n   taped off. The tokens below are the grammar's, once; every rule reads\n   them and names no number of its own. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/base.css",
-        "the-progress-bar.css",
-        "activity-feed.css",
-        "the-switch-and-the-check.css",
-        "what-opens-is-dropped-onto.css",
-        "the-meter-with-a-mark-this.css",
-        "the-mark-past-the-end.css",
-        "key-figures.css",
-        "the-trend-tile.css",
-        "the-strip-of-key-figures.css",
-        "the-time-chart.css",
-        "the-month-heatmap.css",
-        "the-drawer-and-the-tour.css",
-        "every-part-that-opens.css"
+        "tokens.css",
+        "progress-spinner-skeleton/signature.css",
+        "datatable/signature.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "key-figures/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "toast/signature.css",
+        "dialog/signature.css",
+        "popover.css",
+        "upload-wizard.css",
+        "state-plate.css",
+        "navbar/signature.css",
+        "motion/signature.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "card/signature.css",
+        "motion/signature-2.css",
+        "meter.css",
+        "tiles.css",
+        "key-figures/signature-2.css",
+        "key-figure-columns.css",
+        "time-chart.css",
+        "month-heatmap/signature.css",
+        "drawer-tour.css",
+        "motion/signature-3.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Brutalism's own (themes/brutalism/CHARACTER.md): a tile is the slab, white in the 3 px ink line on its 6 px hard\n   shadow, square (G6, G7); pointed at it is inverted, ink ground and yellow words, and nothing moves (the tiles' own\n   hover pick); a press drives it onto its footprint, the shadow gone (G14); a failure is taped off, hazard stripes along\n   its foot (G13); waiting is the lintel hoisted in its well (G10): a heat grid's row of cells is ONE well with one beam,\n   not a well in every cell; the voice is Archivo Black shouting, Space Grotesk in bold capitals (G15). */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows/signature.css",
+        "facet-list.css",
+        "heat-grid.css",
+        "week-agenda.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Brutalism's own (themes/brutalism/CHARACTER.md): the separator is a slab of ink as tall as a link;\n   lying down across the phone's list it is the divider's hazard band, the yellow hatch on the ink between two ink\n   rules. A day on the axis is kicked: pointing lifts it up-left off its hard shadow inside an ink frame, pressed it is\n   driven in, the yellow block in the ink frame (as the current page). The upcoming list's day rule is a 2 px ink line;\n   the facet pattern is boxed in ink on a hard shadow. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt4-data-pieces.css"
+      "open": "/* ── The kpadopt4 data pieces, in this theme [kpadopt4] ──\n   Brutalism's own (themes/brutalism/CHARACTER.md): a mark is paint under black ink in the ink line on its small hard\n   shadow, square (G5, G6, G7); a part under the hand is lifted up-left off its footprint while its shadow stays on the\n   ground (G8); a warning is taped off, hazard stripes along its foot (G13); a number that changes is slammed onto its\n   yellow offset (G9); a bolt is square and has its own small shadow (G16); the voice is Archivo Black shouting and Space\n   Grotesk speaking in bold capitals, the machine's words in mono (G15). */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "key-value-grid.css",
+        "form-grid.css",
+        "code-block.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-uptime-strip-rows.css"
+      "open": "/* ── The uptime strip, rows, checks, choices, a card's four states and the drawings, in this theme [kpadopt4-rows] ──\n   A cell of the strip is a small block of paint in its ink line (up, degraded and down are the statuses' paint and the\n   stripes they already carry); pointing lifts it up-left off its footprint (G8). A row says its state in a bar of paint\n   along its start edge, a failed one taped off, the next one up the yellow slab (G5, G13). A tile of choices is a\n   slab: pointing lifts it, the pick is yellow (G5, G8). Waiting is the lintel hoisted in its well (G10): the strip\n   is one well, not a well in every cell. The drawings are set down one after another and stop dead (G1, G3). */\n@layer kp.signature {\n",
+      "files": [
+        "uptime-strip.css",
+        "action-columns.css",
+        "status-rows/signature-2.css",
+        "forms.css",
+        "card/signature-2.css",
+        "small-patterns/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "flows-and-records-in-this.css"
+      "open": "/* ── Flows and records, in this theme [kpadopt4-flows] ──\n   A secret printed on the page is slammed onto its yellow offset when it is shown, and its time runs out in ten hard\n   steps of a six-pixel bar (G9, G11, G16); a dialog's sections are ruled off in the ink line, the danger section taped\n   off (G13); a moment on the timeline is a square bolt with its own small shadow, a stretch in warning is hazard tape\n   (G16); a journey is a path of blocks, the one it stands at lifted off its footprint; the pipeline's lanes and cards\n   are slabs, pointing lifts a card up-left off its footprint (G7, G8). */\n@layer kp.signature {\n",
+      "files": [
+        "small-patterns/signature-2.css",
+        "dialog/signature-2.css",
+        "run-timeline/signature-3.css",
+        "step-list/signature.css",
+        "pipeline.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "open": "/* ── The ideas and the recipe components, in this theme [kpadopt4-ideas, kpadopt4-recipes] ──\n   Everything here is a slab or a part of one: a terminal is an ink plate with paper words and a yellow prompt; a time\n   left is a disc on its footprint and a digital time a row of blocks, and when the time is out the part is set down\n   again, once, on its footprint (G3, G12); a range's pick is the yellow plate; the compare slider's divider is the\n   six-pixel bar and its handle a block lifted off its footprint; a wheel turns at a constant speed and stops dead\n   (G1: no ease, no settle); an included chip is yellow with a stamped tick, an excluded one is ink with a red cross\n   (G5, G16); a step is set down on its footprint (G3). */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/opening-of-the-signature-block.css"
+        "typed-confirmation.css",
+        "command-block.css",
+        "visual-timer.css",
+        "countdown.css",
+        "range-picker.css",
+        "compare-slider.css",
+        "segmented-toolbar/signature-2.css",
+        "quantity.css",
+        "checklist-sink.css",
+        "kitchen-timers.css",
+        "focus-steps.css",
+        "wheel.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "the-new-adoption-parts.css"
+      "open": "/* ── The new adoption parts in brutalism [t56-brutalism-1018] ──\n   A small part is the 2 px line on a 3 px hard shadow (G7): the weekday chips and the small identity mark stand on a\n   shadow that never reaches a neighbour, and the shadow of a field keeps a clear gap before the unit that follows it.\n   On a phone the labels are set tight, so a day's name, a segment, a Back or Next never breaks mid-word (the 4 px\n   margin rule of research/_review/DEMO_RULES.md, chapter 2). */\n@layer kp.signature {\n",
+      "files": [
+        "weekday-picker.css",
+        "segmented-toolbar/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-whole-grid-loading.css"
+      "open": "/* ── The whole grid loading: one lintel, not one per day [t56-eye-1018] ──\n   While the whole calendar waits, the busy card over the grid carries the hoisted lintel; a day under it is only the paper,\n   its number readable. The lintel in every day's well struck through the numbers and said \"hoisted\" 31 times. A day that\n   loads on its own (the month grid, one day) keeps its own well. */\n@layer kp.signature {\n",
+      "files": [
+        "month-heatmap/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-shape-2.css"
+      "open": "/* ── graph loading · shape 2 · The sticker sheet: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r5-br-load-3.css"
+      "open": "/* ── graph loading · r5-br-load-3 · The site is taped off (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

@@ -1,0 +1,39 @@
+/* @part: card: signature layer; also button, popover */
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-clip: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-button-notch)), calc(100% - var(--kp-button-notch)) 100%, 0 100%);
+        --kp-cp-wide: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - var(--kp-button-notch) - 40px),
+            calc(100% - var(--kp-button-notch) - 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+    }
+
+    /* The holo plate [G7]: a card, a key figure and the menu's popover are void plates with
+       a yellow rim glowing 10 px inward, scan lines at 135 degrees, the rim running along the
+       notch, cut at the dossier corner. A press lights the circuit grid on it. */
+    [data-theme='cyberpunk']
+        :is(.kp-card, .kp-kpi, .kp-popover, .kp-datepicker__panel, .kp-combobox__list, .kp-accordion__item:not(.kp-accordion__item--bare)) {
+        --kp-cp-ground: var(--card);
+        --kp-cp-grid-a: 0;
+        --kp-cp-rest: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        --kp-cp-grid:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px) 0 0 / 100% 100%
+                no-repeat,
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px) 0 0 / 100% 100%
+                no-repeat;
+        --kp-cp-notch-line: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
+        --kp-cp-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-cp-grid), var(--kp-cp-notch-line), var(--kp-cp-scan), var(--kp-cp-ground);
+        box-shadow: var(--kp-cp-rest);
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-popover, .kp-datepicker__panel, .kp-combobox__list) {
+        --kp-cp-ground: var(--popover);
+    }
+

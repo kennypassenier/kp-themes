@@ -1,0 +1,37 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-fill
+       and kp-draw carry no opacity step and are OUT_OF_SCOPE in
+       gates/check-motion.mjs (a size grow, no luminance change). */
+    @keyframes kp-registration {
+        0% {
+            transform: translate(14px, 10px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translate(2px, 2px);
+            opacity: 0.55;
+        }
+    }
+
+    @keyframes kp-fill {
+        from {
+            background-size: 0% 100%;
+        }
+
+        to {
+            background-size: 100% 100%;
+        }
+    }
+
+    @keyframes kp-draw {
+        from {
+            width: 0%;
+        }
+
+        to {
+            width: 100%;
+        }
+    }

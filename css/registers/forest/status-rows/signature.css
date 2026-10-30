@@ -1,0 +1,23 @@
+/* @part: status-rows: signature layer */
+    [data-theme='forest'] .kp-statusrow {
+        --kp-statusrow-radius: var(--kp-sig-fo-part);
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='failed'] .kp-statusrow__detail {
+        justify-self: start;
+        margin-block-start: 0.2rem;
+        padding: 0 0.4em;
+        border-radius: 0;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='empty'] {
+        border-style: dashed;
+    }
+    [data-theme='forest'] .kp-statusrow:not([data-state='failed']) .kp-statusrow__detail {
+        font-style: italic;
+    }
+

@@ -1,0 +1,57 @@
+/* @part: form-field: register layer; also forms, switch */
+    /* ── Fields: wells with the softest radius in the set ──────────────── */
+
+    [data-theme='solstice'] .kp-field__label {
+        font-weight: 600;
+    }
+
+    [data-theme='solstice'] .kp-field__required {
+        font-weight: 600;
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] .kp-field__input {
+        border-radius: calc(var(--radius) - 2px);
+        border-color: var(--border-strong);
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='solstice'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='solstice'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='solstice'] .kp-fieldset {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11]: the pill, on the page's ground with the inputs' edge. */
+    [data-theme='solstice'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='solstice'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='solstice'] .kp-form__summary {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+

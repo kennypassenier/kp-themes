@@ -1,0 +1,64 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root); also menu-button, command-palette, motion, tree-reorder-split */
+    /* A menu and a popover are drawn by the raster as the toast is, the beam riding the
+       edge as a background layer, 4 frames (G3); they close as the draw played backwards
+       (js/motion.js playClose). */
+    [data-theme='nostromo'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+    }
+
+    /* ── Pairs: every close is its open reversed, and the raster on every part that opens
+       [all-themes audit, 2026-10-13; docs/THEME_LESSONS.md 19-27, 31, 36-38]. What opens is drawn
+       by the raster from its top edge down, a band per 80 ms frame, the beam riding the edge (G3);
+       what closes or leaves is erased the same way backwards, frame for frame (G12). ── */
+    [data-theme='nostromo'] {
+        /* A part a script removes or hides leaves first, erased by the raster (lesson 19); what
+           takes no box arrives as nothing (23); the space a leave folds shut takes the erase's own
+           4 frames and starts with it (24). */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* The bar's hover dropdown and its phone panel are held on screen for the erase's 4 frames
+           (js/components.js, lesson 36). */
+        --kp-nav-close-time: 320ms;
+        /* Four equal frames the other way round: the raster's `steps(4, end)` turned round, holding
+           the pose before each jump at the frame boundary itself (cyberpunk's `--kp-cp-back`), so
+           frame t of a close is frame (T - t) of its opening on the boundaries too. */
+        --kp-sig-no-back4: linear(0 0%, 0.25 0.01%, 0.25 25%, 0.5 25.01%, 0.5 50%, 0.75 50.01%, 0.75 75%, 1 75.01%, 1 100%);
+        /* The tour's dim and ring come in the card's 4 frames and go in the same 4 the other way
+           round (lessons 11, 22). */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: var(--kp-sig-no-strike);
+        --kp-tour-dim-close-ease: var(--kp-sig-no-back4);
+        --kp-tour-dim-close-delay: 0s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='nostromo'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* A tree branch's children are kept drawn while their group glides shut (lesson 26). */
+    [data-theme='nostromo'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='nostromo'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The panels the raster draws here, with the beam's tail the popover's. */
+    [data-theme='nostromo'] :is(.kp-palette, .kp-shortcuts, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-nav__links) {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
+    }
+

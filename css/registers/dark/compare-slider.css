@@ -1,0 +1,25 @@
+/* @part: compare-slider: signature layer */
+    /* ── Compare slider: the divider is the line (2 px of film, its glow); the handle a chamfered grip; the labels are
+       bracketed microlabels ── */
+    [data-theme='dark'] .kp-compare {
+        --kp-compare-line: 2px;
+        --kp-compare-ink: var(--foreground);
+    }
+    [data-theme='dark'] .kp-compare__divider {
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-compare__handle,
+    [data-theme='dark'] .kp-compare__grip {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut-4);
+    }
+    [data-theme='dark'] .kp-compare__label {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='dark'] .kp-compare__failed {
+        clip-path: var(--kp-dk4-cut);
+    }

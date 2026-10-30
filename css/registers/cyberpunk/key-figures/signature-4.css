@@ -1,0 +1,77 @@
+/* @part: key-figures: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        /* In: the pose arrives in four ticks (3, 2, 1, 0 left); out: the same four the
+           other way round, and only then does the part count as at rest. */
+        [data-theme='cyberpunk']
+            :is(
+                .kp-button,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
+        [data-theme='cyberpunk']
+            :is(
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):hover {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-button,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled):focus-visible,
+        [data-theme='cyberpunk']
+            :is(
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):hover:focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+    }
+

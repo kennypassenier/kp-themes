@@ -1,0 +1,32 @@
+/* @part: week-agenda: signature layer; also run-timeline */
+    [data-theme='synthwave'] .kp-week__pill {
+        border-color: var(--kp-hairline);
+        border-block-start: 2px solid var(--kp-week-ink);
+    }
+    [data-theme='synthwave'] .kp-week__pill:is(button):hover,
+    [data-theme='synthwave'] .kp-gantt__run:is(button):hover {
+        box-shadow:
+            0 0 0 1px var(--kp-core),
+            0 0 12px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow:
+            0 0 0 1px var(--accent),
+            0 0 10px hsl(from var(--accent) h s l / 0.7);
+    }
+    [data-theme='synthwave'] :is(.kp-week__now, .kp-gantt__now) {
+        filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 8px hsl(from var(--primary) h s l / 0.6));
+    }
+    [data-theme='synthwave'] .kp-week__now::before {
+        background: var(--kp-core);
+        box-shadow: 0 0 6px var(--primary);
+    }
+    [data-theme='synthwave'] :is(.kp-gantt__tick, .kp-week__head) {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-week__time {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+    }

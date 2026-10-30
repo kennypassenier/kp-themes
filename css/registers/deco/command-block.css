@@ -1,0 +1,26 @@
+/* @part: command-block: signature layer */
+    /* Command block. */
+    [data-theme='deco'] .kp-command {
+        --kp-command-prompt-ink: var(--kp-sig-deco-gold-lt);
+    }
+    [data-theme='deco'] .kp-command__head {
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-command__shell {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-command__code {
+        background: var(--kp-sig-deco-shadow);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-command__where {
+        border-block-start-color: hsl(from var(--primary) h s l / 0.35);
+        font-family: var(--theme-font-body);
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='deco'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.7);
+    }
+

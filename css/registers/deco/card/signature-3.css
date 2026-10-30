@@ -1,0 +1,21 @@
+/* @part: card: signature layer */
+    /* A card in four data states: the title of its note in spaced capitals; the data comes up with the lacquer. */
+    [data-theme='deco'] .kp-card__state-title {
+        font-family: var(--theme-font-display);
+        letter-spacing: var(--kp-sig-deco-title-track);
+        text-transform: uppercase;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sig-deco-k4-up var(--kp-sig-deco-up-t) var(--kp-sig-deco-settle) both;
+        }
+    }
+    @keyframes kp-sig-deco-k4-up {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+

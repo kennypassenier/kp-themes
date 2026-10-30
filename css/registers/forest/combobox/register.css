@@ -1,0 +1,79 @@
+/* @part: combobox: register layer; also command-palette, date-picker, upload-wizard, colour-picker */
+    [data-theme='forest'] .kp-wizard__steps {
+        font-family: var(--theme-font-display);
+        font-weight: 600;
+    }
+
+    [data-theme='forest'] .kp-wizard {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Pickers and palettes ────────────────────────────────────────── */
+
+    [data-theme='forest'] .kp-combobox__input,
+    [data-theme='forest'] .kp-palette__input,
+    [data-theme='forest'] .kp-datatable__search {
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='forest'] .kp-datepicker__weekday,
+    [data-theme='forest'] .kp-datepicker__title {
+        font-family: var(--theme-font-display);
+        font-weight: 600;
+    }
+
+    [data-theme='forest'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-colorpicker__value {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='forest'] .kp-shortcuts__row kbd {
+        font-family: var(--theme-font-mono);
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-shortcuts__group-label,
+    [data-theme='forest'] .kp-palette__group-label {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    [data-theme='forest'] .kp-theme-menu__status,
+    [data-theme='forest'] .kp-palette__status,
+    [data-theme='forest'] .kp-combobox__status {
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='forest'] .kp-combobox,
+    [data-theme='forest'] .kp-datepicker,
+    [data-theme='forest'] .kp-colorpicker,
+    [data-theme='forest'] .kp-shortcuts {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+
+    [data-theme='forest'] .kp-field {
+        gap: var(--kp-space-xs);
+    }
+
+    [data-theme='forest'] .kp-form {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='forest'] .kp-grid {
+        gap: var(--kp-space-lg);
+    }
+

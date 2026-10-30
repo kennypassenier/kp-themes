@@ -1,6 +1,4 @@
-/* @part: heat-grid: Heat grid, matrix, bar cell */
-/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
-@layer kp.signature {
+/* @part: heat-grid: signature layer; also matrix, bar-cell */
     /* Ledger entries: a cell is a ruled square of the ledger, the pick is the double rule, labels are small capitals. */
     [data-theme='formal'] :is(.kp-heat, .kp-matrix) {
         --kp-heat-cell-radius: 1px;
@@ -37,4 +35,3 @@
         --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
         font-variant-numeric: tabular-nums;
     }
-}

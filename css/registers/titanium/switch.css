@@ -1,0 +1,39 @@
+/* @part: switch: signature layer */
+    [data-theme='titanium'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    /* The off track is the plain machined groove: the 2 px / 6 px twill at 45 degrees drawn on a 40 px track aliased into a
+       checkerboard and read as a broken control [t56-eye-1018]. The twill stays on the plates, where it has room. */
+    [data-theme='titanium'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--background);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:not(:focus-visible) {
+        box-shadow: var(--kp-sig-ti-edge);
+    }
+
+    [data-theme='titanium'] .kp-switch__input::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.45) 0 1px, transparent 1px 3px) center / 60% 60% no-repeat,
+            var(--muted-foreground);
+        clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(var(--background), var(--background)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+    }
+
+    [data-theme='titanium'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.45) 0 1px, transparent 1px 3px) center / 60% 60% no-repeat,
+            var(--primary);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+

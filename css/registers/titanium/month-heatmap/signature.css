@@ -1,0 +1,77 @@
+/* @part: month-heatmap: signature layer */
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: anodised: it runs through the colours titanium takes under heat, gold, violet, blue, and cools away ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='titanium'] {
+            --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, an empty
+               state, a file row, a re-shown alert) cools away first, as it arrives
+               (js/motion.js leavesState(), lessons 19, 23, 24, 37); what takes no
+               box arrives as nothing; the space a leave folds shut closes with it
+               from its first frame (its defaults, 1.25 times the leave starting a
+               third in, are other themes'). */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        [data-theme='titanium'] [data-kp-leaving] {
+            position: relative;
+            overflow: clip;
+            animation: kp-sig-titanium-leave 400ms var(--kp-sig-ti-ease) forwards;
+        }
+
+        /* The busy table's layer stands where it stood while it cools away and as it
+           arrives (the rule above made it relative, so it dropped below the table
+           into the flow and folded a space of its own: 150 % off, round 2). */
+        [data-theme='titanium'] .kp-datatable__busy-overlay[data-kp-leaving] {
+            position: absolute;
+        }
+
+        [data-theme='titanium'] [data-kp-leaving]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(110deg, var(--warning-foreground), var(--chart-2), var(--chart-1), var(--chart-3));
+            background-size: 300% 100%;
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-leave-2 400ms var(--kp-sig-ti-ease) forwards;
+        }
+
+        @keyframes kp-sig-titanium-leave {
+            0%,
+            70% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* The heat runs start → end, as the update's tint does (G2, G11). */
+        @keyframes kp-sig-titanium-leave-2 {
+            from {
+                opacity: 0;
+                background-position: 100% 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 1;
+                background-position: 0% 0;
+            }
+        }
+    }
+

@@ -2,74 +2,188 @@
   "output": "css/solstice-register.css",
   "items": [
     {
-      "open": "/* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at\n   rest, 1 at the end of the unit. Registered so the browser can transition\n   them, at the top level because Firefox does not register an @property\n   inside a layer. */\n@property --kp-sig-solstice-point {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-solstice-press {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* A clock with nothing drawn on it: the bar's mega menu is held on screen\n   until a transition on its panel has played (js/components.js); this is\n   that transition, the length of the panel's close. */\n@property --kp-sig-solstice-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
+        "tokens/register.css",
         "base.css",
-        "the-hooks.css",
-        "nav.css",
-        "card.css",
-        "data.css",
-        "the-demos-own-pieces.css",
-        "motion.css"
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "toast/register.css",
+        "alert/register.css",
+        "page-header/register.css",
+        "small-patterns/register.css",
+        "tree-reorder-split.css",
+        "command-palette.css",
+        "page-header/register-2.css",
+        "card/register-2.css",
+        "motion/register.css",
+        "sidenav/register.css",
+        "navbar/register-2.css",
+        "alarm.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* solstice's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/solstice.css and research/signature-elements/themes/solstice.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/base.css",
-        "signature-base/g3s-dome-from-nothing-at-the.css",
-        "the-meter-with-a-mark-this.css",
-        "the-mark-past-the-end.css",
-        "pointing-and-pressing/base.css",
-        "pointing-and-pressing/review-round-3-kenny-2026-10.css"
+        "progress-spinner-skeleton/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "toast/signature.css",
+        "dialog/signature.css",
+        "popover.css",
+        "upload-wizard.css",
+        "state-plate.css",
+        "motion/signature.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "motion/signature-2.css",
+        "month-heatmap.css",
+        "motion/signature-3.css",
+        "meter.css",
+        "tokens/signature.css",
+        "button/signature.css",
+        "navbar/signature.css",
+        "sidenav/signature.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Solstice's own (themes/solstice/CHARACTER.md): a tile is the charcoal plate lit from below, a rust wash rising from\n   its foot and the foot edge catching the light (G7); pointing raises the sun under it, the key figure's own sun\n   climbing its arc from the foot with the dome of light round it (G8), and a press is the ember blown on, the sun\n   swelling inside it; nothing moves (G14); a failure reddens the sky (G13); waiting is the low sun's light crossing the\n   waiting part start to end (G10, the register's skeleton light); a running run sees the sun rise and set at its head;\n   the serif speaks in sentence case (G15). Everything on the sine. */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows/signature.css",
+        "facet-list.css",
+        "heat-grid.css",
+        "week-agenda.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Solstice's own (themes/solstice/CHARACTER.md): the separator is the divider's horizon with its peak\n   of low sun, stood upright, the amber point leaning into the next group; lying down across the phone's list the peak\n   rises from the middle of the line. A day on the axis flares from its foot under the pointer; pressed it wears the\n   halo, the primary's light rising from the horizon under it. A series' finished run is lit from its foot in its own\n   light; the facet pattern is a soft lantern of its hue, lit from below. */\n@layer kp.signature {\n",
+      "files": [
+        "navbar/signature-2.css",
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt4-data-pieces.css"
+      "open": "/* ── The kpadopt4 data pieces, in this theme [kpadopt4] ──\n   Solstice's own (themes/solstice/CHARACTER.md): a part is lit from its foot, the sun is the only body that travels and\n   the only mark of a threshold or a pick, a pick is the halo (G16), a warning reddens the sky and keeps its words in the\n   tone's ink (G13), the serif speaks in sentence case (G15), a new number comes up into the light and cools (G3, G9). */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "key-value-grid.css",
+        "form-grid.css",
+        "code-block.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-uptime-strip-in-this.css"
+      "open": "/* ── The uptime strip, in this theme [kpadopt4-ideas] ──\n   A strip of days is a hillside lit from its foot: each cell keeps its tone's fill and its pattern (a state is never\n   colour alone) and takes the low light at its foot; pointing raises the sun under a cell (G8), the room above the strip\n   already makes it taller; waiting is the low sun's light crossing the strip start to end (G10). */\n@layer kp.signature {\n",
+      "files": [
+        "uptime-strip.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "rows-checks-choices.css"
+      "open": "/* ── Rows, checks, choices, a card's four states and the drawings, in this theme [kpadopt4-rows] ──\n   A row is a plate lit from its foot: its state is the light on its start edge (new: the sun's amber, in flight: its\n   cooler light, a warning the ochre sky, a failure the red one, the next one up the sun risen under it); what is done\n   goes quiet by ink, not by opacity (G13, G7, G15). A tile of choices is a plate whose pick is the halo and whose\n   pointer raises the sun (G8, G16). Waiting is the busy card in the theme's own spinner, the sun on its arc (G10). */\n@layer kp.signature {\n",
+      "files": [
+        "action-columns.css",
+        "status-rows/signature-2.css",
+        "forms.css",
+        "card/signature.css",
+        "small-patterns/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "flows-and-records-in-this.css"
+      "open": "/* ── Flows and records, in this theme [kpadopt4-flows] ──\n   A secret is a figure the day keeps under a cover: its time running out is the sun's own travel, a rule with the sun at\n   its head that sets at the end (G10, G16); a value shown rises into its line (G9). A dialog's sections are divided by\n   the horizon with its one rust peak, and the danger section reddens its own sky (G13). A moment on the timeline is a\n   small sun, a stretch a lit hillside; a journey is the sun's path, the step it stands at the sun risen (G16); the\n   pipeline's lanes and cards are plates lit from their foot, pointing raises the sun under a card (G7, G8). */\n@layer kp.signature {\n",
+      "files": [
+        "small-patterns/signature-2.css",
+        "dialog/signature-2.css",
+        "run-timeline/signature-3.css",
+        "step-list.css",
+        "pipeline.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-ideas-in-this-theme.css"
+      "open": "/* ── The ideas, in this theme [kpadopt4-ideas] ──\n   A time left is the sun's own day: the disc's sector is the sun still above the horizon, its hub a small sun, and when\n   the time is out the last light comes once, overbright, and cools (G3, G10, G16, never a breath that goes on). A command\n   is the terminal lit from its foot, the prompt the sun's amber. The compare slider's divider is the horizon and its\n   handle the sun on it (G16). A typed confirmation's loss list reddens its own sky (G13). The range's custom pick is the\n   halo (G16). */\n@layer kp.signature {\n",
+      "files": [
+        "typed-confirmation.css",
+        "command-block.css",
+        "visual-timer.css",
+        "countdown.css",
+        "range-picker.css",
+        "compare-slider.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-recipe-components.css"
+      "open": "/* ── The recipe components, in this theme [kpadopt4-recipes] ──\n   Everything here is the low sun's: a chip included is the sun, excluded the moon (G16); a row pointed at has the sun\n   risen under it; a step comes up into the light (G9); the timer that has run out is the sky reddened; the wheel is a\n   day turning, its pointer a sun, the hub the sun it turns round, and it settles on the sine (G1). */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-2.css",
+        "quantity.css",
+        "checklist-sink.css",
+        "kitchen-timers.css",
+        "focus-steps.css",
+        "wheel.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-new-adoption-parts.css"
+      "open": "/* ── The new adoption parts in solstice [t56-solstice-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "conversation.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature.css"
+      "open": "/* A destructive button on a destructive plate (the urgent and the refused question card) stands on the dark card with the\n   red as its foot edge, like the card's other button, not red ink on a red sky [t56-eye-1018]. */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-shape-1.css"
+      "open": "/* ── graph loading · shape 1 · The low sun: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-d-sol.css"
+      "open": "/* ── graph loading · r3-d-sol-load-2 · Embers catching (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

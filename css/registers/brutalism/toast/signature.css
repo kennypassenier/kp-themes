@@ -1,0 +1,27 @@
+/* @part: toast: signature layer */
+    /* ── What opens is dropped onto its footprint [G3]: the toast, the dialog
+       and the tooltip. Their hard shadow is on the page from the first frame,
+       where the panel will stand; the panel falls onto it from up-left on
+       the fall curve and stops dead. A toast and the tooltip fall 3 units, the
+       dialog, the big slab, 15 (Kenny, 2026-10-03: "I prefer this at 1/4
+       speed"). No clip, no fade, no scale, no tilt. ── */
+    [data-theme='brutalism'] .kp-toast {
+        --kp-sig-dur: var(--kp-sig-br-time);
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        color: var(--secondary-foreground);
+        box-shadow: var(--kp-shadow);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] .kp-toast {
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+

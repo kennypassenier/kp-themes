@@ -1,0 +1,47 @@
+/* @part: code-block: signature layer; also page-header, form-grid, motion */
+    [data-theme='cyberpunk'] .kp-formrows--lines > .kp-formrow,
+    [data-theme='cyberpunk'] .kp-kv--lines > .kp-kv__row {
+        border-image: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px) 1;
+    }
+
+    /* ── Code block: a holo plate, its title a cyan prefixed label, the gutter the machine's mono ── */
+    [data-theme='cyberpunk'] .kp-code {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-code__title,
+    [data-theme='cyberpunk'] .kp-code__meta {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-code__title::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-code__head {
+        border-block-end: 1px dashed var(--border-strong);
+    }
+
+    /* ── Page header line ── */
+    [data-theme='cyberpunk'] .kp-page-header__meta {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    /* ── A number that ticks: two neon copies stutter home, 6, 4, 2, 1 px, in four ticks of 120 ms; the figure stays
+       sharp on top and never moves ── */
+    [data-theme='cyberpunk'] [data-kp-tick] {
+        font-family: var(--theme-font-display);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-kp-tick][data-kp-tick-state='running'] {
+            animation: kp-cp4-stutter calc(8 * var(--kp-cp4-tick)) steps(1, end);
+        }
+    }

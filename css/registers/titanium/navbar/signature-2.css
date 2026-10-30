@@ -1,0 +1,29 @@
+/* @part: navbar: signature layer; also popover */
+    @keyframes kp-sig-titanium-ti-cut {
+        from {
+            --kp-sig-ti-cut: 0%;
+        }
+
+        to {
+            --kp-sig-ti-cut: 100%;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-cutter {
+        from {
+            opacity: 1;
+            transform: translateY(-100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-appear {
+        from {
+            opacity: 0;
+        }
+    }
+

@@ -1,0 +1,16 @@
+/* @part: share-bar: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium']
+            :is(.kp-stackbar__wait-line, .kp-bullets__wait, .kp-kv__wait, .kp-pipeline__ghost, .kp-pipeline__count, .kp-uptime__summary)
+            > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+        [data-theme='titanium'] .kp-pipeline__ghost-count.kp-skeleton,
+        [data-theme='titanium'] .kp-uptime__summary-skeleton.kp-skeleton {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+        [data-theme='titanium'] :is(.kp-stackbar__item:nth-child(2n), .kp-kv__row:nth-child(2n), .kp-bullets__row:nth-child(2n)) .kp-skeleton {
+            animation-delay: -300ms;
+        }
+        [data-theme='titanium'] :is(.kp-stackbar__item:nth-child(3n), .kp-kv__row:nth-child(3n), .kp-bullets__row:nth-child(3n)) .kp-skeleton {
+            animation-delay: -600ms;
+        }
+    }

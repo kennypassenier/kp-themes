@@ -1,0 +1,36 @@
+/* @part: quantity: signature layer */
+    /* ── Quantity: the figure in Martian Mono in a pocket, the unit engraved ── */
+    [data-theme='titanium'] .kp-quantity__field {
+        --kp-sig-ti-c: 0.4rem;
+        border-radius: 0;
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: var(--kp-ti-pocket);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: 0;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+    [data-theme='titanium'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        box-shadow:
+            var(--kp-ti-pocket),
+            inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-quantity__input {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-quantity__unit {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+

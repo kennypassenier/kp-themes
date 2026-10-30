@@ -1,0 +1,81 @@
+/* @part: key-figures: register layer; also date-picker, menu-button */
+    [data-theme='nostromo'] .kp-kpi__value {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+    }
+
+    /* Michroma is wide: in a tile whose content box is 140 px or less (8.75
+       rem; a strip's narrowest tile is 144 px with its padding, a 334 px pane
+       gives 127) a drawn figure such as "412 m³/h" or "1,834 kWh" does not fit
+       beside its unit, and the unit drops to a second line at its 0.55 em size
+       (17.7 px more: 121.2 to 139.4 px). A skeleton or a dash never wraps, so
+       the tile changed height with its state [fix-101]. Down there the figure
+       follows the tile: a 6.5th of its content width at most (the longest
+       sample, "1,834 kWh", is 5.96 em and 3 px wide), never above the size the
+       knob gives, so the figure and its unit keep one line. Its box keeps the
+       height of a full-size line (1.15 times the size, css/components.css),
+       so the tile is the height it has everywhere else. The threshold sits
+       under the 146 px a catalogue strip tile has at 1280 px, where the figure
+       fits at its own size. */
+    @container kp-kpi (max-width: 8.75rem) {
+        [data-theme='nostromo'] .kp-kpi__value {
+            font-size: min(var(--kp-kpi-value-size, 1.75rem), 100cqi / 6.5);
+        }
+
+        [data-theme='nostromo'] .kp-kpi--trend > .kp-kpi__value,
+        [data-theme='nostromo'] :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi > .kp-kpi__value {
+            min-block-size: calc(1.15 * var(--kp-kpi-value-size, 1.75rem));
+        }
+    }
+
+    [data-theme='nostromo'] .kp-kpi__label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='nostromo'] .kp-kpi__delta {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        /* The mono tape's own line box must not grow the trend line (0.5 px
+           in a tile that carries a change). */
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-kpi__delta[data-kp-tone] {
+        border-radius: var(--kp-sig-no-tape);
+    }
+
+    [data-theme='nostromo'] .kp-kpi[data-kp-tone='warning'] {
+        box-shadow:
+            inset 0 0 0 3px var(--warning),
+            var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-kpi[data-kp-tone='destructive'] {
+        box-shadow:
+            inset 0 0 0 3px var(--destructive),
+            var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: inherit;
+    }
+
+    [data-theme='nostromo'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value :is(small, .kp-kpi__note) {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-menu__item--destructive:not(:focus-visible, :active) {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    /* A pick is the person's hand, so it is ink (colour "indicate"): the
+       picked day was the signal orange. */
+    [data-theme='nostromo'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }

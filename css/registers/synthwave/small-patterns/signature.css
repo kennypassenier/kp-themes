@@ -1,0 +1,28 @@
+/* @part: small-patterns: signature layer */
+    /* ── Drawings for an empty state: the horizon. The drawing rises over its own horizon, uncovered from the line up,
+       on the sunrise curve in two beats; its tubes glow in their ink. ── */
+    [data-theme='synthwave'] .kp-art {
+        display: block;
+    }
+    [data-theme='synthwave'] .kp-art > g[data-kp-art-set='horizon'] {
+        display: inline;
+    }
+    [data-theme='synthwave'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='synthwave'] .kp-art__rule {
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.8));
+    }
+    [data-theme='synthwave'] .kp-art__ink {
+        filter: drop-shadow(0 0 2px hsl(from var(--accent) h s l / 0.6));
+    }
+    [data-theme='synthwave'] .kp-art__red {
+        filter: drop-shadow(0 0 3px hsl(from var(--destructive) h s l / 0.8));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-art {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+

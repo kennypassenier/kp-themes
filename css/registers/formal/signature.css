@@ -1,0 +1,26 @@
+/* @part: signature: signature layer — rules that belong to no one component; also toast */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A toast, and anything else that arrives on its own, is ruled in; what
+           leaves has its rules taken off. */
+        [data-theme='formal'] :is(.kp-toast, [data-kp-arriving]) {
+            animation: kp-sig-formal-leave 560ms linear reverse backwards;
+        }
+
+        [data-theme='formal'] :is(.kp-toast, [data-kp-arriving]):dir(rtl) {
+            animation-name: kp-sig-formal-leave-rtl;
+        }
+
+        /* Leaving is ruled off, bottom first [G13]: the pen is set again, then
+           the rule is taken off, end to start. In a row of leaves the next one
+           goes when the one before has had its first 60 ms: `--kp-leave-stagger`. */
+        [data-theme='formal'] [data-kp-leaving] {
+            --kp-leave-stagger: 0.1;
+            animation: kp-sig-formal-leave 560ms linear forwards;
+        }
+
+        [data-theme='formal'] [data-kp-leaving]:dir(rtl) {
+            animation-name: kp-sig-formal-leave-rtl;
+        }
+
+    }
+

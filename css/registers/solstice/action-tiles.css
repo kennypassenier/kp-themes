@@ -1,0 +1,120 @@
+/* @part: action-tiles: signature layer */
+    [data-theme='solstice'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='solstice'] .kp-action {
+        --kp-action-edge: var(--border);
+        --kp-action-edge-hover: var(--border);
+        --kp-action-press: 0 0;
+        --kp-action-title-font: var(--theme-font-display, var(--theme-font-serif, inherit));
+        --kp-action-title-weight: 400;
+        --kp-action-title-size: 1.0625rem;
+        --kp-sig-solstice-rise: 0.4rem;
+        --kp-sig-solstice-sun: var(--primary);
+        --kp-sig-solstice-held: var(--muted);
+        --kp-so-sky: var(--accent);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.55);
+        contain: paint;
+        background-color: var(--card);
+        background-image:
+            linear-gradient(
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(var(--kp-sig-solstice-press) * 0.6)),
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(var(--kp-sig-solstice-press) * 0.6))
+            ),
+            radial-gradient(
+                ellipse 70% 105% at 50% 100%,
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.16 * min(1, var(--kp-sig-solstice-press) * 3))),
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.055 * min(1, var(--kp-sig-solstice-press) * 3))) 42%,
+                transparent 72%
+            ),
+            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)), linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.22), transparent);
+        background-position:
+            0 100%,
+            50% 100%,
+            0 100%,
+            0 100%;
+        background-size:
+            100% 2px,
+            calc((0.08 + 1.1 * var(--kp-sig-solstice-press)) * 100%) calc((0.08 + 1.1 * var(--kp-sig-solstice-press)) * 100%),
+            100% 1px,
+            100% 40%;
+        background-repeat: no-repeat;
+    }
+    [data-theme='solstice'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-sig-solstice-point: 1;
+    }
+    [data-theme='solstice'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-sig-solstice-press: 1;
+    }
+    /* The sun climbs its arc from the foot; a dome of warm light grows round it and the foot edge lights. */
+    [data-theme='solstice'] .kp-action::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-inline-start: calc(6% + (1 - cos(var(--kp-sig-solstice-point) * 90deg)) * 44%);
+        inset-block-end: calc(-0.8rem + sin(var(--kp-sig-solstice-point) * 90deg) * var(--kp-sig-solstice-rise));
+        inline-size: 0.8rem;
+        block-size: 0.8rem;
+        margin-inline-start: -0.4rem;
+        border-radius: 50%;
+        background: var(--kp-sig-solstice-sun);
+        box-shadow: 0 0 0.5rem 0.1rem hsl(from var(--kp-sig-solstice-sun) h s l / 0.55);
+        opacity: min(1, calc(var(--kp-sig-solstice-point) * 6));
+        pointer-events: none;
+    }
+    [data-theme='solstice'] .kp-action::after,
+    [data-theme='solstice'] .kp-action--destructive::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        inline-size: auto;
+        border-radius: inherit;
+        background:
+            linear-gradient(var(--kp-sig-solstice-sun), var(--kp-sig-solstice-sun)) 0 100% / 100% 2px no-repeat,
+            radial-gradient(
+                ellipse 80% 130% at calc(6% + (1 - cos(var(--kp-sig-solstice-point) * 90deg)) * 44%) 100%,
+                hsl(from var(--kp-sig-solstice-sun) h s l / 0.36),
+                hsl(from var(--kp-sig-solstice-sun) h s l / 0.12) 55%,
+                transparent 80%
+            );
+        opacity: min(1, calc(var(--kp-sig-solstice-point) * 2));
+        pointer-events: none;
+    }
+    [data-theme='solstice'] .kp-action > :not(.kp-action__state) {
+        position: relative;
+    }
+    [data-theme='solstice'] .kp-action:not(:is(.kp-action--destructive, :disabled, [aria-disabled='true'])) {
+        color: color-mix(
+            in oklch,
+            var(--card-foreground) calc((1 - var(--kp-sig-solstice-press)) * 100%),
+            var(--kp-sig-solstice-cream, var(--foreground))
+        );
+    }
+    [data-theme='solstice'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        --kp-so-sky: transparent;
+        --kp-so-foot: var(--border);
+        background-color: var(--muted);
+    }
+    /* Destructive: the sky reddens; the wash and the foot in the red, the title in the red lifted to read, the sun red. */
+    [data-theme='solstice'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-action-tone-edge: var(--border);
+        --kp-action-tone-edge-hover: var(--border);
+        --kp-so-sky: var(--destructive);
+        --kp-so-foot: var(--destructive);
+        --kp-sig-solstice-sun: var(--destructive);
+    }
+    [data-theme='solstice'] .kp-action--destructive > .kp-action__title {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+    [data-theme='solstice'] .kp-action--destructive:is(:disabled, [aria-disabled='true']) > .kp-action__title {
+        color: inherit;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-action {
+            transition:
+                --kp-sig-solstice-point var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch),
+                --kp-sig-solstice-press var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch);
+        }
+    }
+

@@ -1,0 +1,82 @@
+/* @part: navbar: signature layer */
+    /* The channel split [Kenny: curve, opening and leave = split]. Four ticks of 120 ms: the part
+       stands with a yellow copy right and up and a cyan copy right and down, 6, 4, 2 and 1 px, then
+       it is the part itself (the implicit last pose: the element's own clip and shadows). The copies
+       are the silhouette (`--kp-cp-b0` to `-b3`, set on a plate; none elsewhere) and the text
+       (`text-shadow`, which the part's words inherit). The clip is the part's own cut, wide
+       around it while a copy plays outside the box (`--kp-cp-wide`), so the notch is cut at
+       every tick and no frame draws a square corner. Opening is this; closing is this played
+       backwards (js/motion.js), which is `kp-sig-cyberpunk-split-out` where a leave plays it. */
+    @keyframes kp-sig-cyberpunk-split {
+        0% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75%,
+        100% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+
+    /* The same four poses under a second name: a part that is shown by the split and closes by
+       playing it backwards (`animation-direction: reverse`) must restart, and an animation that
+       keeps its name does not. Frame for frame the close is the opening. */
+    @keyframes kp-sig-cyberpunk-split-back {
+        0% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75%,
+        100% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+

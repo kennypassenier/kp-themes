@@ -1,0 +1,22 @@
+/* @part: form-grid: signature layer */
+    [data-theme='blueprint'] .kp-formrow[data-kp-changed]:not([data-kp-state='error'])::before {
+        content: '\25B3';
+        inset-block: auto;
+        inset-block-start: 0.35rem;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.35rem);
+        inline-size: auto;
+        background: none;
+        color: var(--accent);
+        font-size: 0.7em;
+        line-height: 1.5;
+    }
+    [data-theme='blueprint'] .kp-formrow__lock {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='blueprint'] .kp-formrow__lock::before {
+        border-radius: 0;
+    }
+

@@ -1,0 +1,41 @@
+/* @part: status-rows: signature layer; also forms, form-field */
+    [data-theme='brutalism'] [data-kp-row-keys] > li:focus-visible {
+        outline-width: 3px;
+        outline-offset: -3px;
+    }
+
+    /* A check with a reservation: the mark in warning paint, a band of tape in that paint along the foot. */
+    [data-theme='brutalism'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        padding-block-end: calc(0.5rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        border-color: var(--border-strong);
+        background: var(--warning);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-statusrow__fix {
+        font-weight: 700;
+    }
+
+    /* Choices as tiles: slabs; pointing lifts one up-left off its footprint; the pick is yellow. */
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+        --kp-field-tiles-gap: 1rem;
+    }
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-field__option-title {
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-field__option-hint {
+        font-weight: 500;
+    }

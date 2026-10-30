@@ -1,0 +1,24 @@
+/* @part: small-patterns: register layer */
+    [data-theme='brutalism'] .kp-copyable__button {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--border-strong);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--border-strong);
+        border-style: dashed;
+        color: var(--destructive-foreground);
+        background: var(--destructive);
+    }
+

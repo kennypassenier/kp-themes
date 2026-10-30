@@ -1,0 +1,44 @@
+/* @part: dialog: register layer; also toast, theme-menu */
+    /* A panel that opens is the tape with the stripe, without the floor
+       [G7]: the same stripe, the lit line and the sides that fall as a plate's. */
+    [data-theme='synthwave'] .kp-dialog,
+    [data-theme='synthwave'] .kp-popover,
+    [data-theme='synthwave'] .kp-menu:not(.kp-popover .kp-menu),
+    [data-theme='synthwave'] .kp-confirm,
+    [data-theme='synthwave'] .kp-datepicker__panel,
+    [data-theme='synthwave'] .kp-combobox__list,
+    [data-theme='synthwave'] .kp-palette,
+    [data-theme='synthwave'] .kp-theme-menu__list {
+        background:
+            var(--kp-stripe) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            var(--kp-sw-fall-l) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--kp-sw-fall-r) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--popover);
+        background-origin: border-box;
+        border: 1px solid transparent;
+        border-block-start: calc(var(--kp-sw-side) + 1px) solid transparent;
+        border-image: none;
+        border-radius: 0;
+        box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    /* The toast is a plate in its own tone and the tooltip a line of the OSD:
+       the toast's stripe is its own (below), the tooltip has none. */
+    [data-theme='synthwave'] .kp-toast,
+    [data-theme='synthwave'] .kp-tooltip {
+        background: var(--popover);
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+        box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='synthwave'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        border-image: none;
+        box-shadow: none;
+    }
+

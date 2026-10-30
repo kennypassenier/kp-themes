@@ -1,0 +1,17 @@
+/* @part: typed-confirmation: signature layer */
+    [data-theme='forest'] .kp-type-confirm__loses {
+        border-inline-start-width: 1px;
+        border-inline-start-color: var(--border);
+    }
+    [data-theme='forest'] .kp-type-confirm__loses-title {
+        justify-self: start;
+        padding: 0 0.4em;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-type-confirm__name {
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow: inset 0 -2px 0 var(--accent-foreground);
+    }

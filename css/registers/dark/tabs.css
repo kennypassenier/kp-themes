@@ -1,0 +1,77 @@
+/* @part: tabs: register layer; also accordion, command-palette, date-picker, breadcrumb-pagination */
+    /* The accordion [gap-12]: the rule at the start edge its category toggle and current page carry. */
+    [data-theme='dark'] .kp-accordion__summary {
+        padding-inline-start: 0.5rem;
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-accordion__item[open] > .kp-accordion__summary {
+        border-inline-start-color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-reorder {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Navigation and steps ───────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-tab {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-tab[aria-selected='true'] {
+        color: var(--foreground);
+        font-weight: 600;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='dark'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-pagination a[aria-current],
+    [data-theme='dark'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='dark'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    [data-theme='dark'] .kp-shortcuts__group-label,
+    [data-theme='dark'] .kp-palette__group-label {
+        font-weight: 700;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-theme-menu__status,
+    [data-theme='dark'] .kp-palette__status,
+    [data-theme='dark'] .kp-combobox__status {
+        color: var(--muted-foreground);
+    }
+

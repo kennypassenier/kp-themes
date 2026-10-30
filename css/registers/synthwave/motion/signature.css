@@ -1,0 +1,121 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-spinner::before {
+            animation: kp-sig-synthwave-sw-set var(--kp-sig-dur) var(--kp-sw-sun) infinite;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-synthwave-sw-sheen var(--kp-sig-dur) var(--kp-sig-sw-ease) infinite;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 220ms;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 440ms;
+        }
+
+        [data-theme='synthwave'] .kp-switch__input::before {
+            transition: transform var(--kp-sw-beat) var(--kp-sw-sun);
+        }
+
+        [data-theme='synthwave'] .kp-field__check:checked {
+            animation: kp-sig-synthwave-sw-tube var(--kp-sig-dur) steps(1, end) both;
+        }
+
+        /* A toast arrives as its leave played backwards: the sun rises behind
+           it and gives it back [G12]; its stripe is drawn from the centre once
+           it is there. */
+        [data-theme='synthwave'] .kp-toast {
+            animation: kp-sig-synthwave-sink var(--kp-sig-dur) var(--kp-sw-sun) reverse backwards;
+        }
+
+        [data-theme='synthwave'] .kp-toast::before {
+            animation: kp-sig-synthwave-sw-horizon calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) calc(2 * var(--kp-sw-beat)) both;
+        }
+
+        [data-theme='synthwave'] .kp-toast::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: var(--kp-sw-sun-cuts), var(--kp-sw-sun-v);
+            pointer-events: none;
+            translate: 0 101%;
+            visibility: hidden;
+            animation: kp-sig-synthwave-sun var(--kp-sig-dur) var(--kp-sw-sun) reverse backwards;
+        }
+
+        /* The beam climbs to the horizon [G3, opening = climb]. */
+        [data-theme='synthwave'] .kp-dialog {
+            animation: kp-sig-synthwave-climb var(--kp-sig-dur) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave'] .kp-dialog::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam var(--kp-sig-dur) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow var(--kp-sig-dur) linear backwards;
+        }
+
+        /* What drops from a button climbs the same way [G3]: the menu, a
+           popover, the combobox's list, the date picker's panel and the
+           tooltip are uncovered from their foot behind the beam, in two beats
+           on the sunrise curve, as the dialog is. The close is that climb
+           played backwards: js/motion.js turns the entrance around on
+           `[data-kp-closing]` / `[data-kp-reversing]` (a menu, the date
+           picker, the tooltip) or on its copy of a popover the browser hides
+           (the ghost). These were transitions to the open state and back,
+           which Firefox cannot hold for a popover leaving the top layer: the
+           close was gone in one frame (all-themes audit, 2026-10-13). */
+        [data-theme='synthwave']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-tooltip
+            ) {
+            animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-tooltip
+            )::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow calc(2 * var(--kp-sw-beat)) linear backwards;
+        }
+
+        /* The list climbs as its own entrance, not as the leave turned around. */
+        [data-theme='synthwave'] .kp-combobox__list {
+            --kp-open: own;
+        }
+
+        /* The command palette and the shortcuts sheet are dialogs: they climb as
+           the dialog does (three beats unopened, two once open, which js/motion.js
+           plays backwards to close them). They faded in the package's way. */
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: calc(3 * var(--kp-sw-beat));
+            animation: kp-sig-synthwave-climb var(--kp-sig-dur) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts)[open] {
+            --kp-sig-dur: calc(2 * var(--kp-sw-beat));
+        }
+
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts)::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam var(--kp-sig-dur) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow var(--kp-sig-dur) linear backwards;
+        }
+    }
+

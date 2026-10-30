@@ -1,0 +1,30 @@
+/* @part: code-block: signature layer */
+    /* Code block: a plate on the sheet (a ruler along its start edge and its foot, no fill, no closed frame); the head
+       is lettered, the text sits on a faint field of its own, the keys are the pen's cyan. */
+    [data-theme='blueprint'] .kp-code {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] :is(.kp-code__title, .kp-code__meta) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-code__body,
+    [data-theme='blueprint'] .kp-code__note {
+        background: hsl(from var(--foreground) h s l / 0.04);
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-code__foot {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+

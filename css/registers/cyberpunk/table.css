@@ -1,0 +1,41 @@
+/* @part: table: register layer; also datatable, diff */
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-table {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-table th {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border-bottom: 1px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-table td {
+        border-color: var(--kp-hairline);
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows, the status line's
+       small spinner stays out, so it holds back no arrival of the layer (lesson 23). */
+    [data-theme='cyberpunk'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-diff {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        border-color: var(--kp-hairline);
+    }
+

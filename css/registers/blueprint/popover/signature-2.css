@@ -1,0 +1,88 @@
+/* @part: popover: signature layer */
+    [data-theme='blueprint'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-bp-tip);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        background-image:
+            linear-gradient(var(--primary), var(--primary)), linear-gradient(var(--primary), var(--primary)),
+            linear-gradient(var(--primary), var(--primary)), linear-gradient(var(--primary), var(--primary));
+        background-size:
+            calc(clamp(0, var(--kp-bp-r), 1) * 100%) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * 100%),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * 100%) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * 100%);
+        background-position:
+            left top,
+            right top,
+            right bottom,
+            left bottom;
+        background-color: var(--popover);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-sig-blueprint-callout {
+            0%,
+            28% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 0;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            43% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            53% {
+                --kp-bp-r: 2;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            68% {
+                --kp-bp-r: 3;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            74.9% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 4;
+            }
+
+            75%,
+            100% {
+                --kp-bp-r: 4;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-leader {
+            0% {
+                transform: scaleY(0);
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            28%,
+            100% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes kp-sig-blueprint-node {
+            0%,
+            27.9% {
+                opacity: 0;
+            }
+
+            28%,
+            100% {
+                opacity: 1;
+            }
+        }
+    }
+

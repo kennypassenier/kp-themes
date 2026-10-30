@@ -1,0 +1,230 @@
+/* @part: month-heatmap: signature layer */
+    /* Calendar · the rows and columns of the month, for the stagger of the
+       arrival (reading order) and of the planting (the days of a week). */
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(2) {
+        --kp-fo-col: 1;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(3) {
+        --kp-fo-col: 2;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(4) {
+        --kp-fo-col: 3;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(5) {
+        --kp-fo-col: 4;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(6) {
+        --kp-fo-col: 5;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(7) {
+        --kp-fo-col: 6;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(2) {
+        --kp-fo-row: 1;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(3) {
+        --kp-fo-row: 2;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(4) {
+        --kp-fo-row: 3;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(5) {
+        --kp-fo-row: 4;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(6) {
+        --kp-fo-row: 5;
+    }
+
+    /* Calendar · shape: leaf corner (Kenny's choice, 2026-10-10): soft organic
+       leaf corner matching the theme's plate grammar, displayed in display face. */
+    [data-theme='forest'] .kp-calendar__day {
+        position: relative;
+        isolation: isolate;
+        border-width: 1px;
+        border-radius: 0 var(--kp-sig-fo-leaf, 0.5rem) 0 var(--kp-sig-fo-leaf, 0.5rem);
+        box-shadow: none;
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='forest'] .kp-calendar__pad {
+        position: relative;
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.15);
+        border-radius: 0 var(--kp-sig-fo-leaf, 0.5rem) 0 var(--kp-sig-fo-leaf, 0.5rem);
+        font-family: var(--theme-font-display);
+        box-sizing: border-box;
+    }
+
+    [data-theme='forest'] .kp-calendar__swatch {
+        border-radius: var(--kp-sig-fo-part);
+    }
+
+    [data-theme='forest'] .kp-calendar__title {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid th {
+        font-style: italic;
+    }
+
+    /* Calendar · tone 2, the trail map: each state is a patch of map. A kept
+       night carries the trail blaze along its start edge in its own ink, a
+       night with nothing done a double blaze; a night not known is a dashed
+       patch with a question mark, a day to come a dotted one, a day before
+       the record hatched; today is ringed in green with a map pin. */
+    [data-theme='forest']
+        :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate):is(
+            [data-kp-tone='ok'],
+            [data-kp-tone='warn'],
+            [data-kp-tone='bad']
+        ) {
+        background-image: linear-gradient(var(--kp-fo-blaze) 0 0);
+        background-position: left 3px center;
+        background-size: 4px calc(100% - 10px);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='ok'] {
+        --kp-fo-blaze: var(--success-foreground);
+        border-color: hsl(from var(--success-foreground) h s l / 0.3);
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'] {
+        --kp-fo-blaze: var(--warning-foreground);
+        border-color: hsl(from var(--warning-foreground) h s l / 0.3);
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'] {
+        --kp-fo-blaze: var(--destructive-foreground);
+        background-image: linear-gradient(var(--kp-fo-blaze) 0 0), linear-gradient(var(--kp-fo-blaze) 0 0);
+        background-position:
+            left 3px center,
+            left 9px center;
+        background-size: 3px calc(100% - 10px);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-tone='bad'] {
+        padding-inline-start: 0.8rem;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='muted'] {
+        border-color: var(--border);
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='none'] {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-tone='none']::before {
+        content: '?';
+        position: absolute;
+        z-index: -1;
+        inset-block-start: 0.125rem;
+        inset-inline-end: 0.25rem;
+        color: var(--border-strong);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='future'] {
+        border-style: dotted;
+        border-color: var(--border-strong);
+        background: transparent;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='before'] {
+        border-color: transparent;
+        background: repeating-linear-gradient(-45deg, hsl(from var(--border-strong) h s l / 0.3) 0 1px, transparent 1px 5px);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-today] {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:has(> .kp-calendar__day[data-kp-today])::after {
+        content: '';
+        position: absolute;
+        inset: -5px -3px auto auto;
+        inline-size: 12px;
+        block-size: 12px;
+        border-radius: 50% 50% 50% 0;
+        rotate: -45deg;
+        background: radial-gradient(circle, var(--card) 0 2px, transparent 2.5px), var(--chart-2);
+        box-shadow: 0 0 0 1px var(--foreground);
+        pointer-events: none;
+    }
+
+    /* Calendar · select 3, the pick is the person's act, so it is forest
+       green (G5, proposal-13), 2 px out; the field note's brackets stay round
+       the picked day's count, and a pointed day underlines its number. */
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day {
+        z-index: 1;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::before {
+        content: '[';
+    }
+
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::after {
+        content: ']';
+    }
+
+    [data-theme='forest'] .kp-calendar__day:hover .kp-calendar__num {
+        text-decoration: underline 2px;
+        text-underline-offset: 2px;
+    }
+
+    /* Calendar · loading 1, the falling leaf → a day has no room for a row,
+       so it plants one tree on its mound in three whole stages (§6.7), the
+       spinner's own drawing; the date stands faint over it. Where the package
+       already puts the spinner (a tree) in a loading day, the day draws none,
+       and while the whole month waits its card's planting row is the one
+       picture: the days stand faint without a tree (Kenny, 2026-10-09 on
+       research/forest-uniformity, loading: "one picture per waiting panel"). */
+    [data-theme='forest']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading'] {
+        border-color: var(--border);
+        background: var(--card);
+        color: hsl(from var(--foreground) h s l / 0.25);
+        animation: none;
+    }
+
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::before,
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 14% 36% 10%;
+        background: var(--primary);
+        pointer-events: none;
+    }
+
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::before {
+        opacity: 0.6;
+        mask: var(--kp-fo-mound) 50% 100% / 100% 100% no-repeat;
+    }
+
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::after {
+        /* Standing still (reduced motion) it is the grown tree. */
+        mask: var(--kp-fo-stages) 100% 100% / 300% 100% no-repeat;
+    }
+

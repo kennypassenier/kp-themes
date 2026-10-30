@@ -1,0 +1,71 @@
+/* @part: wheel: signature layer */
+    /* The wheel: flat paint between ink lines, an ink rim; a constant speed and a dead stop. */
+    [data-theme='brutalism'] .kp-wheel {
+        --kp-wheel-ease: linear;
+        --kp-wheel-tint: 100%;
+        --kp-wheel-tint-chosen: 100%;
+        --kp-wheel-other: 0.35;
+        --kp-wheel-pointer: var(--secondary);
+        --kp-wheel-hub-ring: 4px;
+    }
+    [data-theme='brutalism'] .kp-wheel__segment {
+        stroke: var(--border-strong);
+        stroke-width: 2;
+    }
+    [data-theme='brutalism'] .kp-wheel__segment[data-kp-wheel-chosen] {
+        stroke-width: 3.5;
+    }
+    [data-theme='brutalism'] .kp-wheel__label {
+        fill: var(--border-strong);
+        stroke: var(--card);
+        stroke-width: 3px;
+        stroke-linejoin: round;
+        paint-order: stroke;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button::before,
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-wheel__rim {
+        stroke: var(--border-strong);
+        stroke-width: 4;
+    }
+    [data-theme='brutalism'] .kp-wheel__pointer {
+        stroke: var(--border-strong);
+        stroke-width: 2.5;
+        stroke-linejoin: miter;
+    }
+    [data-theme='brutalism'] .kp-wheel__stage::before {
+        background: var(--card);
+        box-shadow:
+            0 0 0 var(--kp-wheel-hub-ring) var(--border-strong),
+            5px 5px 0 var(--kp-wheel-hub-ring) var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-wheel__ghost {
+        stroke-width: 3;
+    }
+    [data-theme='brutalism'] .kp-wheel__outcome {
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        border: 3px solid var(--border-strong);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
+            animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }

@@ -1,0 +1,102 @@
+/* @part: key-figures: signature layer; also menu-button */
+    /* A key figure that is a toggle and is on: the rim and a primary wash. */
+    [data-theme='cyberpunk'] .kp-kpi--toggle[aria-pressed='true'] {
+        --kp-cp-ground: color-mix(in oklab, var(--primary) 9%, var(--card));
+        box-shadow: var(--kp-cp-rest);
+    }
+
+    /* The machine's voice [G15]: the label is prefixed mono capitals in cyan, the figure the
+       condensed display. */
+    [data-theme='cyberpunk'] .kp-kpi__label {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        letter-spacing: 0.14em;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi__label::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi__value {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    /* A warning is locked as a target [Kenny: tone = lock, G13]: four corner brackets, 2 px, in the
+       tone's ink (a warning's ink, never its plate; the destructive red) frame a key figure whose
+       `data-kp-tone` says so, and a destructive menu entry. They close on it in two twitches (360 ms,
+       `steps(1)`) and hold; there is no frame and no hazard band. Drawn as background layers, so
+       the part's four pseudo-elements stay for pointing and focus. */
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'],
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='destructive'],
+    [data-theme='cyberpunk'] .kp-menu__item--destructive {
+        --kp-cp-tone: var(--destructive);
+        --kp-cp-lock:
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-cp-tone: var(--warning-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        background: var(--kp-cp-lock), var(--kp-cp-grid), var(--kp-cp-notch-line), var(--kp-cp-scan), var(--kp-cp-ground);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item--destructive {
+        background-image: var(--kp-cp-lock);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-kpi[data-kp-tone='warning'], .kp-kpi[data-kp-tone='destructive'], .kp-menu__item--destructive) {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+    }
+
+    /* The tag of the lock: a mono word in the tone's ink, boxed, at the head's end. It is the free
+       `::after` of the label (the label's `::before` is the prefix), laid over the tile, so no markup
+       is added; a tile narrower than 15 rem has no room for it and drops it. */
+    [data-theme='cyberpunk'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label::after,
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__label::after {
+        position: absolute;
+        inset-block-start: 0.45rem;
+        inset-inline-end: 1.2rem;
+        padding: 0 0.3rem;
+        border: 1px solid var(--kp-cp-tone);
+        color: var(--kp-cp-tone);
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1rem;
+        letter-spacing: 0.16em;
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label::after {
+        content: 'CAUTION';
+        content: 'CAUTION' / '';
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__label::after {
+        content: 'TARGET';
+        content: 'TARGET' / '';
+    }
+
+    @container kp-kpi (max-width: 15rem) {
+        [data-theme='cyberpunk'] .kp-kpi[data-kp-tone] .kp-kpi__label::after {
+            display: none;
+        }
+    }
+

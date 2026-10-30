@@ -1,0 +1,28 @@
+/* @part: key-value-grid: signature layer */
+    /* The key-value grid: the keys in the serif, a row lit at its foot only where it fails or changed. */
+    [data-theme='solstice'] .kp-kv {
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-kv__row {
+        align-items: start;
+    }
+    [data-theme='solstice'] .kp-kv__row > dt {
+        font-family: var(--theme-font-display, inherit);
+    }
+    [data-theme='solstice'] .kp-kv--lines > .kp-kv__row {
+        border-block-end-color: var(--border);
+    }
+    [data-theme='solstice'] .kp-kv {
+        --kp-glyph-changed: '\00a0\25CF';
+    }
+    [data-theme='solstice'] .kp-kv__row[data-kp-changed] > dt::after {
+        text-shadow: 0 0 0.45em hsl(from var(--primary) h s l / 0.9);
+    }
+    [data-theme='solstice'] .kp-kv__row[data-kp-state='error'] {
+        background: linear-gradient(to top, hsl(from var(--destructive) h s l / 0.16), transparent 70%);
+        box-shadow: inset 0 -1px 0 var(--destructive);
+    }
+    [data-theme='solstice'] .kp-kv__row[data-kp-state='error']::before {
+        content: none;
+    }
+

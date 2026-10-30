@@ -1,0 +1,34 @@
+/* @part: menu-button: signature layer; also tree-reorder-split, form-field */
+    /* ── Audit round (research/forest-applied/_audit/MISSING.md) ───────── */
+
+    /* Row 17, press on rows: a row that answers the pointer with the blaze
+       answers the press by closing it in and turning it solid (G12), as a
+       button does. The offset (-3px) is the row family's hover rule above. A
+       check and a switch close it to 1px, like a button. */
+    [data-theme='forest']
+        :where(
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr,
+            .kp-field__check,
+            .kp-switch__input
+        ):active:not(:disabled, [aria-disabled='true'], :focus-visible) {
+        outline-style: solid;
+        outline-color: var(--primary);
+    }
+
+    [data-theme='forest'] :where(.kp-field__check, .kp-switch__input):active:not(:disabled, :focus-visible) {
+        outline-offset: 1px;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:active:not(:has([role='treeitem']:active))::after {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+

@@ -1,0 +1,32 @@
+/* @part: popover: signature layer */
+    [data-theme='solstice'] .kp-tooltip {
+        --kp-sig-dur: 360ms;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-inline-start: 0.4rem;
+        padding: 0.3rem 0.8rem 0.3rem 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: 0 8px 20px -12px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    /* The hover card holds several lines: 999px would make it an oval (Kenny, kpadopt-tooltip-sort, 2026-10-16),
+       so it takes the popover's own corner. */
+    [data-theme='solstice'] .kp-tooltip[data-kp-hovercard-card] {
+        padding-block: 0.5rem;
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-tooltip::before {
+        content: '';
+        flex: none;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.22);
+    }
+

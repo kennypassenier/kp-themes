@@ -1,0 +1,37 @@
+/* @part: kitchen-timers: signature layer */
+    /* Timers: slabs; the one that has run out is set down again, yellow, taped off along its foot. */
+    [data-theme='brutalism'] .kp-timer {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-timer__name {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-timer__time {
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--warning);
+        --kp-timer-done-ink: var(--border-strong);
+        --kp-timer-done-edge: var(--border-strong);
+        padding-block-end: calc(var(--kp-space-md, 0.75rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--warning);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-timer[data-kp-timer-state='done'] {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) 1;
+        }
+    }
+

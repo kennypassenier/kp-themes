@@ -1,0 +1,23 @@
+/* @part: switch: signature layer */
+    [data-theme='solstice'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--background);
+    }
+
+    [data-theme='solstice'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        box-shadow: inset -4px -1px 0 0 hsl(from var(--background) h s l / 0.85);
+    }
+
+    [data-theme='solstice'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: linear-gradient(90deg, var(--accent), var(--primary));
+    }
+
+    [data-theme='solstice'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary-foreground);
+        box-shadow: 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.25);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+

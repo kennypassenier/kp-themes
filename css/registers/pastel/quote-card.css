@@ -1,0 +1,28 @@
+/* @part: quote-card: signature layer; also rating, badge */
+    /* A quote card holds the height of its quote (176 px at desktop width); pastel's empty plate (a 52 px disc, 1.25 and 1.6 rem of
+       padding, 168 px) plus the card's own padding made Empty 26 px taller than Ready (kpadopt6-calm/quote-states). In this
+       footprint the disc is 2.25 rem and the padding smaller; the card's stage keeps the height it had. */
+    [data-theme='pastel'] .kp-quote .kp-card__empty {
+        --kp-sig-pa-lip: 1.25rem;
+        padding: 0.75rem 1rem 1rem;
+    }
+
+    [data-theme='pastel'] .kp-quote .kp-card__empty::before {
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.4rem;
+    }
+
+    /* The rating's failed plate lies over the place of the stars (`position: absolute; inset: 0`); pastel's alert rule made every
+       alert `position: relative`, so the plate stood in the flow under the hidden stars and the rating grew from 80 to 158 px
+       (142 against 92 at 390; kpadopt6-fields/rating-states). */
+    [data-theme='pastel'] .kp-rating__failure {
+        position: absolute;
+    }
+
+    /* A waiting version badge holds a skeleton line with the 0.45 rem margins of a line in a list; inside a badge they made it
+       30 px high against 23 for its version (kpadopt5-ops/version-states). */
+    [data-theme='pastel'] .kp-badge > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block: 0.26rem;
+    }
+

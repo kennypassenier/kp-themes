@@ -1,0 +1,134 @@
+/* @part: navbar: signature layer; also sidenav, motion */
+    @keyframes kp-sig-deco-sidenav-dim {
+        0%,
+        66.667% {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='deco'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* kp-sig-deco-arrive under a second name, played in reverse for a close
+       that must start as an animation of its own (the navbar's panels). */
+    @keyframes kp-sig-deco-arrive-back {
+        0% {
+            --kp-sig-deco-draw: 0;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        66.667% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 1;
+        }
+    }
+
+    /* ── Q6, Q7, Q19 · the plate: lacquer, the wallpaper behind it, the
+       inlay on it, its four corners coved. Every plate (a card, a key figure,
+       an alert, an empty state, a tile, a dialog, a menu, a popover, a toast,
+       a tour card, a drawer and the panels of the pickers) is blue lacquer
+       with the chevron wallpaper in gold at 8 % and a faint gold edge; each
+       corner is cut as a concave quarter circle (a cove, 10 px) and two
+       parallel gold hairlines follow the cove and the straight edges, 3 px
+       apart, with a tiny gold bead in each hollow. The cove is a mask on the
+       plate itself (the whole box and 24 px round it kept, the four quarter
+       circles taken out), so a focus ring or a notch outside its box is
+       never cut. The hairlines are the plate's ::after, drawn round from the
+       middle of the top edge both ways as far as --kp-sig-deco-draw; the
+       lacquer, wallpaper and words come up with --kp-sig-deco-up (both rest
+       at 1, the finished pose, and an arrival turns them: "Opening"). ── */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip
+        ) {
+        --kp-sig-deco-r: 10px;
+        --kp-sig-deco-n: 3px;
+        --kp-sig-deco-c: calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1px);
+        --kp-sig-deco-bead: calc(var(--kp-sig-deco-r) * 0.26);
+        isolation: isolate;
+        border: 1px solid hsl(from var(--primary) h s l / calc(0.3 * var(--kp-sig-deco-up)));
+        border-radius: 0;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s l / var(--kp-sig-deco-up));
+        background-image:
+            repeating-linear-gradient(
+                135deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            ),
+            repeating-linear-gradient(
+                45deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            );
+        background-size: 24px 24px;
+        box-shadow: none;
+        color: var(--foreground);
+        mask-image:
+            linear-gradient(var(--foreground) 0 0),
+            radial-gradient(circle at 0 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 0 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px));
+        mask-size:
+            calc(100% + 48px) calc(100% + 48px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px);
+        mask-position:
+            -24px -24px,
+            0 0,
+            100% 0,
+            0 100%,
+            100% 100%;
+        mask-repeat: no-repeat;
+        mask-composite: subtract, add, add, add, add;
+        mask-clip: no-clip;
+    }
+

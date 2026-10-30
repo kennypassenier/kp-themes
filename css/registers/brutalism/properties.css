@@ -1,0 +1,36 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
+   two registered copies, one on each mirror of the motion, so that a rise is
+   the picture's fall and a fall is that fall turned around; registered so
+   the transitions interpolate them. At the top level because Firefox does
+   not register an @property inside a layer. */
+@property --kp-sig-br-lag {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-br-lead {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+/* A clock with nothing drawn on it: the bar's mega menu is held on screen
+   until a transition on its panel has played (js/components.js); this is
+   that transition, the length of the panel's lift. */
+@property --kp-sig-br-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+/* How far the side navigation still stands above its footprint while it is
+   dropped onto it (review round 2): the panel is held up-left by this much and
+   each slab's hard shadow stays on the ground, its offset grown by it. */
+@property --kp-sig-br-lift {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+

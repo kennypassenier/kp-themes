@@ -1,0 +1,158 @@
+/* @part: button: register layer; also card */
+    /* ── The chamfer [scope-16] ────────────────────────────────────────
+       Controls take the small cut and panels the large one. `clip-path`
+       rather than a border-radius, because the corner is a straight edge
+       at forty-five degrees and a radius is an arc. */
+    [data-theme='titanium'] .kp-button,
+    [data-theme='titanium'] .kp-field__input,
+    [data-theme='titanium'] .kp-badge {
+        clip-path: polygon(
+            var(--kp-chamfer) 0,
+            100% 0,
+            100% calc(100% - var(--kp-chamfer)),
+            calc(100% - var(--kp-chamfer)) 100%,
+            0 100%,
+            0 var(--kp-chamfer)
+        );
+        box-shadow: var(--kp-tool-edge);
+    }
+
+    [data-theme='titanium'] .kp-card,
+    [data-theme='titanium'] .kp-dialog,
+    [data-theme='titanium'] .kp-alert {
+        clip-path: polygon(
+            var(--kp-chamfer-panel) 0,
+            100% 0,
+            100% calc(100% - var(--kp-chamfer-panel)),
+            calc(100% - var(--kp-chamfer-panel)) 100%,
+            0 100%,
+            0 var(--kp-chamfer-panel)
+        );
+        box-shadow: var(--kp-tool-edge);
+    }
+
+    /* ── The instrument's own button [scope-16] ────────────────────────
+       Three things happen at once and none of them is a colour change:
+       two brackets close on the label, the label draws itself in a little,
+       and the oxide runs along the bottom edge. The brackets are the
+       button's own pseudo-elements; the oxide is `.kp-button__edge`, which
+       the component now provides precisely because both were needed.
+
+       `content` here is a glyph, not a word: nothing to translate, and so
+       nothing KT5 has to police. */
+    /* No brackets. Those are the spectral instrument's notation — a
+       machine annotating what it has selected — and a material does not
+       annotate. Titanium's two pseudo-element slots stay free. */
+
+    [data-theme='titanium'] .kp-button__edge {
+        background: var(--kp-iris);
+        mix-blend-mode: screen;
+        opacity: 0;
+        z-index: 1;
+    }
+
+    [data-theme='titanium'] .kp-button:hover .kp-button__edge,
+    [data-theme='titanium'] .kp-button:focus-visible .kp-button__edge {
+        opacity: 0.26;
+    }
+
+    [data-theme='titanium'] .kp-button__label {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* No give. The spectral instrument draws its label in on hover; metal
+       does not compress, so titanium answers a press by dropping the whole
+       control one pixel.
+
+       The face goes into its seat [Kenny's titanium note, 2026-09-15].
+       "There is no click effect": the one pixel ran over the theme's 60ms,
+       and on the bare, secondary, ghost and mirror buttons the pressed
+       ground was three RGB steps from the hover ground, so a click showed
+       nothing. Still no give and no glow — the face does not shrink and
+       nothing blooms — but a pressed part is out of the light: the bright
+       tool edge along its top goes out and a hairline of shadow takes its
+       place, the ground drops a full step (below, with the fix-12 rules),
+       and all of it arrives at once, because a click is shorter than a
+       transition. The release runs back over the same 60ms, eased. A
+       keyboard press keeps the focus ring, which owns the shadow while
+       it shows. */
+    [data-theme='titanium'] .kp-button:active:not(:disabled) {
+        translate: 0 1px;
+        transition-duration: 0s;
+    }
+
+    [data-theme='titanium'] .kp-button:active:not(:disabled):not(:focus-visible) {
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.7);
+    }
+
+    /* The reading above the control: the consumer's own word, in the
+       theme's monospace, taking the oxide's colours through the text. */
+    [data-theme='titanium'] .kp-button__readout {
+        inset-block-end: calc(100% + 0.2rem);
+        font-family: var(--theme-font-mono);
+        font-size: 0.5rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        translate: 0 0.2rem;
+    }
+
+    [data-theme='titanium'] .kp-button:hover .kp-button__readout,
+    [data-theme='titanium'] .kp-button:focus-visible .kp-button__readout {
+        opacity: 1;
+        translate: 0 0;
+        background: var(--kp-iris);
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* ── Room for the readout above the chamfer [Kenny's note, 2026-09-15]
+       The chamfer is a clip-path, and a clip-path clips the element's
+       descendants too, so the readout — which sits above the control, out
+       of its box — was cut away entirely: at full opacity on hover and not
+       one pixel painted, on the catalogue and on the concept page alike.
+       A button that carries a readout keeps its chamfer and adds a strip
+       above it for the readout to show in. The strip is an island, joined
+       to the chamfer by a zero-width seam along the end edge (the start
+       corner is the cut one), and it stops the width of the focus ring and
+       its outline short of the control, so none of the ring the chamfer
+       cuts away reappears on top. It reaches well past both ends because
+       the readout does not wrap. */
+    [data-theme='titanium'] .kp-button:has(> .kp-button__readout) {
+        --kp-readout-seam: calc(-1 * (var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px) + 1px));
+        clip-path: polygon(
+            var(--kp-chamfer) 0,
+            100% 0,
+            100% var(--kp-readout-seam),
+            calc(100% + 12rem) var(--kp-readout-seam),
+            calc(100% + 12rem) -2rem,
+            -12rem -2rem,
+            -12rem var(--kp-readout-seam),
+            100% var(--kp-readout-seam),
+            100% 0,
+            100% calc(100% - var(--kp-chamfer)),
+            calc(100% - var(--kp-chamfer)) 100%,
+            0 100%,
+            0 var(--kp-chamfer)
+        );
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Contact. Sixty milliseconds -- the theme's own --fx-duration --
+           on the theme's one curve, which slows as it lands and never
+           passes the rest pose (CHARACTER.md G1, Kenny 2026-10-07). The
+           film takes half as long again: an interference colour arrives as
+           the angle changes, not as a switch closes. */
+        [data-theme='titanium'] .kp-button,
+        [data-theme='titanium'] .kp-button__edge,
+        [data-theme='titanium'] .kp-button__readout {
+            transition:
+                background var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease),
+                opacity calc(var(--fx-duration) * 1.5) var(--fx-ease);
+        }
+    }
+

@@ -1,0 +1,62 @@
+/* @part: state-plate: signature layer; also navbar */
+    [data-theme='solstice'] .kp-empty {
+        padding: 1.25rem 1rem 1.4rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: radial-gradient(ellipse 70% 60% at 50% 0, hsl(from var(--primary) h s l / 0.08), transparent 70%), var(--card);
+    }
+
+    [data-theme='solstice'] .kp-empty::before {
+        content: '';
+        display: block;
+        inline-size: 6rem;
+        block-size: 1.6rem;
+        margin: 0 auto 0.75rem;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 100% / 100% 1px no-repeat,
+            radial-gradient(circle at 50% 100%, var(--primary) 0 0.95rem, hsl(from var(--primary) h s l / 0.25) 0.95rem 1.05rem, transparent 1.6rem);
+        mask: linear-gradient(90deg, transparent, black 25% 75%, transparent);
+    }
+
+    [data-theme='solstice'] .kp-empty__title {
+        margin: 0 0 0.25rem;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.3rem;
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the red sky, not the rising sun: the
+       sun is time passing and the empty state (G16); a failure reddens the foot light (G13). */
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+
+    [data-theme='solstice'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='solstice'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-thickness: 1.5px;
+        text-decoration-color: var(--accent);
+        text-underline-offset: 0.24em;
+    }
+
+    [data-theme='solstice'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        color: var(--primary);
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+        text-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.35);
+    }
+

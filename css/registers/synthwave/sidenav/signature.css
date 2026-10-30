@@ -1,0 +1,60 @@
+/* @part: sidenav: signature layer; also toast, progress-spinner-skeleton */
+    /* The panel is uncovered from its foot upward, its lower edge the beam. */
+    @keyframes kp-sig-synthwave-climb {
+        from {
+            clip-path: inset(100% -4rem -4rem -4rem);
+        }
+
+        to {
+            clip-path: inset(-4rem);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-beam {
+        from {
+            inset-block-start: calc(100% - 2px);
+        }
+
+        to {
+            inset-block-start: 0;
+        }
+    }
+
+    /* The beam is struck from its centre, holds, and goes out as it arrives. */
+    @keyframes kp-sig-synthwave-glow {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+        }
+
+        12%,
+        85% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-horizon {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sw-road {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(var(--kp-sw-road));
+        }
+    }
+

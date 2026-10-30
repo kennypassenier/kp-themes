@@ -1,0 +1,23 @@
+/* @part: status-rows: signature layer */
+    [data-theme='pastel'] .kp-statusrow {
+        --kp-statusrow-radius: var(--kp-sig-pa-r-ctl);
+        --kp-statusrow-edge: var(--border-strong);
+        box-shadow: calc(4px * var(--kp-sig-pa-dir)) 4px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='failed'] .kp-statusrow__detail {
+        justify-self: start;
+        margin-block-start: 0.2rem;
+        padding: 0 0.45rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='empty'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+

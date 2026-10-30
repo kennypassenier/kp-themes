@@ -1,0 +1,72 @@
+/* @part: button: register layer; also toast, alert */
+    /* ── Buttons: hairline-bounded, one mitred corner ─────────────────── */
+
+    [data-theme='blueprint'] .kp-button,
+    [data-theme='blueprint'] .kp-icon-button {
+        font-weight: 600;
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='blueprint'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='blueprint'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* Pointing reads the control on a scale and never tints it [G8, hover]:
+       only its own line turns the pen's cyan; the witness lines, the ruler and
+       the pointers are drawn below, with the dimension. */
+    [data-theme='blueprint'] .kp-button:hover,
+    [data-theme='blueprint'] .kp-icon-button:hover {
+        background: var(--secondary);
+        color: var(--foreground);
+        border-color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-button--primary,
+    [data-theme='blueprint'] .kp-button--primary:hover {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-button--ghost {
+        background: transparent;
+        color: var(--muted-foreground);
+        border-color: var(--border);
+    }
+
+    [data-theme='blueprint'] .kp-button--ghost:hover {
+        background: transparent;
+        color: var(--foreground);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-button--destructive,
+    [data-theme='blueprint'] .kp-button--destructive:hover {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    /* The mirrored corner: a single mitred-corner construction mark, kept
+       to `--kp-chamfer` (8px) so it reads as a mark rather than a shape of
+       its own [S49, "sleek, not bulky"]. */
+    [data-theme='blueprint'] .kp-button--mirror {
+        clip-path: polygon(var(--kp-chamfer) 0, 100% 0, 100% 100%, 0 100%, 0 var(--kp-chamfer));
+    }
+

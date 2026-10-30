@@ -1,0 +1,10 @@
+/* @part: code-block: signature layer */
+    /* Pretty/Raw, Wrap and Copy in one nowrap row: the Pretty/Raw track was squeezed to a 30 px sliver. The tools take a
+       second row when they do not fit, and the track keeps its width. */
+    [data-theme='nostromo'] .kp-code__tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    [data-theme='nostromo'] .kp-code__tools > .kp-segmented {
+        flex: none;
+    }

@@ -1,0 +1,8 @@
+/* @part: weekday-picker: signature layer */
+    /* Seven (and thirty-one) chips share one phone-wide row; the tracked mono capitals touched the chip edge. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+    }

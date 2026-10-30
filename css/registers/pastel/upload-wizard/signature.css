@@ -1,0 +1,22 @@
+/* @part: upload-wizard: signature layer */
+    /* A panel stuck to the page carries one strip of washi tape across its
+       top-start corner. */
+    [data-theme='pastel'] :is(.kp-wizard, .kp-spec) {
+        position: relative;
+    }
+
+    [data-theme='pastel'] :is(.kp-wizard, .kp-spec)::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.4rem;
+        inset-inline-start: 0.5rem;
+        inline-size: 2.75rem;
+        block-size: 0.8rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: calc(-14deg * var(--kp-sig-pa-dir));
+        opacity: 0.94;
+        pointer-events: none;
+    }
+

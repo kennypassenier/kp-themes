@@ -1,0 +1,60 @@
+/* @part: week-agenda: signature layer; also run-timeline, motion */
+    [data-theme='deco'] .kp-week__pill:not([data-kp-state='reference']) {
+        border-style: double;
+        border-width: 3px;
+        padding-inline: 0.3rem;
+    }
+    [data-theme='deco'] .kp-week__pill:is(button):hover,
+    [data-theme='deco'] .kp-gantt__run:is(button):hover {
+        border-color: var(--kp-sig-deco-gold-hi);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+    [data-theme='deco'] .kp-week__pill[data-kp-state='next'] {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-week__now::before {
+        border-radius: 0;
+        rotate: 45deg;
+        inline-size: 7px;
+        block-size: 7px;
+        inset-block-start: -4.5px;
+        inset-inline-start: -3.5px;
+    }
+    [data-theme='deco'] .kp-gantt__run:not([data-kp-state='queued']) {
+        border-inline-style: double;
+        border-inline-width: 3px;
+    }
+    [data-theme='deco'] :is(.kp-week__head, .kp-gantt__tick, .kp-gantt__lane) {
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        border-color: var(--primary);
+        color: var(--foreground);
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 3px / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 calc(100% - 3px) / 100% 1px no-repeat,
+            linear-gradient(
+                    90deg,
+                    transparent calc(var(--kp-sig-deco-g, 1) * 140% - 48%),
+                    hsl(from var(--primary) h s l / 0.35) calc(var(--kp-sig-deco-g, 1) * 140% - 30%),
+                    hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 1) * 140% - 8%),
+                    hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 1) * 140% - 3%),
+                    transparent calc(var(--kp-sig-deco-g, 1) * 140% - 1%)
+                )
+                0 50% / 100% 40% no-repeat,
+            var(--kp-sig-deco-lac, var(--card));
+        box-shadow: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-deco-glint var(--kp-sig-deco-loop) linear infinite;
+        }
+        [data-theme='deco'] :is(.kp-heat__cell, .kp-matrix__cell, .kp-week__pill, .kp-gantt__run) {
+            transition:
+                border-color var(--kp-sig-deco-contact, 160ms) var(--fx-ease),
+                box-shadow var(--kp-sig-deco-contact, 160ms) var(--fx-ease);
+        }
+    }

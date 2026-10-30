@@ -1,0 +1,55 @@
+/* @part: weekday-picker: signature layer; also alert, identity-mark, code-block, focus-steps */
+    [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+        border-width: 2px;
+    }
+    [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    @container kp-weekdays (max-width: 26rem) {
+        [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.65rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+            font-size: 0.6rem;
+            letter-spacing: 0;
+        }
+    }
+    /* The stamped inner frame is for the big marks; below that the letters need the room (4 px from the line). */
+    [data-theme='brutalism'] .kp-idmark--round:not(.kp-idmark--lg, .kp-idmark--xl) {
+        outline: 0;
+        font-size: calc(var(--kp-idmark-s) * 0.38);
+    }
+    [data-theme='brutalism'] .kp-idmark--sm.kp-idmark--round {
+        border-width: 1px;
+        font-size: calc(var(--kp-idmark-s) * 0.36);
+    }
+    [data-theme='brutalism'] .kp-slider__fields,
+    [data-theme='brutalism'] .kp-slider__field-wrap {
+        gap: 0.75rem;
+    }
+    [data-theme='brutalism'] .kp-code--cell .kp-code__foot {
+        padding-inline: 0.375rem;
+    }
+    [data-theme='brutalism'] .kp-code--cell .kp-code__foot .kp-button {
+        padding-inline: 0.375rem;
+        letter-spacing: 0.02em;
+    }
+    /* The rating's failed state is the alert laid over the stars' own place [rating-states]: this register's `.kp-alert` is
+       positioned `relative`, which took the package's `position: absolute; inset: 0` away, put the plate under the hidden
+       stars and grew the component from 80 px to 178 (brutalism) or 201 (deco). */
+    [data-theme='brutalism'] .kp-alert.kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        padding-block: 0.25rem;
+        row-gap: 0.25rem;
+    }
+
+    [data-theme='brutalism'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 1rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+    }
+    [data-theme='brutalism'] .kp-statusrow__label {
+        overflow-wrap: normal;
+    }

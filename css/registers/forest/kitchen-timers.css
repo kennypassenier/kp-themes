@@ -1,0 +1,44 @@
+/* @part: kitchen-timers: signature layer; also focus-steps */
+    /* Kitchen timers: a card is kraft with the leaf corner, the time upright and its state a note; a finished timer, and
+       a finished disc or countdown, has a growth ring laid round it, drawn three times on the growth curve. */
+    [data-theme='forest'] .kp-timer {
+        position: relative;
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-timer__state {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--border);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-timer[data-kp-timer-ringing]::after,
+        [data-theme='forest'] .kp-countdown[data-kp-countdown-state='ended']::after,
+        [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 1.5px solid var(--primary);
+            border-radius: 0 calc(var(--kp-sig-fo-leaf) + 5px);
+            mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-forest-update-ring var(--kp-sig-fo-time) linear 3 both;
+        }
+        [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face::after {
+            border-radius: 50%;
+        }
+    }
+
+    /* Cook mode: what the step needs is a kraft note with the leaf corner; its title and the screen line are notes;
+       the screen lamp is a green node. */
+    [data-theme='forest'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-sig-fo-plate);
+        background: var(--card);
+    }
+    [data-theme='forest'] :is(.kp-focus-steps__needs-title, .kp-focus-steps__wake, .kp-focus-steps__name) {
+        font-style: italic;
+    }
+

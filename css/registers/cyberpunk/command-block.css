@@ -1,0 +1,33 @@
+/* @part: command-block: signature layer */
+    /* ── Command: a prefixed label over a notched plate; the prompt is yellow, the output cyan ── */
+    [data-theme='cyberpunk'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-command__shell {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-command__shell::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-command__head {
+        border-block-end: 1px dashed var(--border-strong);
+    }
+    [data-theme='cyberpunk'] .kp-command__where {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-command__code {
+            animation: kp-cp4-decode calc(8 * var(--kp-cp4-tick)) steps(8, end) backwards;
+        }
+    }
+

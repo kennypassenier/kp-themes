@@ -1,0 +1,299 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    @keyframes kp-sig-cyberpunk-bars-1 {
+        0% {
+            --kp-cp-h1: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h1: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h1: 100%;
+        }
+
+        30% {
+            --kp-cp-h1: 100%;
+        }
+
+        40% {
+            --kp-cp-h1: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h1: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h1: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h1: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h1: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h1: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-2 {
+        0% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h2: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h2: 100%;
+        }
+
+        30% {
+            --kp-cp-h2: 100%;
+        }
+
+        40% {
+            --kp-cp-h2: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h2: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h2: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h2: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-3 {
+        0% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h3: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h3: 100%;
+        }
+
+        30% {
+            --kp-cp-h3: 100%;
+        }
+
+        40% {
+            --kp-cp-h3: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h3: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h3: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h3: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-4 {
+        0% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h4: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h4: 100%;
+        }
+
+        30% {
+            --kp-cp-h4: 100%;
+        }
+
+        40% {
+            --kp-cp-h4: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h4: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h4: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h4: 30.4%;
+        }
+    }
+
+    /* The tear: a cyan copy right and up, a red one right and down, 10 % of the spinner at the
+       first tear (1800 ms), 6 % at the second (2100 ms), and home. */
+    @keyframes kp-sig-cyberpunk-tear {
+        60% {
+            filter: drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.1) calc(var(--kp-spinner-size, 1.25rem) * -0.08) 0 var(--kp-cp-sp-c1))
+                drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.1) calc(var(--kp-spinner-size, 1.25rem) * 0.08) 0 var(--kp-cp-sp-c3));
+        }
+
+        64% {
+            filter: none;
+        }
+
+        70% {
+            filter: drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.06) calc(var(--kp-spinner-size, 1.25rem) * -0.05) 0 var(--kp-cp-sp-c1))
+                drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.06) calc(var(--kp-spinner-size, 1.25rem) * 0.05) 0 var(--kp-cp-sp-c3));
+        }
+
+        72% {
+            filter: none;
+        }
+    }
+
+    /* The word: deciphered start to end in seven ticks, held, gone at 90 % of the
+       loop. Each tick is a property js/strings.js writes (stringProperties()), so a
+       consumer's own word deciphers the same way; the English is the fallback. */
+    @keyframes kp-sig-cyberpunk-word {
+        0% {
+            content: var(--kp-loading-word-0, '#&$?%@/');
+        }
+
+        3.33% {
+            content: var(--kp-loading-word-1, 'L@/#&$?');
+        }
+
+        6.67% {
+            content: var(--kp-loading-word-2, 'LO?%@/#');
+        }
+
+        10% {
+            content: var(--kp-loading-word-3, 'LOA&$?%');
+        }
+
+        13.33% {
+            content: var(--kp-loading-word-4, 'LOAD/#&');
+        }
+
+        16.67% {
+            content: var(--kp-loading-word-5, 'LOADI%@');
+        }
+
+        20% {
+            content: var(--kp-loading-word-6, 'LOADIN$');
+        }
+
+        23.33% {
+            content: var(--kp-loading-word-7, 'LOADING');
+        }
+
+        90% {
+            content: '';
+        }
+    }
+
+    /* The tear before it goes: bands of the word jump sideways with a wider split. */
+    @keyframes kp-sig-cyberpunk-word-tear {
+        0% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+
+        66.67% {
+            translate: -6px 0;
+            clip-path: inset(30% 0 40% 0);
+            text-shadow:
+                6px -2px 0 var(--accent),
+                6px 2px 0 var(--destructive);
+        }
+
+        70% {
+            translate: 6px 0;
+            clip-path: inset(0 0 60% 0);
+            text-shadow:
+                -5px -2px 0 var(--accent),
+                -5px 2px 0 var(--destructive);
+        }
+
+        73.33% {
+            translate: -3px 0;
+            clip-path: inset(55% 0 5% 0);
+            text-shadow:
+                4px -1px 0 var(--accent),
+                4px 1px 0 var(--destructive);
+        }
+
+        76.67% {
+            translate: 4px 0;
+            clip-path: inset(10% 0 50% 0);
+            text-shadow:
+                -3px -1px 0 var(--accent),
+                -3px 1px 0 var(--destructive);
+        }
+
+        80% {
+            translate: -2px 0;
+            clip-path: inset(40% 0 20% 0);
+            text-shadow:
+                3px -1px 0 var(--accent),
+                3px 1px 0 var(--destructive);
+        }
+
+        83.33% {
+            translate: 2px 0;
+            clip-path: inset(0);
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+
+        86.67% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+    }
+

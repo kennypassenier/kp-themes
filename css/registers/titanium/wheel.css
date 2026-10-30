@@ -1,0 +1,50 @@
+/* @part: wheel: signature layer */
+    /* ── The wheel: an indexing head; the hub a turned boss, the pointer a bare-metal detent ── */
+    [data-theme='titanium'] .kp-wheel {
+        --kp-wheel-pointer: var(--primary);
+        --kp-wheel-font: var(--theme-font-mono);
+        --kp-wheel-outcome: 1.25rem;
+        --kp-wheel-hub-ring: 3px;
+    }
+    [data-theme='titanium'] .kp-wheel__stage::before {
+        background: repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.1) 0 1px, transparent 1px 3px), var(--card);
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-wheel__disc {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-wheel__segment {
+        stroke: var(--background);
+        stroke-width: 1.4;
+    }
+    [data-theme='titanium'] .kp-wheel__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.95em;
+    }
+    [data-theme='titanium'] .kp-wheel__rim {
+        stroke: var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+        box-shadow: var(--kp-wheel-hub-shadow);
+        clip-path: none;
+    }
+    [data-theme='titanium'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='titanium'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        text-shadow: var(--kp-ti-engrave);
+        text-align: center;
+    }
+    [data-theme='titanium'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+

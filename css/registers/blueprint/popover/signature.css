@@ -1,0 +1,39 @@
+/* @part: popover: signature layer */
+    [data-theme='blueprint'] .kp-tooltip {
+        --kp-sig-dur: 360ms;
+        margin-block-start: 0.75rem;
+        /* Within 12px under its trigger and never over it (Kenny's phantom note,
+           2026-09-15, tests/dark-themes-notes.spec.mjs). */
+        margin-inline-start: 1rem;
+        border: 1px solid var(--accent);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 0.75rem;
+        inline-size: 1px;
+        block-size: 0.75rem;
+        background: var(--accent);
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='blueprint'] .kp-tooltip::after {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1.05rem - 3px);
+        inset-inline-start: calc(0.75rem - 3px);
+        inline-size: 7px;
+        block-size: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+

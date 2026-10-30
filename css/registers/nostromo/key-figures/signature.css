@@ -1,0 +1,97 @@
+/* @part: key-figures: signature layer */
+    /* ── A live update: the reading is redrawn and its lamp lights [live
+       "raster", Kenny 08/10/2026 00:05, research/nostromo-character; G9] ──
+       js/update.js writes the new value at once and marks it
+       `[data-kp-updating='raster']` while the keyframes play. The new value
+       is there from the first frame, dimmed to about a third (its own mask,
+       so whatever the ground); the raster rewrites it from the top in 4
+       frames (320 ms), the dimmed part shrinking under the beam with its
+       fading tail (::before) until it stands at full strength. The lamp
+       beside the reading's label (a key figure's, also when its spark
+       changes) switches on in the LED orange in one frame, holds, and goes
+       out after 8 frames (640 ms); the value never moves, glows or inverts.
+       The mark stays on for the lamp's 640 ms: the value's own animation
+       runs that long, the redraw in its first half. Under reduced motion no
+       idea is named and the value simply changes. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] {
+            --kp-update: raster;
+        }
+
+        [data-theme='nostromo'] [data-kp-updating='raster'] {
+            position: relative;
+            -webkit-mask: linear-gradient(to bottom, var(--foreground) 50%, hsl(from var(--foreground) h s l / 0.34) 50%) 0 0% / 100% 200% no-repeat;
+            mask: linear-gradient(to bottom, var(--foreground) 50%, hsl(from var(--foreground) h s l / 0.34) 50%) 0 0% / 100% 200% no-repeat;
+            animation: kp-sig-nostromo-update-redraw var(--kp-sig-no-print) linear both;
+        }
+
+        [data-theme='nostromo'] [data-kp-updating='raster']::before {
+            --kp-sig-no-tail: 0.9rem;
+            content: '';
+            position: absolute;
+            z-index: 1;
+            inset-inline: 0;
+            inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+            block-size: var(--kp-sig-no-tail);
+            background: var(--kp-sig-no-beam);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-nostromo-update-beam var(--kp-sig-no-strike) steps(4, end) both;
+        }
+
+        [data-theme='nostromo'] .kp-kpi:has([data-kp-updating='raster']) .kp-kpi__label::before {
+            animation: kp-sig-nostromo-update-lamp var(--kp-sig-no-print) steps(1, end);
+        }
+
+        /* The dimmed part of the value, from the top edge down: the mask's
+           bright half rides down in 4 held frames, then stands. */
+        @keyframes kp-sig-nostromo-update-redraw {
+            0% {
+                -webkit-mask-position: 0 100%;
+                mask-position: 0 100%;
+                animation-timing-function: steps(4, end);
+            }
+
+            49.99% {
+                -webkit-mask-position: 0 0%;
+                mask-position: 0 0%;
+                animation-timing-function: steps(1, end);
+            }
+
+            50%,
+            100% {
+                -webkit-mask-position: 0 0%;
+                mask-position: 0 0%;
+            }
+        }
+
+        @keyframes kp-sig-nostromo-update-beam {
+            from {
+                inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            to {
+                inset-block-start: calc(100% - var(--kp-sig-no-tail));
+                opacity: 0;
+            }
+        }
+
+        /* The lamp lit as the LED, the same lens and glow a focused switch
+           shows, for the whole 640 ms. */
+        @keyframes kp-sig-nostromo-update-lamp {
+            from,
+            to {
+                background: var(--kp-sig-no-lens);
+                box-shadow:
+                    0 0 0 1px var(--foreground),
+                    0 0 6px 1px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+                opacity: 1;
+            }
+        }
+    }
+

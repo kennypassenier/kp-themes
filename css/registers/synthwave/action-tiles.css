@@ -1,0 +1,91 @@
+/* @part: action-tiles: signature layer */
+    [data-theme='synthwave'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='synthwave'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-edge: transparent;
+        --kp-action-edge-hover: transparent;
+        --kp-action-press: 0 0;
+        --kp-action-ground-active: var(--secondary-active, var(--card));
+        --kp-action-title-font: var(--theme-font-display);
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.06em;
+        --kp-action-title-size: 0.9375rem;
+        --kp-stripe: linear-gradient(to right, var(--kp-stripe-from), var(--kp-stripe-to));
+        --kp-sw-fall-l: linear-gradient(to bottom, var(--kp-stripe-from), hsl(from var(--kp-stripe-from) h s l / 0.55) 50%, transparent 100%);
+        --kp-sw-fall-r: linear-gradient(to bottom, var(--kp-stripe-to), hsl(from var(--kp-stripe-to) h s l / 0.55) 50%, transparent 100%);
+        --kp-sw-tile-ground: var(--card);
+        border: 1px solid transparent;
+        border-block-start: calc(var(--kp-sw-side) + 1px) solid transparent;
+        background:
+            var(--kp-stripe) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            var(--kp-sw-fall-l) 0 0 / 1px 100% no-repeat,
+            var(--kp-sw-fall-r) 100% 0 / 1px 100% no-repeat,
+            var(--kp-sw-tile-ground);
+        background-origin: border-box;
+        box-shadow: inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-action__title {
+        color: var(--kp-core);
+    }
+    [data-theme='synthwave'] .kp-action__meta {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size-adjust: 0.5;
+    }
+    /* Pointing turns the tube up in one step, as on a key figure that is a link: the stripe runs pink to the core and
+       the title takes the tube. */
+    [data-theme='synthwave'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-stripe-from: var(--kp-pink-text);
+        --kp-stripe-to: var(--kp-core);
+    }
+    [data-theme='synthwave']
+        .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))
+        > .kp-action__title {
+        text-shadow: var(--kp-sw-tube-up, var(--kp-tube-pink));
+    }
+    /* A press charges the tile, as it charges a button: the top edge burns near-white, the bloom gathers above it, the
+       ground takes the pressed token; nothing moves. */
+    [data-theme='synthwave'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-stripe-from: var(--kp-core);
+        --kp-stripe-to: var(--kp-core);
+        --kp-sw-tile-ground: var(--secondary-active);
+        box-shadow:
+            inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7),
+            0 -4px 14px 0 hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='synthwave'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        --kp-stripe-from: var(--muted-foreground);
+        --kp-stripe-to: var(--muted-foreground);
+        --kp-sw-tile-ground: var(--muted);
+    }
+    [data-theme='synthwave'] .kp-action:is(:disabled, [aria-disabled='true']) > .kp-action__title {
+        color: inherit;
+    }
+    /* Destructive: the stripe and the sides in the red and the VCR's stop (a square) before the title, in the red ink;
+       the register's tone for a failure. No side bar. */
+    [data-theme='synthwave'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-stripe-from: var(--destructive);
+        --kp-stripe-to: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-action--destructive::after {
+        display: none;
+    }
+    [data-theme='synthwave'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title,
+    [data-theme='synthwave'] .kp-statusrow[data-state='failed'] .kp-statusrow__label {
+        color: color-mix(in oklab, var(--destructive) 70%, var(--kp-core));
+    }
+    [data-theme='synthwave'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title::before,
+    [data-theme='synthwave'] .kp-statusrow[data-state='failed'] .kp-statusrow__label::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        margin-inline-end: 0.5em;
+        background: currentColor;
+        filter: drop-shadow(0 0 3px currentColor);
+        vertical-align: 0.06em;
+    }
+

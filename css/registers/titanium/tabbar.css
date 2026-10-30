@@ -1,0 +1,52 @@
+/* @part: tabbar: register layer */
+    /* Bottom tab bar [kpadopt-nav] — titanium: machined metal. The current tab is a chamfered accent plate (top-start and bottom-end cut) with a bright tool edge along its top, fed in from the start and slowing as it lands; counts in the mono (G2, G7, G8). */
+    [data-theme='titanium'] .kp-tabbar {
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='titanium'] .kp-tabbar__tab {
+        border-radius: 0;
+        isolation: isolate;
+    }
+
+    [data-theme='titanium'] .kp-tabbar__tab::before {
+        inset: 0;
+        block-size: auto;
+        z-index: -1;
+        background: var(--accent);
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.45);
+        clip-path: polygon(
+            var(--fx-notch) 0,
+            100% 0,
+            100% calc(100% - var(--fx-notch)),
+            calc(100% - var(--fx-notch)) 100%,
+            0 100%,
+            0 var(--fx-notch)
+        );
+        transform-origin: 0 50%;
+    }
+
+    [data-theme='titanium'] .kp-tabbar__tab:dir(rtl)::before {
+        transform-origin: 100% 50%;
+    }
+
+    [data-theme='titanium'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) {
+        color: var(--accent-foreground);
+    }
+
+    [data-theme='titanium'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__icon {
+        color: inherit;
+    }
+
+    [data-theme='titanium'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false']))::before {
+        scale: 0.12 1;
+    }
+
+    [data-theme='titanium'] .kp-tabbar__tab:active {
+        translate: 0 1px;
+    }
+
+    [data-theme='titanium'] .kp-tabbar__badge {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }

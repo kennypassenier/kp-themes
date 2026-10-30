@@ -1,0 +1,61 @@
+/* @part: forms: signature layer; also card, form-field, alert */
+    /* Choices as tiles: moulded keys; the ticked one is sunk in its well with its rim lit in ink. */
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--kp-sig-no-key);
+        --kp-field-tile-ground: var(--card);
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        --kp-field-tile-edge-checked: var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        border-color: var(--border-strong);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--foreground);
+        background: var(--popover);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        box-shadow:
+            var(--kp-sig-no-well),
+            inset 0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline: 0;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-field__option-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    /* A tiles group with nothing chosen sounds the klaxon round the whole group (G13). */
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'] {
+        outline-width: 3px;
+    }
+
+    /* A card in four data states: the stage is a bay; its note and its failure keep the empty state's and alert's plates. */
+    [data-theme='nostromo'] .kp-card__state-title {
+        font-family: var(--theme-font-mono);
+        font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+        letter-spacing: 0.08em;
+        line-height: 1.3;
+        text-transform: uppercase;
+    }
+    /* The klaxon plate is solid red: its title keeps the plate's own ink, not the page's (dark on red was unreadable). */
+    [data-theme='nostromo'] .kp-alert--destructive .kp-card__state-title {
+        color: inherit;
+    }
+    [data-theme='nostromo'] .kp-card__state > .kp-card__empty {
+        border-radius: var(--kp-sig-no-key);
+    }

@@ -1,0 +1,62 @@
+/* @part: page-header: register layer; also showing-data, small-patterns, badge */
+    /* ── Footer: the alternate ground behind the second tear ──────────── */
+
+    [data-theme='pastel'] .kp-footer {
+        background: var(--sidebar-background);
+        border-top: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-footer h4 {
+        font-weight: 600;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-footer a {
+        color: var(--foreground);
+        font-size: 0.88rem;
+    }
+
+    [data-theme='pastel'] .kp-footer a:hover,
+    [data-theme='pastel'] .kp-footer a:focus-visible {
+        text-decoration: underline;
+    }
+
+    [data-theme='pastel'] .kp-footer .microlabel {
+        color: var(--muted-foreground);
+    }
+
+    /* ── Badges, tags, status ──────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-badge,
+    [data-theme='pastel'] .kp-tag {
+        border-radius: 999px;
+    }
+
+    [data-theme='pastel'] .kp-health__dot {
+        border-radius: 50%;
+    }
+
+    [data-theme='pastel'] .kp-error {
+        color: var(--destructive);
+    }
+
+    [data-theme='pastel'] .kp-health {
+        color: var(--muted-foreground);
+        font-size: 0.85rem;
+    }
+
+    /* ── Text shapes: identifiers in the system mono, the demo's own ──── */
+
+    [data-theme='pastel'] .kp-id,
+    [data-theme='pastel'] .kp-url,
+    [data-theme='pastel'] .kp-numeric,
+    [data-theme='pastel'] .kp-timestamp,
+    [data-theme='pastel'] .kp-masked,
+    [data-theme='pastel'] .kp-copyable,
+    [data-theme='pastel'] .kp-truncate,
+    [data-theme='pastel'] .kp-cell-break,
+    [data-theme='pastel'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9em;
+    }
+

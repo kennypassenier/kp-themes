@@ -1,0 +1,46 @@
+/* @part: step-list: register layer; also accordion, tree-reorder-split, small-patterns */
+    /* The step list is arcade rows with a neon edge; the running row glows. */
+    [data-theme='synthwave'] .kp-steplist {
+        --kp-steplist-gap: 0.625rem;
+    }
+
+    [data-theme='synthwave'] .kp-steplist__item {
+        border-color: hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-steplist__item[data-state='running'] {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='synthwave'] .kp-steplist__time {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='synthwave'] .kp-timeline {
+        border-left: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='synthwave'] .kp-tree {
+        font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: spaced capitals, and the hot core its selected tab burns with. */
+    [data-theme='synthwave'] .kp-accordion__summary {
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--kp-core);
+    }
+
+    [data-theme='synthwave'] .kp-reorder {
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+    }
+

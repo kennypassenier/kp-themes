@@ -1,0 +1,52 @@
+/* @part: state-plate: signature layer */
+    [data-theme='synthwave'] .kp-empty {
+        position: relative;
+        padding: 3.75rem 1.5rem 1.25rem;
+        border: 0;
+        border-radius: 2px;
+    }
+
+    [data-theme='synthwave'] .kp-empty::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.6rem;
+        inset-inline-start: calc(50% - 1.6rem);
+        inline-size: 3.2rem;
+        block-size: 3.2rem;
+        border-radius: 50%;
+        background: var(--kp-sig-sw-sun);
+        -webkit-mask: linear-gradient(
+            to bottom,
+            var(--foreground) 0 50%,
+            transparent 50% 56%,
+            var(--foreground) 56% 63%,
+            transparent 63% 70%,
+            var(--foreground) 70% 75%,
+            transparent 75%
+        );
+        mask: linear-gradient(
+            to bottom,
+            var(--foreground) 0 50%,
+            transparent 50% 56%,
+            var(--foreground) 56% 63%,
+            transparent 63% 70%,
+            var(--foreground) 70% 75%,
+            transparent 75%
+        );
+    }
+
+    [data-theme='synthwave'] .kp-empty::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(0.6rem + 2.4rem);
+        inset-inline: 15%;
+        block-size: 1.5px;
+        background: linear-gradient(to right, transparent, var(--accent) 20%, var(--accent) 80%, transparent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-empty__title {
+        color: var(--foreground);
+        letter-spacing: 0.04em;
+    }
+

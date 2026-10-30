@@ -1,0 +1,64 @@
+/* @part: heat-grid: signature layer; also run-timeline, week-agenda, bar-cell, matrix */
+    [data-theme='deco'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='deco'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        border-color: var(--kp-sig-deco-gold-hi);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--background) h s l / 0.5),
+            0 0 0 1px var(--primary);
+    }
+    [data-theme='deco'] .kp-heat__cell:active:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='deco'] .kp-matrix__cell:active:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow: inset 1px 2px 4px hsl(from var(--background) h s l / 0.9);
+    }
+    [data-theme='deco'] .kp-heat__cell[data-kp-picked],
+    [data-theme='deco'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='deco'] :is(.kp-heat__label, .kp-matrix__name, .kp-heat__col, .kp-matrix__corner) {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='deco'] .kp-matrix__corner {
+        letter-spacing: 0.04em;
+        text-wrap: balance;
+    }
+    [data-theme='deco'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-heat__label-button[aria-pressed='true'] {
+        background: hsl(from var(--primary) h s l / 0.14);
+        color: var(--kp-sig-deco-gold-hi);
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-heat__sep {
+        border-block-start: 3px double var(--primary);
+    }
+    /* A phone's timeline keeps its toolbar on one row: the range steps close in, in these spaced capitals. */
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='deco'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+    }
+    [data-theme='deco'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: an inlay. A pill is a double rule in the series' ink; the next run the double gold
+       ring; the days and the axis in spaced capitals; the line for now is gold with a lozenge at its head. A running
+       run is drawn between two gold hairlines with the glint and its afterglow running between them. */
+    [data-theme='deco'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
+    }
+    /* A planned run [gaps-time-1019]: a lattice of diamonds. */
+    [data-theme='deco'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--kp-gantt-fill) 50%, transparent) 0 1px, transparent 1px 9px), repeating-linear-gradient(-45deg, color-mix(in oklab, var(--kp-gantt-fill) 50%, transparent) 0 1px, transparent 1px 9px);
+    }
+    [data-theme='deco'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+        --kp-gantt-state-ground: var(--kp-sig-deco-lac, var(--card));
+    }

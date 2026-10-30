@@ -1,0 +1,68 @@
+/* @part: button: register layer; also alert */
+    /* ── The hero ──────────────────────────────────────────────────────── */
+
+    [data-theme='formal'] [data-kp-surface='hero'] {
+        background: var(--card);
+    }
+
+    /* ── Buttons: no radius surprise, one static letterpress impression
+       on the mirror modifier — an offset shadow, never an animation, so
+       it costs nothing against DI5. ── */
+
+    [data-theme='formal'] .kp-button {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] .kp-button--secondary {
+        background: var(--muted);
+        border-color: var(--border);
+    }
+
+    [data-theme='formal'] .kp-button--secondary:hover {
+        background: var(--border);
+    }
+
+    [data-theme='formal'] .kp-button--ghost {
+        color: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='formal'] .kp-button--ghost:hover {
+        background: var(--card);
+    }
+
+    /* The mirror: a static double-strike offset shadow, the way a letterpress
+       leaves its twin impression. Applies to whichever variant carries it —
+       the demo puts it on the primary CTA and the shared markup also puts it
+       on the destructive wipe button, which the demo itself did not show for
+       that button (a Class B carry: the package's own markup, the demo's
+       appearance kept where it can be). The twin is struck in the strong
+       hairline, not in gold: gold never acts (G5; Kenny, 2026-10-08). */
+    [data-theme='formal'] .kp-button--mirror {
+        box-shadow: 2px 2px 0 0 var(--border-strong);
+    }
+
+    /* The mirror's static offset shadow and the two-channel focus ring
+       share the box-shadow property; a combined rule (higher specificity
+       than the plain :focus-visible selector, so order-independent) keeps
+       both, exactly as the demo composes them. */
+    [data-theme='formal'] .kp-button--mirror:focus-visible {
+        box-shadow:
+            2px 2px 0 0 var(--border-strong),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    [data-theme='formal'] .kp-icon-button {
+        border-radius: var(--radius);
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='formal'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+

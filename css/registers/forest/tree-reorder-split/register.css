@@ -1,0 +1,75 @@
+/* @part: tree-reorder-split: register layer; also tabs, small-patterns, breadcrumb-pagination, accordion */
+    [data-theme='forest'] .kp-timeline {
+        border-left: 2px solid var(--foreground);
+    }
+
+    [data-theme='forest'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-timeline__when {
+        font-family: var(--theme-font-mono);
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    [data-theme='forest'] .kp-tree {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* A branch's children glide open and shut on the growth curve like the
+       accordion (js/motion.js glideGroup()): its height moves, the box clips.
+       Shutting, the state is already `aria-expanded="false"` and the group
+       is kept drawn until the glide is over. */
+    [data-theme='forest'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='forest'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The accordion [gap-12]: the display face its tabs are set in. */
+    [data-theme='forest'] .kp-accordion__summary {
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='forest'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-reorder {
+        border: 1px solid var(--border);
+    }
+
+    /* ── Navigation and steps ────────────────────────────────────────── */
+
+    [data-theme='forest'] .kp-tab {
+        font-family: var(--theme-font-display);
+        font-weight: 600;
+    }
+
+    [data-theme='forest'] .kp-tab[aria-selected='true'] {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* Crumbs and page numbers are words in the bar, in the body face (G13). */
+    [data-theme='forest'] .kp-breadcrumb,
+    [data-theme='forest'] .kp-pagination {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='forest'] .kp-pagination a[aria-current],
+    [data-theme='forest'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        /* Room round the number for the plate's leaf corner. */
+        padding-inline: 0.5em;
+    }
+

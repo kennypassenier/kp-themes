@@ -1,0 +1,59 @@
+/* @part: popover: signature layer; also navbar */
+    /* The same for a part placed by measuring it as it opens (the combobox's
+       list, a popover, a menu: js/top-layer.js, js/menu-button.js): its
+       first, unseen frame stands at rest, so the measurement reads it where
+       it rests. */
+    @keyframes kp-sig-pastel-stuck-placed-in {
+        0% {
+            opacity: 0;
+        }
+
+        0.1%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-pastel-stuck-placed-out {
+        0% {
+            opacity: 0;
+        }
+
+        0.1%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+
+    /* The pass (A, A2): from 18 px further along the misregistration line
+       to its rest, out of nothing, in the first 440 of the 560 (78.57 %). */
+    @keyframes kp-sig-pastel-pass-in {
+        0% {
+            translate: calc(18px * var(--kp-sig-pa-dir, 1)) 16px;
+            opacity: 0;
+        }
+
+        78.5714%,
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pass-out {
+        0% {
+            translate: calc(18px * var(--kp-sig-pa-dir, 1)) 16px;
+            opacity: 0;
+        }
+
+        78.5714%,
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+

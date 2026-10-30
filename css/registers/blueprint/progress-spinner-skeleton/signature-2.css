@@ -1,0 +1,35 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    @keyframes kp-sig-blueprint-blueprint-compass {
+        0% {
+            opacity: 1;
+            clip-path: polygon(50% 50%, 50% 0, 50% 0, 50% 0, 50% 0, 50% 0, 50% 0);
+        }
+
+        8% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 0);
+        }
+
+        24% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 100% 100%, 100% 100%, 100% 100%);
+        }
+
+        40% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 100%, 0 100%);
+        }
+
+        56% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 0 0);
+        }
+
+        64%,
+        82% {
+            opacity: 1;
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0);
+        }
+
+        100% {
+            opacity: 0;
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0);
+        }
+    }
+

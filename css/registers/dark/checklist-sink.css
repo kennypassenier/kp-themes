@@ -1,0 +1,32 @@
+/* @part: checklist-sink: signature layer */
+    /* ── Checklist: a row rests the line at its start; a ticked item is the film struck through it ── */
+    [data-theme='dark'] .kp-checklist__row {
+        position: relative;
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-checklist__row:hover::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-checklist__title,
+    [data-theme='dark'] .kp-checklist__count,
+    [data-theme='dark'] .kp-checklist__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='dark'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--chart-1);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-checklist__item {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+

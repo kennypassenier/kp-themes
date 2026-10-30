@@ -1,0 +1,50 @@
+/* @part: form-field: signature layer */
+    [data-theme='solstice'] .kp-field__check {
+        --kp-sig-dur: 360ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 0.35rem;
+        background: var(--background);
+    }
+
+    [data-theme='solstice'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-field__check[type='checkbox']:checked:not(:focus-visible) {
+        box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.2);
+    }
+
+    [data-theme='solstice'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        border-end-start-radius: 2px;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='solstice'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='solstice'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0 2.5px hsl(from var(--primary) h s l / 0.3);
+    }
+

@@ -1,0 +1,34 @@
+/* @part: card: register layer */
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A headline is laid word by word: the line crosses each word from its
+           start edge at one pace, 60 ms after the word before [G2, G19]. */
+        [data-theme='dark'] [data-kp-reveal='headline'].is-words [data-word] {
+            animation: kp-sig-dark-lay 660ms linear both;
+            animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
+        }
+
+        /* The redact bar: a size change, not a colour (KT8: no
+           mid-transition colour can be read); the ink turns visible in
+           the same instant the bar clears, staggered per redaction. */
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+            transition: transform 380ms var(--fx-ease);
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: color 0s linear 0s;
+        }
+    }
+

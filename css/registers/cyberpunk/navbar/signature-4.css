@@ -1,0 +1,101 @@
+/* @part: navbar: signature layer */
+    /* The phone bar's links, as one picture: the strip's own cut and its words, so the copies are
+       drawn by `filter` on the list (a clip on the strip's pseudo-element cuts the notch, a filter
+       sees what is cut). Opening is this, closing the same four poses the other way, held until
+       the script hides the list (js/components.js). */
+    @keyframes kp-sig-cyberpunk-split-bar {
+        0% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-split-bar-back {
+        0% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open panel are its own rows and do not split again. */
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-cyberpunk-split-bar 480ms steps(1, end) backwards;
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-cyberpunk-split-bar-back 480ms steps(1, end) reverse forwards;
+            }
+
+            /* The toggle is the part that changes state (its plate turns cyan): a signal changing
+               splits, so it plays the same four poses as the panel it opens, in step with it. */
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__toggle {
+                --kp-cp-wide: var(--kp-cp-wide-ctl);
+                --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+                --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+                --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+                --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__toggle {
+                animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__toggle {
+                animation: kp-sig-cyberpunk-split-back 480ms steps(1, end) reverse forwards;
+            }
+        }
+    }
+

@@ -1,0 +1,51 @@
+/* @part: kitchen-timers: signature layer */
+    /* Kitchen timers: a card is a plate with its sky pass, a strip of washi tape across its top start edge; a paused
+       timer's tape lifts at its end; a finished one wobbles round its foot three times and stays on its plate. */
+    [data-theme='pastel'] .kp-timer {
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1rem;
+        inline-size: 3rem;
+        block-size: 0.7rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        transform-origin: 0 50%;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='paused']::before {
+        rotate: -14deg;
+        translate: 0 -0.05rem;
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done']::before {
+        opacity: 0;
+    }
+    [data-theme='pastel'] .kp-timer__time {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--muted-foreground);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        color: inherit;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-timer::before {
+            transition: rotate var(--fx-duration) var(--kp-sig-pa-land);
+        }
+        [data-theme='pastel'] .kp-timer[data-kp-timer-ringing] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out 3;
+        }
+    }
+

@@ -1,0 +1,41 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also form-field, progress-spinner-skeleton */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-spinner::before {
+            animation: kp-sig-deco-deco-turn var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='deco'] .kp-switch__input::before {
+            transition: transform 280ms var(--fx-ease);
+        }
+
+        [data-theme='deco'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-deco-deco-unfold var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='deco'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-deco-deco-grow var(--kp-sig-dur) var(--fx-ease) both;
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-turn {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-unfold {
+        from {
+            clip-path: inset(50% 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-deco-deco-grow {
+        from {
+            transform: scale(0) rotate(-90deg);
+        }
+    }
+

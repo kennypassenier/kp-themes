@@ -1,0 +1,19 @@
+/* @part: alert: signature layer */
+    /* A solid coral plate (a failed state, an urgent or refused question) carries its buttons as dark keys: the plate's own
+       ink as the ground, a near-white tube round it. The pink frame on the coral did not read. */
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:not(.kp-icon-button) {
+        --kp-frame: var(--kp-core);
+        --kp-glow: transparent;
+        --kp-sw-cut-ink: var(--destructive-foreground);
+        background: var(--destructive-foreground);
+        color: var(--kp-core);
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:not(.kp-icon-button):hover {
+        --kp-frame: var(--kp-pink-text);
+        background: hsl(from var(--destructive-foreground) h s calc(l + 6));
+    }
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button[aria-disabled='true'],
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:disabled {
+        opacity: 0.7;
+    }

@@ -1,0 +1,67 @@
+/* @part: upload-wizard: signature layer; also popover */
+    [data-theme='cyberpunk'] .kp-tooltip {
+        --kp-sig-dur: 480ms;
+        padding: 0.35rem 0.75rem 0.35rem 0.6rem;
+        text-transform: uppercase;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-tooltip::before {
+        content: '>';
+        margin-inline-end: 0.6ch;
+        color: var(--accent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-tooltip {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps {
+        gap: 3px;
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li {
+        gap: 0.6rem;
+        padding: 0.45rem 1.2rem 0.45rem 1.1rem;
+        background: var(--card);
+        color: var(--muted-foreground);
+        clip-path: polygon(0 0, calc(100% - 0.6rem) 0, 100% 50%, calc(100% - 0.6rem) 100%, 0 100%, 0.6rem 50%);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li:first-child {
+        padding-inline-start: 0.7rem;
+        clip-path: polygon(0 0, calc(100% - 0.6rem) 0, 100% 50%, calc(100% - 0.6rem) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li::before {
+        content: counter(kp-step, decimal-leading-zero);
+        inline-size: auto;
+        block-size: auto;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: inherit;
+        font-size: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li[data-state='done'] {
+        background: hsl(from var(--accent) h s l / 0.14);
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard__steps li[data-state='current'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+

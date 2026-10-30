@@ -1,0 +1,32 @@
+/* @part: week-agenda: signature layer */
+    [data-theme='dark'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-block-start-color: color-mix(in oklab, var(--kp-week-ink, var(--kp-gantt-fill, var(--foreground))) 55%, var(--foreground));
+    }
+    [data-theme='dark'] .kp-week__pill {
+        border-inline-start: 2px solid var(--kp-week-ink);
+    }
+    [data-theme='dark'] .kp-week__pill:is(button):hover {
+        box-shadow: inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.5);
+        border-inline-start-color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow:
+            0 0 0 1px var(--chart-1),
+            0 0 10px hsl(from var(--chart-1) h s l / 0.4);
+    }
+    [data-theme='dark'] :is(.kp-week__now, .kp-gantt__now) {
+        filter: drop-shadow(0 0 5px hsl(from var(--chart-1) h s l / 0.6));
+    }
+    [data-theme='dark'] .kp-week__now::before {
+        border-radius: 0;
+        inline-size: 2px;
+        block-size: 10px;
+        inset-block-start: -6px;
+        inset-inline-start: 0;
+    }
+    [data-theme='dark'] :is(.kp-week__head, .kp-week__axis, .kp-gantt__tick, .kp-week__time) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-week__head {
+        letter-spacing: 0.1em;
+    }

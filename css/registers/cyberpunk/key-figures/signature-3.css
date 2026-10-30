@@ -1,0 +1,45 @@
+/* @part: key-figures: signature layer; also menu-button, button */
+    /* ── Target brackets: focus [Kenny: focus = brackets] ─────────────────────
+       Four corners close on the part from 9 px in: the focus ring colour outside, the
+       contrast colour inside it (DI2's two channels), so the ring reads on any ground. */
+    [data-theme='cyberpunk']
+        :is(
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']):not([data-kp-label])
+        )::before,
+    [data-theme='cyberpunk'] .kp-menu__item::after {
+        content: '';
+        position: absolute;
+        inset: calc(var(--kp-cp-ft) * 3px);
+        z-index: 2;
+        border: calc(var(--kp-cp-fp) * 2px) solid var(--focus-ring);
+        background: none;
+        box-shadow: inset 0 0 0 calc(var(--kp-cp-fp) * 2px) var(--focus-ring-contrast);
+        mask: var(--kp-cp-corners);
+        transform: none;
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:focus-visible {
+        box-shadow: none;
+    }
+
+    /* The tag of a destructive entry: the word TARGET, boxed, in the place of its dash prefix. An
+       entry hugs its text and its `::after` is the focus brackets, so the tag is the entry's
+       `::before` (inline, before the label) and moves with the label whatever the entry's width. */
+    [data-theme='cyberpunk'] .kp-menu__item--destructive::before {
+        content: 'TARGET';
+        content: 'TARGET' / '';
+        margin-inline-end: 0.6em;
+        padding: 0 0.3rem;
+        border: 1px solid var(--destructive);
+        color: var(--destructive);
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1rem;
+        letter-spacing: 0.16em;
+        vertical-align: 0.1em;
+    }
+

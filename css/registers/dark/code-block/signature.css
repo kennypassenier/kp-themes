@@ -1,0 +1,57 @@
+/* @part: code-block: signature layer; also motion, page-header */
+    /* ── Code block: a panel with the film along its head, brackets on the title, the gutter in the ticker mono ── */
+    [data-theme='dark'] .kp-code {
+        --kp-code-bg: var(--muted);
+        clip-path: var(--kp-dk4-cut);
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-code__head {
+        position: relative;
+        border-image: var(--kp-dk4-film) 1;
+        border-block-end-width: 1px;
+        border-block-end-style: solid;
+    }
+    [data-theme='dark'] .kp-code__title::before {
+        content: '[ ';
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-code__title::after {
+        content: ' ]';
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-code__title,
+    [data-theme='dark'] .kp-code__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='dark'] .kp-code[data-kp-state='error'] .kp-code__note {
+        box-shadow: inset 2px 0 0 var(--destructive);
+    }
+
+    /* ── Page header line: the badge and freshness sit in the ticker mono ── */
+    [data-theme='dark'] .kp-page-header__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    /* ── A number that ticks: one pass over the figure; the letters take the film as the line crosses ── */
+    [data-theme='dark'] [data-kp-tick] {
+        font-family: var(--theme-font-mono);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-kp-tick][data-kp-tick-state='running'] {
+            background: var(--kp-dk4-film) 0 0 / 200% 100% no-repeat;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: kp-dk4-tick 660ms linear both;
+        }
+    }
+    @keyframes kp-dk4-tick {
+        from {
+            background-position: 100% 0;
+        }
+        to {
+            background-position: 0 0;
+        }
+    }

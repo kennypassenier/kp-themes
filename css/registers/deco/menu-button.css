@@ -1,0 +1,24 @@
+/* @part: menu-button: signature layer */
+    /* A menu entry: no frame at rest; pointed at it draws its hairline round
+       itself in gold, the label warms; the press seals it like a button. */
+    [data-theme='deco'] .kp-menu__item {
+        --kp-sig-deco-hv: 0;
+        --kp-sig-deco-pr: 0;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        background: hsl(from var(--kp-sig-deco-lac) h s calc(l - 3 * var(--kp-sig-deco-pr)) / var(--kp-sig-deco-pr));
+        color: hsl(
+            from var(--foreground) calc(h + 4 * var(--kp-sig-deco-hv)) calc(s + 14 * var(--kp-sig-deco-hv)) calc(l - 7 * var(--kp-sig-deco-hv))
+        );
+        translate: 0 calc(1px * var(--kp-sig-deco-pr));
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--primary) h s l / calc(0.9 * var(--kp-sig-deco-hv))),
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr)));
+    }
+
+    [data-theme='deco'] .kp-menu__item--destructive {
+        color: var(--destructive);
+    }
+

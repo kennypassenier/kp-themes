@@ -1,0 +1,77 @@
+/* @part: key-figures: signature layer; also button */
+    /* ── The split edge: hover [Kenny: hover = split] ─────────────────────────
+       The edge of the pointed part is doubled: cyan along the head and the end, red
+       along the foot, 5, 4, 3 px and then 2 px while the pointer rests, drawn on the part's
+       own cut (a ring between the cut and the cut moved in), open at the start edge.
+       A square part (a menu entry) takes the same two lines as inset shadows. */
+    [data-theme='cyberpunk']
+        :where(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-ct: 0px;
+        --kp-cp-cb: 0px;
+        --kp-cp-ring: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--kp-cp-ct)) 0,
+            100% var(--kp-cp-ct),
+            100% calc(100% - var(--kp-cp-cb)),
+            calc(100% - var(--kp-cp-cb)) 100%,
+            0 100%,
+            0 0,
+            0 var(--kp-cp-d),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d))) var(--kp-cp-d),
+            calc(100% - var(--kp-cp-d)) max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d)),
+            calc(100% - var(--kp-cp-d)) calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))) calc(100% - var(--kp-cp-d)),
+            0 calc(100% - var(--kp-cp-d)),
+            0 var(--kp-cp-d)
+        );
+        isolation: isolate;
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-cb: var(--kp-button-notch);
+    }
+
+    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
+        --kp-cp-ct: var(--kp-cp-notch);
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
+    [data-theme='cyberpunk']
+        :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])):hover {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:focus-visible,
+    [data-theme='cyberpunk']
+        :is(
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']):not([data-kp-label])
+        ):focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk']
+        :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']))::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border: 0;
+        background: linear-gradient(0deg, var(--destructive) 0 var(--kp-cp-d), var(--accent) var(--kp-cp-d));
+        clip-path: var(--kp-cp-ring);
+        transform: none;
+        animation: none;
+        pointer-events: none;
+    }
+

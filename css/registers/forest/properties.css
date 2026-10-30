@@ -1,0 +1,41 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
+   registered so the keyframes interpolate it; at the top level because
+   Firefox does not register an @property inside a layer. */
+@property --kp-fo-breath {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+/* How far a growth ring is drawn round what changed, 0 (nothing) to 360 deg
+   (all the way round), registered so the keyframes interpolate it. */
+@property --kp-fo-arc {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
+/* How far the treatment of a ticking number has gone, 0 (nothing) to 1 (all of it). */
+@property --kp-fo-grown {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+/* How much of the treatment is left in the colour of a ticking number: 1 (all of it) cooling to 0 (the plain ink). */
+@property --kp-fo-ember {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+/* The skeleton block's and circle's one clock, 0 (bare ground) to 1 (the
+   finished treeline), registered so the keyframes interpolate it; it stays 1
+   standing still. At the top level for the same Firefox reason. */
+@property --kp-fo-grow {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+

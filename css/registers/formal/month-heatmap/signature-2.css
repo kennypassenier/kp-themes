@@ -1,0 +1,86 @@
+/* @part: month-heatmap: signature layer; also key-figures, page-header, flash-button, alert */
+    /* The flash button on paper [kpadopt5]: a success is paper with a navy rule under the word, a refusal paper with the
+       red edge and the word in red ink, as formal's warnings are. */
+    [data-theme='formal'] .kp-flash[data-kp-flash-state='success'] .kp-flash__face--result {
+        background: var(--card);
+        box-shadow: inset 0 -3px 0 var(--primary);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-flash[data-kp-flash-state='refused'] .kp-flash__face--result {
+        background: var(--card);
+        box-shadow: inset 3px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__icon {
+        color: var(--destructive);
+    }
+
+    /* A day of the month: paper with a rule, not a tinted plate. A kept night
+       is ruled along its start edge in navy, a night to look at in red ink, a
+       failed one in two red rules; today stands in the double rule. */
+    [data-theme='formal']
+        :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate):is(
+            [data-kp-tone='ok'],
+            [data-kp-tone='warn'],
+            [data-kp-tone='bad']
+        ) {
+        --kp-fm-edge: inset 3px 0 0 var(--primary);
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: var(--kp-fm-edge);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'] {
+        --kp-fm-edge: inset 3px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'] {
+        --kp-fm-edge: inset 3px 0 0 var(--destructive), inset 6px 0 0 var(--card), inset 8px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-calendar__day[data-kp-today] {
+        border-color: var(--primary);
+        box-shadow:
+            var(--kp-fm-edge, 0 0 transparent),
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--primary);
+    }
+
+    /* ── The voice [G18; Kenny, 2026-10-08, question 18]: figures in the
+       display face with tabular numerals, labels in small capitals. ── */
+    [data-theme='formal'] :is(.kp-kpi__value, .kp-state-word, .kp-calendar__num, .kp-calendar__count, .kp-chart__num) {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    [data-theme='formal'] :is(.kp-kpi__label, .kp-calendar__title, .kp-calendar__grid th, .kp-chart__tick) {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+    }
+
+    [data-theme='formal'] .kp-kpi__label {
+        font-size: 0.9375rem;
+    }
+
+    [data-theme='formal'] .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        font-variation-settings: 'opsz' 60;
+        font-weight: 600;
+    }
+
+    /* ── What matters carries the double rule [G7; Kenny, 2026-10-08,
+       question 7]: the page header is a letterhead, a strip column is a
+       certificate, a drawer is a sheet like a dialog. A plain card, a tile,
+       a menu is paper with a hairline and no frame. ── */
+    [data-theme='formal'] .kp-page-header {
+        padding-block-end: var(--kp-space-md, 0.75rem);
+        border-block-end: 3px double var(--border-strong);
+    }
+

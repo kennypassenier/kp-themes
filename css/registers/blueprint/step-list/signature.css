@@ -1,0 +1,51 @@
+/* @part: step-list: signature layer */
+    /* A journey: square marks drawn on one line; a reached step is a hatched square in the pen's cyan or the step's
+       own ink, joined by a solid rule; the ones to come by a chain line; the step it stands at has the amber witness
+       lines at its two sides; a closed path ends in the red cross and its dashes; names are lettering, dates the readout. */
+    [data-theme='blueprint'] .kp-steplist--journey {
+        --kp-journey-rule: 1px;
+    }
+    [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 8px);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background-color: hsl(from var(--primary) h s l / 0.22);
+        color: var(--foreground);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__item[data-state='done'] .kp-steplist__mark {
+        border-width: 1px;
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-width: 1px;
+        box-shadow:
+            -6px 0 0 -5px var(--accent),
+            6px 0 0 -5px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__title,
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__title {
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: repeating-linear-gradient(180deg, var(--border-strong) 0 6px, transparent 6px 8px);
+        }
+        [data-theme='blueprint']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+    }
+

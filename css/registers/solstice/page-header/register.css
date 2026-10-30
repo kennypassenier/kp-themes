@@ -1,0 +1,69 @@
+/* @part: page-header: register layer; also showing-data, progress-spinner-skeleton, badge, small-patterns */
+    /* ── Footer ───────────────────────────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-footer {
+        border-top: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-footer h4 {
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='solstice'] .kp-footer a {
+        color: var(--muted-foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='solstice'] .kp-footer a:hover {
+        color: var(--primary);
+    }
+
+    /* ── Badges, tags, status ───────────────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-badge,
+    [data-theme='solstice'] .kp-tag {
+        border-radius: var(--radius);
+        font-weight: 600;
+    }
+
+    [data-theme='solstice'] .kp-health {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='solstice'] .kp-health__dot {
+        border-radius: 50%;
+    }
+
+    [data-theme='solstice'] .kp-skeleton {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-empty__title {
+        font-weight: 400;
+    }
+
+    [data-theme='solstice'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes: identifiers in the mono face, unornamented ───────── */
+
+    [data-theme='solstice'] .kp-id,
+    [data-theme='solstice'] .kp-url,
+    [data-theme='solstice'] .kp-numeric,
+    [data-theme='solstice'] .kp-timestamp,
+    [data-theme='solstice'] .kp-masked,
+    [data-theme='solstice'] .kp-copyable,
+    [data-theme='solstice'] .kp-truncate,
+    [data-theme='solstice'] .kp-cell-break,
+    [data-theme='solstice'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+    }
+

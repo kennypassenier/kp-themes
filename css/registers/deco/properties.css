@@ -1,0 +1,83 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* The numbers deco's motion is made of, registered at the top level because
+   Firefox does not register an @property inside a cascade layer; with no
+   registration a number would not animate or transition. Each initial value
+   is the finished pose. --kp-sig-deco-draw: how far a plate's inlay is drawn
+   round from its start (0 none, 1 closed). --kp-sig-deco-up: how far its
+   lacquer, wallpaper and words are up. --kp-sig-deco-hv: a pointer's leaf
+   (0 away, 1 on it). --kp-sig-deco-pr: a press (0 rest, 1 sunk).
+   --kp-sig-deco-ring: the seal's ring (0 at the centre, 1 at its edge).
+   --kp-sig-deco-p: how far a waiting part's lift doors have parted (0 shut).
+   --kp-sig-deco-g: where a glint is along a busy bar (0 before the start, 1
+   past the end). --kp-sig-deco-a1 and -a2: the great fan's two guard sticks,
+   from the left along its foot (182deg is folded away below it).
+   --kp-sig-deco-v: how much of the fan's dressing is drawn. */
+@property --kp-sig-deco-draw {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-deco-up {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-deco-hv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-pr {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-ring {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 1;
+}
+
+@property --kp-sig-deco-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-g {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-a1 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
+}
+
+@property --kp-sig-deco-a2 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
+}
+
+@property --kp-sig-deco-v {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+/* --kp-sig-deco-hold: a number the navbar's panels transition while they
+   close, so js/components.js (which waits for a transition on a closing mega
+   menu) holds them for the close's 480 ms. */
+@property --kp-sig-deco-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+

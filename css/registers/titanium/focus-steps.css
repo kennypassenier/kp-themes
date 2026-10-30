@@ -1,0 +1,37 @@
+/* @part: focus-steps: signature layer */
+    /* ── Cook mode ── */
+    [data-theme='titanium'] .kp-focus-steps__head {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+    [data-theme='titanium'] .kp-focus-steps__count {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9375rem;
+        white-space: nowrap;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-focus-steps__wake {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        border-color: var(--chart-1);
+        background: var(--chart-1);
+    }
+    [data-theme='titanium'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem);
+        border: 0;
+        background: var(--background);
+        box-shadow: var(--kp-ti-pocket);
+    }
+    [data-theme='titanium'] .kp-focus-steps__needs-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+    }
+

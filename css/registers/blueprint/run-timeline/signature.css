@@ -1,0 +1,37 @@
+/* @part: run-timeline: signature layer */
+    [data-theme='blueprint'] :is(.kp-gantt__tick, .kp-week__head) {
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        border-color: var(--primary);
+        background:
+            linear-gradient(90deg, var(--primary) 0 0.75rem, transparent 0.75rem 1rem, var(--primary) 1rem 1.125rem, transparent 1.125rem 1.375rem) 0
+                50% / 1.375rem 1px repeat-x,
+            transparent;
+        color: var(--foreground);
+        box-shadow: inset -2px 0 0 var(--primary);
+    }
+    [data-theme='blueprint'] .kp-gantt__run[data-kp-state='running'] .kp-gantt__label {
+        display: none;
+    }
+    [data-theme='blueprint'] .kp-gantt[data-kp-state='loading'] .kp-gantt__state {
+        inset: var(--kp-gantt-axis, 1.75rem) 0 0;
+        inline-size: fit-content;
+        block-size: fit-content;
+        margin: auto;
+        padding: 0.25rem 0.625rem;
+        background: var(--card);
+        box-shadow: 0 0 0 1px var(--border-strong);
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-blueprint-chain calc(6 * var(--kp-sig-bp-unit)) linear infinite;
+        }
+    }
+

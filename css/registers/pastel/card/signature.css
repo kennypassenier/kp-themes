@@ -1,0 +1,56 @@
+/* @part: card: signature layer; also dialog, navbar, drawer-tour */
+    /* An edge part hangs from the corner at its edge (G3): the drawer and a
+       side navigation on the end edge swing from their top-end corner, the
+       other way round; their pass still goes toward the end. */
+    [data-theme='pastel'] :is(.kp-drawer, .kp-sidenav[data-kp-sidenav-side='end']) {
+        --kp-sig-pa-turn: calc(-1 * var(--kp-sig-pa-dir));
+        --kp-sig-pa-corner: calc(50% + 50% * var(--kp-sig-pa-dir)) 0;
+    }
+
+    /* A peeled corner on a plate shows the plate, not the page. */
+    [data-theme='pastel']
+        :is(
+            .kp-card,
+            .kp-dialog,
+            .kp-popover,
+            .kp-menu,
+            .kp-toast,
+            .kp-kpi,
+            .kp-grid__tile,
+            .kp-datatable,
+            .kp-sidenav,
+            .kp-nav,
+            .kp-calendar,
+            .kp-palette,
+            .kp-tour,
+            .kp-alarm__panel,
+            .kp-split__pane,
+            .kp-wizard
+        ) {
+        --kp-sig-pa-ground: var(--card);
+    }
+
+    /* ── 1 · The anchor's keyframes (§0a, G1-G4, G12) ──────────────────── */
+
+    /* The part (A, A2): swung down from its top-start corner from 120 ms of
+       the 560 (21.43 %), out of nothing; the curve is the element's
+       (--kp-sig-pa-land), so each interval lands. `-out` is the same frames
+       under a second name, played `reverse` for a close (lessons 8, 44). */
+    @keyframes kp-sig-pastel-stuck-in {
+        0%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-pastel-stuck-out {
+        0%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+

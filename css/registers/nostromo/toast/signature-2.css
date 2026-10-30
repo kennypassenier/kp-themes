@@ -1,0 +1,47 @@
+/* @part: toast: signature layer; also navbar */
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── nostromo: erased by the raster (Kenny, 2026-10-07 23:18, leave
+           "raster"; it was a flare and a blur in place, 480 ms ease-in): the
+           part is the raster's draw played backwards, frame for frame, erased
+           from the bottom up in 4 frames of 80 ms. ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards,
+           which makes every arrival the raster's draw. */
+        [data-theme='nostromo'] {
+            --kp-open: reverse-close;
+        }
+
+        /* Its own name, so js/motion.js tells the leave from the entrance
+           (a toast's entrance is the raster's draw). Erasing full to empty
+           with the steps at the start of each frame is the draw played
+           backwards frame for frame: frame t of the leave is frame (T - t)
+           of the draw. */
+        [data-theme='nostromo'] [data-kp-leaving] {
+            animation: kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+        }
+
+        /* A toast, a tile and a key figure are erased under the beam, which
+           climbs back up the edge on the same frames (its background layer,
+           kp-sig-nostromo-beam-layer-erase); played backwards by js/motion.js,
+           this is also how a tile or a key figure arrives. */
+        [data-theme='nostromo'] :is(.kp-toast, .kp-card, .kp-kpi)[data-kp-leaving] {
+            animation:
+                kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards,
+                kp-sig-nostromo-beam-layer-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-erase {
+        from {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1));
+        }
+
+        to {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1) calc(var(--kp-sig-no-reach) * -1) 100% calc(var(--kp-sig-no-reach) * -1));
+        }
+    }
+

@@ -1,0 +1,28 @@
+/* @part: drawer-tour: signature layer */
+    /* Growth out of an edge [G3]: what lives at the window's end edge grows
+       out of it, its far side first, moved in from behind the edge and
+       clipped there, so its words keep their shape. */
+    @keyframes kp-sig-forest-edge {
+        from {
+            translate: 100% 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+        }
+    }
+
+    @keyframes kp-sig-forest-edge-rtl {
+        from {
+            translate: -100% 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 100%);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0);
+        }
+    }
+

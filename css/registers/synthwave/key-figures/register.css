@@ -1,0 +1,26 @@
+/* @part: key-figures: register layer */
+    /* The key figure's number [G15, type = osd: "the OSD names, the chrome
+       counts"; Kenny, 2026-10-07 20:41]: figures are counted in the chrome
+       display face (`--theme-font-display`, KP Outrun Display), a near-white
+       core with the pink tube, as the card's title is. Its unit and note are
+       names, so they go back to the body face. A figure on a warning or
+       destructive plate keeps the plate's ink and no glow (the pair the
+       package guarantees, G13). */
+    [data-theme='synthwave'] .kp-kpi > .kp-kpi__value {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='synthwave'] .kp-kpi > .kp-kpi__value :is(small, .kp-kpi__note) {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-shadow: none;
+    }
+
+    [data-theme='synthwave'] .kp-kpi:not([data-kp-tone='warning'], [data-kp-tone='destructive']) > .kp-kpi__value {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-pink);
+    }
+

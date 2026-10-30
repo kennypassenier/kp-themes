@@ -1,0 +1,68 @@
+/* @part: pipeline: signature layer */
+    /* ── The pipeline: a lane is the tape, square, with the stripe along its top; a card is a plate on it; the chosen card
+       turns its tube up and keeps it ── */
+    [data-theme='synthwave'] .kp-pipeline__lane {
+        border-radius: 0;
+        background: var(--kp-sw4-stripe) 0 0 / 100% 3px no-repeat, var(--muted);
+    }
+    [data-theme='synthwave'] .kp-pipeline__head {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-pipeline__name {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-pipeline__name::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='synthwave'] .kp-pipeline__share,
+    [data-theme='synthwave'] .kp-pipeline__sub,
+    [data-theme='synthwave'] .kp-pipeline__meta {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='synthwave'] .kp-pipeline__card {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-pipeline__card:hover {
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-pipeline__card:hover .kp-pipeline__title,
+    [data-theme='synthwave'] .kp-pipeline__card[aria-current='true'] .kp-pipeline__title {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-pipeline__card[aria-current='true'] {
+        outline: 0;
+        border-color: var(--kp-core);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 12px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-pipeline__mark {
+        border-radius: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(2) {
+            animation-delay: var(--kp-sw4-beat);
+        }
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-sw4-beat));
+        }
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-sw4-beat));
+        }
+    }
+

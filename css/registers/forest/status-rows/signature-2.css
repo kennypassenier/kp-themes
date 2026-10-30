@@ -1,0 +1,21 @@
+/* @part: status-rows: signature layer */
+    /* A check with a reservation is a field note on the warning pair, a square italic tag; the fix written out is a
+       note under a clay blaze. */
+    [data-theme='forest'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='warn'] .kp-statusrow__detail {
+        justify-self: start;
+        margin-block-start: 0.2rem;
+        padding: 0 0.4em;
+        border-radius: 0;
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-statusrow__fix {
+        padding-inline-start: 0.6rem;
+        border-inline-start: 3px solid var(--accent-foreground);
+        font-style: italic;
+    }
+

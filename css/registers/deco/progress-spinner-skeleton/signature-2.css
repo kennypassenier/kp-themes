@@ -1,0 +1,47 @@
+/* @part: progress-spinner-skeleton: signature layer; also menu-button, meter */
+    [data-theme='deco'] .kp-skeleton {
+        --kp-sig-deco-hs: 2px;
+        --kp-sig-deco-hx: 10px;
+        --kp-sig-deco-di: 4px;
+        --kp-sig-deco-frame: 0;
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        border-radius: 0;
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-deco-hs: 0px;
+        block-size: 0.9rem;
+    }
+
+    [data-theme='deco'] .kp-skeleton--circle {
+        --kp-sig-deco-hs: 0px;
+        --kp-sig-deco-frame: 0;
+        border-radius: 50%;
+    }
+
+    [data-theme='deco'] .kp-skeleton--block {
+        --kp-sig-deco-di: 6px;
+        --kp-sig-deco-frame: 1;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='deco'] :is(.kp-menu__item[data-kp-loading], .kp-button[aria-busy='true'], .kp-calendar__day[data-kp-tone='loading']) {
+        --kp-sig-deco-hs: 2.5px;
+        --kp-sig-deco-hx: 10px;
+        --kp-sig-deco-di: 3px;
+    }
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-deco-hs: 0px;
+        --kp-sig-deco-frame: 0;
+        background-color: var(--kp-sig-deco-lac);
+    }
+

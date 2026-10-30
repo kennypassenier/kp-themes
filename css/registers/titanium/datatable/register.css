@@ -1,0 +1,79 @@
+/* @part: datatable: register layer; also step-list, accordion, small-patterns, diff */
+    [data-theme='titanium'] .kp-datatable {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
+    }
+
+    [data-theme='titanium'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='titanium'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-datatable__status,
+    [data-theme='titanium'] .kp-datatable__page {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-diff {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-diff__line,
+    [data-theme='titanium'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is a row of machined plates: a strong edge, the time in
+       the mono face; the state is cut into the mark, not animated. */
+    [data-theme='titanium'] .kp-steplist {
+        --kp-steplist-gap: 0.5rem;
+    }
+
+    [data-theme='titanium'] .kp-steplist__item {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='titanium'] .kp-timeline {
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-timeline__when {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-tree {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: muted at rest and the full ink once open, as its tabs do. */
+    [data-theme='titanium'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-reorder {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+

@@ -1,0 +1,138 @@
+/* @part: key-figures: signature layer */
+    /* The two turns of the numbers: pointed at on the settle, away on its
+       inverse; pressed in 160 ms, let go the same. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco']
+            :is(
+                .kp-button,
+                .kp-icon-button,
+                .kp-menu__item,
+                a.kp-kpi,
+                .kp-action,
+                .kp-kpi--toggle,
+                .kp-kpi--trend:has(.kp-kpi__link),
+                .kp-calendar__day
+            ) {
+            transition:
+                --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle-out),
+                --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle-out),
+                background-color var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
+        }
+
+        [data-theme='deco']
+            :is(
+                .kp-button,
+                .kp-icon-button,
+                .kp-menu__item,
+                a.kp-kpi,
+                .kp-action,
+                .kp-kpi--toggle,
+                .kp-kpi--trend:has(.kp-kpi__link),
+                .kp-calendar__day
+            ):hover:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+            transition:
+                --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle-out),
+                background-color var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
+        }
+
+        [data-theme='deco']
+            :is(
+                .kp-button,
+                .kp-icon-button,
+                .kp-menu__item,
+                a.kp-kpi,
+                .kp-action,
+                .kp-kpi--toggle,
+                .kp-kpi--trend:has(.kp-kpi__link),
+                .kp-calendar__day
+            ):active:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+            transition:
+                --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle),
+                background-color var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
+        }
+
+        /* The ring is played whole once it has started: a tap shorter than
+           400 ms lifts the pointer (`:active` ends) and would cut it where it
+           stood, so js/effects.js (--kp-press: hold, declared on the theme)
+           marks the pressed part `data-kp-pressed` for the 400 ms as well. */
+        [data-theme='deco']
+            :is(.kp-button, .kp-icon-button, .kp-menu__item):is(:active, [data-kp-pressed]):not(
+                :disabled,
+                [aria-disabled='true'],
+                [aria-busy='true']
+            )::after,
+        [data-theme='deco']
+            :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading'])):is(
+                :active,
+                [data-kp-pressed]
+            )::before {
+            animation: kp-sig-deco-seal 400ms linear both;
+        }
+    }
+
+    [data-theme='deco']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-action,
+            .kp-kpi--toggle,
+            .kp-kpi--trend:has(.kp-kpi__link),
+            .kp-calendar__day
+        ):hover:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+        --kp-sig-deco-hv: 1;
+    }
+
+    [data-theme='deco']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-action,
+            .kp-kpi--toggle,
+            .kp-kpi--trend:has(.kp-kpi__link),
+            .kp-calendar__day
+        ):active:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+        --kp-sig-deco-pr: 1;
+    }
+
+    @keyframes kp-sig-deco-seal {
+        0% {
+            opacity: 0.95;
+            --kp-sig-deco-ring: 0.08;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            opacity: 0;
+            --kp-sig-deco-ring: 1;
+        }
+    }
+
+    /* Q16 · focus: a 3 px double gold ring round the focused control, outside
+       its frame; it is written after the pointer's rules and stays through
+       a press, so it wins when both apply. */
+    [data-theme='deco']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-action,
+            .kp-kpi--toggle,
+            .kp-calendar__day,
+            .kp-tab,
+            .kp-nav__link,
+            .kp-nav__toggle,
+            .kp-footer a,
+            a:not([class])
+        ):focus-visible,
+    [data-theme='deco'] .kp-kpi--trend:has(.kp-kpi__link:focus-visible) {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+

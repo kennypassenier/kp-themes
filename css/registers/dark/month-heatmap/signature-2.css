@@ -1,0 +1,56 @@
+/* @part: month-heatmap: signature layer; also progress-spinner-skeleton, button, motion */
+    /* A comet crosses a waiting surface. The head (the 2 px line) and the tail
+       (a third of the part, or the share the property --kp-sig-dk-cw says)
+       are two background layers moved together from just before the start to
+       just past the end in three quarters of the loop; the last quarter the
+       slot is dark. A percentage position is a share of the box less the
+       layer, so the head sits at (1 + cw) of the box less its own width and
+       the tail at 1 / (1 - cw). */
+    @keyframes kp-sig-dark-comet {
+        0% {
+            background-position:
+                calc(0% - 2px) 0,
+                calc(-100% * var(--kp-sig-dk-cw) / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+
+        75%,
+        100% {
+            background-position:
+                calc(100% * (1 + var(--kp-sig-dk-cw)) - 2px) 0,
+                calc(100% / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+    }
+
+    /* The spinner's loop: one number, 0 to 1. */
+    @keyframes kp-sig-dark-bars {
+        from {
+            --kp-sig-dk-ph: 0;
+        }
+
+        to {
+            --kp-sig-dk-ph: 1;
+        }
+    }
+
+    /* A press: the line crosses the face and stops at its end. */
+    @keyframes kp-sig-dark-tap {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 100% 0;
+        }
+    }
+
+    /* Growing and shrinking, this theme's way [scope-142; Kenny, 2026-10-09:
+       the darkroom is retired]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. The
+       box keeps the line's glow while it changes; what arrives is laid by the
+       pass (below), and nothing develops from a pale print. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-kp-resizing] {
+            filter: var(--kp-sig-dk-glow);
+        }
+    }
+

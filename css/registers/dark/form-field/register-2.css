@@ -1,0 +1,74 @@
+/* @part: form-field: register layer */
+    /* ── Fields: a panel and an edge, the primary edge as focus ────────── */
+
+    [data-theme='dark'] .kp-field__label {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-field__input,
+    [data-theme='dark'] .kp-datatable__search,
+    [data-theme='dark'] .kp-combobox__input,
+    [data-theme='dark'] .kp-palette__input {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-field__input:focus,
+    [data-theme='dark'] .kp-datatable__search:focus,
+    [data-theme='dark'] .kp-combobox__input:focus,
+    [data-theme='dark'] .kp-palette__input:focus {
+        border-color: var(--primary);
+    }
+
+    /* One arrow on a select, never two [fix-42]. Kenny, 2026-09-16, on the
+       textarea-and-select block: "Rechts van de dropdown zie ik één keer
+       onze styling van pijltje (> maar dan omgekeerd) en nog één van
+       firefox zelf ofzo?" What stood here was a chevron in two 6px
+       gradients — and nothing that took the browser's own arrow away, so
+       firefox drew its dropmarker beside it and chromium would draw its
+       ::picker-icon in the same place. Measured over the select's right
+       edge, firefox: 19 columns of ink where the twenty themes that leave
+       the arrow to the browser measure 8, and still 8 with this register's
+       own arrow forced off — two marks, not one. Titanium carried the same
+       three declarations and the same fault; the sweep found no third.
+
+       The register joins the other fifteen rather than keeping its own:
+       the browser draws the arrow and reserves the room for it (the
+       gradient had none — the package's 0.625rem end padding let a long
+       option run straight under it), and where the page may take the list
+       over the picker icon wears the theme [KT8]. The two registers that
+       do draw their own — terminal and retro — take the browser's away
+       with `appearance: none` in the same rule, which is what this one
+       never did. */
+    [data-theme='dark'] select.kp-field__input::picker-icon {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-field__check:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-field__check:checked::before {
+        content: '';
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 0.1rem;
+        background: var(--primary-foreground);
+    }
+

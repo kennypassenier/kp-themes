@@ -1,0 +1,54 @@
+/* @part: run-timeline: signature layer */
+    /* Moments and stretches on the timeline. */
+    [data-theme='deco'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow:
+            0 0 0 1px var(--kp-sig-deco-lac),
+            0 0 0 2px hsl(from var(--primary) h s l / 0.85);
+    }
+    [data-theme='deco'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        rotate: 45deg;
+        scale: 0.8;
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-gantt__point[data-kp-planned]::before {
+        background: var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 1px var(--kp-sig-deco-lac),
+            0 0 0 2px var(--kp-sig-deco-gold-hi),
+            0 0 0 4px var(--kp-sig-deco-lac),
+            0 0 0 5px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='deco'] .kp-gantt__zone,
+    [data-theme='deco'] .kp-gantt__band {
+        border-inline: 3px double hsl(from var(--kp-gantt-mark) h s l / 0.6);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.1);
+    }
+    [data-theme='deco'] .kp-gantt__zone[data-kp-lane-zone] {
+        border: 0;
+        border-block: 1px solid var(--kp-gantt-mark);
+        border-radius: 0;
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.35);
+    }
+    [data-theme='deco'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: hsl(from var(--destructive) h s calc(l + 4));
+    }
+    [data-theme='deco'] .kp-gantt__count {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-lac);
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='deco'] .kp-gantt__sub {
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-gantt__lane-link {
+        text-decoration-color: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-gantt__lane-link:hover {
+        color: var(--kp-sig-deco-champagne);
+        text-decoration-color: var(--kp-sig-deco-gold-hi);
+    }
+

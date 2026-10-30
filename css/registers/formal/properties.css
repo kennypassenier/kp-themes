@@ -1,0 +1,39 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* The numbers formal's motion is made of, registered at the top level
+   because Firefox does not register an @property inside a cascade layer;
+   with no registration every keyframe below would flip between its two
+   poses instead of moving. --kp-fm-t is how far a ruled opening or a leave
+   has come (0 to 1, finished = 1), --kp-fm-l the loop of the ruled lines of
+   a waiting surface (0 to 1; at rest the three lines are ruled), --kp-fm-u
+   the live update's rules (0 to 1), --kp-fm-a0 and --kp-fm-a1 the two ends
+   of the spinner's arc (at rest the ring is closed). */
+@property --kp-fm-t {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-fm-l {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.5;
+}
+
+@property --kp-fm-u {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-fm-a0 {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --kp-fm-a1 {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+

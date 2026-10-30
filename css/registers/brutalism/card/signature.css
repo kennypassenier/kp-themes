@@ -1,0 +1,76 @@
+/* @part: card: signature layer; also navbar */
+    /* Leaving is being lifted off, arriving is being set down [G12; Kenny,
+       2026-10-07 23:44, "leave = lift"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one halfway through this one. The part is lifted
+       1 rem up-left off its footprint on the lifting curve, its shadow
+       staying on the ground, and at the top it is gone in one cut: no fade,
+       no blur. js/motion.js plays an arrival as this leave backwards, which
+       on the lifting curve is the fall, so what arrives is dropped. The
+       slam to the left (240 ms, steps(2)) of 2026-10-04 is replaced. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] {
+            --kp-open: reverse-close;
+        }
+
+        [data-theme='brutalism'] [data-kp-leaving] {
+            --kp-sig-br-h: var(--kp-sig-br-h-leave);
+            animation: kp-sig-brutalism-leave var(--kp-sig-br-time) var(--kp-sig-br-up) forwards;
+        }
+
+        /* A toast is lifted as far as it fell. */
+        [data-theme='brutalism'] .kp-toast[data-kp-leaving] {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        }
+
+        /* A slab's shadow stays on the ground while it is lifted. */
+        [data-theme='brutalism']
+            :is(
+                .kp-card,
+                .kp-alert,
+                .kp-toast,
+                .kp-popover,
+                .kp-menu,
+                .kp-datatable,
+                .kp-grid__tile,
+                .kp-split__pane,
+                .kp-wizard,
+                .kp-empty,
+                .kp-spec,
+                .kp-log,
+                .kp-diff,
+                .kp-media,
+                .kp-form__summary,
+                .kp-reorder
+            )[data-kp-leaving] {
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation-name: kp-sig-brutalism-leave-slab;
+        }
+
+        [data-theme='brutalism'] :is(.kp-badge, .kp-tag, .kp-tooltip)[data-kp-leaving] {
+            --kp-sig-br-h: var(--kp-sig-br-h-part);
+            --kp-sig-br-sh: 3px;
+            animation-name: kp-sig-brutalism-leave-slab;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-leave {
+        to {
+            translate: calc(-1 * var(--kp-sig-br-h)) calc(-1 * var(--kp-sig-br-h));
+            visibility: hidden;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-leave-slab {
+        from {
+            translate: 0 0;
+            box-shadow: var(--kp-sig-br-sh) var(--kp-sig-br-sh) 0 0 var(--border-strong);
+        }
+
+        to {
+            translate: calc(-1 * var(--kp-sig-br-h)) calc(-1 * var(--kp-sig-br-h));
+            box-shadow: calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) 0 0 var(--border-strong);
+            visibility: hidden;
+        }
+    }
+

@@ -1,0 +1,74 @@
+/* @part: page-header: register layer; also badge, progress-spinner-skeleton, small-patterns, combobox */
+    [data-theme='synthwave'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-footer h4 {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-footer a {
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+
+    [data-theme='synthwave'] .kp-footer a:hover {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    /* ── Badges, tags, status: small tubes ───────────────────────────── */
+
+    [data-theme='synthwave'] .kp-badge,
+    [data-theme='synthwave'] .kp-tag {
+        border-radius: var(--radius);
+        border: 1px solid currentColor;
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='synthwave'] .kp-tag {
+        font-size: 0.95rem;
+    }
+
+    [data-theme='synthwave'] .kp-health__dot {
+        box-shadow: 0 0 8px currentColor;
+    }
+
+    [data-theme='synthwave'] .kp-health {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.08em;
+    }
+
+    [data-theme='synthwave'] .kp-skeleton {
+        background: linear-gradient(90deg, var(--card), var(--popover), var(--card));
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-spinner {
+        border-color: hsl(from var(--accent) h s l / 0.25);
+        border-top-color: var(--accent);
+        filter: drop-shadow(0 0 4px var(--accent));
+    }
+
+    [data-theme='synthwave'] .kp-empty__title {
+        font-family: var(--kp-osd);
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-error {
+        font-family: var(--kp-osd);
+        color: var(--warning-foreground);
+        text-shadow: var(--kp-tube-laser);
+    }
+

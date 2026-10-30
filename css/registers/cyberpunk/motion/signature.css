@@ -1,0 +1,38 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* A leave: the entrance's four poses in the other order, and the last one held until the
+       part is gone, so nothing of it outlives the rest. */
+    @keyframes kp-sig-cyberpunk-split-out {
+        0% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        75%,
+        100% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+    }
+

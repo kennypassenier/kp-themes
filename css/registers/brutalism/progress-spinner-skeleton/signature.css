@@ -1,0 +1,193 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* ── The progress bar: Ruled and labelled, a lot slower [G10; Kenny,
+       2026-10-07 23:44, research/brutalism-character "progress = ruled-slowest"].
+       Ink ticks on the empty track, paper ticks cut through the ink fill,
+       tenth by tenth; the yellow head is the tip and prints the share in
+       Archivo Black. A share walks to its value in ten hard steps of 80 ms
+       (a rise on `steps(10, jump-end)`, a fall on its mirror `jump-start`,
+       so a shrink is the growth reversed); busy, the tip hops tick to tick
+       in ten hard steps of the 2400 ms loop and prints three dots. ── */
+    [data-theme='brutalism'] .kp-progressbar {
+        --kp-progressbar-height: calc(1.375rem * var(--kp-progressbar-scale, 1));
+        --br-line: var(--kp-line, 3px);
+        --br-drop: calc(4px * var(--kp-progressbar-scale, 1));
+        --br-ink: var(--border-strong);
+        --br-u: calc(1px * var(--kp-progressbar-scale, 1));
+        --br-fs: calc(0.85rem * var(--kp-progressbar-scale, 1));
+        --br-hw: calc(3.7 * var(--br-fs) + 2 * var(--br-line));
+        /* Two copies of the value walk to it, one on each mirror of the steps;
+           the share is the lower of them: a rise follows the one that lags, a
+           fall the one that leads. */
+        --kp-sig-br-lag: var(--kp-value, 0);
+        --kp-sig-br-lead: var(--kp-value, 0);
+        --kp-sig-br-share: min(var(--kp-sig-br-lag), var(--kp-sig-br-lead));
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__track {
+        inset: 0 var(--br-drop) var(--br-drop) 0;
+        border: var(--br-line) solid var(--br-ink);
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(90deg, transparent 0 calc(10% - 2 * var(--br-u)), var(--br-ink) calc(10% - 2 * var(--br-u)) 10%) 0 100% / 100%
+                40% no-repeat,
+            var(--card);
+        box-shadow: var(--br-drop) var(--br-drop) 0 0 var(--br-ink);
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__fill {
+        background: repeating-linear-gradient(90deg, var(--br-ink) 0 calc(10% - 2 * var(--br-u)), var(--card) calc(10% - 2 * var(--br-u)) 10%);
+        clip-path: inset(0 calc((1 - var(--kp-sig-br-share)) * 100%) 0 0);
+        transition: none;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__head {
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        inline-size: var(--br-hw);
+        margin-inline-start: 0;
+        counter-reset: kp-sig-br-pct calc(var(--kp-sig-br-share) * 100);
+        background: var(--secondary);
+        border-inline: var(--br-line) solid var(--br-ink);
+        color: var(--secondary-foreground);
+        font-family: var(--theme-font-display);
+        font-size: var(--br-fs);
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        white-space: nowrap;
+        /* The tip rides the share's edge, held inside the track so it is
+           never cut at 0 or at 100 %. */
+        transform: translateX(max(0px, calc(var(--kp-sig-br-share) * 100cqi - var(--br-hw))));
+        transition: none;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__head::after {
+        content: counter(kp-sig-br-pct) '%';
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 0;
+        inline-size: auto;
+        clip-path: inset(0 100% 0 0);
+        animation: none;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: grid;
+        transform: none;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::after {
+        content: '…';
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-progressbar {
+            transition:
+                --kp-sig-br-lag var(--kp-sig-br-bar-time) steps(10, jump-end),
+                --kp-sig-br-lead var(--kp-sig-br-bar-time) steps(10, jump-start);
+        }
+
+        [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+            animation: kp-progressbar-brutalism-hop var(--kp-sig-br-bar-loop) linear infinite;
+        }
+    }
+
+    /* The tip hops tick to tick in ten hard steps over two thirds of the
+       loop, then is back at the start in one cut. */
+    @keyframes kp-progressbar-brutalism-hop {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(10, jump-end);
+        }
+
+        66.667% {
+            translate: calc(100cqi - var(--br-hw)) 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* ── The spinner: the block tipped over [G11]. The yellow block is lifted
+       off its footprint, turned a quarter and set down: lifted on the
+       lifting curve, turned, set down on the fall, stopping dead; 12 units. ── */
+    [data-theme='brutalism'] .kp-spinner {
+        --kp-sig-dur: var(--kp-sig-br-loop);
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='brutalism'] .kp-spinner::before,
+    [data-theme='brutalism'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 2px 4px 4px 2px;
+    }
+
+    [data-theme='brutalism'] .kp-spinner::before {
+        background: var(--border-strong);
+        translate: 3px 3px;
+    }
+
+    [data-theme='brutalism'] .kp-spinner::after {
+        border: 2px solid var(--border-strong);
+        background: var(--secondary);
+    }
+
+    /* ── Loading is the lintel hoisted [G10; Kenny, 2026-10-07 23:44,
+       "loading = hoist-lintel"]. While a part waits, the place its reading
+       will stand is a well in the ink line, and in it one beam as wide as
+       the well, on two cables, is hoisted in four hard lifts, held, let go
+       to fall free on the fall curve and left to rest: 12 units, 1200 ms.
+       The well is the skeleton itself, a loading meter's track, and a strip
+       at the foot of a busy panel, button, card, menu entry or calendar;
+       its words stand above it. The lintel is three gradient layers on a
+       picture twice the well's height, so a lift is one number: the
+       picture's vertical position, 100 % at rest (beam on the floor) to
+       161.6 % (the beam 61.6 % of the well up, as the demo's -280 % of a
+       22 % beam). Standing still it rests on the floor. ── */
+    [data-theme='brutalism'] .kp-skeleton,
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before,
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+    }
+
+    /* The skeleton lines: a well of one line's height on a 3 px footprint,
+       two units apart. */
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        block-size: 1rem;
+        overflow: clip;
+    }
+
+    [data-theme='brutalism']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:is(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        overflow: clip;
+    }
+

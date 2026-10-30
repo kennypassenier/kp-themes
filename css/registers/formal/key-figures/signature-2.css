@@ -1,0 +1,50 @@
+/* @part: key-figures: signature layer; also time-chart */
+    /* A key figure's link ("Open"): the rule under its words, doubled on a
+       press (G15, G17). */
+    [data-theme='formal'] .kp-kpi__link {
+        border-radius: 0;
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='formal'] .kp-kpi__link:hover {
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-kpi__link:active {
+        text-decoration-style: double;
+        text-decoration-thickness: 1px;
+    }
+
+    [data-theme='formal'] .kp-chart__tip {
+        border-radius: 0;
+    }
+
+    /* ── Every part that opens is ruled open and ruled off [G3, G13; lesson 38;
+       all-themes pass, 2026-10-13]. The tour's dim and ring, the calendar's
+       busy layers and the bar's three openings (the hover dropdown, the mega
+       menu, the phone bar's panel) take the ruling the dialog and the menus
+       already use; each close is its opening played backwards. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The tour: the page dims round the target and the ring is drawn in
+           over the card's own 740 ms, at the ruling's even pace (it was the
+           package's 350 and 250 ms ease); css/components.css takes both back
+           in the same time on the same (linear) curve, the dim shrinking
+           into the target as it grew out of it (lessons 11, 21, 22). */
+        [data-theme='formal'] {
+            --kp-tour-dim-close: 0 0 0 0 transparent;
+            --kp-tour-dim-time: 740ms;
+            --kp-tour-dim-close-ease: linear;
+        }
+
+        [data-theme='formal'] [data-kp-tour-target] {
+            transition:
+                box-shadow 740ms linear,
+                outline-color 740ms linear;
+        }
+
+    }
+

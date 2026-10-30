@@ -1,0 +1,74 @@
+/* @part: sidenav: register layer; also back-to-top */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A drawing's index. Every row is a callout, and the one you are on
+       carries the leader line and the tick that this theme draws beside
+       anything it is pointing at. */
+    [data-theme='blueprint'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    /* The backdrop dims in the panel's own time (1 unit, the register's
+       `--fx-duration`) and on its feed: the package's literal 220 ms against a
+       160 ms panel made the close no mirror of the open (lesson 31 checked: no
+       clip cuts the content; it slides out of the frame whole). A literal, for
+       the flash check that reads it. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-sidenav__backdrop {
+            animation-duration: 160ms;
+        }
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link,
+    [data-theme='blueprint'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        padding-inline-start: 1.5rem;
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The row is what the mark below is measured from [fix-73]. Without this
+       it fell back to whatever ancestor happened to be positioned, which is
+       not the row — the same fault Kenny found in nostromo, and the search
+       in gates/check-anchors.mjs found here. */
+    [data-theme='blueprint'] .kp-sidenav__link {
+        position: relative;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.5rem;
+        inset-block-start: 50%;
+        inline-size: 0.5rem;
+        block-size: 1px;
+        background: var(--border-strong);
+        opacity: 0;
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--foreground);
+        background: none;
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-sidenav__link[aria-current='page']::before,
+    [data-theme='blueprint'] .kp-sidenav__link:hover::before {
+        opacity: 1;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A picture on a drawing is a detail view: ruled, cornered, and
+       captioned in the mono face the sheet is annotated in. */
+    [data-theme='blueprint'] .kp-to-top {
+        border-radius: 0;
+        border: 1px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+    }
+

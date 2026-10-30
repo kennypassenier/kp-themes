@@ -1,0 +1,60 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: 2 px rows that turn the tube up when pointed at (a pink wash, the name's neon); counts are the chrome. The
+       counts on their way are marquee bulbs chasing down the list, one in four lit. */
+    [data-theme='synthwave'] .kp-facets {
+        --kp-facet-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.1);
+    }
+    [data-theme='synthwave'] .kp-facet:hover .kp-facet__name {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-facets__title {
+        color: var(--kp-pink-text);
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-facets__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-facet__count {
+        font-family: var(--kp-mono);
+        font-size-adjust: 0.5;
+    }
+    [data-theme='synthwave'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 2px;
+        background: hsl(from var(--primary) h s l / 0.14);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-synthwave-bulb calc(4 * var(--kp-sw-beat)) steps(1, end) infinite;
+        }
+        [data-theme='synthwave'] .kp-facets[aria-busy='true'] li:nth-child(4n + 2) .kp-facet__count {
+            animation-delay: calc(-3 * var(--kp-sw-beat));
+        }
+        [data-theme='synthwave'] .kp-facets[aria-busy='true'] li:nth-child(4n + 3) .kp-facet__count {
+            animation-delay: calc(-2 * var(--kp-sw-beat));
+        }
+        [data-theme='synthwave'] .kp-facets[aria-busy='true'] li:nth-child(4n + 4) .kp-facet__count {
+            animation-delay: calc(-1 * var(--kp-sw-beat));
+        }
+    }
+
+    /* Heat grid and matrix: every cell a tube, 2 px, lit from inside in its tone, its glow the tone's own light; the
+       pick a cyan rail pair; pointing turns the tube up (a wider bloom), nothing grows. Waiting, the cells are the
+       marquee: one bulb in four lit, the light chasing start to end. */
+    [data-theme='synthwave'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 2px;
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='synthwave'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='synthwave'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }

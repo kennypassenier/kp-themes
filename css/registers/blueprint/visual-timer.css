@@ -1,0 +1,73 @@
+/* @part: visual-timer: signature layer; also countdown, range-picker */
+    /* Visual timer and countdown: the timer is the compass's circle with its centre lines; the time left is a hatched
+       section (the pen's hatch, 45 degrees) in the cyan; a finished one is ringed by an amber dashed revision line; the
+       countdown is a plate on the sheet and its digits are the readout. */
+    [data-theme='blueprint'] .kp-timer-disc__face {
+        border-width: 1px;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 100% 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 1px 100% no-repeat,
+            transparent;
+    }
+    [data-theme='blueprint'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--border-strong);
+    }
+    [data-theme='blueprint'] .kp-timer-disc__sector {
+        background: repeating-linear-gradient(45deg, var(--kp-timer-disc-fill, var(--primary)) 0 1px, transparent 1px 4px);
+        mask-image: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        box-shadow: inset 0 0 0 1px var(--kp-timer-disc-fill, var(--primary));
+    }
+    [data-theme='blueprint'] .kp-timer-disc__hub {
+        inset: 47%;
+        border: 1px solid var(--foreground);
+        background: var(--background);
+    }
+    [data-theme='blueprint'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: none;
+        animation: none;
+        outline: 1px dashed var(--accent);
+        outline-offset: 5px;
+    }
+    [data-theme='blueprint'] .kp-countdown {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        position: relative;
+    }
+    [data-theme='blueprint'] .kp-countdown__time {
+        font-family: var(--theme-font-mono);
+        font-weight: 400;
+    }
+    [data-theme='blueprint'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: none;
+        animation: none;
+    }
+    [data-theme='blueprint'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Range picker: the custom window in force is a hatched section in the pen's frame; its label is lettering. */
+    [data-theme='blueprint'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: none;
+    }
+

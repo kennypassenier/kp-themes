@@ -1,0 +1,57 @@
+/* @part: compare-slider: signature layer */
+    /* ── Compare slider: a parting line with its tool edge, a turned knob ── */
+    [data-theme='titanium'] .kp-compare {
+        --kp-compare-ink: var(--primary);
+        --kp-compare-line: 2px;
+        --kp-sig-ti-c: 0.75rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
+    }
+    [data-theme='titanium'] .kp-compare__divider {
+        box-shadow: 1px 0 0 var(--background);
+    }
+    [data-theme='titanium'] .kp-compare__handle {
+        background:
+            repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.1) 0 1px, transparent 1px 3px),
+            radial-gradient(circle closest-side, var(--accent), var(--muted));
+        box-shadow:
+            var(--kp-tool-edge),
+            0 0 0 1px var(--background);
+    }
+    [data-theme='titanium'] .kp-compare__handle:active {
+        translate: -50% calc(-50% + 1px);
+    }
+    [data-theme='titanium'] .kp-compare__label {
+        --kp-sig-ti-c: 4px;
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-ti-engrave);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
+    }
+    [data-theme='titanium'] .kp-compare__failed {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition:
+                clip-path 240ms var(--kp-sig-ti-ease),
+                margin-inline-start 240ms var(--kp-sig-ti-ease);
+        }
+    }

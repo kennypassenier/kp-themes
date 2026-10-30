@@ -1,0 +1,66 @@
+/* @part: month-heatmap: signature layer; also time-chart */
+    /* ── Loading is a comet [G10; Kenny, 2026-10-09, question 10: "A comet
+       with a film tail"]. On every waiting surface the line is the head of a
+       tail a third of the part long, full film at the head and nothing at
+       its end; it crosses from start to end in the first three quarters of
+       the loop (1800 ms of 2400) and lays nothing, the slot stays dark behind
+       the tail, then the loop comes round. It fills the whole element and
+       takes its shape (a chamfered skeleton line is cut, a panel is swept
+       whole). The picture is the element's own ::before, laid over what is
+       waiting; a button has its brackets on ::before, so its comet is
+       painted on its own ground. The surfaces are the package's own: the
+       skeleton lines, blocks and circles (the key figures' and the
+       columns' skeleton lines are skeleton lines), the busy table's panel,
+       the loading menu entry, the busy button and card, the busy calendar
+       and its days, the loading chart, the busy tile grid, the loading
+       meter. One keyframe moves two background layers (the 2 px head and the
+       tail) from just before the start to just past the end; the comet's
+       width is --kp-sig-dk-cw. ── */
+    [data-theme='dark']
+        :where(
+            .kp-skeleton,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        position: relative;
+        animation: none;
+    }
+
+    [data-theme='dark']
+        :where(
+            .kp-skeleton,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
+        )::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: inherit;
+        opacity: 1;
+        pointer-events: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    /* A chart's plot and a menu entry stand on the page's own ground. */
+    [data-theme='dark'] .kp-chart__state[data-kp-state='loading'] {
+        background-color: transparent;
+    }
+

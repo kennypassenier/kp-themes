@@ -1,0 +1,22 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* The figure takes the film through its letters while the line crosses it
+       and settles back to ink once it has gone by. */
+    @keyframes kp-sig-dark-figure {
+        0% {
+            --kp-sig-dk-at: 0%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 1;
+        }
+    }
+

@@ -1,0 +1,125 @@
+/* @part: button: register layer; also key-figures, form-field, alarm */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, .kp-kpi__label)::before {
+            transition:
+                opacity var(--fx-duration) var(--fx-ease),
+                background var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='nostromo'] :is(.kp-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    [data-theme='nostromo'] :is(.kp-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true'])::before,
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
+        opacity: 0.7;
+    }
+
+    [data-theme='nostromo'] :is(.kp-button, .kp-menu__item):active:not(:disabled, [aria-disabled='true'])::before,
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):active .kp-kpi__label::before,
+    [data-theme='nostromo'] .kp-kpi--toggle[aria-pressed='true'] .kp-kpi__label::before {
+        opacity: 1;
+    }
+
+    /* Keyboard focus lights the lamp as the LED: the lens in orange with its
+       glow (focus "led"). */
+    [data-theme='nostromo'] :is(.kp-button, .kp-menu__item):focus-visible::before,
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible .kp-kpi__label::before,
+    [data-theme='nostromo'] .kp-sidenav__link:focus-visible::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+        opacity: 1;
+    }
+
+    /* The key figure under the pointer: its ground one step lighter, as a
+       menu entry's; nothing moves. */
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+        background: var(--popover);
+    }
+
+    /* The key at rest is raised moulding; the ghost and the icon button
+       lie flat in the case and only go in when pressed. */
+    [data-theme='nostromo'] .kp-button:not(.kp-button--ghost, :disabled) {
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    /* Pressed, the key goes in: a well, its ground one step into shadow,
+       its lamp full; it does not move. */
+    [data-theme='nostromo']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):active:not(:disabled, [aria-disabled='true']) {
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    [data-theme='nostromo']
+        :is(.kp-button:not(.kp-button--primary, .kp-button--destructive), .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):active:not(
+            :disabled,
+            [aria-disabled='true']
+        ) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+    }
+
+    /* The pressed state the register's hover backgrounds would cancel [fix-12]:
+       a layer beats a state, so each button kind says again what it is while
+       held; the plain key goes into its well, the others keep their own ink. */
+    [data-theme='nostromo'] .kp-button:active:not(:disabled) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+    }
+
+    [data-theme='nostromo'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='nostromo'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* Focused, the ring of DI2 at the part's own corner; a focused key keeps
+       its moulding inside the ring, and goes in under it when pressed. */
+    [data-theme='nostromo'] :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    [data-theme='nostromo'] .kp-button:not(.kp-button--ghost, :disabled):focus-visible {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):focus-visible:active:not(:disabled, [aria-disabled='true']) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-well);
+    }
+
+    /* The alarm's buttons are painted by the alarm; they stay flat. */
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-button:not(:focus-visible) {
+        box-shadow: none;
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='nostromo'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+

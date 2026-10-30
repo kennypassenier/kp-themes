@@ -1,0 +1,75 @@
+/* @part: form-field: signature layer; also dialog, toast */
+    [data-theme='cyberpunk'] .kp-field__check {
+        --kp-sig-dur: 180ms;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='checkbox']:checked {
+        background: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='checkbox']:checked::before {
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        background: none;
+        clip-path: none;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='radio'] {
+        transform: rotate(45deg) scale(0.8);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check[type='radio']:checked::before {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        clip-path: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-cyberpunk-pen 180ms steps(3, jump-end) both;
+        }
+
+        [data-theme='cyberpunk'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-cyberpunk-dot 180ms steps(2, jump-end) both;
+        }
+    }
+
+    /* The toast, the dialog and the tooltip open by the channel split [Kenny: opening = split]:
+       the part is its yellow and cyan copy until they meet, four ticks of 120 ms. The close
+       is the same four ticks the other way round (js/motion.js plays the entrance backwards,
+       and a leave plays `kp-sig-cyberpunk-split-out`, which is that entrance reversed). The
+       dialog is declared at 720 ms: js/motion.js opens and closes it in two thirds of its
+       entrance, 480 ms, the four ticks of the stutter. */
+    [data-theme='cyberpunk'] .kp-toast {
+        --kp-sig-dur: 480ms;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-toast {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog {
+        /* Durations are written in each animation as literals, so the flash gate can compute their rate [DI5]. */
+        --kp-sig-dur: 720ms;
+        --kp-cp-rest: inset 0 3px 0 var(--primary);
+        box-shadow: var(--kp-cp-rest);
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog::backdrop {
+        background:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px),
+            hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-dialog {
+            animation: kp-sig-cyberpunk-split 720ms steps(1, end) backwards;
+        }
+    }
+

@@ -1,0 +1,26 @@
+/* @part: typed-confirmation: signature layer */
+    /* Typed confirmation. */
+    [data-theme='deco'] .kp-type-confirm__loses {
+        padding: 0.75rem 1rem;
+        text-align: start;
+    }
+    [data-theme='deco'] .kp-type-confirm__loses-title {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-decoration: underline 1px var(--primary);
+        text-transform: uppercase;
+        text-underline-offset: 0.35em;
+        justify-self: start;
+    }
+    [data-theme='deco'] .kp-type-confirm__name {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-type-confirm__status {
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+    }
+

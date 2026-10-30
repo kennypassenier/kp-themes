@@ -1,0 +1,12 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* ── End of the signature ── */
+
+/* The hold a bar's panel keeps while the raster erases it: js/components.js releases the mega menu's
+   item when a transition on the panel ends, and this is the one it waits for. At the top level:
+   Firefox does not register an @property inside a layer. */
+@property --kp-sig-no-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+

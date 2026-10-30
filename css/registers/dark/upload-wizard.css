@@ -1,0 +1,44 @@
+/* @part: upload-wizard: signature layer */
+    [data-theme='dark'] .kp-wizard__steps {
+        gap: 0.5rem 0.9rem;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li {
+        gap: 0.5rem;
+        padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='done']::before {
+        background: var(--kp-iris);
+        box-shadow: none;
+        color: var(--background);
+        font-weight: 700;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='current'] {
+        --kp-sig-dark-bk: var(--primary);
+        --kp-sig-dark-arm: 0.45rem;
+        background: var(--kp-sig-dark-brackets);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='current']::before {
+        background: var(--primary);
+        box-shadow: none;
+        color: var(--primary-foreground);
+    }
+

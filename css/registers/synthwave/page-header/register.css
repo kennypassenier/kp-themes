@@ -1,0 +1,194 @@
+/* @part: page-header: register layer; also switch, forms */
+    /* The switch [gap-11], in the checkbox's voice: the theme's radius on a
+       primary-edged track over the sidebar's night with a faint glow, and
+       a thumb that lights in the accent with its own glow once on. */
+    [data-theme='synthwave'] .kp-switch {
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='synthwave'] .kp-switch__input {
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-form__summary {
+        border-left: 4px solid transparent;
+        border-image: var(--kp-stripe) 1;
+        background: var(--card);
+    }
+
+    /* ── The page horizon [the anchor, Kenny, 2026-10-07 21:21] ───────────
+       One neon tube for the page on the header's foot, the floor under it,
+       every plate carrying 1 px of its light on its top edge (the lit line
+       under its stripe), and, under a hand, a brighter piece of the tube
+       exactly as wide as the part touched. The header draws all of it: the
+       tube on its `::after`, the floor and the far cyan line on its `::before`
+       (8.5 rem deep under the tube, at z-index -1 inside the header's own
+       stacking context, so it lies BEHIND the plates: the header reserves
+       nothing and whatever follows it is positioned, at no specificity, so
+       it paints above the floor [Kenny, 2026-10-08 01:00]),
+       the piece on the inner grid's `::after`, positioned by the hovered
+       action through anchor positioning. Every action lights its piece, the
+       popover's trigger included. ───────────────────────────────────────── */
+
+    [data-theme='synthwave'] .kp-page-header {
+        position: relative;
+        padding-block-end: 0.75rem;
+    }
+
+    [data-theme='synthwave'] .kp-page-header::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        z-index: 1;
+        block-size: 3px;
+        background: var(--kp-core);
+        box-shadow: var(--kp-sw-tube);
+        pointer-events: none;
+    }
+
+    [data-theme='synthwave'] .kp-page-header::before {
+        content: '';
+        position: absolute;
+        inset: 100% 0 auto;
+        z-index: -1;
+        block-size: var(--kp-sw-floor-page);
+        background:
+            linear-gradient(hsl(from var(--accent) h s l / 0.7) 0 0) 0 6px / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 1.6% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.31) 0 0) 0 6.2% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.33) 0 0) 0 14.1% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 25% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.35) 0 0) 0 39.1% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.37) 0 0) 0 56.2% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 76.6% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.4) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
+        mask-image: linear-gradient(to bottom, var(--sidebar-background) 0, var(--sidebar-background) 20%, transparent 95%);
+        pointer-events: none;
+    }
+
+    /* ── The page waits [G10, loading = the oncoming tube and floor, the bars
+       as they were; Kenny, 2026-10-07 23:54]. While the page or the part it
+       sits in is busy (`aria-busy='true'` on the header or an ancestor), the
+       tube is an unlit track with the sun's ramp (pink, laser yellow, pink)
+       flowing through it from its start to its end, 8 beats (1800 ms) a
+       period, while the floor drives toward you, 4 beats (900 ms) a period:
+       the lines are born at the horizon and spread to the foot, one line a
+       step. Nothing flickers: every light glides. The bars under them fill as
+       they are (the signature below). Standing still, the tube shows the ramp
+       and the floor its lines, which says "busy" and claims no share. ─── */
+    [data-theme='synthwave'] :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::after {
+        background: var(--kp-sw-ramp-loop) 0 0 / 200% 100% repeat-x;
+        box-shadow: none;
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::after {
+            animation: kp-sw-flow calc(8 * var(--kp-sw-beat)) linear infinite reverse;
+        }
+
+        [data-theme='synthwave'] :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::before {
+            animation: kp-sw-floor-drive calc(4 * var(--kp-sw-beat)) linear infinite;
+        }
+    }
+
+    @keyframes kp-sw-flow {
+        to {
+            background-position: 200% 0;
+        }
+    }
+
+    @keyframes kp-sw-floor-drive {
+        from {
+            background-position:
+                0 6px,
+                0 1.6%,
+                0 6.2%,
+                0 14.1%,
+                0 25%,
+                0 39.1%,
+                0 56.2%,
+                0 76.6%,
+                0 100%,
+                0 0;
+        }
+
+        to {
+            background-position:
+                0 6px,
+                0 6.2%,
+                0 14.1%,
+                0 25%,
+                0 39.1%,
+                0 56.2%,
+                0 76.6%,
+                0 100%,
+                0 130%,
+                0 0;
+        }
+    }
+
+    [data-theme='synthwave'] .kp-page-header__inner::after {
+        content: '';
+        position: absolute;
+        display: none;
+        z-index: 2;
+        inset-block-end: -1px;
+        block-size: 5px;
+        background: var(--kp-core);
+        box-shadow:
+            var(--kp-sw-tube-up),
+            0 8px 18px hsl(from var(--primary) h s l / 0.5);
+        pointer-events: none;
+    }
+
+    /* The piece is anchored to a pseudo-element of the action, not to the
+       action: a popover's trigger names itself in an inline `anchor-name` (its
+       popover is positioned by it), and an inline name beats any sheet's, so
+       naming the action would either miss the trigger or steal its popover.
+       The action's `::after` is its own box, with no inline style, and is
+       named only while a hand is on it. A button's `::after` is the sun cut,
+       positioned 4 px outside its padding box (2 px past the frame, the frame
+       being 2 px), so the piece takes those 2 px back; an icon button's is a transparent box on its border box. */
+    @supports (anchor-name: --a) {
+        [data-theme='synthwave'] .kp-page-header__actions > .kp-icon-button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        [data-theme='synthwave'] .kp-page-header__actions > :is(.kp-button, .kp-icon-button):is(:hover, :focus-visible, :active)::after {
+            anchor-name: --kp-sw-hand;
+        }
+
+        [data-theme='synthwave']
+            .kp-page-header:has(.kp-page-header__actions > :is(.kp-button, .kp-icon-button):is(:hover, :focus-visible, :active))
+            .kp-page-header__inner::after {
+            display: block;
+            left: anchor(--kp-sw-hand left);
+            right: anchor(--kp-sw-hand right);
+        }
+
+        [data-theme='synthwave']
+            .kp-page-header:has(.kp-page-header__actions > .kp-button:is(:hover, :focus-visible, :active))
+            .kp-page-header__inner::after {
+            left: calc(anchor(--kp-sw-hand left) + 2px);
+            right: calc(anchor(--kp-sw-hand right) + 2px);
+        }
+
+        /* A press charges the piece: its bloom doubles and spreads and it
+           thickens, for as long as the press is held. */
+        [data-theme='synthwave']
+            .kp-page-header:has(.kp-page-header__actions > :is(.kp-button, .kp-icon-button):active:not(:disabled))
+            .kp-page-header__inner::after {
+            box-shadow:
+                0 0 3px var(--kp-core),
+                0 0 12px var(--primary),
+                0 0 30px hsl(from var(--primary) h s l / 0.9),
+                0 14px 32px hsl(from var(--primary) h s l / 0.75);
+            transform: scaleY(1.5);
+        }
+    }
+

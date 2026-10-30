@@ -1,0 +1,26 @@
+/* @part: card: signature layer */
+    /* The static plates are the box their ::after and a stretched link lie
+       over. The overlays are positioned already (and must stay so). */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-toast,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option
+        ) {
+        position: relative;
+    }
+

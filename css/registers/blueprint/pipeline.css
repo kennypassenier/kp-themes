@@ -1,0 +1,80 @@
+/* @part: pipeline: signature layer; also small-patterns */
+    /* The pipeline: a lane is a plate on the sheet (a ruler along its start edge and its foot, no fill, no frame), its
+       head a hatched section in the stage's own ink, the name lettering; a card is a part framed square, with the amber
+       witness lines when pointed at and the dimension across its foot when pressed; the open one has the pen's frame; a
+       dimmed one is dashed; a failure of the board is flagged ▲. */
+    [data-theme='blueprint'] .kp-pipeline__lane {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-pipeline__head {
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--kp-pipeline-tone) h s l / 0.5) 0 1px, transparent 1px 5px),
+            transparent;
+    }
+    [data-theme='blueprint'] :is(.kp-pipeline__name, .kp-pipeline__share, .kp-pipeline__sub, .kp-pipeline__meta, .kp-pipeline__none) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card {
+        border-radius: 0;
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card:is(button, a):hover:not([aria-current='true']) {
+        box-shadow:
+            -5px 0 0 -4px var(--accent),
+            5px 0 0 -4px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card:is(button, a):active:not([aria-current='true']) {
+        box-shadow:
+            -5px 0 0 -4px var(--accent),
+            5px 0 0 -4px var(--accent),
+            inset 0 -1px 0 var(--accent);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--primary);
+        box-shadow: none;
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-pipeline__card[data-kp-dimmed] {
+        background: transparent;
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-pipeline__mark {
+        border: 1px solid var(--kp-pipeline-tone, var(--border-strong));
+        border-radius: 0;
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s l / 0.5) 0 1px, transparent 1px 4px);
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+    }
+    [data-theme='blueprint'] .kp-pipeline__more {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Drawings for an empty state: the working drawing (js/art.js). The pen draws each stroke in cyan along its line on the
+       plotter's feed, three units, half a unit after the one before; when the line is drawn it is inked in the finished
+       line. Reduced, the drawing is inked. */
+    [data-theme='blueprint'] .kp-art {
+        display: block;
+        --kp-art-ink: var(--border-strong);
+        --kp-art-line: hsl(from var(--border-strong) h s l / 0.55);
+        --kp-art-stroke: 1.25px;
+    }
+    [data-theme='blueprint'] .kp-art > g[data-kp-art-set='drawing'] {
+        display: inline;
+    }
+    [data-theme='blueprint'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }

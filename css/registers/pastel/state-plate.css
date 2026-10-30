@@ -1,0 +1,80 @@
+/* @part: state-plate: signature layer */
+    /* The empty state: a white plate with a dotted riso disc, its corner
+       folded over for real (update 1, Kenny 2026-10-14: "de lip hangt wel
+       omhoog … maar door schaduw of weet ik veel ziet het er niet goed
+       uit"): the plate is cut along the crease, its border, paper and
+       shadow together, so the page shows through, and the lip is the corner
+       folded onto the plate, the sticker's back with the plate's own rounded
+       corner and border, the crease one line. */
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed]))) {
+        --kp-sig-pa-lip: 1.9rem;
+        position: relative;
+        padding: 1.25rem 1.5rem 1.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--card);
+        color: var(--muted-foreground);
+        box-shadow: 0 3px 0 var(--border-strong);
+        clip-path: polygon(
+            -1rem -1rem,
+            calc(100% + 1rem) -1rem,
+            calc(100% + 1rem) calc(100% - var(--kp-sig-pa-lip) - 1rem),
+            calc(100% - var(--kp-sig-pa-lip) - 1rem) calc(100% + 1rem),
+            -1rem calc(100% + 1rem)
+        );
+    }
+
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed]))):dir(rtl) {
+        clip-path: polygon(
+            calc(100% + 1rem) -1rem,
+            -1rem -1rem,
+            -1rem calc(100% - var(--kp-sig-pa-lip) - 1rem),
+            calc(var(--kp-sig-pa-lip) + 1rem) calc(100% + 1rem),
+            calc(100% + 1rem) calc(100% + 1rem)
+        );
+    }
+
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
+        content: '';
+        display: block;
+        inline-size: 3.25rem;
+        block-size: 3.25rem;
+        margin: 0 auto 0.75rem;
+        background:
+            radial-gradient(circle, var(--primary) 1.3px, transparent 1.7px) 0 0 / 6px 6px,
+            radial-gradient(circle, var(--kp-sig-pa-pass-c) 1.3px, transparent 1.7px) 2px 2px / 6px 6px;
+        mask: radial-gradient(circle closest-side, black 0 calc(100% - 1px), transparent 100%);
+    }
+
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-end: 0;
+        inline-size: var(--kp-sig-pa-lip);
+        block-size: var(--kp-sig-pa-lip);
+        box-sizing: border-box;
+        border: 1px solid var(--border-strong);
+        border-block-end: 0;
+        border-inline-end: 0;
+        border-radius: 0;
+        border-start-start-radius: var(--kp-sig-pa-r-plate);
+        background: linear-gradient(
+            calc(135deg - 90deg * (1 - var(--kp-sig-pa-dir))),
+            var(--muted) calc(50% - 1px),
+            hsl(from var(--border-strong) h s l / 0.7) calc(50% - 1px) 50%,
+            transparent 50%
+        );
+        box-shadow: none;
+    }
+
+    [data-theme='pastel'] .kp-empty__title {
+        margin: 0 0 0.25rem;
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='pastel'] .kp-empty__body {
+        margin: 0;
+    }
+

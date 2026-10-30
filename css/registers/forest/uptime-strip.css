@@ -1,0 +1,41 @@
+/* @part: uptime-strip: signature layer; also command-block */
+    /* Uptime: every period is a plank of the strip, the leaf corner on its small scale, up in the wood's grain; the
+       one pointed at is blazed; a failure to read is a field note. */
+    [data-theme='forest'] .kp-uptime {
+        --kp-uptime-cell-radius: 0 3px;
+        --kp-uptime-gap: 3px;
+    }
+    [data-theme='forest'] .kp-uptime__cell[data-kp-tone='up'] {
+        --kp-uptime-pattern: var(--kp-sig-fo-wood);
+    }
+    [data-theme='forest'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline-style: dashed;
+        outline-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: 0;
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-uptime__axis, .kp-uptime__info-figures) {
+        font-style: italic;
+    }
+
+    /* Command: a kraft plate with the leaf corner; the shell is a wooden tag, the prompt clay, the place a note. */
+    [data-theme='forest'] .kp-command {
+        --kp-command-prompt-ink: var(--accent-foreground);
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-command__head {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+    }
+    [data-theme='forest'] .kp-command__shell {
+        padding: 0.1rem 0.5rem;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-command__where {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+        font-style: italic;
+    }
+

@@ -1,0 +1,80 @@
+/* @part: card: register layer; also dialog */
+    /* ── The dossier card: the stamp (a rubber stamp, rotated), the
+   redactions that clear together on the trigger [demo §1] ───────────── */
+
+    [data-theme='nostromo'] .kp-card {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'][data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        inset-block-start: 0.9rem;
+        inset-inline-end: 1.1rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--primary-foreground);
+        background: var(--selected);
+        border: 1px solid var(--primary);
+        border-radius: var(--kp-sig-no-tape);
+        padding: 0.25rem 0.55rem;
+        transform: rotate(-5deg);
+    }
+
+    [data-theme='nostromo'] .kp-card[data-kp-open][data-kp-label-open]::before {
+        content: attr(data-kp-label-open);
+    }
+
+    /* The redactions: ink over the phrase until the trigger opens the
+   file, then they clear one after another, staggered — the way label
+   tape peels, one motion, not a flicker. */
+    [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark {
+        background: var(--kp-redact-ink);
+        color: transparent;
+        border-radius: var(--kp-sig-no-tape);
+        box-shadow: none;
+        padding: 0 0.15em;
+    }
+
+    [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background: transparent;
+        color: var(--card-foreground);
+        font-weight: 600;
+        box-shadow: inset 0 -0.4em 0 0 var(--kp-underline);
+    }
+
+    [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+        transition-delay: var(--kp-reveal-stagger);
+    }
+
+    [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+        transition-delay: calc(2 * var(--kp-reveal-stagger));
+    }
+
+    /* ── The confirm dialog and its siblings ──────────────────────────── */
+
+    [data-theme='nostromo'] .kp-dialog,
+    [data-theme='nostromo'] .kp-popover,
+    [data-theme='nostromo'] .kp-menu,
+    [data-theme='nostromo'] .kp-toast,
+    [data-theme='nostromo'] .kp-tooltip,
+    [data-theme='nostromo'] .kp-confirm,
+    [data-theme='nostromo'] .kp-datepicker__panel,
+    [data-theme='nostromo'] .kp-combobox__list,
+    [data-theme='nostromo'] .kp-palette,
+    [data-theme='nostromo'] .kp-theme-menu__list {
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+

@@ -1,0 +1,8 @@
+/* @part: form-field: signature layer */
+    /* The theme's size motion moves a box one line per 80 ms frame. A text box that takes a whole mail (87 lines at 390 px)
+       therefore glided for 6960 ms with its field clipped, and the box under it stood on the unfinished one. A growing
+       text box keeps the line-by-line steps but takes the theme's strike time for all of them (js/motion.js reads
+       `--kp-size-step`; 0 means the size time). */
+    [data-theme='nostromo'] .kp-field:has(> .kp-autosize) {
+        --kp-size-step: 0ms;
+    }

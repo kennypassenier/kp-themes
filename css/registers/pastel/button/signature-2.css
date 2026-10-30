@@ -1,0 +1,33 @@
+/* @part: button: signature layer; also table, form-field, alarm */
+    /* A cell of a grid and a box that scrolls take the line inside. */
+    [data-theme='pastel']
+        :is(.kp-table[role='grid'] :is(th, td), .kp-table-wrap, .kp-datatable > .kp-table-wrap, .kp-chart__plot, .kp-kpi__chart-plot):focus-visible {
+        outline-offset: -3px;
+        box-shadow: none;
+    }
+
+    /* A field's line goes round its box, the box stays as it is. */
+    [data-theme='pastel'] :is(.kp-field__input, .kp-combobox__input):focus-visible {
+        box-shadow: none;
+    }
+
+    /* The alarm takes no line: in its auto mode the whole screen has focus. */
+    [data-theme='pastel'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-menu__item) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land),
+                background-color var(--fx-duration) ease,
+                border-color var(--fx-duration) ease,
+                color var(--fx-duration) ease;
+        }
+
+        [data-theme='pastel'] :is(.kp-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle)::after {
+            transition: scale var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+

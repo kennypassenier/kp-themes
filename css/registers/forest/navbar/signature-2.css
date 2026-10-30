@@ -1,0 +1,25 @@
+/* @part: navbar: signature layer */
+    [data-theme='forest'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: hsl(from var(--primary) h s l / 0.55);
+    }
+    [data-theme='forest'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 1px;
+        inset-inline-start: 0;
+        inline-size: 6px;
+        block-size: 6px;
+        border-radius: 0 100%;
+        background: var(--primary);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: hsl(from var(--primary) h s l / 0.55);
+        }
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -6px;
+            inset-inline-start: 0;
+        }
+    }
+

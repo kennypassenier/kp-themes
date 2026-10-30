@@ -1,0 +1,78 @@
+/* @part: form-field: signature layer; also popover, toast */
+    [data-theme='dark'] .kp-field__check {
+        appearance: none;
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.1rem;
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-field__check::before,
+    [data-theme='dark'] .kp-field__check::after {
+        grid-area: 1 / 1;
+    }
+
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(var(--primary), var(--primary)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-radius: 0;
+        background: none;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-toast {
+        position: relative;
+    }
+
+    [data-theme='dark'] .kp-toast:not([class*='kp-toast--']) {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    [data-theme='dark'] .kp-tooltip {
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.75rem;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+        box-shadow: none;
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+        clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+    }
+

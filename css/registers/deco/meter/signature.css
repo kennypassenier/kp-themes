@@ -1,0 +1,44 @@
+/* @part: meter: signature layer */
+    /* The meter (the share against a limit) is the same inlay in little: a
+       gold hairline track, the share a heavier gold line, the mark a hollow
+       lozenge, nothing lit or glowing; loading is the doors, above. */
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.75rem;
+        --kp-sig-meter-mo-ink: var(--primary);
+        --kp-sig-meter-mo-halo: var(--background);
+        --kp-sig-meter-mo-sign: '▼';
+        border-radius: 0;
+        background: var(--kp-sig-deco-dim, linear-gradient(hsl(from var(--primary) h s l / 0.5) 0 0)) 0 50% / 100% 1px no-repeat;
+        box-shadow: none;
+    }
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading])::before {
+        inset-block: calc(50% - 1px);
+        border-radius: 0;
+        background: var(--kp-sig-deco-share, var(--kp-meter-fill-colour));
+        filter: none;
+    }
+
+    [data-theme='deco'] .kp-meter__mark {
+        inset-block: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-block-end: auto;
+        inset-inline-start: 50%;
+        box-sizing: border-box;
+        inline-size: 9px;
+        block-size: 9px;
+        border: 1px solid var(--primary);
+        background: var(--kp-sig-deco-lac);
+        clip-path: none;
+        translate: -50% -50%;
+        rotate: 45deg;
+    }
+

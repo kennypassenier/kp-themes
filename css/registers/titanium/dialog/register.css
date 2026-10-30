@@ -1,0 +1,28 @@
+/* @part: dialog: register layer; also theme-menu */
+    /* ── Panels: a quiet dark ground, the theme's own edge ─────────────── */
+
+    [data-theme='titanium'] .kp-dialog,
+    [data-theme='titanium'] .kp-popover,
+    [data-theme='titanium'] .kp-menu,
+    [data-theme='titanium'] .kp-toast,
+    [data-theme='titanium'] .kp-tooltip,
+    [data-theme='titanium'] .kp-confirm,
+    [data-theme='titanium'] .kp-datepicker__panel,
+    [data-theme='titanium'] .kp-combobox__list,
+    [data-theme='titanium'] .kp-palette,
+    [data-theme='titanium'] .kp-theme-menu__list {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+        box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='titanium'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+

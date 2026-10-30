@@ -1,0 +1,45 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* ── Identity mark: the plate in the name's colour, cut at its end corner; the letters are the machine's mono ── */
+    [data-theme='cyberpunk'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        font-family: var(--kp-mono);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        clip-path: var(--kp-cp4-cut);
+    }
+    [data-theme='cyberpunk'] .kp-idmark--round {
+        border-radius: 0;
+        clip-path: polygon(
+            var(--kp-cp4-n) 0,
+            100% 0,
+            100% calc(100% - var(--kp-cp4-n)),
+            calc(100% - var(--kp-cp4-n)) 100%,
+            0 100%,
+            0 var(--kp-cp4-n)
+        );
+    }
+    [data-theme='cyberpunk'] .kp-idmark--glyph {
+        clip-path: var(--kp-cp4-cut-open);
+    }
+    [data-theme='cyberpunk'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        box-shadow: none;
+    }
+    [data-theme='cyberpunk'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='cyberpunk'] .kp-idmark[data-kp-idmark-selected] {
+        clip-path: none;
+        box-shadow: none;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='cyberpunk'] .kp-idmark-group > .kp-idmark {
+        box-shadow: none;
+    }
+    [data-theme='cyberpunk'] .kp-idmark-group__more {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+    }
+

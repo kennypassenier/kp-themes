@@ -2,105 +2,263 @@
   "output": "css/pastel-register.css",
   "items": [
     {
-      "open": "/* The redaction plate's alpha, registered so it can be transitioned: an\n   unregistered custom property flips at the end of its transition instead\n   of passing through values, and the plate's background reads it through\n   color-mix(). 1 is the covered plate, 0 the cleared one [scope-94]. */\n@property --kp-redact-alpha {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* The bar's mega menu is held on screen while a transition on the panel plays (js/components.js\n   settleClosing()): this number, which pastel transitions over the sheet's time, is that transition\n   (review round 2, 2026-10-13; brutalism's --kp-sig-br-hold). */\n@property --kp-sig-pastel-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "file": "properties/top-level.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
+        "tokens/register.css",
         "base.css",
-        "the-hooks.css",
-        "the-navbar.css",
-        "the-sticker.css",
-        "card.css",
-        "windows.css",
-        "data.css",
-        "the-demos-own-pieces.css",
-        "the-alarm.css"
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "dialog.css",
+        "toast/register.css",
+        "alert.css",
+        "page-header/register.css",
+        "small-patterns/register.css",
+        "table.css",
+        "breadcrumb-pagination.css",
+        "combobox.css",
+        "page-header/register-2.css",
+        "motion/register.css",
+        "navbar/register-2.css",
+        "sidenav/register.css",
+        "button/register-2.css",
+        "navbar/register-3.css",
+        "alarm/register.css",
+        "sidenav/register-2.css"
       ],
       "close": "}\n\n"
     },
     {
-      "open": "/* ── Signature: pastel's grammar [scope-141] ───────────────────────────── */\n/* Kenny approved pastel's character in full on 2026-10-14 03:23\n   (research/pastel-character/decided.json, themes/pastel/CHARACTER.md §1,\n   G1-G20): a risograph-printed sticker sheet in a planner. Everything that\n   happens here happens to paper: it is PRINTED TWICE AND STUCK ON. A part's\n   second pass (a flat silhouette in the second ink, --fx-overprint, no words)\n   springs from a wide misregistration into its rest 6 px off register, down\n   and toward the end, where it stays as the part's flat shadow; 120 ms later\n   the part itself swings down from its top-start corner onto it, on the soft\n   landing (one 8 % overshoot, settled once). One landing is 560 ms; a close\n   is that landing played backwards, frame for frame. A part fixed to the\n   page then has a thumbtack pushed in at its top centre, which comes out\n   first when it leaves. Hover peels the top-end corner into a fold, focus is\n   the dashed line alone, a press sticks the part down flat, a live change\n   wobbles, and loading is the pom-pom caterpillar: everything that waits\n   becomes caterpillar (js/loading-pieces.js adds its pom-poms, head and\n   legs; the spinner is the caterpillar going round a day sticker).\n\n   HOW THE TWO PASSES ARE TWO LAYERS. The demo draws the pass and the part as\n   two sibling boxes, so the part can be invisible while its pass is already\n   there. In the package a part is one element, and its opacity and its turn\n   carry everything inside it, pseudo-elements included; so the pass is\n   drawn OUTSIDE the part wherever the part can be faded as a whole:\n     A. a part in the top layer (a dialog, a popover, a menu, the date\n        picker's panel, the combobox's list): its own ::backdrop, placed on\n        the part by anchor positioning (`position-anchor: auto`, which reads\n        the part's layout box, never its turn). A modal's dim is that\n        backdrop's 200vmax border, so a click outside still reaches it;\n     A2. a part hanging in its holder (the bar's dropdown and mega menu, a\n        tooltip): the holder's ::after, anchored to the part\n        (`anchor-scope` keeps the name to the holder);\n   and where neither exists (a toast, an alert, the tour's card, the side\n   navigation, the busy panels), the part draws its own plate and pass:\n     B. the plate is its ::after and the pass its ::before, both under its\n        words; the part does not fade as a whole, its plate and its children\n        follow `--kp-sig-pa-ink`, and the pass counter-turns against the\n        part's swing, so on screen it only slides, as the demo's does.\n   Two registered numbers carry the clock (--kp-sig-pa-pass for the pass,\n   --kp-sig-pa-ink for the part), so anything that reads them follows the\n   one animation that runs; js/motion.js keeps and reverses that animation\n   (and a ::backdrop's) for every close, so a close stays the open backwards.\n\n   Without anchor positioning (`@supports not (anchor-name: --a)`) every\n   part shows its pass at rest as a flat box-shadow and opens with the swing\n   alone. Every motion sits under prefers-reduced-motion: no-preference; the\n   reduced pose is the finished picture (G19). Colours are tokens only. */\n\n@property --kp-sig-pa-ink {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-pa-pass {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@layer kp.signature {\n",
+      "file": "properties/top-level-2.css"
+    },
+    {
+      "open": "@layer kp.signature {\n",
       "files": [
-        "the-grammar-as-tokens-g1.css",
-        "the-anchors-keyframes-0a.css",
-        "the-pass-outside-the-part.css",
-        "the-pass-in-the-holder-a2.css",
-        "a-part-that-draws-its-own.css",
-        "the-alarm-scope-94-scope.css",
-        "leaving-and-arriving-g12.css",
-        "paper-at-rest.css",
-        "pointing-focus-press-g13.css",
-        "tones-the-live-change-g8.css",
-        "loading.css",
-        "the-spinner.css",
-        "the-signature-elements.css",
-        "the-meter-with-a-mark-this.css"
+        "tokens/signature.css",
+        "card/signature.css",
+        "popover/signature.css",
+        "toast/signature.css",
+        "sidenav/signature.css",
+        "motion/signature.css",
+        "popover/signature-2.css",
+        "command-palette.css",
+        "motion/signature-2.css",
+        "navbar/signature.css",
+        "popover/signature-3.css",
+        "navbar/signature-2.css",
+        "toast/signature-2.css",
+        "motion/signature-3.css",
+        "navbar/signature-3.css",
+        "alarm/signature.css",
+        "datatable.css",
+        "month-heatmap/signature.css",
+        "card/signature-2.css",
+        "upload-wizard/signature.css",
+        "button/signature.css",
+        "menu-button.css",
+        "button/signature-2.css",
+        "key-figures.css",
+        "kitchen-timers/signature.css",
+        "progress-spinner-skeleton/signature.css",
+        "signature.css",
+        "month-heatmap/signature-2.css",
+        "motion/signature-4.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "switch.css",
+        "form-field/signature.css",
+        "popover/signature-4.css",
+        "upload-wizard/signature-2.css",
+        "state-plate.css",
+        "navbar/signature-4.css",
+        "meter.css",
+        "tokens/signature-2.css",
+        "motion/signature-5.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* The words of a part that draws its own plate and pass (the signature\n   layer, section 4) fade with its plate on `--kp-sig-pa-ink`. In kp.base, so\n   a component's own opacity for one of its parts (a disabled control) still\n   wins and that part keeps its own look. */\n@layer kp.base {\n",
+      "files": [
+        "toast/base.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "segmented-toolbar.css"
+      "open": "/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Pastel's own (themes/pastel/CHARACTER.md): a tile is a sticker on its flat plum peel, a plate's round corner (G6, G7);\n   pointing lifts it 2 px on its peel and curls its top-end corner into a fold of its back (G14); a press sticks it down\n   flat (G16); focus is the dashed plum line alone (G15); a tone is a sticker on its own plate with its own peel, never an\n   edge (G8); what waits becomes the pom-pom caterpillar (G10, b-bug-6): a heat grid's row of cells is one caterpillar\n   (js/loading-pieces.js), the matrix and the counts are pom-poms whose hump runs through them; what runs is washi tape,\n   its stripes drifting start to end. Every motion on the landing curve. */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows/signature.css",
+        "facet-list.css",
+        "heat-grid.css",
+        "matrix.css",
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Pastel's own (themes/pastel/CHARACTER.md): the separator is the divider's row of plum beads, stood upright,\n   and lying down across the phone's list as a dotted bead line. A day on the axis is a sticker: pointing lifts it on\n   its plum peel, pressed it is stuck down, the pink chip in a plum ring (G5). A series' finished run stands on a peel of\n   its own colour; the upcoming list's day rule is the beads; the facet pattern is a rounded sticker on a little peel. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-fourth-adoption-round.css"
+      "open": "/* ── The fourth adoption round in this theme [kpadopt4]: data pieces ──\n   Pastel's own (themes/pastel/CHARACTER.md): a mark, a plate or a part is a sticker or a taped-in note. A mark stands on\n   its flat peel, a figure that says a tone is a sticker on the tone's plate with its own peel (G8), what is pointed at\n   lifts on its peel (G14), a live number wobbles round its foot (G9), a ruled line is a thread of pearls (G18), and a\n   plate that is stuck to the page carries one strip of washi tape (G7). The part that is held in the hand carries none.\n   Every colour is a token; every motion sits under no-preference and lands on the soft landing (G1). */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "code-block.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "rows-cards-and-choices.css"
+      "open": "/* ── Rows, cards and choices [kpadopt4]: tiles, status rows, the action list ── */\n@layer kp.signature {\n",
+      "files": [
+        "forms.css",
+        "status-rows/signature-2.css",
+        "action-columns.css",
+        "small-patterns/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "time-and-flows.css"
+      "open": "/* ── Time and flows [kpadopt4]: moments, the journey, the pipeline, the drawings ── */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-4.css",
+        "step-list.css",
+        "pipeline.css",
+        "small-patterns/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-calm-components.css"
+      "open": "/* ── The calm components and the seven new ones [kpadopt4]: chips, quantity, checklist, timers, steps, wheel,\n   uptime, command, disc, countdown, range, compare ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-2.css",
+        "checklist-sink.css",
+        "kitchen-timers/signature-2.css",
+        "focus-steps.css",
+        "wheel.css",
+        "uptime-strip.css",
+        "command-block.css",
+        "countdown.css",
+        "compare-slider.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt5-and-kpadopt6.css"
+      "open": "/* ── The kpadopt5 and kpadopt6 components in pastel [t56-pastel-1018] ──────────────────────────────────────────────\n   What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */\n@layer kp.signature {\n",
+      "files": [
+        "request-inspector.css",
+        "auto-refresh.css",
+        "quote-card.css",
+        "gallery.css",
+        "card/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "t56-q.css"
+      "open": "/* ── t56-q: the failed chart is the failed plate ── */\n@layer kp.signature {\n",
+      "files": [
+        "time-chart/signature.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q/base.css"
+      "open": "/* ── end t56-q ── */\n\n/* ── t56-q: the too-early plate stays off the axis ── */\n@layer kp.signature {\n",
+      "files": [
+        "time-chart/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q/end-t56-q.css"
+      "open": "/* ── end t56-q ── */\n\n/* ── t56-q2 people: the fold keeps off a small button's label ── */\n@layer kp.signature {\n",
+      "files": [
+        "button/signature-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-people.css"
+      "open": "/* ── end t56-q2 people ── */\n\n/* ── t56-q2 confirm: Stop keeps its plate on the red card ── */\n@layer kp.signature {\n",
+      "files": [
+        "question-card.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-confirm.css"
+      "open": "/* ── end t56-q2 confirm ── */\n\n/* ── t56-q2 calm: the calendar's caterpillar stays in the card and the box ── */\n@layer kp.signature {\n",
+      "files": [
+        "month-heatmap/signature-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-calm.css"
+      "open": "/* ── end t56-q2 calm ── */\n\n/* ── t56-q2 updates: a version that wraps stays a sticker ── */\n@layer kp.signature {\n",
+      "files": [
+        "badge.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-updates.css"
+      "open": "/* ── end t56-q2 updates ── */\n\n/* ── t56-q2 choose: the waiting picker's panel fits its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "usual-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-choose.css"
+      "open": "/* ── end t56-q2 choose ── */\n\n/* ── t56-q2 schedule: a disabled quick pick is dimmed with its chips ── */\n@layer kp.signature {\n",
+      "files": [
+        "weekday-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/base.css"
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── t56-q2 schedule: the snooze tiles share one grid ── */\n@layer kp.signature {\n",
+      "files": [
+        "snooze-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── graph loading · shape 1 · Candy beads and licorice: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-b-ps-load.css"
+      "open": "/* ── graph loading · r3-b-ps-load-4 · The sprinkle drift (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

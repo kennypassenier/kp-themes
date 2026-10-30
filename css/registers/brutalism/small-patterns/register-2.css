@@ -1,0 +1,55 @@
+/* @part: small-patterns: register layer; also tree-reorder-split, accordion */
+    [data-theme='brutalism'] .kp-timeline {
+        border-inline-start: var(--kp-line) solid var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-timeline__marker {
+        background: var(--secondary);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    /* A time is a date: bold mono in ink [G15]. */
+    [data-theme='brutalism'] .kp-timeline__when {
+        font-family: var(--theme-font-mono);
+        font-size: max(0.75rem, 0.9375em);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-tree {
+        font-weight: 500;
+    }
+
+    /* A branch's children glide open and shut (js/motion.js glideGroup(),
+       lesson 26): shutting, the group is kept drawn until the glide is over. */
+    [data-theme='brutalism'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='brutalism'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The accordion [gap-12]: heavy capitals like its tabs, and open is struck under with its own line weight. */
+    [data-theme='brutalism'] .kp-accordion__summary {
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-accordion__summary::marker {
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline;
+        text-decoration-thickness: var(--kp-line);
+    }
+
+    [data-theme='brutalism'] .kp-reorder {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+

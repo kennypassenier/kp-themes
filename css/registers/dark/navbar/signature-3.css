@@ -1,0 +1,96 @@
+/* @part: navbar: signature layer */
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='dark'] .kp-nav {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    @keyframes kp-sig-dark-sweep-back {
+        0% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        3% {
+            mask-size:
+                4% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        72% {
+            mask-size:
+                96% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        75%,
+        100% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                100% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+    }
+
+    @keyframes kp-sig-dark-film-back {
+        0% {
+            --kp-sig-dk-turn: 0deg;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-turn: 345deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-turn: 360deg;
+        }
+    }
+
+    @keyframes kp-sig-dark-pass-line-back {
+        0% {
+            translate: calc(-100% * var(--kp-sig-dk-s)) 0;
+            opacity: 0;
+        }
+
+        3% {
+            translate: calc(-96% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        69% {
+            translate: calc(-8% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+

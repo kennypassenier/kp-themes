@@ -1,0 +1,41 @@
+/* @part: card: register layer */
+    /* The dossier: a tape card; the label is the OSD's REC stamp; the
+       redactions are tracking noise that clears when the file is opened. */
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-label]::before {
+        content: '● ' attr(data-kp-label);
+        position: absolute;
+        top: 0.9rem;
+        right: 1.4rem;
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.05em -0.15em;
+        background: repeating-linear-gradient(90deg, var(--primary) 0 2px, var(--card) 2px 3px, var(--accent) 3px 4px, var(--card) 4px 7px);
+        opacity: 0.9;
+        transform: scaleX(0);
+        transform-origin: right center;
+    }
+
+    [data-theme='synthwave'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
+        transform: scaleX(1);
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        text-shadow: var(--kp-tube-cyan);
+    }
+

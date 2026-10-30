@@ -1,0 +1,47 @@
+/* @part: master-detail: register layer; also movable-grid, combobox, form-field, forms */
+    /* ── Layout roots the rules above reach only through their parts ─── */
+
+    [data-theme='nostromo'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+
+    [data-theme='nostromo'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    [data-theme='nostromo'] .kp-combobox,
+    [data-theme='nostromo'] .kp-datepicker,
+    [data-theme='nostromo'] .kp-colorpicker,
+    [data-theme='nostromo'] .kp-shortcuts,
+    [data-theme='nostromo'] .kp-tabs {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] .kp-split {
+        gap: 1px;
+        background: var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-split__separator {
+        background: var(--border-strong);
+        inline-size: 1px;
+    }
+
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='nostromo'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 1px;
+    }
+
+    [data-theme='nostromo'] .kp-grid {
+        gap: 1px;
+    }
+
+    [data-theme='nostromo'] .kp-grid__tile,
+    [data-theme='nostromo'] .kp-split__pane {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+

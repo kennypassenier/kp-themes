@@ -1,0 +1,68 @@
+/* @part: segmented-toolbar: signature layer; also conversation, qr-link, code-block, button */
+    @media (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-segmented:not(.kp-segmented--chips, .kp-segmented--block) {
+            --kp-seg-tracking: 0.04em;
+            --kp-seg-size: 0.72rem;
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+        [data-theme='brutalism'] .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow {
+            column-gap: 0.5rem;
+        }
+        [data-theme='brutalism'] .kp-rating--display .kp-rating__body {
+            grid-auto-flow: row;
+            row-gap: 0.125rem;
+        }
+        [data-theme='brutalism'] .kp-calendar__day .kp-calendar__num {
+            font-size: 0.875rem;
+        }
+        [data-theme='brutalism'] .kp-statusrow__action.kp-button {
+            padding-inline: 0.625rem;
+            letter-spacing: 0.04em;
+        }
+    }
+
+    /* Slabs (G7): a bubble, a gallery tile and the plate of a QR code are small parts or plates in the ink line on their hard
+       shadow; the sender's own bubble is the yellow of a hand (G5). The code keeps its white quiet zone inside the line. */
+    [data-theme='brutalism'] .kp-thread__bubble {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+        margin-inline-end: 3px;
+        margin-block-end: 3px;
+    }
+    [data-theme='brutalism'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-thread__item[data-kp-first='true'] > .kp-thread__bubble {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-gallery__tile {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-qr__plate {
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        overflow: visible;
+        box-shadow: 6px 6px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-qr__svg {
+        padding: 0;
+    }
+
+    /* The code box's tools wrap under the title when the line is short (Pretty, Raw, Wrap and Copy are chunkier in the slab). */
+    [data-theme='brutalism'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='brutalism'] .kp-code__head {
+        min-inline-size: 0;
+    }
+    @media (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-button--sm {
+            letter-spacing: 0.04em;
+            padding-inline: 0.75rem;
+        }
+    }

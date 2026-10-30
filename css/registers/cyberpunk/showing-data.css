@@ -1,0 +1,79 @@
+/* @part: showing-data: register layer; also badge, page-header, combobox, progress-spinner-skeleton */
+    [data-theme='cyberpunk'] .kp-error {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-error h1 {
+        color: var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--muted-foreground);
+        border-top: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-split {
+        gap: 3rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-grid {
+        gap: 2px;
+        background: var(--kp-hairline);
+    }
+
+    /* ── Badges, tags, status ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-badge,
+    [data-theme='cyberpunk'] .kp-tag,
+    [data-theme='cyberpunk'] .kp-health {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag and the health keep this register's. */
+    [data-theme='cyberpunk'] .kp-tag,
+    [data-theme='cyberpunk'] .kp-health {
+        font-size: 0.72rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-badge {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-tag {
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-health__dot {
+        border-radius: 0;
+        transform: rotate(45deg) scale(0.8);
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton {
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--card), var(--secondary), var(--card));
+    }
+
+    [data-theme='cyberpunk'] .kp-spinner {
+        border-color: var(--primary) transparent var(--accent) transparent;
+    }
+
+    /* ── Text shapes: identifiers as ornament ─────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-id,
+    [data-theme='cyberpunk'] .kp-url,
+    [data-theme='cyberpunk'] .kp-masked,
+    [data-theme='cyberpunk'] .kp-numeric,
+    [data-theme='cyberpunk'] .kp-timestamp,
+    [data-theme='cyberpunk'] .kp-truncate,
+    [data-theme='cyberpunk'] .kp-cell-break,
+    [data-theme='cyberpunk'] .kp-cell-truncate,
+    [data-theme='cyberpunk'] .kp-copyable,
+    [data-theme='cyberpunk'] .kp-shortcuts {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.04em;
+    }
+

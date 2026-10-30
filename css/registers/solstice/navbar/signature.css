@@ -1,0 +1,141 @@
+/* @part: navbar: signature layer; also menu-button */
+    /* A menu and a popover are kindled (G3, the dome above); they close as it played
+       backwards (js/motion.js playClose, the ghost of a hidden popover). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+    }
+
+    /* The rest of what opens takes the theme's own entrance [all-themes, 2026-10-13, lesson 38:
+       these opened by the package's bare fade, or by nothing].
+       Every one of them is kindled, G3's dome (480 ms on G1's coming curve), so every part
+       that opens in solstice opens one way (coordinator, 2026-10-13; G3 does not name these
+       parts, the dome is borrowed for them).
+       - The command palette and the tour's card are dialogs: js/motion.js plays the dome
+         backwards to close the palette and js/tour.js to end the tour. A tour step is no
+         arrival: the card walks, its shape kept.
+       - The combobox's list and the date picker's panel are lists that float over the page:
+         the dome, played backwards as they close (the ghost of a hidden
+         popover, js/motion.js; the date picker's playClose(), whose name stays the same on the
+         union of its opening mark and the closing marks, lesson 10).
+       - The page's dim round the tour's target and its ring come in on the card's time and
+         curve and go back on the curve turned round (css/components.css reads the tokens). */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The command palette is kindled (G3's dome, as the dialog it is; Kenny,
+           2026-10-13: the dawn was "not the right animation for this theme"). js/motion.js
+           plays it in the dialog's close time (480 ms) and backwards to close it. */
+        [data-theme='solstice'] .kp-palette {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+        }
+
+        [data-theme='solstice'] {
+            --kp-tour-dim-close: 0 0 0 0 transparent;
+            --kp-tour-dim-time: var(--kp-sig-solstice-open);
+            /* G1's going curve: the coming curve turned round. */
+            --kp-tour-dim-close-ease: cubic-bezier(0.12, 0, 0.39, 0);
+        }
+
+        /* `backwards`, not `both`: a ring a finished animation holds cannot be taken back by
+           the close's transition (lesson 21). */
+        [data-theme='solstice'] [data-kp-tour-target] {
+            animation: kp-sig-solstice-tour-ring var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+            transition:
+                box-shadow var(--kp-sig-solstice-open) var(--kp-sig-solstice-come),
+                outline-color var(--kp-sig-solstice-open) var(--kp-sig-solstice-come);
+        }
+
+        @keyframes kp-sig-solstice-tour-ring {
+            from {
+                outline-color: transparent;
+            }
+        }
+
+        [data-theme='solstice']
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        /* The bar's dropdown and mega menu are the header's menu (G3): they are kindled as a
+           menu is and go as that played backwards (the same keyframes under a second name, so
+           the browser restarts them). Once the pointer or the focus has left a dropdown,
+           js/components.js marks its item `[data-kp-nav-closing]` for `--kp-nav-close-time`
+           (Firefox does not hold `display`, lesson 36) and the rule below keeps it drawn; the
+           mega menu's item is held until a transition on the panel has played, which is the
+           `--kp-sig-solstice-hold` below. It replaces the package's opacity fade. */
+        [data-theme='solstice'] {
+            --kp-nav-close-time: var(--kp-sig-solstice-open);
+        }
+
+        [data-theme='solstice'] .kp-nav__menu {
+            --kp-sig-solstice-hold: 0;
+            transition: --kp-sig-solstice-hold var(--kp-sig-solstice-open) linear;
+        }
+
+        [data-theme='solstice']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-solstice-hold: 1;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
+        }
+
+        [data-theme='solstice']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide {
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
+        }
+
+        /* On a phone the bar's menu is its list of links under the toggle: it is kindled as
+           the menu is and goes as that played backwards, in the same 480 ms (js/components.js
+           keeps it open `--kp-nav-close-time` while `[data-kp-nav-closing]`). The lists nested
+           in it are its own rows and play nothing of their own. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+            }
+
+            [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
+            }
+
+            [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+        }
+
+        /* G3's dome under a second name, played in reverse for a close that must start as
+           an animation of its own (the bar's panels). */
+        @keyframes kp-sig-solstice-kindled-back {
+            from {
+                clip-path: ellipse(0 0 at 50% 100%);
+                filter: brightness(1.35) saturate(1.3);
+            }
+
+            to {
+                clip-path: ellipse(150% 150% at 50% 100%);
+                filter: brightness(1) saturate(1);
+            }
+        }
+    }
+

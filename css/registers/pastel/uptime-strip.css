@@ -1,0 +1,25 @@
+/* @part: uptime-strip: signature layer */
+    /* Uptime: every period is a small sticker standing on its own peel; the one pointed at grows into the room above,
+       its ring the dashed plum line; a failure to read is a sticker on the red's plate. */
+    [data-theme='pastel'] .kp-uptime {
+        --kp-uptime-cell-radius: 4px;
+        --kp-uptime-gap: 3px;
+    }
+    [data-theme='pastel'] .kp-uptime__cell:not(.kp-skeleton) {
+        box-shadow: inset 0 -2px 0 hsl(from var(--kp-uptime-fill) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='pastel'] .kp-uptime__percent {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-uptime__swatch {
+        border-radius: 3px;
+    }
+

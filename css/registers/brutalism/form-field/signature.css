@@ -1,0 +1,47 @@
+/* @part: form-field: signature layer */
+    [data-theme='brutalism'] .kp-field__check {
+        --kp-sig-dur: var(--kp-sig-br-time);
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+        margin: 0;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+    }
+
+    [data-theme='brutalism'] .kp-field__check:not(:focus-visible) {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-field__check:checked {
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.7rem;
+        block-size: 0.36rem;
+        border-inline-start: 3px solid var(--border-strong);
+        border-block-end: 3px solid var(--border-strong);
+        transform: translateY(-2px) rotate(-45deg);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio']:checked {
+        background: var(--accent);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--border-strong);
+    }
+

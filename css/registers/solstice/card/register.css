@@ -1,0 +1,74 @@
+/* @part: card: register layer; also dialog */
+    /* ── Cards, windows and containers ─────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-card {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
+    /* The dossier: the stamp rides a slight rotation the way a printed
+       tag would sit on a folder, and the redactions are the mark hook's
+       own emphasis reveal, styled below. */
+    [data-theme='solstice'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        rotate: -2deg;
+        background: var(--accent);
+        color: var(--accent-foreground);
+        font-weight: 700;
+        font-size: 0.6875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-radius: 4px;
+        padding: 0.35rem 0.6rem;
+    }
+
+    [data-theme='solstice'] .kp-card[data-kp-open]::before {
+        content: attr(data-kp-label-open);
+    }
+
+    /* The redactions: three marks inside the dossier, covered by a bar in
+       the theme's own boundary colour until the trigger opens the file,
+       then lifted one after another, right to left — the demo's own
+       clip-path direction. The bar is the phrase's own background, 1px
+       inside its padding and cloned onto every line the phrase takes, so a
+       phrase that wraps is covered line by line [fix-33, scope-93]; a bar
+       on an absolutely positioned ::after covered none of it. A background
+       paints under the words rather than over them, and the bar is not the
+       words' colour, so the words wear no ink while the bar is there and
+       take it back once their bar has gone. */
+    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+        background: linear-gradient(var(--border-strong), var(--border-strong)) 1px center / calc(100% - 2px) calc(100% - 2px) no-repeat;
+        color: transparent;
+        padding: 0.05em 0.15em;
+        font-weight: 400;
+        border-radius: 3px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+    }
+
+    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 2px);
+        color: var(--card-foreground);
+    }
+
+    /* Windows: a plain popover panel with the demo's soft drop shadow —
+       no bevel, no ramp; the softest radius in the set doing the work
+       DI9's "no texture" leaves it to do. */
+    [data-theme='solstice'] .kp-dialog,
+    [data-theme='solstice'] .kp-popover,
+    [data-theme='solstice'] .kp-menu,
+    [data-theme='solstice'] .kp-toast,
+    [data-theme='solstice'] .kp-tooltip,
+    [data-theme='solstice'] .kp-confirm,
+    [data-theme='solstice'] .kp-datepicker__panel,
+    [data-theme='solstice'] .kp-combobox__list,
+    [data-theme='solstice'] .kp-palette,
+    [data-theme='solstice'] .kp-theme-menu__list {
+        box-shadow: 0 24px 56px var(--kp-shadow-deep);
+    }
+

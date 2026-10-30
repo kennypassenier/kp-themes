@@ -1,0 +1,23 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    @keyframes kp-sig-synthwave-sw-set {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(45%);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-sheen {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        65%,
+        100% {
+            transform: translateX(260%);
+        }
+    }
+

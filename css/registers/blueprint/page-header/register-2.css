@@ -1,0 +1,76 @@
+/* @part: page-header: register layer; also showing-data, badge, progress-spinner-skeleton, combobox */
+    [data-theme='blueprint'] .kp-split__separator {
+        background: var(--border);
+    }
+
+    /* ── The footer ────────────────────────────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-footer {
+        border-block-start: 1px solid var(--border);
+    }
+
+    [data-theme='blueprint'] .kp-footer h4 {
+        font-family: var(--theme-font-mono);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='blueprint'] .kp-footer a {
+        color: var(--muted-foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='blueprint'] .kp-footer a:hover,
+    [data-theme='blueprint'] .kp-footer a:focus-visible {
+        color: var(--foreground);
+    }
+
+    /* ── Badges, tags, status ──────────────────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-badge,
+    [data-theme='blueprint'] .kp-tag {
+        border-radius: 2px;
+        border: 1px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='blueprint'] .kp-tag {
+        font-size: 0.72rem;
+    }
+
+    [data-theme='blueprint'] .kp-health__dot {
+        border-radius: 999px;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton {
+        background: var(--card);
+        border-radius: 2px;
+    }
+
+    [data-theme='blueprint'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes: identifiers in mono ──────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-id,
+    [data-theme='blueprint'] .kp-url,
+    [data-theme='blueprint'] .kp-numeric,
+    [data-theme='blueprint'] .kp-timestamp,
+    [data-theme='blueprint'] .kp-masked,
+    [data-theme='blueprint'] .kp-copyable,
+    [data-theme='blueprint'] .kp-truncate,
+    [data-theme='blueprint'] .kp-cell-break,
+    [data-theme='blueprint'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        font-size: 0.92em;
+        letter-spacing: 0.02em;
+    }
+

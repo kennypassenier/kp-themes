@@ -1,0 +1,77 @@
+/* @part: breadcrumb-pagination: register layer; also command-palette, date-picker, upload-wizard, colour-picker */
+    [data-theme='nostromo'] .kp-breadcrumb,
+    [data-theme='nostromo'] .kp-pagination {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='nostromo'] .kp-pagination a[aria-current],
+    [data-theme='nostromo'] .kp-pagination [aria-current] {
+        background: var(--selected);
+        color: var(--primary-foreground);
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    /* The plate marks the current page; the nav LED the base rules light in
+       front of every current link in a <nav> is a second mark on the same
+       number, so pagination does without it [scope-60]. */
+    [data-theme='nostromo'] .kp-pagination [aria-current='page']::before {
+        content: none;
+    }
+
+    [data-theme='nostromo'] .kp-wizard {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* ── Pickers and palettes ──────────────────────────────────────────── */
+
+    [data-theme='nostromo'] .kp-datepicker__day[aria-selected='true'] {
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    [data-theme='nostromo'] .kp-datepicker__weekday,
+    [data-theme='nostromo'] .kp-datepicker__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    [data-theme='nostromo'] .kp-colorpicker__value {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-shortcuts__group-label,
+    [data-theme='nostromo'] .kp-palette__group-label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-theme-menu__status,
+    [data-theme='nostromo'] .kp-palette__status,
+    [data-theme='nostromo'] .kp-combobox__status {
+        color: var(--muted-foreground);
+        font-size: 0.85rem;
+    }
+

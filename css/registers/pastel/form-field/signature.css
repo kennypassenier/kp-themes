@@ -1,0 +1,113 @@
+/* @part: form-field: signature layer; also motion, toast */
+    /* The checkbox and the radio: the tick and the dot printed twice, their
+       sky pass 1.5 px off register (::before), the ink (::after) stuck on it
+       120 ms later. */
+    [data-theme='pastel'] .kp-field__check {
+        appearance: none;
+        position: relative;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.2rem;
+        block-size: 1.2rem;
+        margin: 0;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 0.4rem;
+        background: var(--card);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::before,
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::after {
+        content: '';
+        grid-area: 1 / 1;
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid currentColor;
+        border-block-end: 2px solid currentColor;
+        border-end-start-radius: 2px;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::before {
+        color: var(--kp-sig-pa-pass-c);
+        translate: 1.5px 1.5px;
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::after {
+        color: var(--primary-foreground);
+        transform-origin: 0 0;
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio']:checked::before,
+    [data-theme='pastel'] .kp-field__check[type='radio']:checked::after {
+        content: '';
+        grid-area: 1 / 1;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio']:checked::before {
+        background: var(--kp-sig-pa-pass-c);
+        translate: 1.5px 1.5px;
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio']:checked::after {
+        background: var(--primary);
+        transform-origin: 0 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-field__check:checked::before {
+            animation: kp-sig-pastel-pass-small-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] .kp-field__check:checked::after {
+            animation: kp-sig-pastel-stuck-small-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* The anchor in small, for the tick and the dot. */
+    @keyframes kp-sig-pastel-pass-small-in {
+        0% {
+            translate: 5px 5px;
+            opacity: 0;
+        }
+
+        78.5714%,
+        100% {
+            translate: 1.5px 1.5px;
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-stuck-small-in {
+        0%,
+        21.4286% {
+            rotate: -9deg;
+            translate: 0 -2px;
+            opacity: 0;
+        }
+    }
+
+    /* The toast: paper in the hand (no tape), its pass in section 4. */
+    [data-theme='pastel'] .kp-toast {
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+

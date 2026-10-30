@@ -1,0 +1,72 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* The identity mark: flat paint, never a tint, the letters in Archivo Black; the round mark is the same square with
+       a second frame stamped inside it; the pick is the fat frame. */
+    [data-theme='brutalism'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        border: 2px solid var(--border-strong);
+        background: var(--kp-idmark-c);
+        box-shadow: 2px 2px 0 var(--border-strong);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-size: calc(var(--kp-idmark-s) * 0.42);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-idmark--xs {
+        border-width: 1px;
+        box-shadow: 1px 1px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--round {
+        border-radius: 0;
+        outline: 2px solid var(--border-strong);
+        outline-offset: -5px;
+    }
+    [data-theme='brutalism'] .kp-idmark--xs.kp-idmark--round {
+        outline: 0;
+    }
+    [data-theme='brutalism'] .kp-idmark--pattern {
+        --kp-idmark-ink: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        background: var(--secondary);
+        box-shadow: 0 0 0 1.5px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-idmark--glyph[data-kp-idmark-glyph='triangle']::after {
+        box-shadow: none;
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark[data-kp-idmark-empty] {
+        border-style: dashed;
+        background: var(--muted);
+        box-shadow: none;
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='brutalism'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 4px solid var(--border-strong);
+        outline-offset: 1px;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--round[aria-current]:not([aria-current='false']),
+    [data-theme='brutalism'] .kp-idmark--round[data-kp-idmark-selected] {
+        outline: 4px solid var(--border-strong);
+        outline-offset: 1px;
+    }
+    [data-theme='brutalism'] .kp-idmark-group > .kp-idmark,
+    [data-theme='brutalism'] .kp-idmark-group > .kp-idmark-group__more {
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark-group__more {
+        --kp-idmark-radius: 0;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+    }
+

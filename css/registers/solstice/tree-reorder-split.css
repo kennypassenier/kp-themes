@@ -1,0 +1,75 @@
+/* @part: tree-reorder-split: register layer; also date-picker, breadcrumb-pagination, tabs, accordion */
+    /* A branch's children glide open and shut (js/motion.js glideGroup(),
+       lesson 26): shutting, the group is kept drawn until the glide is over. */
+    [data-theme='solstice'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='solstice'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    [data-theme='solstice'] .kp-tree {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: the warm primary its selected tab wears. */
+    [data-theme='solstice'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-reorder {
+        border-radius: var(--radius);
+    }
+
+    /* ── Navigation and steps ───────────────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-tab[aria-selected='true'] {
+        color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='solstice'] .kp-breadcrumb,
+    [data-theme='solstice'] .kp-pagination {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='solstice'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-wizard {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* ── Pickers and palettes ────────────────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-datepicker__weekday,
+    [data-theme='solstice'] .kp-datepicker__title {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='solstice'] .kp-colorpicker__swatch {
+        border-radius: calc(var(--radius) - 3px);
+    }
+
+    [data-theme='solstice'] .kp-colorpicker__value {
+        font-family: var(--theme-font-mono);
+    }
+

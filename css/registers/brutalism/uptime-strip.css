@@ -1,0 +1,78 @@
+/* @part: uptime-strip: signature layer */
+    [data-theme='brutalism'] .kp-uptime {
+        --kp-uptime-cell-radius: 0;
+        --kp-uptime-up: var(--success);
+        --kp-uptime-degraded: var(--warning);
+        --kp-uptime-down: var(--destructive);
+    }
+    [data-theme='brutalism'] .kp-uptime__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-uptime__percent {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-uptime__summary {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-uptime__summary[data-kp-tone='error'] {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell:not(.kp-skeleton) {
+        border: 0;
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell[data-kp-tone='none']:not(.kp-skeleton) {
+        background: var(--card);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']):not(.kp-skeleton) {
+        translate: -1px 0;
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__axis {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-uptime__info-title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-uptime__swatch {
+        border: 0;
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='brutalism'] .kp-uptime__track:has(> .kp-skeleton) {
+        position: relative;
+        box-sizing: border-box;
+        box-shadow:
+            inset 0 0 0 2px var(--border-strong),
+            3px 3px 0 var(--border-strong);
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-uptime__track:has(> .kp-skeleton) {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+        [data-theme='brutalism'] .kp-uptime__cell {
+            transition: none;
+        }
+    }
+

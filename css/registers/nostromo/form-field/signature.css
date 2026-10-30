@@ -1,0 +1,53 @@
+/* @part: form-field: signature layer */
+    [data-theme='nostromo'] .kp-field__check {
+        --kp-sig-dur: 160ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+    }
+
+    [data-theme='nostromo'] .kp-field__check:not(:focus-visible) {
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    /* A tick is the person's pick, so it is ink (G5, colour "indicate"); it
+       was the signal orange. */
+    [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+        background: hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio']:checked {
+        border-color: var(--foreground);
+        background: var(--foreground);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+

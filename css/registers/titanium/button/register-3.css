@@ -1,0 +1,75 @@
+/* @part: button: register layer; also card, navbar */
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    /* Not `--secondary-active` any more: that token sits three RGB steps
+       from `--accent`, the hover ground, so the press never showed on the
+       bare, secondary, ghost and mirror buttons [Kenny's titanium note,
+       2026-09-15]. Eleven points under the hover ground, the metal in
+       shadow: ten measured 9.9 in OKLab distance, a hair under the States
+       block's floor of 10; eleven is 10.9. */
+    [data-theme='titanium'] .kp-button:active:not(:disabled) {
+        background: hsl(from var(--accent) h s calc(l - 11));
+    }
+
+    /* Not `--primary-active` any more: that token is 74%, three points
+       from the darker hover above, so the press would vanish into it
+       [scope-80]. */
+    [data-theme='titanium'] .kp-button--primary:active:not(:disabled) {
+        background: hsl(from var(--primary) h s calc(l - 27));
+        border-color: hsl(from var(--primary) h s calc(l - 27));
+    }
+
+    [data-theme='titanium'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* -- The ground [scope-17] ----------------------------------------
+       Carbon weave: two diagonals crossing at forty-five degrees, which is
+       the twill of real woven cloth and not a square grid. The light under
+       the pointer is the same idea as the spectral instrument's, warmer
+       and tighter, because a metal face reflects where an instrument
+       screen glows. */
+    [data-theme='titanium'] body {
+        background-image:
+            radial-gradient(
+                48rem 32rem at calc(var(--kp-px) * 100%) calc(var(--kp-py) * 100%),
+                hsl(from var(--chart-1) h s l / 0.1),
+                transparent 62%
+            ),
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px var(--kp-weave, 9px)),
+            repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.04) 0 2px, transparent 2px var(--kp-weave, 9px));
+        background-attachment: fixed;
+    }
+
+    /* ── The panels' edge is the film itself [scope-16] ────────────────
+       A gradient border, drawn by painting the panel's own ground over
+       the oxide and letting only the border box show through. */
+    [data-theme='titanium'] .kp-card,
+    [data-theme='titanium'] .kp-dialog {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    /* ── The small parts that carry the film [scope-16] ───────────────── */
+    [data-theme='titanium'] .kp-nav__marker,
+    [data-theme='titanium'] .kp-boot__bar i {
+        background: var(--kp-iris);
+    }
+
+    [data-theme='titanium'] .kp-measure__bracket {
+        border-color: hsl(from var(--chart-1) h s l / 0.55);
+    }
+

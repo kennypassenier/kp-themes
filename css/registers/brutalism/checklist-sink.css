@@ -1,0 +1,61 @@
+/* @part: checklist-sink: signature layer */
+    /* Checklist: rows ruled in ink; the row under the hand is the yellow plate; a ticked item is struck through in ink. */
+    [data-theme='brutalism'] .kp-checklist__bar {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__status {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__head {
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-checklist__count {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        color: var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-checklist__list {
+        border-block-start: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__item {
+        border-block-end: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__label {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__detail {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__row:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-checklist__row:hover .kp-checklist__detail {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        color: var(--foreground);
+        text-decoration-color: var(--border-strong);
+        text-decoration-thickness: 3px;
+    }
+    [data-theme='brutalism'] .kp-checklist__empty {
+        border: var(--kp-line) dashed var(--border-strong);
+        border-radius: 0;
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__empty[data-kp-checklist-failed] {
+        padding-block-end: calc(var(--kp-space-lg, 1.5rem) + 0.5rem);
+        border-style: solid;
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+

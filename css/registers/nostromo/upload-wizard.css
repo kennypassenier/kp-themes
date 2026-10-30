@@ -1,0 +1,45 @@
+/* @part: upload-wizard: signature layer */
+    [data-theme='nostromo'] .kp-wizard__steps {
+        gap: 0.5rem 1rem;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li {
+        gap: 0.5rem;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li::before {
+        inline-size: 1.7rem;
+        block-size: 1.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--border-strong);
+        color: var(--selected);
+        font-weight: 700;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: var(--kp-sig-no-well);
+        color: var(--foreground);
+        transform: translateY(1px);
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='current']::after {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 2px var(--foreground),
+            0 0 5px 2px hsl(from var(--kp-sig-no-led) h s l / 0.45);
+    }
+

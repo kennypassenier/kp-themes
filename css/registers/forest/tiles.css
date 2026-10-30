@@ -1,0 +1,29 @@
+/* @part: tiles: signature layer */
+    /* ── The dashboard port [themes/forest/CHARACTER.md §5, Kenny's picks on
+       research/character-{tiles,kpi,trend,columns,calendar,drawer}, decided
+       2026-10-06; drawn on forest's grammar 2026-10-07]. Each block names its
+       demo and pick; a demo's option attribute is the package's own markup
+       here. Loading on these parts is the planting strip above (the tile
+       grid, the trend's plot); the network graph is left alone (G16). ── */
+
+    /* Tiles · shape 3, the herbarium sheet: the leaf corner is the plate's
+       (above); a tile's title is the field-note voice, the body face in
+       italic, no Georgia (G13, proposal-15). */
+    [data-theme='forest'] .kp-tiles > .kp-card .kp-card__title {
+        font-family: var(--theme-font-body);
+        font-style: italic;
+    }
+
+    /* Tiles · hover 3, the light breaks through → the blaze: pointing at a
+       sheet lays the dashed trail ring round it (G12); pointing at its Open
+       link blazes the link alone (a forest ghost button, above). */
+    [data-theme='forest'] .kp-tiles > .kp-card {
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] .kp-tiles > .kp-card:hover:not(:has(:is(a, button, .kp-button):hover)) {
+        outline-color: var(--primary);
+        box-shadow: none;
+    }
+

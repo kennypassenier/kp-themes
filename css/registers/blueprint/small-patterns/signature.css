@@ -1,0 +1,38 @@
+/* @part: small-patterns: signature layer */
+    /* A secret: the value is a readout in the mono; while it is hidden it is a covered section, hatched; the time left
+       is a dimension line in amber with a tick at each end, shortening from its end to nothing; a failure is flagged ▲. */
+    [data-theme='blueprint'] .kp-secret {
+        --kp-secret-drain-size: 7px;
+    }
+    [data-theme='blueprint'] .kp-secret__value {
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-secret__value.kp-masked {
+        background: repeating-linear-gradient(45deg, hsl(from var(--border-strong) h s l / 0.55) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-secret__drain {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 0 50% / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 100% 50% / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+    }
+    [data-theme='blueprint'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words::before {
+        content: '\25B2';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            animation-timing-function: var(--kp-sig-bp-feed);
+        }
+    }
+

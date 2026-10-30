@@ -2,127 +2,273 @@
   "output": "css/titanium-register.css",
   "items": [
     {
-      "open": "/* The header's mega menu is held on screen while a transition on its panel runs\n   (js/components.js settleClosing): this number is that transition, 1 open and 0\n   shut, run over the panel's cut. At the top level because Firefox does not\n   register an @property inside a layer (all-themes audit, 2026-10-13). */\n@property --kp-sig-ti-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
-        "base.css",
-        "the-instruments-own-button.css",
-        "the-hooks.css",
-        "the-navbar.css",
-        "button.css",
-        "fields.css",
-        "card.css",
-        "panels.css",
-        "data.css",
-        "the-demos-own-pieces.css",
-        "motion.css"
+        "tokens/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "time-field.css",
+        "base/register.css",
+        "page-header/register.css",
+        "navbar/register.css",
+        "button/register-2.css",
+        "form-field/register-2.css",
+        "card/register.css",
+        "dialog/register.css",
+        "toast/register.css",
+        "alert/register.css",
+        "page-header/register-2.css",
+        "small-patterns/register.css",
+        "datatable/register.css",
+        "tabs.css",
+        "base/register-2.css",
+        "page-header/register-3.css",
+        "card/register-2.css",
+        "motion/register.css",
+        "sidenav.css",
+        "button/register-3.css",
+        "navbar/register-2.css",
+        "alarm.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* titanium's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/titanium.css and research/signature-elements/themes/titanium.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/base.css",
-        "signature-base/the-too-few-days-sentence-on.css",
-        "every-pair-closes-as.css",
-        "sidenav.css",
-        "the-meter-with-a-mark-this.css",
-        "titanium-the-heat-tinted.css",
-        "the-mark-past-the-end.css",
-        "activity-feed.css"
+        "progress-spinner-skeleton/signature.css",
+        "tokens/signature.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "switch.css",
+        "form-field/signature.css",
+        "dialog/signature.css",
+        "popover/signature.css",
+        "upload-wizard.css",
+        "state-plate.css",
+        "navbar/signature.css",
+        "motion/signature.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "toast/signature.css",
+        "navbar/signature-2.css",
+        "motion/signature-2.css",
+        "month-heatmap/signature.css",
+        "tokens/signature-2.css",
+        "datatable/signature.css",
+        "popover/signature-2.css",
+        "motion/signature-3.css",
+        "navbar/signature-3.css",
+        "month-heatmap/signature-2.css",
+        "motion/signature-4.css",
+        "meter.css",
+        "datatable/signature-2.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Titanium's own (themes/titanium/CHARACTER.md): a tile is a machined plate, square with the register's chamfer pair\n   (top-start and bottom-end), the bright tool edge along its top (G7, G8); every contact is instant and linear, metal\n   does not ease (G1, G4): pointing turns the tool edge to bare bright metal, a press drops the plate 1 px; a pick is\n   bright metal, a running process blue oxide (G6); waiting is the anodising bath, the oxide ramp drifting start to end\n   in every waiting part (G10); Martian Mono for labels and counts (G8). */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows.css",
+        "heat-grid.css",
+        "week-agenda.css",
+        "motion/signature-5.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Titanium's own (themes/titanium/CHARACTER.md): the separator is the divider's milled groove stood\n   upright, a dark channel with its bright lip; lying down across the phone's list it is the groove itself. A day on the\n   axis has its tool edge turned to bright metal under the pointer, instantly (G1); pressed it is a blue-oxide plate with\n   the chamfer pair, the oxide edge under it. A series' finished run carries its tool edge along the top in its own\n   oxide; the facet pattern is chamfered. Every contact is linear. */\n@layer kp.signature {\n",
+      "files": [
+        "navbar/signature-4.css",
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "open": "/* ── The kpadopt4 components in titanium's grammar: data pieces, empty-state drawings [kpadopt4] ──\n   Titanium's own (themes/titanium/CHARACTER.md): a part is machined, never moulded: square with the chamfer pair (top\n   start and bottom end, cut outwards past the box so a ring or a shadow stays whole, G7), a bright tool edge along its\n   top, engraved Martian Mono for labels and figures (G8); contact is instant and linear, pointing turns the tool edge to\n   bare bright metal, a press drops the part 1 px (G1, G4, G6); the oxide is a cause only: blue is what the system says,\n   gold to cyan is heat, and a loading part is in the anodising bath (G5, G9, G10). Every drawing in an empty state is a\n   part on a machinist's drawing, cut in from the start edge and cooling from the oxide's heat colours to bare metal. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/opening-of-the-signature-block.css",
-        "the-identity-mark.css",
-        "the-share-bar.css"
+        "identity-mark.css",
+        "share-bar/signature.css",
+        "bullet-rows.css",
+        "key-value-grid/signature.css",
+        "form-grid/signature.css",
+        "code-block/signature.css",
+        "small-patterns/signature.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── The kpadopt4 components in titanium's grammar: rows, tiles, check lists, pipeline, journey, secret, dialog [kpadopt4] ──\n   A row's state is a bar cut along its start edge: bare metal for what is new to the person, blue oxide for what the\n   system is doing, gold for a reservation, bronze for a failure (G5, G6); the lists between rows are milled grooves. A\n   tile of choices is a machined plate whose ticked edge is bare metal; a lane of the pipeline is a plate with an oxide\n   strip along its head; a journey is a rail whose reached stretch is oxide cut in start to end; a secret is fed into its\n   pocket from the start edge and its countdown is the film cooling away (G2, G11); a dialog's danger section is the\n   bronze tool edge along its top (the register's destructive). Every contact is instant and linear, a press drops 1 px. */\n@layer kp.signature {\n",
       "files": [
-        "action-list-with-a-lead.css",
-        "choices-as-tiles.css",
-        "pipeline.css"
+        "action-columns.css",
+        "forms.css",
+        "pipeline.css",
+        "step-list.css",
+        "run-timeline/signature-3.css",
+        "small-patterns/signature-2.css",
+        "dialog/signature-2.css",
+        "typed-confirmation.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── The kpadopt4 components in titanium's grammar: time, cooking and comparison [kpadopt4] ──\n   A time read out is engraved in a pocket in Martian Mono, instant and linear (G1, G8); a running process is blue oxide,\n   what the system says (G6); a finished timer is the bronze tool edge along its top and never breathes (G5); the timer\n   disc is a turned part, its face with turning grain and the time left a sector of bare metal; the wheel is an indexing\n   head that settles on the theme's one curve (G1); a three-way chip is a machined key whose state is a square mark; the\n   quantity's figure and the checklist's amounts are Martian Mono; the compare slider is a parting line with a turned\n   knob. Contact is 60 ms linear, a press drops the part 1 px. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/opening-of-the-signature-block-2.css",
-        "uptime-strip.css"
+        "uptime-strip.css",
+        "kitchen-timers.css",
+        "countdown.css",
+        "visual-timer.css",
+        "range-picker.css",
+        "wheel.css",
+        "focus-steps.css",
+        "quantity.css",
+        "checklist-sink.css",
+        "segmented-toolbar/signature-2.css",
+        "compare-slider.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "kpadopt4-repairs-found.css"
+      "open": "/* ── kpadopt4 repairs found at 390 px [kpadopt4] ──\n   A label set in this theme's wide letters needs more room than the aside leaves it in a narrow form: below 36rem of the\n   form's own width each row is its own column (label, control, then the aside under it), so no label ever runs into the aside. The countdown's\n   colon takes the room of a monospaced character. */\n@layer kp.signature {\n",
+      "files": [
+        "form-grid/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "sort-the-page-carries-out.css"
+      "open": "/* ── A sort the page carries out [kpadopt4]: the sorted header is edged in bare metal (G6) ──\n   What the person chose is bare metal: the sorted header carries the tool edge along its top in `--primary`, at once and\n   linear; pressing a header drops it 1 px; a column that cannot be sorted now is a plain header. */\n@layer kp.signature {\n",
+      "files": [
+        "table/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/base.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "key-value-grid/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/waiting-lines-the-kpadopt4.css"
+      "open": "/* Waiting lines the kpadopt4 components draw: the register's line rule holds its lines still, so each of them is named here\n   and the anodising bath runs through it, a beat apart, as in every other waiting part (G10). */\n@layer kp.signature {\n",
+      "files": [
+        "share-bar/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/a-dialogs-buttons-stay-whole.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "dialog/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/base.css"
+      "open": "/* ── kpadopt5/6 fit: the 79 adopted parts at 390 px [t56-titanium-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "table/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit.css"
+      "open": "/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-titanium-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-3.css",
+        "request-inspector.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-2.css"
+      "open": "/* ── kpadopt5/6 fit: the weekday chips [t56-titanium-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "weekday-picker.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-3.css"
+      "open": "/* ── kpadopt5/6 fit: the fold button of a code cell [t56-titanium-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-parts.css"
+      "open": "/* ── kpadopt5/6 parts: titanium's own corners [t56-titanium-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "slider.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-4.css"
+      "open": "/* ── kpadopt5/6 fit: the code box's tools [t56-titanium-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/a-destructive-button-that.css"
+      "open": "/* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its\n   action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it\n   without a plate [t56-eye-1018]. */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "failed-area-is-the-alarm.css"
+      "open": "/* ── A failed area is the alarm plate with its machined ring and the film at its foot [t56-eye-1018] ──\n   Titanium's own (themes/titanium/CHARACTER.md, busy failure \"the alarm lamp\", F1 and F2): the lamp lights at once, in the\n   destructive plate, with its inner ring cut 2 px into the metal in the plate's ink and the anodised film running along the\n   foot, the one place the film carries a meaning (this part failed). A flat orange slab was the lamp without the metal. */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/the-help-sheets-empty-plate.css"
+      "open": "/* The help sheet's empty plate speaks in the sheet's own sans and is centred under its centred title: the engraved mono at\n   0.78 rem, start-aligned, was the one line of the sheet in another voice [t56-eye-1018]. */\n@layer kp.signature {\n",
+      "files": [
+        "command-palette.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/a-ghost-that-stands-alone-end.css"
+      "open": "/* A ghost that stands alone (End snooze, the weekday quick picks, the \"+N\" flags opener) has its machined edge at rest, so it\n   reads as a control and not as a label; the hover fills it as every ghost [t56-eye-1018]. */\n@layer kp.signature {\n",
+      "files": [
+        "snooze-picker.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-shape-2.css"
+      "open": "/* ── graph loading · shape 2 · The instrument dial: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-tn-load-3.css"
+      "open": "/* ── graph loading · r3-tn-load-3 · The signal runs the harness (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

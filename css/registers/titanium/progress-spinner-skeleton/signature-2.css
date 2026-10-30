@@ -1,0 +1,111 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* The spinner is the facing cut (Kenny, 2026-10-07 01:33, on
+       research/titanium-spinner, option 1; was the drill). The end of a bar
+       turning on the lathe, seen face on: concentric turning grain and a
+       centre point on the span; the oxide film the tool tip leaves in its
+       track on ::before (thin gold far behind, thickest cyan right behind
+       the tip, fading back to bare metal before the tip comes round); the
+       tool tip itself on ::after, a bright radial line with the dark cut
+       beside it on the side it travels to. Round because it is a turned part
+       (G7); one revolution per 1800 ms at a constant feed (G4, a loop),
+       start → end: clockwise in a left-to-right page, mirrored in a
+       right-to-left one. Square at every size, so it fits the square slots
+       the busy panel, the status line and a calendar day give it. Standing
+       still (reduced motion), the tip with its tail still reads as busy. */
+    [data-theme='titanium'] .kp-spinner {
+        --kp-sig-dur: 1800ms;
+        --kp-sig-ti-spin: var(--kp-spinner-size, 1.25rem);
+        --kp-sig-ti-tip: max(1.5px, calc(var(--kp-sig-ti-spin) * 0.07));
+        position: relative;
+        display: inline-block;
+        flex: none;
+        inline-size: var(--kp-sig-ti-spin);
+        block-size: var(--kp-sig-ti-spin);
+        border: 0;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle closest-side, var(--primary) 0 9%, transparent 11%),
+            repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 3px),
+            radial-gradient(circle closest-side, var(--accent), var(--muted));
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        clip-path: none;
+        vertical-align: middle;
+        isolation: isolate;
+        animation: none;
+    }
+
+    [data-theme='titanium'] .kp-spinner:dir(rtl) {
+        scale: -1 1;
+    }
+
+    [data-theme='titanium'] .kp-spinner::before,
+    [data-theme='titanium'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        border-radius: 50%;
+    }
+
+    [data-theme='titanium'] .kp-spinner::before {
+        background: conic-gradient(
+            transparent 0 105deg,
+            var(--warning-foreground) 170deg,
+            var(--chart-4) 205deg,
+            var(--chart-2) 245deg,
+            var(--chart-1) 295deg,
+            var(--chart-3) 340deg,
+            var(--primary) 352deg 360deg
+        );
+        /* A mask reads only alpha: any opaque token draws the ring. */
+        -webkit-mask: radial-gradient(circle closest-side, transparent 0 44%, var(--foreground) 47% 100%, transparent 100%);
+        mask: radial-gradient(circle closest-side, transparent 0 44%, var(--foreground) 47% 100%, transparent 100%);
+    }
+
+    [data-theme='titanium'] .kp-spinner::after {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 50% 0 / var(--kp-sig-ti-tip) 48% no-repeat,
+            linear-gradient(var(--background), var(--background)) calc(50% + var(--kp-sig-ti-tip)) 0 / 1px 48% no-repeat;
+    }
+
+    [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 1800ms;
+        --kp-sig-ti-c: 5px;
+        position: relative;
+        overflow: hidden;
+        block-size: 0.95rem;
+        border-radius: 0;
+        background: var(--kp-sig-ti-bath), var(--card);
+        box-shadow: var(--kp-sig-ti-edge);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
+        animation: none;
+    }
+
+    [data-theme='titanium']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.55rem;
+    }
+
+    [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 100%;
+        background: var(--kp-sig-ti-weave);
+    }
+
+    /* A circle or a block is the bath through and through. */
+    [data-theme='titanium'] :is(.kp-skeleton--circle, .kp-skeleton--block) {
+        background: var(--kp-sig-ti-bath), var(--card);
+        opacity: 1;
+    }
+

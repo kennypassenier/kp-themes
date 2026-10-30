@@ -1,0 +1,47 @@
+/* @part: countdown: signature layer; also range-picker, visual-timer */
+    [data-theme='pastel'] .kp-countdown {
+        --kp-countdown-ink: var(--primary);
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-countdown::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1rem;
+        inline-size: 3rem;
+        block-size: 0.7rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--muted-foreground);
+    }
+    [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='ended'] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out 3;
+        }
+    }
+
+    /* Range picker: the custom window in force is a sticker pressed on, ringed in plum; its panel is the popover's own
+       plate (opaque); an invalid time takes the dashed red line. */
+    [data-theme='pastel'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 4px 0 1px var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+

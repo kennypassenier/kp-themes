@@ -1,0 +1,4 @@
+/* @part: month-heatmap: signature layer */
+    [data-theme='brutalism'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+    }

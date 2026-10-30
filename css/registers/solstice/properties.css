@@ -1,0 +1,26 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
+   rest, 1 at the end of the unit. Registered so the browser can transition
+   them, at the top level because Firefox does not register an @property
+   inside a layer. */
+@property --kp-sig-solstice-point {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-solstice-press {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+/* A clock with nothing drawn on it: the bar's mega menu is held on screen
+   until a transition on its panel has played (js/components.js); this is
+   that transition, the length of the panel's close. */
+@property --kp-sig-solstice-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+

@@ -1,0 +1,54 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: softly rounded rows; pointing lights the row's foot in amber. The counts on their way are the skeleton's
+       muted pills, the low light crossing them. */
+    [data-theme='solstice'] .kp-facets {
+        --kp-facet-radius: calc(var(--radius) * 0.8);
+    }
+    [data-theme='solstice'] .kp-facet {
+        --kp-facet-hover: linear-gradient(to top, hsl(from var(--accent) h s l / 0.2), transparent 70%);
+    }
+    [data-theme='solstice'] .kp-facet:hover {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.2), transparent 70%);
+    }
+    [data-theme='solstice'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        position: relative;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--muted);
+        animation: none;
+    }
+    [data-theme='solstice'] .kp-facets[aria-busy='true'] .kp-facet__count::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 60%;
+        background: radial-gradient(ellipse closest-side, hsl(from var(--primary) h s l / 0.45), transparent);
+        transform: translateX(-100%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-facets[aria-busy='true'] .kp-facet__count::after {
+            animation: kp-sig-solstice-solstice-light 3600ms ease-in-out infinite;
+        }
+        [data-theme='solstice'] .kp-facets[aria-busy='true'] li:nth-child(2n) .kp-facet__count::after {
+            animation-delay: 240ms;
+        }
+    }
+
+    /* Heat grid and matrix: each cell a hillside lit from its foot; pointing lights the foot in full amber, nothing
+       moves; the pick is the halo. Waiting: the cells stand as the skeleton's muted ground, and the low light crosses
+       each row (the matrix as one surface). */
+    [data-theme='solstice'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 5px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='solstice'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='solstice'] .kp-matrix {
+        --kp-heat-cell-radius: calc(var(--radius) * 0.8);
+        --kp-matrix-gap: 4px;
+    }

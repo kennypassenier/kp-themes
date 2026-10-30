@@ -1,0 +1,40 @@
+/* @part: state-plate: signature layer */
+    /* The empty state: no crest (Q19), its title in capitals. */
+    [data-theme='deco'] .kp-empty {
+        display: grid;
+        /* The grid's rows stretched over a tall plate (dated-states: the title at the top, the button at the foot);
+           the package's own empty plates are flex columns centred in the middle. */
+        align-content: center;
+        justify-items: center;
+        gap: 0.3rem;
+        padding: 1.2rem 1.1rem;
+        text-align: center;
+    }
+
+    [data-theme='deco'] .kp-empty::before {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-empty__title {
+        font-size: 1.05rem;
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) says so in the ruby with the gold rule. */
+    [data-theme='deco'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        /* Josefin in sentence case like the other failed plates: the ruby in Poiret's hairline strokes did not read. */
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* An empty plate that fills its whole component is set at heading size (the package's 1.125rem; the rule above made it
+       1.05rem, a small line in a large plate). */
+    [data-theme='deco'] .kp-empty__title:is(.kp-dated__empty-title, .kp-runs__empty-title, .kp-passkeys__note-title, .kp-thread__note-title) {
+        font-size: 1.375rem;
+    }
+

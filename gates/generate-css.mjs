@@ -97,11 +97,22 @@ function main() {
             written++;
         }
     }
-    // css/README.md is the index of the part files: every top-level entry of css/components/ appears in it.
+    // css/README.md is the index of the part files: every top-level entry of css/components/ appears in it ...
     const readme = existsSync(join(ROOT, 'css/README.md')) ? readFileSync(join(ROOT, 'css/README.md'), 'utf8') : '';
     for (const e of readdirSync(join(ROOT, 'css/components'), { withFileTypes: true })) {
         const entry = e.isDirectory() ? `${e.name}/` : e.name;
         if (e.name !== 'index.json' && !readme.includes(`\`${entry}\``)) failures.push(`css/README.md does not index css/components/${entry}`);
+    }
+    // ... and so does every top-level entry of every css/registers/<theme>/, under that theme's `### <theme>` heading.
+    for (const t of readdirSync(join(ROOT, 'css/registers'), { withFileTypes: true })) {
+        if (!t.isDirectory()) continue;
+        const at = readme.indexOf(`\n### ${t.name}\n`);
+        const section = at < 0 ? '' : readme.slice(at + 1).split(/\n#{2,3} /)[0];
+        if (at < 0) failures.push(`css/README.md has no \`### ${t.name}\` section for css/registers/${t.name}/`);
+        for (const e of readdirSync(join(ROOT, 'css/registers', t.name), { withFileTypes: true })) {
+            const entry = e.isDirectory() ? `${e.name}/` : e.name;
+            if (at >= 0 && e.name !== 'index.json' && !section.includes(`\`${entry}\``)) failures.push(`css/README.md does not index css/registers/${t.name}/${entry}`);
+        }
     }
     if (failures.length) {
         console.error(failures.map((f) => `generate-css: ${f}`).join('\n'));

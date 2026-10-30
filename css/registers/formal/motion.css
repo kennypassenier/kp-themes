@@ -1,0 +1,33 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] :is(.kp-button, .kp-menu__item, .kp-nav__link) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                text-decoration-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] :is(.kp-button, .kp-icon-button)::after,
+        [data-theme='formal'] :is(.kp-button, .kp-icon-button)::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-icon-button {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                background-size var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label,
+        [data-theme='formal'] .kp-calendar__day .kp-calendar__num {
+            transition: text-decoration-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+    }
+

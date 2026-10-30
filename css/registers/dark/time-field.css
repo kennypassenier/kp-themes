@@ -1,0 +1,51 @@
+/* @part: time-field: register layer; also button */
+    [data-theme='dark'] .kp-time:not(.kp-time--inline) > .kp-time__control::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 1px;
+        background: var(--kp-iris);
+        scale: 0 1;
+        transform-origin: left center;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] .kp-time:not(.kp-time--inline) > .kp-time__control:focus-within::after {
+        scale: 1 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-time:not(.kp-time--inline) > .kp-time__control::after {
+            transition: scale calc(var(--fx-duration) * 1.5) var(--fx-ease);
+        }
+    }
+
+    /* ── The ring, reversed from the base default [DI2, AR30, S49] ────────
+       The base layer puts the theme's foreground on the inner ring and its
+       background on the outer one; the approved demo's own :focus-visible
+       does it the other way — the void touching the element, the ink
+       outside it — and DI2's promise holds either way, since one of the
+       two always clears 3:1 on the surface behind it. */
+    [data-theme='dark'] :focus-visible {
+        outline-color: var(--foreground);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
+    }
+
+    /* ── The ring inside the chamfer [fix-38, DI2] ─────────────────────
+       The chamfer's clip-path cuts away everything outside the button's
+       box, the outline and the outer shadow above included: tabbing to a
+       button changed 0 pixels on or outside its edge. So on a clipped
+       control both channels go inside, along the edge, where the clip
+       cannot reach — the answer the menu item below and cyberpunk's bevel
+       already give. The ink (--focus-ring) runs along the edge and the
+       void (--focus-ring-contrast) inside it, the same order as the ring
+       outside: on the card-grounded button the ink reads, on the
+       near-white primary the void does. The outline stays declared and
+       stays clipped. */
+    [data-theme='dark'] .kp-button:focus-visible {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+

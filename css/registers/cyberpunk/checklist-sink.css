@@ -1,0 +1,25 @@
+/* @part: checklist-sink: signature layer */
+    /* ── Checklist: a row lights its circuit; a ticked item is dimmed and struck; the head is a prefixed label ── */
+    [data-theme='cyberpunk'] .kp-checklist__row {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-checklist__row:hover {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-checklist__title,
+    [data-theme='cyberpunk'] .kp-checklist__count,
+    [data-theme='cyberpunk'] .kp-checklist__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-checklist__title {
+        color: var(--accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-checklist__item {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+

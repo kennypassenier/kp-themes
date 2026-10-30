@@ -1,0 +1,22 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    /* ── The tour, the alarm and the side navigation as pairs [Kenny, 2026-10-12: every close
+       is its open reversed, in Firefox and Chromium] ──────────────────────────────────────
+       The tour's card is a holo plate like the menu's popover and opens by the channel split
+       (480 ms, four ticks); js/motion.js playEntranceBackwards plays that backwards when the
+       tour ends. The page's dim and the ring round the target are part of the pair: they come
+       in four ticks of the same 480 ms and go in the same four the other way round. A step is
+       no arrival (data-kp-tour-stepping): the card keeps its shape, plays no entrance, takes no
+       update copy, and walks to the next target in the same four ticks. */
+    [data-theme='cyberpunk'] {
+        /* The tour's dim goes back to no shadow at all, shrinking into the target as it grew out of it. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 480ms;
+        /* The four ticks of 120 ms the other way round. `steps(4, jump-start)` jumps at a boundary
+           the same way as the opening's `jump-end`, so the two engines read a frame that falls
+           exactly on one as different poses; this one holds the pose before the jump at the
+           boundary itself (the jump takes 0.01 % of the time), so frame t of the going is frame
+           (T - t) of the coming at the boundary as well. */
+        --kp-cp-back: linear(0 0%, 0.25 0.01%, 0.25 25%, 0.5 25.01%, 0.5 50%, 0.75 50.01%, 0.75 75%, 1 75.01%, 1 100%);
+        --kp-tour-dim-close-ease: var(--kp-cp-back);
+    }
+

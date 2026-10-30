@@ -1,0 +1,37 @@
+/* @part: checklist-sink: signature layer; also button */
+    /* The checklist's loading, two ways [cook-1017; Kenny 2026-10-17 17:48: "de loading animatie met de gordijnen werkt
+       enkel als het het hele element omvangt, dus maak een versie die dat doet, en een versie met gewoon de spinner"].
+       `data-kp-checklist-loading` on the list picks one, the curtains when it is absent:
+       - curtains: the busy card's own layer, which covers the whole body of the list, wears the two doors, so they close
+         over the entire checklist and open on it; the card's spinner and words stand under them and show in the gap.
+       - spinner: the busy card with deco's sunburst spinner and its words, centred, and no doors.
+       The card's panel never wears the doors itself here: a small pair over a long list is what was refused. */
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::before,
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::after {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+        --kp-sig-deco-p: 1;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
+    }
+
+    /* Standing still, a waiting button keeps its label readable: the other
+       parts stand with the doors parted by a third (G20), but a button is
+       mostly its words, and at one third the doors covered 43 % of a 128 px
+       button's label. Here they stand parted nearly the whole way (2.5 of
+       their 3 thirds), leaving only each door's outer edge, about 10 px of
+       lacquer at each end of the plate. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='deco'] .kp-button[aria-busy='true'] {
+            --kp-sig-deco-p: 2.5;
+        }
+    }
+

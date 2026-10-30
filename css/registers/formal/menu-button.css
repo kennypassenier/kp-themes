@@ -1,0 +1,84 @@
+/* @part: menu-button: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal']
+            :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip), .kp-tooltip, .kp-combobox__list, .kp-datepicker__panel) {
+            --kp-fm-total: calc(var(--kp-sig-fm-len) + var(--kp-sig-fm-lift) + (var(--kp-fm-n, 1) - 1) * var(--kp-sig-fm-st));
+            --kp-fm-f: clamp(0, var(--kp-fm-t) * var(--kp-fm-total) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift), 1);
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            animation: kp-sig-formal-ruling calc(var(--kp-fm-total) * 1ms) linear backwards;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip), .kp-tooltip) {
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 0;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(1) {
+            --kp-fm-k: 0;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(2) {
+            --kp-fm-k: 1;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(3) {
+            --kp-fm-k: 2;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(4) {
+            --kp-fm-k: 3;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(5) {
+            --kp-fm-k: 4;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(6) {
+            --kp-fm-k: 5;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(7) {
+            --kp-fm-k: 6;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(n + 8) {
+            --kp-fm-k: 7;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > * {
+            --kp-fm-f: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(
+                0,
+                (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
+                1
+            );
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 100%;
+        }
+
+    }
+

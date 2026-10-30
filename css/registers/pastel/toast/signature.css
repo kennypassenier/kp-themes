@@ -1,0 +1,42 @@
+/* @part: toast: signature layer; also navbar */
+    /* A part that draws its own plate and pass (B): the swing without the
+       fade, and the two clocks as numbers its plate, its words and its pass
+       read. */
+    @keyframes kp-sig-pastel-stuck-plate-in {
+        0% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-stuck-plate-out {
+        0% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+

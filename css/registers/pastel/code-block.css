@@ -1,0 +1,47 @@
+/* @part: code-block: signature layer; also motion */
+    /* Code block: a plate stuck to the page, its sky pass 6 px off register and one strip of washi tape across its top
+       start edge; the head is cut from the body by the tape's dashed edge, the keys are plum. */
+    [data-theme='pastel'] .kp-code {
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-code::before {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1.25rem;
+        inline-size: 3.5rem;
+        block-size: 0.8rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] :is(.kp-code__head, .kp-code__foot) {
+        border-color: var(--border-strong);
+        border-style: dashed;
+        border-width: 0;
+    }
+    [data-theme='pastel'] .kp-code__head {
+        border-block-end-width: 2px;
+        padding-block-start: calc(var(--kp-space-xs, 0.25rem) + 0.25rem);
+    }
+    [data-theme='pastel'] .kp-code__foot {
+        border-block-start-width: 2px;
+    }
+    [data-theme='pastel'] .kp-code__head {
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+    }
+
+    /* A live number wobbles once round its foot as it counts (G9), 800 ms, its second pass staying where it is. */
+    [data-theme='pastel'] [data-kp-tick] {
+        display: inline-block;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-tick][data-kp-tick-state='running'] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out;
+        }
+    }

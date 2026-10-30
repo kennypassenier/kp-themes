@@ -1,0 +1,27 @@
+/* @part: focus-steps: signature layer */
+    /* Cook mode: what the step needs is a note taped in (a dashed edge on paper) under a mint sticker for its title;
+       the screen lamp is a pearl; each step arrives stuck on (the package's own arrival). */
+    [data-theme='pastel'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--card);
+    }
+    [data-theme='pastel'] .kp-focus-steps__needs-title {
+        justify-self: start;
+        display: inline-block;
+        padding: 0 0.6rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-focus-steps__count {
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-focus-steps__amount {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        box-shadow: 0 1.5px 0 var(--kp-sig-pa-peel);
+    }
+

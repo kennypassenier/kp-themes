@@ -1,0 +1,79 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root); also motion */
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]` (which
+       is ruled in below, as every arrival is). The frame is ruled in as the
+       box changes. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-kp-resizing] {
+            outline: 1px solid var(--border-strong);
+            outline-offset: 4px;
+        }
+    }
+
+    /* ── Ruled open, ruled off [G1 to G4, G13; Kenny, 2026-10-08, questions 1
+       to 4 and 13 of research/formal-character]. What opens is ruled open
+       where it stands: its frame rule is ruled start to end at an even pace
+       and stops dead at the margin (linear, 400 ms), the words revealed
+       behind it; then each line under it is ruled the same way, top down,
+       60 ms apart (a dialog's title, its sentence, its buttons; a menu's
+       entries one by one; a drawer's head, body and foot; a tour card's
+       title, text and foot); a 2 px navy pen runs ahead of the words and is
+       lifted, from the start, 160 ms after it has reached the margin (the
+       finished pose is bare). A close is the same motion played backwards,
+       bottom first, end to start; what arrives is the leave turned around
+       (`--kp-open: reverse-close`). Everything under prefers-reduced-motion:
+       no-preference; standing still nothing is clipped and nothing is drawn.
+       Mirrored by `dir` (`-rtl` keyframes, `--kp-fm-ltr`).
+
+       Two machines, because js/motion.js plays a close and a leave two ways.
+       (1) A dialog, a drawer, a tour card and what leaves or arrives are
+       turned round by js/motion.js from the effects the browser reports,
+       element by element and pseudo-element by pseudo-element. Said
+       `--kp-lines: keep`, each keeps its own time and wait (its
+       animation-delay) in the close, the open and the leave: one pair of
+       keyframes per line (`kp-sig-formal-ruled-line`, the clip;
+       `kp-sig-formal-ruled-pen`, the pen), the wait of the line as its delay
+       (0, 60, 120 and 180 ms; a fourth line and later share the fourth's),
+       over 740 ms (400 + 160 + three lines 60 ms apart). The shade behind it
+       takes the whole time, as it does without the token. The unopened dialog runs 1.5
+       times that: js/motion.js reads the theme's time from an unopened dialog
+       and takes a close as two thirds of it, so a dialog opens and closes in
+       exactly 740 ms, and `--kp-close-max` allows it. A leave is the
+       arrival's reverse in 560 ms (400 + 160): the pen is set again, then the
+       rule is taken off, end to start; the arrival is that played backwards
+       by js/motion.js, and a toast comes in as it. (2) A menu, a popover, a
+       tooltip and the other panels that hang from something are turned round
+       in CSS (`[data-kp-reversing]`, css/components.css), which can play a
+       custom property: one number, `--kp-fm-t` (0 to 1, @property at the
+       top of this file, finished = 1), runs over the time the lines of the
+       panel need (`--kp-fm-total`: 400 + 160 + 60 per line after the first,
+       in ms; `--kp-fm-n` counts them, so a short menu has no dead time
+       at its end: a menu button's menu from the `--kp-menu-count` that
+       js/menu-button.js writes, a popover's menu with :has(), which needs no
+       script); the panel's clip and pen and every entry's clip
+       and pen are computed from that number and the entry's index. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] {
+            --kp-open: reverse-close;
+            --kp-lines: keep;
+            --kp-fm-ltr: 1;
+            --kp-fm-dir: to right;
+            /* A part a script removes or hides (the busy table's layer, a file
+               row, an empty state, a re-shown alert) is ruled off first, as it
+               is ruled in (js/motion.js leavesState(), lessons 19, 23, 24);
+               what takes no box arrives as nothing; the space a leave folds
+               shut takes the leave's own time and starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        [data-theme='formal']:dir(rtl) {
+            --kp-fm-ltr: 0;
+            --kp-fm-dir: to left;
+        }
+
+    }
+

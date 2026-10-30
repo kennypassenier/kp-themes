@@ -1,0 +1,24 @@
+/* @part: small-patterns: signature layer */
+    /* ── Drawings for an empty state: the HUD. The strokes are torn in sideways and jitter home in six held ticks; the
+       reduced pose is the drawing standing locked. ── */
+    [data-theme='cyberpunk'] .kp-art {
+        display: block;
+    }
+    [data-theme='cyberpunk'] .kp-art > g[data-kp-art-set='hud'] {
+        display: inline;
+    }
+    [data-theme='cyberpunk'] .kp-art path {
+        stroke-linecap: square;
+    }
+    [data-theme='cyberpunk'] .kp-art__rule {
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.6));
+    }
+    [data-theme='cyberpunk'] .kp-art__red {
+        filter: drop-shadow(0 0 3px hsl(from var(--destructive) h s l / 0.6));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-art {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+

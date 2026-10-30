@@ -1,0 +1,92 @@
+/* @part: pipeline: signature layer */
+    /* The pipeline. */
+    [data-theme='brutalism'] .kp-pipeline {
+        --kp-pipeline-gap: 1rem;
+    }
+    [data-theme='brutalism'] .kp-pipeline__lane {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__head {
+        border: 0;
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-pipeline-tone);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__name {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-pipeline__share {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:hover {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: -2px -2px;
+        box-shadow: 5px 5px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:hover :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:active {
+        translate: 3px 3px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow:
+            inset 0 0 0 2px var(--border-strong),
+            3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[aria-current='true'] :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[data-kp-dimmed] {
+        border-style: dashed;
+        background: transparent;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-pipeline__title {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='brutalism'] .kp-pipeline__sub,
+    [data-theme='brutalism'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-pipeline__mark {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-pipeline-tone, var(--muted));
+        box-shadow: 2px 2px 0 var(--border-strong);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-pipeline__card {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-fall),
+                box-shadow var(--fx-duration) var(--kp-sig-br-fall);
+        }
+    }

@@ -1,0 +1,39 @@
+/* @part: status-rows: signature layer; also calm-status */
+    /* Status rows: machined rows on the control's cut, square marks, the reading in the ticker mono. A failed row is
+       the film gone coral; a loading row is a waiting surface, so the comet crosses it. */
+    [data-theme='dark'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='dark'] .kp-statusrow {
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 0;
+        position: relative;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+    [data-theme='dark'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--destructive);
+    }
+    [data-theme='dark'] .kp-statusrow__detail {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-statusrow[data-state='loading']::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+        opacity: 0.55;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-statusrow[data-state='loading']::before {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+    }
+

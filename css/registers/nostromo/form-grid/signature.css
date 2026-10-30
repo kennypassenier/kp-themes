@@ -1,0 +1,33 @@
+/* @part: form-grid: signature layer */
+    /* ── Form rows: the same tape labels; the changed row's lamp rule in ink, a failed row's klaxon rule ── */
+    [data-theme='nostromo'] .kp-formrow__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding-block-start: calc((var(--kp-control-height, 2.25rem) - 1.5em) / 2);
+    }
+    [data-theme='nostromo'] .kp-formrow__label > small {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+    [data-theme='nostromo'] .kp-formrows--lines > .kp-formrow {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-formrows--lines > .kp-formrow:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='nostromo'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+    [data-theme='nostromo'] .kp-formrow__aside {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-formrow__lock::before {
+        border-radius: 2px;
+    }
+

@@ -1,0 +1,49 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* A live number as it counts [kpadopt4, tick; Kenny, 2026-10-17: "geen fan van de cirkel rond de waarde, zoek een meer
+       forest optie", then the trees, the tag and the trail round it not approved; he picked the branded digits]. The
+       change is in the digits: nothing is drawn round, behind, under or after the figure. The element, its box and its
+       text are untouched (no pseudo-element, no padding, no transform); the digits are branded for as long as the count
+       runs (--kp-tick): stamped hot in clay with a char edge that is burned out of the wood, then cooled into the ink
+       (the edge lies outside the glyph, the counters stay open). The paint is the plain ink again on the frame the count
+       lands, so nothing has to be put back. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-kp-tick][data-kp-tick-state='running'] {
+            --kp-fo-tick-time: calc(var(--kp-tick, 600) * 1ms);
+            animation:
+                kp-fo-tick-stamp var(--kp-fo-tick-time) linear both,
+                kp-fo-tick-cool var(--kp-fo-tick-time) linear both;
+            background: none;
+            -webkit-text-fill-color: color-mix(in oklab, var(--chart-2) calc(var(--kp-fo-ember) * 100%), currentColor);
+            -webkit-text-stroke: calc(var(--kp-fo-grown) * 0.08em) color-mix(in oklab, var(--accent-foreground) 85%, transparent);
+            paint-order: stroke fill;
+            /* The package dims a busy element (layout.css, --kp-busy-opacity, 0.7): the digits are what changes here, so they
+               keep their full ink. */
+            --kp-busy-opacity: 1;
+        }
+
+        /* The brand lands hot in the first fifth and its char edge burns back into the wood as it cools. */
+        @keyframes kp-fo-tick-stamp {
+            0% {
+                --kp-fo-grown: 0;
+                animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+            }
+            18% {
+                --kp-fo-grown: 1;
+                animation-timing-function: var(--kp-sig-fo-wither);
+            }
+            100% {
+                --kp-fo-grown: 0;
+            }
+        }
+
+        /* How much of the treatment is left: all of it for the first half, then none by the time the count lands. */
+        @keyframes kp-fo-tick-cool {
+            0%,
+            50% {
+                --kp-fo-ember: 1;
+            }
+            100% {
+                --kp-fo-ember: 0;
+            }
+        }
+    }

@@ -1,0 +1,30 @@
+/* @part: key-value-grid: signature layer */
+    /* The key-value grid: the keys in spaced Josefin capitals, hairlines of gold, a changed row marked by a lozenge. */
+    [data-theme='deco'] .kp-kv__row > dt {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-kv__row > dd {
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-kv--lines > .kp-kv__row {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-kv {
+        --kp-glyph-changed: '\00a0\25C6';
+    }
+    [data-theme='deco'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--kp-sig-deco-gold-lt);
+        font-size: 0.6em;
+        vertical-align: 0.15em;
+    }
+    [data-theme='deco'] .kp-kv__row[data-kp-state='error'] > dd {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-kv__row[data-kp-state='error']::before {
+        content: none;
+    }
+

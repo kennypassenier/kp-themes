@@ -1,0 +1,7 @@
+/* @part: action-tiles: signature layer; also facet-list */
+    [data-theme='formal'] .kp-actions {
+        --kp-actions-gap: 0.5rem;
+    }
+    [data-theme='formal'] .kp-facet {
+        --kp-facet-hover: var(--muted);
+    }

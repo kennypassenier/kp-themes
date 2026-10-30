@@ -1,0 +1,42 @@
+/* @part: switch: signature layer */
+    /* The skeleton is the waiting screen too: see "The waiting screen"
+       below (loading "raster"). */
+
+    [data-theme='nostromo'] .kp-switch {
+        --kp-switch-radius: 0.3rem;
+        --kp-switch-thumb-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background:
+            radial-gradient(circle at calc(100% - 0.6rem) 50%, hsl(from var(--foreground) h s l / 0.35) 0 0.24rem, transparent 0.26rem),
+            hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:not(:focus-visible) {
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+            var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked {
+        border-color: var(--border-strong);
+        background:
+            radial-gradient(circle at 0.6rem 50%, var(--primary-foreground) 0 0.06rem, var(--kp-sig-no-led) 0.12rem 0.24rem, transparent 0.26rem),
+            hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+            var(--card);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+

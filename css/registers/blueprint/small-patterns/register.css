@@ -1,0 +1,58 @@
+/* @part: small-patterns: register layer; also datatable, table, diff */
+    [data-theme='blueprint'] .kp-copyable__button {
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='blueprint'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='blueprint'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
+    /* ── Data: hairline tables and panels ─────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-table th {
+        background: var(--card);
+        /* The reach above a sticky header paints this ground too [fix-32]. */
+        --kp-datatable-head-ground: var(--card);
+        border-block-end: 1px solid var(--border-strong);
+        font-weight: 600;
+    }
+
+    [data-theme='blueprint'] .kp-table td {
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='blueprint'] .kp-datatable {
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: var(--card);
+    }
+
+    [data-theme='blueprint'] .kp-datatable__bar {
+        background: var(--background);
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='blueprint'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-diff {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        font-family: var(--theme-font-mono);
+    }
+

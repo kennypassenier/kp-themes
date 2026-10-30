@@ -1,0 +1,74 @@
+/* @part: heat-grid: signature layer; also run-timeline, week-agenda, bar-cell, matrix */
+    /* Heat grid and matrix: vents lit from behind, a dark slot per cell with the tone as the light inside it; nothing
+       scales; pointing lights the slot's rim; the pick is the LED tab under its night. Waiting: each row of cells is one
+       LED window computing, the matrix's cells small screens. */
+    [data-theme='nostromo'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 2px;
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='nostromo'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='nostromo'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='nostromo']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='nostromo'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: radial-gradient(ellipse at 50% 50%, hsl(from var(--background) h s 100% / 0.28), transparent 70%), var(--kp-heat-pattern);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--background) h s 0% / 0.6),
+            0 0 4px hsl(from var(--kp-heat-fill) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='nostromo'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow:
+            inset 0 0 0 1px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-heat__cell[data-kp-picked],
+    [data-theme='nostromo'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--foreground);
+        outline-offset: 1px;
+        box-shadow: 0 4px 0 -1px var(--kp-sig-no-led);
+    }
+    [data-theme='nostromo'] :is(.kp-heat__label, .kp-matrix__name, .kp-heat__col, .kp-matrix__corner) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='nostromo'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: var(--kp-sig-no-key);
+    }
+    [data-theme='nostromo'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-heat__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='nostromo'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-family: var(--theme-font-mono);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: label tape, mono capitals on a hairline frame with 2 px corners; pointing lights a
+       pill's rim; the next run has the lit LED; the line for now is the LED orange. A running run is the LED window
+       computing along its length. */
+    [data-theme='nostromo'] .kp-week {
+        --kp-week-pill-radius: var(--kp-sig-no-tape);
+        --kp-week-now: var(--kp-sig-no-led);
+    }
+    /* A planned run [gaps-time-1019]: tape ticks, vertical. */
+    [data-theme='nostromo'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(90deg, color-mix(in oklab, var(--kp-gantt-fill) 60%, transparent) 0 1px, transparent 1px 6px);
+    }
+    [data-theme='nostromo'] .kp-gantt {
+        --kp-gantt-bar-radius: var(--kp-sig-no-tape);
+        --kp-gantt-now: var(--kp-sig-no-led);
+        --kp-gantt-state-ground: var(--card);
+    }

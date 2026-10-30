@@ -1,0 +1,39 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root); also tree-reorder-split, motion */
+    /* ── Every pair closes as its open reversed [all-themes audit, 2026-10-13;
+       lessons 11, 19, 21, 22, 26, 31, 36, 38] ─────────────────────────────
+       What drops from a trigger is cut top-down [G3]: the popover, the menu,
+       the combobox's list, the date picker's panel, the palette, the tour's
+       card and the header's dropdown, mega menu and phone panel open by the
+       dialog's cut (the panel uncovered from its top edge down, the cutter's
+       line running ahead of it in the second oxide), in the cut's 240 ms on the
+       theme curve, and close as that cut played backwards. Most had no motion
+       (popovers, menus, the list, the panel, the header); the palette faded. */
+    [data-theme='titanium'] {
+        --kp-sig-ti-panel: 240ms;
+        /* The theme curve turned round (1 - f(1 - x)): what a transition back
+           takes so frame t of the going is frame (T - t) of the coming. */
+        --kp-sig-ti-ease-back: cubic-bezier(0.8, 0, 0.8, 0.2);
+        /* The tour's dim and ring come in on the card's cut and go back the same
+           way, to no shadow at all. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: var(--kp-sig-ti-panel);
+        --kp-tour-dim-close-ease: var(--kp-sig-ti-ease-back);
+        /* The header's hover dropdown and its phone panel are held on screen for
+           their close (js/components.js; Firefox does not hold `display`). */
+        --kp-nav-close-time: 240ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='titanium'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* A tree branch's children glide open and shut (js/motion.js glideGroup());
+       shutting, the state is already `aria-expanded="false"` and the group is
+       kept drawn until the glide is over. They went at once. */
+    [data-theme='titanium'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='titanium'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+

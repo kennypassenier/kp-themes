@@ -1,0 +1,57 @@
+/* @part: share-bar: signature layer */
+    /* ── Share bar: the parts are held tubes with the stripe's gap; the part pointed at turns up in one step; the
+       threshold is a laser tick; the title is the OSD ── */
+    [data-theme='synthwave'] .kp-stackbar {
+        --kp-stackbar-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-stackbar__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-stackbar__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-stackbar__total,
+    [data-theme='synthwave'] .kp-stackbar__value {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-stackbar__bar {
+        background: hsl(from var(--sidebar-background) h s l / 0.8);
+        box-shadow: inset 0 -1px 0 var(--kp-hairline);
+    }
+    [data-theme='synthwave'] .kp-stackbar__seg {
+        border-radius: 0;
+        outline: 0;
+    }
+    [data-theme='synthwave'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        filter: brightness(1.2) drop-shadow(0 0 5px var(--kp-stackbar-colour, var(--chart-1)));
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card);
+    }
+    [data-theme='synthwave'] .kp-stackbar__mark {
+        inset-block: -4px;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 6px var(--primary);
+    }
+    [data-theme='synthwave'] .kp-stackbar__swatch {
+        border-radius: 1px;
+        box-shadow: 0 0 5px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='synthwave'] .kp-stackbar__item[data-kp-stackbar-lit] .kp-stackbar__label {
+        text-shadow: var(--kp-tube-pink);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+

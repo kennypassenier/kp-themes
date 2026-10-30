@@ -1,0 +1,54 @@
+/* @part: popover: signature layer; also card, menu-button */
+    /* The tooltip: a small plate, a faceted lozenge set on its inlay under
+       what it names (the inlay starts there). */
+    [data-theme='deco'] .kp-tooltip {
+        --kp-sig-deco-at: calc(1.1rem + 3.5px) 50%;
+        margin-block-start: 0.65rem;
+        padding: 0.45rem 1.1rem;
+        border-color: hsl(from var(--primary) h s l / calc(0.3 * var(--kp-sig-deco-up)));
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+    }
+
+    [data-theme='deco'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(var(--kp-sig-deco-n) - 1px - 3.5px);
+        inset-inline-start: 1.1rem;
+        z-index: 3;
+        inline-size: 7px;
+        block-size: 7px;
+        background: var(--kp-sig-deco-gem);
+        clip-path: none;
+        rotate: 45deg;
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.5));
+        opacity: min(var(--kp-sig-deco-draw) * 8, 1);
+    }
+
+    /* The menu: lacquer, entries in capitals. */
+    [data-theme='deco'] .kp-menu-button > .kp-menu {
+        padding: 0.4rem;
+    }
+
+    [data-theme='deco'] .kp-menu__item {
+        letter-spacing: 0.06em;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+
+    /* The card, the key figure, the tile: lacquer under Poiret titles and
+       Josefin figures (Q18); the figure is tabular and 600. */
+    [data-theme='deco'] .kp-card {
+        padding: 0.95rem 1.1rem;
+    }
+
+    [data-theme='deco'] :is(.kp-card__title, .kp-dialog__title, .kp-empty__title, .kp-page-header__title) {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] :is(.kp-card__title, .kp-page-header__title) {
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+

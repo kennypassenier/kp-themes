@@ -1,0 +1,38 @@
+/* @part: alert: signature layer; also menu-button */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] :is([data-kp-leaving], [data-kp-arriving]):is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi) {
+            position: relative;
+        }
+
+        [data-theme='formal'] :is([data-kp-leaving], [data-kp-arriving]):is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi)::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline: 0;
+            z-index: 1;
+            block-size: var(--kp-sig-fm-pen);
+            background: var(--primary);
+            clip-path: inset(0 0 0 100%);
+            pointer-events: none;
+            animation: kp-sig-formal-leave-pen 560ms linear forwards;
+        }
+
+        [data-theme='formal'] [data-kp-arriving]:is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi)::before {
+            animation-direction: reverse;
+            animation-fill-mode: backwards;
+        }
+
+        [data-theme='formal'] :is([data-kp-leaving], [data-kp-arriving]):is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi):dir(rtl)::before {
+            clip-path: inset(0 100% 0 0);
+            animation-name: kp-sig-formal-leave-pen-rtl;
+        }
+
+        /* js/menu-button.js writes the number of lines on the menu (`--kp-menu-count`),
+           so the ruling counts them without a :has() rule per number; the ninth
+           line and later are ruled with the eighth, as they always were. */
+        [data-theme='formal'] .kp-menu-button > .kp-menu {
+            --kp-fm-n: max(1, min(var(--kp-menu-count, 1), 8));
+        }
+
+    }
+

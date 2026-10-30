@@ -1,0 +1,70 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A toast is stuck on when it comes. js/motion.js reads this entrance
+           as the theme's arrival (a toast drawn out of sight) and lets
+           whatever arrives (a toast, an alert shown again, a card, the busy
+           table's layer) play its leave, below, backwards. */
+        [data-theme='pastel'] .kp-toast {
+            animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        /* The tour's card is stuck on when it opens, never on a step (lessons
+           4, 30). */
+        [data-theme='pastel'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        /* The busy month's card is stuck on when its grid starts to load. */
+        [data-theme='pastel'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        /* The side navigation (over and push) is stuck on in its own column
+           (no turn, kp-sig-pastel-sidenav-in) and taken off as that backwards; only then does it go back behind its
+           edge. The content a push panel moves glides on the landing's time
+           and curve, and back on its reflection. */
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-pastel-sidenav-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-pa-window);
+            animation: kp-sig-pastel-sidenav-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav__backdrop {
+            animation-duration: var(--kp-sig-pa-window);
+        }
+
+        [data-theme='pastel'] [data-kp-sidenav-shift='open'] {
+            transition-duration: var(--kp-sig-pa-window);
+            transition-timing-function: var(--kp-sig-pa-land);
+            transition-delay: 0s;
+        }
+
+        [data-theme='pastel'] [data-kp-sidenav-shift='closed'] {
+            transition-duration: var(--kp-sig-pa-window);
+            transition-timing-function: var(--kp-sig-pa-land-back);
+            transition-delay: 0s;
+        }
+
+        /* On a phone the bar's links are a panel of their own under the bar:
+           stuck on, and taken off as that backwards (js/components.js keeps it
+           open `--kp-nav-close-time` while `[data-kp-nav-closing]`). */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-pastel-stuck-plate-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+        }
+    }
+

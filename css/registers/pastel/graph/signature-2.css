@@ -1,0 +1,14 @@
+/* @part: graph: signature layer */
+    [data-theme='pastel'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='pastel'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.62;
+    }
+
+    [data-theme='pastel'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 10 90;
+        --kp-graph-edge-anim: kp-graph-spark 1800ms ease-in-out infinite;
+        --kp-graph-edge-stagger: -130ms;
+    }

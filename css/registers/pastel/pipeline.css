@@ -1,0 +1,76 @@
+/* @part: pipeline: signature layer; also small-patterns, state-plate */
+    /* The pipeline: a lane is a sheet of paper with its sky pass off register, its head a sticker on the stage's own
+       plate and peel; a card is a sticker that lifts 2 px on its peel when pointed at and sticks down when pressed;
+       the open one is ringed in plum; a dimmed one is a dashed outline with no pass; the board's sentence is paper. */
+    [data-theme='pastel'] .kp-pipeline {
+        --kp-pipeline-gap: 1rem;
+    }
+    [data-theme='pastel'] .kp-pipeline__lane {
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--muted);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-pipeline__head {
+        border-color: transparent;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 3px 0 hsl(from var(--kp-pipeline-tone) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-pipeline__share {
+        font-weight: 600;
+    }
+    [data-theme='pastel'] .kp-pipeline__card {
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card:is(button, a):hover {
+        translate: 0 -2px;
+        border-color: var(--border-strong);
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card:is(button, a):active {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card:focus-visible {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='pastel'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--primary);
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 4px 0 1px var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card[data-kp-dimmed] {
+        border-width: 2px;
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-pipeline__mark {
+        border-radius: calc(var(--kp-sig-pa-r-ctl) * 0.6);
+        box-shadow: 0 2px 0 hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s calc(l * 0.6));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] :is(.kp-pipeline__card, .kp-pipeline__mark) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* Drawings for an empty state: the sticker sheet (js/art.js). Each stroke is stuck on in reading order, 60 ms apart
+       on the soft landing: the second pass slides in along the misregistration line, the paper swings down from its
+       top-start corner, the tape last. The tape is the last stroke of every drawing, mint. Reduced, the drawing is
+       stuck on. */
+    [data-theme='pastel'] .kp-art {
+        display: block;
+        --kp-art-stroke: 1.5px;
+    }
+    [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] {
+        display: inline;
+    }
+    /* The drawing takes the place of the empty state's halftone disc; the fold stays. */
+    [data-theme='pastel'] .kp-empty[data-kp-art]::before {
+        content: none;
+    }

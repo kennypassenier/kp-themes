@@ -1,0 +1,72 @@
+/* @part: step-list: signature layer */
+    /* The journey: a path of blocks. */
+    [data-theme='brutalism'] .kp-steplist--journey {
+        --kp-journey-rule: 4px;
+        --kp-steplist-mark: 1.5rem;
+        --kp-steplist-mark-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__mark {
+        border: 3px solid var(--border-strong);
+        background-color: var(--card);
+        box-shadow: 2px 2px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:not([data-state='current']) .kp-steplist__title {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        background: var(--border-strong);
+        color: var(--card);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='done'][data-kp-tone] .kp-steplist__mark {
+        border-color: var(--border-strong);
+        background: var(--kp-step-tone);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--border-strong);
+        background: var(--kp-step-tone, var(--secondary));
+        translate: -2px -2px;
+        box-shadow: 5px 5px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='failed'] .kp-steplist__mark {
+        border-color: var(--border-strong);
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: repeating-linear-gradient(180deg, var(--border-strong) 0 6px, transparent 6px 10px);
+        }
+        [data-theme='brutalism']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--border-strong);
+        }
+        [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(135deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+        }
+    }
+

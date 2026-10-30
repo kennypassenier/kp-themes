@@ -1,0 +1,23 @@
+/* @part: small-patterns: signature layer */
+    /* ── Drawings for an empty state: the spectrum, the instrument's screen. Laid by one pass, 660 ms, left to right
+       at one pace, then still. ── */
+    [data-theme='dark'] .kp-art {
+        display: block;
+    }
+    [data-theme='dark'] .kp-art > g[data-kp-art-set='spectrum'] {
+        display: inline;
+    }
+    [data-theme='dark'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }
+    [data-theme='dark'] .kp-art__rule {
+        filter: drop-shadow(0 0 4px hsl(from var(--chart-1) h s l / 0.4));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-art {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+            --kp-sig-dk-cut: 0 100% 0 0;
+        }
+    }
+

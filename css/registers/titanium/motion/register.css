@@ -1,0 +1,72 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component; also navbar */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). The
+       word resolve is one monotonic change (blur and translate settle
+       alongside the opacity move) [S49]. */
+    /* The word converges [scope-16]. It arrives split into two of the
+       oxide's own wavelengths, out of focus, and the two halves come
+       together as the blur clears — an instrument bringing a line into
+       register. The demo's own mechanism, values and all.
+
+       The split is a text-shadow rather than two copies of the word, so
+       there is nothing for a screen reader to read twice. */
+    /* The word is milled into place [scope-17]. It arrives a twelfth of an
+       em to the left and slides square — one short linear pass, the way a
+       tool finishes a face. No blur and no chromatic split: those belong to
+       the spectral instrument, which is bringing a line into register;
+       this is a part being cut.
+
+       Its own name rather than the shared `kp-resolve`, because a keyframe
+       name is global: two registers writing the same name would hand
+       whichever loaded last to BOTH themes. Five registers do share
+       `kp-dialog-in`, and that is correct — they share the shape. These
+       two do not. */
+    @keyframes kp-mill {
+        0% {
+            opacity: 0;
+            transform: translateX(-0.12em);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-ignite {
+        100% {
+            color: var(--primary);
+            text-decoration-color: var(--border-strong);
+        }
+    }
+
+    /* The rule draws itself from the leading edge [scope-16]. Scroll-bound
+       like the ignite above it: the browser scrubs this by the heading's
+       own position, so it cannot free-run and cannot loop. */
+    @keyframes kp-draw {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the row a step lighter than the page it sits on. */
+    [data-theme='titanium'] .kp-marquee {
+        border-block: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+        background: color-mix(in srgb, var(--card) 60%, var(--background));
+        --kp-marquee: 50000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='titanium'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='titanium'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+    }
+

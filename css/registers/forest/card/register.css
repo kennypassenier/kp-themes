@@ -1,0 +1,67 @@
+/* @part: card: register layer; also dialog, popover, theme-menu */
+    /* ── Cards, the dossier and its stamp ───────────────────────────── */
+
+    [data-theme='forest'] .kp-card {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    /* The stamp: a rotated field label, the theme's own restraint — one
+       colour, no plate. */
+    [data-theme='forest'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        top: var(--kp-space-md);
+        right: var(--kp-space-md);
+        font: 700 0.68rem/1 var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--destructive);
+        border: 2px solid var(--destructive);
+        padding: 0.2rem 0.45rem;
+        transform: rotate(-6deg);
+        opacity: 0.85;
+    }
+
+    [data-theme='forest'] .kp-card[data-kp-label] {
+        position: relative;
+    }
+
+    /* Popovers, menus and overlays: the same bordered card language. */
+    [data-theme='forest'] .kp-dialog,
+    [data-theme='forest'] .kp-popover,
+    [data-theme='forest'] .kp-menu,
+    [data-theme='forest'] .kp-toast,
+    [data-theme='forest'] .kp-tooltip,
+    [data-theme='forest'] .kp-confirm,
+    [data-theme='forest'] .kp-datepicker__panel,
+    [data-theme='forest'] .kp-combobox__list,
+    [data-theme='forest'] .kp-palette,
+    [data-theme='forest'] .kp-theme-menu__list {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        box-shadow: 0 20px 44px -16px color-mix(in srgb, var(--foreground) 45%, transparent);
+    }
+
+    /* A menu inside a popover is the popover's list, not a second plate
+       (G6, G7: one plate, one leaf corner; F-24). */
+    [data-theme='forest'] .kp-popover > .kp-menu {
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='forest'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+

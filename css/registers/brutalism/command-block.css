@@ -1,0 +1,37 @@
+/* @part: command-block: signature layer */
+    /* Command block: the terminal is ink with paper words, the prompt the yellow hand. */
+    [data-theme='brutalism'] .kp-command {
+        --kp-command-prompt-ink: var(--secondary);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-command__head {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-command__shell {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-command__code {
+        background: var(--foreground);
+        color: var(--background);
+    }
+    [data-theme='brutalism'] .kp-command__code > code {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-command__where {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+    }
+

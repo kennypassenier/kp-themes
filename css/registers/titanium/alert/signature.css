@@ -1,0 +1,8 @@
+/* @part: alert: signature layer */
+    [data-theme='titanium'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+

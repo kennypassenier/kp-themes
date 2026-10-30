@@ -1,0 +1,43 @@
+/* @part: base: register layer — rules that belong to no one component */
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar-track {
+        background: var(--background);
+    }
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border: 2px solid var(--background);
+    }
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+    }
+
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    /* The hero grid of the reference: the copy wide, the spec sheet beside
+       it, both aligned to the bottom. */
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: 3rem;
+        align-items: end;
+    }
+
+    @container (max-width: 52rem) {
+        [data-theme='cyberpunk'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] {
+        position: relative;
+        overflow: hidden;
+        padding-block: 3rem 4.5rem;
+    }
+

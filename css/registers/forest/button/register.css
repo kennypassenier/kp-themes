@@ -1,0 +1,129 @@
+/* @part: button: register layer; also tabs, breadcrumb-pagination */
+    /* A tab, a crumb and a page number are links in a bar (G11; Kenny,
+       2026-10-09 on research/forest-uniformity, the bar: "a link answers as
+       a link"): pointed at, they take forest's link answer, the 2 px green
+       rule under the words with the words in green, drawn in contact time.
+       The rule is laid at rest in transparent ink, so only its colour moves.
+       The selected tab keeps its own rule and the current page its plate. */
+    [data-theme='forest'] :is(.kp-tab, .kp-breadcrumb a, .kp-pagination a) {
+        text-decoration-line: underline;
+        text-decoration-thickness: 2px;
+        text-decoration-color: transparent;
+        text-underline-offset: 0.35em;
+    }
+
+    [data-theme='forest'] :is(.kp-tab:not([aria-selected='true']), .kp-breadcrumb a, .kp-pagination a:not([aria-current])):hover {
+        color: var(--primary);
+        text-decoration-color: var(--primary);
+    }
+
+    /* ── Buttons ─────────────────────────────────────────────────────── */
+
+    [data-theme='forest'] .kp-button {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        color: var(--foreground);
+    }
+
+    /* Pointing is blazing, and a press closes the blaze in [themes/forest/
+       CHARACTER.md G12; Kenny, 2026-10-07 on research/forest-character:
+       hover = the blaze ring, press = the blaze closes in]. The trail's
+       blaze is laid round the part: a 2 px dashed ring in the acting green.
+       At rest it is not yet laid (transparent, 5 px out); pointing brings it
+       to 2 px; a press pulls it to 1 px and turns it solid, 200 ms, and a
+       release plays that backwards. The part itself does not move and casts
+       nothing, and its siblings are left alone. A menu entry fills its row
+       edge to edge, so its ring is laid inside. The transition lives with
+       the other motion, below. */
+    /* Every part a person acts on blazes (Kenny, 2026-10-09 on research/
+       forest-uniformity: pointing, fields and the bar "blaze"): the bar's
+       call to action and its toggle, a date picker's day, a chart's legend
+       key, a reorder row, a field, a select, a check, a switch and the drop
+       zone take the button's ring. A row that fills its list edge to edge
+       (a menu entry, a theme option, a combobox or palette option, an
+       accordion heading, a dropdown link, a side navigation row, a table
+       row) takes it laid just inside, on the entry's kraft ground (rows:
+       "every row answers as a menu entry"). A tree row draws the same on its
+       first line (below). Focus is the two-channel ring and wins: the blaze
+       is not laid on a part the keyboard is on. */
+    [data-theme='forest']
+        :where(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-nav__link--cta,
+            .kp-nav__toggle,
+            .kp-datepicker__day,
+            .kp-chart__source,
+            .kp-chart__show-all,
+            .kp-reorder [data-kp-item],
+            .kp-field__input,
+            .kp-combobox__input,
+            .kp-datatable__search,
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-upload__zone,
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ) {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+
+    [data-theme='forest']
+        :where(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-nav__link--cta,
+            .kp-nav__toggle,
+            .kp-datepicker__day,
+            .kp-chart__source,
+            .kp-chart__show-all,
+            .kp-reorder [data-kp-item],
+            .kp-field__input,
+            .kp-combobox__input,
+            .kp-datatable__search,
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-upload__zone,
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ):hover:not(:disabled, [aria-disabled='true'], :focus-visible) {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest']
+        :where(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-nav__link--cta,
+            .kp-nav__toggle,
+            .kp-datepicker__day,
+            .kp-chart__source
+        ):active:not(:disabled, [aria-disabled='true']) {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: 1px;
+    }
+

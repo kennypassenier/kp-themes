@@ -1,0 +1,25 @@
+/* @part: diff: register layer */
+    [data-theme='brutalism'] .kp-diff {
+        background: var(--card);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-diff__line,
+    [data-theme='brutalism'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+
+    /* The hunk header is a slab of its own: the same thick rule the frame
+       carries, and the foreground ink on the muted plate. */
+    [data-theme='brutalism'] .kp-diff__hunk {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-diff__hunk:not(:first-child) {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+

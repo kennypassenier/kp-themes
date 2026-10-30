@@ -1,0 +1,52 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: entries of a list, a menu entry's corner and its mint wash. The counts on their way are pom-poms of
+       the caterpillar standing in their column, the hump running down the list. */
+    [data-theme='pastel'] .kp-facets {
+        --kp-facet-radius: calc(var(--kp-sig-pa-r-ctl) * 0.8);
+    }
+    [data-theme='pastel'] .kp-facet {
+        --kp-facet-hover: var(--accent);
+    }
+    [data-theme='pastel'] .kp-facet:hover {
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background:
+            radial-gradient(circle closest-side, var(--accent) 0 calc(100% - 0.5px), transparent 100%) 100% 50% / 1.1em 1.1em no-repeat,
+            radial-gradient(circle, var(--kp-sig-pa-tape-stripe) 0.6px, transparent 1.1px) 0 0 / 3px 3px;
+        -webkit-mask: radial-gradient(circle closest-side, var(--foreground) 0 calc(100% - 0.5px), transparent 100%) 100% 50% / 1.1em 1.1em no-repeat;
+        mask: radial-gradient(circle closest-side, var(--foreground) 0 calc(100% - 0.5px), transparent 100%) 100% 50% / 1.1em 1.1em no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-pastel-bug-rise calc(var(--kp-sig-pa-loop) / 2) ease-in-out infinite;
+        }
+        [data-theme='pastel'] .kp-facets[aria-busy='true'] li:nth-child(2) .kp-facet__count {
+            animation-delay: 140ms;
+        }
+        [data-theme='pastel'] .kp-facets[aria-busy='true'] li:nth-child(3) .kp-facet__count {
+            animation-delay: 280ms;
+        }
+        [data-theme='pastel'] .kp-facets[aria-busy='true'] li:nth-child(4) .kp-facet__count {
+            animation-delay: 420ms;
+        }
+        [data-theme='pastel'] .kp-facets[aria-busy='true'] li:nth-child(n + 5) .kp-facet__count {
+            animation-delay: 560ms;
+        }
+    }
+
+    /* Heat grid and matrix: small stickers with a flat pass; pointing lifts a cell 2 px, a press sticks it down; the
+       pin is the dashed plum line. Waiting: a heat row is one caterpillar (its cells give their place to it), a matrix
+       cell is a pom-pom, the hump running along the row to the head at its end. */
+    [data-theme='pastel'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 6px;
+        --kp-heat-cell-gap: 4px;
+        --kp-heat-cell-lift: calc(1.5px * var(--kp-sig-pa-dir)) 1.5px 0 var(--kp-sig-pa-pass-c);
+        --kp-heat-cell-hover: translateY(-2px);
+        --kp-matrix-cell-hover: translateY(-2px);
+    }
+    [data-theme='pastel'] .kp-matrix {
+        --kp-heat-cell-radius: calc(var(--kp-sig-pa-r-ctl) * 0.7);
+        --kp-matrix-gap: 5px;
+    }

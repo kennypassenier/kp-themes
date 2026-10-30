@@ -11,14 +11,15 @@ its parts, so a hand edit of a generated file is refused. Edit a part, regenerat
   parts (`base.css` first, then one file per concern). Names follow the component, not the class prefix, so
   `.kp-nav` lives in `navbar/`, `.kp-sidenav` in `sidenav/`, `.kp-heat` in `heat-grid.css`. When in doubt,
   `grep -rn "\.kp-x" css/components/`.
-- The theme look of the same component is in `css/registers/<theme>/x…`, using the same component name where the
-  register is organised per component. A register also has `base.css` (the theme's knobs and texture) and, after
-  it, the parts of its `kp.signature` layer (`signature-base/`, `the-approved-grammar.css`, and so on).
+- The theme look of the same component is in `css/registers/<theme>/x.css` (or `x/…`), under the **same name** as the
+  component in `css/components/`: `.kp-datatable` is `components/datatable/` and `registers/<theme>/datatable…`.
+  Theme-wide parts have plain names: `properties.css` (the registered `@property` numbers), `tokens`, `base`,
+  `signature` and `motion`. A name that holds several parts is a folder (`button/`); one part is a plain file.
 - Every part opens with one line, `/* @part: <component>: <what it styles> */`. The generator strips that line, so
   it never reaches the output.
-- A layer block that is too long for one file is split over several parts: the manifest holds the exact
-  `@layer … {` opening and the closing `}`, and the parts hold only what sits inside it. A rare part may therefore
-  start or end inside a nested `@media` block; the manifest order is what makes it whole.
+- Every part is whole, valid CSS: complete rules and at-rule blocks, so it can be read and linted on its own
+  (`npm run check:css-parse` parses each one). The manifest wraps parts in their `@layer … {` … `}`: it holds the
+  exact opening and the closing, and the parts hold what sits inside.
 - No hand-written source file may pass 500 lines (`npm run check:file-size`, `gates/file-size.json`).
 
 ## How the generated files are built
@@ -188,6 +189,91 @@ generator refuses a part that is not listed, a listed part that is missing and a
 
 ## css/registers/
 
-One folder per theme: `blueprint`, `brutalism`, `cyberpunk`, `dark`, `deco`, `forest`, `formal`, `nostromo`,
-`pastel`, `solstice`, `synthwave`, `titanium`. Each has an `index.json`, a `base.css` and parts named after the
-component or concern they restyle; list a folder to see them, and read the first line of a part for what it holds.
+One folder per theme, with the same layout in every theme. A part is named after the component it styles
+(the names of `css/components/` above); a name with several parts is a folder, a name with one part is a file.
+
+- **Inside a component folder** the files are named after the cascade layer they sit in: `register.css`
+  (`kp.register`, the theme's look of the component), `signature.css` (`kp.signature`, its motion and character),
+  and for a layer that is entered more than once `register-2.css`, `register-3.css`, `signature-2.css` and so
+  on. The number is the order in `index.json`, which is the cascade order; it is never a version.
+- **Theme-wide names** are `properties.css` (top-level `@property` registrations), `tokens` (the knobs, custom
+  properties on the theme root), `base` (rules of no one component: type, hooks, the page), `signature` (the same
+  for `kp.signature`) and `motion` (keyframes and `prefers-reduced-motion` blocks of no one component, such as the
+  shared opening and leaving of dialogs, drawers and the tour). They become folders in the same way.
+- **A part is named for the component that owns most of its lines.** Neighbouring runs of a few lines for other
+  components ride along (the part's `@part` line says "also …"): the generated stylesheet has one fixed order, and
+  the cascade within a layer depends on it, so a rule cannot move away from its neighbours. `grep -rn "\.kp-x"
+  css/registers/<theme>/` finds a class anywhere.
+- `index.json` lists the parts in output order, grouped by the `@layer` block they sit in.
+
+### blueprint
+
+Theme-wide: `base/`, `motion/`, `properties.css`, `tokens/`.
+
+Components: `ack-gate.css`, `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert.css`, `auto-refresh.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink/`, `code-block.css`, `combobox.css`, `command-block.css`, `compare-slider.css`, `datatable.css`, `dialog/`, `facet-list/`, `focus-steps.css`, `form-field/`, `form-grid.css`, `forms.css`, `graph/`, `identity-mark.css`, `key-figures.css`, `key-value-grid.css`, `kitchen-timers.css`, `log.css`, `menu-button.css`, `meter/`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover/`, `progress-spinner-skeleton/`, `question-card.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `state-plate.css`, `state-word.css`, `status-rows.css`, `step-list/`, `switch.css`, `tabbar.css`, `tabs.css`, `time-field.css`, `toast/`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `wheel.css`.
+
+### brutalism
+
+Theme-wide: `base.css`, `motion/`, `properties.css`, `tokens.css`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block.css`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `countdown.css`, `datatable/`, `dialog/`, `diff.css`, `drawer-tour.css`, `facet-list.css`, `focus-steps.css`, `form-field/`, `form-grid.css`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figure-columns.css`, `key-figures/`, `key-value-grid.css`, `kitchen-timers.css`, `log.css`, `media.css`, `menu-button.css`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover.css`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `showing-data.css`, `sidenav/`, `small-patterns/`, `state-plate.css`, `status-rows/`, `step-list/`, `switch.css`, `tabbar.css`, `table.css`, `tabs.css`, `tiles.css`, `time-chart.css`, `toast/`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`.
+
+### cyberpunk
+
+Theme-wide: `base/`, `motion/`, `signature.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert.css`, `badge.css`, `breadcrumb-pagination.css`, `bullet-rows/`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `connection-path.css`, `conversation.css`, `countdown.css`, `dialog.css`, `drawer-tour.css`, `facet-list/`, `focus-steps.css`, `form-field/`, `forms.css`, `gallery.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `kitchen-timers.css`, `log.css`, `media.css`, `menu-button/`, `meter/`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `progress-spinner-skeleton/`, `quote-card.css`, `range-picker.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar/`, `showing-data.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `status-rows.css`, `step-list/`, `switch.css`, `tabbar.css`, `table.css`, `time-field.css`, `toast.css`, `tree-reorder-split.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel/`.
+
+### dark
+
+Theme-wide: `base.css`, `motion/`, `properties.css`, `signature.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert/`, `badge.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `combobox.css`, `command-block.css`, `compare-slider.css`, `conversation.css`, `datatable/`, `dialog/`, `facet-list.css`, `focus-steps.css`, `form-field/`, `forms.css`, `gallery.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `kitchen-timers.css`, `menu-button.css`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `progress-spinner-skeleton/`, `quote-card.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `state-word/`, `status-rows.css`, `step-list.css`, `switch.css`, `tabbar.css`, `tabs.css`, `time-field.css`, `toast.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`.
+
+### deco
+
+Theme-wide: `base.css`, `motion/`, `properties.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink/`, `code-block.css`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `conversation.css`, `datatable/`, `dialog/`, `facet-list.css`, `focus-steps/`, `form-field/`, `form-grid.css`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `key-value-grid.css`, `kitchen-timers.css`, `menu-button.css`, `meter/`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover/`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `showing-data.css`, `sidenav.css`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `status-rows.css`, `step-list.css`, `switch.css`, `tabbar.css`, `table.css`, `tabs.css`, `toast/`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `wheel.css`.
+
+### forest
+
+Theme-wide: `base.css`, `motion/`, `properties.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert.css`, `auto-refresh.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `combobox/`, `compare-slider.css`, `datatable.css`, `dialog.css`, `drawer-tour/`, `facet-list.css`, `form-field/`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `kitchen-timers.css`, `menu-button/`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover.css`, `progress-spinner-skeleton/`, `question-card.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `showing-data.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `state-word.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `tiles.css`, `time-chart/`, `toast/`, `tree-reorder-split/`, `typed-confirmation.css`, `upload-wizard/`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `weekday-picker.css`, `wheel.css`.
+
+### formal
+
+Theme-wide: `base.css`, `motion.css`, `properties.css`, `signature.css`, `tokens/`.
+
+Components: `ack-gate.css`, `action-tiles/`, `alarm.css`, `alert/`, `badge.css`, `button/`, `card/`, `command-palette/`, `connection-path.css`, `dependency-list.css`, `dialog/`, `drawer-tour.css`, `entity-card.css`, `form-field/`, `graph/`, `heat-grid.css`, `key-figures/`, `kitchen-timers.css`, `menu-button.css`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header.css`, `pipeline.css`, `popover/`, `progress-spinner-skeleton/`, `run-timeline/`, `segmented-toolbar.css`, `showing-data.css`, `sidenav/`, `small-patterns/`, `state-word/`, `step-list/`, `switch.css`, `tabbar.css`, `toast/`, `toggle-button.css`, `transfer.css`, `tree-reorder-split.css`, `upload-wizard.css`, `version-jump.css`, `week-agenda.css`, `wheel.css`.
+
+### nostromo
+
+Theme-wide: `base/`, `motion/`, `properties.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `breadcrumb-pagination.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `compare-slider.css`, `countdown.css`, `dialog/`, `focus-steps.css`, `form-field/`, `form-grid/`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `key-value-grid.css`, `kitchen-timers.css`, `master-detail.css`, `meter.css`, `navbar/`, `page-header/`, `pipeline.css`, `progress-spinner-skeleton/`, `quantity.css`, `quote-card.css`, `range-picker.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav.css`, `slider.css`, `small-patterns/`, `state-plate.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `table/`, `tabs.css`, `time-chart.css`, `toast/`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`, `who-can-come.css`.
+
+### pastel
+
+Theme-wide: `base.css`, `motion/`, `properties/`, `signature.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert.css`, `auto-refresh.css`, `badge.css`, `breadcrumb-pagination.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block.css`, `combobox.css`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `countdown.css`, `datatable.css`, `dialog.css`, `facet-list.css`, `focus-steps.css`, `form-field/`, `forms.css`, `gallery.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures.css`, `kitchen-timers/`, `matrix.css`, `menu-button.css`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover/`, `progress-spinner-skeleton/`, `question-card.css`, `quote-card.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `table.css`, `time-chart/`, `toast/`, `upload-wizard/`, `uptime-strip.css`, `usual-picker.css`, `weekday-picker.css`, `wheel.css`.
+
+### solstice
+
+Theme-wide: `base.css`, `motion/`, `properties.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block.css`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `conversation.css`, `countdown.css`, `dialog/`, `facet-list.css`, `focus-steps.css`, `form-field/`, `form-grid.css`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-value-grid.css`, `kitchen-timers.css`, `meter.css`, `month-heatmap.css`, `navbar/`, `page-header/`, `pipeline.css`, `popover.css`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `state-plate.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `toast/`, `tree-reorder-split.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `wheel.css`.
+
+### synthwave
+
+Theme-wide: `base/`, `motion/`, `signature.css`, `tokens.css`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `attention-band.css`, `bullet-rows/`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `conversation.css`, `countdown.css`, `dialog/`, `facet-list.css`, `focus-steps/`, `form-field/`, `forms.css`, `gallery.css`, `graph/`, `heat-grid.css`, `identity-mark/`, `key-figures/`, `kitchen-timers.css`, `meter.css`, `navbar/`, `page-header/`, `pipeline.css`, `progress-spinner-skeleton/`, `question-card.css`, `quote-card.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `showing-data/`, `sidenav/`, `slider.css`, `small-patterns/`, `snooze-picker.css`, `state-plate/`, `state-word.css`, `status-rows.css`, `step-list/`, `switch.css`, `tabbar.css`, `table/`, `tabs.css`, `time-chart/`, `toast/`, `tree-reorder-split.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `week-agenda.css`, `wheel.css`.
+
+### titanium
+
+Theme-wide: `base/`, `motion/`, `properties.css`, `tokens/`.
+
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `command-palette.css`, `compare-slider.css`, `countdown.css`, `datatable/`, `dialog/`, `focus-steps.css`, `form-field/`, `form-grid/`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-value-grid/`, `kitchen-timers.css`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover/`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar/`, `sidenav.css`, `slider.css`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `status-rows.css`, `step-list.css`, `switch.css`, `tabbar.css`, `table/`, `tabs.css`, `time-field.css`, `toast/`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`.

@@ -1,0 +1,29 @@
+/* @part: checklist-sink: signature layer */
+    /* Checklist: a row is read on a scale when pointed at (the two amber witness lines and a ruler along its foot, no
+       wash); a ticked item is struck through in amber, the redline; heads and counts are lettering. */
+    [data-theme='blueprint'] .kp-checklist__row {
+        border-radius: 0;
+    }
+    @media (hover: hover) {
+        [data-theme='blueprint'] .kp-checklist__row:hover {
+            background:
+                linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+                linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat,
+                repeating-linear-gradient(90deg, var(--accent) 0 1px, transparent 1px 5px) 2px 100% / calc(100% - 4px) 3px no-repeat;
+        }
+    }
+    [data-theme='blueprint'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 1px;
+    }
+    [data-theme='blueprint'] :is(.kp-checklist__title, .kp-checklist__count, .kp-checklist__status, .kp-checklist__detail) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border-radius: 0;
+    }
+

@@ -1,0 +1,131 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also card, key-figures */
+    /* The leave, and the arrival that is its reverse. A part is dressed (the
+       fan opens from where it was folded away), hidden once covered, and
+       gone; arriving it plays the same backwards. Easings are literal: the
+       opening on the settle's inverse (the reversed play is the settle),
+       the stand linear. */
+    @keyframes kp-sig-deco-fan {
+        0% {
+            --kp-sig-deco-a1: 182deg;
+            --kp-sig-deco-a2: 182deg;
+            --kp-sig-deco-v: 1;
+            visibility: visible;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        50% {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            --kp-sig-deco-v: 1;
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        55% {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            visibility: hidden;
+        }
+
+        60% {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        98% {
+            --kp-sig-deco-v: 1;
+            visibility: hidden;
+        }
+
+        100% {
+            --kp-sig-deco-a1: 90deg;
+            --kp-sig-deco-a2: 90deg;
+            --kp-sig-deco-v: 0;
+            visibility: hidden;
+        }
+    }
+
+    /* A part that carries no dressing (a row, a step) folds away in the fan's
+       own shape: the part itself seen through the fan's sector, which folds
+       from the left. */
+    @keyframes kp-sig-deco-wipe {
+        from {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            --kp-sig-deco-a1: 182deg;
+            --kp-sig-deco-a2: 182deg;
+        }
+    }
+
+    /* ── Q9 · a live update: gilded. The figure flares gold, swells once and
+       settles; the box keeps its space (js/update.js). The update time the
+       theme reads is 600 ms; the flare is a second. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] {
+            --kp-update: gilded;
+        }
+
+        [data-theme='deco'] [data-kp-updating='gilded'] {
+            animation: kp-sig-deco-gilded calc(var(--kp-update-duration, 600ms) * 5 / 3) linear both;
+        }
+    }
+
+    @keyframes kp-sig-deco-gilded {
+        0% {
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        30% {
+            color: var(--primary);
+            filter: drop-shadow(0 0 0.4em var(--primary));
+            scale: 1.1;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* ── Q10 · loading: lift doors that part and close. Every waiting surface
+       the package has (a skeleton line, block or circle, a busy card, the
+       tiles of a busy grid, a key figure that loads, the table's busy panel,
+       a loading day, the loading meter, the loading entry of a menu, a busy
+       button, the chart's loading plot) is drawn the same way: two doors of
+       lacquer, each with its panel and a faceted gold lozenge for a handle,
+       meet at a gold double hairline down the middle of the part; they part
+       to the sides by a third and close again, slowly, like a lift's doors
+       waiting, 2400 ms, the wallpaper running on across both. The doors are
+       the part's ::before and ::after, one half of its width each, and the
+       part's own `overflow: clip` is what keeps them in it; one registered
+       number (--kp-sig-deco-p) is how far they have parted. They fill the
+       whole element and take its shape, so a line is a slim pair, a block a
+       pair of panels. Standing still (reduced motion) they stand parted by a
+       third, so the words under them read. ── */
+    [data-theme='deco'] [aria-busy='true'] {
+        --kp-busy-opacity: 1;
+    }
+
+    [data-theme='deco'] .kp-skeleton,
+    [data-theme='deco'] .kp-card[aria-busy='true'],
+    [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card,
+    [data-theme='deco'] .kp-kpi[aria-busy='true'],
+    [data-theme='deco'] .kp-datatable__busy-panel,
+    [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading'],
+    [data-theme='deco'] .kp-meter[data-kp-loading],
+    [data-theme='deco'] .kp-kpi__meter[data-kp-loading],
+    [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+    [data-theme='deco'] .kp-button[aria-busy='true'] {
+        --kp-sig-deco-p: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        animation: none;
+    }
+

@@ -1,0 +1,169 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* The hum band, top to past the foot, in 10 held steps (the scanlines'
+       layer stands). */
+    @keyframes kp-sig-nostromo-hum {
+        from {
+            background-position:
+                0 0,
+                0 -66.67%;
+        }
+
+        to {
+            background-position:
+                0 0,
+                0 173.33%;
+        }
+    }
+
+    /* The waiting screen's picture: written row by row from the top in 12
+       frames with the beam on its edge (0 to 60 %), standing whole without
+       the beam for 6 frames (60 to 90 %), blank for 2 (90 to 100 %). */
+    @keyframes kp-sig-nostromo-redraw {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position: 0 100%;
+            animation-timing-function: steps(12, end);
+        }
+
+        59.99% {
+            clip-path: inset(0);
+            background-position: 0 0%;
+            animation-timing-function: steps(1, end);
+        }
+
+        60%,
+        89.99% {
+            clip-path: inset(0);
+            background-position: 0 -100%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position: 0 -100%;
+        }
+    }
+
+    /* A skeleton's rows: each written in 4 frames, in its turn. */
+    @keyframes kp-sig-nostromo-redraw-row-1 {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(4, end);
+        }
+
+        19.99% {
+            clip-path: inset(0);
+            background-position:
+                0 0%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        20%,
+        89.99% {
+            clip-path: inset(0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-redraw-row-2 {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        20% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(4, end);
+        }
+
+        39.99% {
+            clip-path: inset(0);
+            background-position:
+                0 0%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        40%,
+        89.99% {
+            clip-path: inset(0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-redraw-row-3 {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        40% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(4, end);
+        }
+
+        59.99% {
+            clip-path: inset(0);
+            background-position:
+                0 0%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        60%,
+        89.99% {
+            clip-path: inset(0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+        }
+    }
+

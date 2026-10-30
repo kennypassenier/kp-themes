@@ -1,0 +1,89 @@
+/* @part: action-tiles: signature layer */
+    [data-theme='cyberpunk'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='cyberpunk'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-edge: transparent;
+        --kp-action-edge-hover: transparent;
+        --kp-action-press: 0 0;
+        --kp-action-title-font: var(--kp-mono);
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.12em;
+        --kp-action-title-size: 0.875rem;
+        --kp-action-pad: 0.75rem 0.875rem;
+        --kp-cp-ground: var(--card);
+        --kp-cp-grid-a: 0;
+        --kp-cp-lk: 3px;
+        --kp-cp-rest: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        --kp-cp-tile-grid:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        --kp-cp-tile-notch: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
+        --kp-cp-tile-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        --kp-cp-tile-lock: linear-gradient(transparent, transparent);
+        background: var(--kp-cp-tile-lock), var(--kp-cp-tile-grid), var(--kp-cp-tile-notch), var(--kp-cp-tile-scan), var(--kp-cp-ground);
+        box-shadow: var(--kp-cp-rest);
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-action > :not(.kp-action__state) {
+        position: relative;
+    }
+    /* The sentence is the machine's read-out: cyan reads (G5). */
+    [data-theme='cyberpunk'] .kp-action__meta {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        letter-spacing: 0.08em;
+    }
+    [data-theme='cyberpunk'] .kp-action__meta::before {
+        content: '// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-cp-grid-a: 0.3;
+        box-shadow: var(--kp-cp-rest);
+    }
+    [data-theme='cyberpunk'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-cp-grid-a: 0.6;
+        --kp-cp-ground: color-mix(in oklab, var(--primary) 12%, var(--card));
+        box-shadow: var(--kp-cp-rest);
+    }
+    /* Focus: DI2's two channels drawn inset, so the notch never cuts them; the circuit lit as under the pointer. */
+    [data-theme='cyberpunk'] .kp-action:focus-visible {
+        --kp-cp-grid-a: 0.3;
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+    [data-theme='cyberpunk'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        --kp-cp-rest: inset 0 0 0 1px var(--border);
+        --kp-cp-ground: var(--muted);
+        --kp-cp-tile-notch: linear-gradient(transparent, transparent);
+        box-shadow: var(--kp-cp-rest);
+    }
+    /* Destructive: locked as a target. Four 2 px corner brackets in the red, the title in the red; no side bar. */
+    [data-theme='cyberpunk'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-cp-tone: var(--destructive);
+        --kp-cp-rest: inset 0 0 0 1px hsl(from var(--destructive) h s l / 0.55), inset 0 0 10px hsl(from var(--destructive) h s l / 0.3);
+        --kp-cp-tile-lock:
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat;
+        --kp-cp-tile-notch: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--destructive) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
+    }
+    [data-theme='cyberpunk'] .kp-action--destructive::after {
+        display: none;
+    }
+    [data-theme='cyberpunk'] .kp-action--destructive > .kp-action__title {
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-action--destructive:is(:disabled, [aria-disabled='true']) > .kp-action__title {
+        color: inherit;
+    }
+

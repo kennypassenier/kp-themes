@@ -1,0 +1,39 @@
+/* @part: focus-steps: signature layer */
+    /* Cook mode: the step comes up with the lacquer; the wake light is a small jewel. */
+    [data-theme='deco'] .kp-focus-steps__count {
+        font-family: var(--theme-font-body);
+        font-size: 0.9375rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-focus-steps__text {
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    [data-theme='deco'] .kp-focus-steps__needs {
+        border-block-start: 3px double hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='deco'] .kp-focus-steps__needs-title {
+        color: var(--kp-sig-deco-champagne);
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-focus-steps__amount {
+        color: var(--kp-sig-deco-champagne);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+        rotate: 45deg;
+    }
+    [data-theme='deco'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        border-color: var(--kp-sig-deco-gold-lt);
+        background: var(--kp-sig-deco-gold-lt);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-focus-steps__step {
+            animation: kp-sig-deco-k4-up var(--kp-sig-deco-up-t) var(--kp-sig-deco-settle) both;
+        }
+    }
+

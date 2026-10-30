@@ -1,0 +1,120 @@
+/* @part: tokens: register layer — the theme's knobs (custom properties on the theme root) */
+    /* @kp-soft/themes — css/dark-register.css
+   The dark register, 5.0.0 [S48, LIFT_PLAN row 15]: the ordinary dark
+   theme, done properly. Scoped to [data-theme='dark'] and inert
+   elsewhere; opt-in, imported after themes.css. The approved concept
+   demo ("Small Hours", stars II, 2026-09-08) was the reference for every
+   value here.
+
+   THE STARFIELD IS GONE [Kenny, 2026-09-11]: "dark mag zijn sterren weer
+   kwijtspelen op de achtergrond". What stood here until that day was 112
+   individually-generated positions pasted verbatim from the demo's own
+   header — a 102-point field on the shared texture layer at 0.35, and
+   ten brighter stars on a layer of their own, their SVG shimmer rebuilt
+   as masked conic gradients. None of it was animated; it was a still
+   photograph, painted once. It is recorded here rather than only in the
+   history because the demo that approved it still shows it, and anyone
+   comparing the two deserves to know which way the difference runs.
+
+   The divider keeps its own dense local sample. That is a seam between
+   sections, not the background he named, and it stays until he says
+   otherwise.
+
+   What this file does, in order: the knobs; the two-channel focus ring,
+   reversed from the base default; the type; the hooks of S45 — the
+   headline that resolves word by word out of a blur, the mark as an
+   ignite (the lede's colour-only, scroll-bound; the dossier's a redact
+   bar that lifts on the trigger), the rule that sweeps in under a
+   heading, the divider as a night seam with its own dense local sample;
+   the nav as a quiet strip with its dropdown's own keyboard ring; the
+   buttons, fields and panels; and one answer per component root (TH124).
+
+   Colour discipline (DI9): nothing here names a colour. Every stop is
+   `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
+
+    [data-theme='dark'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 25rem;
+        /* A key-figure tile's frame in a strip with columns: --border-strong
+           reads 2.22:1 on the page and 2.11:1 on the card here (DI1, open), so
+           a fifth of the ink goes in it: 3.55:1 and 3.36:1 [fix-101]. */
+        --kp-kpi-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-reveal-threshold: 0.6;
+        --kp-word-stagger: 60ms;
+        --kp-redact-stagger: 90ms;
+        --kp-sweep-range-start: entry 10%;
+        --kp-sweep-range-end: entry 85%;
+        --kp-ignite-range-start: entry 30%;
+        --kp-ignite-range-end: entry 80%;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           and leaves a theme that declares none at rest. No arrival: the
+           demo has no boot sequence, the page is simply there. */
+        --kp-reveal-headline: resolve;
+        --kp-reveal-emphasis: ignite;
+        --kp-reveal-rule: sweep;
+        /* The turn's curve: most of it at once, then a long settle to cyan at
+           the top [G1; Kenny, 2026-10-09]. The pass itself is linear. */
+        --kp-settle: cubic-bezier(0.22, 1, 0.36, 1);
+
+        /* No starfield. The approved demo had one — 102 points on the
+           shared texture layer with ten shimmer stars above it — and
+           Kenny took it back out on 2026-09-11: "dark mag zijn sterren
+           weer kwijtspelen op de achtergrond". The ground is plain now.
+           The divider keeps its own dense local sample, which is a seam
+           between sections rather than the background he named. */
+
+        /* ── The oxide film [scope-16] ─────────────────────────────────
+           The one mechanism this theme is really about. Anodising does not
+           add pigment: it grows a film whose thickness decides which
+           wavelength survives, so the colour shifts with the angle you
+           look from. The gradient's start angle follows the pointer, and
+           `js/effects.js` writes that angle down — a gradient cannot read
+           a pointer.
+
+           `--kp-px` carries its own value so the gradient is valid before
+           anything has moved, and so it keeps working when the module is
+           detached or absent. Half a turn is the middle of the sweep. */
+        --kp-pointer: track;
+        --kp-px: 0.5;
+        --kp-py: 0.5;
+        --kp-iris: conic-gradient(from calc(var(--kp-px) * 1turn), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+
+        /* ── The halo: the film, spilled onto the ground [scope-102] ────
+           Kenny, 2026-09-16, the shadow-and-ink form, dark-shadow "Gloed
+           van de oxidefilm": a raised panel is separated from the ground
+           by the film's own four wavelengths rather than by a shadow in
+           the ground's own colour, which on a 5%-lightness ground had
+           almost nowhere to go (measured 0.4% of the band past ΔL* 3;
+           research/dark-dialog-shadow/README.md, option 1).
+
+           Four fixed shadows, not the blurred film itself. The research
+           measured the blurred version higher (88.3% of the band at dPR
+           1 against this one's share), but it cannot be worn by the two
+           surfaces this decision is mostly about: `.kp-popover` is
+           `overflow: auto` and a modal dialog is `overflow: auto` by the
+           UA stylesheet (HTML Standard §15.3.3), and overflow clips a
+           pseudo-element — the blurred halo measured 0 of 17616 band
+           pixels on the popover. A box-shadow is not a descendant and is
+           not clipped, so the same idea is painted as four of them, one
+           per wavelength, placed where the conic gradient puts that
+           colour: chart-2 below, chart-1 to the left, chart-3 to the
+           right, chart-4 above. The cost, stated rather than hidden: a
+           fixed shadow does not turn with the pointer as the film's own
+           border does. */
+        --kp-halo:
+            0 10px 18px hsl(from var(--chart-2) h s l / 0.3), -10px 4px 16px hsl(from var(--chart-1) h s l / 0.26),
+            10px 4px 16px hsl(from var(--chart-3) h s l / 0.26), 0 -6px 14px hsl(from var(--chart-4) h s l / 0.2);
+        /* The machined corner: cut, never rounded. Two opposite corners,
+           the way a milled part is relieved. */
+        --kp-chamfer: var(--fx-notch, 0.55rem);
+        --kp-chamfer-panel: 1rem;
+        /* How far past its own box the halo reaches, and how far past that
+           nothing of it is left [fix-41]. The furthest of the four shadows
+           travels its offset plus its blur — 10px + 18px — so 2.5rem is
+           past the last pixel of it and short of anything a panel holds. */
+        --kp-halo-reach: 2.5rem;
+        --kp-halo-field: 100rem;
+    }
+

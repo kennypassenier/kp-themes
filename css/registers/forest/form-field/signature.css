@@ -1,0 +1,71 @@
+/* @part: form-field: signature layer */
+    [data-theme='forest'] .kp-field__check {
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    /* The tick and the dot are always there, cleared by their clip: a set
+       check draws its tick start to end and a cleared one takes it back the
+       same way, end to start (Kenny, 2026-10-09 on research/forest-
+       uniformity, pairs: "every pair mirrored"). A cleared part is never
+       drawn: the clip leaves nothing of it. */
+    [data-theme='forest'] .kp-field__check[type='checkbox']::before {
+        content: '';
+        inline-size: 0.62rem;
+        block-size: 0.32rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        border-end-start-radius: 1px;
+        transform: translateY(-1px) rotate(-45deg);
+        clip-path: inset(0 100% 0 0);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:dir(rtl)::before {
+        clip-path: inset(0 0 0 100%);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:checked::before {
+        clip-path: inset(0);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='forest'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    /* The dot grows up out of its foot and sinks back into it, never scaled
+       (G3). */
+    [data-theme='forest'] .kp-field__check[type='radio']::before {
+        content: '';
+        clip-path: inset(100% 0 0);
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle closest-side,
+            var(--primary) 0 40%,
+            transparent 40% 72%,
+            hsl(from var(--primary) h s l / 0.6) 72% calc(72% + 1.25px),
+            transparent calc(72% + 1.25px)
+        );
+    }
+
+    [data-theme='forest'] .kp-field__check[type='radio']:checked::before {
+        clip-path: inset(0);
+    }
+

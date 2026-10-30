@@ -1,0 +1,45 @@
+/* @part: tree-reorder-split: signature layer */
+    /* Rows · a tree row answers as a menu entry on its own line: a branch
+       holds its children inside it, so the kraft ground and the blaze are
+       drawn on a layer as tall as its first line, under its words, for the
+       innermost row pointed at only. */
+    [data-theme='forest'] .kp-tree [role='treeitem'] {
+        position: relative;
+        isolation: isolate;
+        padding-inline-start: calc(0.5rem + var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:hover:not([aria-selected='true']) {
+        background: none;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0 0 auto;
+        block-size: calc(1lh + 0.5rem);
+        border-radius: var(--kp-sig-fo-part);
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+        pointer-events: none;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:hover:not(:has([role='treeitem']:hover))::after {
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:not([aria-selected='true']):hover:not(:has([role='treeitem']:hover))::after {
+        background: var(--secondary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-tree [role='treeitem']::after {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+

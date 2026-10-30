@@ -1,0 +1,71 @@
+/* @part: wheel: signature layer */
+    /* The wheel: a double gold rim round the disc, flat lacquer segments between gold hairlines, a gold pointer. */
+    [data-theme='deco'] .kp-wheel {
+        --kp-wheel-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --kp-wheel-tint: 26%;
+        --kp-wheel-tint-chosen: 58%;
+        --kp-wheel-pointer: var(--kp-sig-deco-gold-lt);
+    }
+    [data-theme='deco'] .kp-wheel__disc {
+        box-shadow:
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-wheel__segment {
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint), var(--kp-sig-deco-lac));
+        stroke: hsl(from var(--primary) h s l / 0.8);
+        stroke-width: 0.8;
+    }
+    [data-theme='deco'] .kp-wheel__segment[data-kp-wheel-chosen] {
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint-chosen), var(--kp-sig-deco-lac));
+        stroke: var(--kp-sig-deco-gold-hi);
+        stroke-width: 1.6;
+    }
+    [data-theme='deco'] .kp-wheel__label {
+        fill: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='deco'] .kp-wheel__rim {
+        stroke: var(--primary);
+        stroke-width: 1;
+    }
+    /* The hub is still: pointing and pressing turn neither the leaf's wash nor the seal's ring, and nothing sinks
+       [cook-1017; Kenny 2026-10-17: no hover animation on the spin hub in any theme]. */
+    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button,
+    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        --kp-sig-deco-hv: 0 !important;
+        --kp-sig-deco-pr: 0 !important;
+        --kp-wheel-hub-shadow: none;
+        translate: none;
+    }
+    [data-theme='deco'] .kp-wheel__pointer {
+        stroke: var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-wheel__stage::before {
+        background: var(--kp-sig-deco-lac);
+        box-shadow:
+            0 0 0 var(--kp-wheel-hub-ring, 4px) var(--kp-sig-deco-lac),
+            0 0 0 calc(var(--kp-wheel-hub-ring, 4px) + 1px) hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        padding-block-end: 0.2em;
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.7);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-wheel__outcome:empty {
+        border-block-end: 0;
+    }
+    [data-theme='deco'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        background: none;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-wheel__caption {
+        letter-spacing: 0.04em;
+    }

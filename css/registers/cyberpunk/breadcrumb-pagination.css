@@ -1,0 +1,79 @@
+/* @part: breadcrumb-pagination: register layer; also combobox, upload-wizard, tabs, date-picker */
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-breadcrumb {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-breadcrumb li + li::before {
+        content: '//';
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-pagination {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-pagination a,
+    [data-theme='cyberpunk'] .kp-pagination button {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-tab {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-tab[aria-selected='true'] {
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard {
+        border-radius: 0;
+    }
+
+    /* The step labels; written for `.kp-wizard__step`, a class the package
+       never renders, so it matched nothing until 2026-10-03. */
+    [data-theme='cyberpunk'] .kp-wizard__steps li {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-combobox,
+    [data-theme='cyberpunk'] .kp-datepicker,
+    [data-theme='cyberpunk'] .kp-colorpicker,
+    [data-theme='cyberpunk'] .kp-palette {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-combobox__list,
+    [data-theme='cyberpunk'] .kp-palette__list {
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-datepicker__day[aria-selected='true'] {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    /* The day grid keeps the height of a six-week month, so a month of four or five weeks does
+       not shorten the panel under the pointer [lesson 9]. */
+    [data-theme='cyberpunk'] .kp-datepicker__grid[data-kp-view='days'] {
+        min-block-size: 15.125rem;
+        align-content: start;
+    }
+
+    [data-theme='cyberpunk'] .kp-colorpicker__swatch {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-palette {
+        font-family: var(--kp-mono);
+    }
+

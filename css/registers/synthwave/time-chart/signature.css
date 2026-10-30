@@ -1,0 +1,5 @@
+/* @part: time-chart: signature layer */
+    /* The chart's own dot sits beside the sentence; the stop tube above it says the same, so the dot leaves. */
+    [data-theme='synthwave'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }

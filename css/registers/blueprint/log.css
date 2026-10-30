@@ -1,0 +1,43 @@
+/* @part: log: register layer; also page-header, table, small-patterns, movable-grid */
+    [data-theme='blueprint'] .kp-grid {
+        gap: 1.25rem;
+    }
+
+    [data-theme='blueprint'] .kp-health {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The spec sheet: a flat card, hairline-bounded, no shadow — the
+       "sleek" mandate applied past the headline to the rest of the
+       surface furniture. */
+    [data-theme='blueprint'] .kp-spec {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='blueprint'] .kp-log {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
+    [data-theme='blueprint'] .kp-split {
+        gap: 0;
+    }
+
+    [data-theme='blueprint'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--card);
+    }
+
+    [data-theme='blueprint'] .kp-toasts {
+        gap: 0.5rem;
+    }
+

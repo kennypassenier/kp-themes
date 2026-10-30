@@ -1,0 +1,46 @@
+/* @part: dialog: signature layer */
+    /* ── Dialog in sections, confirmation, typed confirmation ── */
+    [data-theme='synthwave'] .kp-dialog__heading {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-dialog__heading::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-dialog__section:not(:first-child) {
+        border-block-start: 1px solid transparent;
+        border-image: var(--kp-sw4-horizon) 1;
+    }
+    [data-theme='synthwave'] .kp-dialog__section--danger {
+        border-inline-start: 0;
+        border-image: none;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+    }
+    [data-theme='synthwave'] .kp-dialog__section--danger > .kp-dialog__heading {
+        --kp-sw4-tone: var(--destructive);
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-dialog__section--danger > .kp-dialog__heading::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        margin-inline-end: 0.45em;
+        border: 2px solid var(--kp-core);
+        border-radius: 50%;
+        box-shadow:
+            0 0 5px var(--destructive),
+            inset 0 0 4px var(--destructive);
+        box-sizing: border-box;
+    }
+    [data-theme='synthwave'] .kp-confirm__dependents,
+    [data-theme='synthwave'] .kp-type-confirm__loses {
+        border-radius: 0;
+    }

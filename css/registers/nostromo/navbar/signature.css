@@ -1,0 +1,80 @@
+/* @part: navbar: signature layer */
+    /* The raster (the anchor, research/nostromo-anchor): the part uncovered
+       from its top edge, a band per frame (the timing function's steps); its
+       own shadow may show past its edge while it is drawn. */
+    @keyframes kp-sig-nostromo-raster {
+        from {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1) calc(var(--kp-sig-no-reach) * -1) 100% calc(var(--kp-sig-no-reach) * -1));
+        }
+
+        to {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1));
+        }
+    }
+
+    /* The beam riding the edge of what is written, its tail behind it; it
+       goes out on the last frame. */
+    @keyframes kp-sig-nostromo-beam {
+        from {
+            inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        to {
+            inset-block-start: calc(100% - var(--kp-sig-no-tail));
+            opacity: 0;
+        }
+    }
+
+    /* The same beam as a background layer, for a part whose pseudo-elements
+       are taken: the image, its size and its box are set only while it
+       plays, so at rest the part keeps its own background untouched. The
+       layer is the tail's height, its foot on the border box's edge that
+       the raster has reached: -tail at the start (above the part, unseen),
+       100% at the end (its foot on the bottom edge); in between, at a share
+       p of the draw, its top is p * height - tail, the dialog's ::after's
+       place. It lies under the part's text and inset frames (the klaxon
+       frame stays on top). */
+    @keyframes kp-sig-nostromo-beam-layer {
+        from {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 calc(var(--kp-sig-no-tail) * -1);
+        }
+
+        to {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 100%;
+        }
+    }
+
+    /* The beam layer travelling back up as the raster erases: the draw's
+       keyframes the other way, on the erase's timing, so frame t of the
+       leave is frame (T - t) of the draw. */
+    @keyframes kp-sig-nostromo-beam-layer-erase {
+        from {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 100%;
+        }
+
+        to {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 calc(var(--kp-sig-no-tail) * -1);
+        }
+    }
+

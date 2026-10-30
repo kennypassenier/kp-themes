@@ -1,0 +1,37 @@
+/* @part: key-figures: signature layer; also form-field */
+    /* The target lock: the brackets close twice, then hold. */
+    @keyframes kp-sig-cyberpunk-lock {
+        0% {
+            --kp-cp-lk: 8px;
+        }
+
+        16.67% {
+            --kp-cp-lk: 3px;
+        }
+
+        33.33% {
+            --kp-cp-lk: 6px;
+        }
+
+        50%,
+        100% {
+            --kp-cp-lk: 3px;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-pen {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-dot {
+        from {
+            transform: scale(0);
+        }
+    }
+

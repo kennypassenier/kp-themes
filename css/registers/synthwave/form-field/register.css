@@ -1,0 +1,75 @@
+/* @part: form-field: register layer; also forms */
+    /* ── Fields ───────────────────────────────────────────────────────── */
+
+    [data-theme='synthwave'] .kp-field__label {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-field__label::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-field__input {
+        font-weight: 500;
+        background: var(--sidebar-background);
+        border: 2px solid hsl(from var(--kp-pink-text) h s l / 0.35);
+        border-radius: var(--radius);
+        padding-inline: 0.9rem;
+        caret-color: var(--accent);
+    }
+
+    /* The same two tubes round the field [G14, DI2]: it is a part like any
+       other, so its ring is the button's. */
+    [data-theme='synthwave'] .kp-field__input:focus-visible {
+        outline: none;
+        border-color: var(--focus-ring);
+        box-shadow:
+            var(--kp-sw-rails-in),
+            0 0 14px hsl(from var(--primary) h s l / 0.35);
+    }
+
+    [data-theme='synthwave'] select.kp-field__input::picker-icon {
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-field__help {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='synthwave'] .kp-field--invalid .kp-field__input {
+        border-color: var(--warning-foreground);
+        box-shadow: 0 0 0 1px var(--warning-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-field__error {
+        font-family: var(--kp-osd);
+        color: var(--warning-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-field__error::before {
+        content: '!! ';
+    }
+
+    [data-theme='synthwave'] .kp-field__check {
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-field__check:checked {
+        background: var(--sidebar-background);
+        border-color: var(--primary);
+        box-shadow:
+            inset 0 0 0 3px var(--sidebar-background),
+            inset 0 0 0 8px var(--accent),
+            0 0 8px var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-fieldset {
+        border: 1px solid var(--kp-hairline);
+        border-radius: var(--radius);
+    }
+

@@ -1,0 +1,67 @@
+/* @part: card: register layer */
+    /* ── Cards and the dossier ────────────────────────────────────────── */
+
+    [data-theme='brutalism'] .kp-card {
+        background: var(--card);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    /* The stamp: a signal plate with the pixel outline, tilted. */
+    [data-theme='brutalism'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        inset-block-start: 0.9rem;
+        inset-inline-end: 1.1rem;
+        rotate: -7deg;
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.55rem;
+        box-shadow: var(--kp-pixel);
+    }
+
+    /* The stamp changes when the file opens, as the demo's does [S49, A11]. */
+    [data-theme='brutalism'] .kp-card[data-kp-open][data-kp-label-open]::before {
+        content: attr(data-kp-label-open);
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    /* The redactions: black bars that slide off one after another, the
+       way a pen is dragged off a page. */
+    [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+        background: none;
+        color: var(--card-foreground);
+        font-weight: 400;
+        padding: 0;
+        border-bottom: 0;
+    }
+
+    [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.12em -0.2em;
+        background: var(--foreground);
+        transform: scaleX(0);
+        transform-origin: right center;
+        pointer-events: none;
+    }
+
+    [data-theme='brutalism'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        color: transparent;
+    }
+
+    [data-theme='brutalism'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
+        transform: scaleX(1);
+    }
+

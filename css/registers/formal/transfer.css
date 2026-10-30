@@ -1,0 +1,55 @@
+/* @part: transfer: signature layer; also progress-spinner-skeleton, button */
+    /* A transfer of unknown size [kpadopt5-r3; Kenny, 2026-10-18 00:28: "Die tweede balk toonde weer geen vooruitgang? ... leg
+       deftig uit"]: no total, so no share to rule. The band is ruled in diagonal hatching across the whole track that drifts
+       at an even pace, the second rule waits for the end, and the words in the row say the size is unknown. The size turning
+       out shrinks the band to its share. */
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+        animation: none;
+        opacity: 0;
+    }
+
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        animation: none;
+        display: none;
+    }
+
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        --kp-transfer-stripe: calc(8 * var(--kp-ps-px));
+        background-color: transparent;
+        background-image: linear-gradient(-45deg, var(--primary) 25%, transparent 25% 50%, var(--primary) 50% 75%, transparent 75%);
+        background-size: var(--kp-transfer-stripe) var(--kp-transfer-stripe);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation:
+                kp-transfer-enter 700ms ease-out,
+                kp-transfer-drift 1200ms linear infinite;
+        }
+
+        [data-theme='formal'] .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
+            animation: kp-transfer-settle 700ms ease-out;
+        }
+    }
+
+    /* ── The spinner rules an arc round a double ring [G12; Kenny,
+       2026-10-08, question 12]. A hairline ring with a thinner ring inside
+       it (the double rule, round); a navy arc is ruled round the outer ring at
+       an even pace, closes with a thinner arc inside it, both are lifted, and
+       it is ruled again, 2400 ms a loop. Three sizes (--kp-spinner-size), in
+       a busy button, in the busy panel; standing still it is the closed ring
+       (both arcs complete). The package's own turning head is retired. ── */
+    [data-theme='formal'] .kp-spinner {
+        position: relative;
+        box-sizing: content-box;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: radial-gradient(circle closest-side, transparent calc(60% - 1px), var(--border) calc(60% - 1px) 60%, transparent 60%);
+        color: var(--primary);
+        animation: none;
+    }
+
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive, .kp-toast) .kp-spinner {
+        color: currentColor;
+    }
+

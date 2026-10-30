@@ -1,0 +1,7 @@
+/* @part: datatable: signature layer */
+    /* The comet is the panel's ::before at z-index 1, laid over what is waiting, so it crossed the card's own sentence (the vertical
+       bar through "Reading..."). Around the content, never through it: the words and the spinner stand above the sweep. */
+    [data-theme='dark'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) > * {
+        position: relative;
+        z-index: 2;
+    }

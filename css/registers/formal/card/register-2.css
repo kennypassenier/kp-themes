@@ -1,0 +1,34 @@
+/* @part: card: register layer */
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every transition of this register lives here, inside the
+       no-preference guard, so a reader who asked for reduced motion never
+       receives one: the rest states above (already the revealed look) are
+       what they get. Every reveal here is a plain transition, ruled on
+       --fx-ease (linear) in the ruling time; the keyframes, which DI5's
+       report describes, are in kp.signature. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-kp-reveal='headline'] {
+            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
+        }
+
+        [data-theme='formal'] mark {
+            transition: background-size var(--kp-sig-fm-time) var(--fx-ease);
+        }
+
+        [data-theme='formal'] [data-kp-reveal='rule']::after {
+            transition: transform var(--kp-sig-fm-time) var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: background-size var(--kp-sig-fm-time) var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger, var(--kp-sig-fm-stagger));
+        }
+
+        [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger, var(--kp-sig-fm-stagger)));
+        }
+    }

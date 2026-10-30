@@ -1,0 +1,28 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    /* The surface [surface, G7]: a plate is a part on the sheet, not a box on
+       it. No fill and no closed frame: the sheet and its ruled grid show through,
+       and the plate stands on the graticule's two axes, a ruler along its start
+       edge and another along its foot, a short tick every 8 px and a long one every
+       40 in the line the finished lines are drawn in. The frame's 1 px stays, in
+       no colour, so no plate changes size. What floats over the sheet (a menu, a
+       dialog, a toast) is an overlay sheet and keeps its one frame. The axes are
+       three custom properties so a part the package does not name (a demo's) can
+       stand on them too. */
+    [data-theme='blueprint'] {
+        /* js/effects.js writes a pressed button's width as data-kp-press-size, for
+           the dimension's lettering; it stays armed under reduced motion. */
+        --kp-press: size;
+        --kp-bp-axes-img:
+            linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong)),
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--border-strong) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--border-strong) 0 1px, transparent 1px 40px);
+        --kp-bp-axes-size: 100% 1px, 1px 100%, 100% 4px, 4px 100%, 100% 7px, 7px 100%;
+        --kp-bp-axes-pos: left bottom, left top, left bottom, left top, left bottom, left top;
+    }
+
+    [data-theme='blueprint']:dir(rtl) {
+        --kp-bp-axes-pos: right bottom, right top, right bottom, right top, right bottom, right top;
+    }
+

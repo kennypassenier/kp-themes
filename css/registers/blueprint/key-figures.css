@@ -1,0 +1,100 @@
+/* @part: key-figures: signature layer */
+    /* A tone is pointed out [tone, G13]: the figure stands upright on no plate and a
+       short ruler runs under it with a pointer in the tone's ink where the reading
+       is (--kp-bp-at, 0 to 1; a warning 0.7, a failure 0.92 unless the page says
+       where). Nothing frames the whole part, nothing hatches it, no plate under
+       the figure. The ink is the status colour made light enough to read on the
+       sheet. A change is set in the lettering with its sign (the arrow before
+       it), on no plate. */
+    [data-theme='blueprint'] .kp-kpi {
+        --kp-bp-warn: hsl(from var(--warning) h s 62%);
+        --kp-bp-bad: var(--destructive);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        --kp-bp-tone: var(--kp-bp-warn);
+        --kp-bp-at: 0.7;
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-bp-tone: var(--kp-bp-bad);
+        --kp-bp-at: 0.92;
+        --kp-kpi-meter-fill: var(--kp-bp-bad);
+    }
+
+    [data-theme='blueprint'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-kpi-meter-fill: var(--kp-bp-warn);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        position: relative;
+        padding: 0 0 14px;
+        background: transparent;
+        color: var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value :is(small, .kp-kpi__note) {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 6px;
+        inset-inline: 0;
+        block-size: 5px;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) bottom / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 6px) bottom / 100% 4px no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: calc(var(--kp-bp-at) * 100%);
+        inline-size: 9px;
+        block-size: 6px;
+        translate: -4.5px 0;
+        background: conic-gradient(from 135deg at 50% 0, var(--kp-bp-tone) 90deg, transparent 0);
+    }
+
+    [data-theme='blueprint'] .kp-kpi__delta[data-kp-tone] {
+        padding: 0;
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] .kp-kpi__delta[data-kp-tone='good'] {
+        color: hsl(from var(--success) h s 62%);
+    }
+
+    [data-theme='blueprint'] .kp-kpi__delta[data-kp-tone='bad'] {
+        color: var(--destructive);
+    }
+
+    /* The voice [voice, G15]: the lettering names, the sans speaks. Labels, tags,
+       table heads, the change, toasts, the tooltip and the dialog's title are the
+       draughtsman's lettering: mono capitals sloped 15 degrees (ISO 3098 type B),
+       barely tracked. Titles and figures stay upright, in the sans, with tabular
+       figures. */
+    [data-theme='blueprint'] .microlabel,
+    [data-theme='blueprint'] .kp-badge,
+    [data-theme='blueprint'] .kp-tag,
+    [data-theme='blueprint'] .kp-table th,
+    [data-theme='blueprint'] .kp-kpi__label,
+    [data-theme='blueprint'] .kp-kpi__delta,
+    [data-theme='blueprint'] .kp-toast,
+    [data-theme='blueprint'] .kp-tooltip,
+    [data-theme='blueprint'] .kp-dialog__title,
+    [data-theme='blueprint'] .kp-menu__heading,
+    [data-theme='blueprint'] .kp-empty__title,
+    [data-theme='blueprint'] .kp-health,
+    [data-theme='blueprint'] .kp-wizard__steps,
+    [data-theme='blueprint'] .kp-datatable__sort {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+

@@ -1,0 +1,59 @@
+/* @part: progress-spinner-skeleton: signature layer; also navbar, form-field, dialog */
+    /* The block is lifted off its footprint (quick, slowing at the top),
+       turned a quarter while held up, and set down on the fall, stopping
+       dead; a quarter turn is the same block, so the loop is seamless. */
+    @keyframes kp-sig-brutalism-tip {
+        0% {
+            transform: none;
+            animation-timing-function: var(--kp-sig-br-up);
+        }
+
+        25% {
+            transform: translate(-3px, -3px);
+            animation-timing-function: linear;
+        }
+
+        60% {
+            transform: translate(-3px, -3px) rotate(90deg);
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+
+        75%,
+        100% {
+            transform: rotate(90deg);
+        }
+    }
+
+    @keyframes kp-sig-brutalism-set {
+        from {
+            translate: -0.4rem -0.4rem;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    /* The part is held up-left of its footprint and falls onto it; the
+       shadow stays on the ground, so its offset shrinks as the part comes
+       down. --kp-sig-br-h is the height it falls from, --kp-sig-br-sh the
+       shadow's own offset at rest. */
+    @keyframes kp-sig-brutalism-drop {
+        from {
+            translate: calc(-1 * var(--kp-sig-br-h)) calc(-1 * var(--kp-sig-br-h));
+            box-shadow: calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) 0 0 var(--border-strong);
+        }
+
+        to {
+            translate: 0 0;
+            box-shadow: var(--kp-sig-br-sh) var(--kp-sig-br-sh) 0 0 var(--border-strong);
+        }
+    }
+
+    @keyframes kp-sig-brutalism-hold {
+        from,
+        to {
+            visibility: visible;
+        }
+    }
+

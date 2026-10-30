@@ -1,0 +1,24 @@
+/* @part: focus-steps: signature layer */
+    /* Cook mode: what the step needs is a plate on the sheet; its title and the amounts are the lettering and the
+       readout; the screen lamp is a square. */
+    [data-theme='blueprint'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 0;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] :is(.kp-focus-steps__needs-title, .kp-focus-steps__count, .kp-focus-steps__wake) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+    }
+

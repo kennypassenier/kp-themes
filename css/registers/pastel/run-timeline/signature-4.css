@@ -1,0 +1,40 @@
+/* @part: run-timeline: signature layer */
+    /* Moments on the run timeline: a moment is a pearl with its flat peel, a planned one a dashed ring; pointing lifts
+       it 2 px on a longer peel; a count on a cluster is a sticker; a stretch is washi tape in the tone's own stripes,
+       an area across the lanes the dotted edge of a cut-out; the dated line stands on a thread of pearls. */
+    [data-theme='pastel'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow: 0 1.5px 0 hsl(from var(--kp-gantt-mark) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-gantt__point[data-kp-planned]::before {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-gantt__point:hover::before {
+        translate: 0 -2px;
+        box-shadow: 0 3.5px 0 hsl(from var(--kp-gantt-mark) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-gantt__count {
+        border: 0;
+        border-radius: var(--kp-sig-pa-r-chip);
+        box-shadow: 0 1.5px 0 var(--kp-sig-pa-peel);
+        padding-inline: 0.3125rem;
+    }
+    [data-theme='pastel'] .kp-gantt__zone {
+        border-inline-style: dotted;
+        border-inline-width: 2px;
+    }
+    [data-theme='pastel'] .kp-gantt__zone[data-kp-lane-zone] {
+        background: repeating-linear-gradient(
+            90deg,
+            hsl(from var(--kp-gantt-mark) h s l / 0.7) 0 6px,
+            hsl(from var(--kp-gantt-mark) h s l / 0.3) 6px 12px
+        );
+    }
+    [data-theme='pastel'] .kp-gantt--line :is(.kp-gantt__corner, .kp-gantt__axis) {
+        border-block-start: 3px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-gantt__lane-link {
+        text-decoration-style: dotted;
+        text-decoration-thickness: 2px;
+    }
+

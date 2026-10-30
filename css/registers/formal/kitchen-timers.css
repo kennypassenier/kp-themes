@@ -1,0 +1,12 @@
+/* @part: kitchen-timers: register layer */
+    [data-theme='formal'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border);
+        border-inline-start: 3px solid var(--destructive);
+    }
+    [data-theme='formal'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }

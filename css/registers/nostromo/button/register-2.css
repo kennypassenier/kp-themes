@@ -1,0 +1,73 @@
+/* @part: button: register layer; also media, menu-button */
+    [data-theme='nostromo'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    [data-theme='nostromo'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='nostromo'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The dot becomes a lamp [scope-12, approved 2026-09-11] ────────
+       Kenny's own example of what a quirk is, carried through: the dot no
+       longer marks only the page you are on but every control there is.
+       Dark at rest, lit under the pointer, full when pressed — a console
+       where each switch has its own lamp. Same size and same gutter as
+       the one in the navigation, so the theme becomes more recognisable
+       rather than busier.
+
+       Carried to every switch (Kenny, 2026-10-07 23:18, research/
+       nostromo-character: hover "lamp", focus "led", press "well",
+       composites "own"; G8, G14, G17): the button, the menu entry and the
+       key figure that is a link or a filter each carry the lamp at their
+       start. Unlit at rest (ink at 25 %), lit in ink under the pointer
+       (70 %), full when pressed; on keyboard focus it is lit as the LED, in
+       orange with its glow, beside DI2's two-channel ring. A key at rest is
+       raised moulding; pressed, it turns into a well (the shadow inside its
+       top edge, its ground one step into shadow) and never moves. A button
+       inside a header, a menu, a drawer, a tile or an alert is this button:
+       nothing here is scoped to a composite. */
+    [data-theme='nostromo'] .kp-button {
+        position: relative;
+        padding-inline-start: 1.7rem;
+    }
+
+    /* Under :where(), so every state below (hover, press, focus, a rich
+       entry's place) outranks the lamp at rest. */
+    [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, .kp-kpi__label)::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-block-start: -0.22rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+    }
+
+    [data-theme='nostromo'] .kp-menu__item {
+        position: relative;
+        padding-inline-start: 1.6rem;
+    }
+
+    [data-theme='nostromo'] .kp-menu__item::before {
+        inset-inline-start: 0.6rem;
+    }
+
+    /* A rich entry's lamp stands beside its label, not in the middle of the
+       label and its hint. */
+    [data-theme='nostromo'] .kp-menu--rich .kp-menu__item::before {
+        inset-block-start: calc(0.4375rem + 0.75em);
+    }
+

@@ -1,0 +1,188 @@
+/* @part: base: register layer — rules that belong to no one component */
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] h1,
+    [data-theme='cyberpunk'] h2,
+    [data-theme='cyberpunk'] h3 {
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+    }
+
+    /* Microlabels: uppercase mono with the diegetic prefix. The mono face
+       is the register's own knob, not the Tailwind bridge (TH133). */
+    [data-theme='cyberpunk'] .microlabel {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .microlabel::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] .microlabel {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The hooks [S45]: the heading accent, the mark, the divider ───── */
+
+    /* The heading accent: a display headline on a surface, at the display
+       step of the scale (S47). The headline reveal (decipher and one slice
+       burst) is C3's; the slice keyframes below are its rest-to-burst. */
+    [data-theme='cyberpunk'] [data-kp-surface] h1 {
+        font-weight: 900;
+        letter-spacing: 0.005em;
+        margin-block: 0 0.4em;
+        text-wrap: balance;
+    }
+
+    /* A section heading carries the bracket frame of the reference (⌜ ⌝),
+       drawn as two corner gradients so both pseudo-elements stay free. */
+    [data-theme='cyberpunk'] [data-kp-surface] h2 {
+        font-weight: 800;
+        position: relative;
+        padding-top: 0.9rem;
+        color: var(--primary);
+        background:
+            linear-gradient(var(--primary), var(--primary)) top left / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top left / 2px 0.8rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 2px 0.8rem no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-reveal='headline'] {
+        position: relative;
+    }
+
+    /* The slice burst: two copies of the headline, clipped into bands and
+       shoved sideways, once — after the decipher and on hover. The copies
+       read `data-kp-text`, which the effects module writes; without it the
+       pseudo-elements are empty and nothing paints. */
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::before,
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::after {
+        content: attr(data-kp-text);
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        white-space: pre-wrap;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::before {
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-reveal='headline']::after {
+        color: var(--chart-4);
+    }
+
+    /* The decipher's glyph cells: fixed width so the line does not dance. */
+    [data-theme='cyberpunk'] [data-kp-reveal='headline'] [data-glyph] {
+        display: inline-block;
+        min-width: 0.48em;
+    }
+
+    /* The decipher's noise glyphs, while the module swaps them in. */
+    [data-theme='cyberpunk'] [data-kp-reveal='headline'] .is-noise {
+        color: var(--link);
+    }
+
+    /* The drawn rule under a section heading: a hairline that scales in
+       from the left when the heading enters the viewport (C3). Without the
+       script — no data-kp-effects on the root — it stands drawn. */
+    [data-theme='cyberpunk'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        height: var(--kp-rule-weight);
+        margin-top: 0.5rem;
+        background: linear-gradient(to right, var(--accent) 0 35%, hsl(from var(--accent) h s l / 0.35) 70%, transparent);
+        transform-origin: left center;
+    }
+
+    [data-theme='cyberpunk'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        transform: scaleX(0);
+    }
+
+    /* The mark: emphasis is classified, then cleared. At rest the bar is
+       lifted and the phrase reads in the surface's link colour — red on
+       yellow, yellow on void. With the script armed the bar covers the
+       phrase until the module clears it, one after another. */
+    [data-theme='cyberpunk'] mark {
+        background: none;
+        color: var(--link);
+        font-weight: 700;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    [data-theme='cyberpunk'] mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.05em -0.15em;
+        background: var(--surface-hero-fg);
+        outline: 1px solid hsl(from var(--primary) h s l / 0.35);
+        transform: scaleX(0);
+        transform-origin: right center;
+    }
+
+    [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared) {
+        color: inherit;
+        font-weight: inherit;
+    }
+
+    [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared)::after {
+        transform: scaleX(1);
+    }
+
+    /* Inside an emphasis reveal the marks lift one after another. */
+
+    /* The divider: the data stream [TH121, scope-96]. Three rows of dashes
+       in two tiles of different widths (144px muted yellow, 216px cyan
+       packets), every dash inside its tile, under an untiled scan hairline,
+       so a tile boundary has nothing to split at any devicePixelRatio.
+       After a hero the stream runs on the void; after an app surface, on
+       the sidebar plate. Under motion the two layers drift by exactly one
+       tile per loop, at two speeds, and `data-kp-divider="alt"` flows the
+       other way (the guard below). Implemented as the approved research
+       demo draws it: research/cyberpunk-dividers/demo.html, option 3. */
+    [data-theme='cyberpunk'] [data-kp-divider] {
+        display: block;
+        position: relative;
+        block-size: 28px;
+        overflow: hidden;
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.35) 0 0) 0 0 / 100% 0.9px no-repeat,
+            var(--background);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='app'] + [data-kp-divider] {
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.35) 0 0) 0 0 / 100% 0.9px no-repeat,
+            var(--sidebar-background);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider]::before,
+    [data-theme='cyberpunk'] [data-kp-divider]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        mask-repeat: repeat-x;
+        mask-position: 0 0;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider]::before {
+        background: hsl(from var(--primary) h s l / 0.55);
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 28'%3E%3Cg%3E%3Crect x='6' y='7' width='22' height='1.8'/%3E%3Crect x='36' y='7' width='8' height='1.8'/%3E%3Crect x='52' y='7' width='40' height='1.8'/%3E%3Crect x='100' y='7' width='14' height='1.8'/%3E%3Crect x='122' y='7' width='16' height='1.8'/%3E%3Crect x='4' y='13' width='10' height='1.8'/%3E%3Crect x='20' y='13' width='34' height='1.8'/%3E%3Crect x='62' y='13' width='6' height='1.8'/%3E%3Crect x='76' y='13' width='28' height='1.8'/%3E%3Crect x='112' y='13' width='26' height='1.8'/%3E%3Crect x='10' y='19' width='30' height='1.8'/%3E%3Crect x='48' y='19' width='12' height='1.8'/%3E%3Crect x='68' y='19' width='44' height='1.8'/%3E%3Crect x='120' y='19' width='18' height='1.8'/%3E%3C/g%3E%3C/svg%3E");
+        mask-size: 144px 28px;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-divider]::after {
+        background: var(--accent);
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 216 28'%3E%3Crect x='58' y='7' width='6' height='1.8'/%3E%3Crect x='150' y='13' width='10' height='1.8'/%3E%3Crect x='24' y='19' width='4' height='1.8'/%3E%3Crect x='176' y='19' width='8' height='1.8'/%3E%3C/svg%3E");
+        mask-size: 216px 28px;
+    }
+

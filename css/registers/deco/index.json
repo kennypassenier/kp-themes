@@ -2,83 +2,218 @@
   "output": "css/deco-register.css",
   "items": [
     {
-      "open": "/* The numbers deco's motion is made of, registered at the top level because\n   Firefox does not register an @property inside a cascade layer; with no\n   registration a number would not animate or transition. Each initial value\n   is the finished pose. --kp-sig-deco-draw: how far a plate's inlay is drawn\n   round from its start (0 none, 1 closed). --kp-sig-deco-up: how far its\n   lacquer, wallpaper and words are up. --kp-sig-deco-hv: a pointer's leaf\n   (0 away, 1 on it). --kp-sig-deco-pr: a press (0 rest, 1 sunk).\n   --kp-sig-deco-ring: the seal's ring (0 at the centre, 1 at its edge).\n   --kp-sig-deco-p: how far a waiting part's lift doors have parted (0 shut).\n   --kp-sig-deco-g: where a glint is along a busy bar (0 before the start, 1\n   past the end). --kp-sig-deco-a1 and -a2: the great fan's two guard sticks,\n   from the left along its foot (182deg is folded away below it).\n   --kp-sig-deco-v: how much of the fan's dressing is drawn. */\n@property --kp-sig-deco-draw {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-deco-up {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-deco-hv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-pr {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-ring {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 1;\n}\n\n@property --kp-sig-deco-p {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-g {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-a1 {\n    syntax: '<angle>';\n    inherits: true;\n    initial-value: 182deg;\n}\n\n@property --kp-sig-deco-a2 {\n    syntax: '<angle>';\n    inherits: true;\n    initial-value: 182deg;\n}\n\n@property --kp-sig-deco-v {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n/* --kp-sig-deco-hold: a number the navbar's panels transition while they\n   close, so js/components.js (which waits for a transition on a closing mega\n   menu) holds them for the close's 480 ms. */\n@property --kp-sig-deco-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
+        "tokens/register.css",
         "base.css",
-        "the-hooks.css",
-        "the-navbar.css",
-        "button.css",
-        "fields.css",
-        "card.css",
-        "data.css",
-        "the-demos-own-pieces.css"
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "toast/register.css",
+        "alert/register.css",
+        "page-header/register.css",
+        "showing-data.css",
+        "small-patterns/register.css",
+        "table.css",
+        "datatable/register.css",
+        "tabs.css",
+        "command-palette.css",
+        "page-header/register-2.css",
+        "motion/register.css",
+        "navbar/register-2.css",
+        "sidenav.css",
+        "button/register-2.css",
+        "navbar/register-3.css",
+        "alarm.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* deco's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/deco.css and research/signature-elements/themes/deco.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base.css",
-        "the-navbars-panels-open.css",
-        "sidenav.css",
-        "q7-q19-the-plate/base.css",
-        "q7-q19-the-plate/the-empty-state-no-crest-q19.css",
-        "q13-leaving-and-arriving.css",
-        "q10-loading.css",
-        "q11-the-progress-bar.css",
-        "q14-to-q17-the-colour.css",
-        "the-meter-with-a-mark-this.css",
-        "the-mark-past-the-end.css"
+        "progress-spinner-skeleton/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "upload-wizard.css",
+        "motion/signature.css",
+        "tokens/signature.css",
+        "datatable/signature.css",
+        "month-heatmap/signature.css",
+        "navbar/signature.css",
+        "motion/signature-2.css",
+        "navbar/signature-2.css",
+        "card/signature.css",
+        "button/signature.css",
+        "navbar/signature-3.css",
+        "popover/signature.css",
+        "toast/signature.css",
+        "alert/signature.css",
+        "state-plate.css",
+        "dialog/signature.css",
+        "popover/signature-2.css",
+        "key-figures/signature.css",
+        "dialog/signature-2.css",
+        "card/signature-2.css",
+        "motion/signature-3.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "key-figures/signature-2.css",
+        "checklist-sink/signature.css",
+        "motion/signature-4.css",
+        "checklist-sink/signature-2.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "meter/signature.css",
+        "button/signature-2.css",
+        "menu-button.css",
+        "key-figures/signature-3.css",
+        "month-heatmap/signature-2.css",
+        "key-figures/signature-4.css",
+        "meter/signature-2.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Deco's own (themes/deco/CHARACTER.md): a tile and a status row are plates of the lobby, blue lacquer with the chevron\n   wallpaper, the four corners coved and the double gold inlay following the coves (G5, G6, G7; they join the plate\n   rules above); a tile answers the pointer as a key figure that is a link does: gold leaf warms it and the hairline\n   goes to full gold (G15), a press is the seal in wax, the ring rippling out (G17), focus the 3 px double gold ring\n   (G16); a warning is the words in ruby over a gold rule (G8); waiting is the lift doors (G10) and, where there is no\n   room for doors, the glint running between gold lines (G11); Poiret One capitals name (G18). */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "facet-list.css",
+        "heat-grid.css",
+        "week-agenda.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Deco's own (themes/deco/CHARACTER.md): the separator is a gold hairline with the lozenge at its middle, the\n   inlay's own mark; lying down across the phone's list the lozenge sits on the gold line. A day on the axis is ruled\n   in gold under the pointer; pressed it stands on the lacquer over the inlay's double gold rule, the date in the high\n   gold. A series' finished run is a double rule in its ink, as a week pill is; the upcoming list's day rule is a gold\n   hairline; the facet pattern is set in a gilt frame. */\n@layer kp.signature {\n",
+      "files": [
+        "navbar/signature-4.css",
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt4-data-pieces.css"
+      "open": "/* ── The kpadopt4 data pieces, in this theme [kpadopt4] ──\n   Deco's own (themes/deco/CHARACTER.md): the lobby after the lights go down. A small part is a plate in little, blue\n   lacquer inside a double gold hairline; gold is a line and a jewel, never a fill (G5); emerald marks what is on or\n   done and ruby only warns, as the figure over a gold rule (G8); pointing warms with gold leaf, the hairline goes to\n   full gold and the label to champagne (G15); a mark is a lozenge, the jewel (G19); Poiret One capitals name, Josefin\n   speaks and counts (G18). Everything settles on the lobby's curve (G1). */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "key-value-grid.css",
+        "form-grid.css",
+        "code-block.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-uptime-strip-in-this.css"
+      "open": "/* ── The uptime strip, in this theme [kpadopt4-ideas] ──\n   A strip is a row of lacquer slats between gold hairlines: up is emerald (what is on), a degraded period is gold with\n   its fine rules, a down one ruby with its stripes, none an empty frame in gold (G5); pointing warms the slat with gold\n   leaf and its edge to full gold (G15); waiting is the glint running between two gold hairlines, the narrow place's own\n   loading (G10, G11). */\n@layer kp.signature {\n",
+      "files": [
+        "uptime-strip.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "rows-checks-choices.css"
+      "open": "/* ── Rows, checks, choices, a card's four states and the drawings, in this theme [kpadopt4-rows] ──\n   A row is ruled by gold hairlines and says its state in a double edge of gold, emerald or ruby; a warning is the words\n   in ruby over a gold rule (G8); the next one up is warmed by gold leaf (G15). A tile of choices is a plate of the\n   lobby, its pick a hairline gone to full gold with a glow inside the inlay (G5, G7). A card's data comes up with the\n   lacquer (G3). The drawings are the fan, drawn as the inlay is, from the centre out in pairs (G2, G13). */\n@layer kp.signature {\n",
+      "files": [
+        "action-columns.css",
+        "status-rows.css",
+        "forms.css",
+        "card/signature-3.css",
+        "small-patterns/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "flows-and-records-in-this.css"
+      "open": "/* ── Flows and records, in this theme [kpadopt4-flows] ──\n   A secret is a figure kept under lacquer: shown, it opens from its middle to both sides as the inlay does (G2), and\n   its time runs out as a gold hairline with a lozenge at its head (G11, G19). A dialog's sections are divided by a\n   gold hairline with a lozenge at its centre, the danger section is the words in ruby over a gold rule (G8, G19). A\n   moment on the timeline is a jewel set in gold, a stretch a pair of hairlines. A journey is a path of gold double\n   rules through emerald jewels, the step it stands at the double ring (G5, G16). The pipeline's lanes are plates of the\n   lobby, a card an inlaid panel warmed by gold leaf (G7, G15). */\n@layer kp.signature {\n",
+      "files": [
+        "small-patterns/signature-2.css",
+        "dialog/signature-3.css",
+        "run-timeline/signature-3.css",
+        "step-list.css",
+        "pipeline.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-ideas-and-the-recipe.css"
+      "open": "/* ── The ideas and the recipe components, in this theme [kpadopt4-ideas, kpadopt4-recipes] ──\n   Plates of the lobby (a timer, a countdown, a code block, a terminal, the compare frame) take the lacquer, the coves and\n   the double inlay; a time out is one gilded flare, never a loop that shouts (G9); a handle is the lozenge jewel (G19);\n   emerald marks what is included, ruby what is left out (G5); a wheel settles as a hand opens a fan (G1) inside a double\n   gold rim; a step comes up with the lacquer (G3). Poiret One capitals name, Josefin counts (G18). */\n@layer kp.signature {\n",
+      "files": [
+        "typed-confirmation.css",
+        "command-block.css",
+        "visual-timer.css",
+        "range-picker.css",
+        "compare-slider.css",
+        "segmented-toolbar/signature-2.css",
+        "quantity.css",
+        "checklist-sink/signature-3.css",
+        "kitchen-timers.css",
+        "focus-steps/signature.css",
+        "wheel.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-new-adoption-parts.css"
+      "open": "/* ── The new adoption parts in deco [t56-deco-1018] ──\n   Deco's own (themes/deco/CHARACTER.md, G5 to G7, G14): what is empty or failed inside a list is the lobby's plate, lacquer\n   with the wallpaper and the double gold inlay, never a bare black void; the words of a waiting part stand over the doors\n   that part and close, so they read at every moment of the loop; the quote mark is a gold jewel. On a phone the labels\n   are set tight, so a day's name, a segment, a Back or a Next never breaks mid-word (DEMO_RULES.md, chapter 2). */\n@layer kp.signature {\n",
+      "files": [
+        "checklist-sink/signature-4.css",
+        "conversation.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-whole-grid-loading.css"
+      "open": "/* ── The whole grid loading: one pair of doors over it, not one pair in every day [t56-eye-1018] ──\n   The busy card over the grid is the lift doors; a day under it stands as lacquer with its number, so the seams and the\n   lozenges no longer cross the figures and the doors do not appear 36 times. A day that loads on its own keeps its doors. */\n@layer kp.signature {\n",
+      "files": [
+        "month-heatmap/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/base.css"
+      "open": "/* A long answer in tight capitals needs air from the gold inlay above and below it: three lines at 12 px of padding put the\n   letters on the inlay [t56-eye-1018]. A one-line answer keeps its 56 px height; only a wrapped label grows. */\n@layer kp.signature {\n",
+      "files": [
+        "focus-steps/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/a-ghost-that-stands-alone-end.css"
+      "open": "/* A ghost that stands alone (End snooze, the weekday quick picks, the \"+N\" flags opener) is drawn with its gold hairline at\n   rest, not only when it is disabled, so enabled and disabled read in one order [t56-eye-1018]. */\n@layer kp.signature {\n",
+      "files": [
+        "snooze-picker.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-shape-2.css"
+      "open": "/* ── graph loading · shape 2 · The marquee: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r4-dec-load.css"
+      "open": "/* ── graph loading · r4-dec-load-3 · The engraving is cut (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

@@ -1,0 +1,87 @@
+/* @part: month-heatmap: signature layer */
+    /* The calendar's busy layers (the whole grid's card and a day's compass)
+       arrive and leave as a part does: read out on their scales, 3 units
+       (480 ms), the leave that reading played backwards (all-themes,
+       2026-10-13; it was the package's 160 ms opacity fade in and nothing
+       out). js/calendar.js marks a layer `[data-kp-leaving]` while its state
+       goes (`--kp-calendar-busy-leave: hold`, lesson 37) and the rules below
+       keep it drawn through the leave. The layers' reading stands at 1 at
+       rest, so the mask that inks their lines shows them whole once the
+       arrival has played. */
+    /* The mask inks a part line by line (`round(up, …, 1lh)`); the busy layers set
+       `line-height: 0` (css/components.css), where a step of 0 made the round NaN and
+       Firefox masked the whole content away: the month showed no loading at all
+       (review round 1, 2026-10-13: "there is no loading animation?"). The step is at
+       least a pixel (`max(1lh, 1px)`), the same as before wherever a line has height. */
+    [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy) {
+        --kp-calendar-busy-leave: hold;
+        --kp-bp-rp: 1;
+    }
+
+    [data-theme='blueprint'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        position: relative;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy) {
+            transition: none;
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground));
+            mask-origin: content-box, border-box, content-box;
+            mask-clip: content-box, border-box, content-box;
+            mask-size:
+                100% round(up, calc(var(--kp-bp-rp) * 100%), max(1lh, 1px)),
+                100% 100%,
+                100% 100%;
+            mask-position: 0 0;
+            mask-repeat: no-repeat;
+            mask-composite: add, subtract, add;
+        }
+
+        [data-theme='blueprint']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='blueprint'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear backwards;
+        }
+
+        /* The reading under a second name, so the browser restarts it: the
+           arrival's own animation is still on the layer, finished, and only
+           turning its direction would show its first frame at once. (0,4,0),
+           after the general leave, which names the first. */
+        [data-theme='blueprint'] .kp-calendar > .kp-calendar__busy[data-kp-leaving],
+        [data-theme='blueprint'] .kp-calendar__day > .kp-calendar__day-busy[data-kp-leaving] {
+            animation: kp-sig-blueprint-read-out var(--kp-sig-bp-part) linear reverse forwards;
+        }
+
+        [data-theme='blueprint'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        /* (0,4,0), after the general leave's `position: relative`, so the day's compass stays on its line. */
+        [data-theme='blueprint'] .kp-calendar__day > .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='blueprint'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+    }
+

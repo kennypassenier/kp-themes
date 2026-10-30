@@ -1,0 +1,85 @@
+/* @part: state-plate: signature layer; also time-chart, card */
+    [data-theme='brutalism'] .kp-empty {
+        padding: 1.25rem 1rem 1.4rem;
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-sig-br-drop) var(--kp-sig-br-drop) 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-empty::before {
+        content: '0';
+        display: grid;
+        place-content: center;
+        inline-size: 3rem;
+        block-size: 3rem;
+        margin: 0 auto 0.7rem;
+        border: 3px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-size: 1.4rem;
+        line-height: 1;
+        box-shadow: 3px 3px 0 var(--border-strong);
+        rotate: -8deg;
+    }
+
+    /* In the two short components (the quote card's 142 px, the runs list's 134 px) the 3 rem zero and its air made the plate
+       28 px and 20 px taller than the component: a smaller stamp, same slab, no growth between states. */
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty) {
+        padding-block: 0.6rem;
+    }
+
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty)::before {
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.3rem;
+        font-size: 1.05rem;
+    }
+
+    /* The "too few days" sentence on a chart is a slab with its words, not an empty state: no zero stamp, and the room under
+       it is kept for the axis dates, so the slab never covers them [t56-eye-1018]. */
+    [data-theme='brutalism'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate {
+        padding-block: 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate::before {
+        display: none;
+    }
+
+    [data-theme='brutalism'] .kp-empty__title {
+        margin: 0 0 0.3rem;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        text-transform: uppercase;
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the taped red slab of every other
+       failure, not the lavender zero of an empty list. */
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] {
+        padding-block-end: calc(1.4rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] :is(.kp-empty__title, .kp-empty__body) {
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-empty__body {
+        margin: 0;
+        color: var(--foreground);
+    }
+

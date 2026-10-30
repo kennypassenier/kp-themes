@@ -1,0 +1,80 @@
+/* @part: drawer-tour: signature layer */
+    /* ── The drawer and the tour [research/character-drawer: shape
+       r2-br-shape-2, openclose r2-br-openclose-2, highlight r2-br-highlight-1,
+       card 1]. ── */
+
+    /* shape: the poster plate, the slab with the yellow head. */
+    [data-theme='brutalism'] .kp-drawer {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-drawer__head {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-drawer__desc {
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-drawer__foot {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+
+    /* openclose: the drawer dialog is dropped onto its footprint from
+       up-left, its shadow on the page from the first frame, and lifted off
+       as the drop played backwards (js/motion.js); no slide from the edge. */
+    [data-theme='brutalism'] dialog.kp-drawer {
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+    }
+
+    /* card 1: the tour card is a slab, the 3 px line on the 6 px shadow,
+       square, its title ruled off; it is dropped as a menu is, and leaves as
+       that drop played backwards (js/tour.js), in place of the fade. */
+    [data-theme='brutalism'] .kp-tour {
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-tour__title {
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        border-block-end: 2px solid var(--border-strong);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-tour[open] {
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
+        }
+
+        /* The next step: js/tour.js marks the card with the theme's update
+           (slam) on every step after the first; the card is slammed onto
+           its yellow offset as any changed value is. */
+        [data-theme='brutalism'] .kp-tour[open][data-kp-updating='slam'] {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+
+    /* highlight: the target keeps the rivet ring (the ink outline and the
+       pixel outline); the veil around it is the ink laid thin, one flat
+       weight, so the page reads through it as a dim does [r2-br-highlight-1,
+       Kenny's pick, the ink veil; review round 1, 2026-10-13: the solid ink
+       of proposal-13 left only the target to see ("that's not the purpose of
+       the dim effect")]. The weight never moves: the veil grows out of the
+       target and shrinks back into it, it never fades (G1). */
+    [data-theme='brutalism'] {
+        --kp-br-veil: hsl(from var(--foreground) h s l / 0.62);
+    }
+

@@ -1,0 +1,47 @@
+/* @part: auto-refresh: signature layer; also question-card, avatar, state-plate */
+    /* On a phone the six segments share the chooser's width and their words wrap ("Every" over "15 s") instead of running out of
+       the section; no label is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='blueprint'] .kp-refresh__segments {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(min-content, 1fr));
+            inline-size: 100%;
+        }
+
+        [data-theme='blueprint'] .kp-refresh__segments > .kp-segmented__item {
+            padding-inline: 0.375rem;
+            min-inline-size: 0;
+            white-space: normal;
+            text-align: center;
+        }
+
+        [data-theme='blueprint'] .kp-refresh__segments .kp-segmented__label {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            letter-spacing: 0;
+            font-size: 0.625rem;
+            line-height: 1.25;
+        }
+    }
+
+    /* A question card stands on a tone's plate (amber, red or green). Its destructive button is the same red as the urgent and
+       refused plates and had no edge of its own, so on those cards "Stop" was words on the plate, not a button. It carries the
+       sheet's dark line. */
+    [data-theme='blueprint'] .kp-question .kp-button--destructive {
+        border-color: var(--background);
+    }
+
+    /* The names left out of a group ("+4") open in a list that the package gives a soft drop shadow; nothing glows on the sheet:
+       the list is the sheet's plate, one line and no shadow. */
+    [data-theme='blueprint'] .kp-idmark-group__list {
+        border-radius: var(--radius);
+        box-shadow: none;
+    }
+
+    /* The plate of an empty or failed area is set at heading size (`.kp-stateplate`, 1.125 to 1.5 rem), and its action inherited
+       that size: Retry was 23.7 px high text in a 36 px button. The action is a normal button, the size of every other one. */
+    [data-theme='blueprint'] .kp-stateplate__action {
+        font-size: var(--kp-text-md, 1rem);
+    }
+

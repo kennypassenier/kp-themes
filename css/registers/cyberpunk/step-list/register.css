@@ -1,0 +1,70 @@
+/* @part: step-list: register layer; also small-patterns, tree-reorder-split, accordion */
+    /* The step list is HUD readout rows: square corners, a hairline frame,
+       and a hard 3px bar on the side of the step that is running or has
+       failed (the bar is in the plate's own colour, the shape carries it). */
+    [data-theme='cyberpunk'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__item {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__item:is([data-state='running'], [data-state='failed']) {
+        border-inline-start-width: 3px;
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__time {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline {
+        border-left: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline__marker {
+        border-radius: 0;
+        transform: rotate(45deg) scale(0.75);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline__when {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-tree {
+        font-family: var(--kp-mono);
+    }
+
+    /* A branch's children glide open and shut like the accordion (js/motion.js glideGroup()):
+       shutting, the state is already `aria-expanded="false"` and the group is kept drawn until
+       the glide is over. */
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The accordion [gap-12]: mono capitals, spaced like its tabs, with the signal yellow for what is open. */
+    [data-theme='cyberpunk'] .kp-accordion__summary {
+        font-family: var(--kp-mono);
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-reorder {
+        border-radius: 0;
+    }
+

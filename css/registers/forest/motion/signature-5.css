@@ -1,0 +1,37 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-calendar--busy-whole > .kp-calendar__busy {
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                display var(--kp-sig-fo-time) allow-discrete;
+        }
+
+        [data-theme='forest'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+
+        @starting-style {
+            [data-theme='forest'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+                translate: 0 100%;
+                clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)));
+            }
+        }
+
+        /* Back to top fades in contact time and out on the curve turned
+           around; it keeps the button's contact answers. */
+        [data-theme='forest'] .kp-to-top {
+            transition:
+                opacity var(--fx-duration) var(--fx-ease),
+                visibility var(--fx-duration) var(--fx-ease),
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='forest'] .kp-to-top:not([data-kp-to-top-shown]) {
+            transition-timing-function: var(--kp-sig-fo-wither);
+        }
+    }
+

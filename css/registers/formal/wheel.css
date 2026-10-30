@@ -1,0 +1,12 @@
+/* @part: wheel: register layer */
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='formal'] .kp-wheel__spin.kp-button::before,
+    [data-theme='formal'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='formal'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
+        text-decoration: underline double var(--primary);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.3em;
+    }

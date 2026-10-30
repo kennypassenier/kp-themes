@@ -1,0 +1,4 @@
+/* @part: code-block: layout layer */
+    [data-theme='cyberpunk'] .kp-code-block {
+        border-radius: 0;
+    }

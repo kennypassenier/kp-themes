@@ -1,0 +1,44 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component; also navbar */
+    @keyframes kp-floor-drift {
+        to {
+            background-position: 0 6vw;
+        }
+    }
+
+    @keyframes kp-crt-off {
+        0% {
+            transform: scaleY(1);
+            filter: brightness(1);
+            opacity: 1;
+        }
+
+        60% {
+            transform: scaleY(0.006);
+            filter: brightness(8);
+        }
+
+        100% {
+            transform: scaleY(0.006) scaleX(0);
+            filter: brightness(50);
+            opacity: 0;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a neon rule under the band and a glow around the text. */
+    [data-theme='synthwave'] .kp-marquee {
+        background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, transparent), transparent);
+        border-block-end: 2px solid var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        --kp-marquee: 26000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='synthwave'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='synthwave'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        border-block-end: 0;
+    }
+

@@ -1,0 +1,66 @@
+/* @part: key-figures: signature layer; also menu-button, page-header */
+    [data-theme='deco'] .kp-kpi {
+        padding: 0.85rem 1.1rem;
+    }
+
+    [data-theme='deco'] .kp-kpi__label {
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='deco'] :is(.kp-kpi__value, .kp-numeric, .kp-state-word) {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* The change on a tile: ivory words, its arrow in the jewel of its tone
+       (emerald for good, ruby for bad); no plate under it. */
+    [data-theme='deco'] .kp-kpi__delta[data-kp-tone] {
+        padding-inline: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='deco'] .kp-kpi__delta[data-kp-tone='good']::before {
+        color: var(--kp-sig-deco-emerald);
+    }
+
+    [data-theme='deco'] .kp-kpi__delta[data-kp-tone='bad']::before {
+        color: var(--destructive);
+    }
+
+    /* Q8 · a warning: the figure itself in ruby with a thin gold rule under
+       it; the plate stays lacquer, its inlay gold. A tone on a key figure
+       (and so on the trend tile) is the figure, the plate stays; the
+       package's start edge, its frame and its plate under the figure are
+       retired. */
+    [data-theme='deco'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        border-color: hsl(from var(--primary) h s l / 0.3);
+        box-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='deco'] .kp-menu__item--destructive {
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* Q19 · the lozenge as a point (a bullet), a jewel (a done day) and the
+       divider's centre; the double rule under what matters. */
+    [data-theme='deco'] [data-kp-divider]::before {
+        background: var(--kp-sig-deco-gem);
+    }
+
+    [data-theme='deco'] .kp-page-header {
+        padding-block-end: 0.6rem;
+        border-block-end: 3px double var(--primary);
+    }
+

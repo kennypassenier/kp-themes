@@ -1,0 +1,29 @@
+/* @part: card: signature layer; also state-plate */
+    /* A card in four data states: the title of its note in the serif; a failure reddens the card's own sky; the data
+       that returns rises into its place (G9). */
+    [data-theme='solstice'] .kp-card__state-title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.25rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-card[data-kp-state='error'] > .kp-card__stage > .kp-card__state .kp-card__failure {
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.2), transparent 70%);
+        /* On the card's dark sky the package's destructive-foreground (a dark red) left "why" unreadable. */
+        color: var(--foreground);
+    }
+    [data-theme='solstice'] .kp-card[data-kp-state='error'] > .kp-card__stage > .kp-card__state .kp-card__state-title {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sig-solstice-solstice-dawn calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-come) both;
+        }
+    }
+
+    /* The drawings: the low sun's set, drawn up from the horizon, each stroke along its own length on the sine, the sun
+       first (G1, G2). The empty state's own small sun gives way to the drawing. */
+    [data-theme='solstice'] .kp-empty[data-kp-art]::before {
+        display: none;
+    }

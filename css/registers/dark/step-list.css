@@ -1,0 +1,49 @@
+/* @part: step-list: signature layer; also run-timeline */
+    /* ── The journey: one path, the line laid between the steps reached in the film, the mark a slot, the current step
+       a mark with the film turning on its edge ── */
+    [data-theme='dark'] .kp-steplist--journey {
+        --kp-journey-rule: 2px;
+    }
+    [data-theme='dark'] .kp-steplist--journey .kp-steplist__mark {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut-4);
+    }
+    [data-theme='dark'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: linear-gradient(90deg, var(--kp-step-tone, var(--chart-1)), var(--kp-step-tone, var(--chart-2)));
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item:not([data-state='done'], [data-state='current'])::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 6px);
+    }
+    [data-theme='dark'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='dark'] .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        box-shadow: 0 0 0 1px var(--chart-1), var(--kp-dk4-rest);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-steplist--journey > .kp-steplist__item::before {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+
+    /* ── Moments on the run timeline and the dated line: a mark is a slot, pointing rests the line on it, a zone is a
+       band of film at 12 % with its start edge drawn ── */
+    [data-theme='dark'] .kp-gantt__point:hover::before,
+    [data-theme='dark'] .kp-gantt__point:focus-visible::before {
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-gantt__count {
+        font-family: var(--theme-font-mono);
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-gantt__zone {
+        border-inline-start: 1px solid var(--border-strong);
+    }
+    [data-theme='dark'] .kp-gantt__mark {
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-gantt--line .kp-gantt__track {
+        border-radius: 0;
+    }

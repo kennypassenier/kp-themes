@@ -1,0 +1,65 @@
+/* @part: command-block: signature layer; also visual-timer */
+    /* Command: a plate stuck to the page, its sky pass off register and a strip of tape over its top edge; the shell
+       is a mint sticker, the prompt plum, the head cut from the line by a dashed edge. */
+    [data-theme='pastel'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        overflow: visible;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-command::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1.25rem;
+        inline-size: 3.25rem;
+        block-size: 0.75rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-command__head,
+    [data-theme='pastel'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 2px dashed var(--border-strong);
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+    }
+    [data-theme='pastel'] .kp-command__head {
+        padding-block-start: calc(var(--kp-space-xs, 0.25rem) + 0.25rem);
+    }
+    [data-theme='pastel'] .kp-command__shell {
+        padding: 0 0.6rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-command__where {
+        border-block-start: 2px dashed var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-command__code {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+    }
+
+    /* Visual timer and countdown: the timer is a round sticker with its sky pass off register, the time left plum on
+       paper, the hub a pearl; a finished one wobbles round its foot and keeps its pass; the countdown is a plate with
+       its pass and a strip of tape, its digits plum. */
+    [data-theme='pastel'] .kp-timer-disc__face {
+        border-width: 2px;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--border-strong);
+        --kp-timer-disc-ring: var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer-disc__hub {
+        background: var(--primary);
+        border-color: var(--card);
+    }
+    [data-theme='pastel'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }

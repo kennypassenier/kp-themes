@@ -1,0 +1,36 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-spinner::after {
+            animation: kp-sig-blueprint-blueprint-compass var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-switch__input::before {
+            transition: transform 200ms linear;
+        }
+
+        [data-theme='blueprint'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-blueprint-blueprint-draw var(--kp-sig-dur) linear both;
+        }
+
+        [data-theme='blueprint'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-blueprint-blueprint-mark var(--kp-sig-dur) linear both;
+        }
+
+        /* A tooltip opens along its leader first [opening, G3]: the leader is
+           drawn from its node, then the pen traces the outline on the tooltip's
+           own ground, and at three quarters the words and the plate are inked.
+           Three units, the closing is this played backwards
+           (js/overlays.js, [data-kp-reversing]). */
+        [data-theme='blueprint'] .kp-tooltip {
+            animation: kp-sig-blueprint-callout var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-tooltip::before {
+            animation: kp-sig-blueprint-leader var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-tooltip::after {
+            animation: kp-sig-blueprint-node var(--kp-sig-dur) linear backwards;
+        }
+    }
+

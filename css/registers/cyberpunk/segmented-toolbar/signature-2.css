@@ -1,0 +1,35 @@
+/* @part: segmented-toolbar: signature layer; also quantity */
+    /* ── Segmented tri-state chips: in is the circuit lit and a yellow rim, out is locked as a target in red ── */
+    [data-theme='cyberpunk'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--primary);
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        --kp-cp4-tone: var(--destructive);
+        border-color: var(--border);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-segmented__mark {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-segmented__summary {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+
+    /* ── Quantity ── */
+    [data-theme='cyberpunk'] .kp-quantity__field {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-quantity__input,
+    [data-theme='cyberpunk'] .kp-quantity__unit {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        clip-path: none;
+    }
+

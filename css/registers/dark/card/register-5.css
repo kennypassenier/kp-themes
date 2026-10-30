@@ -1,0 +1,33 @@
+/* @part: card: register layer */
+    /* ── The panels' edge is the film itself [scope-16] ────────────────
+       A gradient border, drawn by painting the panel's own ground over
+       the oxide and letting only the border box show through. */
+    [data-theme='dark'] .kp-card::after,
+    [data-theme='dark'] .kp-dialog::before {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    /* ── The card's plate, and its halo [scope-102] ───────────────────────
+       The dialog's scope-100 restructure, applied to the card for the same
+       measured reason: its chamfer is a clip-path, a clip-path clips the
+       element's own box-shadow, and the card could therefore cast nothing
+       at all. The plate — the ground, the film edge and the cut — moves to
+       the ::after; the card keeps its own border box (`border: 1px solid
+       transparent`, so no box moves) and carries the halo.
+
+       `inset: -1px` is the border's width: the containing block is the
+       card's padding box, and the plate has to reach back over the 1px
+       border it paints the film into. The same inset the dialog's plate
+       carries, for the same reason. */
+    [data-theme='dark'] .kp-card::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: calc(var(--radius) * 1.5);
+        pointer-events: none;
+    }
+

@@ -1,0 +1,60 @@
+/* @part: button: signature layer; also key-figures, menu-button */
+    /* ── The closed circuit: press [Kenny: press = closed] ────────────────────
+       While the part is held down its circuit grid lights at 60 % and its ground takes the
+       pressed shade; the part does not move. */
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-grid-a: 0;
+        --kp-cp-grid-ink: hsl(from var(--kp-btn-fg) h s l / var(--kp-cp-grid-a));
+        background-image:
+            repeating-linear-gradient(to bottom, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(135deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-size:
+            calc(100% - 8px) calc(100% - 8px),
+            calc(100% - 8px) calc(100% - 8px),
+            100% var(--kp-button-slit),
+            var(--kp-button-notch) var(--kp-button-notch),
+            calc(100% - 4px) calc(100% - 4px);
+        background-position:
+            4px 4px,
+            4px 4px,
+            0 50%,
+            right bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--mirror,
+    [data-theme='cyberpunk'] .kp-button[data-kp-direction='back'] {
+        background-image:
+            repeating-linear-gradient(to bottom, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(225deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-position:
+            4px 4px,
+            4px 4px,
+            0 50%,
+            left bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:active:not(:disabled) {
+        --kp-cp-grid-a: 0.6;
+        --kp-btn-ground: var(--secondary);
+    }
+
+    [data-theme='cyberpunk']
+        :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])):active {
+        --kp-cp-grid-a: 0.6;
+        --kp-cp-ground: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item:active:not(:is(:disabled, [aria-disabled='true'])) {
+        background:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px), var(--secondary);
+    }
+

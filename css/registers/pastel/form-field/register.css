@@ -1,0 +1,59 @@
+/* @part: form-field: register layer; also forms, switch */
+    /* ── Fields ───────────────────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-field__label {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    [data-theme='pastel'] .kp-field__input {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.85rem;
+        background: var(--background);
+        color: var(--foreground);
+        padding-inline: 0.75rem;
+        font-size: 0.92rem;
+    }
+
+    /* A field's focus is the dashed line alone, as every control's (the
+       signature layer, G15). */
+
+    [data-theme='pastel'] .kp-field__input--multiline {
+        min-height: 5.5rem;
+        padding-block: calc(var(--kp-space-sm) * 1.2);
+    }
+
+    [data-theme='pastel'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='pastel'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='pastel'] .kp-fieldset {
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+        padding: 0.35rem 0.85rem 0.65rem;
+    }
+
+    /* The switch [gap-11]: the pill stays, soft on the field's ground. */
+    [data-theme='pastel'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='pastel'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='pastel'] .kp-form__summary {
+        background: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: 0.85rem;
+    }
+

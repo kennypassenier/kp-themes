@@ -1,0 +1,29 @@
+/* @part: page-header: register layer */
+    /* The margin note: a difference-blend chrome over the hero's own glow —
+       there is no photograph to invert over (S48), so the "imagery" is the
+       glow itself. Decorative, aria-hidden, never carries text a reader
+       needs (checked against every surface it might land on: over the
+       void 13.36, over the panel 11.72, over the glow itself only 2.19 —
+       the reason it stays hidden from assistive tech rather than relied
+       on). */
+    [data-theme='dark'] .kp-side-note {
+        position: absolute;
+        inset-inline-end: 0.35rem;
+        inset-block-start: 2rem;
+        writing-mode: vertical-rl;
+        font-family: var(--theme-font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        mix-blend-mode: difference;
+        z-index: 2;
+        padding: 0.4rem 0.1rem;
+    }
+
+    @media (max-width: 40rem) {
+        [data-theme='dark'] .kp-side-note {
+            display: none;
+        }
+    }
+

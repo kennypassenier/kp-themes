@@ -1,0 +1,44 @@
+/* @part: wheel: signature layer */
+    /* Wheel: a sticker sheet round, its sky pass off register on the stage; every wedge die-cut with a paper gap, the
+       rim plum; it spins on the soft landing and settles back once past its mark; the winner's name wobbles. */
+    [data-theme='pastel'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-pa-land);
+        --kp-wheel-hub-ring: 5px;
+    }
+    [data-theme='pastel'] .kp-wheel__stage {
+        filter: drop-shadow(calc(5px * var(--kp-sig-pa-dir)) 5px 0 var(--kp-sig-pa-pass-c));
+    }
+    [data-theme='pastel'] .kp-wheel__segment {
+        stroke-width: 2.4;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::before,
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='pastel'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-wheel__rim {
+        stroke: var(--primary);
+        stroke-width: 2;
+    }
+    [data-theme='pastel'] .kp-wheel__label {
+        font-weight: 600;
+    }
+    [data-theme='pastel'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        color: var(--primary);
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-wheel[data-kp-wheel-won] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out;
+        }
+    }
+

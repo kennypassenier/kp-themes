@@ -1,0 +1,80 @@
+/* @part: action-tiles: signature layer */
+    [data-theme='nostromo'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='nostromo'] .kp-action {
+        --kp-action-radius: var(--radius);
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-ground-hover: var(--popover);
+        --kp-action-ground-active: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        --kp-action-shadow: var(--kp-sig-no-raised);
+        --kp-action-shadow-hover: var(--kp-sig-no-raised);
+        --kp-action-shadow-active: var(--kp-sig-no-well);
+        --kp-action-press: 0 0;
+        --kp-action-title-font: var(--theme-font-display);
+        --kp-action-title-size: 0.8125rem;
+        --kp-action-title-tracking: 0.04em;
+        --kp-action-title-case: uppercase;
+    }
+    /* The lamp before the title: unlit (25 %), lit under the hand (70 %), full when pressed. */
+    [data-theme='nostromo'] .kp-action__title::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-inline-end: 0.5rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+        vertical-align: 0.08em;
+    }
+    [data-theme='nostromo'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title::before {
+        opacity: 0.7;
+    }
+    [data-theme='nostromo'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title::before {
+        opacity: 1;
+    }
+    [data-theme='nostromo'] .kp-action:focus-visible {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-action:focus-visible .kp-action__title::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+        opacity: 1;
+    }
+    [data-theme='nostromo'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        box-shadow: none;
+    }
+    /* Destructive: the klaxon, the plate framed all round, 3 px, in the red; its lamp in the red. */
+    [data-theme='nostromo'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-action-tone-edge: var(--destructive);
+        --kp-action-tone-edge-hover: var(--destructive);
+        --kp-action-line: 3px;
+    }
+    [data-theme='nostromo'] .kp-action--destructive::after {
+        display: none;
+    }
+    [data-theme='nostromo'] .kp-action--destructive > .kp-action__title::before {
+        color: var(--destructive);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-action__title::before {
+            transition:
+                opacity var(--fx-duration) steps(2, jump-end),
+                background var(--fx-duration) steps(2, jump-end),
+                box-shadow var(--fx-duration) steps(2, jump-end);
+        }
+    }
+

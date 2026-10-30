@@ -1,0 +1,75 @@
+/* @part: sidenav: signature layer; also dialog, motion */
+    [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+        --kp-sn-t: 4;
+        --kp-sn-x: calc(var(--kp-sn-t) * 1px + max(0px, (var(--kp-sn-t) - 2) * 1px));
+        --kp-sn-y: calc(var(--kp-sn-t) * 1px);
+        --kp-sn-a: calc(min(1, var(--kp-sn-t)));
+        translate: 0 0;
+        /* Shut, the panel stands off the screen: the transform is the move out, and it comes
+           only when the four ticks of the close are over (the transition below), so the tear
+           plays in place and is gone before the panel leaves. Not `translate`: js/sidenav.js
+           reads that transition as the clock of a pushed page. */
+        transform: translateX(var(--kp-sidenav-away, -100%));
+        visibility: hidden;
+        box-shadow:
+            var(--kp-sn-x) var(--kp-sn-y) 0 hsl(from var(--accent) h s l / var(--kp-sn-a)),
+            var(--kp-sn-x) calc(-1 * var(--kp-sn-y)) 0 hsl(from var(--primary) h s l / var(--kp-sn-a));
+        text-shadow:
+            var(--kp-sn-x) var(--kp-sn-y) 0 hsl(from var(--accent) h s l / var(--kp-sn-a)),
+            var(--kp-sn-x) calc(-1 * var(--kp-sn-y)) 0 hsl(from var(--primary) h s l / var(--kp-sn-a));
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+        --kp-sn-t: 0;
+        translate: 0 0;
+        transform: none;
+        visibility: visible;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            transition:
+                --kp-sn-t 480ms var(--kp-cp-back),
+                visibility 480ms linear,
+                translate 0s,
+                transform 0s linear 480ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition:
+                --kp-sn-t 480ms steps(4, jump-end),
+                visibility 480ms linear,
+                translate 0s,
+                transform 0s;
+        }
+
+        /* The dim is drawn in by its colour, not its opacity: an opacity that stands at 1 reads one
+           level darker in Chromium when a compositor layer holds it than when it is static. */
+        [data-theme='cyberpunk'] .kp-sidenav__backdrop {
+            animation: kp-sig-cyberpunk-dim 480ms steps(4, jump-end) both;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-sidenav-shift] {
+            transition:
+                margin-inline-start 480ms var(--kp-cp-back),
+                padding-inline-start 480ms var(--kp-cp-back);
+        }
+
+        [data-theme='cyberpunk'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 480ms steps(4, jump-end),
+                padding-inline-start 480ms steps(4, jump-end);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-dim {
+        from {
+            background-color: transparent;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }

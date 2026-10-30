@@ -1,0 +1,77 @@
+/* @part: bullet-rows: signature layer; also key-value-grid, form-grid */
+    /* ── Bullet rows: the figure is a read-out; a tone locks the figure as a target in its ink ── */
+    [data-theme='cyberpunk'] .kp-bullets__figure {
+        font-family: var(--kp-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.08em;
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        padding: 0.125em 0.625em;
+        background: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        --kp-cp4-tone: var(--destructive);
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        --kp-cp4-tone: var(--warning-foreground);
+        color: var(--warning-foreground);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__detail {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row:has(.kp-bullets__link:is(:hover, :focus-visible)) {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__note {
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(2) {
+            animation-delay: var(--kp-cp4-tick);
+        }
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-cp4-tick));
+        }
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-cp4-tick));
+        }
+    }
+
+    /* ── Key-value grid and form rows: the key is a cyan prefixed label, the failed row is locked as a target ── */
+    [data-theme='cyberpunk'] .kp-kv__row > dt,
+    [data-theme='cyberpunk'] .kp-formrow__label {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-kv__row > dt::before {
+        content: '// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-formrow__label > small {
+        text-transform: none;
+        letter-spacing: 0.04em;
+        color: var(--muted-foreground);
+    }
+    [data-theme='cyberpunk'] .kp-kv__row[data-kp-state='error'],
+    [data-theme='cyberpunk'] .kp-formrow[data-kp-state='error'] {
+        --kp-cp4-tone: var(--destructive);
+        background: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='cyberpunk'] .kp-formrow[data-kp-state='error']::before {
+        display: none;
+    }
+    [data-theme='cyberpunk'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--primary);
+    }

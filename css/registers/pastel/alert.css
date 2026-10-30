@@ -1,0 +1,46 @@
+/* @part: alert: register layer; also movable-grid, master-detail */
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='pastel'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    /* The success and warning plates' own inks read 4.57 and 4.58:1; a
+       twentieth of the page's text in them reads 4.79 and 4.75
+       [alert-contrast-M1]. The band's items are left alone: they keep the
+       page's text on a soft tint. */
+    [data-theme='pastel'] .kp-alert--success:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--success-foreground) 95%, var(--foreground));
+    }
+
+    [data-theme='pastel'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
+    [data-theme='pastel'] .kp-grid {
+        gap: 1rem;
+    }
+
+    [data-theme='pastel'] .kp-grid__tile,
+    [data-theme='pastel'] .kp-split__pane {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-split__separator {
+        background: var(--border);
+    }
+

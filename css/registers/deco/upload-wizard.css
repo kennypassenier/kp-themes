@@ -1,0 +1,67 @@
+/* @part: upload-wizard: signature layer; also navbar, state-plate */
+    [data-theme='deco'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li {
+        gap: 0.45rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.4rem;
+        block-size: 4px;
+        margin-inline: 0.45rem;
+        border-block: 1px solid hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='done']::after {
+        border-color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li::before {
+        inline-size: 1.9rem;
+        block-size: 1.9rem;
+        border: 0;
+        border-radius: 0;
+        background: hsl(from var(--primary) h s l / 0.22);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        color: var(--foreground);
+        font-size: 0.75rem;
+        letter-spacing: 0;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='done']::before {
+        background: hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='current']::before {
+        inline-size: 2.3rem;
+        block-size: 2.3rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='deco'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='deco'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--primary) h s l / 0.7);
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='deco'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        text-decoration-line: underline overline;
+        text-decoration-color: var(--primary);
+    }
+

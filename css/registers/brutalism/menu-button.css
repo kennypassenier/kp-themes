@@ -1,0 +1,54 @@
+/* @part: menu-button: register layer */
+    /* The menu keeps a ring's width of paper inside its frame: with the
+       line directly against the items, an item's ink ring fell onto the
+       ink line and painted nothing new (AR30's dashboard test). */
+    [data-theme='brutalism'] .kp-menu {
+        padding: calc(2 * var(--kp-focus-ring-inner-width, 2px));
+    }
+
+    /* The items are flat on the menu's own plate, as the demo's dropdown
+       was: the line, the shadow and the lift belong to the menu, not to
+       each row — a row that carried them drowned its ink ring in the ink
+       of its own shadow and the frame (AR30's dashboard test). */
+    [data-theme='brutalism'] .kp-menu .kp-menu__item {
+        --kp-plate: var(--popover);
+        --kp-plate-ink: var(--popover-foreground);
+        border: 0;
+        box-shadow: none;
+        translate: none;
+        padding: 0.5rem 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-menu .kp-menu__item--destructive {
+        --kp-plate-ink: var(--destructive);
+    }
+
+    /* An entry is brutalism's own element [G17]: pointed at it inverts, with
+       focus it is the yellow hand under the inner ring, a press drives it
+       onto the active plate. */
+    [data-theme='brutalism'] .kp-menu .kp-menu__item:not(:active, [aria-disabled='true']):hover {
+        background: var(--foreground);
+        color: var(--secondary);
+        translate: none;
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-menu .kp-menu__item--destructive:not(:active, [aria-disabled='true']):hover {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-menu .kp-menu__item:not(:active):focus-visible {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: none;
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+
+    [data-theme='brutalism'] .kp-menu .kp-menu__item:active:not([aria-disabled='true']) {
+        background: var(--secondary-active);
+        color: var(--secondary-foreground);
+        translate: none;
+        box-shadow: none;
+    }
+

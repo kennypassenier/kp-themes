@@ -1,0 +1,30 @@
+/* @part: dialog: register layer; also theme-menu */
+    /* ── Windows: dialogs, popovers, menus — the demo's own shadow [X0] ── */
+
+    [data-theme='pastel'] .kp-dialog,
+    [data-theme='pastel'] .kp-popover,
+    [data-theme='pastel'] .kp-menu,
+    [data-theme='pastel'] .kp-toast,
+    [data-theme='pastel'] .kp-tooltip,
+    [data-theme='pastel'] .kp-confirm,
+    [data-theme='pastel'] .kp-datepicker__panel,
+    [data-theme='pastel'] .kp-combobox__list,
+    [data-theme='pastel'] .kp-palette,
+    [data-theme='pastel'] .kp-theme-menu__list {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 1.2rem;
+        /* No soft shadow (G7): a window's shadow is its sky pass (the
+           signature layer). */
+        box-shadow: none;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='pastel'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+

@@ -1,0 +1,24 @@
+/* @part: key-figures: signature layer */
+    /* Four hard lifts in half the loop (the first at once), a unit's hold,
+       then let go to fall free on the fall curve, and rest. */
+    @keyframes kp-sig-brutalism-hoist {
+        0% {
+            background-position-y: 100%;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        50%,
+        58.333% {
+            background-position-y: 161.6%;
+        }
+
+        58.333% {
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+
+        75%,
+        100% {
+            background-position-y: 100%;
+        }
+    }
+

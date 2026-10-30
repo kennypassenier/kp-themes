@@ -1,0 +1,45 @@
+/* @part: segmented-toolbar: signature layer; also quantity */
+    /* Three-way chips: the chip that is in is green on the leaf; the one that is out is a dashed outline with the word
+       struck through and a red node; pointing blazes any chip with the dashed green ring (no inner line). */
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-style: dashed;
+    }
+    @media (hover: hover) {
+        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover:not(:focus-visible) {
+            box-shadow: none;
+            outline-color: var(--primary);
+            outline-offset: 2px;
+        }
+    }
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item:active:not(:focus-visible) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Quantity: the number lies in a routed slot of wood; the steps are forest's own buttons. */
+    [data-theme='forest'] .kp-quantity__field {
+        border-color: transparent;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-quantity__unit {
+        font-style: italic;
+    }
+

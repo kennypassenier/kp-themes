@@ -1,0 +1,36 @@
+/* @part: small-patterns: signature layer */
+    /* The drawings: the lobby's fan in gold hairlines, drawn from the centre out two strokes at a time on the settle
+       (G1, G2); the reduced pose is the drawing as it is. */
+    [data-theme='deco'] .kp-art {
+        display: block;
+        --kp-art-stroke: 1.25px;
+        --kp-art-rule: var(--kp-sig-deco-gold-hi);
+        --kp-art-line: hsl(from var(--primary) h s l / 0.45);
+        --kp-art-ink: var(--primary);
+        --kp-art-red: hsl(from var(--destructive) h s calc(l + 4));
+    }
+    [data-theme='deco'] .kp-art > g[data-kp-art-set='fan'] {
+        display: inline;
+    }
+    [data-theme='deco'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }
+    [data-theme='deco'] .kp-art path.kp-art__ink {
+        stroke-width: 1.25px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-art path {
+            stroke-dasharray: 1;
+            animation: kp-sig-deco-art-draw var(--kp-sig-deco-draw-t) var(--kp-sig-deco-settle) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 40ms);
+        }
+    }
+    @keyframes kp-sig-deco-art-draw {
+        from {
+            stroke-dashoffset: 1;
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }

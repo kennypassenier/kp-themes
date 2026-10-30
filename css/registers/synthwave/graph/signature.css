@@ -1,0 +1,22 @@
+/* @part: graph: signature layer */
+    [data-theme='synthwave'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: var(--background);
+        --kp-graph-load-under:
+            linear-gradient(to top, color-mix(in oklch, var(--primary) 22%, transparent), transparent 30%),
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--accent) 14%, transparent) 0 1px, transparent 1px 40px) bottom / 100% 26%
+                no-repeat,
+            repeating-linear-gradient(to top, color-mix(in oklch, var(--accent) 14%, transparent) 0 1px, transparent 1px 18px) bottom / 100% 26%
+                no-repeat;
+        --kp-graph-load-font: var(--theme-font-mono);
+        --kp-graph-load-size: 15px;
+        --kp-graph-load-edge-w: 1.2;
+        --kp-graph-load-edge-mix: 80%;
+        --kp-graph-load-edge-glow: drop-shadow(0 0 2px var(--kp-graph-edge-colour, var(--chart-3)));
+        --kp-graph-load-ring-fill: var(--background);
+        --kp-graph-load-ring-w: 2;
+        --kp-graph-load-node-mix: 70%;
+    }
+
+    [data-theme='synthwave'] .kp-graph[data-kp-state='loading'] .kp-graph__node {
+        --kp-graph-load-node-glow: drop-shadow(0 0 6px var(--kp-graph-node-colour));
+    }

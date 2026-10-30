@@ -1,0 +1,65 @@
+/* @part: forms: signature layer; also status-rows, card, form-field */
+    /* ── Status rows: the fix is a line of its own in the tone's film ── */
+    [data-theme='dark'] .kp-statusrow__fix {
+        padding-inline-start: 0.5rem;
+        box-shadow: inset 2px 0 0 var(--kp-statusrow-state-edge, var(--border-strong));
+    }
+    [data-theme='dark'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--warning-foreground);
+        --kp-statusrow-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+
+    /* ── Choices as tiles: a slot with the line resting at its start when pointed at; checked it takes the film
+       along its whole edge and the accent plate ── */
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+        --kp-field-tile-ground-checked: var(--accent);
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        position: relative;
+        clip-path: var(--kp-dk4-cut);
+        border-color: var(--border);
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:is(:hover, :has(> .kp-field__check:checked)):not(:has(> .kp-field__check:disabled))::before {
+        opacity: 1;
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border-strong);
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        border-color: transparent;
+        box-shadow: none;
+        background:
+            linear-gradient(var(--accent), var(--accent)) padding-box,
+            var(--kp-iris, var(--kp-sig-dk-line)) border-box;
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        clip-path: none;
+        outline-offset: -2px;
+    }
+    [data-theme='dark'] .kp-field__option-hint {
+        font-family: var(--theme-font-body);
+    }
+
+    /* ── A card in four data states: the stage is laid by the pass when it fills; empty and failed keep the footprint ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+    [data-theme='dark'] .kp-card__failure {
+        clip-path: var(--kp-dk4-cut);
+    }
+

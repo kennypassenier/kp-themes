@@ -1,0 +1,168 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* Loading is one pen [loading, Kenny 2026-10-07 22:24: "always just one pen
+       that traces everything"]: the pen traces the outline of what waits, then
+       underlines every place a reading will stand, in reading order, the pen up
+       between places. A place is two dimension ticks and a baseline the pen
+       draws; places follow each other two units apart, so no two pens are ever
+       on the sheet at once; a block of places is traced round first. A loop is
+       18 units (2880 ms): the route, the marks standing, the marks lifted. The
+       reduced pose is the marks standing, drawn, and no pen. The progress bar
+       draws its value as a stroke with the pen at its end, busy it strokes along
+       the scale, lifts, goes back with the pen up and strokes again; the
+       compass of the spinner is the approved circle and stays. */
+    [data-theme='blueprint'] .kp-skeleton {
+        background: transparent;
+        border-radius: 0;
+        animation: none;
+        --kp-bp-p: 1;
+        --kp-bp-tv: 1;
+        --kp-bp-pv: 0;
+        --kp-bp-nib: 0;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        block-size: 0.9rem;
+        margin-inline: 1px 4px;
+        border: 0;
+    }
+
+    [data-theme='blueprint']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.7rem;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        content: '';
+        position: absolute;
+        inset-block: -5px;
+        inset-inline: -1px;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        --kp-bp-px: var(--kp-bp-p);
+        --kp-bp-py: 1;
+        inset: -8px;
+        background-image: var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(var(--kp-bp-p) * (100% - 16px)) 1px;
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px calc(100% - 9px);
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--block {
+        position: relative;
+        border: 0;
+        --kp-bp-r: 4;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--block::after {
+        --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+        --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+        inset: -8px;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 8px,
+            right 8px top 8px,
+            right 8px bottom 8px,
+            left 8px bottom 8px;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--circle {
+        position: relative;
+        border-radius: 50%;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--circle::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid hsl(from var(--primary) h s l / var(--kp-bp-tv));
+        pointer-events: none;
+        mask: conic-gradient(var(--foreground) calc(var(--kp-bp-p) * 1turn), transparent 0);
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--circle::before {
+        --kp-bp-px: calc(0.5 + 0.5 * sin(var(--kp-bp-p) * 1turn));
+        --kp-bp-py: calc(0.5 - 0.5 * cos(var(--kp-bp-p) * 1turn));
+        inset: -8px;
+        background-image: var(--kp-bp-pen-img);
+        background-size: var(--kp-bp-pen-size);
+        background-position: var(--kp-bp-pen-pos);
+    }
+
+    [data-theme='blueprint'] .kp-progressbar {
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --kp-bp-p: var(--kp-value);
+        --kp-bp-pv: 1;
+        --kp-bp-nib: 1;
+        --kp-bp-tv: 1;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] {
+        --kp-bp-p: 1;
+        --kp-bp-nib: 0;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left top / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) right top / 1px 100% no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
+            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.55) 0 1px, transparent 1px calc(100% / (var(--kp-steps) * 2)))
+                center / 100% 28% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) center / 100% 1px no-repeat,
+            transparent;
+        overflow: visible;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__fill,
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-block: calc(50% - 1px);
+        inset-inline: 0;
+        inline-size: auto;
+        background: hsl(from var(--primary) h s l / var(--kp-bp-tv));
+        animation: none;
+        clip-path: inset(0 calc((1 - var(--kp-bp-p)) * 100%) 0 0);
+        transform: none;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        transform: translateX(calc(var(--kp-bp-p) * 100cqi));
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__head {
+        inline-size: 0;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__head::before {
+        --kp-bp-px: 0.5;
+        --kp-bp-py: 0.5;
+        inset-block-start: calc(50% - 8.5px);
+        inset-inline-start: -8.5px;
+        inline-size: 17px;
+        block-size: 17px;
+        background-image: var(--kp-bp-pen-img);
+        background-size: var(--kp-bp-pen-size);
+        background-position: var(--kp-bp-pen-pos);
+    }
+

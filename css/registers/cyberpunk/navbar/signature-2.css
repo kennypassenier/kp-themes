@@ -1,0 +1,52 @@
+/* @part: navbar: signature layer */
+    [data-theme='cyberpunk'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        position: relative;
+        text-decoration: underline dotted var(--accent);
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='cyberpunk']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a)::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -0.1em;
+        block-size: 2px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+    }
+
+    [data-theme='cyberpunk']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        text-decoration-color: transparent;
+    }
+
+    [data-theme='cyberpunk']
+        a:not(
+            [class],
+            :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+        ):hover::after {
+        transform: scaleX(1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk']
+            a:not(
+                [class],
+                :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+            )::after {
+            transition: transform 180ms steps(3, jump-start);
+        }
+
+        /* Drawn in three ticks, wiped out in the same three backwards (jump-start is jump-end
+           reversed): contact is a tick count, never an ease [G1, G4]. */
+        [data-theme='cyberpunk']
+            a:not(
+                [class],
+                :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+            ):hover::after {
+            transition-timing-function: steps(3, jump-end);
+        }
+    }
+

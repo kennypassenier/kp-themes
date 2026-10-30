@@ -1,0 +1,42 @@
+/* @part: page-header: register layer */
+    /* ── The footer: one step down, the base unit ─────────────────────── */
+
+    [data-theme='nostromo'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-footer h4 {
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-footer p {
+        color: var(--sidebar-foreground);
+        opacity: 0.85;
+    }
+
+    [data-theme='nostromo'] .kp-footer a {
+        color: var(--sidebar-foreground);
+        opacity: 0.85;
+        text-decoration: none;
+    }
+
+    [data-theme='nostromo'] .kp-footer a:hover,
+    [data-theme='nostromo'] .kp-footer a:focus-visible {
+        opacity: 1;
+        text-decoration: underline;
+    }
+
+    [data-theme='nostromo'] .kp-footer .microlabel {
+        color: var(--sidebar-foreground);
+        opacity: 0.55;
+    }
+
+    /* ── The scrollbar joins the theme ─────────────────────────────────── */
+
+    [data-theme='nostromo'] {
+        scrollbar-color: var(--border-strong) var(--background);
+    }
+

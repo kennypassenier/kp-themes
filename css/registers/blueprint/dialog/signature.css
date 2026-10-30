@@ -1,0 +1,50 @@
+/* @part: dialog: signature layer */
+    [data-theme='blueprint'] .kp-dialog::backdrop {
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.07) 1px, transparent 1px) 0 0 / 16px 16px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.07) 1px, transparent 1px) 0 0 / 16px 16px,
+            hsl(from var(--background) h s calc(l * 0.7));
+    }
+
+    /* The unopened dialog is the one js/motion.js measures for the theme's
+       time (a probe it adds and takes off), and it reads a close as two thirds
+       of that; so it runs one and a half openings, and the dialog that is open
+       runs one, which is also its close (5 units, 800 ms: the pen traces the
+       outline, the sheet is inked). */
+    [data-theme='blueprint'] .kp-dialog {
+        --kp-sig-dur: calc(1.5 * var(--kp-sig-bp-panel));
+        border: 1px solid var(--primary);
+        border-radius: 2px;
+        background: var(--popover);
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-bp-panel);
+    }
+
+    /* The registration crosses of an overlay sheet [G16]: at its start and
+       end corners, inside its edge (the dialog scrolls inside itself, so
+       nothing outside it is ever drawn); both on ::before, so ::after is the
+       pen's. */
+    [data-theme='blueprint'] .kp-dialog::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 6px 3px / 1px 7px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 3px 6px / 7px 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - 6px) calc(100% - 3px) / 1px 7px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - 3px) calc(100% - 6px) / 7px 1px no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-mono);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+

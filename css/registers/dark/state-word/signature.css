@@ -1,0 +1,56 @@
+/* @part: state-word: signature layer */
+    /* ── A live update is one pass over the figure [G9; Kenny, 2026-10-09,
+       question 9: "One pass over the figure"]. js/update.js writes the new
+       value at once and marks the element `[data-kp-updating='pass']`; the
+       line crosses the changed figure once from its start (the theme's update
+       time, 660 ms), the letters behind it take the film and settle back to
+       ink once it has gone by; the figure never moves, flares or jolts and
+       the box keeps its space. Applies to the key figure, the state word, the
+       trend, the strip column and the tile alike. A state word keeps its
+       width-holding ::after, so its line is drawn on ::before; a spark (an
+       svg) has no letters, its line crosses the parent's box. Two numbers, how
+       far the line has come (--kp-sig-dk-at) and how much ink lies over the
+       film (--kp-sig-dk-ink), are @property at the top of this file. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] {
+            --kp-update: pass;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass'] {
+            position: relative;
+            --kp-sig-dk-ink-colour: var(--foreground);
+        }
+
+        [data-theme='dark'] .kp-kpi > .kp-kpi__value[data-kp-updating='pass'] {
+            justify-self: start;
+            inline-size: fit-content;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(:has(> svg)) {
+            background:
+                linear-gradient(var(--kp-sig-dk-gdir), transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
+                ),
+                var(--kp-iris);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: kp-sig-dark-figure var(--kp-update-duration, 660ms) linear both;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(.kp-state-word)::after,
+        [data-theme='dark'] .kp-state-word[data-kp-updating='pass']::before {
+            content: '';
+            position: absolute;
+            inset: -2px -4px;
+            z-index: 1;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-live var(--kp-update-duration, 660ms) linear both;
+        }
+    }
+

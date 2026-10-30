@@ -1,0 +1,22 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-tour-target] {
+            outline-style: dashed;
+            animation: kp-sig-pastel-tour-ring var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+            transition:
+                box-shadow var(--kp-sig-pa-window) var(--kp-sig-pa-land),
+                outline-color var(--kp-sig-pa-window) var(--kp-sig-pa-land);
+        }
+    }
+
+    @keyframes kp-sig-pastel-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='pastel'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }

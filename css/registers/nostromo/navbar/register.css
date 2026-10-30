@@ -1,0 +1,143 @@
+/* @part: navbar: register layer */
+    [data-theme='nostromo'] .kp-nav a:focus-visible,
+    [data-theme='nostromo'] .kp-nav button:focus-visible,
+    [data-theme='nostromo'] .kp-footer a:focus-visible {
+        box-shadow:
+            0 0 0 2px var(--sidebar-background),
+            0 0 0 4px var(--sidebar-foreground);
+    }
+
+    /* ── Nav: the dark control strip, and its dropdown (KT14) ─────────── */
+
+    [data-theme='nostromo'] .kp-nav-wrap {
+        background: var(--sidebar-background);
+    }
+
+    [data-theme='nostromo'] .kp-nav {
+        background: var(--sidebar-background);
+        color: var(--sidebar-foreground);
+        border-bottom: 1px solid var(--sidebar-accent);
+    }
+
+    [data-theme='nostromo'] .kp-nav__brand {
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        color: var(--sidebar-foreground);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    [data-theme='nostromo'] .kp-nav__brand::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--sidebar-primary);
+        box-shadow:
+            0 0 0 2px var(--sidebar-background),
+            0 0 4px 1px hsl(from var(--sidebar-primary) h s l / 0.5);
+        flex: none;
+    }
+
+    /* The site mark is quieter than the brand, not unreadable [scope-59]:
+       --muted-foreground is the light page's muted ink and read 1.82:1 on
+       the dark strip. The strip's own ink, desaturated and dimmed, keeps it
+       a step below the brand at 6:1 or so. */
+    [data-theme='nostromo'] .kp-nav__brand-tag {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        color: hsl(from var(--sidebar-foreground) h calc(s * 0.6) 64);
+    }
+
+    [data-theme='nostromo'] .kp-nav__links {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-nav__link {
+        color: var(--sidebar-foreground);
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    /* The current item carries a filled LED dot no other item has [DI4];
+   css/_rules.css draws it for `nav [aria-current='page']`. The link stays
+   inline like its neighbours [scope-59]: as an inline-flex box its
+   baseline was the dot's bottom edge, and "Incidents" sat 1.6px below the
+   other items. The dot is centred on the text instead. */
+    [data-theme='nostromo'] .kp-nav__link[aria-current]::before {
+        vertical-align: middle;
+    }
+
+    [data-theme='nostromo'] .kp-nav__link:hover,
+    [data-theme='nostromo'] .kp-nav__link:focus-visible,
+    [data-theme='nostromo'] .kp-nav__link[aria-expanded='true'],
+    [data-theme='nostromo'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        background: var(--sidebar-accent);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-nav__link--lang {
+        opacity: 0.85;
+    }
+
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
+    [data-theme='nostromo'] .kp-nav__link--cta {
+        background: var(--selected);
+        color: var(--primary-foreground);
+        border-radius: var(--kp-sig-no-key);
+        padding-inline: var(--kp-space-lg, 1rem);
+    }
+
+    [data-theme='nostromo'] .kp-nav__link--cta:hover,
+    [data-theme='nostromo'] .kp-nav__link--cta:focus-visible {
+        background: hsl(from var(--selected) h s calc(l - 6));
+        color: var(--primary-foreground);
+    }
+
+    /* The dropdown [KT14]: a dark plate off the strip, one boundary in
+   the sidebar's own accent. */
+    [data-theme='nostromo'] .kp-nav__menu {
+        background: var(--sidebar-background);
+        border: 1px solid var(--sidebar-accent);
+        border-radius: var(--radius);
+        box-shadow: 0 8px 20px hsl(from var(--sidebar-background) h s l / 0.35);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            /* Room under the item it belongs to [scope-59]: the caption
+               touched "Readings" (4px, the panel's own padding). */
+            padding-block-start: 0.5rem;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        /* …and room under the caption's rule before the first item. */
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu[data-kp-menu-label]::before {
+            margin-block-end: 0.5rem;
+        }
+    }
+
+    [data-theme='nostromo'] .kp-nav__menu a {
+        color: var(--sidebar-foreground);
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    [data-theme='nostromo'] .kp-nav__menu a:hover,
+    [data-theme='nostromo'] .kp-nav__menu a:focus-visible {
+        background: var(--sidebar-accent);
+    }
+

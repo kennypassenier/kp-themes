@@ -1,0 +1,9 @@
+/* @part: command-palette: signature layer */
+    [data-theme='titanium'] .kp-shortcuts .kp-empty {
+        text-align: center;
+    }
+
+    [data-theme='titanium'] .kp-shortcuts .kp-empty__body {
+        font-family: inherit;
+        font-size: var(--kp-text-sm, 0.875rem);
+    }

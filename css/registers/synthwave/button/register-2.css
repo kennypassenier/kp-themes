@@ -1,0 +1,44 @@
+/* @part: button: register layer; also graph */
+    /* A link in running text and the small marks stand on their own: the rails
+       sit outside them, close, and their own glow stays. */
+    [data-theme='synthwave']
+        :is(
+            a:not(
+                .kp-button,
+                .kp-kpi,
+                .kp-nav__link,
+                .kp-nav__menu a,
+                .kp-sidenav__link,
+                .kp-breadcrumb a,
+                .kp-pagination a,
+                .kp-table a,
+                .kp-menu__item
+            ),
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-radio
+        ):focus-visible {
+        outline: none;
+        box-shadow:
+            var(--kp-sw-rails-out),
+            0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
+    }
+
+    /* Whatever else takes the keyboard (a handle, a theme swatch, a custom
+       widget with a role) is a part like any other: the same two tubes inside
+       it, at almost no specificity, so every rule above and any consumer's own
+       wins. The network graph is left as it is (it is no theme's target). */
+    :where([data-theme='synthwave'])
+        :where(button, [role='button'], [role='tab'], [role='menuitem'], [role='option'], [role='gridcell'], [tabindex]):not(
+            .kp-graph *
+        ):focus-visible {
+        outline: none;
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='synthwave'] :focus-visible {
+            outline: 2px solid Highlight;
+            outline-offset: 2px;
+        }
+    }

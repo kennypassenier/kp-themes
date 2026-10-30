@@ -1,0 +1,48 @@
+/* @part: forms: signature layer */
+    /* Choice tiles: a sticker on its flat peel; pointing lifts it 2 px on its peel, a press sticks it down flat, the
+       chosen one is mint paper with a plum edge and no peel of its own (it is stuck down), focus is the dashed line. */
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--kp-sig-pa-r-plate);
+        --kp-field-tiles-gap: 0.875rem;
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        border-color: var(--border-strong);
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border-strong);
+        translate: 0 -2px;
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--accent) 55%, var(--card));
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+        translate: 0 3px;
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        box-shadow: 0 3px 0 var(--border);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'],
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'][data-kp-invalid] {
+        outline: 2px dashed var(--destructive);
+        outline-offset: 4px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land),
+                background-color var(--fx-duration) ease,
+                border-color var(--fx-duration) ease;
+        }
+    }
+

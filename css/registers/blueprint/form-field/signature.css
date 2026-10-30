@@ -1,0 +1,43 @@
+/* @part: form-field: signature layer */
+    [data-theme='blueprint'] .kp-field__check {
+        --kp-sig-dur: 300ms;
+        appearance: none;
+        position: relative;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        margin: 0;
+        border: 1px solid hsl(from var(--foreground) h s l / 0.7);
+        border-radius: 1px;
+        background: var(--background);
+    }
+
+    [data-theme='blueprint'] .kp-field__check:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.62rem;
+        block-size: 0.3rem;
+        border-inline-start: 1.5px solid var(--primary);
+        border-block-end: 1.5px solid var(--primary);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='blueprint'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='blueprint'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        background:
+            radial-gradient(circle, var(--primary) 0 3px, transparent 3.5px),
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+        mask: radial-gradient(circle, black 0 4px, transparent 4px 6.5px, black 6.5px);
+    }
+

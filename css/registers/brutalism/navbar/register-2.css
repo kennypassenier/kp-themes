@@ -1,0 +1,40 @@
+/* @part: navbar: register layer */
+    @keyframes kp-marquee {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* Stamped beside the wordmark, in the ink [S49, A3]. */
+    [data-theme='brutalism'] .kp-nav__brand-tag {
+        color: var(--foreground);
+        font-weight: 700;
+        letter-spacing: 0.14em;
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — ink on paper inverted, the fastest pass but its own hatch band. */
+    [data-theme='brutalism'] .kp-marquee {
+        background: var(--foreground);
+        color: var(--background);
+        border-block: 3px solid var(--foreground);
+        font-weight: 700;
+        text-transform: uppercase;
+        --kp-marquee: 20000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='brutalism'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='brutalism'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        background: var(--foreground);
+        color: var(--background);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        border-block-end: 0;
+    }
+

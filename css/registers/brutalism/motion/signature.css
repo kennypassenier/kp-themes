@@ -1,0 +1,30 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        /* G11: lifted off its footprint on the lifting curve, turned, set
+           down on the fall. */
+        [data-theme='brutalism'] .kp-spinner::after {
+            animation: kp-sig-brutalism-tip var(--kp-sig-dur) infinite;
+        }
+
+        [data-theme='brutalism'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+
+        /* The tick is set down onto its box, not stamped in with a fade. */
+        [data-theme='brutalism'] .kp-field__check:checked::before {
+            animation: kp-sig-brutalism-set var(--kp-sig-dur) var(--kp-sig-br-fall) both;
+        }
+
+        /* G3: dropped onto the footprint. */
+        [data-theme='brutalism'] :is(.kp-toast, .kp-dialog, .kp-tooltip) {
+            animation: kp-sig-brutalism-drop var(--kp-sig-dur) var(--kp-sig-br-fall) both;
+        }
+
+        /* Nothing fades (G1, proposal-29): the backdrop is solid lavender the
+           whole time the dialog is there, and js/motion.js, which fades a
+           backdrop that has no motion of its own, finds one that holds. */
+        [data-theme='brutalism'] .kp-dialog::backdrop {
+            animation: kp-sig-brutalism-hold var(--kp-sig-br-dialog) steps(1, end) both;
+        }
+    }
+

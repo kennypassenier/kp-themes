@@ -1,0 +1,68 @@
+/* @part: small-patterns: signature layer */
+    [data-theme='deco'] .kp-secret {
+        --kp-secret-drain: var(--kp-sig-deco-gold-lt);
+        --kp-secret-drain-size: 1px;
+    }
+    [data-theme='deco'] .kp-secret__value {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-secret__value.kp-masked {
+        letter-spacing: 0.08em;
+    }
+    [data-theme='deco'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        border-color: var(--kp-sig-deco-gold-hi);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-secret__line {
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-secret__drain {
+        position: relative;
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.5), var(--kp-sig-deco-gold-hi));
+        overflow: visible;
+    }
+    [data-theme='deco'] .kp-secret__drain::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: 0;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        translate: 50% -50%;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-deco-secret-open var(--kp-sig-deco-draw-t) var(--kp-sig-deco-settle) both;
+        }
+    }
+    @keyframes kp-sig-deco-secret-open {
+        from {
+            clip-path: inset(0 50% 0 50%);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+

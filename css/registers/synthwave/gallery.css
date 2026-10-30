@@ -1,0 +1,20 @@
+/* @part: gallery: signature layer */
+    /* A picture is a lit screen: a pink-to-cyan tube round the edge (the card's stripe), and a glow when pointed at. */
+    [data-theme='synthwave'] .kp-gallery__tile:not(.kp-skeleton, [data-kp-state='error']) {
+        border-radius: 0;
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--muted), var(--muted)) padding-box,
+            linear-gradient(135deg, var(--kp-pink-text), var(--kp-core)) border-box;
+    }
+    [data-theme='synthwave'] .kp-gallery__tile:hover,
+    [data-theme='synthwave'] .kp-gallery__tile:focus-within {
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-block-start: 1px solid var(--kp-hairline);
+    }

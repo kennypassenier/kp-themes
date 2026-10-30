@@ -1,0 +1,32 @@
+/* @part: status-rows: signature layer; also forms, form-field */
+    /* A check with a reservation: the label in ruby over a gold rule; the mark square with its gold hairline. */
+    [data-theme='deco'] .kp-statusrow[data-state='warn'] .kp-statusrow__label {
+        justify-self: start;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        border-color: var(--primary);
+        background: var(--kp-sig-deco-lac);
+        color: hsl(from var(--destructive) h s calc(l + 4));
+    }
+    [data-theme='deco'] .kp-statusrow__fix {
+        letter-spacing: 0.02em;
+    }
+
+    /* Choices as tiles: the plate of the lobby, the title in spaced capitals, the pick a gold hairline gone full. */
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tiles-gap: 0.75rem;
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        position: relative;
+        padding: 0.875rem 1.125rem;
+        border-color: hsl(from var(--primary) h s l / 0.3);
+        color: var(--foreground);
+    }
+    [data-theme='deco'] .kp-field__option-title {
+        font-size: 0.8125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }

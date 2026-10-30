@@ -1,0 +1,70 @@
+/* @part: alert: signature layer */
+    /* Leaving, this theme's way [G13; Kenny, 2026-10-09, question 13: "The
+       pass lays, the pass back takes off"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one a tenth into this one. The line crosses back
+       from the end and the part goes dark behind it, the film taken with it:
+       the opening played backwards, in the same time. Opening is closing
+       turned around (Kenny's pick on research/open-reverse, 2026-10-05): what
+       arrives plays this leave backwards (js/motion.js), so it is laid from
+       the start by the pass and the turn settles to cyan at the top, and
+       frame t of the arrival is frame (T - t) of the leave. The line is
+       drawn on the parts that can carry a pseudo-element: the alert, the key
+       figure and the card (on ::before, its ::after being the plate); a row
+       or any other part is taken off by the mask and the film alone. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] {
+            --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, a file
+               row, an empty state, a re-shown alert) is taken off by the pass
+               back first, as the pass lays it (js/motion.js leavesState(),
+               lessons 19, 23, 24); what takes no box arrives as nothing; the
+               space a leave folds shut takes the pass's own time and starts
+               with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        [data-theme='dark'] :is(.kp-card, .kp-alert, .kp-kpi) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark'] .kp-kpi {
+            --kp-sig-dk-r: 0px;
+        }
+
+        /* The leave plays the pass's frames under their second names (the
+           `-back` keyframes at the end of this layer), so a part whose
+           entrance is the pass itself (a toast) starts its leave afresh
+           instead of turning the finished entrance round in place (lesson 10;
+           all-themes pass, 2026-10-13). The attribute is named twice: the
+           entrance rule above names `dialog.kp-drawer` in its list, which
+           outranks a single attribute, so a leaving toast kept its entrance
+           and had no leave of its own to turn round into its arrival. */
+        [data-theme='dark'] [data-kp-leaving][data-kp-leaving] {
+            --kp-leave-stagger: 0.1;
+            animation:
+                kp-sig-dark-sweep-back var(--kp-sig-dk-time) linear reverse forwards,
+                kp-sig-dark-film-back var(--kp-sig-dk-time) linear reverse forwards;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi, .kp-card:not([data-kp-label])) {
+            position: relative;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi)::after,
+        [data-theme='dark'] [data-kp-leaving].kp-card:not([data-kp-label])::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line-back var(--kp-sig-dk-time) linear reverse forwards;
+        }
+    }
+

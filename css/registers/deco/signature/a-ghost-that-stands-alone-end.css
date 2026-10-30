@@ -1,9 +1,0 @@
-/* @part: signature: A ghost that stands alone (End snooze, the weekday quick picks, the "+ */
-/* A ghost that stands alone (End snooze, the weekday quick picks, the "+N" flags opener) is drawn with its gold hairline at
-   rest, not only when it is disabled, so enabled and disabled read in one order [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='deco'] :is(.kp-snooze__end, .kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
-        border-color: hsl(from var(--primary) h s l / 0.6);
-    }
-}
-

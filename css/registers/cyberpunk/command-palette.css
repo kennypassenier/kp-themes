@@ -1,0 +1,75 @@
+/* @part: command-palette: signature layer; also sidenav, combobox, tabs */
+    /* ── F. Every plate is cut at its dossier corner, every control at its end [G6] ─────────
+       14 px on a plate, 8 px on a control, a share of its height on a part too small for 8;
+       nothing is round (the radio is the one exception, the graph's kind chips another). */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-palette,
+            .kp-drawer,
+            .kp-accordion__item,
+            .kp-upload__zone,
+            .kp-upload__file,
+            .kp-code-block,
+            .kp-footer,
+            .kp-form__summary,
+            .kp-alarm,
+            .kp-timeline,
+            .kp-shortcuts,
+            .kp-diff,
+            .kp-sidenav,
+            .kp-tabs__list
+        ) {
+        --kp-cp-clip: var(--kp-cp-clip-plate);
+        --kp-cp-wide: var(--kp-cp-wide-plate);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    /* The parts that open by the split carry its copies, as the other plates do. */
+    [data-theme='cyberpunk'] :is(.kp-palette, .kp-drawer, .kp-alarm, .kp-shortcuts) {
+        --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+        --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+        --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+        --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+    }
+
+    /* ...and the arrival that goes with them [Kenny, 2026-10-12: "Command palette is hetzelfde, geen
+       glitch effect bij open/close?"]. These parts had the shape and the copies' tokens but no
+       `animation`: the package default (none for the palette) ran, so the pair meter, which times
+       and mirrors whatever runs, passed them. A dialog's entrance is kept by js/motion.js and its
+       close plays it backwards, so one declaration is the pair. The drawer is a `.kp-dialog` and
+       has the dialog's. The alarm keeps its own approved strike (scope-94, scope-100). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-palette, .kp-shortcuts) {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+    }
+
+    /* The side navigation's panel plays its copies outside its box while its clock runs, so its
+       cut is wide by the same clock: no room round the plate at rest, 40 px while it plays. */
+    [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+        --kp-cp-e: calc(min(1, var(--kp-sn-t)) * 40px);
+        clip-path: polygon(
+            calc(-1 * var(--kp-cp-e)) calc(-1 * var(--kp-cp-e)),
+            calc(100% - var(--kp-cp-notch) - var(--kp-cp-e)) calc(-1 * var(--kp-cp-e)),
+            calc(100% + var(--kp-cp-e)) calc(var(--kp-cp-notch) + var(--kp-cp-e)),
+            calc(100% + var(--kp-cp-e)) calc(100% + var(--kp-cp-e)),
+            calc(-1 * var(--kp-cp-e)) calc(100% + var(--kp-cp-e))
+        );
+    }
+
+    [data-theme='cyberpunk']
+        :is(.kp-tag, .kp-icon-button, .kp-switch__input, .kp-chart__source, .kp-attention__icon, .kp-combobox__input, .kp-skip-link) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-tab {
+        --kp-cp-clip: var(--kp-cp-clip-ctl-top);
+        --kp-cp-wide: var(--kp-cp-wide-ctl-top);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+

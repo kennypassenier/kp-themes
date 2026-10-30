@@ -1,0 +1,32 @@
+/* @part: datatable: signature layer */
+    /* One picture per waiting panel (Kenny, loading: "the row where it fits,
+       the tree where it does not"): the busy table's panel and the busy
+       month's card show the planting row at their foot and no tree; the
+       spinner's tree stays where a row has no room (alone, in a day, beside
+       the status line's words). The month's card keeps room for a row. */
+    [data-theme='forest'] :is(.kp-datatable__busy-panel, .kp-calendar__busy) > .kp-spinner {
+        display: none;
+    }
+
+    [data-theme='forest'] .kp-datatable__busy-panel {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* The busy table's layer arrives as its leave played backwards and leaves
+       by js/motion.js leave() (`--kp-leave-state: leave`): one mechanism, so
+       the layer's own animations, which a loop on the same part overrode, are
+       gone. The table and its rows beneath it dim and come back on the growth time, on the
+       curve of the state they go to (a transition back takes the withering
+       curve), so the table under the layer is the same pair. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-datatable,
+        [data-theme='forest'] .kp-datatable .kp-table tbody {
+            transition: opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+        }
+
+        [data-theme='forest'] .kp-datatable[aria-busy='true'],
+        [data-theme='forest'] .kp-datatable[aria-busy='true'] .kp-table tbody {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+    }
+

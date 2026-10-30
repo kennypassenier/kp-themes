@@ -1,0 +1,64 @@
+/* @part: kitchen-timers: signature layer */
+    /* Kitchen timers: a card is a plate on the sheet (a ruler along its start edge and its foot, no fill); a finished
+       timer is flagged ▲ before its state, never filled; a ringing one draws the amber dimension across its foot,
+       three times, on the feed. */
+    [data-theme='blueprint'] .kp-timer {
+        position: relative;
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: transparent;
+        --kp-timer-done-ink: var(--foreground);
+        --kp-timer-done-edge: transparent;
+    }
+    [data-theme='blueprint'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state::before {
+        content: '\25B2\00a0';
+        color: hsl(from var(--warning) h s 62%);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-timer__time {
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+    [data-theme='blueprint'] .kp-timer[data-kp-timer-ringing]::after,
+    [data-theme='blueprint'] .kp-countdown[data-kp-countdown-state='ended']::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -5px;
+        block-size: 7px;
+        pointer-events: none;
+        background:
+            linear-gradient(var(--accent), var(--accent)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--accent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 0 50% / 7px 7px no-repeat,
+            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--accent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 100% 50% / 7px 7px no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-timer[data-kp-timer-ringing]::after,
+        [data-theme='blueprint'] .kp-countdown[data-kp-countdown-state='ended']::after {
+            transform-origin: 0 50%;
+            animation: kp-sig-blueprint-dimension calc(6 * var(--kp-sig-bp-unit)) var(--kp-sig-bp-feed) 3 both;
+        }
+    }
+    @keyframes kp-sig-blueprint-dimension {
+        from {
+            scale: 0 1;
+        }
+        50%,
+        to {
+            scale: 1 1;
+        }
+    }
+

@@ -1,0 +1,4 @@
+/* @part: ack-gate: register layer */
+    [data-theme='formal'] .kp-ack[data-kp-checked] {
+        box-shadow: inset 0 -3px 0 -2px var(--warning-foreground);
+    }

@@ -1,0 +1,59 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The facing cut: the film and the tool tip turn together; the face
+           and its grain stay, as a turning bar's do to the eye. */
+        [data-theme='titanium'] .kp-spinner::before,
+        [data-theme='titanium'] .kp-spinner::after {
+            animation: kp-sig-titanium-ti-facing var(--kp-sig-dur) linear infinite;
+        }
+
+        /* The skeleton is the anodising bath; lines run a beat apart. */
+        [data-theme='titanium'] .kp-skeleton {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+
+        [data-theme='titanium'] .kp-skeleton:nth-child(2) {
+            animation-delay: -300ms;
+        }
+
+        [data-theme='titanium'] .kp-skeleton:nth-child(3) {
+            animation-delay: -600ms;
+        }
+
+        [data-theme='titanium'] .kp-switch__input::before {
+            transition: transform var(--kp-sig-ti-fast) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-field__check:checked::before {
+            animation: kp-sig-titanium-ti-stamp var(--kp-sig-dur) steps(2, jump-end) both;
+        }
+
+        /* The toast lives at the inline-end edge and slides in from it (G3),
+           mirrored under a right-to-left direction (G2). */
+        [data-theme='titanium'] .kp-toast {
+            animation: kp-sig-titanium-ti-rail var(--kp-sig-dur) var(--kp-sig-ti-ease) both;
+        }
+
+        [data-theme='titanium'] .kp-toast:dir(rtl) {
+            --kp-sig-ti-dir: -1;
+        }
+
+        [data-theme='titanium'] .kp-toast::after {
+            animation: kp-sig-titanium-ti-scribe calc(var(--kp-sig-dur) * 1.5) var(--kp-sig-ti-ease) both;
+        }
+
+        /* The cut from the top edge, on the theme's curve: themeMotion()
+           reads this curve, so the close, a box's glide and an update follow. */
+        [data-theme='titanium'] .kp-dialog {
+            animation: kp-sig-titanium-ti-cut var(--kp-sig-dur) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-dialog::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-tooltip {
+            animation: kp-sig-titanium-ti-appear var(--kp-sig-dur) var(--kp-sig-ti-ease) both;
+        }
+    }
+

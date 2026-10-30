@@ -1,0 +1,24 @@
+/* @part: navbar: signature layer */
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open phone panel are its own rows: they are not drawn again. */
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        /* The phone panel is drawn by the raster; closing, it is held (`[data-kp-nav-closing]`, for
+           `--kp-nav-close-time`) while the raster erases it. */
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation:
+                    kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                    kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+            }
+
+            [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation:
+                    kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards,
+                    kp-sig-nostromo-beam-layer-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+            }
+        }
+    }

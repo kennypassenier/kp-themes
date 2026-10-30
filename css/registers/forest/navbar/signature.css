@@ -1,0 +1,110 @@
+/* @part: navbar: signature layer */
+    /* ── Forest, straightened [Kenny, 2026-10-09: all ten questions of
+       research/forest-uniformity approved, every recommendation]. What the
+       first apply did not reach, on the same grammar: the bar, the overlays
+       that did not grow, the closes that were not their opens, the alarm,
+       and the busy panels' one picture. themes/forest/CHARACTER.md §5,
+       "Applied 2026-10-09 (uniformity)". ── */
+
+    /* The bar · the dropdown and the mega menu grow down out of their link,
+       far end first, clipped at the bar's line all the way, and close as
+       that growth backwards: a transition takes the curve of the state it
+       goes to, so the opening runs on the growth curve and the close on the
+       curve turned around, and a close begun halfway turns round where it
+       stands. Shown, it stays drawn through its close (display is held). */
+    [data-theme='forest'] .kp-nav__menu {
+        opacity: 1;
+        translate: var(--kp-nav-menu-shift, 0) -100%;
+        clip-path: inset(100% calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    [data-theme='forest']
+        :is(
+            .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+            .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+        ) {
+        translate: var(--kp-nav-menu-shift, 0) 0;
+        clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-nav__menu {
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                display var(--kp-sig-fo-time) allow-discrete;
+        }
+
+        [data-theme='forest']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+
+        @starting-style {
+            [data-theme='forest']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                translate: var(--kp-nav-menu-shift, 0) -100%;
+                clip-path: inset(100% calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+            }
+        }
+    }
+
+    /* The bar collapsed on a phone: its links grow down out of the bar, far
+       end first, and go back into it as that growth played backwards (the
+       same frames under a second name, so the close restarts); the lists
+       nested in it are the open panel's own rows and do not grow again. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            translate: none;
+            clip-path: none;
+        }
+
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            overflow: clip;
+            /* One column that never wraps: under a ceiling a wrapping column
+               moves its last rows into new columns, so the height grew in
+               whole rows and the items jumped sideways. */
+            flex-wrap: nowrap;
+            max-block-size: 0;
+            opacity: 0;
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+        }
+
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+            max-block-size: var(--kp-nav-links-height, 25rem);
+            opacity: 1;
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+        }
+
+        @starting-style {
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                max-block-size: 0;
+                opacity: 0;
+            }
+        }
+
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+            max-block-size: 0;
+            opacity: 0;
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+                transition: none;
+            }
+        }
+    }
+

@@ -1,0 +1,77 @@
+/* @part: heat-grid: signature layer; also matrix, run-timeline, week-agenda, bar-cell */
+    [data-theme='synthwave']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='synthwave'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: linear-gradient(to bottom, hsl(from var(--background) h s 100% / 0.45), transparent 55%), var(--kp-heat-pattern);
+        box-shadow: 0 0 8px hsl(from var(--kp-heat-fill) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-heat__cell[data-kp-share] {
+        box-shadow: 0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='synthwave'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow:
+            0 0 4px var(--kp-core),
+            0 0 14px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='synthwave'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow:
+            0 -3px 0 -1px var(--accent),
+            0 3px 0 -1px var(--accent);
+    }
+    [data-theme='synthwave'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--accent),
+            0 0 12px var(--accent);
+    }
+    [data-theme='synthwave'] :is(.kp-heat__col, .kp-matrix__col) {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='synthwave'] .kp-heat__label-button[aria-pressed='true'] {
+        background: hsl(from var(--primary) h s l / 0.16);
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        border-radius: 2px;
+        background: hsl(from var(--primary) h s l / 0.12);
+        box-shadow: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+            animation: kp-sig-synthwave-bulb calc(4 * var(--kp-sw-beat)) steps(1, end) infinite;
+        }
+        [data-theme='synthwave'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton:nth-child(4n + 2) {
+            animation-delay: calc(-3 * var(--kp-sw-beat));
+        }
+        [data-theme='synthwave'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton:nth-child(4n + 3) {
+            animation-delay: calc(-2 * var(--kp-sw-beat));
+        }
+        [data-theme='synthwave'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton:nth-child(4n + 4) {
+            animation-delay: calc(-1 * var(--kp-sw-beat));
+        }
+    }
+    [data-theme='synthwave'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: the arcade floor. Pills are 2 px tape with the series' ink as a stripe along their
+       top; the OSD names the days and the axis; the line for now is the laser in pink with its core. A running bar is
+       the road: a dark lane in a pink tube with its core dashes racing start to end. */
+    [data-theme='synthwave'] .kp-week {
+        --kp-week-pill-radius: 2px;
+        --kp-week-now: var(--primary);
+    }
+    /* A planned run [gaps-time-1019]: sunset bands. */
+    [data-theme='synthwave'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--kp-gantt-fill) 55%, transparent) 0 2px, transparent 2px 5px);
+    }
+    [data-theme='synthwave'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
+        --kp-gantt-bar-radius: 2px;
+        --kp-gantt-now: var(--primary);
+    }

@@ -1,0 +1,21 @@
+/* @part: navbar: signature layer */
+    [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
+        text-underline-offset: 0.25em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        padding-block-end: 1px;
+        background: var(--kp-iris) left bottom / 100% 2px no-repeat;
+        text-decoration-color: transparent;
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+            text-decoration-color: currentColor;
+        }
+    }
+

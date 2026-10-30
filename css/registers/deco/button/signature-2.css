@@ -1,0 +1,146 @@
+/* @part: button: signature layer; also navbar */
+    /* ── Q5, Q14 to Q17 · the colour, the hover, the focus, the press. Every
+       button, icon button and menu entry, wherever it stands (a header, a
+       menu, a tile, a drawer, a tour), is deco's own: a gold hairline frame
+       with ivory capitals, the one primary solid gold with lacquer ink.
+       Pointing (Q15) warms the plate with gold leaf, a fine wash with a grain
+       that fades in over 320 ms, the frame brightening to full gold and the
+       label to champagne; leaving it fades out on the settle's inverse.
+       The press (Q17) is a seal in wax: the plate sinks 1 px (an inner shadow
+       at its top left, a highlight at its bottom right) and one fine gold
+       ring ripples out from the centre and fades in 400 ms; release lets it
+       rise. Focus (Q16) is a 3 px double gold ring and wins over both. Two
+       registered numbers, --kp-sig-deco-hv (0 to 1) and --kp-sig-deco-pr, are
+       turned by :hover and :active and moved by a transition each way. ── */
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button) {
+        --kp-sig-deco-hv: 0;
+        --kp-sig-deco-pr: 0;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        border: 1px solid hsl(from var(--primary) h s l / calc(0.55 + 0.45 * var(--kp-sig-deco-hv)));
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l - 3 * var(--kp-sig-deco-pr)) / var(--kp-sig-deco-pr));
+        background-image: var(--kp-sig-deco-hair);
+        background-repeat: no-repeat;
+        background-position: var(--kp-sig-deco-hair-pos);
+        background-size: var(--kp-sig-deco-hair-size);
+        background-origin: border-box;
+        background-clip: border-box;
+        color: hsl(
+            from var(--foreground) calc(h + 4 * var(--kp-sig-deco-hv)) calc(s + 14 * var(--kp-sig-deco-hv)) calc(l - 7 * var(--kp-sig-deco-hv))
+        );
+        translate: 0 calc(1px * var(--kp-sig-deco-pr));
+        box-shadow:
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr))),
+            inset calc(-1px * var(--kp-sig-deco-pr)) calc(-1px * var(--kp-sig-deco-pr)) 0
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.3 * var(--kp-sig-deco-pr)));
+    }
+
+    [data-theme='deco'] .kp-button--primary {
+        border-color: var(--primary);
+        background-color: hsl(from var(--primary) h s calc(l - 7 * var(--kp-sig-deco-pr)));
+        background-image: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.32 + 0.2 * var(--kp-sig-deco-hv))),
+            transparent 46%,
+            hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.3)
+        );
+        color: var(--primary-foreground);
+        box-shadow:
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-gold-dk) h s l / calc(0.9 * var(--kp-sig-deco-pr))),
+            inset calc(-1px * var(--kp-sig-deco-pr)) calc(-1px * var(--kp-sig-deco-pr)) 0
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.6 * var(--kp-sig-deco-pr)));
+    }
+
+    [data-theme='deco'] .kp-button--destructive {
+        --kp-sig-deco-arc: var(--destructive);
+        --kp-sig-deco-leaf-x: linear-gradient(var(--destructive), var(--destructive));
+        --kp-sig-deco-leaf-y: linear-gradient(var(--destructive), var(--destructive));
+        border-color: hsl(from var(--destructive) h s l / calc(0.7 + 0.3 * var(--kp-sig-deco-hv)));
+        color: var(--destructive);
+    }
+
+    [data-theme='deco'] .kp-button--ghost {
+        border-color: transparent;
+        background-image: none;
+        color: hsl(
+            from var(--muted-foreground) calc(h + 4 * var(--kp-sig-deco-hv)) calc(s + 14 * var(--kp-sig-deco-hv)) calc(l + 8 * var(--kp-sig-deco-hv))
+        );
+    }
+
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button):disabled {
+        border-color: var(--border);
+        background-image: none;
+        color: var(--muted-foreground);
+        cursor: not-allowed;
+    }
+
+    [data-theme='deco'] .kp-nav .kp-button--ghost,
+    [data-theme='deco'] :is(.kp-toast, .kp-alert) :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+        background-image: none;
+        border-color: transparent;
+    }
+
+    /* The gold leaf: a wash of gold at 9 % with a fine irregular grain
+       (a few percent either way) behind the label. */
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12) 64%,
+            hsl(from var(--primary) h s l / 0.06)
+        );
+        mask: var(--kp-sig-deco-grain) 0 0 / 64px 64px;
+        opacity: var(--kp-sig-deco-hv);
+    }
+
+    [data-theme='deco'] .kp-button--primary::before {
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.5),
+            transparent 45%,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.35)
+        );
+    }
+
+    /* The seal's ring: one fine gold ring from the centre, outward and gone. */
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background-image: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.9) calc(100% - 1.6px),
+            var(--primary) calc(100% - 0.6px),
+            transparent
+        );
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: calc(var(--kp-sig-deco-ring) * 170%) calc(var(--kp-sig-deco-ring) * 170%);
+        opacity: 0;
+    }
+
+    [data-theme='deco'] .kp-button--primary::after {
+        background-image: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--kp-sig-deco-gold-hi) h s 92%) calc(100% - 1.6px),
+            var(--kp-sig-deco-gold-lt) calc(100% - 0.6px),
+            transparent
+        );
+    }
+

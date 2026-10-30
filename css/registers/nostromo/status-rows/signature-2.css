@@ -1,0 +1,24 @@
+/* @part: status-rows: signature layer */
+    /* The lamp bank: a new pattern every 4 frames, five unordered shifts in the loop, so no lamp walks. */
+    @keyframes kp-sig-nostromo-bank {
+        0% {
+            background-position-x: 0, 0, 0;
+        }
+
+        20% {
+            background-position-x: calc(var(--kp-no-pitch) * 14), 0, 0;
+        }
+
+        40% {
+            background-position-x: calc(var(--kp-no-pitch) * 5), 0, 0;
+        }
+
+        60% {
+            background-position-x: calc(var(--kp-no-pitch) * 25), 0, 0;
+        }
+
+        80%,
+        100% {
+            background-position-x: calc(var(--kp-no-pitch) * 11), 0, 0;
+        }
+    }

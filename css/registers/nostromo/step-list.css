@@ -1,0 +1,68 @@
+/* @part: step-list: signature layer */
+    /* ── Journey: the LED bargraph between the steps ── */
+    [data-theme='nostromo'] .kp-steplist--journey {
+        --kp-journey-rule: 6px;
+        --kp-no-cells: linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px) 0 0 / 5px 100% repeat-x;
+        --kp-no-cells-v: linear-gradient(180deg, var(--foreground) 0 3px, transparent 3px) 0 0 / 100% 5px repeat-y;
+        --kp-steplist-mark-radius: var(--kp-sig-no-key);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before,
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+        background: var(--sidebar-accent);
+        -webkit-mask: var(--kp-no-cells);
+        mask: var(--kp-no-cells);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--kp-sig-no-led));
+    }
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 5px, transparent 5px 10px);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__mark {
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    /* The step it stands at: a key sunk in its well with its lamp lit in the step's colour. */
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--foreground);
+        background:
+            radial-gradient(
+                circle,
+                hsl(from var(--kp-step-tone, var(--kp-sig-no-led)) h s calc(l + 22)) 0 18%,
+                var(--kp-step-tone, var(--kp-sig-no-led)) 34%,
+                transparent 40%
+            ),
+            var(--secondary);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--foreground);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            -webkit-mask: var(--kp-no-cells-v);
+            mask: var(--kp-no-cells-v);
+            inline-size: 6px;
+        }
+        [data-theme='nostromo']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--kp-sig-no-led));
+        }
+        [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 5px, transparent 5px 10px);
+        }
+    }
+

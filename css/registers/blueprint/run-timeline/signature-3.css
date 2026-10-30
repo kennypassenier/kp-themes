@@ -1,0 +1,46 @@
+/* @part: run-timeline: signature layer; also navbar, facet-list, week-agenda */
+    [data-theme='blueprint'] .kp-nav__sep {
+        inline-size: 1px;
+        border-inline-start: 0;
+        background: linear-gradient(to bottom, var(--border-strong) 0 6px, transparent 6px 12px) 0 0 / 1px 12px repeat-y;
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 1px;
+            border-block-start: 0;
+            background: linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px) 0 0 / 12px 1px repeat-x;
+        }
+    }
+
+    [data-theme='blueprint'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='blueprint'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow:
+            -4px 0 0 -3px var(--primary),
+            4px 0 0 -3px var(--primary);
+    }
+    [data-theme='blueprint'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: repeating-linear-gradient(-45deg, hsl(from var(--accent) h s l / 0.3) 0 1px, transparent 1px 5px);
+        color: var(--accent);
+        box-shadow:
+            -4px 0 0 -3px var(--accent),
+            4px 0 0 -3px var(--accent),
+            inset 0 -1px 0 var(--accent);
+    }
+    [data-theme='blueprint'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        background:
+            repeating-linear-gradient(-45deg, hsl(from var(--kp-gantt-series) h s l / 0.5) 0 1px, transparent 1px 4px),
+            color-mix(in oklab, var(--kp-gantt-series) 18%, var(--card));
+    }
+    [data-theme='blueprint'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        outline: 1px solid hsl(from var(--kp-facet-swatch-colour, var(--border-strong)) h s l / 0.7);
+        outline-offset: 1px;
+    }

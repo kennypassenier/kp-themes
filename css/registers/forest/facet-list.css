@@ -1,0 +1,59 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: rows with the small leaf corner that blaze inside the list when pointed at, on their kraft ground; the
+       title is a note; counts upright. The counts on their way: each has no room for a row, so it plants one tree in
+       three stages, a week's rhythm down the list. */
+    [data-theme='forest'] .kp-facets {
+        --kp-facet-radius: var(--kp-sig-fo-part);
+    }
+    [data-theme='forest'] .kp-facet {
+        --kp-facet-hover: transparent;
+        outline: 2px dashed transparent;
+        outline-offset: -2px;
+    }
+    [data-theme='forest'] .kp-facet:hover:not(:focus-within) {
+        outline-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-facets__title {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        position: relative;
+        background: none;
+        animation: none;
+    }
+    [data-theme='forest'] .kp-facets[aria-busy='true'] .kp-facet__count::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 0.8em;
+        background: var(--primary);
+        mask: var(--kp-fo-stages) 100% 100% / 300% 100% no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-facets[aria-busy='true'] .kp-facet__count::after {
+            animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end infinite;
+        }
+        [data-theme='forest'] .kp-facets[aria-busy='true'] li:nth-child(2n) .kp-facet__count::after {
+            animation-delay: -150ms;
+        }
+        [data-theme='forest'] .kp-facets[aria-busy='true'] li:nth-child(3n) .kp-facet__count::after {
+            animation-delay: -300ms;
+        }
+        [data-theme='forest'] .kp-facet {
+            transition: outline-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Heat grid and matrix: leaves on a trail, the leaf corner on every cell; pointing blazes a cell, a press closes the
+       blaze in; the pick is the solid green ring and a ▾ over its night; axis and names in the note voice. Waiting, a
+       cell is the treeline (the block's decided picture). */
+    [data-theme='forest'] .kp-heat {
+        --kp-heat-cell-radius: 0 7px;
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='forest'] .kp-matrix {
+        --kp-heat-cell-radius: 0 var(--kp-sig-fo-leaf);
+        --kp-matrix-gap: 4px;
+    }

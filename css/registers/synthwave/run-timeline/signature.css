@@ -1,0 +1,83 @@
+/* @part: run-timeline: signature layer; also status-rows, facet-list */
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running'] {
+        border-color: var(--primary);
+        background: var(--sidebar-background);
+        color: var(--kp-core);
+        box-shadow:
+            inset -3px 0 0 var(--kp-core),
+            0 0 8px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running']::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: calc(-1 * var(--kp-sw-lane, 1.5rem)) 0;
+        background: linear-gradient(90deg, var(--kp-core) 0 0.75rem, transparent 0.75rem) 0 50% / var(--kp-sw-lane, 1.5rem) 2px repeat-x;
+        filter: drop-shadow(0 0 2px var(--primary));
+        pointer-events: none;
+    }
+    [data-theme='synthwave'] .kp-gantt__swatch[data-kp-state='running'] {
+        border-color: var(--primary);
+        background:
+            linear-gradient(90deg, var(--kp-core) 0 3px, transparent 3px) 0 50% / 6px 2px repeat-x,
+            var(--sidebar-background);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running'] {
+            animation: none;
+        }
+        [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running']::after {
+            animation: kp-sig-synthwave-lane 600ms linear infinite;
+        }
+    }
+
+    /* A phone's timeline keeps its toolbar on one row: the range steps close in a little in these wide letters. */
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='synthwave'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+    }
+
+    /* One bulb of the marquee: lit for one beat of four, dark for the rest. */
+    @keyframes kp-sig-synthwave-bulb {
+        0% {
+            background-color: hsl(from var(--primary) h s l / 0.9);
+            box-shadow:
+                0 0 2px var(--kp-core),
+                0 0 8px hsl(from var(--primary) h s l / 0.8);
+        }
+
+        25%,
+        100% {
+            background-color: hsl(from var(--primary) h s l / 0.12);
+            box-shadow: none;
+        }
+    }
+
+    /* The bulbs along a row's top edge chase one bulb a step. */
+    @keyframes kp-sig-synthwave-chase {
+        from {
+            background-position:
+                0 0,
+                0 0,
+                0 0;
+        }
+
+        to {
+            background-position:
+                40px 0,
+                0 0,
+                0 0;
+        }
+    }
+
+    /* The road's lane dashes race along the running bar. */
+    @keyframes kp-sig-synthwave-lane {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(var(--kp-sw-lane, 1.5rem));
+        }
+    }

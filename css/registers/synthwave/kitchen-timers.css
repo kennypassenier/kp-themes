@@ -1,0 +1,42 @@
+/* @part: kitchen-timers: signature layer */
+    /* ── Kitchen timers: the tape with its stripe; a timer that has ended has the red neon ring before its name ── */
+    [data-theme='synthwave'] .kp-timer {
+        --kp-timer-font: var(--theme-font-display);
+        border-radius: 0;
+        background-image: var(--kp-sw4-stripe);
+        background-size: 100% 3px;
+        background-repeat: no-repeat;
+    }
+    [data-theme='synthwave'] .kp-timer__name,
+    [data-theme='synthwave'] .kp-timer__state {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    /* The card's three buttons take the small button's padding, so Pause, +1 min and the close fit one line in the card. */
+    [data-theme='synthwave'] .kp-timer__toggle,
+    [data-theme='synthwave'] .kp-timer__sizer,
+    [data-theme='synthwave'] .kp-timer__more {
+        padding-inline: 1rem;
+    }
+    [data-theme='synthwave'] .kp-timer__time {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--destructive);
+        --kp-sw4-tone: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='done'] .kp-timer__name,
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+

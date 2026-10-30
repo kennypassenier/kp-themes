@@ -1,0 +1,32 @@
+/* @part: bullet-rows: signature layer */
+    /* Four 2 px corner brackets in the tone, as background layers (set --kp-cp4-tone on the part). */
+    [data-theme='cyberpunk'] :is(
+            .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure,
+            .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+            .kp-action-list--lead > li[data-kp-state='failed'],
+            .kp-action-list--lead > li[data-kp-state='warn'],
+            .kp-kv__row[data-kp-state='error'],
+            .kp-formrow[data-kp-state='error'],
+            .kp-statusrow[data-state='warn'],
+            .kp-timer[data-kp-timer-state='done'],
+            .kp-countdown[data-kp-countdown-state='ended'],
+            .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+            .kp-segmented__item[data-kp-segmented-tri='exclude'],
+            .kp-dialog__section--danger,
+            .kp-pipeline__card[aria-current='true'],
+            .kp-secret[data-kp-secret-state='error'] .kp-secret__value
+        ) {
+        --kp-cp4-b: 2px;
+        --kp-cp4-a: 9px;
+        --kp-cp4-o: 3px;
+        --kp-cp4-lock:
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) var(--kp-cp4-o) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) var(--kp-cp4-o) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) var(--kp-cp4-o) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) var(--kp-cp4-o) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat;
+    }
+

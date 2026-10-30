@@ -1,0 +1,22 @@
+/* @part: showing-data: register layer */
+    [data-theme='synthwave']
+        :is(
+            .kp-id,
+            .kp-url,
+            .kp-numeric,
+            .kp-timestamp,
+            .kp-masked,
+            .kp-copyable,
+            .kp-truncate,
+            .kp-cell-break,
+            .kp-cell-truncate,
+            .kp-diff__line,
+            .kp-diff__hunk,
+            .kp-tree,
+            .kp-colorpicker__value,
+            .kp-spec,
+            .kp-log
+        ) {
+        font-size-adjust: 0.5;
+    }
+

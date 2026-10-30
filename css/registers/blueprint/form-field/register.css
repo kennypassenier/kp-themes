@@ -1,0 +1,35 @@
+/* @part: form-field: register layer; also forms */
+    /* ── Fields: wells cut into the sheet ──────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-field__input,
+    [data-theme='blueprint'] .kp-datatable__search,
+    [data-theme='blueprint'] .kp-combobox__input,
+    [data-theme='blueprint'] .kp-palette__input {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='blueprint'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='blueprint'] .kp-field__check {
+        accent-color: var(--selected);
+    }
+
+    [data-theme='blueprint'] .kp-fieldset {
+        border: 1px solid var(--border);
+        border-radius: 2px;
+    }
+
+    [data-theme='blueprint'] .kp-form__summary {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+

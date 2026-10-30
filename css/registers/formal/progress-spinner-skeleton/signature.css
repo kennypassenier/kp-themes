@@ -1,0 +1,95 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
+    [data-theme='formal'] .kp-progressbar {
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at the bar's size (1px at the small size);
+           the 1px rules and the 2px pen stay the register's line weight. */
+        --kp-ps-px: calc(1px * var(--kp-progressbar-scale, 1));
+        /* 1 when the value has reached the end, 0 below it: closes the account. */
+        --kp-ps-closed: clamp(0, (var(--kp-value) - 0.999) * 1000, 1);
+        /* 1 once anything is entered, 0 at nothing. */
+        --kp-ps-entered: clamp(0, var(--kp-value) * 1000, 1);
+    }
+
+    [data-theme='formal'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px calc(8 * var(--kp-ps-px)) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px calc(8 * var(--kp-ps-px)) no-repeat;
+    }
+
+    [data-theme='formal'] .kp-progressbar__fill {
+        inset-block: calc(4 * var(--kp-ps-px)) auto;
+        block-size: calc(4 * var(--kp-ps-px));
+        background: var(--primary);
+        transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
+    }
+
+    [data-theme='formal'] .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(10 * var(--kp-ps-px));
+        block-size: 1px;
+        background: var(--primary);
+        opacity: var(--kp-ps-closed);
+        transition: opacity var(--kp-sig-fm-time) var(--fx-ease);
+    }
+
+    [data-theme='formal'] .kp-progressbar__head {
+        inline-size: 2px;
+        translate: -100% 0;
+        inset-block: 0 calc(2 * var(--kp-ps-px));
+        background: var(--primary);
+        opacity: calc(var(--kp-ps-entered) - var(--kp-ps-closed));
+        transition:
+            transform var(--kp-sig-fm-time) var(--fx-ease),
+            opacity var(--kp-sig-fm-time) var(--fx-ease);
+    }
+
+    /* ── The busy bar is a rule ruled and closed [G11; Kenny, 2026-10-08,
+       question 11: ruled and closed, lifted, ruled again]. The band is ruled
+       start to end (1200 ms), the second rule closes it, both are lifted from
+       the start (1200 ms), and it is ruled again: one loop of 2400 ms on an
+       even pace. Standing still it is the finished picture, the band across
+       and the account closed under it (the dotted leader is retired). With a
+       share known the bar above is unchanged: the band ruled to the share,
+       the second rule only at 100 %. ── */
+    [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        background: var(--primary);
+        transition: none;
+    }
+
+    [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+        opacity: 1;
+        transition: none;
+    }
+
+    [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation: kp-sig-formal-bar-band var(--kp-sig-fm-loop) linear infinite;
+        }
+
+        [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+            animation: kp-sig-formal-bar-second var(--kp-sig-fm-loop) linear infinite;
+        }
+
+        [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+            display: block;
+            animation: kp-sig-formal-bar-head var(--kp-sig-fm-loop) linear infinite;
+        }
+    }
+

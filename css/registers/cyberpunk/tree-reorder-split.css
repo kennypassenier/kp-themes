@@ -1,0 +1,81 @@
+/* @part: tree-reorder-split: signature layer; also button, form-field */
+    /* A branch holds its children inside its own element: the layers are sized to the item's own row
+       (one line plus the row's block padding), as the selected mark of the package is. */
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'] {
+        /* A row's words stand clear of the plate's edge, as a menu entry's do (forest's inset). */
+        --kp-tree-inset: 0.5rem;
+        --kp-cp-rowh: calc(1lh + 0.5rem);
+        --kp-cp-tr-img:
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--destructive) 0 0), linear-gradient(var(--accent) 0 0),
+            linear-gradient(var(--accent) 0 0),
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        --kp-cp-tr-pos:
+            var(--kp-cp-i) var(--kp-cp-i), var(--kp-cp-i) var(--kp-cp-i),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)), calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr),
+            calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr), calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)),
+            var(--kp-cp-ibl) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fw)),
+            var(--kp-cp-ibl) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fa)),
+            calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fw) - var(--kp-cp-fw)),
+            calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fw) - var(--kp-cp-fai)),
+            calc(100% - var(--kp-cp-ibr)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fa)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fw) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fw) - var(--kp-cp-fai)),
+            0 calc(var(--kp-cp-rowh) - var(--kp-cp-d)), 0 0, 100% 0, 0 0, 0 0;
+        --kp-cp-tr-size:
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            100% var(--kp-cp-d), 100% var(--kp-cp-d), var(--kp-cp-d) var(--kp-cp-rowh), 100% var(--kp-cp-rowh), 100% var(--kp-cp-rowh);
+        --kp-cp-sq-img: var(--kp-cp-tr-img);
+        --kp-cp-sq-pos: var(--kp-cp-tr-pos);
+        --kp-cp-sq-size: var(--kp-cp-tr-size);
+    }
+
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-selected='true'] {
+        --kp-cp-sq-img:
+            var(--kp-cp-tr-img), linear-gradient(var(--kp-tree-selected-bar, var(--primary)) 0 0),
+            linear-gradient(var(--kp-tree-selected, hsl(from var(--primary) h s l / 0.14)) 0 0);
+        --kp-cp-sq-pos: var(--kp-cp-tr-pos), 0 0, 0 0;
+        --kp-cp-sq-size: var(--kp-cp-tr-size), 3px var(--kp-cp-rowh), 100% var(--kp-cp-rowh);
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-nbr: var(--kp-button-notch);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--mirror,
+    [data-theme='cyberpunk'] .kp-button[data-kp-direction='back'] {
+        --kp-cp-nbr: 0px;
+        --kp-cp-nbl: var(--kp-button-notch);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-field__input, .kp-datatable__select) {
+        --kp-cp-nbr: var(--fx-notch-sm, 8px);
+    }
+
+    /* The button's brackets: its own pseudo-element, the same layers, clear of its notch. */
+    [data-theme='cyberpunk'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border: 0;
+        background-image: var(--kp-cp-br-img);
+        background-position: var(--kp-cp-br-pos);
+        background-size: var(--kp-cp-br-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        transform: none;
+        pointer-events: none;
+    }
+

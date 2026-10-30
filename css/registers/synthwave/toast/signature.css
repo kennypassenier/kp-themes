@@ -1,0 +1,34 @@
+/* @part: toast: signature layer */
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── synthwave: neon. The edge burns pink and cyan while the box glides;
+           new rows rise over the horizon (the sunrise curve, four beats, no
+           race and no skew: the world is horizontal, G2). ───────────────── */
+        [data-theme='synthwave'] [data-kp-resizing] {
+            outline: 1px solid var(--primary);
+            outline-offset: 3px;
+            filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 18px var(--accent));
+        }
+
+        /* A part that arrives as its leave played backwards carries
+           `[data-kp-leaving]` too (js/motion.js arriveAsReversedLeave reads that
+           leave): it is not a row rising in a size change. */
+        [data-theme='synthwave'] [data-kp-arriving]:not(.kp-toast, [data-kp-leaving]) {
+            animation: kp-sig-synthwave-size-rise calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        @keyframes kp-sig-synthwave-size-rise {
+            from {
+                translate: 0 0.5rem;
+                clip-path: inset(100% 0 0.5rem 0);
+            }
+
+            to {
+                translate: 0 0;
+                clip-path: inset(0);
+            }
+        }
+    }
+

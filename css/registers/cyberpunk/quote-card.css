@@ -1,0 +1,6 @@
+/* @part: quote-card: signature layer */
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='cyberpunk'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }

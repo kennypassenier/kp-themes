@@ -1,0 +1,20 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* The redaction plate's alpha, registered so it can be transitioned: an
+   unregistered custom property flips at the end of its transition instead
+   of passing through values, and the plate's background reads it through
+   color-mix(). 1 is the covered plate, 0 the cleared one [scope-94]. */
+@property --kp-redact-alpha {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+/* The bar's mega menu is held on screen while a transition on the panel plays (js/components.js
+   settleClosing()): this number, which pastel transitions over the sheet's time, is that transition
+   (review round 2, 2026-10-13; brutalism's --kp-sig-br-hold). */
+@property --kp-sig-pastel-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+

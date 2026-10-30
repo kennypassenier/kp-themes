@@ -1,0 +1,39 @@
+/* @part: segmented-toolbar: signature layer */
+    /* Three-way chips. */
+    [data-theme='brutalism'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 0;
+        --kp-tri-out-edge: var(--border-strong);
+        --kp-tri-out-ground: var(--foreground);
+        --kp-tri-out-ink: var(--background);
+    }
+    [data-theme='brutalism'] .kp-segmented__mark {
+        border: 2px solid currentColor;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration-color: var(--background);
+        text-decoration-thickness: 3px;
+    }
+    [data-theme='brutalism'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--background);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='brutalism'] .kp-segmented__summary {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    @media (hover: hover) {
+        [data-theme='brutalism'] .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri]:hover {
+            translate: -2px -2px;
+            box-shadow: 5px 5px 0 var(--border-strong);
+        }
+    }
+

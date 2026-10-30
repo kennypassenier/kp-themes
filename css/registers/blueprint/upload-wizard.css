@@ -1,0 +1,62 @@
+/* @part: upload-wizard: signature layer */
+    [data-theme='blueprint'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li {
+        gap: 0.4rem;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.5rem;
+        block-size: 9px;
+        margin-inline: 0.35rem;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='done']::after {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li::before {
+        content: counter(kp-step, decimal-leading-zero);
+        inline-size: 1.7rem;
+        block-size: 1.7rem;
+        border: 1px solid hsl(from var(--foreground) h s l / 0.6);
+        background: none;
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='current']::before {
+        border: 1px solid var(--accent);
+        background: none;
+        color: var(--accent);
+        box-shadow:
+            0 0 0 3px var(--background),
+            0 0 0 4px hsl(from var(--accent) h s l / 0.6);
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--accent);
+    }
+

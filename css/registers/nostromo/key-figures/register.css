@@ -1,0 +1,37 @@
+/* @part: key-figures: register layer */
+    /* Every reading carries its lamp too (motifs "place", G16; live
+       "raster", G9): a key figure's lamp stands before its label, in the
+       line, unlit at rest; it lights when the reading changes (the live
+       update below) and, on a key figure that is a link or a filter, under
+       the hand as a switch's does. The label clips what overflows it
+       (css/components.css, `.kp-kpi__label { overflow: hidden }`, for its
+       ellipsis), which cut the lit lamp's lens and glow flat on its start
+       side: the label gets half a rem of room on every side, given back by a
+       negative margin, so nothing beside it moves. */
+    [data-theme='nostromo'] .kp-kpi__label {
+        margin: -0.5rem;
+        padding: 0.5rem;
+    }
+
+    /* The trend tile's label stops before its corner link (4.5rem, 2.25rem in
+       a narrow tile, css/components.css); the label's own end margin above is
+       the half rem it gives back, so the room for the link stays whole. */
+    [data-theme='nostromo'] .kp-kpi--trend > .kp-kpi__label {
+        margin-inline-end: calc(4.5rem - 0.5rem);
+    }
+
+    @container kp-kpi (max-width: 12rem) {
+        [data-theme='nostromo'] .kp-kpi--trend > .kp-kpi__label {
+            margin-inline-end: calc(2.25rem - 0.5rem);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-kpi__label::before {
+        position: relative;
+        inset: auto;
+        display: inline-block;
+        margin-block-start: 0;
+        margin-inline-end: 0.4rem;
+        vertical-align: 0.08em;
+    }
+

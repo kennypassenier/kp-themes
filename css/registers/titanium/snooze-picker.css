@@ -1,0 +1,4 @@
+/* @part: snooze-picker: signature layer */
+    [data-theme='titanium'] :is(.kp-snooze__end, .kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
+        border-color: var(--border-strong);
+    }

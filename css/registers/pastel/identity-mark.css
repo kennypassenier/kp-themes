@@ -1,0 +1,30 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* Identity mark: a sticker, its flat peel under it in its own darker colour; the current one in a list is ringed by
+       the dashed plum line, kept off its neighbours by the paper's edge; a group of marks is stuck down overlapping. */
+    [data-theme='pastel'] .kp-idmark {
+        box-shadow: 0 calc(var(--kp-idmark-s) * 0.05) 0 hsl(from var(--kp-idmark-c) h s calc(l * 0.6));
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-idmark:is(.kp-skeleton, [data-kp-idmark-empty]) {
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='pastel'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 3px;
+        box-shadow: 0 calc(var(--kp-idmark-s) * 0.05) 0 hsl(from var(--kp-idmark-c) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-idmark-group > :is(.kp-idmark, .kp-idmark-group__more) {
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='pastel'] .kp-idmark-group__more {
+        border-radius: var(--kp-idmark-radius, min(var(--radius, 1rem), calc(var(--kp-idmark-s) * 0.28)));
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-idmark--glyph::after {
+        border-radius: 3px;
+    }
+    [data-theme='pastel'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 50%;
+    }
+

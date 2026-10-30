@@ -1,0 +1,24 @@
+/* @part: dialog: signature layer */
+    [data-theme='solstice'] .kp-dialog::backdrop {
+        background:
+            radial-gradient(ellipse 80% 55% at 50% 100%, hsl(from var(--primary) h s l / 0.22), transparent 70%),
+            hsl(from var(--background) h s calc(l * 0.6) / 0.9);
+    }
+
+    [data-theme='solstice'] .kp-dialog {
+        --kp-sig-dur: 560ms;
+        border-color: var(--border);
+        border-block-start: 2px solid var(--primary);
+        border-radius: var(--radius);
+        box-shadow:
+            0 -12px 40px -24px hsl(from var(--primary) h s l / 0.7),
+            0 24px 40px -24px hsl(from var(--background) h s calc(l * 0.3));
+    }
+
+    [data-theme='solstice'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+

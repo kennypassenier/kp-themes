@@ -1,0 +1,32 @@
+/* @part: datatable: register layer */
+    [data-theme='brutalism'] .kp-datatable {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+        background: var(--card);
+    }
+
+    /* Compact reaches the search box [gap-13]: the well's padding is a
+     * literal, so the compact step is named here, a quarter rem less. */
+    [data-theme='brutalism'] [data-density='compact'] .kp-datatable__search,
+    [data-theme='brutalism'] .kp-datatable[data-density='compact'] .kp-datatable__search {
+        padding-block: 0.4rem;
+    }
+
+    [data-theme='brutalism'] .kp-datatable__bar {
+        border-bottom: var(--kp-line) solid var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-datatable__sort[aria-sort] {
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-datatable__status,
+    [data-theme='brutalism'] .kp-datatable__page {
+        font-family: var(--theme-font-body);
+        font-size: max(0.75rem, 0.875em);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+

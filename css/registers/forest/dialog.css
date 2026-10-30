@@ -1,0 +1,26 @@
+/* @part: dialog: signature layer */
+    [data-theme='forest'] .kp-dialog::backdrop {
+        background:
+            repeating-radial-gradient(ellipse 120% 90% at 30% 110%, transparent 0 22px, hsl(from var(--foreground) h s l / 0.07) 22px 23px),
+            color-mix(in oklab, var(--foreground) 18%, var(--background));
+    }
+
+    /* The unopened dialog is the one js/motion.js measures for the theme's
+       time (a probe it adds and takes off), and it reads close = two thirds
+       of that: so it runs one and a half growths, and the dialog that is open
+       runs one, which is also its close and its opening [see the motion
+       block below]. */
+    [data-theme='forest'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-fo-time);
+    }
+
+    [data-theme='forest'] .kp-dialog {
+        --kp-sig-dur: calc(var(--kp-sig-fo-time) * 1.5);
+        border-color: var(--border-strong);
+        /* The map's neat line: a hairline frame just inside the sheet edge. */
+        box-shadow:
+            inset 0 0 0 5px var(--popover),
+            inset 0 0 0 6px hsl(from var(--primary) h s l / 0.35),
+            0 16px 34px -22px hsl(from var(--foreground) h s l / 0.55);
+    }
+

@@ -1,0 +1,59 @@
+/* @part: dialog: signature layer; also navbar */
+    /* ── Q2, Q3 · opening: the gold inlay draws itself, the lacquer comes up.
+       A dialog, a menu, a popover, a tooltip, a toast, a drawer and a tour card
+       come in as ONE keyframe set on the settle: the inlay drawn from the
+       middle of its top edge round both ways until it meets at the bottom
+       (320 ms; the tooltip's starts at its lozenge), then the lacquer, the
+       wallpaper and the words come up behind it (160 ms). Each close is that
+       set played backwards, in the same time, by js/motion.js
+       (`--kp-open: reverse-close`): the lacquer sinks, the inlay undraws to
+       its start. The keyframes carry their easing per segment and name none
+       of their own, so the reversed play is the mirror frame for frame.
+       The dialog that is not yet open runs one and a half times as long, so
+       the close js/motion.js reads off it (two thirds) is the opening's own
+       480 ms. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-dialog {
+            --kp-sig-deco-dur: calc(var(--kp-sig-deco-arrive) * 1.5);
+        }
+
+        [data-theme='deco'] .kp-dialog[open] {
+            --kp-sig-deco-dur: var(--kp-sig-deco-arrive);
+        }
+
+        [data-theme='deco']
+            :is(
+                .kp-dialog,
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover],
+                .kp-toast,
+                .kp-tooltip,
+                dialog.kp-drawer[open],
+                .kp-tour[open],
+                .kp-datepicker__panel,
+                .kp-combobox__list,
+                .kp-palette
+            ) {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-dur, var(--kp-sig-deco-arrive)) linear backwards;
+        }
+    }
+
+    @keyframes kp-sig-deco-arrive {
+        0% {
+            --kp-sig-deco-draw: 0;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        66.667% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 1;
+        }
+    }
+

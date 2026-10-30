@@ -1,0 +1,26 @@
+/* @part: progress-spinner-skeleton: signature layer; also toast */
+    @keyframes kp-progressbar-forest-breath {
+        0% {
+            --kp-fo-breath: 0;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        45.4545% {
+            --kp-fo-breath: 1;
+            animation-timing-function: linear;
+        }
+        54.5455% {
+            --kp-fo-breath: 1;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        100% {
+            --kp-fo-breath: 0;
+        }
+    }
+
+    /* On the paper plate the success toast keeps, a hovered button takes a shade
+       of the toast's own green rather than white on white (Kenny's second
+       nostromo pass, note 4). */
+    [data-theme='forest'] .kp-toast--success {
+        --kp-toast-button-hover: color-mix(in srgb, var(--success-foreground) 14%, transparent);
+    }
+

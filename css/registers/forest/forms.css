@@ -1,0 +1,46 @@
+/* @part: forms: signature layer; also form-field */
+    /* Choice tiles: kraft cards with the leaf corner; pointing blazes a tile with the dashed green ring, a press closes
+       the blaze in, the chosen one has the solid green ring over its moss wash; the hint is a note. */
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--kp-sig-fo-plate);
+        --kp-field-tiles-gap: 0.875rem;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border);
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--primary) 9%, var(--card));
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline-style: solid;
+        outline-color: var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+    }
+    [data-theme='forest'] .kp-field__option-hint {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'],
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'][data-kp-invalid] {
+        outline: 2px dashed var(--destructive);
+        outline-offset: 4px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+

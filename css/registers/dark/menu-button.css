@@ -1,0 +1,68 @@
+/* @part: menu-button: register layer; also navbar, toast */
+    /* The panels are cut on the same two corners as the card and the dialog
+       [G6; Kenny, 2026-10-09: two opposite corners, the halo and the shadow
+       follow the cut]. The clip above carries the halo through the cut; the
+       cut's own edge is a 1 px diagonal in the panel's edge colour at each
+       cut corner, so the border does not stop short of the corner. The
+       diagonal of a square of side c lies c * 0.7071 from its corner. */
+    [data-theme='dark']
+        :is(
+            .kp-menu,
+            .kp-popover:not(.kp-tooltip),
+            .kp-toast,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu
+        ) {
+        --kp-sig-dk-diag: var(--border-strong);
+        background-image:
+            linear-gradient(
+                225deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                45deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            );
+        background-repeat: no-repeat;
+        background-size: var(--kp-chamfer-panel) var(--kp-chamfer-panel);
+        background-position:
+            100% 0,
+            0 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        --kp-sig-dk-diag: transparent;
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            background-image: none;
+        }
+    }
+
+    /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
+       row menu painted nothing at all in this theme — measured `outside:
+       0 focused, 0 at rest`. The popover rounds its corners and the item
+       fills it, so a ring drawn outside the item has nowhere to land;
+       cyberpunk hit the same wall when its bevel came back and answered
+       it the same way. Both channels go INSIDE, where nothing can clip
+       them: the ring colour first, the contrast colour behind it. */
+    [data-theme='dark'] .kp-menu__item:focus-visible {
+        outline: none;
+        background: var(--accent);
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    [data-theme='dark'] .kp-menu__item:hover {
+        background: var(--accent);
+    }
+

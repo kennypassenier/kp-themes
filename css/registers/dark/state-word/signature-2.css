@@ -1,0 +1,37 @@
+/* @part: state-word: signature layer; also small-patterns */
+    /* A live pass: the line goes in at the start and out at the end of the
+       update's own time. */
+    @keyframes kp-sig-dark-pass-live {
+        0% {
+            translate: calc(-100% * var(--kp-sig-dk-s)) 0;
+            opacity: 0;
+        }
+
+        4% {
+            translate: calc(-96% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        92% {
+            translate: calc(-8% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The pass of a small part or of a word: its box, from the start edge, at
+       one pace, stopping dead. */
+    @keyframes kp-sig-dark-lay {
+        from {
+            clip-path: inset(var(--kp-sig-dk-cut));
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+

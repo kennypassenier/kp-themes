@@ -1,0 +1,285 @@
+/* @part: navbar: register layer; also motion */
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get. The
+       durations are literal because check-motion.mjs computes DI5's rate
+       from them; the matching --kp-* knobs are what js/effects.js reads. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-kp-reveal='headline'].is-glitching::before,
+        [data-theme='cyberpunk'] [data-kp-reveal='headline']:hover::before {
+            animation: kp-slice-1 600ms steps(1, end) 1;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='headline'].is-glitching::after,
+        [data-theme='cyberpunk'] [data-kp-reveal='headline']:hover::after {
+            animation: kp-slice-2 600ms steps(1, end) 1;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='rule']::after {
+            transition: transform var(--kp-rule-draw) steps(4, jump-end);
+        }
+
+        [data-theme='cyberpunk'] mark {
+            transition: color 360ms steps(3, jump-end) 400ms;
+        }
+
+        [data-theme='cyberpunk'] mark::after {
+            transition: transform var(--kp-wipe) steps(4, jump-end);
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        [data-theme='cyberpunk'] [data-kp-reveal='emphasis'] mark:nth-of-type(4)::after {
+            transition-delay: calc(3 * var(--kp-redact-stagger));
+        }
+
+        /* The bar arrives by the channel split, as a whole picture (plate and links), and a bar
+           that leaves goes as that played backwards (end of this file). */
+
+        [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link[data-kp-text]::before,
+        [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__link[data-kp-text]::before {
+            animation: kp-slice-a 320ms steps(2, end) 1;
+        }
+
+        /* The bar's dropdown and mega menu open by the channel split and go as it played
+           backwards [Kenny: arrival and leave = split]: shown, the split plays; once the pointer
+           or the press is gone, `display` is held for 480 ms (a transition) while the same four
+           poses play in the other order, and the panel is gone with the last one. The mega
+           menu's item is held by the script (`[data-kp-nav-closing]`, js/components.js), which
+           waits for a transition on the panel: the hold below is that transition. */
+        [data-theme='cyberpunk'] .kp-nav__menu:not(.kp-nav__menu--wide) {
+            --kp-cp-hold: 0;
+            transition: --kp-cp-hold 480ms linear;
+            animation: kp-sig-cyberpunk-split-back 480ms steps(1, end) reverse forwards;
+        }
+
+        /* A dropdown the pointer or the focus has left is drawn through its close by the mark the
+           script puts on its item (js/components.js: Firefox does not hold `display`). */
+        [data-theme='cyberpunk']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+        }
+
+        [data-theme='cyberpunk'] .kp-nav__menu--wide {
+            --kp-cp-hold: 0;
+            transition: --kp-cp-hold 480ms linear;
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-cp-hold: 1;
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide {
+            animation: kp-sig-cyberpunk-split-back 480ms steps(1, end) reverse forwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-button {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='cyberpunk'] .kp-field__input {
+            transition:
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='cyberpunk'] .fx-glitch:hover::before {
+            animation: kp-slice-a 320ms steps(2, end) 1;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-divider]::before {
+            animation: kp-stream-144 8000ms linear infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-divider]::after {
+            animation: kp-stream-216 8000ms linear infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-divider='alt']::before,
+        [data-theme='cyberpunk'] [data-kp-divider='alt']::after {
+            animation-direction: reverse;
+        }
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has a row in TIMINGS (js/effects.js) with its
+       measured opacity stops; check-motion.mjs holds the two in step and
+       reports the rate of every one (S42: reported, never corrected). */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-slice-a {
+            0% {
+                opacity: 1;
+                clip-path: inset(0 0 55% 0);
+                transform: translate(-3px, -1px);
+            }
+            50% {
+                opacity: 1;
+                clip-path: inset(40% 0 20% 0);
+                transform: translate(3px, 1px);
+            }
+            100% {
+                opacity: 0;
+                clip-path: inset(0 0 0 0);
+                transform: none;
+            }
+        }
+
+        @keyframes kp-slice-1 {
+            0% {
+                opacity: 1;
+                clip-path: polygon(0 2%, 100% 2%, 100% 9%, 0 9%);
+                transform: translate(-6px, 0);
+            }
+            14% {
+                clip-path: polygon(0 31%, 100% 31%, 100% 36%, 0 36%);
+                transform: translate(5px, 0);
+            }
+            28% {
+                clip-path: polygon(0 58%, 100% 58%, 100% 63%, 0 63%);
+                transform: translate(-4px, 0);
+            }
+            42% {
+                clip-path: polygon(0 12%, 100% 12%, 100% 22%, 0 22%);
+                transform: translate(7px, 0);
+            }
+            56% {
+                clip-path: polygon(0 80%, 100% 80%, 100% 84%, 0 84%);
+                transform: translate(-5px, 0);
+            }
+            70% {
+                clip-path: polygon(0 44%, 100% 44%, 100% 47%, 0 47%);
+                transform: translate(3px, 0);
+            }
+            84%,
+            100% {
+                opacity: 0;
+                clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+                transform: none;
+            }
+        }
+
+        @keyframes kp-slice-2 {
+            0% {
+                opacity: 1;
+                clip-path: polygon(0 66%, 100% 66%, 100% 72%, 0 72%);
+                transform: translate(6px, 0);
+            }
+            14% {
+                clip-path: polygon(0 5%, 100% 5%, 100% 8%, 0 8%);
+                transform: translate(-5px, 0);
+            }
+            28% {
+                clip-path: polygon(0 40%, 100% 40%, 100% 49%, 0 49%);
+                transform: translate(4px, 0);
+            }
+            42% {
+                clip-path: polygon(0 88%, 100% 88%, 100% 93%, 0 93%);
+                transform: translate(-7px, 0);
+            }
+            56% {
+                clip-path: polygon(0 20%, 100% 20%, 100% 24%, 0 24%);
+                transform: translate(5px, 0);
+            }
+            70% {
+                clip-path: polygon(0 74%, 100% 74%, 100% 77%, 0 77%);
+                transform: translate(-3px, 0);
+            }
+            84%,
+            100% {
+                opacity: 0;
+                clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+                transform: none;
+            }
+        }
+
+        @keyframes kp-stream-144 {
+            from {
+                mask-position: 0 0;
+            }
+            to {
+                mask-position: 144px 0;
+            }
+        }
+
+        @keyframes kp-stream-216 {
+            from {
+                mask-position: 0 0;
+            }
+            to {
+                mask-position: 216px 0;
+            }
+        }
+    }
+
+    /* Reduced motion: every effect resolves to its rest state at once
+       [DI7]. Nothing animates (see the guard above); what the script would
+       have revealed is shown: the marks are clear, the rule is drawn. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared) {
+            color: var(--link);
+            font-weight: 700;
+        }
+
+        [data-theme='cyberpunk'][data-kp-effects] mark:not(.is-cleared)::after,
+        [data-theme='cyberpunk'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+            transform: none;
+        }
+    }
+
+    /* The sector code beside the wordmark [S49, A3]. */
+    [data-theme='cyberpunk'] .kp-nav__brand-tag {
+        color: var(--accent);
+        letter-spacing: 0.2em;
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the band Kenny corrected on 2026-09-08: every corner cut the same, and the ground signal yellow with the ink in blood red rather than the unreadable white it had. The pair measures 3.21 against the 4.5 floor, reported to him with the change. */
+    [data-theme='cyberpunk'] .kp-marquee {
+        background: var(--primary);
+        color: var(--destructive);
+        clip-path: polygon(
+            var(--fx-notch-sm) 0,
+            calc(100% - var(--fx-notch-sm)) 0,
+            100% var(--fx-notch-sm),
+            100% calc(100% - var(--fx-notch-sm)),
+            calc(100% - var(--fx-notch-sm)) 100%,
+            var(--fx-notch-sm) 100%,
+            0 calc(100% - var(--fx-notch-sm)),
+            0 var(--fx-notch-sm)
+        );
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        --kp-marquee: 18000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='cyberpunk'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='cyberpunk'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.14em;
+        border-block-end: 0;
+    }
+

@@ -1,0 +1,99 @@
+/* @part: page-header: register layer; also lede */
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    [data-theme='brutalism'] .kp-side-note {
+        position: absolute;
+        inset-inline-end: 0.4rem;
+        inset-block-start: 4.5rem;
+        writing-mode: vertical-rl;
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        border-inline-start: var(--kp-line) solid var(--border-strong);
+        padding-inline-start: 0.5rem;
+    }
+
+    /* The laurels: three plates, each with its own ink (DI4). */
+    [data-theme='brutalism'] .kp-laurels {
+        gap: 0.9rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-laurels li {
+        --kp-plate: var(--secondary);
+        --kp-plate-ink: var(--secondary-foreground);
+        background: var(--kp-plate);
+        color: var(--kp-plate-ink);
+        border: var(--kp-line) solid var(--border-strong);
+        box-shadow: var(--kp-shadow);
+        padding: 0.55rem 0.85rem;
+        max-width: 100%;
+    }
+
+    [data-theme='brutalism'] .kp-laurels li:nth-child(2) {
+        --kp-plate: var(--accent);
+        --kp-plate-ink: var(--accent-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-laurels li:nth-child(3) {
+        --kp-plate: var(--success);
+        --kp-plate-ink: var(--success-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-laurels b {
+        display: block;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
+        text-transform: none;
+    }
+
+    [data-theme='brutalism'] .kp-lede {
+        max-width: 36rem;
+        font-size: 1.1rem;
+    }
+
+    /* The platforms: bordered chips on the muted plate. */
+    [data-theme='brutalism'] .kp-platforms {
+        margin-block-start: 2rem;
+        gap: 0.5rem;
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-platforms span {
+        border: var(--kp-line) solid var(--border-strong);
+        padding: 0.25rem 0.6rem;
+        background: var(--muted);
+    }
+
+    /* The spec sheet: the white card, the line, the shadow. */
+    [data-theme='brutalism'] .kp-spec {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+        padding: 1.2rem 1.3rem 1.4rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.78rem;
+        font-weight: 700;
+        line-height: 1.7;
+    }
+
+    [data-theme='brutalism'] .kp-spec dt {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+

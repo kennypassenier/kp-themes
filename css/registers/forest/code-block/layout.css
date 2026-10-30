@@ -1,0 +1,4 @@
+/* @part: code-block: layout layer */
+    [data-theme='forest'] .kp-code-block {
+        border-radius: var(--kp-sig-fo-plate);
+    }

@@ -1,0 +1,88 @@
+/* @part: page-header: register layer; also lede, log */
+    /* ── The demo's own pieces [S46] ───────────────────────────────────── */
+
+    [data-theme='dark'] .kp-laurels {
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-laurels li {
+        flex: 1 1 12rem;
+        padding: 0.5rem 0.7rem;
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-laurels b {
+        display: block;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--foreground);
+        margin-block-end: 0.15rem;
+    }
+
+    [data-theme='dark'] .kp-lede {
+        max-width: 38rem;
+        font-size: 1.08rem;
+    }
+
+    [data-theme='dark'] .kp-platforms {
+        margin-block-start: 1.6rem;
+        gap: 0.2rem 1.3rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-platforms span::before {
+        content: '· ';
+        color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-spec {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+        padding: 1.2rem 1.4rem;
+        font-size: 0.86rem;
+        line-height: 1.75;
+    }
+
+    [data-theme='dark'] .kp-spec dt {
+        color: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='dark'] .kp-log {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+    }
+
+    [data-theme='dark'] .kp-log__level {
+        --kp-log-level-ink: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    [data-theme='dark'] .kp-spec__swatch {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-spec__font {
+        font-family: var(--theme-font-display);
+    }
+

@@ -1,0 +1,35 @@
+/* @part: progress-spinner-skeleton: signature layer; also motion */
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    @keyframes kp-cp-charge {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(100cqi);
+        }
+    }
+
+    @keyframes kp-cp-stream-144 {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(144 * var(--kp-cp-px)));
+        }
+    }
+
+    @keyframes kp-cp-stream-216 {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(216 * var(--kp-cp-px)));
+        }
+    }
+

@@ -1,0 +1,50 @@
+/* @part: graph: signature layer */
+    [data-theme='deco'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='deco'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.55;
+    }
+
+    [data-theme='deco'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 3 7;
+        --kp-graph-edge-anim: kp-graph-engrave 2600ms ease-in infinite;
+        --kp-graph-edge-stagger: 210ms;
+    }
+
+    [data-theme='deco'] .kp-graph__ghost .kp-graph__node {
+        clip-path: inset(18%);
+        --kp-graph-node-anim: kp-graph-bevel 2600ms ease-in infinite;
+        --kp-graph-node-stagger: 210ms;
+    }
+
+    @keyframes kp-graph-engrave {
+        0%,
+        30% {
+            stroke-dasharray: 2 14;
+        }
+        50% {
+            stroke-dasharray: 3 7;
+        }
+        70%,
+        100% {
+            stroke-dasharray: 100;
+        }
+    }
+    @keyframes kp-graph-bevel {
+        0%,
+        68% {
+            clip-path: inset(18%);
+            filter: brightness(1);
+        }
+        72% {
+            clip-path: inset(4%);
+            filter: brightness(1.5);
+        }
+        80%,
+        100% {
+            clip-path: inset(18%);
+            filter: brightness(1);
+        }
+    }

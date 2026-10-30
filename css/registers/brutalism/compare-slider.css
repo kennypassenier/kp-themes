@@ -1,0 +1,38 @@
+/* @part: compare-slider: signature layer */
+    /* Compare slider. */
+    [data-theme='brutalism'] .kp-compare {
+        --kp-compare-line: 6px;
+        --kp-compare-ink: var(--border-strong);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-compare__handle {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-compare__handle:active {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-compare__label {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-compare__failed {
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--muted);
+        color: var(--foreground);
+        font-weight: 700;
+    }
+

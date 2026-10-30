@@ -1,0 +1,34 @@
+/* @part: command-block: signature layer */
+    /* ── Command: the OSD names the shell, the tape carries the stripe, the prompt is cyan ── */
+    [data-theme='synthwave'] .kp-command {
+        --kp-command-prompt-ink: var(--accent);
+        border-radius: 0;
+        border-block-start: 3px solid transparent;
+        border-image: var(--kp-sw4-stripe) 1;
+        border-image-width: 3px 0 0 0;
+    }
+    [data-theme='synthwave'] .kp-command__shell {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-command__shell::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-command__head {
+        border-block-end: 1px solid var(--kp-hairline);
+    }
+    [data-theme='synthwave'] .kp-command__where {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-command__code {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+

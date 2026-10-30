@@ -1,0 +1,27 @@
+/* @part: switch: signature layer */
+    [data-theme='synthwave'] .kp-switch {
+        --kp-switch-radius: 2px;
+        --kp-switch-thumb-radius: 1px;
+    }
+
+    [data-theme='synthwave'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.55), hsl(from var(--accent) h s l / 0.55)), var(--card);
+    }
+
+    [data-theme='synthwave'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--kp-core);
+        box-shadow: var(--kp-tube-pink);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+

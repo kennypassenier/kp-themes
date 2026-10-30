@@ -1,0 +1,43 @@
+/* @part: form-field: signature layer */
+    [data-theme='deco'] .kp-field__check {
+        --kp-sig-dur: 360ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.2rem;
+        block-size: 1.2rem;
+        margin: 0;
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    [data-theme='deco'] .kp-field__check:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-field__check[type='checkbox']:checked {
+        background: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.28rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='deco'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='deco'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+

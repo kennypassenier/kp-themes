@@ -1,0 +1,57 @@
+/* @part: bullet-rows: signature layer; also form-grid, key-value-grid */
+    /* Bullet rows: a row that leads somewhere takes the mint wash of a hovered entry on its menu corner; a figure that
+       says a tone is a sticker on the tone's plate with its own peel. */
+    [data-theme='pastel'] .kp-bullets__row {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='pastel'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__detail {
+        color: inherit;
+    }
+    [data-theme='pastel'] .kp-bullets__row:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-bullets__figure {
+        padding-inline: 0.55em;
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        box-shadow: 0 2px 0 hsl(from var(--warning) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+
+    /* Key-value grid and form rows: a ruled line is a thread of pearls; a row changed and not saved, or one that could
+       not be read, is marked by a pearl in the gap before its label, never a bar. */
+    [data-theme='pastel'] :is(.kp-kv--lines > .kp-kv__row, .kp-formrows--lines > .kp-formrow) {
+        border-block-end: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] :is(.kp-kv--lines > .kp-kv__row:last-child, .kp-formrows--lines > .kp-formrow:last-child) {
+        border-block-end: 0;
+    }
+    [data-theme='pastel'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='pastel'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='pastel'] .kp-formrow[data-kp-state='error']::before {
+        inset-block: 0.65em auto;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 4px);
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+    }
+    [data-theme='pastel'] .kp-formrow:is([data-kp-changed], [data-kp-state='error'])::before {
+        inset-block-start: 1rem;
+    }
+    [data-theme='pastel'] .kp-kv__row[data-kp-changed] > dt::after {
+        font-size: 1.25em;
+        line-height: 0;
+    }
+    [data-theme='pastel'] .kp-formrow__lock {
+        padding-inline: 0.55em;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--muted);
+    }
+

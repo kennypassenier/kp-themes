@@ -1,0 +1,11 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* The header's mega menu is held on screen while a transition on its panel runs
+   (js/components.js settleClosing): this number is that transition, 1 open and 0
+   shut, run over the panel's cut. At the top level because Firefox does not
+   register an @property inside a layer (all-themes audit, 2026-10-13). */
+@property --kp-sig-ti-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+

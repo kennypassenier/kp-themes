@@ -1,0 +1,24 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-skeleton,
+        [data-theme='deco'] .kp-card[aria-busy='true'],
+        [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card,
+        [data-theme='deco'] .kp-kpi[aria-busy='true'],
+        [data-theme='deco'] .kp-datatable__busy-panel,
+        [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading'],
+        [data-theme='deco'] .kp-meter[data-kp-loading],
+        [data-theme='deco'] .kp-kpi__meter[data-kp-loading],
+        [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+        [data-theme='deco'] .kp-button[aria-busy='true'] {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
+
+        [data-theme='deco'] .kp-skeleton:nth-child(2) {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -12);
+        }
+
+        [data-theme='deco'] .kp-skeleton:nth-child(3) {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -6);
+        }
+    }
+

@@ -1,0 +1,32 @@
+/* @part: run-timeline: signature layer */
+    /* Moments on the run timeline: a moment is a node on the trail, a planned one dashed; pointing blazes it with the
+       dashed green ring; a count on a cluster is a field note; a stretch is a dashed trail line in the tone's own
+       colour; the dated line is the trail itself, its dates notes. */
+    [data-theme='forest'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        border-radius: 0 3px;
+    }
+    [data-theme='forest'] .kp-gantt__point[data-kp-planned]::before {
+        border-style: dashed;
+    }
+    [data-theme='forest'] .kp-gantt__point:hover::before {
+        box-shadow: none;
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-gantt__count {
+        border-radius: 0;
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 0;
+        background: repeating-linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.8) 0 8px, transparent 8px 12px);
+    }
+    [data-theme='forest'] .kp-gantt__sub {
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-gantt__point::before {
+            transition: outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+

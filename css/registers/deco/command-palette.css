@@ -1,0 +1,58 @@
+/* @part: command-palette: register layer; also colour-picker, theme-menu, combobox, form-field */
+    [data-theme='deco'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-colorpicker__value {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='deco'] .kp-shortcuts__row kbd {
+        font-family: var(--theme-font-mono);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    [data-theme='deco'] .kp-shortcuts__group-label,
+    [data-theme='deco'] .kp-palette__group-label {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-theme-menu__status,
+    [data-theme='deco'] .kp-palette__status,
+    [data-theme='deco'] .kp-combobox__status {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+        color: var(--muted-foreground);
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='deco'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+
+    [data-theme='deco'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    [data-theme='deco'] .kp-combobox,
+    [data-theme='deco'] .kp-datepicker,
+    [data-theme='deco'] .kp-colorpicker,
+    [data-theme='deco'] .kp-shortcuts,
+    [data-theme='deco'] .kp-tabs {
+        border-radius: 0;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='deco'] {
+        scrollbar-color: var(--border-strong) var(--background);
+    }
+

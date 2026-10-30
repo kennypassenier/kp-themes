@@ -2,125 +2,266 @@
   "output": "css/formal-register.css",
   "items": [
     {
-      "open": "/* The numbers formal's motion is made of, registered at the top level\n   because Firefox does not register an @property inside a cascade layer;\n   with no registration every keyframe below would flip between its two\n   poses instead of moving. --kp-fm-t is how far a ruled opening or a leave\n   has come (0 to 1, finished = 1), --kp-fm-l the loop of the ruled lines of\n   a waiting surface (0 to 1; at rest the three lines are ruled), --kp-fm-u\n   the live update's rules (0 to 1), --kp-fm-a0 and --kp-fm-a1 the two ends\n   of the spinner's arc (at rest the ring is closed). */\n@property --kp-fm-t {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-fm-l {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0.5;\n}\n\n@property --kp-fm-u {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-fm-a0 {\n    syntax: '<angle>';\n    inherits: false;\n    initial-value: 0deg;\n}\n\n@property --kp-fm-a1 {\n    syntax: '<angle>';\n    inherits: false;\n    initial-value: 360deg;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
+        "tokens/register.css",
         "base.css",
-        "the-navbar.css",
-        "button.css",
-        "card.css",
-        "panels.css",
-        "the-demos-own-pieces.css",
-        "data.css",
-        "pointing-focus.css",
-        "the-alarm.css"
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "dialog/register.css",
+        "toast/register.css",
+        "page-header.css",
+        "showing-data.css",
+        "small-patterns/register.css",
+        "tree-reorder-split.css",
+        "command-palette/register.css",
+        "card/register-2.css",
+        "navbar/register-2.css",
+        "button/register-2.css",
+        "key-figures/register.css",
+        "motion.css",
+        "navbar/register-3.css",
+        "alarm.css",
+        "sidenav/register.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* formal's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/formal.css and research/signature-elements/demo.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "formals-grammar-as-tokens.css",
-        "the-busy-bar-is-a-rule.css",
-        "the-spinner-rules-an-arc.css",
-        "activity-feed/base.css",
-        "ruled-open-ruled-off/base.css",
-        "ruled-open-ruled-off/a-part-a-script-removes-or.css",
-        "ruled-open-ruled-off/menu-button.css",
-        "live-update-is-ruled-again.css",
-        "activity-feed/loading-is-ruling-the-lines.css",
-        "keyframes.css",
-        "the-meter-with-a-mark-this.css",
-        "warning-is-a-red-ink-entry.css",
-        "what-matters-carries.css",
-        "every-part-that-opens/base.css",
-        "every-part-that-opens/the-tour-the-page-dims-round.css",
-        "every-part-that-opens/nav.css"
+        "tokens/signature.css",
+        "progress-spinner-skeleton/signature.css",
+        "transfer.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "switch.css",
+        "form-field/signature.css",
+        "toast/signature.css",
+        "popover/signature.css",
+        "upload-wizard.css",
+        "tokens/signature-2.css",
+        "dialog/signature.css",
+        "alert/signature.css",
+        "dialog/signature-2.css",
+        "signature.css",
+        "alert/signature-2.css",
+        "popover/signature-2.css",
+        "menu-button.css",
+        "state-word/signature.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "month-heatmap/signature.css",
+        "progress-spinner-skeleton/signature-4.css",
+        "meter.css",
+        "key-figures/signature.css",
+        "month-heatmap/signature-2.css",
+        "state-word/signature-2.css",
+        "key-figures/signature-2.css",
+        "drawer-tour.css",
+        "sidenav/signature.css",
+        "month-heatmap/signature-3.css",
+        "navbar/signature.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "register/base.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "register/week-agenda-and-run-timeline.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "week-agenda.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "signature/base.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "action-tiles.css"
+      "open": "/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/the-grids-gap-leaves-room-for.css"
+      "open": "/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "heat-grid.css"
+      "open": "/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */\n@layer kp.signature {\n",
+      "files": [
+        "heat-grid.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-heat-grid-matrix-bar.css"
+      "open": "/* ── end heat grid, matrix, bar cell ── */\n\n/* ── Flows and records [kpadopt4]: secret field ── */\n@layer kp.register {\n",
+      "files": [
+        "small-patterns/register-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-flows-and-records/base.css"
+      "open": "/* ── end flows and records ── */\n\n/* ── Flows and records [kpadopt4]: a dialog in sections, a confirmation that depends on something ── */\n@layer kp.register {\n",
+      "files": [
+        "dialog/register-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-flows-and-records/end-flows-and-records.css"
+      "open": "/* ── end flows and records: dialog ── */\n\n/* ── Flows and records [kpadopt4]: moments on the timeline, the dated line ── */\n@layer kp.register {\n",
+      "files": [
+        "run-timeline/register.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-flows-and-records/end-flows-and-records-2.css"
+      "open": "/* ── end flows and records: timeline ── */\n\n/* ── Flows and records [kpadopt4]: the journey ── */\n@layer kp.register {\n",
+      "files": [
+        "step-list/register.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-flows-and-records/end-flows-and-records-3.css"
+      "open": "/* ── end flows and records: journey ── */\n\n/* ── Flows and records [kpadopt4]: the pipeline ── */\n@layer kp.register {\n",
+      "files": [
+        "pipeline.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-flows-and-records/end-flows-and-records-4.css"
+      "open": "/* ── end flows and records: pipeline ── */\n\n/* ── Flows and records [kpadopt4]: drawings for an empty state ── */\n@layer kp.register {\n",
+      "files": [
+        "small-patterns/register-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-flows-and-records/end-flows-and-records-5.css"
+      "open": "/* ── end flows and records: drawings ── */\n\n/* ── kitchen timers [kpadopt4] ──\n   G8: an ended timer needs the eye, so it is a red-ink entry: ruled off along\n   its start edge in red ink, the ground stays paper, the name in Fraunces in\n   the figure's place, the state word in red small capitals. */\n@layer kp.register {\n",
+      "files": [
+        "kitchen-timers.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-kitchen-timers.css"
+      "open": "/* ── end kitchen timers ── */\n\n/* ── wheel [kpadopt4] ──\n   The anchor: the outcome is the account closed, a navy rule under the name\n   with the thinner second rule under it (the double rule). */\n@layer kp.register {\n",
+      "files": [
+        "wheel.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-wheel.css"
+      "open": "/* ── end wheel ── */\n\n/* ── toggle button [kpadopt6-ops] ──\n   The anchor: the double rule. A press draws the two rules for as long as the finger is down; a toggle that stays\n   pressed keeps them drawn, and the underline stays under its label, so \"on\" is a ruled line and not a colour alone. */\n@layer kp.register {\n",
+      "files": [
+        "button/register-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "signature/the-count-that-is-still-being.css"
+      "open": "/* The count that is still being counted is one ruled line of the ledger, as high as the figure it stands for and not\n   the 1.5rem of a text line, so the pill keeps its height. */\n@layer kp.signature {\n",
+      "files": [
+        "toggle-button.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-toggle-button.css"
+      "open": "/* ── end toggle button ── */\n\n/* ── palette that finds words in any order [kpadopt6-ops] ──\n   The anchor: ruling. A matched word is ruled under in navy, as formal rules what it points at, and not washed. */\n@layer kp.register {\n",
+      "files": [
+        "command-palette/register-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-palette-that-finds.css"
+      "open": "/* ── end palette that finds words in any order ── */\n\n/* ── version jump chip [kpadopt6-ops] ──\n   The anchor: the double rule. A jump that needs care is ruled twice, a hairline under the new version with the thin\n   second rule beneath it, as formal marks what must be read. The chip that is still being looked up is one ruled line of\n   the ledger as high as the figure, so the chip keeps its height. */\n@layer kp.register {\n",
+      "files": [
+        "badge.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "signature/version.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "version-jump.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-version-jump-chip.css"
+      "open": "/* ── end version jump chip ── */\n\n/* ── acknowledge gate [kpadopt6-ops] ──\n   The anchor: the double rule. A gate that is ticked is ruled off with the thin second rule under its words, as formal\n   signs what has been read; while the notes are looked up the table's busy card stands over the alert. */\n@layer kp.register {\n",
+      "files": [
+        "ack-gate.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-acknowledge-gate.css"
+      "open": "/* ── end acknowledge gate ── */\n\n/* ── dependency list [kpadopt6-ops] ──\n   The anchor: ruled lines. Each row is a line of the ledger, a hairline under it with the number set in the margin; a cycle is\n   ruled in the destructive ink. The waiting rows are the ledger's ruled lines. */\n@layer kp.signature {\n",
+      "files": [
+        "dependency-list.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-dependency-list.css"
+      "open": "/* ── end dependency list ── */\n\n/* ── path of a connection [kpadopt6-ops] ──\n   The anchor: the double rule. The hop where the packet stops is ruled twice under its title (the refusal is the rule\n   that is read); the hops it never reaches keep a single hairline. */\n@layer kp.register {\n",
+      "files": [
+        "step-list/register-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "signature/trace.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "connection-path.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-path-of-a-connection.css"
+      "open": "/* ── end path of a connection ── */\n\n/* ── entity card [kpadopt6-ops] ──\n   The anchor: ruled lines. The card is a page of the ledger: the identity row is ruled off from the rows under it by a\n   hairline, and a selected card takes the navy double rule round it (the thin second rule inside the first). The waiting\n   card is the ledger's ruled lines. */\n@layer kp.register {\n",
+      "files": [
+        "card/register-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "signature/entity.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "entity-card.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-entity-card.css"
+      "open": "/* ── end entity card ── */\n\n/* ── graph loading · shape 3 · The annual report: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-fm-load-3.css"
+      "open": "/* ── graph loading · r3-fm-load-3 · The courier’s round (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

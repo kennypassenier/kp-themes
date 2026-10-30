@@ -1,0 +1,39 @@
+/* @part: toast: signature layer; also dialog */
+    /* The toast, the dialog and the tooltip are ruled open where they stand
+       (G3, G13: the engine below); this is how each looks at rest. */
+    [data-theme='formal'] .kp-toast {
+        position: relative;
+    }
+
+    [data-theme='formal'] .kp-toast::after {
+        content: '';
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline: var(--radius);
+        block-size: 2px;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-toast--success::after {
+        background: var(--success-foreground);
+        inset-block-start: 3px;
+        opacity: 0.6;
+    }
+
+    [data-theme='formal'] .kp-dialog::backdrop {
+        background: color-mix(in oklab, var(--foreground) 20%, var(--background));
+    }
+
+    /* The mat of a dialog is the double rule: a strong hairline and a thinner
+       one inside it (G7). */
+    [data-theme='formal'] .kp-dialog {
+        box-shadow:
+            0 0 0 4px var(--popover),
+            0 0 0 5px var(--border-strong),
+            0 18px 40px -24px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    [data-theme='formal'] .kp-dialog__title {
+        font-family: var(--theme-font-display);
+    }
+

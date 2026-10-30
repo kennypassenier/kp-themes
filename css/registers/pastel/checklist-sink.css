@@ -1,0 +1,45 @@
+/* @part: checklist-sink: signature layer */
+    /* Checklist: a row is lifted onto the mint wash when pointed at; a ticked item is struck through in plum; the rules
+       are threads of pearls, the bar's a dashed cut; a finished group's count carries a tick sticker. */
+    [data-theme='pastel'] .kp-checklist__bar {
+        border-block-end: 2px dashed var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__list {
+        border-block-start: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__item {
+        border-block-end: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__row {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    @media (hover: hover) {
+        [data-theme='pastel'] .kp-checklist__row:hover {
+            background: var(--accent);
+            color: var(--accent-foreground);
+        }
+        [data-theme='pastel'] .kp-checklist__row:hover :is(.kp-checklist__detail, .kp-checklist__label) {
+            color: inherit;
+        }
+    }
+    [data-theme='pastel'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='pastel'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        display: inline-block;
+        padding: 0 0.35em;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--success);
+        color: var(--success-foreground);
+        box-shadow: 0 1.5px 0 hsl(from var(--success) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+    [data-theme='pastel'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-style: solid;
+        border-color: var(--destructive);
+    }
+

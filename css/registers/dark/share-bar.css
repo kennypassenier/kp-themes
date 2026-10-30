@@ -1,0 +1,71 @@
+/* @part: share-bar: signature layer */
+    /* ── Share bar: the track is the machined channel (the progress bar's cut and ticks), the parts are laid by the line,
+       the part pointed at takes the line at its start edge ── */
+    [data-theme='dark'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+        --kp-stackbar-gap: 2px;
+    }
+    [data-theme='dark'] .kp-stackbar__title {
+        font-weight: 600;
+    }
+    [data-theme='dark'] .kp-stackbar__total,
+    [data-theme='dark'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='dark'] .kp-stackbar__bar {
+        background:
+            linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 100% / 10% 45% repeat-x,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(0.25rem 0, 100% 0, 100% calc(100% - 0.25rem), calc(100% - 0.25rem) 100%, 0 100%, 0 0.25rem);
+    }
+    [data-theme='dark'] .kp-stackbar__seg {
+        border-radius: 0;
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card);
+        outline: 0;
+    }
+    [data-theme='dark'] .kp-stackbar__seg:dir(rtl) {
+        box-shadow: inset var(--kp-stackbar-gap, 2px) 0 0 var(--card);
+    }
+    [data-theme='dark'] .kp-stackbar__seg::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card);
+        filter: brightness(1.15);
+    }
+    [data-theme='dark'] .kp-stackbar__seg[data-kp-stackbar-lit]::before {
+        opacity: 1;
+    }
+    [data-theme='dark'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: none;
+    }
+    [data-theme='dark'] .kp-stackbar__mark {
+        inset-block: -1px;
+        background: var(--primary);
+        box-shadow: 0 0 6px hsl(from var(--chart-1) h s l / 0.5);
+    }
+    [data-theme='dark'] .kp-stackbar__swatch {
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        box-shadow: inset 2px 0 0 var(--chart-1);
+    }
+    [data-theme='dark'] .kp-stackbar__note {
+        clip-path: var(--kp-dk4-cut);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar > .kp-stackbar__seg {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+

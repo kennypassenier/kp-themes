@@ -1,0 +1,24 @@
+/* @part: toast: signature layer */
+    @keyframes kp-sig-titanium-ti-rail {
+        from {
+            opacity: 0;
+            transform: translateX(calc(16px * var(--kp-sig-ti-dir)));
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-scribe {
+        0%,
+        33% {
+            transform: scaleX(0);
+        }
+
+        100% {
+            transform: scaleX(1);
+        }
+    }
+

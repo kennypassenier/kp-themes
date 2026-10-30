@@ -1,0 +1,6 @@
+/* @part: badge: register layer */
+    [data-theme='formal'] .kp-badge--version[data-kp-level='major'] .kp-version__to {
+        text-decoration: underline double currentColor;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }

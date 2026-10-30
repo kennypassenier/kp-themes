@@ -1,0 +1,175 @@
+/* @part: card: signature layer */
+    /* ── Q13 · leaving and arriving: a great fan. A fan of gold ribs and panels
+       of deep-blue satin with a gold-braid edge opens over the part, hides it,
+       and folds away rib by rib, taking the satin with it; a part arrives as
+       that played backwards (js/motion.js turns it round, the hidden part
+       showing again as the fan folds off it). The fan is the part's own
+       ::before (the satin field, the guard sticks, the pivot) and ::after (the
+       leaf with its braid), standing over the whole box from a pivot at the
+       middle of its foot, between two guard sticks (--kp-sig-deco-a1 and -a2,
+       from the left along the foot). Closed it is nothing: the part is
+       `visibility: hidden` from the frame the fan covers it, the fan's own
+       parts go with --kp-sig-deco-v in its last frame, and without the
+       attribute neither pseudo-element exists, so nothing of the dressing is
+       drawn once a part has arrived or after it has left. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] {
+            --kp-open: reverse-close;
+        }
+
+        [data-theme='deco'] [data-kp-leaving] {
+            animation: kp-sig-deco-fan var(--kp-sig-deco-leave) linear forwards;
+        }
+
+        /* The plates that close by their own arrival played backwards (toast,
+           dialog, popover, menu) are left out with no weight (:where), so the
+           fan's sector, resting folded at 182deg, never masks them away for
+           the whole of their close (2026-10-13: the toast vanished in frame 0). */
+        [data-theme='deco']
+            [data-kp-leaving]:not(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):not(
+                :where(.kp-toast, .kp-dialog, .kp-popover, .kp-menu-button > .kp-menu)
+            ) {
+            animation-name: kp-sig-deco-wipe;
+            animation-duration: calc(var(--kp-sig-deco-leave) / 2);
+            mask-image: conic-gradient(
+                from -90deg at 50% 100%,
+                transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                transparent calc(var(--kp-sig-deco-a2) + 1deg)
+            );
+        }
+
+        [data-theme='deco'] :is(.kp-dialog, .kp-popover, .kp-menu-button > .kp-menu)[data-kp-leaving] {
+            animation: none;
+        }
+
+        /* A toast leaves as its arrival played backwards (G3: the lacquer
+           sinks, the inlay undraws), under the arrival's own name, so
+           js/motion.js also lets it arrive as that leave turned round: its
+           space unfolds as it arrives and folds as it leaves, one picture
+           mirrored (lessons 19, 24; forest's toast does the same). The class
+           is doubled to outweigh the arrival's list, whose `dialog.kp-drawer[open]`
+           gives it (0,3,1). */
+        [data-theme='deco'] .kp-toast.kp-toast[data-kp-leaving] {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear reverse forwards;
+        }
+
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::before,
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            z-index: 5;
+            visibility: visible;
+            pointer-events: none;
+            opacity: var(--kp-sig-deco-v);
+            background-repeat: no-repeat;
+            mask-composite: intersect;
+        }
+
+        /* The satin field: pleats of the lobby's blue, 12 degrees apart, a
+           shade and a sheen in each, lace dots of gold along them; the
+           guard sticks at both edges of the fan, gold lit from the top; the
+           pivot's two upper facets. */
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::before {
+            background-image:
+                linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+                linear-gradient(to bottom left, transparent 50%, var(--primary) 50%),
+                conic-gradient(
+                    from -90deg at 50% 100%,
+                    transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                    var(--kp-sig-deco-gold-hi) calc(var(--kp-sig-deco-a1) - 1deg),
+                    var(--primary) calc(var(--kp-sig-deco-a1) + 0.4deg),
+                    var(--kp-sig-deco-gold-lo) calc(var(--kp-sig-deco-a1) + 1.4deg),
+                    transparent calc(var(--kp-sig-deco-a1) + 1.4deg) calc(var(--kp-sig-deco-a2) - 1.4deg),
+                    var(--kp-sig-deco-gold-lo) calc(var(--kp-sig-deco-a2) - 1.4deg),
+                    var(--primary) calc(var(--kp-sig-deco-a2) - 0.4deg),
+                    var(--kp-sig-deco-gold-hi) calc(var(--kp-sig-deco-a2) + 1deg),
+                    transparent calc(var(--kp-sig-deco-a2) + 1deg)
+                ),
+                radial-gradient(circle 0.7px, var(--kp-sig-deco-gold-lt), transparent),
+                repeating-conic-gradient(
+                    from -90deg at 50% 100%,
+                    var(--kp-sig-deco-velvet-lo) 0deg,
+                    hsl(from var(--kp-sig-deco-velvet) h s calc(l - 3)) 6deg,
+                    var(--kp-sig-deco-velvet-lo) 12deg
+                );
+            background-position:
+                calc(50% - 6px) 100%,
+                calc(50% + 6px) 100%,
+                0 0,
+                0 0,
+                0 0;
+            background-size:
+                6px 6px,
+                6px 6px,
+                100% 100%,
+                6px 6px,
+                100% 100%;
+            background-repeat: no-repeat, no-repeat, no-repeat, repeat, no-repeat;
+            mask-image: conic-gradient(
+                from -90deg at 50% 100%,
+                transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                transparent calc(var(--kp-sig-deco-a2) + 1deg)
+            );
+        }
+
+        /* The leaf: a heart of lacquer with gold sticks in it, the satin
+           panels pleated round it between gold ribs, a braid at its edge (a
+           bronze cord wound with gold), a hairline inside it and a rim round
+           the sticks; it is the ellipse of the fan, inside the sector. */
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::after {
+            background-image:
+                radial-gradient(
+                    ellipse 22% 42% at 50% 100%,
+                    transparent calc(100% - 1.4px),
+                    var(--kp-sig-deco-gold-lt) calc(100% - 0.7px) 100%,
+                    transparent
+                ),
+                radial-gradient(
+                    ellipse 42% 84% at 50% 100%,
+                    transparent calc(100% - 1px),
+                    hsl(from var(--primary) h s l / 0.75) calc(100% - 0.4px) 100%,
+                    transparent
+                ),
+                radial-gradient(
+                    ellipse 47% 92% at 50% 100%,
+                    transparent calc(100% - 3.8px),
+                    var(--kp-sig-deco-gold-hi) calc(100% - 3.4px) calc(100% - 2.6px),
+                    var(--kp-sig-deco-gold-lo) calc(100% - 2.4px) calc(100% - 0.4px),
+                    transparent 100%
+                ),
+                repeating-conic-gradient(
+                    from -90deg at 50% 100%,
+                    transparent 0 9.4deg,
+                    var(--kp-sig-deco-gold-lo) 9.4deg 9.9deg,
+                    var(--primary) 9.9deg 10.5deg,
+                    var(--kp-sig-deco-gold-lo) 10.5deg 11deg,
+                    transparent 11deg 12deg
+                ),
+                radial-gradient(ellipse 22% 42% at 50% 100%, var(--kp-sig-deco-lac) 99%, transparent 100%),
+                repeating-conic-gradient(
+                    from -90deg at 50% 100%,
+                    var(--kp-sig-deco-gold-lo) 0deg,
+                    var(--kp-sig-deco-gold-hi) 0.25deg,
+                    var(--kp-sig-deco-gold-lo) 0.5deg,
+                    var(--kp-sig-deco-velvet-lo) 0.6deg,
+                    var(--kp-sig-deco-velvet) 3.5deg,
+                    hsl(from var(--kp-sig-deco-velvet-hi) h s calc(l + 5)) 6deg,
+                    var(--kp-sig-deco-velvet) 8.5deg,
+                    var(--kp-sig-deco-velvet-lo) 12deg
+                ),
+                radial-gradient(ellipse 60% 100% at 50% 100%, transparent 55%, hsl(from var(--kp-sig-deco-shadow) h s l / 0.35));
+            background-size: 100% 100%;
+            mask-image:
+                conic-gradient(
+                    from -90deg at 50% 100%,
+                    transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                    var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                    transparent calc(var(--kp-sig-deco-a2) + 1deg)
+                ),
+                radial-gradient(ellipse 47% 92% at 50% 100%, var(--foreground) 99.4%, transparent 100%);
+        }
+    }
+

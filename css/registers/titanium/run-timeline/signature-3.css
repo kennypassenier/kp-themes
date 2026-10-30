@@ -1,0 +1,41 @@
+/* @part: run-timeline: signature layer */
+    /* ── Moments on the timeline: machined marks; a stretch is oxide ── */
+    [data-theme='titanium'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.4);
+    }
+    [data-theme='titanium'] .kp-gantt__point {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary);
+    }
+    [data-theme='titanium'] .kp-gantt__point:active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-gantt__count {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(2px 0, 100% 0, 100% calc(100% - 2px), calc(100% - 2px) 100%, 0 100%, 0 2px);
+    }
+    [data-theme='titanium'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 0;
+        background: linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.35), hsl(from var(--kp-gantt-mark) h s l / 0.8));
+    }
+    [data-theme='titanium'] :is(.kp-gantt__zone:not([data-kp-lane-zone]), .kp-gantt__band) {
+        border-inline: 0;
+        border-inline-start: 2px solid var(--kp-gantt-mark);
+        background: linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.24), hsl(from var(--kp-gantt-mark) h s l / 0.06));
+    }
+    [data-theme='titanium'] .kp-gantt__sub {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-gantt__point::before {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+

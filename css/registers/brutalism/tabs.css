@@ -1,0 +1,76 @@
+/* @part: tabs: register layer; also breadcrumb-pagination, date-picker, upload-wizard, colour-picker */
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='brutalism'] .kp-tab {
+        border: var(--kp-line) solid transparent;
+        border-radius: 0;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-tab[aria-selected='true'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        border-color: var(--border-strong);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-tabs__list {
+        border-bottom: var(--kp-line) solid var(--border-strong);
+        gap: 0.5rem;
+    }
+
+    [data-theme='brutalism'] .kp-breadcrumb,
+    [data-theme='brutalism'] .kp-pagination {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-pagination a[aria-current],
+    [data-theme='brutalism'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-wizard {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-wizard__steps {
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='brutalism'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='brutalism'] .kp-datepicker__weekday,
+    [data-theme='brutalism'] .kp-datepicker__title {
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-colorpicker__swatch {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-colorpicker__value {
+        font-family: var(--theme-font-mono);
+    }
+

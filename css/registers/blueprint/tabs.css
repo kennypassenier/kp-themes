@@ -1,0 +1,79 @@
+/* @part: tabs: register layer; also breadcrumb-pagination, combobox, colour-picker, date-picker */
+    /* ── Navigation and steps ──────────────────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-tab {
+        color: var(--muted-foreground);
+        border-block-end: 1px solid transparent;
+    }
+
+    [data-theme='blueprint'] .kp-tab[aria-selected='true'] {
+        color: var(--foreground);
+        border-block-end-color: var(--primary);
+        font-weight: 600;
+    }
+
+    [data-theme='blueprint'] .kp-tabs__list {
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='blueprint'] .kp-breadcrumb,
+    [data-theme='blueprint'] .kp-pagination {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] .kp-pagination a[aria-current],
+    [data-theme='blueprint'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 2px;
+    }
+
+    [data-theme='blueprint'] .kp-wizard {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='blueprint'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 2px;
+    }
+
+    [data-theme='blueprint'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+    }
+
+    [data-theme='blueprint'] .kp-colorpicker__value {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] .kp-shortcuts__row kbd {
+        font-family: var(--theme-font-mono);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: var(--card);
+        padding-inline: 0.4em;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='blueprint'] .kp-combobox,
+    [data-theme='blueprint'] .kp-datepicker,
+    [data-theme='blueprint'] .kp-colorpicker,
+    [data-theme='blueprint'] .kp-shortcuts,
+    [data-theme='blueprint'] .kp-tabs {
+        border-radius: 2px;
+    }
+
+    [data-theme='blueprint'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.2);
+    }
+
+    [data-theme='blueprint'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 0.85);
+    }
+

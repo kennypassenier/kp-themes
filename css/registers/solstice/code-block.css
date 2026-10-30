@@ -1,0 +1,45 @@
+/* @part: code-block: signature layer; also page-header, motion */
+    /* The code block: a plate lit from below, its head warmed, its keys in amber (the sun acts), a failure's note reddened. */
+    [data-theme='solstice'] .kp-code {
+        background: var(--kp-code-bg, var(--card));
+        box-shadow: inset 0 -1px 0 hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='solstice'] .kp-code__head {
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.14), transparent);
+    }
+    [data-theme='solstice'] .kp-code__title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-code__body,
+    [data-theme='solstice'] .kp-code__note {
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.1), transparent 45%), var(--muted);
+    }
+    [data-theme='solstice'] .kp-code[data-kp-state='error'] .kp-code__note {
+        background: linear-gradient(to top, hsl(from var(--destructive) h s l / 0.2), transparent 70%), var(--muted);
+        box-shadow: inset 0 -1px 0 var(--destructive);
+    }
+
+    /* The header line: the title in the serif; the freshness a quiet line. */
+    [data-theme='solstice'] .kp-page-header__line > .kp-page-header__title {
+        font-family: var(--theme-font-display, inherit);
+        font-weight: 400;
+    }
+
+    /* A number that ticks: while it runs it stands overbright in the first light and cools into its ink when it lands
+       (G3, G9); it never swells or jumps. */
+    [data-theme='solstice'] [data-kp-tick] {
+        transition:
+            color calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-touch),
+            text-shadow calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-touch);
+    }
+    [data-theme='solstice'] [data-kp-tick][data-kp-tick-state='running'] {
+        color: hsl(from var(--primary) h s 80%);
+        text-shadow: 0 0 0.6em hsl(from var(--primary) h s l / 0.7);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='solstice'] [data-kp-tick] {
+            transition: none;
+        }
+    }

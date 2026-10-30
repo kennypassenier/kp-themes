@@ -1,0 +1,208 @@
+/* @part: progress-spinner-skeleton: signature layer; also form-field, month-heatmap, menu-button, button */
+    [data-theme='formal'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        padding-block-end: calc(0.375rem + 0.9rem);
+    }
+
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive)[aria-busy='true'] {
+        --kp-fm-ink: currentColor;
+    }
+
+    [data-theme='formal'] :is(.kp-skeleton--block, .kp-skeleton--circle, .kp-chart__state[data-kp-state='loading'])::before {
+        inset: 0.75rem;
+        block-size: auto;
+    }
+
+    [data-theme='formal'] .kp-skeleton--circle::before {
+        inset: 24% 12%;
+    }
+
+    /* The skeleton block and circle are plates of paper, not grey patches. */
+    [data-theme='formal'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
+        overflow: clip;
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    [data-theme='formal'] .kp-skeleton--block {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] .kp-skeleton--circle {
+        border-radius: 50%;
+    }
+
+    [data-theme='formal'] .kp-kpi__chart .kp-chart__state[data-kp-state='loading'] {
+        background-color: transparent;
+    }
+
+    /* A loading day is paper, its date faint. */
+    [data-theme='formal']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--card);
+        color: hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal']
+            :where(
+                [aria-busy='true'],
+                [data-kp-busy],
+                [data-kp-loading],
+                [data-kp-state='loading'],
+                .kp-skeleton--block,
+                .kp-skeleton--circle,
+                .kp-datatable__busy-panel,
+                .kp-calendar__busy,
+                .kp-calendar__day[data-kp-tone='loading']
+            ) {
+            animation: kp-sig-formal-loading var(--kp-sig-fm-loop) linear infinite;
+        }
+    }
+
+    /* ── Keyframes ───────────────────────────────────────────────────────
+       Timing functions are written out or left to the animation's shorthand
+       (linear: a rule at an even pace, a dead stop, G1); a close plays an
+       animation backwards, and linear is its own inverse. ── */
+
+    /* A tick, and a radio's dot, are ruled start to end. */
+    @keyframes kp-sig-formal-pen {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* A rule on a waiting surface: ruled (17 %), held (to 62 %), lifted from
+       the start (to 79 %), gone until the loop comes round. */
+    @keyframes kp-sig-formal-ledger {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        17% {
+            clip-path: inset(0);
+        }
+
+        62% {
+            clip-path: inset(0);
+        }
+
+        79%,
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes kp-sig-formal-loading {
+        from {
+            --kp-fm-l: 0;
+        }
+
+        to {
+            --kp-fm-l: 1;
+        }
+    }
+
+    @keyframes kp-sig-formal-update-closed {
+        from {
+            --kp-fm-u: 0;
+        }
+
+        to {
+            --kp-fm-u: 1;
+        }
+    }
+
+    /* The busy bar: the band ruled across (48 %), the second rule closing
+       it (52 %), both lifted from the start (to 100 %). */
+    @keyframes kp-sig-formal-bar-band {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        48%,
+        52% {
+            clip-path: inset(0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes kp-sig-formal-bar-second {
+        0%,
+        48% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        52% {
+            clip-path: inset(0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes kp-sig-formal-bar-head {
+        0% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        48% {
+            transform: translateX(100cqi);
+            opacity: 1;
+        }
+
+        48.1%,
+        100% {
+            transform: translateX(100cqi);
+            opacity: 0;
+        }
+    }
+
+    /* The spinner: the arc ruled round the outer ring (to 50 %), the inner
+       arc closing it (58 %), both lifted from the start (60 % to 100 %). */
+    @keyframes kp-sig-formal-arc-outer {
+        0% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 0deg;
+        }
+
+        50%,
+        60% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 360deg;
+        }
+
+        100% {
+            --kp-fm-a0: 360deg;
+            --kp-fm-a1: 360deg;
+        }
+    }
+
+    @keyframes kp-sig-formal-arc-inner {
+        0%,
+        50% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 0deg;
+        }
+
+        58%,
+        60% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 360deg;
+        }
+
+        100% {
+            --kp-fm-a0: 360deg;
+            --kp-fm-a1: 360deg;
+        }
+    }
+

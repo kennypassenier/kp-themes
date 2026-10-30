@@ -1,0 +1,27 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component; also question-card */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js);
+       kp-rule-in is the base layer's. Each is a single pass, once. */
+    @keyframes kp-headline-fade {
+        0% {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes kp-dim-label {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+

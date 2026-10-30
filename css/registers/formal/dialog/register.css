@@ -1,0 +1,26 @@
+/* @part: dialog: register layer; also theme-menu */
+    /* ── Panels: one hairline boundary, the card's own paper ─────────── */
+
+    [data-theme='formal'] .kp-dialog,
+    [data-theme='formal'] .kp-popover,
+    [data-theme='formal'] .kp-menu,
+    [data-theme='formal'] .kp-toast,
+    [data-theme='formal'] .kp-tooltip,
+    [data-theme='formal'] .kp-confirm,
+    [data-theme='formal'] .kp-datepicker__panel,
+    [data-theme='formal'] .kp-combobox__list,
+    [data-theme='formal'] .kp-palette,
+    [data-theme='formal'] .kp-theme-menu__list {
+        background: var(--card);
+        border-color: var(--border);
+        border-radius: var(--radius);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='formal'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+

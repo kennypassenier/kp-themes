@@ -1,0 +1,200 @@
+/* @part: navbar: signature layer */
+    /* The hairlines: the outer edge as strips between the coves, the inner
+       line 3 px in, an arc round each cove on both, a bead in each hollow.
+       The gold runs along a line as leaf does: a highlight, the gold, its
+       shade. Twenty layers (kept in --kp-sig-deco-hair, with their places and
+       sizes, so a plate's ::after and a button itself draw the same): on the
+       plate's ::after, which the arrival draws round with its conic mask; on
+       a button, its own background, because its ::after is the seal's ring. */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip,
+            .kp-button,
+            .kp-icon-button
+        ) {
+        --kp-sig-deco-hair:
+            var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-x),
+            var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-y),
+            radial-gradient(
+                circle at 0 0,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 100% 0,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 0 100%,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at calc(-1 * var(--kp-sig-deco-n)) calc(-1 * var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(100% + var(--kp-sig-deco-n)) calc(-1 * var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(-1 * var(--kp-sig-deco-n)) calc(100% + var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(100% + var(--kp-sig-deco-n)) calc(100% + var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            );
+        --kp-sig-deco-hair-pos:
+            left var(--kp-sig-deco-r) top 0, left var(--kp-sig-deco-r) bottom 0, left 0 top var(--kp-sig-deco-r), right 0 top var(--kp-sig-deco-r),
+            left var(--kp-sig-deco-c) top var(--kp-sig-deco-n), left var(--kp-sig-deco-c) bottom var(--kp-sig-deco-n),
+            left var(--kp-sig-deco-n) top var(--kp-sig-deco-c), right var(--kp-sig-deco-n) top var(--kp-sig-deco-c), 0 0, 100% 0, 0 100%, 100% 100%,
+            left var(--kp-sig-deco-n) top var(--kp-sig-deco-n), right var(--kp-sig-deco-n) top var(--kp-sig-deco-n),
+            left var(--kp-sig-deco-n) bottom var(--kp-sig-deco-n), right var(--kp-sig-deco-n) bottom var(--kp-sig-deco-n),
+            left calc(var(--kp-sig-deco-bead) - 1.7px) top calc(var(--kp-sig-deco-bead) - 1.7px),
+            right calc(var(--kp-sig-deco-bead) - 1.7px) top calc(var(--kp-sig-deco-bead) - 1.7px),
+            left calc(var(--kp-sig-deco-bead) - 1.7px) bottom calc(var(--kp-sig-deco-bead) - 1.7px),
+            right calc(var(--kp-sig-deco-bead) - 1.7px) bottom calc(var(--kp-sig-deco-bead) - 1.7px);
+        --kp-sig-deco-hair-size:
+            calc(100% - 2 * var(--kp-sig-deco-r)) 1px, calc(100% - 2 * var(--kp-sig-deco-r)) 1px, 1px calc(100% - 2 * var(--kp-sig-deco-r)),
+            1px calc(100% - 2 * var(--kp-sig-deco-r)), calc(100% - 2 * var(--kp-sig-deco-c)) 1px, calc(100% - 2 * var(--kp-sig-deco-c)) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-c)), 1px calc(100% - 2 * var(--kp-sig-deco-c)),
+            calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px), calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px),
+            calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px), calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px), 3.4px 3.4px, 3.4px 3.4px,
+            3.4px 3.4px, 3.4px 3.4px;
+    }
+
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip
+        )::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: 2;
+        pointer-events: none;
+        background-image: var(--kp-sig-deco-hair);
+        background-repeat: no-repeat;
+        background-position: var(--kp-sig-deco-hair-pos);
+        background-size: var(--kp-sig-deco-hair-size);
+        mask-image: conic-gradient(
+            from calc(var(--kp-sig-deco-draw) * -180deg) at var(--kp-sig-deco-at, 50% 50%),
+            var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
+            transparent 0
+        );
+    }
+

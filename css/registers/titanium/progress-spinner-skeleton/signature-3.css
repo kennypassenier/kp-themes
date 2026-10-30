@@ -1,0 +1,33 @@
+/* @part: progress-spinner-skeleton: signature layer; also form-field */
+    @keyframes kp-sig-titanium-ti-facing {
+        from {
+            rotate: 0turn;
+        }
+
+        to {
+            rotate: 1turn;
+        }
+    }
+
+    /* The anodising bath's drift: 260% of film moved start → end at a
+       constant feed (research/character-kpi r2-ti-load-1). */
+    @keyframes kp-sig-titanium-bath {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: -160% 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-stamp {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+

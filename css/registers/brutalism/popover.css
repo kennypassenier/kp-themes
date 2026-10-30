@@ -1,0 +1,30 @@
+/* @part: popover: signature layer */
+    [data-theme='brutalism'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-br-time);
+        --kp-sig-br-h: var(--kp-sig-br-h-part);
+        --kp-sig-br-sh: 3px;
+        margin-block-start: 0.6rem;
+        margin-inline-start: 0.35rem;
+        padding: 0.25rem 0.6rem;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--info);
+        color: var(--border-strong);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 0.8rem;
+        inline-size: 12px;
+        block-size: 8px;
+        background: var(--border-strong);
+        clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    }
+

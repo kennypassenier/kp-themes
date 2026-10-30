@@ -1,0 +1,66 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark']
+            :where(
+                .kp-skeleton,
+                .kp-datatable__busy-panel,
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-chart__state[data-kp-state='loading'],
+                .kp-calendar--busy-whole > .kp-calendar__busy,
+                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
+            )::before {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        [data-theme='dark'] .kp-button[aria-busy='true'][aria-busy='true'] {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* A part's place in a row staggers its comet by 120 ms, so a row of
+           skeleton lines or days reads as one pass. */
+        [data-theme='dark'] .kp-skeleton:nth-child(2)::before {
+            animation-delay: calc(120ms - var(--kp-sig-dk-loop));
+        }
+
+        [data-theme='dark'] .kp-skeleton:nth-child(3)::before {
+            animation-delay: calc(240ms - var(--kp-sig-dk-loop));
+        }
+
+        [data-theme='dark'] .kp-spinner {
+            animation: kp-sig-dark-bars var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* The busy bar: no share is known, so the line runs the empty track
+           [G11; Kenny, 2026-10-09, question 11: "The line runs the track"]:
+           a short stretch of film (28 % of the track) crosses from the start
+           to the end, laying a tail that dims behind the line, 2400 ms, and
+           again. With a share known the fill is laid to the share, as round
+           one drew it. */
+        [data-theme='dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            --kp-sig-dk-cw: 0.28;
+            -webkit-mask: none;
+            mask: none;
+            background-color: transparent;
+            background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+            background-repeat: no-repeat;
+            background-size:
+                2px 100%,
+                calc(var(--kp-sig-dk-cw) * 100%) 100%;
+            background-position:
+                calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+                50% 0;
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* A tick and a radio's dot are laid by the pass, in the contact time. */
+        [data-theme='dark'] .kp-field__check:checked::before {
+            animation: kp-sig-dark-lay var(--fx-duration) linear both;
+        }
+
+        [data-theme='dark'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--kp-sig-dark-ease);
+        }
+    }
+

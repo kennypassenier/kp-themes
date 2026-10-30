@@ -1,0 +1,37 @@
+/* @part: code-block: signature layer; also page-header, form-grid */
+    [data-theme='synthwave'] .kp-formrows--lines > .kp-formrow,
+    [data-theme='synthwave'] .kp-kv--lines > .kp-kv__row {
+        border-image: var(--kp-sw4-horizon) 1;
+    }
+
+    /* ── Code block: the tape with its stripe, the title the OSD after a cyan arrow ── */
+    [data-theme='synthwave'] .kp-code {
+        border-radius: 0;
+        border-block-start: 3px solid transparent;
+        border-image: var(--kp-sw4-stripe) 1;
+        border-image-width: 3px 0 0 0;
+    }
+    [data-theme='synthwave'] .kp-code__title,
+    [data-theme='synthwave'] .kp-code__meta {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-code__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-code__head {
+        border-block-end: 1px solid var(--kp-hairline);
+    }
+
+    /* ── Page header line ── */
+    [data-theme='synthwave'] .kp-page-header__meta {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+

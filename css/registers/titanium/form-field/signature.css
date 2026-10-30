@@ -1,0 +1,73 @@
+/* @part: form-field: signature layer; also toast */
+    [data-theme='titanium'] .kp-field__check {
+        --kp-sig-dur: 120ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    [data-theme='titanium'] .kp-field__check:not(:focus-visible) {
+        box-shadow: var(--kp-sig-ti-edge);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-radius: 0;
+        background: none;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--kp-iris);
+    }
+
+    [data-theme='titanium'] .kp-toast {
+        --kp-sig-dur: 160ms;
+        position: relative;
+        box-shadow: var(--kp-sig-ti-edge);
+    }
+
+    [data-theme='titanium'] .kp-toast::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 2px;
+        background: var(--kp-iris);
+        transform-origin: 0 50%;
+        pointer-events: none;
+    }
+
+    @property --kp-sig-ti-cut {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+

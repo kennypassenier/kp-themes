@@ -1,0 +1,81 @@
+/* @part: breadcrumb-pagination: register layer; also accordion, tabs, tree-reorder-split, date-picker */
+    [data-theme='pastel'] .kp-reorder {
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-tree {
+        font-size: 0.92rem;
+    }
+
+    /* The accordion [gap-12]: the primary ink its selected tab takes, on the
+       marker and on what is open. */
+    [data-theme='pastel'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-tab[aria-selected='true'] {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-breadcrumb {
+        color: var(--muted-foreground);
+    }
+
+    /* The pagination's size is the package's [scope-87]; its numerals are
+       this register's: tabular, so the page numbers line up. */
+    [data-theme='pastel'] .kp-pagination {
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='pastel'] .kp-pagination a[aria-current],
+    [data-theme='pastel'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 999px;
+        padding-inline: 0.45em;
+    }
+
+    [data-theme='pastel'] .kp-wizard {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    /* A day is round (G6). */
+    [data-theme='pastel'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 50%;
+    }
+
+    [data-theme='pastel'] .kp-colorpicker__swatch {
+        border-radius: 0.85rem;
+    }
+
+    [data-theme='pastel'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.4rem;
+        background: var(--muted);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='pastel'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+

@@ -1,0 +1,41 @@
+/* @part: forms: signature layer; also card, form-field */
+    /* ── Choices as tiles: a notched slot; pointing lights its circuit, checked it is the holo card (the rim, the glow),
+       a press lights the circuit full ── */
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--primary) 9%, var(--card));
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image: none;
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        background-image: var(--kp-cp4-grid);
+        border-color: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        background-image: var(--kp-cp4-grid-press);
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        clip-path: none;
+        outline-offset: -2px;
+    }
+    [data-theme='cyberpunk'] .kp-field__option-hint {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+
+    /* ── A card in four data states ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+

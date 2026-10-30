@@ -1,0 +1,198 @@
+/* @part: month-heatmap: signature layer */
+    /* ── The month heatmap [research/character-calendar: shape 1, loading 1,
+       arrival 1, tone 1, select 3]. ── */
+
+    /* shape 1: a day is a small slab, a 2 px line on a 3 px shadow, square;
+       its number in the display face, its count in 700. */
+    [data-theme='brutalism'] .kp-calendar {
+        --kp-calendar-gap: 9px;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day {
+        position: relative;
+        isolation: isolate;
+        border-width: 2px;
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism']
+        .kp-calendar__day:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='muted'], [data-kp-tone='loading']) {
+        border-color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__swatch {
+        border-radius: 0;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__num {
+        font-family: var(--theme-font-display);
+        font-size: 1.15em;
+        font-weight: 400;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__count {
+        font-size: max(0.75rem, 0.7em);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__title {
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid th {
+        color: var(--foreground);
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    /* tone 1: every plate framed in ink; a day without data, a day to come
+       and one before the record are flat card, dashed or dotted, and lie
+       on the page without a shadow; today is ruled off by the six-pixel
+       bar along its top, no tape (tape means danger only, G16). */
+    [data-theme='brutalism'] .kp-calendar__day:is([data-kp-tone='none'], [data-kp-tone='future'], [data-kp-tone='before']) {
+        border-color: var(--foreground);
+        background: var(--card);
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='none'] {
+        border-style: dashed;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='before'] {
+        border-style: dotted;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-today]:not(:is([data-kp-tone='none'], [data-kp-tone='future'], [data-kp-tone='before'])) {
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-today]:is([data-kp-tone='none'], [data-kp-tone='future'], [data-kp-tone='before']) {
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:has(> .kp-calendar__day[data-kp-today])::after {
+        content: '';
+        position: absolute;
+        inset: -3px 0 auto;
+        block-size: 6px;
+        background: var(--foreground);
+        pointer-events: none;
+    }
+
+    /* A day's column and week, for the hoist and the drop to go one unit
+       (100 ms) apart. */
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(2) {
+        --kp-sig-br-col: 1;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(3) {
+        --kp-sig-br-col: 2;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(4) {
+        --kp-sig-br-col: 3;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(5) {
+        --kp-sig-br-col: 4;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(6) {
+        --kp-sig-br-col: 5;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(7) {
+        --kp-sig-br-col: 6;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(2) {
+        --kp-sig-br-row: 1;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(3) {
+        --kp-sig-br-row: 2;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(4) {
+        --kp-sig-br-row: 3;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(5) {
+        --kp-sig-br-row: 4;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(6) {
+        --kp-sig-br-row: 5;
+    }
+
+    /* loading 1: a day's own figure place, inset, is the well with the
+       lintel hoisted in it; the days of a week hoist one unit (100 ms) apart;
+       the day itself does not pulse (nothing fades). */
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--card);
+        animation: none;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        position: absolute;
+        inset: 0.35rem;
+        z-index: -1;
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear calc(var(--kp-sig-br-col, 0) * 100ms) infinite backwards;
+        }
+
+        /* arrival 1: every day is dropped onto its footprint from up-left,
+           row by row, 300 ms on the fall curve: when the month is shown, and
+           when a day or the whole grid stops loading. */
+        [data-theme='brutalism'] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day:not([data-kp-tone='loading']) {
+            --kp-sig-br-h: var(--kp-sig-br-h-part);
+            --kp-sig-br-sh: 3px;
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) calc(var(--kp-sig-br-row, 0) * 100ms) backwards;
+        }
+    }
+
+    /* select 3: the pick is the yellow plate in the 5 px fat frame, its count
+       in brackets; a day under the pointer is inverted, nothing moves [G8]. */
+    [data-theme='brutalism'] .kp-calendar__day:hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day {
+        z-index: 1;
+        outline: 5px solid var(--foreground);
+        outline-offset: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        outline: 3px solid var(--ring);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::before {
+        content: '[';
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::after {
+        content: ']';
+    }
+

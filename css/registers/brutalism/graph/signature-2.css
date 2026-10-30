@@ -1,0 +1,87 @@
+/* @part: graph: signature layer */
+    [data-theme='brutalism'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='brutalism'] .kp-graph__ghost {
+        --kp-graph-ghost: 1;
+    }
+
+    [data-theme='brutalism'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-graph[data-kp-state='loading'] .kp-graph__note {
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--secondary);
+        stroke-width: 11;
+        stroke-linecap: butt;
+        stroke-dasharray: 4 4;
+        --kp-graph-edge-anim: kp-graph-tape 640ms linear infinite;
+        --kp-graph-edge-stagger: 0ms;
+    }
+
+    [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+        fill: var(--foreground);
+        stroke: var(--secondary);
+        stroke-width: 6;
+        stroke-dasharray: 7 5;
+    }
+
+    [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__core {
+        opacity: 1;
+        fill: var(--warning);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+            animation: kp-graph-beacon 480ms steps(3) infinite;
+        }
+
+        [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__core {
+            animation: kp-graph-lamp 960ms linear infinite;
+            animation-delay: calc(var(--i, 0) * 120ms - 960ms);
+        }
+
+        @keyframes kp-graph-tape {
+            0% {
+                stroke-dashoffset: 0;
+                stroke-width: 11;
+                animation-timing-function: steps(4, end);
+            }
+            50% {
+                stroke-dashoffset: -8;
+                stroke-width: 11;
+                animation-timing-function: steps(1, end);
+            }
+            62% {
+                stroke-width: 15;
+                stroke-dashoffset: -8;
+                animation-timing-function: steps(1, end);
+            }
+            75%,
+            100% {
+                stroke-width: 11;
+                stroke-dashoffset: -8;
+            }
+        }
+        @keyframes kp-graph-beacon {
+            to {
+                stroke-dashoffset: -24;
+            }
+        }
+        @keyframes kp-graph-lamp {
+            0%,
+            49% {
+                fill: var(--warning);
+                animation-timing-function: steps(1, end);
+            }
+            50%,
+            100% {
+                fill: var(--destructive);
+            }
+        }
+    }

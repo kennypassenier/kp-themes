@@ -4,125 +4,286 @@
     {
       "open": "@layer kp.register {\n",
       "files": [
-        "base.css",
-        "the-hooks.css",
-        "the-hero.css",
-        "the-navbar.css",
-        "button.css",
-        "fields.css",
-        "the-page-waits.css",
-        "card.css",
-        "tile-waits.css",
-        "data.css",
-        "the-demos-own-pieces.css",
-        "motion-guarded.css",
-        "motion.css",
-        "the-vcrs-symbols.css",
-        "focus-is-two-tubes.css"
+        "tokens.css",
+        "base/register.css",
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "page-header/register.css",
+        "card/register.css",
+        "key-figures/register.css",
+        "card/register-2.css",
+        "dialog/register.css",
+        "toast/register.css",
+        "alert/register.css",
+        "page-header/register-2.css",
+        "showing-data/register.css",
+        "small-patterns/register.css",
+        "table/register.css",
+        "step-list/register.css",
+        "tabs.css",
+        "command-palette.css",
+        "page-header/register-3.css",
+        "base/register-2.css",
+        "motion/register.css",
+        "small-patterns/register-2.css",
+        "motion/register-2.css",
+        "sidenav/register.css",
+        "navbar/register-2.css",
+        "alarm.css",
+        "showing-data/register-2.css",
+        "key-figures/register-2.css",
+        "time-chart/register.css",
+        "table/register-2.css",
+        "button/register-2.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* synthwave's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/synthwave.css and research/signature-elements/themes/synthwave.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/base.css",
-        "signature-base/empty.css",
-        "signature-base/leaving-this-themes-way.css",
-        "every-pair-closes-as.css",
-        "live-change-draws.css",
-        "the-meter-with-a-mark-this.css",
-        "the-mark-past-the-end.css"
+        "progress-spinner-skeleton/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "dialog/signature.css",
+        "upload-wizard.css",
+        "state-plate/signature.css",
+        "navbar/signature.css",
+        "motion/signature.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "form-field/signature-2.css",
+        "sidenav/signature.css",
+        "toast/signature.css",
+        "motion/signature-2.css",
+        "tree-reorder-split.css",
+        "navbar/signature-2.css",
+        "state-word.css",
+        "meter.css",
+        "sidenav/signature-2.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── What follows the page header [Kenny, 2026-10-08 01:00] ─────────────────\n   The floor is painted by the header at z-index -1, so whatever follows it\n   must be positioned to paint above it. This is in kp.base, the lowest layer,\n   at no specificity: every component, register and utility rule that says its\n   own position (fixed, sticky, absolute) wins over it, and the top-layer parts\n   (a dialog, a popover) are left out because the user agent's own fixed\n   position would lose to any author rule. ── */\n@layer kp.base {\n",
+      "files": [
+        "page-header/base.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "segmented-toolbar.css"
+      "open": "/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Synthwave's own (themes/synthwave/CHARACTER.md): a tile is the tape, square, with the pink to cyan stripe along its\n   top and the corners falling in the stripe's colours, never glowing on its rim (G6, G7); pointing turns the tube up in\n   one step, the stripe and the title's tube (G8); a press charges it, the top edge burning near-white, and nothing\n   moves (the register's press); a failure is the VCR's stop before the title, in the red (the register's tone); waiting\n   is the marquee, bulbs\n   chasing one in four, start to end, four hard steps a 900 ms loop (G10); what runs is the road, the lane dashes\n   racing (G11, G16); the OSD's mono capitals name, the chrome counts (G15). */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows.css",
+        "facet-list.css",
+        "heat-grid.css",
+        "week-agenda.css",
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Synthwave's own (themes/synthwave/CHARACTER.md): the separator is the horizon stood upright, the pink\n   tube with its white core glowing; lying down across the phone's list it is the horizon itself. A day on the axis is\n   swept by the laser under the pointer; pressed it is lit in the pink tube with its glow, the date in the core's white.\n   A series' finished run glows in its own neon; the upcoming list's day rule is a line of the grid floor; the facet\n   pattern glows in its hue. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt4-components.css"
+      "open": "/* ── The kpadopt4 components in synthwave's own grammar [kpadopt4] ──\n   Synthwave is the drive into the sunset (themes/synthwave/CHARACTER.md): the tape stands on the grid floor under its\n   own horizon, every light is a neon tube, what arrives rises over its horizon and what leaves sets behind it (G2, G3,\n   G12). A part that is drawn rises 0.5 rem from behind its line, uncovered from that line up, on the sunrise curve in\n   two beats of 225 ms (G1, G4); light switches in hard steps and is never tweened (G1); pointing turns the tube up in one\n   step (G8); a press dips it (G14); a warning is a hollow neon ring before the title or figure, the words glowing in the\n   tone's ink (G13); a change draws the laser (G9); labels are the OSD's capitals after a cyan arrow, figures the chrome\n   display (G15); square plates carrying the pink to cyan stripe, 2 px controls, never a notch or a pill (G6). */\n@layer kp.signature {\n",
+      "files": [
+        "bullet-rows/signature.css",
+        "identity-mark/signature.css",
+        "share-bar.css",
+        "bullet-rows/signature-2.css",
+        "code-block/signature.css",
+        "signature.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-the-kpadopt4-data.css"
+      "open": "/* ── end the kpadopt4 data pieces ── */\n\n/* ── The kpadopt4 rows, records and flows in synthwave's own grammar [kpadopt4] ──\n   Rows and lanes rise over their horizon one beat after the part before (G3, G4); pointing turns the row's tube up (G8);\n   a warning is the hollow neon ring before the title (G13); a plate carries the stripe along its top and is square (G6,\n   G7); the journey is the drive: the horizon runs between the steps reached, the current step is the striped sun (G16);\n   the drawings for an empty state are the horizon, the striped sun and the floor (G16). */\n@layer kp.signature {\n",
+      "files": [
+        "action-columns.css",
+        "forms.css",
+        "small-patterns/signature.css",
+        "pipeline.css",
+        "step-list/signature.css"
+      ],
+      "close": "}\n"
     },
     {
       "open": "/* ── end the kpadopt4 rows and flows ── */\n\n/* ── The kpadopt4 secrets, time, cooking and commands in synthwave's own grammar [kpadopt4] ──\n   A secret is a tube that strikes on (G1, G13); what runs out is a laser burning down (G9); a clock is the sun setting:\n   the share left is the striped sun, its stripes closing as it sinks, on the face's horizon ring (G11, G16); the wheel is\n   the arcade's: marquee bulbs round its rim, a turn on the sunrise curve (G1, G10); a thing that ends or fails has the\n   neon ring (G13); a command is the VCR's OSD over the tape (G15). Light switches in hard steps, bodies glide. */\n@layer kp.signature {\n",
       "files": [
-        "secret-field.css",
-        "dialog.css"
+        "small-patterns/signature-2.css",
+        "dialog/signature-2.css",
+        "typed-confirmation.css",
+        "segmented-toolbar/signature-2.css",
+        "checklist-sink.css",
+        "kitchen-timers.css",
+        "focus-steps/signature.css",
+        "wheel.css",
+        "uptime-strip.css",
+        "visual-timer.css",
+        "countdown.css",
+        "command-block.css",
+        "compare-slider.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-the-kpadopt4-secrets.css"
+      "open": "/* ── end the kpadopt4 secrets, time, cooking and commands ── */\n\n/* ── t56: the kpadopt5/6 parts inside synthwave ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/base.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the small neon ring keeps its letters off the ring ── */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the foot of a code cell ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-2.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the attention band keeps its grid ── */\n@layer kp.signature {\n",
+      "files": [
+        "attention-band.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-3.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the gallery tile ── */\n@layer kp.signature {\n",
+      "files": [
+        "gallery.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-4.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the conversation bubble ── */\n@layer kp.signature {\n",
+      "files": [
+        "conversation.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-5.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: what has to fit a phone ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-6.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: states ── */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-7.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: cook mode navigation ── */\n@layer kp.signature {\n",
+      "files": [
+        "focus-steps/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-8.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the quote card keeps its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "quote-card.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-9.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56-q: the failed plate is a tube on the floor ── */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "signature.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "time-chart/signature.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q.css"
+      "open": "/* ── end t56-q ── */\n\n/* ── t56-q2 fields: the loading slider is the marquee ── */\n@layer kp.signature {\n",
+      "files": [
+        "slider.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-fields.css"
+      "open": "/* ── end t56-q2 fields ── */\n\n/* ── t56-q2 confirm: the floor stays under the question's words ── */\n@layer kp.signature {\n",
+      "files": [
+        "question-card.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-confirm.css"
+      "open": "/* ── end t56-q2 confirm ── */\n\n/* ── t56-q2 updates: the floor stays under a failed plate's button ── */\n@layer kp.signature {\n",
+      "files": [
+        "state-plate/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-updates.css"
+      "open": "/* ── end t56-q2 updates ── */\n\n/* ── t56-q2 choose: the waiting picker's panel fits its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "usual-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-choose.css"
+      "open": "/* ── end t56-q2 choose ── */\n\n/* ── t56-q2 schedule: the snooze tiles share one grid ── */\n@layer kp.signature {\n",
+      "files": [
+        "snooze-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule.css"
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── graph loading · shape 1 · The grid-floor constellation: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-b-sw-load.css"
+      "open": "/* ── graph loading · r3-b-sw-load-4 · The outrun pulse (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

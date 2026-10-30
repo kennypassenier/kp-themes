@@ -1,0 +1,35 @@
+/* @part: form-field: register layer */
+    /* ── The field's own oxide line [scope-16] ─────────────────────────── */
+    [data-theme='titanium'] .kp-field {
+        position: relative;
+    }
+
+    [data-theme='titanium'] .kp-field::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 1px;
+        background: var(--kp-iris);
+        scale: 0 1;
+        transform-origin: left center;
+        pointer-events: none;
+    }
+
+    [data-theme='titanium'] .kp-field:focus-within::after {
+        scale: 1 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-field::after {
+            transition: scale calc(var(--fx-duration) * 1.5) var(--fx-ease);
+        }
+    }
+
+    /* A time field's line spans the time field, not the field around it [fields-r3-1018]. The box is 8.5rem
+       wide and does not stretch, while the .kp-field holding it does (288 px in a column of 18rem, 371 px in a flex
+       row), so the field's line ran past the box to the right, twice its width (Kenny, 2026-10-18 19:53). */
+    [data-theme='titanium'] .kp-field:has(.kp-time:not(.kp-time--inline))::after {
+        content: none;
+    }
+

@@ -1,0 +1,60 @@
+/* @part: alarm: register layer; also sidenav */
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A warning posted at the trailhead: its paper ground, the headline in its red, a green split and a green glow at the edges. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='forest'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.97);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: var(--destructive-foreground);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.3);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.04);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-frame: 2px solid;
+        --kp-sig-dur: var(--kp-sig-fo-time);
+    }
+
+    [data-theme='forest'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='forest'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    /* The alarm's prose, hint, countdown and button are words, not identifiers:
+       the body face, and the button is forest's own (no tracked capitals);
+       the code (`.kp-alarm__code`) is an identifier and stays mono. */
+    [data-theme='forest'] .kp-alarm :is(.kp-alarm__detail, .kp-alarm__hint, .kp-alarm__countdown, .kp-alarm__ack) {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the open ring it already uses, like a seed. */
+    [data-theme='forest'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◦';
+    }

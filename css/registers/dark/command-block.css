@@ -1,0 +1,33 @@
+/* @part: command-block: signature layer */
+    /* ── Command: the head is a bracketed microlabel, the prompt the film's cyan, the code a slot with the film along the
+       head edge ── */
+    [data-theme='dark'] .kp-command {
+        --kp-command-prompt-ink: var(--chart-1);
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-command__head {
+        position: relative;
+        font-family: var(--theme-font-mono);
+        border-image: var(--kp-dk4-film) 1;
+        border-block-end-width: 1px;
+        border-block-end-style: solid;
+    }
+    [data-theme='dark'] .kp-command__shell::before {
+        content: '[ ';
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-command__shell::after {
+        content: ' ]';
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-command__where {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-command__code {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+

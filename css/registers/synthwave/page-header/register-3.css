@@ -1,0 +1,108 @@
+/* @part: page-header: register layer; also lede, log */
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    /* The vertical OSD label in the margin: ● REC · SP 0:00:00. */
+    [data-theme='synthwave'] .kp-side-note {
+        position: absolute;
+        right: 1rem;
+        top: 3rem;
+        writing-mode: vertical-rl;
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.3em;
+        color: var(--kp-pink-text);
+        z-index: 2;
+    }
+
+    /* Laurels: uppercase, each item between two striped bars — the sun's
+       stripes, three bands each. */
+    [data-theme='synthwave'] .kp-laurels {
+        gap: 1.5rem 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-laurels li {
+        position: relative;
+        padding-inline: 0.9rem;
+        background:
+            repeating-linear-gradient(0deg, var(--primary) 0 3px, transparent 3px 6px) left / 4px 100% no-repeat,
+            repeating-linear-gradient(0deg, var(--primary) 0 3px, transparent 3px 6px) right / 4px 100% no-repeat;
+    }
+
+    [data-theme='synthwave'] .kp-laurels b {
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    [data-theme='synthwave'] .kp-lede {
+        max-width: 34rem;
+        font-size: 1.15rem;
+        font-weight: 500;
+    }
+
+    /* The platforms line: the OSD face, ▶ before every name. */
+    [data-theme='synthwave'] .kp-platforms {
+        margin-top: 2.4rem;
+        gap: 0.4rem 1.6rem;
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-platforms span::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+
+    /* The spec sheet: a tape card with the stripe on top. */
+    [data-theme='synthwave'] .kp-spec {
+        background: var(--card);
+        color: var(--foreground);
+        padding: 1.4rem 1.5rem 1.6rem;
+        border: 1px solid var(--kp-hairline);
+        border-top: 4px solid transparent;
+        border-image: var(--kp-stripe) 1;
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+        line-height: 1.7;
+        box-shadow: 0 0 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] .kp-spec dt {
+        color: var(--accent);
+        letter-spacing: 0.1em;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='synthwave'] .kp-log {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--kp-hairline);
+        font-family: var(--kp-mono);
+        box-shadow: 0 0 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] .kp-log__level {
+        --kp-log-level-ink: var(--accent);
+        letter-spacing: 0.1em;
+    }
+
+    [data-theme='synthwave'] .kp-spec__swatch {
+        border: 1px solid hsl(from var(--kp-core) h s l / 0.25);
+    }
+
+    [data-theme='synthwave'] .kp-spec__font {
+        font-family: var(--theme-font-display);
+    }
+

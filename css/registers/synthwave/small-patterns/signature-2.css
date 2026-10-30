@@ -1,0 +1,36 @@
+/* @part: small-patterns: signature layer */
+    /* ── Secret field ── */
+    [data-theme='synthwave'] .kp-secret__value {
+        border-radius: 2px;
+        font-family: var(--kp-mono);
+        background: hsl(from var(--sidebar-background) h s l / 0.85);
+    }
+    [data-theme='synthwave'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        border-color: var(--kp-pink-text);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='synthwave'] .kp-secret {
+        --kp-secret-drain: var(--kp-core);
+    }
+    [data-theme='synthwave'] .kp-secret__drain {
+        background: var(--kp-core);
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 14px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='synthwave'] .kp-secret__line {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            animation: kp-tube-on calc(4 * var(--kp-sw4-beat)) steps(1, end) backwards;
+        }
+    }
+

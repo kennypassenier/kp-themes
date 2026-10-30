@@ -1,0 +1,77 @@
+/* @part: heat-grid: signature layer; also run-timeline, week-agenda, bar-cell */
+    [data-theme='forest'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='forest'] :is(.kp-heat__cell, .kp-matrix__cell):not([data-kp-picked], [aria-pressed='true']) {
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true'], [data-kp-picked], :focus-visible),
+    [data-theme='forest'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton, [aria-pressed='true'], :focus-visible) {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+    [data-theme='forest'] .kp-heat__cell:active:not(.kp-skeleton, [aria-disabled='true'], :focus-visible),
+    [data-theme='forest'] .kp-matrix__cell:active:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton, :focus-visible) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-heat__cell[data-kp-picked],
+    [data-theme='forest'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-heat__col[data-kp-picked]::before {
+        content: '▾';
+        margin-inline-end: 1px;
+        color: var(--primary);
+    }
+    [data-theme='forest'] :is(.kp-heat__col, .kp-matrix__corner, .kp-heat__legend) {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: var(--kp-sig-fo-part);
+    }
+    [data-theme='forest'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 16%, var(--card));
+        color: var(--foreground);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-heat__cell, .kp-matrix__cell) {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='forest'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: leaves, the small leaf corner on every pill and bar; pointing blazes them; the next
+       run has the solid green ring; lane names and the axis in the note voice; the line for now is the clay trail mark
+       with its pin. A running run is a planted row: whole trees along it and, at its growing head, a tree being
+       planted, seedling to sapling to tree; no marching stripes. */
+    [data-theme='forest'] .kp-week {
+        --kp-week-pill-radius: var(--kp-sig-fo-part);
+        --kp-week-now: var(--accent-foreground);
+    }
+    /* A planned run [gaps-time-1019]: seeds: a scatter of dots. */
+    [data-theme='forest'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--kp-gantt-fill) 65%, transparent) 0 1px, transparent 1.5px);
+        background-size: 7px 7px;
+    }
+    [data-theme='forest'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
+        --kp-gantt-bar-radius: 0 0.45rem;
+        --kp-gantt-now: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }

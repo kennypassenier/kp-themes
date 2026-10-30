@@ -1,0 +1,35 @@
+/* @part: action-columns: signature layer */
+    /* The action list with a lead: a row is a strip of paper on a rule of pearls; its state is a washi bar on the start
+       edge with round ends, the severity dot a pearl; the next one is mint and its date a mint sticker; a group's
+       heading is a sentence, not capitals (G17); a payload is a taped-in note. */
+    [data-theme='pastel'] .kp-action-list--lead > li {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-action-list--lead > li:not(.kp-action-list__group) {
+        border-inline-start-width: 5px;
+        border-start-start-radius: 5px;
+        border-end-start-radius: 5px;
+    }
+    [data-theme='pastel'] .kp-action-list--lead > li[data-kp-state='next'] {
+        background: color-mix(in oklab, var(--accent) 38%, transparent);
+    }
+    [data-theme='pastel'] .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead .kp-action-list__when {
+        padding: 0.2rem 0.6rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--accent) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-action-list > li.kp-action-list__group {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        letter-spacing: 0;
+        text-transform: none;
+    }
+    [data-theme='pastel'] .kp-action-list__payload {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-action-list__more > summary {
+        border-radius: var(--kp-sig-pa-r-chip);
+    }
+

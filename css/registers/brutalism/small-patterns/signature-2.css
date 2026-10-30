@@ -1,0 +1,62 @@
+/* @part: small-patterns: signature layer */
+    [data-theme='brutalism'] .kp-secret {
+        --kp-secret-drain: var(--border-strong);
+        --kp-secret-drain-size: 6px;
+    }
+    [data-theme='brutalism'] .kp-secret__value {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        background: var(--accent);
+        color: var(--accent-foreground, var(--foreground));
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-secret__drain {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0 0.5rem;
+        border-inline-start: 0;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.375rem no-repeat;
+        font-weight: 700;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism']
+            .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown']
+            .kp-secret__drain {
+            animation-timing-function: steps(10, jump-end);
+        }
+        [data-theme='brutalism'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+    @keyframes kp-sig-brutalism-secret-slam {
+        0% {
+            translate: -6px -6px;
+            filter: drop-shadow(9px 9px 0 var(--border-strong));
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+        20%,
+        99.9% {
+            translate: 0 0;
+            filter: drop-shadow(3px 3px 0 var(--border-strong));
+        }
+        100% {
+            translate: 0 0;
+            filter: none;
+        }
+    }
+

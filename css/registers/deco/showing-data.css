@@ -1,0 +1,21 @@
+/* @part: showing-data: register layer */
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-id,
+    [data-theme='deco'] .kp-url,
+    [data-theme='deco'] .kp-numeric,
+    [data-theme='deco'] .kp-timestamp,
+    [data-theme='deco'] .kp-masked,
+    [data-theme='deco'] .kp-copyable,
+    [data-theme='deco'] .kp-truncate,
+    [data-theme='deco'] .kp-cell-break,
+    [data-theme='deco'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='deco'] .kp-timestamp,
+    [data-theme='deco'] .kp-id {
+        color: var(--muted-foreground);
+    }
+

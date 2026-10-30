@@ -1,0 +1,32 @@
+/* @part: button: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-size var(--fx-duration) var(--fx-ease),
+                --kp-sig-dk-turn var(--fx-duration) cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+
+        /* On contact: the edge turns a quarter on the settle, the ground and the
+           line answer at once; the line crosses the face in the contact time. */
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled) {
+            --kp-sig-dk-turn: 90deg;
+            background-size: 2px 100%;
+            transition:
+                background-color 0s,
+                border-color 0s,
+                color 0s,
+                box-shadow 0s,
+                background-size 0s,
+                --kp-sig-dk-turn var(--fx-duration) var(--fx-ease);
+            animation: kp-sig-dark-tap var(--fx-duration) linear both;
+        }
+    }
+

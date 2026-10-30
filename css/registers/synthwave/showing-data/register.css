@@ -1,0 +1,21 @@
+/* @part: showing-data: register layer */
+    /* ── Text shapes: identifiers in the OSD face ────────────────────── */
+
+    [data-theme='synthwave'] .kp-id,
+    [data-theme='synthwave'] .kp-url,
+    [data-theme='synthwave'] .kp-numeric,
+    [data-theme='synthwave'] .kp-timestamp,
+    [data-theme='synthwave'] .kp-masked,
+    [data-theme='synthwave'] .kp-copyable,
+    [data-theme='synthwave'] .kp-truncate,
+    [data-theme='synthwave'] .kp-cell-break,
+    [data-theme='synthwave'] .kp-cell-truncate {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='synthwave'] .kp-timestamp,
+    [data-theme='synthwave'] .kp-id {
+        color: var(--accent);
+    }
+

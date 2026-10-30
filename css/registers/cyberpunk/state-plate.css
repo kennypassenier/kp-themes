@@ -1,0 +1,29 @@
+/* @part: state-plate: signature layer */
+    [data-theme='cyberpunk'] .kp-empty {
+        padding: 1.25rem;
+        border: 1px solid hsl(from var(--primary) h s l / 0.45);
+        border-radius: 0;
+        background: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 4px), var(--card);
+        clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+        text-align: start;
+    }
+
+    [data-theme='cyberpunk'] .kp-empty__title {
+        margin: 0 0 0.35rem;
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-empty__title::before {
+        content: '/// ';
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-empty__body {
+        margin: 0;
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+    }
+

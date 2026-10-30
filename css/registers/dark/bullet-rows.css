@@ -1,0 +1,72 @@
+/* @part: bullet-rows: signature layer; also key-value-grid, form-grid */
+    /* ── Bullet rows: the meter is dark's own; the figure is a reading, a tone is the film gone coral on its edge ── */
+    [data-theme='dark'] .kp-bullets__figure {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='dark'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        background: transparent;
+        padding-inline: 0.5em 0;
+        box-shadow: inset 2px 0 0 currentColor;
+    }
+    [data-theme='dark'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        color: var(--warning-foreground);
+    }
+    [data-theme='dark'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        color: var(--destructive);
+    }
+    [data-theme='dark'] .kp-bullets__row {
+        position: relative;
+    }
+    [data-theme='dark'] .kp-bullets__row:has(.kp-bullets__link:is(:hover, :focus-visible))::before {
+        content: '';
+        position: absolute;
+        inset-block: 2px;
+        inset-inline-start: -0.5rem;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-bullets__note {
+        clip-path: var(--kp-dk4-cut);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+        [data-theme='dark'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(2) {
+            animation-delay: 60ms;
+        }
+        [data-theme='dark'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(3) {
+            animation-delay: 120ms;
+        }
+        [data-theme='dark'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(n + 4) {
+            animation-delay: 180ms;
+        }
+    }
+
+    /* ── Key-value grid and form rows: labels are microlabels, the values readings in the ticker mono where they are
+       identifiers; a changed row carries the line at its start; a failed row is the film gone coral ── */
+    [data-theme='dark'] .kp-kv__row > dt,
+    [data-theme='dark'] .kp-formrow__label > small {
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='dark'] .kp-kv__row[data-kp-state='error']::before {
+        background: var(--destructive);
+        box-shadow: 0 0 8px hsl(from var(--destructive) h s l / 0.4);
+    }
+    [data-theme='dark'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-formrow[data-kp-state='error']::before {
+        background: var(--destructive);
+        box-shadow: 0 0 8px hsl(from var(--destructive) h s l / 0.4);
+    }
+    [data-theme='dark'] .kp-formrows--lines > .kp-formrow,
+    [data-theme='dark'] .kp-kv--lines > .kp-kv__row {
+        border-image: linear-gradient(90deg, var(--border-strong) 0 90%, transparent) 1;
+    }
+

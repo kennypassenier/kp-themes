@@ -1,0 +1,45 @@
+/* @part: popover: signature layer */
+    /* A tooltip hangs in its anchor: the anchor's ::after is its pass. */
+    [data-theme='pastel'] .kp-tooltip-anchor {
+        anchor-scope: --kp-sig-pa-tip;
+    }
+
+    [data-theme='pastel'] .kp-tooltip {
+        anchor-name: --kp-sig-pa-tip;
+        z-index: 2;
+        transform-origin: var(--kp-sig-pa-corner);
+    }
+
+    [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-tooltip:not([hidden]))::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        position-anchor: --kp-sig-pa-tip;
+        inset: auto;
+        inline-size: anchor-size(width);
+        block-size: anchor-size(height);
+        left: calc(anchor(left) + 3px * var(--kp-sig-pa-dir));
+        top: calc(anchor(top) + 3px);
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--kp-sig-pa-pass-c);
+        pointer-events: none;
+    }
+
+    /* The page's one hover card lives in <body>, in no anchor, so there is no
+       anchor ::after to be its pass: it carries the pass itself, as the
+       offset plate behind it, and it goes with the card's entrance
+       (js/hovercard.js). */
+    [data-theme='pastel'] .kp-tooltip[data-kp-hovercard-card] {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+
+    @supports not (anchor-name: --a) {
+        [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-tooltip:not([hidden]))::after {
+            content: none;
+        }
+
+        [data-theme='pastel'] :is(.kp-nav__menu, .kp-tooltip) {
+            box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+        }
+    }
+

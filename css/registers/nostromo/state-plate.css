@@ -1,0 +1,54 @@
+/* @part: state-plate: signature layer; also navbar */
+    [data-theme='nostromo'] .kp-empty {
+        position: relative;
+        padding: 2.4rem 1.25rem 1.25rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-well);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-empty::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.8rem;
+        inset-inline: calc(50% - 3rem);
+        block-size: 0.9rem;
+        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.3) 0 2px, transparent 2px 4.5px);
+        border-radius: 1px;
+    }
+
+    /* The empty plate's ink tape names the state at heading size (DEMO_RULES 3): the stateplate's title is the same
+       tape as every other empty title, so an empty area reads alike wherever the page draws it. */
+    [data-theme='nostromo'] :is(.kp-empty__title, .kp-stateplate--empty .kp-stateplate__title) {
+        display: inline-block;
+        margin-block-end: 0.5rem;
+        padding: 0.2rem 0.75rem;
+        border-radius: 2px;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        line-height: 1.3;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='nostromo'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        color: var(--primary);
+        text-decoration-color: var(--kp-underline, hsl(from var(--selected) h s l / 0.28));
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.22em;
+    }
+
+    [data-theme='nostromo'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        text-decoration-color: var(--selected);
+        text-decoration-thickness: 3px;
+    }
+

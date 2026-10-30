@@ -1,0 +1,23 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component; also connection-path */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Both keyframes have their row in TIMINGS (js/effects.js). The headline
+       comes up out of its own line, clipped there all the way, so its words
+       keep their shape and nothing fades. */
+    @keyframes kp-headline-in {
+        0% {
+            translate: 0 100%;
+            clip-path: inset(0 -0.5em 100% -0.5em);
+        }
+
+        100% {
+            translate: 0 0;
+            clip-path: inset(-0.5em -0.5em 0 -0.5em);
+        }
+    }
+
+    @keyframes kp-trace {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }

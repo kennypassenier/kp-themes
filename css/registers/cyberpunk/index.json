@@ -4,116 +4,263 @@
     {
       "open": "@layer kp.register {\n",
       "files": [
-        "base.css",
-        "the-hooks.css",
-        "the-navbar/base.css",
-        "button.css",
-        "fields.css",
-        "card.css",
-        "data.css",
-        "the-demos-own-pieces.css",
-        "motion-guarded.css",
-        "motion.css",
-        "the-alarm.css"
+        "tokens/register.css",
+        "base/register.css",
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "menu-button/register.css",
+        "toast.css",
+        "showing-data.css",
+        "small-patterns/register.css",
+        "table.css",
+        "step-list/register.css",
+        "breadcrumb-pagination.css",
+        "base/register-2.css",
+        "page-header/register.css",
+        "log.css",
+        "form-field/register-2.css",
+        "page-header/register-2.css",
+        "base/register-3.css",
+        "navbar/register-2.css",
+        "sidenav/register.css",
+        "media.css",
+        "navbar/register-3.css",
+        "alarm/register.css",
+        "sidenav/register-2.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* cyberpunk's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/cyberpunk.css and research/signature-elements/demo.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "the-approved-grammar.css",
-        "the-split-edge.css",
-        "the-closed-circuit.css",
-        "pointing-answers-for-every/base.css",
-        "pointing-answers-for-every/nav.css",
-        "pointing-answers-for-every/the-spinner-signal-bars-with.css",
-        "pointing-answers-for-every/rules.css",
-        "pointing-answers-for-every/collapsed-the-lists-nested-in.css",
-        "the-meter-with-a-mark-this.css",
-        "the-mark-past-the-end.css",
-        "the-tour-the-alarm.css",
-        "the-navbar/c-the-navbar.css",
-        "every-plate-is-cut.css",
-        "prose-is-rajdhani.css",
-        "leftovers-of-the-notch.css"
+        "signature.css",
+        "tokens/signature.css",
+        "card/signature.css",
+        "key-figures/signature.css",
+        "meter/signature.css",
+        "key-figures/signature-2.css",
+        "menu-button/signature.css",
+        "key-figures/signature-3.css",
+        "button/signature.css",
+        "month-heatmap/signature.css",
+        "key-figures/signature-4.css",
+        "navbar/signature.css",
+        "tree-reorder-split.css",
+        "form-field/signature.css",
+        "progress-spinner-skeleton/signature.css",
+        "month-heatmap/signature-2.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "switch.css",
+        "form-field/signature-2.css",
+        "upload-wizard.css",
+        "state-plate.css",
+        "navbar/signature-2.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "key-figures/signature-5.css",
+        "navbar/signature-3.css",
+        "motion/signature.css",
+        "navbar/signature-4.css",
+        "progress-spinner-skeleton/signature-4.css",
+        "motion/signature-2.css",
+        "meter/signature-2.css",
+        "menu-button/signature-2.css",
+        "tokens/signature-2.css",
+        "drawer-tour.css",
+        "sidenav/signature.css",
+        "tokens/signature-3.css",
+        "navbar/signature-5.css",
+        "command-palette.css",
+        "alarm/signature.css",
+        "badge.css",
+        "form-field/signature-3.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* <<cfd-layout-begin>> */\n/* The package's own rule for these lives in kp.layout, which a register's layers cannot beat. */\n@layer kp.layout {\n",
+      "files": [
+        "code-block/layout.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "segmented-toolbar.css"
+      "open": "/* <<cfd-layout-end>> */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Cyberpunk's own (themes/cyberpunk/CHARACTER.md): every plate is a holo card, the void with a yellow rim glowing\n   inward, scan lines at 135 degrees, cut at its dossier corner (G6, G7); pointing lights the 14 px circuit in one tick\n   (G8) and a press closes it (G14); a failure is locked as a target, four corner brackets in the red (G13); the machine\n   speaks in prefixed mono capitals (G15); waiting is signal loss, the word LOADING deciphered over the dimmed part, once\n   per waiting part and never once per cell (the register's osd); a running job is a data stream through its wire (G16).\n   Hard ticks everywhere, never an ease. */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows.css",
+        "facet-list/signature.css",
+        "heat-grid.css",
+        "week-agenda.css",
+        "run-timeline/signature.css",
+        "facet-list/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Cyberpunk's own (themes/cyberpunk/CHARACTER.md): the separator is the neon slash, the yellow leaning with\n   the bar's own cut and split into its cyan ghost (the RGB split); lying down in the phone's list it is a short data\n   dash on the plate, yellow then a cyan packet, never wider than the plate. A day on the axis takes the RGB split under\n   the pointer; pressed it is a lock-on: the yellow ground with its notched corner and the hard yellow foot. A series'\n   finished run has the hard 3 px bar on its leading edge, as a week pill does; the facet pattern is notched. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "open": "/* ── The kpadopt4 components in cyberpunk's own grammar [kpadopt4] ──\n   Cyberpunk is the netrunner's HUD (themes/cyberpunk/CHARACTER.md): the void is the ground, the holo card what stands on\n   it, the HUD what the system draws over it. A signal is acquired, never eased: a part that is drawn is torn in sideways\n   and jitters home in six ticks of 60 ms, held poses with `steps(1)` (G1, G3, G12); pointing lights the 14 px circuit in\n   its own ink in one tick (G8); a press lights it full (G14); a warning is locked as a target, four corner brackets, 2 px,\n   in the tone's ink (G13); the machine talks in prefixed mono capitals, figures in the condensed display (G15); a\n   control is cut at its end corner, a plate at its dossier corner, never rounded (G6). Yellow acts, cyan reads, red\n   alarms. Waiting is the reticle's lock-on the register already lays; the data stream is only for what is transferred. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base.css",
-        "ticking-number.css"
+        "tokens/signature-4.css",
+        "bullet-rows/signature.css",
+        "identity-mark.css",
+        "share-bar/signature.css",
+        "bullet-rows/signature-2.css",
+        "code-block/signature.css",
+        "wheel/signature.css",
+        "share-bar/signature-2.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-the-kpadopt4-data.css"
+      "open": "/* ── end the kpadopt4 data pieces ── */\n\n/* ── The kpadopt4 rows, records and flows in cyberpunk's own grammar [kpadopt4] ──\n   A row lights its circuit when pointed at (G8) and is torn in a tick after the row before it (G3, G12); a failed or\n   warned part is locked as a target in the tone's ink (G13); a card standing on the board is cut at its dossier corner\n   (G6, G7); the chosen card, the current step are held by the reticle in cyan (G16); a group's rule is the tripwire dashes\n   (G16); the drawings for an empty state are the system looking at a holo card (G10, G16). */\n@layer kp.signature {\n",
+      "files": [
+        "action-columns.css",
+        "forms.css",
+        "small-patterns/signature.css",
+        "pipeline.css",
+        "step-list/signature.css"
+      ],
+      "close": "}\n"
     },
     {
       "open": "/* ── end the kpadopt4 rows and flows ── */\n\n/* ── The kpadopt4 secrets, time, cooking and commands in cyberpunk's own grammar [kpadopt4] ──\n   A secret is decoded start to end in held steps (G2, G10); what runs out is a tripwire (G16); a thing that ends or\n   fails is locked as a target in red (G13); a clock is a notched face with a held sector (a loop advances in whole ticks,\n   G1); the wheel turns in ticks, never an ease (G1); a command is a prefixed label over a notched plate (G15). */\n@layer kp.signature {\n",
       "files": [
-        "secret-field.css",
-        "dialog.css"
+        "small-patterns/signature-2.css",
+        "dialog.css",
+        "typed-confirmation.css",
+        "segmented-toolbar/signature-2.css",
+        "checklist-sink.css",
+        "kitchen-timers.css",
+        "focus-steps.css",
+        "wheel/signature-2.css",
+        "uptime-strip.css",
+        "visual-timer.css",
+        "countdown.css",
+        "range-picker.css",
+        "command-block.css",
+        "compare-slider.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-the-kpadopt4-secrets.css"
+      "open": "/* ── end the kpadopt4 secrets, time, cooking and commands ── */\n\n/* ── t56: the kpadopt5/6 parts inside cyberpunk ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-3.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/base.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the gallery tile ── */\n@layer kp.signature {\n",
+      "files": [
+        "gallery.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the conversation bubble ── */\n@layer kp.signature {\n",
+      "files": [
+        "conversation.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-2.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: what has to fit a phone ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-3.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the trace's rule tag ── */\n@layer kp.signature {\n",
+      "files": [
+        "connection-path.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-4.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56: the quote card keeps its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "quote-card.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56/end-t56-5.css"
+      "open": "/* ── end t56 ── */\n\n/* ── t56-q: the failed plate keeps its cut edge ── */\n@layer kp.signature {\n",
+      "files": [
+        "alert.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q.css"
+      "open": "/* ── end t56-q ── */\n\n/* ── t56-q2 fields: the loading time field reads ── */\n@layer kp.signature {\n",
+      "files": [
+        "time-field.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-fields.css"
+      "open": "/* ── end t56-q2 fields ── */\n\n/* ── t56-q2 choose: the waiting picker's panel fits its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "usual-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-choose.css"
+      "open": "/* ── end t56-q2 choose ── */\n\n/* ── t56-q2 schedule: the quiet buttons are framed, and a disabled one is quieter ── */\n@layer kp.signature {\n",
+      "files": [
+        "weekday-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/base.css"
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── t56-q2 schedule: the snooze tiles share one grid ── */\n@layer kp.signature {\n",
+      "files": [
+        "snooze-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── graph loading · shape 3 · The holo HUD: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-b-cp-load.css"
+      "open": "/* ── graph loading · r3-b-cp-load-4 · The packet race (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

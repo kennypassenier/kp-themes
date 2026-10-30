@@ -1,0 +1,60 @@
+/* @part: properties: registered custom properties (@property), at the top level */
+/* ── Signature: pastel's grammar [scope-141] ───────────────────────────── */
+/* Kenny approved pastel's character in full on 2026-10-14 03:23
+   (research/pastel-character/decided.json, themes/pastel/CHARACTER.md §1,
+   G1-G20): a risograph-printed sticker sheet in a planner. Everything that
+   happens here happens to paper: it is PRINTED TWICE AND STUCK ON. A part's
+   second pass (a flat silhouette in the second ink, --fx-overprint, no words)
+   springs from a wide misregistration into its rest 6 px off register, down
+   and toward the end, where it stays as the part's flat shadow; 120 ms later
+   the part itself swings down from its top-start corner onto it, on the soft
+   landing (one 8 % overshoot, settled once). One landing is 560 ms; a close
+   is that landing played backwards, frame for frame. A part fixed to the
+   page then has a thumbtack pushed in at its top centre, which comes out
+   first when it leaves. Hover peels the top-end corner into a fold, focus is
+   the dashed line alone, a press sticks the part down flat, a live change
+   wobbles, and loading is the pom-pom caterpillar: everything that waits
+   becomes caterpillar (js/loading-pieces.js adds its pom-poms, head and
+   legs; the spinner is the caterpillar going round a day sticker).
+
+   HOW THE TWO PASSES ARE TWO LAYERS. The demo draws the pass and the part as
+   two sibling boxes, so the part can be invisible while its pass is already
+   there. In the package a part is one element, and its opacity and its turn
+   carry everything inside it, pseudo-elements included; so the pass is
+   drawn OUTSIDE the part wherever the part can be faded as a whole:
+     A. a part in the top layer (a dialog, a popover, a menu, the date
+        picker's panel, the combobox's list): its own ::backdrop, placed on
+        the part by anchor positioning (`position-anchor: auto`, which reads
+        the part's layout box, never its turn). A modal's dim is that
+        backdrop's 200vmax border, so a click outside still reaches it;
+     A2. a part hanging in its holder (the bar's dropdown and mega menu, a
+        tooltip): the holder's ::after, anchored to the part
+        (`anchor-scope` keeps the name to the holder);
+   and where neither exists (a toast, an alert, the tour's card, the side
+   navigation, the busy panels), the part draws its own plate and pass:
+     B. the plate is its ::after and the pass its ::before, both under its
+        words; the part does not fade as a whole, its plate and its children
+        follow `--kp-sig-pa-ink`, and the pass counter-turns against the
+        part's swing, so on screen it only slides, as the demo's does.
+   Two registered numbers carry the clock (--kp-sig-pa-pass for the pass,
+   --kp-sig-pa-ink for the part), so anything that reads them follows the
+   one animation that runs; js/motion.js keeps and reverses that animation
+   (and a ::backdrop's) for every close, so a close stays the open backwards.
+
+   Without anchor positioning (`@supports not (anchor-name: --a)`) every
+   part shows its pass at rest as a flat box-shadow and opens with the swing
+   alone. Every motion sits under prefers-reduced-motion: no-preference; the
+   reduced pose is the finished picture (G19). Colours are tokens only. */
+
+@property --kp-sig-pa-ink {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-pa-pass {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+

@@ -1,0 +1,81 @@
+/* @part: navbar: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The bar's dropdown (opened by hover and focus) and mega menu (by its
+           button). While a dropdown closes, js/components.js marks its item
+           `[data-kp-nav-closing]` for `--kp-nav-close-time` and the rule keeps
+           it drawn (Firefox holds no `display`); the mega menu's item is held
+           while the hold number below transitions. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='pastel'] .kp-nav__menu {
+                --kp-sig-pastel-hold: 0;
+                transition: --kp-sig-pastel-hold var(--kp-sig-pa-window) linear;
+            }
+
+            [data-theme='pastel']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                --kp-sig-pastel-hold: 1;
+                animation: kp-sig-pastel-stuck-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li:is(:hover, :focus-within, [data-kp-nav-menu-open]):has(> .kp-nav__menu:not(.kp-nav__menu--wide))::after,
+            [data-theme='pastel']
+                .kp-nav__links
+                > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])):has(> .kp-nav__menu--wide)::after {
+                animation: kp-sig-pastel-pass-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide) {
+                display: block;
+                opacity: 1;
+                animation: kp-sig-pastel-stuck-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]):has(> .kp-nav__menu:not(.kp-nav__menu--wide))::after {
+                animation: kp-sig-pastel-pass-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide {
+                animation: kp-sig-pastel-stuck-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])):has(
+                    > .kp-nav__menu--wide
+                )::after {
+                animation: kp-sig-pastel-pass-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+            }
+        }
+
+        /* A tooltip: stuck on beside its trigger; js/overlays.js takes it off
+           as its entrance backwards (`[data-kp-reversing]`), the pass with it. */
+        [data-theme='pastel'] .kp-tooltip:not([hidden]) {
+            animation: kp-sig-pastel-stuck-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-tooltip:not([hidden]))::after {
+            animation: kp-sig-pastel-pass-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-tooltip[data-kp-reversing='reset'])::after {
+            animation-name: none;
+        }
+
+        [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-tooltip[data-kp-reversing='play'])::after {
+            animation: kp-sig-pastel-pass-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse both;
+        }
+    }
+

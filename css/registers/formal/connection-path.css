@@ -1,0 +1,4 @@
+/* @part: connection-path: signature layer */
+    [data-theme='formal'] .kp-trace .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1rem;
+    }

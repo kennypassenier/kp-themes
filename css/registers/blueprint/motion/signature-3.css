@@ -1,0 +1,187 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A part arrives and leaves by being read out on its own scales (Kenny,
+           2026-10-07 23:41, arrival and leave): the pen is set down at the start
+           corner, lowered, and read along the part's diagonal on one feed, its
+           amber witness lines running from the nib to the foot and to the start
+           edge with a pointer on each scale; each line of the part is inked as the
+           pen passes it. The leave is that played backwards (the pen comes to the
+           end corner, reads back, and each line goes as it passes): js/motion.js
+           plays a leave turned around for an arrival (--kp-open: reverse-close), so
+           the one set of keyframes is both. The part's own frame stands from the
+           first frame to the last; only its lines are inked: a mask, a line high
+           in steps, over the content box alone. */
+        /* The tour's card is no part that arrives: it opens by its trace (below).
+           Read out as it was added, it played the read where it stood first, in the
+           flow (`position: relative` on a fixed card), and then the trace again
+           where it belongs (review round 1, 2026-10-13: "some weird behaviour
+           when the first card opens"). */
+        [data-theme='blueprint']
+            :is([data-kp-leaving], [data-kp-arriving]):not(
+                .kp-dialog,
+                .kp-popover:not(.kp-tooltip),
+                .kp-menu-button > .kp-menu,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-toast,
+                .kp-tour,
+                .kp-meter,
+                .kp-kpi__meter
+            ) {
+            position: relative;
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground));
+            mask-origin: content-box, border-box, content-box;
+            mask-clip: content-box, border-box, content-box;
+            mask-size:
+                100% round(up, calc(var(--kp-bp-rp) * 100%), max(1lh, 1px)),
+                100% 100%,
+                100% 100%;
+            mask-position: 0 0;
+            mask-repeat: no-repeat;
+            mask-composite: add, subtract, add;
+        }
+
+        [data-theme='blueprint']
+            [data-kp-leaving]:not(
+                .kp-dialog,
+                .kp-popover:not(.kp-tooltip),
+                .kp-menu-button > .kp-menu,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-toast,
+                .kp-tour,
+                .kp-meter,
+                .kp-kpi__meter
+            ) {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear reverse forwards;
+        }
+
+        [data-theme='blueprint']
+            [data-kp-arriving]:not([data-kp-leaving]):not(
+                .kp-dialog,
+                .kp-popover:not(.kp-tooltip),
+                .kp-menu-button > .kp-menu,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-toast,
+                .kp-tour,
+                .kp-meter,
+                .kp-kpi__meter
+            ) {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear backwards;
+        }
+
+        @keyframes kp-sig-blueprint-read {
+            0% {
+                visibility: hidden;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 0;
+            }
+
+            10% {
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            90% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: linear;
+            }
+
+            92% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            99.9% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            100% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+        }
+
+        /* The same reading under a second name, for a leave that follows an arrival on the same part. */
+        @keyframes kp-sig-blueprint-read-out {
+            0% {
+                visibility: hidden;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 0;
+            }
+
+            10% {
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            90% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: linear;
+            }
+
+            92% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            99.9% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            100% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+        }
+    }
+

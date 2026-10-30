@@ -1,0 +1,33 @@
+/* @part: switch: signature layer */
+    [data-theme='blueprint'] .kp-switch {
+        --kp-switch-radius: 2px;
+        --kp-switch-thumb-radius: 1px;
+    }
+
+    [data-theme='blueprint'] .kp-switch__input {
+        border-color: hsl(from var(--foreground) h s l / 0.6);
+        background: var(--background);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input::before {
+        border: 1px solid var(--foreground);
+        background:
+            /* One upright tick, the witness line of a handle: the crossed square (a window pane) read as a checkbox
+               [t56-eye-1018]. */
+            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 60% no-repeat,
+            hsl(from var(--foreground) h s l / 0.12);
+        box-sizing: border-box;
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.45) 0 1px, transparent 1px 5px), var(--background);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        border-color: var(--primary);
+        background: var(--primary);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+

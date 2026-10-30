@@ -1,0 +1,59 @@
+/* @part: command-palette: register layer; also forms, movable-grid, master-detail, combobox */
+    [data-theme='formal'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) / 2);
+        background: var(--muted);
+    }
+
+    [data-theme='formal'] .kp-shortcuts__group-label,
+    [data-theme='formal'] .kp-palette__group-label,
+    [data-theme='formal'] .kp-menu__heading {
+        color: var(--muted-foreground);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+    }
+
+    [data-theme='formal'] .kp-theme-menu__status,
+    [data-theme='formal'] .kp-palette__status,
+    [data-theme='formal'] .kp-combobox__status {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    /* Not a form that is a block of a form grid [formgrid-notes-1019; chassis-rs]: there the grid's gap passes down to the
+       form (it is a subgrid), and this rule, being more specific than the grid's, made the form's rows 1rem apart whatever
+       --kp-formgrid-gap said. */
+    [data-theme='formal'] .kp-form:not(:is(.kp-formgrid, .kp-formgrid__group) > .kp-form) {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='formal'] .kp-grid {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='formal'] .kp-grid > * {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] .kp-split {
+        gap: 0;
+    }
+
+    [data-theme='formal'] .kp-split__separator {
+        background: var(--border);
+    }
+
+    [data-theme='formal'] .kp-health {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] .kp-combobox,
+    [data-theme='formal'] .kp-datepicker,
+    [data-theme='formal'] .kp-colorpicker,
+    [data-theme='formal'] .kp-shortcuts,
+    [data-theme='formal'] .kp-tabs {
+        border-radius: var(--radius);
+    }
+

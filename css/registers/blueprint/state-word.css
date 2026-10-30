@@ -1,0 +1,75 @@
+/* @part: state-word: signature layer; also card */
+    [data-theme='blueprint'] .kp-card__title,
+    [data-theme='blueprint'] .kp-kpi__value,
+    [data-theme='blueprint'] .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        font-style: normal;
+        font-variant-numeric: tabular-nums;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A value that changes in place is read again [live]: js/update.js writes
+           the new value at once and marks the element [data-kp-updating='read'];
+           a short ruler is set under it with an amber pointer standing on the old
+           reading, which slides to the new one on the feed (15 % to 60 % of 6 units,
+           960 ms) and stands; ruler and pointer are lifted at once. The value never
+           moves, flips or swells. A page that knows the two readings says them as
+           --kp-bp-from and --kp-bp-to (0 to 1). */
+        [data-theme='blueprint'] {
+            --kp-update: read;
+        }
+
+        [data-theme='blueprint'] [data-kp-updating='read'] {
+            position: relative;
+        }
+
+        [data-theme='blueprint'] [data-kp-updating='read']:not(.kp-state-word)::after,
+        [data-theme='blueprint'] .kp-state-word[data-kp-updating='read']::before {
+            content: '';
+            position: absolute;
+            inset-block-start: calc(100% + 2px);
+            inset-inline: 0;
+            block-size: 12px;
+            pointer-events: none;
+            --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+            background-repeat: no-repeat;
+            background-image:
+                conic-gradient(from 135deg at 50% 0, var(--kp-bp-n1) 90deg, transparent 0), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+                repeating-linear-gradient(90deg, var(--kp-bp-n1) 0 1px, transparent 1px 5px);
+            background-size:
+                9px 6px,
+                100% 1px,
+                100% 4px;
+            background-position:
+                calc(var(--kp-bp-p) * 100%) bottom,
+                left 5px,
+                left 1px;
+            animation: kp-sig-blueprint-update-read var(--kp-sig-bp-revision) linear both;
+        }
+
+        @keyframes kp-sig-blueprint-update-read {
+            0% {
+                --kp-bp-p: var(--kp-bp-from, 0.2);
+                --kp-bp-rv: 1;
+            }
+
+            15% {
+                --kp-bp-p: var(--kp-bp-from, 0.2);
+                --kp-bp-rv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            60%,
+            85% {
+                --kp-bp-p: var(--kp-bp-to, 0.8);
+                --kp-bp-rv: 1;
+            }
+
+            85.1%,
+            100% {
+                --kp-bp-p: var(--kp-bp-to, 0.8);
+                --kp-bp-rv: 0;
+            }
+        }
+    }
+

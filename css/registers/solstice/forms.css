@@ -1,0 +1,31 @@
+/* @part: forms: signature layer */
+    [data-theme='solstice'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--primary) h s l / 0.3), transparent 75%),
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--primary) h s l / 0.34), transparent 85%),
+            var(--card);
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary),
+            0 0 0.9rem 0.1rem hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='solstice'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        background: var(--muted);
+        box-shadow: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                background-color var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch),
+                box-shadow var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch);
+        }
+    }
+

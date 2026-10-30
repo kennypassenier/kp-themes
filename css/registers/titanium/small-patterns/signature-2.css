@@ -1,0 +1,51 @@
+/* @part: small-patterns: signature layer */
+    /* ── Secret field: a pocket the value is fed into from the start edge; the countdown is the film cooling away ── */
+    [data-theme='titanium'] .kp-secret {
+        --kp-secret-drain-size: 3px;
+    }
+    [data-theme='titanium'] .kp-secret__value {
+        border-radius: 0;
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+    }
+    [data-theme='titanium'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-secret__drain {
+        background: var(--kp-sig-ti-oxide);
+        transform-origin: 100% 50%;
+    }
+    [data-theme='titanium'] .kp-secret__drain:dir(rtl) {
+        transform-origin: 0 50%;
+    }
+    [data-theme='titanium'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        border-inline-start-width: 3px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-titanium-secret-cut 240ms var(--kp-sig-ti-ease) backwards;
+        }
+        [data-theme='titanium'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text:dir(rtl) {
+            animation-name: kp-sig-titanium-secret-cut-rtl;
+        }
+    }
+    @keyframes kp-sig-titanium-secret-cut {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+    @keyframes kp-sig-titanium-secret-cut-rtl {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+

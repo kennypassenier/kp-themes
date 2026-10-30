@@ -1,0 +1,30 @@
+/* @part: tabs: register layer */
+    /* ── Navigation and steps ──────────────────────────────────────────── */
+
+    [data-theme='nostromo'] .kp-tab {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        border-radius: var(--kp-sig-no-key) var(--kp-sig-no-key) 0 0;
+    }
+
+    [data-theme='nostromo'] .kp-tab[aria-selected='true'] {
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 0 var(--selected);
+    }
+
+    /* Focused, the selected tab keeps the ring of DI2 with its underline: the underline's own
+       box-shadow had replaced the ring (Firefox Tab audit, tab-paint.mjs: 0 px changed). */
+    [data-theme='nostromo'] .kp-tab[aria-selected='true']:focus-visible {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            inset 0 -2px 0 0 var(--selected);
+    }
+
+    [data-theme='nostromo'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border-strong);
+    }
+

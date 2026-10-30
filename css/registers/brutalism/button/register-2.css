@@ -1,0 +1,107 @@
+/* @part: button: register layer; also form-field, card, alert, badge */
+    [data-theme='brutalism'] .kp-button::after,
+    [data-theme='brutalism'] .kp-field__input::after,
+    [data-theme='brutalism'] .kp-card::after,
+    [data-theme='brutalism'] .kp-alert::after,
+    [data-theme='brutalism'] .kp-badge::after,
+    [data-theme='brutalism'] .kp-sidenav::after {
+        position: absolute;
+        inset-block-end: calc(100% + 0.3rem);
+        inset-inline-start: 0;
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        line-height: 1.2;
+        white-space: nowrap;
+        background: var(--foreground);
+        color: var(--background);
+        padding: 0.1rem 0.35rem;
+        opacity: 0;
+        pointer-events: none;
+        /* Out of the box tree until pointed at: an invisible tab hanging past a small button at the right edge still made the
+           section scroll sideways (7 px at 390 px, choose / intent-states). */
+        display: none;
+    }
+
+    [data-theme='brutalism'] .kp-button::after {
+        content: var(--kp-label, 'BUTTON');
+    }
+
+    [data-theme='brutalism'] .kp-field__input::after {
+        content: var(--kp-label, 'FIELD');
+    }
+
+    [data-theme='brutalism'] .kp-card::after {
+        content: var(--kp-label, 'CARD');
+    }
+
+    [data-theme='brutalism'] .kp-alert::after {
+        content: var(--kp-label, 'ALERT');
+    }
+
+    [data-theme='brutalism'] .kp-badge::after {
+        content: var(--kp-label, 'BADGE');
+    }
+
+    [data-theme='brutalism'] .kp-sidenav::after {
+        content: var(--kp-label, 'NAV');
+    }
+
+    [data-theme='brutalism'] .kp-button:hover::after,
+    [data-theme='brutalism'] .kp-button:focus-visible::after,
+    [data-theme='brutalism'] .kp-field__input:hover::after,
+    [data-theme='brutalism'] .kp-field__input:focus::after,
+    [data-theme='brutalism'] .kp-card:hover::after,
+    [data-theme='brutalism'] .kp-alert:hover::after,
+    [data-theme='brutalism'] .kp-badge:hover::after,
+    [data-theme='brutalism'] .kp-sidenav:hover::after {
+        display: block;
+        opacity: 1;
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token,
+       and drive the box onto its footprint, the shadow's own offset [G14,
+       Kenny 2026-10-07 23:44, "press = ground"; the base layer's 4 px left
+       the box 2 px short of a 6 px shadow]. */
+
+    [data-theme='brutalism'] .kp-button:active:not(:disabled) {
+        color: var(--kp-plate-ink);
+        background: var(--secondary-active);
+        translate: var(--kp-drop) var(--kp-drop);
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+    }
+
+    [data-theme='brutalism'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+    }
+
+    [data-theme='brutalism'] .kp-button--ghost:active:not(:disabled) {
+        color: var(--foreground);
+        background: var(--secondary-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='brutalism'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+

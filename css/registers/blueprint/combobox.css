@@ -1,0 +1,53 @@
+/* @part: combobox: signature layer; also menu-button */
+    /* The combobox's and the palette's rows are the same entries: the package
+       lights the active one (the arrow keys' place, mirrored by the pointer) with
+       a wash; here it takes the lines and the ruler and its ground stays. The
+       input keeps the focus, so the lines are the place's one signal. */
+    [data-theme='blueprint'] :is(.kp-combobox__option, .kp-palette__option) {
+        position: relative;
+        --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+        --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
+    }
+
+    [data-theme='blueprint'] :is(.kp-combobox__option, .kp-palette__option)::before {
+        content: '';
+        position: absolute;
+        inset-block: -0.2rem;
+        inset-inline: calc(0.35rem - 4px);
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+            linear-gradient(var(--kp-bp-n2), var(--kp-bp-n2)), repeating-linear-gradient(90deg, var(--kp-bp-n2) 0 1px, transparent 1px 5px),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0);
+        background-size:
+            1px 100%,
+            1px 100%,
+            calc(100% - 8px) 1px,
+            calc(100% - 8px) 3px,
+            9px 5px,
+            9px 5px;
+        background-position:
+            4px top,
+            calc(100% - 4px) top,
+            left 4px bottom calc(0.2rem + 5px),
+            left 4px bottom calc(0.2rem + 6px),
+            left bottom 0.2rem,
+            right bottom 0.2rem;
+    }
+
+    [data-theme='blueprint'] :is(.kp-combobox__option, .kp-palette__option).is-active:not([aria-disabled='true'], [data-kp-disabled]) {
+        background: none;
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] :is(.kp-menu__item, .kp-nav__menu a, .kp-combobox__option, .kp-palette__option) {
+            transition:
+                --kp-bp-hv var(--fx-duration) var(--fx-ease),
+                --kp-bp-sv var(--fx-duration) var(--fx-ease);
+        }
+    }
+

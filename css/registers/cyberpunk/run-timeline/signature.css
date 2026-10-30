@@ -1,0 +1,57 @@
+/* @part: run-timeline: signature layer */
+    [data-theme='cyberpunk'] .kp-gantt__run:is(button):hover {
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
+        position: absolute;
+        border-color: var(--primary);
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: inset -3px 0 0 var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running']::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: -144px 0;
+        background:
+            repeating-linear-gradient(90deg, var(--accent) 0 18px, transparent 18px 36px) 0 30% / 100% 2px no-repeat,
+            repeating-linear-gradient(90deg, transparent 0 9px, var(--accent) 9px 15px, transparent 15px 36px) 0 70% / 100% 2px no-repeat;
+        opacity: 0.8;
+        pointer-events: none;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__swatch[data-kp-state='running'] {
+        border-color: var(--primary);
+        background:
+            repeating-linear-gradient(90deg, var(--accent) 0 3px, transparent 3px 6px) 0 50% / 100% 2px no-repeat,
+            var(--card);
+    }
+    /* The loading sentence is the machine's voice on a plate of the void, never over a ghost bar's edge. */
+    [data-theme='cyberpunk'] .kp-gantt[data-kp-state='loading'] .kp-gantt__state {
+        display: none;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__ghost .kp-skeleton {
+        opacity: 0.45;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__ghost .kp-skeleton::before {
+        content: none;
+        animation: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
+            animation: none;
+        }
+        [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running']::after {
+            animation: kp-sig-cyberpunk-feed 1800ms linear infinite;
+        }
+    }
+
+    /* A phone's timeline keeps its toolbar on one row: the range steps close in a little in these wide letters. */
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='cyberpunk'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+    }
+

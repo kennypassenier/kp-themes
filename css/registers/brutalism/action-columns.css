@@ -1,0 +1,78 @@
+/* @part: action-columns: signature layer */
+    /* Rows with a lead. */
+    [data-theme='brutalism'] .kp-action-list--lead {
+        --kp-action-list-bar: 8px;
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li {
+        border-block-end: 2px solid var(--border-strong);
+        border-inline-start-color: transparent;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='new'] {
+        border-inline-start-color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='active'] {
+        border-inline-start-color: var(--accent);
+        box-shadow: inset 2px 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        border-inline-start-color: var(--warning);
+        box-shadow: inset 2px 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 0 / 8px 100% no-repeat;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='failed']:dir(rtl) {
+        background-position: 100% 0;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='next'] {
+        border-inline-start-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 3px var(--border-strong);
+    }
+    [data-theme='brutalism']
+        .kp-action-list--lead
+        > li[data-kp-state='next']
+        :is(.kp-action-list__lead, .kp-action-list__text, .kp-action-list__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-action-list__title {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li:is([data-kp-state='done'], [data-kp-state='past']) .kp-action-list__title {
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-action-list__meta {
+        font-family: var(--theme-font-mono);
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-action-list__when > :first-child {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-action-list > li.kp-action-list__group {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='brutalism'] .kp-action-list__payload {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list__more > summary {
+        color: var(--foreground);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-action-list__more > summary:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }

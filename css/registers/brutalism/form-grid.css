@@ -1,0 +1,32 @@
+/* @part: form-grid: signature layer */
+    /* Form rows: the label in bold capitals; a row changed and not saved has the yellow block along its start edge in
+       the ink line; a row in error is taped off along that edge. */
+    [data-theme='brutalism'] .kp-formrow__label {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-formrow__label > small {
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+    [data-theme='brutalism'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='brutalism'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 8px;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 4px);
+        background: var(--secondary);
+        box-shadow: 0 0 0 2px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-formrow[data-kp-state='error']::before {
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+    }
+    [data-theme='brutalism'] .kp-formrows--lines > .kp-formrow {
+        border-block-end: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-formrow__lock::before {
+        border-radius: 0;
+        border-width: 2px;
+    }
+

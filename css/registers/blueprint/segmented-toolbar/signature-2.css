@@ -1,0 +1,52 @@
+/* @part: segmented-toolbar: signature layer; also quantity */
+    /* Three-way chips: a square mark; the chip that is in is a hatched section in the pen's frame, the one that is out
+       has the red frame with its word struck through; pointing sets the amber witness lines. */
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--primary);
+        background: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        color: var(--foreground);
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        color: var(--background);
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration-thickness: 1px;
+    }
+    @media (hover: hover) {
+        [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover {
+            box-shadow:
+                -5px 0 0 -4px var(--accent),
+                5px 0 0 -4px var(--accent);
+        }
+    }
+
+    /* Quantity: the number is a readout in the mono in a square frame; the unit is lettering; the steps are blueprint's
+       own buttons. */
+    [data-theme='blueprint'] .kp-quantity__field {
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-quantity__input {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-quantity__unit {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+

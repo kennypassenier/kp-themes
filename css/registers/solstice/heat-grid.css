@@ -1,0 +1,77 @@
+/* @part: heat-grid: signature layer; also run-timeline, week-agenda, bar-cell */
+    [data-theme='solstice']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='solstice'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s 85% / 0.55) 0 18%, transparent 18%), var(--kp-heat-pattern);
+    }
+    [data-theme='solstice'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='solstice'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow:
+            inset 0 -2px 0 var(--primary),
+            0 0.35rem 0.6rem -0.35rem hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='solstice'] .kp-heat__cell[data-kp-picked],
+    [data-theme='solstice'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0.6rem hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='solstice'] :is(.kp-heat__label, .kp-matrix__name) {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-heat__label-button[aria-pressed='true'] {
+        background: linear-gradient(to top, hsl(from var(--primary) h s l / 0.3), transparent);
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='solstice'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        background: var(--muted);
+        animation: none;
+    }
+    [data-theme='solstice'] :is(.kp-heat__cells:has(> .kp-skeleton), .kp-matrix:has(.kp-matrix__cell.kp-skeleton)) {
+        position: relative;
+        overflow: clip;
+    }
+    [data-theme='solstice'] :is(.kp-heat__cells:has(> .kp-skeleton), .kp-matrix:has(.kp-matrix__cell.kp-skeleton))::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 37%;
+        background: radial-gradient(ellipse closest-side, hsl(from var(--primary) h s l / 0.32), transparent);
+        transform: translateX(-100%);
+        pointer-events: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] :is(.kp-heat__cells:has(> .kp-skeleton), .kp-matrix:has(.kp-matrix__cell.kp-skeleton))::after {
+            animation: kp-sig-solstice-solstice-light 3600ms ease-in-out infinite;
+        }
+        [data-theme='solstice'] .kp-heat__row:nth-child(2n) .kp-heat__cells::after {
+            animation-delay: 240ms;
+        }
+        [data-theme='solstice'] :is(.kp-heat__cell, .kp-matrix__cell) {
+            transition: box-shadow var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch);
+        }
+    }
+    [data-theme='solstice'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: pills lit from their foot in the series' light; pointing lights the foot in amber;
+       the next run wears the halo; the line for now is the low sun's amber with the sun at its head. A running run
+       watches the sun rise and set at its growing head, on its own short horizon, no marching stripes. */
+    [data-theme='solstice'] .kp-week {
+        --kp-week-pill-radius: calc(var(--radius) * 0.8);
+        --kp-week-now: var(--primary);
+    }
+    /* A planned run [gaps-time-1019]: wide soft bands, like long light. */
+    [data-theme='solstice'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--kp-gantt-fill) 26%, transparent) 0 4px, transparent 4px 10px);
+    }
+    [data-theme='solstice'] .kp-gantt {
+        --kp-gantt-bar-radius: calc(var(--radius) * 0.8);
+        --kp-gantt-now: var(--primary);
+        --kp-gantt-state-ground: var(--card);
+    }

@@ -1,0 +1,44 @@
+/* @part: card: register layer */
+    /* ── Motion, guarded [DI7] ─────────────────────────────────────────── */
+
+    /* Every animation and transition this register runs lives here, so a
+   reader who asked for reduced motion never receives one: the rest
+   states above are what they get instead — full opacity, no clip, rules
+   drawn, marks either covered (never seen) or clear immediately. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The headline: js/effects.js's `popdown` routine toggles this
+       class (a new routine — the text never splits into glyphs or
+       words, unlike every other headline routine); without it the class
+       never appears and the element stays at its rest opacity/clip. Since
+       the raster grammar (Kenny, 2026-10-07 23:18) it is written from its
+       top edge down by the raster, a quarter per frame, 4 frames, with no
+       fade; the routine's own timer (TIMINGS['kp-popdown'], 340 ms) still
+       takes the class off after it. */
+        [data-theme='nostromo'][data-kp-effects] [data-kp-reveal='headline'].is-popping {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) both;
+        }
+
+        /* The dossier stamp: a ::before pseudo-element, which JS can never
+       select — gated on [data-kp-effects] presence directly, exactly as
+       the demo's own stylesheet gates it. Drawn by the raster as the
+       headline is. */
+        [data-theme='nostromo'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'][data-kp-label]::before {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) both;
+            animation-delay: var(--kp-stamp-delay);
+        }
+
+        /* The section rule is printed start to end in 4 frames [G2, G4]. */
+        [data-theme='nostromo'][data-kp-effects] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-rule-in var(--kp-sig-no-strike) steps(4, end) both;
+            animation-delay: var(--kp-rule-delay);
+        }
+
+        [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease);
+        }
+
+        /* The dialog's entrance is the raster's, in kp.signature below. */
+    }
+

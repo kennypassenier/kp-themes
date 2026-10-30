@@ -1,0 +1,64 @@
+/* @part: checklist-sink: signature layer; also kitchen-timers */
+    /* ── Checklist: the log, rows lit by the hand, seams of dots ── */
+    [data-theme='nostromo'] .kp-checklist__bar {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+        padding-block-end: calc(var(--kp-space-xs, 0.25rem) + 3px);
+    }
+    [data-theme='nostromo'] .kp-checklist__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-checklist__head {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-checklist__count {
+        font-family: var(--theme-font-display);
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+    [data-theme='nostromo'] .kp-checklist__list {
+        border-block-start: 0;
+        background: var(--kp-no-seam);
+        background-position: 0 0;
+        background-size: 10px 3px;
+        background-repeat: repeat-x;
+        padding-block-start: 3px;
+    }
+    [data-theme='nostromo'] .kp-checklist__item {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-checklist__item:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-checklist__row:hover {
+        background: var(--popover);
+    }
+    [data-theme='nostromo'] .kp-checklist__row:active {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-checklist__detail {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='nostromo'] .kp-checklist__empty {
+        border-radius: var(--kp-sig-no-key);
+        border-color: var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border: 3px solid var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timers__empty {
+        border-radius: var(--kp-sig-no-key);
+        border-color: var(--border-strong);
+    }
+

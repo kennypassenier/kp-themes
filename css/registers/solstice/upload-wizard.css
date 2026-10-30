@@ -1,0 +1,49 @@
+/* @part: upload-wizard: signature layer */
+    [data-theme='solstice'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.4rem;
+        block-size: 2px;
+        margin-inline: 0.35rem;
+        border-radius: 2px;
+        background: var(--border);
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps li[data-state='done']::after {
+        background: linear-gradient(90deg, var(--accent), var(--primary));
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 1.5px solid var(--border-strong);
+        background: none;
+        color: var(--muted-foreground);
+        box-sizing: border-box;
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+        box-shadow: 0 0 0 4px hsl(from var(--primary) h s l / 0.22);
+    }
+
+    [data-theme='solstice'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--foreground);
+    }
+

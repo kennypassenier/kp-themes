@@ -1,0 +1,79 @@
+/* @part: sidenav: register layer; also media, form-field, button, back-to-top */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar lights its current item from underneath. A column has no
+       underneath, so the glow moves to the leading edge and becomes the
+       tube running down the side of the active row. */
+    [data-theme='synthwave'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__title {
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link,
+    [data-theme='synthwave'] .kp-sidenav__category-toggle {
+        padding-inline: 1.1rem;
+        font-weight: 600;
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--kp-core);
+        background: none;
+        box-shadow:
+            inset 0.2rem 0 0 var(--primary),
+            inset 0 0 25px hsl(from var(--primary) h s l / 0.18);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Both get the tube: a ring of the primary that glows rather than
+       merely bounding. */
+    [data-theme='synthwave'] .kp-to-top {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-media {
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.28);
+    }
+
+    [data-theme='synthwave'] .kp-media-figure > figcaption {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='synthwave'] .kp-media-figure {
+        color: var(--primary);
+        text-align: start;
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='synthwave'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='synthwave'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+

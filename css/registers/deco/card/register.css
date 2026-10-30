@@ -1,0 +1,74 @@
+/* @part: card: register layer; also dialog */
+    /* ── Cards and the dossier ────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-card {
+        background: var(--popover);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    /* The stamp: a ruby plate, tilted, the demo's own literal offset. The
+   demo carries no `data-kp-label-open` colour change, so none is answered
+   here — the label stays "Classified" whether the file is open or not. */
+    [data-theme='deco'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        inset-block-start: -0.6rem;
+        inset-inline-end: 1rem;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.5rem;
+        rotate: 1.5deg;
+    }
+
+    /* The redactions: jewel plates (emerald) sitting over the words —
+   covered when the effects module is live, always readable without it
+   (AR34). Rest state here is cleared/readable; the trigger's marks start
+   covered only once [data-kp-effects] is set. Scoped to the dossier's own
+   marks, not every mark on the page (the lede's stay plain highlights). */
+    [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark {
+        display: inline-block;
+        background: transparent;
+        color: var(--foreground);
+        border-radius: 0;
+        padding: 0 0.3em;
+        box-shadow: inset 0 -2px 0 var(--accent);
+    }
+
+    [data-theme='deco'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        background: var(--accent);
+        color: var(--accent);
+        box-shadow: none;
+    }
+
+    /* Panels: one gold hairline, no shadow, nothing floats. */
+    [data-theme='deco'] .kp-dialog,
+    [data-theme='deco'] .kp-popover,
+    [data-theme='deco'] .kp-menu,
+    [data-theme='deco'] .kp-toast,
+    [data-theme='deco'] .kp-tooltip,
+    [data-theme='deco'] .kp-confirm,
+    [data-theme='deco'] .kp-datepicker__panel,
+    [data-theme='deco'] .kp-combobox__list,
+    [data-theme='deco'] .kp-palette,
+    [data-theme='deco'] .kp-theme-menu__list {
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+

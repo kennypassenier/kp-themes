@@ -1,0 +1,45 @@
+/* @part: form-field: register layer; also switch, forms */
+    /* ── Fields: ruled boxes on the page ground ───────────────────────── */
+
+    [data-theme='formal'] .kp-field {
+        gap: var(--kp-space-xs);
+    }
+
+    [data-theme='formal'] .kp-field__label {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-field__input,
+    [data-theme='formal'] .kp-datatable__search,
+    [data-theme='formal'] .kp-combobox__input,
+    [data-theme='formal'] .kp-palette__input {
+        background: var(--background);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    /* Invalid wins over this register's own field border [gap-11]: the rule
+       above sets the border in kp.register, which beats
+       .kp-field--invalid in kp.components, so an invalid field painted
+       exactly like a valid one. */
+    [data-theme='formal'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-fieldset {
+        border-color: var(--border);
+        border-radius: var(--radius);
+    }
+
+    /* The switch [gap-11]: formal keeps the pill, on the field's own ground
+       and boundary, so a switch sits in a form like the inputs beside it. */
+    [data-theme='formal'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='formal'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+

@@ -1,0 +1,28 @@
+/* @part: small-patterns: signature layer */
+    [data-theme='pastel'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='pastel'] .kp-art__line {
+        fill: var(--kp-sig-pa-pass-c);
+        stroke: none;
+    }
+    [data-theme='pastel'] .kp-art__ink {
+        fill: var(--card);
+        stroke: var(--primary);
+    }
+    [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] > path:last-child {
+        fill: var(--accent);
+        stroke: var(--kp-sig-pa-tape-stripe);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] > path {
+            transform-box: fill-box;
+            transform-origin: 0 0;
+            animation: kp-sig-pastel-stuck-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 60ms);
+        }
+        [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] > path.kp-art__line {
+            animation-name: kp-sig-pastel-pass-in;
+        }
+    }

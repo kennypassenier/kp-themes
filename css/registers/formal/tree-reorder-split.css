@@ -1,0 +1,79 @@
+/* @part: tree-reorder-split: register layer; also accordion, date-picker, tabs, breadcrumb-pagination */
+    [data-theme='formal'] .kp-reorder {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] .kp-tree {
+        font-family: var(--theme-font-body);
+        color: var(--foreground);
+    }
+
+    /* A branch's children are kept drawn while they glide shut
+       (js/motion.js glideGroup(), lesson 26): the state is already
+       `aria-expanded="false"` while the glide plays. */
+    [data-theme='formal'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='formal'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The accordion [gap-12]: the body face and the ink, and the primary colour for what is open, as its tabs mark the selected one. */
+    [data-theme='formal'] .kp-accordion__summary {
+        font-family: var(--theme-font-body);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    /* ── Navigation and steps ──────────────────────────────────────────── */
+
+    [data-theme='formal'] .kp-tab {
+        border-radius: calc(var(--radius) - 2px);
+    }
+
+    [data-theme='formal'] .kp-tab[aria-selected='true'] {
+        color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-breadcrumb,
+    [data-theme='formal'] .kp-pagination {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] .kp-wizard {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='formal'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 50%;
+    }
+
+    /* A month or a year is wider than it is tall, so the day's 50% drew it
+     * as a stretched ellipse; it is a pill, and the day stays a circle [scope-90]. */
+    [data-theme='formal'] .kp-datepicker__grid:is([data-kp-view='months'], [data-kp-view='years']) .kp-datepicker__day[aria-selected='true'] {
+        border-radius: 999px;
+    }
+
+    [data-theme='formal'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+    }
+

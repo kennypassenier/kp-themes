@@ -1,0 +1,42 @@
+/* @part: button: register layer; also form-field */
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    /* The plain button only: a primary or destructive plate stays its own
+       when pressed (G12: the blaze closes in, the part does not change). The
+       restatement reached them too and turned them pale under their light
+       words, 1.8:1 (research/forest-uniformity F-10). */
+    [data-theme='forest'] .kp-button:active:not(:disabled, .kp-button--primary, .kp-button--destructive, .kp-button--ghost) {
+        background: var(--card);
+    }
+
+    /* The same for the plain button and the ghost: the press closes the blaze
+       and the part keeps the plate it had pointed at (it turned (252,251,248)
+       to (191,187,176) before, and the ghost's green words read 4.35:1 on
+       that grey). */
+    [data-theme='forest'] .kp-button--ghost:active:not(:disabled) {
+        border-color: var(--border-strong);
+        background: color-mix(in srgb, var(--primary) 8%, transparent);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='forest'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+

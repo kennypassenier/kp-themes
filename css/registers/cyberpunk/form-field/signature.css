@@ -1,0 +1,426 @@
+/* @part: form-field: signature layer; also month-heatmap */
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):hover:not(:disabled, [aria-disabled='true']),
+    [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch, .kp-upload__zone):hover:not(:has(input:disabled)) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):focus-visible,
+    [data-theme='cyberpunk']
+        :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url):focus-visible,
+    [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch):has(input:focus-visible),
+    [data-theme='cyberpunk'] :focus-visible + .kp-upload__zone,
+    [data-theme='cyberpunk'] [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+    }
+
+    /* The brackets are the focus mark: the package's outline and its inner ring step aside. */
+    [data-theme='cyberpunk']
+        :is(
+            :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url),
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            )
+        ):focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch) input:focus-visible,
+    [data-theme='cyberpunk'] [data-kp-upload-input]:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):active:not(:disabled, [aria-disabled='true']) {
+        --kp-cp-grid-a: 0.6;
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):active:not(:disabled, [aria-disabled='true'], [aria-selected='true'], [aria-current], [aria-pressed='true']) {
+        background-color: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] input.kp-field__check {
+        position: relative;
+    }
+
+    /* A check on its own (a table cell, a bar) is framed by its pseudo-element, a little outside its box. */
+    [data-theme='cyberpunk'] input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)::after {
+        content: '';
+        position: absolute;
+        inset: -6px;
+        background-image: var(--kp-cp-sq-img);
+        background-position: var(--kp-cp-sq-pos);
+        background-size: var(--kp-cp-sq-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        pointer-events: none;
+    }
+
+    /* A calendar day answers hover and press with its own two shadows and draws the brackets as layers. */
+    [data-theme='cyberpunk'] .kp-calendar__day {
+        background-image: var(--kp-cp-br-img);
+        background-position: var(--kp-cp-br-pos);
+        background-size: var(--kp-cp-br-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day:focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ),
+        [data-theme='cyberpunk']
+            :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url),
+        [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch, .kp-upload__zone) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ):hover:not(:disabled, [aria-disabled='true']),
+        [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch, .kp-upload__zone):hover:not(:has(input:disabled)) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ):focus-visible,
+        [data-theme='cyberpunk']
+            :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url):focus-visible,
+        [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch):has(input:focus-visible),
+        [data-theme='cyberpunk'] :focus-visible + .kp-upload__zone,
+        [data-theme='cyberpunk'] [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ):hover:not(:disabled, [aria-disabled='true']):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+    }
+

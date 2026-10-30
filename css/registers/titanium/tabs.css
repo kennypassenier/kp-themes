@@ -1,0 +1,80 @@
+/* @part: tabs: register layer; also command-palette, breadcrumb-pagination, date-picker, combobox */
+    /* ── Navigation and steps ───────────────────────────────────────────── */
+
+    [data-theme='titanium'] .kp-tab {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-tab[aria-selected='true'] {
+        color: var(--foreground);
+        font-weight: 600;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-pagination a[aria-current],
+    [data-theme='titanium'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='titanium'] .kp-wizard {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='titanium'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='titanium'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    [data-theme='titanium'] .kp-shortcuts__group-label,
+    [data-theme='titanium'] .kp-palette__group-label {
+        font-weight: 700;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-theme-menu__status,
+    [data-theme='titanium'] .kp-palette__status,
+    [data-theme='titanium'] .kp-combobox__status {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The roots the rules above reach only by their parts ───────────── */
+
+    [data-theme='titanium'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.2);
+    }
+
+    [data-theme='titanium'] .kp-form {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='titanium'] .kp-breadcrumb,
+    [data-theme='titanium'] .kp-pagination {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-combobox,
+    [data-theme='titanium'] .kp-datepicker,
+    [data-theme='titanium'] .kp-colorpicker,
+    [data-theme='titanium'] .kp-shortcuts {
+        border-radius: var(--radius);
+    }
+

@@ -1,0 +1,35 @@
+/* @part: graph: signature layer */
+    [data-theme='nostromo'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.7;
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__edge {
+        filter: drop-shadow(0 0 1.5px var(--success));
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node--hub {
+        --kp-graph-node-anim: kp-graph-breathe 2400ms ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+            animation: kp-graph-blink 1000ms steps(1) infinite;
+            animation-delay: calc(var(--i) * 130ms);
+        }
+    }
+
+    @keyframes kp-graph-breathe {
+        50% {
+            transform: scale(1.06);
+        }
+    }
+
+    @keyframes kp-graph-blink {
+        50% {
+            visibility: hidden;
+        }
+    }

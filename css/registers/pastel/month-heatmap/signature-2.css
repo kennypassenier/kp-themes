@@ -1,0 +1,54 @@
+/* @part: month-heatmap: signature layer; also progress-spinner-skeleton */
+    /* A loading day is the body: a mint pom-pom rim with its pass. */
+    [data-theme='pastel'] :is(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'] {
+        box-shadow:
+            0 0 0 0.16rem var(--accent),
+            1.5px 1.5px 0 0.16rem var(--kp-sig-pa-pass-c);
+    }
+
+    /* The busy progress bar is the row along its track; its fill stands down. */
+    [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
+        overflow: visible;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] :is(.kp-progressbar__fill, .kp-progressbar__head) {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The hump through the days themselves and through the beads, in
+           reading order; the legs step in turn; the feelers feel. */
+        [data-theme='pastel'] .kp-calendar__day[data-kp-pieces] {
+            animation: kp-sig-pastel-bug-rise calc(var(--kp-sig-pa-loop) / 2) ease-in-out var(--kp-pieces-d, 0ms) infinite;
+        }
+
+        [data-theme='pastel'] .kp-pieces :is(.kp-pieces__bead, .kp-pieces__head--line) {
+            animation: kp-sig-pastel-bug-rise-bead calc(var(--kp-sig-pa-loop) / 2) ease-in-out calc(var(--k, 0) * 70ms) infinite;
+        }
+
+        [data-theme='pastel'] .kp-pieces .kp-pieces__leg {
+            animation: kp-sig-pastel-bug-step calc(var(--kp-sig-pa-loop) / 2) ease-in-out calc(var(--kp-pieces-d, 0ms) + var(--k, 0) * 110ms) infinite;
+        }
+
+        [data-theme='pastel'] .kp-pieces .kp-pieces__leg--b {
+            animation-delay: calc(var(--kp-pieces-d, 0ms) + 600ms);
+        }
+
+        [data-theme='pastel'] .kp-pieces :is(.kp-pieces__head--day, .kp-pieces__head--lead)::before {
+            animation: kp-sig-pastel-bug-feel calc(var(--kp-sig-pa-loop) / 2) ease-in-out infinite alternate;
+        }
+    }
+
+    @keyframes kp-sig-pastel-bug-rise {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0 -0.22rem;
+        }
+    }
+

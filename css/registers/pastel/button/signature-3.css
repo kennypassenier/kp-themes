@@ -1,0 +1,7 @@
+/* @part: button: signature layer */
+    /* The curl of a pointed small button (15 px) lay over the last letter of its 9 px side margin ("Failed" read "Failec").
+       A small button curls a smaller corner, inside its own margin. */
+    [data-theme='pastel'] .kp-button.kp-button--sm::after {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+    }

@@ -1,0 +1,31 @@
+/* @part: heat-grid: signature layer */
+    [data-theme='pastel'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='pastel'] .kp-heat__cell:active:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='pastel'] .kp-matrix__cell:active:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        transform: translateY(1.5px);
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-heat__cell[data-kp-picked],
+    [data-theme='pastel'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='pastel'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: var(--kp-sig-pa-r-chip);
+    }
+    [data-theme='pastel'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton) {
+        position: relative;
+    }
+    [data-theme='pastel'] .kp-heat__cells[data-kp-pieces] > .kp-heat__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='pastel'] .kp-heat__cell.kp-skeleton {
+        border-radius: 6px;
+        box-shadow: none;
+    }

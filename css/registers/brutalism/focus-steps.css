@@ -1,0 +1,39 @@
+/* @part: focus-steps: signature layer */
+    /* Cook mode: each step is set down on its footprint; the figures and the counter shout. */
+    [data-theme='brutalism'] .kp-focus-steps__count {
+        font-family: var(--theme-font-display);
+        font-size: 1.125rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__text {
+        font-weight: 600;
+        line-height: 1.35;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__needs {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-focus-steps__needs-title {
+        color: var(--foreground);
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__name {
+        font-weight: 600;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+        border-width: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-focus-steps__step {
+            animation: kp-sig-brutalism-k4-fall var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+        }
+    }
+

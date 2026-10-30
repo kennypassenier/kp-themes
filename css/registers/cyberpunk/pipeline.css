@@ -1,0 +1,62 @@
+/* @part: pipeline: signature layer */
+    /* ── The pipeline: a lane is a plate cut at its dossier corner, its head a prefixed mono label; a card is cut at its
+       end corner and lights its circuit; the chosen card is held by the reticle ── */
+    [data-theme='cyberpunk'] .kp-pipeline__lane {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__head {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__name {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__name::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__share,
+    [data-theme='cyberpunk'] .kp-pipeline__sub,
+    [data-theme='cyberpunk'] .kp-pipeline__meta {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__card {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__card:hover {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__card[aria-current='true'] {
+        --kp-cp4-tone: var(--accent);
+        outline: 0;
+        border-color: var(--border);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__mark {
+        border-radius: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(2) {
+            animation-delay: var(--kp-cp4-tick);
+        }
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-cp4-tick));
+        }
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-cp4-tick));
+        }
+    }
+

@@ -1,0 +1,73 @@
+/* @part: week-agenda: signature layer; also heat-grid, run-timeline, bar-cell */
+    [data-theme='blueprint'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='blueprint'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        border-color: var(--primary);
+        outline: 1px solid var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='blueprint'] .kp-heat__cell[data-kp-picked],
+    [data-theme='blueprint'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px dashed var(--accent);
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] :is(.kp-heat__label, .kp-matrix__name, .kp-heat__col, .kp-matrix__corner) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-heat__label-button[aria-pressed='true'] {
+        background: none;
+        color: var(--primary);
+        box-shadow: inset 0 -1px 0 var(--accent);
+    }
+    [data-theme='blueprint'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: a drawing. Open frames in the series' ink with its hatch for a section, square;
+       pointing turns the frame to the pen; the next run carries the amber witness lines; the line for now is the pen's
+       cyan; the rules of the plot are the sheet's hairlines; times and the axis are lettering. A running run is the
+       chain line, long dash and dot, feeding along its own dimension line; the loading sentence is lettered on the
+       sheet's own ground, clear of every ghost. */
+    [data-theme='blueprint'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
+    }
+    /* A planned run [gaps-time-1019]: drafting cross-hatch. */
+    [data-theme='blueprint'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--kp-gantt-fill) 40%, transparent) 0 1px, transparent 1px 8px), repeating-linear-gradient(-45deg, color-mix(in oklab, var(--kp-gantt-fill) 40%, transparent) 0 1px, transparent 1px 8px);
+    }
+    [data-theme='blueprint'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='blueprint'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        border-color: var(--kp-week-ink);
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-week-ink) h s l / 0.28) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] :is(.kp-week__pill, .kp-gantt__run):is(button):hover {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+    [data-theme='blueprint'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow:
+            -4px 0 0 -3px var(--accent),
+            4px 0 0 -3px var(--accent),
+            0 0 0 1px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-week__col {
+        border-inline-start-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-gantt__rule {
+        border-inline-start-color: hsl(from var(--border-strong) h s l / 0.5);
+    }
+    [data-theme='blueprint'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span, .kp-week__head) {
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }

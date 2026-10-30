@@ -1,0 +1,23 @@
+/* @part: range-picker: signature layer */
+    /* ── Range picker: the custom window in force is a key sunk in its well ── */
+    [data-theme='nostromo'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-range__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+

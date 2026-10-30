@@ -1,0 +1,41 @@
+/* @part: sidenav: register layer; also media, back-to-top */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Quiet, the way this theme is quiet: the row you are on is a raised
+       plate rather than a colour, and the accent shows only at its
+       leading edge. */
+    [data-theme='dark'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-sidenav__link,
+    [data-theme='dark'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--accent);
+        color: var(--foreground);
+        border-inline-start-color: var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet, like the rest of it. */
+    [data-theme='dark'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='dark'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+

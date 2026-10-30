@@ -1,0 +1,35 @@
+/* @part: typed-confirmation: signature layer */
+    [data-theme='synthwave'] .kp-type-confirm__loses {
+        border-inline-start-width: 1px;
+        border-inline-start-color: var(--border);
+        border-block-start: 2px solid var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-type-confirm__loses-title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-type-confirm__name {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        color: var(--accent);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='synthwave'] .kp-type-confirm__list,
+    [data-theme='synthwave'] .kp-type-confirm__input {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='synthwave'] .kp-type-confirm__status {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+    }
+    [data-theme='synthwave'] .kp-type-confirm[data-kp-matched] .kp-type-confirm__input {
+        border-color: var(--accent);
+        box-shadow: 0 0 8px hsl(from var(--accent) h s l / 0.5);
+    }
+

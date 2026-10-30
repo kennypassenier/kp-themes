@@ -1,0 +1,27 @@
+/* @part: popover: signature layer; also dialog */
+    /* A plate's words come up with the lacquer, in an overlay that arrives (a
+       disabled entry keeps the dimming of its own). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco']
+            :is(.kp-dialog, .kp-popover, .kp-menu-button > .kp-menu, .kp-toast, .kp-tour, dialog.kp-drawer, .kp-tooltip)
+            > :not(:disabled, [aria-disabled='true'], [hidden]) {
+            opacity: var(--kp-sig-deco-up);
+        }
+    }
+
+    /* The plates inside a plate: a menu in a popover, a card in a dialog are
+       the lacquer of the plate they stand on, not a second one. A menu that a
+       menu button opens is a plate of its own wherever the button stands (a
+       dialog's footer, a popover): it keeps its lacquer and inlay
+       (2026-10-15: the review dialog's menus showed bare words), the
+       :where() keeping the rule as light as it was. */
+    [data-theme='deco'] :is(.kp-popover, .kp-dialog) .kp-menu:not(:where(.kp-menu-button > .kp-menu)) {
+        border: 0;
+        background: none;
+        mask-image: none;
+    }
+
+    [data-theme='deco'] :is(.kp-popover, .kp-dialog) .kp-menu:not(:where(.kp-menu-button > .kp-menu))::after {
+        content: none;
+    }
+

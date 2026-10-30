@@ -1,0 +1,22 @@
+/* @part: dialog: signature layer */
+    [data-theme='titanium'] .kp-dialog {
+        --kp-sig-dur: 240ms;
+        clip-path: polygon(
+            var(--kp-chamfer-panel) 0,
+            100% 0,
+            100% min(var(--kp-sig-ti-cut), 100% - var(--kp-chamfer-panel)),
+            calc(100% - var(--kp-chamfer-panel)) var(--kp-sig-ti-cut),
+            0 var(--kp-sig-ti-cut),
+            0 min(var(--kp-chamfer-panel), var(--kp-sig-ti-cut))
+        );
+    }
+
+    [data-theme='titanium'] .kp-dialog::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block-end: 2px solid var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+

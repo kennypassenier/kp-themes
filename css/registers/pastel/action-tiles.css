@@ -1,0 +1,78 @@
+/* @part: action-tiles: signature layer; also calm-status */
+    [data-theme='pastel'] .kp-actions {
+        --kp-actions-gap: 0.875rem;
+    }
+    [data-theme='pastel'] .kp-action {
+        --kp-action-radius: var(--kp-sig-pa-r-plate);
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+        --kp-action-shadow-hover: 0 5px 0 var(--kp-sig-pa-peel);
+        --kp-action-shadow-active: 0 0 0 var(--kp-sig-pa-peel);
+        --kp-action-ground-active: var(--card);
+        --kp-action-lift: 0 -2px;
+        --kp-action-press: 0 3px;
+        --kp-action-title-weight: 700;
+    }
+    /* The fold: the ground where the corner lifted off, the sticker's back below the crease (the key figure's). */
+    [data-theme='pastel'] .kp-action::after,
+    [data-theme='pastel'] .kp-action--destructive::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: -1px -1px auto auto;
+        inset-block: -1px auto;
+        inset-inline: auto -1px;
+        inline-size: 0.85rem;
+        block-size: 0.85rem;
+        border-radius: 0;
+        border-start-end-radius: var(--kp-sig-pa-r-plate);
+        border-end-start-radius: 0.4rem;
+        background: linear-gradient(calc(225deg - 90deg * (1 - var(--kp-sig-pa-dir))), var(--kp-sig-pa-ground) 0 50%, var(--muted) 50% 100%);
+        box-shadow: calc(-1px * var(--kp-sig-pa-dir)) 1px 0 hsl(from var(--border-strong) h s l / 0.7);
+        scale: 0;
+        transform-origin: calc(50% + 50% * var(--kp-sig-pa-dir)) 0;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active))::after {
+        scale: 1;
+    }
+    [data-theme='pastel'] .kp-action:focus-visible {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+        box-shadow: var(--kp-action-shadow);
+    }
+    [data-theme='pastel'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        box-shadow: 0 3px 0 var(--border);
+    }
+    /* Destructive: a tone is a sticker. The title stands on the red's own plate with its own flat peel. */
+    [data-theme='pastel'] .kp-action--destructive {
+        --kp-action-tone-edge: var(--border-strong);
+        --kp-action-tone-edge-hover: var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title {
+        justify-self: start;
+        padding: 0.05rem 0.5rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-action {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land),
+                background-color var(--fx-duration) ease,
+                border-color var(--fx-duration) ease;
+        }
+        [data-theme='pastel'] .kp-action::after {
+            transition: scale var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* Status rows: white paper with its sky pass off register beside it, a control's corner. A failed row's reason is
+       a sticker on the red's plate; an empty row is a dashed outline with no pass. Marks stand upright. */
+    [data-theme='pastel'] .kp-statuslist {
+        --kp-statuslist-gap: 0.75rem;
+    }

@@ -1,0 +1,32 @@
+/* @part: visual-timer: signature layer */
+    /* ── Timer disc: a turned part, the time left a sector of bare metal ── */
+    [data-theme='titanium'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--primary);
+        --kp-timer-disc-marks: var(--foreground);
+        --kp-timer-disc-ring: var(--destructive);
+    }
+    [data-theme='titanium'] .kp-timer-disc__face {
+        border: 0;
+        background:
+            repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.1) 0 1px, transparent 1px 3px),
+            radial-gradient(circle closest-side, var(--accent), var(--muted));
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-timer-disc__sector {
+        background:
+            repeating-radial-gradient(circle, hsl(from var(--background) h s l / 0.22) 0 1px, transparent 1px 3px),
+            conic-gradient(var(--kp-timer-disc-fill) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+    }
+    [data-theme='titanium'] .kp-timer-disc__hub {
+        border: 0;
+        background: radial-gradient(circle, var(--background) 0 35%, var(--primary) 40%);
+    }
+    [data-theme='titanium'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            0 0 0 3px var(--destructive);
+        animation: none;
+    }
+

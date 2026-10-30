@@ -1,0 +1,21 @@
+/* @part: form-field: signature layer */
+    /* At most two dips as it strikes (the anatomy's tube), each held. */
+    @keyframes kp-sig-synthwave-sw-tube {
+        0% {
+            opacity: 0.3;
+        }
+
+        25% {
+            opacity: 1;
+        }
+
+        45% {
+            opacity: 0.55;
+        }
+
+        70%,
+        100% {
+            opacity: 1;
+        }
+    }
+

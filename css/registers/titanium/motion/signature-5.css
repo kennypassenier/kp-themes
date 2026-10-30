@@ -1,0 +1,15 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also run-timeline */
+    [data-theme='titanium'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        border-color: var(--chart-1);
+        color: var(--foreground);
+        background: var(--kp-sig-ti-bath), color-mix(in oklab, var(--chart-1) 40%, var(--card));
+        box-shadow: inset -2px 0 0 var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+        [data-theme='titanium'] :is(.kp-week__pill, .kp-gantt__run) {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }

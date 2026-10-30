@@ -1,0 +1,36 @@
+/* @part: wheel: signature layer */
+    /* Wheel: a compass drawing: wedges are light washes between thin drawn lines, the rim one line, the pointer the
+       amber pointer of the scale; it turns on the plotter's feed (up to speed, at speed, down) and stops. */
+    [data-theme='blueprint'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-bp-feed);
+        --kp-wheel-tint: 16%;
+        --kp-wheel-tint-chosen: 40%;
+        --kp-wheel-pointer: var(--accent);
+    }
+    [data-theme='blueprint'] .kp-wheel__segment {
+        stroke: var(--border-strong);
+        stroke-width: 0.8;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='blueprint'] .kp-wheel__spin.kp-button::before,
+    [data-theme='blueprint'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='blueprint'] .kp-wheel__rim {
+        stroke-width: 1;
+    }
+    [data-theme='blueprint'] .kp-wheel__pointer {
+        stroke: none;
+    }
+    [data-theme='blueprint'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border-radius: 0;
+    }
+

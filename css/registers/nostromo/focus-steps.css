@@ -1,0 +1,52 @@
+/* @part: focus-steps: signature layer */
+    /* ── Cook mode: the count is Michroma, the wake lamp lights, the needs are a printout on the screen ── */
+    [data-theme='nostromo'] .kp-focus-steps__head {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__count {
+        font-family: var(--theme-font-display);
+        font-size: 0.8125rem;
+        font-weight: 400;
+        white-space: nowrap;
+    }
+    [data-theme='nostromo'] .kp-focus-steps__wake {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-focus-steps__wake::before {
+        border: 0;
+        background: var(--sidebar-accent);
+        box-shadow: 0 0 0 1.5px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem);
+        border: 0;
+        border-radius: 0.5rem;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        margin-inline: 0.25rem;
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__needs-title {
+        color: var(--kp-no-phosphor);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-focus-steps__amount {
+        color: var(--kp-no-phosphor);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__nav > .kp-button {
+        font-size: 1rem;
+    }
+

@@ -1,0 +1,21 @@
+/* @part: small-patterns: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-art > g[data-kp-art-set='fieldkit'] > path {
+            transform-box: fill-box;
+            transform-origin: 50% 100%;
+            animation: kp-sig-forest-art-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow) both;
+            animation-delay: calc(var(--kp-art-i, 0) * var(--kp-sig-fo-stagger));
+        }
+    }
+    @keyframes kp-sig-forest-art-grow {
+        from {
+            scale: 1 0;
+            opacity: 0;
+            filter: sepia(1) saturate(0.6);
+        }
+        to {
+            scale: 1 1;
+            opacity: 1;
+            filter: none;
+        }
+    }

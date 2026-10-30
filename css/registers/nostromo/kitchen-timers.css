@@ -1,0 +1,55 @@
+/* @part: kitchen-timers: signature layer */
+    /* ── Kitchen timers: the time is a screen readout; ended, the klaxon frames the card (never flashing) ── */
+    [data-theme='nostromo'] .kp-timers {
+        --kp-timer-font: var(--theme-font-mono);
+        --kp-timer-size: 2.25rem;
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-timer {
+        border-color: var(--border-strong);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-timer__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-timer__time {
+        box-sizing: content-box;
+        padding-inline: 0.5rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        color: var(--kp-no-phosphor);
+        text-align: end;
+        text-shadow: 0 0 6px hsl(from var(--sidebar-primary) h s l / 0.6);
+        font-weight: 700;
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--kp-no-dim);
+        text-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        padding-inline: 0.4rem;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        font-size: calc(var(--kp-timer-size) * 0.62);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+

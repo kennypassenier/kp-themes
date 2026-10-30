@@ -1,0 +1,24 @@
+/* @part: focus-steps: signature layer */
+    /* ── Cook mode ── */
+    [data-theme='cyberpunk'] .kp-focus-steps__count,
+    [data-theme='cyberpunk'] .kp-focus-steps__amount,
+    [data-theme='cyberpunk'] .kp-focus-steps__needs-title {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+    }
+    [data-theme='cyberpunk'] .kp-focus-steps__needs-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-focus-steps__needs {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image: var(--kp-cp4-scan);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-focus-steps__step {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+

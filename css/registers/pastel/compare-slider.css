@@ -1,0 +1,43 @@
+/* @part: compare-slider: signature layer */
+    /* Compare slider: a photo stuck down in a frame with its sky pass; the divider is a strip of washi tape laid across
+       it; the handle is a round sticker on its peel that lifts when pointed at; the two labels are stickers. */
+    [data-theme='pastel'] .kp-compare {
+        --kp-compare-line: 10px;
+        --kp-compare-ink: var(--primary);
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-compare__divider {
+        border-inline-start-color: transparent;
+        background:
+            repeating-linear-gradient(0deg, var(--accent) 0 6px, transparent 6px 12px),
+            var(--kp-sig-pa-tape-stripe);
+    }
+    [data-theme='pastel'] .kp-compare__handle {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:hover {
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:active {
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:focus-visible {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='pastel'] .kp-compare__label {
+        border: 0;
+        border-radius: var(--kp-sig-pa-r-chip);
+        padding-inline: 0.7rem;
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-compare__handle {
+            transition: box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+        [data-theme='pastel'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-pa-land-size);
+        }
+    }

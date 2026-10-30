@@ -1,0 +1,41 @@
+/* @part: status-rows: signature layer; also calm-status */
+    /* Status rows: square tape rows with the hairline and a 2 px pink stripe on top; the detail is the OSD. A failed
+       row is the red stripe and its name in the red neon; a loading row's stripe is the marquee. */
+    [data-theme='synthwave'] .kp-statuslist {
+        --kp-statuslist-gap: 0.625rem;
+        --kp-statusrow-mark-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-statusrow {
+        --kp-statusrow-edge: var(--kp-hairline);
+        --kp-statusrow-radius: 0;
+        --kp-sw-row-stripe: linear-gradient(to right, var(--primary), var(--accent));
+        background:
+            var(--kp-sw-row-stripe) 0 0 / 100% 2px no-repeat,
+            var(--card);
+    }
+    [data-theme='synthwave'] .kp-statusrow[data-state='failed'] {
+        --kp-sw-row-stripe: linear-gradient(var(--destructive), var(--destructive));
+        --kp-statusrow-state-edge: var(--kp-hairline);
+    }
+    [data-theme='synthwave'] .kp-statusrow[data-state='empty'] {
+        --kp-sw-row-stripe: linear-gradient(var(--kp-hairline), var(--kp-hairline));
+    }
+    [data-theme='synthwave'] .kp-statusrow[data-state='loading'] {
+        --kp-sw-row-stripe: radial-gradient(circle, var(--kp-core) 0 1.5px, hsl(from var(--primary) h s l / 0.9) 2px, transparent 3px) 0 0 / 40px 4px
+            repeat-x;
+        background:
+            var(--kp-sw-row-stripe),
+            radial-gradient(circle, hsl(from var(--primary) h s l / 0.35) 0 1.5px, transparent 2px) 0 0 / 10px 4px repeat-x,
+            var(--card);
+    }
+    [data-theme='synthwave'] .kp-statusrow__detail {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size-adjust: 0.5;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-statusrow[data-state='loading'] {
+            animation: kp-sig-synthwave-chase calc(4 * var(--kp-sw-beat)) steps(4, end) infinite;
+        }
+    }
+

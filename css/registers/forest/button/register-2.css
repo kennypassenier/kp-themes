@@ -1,0 +1,63 @@
+/* @part: button: register layer; also toast, alert */
+    [data-theme='forest'] .kp-button--primary {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* The mirror sheen: a light band that sweeps once on hover. */
+    [data-theme='forest'] .kp-button--mirror {
+        background-image: linear-gradient(
+            100deg,
+            transparent 0%,
+            color-mix(in srgb, var(--primary-foreground) 35%, transparent) 45%,
+            transparent 55%
+        );
+        background-size: 220% 100%;
+        background-position: 120% 0;
+    }
+
+    [data-theme='forest'] .kp-button--ghost {
+        background: transparent;
+        border-color: transparent;
+        color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-button--ghost:hover,
+    [data-theme='forest'] .kp-button--ghost:focus-visible {
+        border-color: var(--border-strong);
+        background: color-mix(in srgb, var(--primary) 8%, transparent);
+    }
+
+    [data-theme='forest'] .kp-button--destructive {
+        background: var(--destructive);
+        border-color: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='forest'] .kp-icon-button {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='forest'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='forest'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    [data-theme='forest'] .kp-icon-button:hover {
+        background: color-mix(in srgb, var(--primary) 8%, transparent);
+    }
+

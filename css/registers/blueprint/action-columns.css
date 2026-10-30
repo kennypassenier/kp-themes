@@ -1,0 +1,57 @@
+/* @part: action-columns: signature layer */
+    /* The action list with a lead: a row's state is a chain line on its start edge in the state's ink, not a bar; a
+       warning row is flagged △, a failed one ▲; the next one is held between two amber witness lines; the group's
+       heading and the date are lettering; the payload a dashed frame of the mono. */
+    [data-theme='blueprint'] .kp-action-list--lead {
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='new'] {
+        --kp-bp-state: var(--primary);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='active'] {
+        --kp-bp-state: var(--info-foreground);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        --kp-bp-state: hsl(from var(--warning) h s 62%);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        --kp-bp-state: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='next'] {
+        --kp-bp-state: var(--accent);
+        background:
+            linear-gradient(var(--accent), var(--accent)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 100% 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed'], [data-kp-state='next']) {
+        border-image: repeating-linear-gradient(to bottom, var(--kp-bp-state) 0 6px, transparent 6px 9px) 1;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='warn'] .kp-action-list__title::before {
+        content: '\25B3\00a0';
+        color: hsl(from var(--warning) h s 62%);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='failed'] .kp-action-list__title::before {
+        content: '\25B2\00a0';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] :is(.kp-action-list__meta, .kp-action-list > li.kp-action-list__group) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-action-list__when {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-action-list__payload {
+        border-style: dashed;
+        border-radius: 0;
+        background: transparent;
+    }
+

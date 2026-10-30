@@ -1,0 +1,70 @@
+/* @part: sidenav: signature layer; also alarm, datatable */
+    /* The side navigation lands in its own column (Kenny, 2026-10-14:
+       toggling it moves only the sidebar itself, nothing may cover the page
+       beside it): the two clocks and the 8 px drop of the stuck plate, no
+       turn, since a turn round its top corner swings its foot over the page.
+       `-out` is the same frames, played `reverse` for the close. */
+    @keyframes kp-sig-pastel-sidenav-in {
+        0%,
+        21.4286% {
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        0% {
+            --kp-sig-pa-pass: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-sidenav-out {
+        0%,
+        21.4286% {
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        0% {
+            --kp-sig-pa-pass: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    /* The clocks alone, on a holder whose parts read them (the alarm, the
+       busy table's layer): the holder itself does not move. */
+    @keyframes kp-sig-pastel-pass-host-in {
+        0% {
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pass-host-out {
+        0% {
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+

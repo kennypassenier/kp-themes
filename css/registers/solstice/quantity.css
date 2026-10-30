@@ -1,0 +1,23 @@
+/* @part: quantity: signature layer */
+    /* Quantity. */
+    [data-theme='solstice'] .kp-quantity__field {
+        border-color: var(--border-strong);
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.14), transparent 55%), var(--background);
+        box-shadow: inset 0 -1px 0 hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='solstice'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='solstice'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        box-shadow: inset 0 -2px 0 var(--destructive);
+    }
+    [data-theme='solstice'] .kp-quantity__input {
+        font-family: var(--theme-font-display, inherit);
+        font-weight: 400;
+        font-size: calc(var(--kp-quantity-size, 1rem) * 1.15);
+    }
+    [data-theme='solstice'] .kp-quantity__unit {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+

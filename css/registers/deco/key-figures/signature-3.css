@@ -1,0 +1,58 @@
+/* @part: key-figures: signature layer */
+    /* A key figure that is a link or a filter, and a day of the month: a
+       plate that answers the pointer the same way, the leaf as one more
+       layer on its lacquer, the ring on its ::before. */
+    [data-theme='deco'] :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link)) {
+        --kp-sig-deco-hv: 0;
+        --kp-sig-deco-pr: 0;
+        cursor: pointer;
+        border-color: hsl(from var(--primary) h s l / calc(0.3 + 0.7 * var(--kp-sig-deco-hv)));
+        background-image:
+            linear-gradient(
+                135deg,
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.13 * var(--kp-sig-deco-hv))),
+                hsl(from var(--primary) h s l / calc(0.07 * var(--kp-sig-deco-hv))) 38%,
+                hsl(from var(--kp-sig-deco-gold-lt) h s l / calc(0.12 * var(--kp-sig-deco-hv))),
+                hsl(from var(--primary) h s l / calc(0.06 * var(--kp-sig-deco-hv)))
+            ),
+            repeating-linear-gradient(
+                135deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            ),
+            repeating-linear-gradient(
+                45deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            );
+        background-size:
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        translate: 0 calc(1px * var(--kp-sig-deco-pr));
+    }
+
+    /* A loading day's ::before is its left lift door (Q10), so the seal's ring
+       is not drawn on it: the ring's picture and opacity 0, written later at
+       the same weight, took the left door away (Kenny, 2026-10-13: "only has
+       the right curtain"). */
+    [data-theme='deco']
+        :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading']))::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        background-image: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.9) calc(100% - 1.6px),
+            var(--primary) calc(100% - 0.6px),
+            transparent
+        );
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: calc(var(--kp-sig-deco-ring) * 170%) calc(var(--kp-sig-deco-ring) * 170%);
+        opacity: 0;
+    }
+

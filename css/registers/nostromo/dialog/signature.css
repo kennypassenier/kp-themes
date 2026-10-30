@@ -1,0 +1,90 @@
+/* @part: dialog: signature layer; also card, popover */
+    /* js/motion.js learns the theme's time from an unopened dialog (a probe
+       it adds and takes off) and closes in two thirds of it: so an unopened
+       dialog is drawn over 480 ms and the open one in 320 ms (4 frames),
+       which is also its close and, opening as its close reversed, its
+       opening. Both in 4 bands: the probe's curve is the one motion.js folds
+       a disclosure on, in the size time (320 ms), so 4 bands keep that fold
+       on the 80 ms clock too. */
+    [data-theme='nostromo'] .kp-dialog {
+        --kp-sig-dur: calc(var(--kp-sig-no-frame) * 6);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.2rem;
+        --kp-sig-no-screw: radial-gradient(
+            circle,
+            hsl(from var(--foreground) h s l / 0.45) 0 1.5px,
+            hsl(from var(--foreground) h s l / 0.2) 2px 3px,
+            transparent 3.5px
+        );
+        background:
+            var(--kp-sig-no-screw) 6px 6px / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) calc(100% - 6px) 6px / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) 6px calc(100% - 6px) / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) calc(100% - 6px) calc(100% - 6px) / 8px 8px no-repeat,
+            var(--card);
+        box-shadow:
+            var(--kp-sig-no-raised),
+            0 12px 28px -14px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    [data-theme='nostromo'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+    }
+
+    /* The beam rides the edge of what the raster has written: a bright line
+       with a fading phosphor tail. At rest it is away, so the reduced pose is
+       the finished dialog. A dialog in the page's flow (not a <dialog>, which
+       the browser places itself) holds it. */
+    [data-theme='nostromo'] .kp-dialog:not(dialog) {
+        position: relative;
+    }
+
+    /* A toast, a tile and a key figure carry the same beam, but not on a
+       pseudo-element: the toast's ::before is its lamp, a card's the stamp,
+       and a key figure is the box its trend link's ::after stretches over.
+       Theirs is one mechanism for all three, a background layer that exists
+       only while the raster draws or erases them (the beam-layer keyframes
+       below): at rest the part has no extra layer at all. The tail is the
+       research demo's for a tile and a leaving part (research/nostromo-
+       character, 1.1 rem). */
+    [data-theme='nostromo'] :is(.kp-card, .kp-kpi) {
+        --kp-sig-no-tail: 1.1rem;
+    }
+
+    [data-theme='nostromo'] .kp-dialog::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+        block-size: var(--kp-sig-no-tail);
+        background: var(--kp-sig-no-beam);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='nostromo'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-no-contact);
+        --kp-sig-no-n: 2;
+        margin-inline-start: 0.5rem;
+        padding: 0.2rem 0.6rem;
+        border: 0;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.4);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-shadow: 0 -1px 0 hsl(from var(--foreground) h s l / 0.9);
+        text-transform: uppercase;
+    }
+

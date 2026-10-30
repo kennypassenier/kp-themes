@@ -1,0 +1,21 @@
+/* @part: signature: signature layer — rules that belong to no one component */
+    /* A right-to-left page is passed from its right edge, the line crossing
+       to the left, and the pass back is the same frames reversed as ever.
+       A left-to-right island inside it turns them back. */
+    [data-theme='dark']:dir(rtl),
+    [data-theme='dark'] [dir]:dir(rtl) {
+        --kp-sig-dk-s: -1;
+        --kp-sig-dk-from: right;
+        --kp-sig-dk-end: 0%;
+        --kp-sig-dk-gdir: 270deg;
+        --kp-sig-dk-cut: 0 0 0 100%;
+    }
+
+    [data-theme='dark'] [dir]:dir(ltr) {
+        --kp-sig-dk-s: 1;
+        --kp-sig-dk-from: left;
+        --kp-sig-dk-end: 100%;
+        --kp-sig-dk-gdir: 90deg;
+        --kp-sig-dk-cut: 0 100% 0 0;
+    }
+

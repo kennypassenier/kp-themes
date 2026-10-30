@@ -1,0 +1,23 @@
+/* @part: showing-data: register layer */
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='formal'] .kp-id,
+    [data-theme='formal'] .kp-url,
+    [data-theme='formal'] .kp-numeric,
+    [data-theme='formal'] .kp-timestamp,
+    [data-theme='formal'] .kp-masked,
+    [data-theme='formal'] .kp-copyable,
+    [data-theme='formal'] .kp-truncate,
+    [data-theme='formal'] .kp-cell-break,
+    [data-theme='formal'] .kp-cell-truncate {
+        font-family: var(--theme-font-body);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-timestamp,
+    [data-theme='formal'] .kp-id {
+        color: var(--muted-foreground);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+

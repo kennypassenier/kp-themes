@@ -1,0 +1,37 @@
+/* @part: forms: signature layer */
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--kp-sig-deco-gold-hi);
+        box-shadow: inset 0 0 1.25rem hsl(from var(--primary) h s l / 0.14);
+    }
+    [data-theme='deco']
+        .kp-fieldset[data-kp-layout='tiles']
+        > .kp-field__option:hover:not(:has(> .kp-field__check:disabled))
+        .kp-field__option-title {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        border-color: var(--kp-sig-deco-gold-hi);
+        background-color: color-mix(in oklab, var(--primary) 9%, var(--kp-sig-deco-lac));
+        box-shadow: inset 0 0 1.5rem hsl(from var(--primary) h s l / 0.2);
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) .kp-field__option-title {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        border-style: dashed;
+        background-color: var(--muted);
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                border-color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                box-shadow var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                background-color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle);
+        }
+    }
+

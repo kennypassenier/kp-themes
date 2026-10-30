@@ -1,0 +1,41 @@
+/* @part: navbar: signature layer */
+    /* A link in running text: a mint plate grows in behind its words, start
+       to end, on the landing in the contact time; a link in a navigation, a
+       menu, a breadcrumb or the footer keeps its own component's look
+       (scope-93). */
+    [data-theme='pastel'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        position: relative;
+        isolation: isolate;
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.22em;
+    }
+
+    [data-theme='pastel'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a)::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -0.05em -0.25em;
+        border-radius: 0.4em;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: calc(50% - 50% * var(--kp-sig-pa-dir)) 50%;
+    }
+
+    [data-theme='pastel']
+        a:not(
+            [class],
+            :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+        ):hover::before {
+        transform: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel']
+            a:not(
+                [class],
+                :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+            )::before {
+            transition: transform var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }

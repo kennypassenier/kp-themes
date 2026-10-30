@@ -1,0 +1,73 @@
+/* @part: tabs: register layer; also date-picker, breadcrumb-pagination, upload-wizard, combobox */
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='synthwave'] .kp-tab {
+        border-radius: 0;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        position: relative;
+    }
+
+    [data-theme='synthwave'] .kp-tab[aria-selected='true'] {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-cyan);
+        box-shadow: inset 0 -4px 0 0 var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-tabs__list {
+        border-bottom: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='synthwave'] .kp-breadcrumb,
+    [data-theme='synthwave'] .kp-pagination {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-pagination a[aria-current],
+    [data-theme='synthwave'] .kp-pagination [aria-current] {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-pink);
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-wizard {
+        border: 1px solid var(--kp-hairline);
+        border-top: 4px solid transparent;
+        border-image: var(--kp-stripe) 1;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='synthwave'] .kp-combobox__input,
+    [data-theme='synthwave'] .kp-palette__input,
+    [data-theme='synthwave'] .kp-datatable__search {
+        background: var(--sidebar-background);
+        border: 2px solid hsl(from var(--kp-pink-text) h s l / 0.35);
+        border-radius: var(--radius);
+        caret-color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.6);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='synthwave'] .kp-datepicker__weekday,
+    [data-theme='synthwave'] .kp-datepicker__title {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+

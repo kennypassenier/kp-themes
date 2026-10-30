@@ -1,0 +1,57 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: square rows; pointing rests the line at the row's start, as on a menu entry; counts are readings. The
+       counts on their way are slots the comet crosses. */
+    [data-theme='dark'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='dark'] .kp-facet {
+        --kp-facet-hover: var(--accent);
+        background-image: var(--kp-sig-dk-line);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 0 100%;
+    }
+    [data-theme='dark'] .kp-facet:hover {
+        background-size: 2px 100%;
+    }
+    [data-theme='dark'] :is(.kp-facet__count, .kp-facets__title) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background-color: var(--accent);
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-facet {
+            transition:
+                background-color var(--fx-duration) linear,
+                background-size var(--fx-duration) linear;
+        }
+        [data-theme='dark'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+    }
+
+    /* Heat grid and matrix: square instrument cells with a lighter top edge where the tool left the surface;
+       pointing rests the line on the cell's start edge (nothing grows); the pin is the film's cyan with its glow. */
+    [data-theme='dark'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-lift: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.16);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='dark'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='dark'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }

@@ -1,0 +1,37 @@
+/* @part: switch: signature layer */
+    /* ── The switch and the check [G7]: small slabs, a 2 px line on a 3 px
+       shadow. ── */
+    [data-theme='brutalism'] .kp-switch {
+        --kp-switch-border: 2px;
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-inset: 3px;
+    }
+
+    [data-theme='brutalism'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:not(:focus-visible) {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input::before {
+        border: 2px solid var(--border-strong);
+        background: var(--muted);
+        box-sizing: border-box;
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked {
+        border-color: var(--border-strong);
+        background: var(--primary);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        border-color: var(--primary-foreground);
+        background: var(--primary-foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+

@@ -1,0 +1,91 @@
+/* @part: form-field: register layer; also combobox, forms, switch */
+    [data-theme='cyberpunk'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__label {
+        font-family: var(--kp-mono);
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-surface='hero'] .kp-field__label {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__label::before {
+        content: '> ';
+        opacity: 0.6;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__input {
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: none;
+        caret-color: var(--accent);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__input:focus-visible {
+        outline: none;
+        border-color: var(--ring);
+        box-shadow: inset 0 0 0 1px var(--ring);
+    }
+
+    /* The combobox input stands on the field's ground [gap-11]. The package
+       gives both the same ground now, and this register moves the field's
+       to the card, so the combobox follows it here. The ground only: the
+       notch would clip the package's focus ring, which the field replaces
+       with a ring of its own. */
+    [data-theme='cyberpunk'] .kp-combobox__input {
+        background: var(--card);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__input::placeholder {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__help {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__error {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__error::before {
+        content: '!! ';
+    }
+
+    [data-theme='cyberpunk'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check {
+        border-radius: 0;
+        accent-color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-fieldset {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-switch__input:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-fieldset > legend {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+

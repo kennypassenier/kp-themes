@@ -1,0 +1,34 @@
+/* @part: switch: signature layer */
+    /* The switch: the pill on the field's ground; on, plum, its thumb a
+       sticker with its peel and a mint pearl, moved on the landing in the
+       contact time; it never turns (G14). */
+    [data-theme='pastel'] .kp-switch {
+        --kp-switch-inset: 3px;
+    }
+
+    [data-theme='pastel'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--background);
+    }
+
+    [data-theme='pastel'] .kp-switch__input::before {
+        inset-block: 2px 3px;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 0 2px 0 var(--border-strong);
+        box-sizing: border-box;
+    }
+
+    [data-theme='pastel'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset);
+        border-color: var(--kp-sig-pa-peel);
+        background: radial-gradient(circle, var(--accent-foreground) 0 2.5px, transparent 3px), var(--card);
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+        transform: translateX(calc((var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)) * var(--kp-sig-pa-dir)));
+    }
+

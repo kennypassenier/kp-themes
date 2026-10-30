@@ -1,0 +1,48 @@
+/* @part: upload-wizard: signature layer */
+    /* The wizard's steps: round stickers; the current one plum with its peel,
+       upright (G14); a done one on the mint plate. */
+    [data-theme='pastel'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.25rem;
+        block-size: 2px;
+        margin-inline: 0.3rem;
+        border-radius: 2px;
+        background: var(--border-strong);
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li[data-state='done']::after {
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li::before {
+        inline-size: 1.65rem;
+        block-size: 1.65rem;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--muted-foreground);
+        font-weight: 700;
+        box-sizing: border-box;
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--accent-foreground);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+    }
+

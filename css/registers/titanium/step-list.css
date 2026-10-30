@@ -1,0 +1,52 @@
+/* @part: step-list: signature layer */
+    /* ── Journey: a rail, the way travelled is oxide, the step it stands at a bare-metal ring ── */
+    [data-theme='titanium'] .kp-steplist--journey {
+        --kp-journey-rule: 3px;
+        --kp-steplist-mark-radius: 0;
+    }
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before,
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+        background: var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.12);
+    }
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--chart-1));
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.4);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__mark {
+        --kp-sig-ti-c: 0.3rem;
+        border-width: 1px;
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--primary);
+        background: radial-gradient(circle, var(--kp-step-tone, var(--primary)) 0 32%, transparent 36%), var(--background);
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px var(--card);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.01em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+

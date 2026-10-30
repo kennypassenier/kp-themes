@@ -1,0 +1,41 @@
+/* @part: uptime-strip: signature layer */
+    /* ── Uptime: cells are tubes; a cell pointed at turns up; the strip rises over its horizon ── */
+    [data-theme='synthwave'] .kp-uptime {
+        --kp-uptime-cell-radius: 1px;
+    }
+    [data-theme='synthwave'] .kp-uptime__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-uptime__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-uptime__percent,
+    [data-theme='synthwave'] .kp-uptime__incidents,
+    [data-theme='synthwave'] .kp-uptime__axis,
+    [data-theme='synthwave'] .kp-uptime__info-figures {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='synthwave'] .kp-uptime__percent {
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']) {
+        filter: brightness(1.25) drop-shadow(0 0 4px var(--kp-uptime-fill));
+    }
+    [data-theme='synthwave'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-uptime:not([data-kp-uptime-state]) .kp-uptime__track {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+

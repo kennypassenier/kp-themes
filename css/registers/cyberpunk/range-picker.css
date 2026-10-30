@@ -1,0 +1,21 @@
+/* @part: range-picker: signature layer */
+    /* ── Range picker ── */
+    [data-theme='cyberpunk'] .kp-range__label,
+    [data-theme='cyberpunk'] .kp-range__bound,
+    [data-theme='cyberpunk'] .kp-range__title {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-range__error {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-range__error::before {
+        content: '!! ';
+    }
+

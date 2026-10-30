@@ -1,0 +1,76 @@
+/* @part: pipeline: signature layer; also small-patterns, state-plate */
+    /* The pipeline: a lane is a kraft plate with the leaf corner, its head a wooden tag in the stage's own stain; a card
+       is a kraft card with the small leaf corner, blazed when pointed at, closed in solid when pressed; the open one has
+       the solid green ring; a dimmed one is dashed; the share is a note. */
+    [data-theme='forest'] .kp-pipeline__lane {
+        border-radius: var(--kp-sig-fo-plate);
+        background: color-mix(in oklab, var(--muted) 70%, var(--card));
+    }
+    [data-theme='forest'] .kp-pipeline__head {
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), color-mix(in oklab, var(--kp-pipeline-tone) 24%, var(--card));
+        box-shadow: var(--kp-sig-fo-routed);
+        border-color: transparent;
+    }
+    [data-theme='forest'] .kp-pipeline__share,
+    [data-theme='forest'] .kp-pipeline__sub,
+    [data-theme='forest'] .kp-pipeline__none {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-pipeline__card {
+        border-radius: var(--kp-sig-fo-part);
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-pipeline__card:is(button, a):hover:not(:focus-visible) {
+        border-color: var(--border);
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-pipeline__card:is(button, a):active:not(:focus-visible) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border);
+        box-shadow: none;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-pipeline__mark {
+        border-radius: 3px;
+        background-image: var(--kp-sig-fo-wood);
+        font-style: italic;
+        text-transform: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-pipeline__card {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Drawings for an empty state: the field kit (js/art.js). Each stroke grows up out of its own line on the growth
+       curve, 1000 ms, 80 ms apart from the ground up, turning from autumn to green as it grows (G10). The drawing takes
+       the place of the empty state's contour clearing and its sprout. Reduced, the drawing stands grown. */
+    [data-theme='forest'] .kp-art {
+        display: block;
+    }
+    [data-theme='forest'] .kp-art > g[data-kp-art-set='fieldkit'] {
+        display: inline;
+    }
+    [data-theme='forest'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='forest'] .kp-art__ink {
+        stroke: var(--foreground);
+    }
+    [data-theme='forest'] .kp-empty[data-kp-art] {
+        background: var(--card);
+    }
+    [data-theme='forest'] .kp-empty[data-kp-art]::before,
+    [data-theme='forest'] .kp-empty[data-kp-art]::after {
+        content: none;
+    }

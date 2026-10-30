@@ -1,0 +1,166 @@
+/* @part: toast: signature layer; also month-heatmap, drawer-tour, sidenav, alert */
+    /* ── 4 · A part that draws its own plate and pass (B) ──────────────── */
+
+    /* A toast, an alert, the tour's card, the side navigation that opens over
+       or pushes the page, the bar's panel on a phone, the busy table's and
+       the busy month's panels. Each names its paper and its edge; its own
+       ground goes to its ::after, its pass to its ::before. */
+    [data-theme='pastel']
+        :is(
+            .kp-toast,
+            .kp-alert,
+            .kp-tour,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-datatable__busy-panel,
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
+        ) {
+        isolation: isolate;
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        transform-origin: var(--kp-sig-pa-corner);
+    }
+
+    /* The paper and its edge by default, at no weight, so every part and
+       tone below names its own (lesson 32: a default never out-ranks the
+       states it stands for). */
+    :where([data-theme='pastel']) :where(.kp-toast, .kp-alert, .kp-tour, .kp-sidenav, .kp-datatable__busy-panel, .kp-calendar__busy) {
+        --kp-sig-pa-plate: var(--card);
+        --kp-sig-pa-edge: var(--border-strong);
+    }
+
+    [data-theme='pastel'] :is(.kp-toast, .kp-alert, .kp-datatable__busy-panel, .kp-chart__state[data-kp-state='error']) {
+        position: relative;
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+
+    [data-theme='pastel'] :is(.kp-tour, .kp-calendar__busy) {
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+
+    /* Its plate and pass are drawn against it (lesson 50). */
+    [data-theme='pastel'] .kp-calendar__busy {
+        position: relative;
+    }
+
+    /* The pass: a flat sky silhouette, 6 px off register at rest. While the
+       part swings it turns the other way round the same corner, so on
+       screen it only slides (the part turns by -9° × (1 - ink) and drops
+       8 px × (1 - ink); the pass is set back by both). */
+    [data-theme='pastel']
+        :is(
+            .kp-toast,
+            .kp-alert,
+            .kp-tour,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-datatable__busy-panel,
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
+        )::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -1px;
+        border-radius: inherit;
+        background: var(--kp-sig-pa-pass-c);
+        transform-origin: var(--kp-sig-pa-corner);
+        rotate: calc(9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir)) * (1 - var(--kp-sig-pa-ink)));
+        transform: translate(
+            calc((var(--kp-sig-pa-off) + 18px * (1 - var(--kp-sig-pa-pass))) * var(--kp-sig-pa-dir)),
+            calc(var(--kp-sig-pa-off) + 16px * (1 - var(--kp-sig-pa-pass)) + 8px * (1 - var(--kp-sig-pa-ink)))
+        );
+        opacity: clamp(0, var(--kp-sig-pa-pass), 1);
+        pointer-events: none;
+    }
+
+    /* The plate: the part's own paper and edge, fading with the part. */
+    [data-theme='pastel']
+        :is(
+            .kp-toast,
+            .kp-alert,
+            .kp-tour,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-datatable__busy-panel,
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
+        )::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -1px;
+        box-sizing: border-box;
+        border: 1px solid var(--kp-sig-pa-edge);
+        border-radius: inherit;
+        background: var(--kp-sig-pa-plate);
+        opacity: clamp(0, var(--kp-sig-pa-ink), 1);
+        pointer-events: none;
+    }
+
+    /* The side navigation's pass is its own flat shadow 6 px off register and
+       nothing more: it does not slide in from further along the line or turn,
+       it only comes and goes on its clock, so nothing beyond those 6 px ever
+       paints over the page beside it (Kenny, 2026-10-14). */
+    [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::before {
+        rotate: none;
+        transform: translate(calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)), var(--kp-sig-pa-off));
+    }
+
+    /* The side navigation is an edge panel: one edge, no corner at its edge. */
+    [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+        border: 0;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    /* The plates by tone (the toast's and the alert's status pairs). */
+    [data-theme='pastel'] .kp-toast {
+        --kp-sig-pa-plate: var(--popover);
+    }
+
+    [data-theme='pastel'] .kp-alert {
+        --kp-sig-pa-plate: var(--muted);
+        --kp-sig-pa-edge: var(--border);
+    }
+
+    [data-theme='pastel'] :is(.kp-toast--success, .kp-alert--success) {
+        --kp-sig-pa-plate: var(--success);
+        --kp-sig-pa-edge: var(--success-foreground);
+    }
+
+    /* The success alert's edge is its plate, as the package draws it. */
+    [data-theme='pastel'] .kp-alert--success {
+        --kp-sig-pa-edge: var(--success);
+    }
+
+    [data-theme='pastel'] :is(.kp-toast--info, .kp-alert--info) {
+        --kp-sig-pa-plate: var(--info);
+        --kp-sig-pa-edge: var(--info);
+    }
+
+    [data-theme='pastel'] :is(.kp-toast--warning, .kp-alert--warning) {
+        --kp-sig-pa-plate: var(--warning);
+        --kp-sig-pa-edge: var(--warning);
+    }
+
+    [data-theme='pastel'] :is(.kp-toast--destructive, .kp-toast--error, .kp-alert--destructive, .kp-chart__state[data-kp-state='error']) {
+        --kp-sig-pa-plate: var(--destructive);
+        --kp-sig-pa-edge: var(--destructive);
+    }
+
+    /* The busy table's panel and the busy month's card are paper on the page. */
+    [data-theme='pastel'] :is(.kp-datatable__busy-panel, .kp-calendar__busy) {
+        --kp-sig-pa-edge: var(--border-strong);
+    }
+
+    /* The busy table's panel follows its layer's clock (the layer arrives
+       and leaves as one part, js/motion.js; the panel is stuck on in it). */
+    [data-theme='pastel'] .kp-datatable__busy-panel {
+        rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir)) * (1 - var(--kp-sig-pa-ink)));
+        translate: 0 calc(-8px * (1 - var(--kp-sig-pa-ink)));
+    }
+
+    /* The busy table's veil comes on the pass's clock. */
+    [data-theme='pastel'] .kp-datatable__busy-overlay {
+        background: color-mix(in oklab, var(--background) calc(var(--kp-busy-overlay-veil, 70%) * clamp(0, var(--kp-sig-pa-pass), 1)), transparent);
+    }
+

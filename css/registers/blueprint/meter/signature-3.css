@@ -1,0 +1,23 @@
+/* @part: meter: signature layer */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        --kp-bp-px: var(--kp-bp-p);
+        --kp-bp-py: 0.5;
+        inset: calc(50% - 8.5px) -8px;
+        block-size: 17px;
+        background-image: var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(var(--kp-bp-p) * (100% - 16px)) 2px;
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 50%;
+        animation: none;
+    }
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-bp-p: 1;
+        --kp-bp-tv: 1;
+        --kp-bp-pv: 0;
+        --kp-bp-nib: 0;
+    }
+

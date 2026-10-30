@@ -1,0 +1,23 @@
+/* @part: form-grid: signature layer */
+    /* Form rows: the label in the serif; changed and not saved, the sun stands on the row's start edge, lit from its
+       foot (an unsaved row is a thing the day has touched); an error reddens the same edge. */
+    [data-theme='solstice'] .kp-formrow__label {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='solstice'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 3px;
+        border-radius: 3px;
+        background: linear-gradient(to top, var(--primary), hsl(from var(--primary) h s l / 0.15));
+        box-shadow: 0 0 0.5rem hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='solstice'] .kp-formrow[data-kp-state='error']::before {
+        background: linear-gradient(to top, var(--destructive), hsl(from var(--destructive) h s l / 0.15));
+        box-shadow: 0 0 0.5rem hsl(from var(--destructive) h s l / 0.5);
+    }
+    [data-theme='solstice'] .kp-formrows--lines > .kp-formrow {
+        border-block-end-color: var(--border);
+    }
+

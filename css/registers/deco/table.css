@@ -1,0 +1,27 @@
+/* @part: table: register layer */
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='deco'] .kp-table th {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary);
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='deco'] .kp-table tbody tr:hover {
+        background: var(--muted);
+    }
+

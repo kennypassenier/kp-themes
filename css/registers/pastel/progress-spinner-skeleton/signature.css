@@ -1,0 +1,114 @@
+/* @part: progress-spinner-skeleton: signature layer; also meter */
+    /* ── 10 · Loading: everything becomes caterpillar (G10, b-bug-6) ──── */
+
+    /* What waits becomes the pom-pom caterpillar itself. js/loading-pieces.js
+       reads `--kp-loading-pieces: caterpillar` and adds the pieces to every
+       waiting part (`[data-kp-pieces]` on it while they are there):
+         - a skeleton line, the busy progress bar, a loading meter: a row of
+           mint pom-poms with a plum head at its end, the hump running
+           through them tail to head (1200 ms);
+         - a loading day of the month: its body, a mint pom-pom rim and two
+           legs, the hump running through the days, a head beside the last;
+         - a plate that waits (a block skeleton, the busy table's panel, the
+           busy month's card, a busy menu): a head on its top-end corner and
+           legs under it that step in turn.
+       Without the script each still shows a row of pom-poms with its head
+       (the rule below), standing. */
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        overflow: visible;
+        block-size: 0.7rem;
+        margin-inline: 0;
+        margin-block: 0.45rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='pastel'] .kp-skeleton--block {
+        position: relative;
+        overflow: visible;
+        border-radius: var(--kp-sig-pa-r-plate);
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        animation: none;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+
+    [data-theme='pastel'] .kp-skeleton--circle {
+        position: relative;
+        overflow: visible;
+        border-radius: 50%;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        animation: none;
+    }
+
+    /* The still row of pom-poms (no script): beads as round as the line is
+       high and a plum head at its end. The pieces replace it. */
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-pa-row-h: 0.7rem;
+    }
+
+    [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track {
+        --kp-sig-pa-row-h: calc(var(--kp-progressbar-height, 1.125rem) - 6px);
+    }
+
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-pa-row-h: var(--kp-meter-height, 0.625rem);
+    }
+
+    [data-theme='pastel']
+        :is(.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block), .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track):not(
+            [data-kp-pieces]
+        )::before,
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]:not([data-kp-pieces])::after {
+        content: '';
+        position: absolute;
+        inset-block: calc(50% - var(--kp-sig-pa-row-h) / 2);
+        inset-inline: 0 calc(var(--kp-sig-pa-row-h) * 1.1);
+        border-radius: 0;
+        background: radial-gradient(circle closest-side, var(--accent) 0 calc(100% - 0.5px), transparent 100%) 0 50% /
+            calc(var(--kp-sig-pa-row-h) * 0.78) var(--kp-sig-pa-row-h) round no-repeat;
+        filter: drop-shadow(1.5px 1.5px 0 var(--kp-sig-pa-pass-c));
+        opacity: 1;
+        mask: none;
+        clip-path: none;
+        translate: none;
+        animation: none;
+    }
+
+    [data-theme='pastel']
+        :is(.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block), .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track):not(
+            [data-kp-pieces]
+        )::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - var(--kp-sig-pa-row-h) * 0.59);
+        inset-inline-end: 0;
+        inline-size: calc(var(--kp-sig-pa-row-h) * 1.18);
+        block-size: calc(var(--kp-sig-pa-row-h) * 1.18);
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 60% 42%, var(--primary) 0 7%, transparent 9.5%),
+            radial-gradient(circle at 82% 42%, var(--primary) 0 7%, transparent 9.5%),
+            radial-gradient(circle at 60% 42%, var(--card) 0 15%, transparent 17.5%),
+            radial-gradient(circle at 82% 42%, var(--card) 0 15%, transparent 17.5%), var(--primary);
+        filter: drop-shadow(1.5px 1.5px 0 var(--kp-sig-pa-pass-c));
+        animation: none;
+    }
+
+    [data-theme='pastel']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track
+        )[data-kp-pieces]::before,
+    [data-theme='pastel']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track
+        )[data-kp-pieces]::after,
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading][data-kp-pieces]::after {
+        content: none;
+    }
+

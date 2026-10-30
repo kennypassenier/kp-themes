@@ -1,0 +1,62 @@
+/* @part: share-bar: signature layer */
+    /* Share bar: a wooden gauge, routed into the page; each part is the same wood stained in its own colour; the
+       threshold is a trig point on the scale; a part pointed at is blazed with the dashed green ring and its legend row
+       blazed inside; the labels are notes. */
+    [data-theme='forest'] .kp-stackbar {
+        --kp-stackbar-radius: 3px;
+    }
+    [data-theme='forest'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-stackbar__seg {
+        background-image: var(--kp-sig-fo-wood);
+        background-color: var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='forest'] .kp-stackbar__seg[data-kp-stackbar-hatch] {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 3px, var(--card) 3px 4.5px);
+    }
+    [data-theme='forest'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card);
+    }
+    [data-theme='forest'] .kp-stackbar__mark {
+        inline-size: 2px;
+        background: var(--accent-foreground);
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.4rem;
+        inset-inline-start: 50%;
+        inline-size: 0.7rem;
+        block-size: 0.5rem;
+        translate: -50% 0;
+        background: var(--accent-foreground);
+        clip-path: polygon(50% 100%, 0 0, 100% 0);
+    }
+    [data-theme='forest'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: transparent;
+        outline: 2px dashed var(--primary);
+        outline-offset: -2px;
+    }
+    [data-theme='forest'] .kp-stackbar__swatch {
+        border-radius: 0 3px;
+        background-image: var(--kp-sig-fo-wood);
+        background-color: var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='forest'] .kp-stackbar__swatch[data-kp-stackbar-hatch] {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 3px, var(--card) 3px 4.5px);
+    }
+    [data-theme='forest'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background-image: none;
+    }
+    [data-theme='forest'] .kp-stackbar__label {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-stackbar__note {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+

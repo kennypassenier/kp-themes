@@ -1,0 +1,64 @@
+/* @part: drawer-tour: signature layer */
+    /* The command palette grows up out of its base like the dialog, its
+       backdrop with it. Where the browser can keep a closing dialog in the
+       top layer (overlay), it closes as that growth played backwards; where
+       it cannot, it goes at once until js/motion.js reverses it as it does
+       a .kp-dialog (research/PACKAGE_FINDINGS.md). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] dialog.kp-palette[open] {
+            animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] dialog.kp-palette[open]::backdrop {
+            animation: kp-sig-forest-fade var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) backwards;
+        }
+
+        /* The close is js/motion.js's, in every engine: it keeps the palette
+           open while it plays the growth backwards, as it does for a dialog. */
+
+        /* The tour's card grows up out of its own line from autumn to green
+           (pairs), and js/tour.js plays that backwards when the tour ends. */
+        [data-theme='forest'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-forest-arrive var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        /* The page dims around the target on the growth time and curve, and the
+           close takes it back on the reversed curve (css/components.css), so the
+           two are mirrors. */
+        [data-theme='forest'] [data-kp-tour-target] {
+            /* `backwards`, not `both`: a ring held by a finished animation
+               cannot be faded by the close's transition (css/components.css,
+               on the withering curve), and went at once. */
+            animation: kp-sig-forest-tour-ring var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+            /* The dim grows by the animation, not by a transition (review round 2, Kenny 2026-10-13:
+               "Bij de laatste stap is nog altijd een flash van groen dat over het scherm gaat"): a
+               transition starts from the part's own shadow, and a card's is the package's
+               `0 0 0 0 var(--border-strong)`, forest's green-grey, so on the step to the last card
+               the dim grew out of the card in green across the whole screen. The animation starts
+               from no shadow on every target, which is what the transition did on a part without a
+               shadow of its own (the row, the field): those frames are unchanged. A transition
+               outranks an animation, so box-shadow is out of this list; the close keeps its own
+               (css/components.css, `[data-kp-reversing]`, important). */
+            transition: outline-color var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+        }
+
+        /* A step walks the card to the next target on the growth time and
+           curve, its shape untouched. */
+        /* A step is no arrival and no news: the card keeps its shape, plays no entrance again and
+           draws no ring round itself; it walks to the next target and swaps its words. */
+        [data-theme='forest'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+        }
+
+        [data-theme='forest'] .kp-tour[data-kp-updating]::after {
+            content: none;
+            animation: none;
+        }
+
+        [data-theme='forest'] .kp-tour[data-kp-tour-stepping] {
+            transition:
+                left var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                top var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+        }
+    }
+

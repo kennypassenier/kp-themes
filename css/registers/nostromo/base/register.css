@@ -1,0 +1,45 @@
+/* @part: base: register layer — rules that belong to no one component */
+    /* ── Headings: sentence case, Michroma, correcting the pre-lift
+   placeholder in css/_rules.css (this layer outranks it regardless of
+   what stays there — kp.register loads after kp.base) ─────────────── */
+
+    [data-theme='nostromo'] h1,
+    [data-theme='nostromo'] h2,
+    [data-theme='nostromo'] h3,
+    [data-theme='nostromo'] h4 {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        text-transform: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='nostromo'] [data-kp-surface] h1 {
+        max-width: 20ch;
+    }
+
+    [data-theme='nostromo'] .microlabel {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--muted-foreground);
+    }
+
+    /* ── Focus: two channels always, DI2/AR30 ─────────────────────────── */
+
+    /* At the part's own corner (G6; Kenny, 2026-10-07 23:18, focus "led"):
+       the ring used to force calc(var(--radius) / 2), so a 12 px plate turned
+       6 px while focused. The switch's lamp is lit orange as well (below). */
+    [data-theme='nostromo'] a:focus-visible,
+    [data-theme='nostromo'] button:focus-visible,
+    [data-theme='nostromo'] input:focus-visible,
+    [data-theme='nostromo'] select:focus-visible,
+    [data-theme='nostromo'] textarea:focus-visible,
+    [data-theme='nostromo'] dialog:focus-visible {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+

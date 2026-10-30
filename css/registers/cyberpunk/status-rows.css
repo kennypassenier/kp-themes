@@ -1,0 +1,37 @@
+/* @part: status-rows: signature layer; also calm-status */
+    /* Status rows: square read-outs with a hairline; a failed row is locked as a target in the red; the detail is the
+       machine's mono. */
+    [data-theme='cyberpunk'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-statusrow {
+        --kp-statusrow-radius: 0;
+        --kp-statusrow-edge: var(--kp-hairline, var(--border));
+        --kp-cp-lk: 3px;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-statusrow[data-state='failed'] {
+        --kp-cp-tone: var(--destructive);
+        --kp-statusrow-state-edge: hsl(from var(--destructive) h s l / 0.45);
+        background:
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat,
+            var(--card);
+    }
+    [data-theme='cyberpunk'] .kp-statusrow[data-state='loading'] {
+        --kp-statusrow-state-edge: hsl(from var(--accent) h s l / 0.6);
+    }
+    [data-theme='cyberpunk'] .kp-statusrow__detail {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.04em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-statusrow[data-state='failed'] {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end) 1 both;
+        }
+    }
+

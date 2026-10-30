@@ -1,0 +1,35 @@
+/* @part: typed-confirmation: signature layer */
+    /* Typed confirmation: the loss list is a slab taped off along its foot; the name is the yellow plate in its box. */
+    [data-theme='brutalism'] .kp-type-confirm__loses {
+        padding-block-end: calc(var(--kp-space-sm, 0.5rem) + 0.5rem);
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-type-confirm__loses-title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__list {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__name {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__input {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+

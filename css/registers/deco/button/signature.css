@@ -1,0 +1,35 @@
+/* @part: button: signature layer */
+    /* A small part is a plate in little: the cove 5 px, the hairlines 2 px
+       apart (Q6: a button, a tag and the tooltip take half the size). */
+    [data-theme='deco'] :where(.kp-tooltip, .kp-button, .kp-icon-button, .kp-tag, .kp-badge:not([data-kp-dot])) {
+        --kp-sig-deco-r: 5px;
+        --kp-sig-deco-n: 2px;
+        --kp-sig-deco-bead: 1.5px;
+    }
+
+    [data-theme='deco'] :where(.kp-button, .kp-icon-button, .kp-tag, .kp-badge:not([data-kp-dot])) {
+        --kp-sig-deco-c: calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1px);
+        mask-image:
+            linear-gradient(var(--foreground) 0 0),
+            radial-gradient(circle at 0 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 0 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px));
+        mask-size:
+            calc(100% + 48px) calc(100% + 48px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px);
+        mask-position:
+            -24px -24px,
+            0 0,
+            100% 0,
+            0 100%,
+            100% 100%;
+        mask-repeat: no-repeat;
+        mask-composite: subtract, add, add, add, add;
+        mask-clip: no-clip;
+        border-radius: 0;
+    }
+

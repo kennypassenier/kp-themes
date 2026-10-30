@@ -1,0 +1,113 @@
+/* @part: navbar: register layer; also table, master-detail, toast */
+    [data-theme='forest'] .kp-split {
+        gap: 0;
+    }
+
+    [data-theme='forest'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    [data-theme='forest'] .kp-toasts {
+        gap: var(--kp-space-sm);
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='forest'] {
+        scrollbar-color: var(--primary) var(--background);
+    }
+
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one — the rest states above are what they get. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The headline grows up out of its own line (G10), held at its
+           first frame through the delay; the finished line is the rest. */
+        [data-theme='forest'] [data-kp-reveal='headline'] {
+            animation: kp-headline-in var(--kp-sig-fo-time, 1000ms) var(--fx-ease) var(--kp-headline-delay) backwards;
+        }
+
+        [data-theme='forest'] .kp-contour-trace path {
+            stroke-dashoffset: 1;
+            animation: kp-trace var(--kp-sig-fo-time, 1000ms) var(--fx-ease) var(--kp-trace-delay) forwards;
+        }
+
+        [data-theme='forest'] [data-kp-reveal='rule']::before {
+            transition: inline-size var(--kp-sig-fo-time, 1000ms) var(--fx-ease);
+        }
+
+        [data-theme='forest'] [data-kp-reveal='emphasis'] mark {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                color 0s var(--fx-duration) linear;
+        }
+
+        [data-theme='forest'][data-kp-effects] [data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                color 0s linear;
+        }
+
+        [data-theme='forest'] [data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='forest'] [data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        /* Contact is 200 ms on forest's curve (--fx-duration, --fx-ease), a
+           press and its release alike. */
+        [data-theme='forest'] .kp-button,
+        [data-theme='forest'] .kp-icon-button,
+        [data-theme='forest'] .kp-menu__item,
+        [data-theme='forest'] a.kp-kpi,
+        [data-theme='forest'] .kp-kpi--toggle,
+        [data-theme='forest'] .kp-nav__link,
+        [data-theme='forest'] .kp-nav__link--cta,
+        [data-theme='forest'] .kp-nav__toggle,
+        [data-theme='forest'] .kp-field__input,
+        [data-theme='forest'] .kp-combobox__input,
+        [data-theme='forest'] .kp-datatable__search,
+        [data-theme='forest'] .kp-switch__input,
+        [data-theme='forest'] .kp-upload__zone,
+        [data-theme='forest'] .kp-datepicker__day,
+        [data-theme='forest'] .kp-chart__source,
+        [data-theme='forest'] .kp-chart__show-all,
+        [data-theme='forest'] .kp-reorder [data-kp-item],
+        [data-theme='forest'] .kp-menu [data-kp-theme],
+        [data-theme='forest'] .kp-combobox__option,
+        [data-theme='forest'] .kp-palette__option,
+        [data-theme='forest'] .kp-accordion__summary,
+        [data-theme='forest'] .kp-nav__menu a,
+        [data-theme='forest'] .kp-sidenav__link,
+        [data-theme='forest'] .kp-sidenav__category-toggle,
+        [data-theme='forest'] .kp-table tbody tr,
+        [data-theme='forest'] .kp-tab,
+        [data-theme='forest'] .kp-breadcrumb a,
+        [data-theme='forest'] .kp-pagination a,
+        [data-theme='forest'] .kp-footer a {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) var(--fx-ease) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                text-decoration-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='forest'] .kp-button--mirror {
+            transition: background-position var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='forest'] .kp-button--mirror:hover,
+        [data-theme='forest'] .kp-button--mirror:focus-visible {
+            background-position: -20% 0;
+        }
+    }
+

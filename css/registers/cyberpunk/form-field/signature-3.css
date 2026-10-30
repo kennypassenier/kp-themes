@@ -1,0 +1,31 @@
+/* @part: form-field: signature layer */
+    [data-theme='cyberpunk'] .kp-field__check:not([type='radio']) {
+        --kp-cp-clip: var(--kp-cp-clip-mini);
+        --kp-cp-wide: var(--kp-cp-wide-mini);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+        background-image: linear-gradient(135deg, transparent calc(50% - 1px), var(--primary) calc(50% - 1px));
+        background-position: right bottom;
+        background-size: 7px 7px;
+        background-repeat: no-repeat;
+    }
+
+    /* A check on its own is framed inside itself now (the cut would take a frame drawn outside): the
+       brackets are 6 px long and close from 4 px, the split edge is a third of the pair's. */
+    [data-theme='cyberpunk'] input.kp-field__check:not([type='radio']):not(.kp-field__option *, .kp-field--check *, .kp-menu__item *) {
+        --kp-cp-i: calc(var(--kp-cp-ft) * 1px);
+        --kp-cp-fa: calc(var(--kp-cp-fp) * 5px);
+        --kp-cp-fai: calc(var(--kp-cp-fp) * 3px);
+        --kp-cp-nbr: 10px;
+        --kp-cp-d: calc(var(--kp-cp-p) * (1px + var(--kp-cp-t) * 0.5px));
+    }
+
+    [data-theme='cyberpunk'] input.kp-field__check:not([type='radio']):not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)::after {
+        inset: 0;
+    }
+
+    /* The check inside a label is framed by the label; its own outline would be cut, so it has none. */
+    [data-theme='cyberpunk'] .kp-field__check:not([type='radio']):focus-visible {
+        outline: none;
+    }
+    /* <<cfd-end>> */

@@ -1,0 +1,51 @@
+/* @part: compare-slider: signature layer */
+    /* ── Compare slider: the divider is a lit rail, the handle a lamp-lit knob, the labels tape ── */
+    [data-theme='nostromo'] .kp-compare {
+        --kp-compare-ink: var(--foreground);
+        --kp-compare-line: 3px;
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-compare__divider {
+        box-shadow: 0 0 0 1px var(--card);
+    }
+    [data-theme='nostromo'] .kp-compare__handle {
+        border-radius: var(--kp-sig-no-key);
+        background: var(--secondary);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-compare__handle::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.3rem;
+        inset-inline-start: calc(50% - 0.2rem);
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-compare__handle:active {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-compare__handle:focus-visible {
+        outline: 0;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-compare__label {
+        border: 0;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-compare__failed {
+        border: 3px solid var(--destructive);
+        box-sizing: border-box;
+    }

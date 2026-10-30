@@ -1,0 +1,30 @@
+/* @part: dialog: signature layer; also menu-button */
+    /* The dialog: lacquer, the double rule under its title (the dialog is
+       what matters), no crest. */
+    [data-theme='deco'] .kp-dialog {
+        padding: 1.25rem 1.5rem 1.4rem;
+        text-align: center;
+    }
+
+    [data-theme='deco'] .kp-dialog__actions {
+        justify-content: center;
+    }
+
+    [data-theme='deco'] .kp-dialog::before {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-dialog__title {
+        border-block-end: 3px double var(--primary);
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    /* A menu a button opened: its inlay starts under that button.
+       js/menu-button.js writes --kp-menu-anchor-x on the open menu (the
+       button's centre from the menu's left edge); a menu without it (above
+       its button, or opened by a page's own script) starts at the middle of
+       its top edge, as every other plate does. */
+    [data-theme='deco'] .kp-menu-button > .kp-menu {
+        --kp-sig-deco-at: var(--kp-menu-anchor-x, 50%) 50%;
+    }
+

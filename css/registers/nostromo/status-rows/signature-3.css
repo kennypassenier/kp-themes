@@ -1,0 +1,24 @@
+/* @part: status-rows: signature layer */
+    /* A check that warns: the klaxon, as a failed row's, in the warning ink. */
+    [data-theme='nostromo'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--warning);
+        --kp-statusrow-line: 3px;
+    }
+    [data-theme='nostromo'] .kp-statusrow__fix {
+        box-sizing: border-box;
+        inline-size: fit-content;
+        max-inline-size: 100%;
+        padding: 0.3rem 0.6rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] .kp-statusrow__fix::before {
+        content: '> ' / '';
+        color: var(--kp-no-phosphor);
+    }
+

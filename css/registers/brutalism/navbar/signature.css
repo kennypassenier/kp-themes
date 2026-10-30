@@ -1,0 +1,26 @@
+/* @part: navbar: signature layer */
+    [data-theme='brutalism'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        color: var(--foreground);
+        font-weight: 700;
+        text-decoration-color: var(--border-strong);
+        text-decoration-thickness: 3px;
+        text-underline-offset: 0.18em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='brutalism']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        padding-inline: 0.15em;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        text-decoration-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover:not(:focus-visible) {
+        box-shadow:
+            0 0 0 2px var(--border-strong),
+            3px 3px 0 2px var(--border-strong);
+    }
+

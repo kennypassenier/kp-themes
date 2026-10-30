@@ -1,0 +1,57 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The hum band rolls down every glass in 10 steps per cycle; a week's
+           days start 2 frames apart, as the demo's days do. */
+        [data-theme='nostromo'] :is(.kp-skeleton:not(.kp-skeleton--circle), .kp-calendar__day[data-kp-tone='loading'])::before,
+        [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::before {
+            animation: kp-sig-nostromo-hum var(--kp-sig-dur) steps(10, end) infinite;
+        }
+
+        [data-theme='nostromo'] td:nth-child(2) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -2);
+        }
+
+        [data-theme='nostromo'] td:nth-child(3) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -4);
+        }
+
+        [data-theme='nostromo'] td:nth-child(4) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -6);
+        }
+
+        [data-theme='nostromo'] td:nth-child(5) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -8);
+        }
+
+        [data-theme='nostromo'] td:nth-child(6) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -10);
+        }
+
+        [data-theme='nostromo'] td:nth-child(7) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -12);
+        }
+
+        /* The word is written in 12 frames, stands 6, is blanked for 2. */
+        [data-theme='nostromo'] .kp-skeleton--block::after,
+        [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::after {
+            animation: kp-sig-nostromo-redraw var(--kp-sig-dur) linear infinite;
+        }
+
+        /* Skeleton lines are rows of one screen: the first written in frames
+           0 to 3, the second in 4 to 7, the third in 8 to 11; all stand to
+           frame 17 and are blanked together. */
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-nostromo-redraw-row-1 var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n + 2)::after,
+        [data-theme='nostromo'] tr:nth-child(3n + 2) .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation-name: kp-sig-nostromo-redraw-row-2;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n)::after,
+        [data-theme='nostromo'] tr:nth-child(3n) .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation-name: kp-sig-nostromo-redraw-row-3;
+        }
+    }
+

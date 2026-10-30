@@ -1,0 +1,36 @@
+/* @part: status-rows: signature layer; also forms, form-field */
+    /* A check with a reservation: the sky ochre, the mark lit in the warning ink; the fix is a sentence in the serif. */
+    [data-theme='solstice'] .kp-statusrow[data-state='warn'] {
+        --kp-so-sky: hsl(from var(--warning) h s 50%);
+        --kp-so-foot: hsl(from var(--warning) h s 50%);
+        --kp-statusrow-state-edge: var(--border);
+    }
+    [data-theme='solstice'] .kp-statusrow[data-state='warn'] .kp-statusrow__detail {
+        color: var(--warning-foreground);
+    }
+    [data-theme='solstice'] .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        background: linear-gradient(to top, hsl(from var(--warning) h s l / 0.7), hsl(from var(--warning) h s l / 0.25));
+        box-shadow: 0 0 0.5rem hsl(from var(--warning) h s 50% / 0.45);
+    }
+    [data-theme='solstice'] .kp-statusrow__fix {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1rem;
+    }
+
+    /* Choices as tiles. */
+    [data-theme='solstice'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--radius);
+    }
+    [data-theme='solstice'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        position: relative;
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.5), hsl(from var(--primary) h s l / 0.5)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.18), transparent 45%),
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-field__option-title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.0625rem;
+        font-weight: 400;
+    }

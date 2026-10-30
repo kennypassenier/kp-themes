@@ -1,0 +1,92 @@
+/* @part: navbar: register layer */
+    /* ── Nav: chrome, no bevel — a warm strip over the app ─────────────── */
+
+    [data-theme='solstice'] .kp-nav-wrap {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-nav {
+        gap: 0.75rem 1.5rem;
+    }
+
+    [data-theme='solstice'] .kp-nav__brand {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        font-size: 1.35rem;
+        letter-spacing: -0.01em;
+    }
+
+    [data-theme='solstice'] .kp-nav__link {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] .kp-nav__link:hover {
+        color: var(--primary);
+        background: none;
+    }
+
+    [data-theme='solstice'] .kp-nav__link--lang {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    /* The dropdown caret: one glyph, drawn by content, never a word
+       [KT5] — the demo's own ⌄, not a borrowed arrow. */
+    [data-theme='solstice'] .kp-nav__link[aria-haspopup]::after {
+        content: ' ⌄';
+        font-size: 0.7em;
+        opacity: 0.8;
+    }
+
+    /* The dropdown (KT14): the demo's popover, opened and read before
+       this register was called done. */
+    [data-theme='solstice'] .kp-nav__menu {
+        background: var(--popover);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        padding: 0.4rem;
+        box-shadow: 0 12px 28px var(--kp-shadow-soft);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    [data-theme='solstice'] .kp-nav__menu a {
+        border-radius: calc(var(--radius) - 3px);
+        padding-inline: 0.6rem;
+    }
+
+    [data-theme='solstice'] .kp-nav__menu a:hover,
+    [data-theme='solstice'] .kp-nav__menu a:focus-visible {
+        background: var(--muted);
+        color: var(--primary);
+    }
+
+    /* Room between the words and the plate's edge (Kenny, 2026-09-15,
+       page-effects#nav-cta, cta-plates "Gelijktrekken" [scope-93]): the
+       link had 0px inline padding, so the plate ended at the first and
+       last letter. The same 16px as formal's plate. */
+    [data-theme='solstice'] .kp-nav__link--cta {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: var(--radius);
+        font-weight: 600;
+        padding-inline: var(--kp-space-lg, 1rem);
+    }
+
+    [data-theme='solstice'] .kp-nav__link--cta:hover {
+        background: hsl(from var(--primary) h s calc(l + 8));
+        color: var(--primary-foreground);
+    }
+

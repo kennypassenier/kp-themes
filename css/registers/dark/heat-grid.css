@@ -1,0 +1,47 @@
+/* @part: heat-grid: signature layer; also run-timeline, week-agenda, bar-cell */
+    [data-theme='dark'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='dark'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow:
+            inset 2px 0 0 var(--chart-1),
+            inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.5);
+    }
+    [data-theme='dark'] .kp-heat__cell[data-kp-picked],
+    [data-theme='dark'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--chart-1);
+        outline-offset: 1px;
+        box-shadow: 0 0 10px hsl(from var(--chart-1) h s l / 0.4);
+    }
+    [data-theme='dark'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--foreground);
+        box-shadow: inset 2px 0 0 var(--chart-1);
+    }
+    [data-theme='dark'] :is(.kp-heat__col, .kp-matrix__col) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-family: var(--theme-font-mono);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: square slots with a lighter top edge where the tool left the surface and the
+       series' ink on the start edge; the line for now is the film's 2 px cyan with its one glow; day names and the
+       axis are microlabels in the ticker mono. A running run is the line running its track: a near-black slot in the
+       film, crossed by the comet, again and again; no marching stripes. */
+    [data-theme='dark'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--chart-1);
+    }
+    /* A planned run [gaps-time-1019]: a darker hatch, 2px rules. */
+    [data-theme='dark'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--kp-gantt-fill) 45%, transparent) 0 2px, transparent 2px 7px);
+    }
+    [data-theme='dark'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--chart-1);
+    }

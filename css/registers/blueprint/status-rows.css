@@ -1,0 +1,34 @@
+/* @part: status-rows: signature layer; also calm-status */
+    /* Status rows: parts on the sheet, a ruler along the foot; the detail and the empty reason in the lettering. A
+       failed row is flagged ▲ in the red; an empty row is the dashed ruler of a part not drawn. */
+    [data-theme='blueprint'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+        --kp-statuslist-gap: 0.25rem 0.75rem;
+    }
+    [data-theme='blueprint'] .kp-statusrow {
+        --kp-statusrow-edge: transparent;
+        --kp-statusrow-ground: transparent;
+        --kp-statusrow-radius: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left bottom / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 8px) left bottom / 100% 4px no-repeat;
+    }
+    [data-theme='blueprint'] .kp-statusrow[data-state='empty'] {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 4px, transparent 4px 8px) left bottom / 100% 1px no-repeat;
+    }
+    [data-theme='blueprint'] .kp-statusrow__detail {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-statusrow[data-state='failed'] .kp-statusrow__label::before {
+        content: '▲ ';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-statusrow[data-state='failed'] .kp-statusrow__detail {
+        color: var(--destructive);
+    }
+

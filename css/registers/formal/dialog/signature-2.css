@@ -1,0 +1,181 @@
+/* @part: dialog: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The frame is the one animation as long as the whole part (740 ms, 54.054 %
+           being its 400): it fixes the time the lines are scaled to, so a dialog of
+           two lines has the dead time at its end it always had. */
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette) {
+            animation: kp-sig-formal-ruled-frame 740ms linear backwards;
+        }
+
+        /* The unopened dialog is the probe js/motion.js reads the theme's time from
+           (a close is two thirds of its animation-duration): 1.5 times the 740 ms
+           the lines take, so a dialog opens and closes in exactly 740 ms. */
+        [data-theme='formal'] .kp-dialog:not([open]) {
+            animation-duration: 1110ms;
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette):dir(rtl) {
+            animation-name: kp-sig-formal-ruled-frame-rtl;
+        }
+
+        /* The frame rule, along the top edge. */
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline: 0;
+            z-index: 1;
+            block-size: var(--kp-sig-fm-pen);
+            background: var(--primary);
+            clip-path: inset(0 0 0 100%);
+            pointer-events: none;
+            animation: kp-sig-formal-ruled-pen 560ms linear 0ms backwards;
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette):dir(rtl)::before {
+            clip-path: inset(0 100% 0 0);
+            animation-name: kp-sig-formal-ruled-pen-rtl;
+        }
+
+        /* Each line under it, and its rule under it. */
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]) {
+            position: relative;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close])::after {
+            content: '';
+            position: absolute;
+            inset-block-end: 0;
+            inset-inline: 0;
+            block-size: var(--kp-sig-fm-pen);
+            background: var(--primary);
+            clip-path: inset(0 0 0 100%);
+            pointer-events: none;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):dir(rtl)::after {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1) {
+            animation: kp-sig-formal-ruled-line 400ms linear 0ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl) {
+            animation-name: kp-sig-formal-ruled-line-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1)::after {
+            animation: kp-sig-formal-ruled-pen 560ms linear 0ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl)::after {
+            animation-name: kp-sig-formal-ruled-pen-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2) {
+            animation: kp-sig-formal-ruled-line 400ms linear 60ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl) {
+            animation-name: kp-sig-formal-ruled-line-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2)::after {
+            animation: kp-sig-formal-ruled-pen 560ms linear 60ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl)::after {
+            animation-name: kp-sig-formal-ruled-pen-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3) {
+            animation: kp-sig-formal-ruled-line 400ms linear 120ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl) {
+            animation-name: kp-sig-formal-ruled-line-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3)::after {
+            animation: kp-sig-formal-ruled-pen 560ms linear 120ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl)::after {
+            animation-name: kp-sig-formal-ruled-pen-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4) {
+            animation: kp-sig-formal-ruled-line 400ms linear 180ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl) {
+            animation-name: kp-sig-formal-ruled-line-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4)::after {
+            animation: kp-sig-formal-ruled-pen 560ms linear 180ms backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl)::after {
+            animation-name: kp-sig-formal-ruled-pen-rtl;
+        }
+
+        /* The shade behind a dialog is ruled across as well; the palette is
+           ruled in as the dialog is (it had the package's bare fade), and the
+           alarm's shade takes the same ruling, so js/motion.js turns it round
+           instead of falling back to its own ease-in fade (lesson 16). */
+        [data-theme='formal'] :is(.kp-dialog, .kp-palette, .kp-alarm:not([data-kp-alarm-motion='still']))::backdrop {
+            animation: kp-sig-formal-backdrop var(--kp-sig-fm-time, 400ms) linear backwards;
+        }
+
+        @keyframes kp-sig-formal-backdrop {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+    }
+

@@ -1,0 +1,23 @@
+/* @part: command-block: signature layer */
+    /* Command block. */
+    [data-theme='solstice'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.12), transparent 50%), var(--card);
+        box-shadow: inset 0 -1px 0 hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='solstice'] .kp-command__head {
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.14), transparent);
+    }
+    [data-theme='solstice'] .kp-command__shell {
+        font-weight: 500;
+    }
+    [data-theme='solstice'] .kp-command__code {
+        background: var(--muted);
+    }
+    [data-theme='solstice'] .kp-command__where {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.875rem;
+    }
+

@@ -1,0 +1,40 @@
+/* @part: request-inspector: signature layer; also alert, code-block */
+    /* A problem alert (kp-alert.kp-problem) is a soft tint of its tone on paper, with the page's ink: the package reads it so
+       (`.kp-problems > .kp-problem`). Pastel drew it on the tone's solid plate (`--kp-sig-pa-plate: var(--destructive)`) and kept
+       the page's plum ink, so a critical problem was plum on a red plate. The plate is now the tone at 14 % in paper, the pass
+       and the tone's edge stay. */
+    [data-theme='pastel'] .kp-alert.kp-problem {
+        --kp-sig-pa-plate: color-mix(in oklab, var(--kp-problem-tone, var(--muted)) 14%, var(--card));
+        color: var(--foreground);
+    }
+
+    /* The request inspector's status filter is five segments (a label and its exact count each) and stood in one row wider than
+       a phone: the bar stuck out 91 to 93 px past its section (kpadopt5-rows/request-inspector, 390 px). Wrapping them breaks the
+       package's sliding plate, so on a phone the five share the width, with less padding, and nothing is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='pastel'] .kp-inspector__filter {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            max-inline-size: 100%;
+        }
+
+        [data-theme='pastel'] .kp-inspector__filter > .kp-segmented__item {
+            padding-inline: 0.125rem;
+            gap: 0.1875rem;
+            min-inline-size: 0;
+            font-size: 0.8125rem;
+        }
+
+        [data-theme='pastel'] .kp-inspector__filter .kp-segmented__count {
+            min-inline-size: 0;
+            padding-inline: 0.25rem;
+            font-size: 0.6875rem;
+            letter-spacing: 0;
+        }
+    }
+
+    /* The code box's tools (Pretty and Raw, Wrap, Copy) stand in one nowrap row; pastel's stickers are wider than the package's
+       buttons, so in a phone-wide request inspector "Copy" stuck out 36 px. The row may wrap. */
+    [data-theme='pastel'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+

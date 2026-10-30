@@ -1,0 +1,12 @@
+/* @part: month-heatmap: signature layer */
+    [data-theme='blueprint'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.55) 0 1px, transparent 1px 5px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-calendar__busy-text {
+        font-size: var(--kp-text-md, 1rem);
+    }

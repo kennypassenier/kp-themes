@@ -1,0 +1,57 @@
+/* @part: month-heatmap: signature layer */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav) {
+            transition-timing-function: steps(3, jump-end);
+        }
+
+        [data-theme='cyberpunk'] .kp-switch__input,
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)::after {
+            transition-timing-function: steps(3, jump-end);
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's spinner) arrive by the
+           channel split and leave as it played backwards (lesson 19): js/calendar.js marks a
+           layer `[data-kp-leaving]` while its state goes (`--kp-calendar-busy-leave: hold`), and the
+           rules below keep it drawn through the 480 ms of that leave. Firefox does not hold
+           `display` for a transition, so this is an animation in both engines. */
+        [data-theme='cyberpunk'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='cyberpunk']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='cyberpunk'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+    }
+

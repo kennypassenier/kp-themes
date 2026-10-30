@@ -1,0 +1,73 @@
+/* @part: tokens: register layer — the theme's knobs (custom properties on the theme root) */
+    /* @kp-soft/themes — css/deco-register.css
+   The deco register, 5.0.0 [S48, LIFT_PLAN row 8]: Paris 1925, dark
+   reading. Scoped to [data-theme='deco'] and inert elsewhere; opt-in,
+   imported after themes.css. The approved concept demo ("The Gilded
+   Ascent", 2026-09-08) is the reference for every value here.
+
+   What this file does, in order: the knobs; the type; the hooks of S45 —
+   the headline inside a concentric inset frame that scales in once (the
+   cartouche), the redaction as a jewel plate lifted on a trigger, the
+   rule drawn under a heading, the double rule with a lozenge as divider;
+   the strip as navbar; the buttons with the mirror flourish; the wells;
+   the dossier with its stamp and its jewel redactions; and one answer
+   per component root (TH124). The reveals have their rest state here and
+   their motion in js/effects.js; without the script every one of them
+   stands at rest. There is no arrival: the cartouche is the only entry,
+   scoped to the headline, not the page.
+
+   Colour discipline (DI9): nothing here names a colour, not even in a
+   comment. Every colour literal the demo's own CSS wrote — the mirror
+   flourish's alpha, the nav dropdown's shadow, the dialog backdrop —
+   resolves onto an existing token (--primary for the first, close to
+   --sidebar-background for the other two, see the anatomy's findings
+   section for the near-black substitution), so every one is rewritten as
+   a relative colour of that token below; the rendered pixels do not
+   move except for the one substitution the anatomy records. Gold as a
+   flat colour
+   reads as Deco; gold as a gradient reads as a casino (anatomy.md), so
+   the only gradient in this file is the mirror flourish under the
+   primary button, and it fades to transparent rather than to a second
+   hue. Radius stays 0 everywhere: the style is corners.
+
+   DI2's focus ring needs no override: the derived --focus-ring and
+   --focus-ring-contrast tokens already equal --foreground and
+   --background for this theme, which is exactly the two-channel ring the
+   demo draws by hand — the base layer's default is already this theme's
+   answer.
+
+   The only loops: none. Every animation here runs once and stops. */
+
+    [data-theme='deco'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 25.25rem;
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-reveal-threshold: 0.6;
+        --kp-redact-stagger: 140ms;
+        --kp-classified-delay: 0ms;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+       and leaves a theme that declares none at rest. Headline is quiet on
+       purpose — the demo's own script never touches the headline's text,
+       only its frame animates, so no word/glyph routine applies (see the
+       anatomy's "What the demo showed" section). */
+        --kp-reveal-emphasis: plate;
+        --kp-reveal-rule: draw;
+        /* A press marks the part for the seal's 400 ms, so a quick tap shows
+           the whole ring [js/effects.js, --kp-press: hold]. */
+        --kp-press: hold;
+        --kp-press-hold: 400ms;
+        /* The cartouche's three concentric steps and its chevron bite. */
+        --kp-frame: inset 0 0 0 2px var(--primary), inset 0 0 0 5px var(--background), inset 0 0 0 7px var(--foreground);
+        --kp-chevron: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+        /* The mirror flourish under a primary button: the demo's own
+       literal alpha over the primary hue, exactly. */
+        --kp-mirror: linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.35), transparent);
+        /* The nav dropdown's shadow and the dialog's backdrop: the demo's
+       own near-black literal is close to --sidebar-background, so both
+       are relative colours of that token now (DI9) — see the anatomy's
+       findings section for how close. */
+        --kp-shadow-ink: hsl(from var(--sidebar-background) h s l / 0.5);
+        --kp-backdrop: hsl(from var(--sidebar-background) h s l / 0.72);
+    }
+

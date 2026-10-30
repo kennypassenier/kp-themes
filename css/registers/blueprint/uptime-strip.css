@@ -1,0 +1,31 @@
+/* @part: uptime-strip: signature layer */
+    /* Uptime: square sections side by side, thin; a pointed or focused one is framed by the pen; a failure to read is
+       flagged ▲ before its words on no plate; the axis is lettering. */
+    [data-theme='blueprint'] .kp-uptime {
+        --kp-uptime-cell-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline-color: var(--primary);
+        outline-width: 1px;
+    }
+    [data-theme='blueprint'] .kp-uptime__summary[data-kp-tone='error'] {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-uptime__summary[data-kp-tone='error']::before {
+        content: '\25B2\00a0';
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] :is(.kp-uptime__axis, .kp-uptime__info-figures) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-uptime__percent,
+    [data-theme='blueprint'] .kp-uptime__summary {
+        font-family: var(--theme-font-mono);
+    }
+

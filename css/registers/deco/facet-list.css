@@ -1,0 +1,62 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: square rows warmed by gold leaf when pointed at; the title in very widely spaced capitals. The counts on
+       their way are two gold hairlines with the glint running between them. */
+    [data-theme='deco'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='deco'] .kp-facet {
+        --kp-facet-hover: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
+    }
+    [data-theme='deco'] .kp-facet:hover {
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-facets__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 30% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 70% / 100% 1px no-repeat,
+            linear-gradient(
+                    90deg,
+                    transparent calc(var(--kp-sig-deco-g, 0) * 140% - 48%),
+                    hsl(from var(--primary) h s l / 0.3) calc(var(--kp-sig-deco-g, 0) * 140% - 30%),
+                    hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 0) * 140% - 8%),
+                    hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 0) * 140% - 3%),
+                    transparent calc(var(--kp-sig-deco-g, 0) * 140% - 1%)
+                )
+                0 50% / 100% 2px no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-deco-glint var(--kp-sig-deco-loop) linear infinite;
+        }
+        [data-theme='deco'] .kp-facets[aria-busy='true'] li:nth-child(2n) .kp-facet__count {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -12);
+        }
+    }
+
+    /* Heat grid and matrix: inlaid tiles, a thin gold inlay inside each frame; pointing warms a tile with gold leaf
+       and its inlay goes to full gold; a press sinks it under an inner shadow; the pick is the double gold ring;
+       names and the axis in spaced capitals. */
+    [data-theme='deco'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-ink: hsl(from var(--primary) h s l / 0.55);
+        --kp-heat-cell-lift: inset 0 0 0 1px hsl(from var(--background) h s l / 0.5);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='deco'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='deco'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }

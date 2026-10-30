@@ -1,0 +1,93 @@
+/* @part: step-list: signature layer */
+    /* The journey. */
+    [data-theme='deco'] .kp-steplist--journey {
+        --kp-journey-rule: 3px;
+        --kp-steplist-mark: 1.5rem;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        outline: 0;
+        background: transparent;
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__title {
+        font-size: 0.8125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:not([data-state='current']) .kp-steplist__title {
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        color: var(--kp-sig-deco-champagne);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before,
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background:
+            linear-gradient(
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35)),
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35))
+                )
+                0 0 / 100% 1px no-repeat,
+            linear-gradient(
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35)),
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35))
+                )
+                0 100% / 100% 1px no-repeat;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        --kp-journey-line: var(--kp-step-tone, var(--primary));
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__mark {
+        border: 1px solid hsl(from var(--primary) h s l / 0.5);
+        background-color: var(--kp-sig-deco-lac);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--kp-sig-deco-emerald);
+        color: var(--kp-sig-deco-champagne);
+        box-shadow: inset 0 0 0 2px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='done'][data-kp-tone] .kp-steplist__mark {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 2px var(--kp-sig-deco-lac);
+        background: color-mix(in oklab, var(--kp-step-tone) 78%, var(--kp-sig-deco-lac));
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--kp-sig-deco-gold-hi);
+        background: var(--kp-sig-deco-lac);
+        box-shadow:
+            0 0 0 2px var(--kp-sig-deco-lac),
+            0 0 0 3px var(--kp-step-tone, var(--primary)),
+            inset 0 0 0 4px var(--kp-sig-deco-lac),
+            inset 0 0 0 20px var(--kp-step-tone, var(--kp-sig-deco-gold-lt));
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='failed'] .kp-steplist__mark {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 2px var(--kp-sig-deco-lac);
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: hsl(from var(--primary) h s l / 0.35);
+        }
+        [data-theme='deco']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+        [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
+    }
+

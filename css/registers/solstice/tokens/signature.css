@@ -1,0 +1,28 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    /* ── Pointing and pressing [Kenny, 2026-10-07, research/solstice-character] ──
+       Pointing at something: the sun climbs its arc under it. Pressing:
+       the sun swells inside it. One grammar for every part that can be
+       pointed at or pressed: buttons (secondary, primary, ghost,
+       destructive, mirror, icon), menu items, calendar days, key figures
+       that are links or toggles, chart legend keys. Each answers to two
+       numbers, --kp-sig-solstice-point (0 to 1 under the real pointer) and
+       --kp-sig-solstice-press (0 to 1 while held), which run 240 ms on the
+       curve that is its own mirror (a sine in and out), so a part is
+       half-way and nine tenths of the way at the same moment going and
+       coming (t50 120 ms, t90 200 ms, the way back is the way there).
+       Every layer is a function of those numbers: nothing is switched, so
+       nothing can stop half-way. The pointer draws on the part's ::before
+       (the sun) and ::after (the lit foot); the press draws on the part's
+       own background-image (the swell, the foot edge, the half-way ground),
+       so the two never hide each other. The part keeps its own ground and
+       ink at rest and in a hover: the register paints no hover face. The
+       alarm keeps the plate and paint of its own screen [scope-94]. */
+
+    [data-theme='solstice'] {
+        --kp-sig-solstice-touch: cubic-bezier(0.37, 0, 0.63, 1);
+        --kp-sig-solstice-contact: 240ms;
+        /* G3 and G1: opening a panel takes 2 units, on the sine's last quarter (what comes). */
+        --kp-sig-solstice-open: 480ms;
+        --kp-sig-solstice-come: cubic-bezier(0.61, 1, 0.88, 1);
+    }
+

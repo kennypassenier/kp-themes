@@ -2,86 +2,222 @@
   "output": "css/blueprint-register.css",
   "items": [
     {
-      "open": "/* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the\n   anchor of the theme]. Registered at the top level because Firefox does not\n   register an @property inside a cascade layer; with no registration every\n   keyframe below would flip between its two poses instead of moving.\n   --kp-bp-r is the route of a traced outline (0 to 4: a side per unit),\n   --kp-bp-rp the reading along a diagonal (0 to 1), --kp-bp-p one stroke\n   along a line (0 to 1); --kp-bp-nib is the pen down (1) or up (0),\n   --kp-bp-pv, --kp-bp-rv and --kp-bp-tv how much of the pen, of the reading\n   (witness lines and pointers) and of the construction line is on the sheet;\n   --kp-bp-hv, --kp-bp-dv and --kp-bp-sv how much of the scale, of the\n   dimension and of the pointer a hand has set on a control. */\n@property --kp-bp-r {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-rp {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-p {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-nib {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-pv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-rv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-tv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-hv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-dv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-sv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* --kp-bp-ink is whether a traced panel's contents are inked (1) or not yet\n   (0): the trace hides the panel's own box by `visibility`, but its contents\n   stay visible to focus and are painted by this number, so a dialog, the\n   palette and the date picker take the focus they are opened with while the\n   pen still draws (all-themes, 2026-10-13: the focus fell to <body>). */\n/* --kp-bp-hold is a clock with nothing drawn on it: the bar's mega menu is\n   held on screen until a transition on its panel has played\n   (js/components.js), and this is that transition, the length of its\n   close. */\n@property --kp-bp-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@property --kp-bp-ink {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
-        "base.css",
-        "the-measurement-frame.css",
-        "the-laurels-stand.css",
-        "the-navbar.css",
-        "button.css",
-        "card.css",
-        "data.css",
-        "the-roots-the-rules-above.css",
-        "motion-guarded.css",
-        "sidenav.css"
+        "tokens/register.css",
+        "base/register.css",
+        "question-card.css",
+        "base/register-2.css",
+        "page-header/register.css",
+        "navbar/register.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "toast/register.css",
+        "page-header/register-2.css",
+        "small-patterns/register.css",
+        "step-list/register.css",
+        "tabs.css",
+        "log.css",
+        "card/register-2.css",
+        "motion/register.css",
+        "navbar/register-2.css",
+        "sidenav/register.css",
+        "button/register-2.css",
+        "navbar/register-3.css",
+        "alarm.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* blueprint's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/blueprint.css and research/signature-elements/themes/blueprint.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/base.css",
-        "signature-base/rules.css",
-        "the-meter-with-a-mark-this.css",
-        "blueprint-3-the-dimension.css",
-        "the-character/base.css",
-        "the-character/what-opens-is-drawn-the-same.css",
-        "the-character/a-menu-entry-is-the-themes.css",
-        "the-character/progressbar.css",
-        "the-character/review-round-3-kenny-2026-10.css"
+        "progress-spinner-skeleton/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "toast/signature.css",
+        "dialog/signature.css",
+        "popover/signature.css",
+        "upload-wizard.css",
+        "state-plate.css",
+        "navbar/signature.css",
+        "motion/signature.css",
+        "popover/signature-2.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "form-field/signature-2.css",
+        "motion/signature-2.css",
+        "meter/signature.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "meter/signature-2.css",
+        "motion/signature-3.css",
+        "datatable.css",
+        "month-heatmap/signature.css",
+        "dialog/signature-2.css",
+        "navbar/signature-2.css",
+        "button/signature.css",
+        "menu-button.css",
+        "combobox.css",
+        "tokens/signature.css",
+        "card/signature.css",
+        "key-figures.css",
+        "state-word.css",
+        "progress-spinner-skeleton/signature-4.css",
+        "meter/signature-3.css",
+        "progress-spinner-skeleton/signature-5.css",
+        "sidenav/signature.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Blueprint's own (themes/blueprint/CHARACTER.md): a tile is a part on the sheet, no fill and no frame, standing on the\n   graticule's two axes (G7); pointing sets the amber witness lines at its two ends (G8); a press takes the dimension,\n   an amber line across its foot with a slash at each end, and the part's ground never changes (G14); a failure is\n   flagged, the filled triangle in the tone's ink before the title (G13); the lettering names (mono capitals sloped 15\n   degrees), the sans speaks (G15); a waiting count is a section being hatched (G10); what runs is the chain line\n   feeding along its dimension line (G11). Every stroke on the plotter's feed. */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows.css",
+        "facet-list/signature.css",
+        "week-agenda.css",
+        "run-timeline/signature.css",
+        "facet-list/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Blueprint's own (themes/blueprint/CHARACTER.md): the separator is the sheet's fold line, the dashed\n   rule of the divider, stood upright and lying across the phone's list. A day on the axis is drafted: pointing brings\n   the pen's cyan witness lines to either side of it; pressed it is the section, hatched in amber between the amber\n   witness lines with its dimension line under it (the next run's amber). A series' finished run is a hatched section\n   in its ink; the upcoming list's day rule is dashed; the facet pattern is framed by a drawn line. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-fourth-adoption-round.css"
+      "open": "/* ── The fourth adoption round in this theme [kpadopt4]: data pieces ──\n   Blueprint's own (themes/blueprint/CHARACTER.md): a part that does not exist yet, drawn on a ruled sheet and measured.\n   A plate has no fill and no closed frame, the sheet shows through and a ruler runs along its start edge and its foot\n   (G7); a section is hatched (G16); pointing sets the amber witness lines at a part's two ends (G8); a press takes the\n   dimension (G14); a change is revised (G9); a warning is flagged with the triangle before its words, outlined for a\n   warning, filled for a failure (G13); the lettering names, the sans speaks (G15). Every stroke is on the plotter's\n   feed (G1) and under no-preference (G18). */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "key-value-grid.css",
+        "form-grid.css",
+        "code-block.css",
+        "motion/signature-4.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "rows-cards-and-choices.css"
+      "open": "/* ── Rows, cards and choices [kpadopt4]: tiles, status rows, the action list, secrets, dialogs ── */\n@layer kp.signature {\n",
+      "files": [
+        "forms.css",
+        "action-columns.css",
+        "small-patterns/signature.css",
+        "dialog/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "time-and-flows.css"
+      "open": "/* ── Time and flows [kpadopt4]: moments, the journey, the pipeline, the drawings ── */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-4.css",
+        "step-list/signature.css",
+        "pipeline.css",
+        "small-patterns/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-calm-components.css"
+      "open": "/* ── The calm components and the seven new ones [kpadopt4] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-2.css",
+        "checklist-sink/signature.css",
+        "kitchen-timers.css",
+        "focus-steps.css",
+        "wheel.css",
+        "uptime-strip.css",
+        "command-block.css",
+        "visual-timer.css",
+        "compare-slider.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt5-and-kpadopt6.css"
+      "open": "/* ── The kpadopt5 and kpadopt6 components in blueprint [t56-blueprint-1018] ────────────────────────────────────────────────\n   What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-3.css",
+        "request-inspector.css",
+        "auto-refresh.css",
+        "checklist-sink/signature-2.css",
+        "card/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "failed-area-is-flagged.css"
+      "open": "/* ── A failed area is flagged, never filled [G13, t56-eye-1018] ──\n   Blueprint's own (themes/blueprint/CHARACTER.md, G5 and G13): a statuses only flag. A failed part carries the drafting flag\n   before its title (a filled ▲ in the tone's lit ink with the word FAILED in the lettering), stands on the sheet's two axes\n   drawn in that ink, and is on no plate and in no frame all round. The package's flat `--destructive` fill (a salmon slab)\n   is no part of the sheet, so every destructive alert and the empty plate a failure borrows are this one drawing. */\n@layer kp.signature {\n",
+      "files": [
+        "alert.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-time-fields-waiting.css"
+      "open": "/* ── The time field's waiting place is a traced frame [t56-eye-1018] ──\n   The field is waiting at its own final width and height (a 36 px box), not a line of text, so it is the sheet's block\n   place: the pen traces the four sides, as it does round every other block. The line's two ticks and one baseline, drawn\n   on a box this size, read as two stray strokes. */\n@layer kp.signature {\n",
+      "files": [
+        "time-field.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-calendars-busy-card.css"
+      "open": "/* ── The calendar's busy card is a section ── [G16, t56-eye-1018]\n   The hatch is a section (waiting, leaving): the card that waits over the whole grid wears it as a band along its foot,\n   under the compass, never behind the words; its words are at reading size, not the tiny line they were. */\n@layer kp.signature {\n",
+      "files": [
+        "month-heatmap/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-acknowledge-gate.css"
+      "open": "/* ── The acknowledge gate is flagged, not filled [G13, t56-eye-1018] ──\n   A warning on the sheet is the outlined triangle in the lit amber before its title on the two axes drawn in that ink, on no\n   plate: the flat brown block carried no mark of the sheet. */\n@layer kp.signature {\n",
+      "files": [
+        "ack-gate.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-count-that-is-still.css"
+      "open": "/* ── The count that is still being counted is a hatched place [G16, t56-eye-1018] ──\n   The line skeleton's two dimension ticks and baseline, drawn on the toggle's 2-character bone, read as an empty box with a\n   stray stroke. The hatch is a section waiting: the bone is a small hatched section between its two ticks. */\n@layer kp.signature {\n",
+      "files": [
+        "progress-spinner-skeleton/signature-6.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-shape-2.css"
+      "open": "/* ── graph loading · shape 2 · The drafting sheet: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-bp-load-3.css"
+      "open": "/* ── graph loading · r3-bp-load-3 · Current finds the circuit (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

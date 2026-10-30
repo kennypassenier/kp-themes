@@ -1,0 +1,33 @@
+/* @part: visual-timer: signature layer */
+    /* ── Timer disc: a round screen, the time left a lit sector, the rim marks in cream ── */
+    [data-theme='nostromo'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--kp-no-phosphor);
+        --kp-timer-disc-marks: var(--kp-no-cream);
+        --kp-timer-disc-ring: var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timer-disc__face {
+        border: 0;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow:
+            0 0 0 3px var(--secondary),
+            0 0 0 4px var(--border-strong),
+            inset 0 0 16px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+    }
+    [data-theme='nostromo'] .kp-timer-disc__sector {
+        filter: drop-shadow(0 0 5px hsl(from var(--sidebar-primary) h s l / 0.6));
+    }
+    [data-theme='nostromo'] .kp-timer-disc__hub {
+        border: 0;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            0 0 0 3px var(--destructive),
+            0 0 0 4px var(--border-strong),
+            inset 0 0 16px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        animation: none;
+    }
+

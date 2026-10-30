@@ -1,0 +1,87 @@
+/* @part: share-bar: signature layer */
+    /* The share bar: a horizon, each part lit at its foot, the threshold the sun on its stalk (the meter's mark), the sum
+       past the whole a ✳ past the end. The legend row under the pointer takes the lit foot. */
+    [data-theme='solstice'] .kp-stackbar {
+        --kp-stackbar-radius: calc(var(--radius) * 0.4);
+    }
+    [data-theme='solstice'] .kp-stackbar__title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.0625rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-stackbar__bar {
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.25), var(--muted) 70%);
+        box-shadow: inset 0 -1px 0 var(--border-strong);
+    }
+    [data-theme='solstice'] .kp-stackbar__seg {
+        background-image: linear-gradient(to top, hsl(from var(--foreground) h s l / 0.3), transparent 55%);
+        background-color: var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='solstice'] .kp-stackbar__seg[data-kp-stackbar-hatch] {
+        background-image:
+            repeating-linear-gradient(-45deg, transparent 0 3px, var(--card) 3px 4.5px),
+            linear-gradient(to top, hsl(from var(--foreground) h s l / 0.3), transparent 55%);
+    }
+    [data-theme='solstice'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card),
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary),
+            0 0.4rem 0.7rem -0.3rem hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='solstice'] .kp-stackbar__mark {
+        inset-block: -0.2rem;
+        inline-size: 1px;
+        background: var(--foreground);
+        box-shadow: none;
+    }
+    [data-theme='solstice'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.3rem;
+        inset-inline-start: -0.2rem;
+        inline-size: 0.4rem;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0.4rem hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='solstice'] .kp-stackbar__bar[data-kp-over]::after {
+        content: '\2733';
+        color: hsl(from var(--destructive) h s 68%);
+    }
+    [data-theme='solstice'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.28), transparent 85%);
+    }
+    [data-theme='solstice'] .kp-stackbar__swatch {
+        border-radius: 50%;
+        background-image: linear-gradient(to top, hsl(from var(--foreground) h s l / 0.3), transparent 55%);
+    }
+    [data-theme='solstice'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background-image: none;
+    }
+    [data-theme='solstice'] .kp-stackbar__label {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-stackbar__item[data-kp-stackbar-over] .kp-stackbar__value {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+    /* Not read, or failed: the empty state's own footprint, the sky over it dim; a failure reddens it. */
+    [data-theme='solstice'] .kp-stackbar__note {
+        border-style: solid;
+        border-color: var(--border);
+        background:
+            linear-gradient(var(--kp-so-foot, var(--border)), var(--kp-so-foot, var(--border))) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-so-sky, var(--accent)) h s l / 0.14), transparent 55%);
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1rem;
+    }
+    [data-theme='solstice'] .kp-stackbar[data-kp-state='error'] .kp-stackbar__note,
+    [data-theme='solstice'] .kp-bullets[data-kp-state='error'] .kp-bullets__note {
+        --kp-so-sky: var(--destructive);
+        --kp-so-foot: var(--destructive);
+    }
+

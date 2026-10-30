@@ -1,0 +1,60 @@
+/* @part: button: register layer; also alert */
+    /* ── Buttons: no bevel, one soft accent highlight [S49, A7] ────────── */
+
+    [data-theme='solstice'] .kp-button,
+    [data-theme='solstice'] .kp-icon-button {
+        border-radius: var(--radius);
+        font-weight: 600;
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='solstice'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* Pointing and pressing are not painted here: every pressable part
+       answers to the same two numbers, drawn once in the signature layer
+       (the sun climbs its arc under the pointer, the sun swells inside a
+       press), so no variant has a hover face of its own. Rest only. */
+    [data-theme='solstice'] .kp-button--ghost {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='solstice'] .kp-button--destructive {
+        background: transparent;
+        color: var(--destructive);
+        border-color: var(--destructive);
+    }
+
+    /* The demo's answer to "mirror" [S49, A7]: a thin calibration-bar
+       highlight riding the top and bottom inset edges, echoing the
+       headline's fg/ink pair — this theme carries no gradients
+       (anatomy.md), so this is a highlight, not a flip. One rule for every
+       mirror button: a second, identical rule for the primary mirror was
+       merged into it [scope-100], since nothing in this layer gives the
+       primary button a box-shadow of its own to beat. */
+    [data-theme='solstice'] .kp-button--mirror {
+        box-shadow:
+            inset 0 2px 0 hsl(from var(--foreground) h s l / 0.35),
+            inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
+    }
+
+    /* Focus is a halo [Kenny's pick on research/solstice-character, 2026-10-07]:
+       a 3 px double rust ring standing 3 px off the part, in place of the
+       global two-channel ring (DI2). One rule for every focusable part; the
+       mirror button keeps its highlight untouched by it. */
+    [data-theme='solstice'] :focus-visible {
+        outline: 3px double var(--accent);
+        outline-offset: 3px;
+        box-shadow: none;
+    }
+
+    [data-theme='solstice'] .kp-button--mirror:focus-visible {
+        box-shadow:
+            inset 0 2px 0 hsl(from var(--foreground) h s l / 0.35),
+            inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
+    }
+

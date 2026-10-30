@@ -1,0 +1,51 @@
+/* @part: form-field: signature layer */
+    [data-theme='formal'] .kp-field__check {
+        --kp-sig-dur: var(--fx-duration);
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.62rem;
+        block-size: 0.32rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='formal'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-field__check[type='checkbox']:checked::before,
+        [data-theme='formal'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-formal-pen var(--kp-sig-dur) linear both;
+        }
+    }
+

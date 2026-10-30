@@ -1,0 +1,65 @@
+/* @part: week-agenda: signature layer; also run-timeline */
+    [data-theme='nostromo'] :is(.kp-week__pill, .kp-gantt__run) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-week__pill {
+        border-color: var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-week__pill:is(button):hover,
+    [data-theme='nostromo'] .kp-gantt__run:is(button):hover {
+        box-shadow:
+            inset 0 0 0 1px var(--foreground),
+            0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.5);
+    }
+    [data-theme='nostromo'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-week__pill[data-kp-state='next'] .kp-week__time::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-inline-end: 0.3rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 4px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        vertical-align: 0.06em;
+    }
+    [data-theme='nostromo'] :is(.kp-week__head, .kp-gantt__tick) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='nostromo'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        --kp-no-pitch: 5px;
+        border-color: var(--border-strong);
+        color: var(--sidebar-primary);
+        background:
+            var(--kp-no-leds) 0 50% / calc(var(--kp-no-pitch) * 37) calc(100% - 6px) repeat-x,
+            linear-gradient(90deg, var(--sidebar-accent) 0 3px, transparent 0) 0 50% / var(--kp-no-pitch) calc(100% - 6px) repeat-x,
+            var(--sidebar-background);
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-gantt__run[data-kp-state='running'] .kp-gantt__label {
+        display: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-nostromo-bank var(--kp-sig-no-loop) steps(1, end) infinite;
+        }
+    }
+
+    /* In a narrow agenda the range's title stays on one line in Michroma's wide letters; a phone's timeline keeps its
+       toolbar on one row. */
+    @container kp-week (max-width: 30rem) {
+        [data-theme='nostromo'] .kp-week__title {
+            font-size: 0.9375rem;
+            white-space: nowrap;
+        }
+    }
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='nostromo'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+    }
+

@@ -1,0 +1,32 @@
+/* @part: form-grid: signature layer */
+    /* ── Form rows: engraved labels; a changed row's bar is bare metal (what the person did), a failed row's bronze ── */
+    [data-theme='titanium'] .kp-formrow__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-formrow__label > small {
+        font-size: 0.6875rem;
+        text-shadow: none;
+    }
+    [data-theme='titanium'] .kp-formrows--lines > .kp-formrow {
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-formrows--lines > .kp-formrow:last-child {
+        border-block-end: 0;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='titanium'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+    [data-theme='titanium'] .kp-formrow__aside {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-formrow__lock::before {
+        border-radius: 0;
+    }
+

@@ -1,0 +1,82 @@
+/* @part: motion: register layer — keyframes and motion that belong to no one component */
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get, and the
+       marquee stands still. The durations are literal because
+       check-motion.mjs computes DI5's rate from them; the matching --kp-*
+       knobs are what js/effects.js reads. Position and size only — no
+       colour transition anywhere (KT8). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-kp-reveal='headline'].is-words [data-word] {
+            animation: kp-slam 300ms var(--fx-ease) both;
+            animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
+        }
+
+        [data-theme='brutalism'] mark {
+            transition: background-size 400ms var(--fx-ease);
+        }
+
+        [data-theme='brutalism'] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-rule-in 600ms var(--fx-ease) 1 both;
+        }
+
+        [data-theme='brutalism'] [data-kp-divider]::before {
+            animation: kp-marquee 42000ms linear infinite;
+        }
+
+        [data-theme='brutalism'] [data-kp-divider='alt']::before {
+            animation-direction: reverse;
+        }
+
+        [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+            transition: transform 400ms var(--fx-ease);
+        }
+
+        [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        /* What the demo moves on a hover [S49, A6 of 2026-09-08]: the
+           lift, the shadow it lifts away from, and the plate colour. KT8
+           held a hover to one step with no colour transition; Kenny chose
+           the demo for this theme, and AR30's reader waits out
+           --fx-duration after a theme switch rather than reading a ring
+           mid-flight. */
+        [data-theme='brutalism'] :is(.kp-button, .kp-icon-button, .kp-nav__link--cta) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-up),
+                box-shadow var(--fx-duration) var(--kp-sig-br-up);
+        }
+
+        /* What is driven in or lifted into focus falls: one unit on the
+           fall curve, stopping dead [G1, G14]; released, it is lifted on
+           the same curve played back. */
+        [data-theme='brutalism'] :is(.kp-button, .kp-icon-button, .kp-nav__link--cta):is(:active, :focus-visible) {
+            transition-timing-function: var(--kp-sig-br-fall);
+        }
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-rule-in
+       is the base layer's. The slam moves a word onto its offset once; the
+       marquee translates a strip -50%, seamlessly, and never changes
+       luminance. */
+    @keyframes kp-slam {
+        from {
+            transform: translate(-9px, -9px);
+            text-shadow: 0 0 0 var(--secondary);
+        }
+
+        to {
+            transform: none;
+            text-shadow: 4px 4px 0 var(--secondary);
+        }
+    }
+

@@ -1,0 +1,87 @@
+/* @part: page-header: register layer */
+    /* ── The demo's own pieces [S46] ─────────────────────────────────────── */
+
+    /* The vertical margin note: static on narrow screens, rotated into
+       the hero's left margin from 960px, the demo's own breakpoint. */
+    [data-theme='solstice'] .kp-side-note {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    @media (min-width: 60rem) {
+        [data-theme='solstice'] .kp-side-note {
+            position: absolute;
+            inset-block-start: 6rem;
+            inset-inline-start: clamp(0.5rem, 2vw, 1.5rem);
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            max-width: none;
+        }
+
+        /* The note's containing block is its own hero (Kenny, 2026-09-16,
+           register-faults [scope-100]): nothing positioned the hero, so
+           outside the catalogue's stage the note was placed against the
+           page — at y=24 while its hero stood thousands of pixels lower. */
+        [data-theme='solstice'] [data-kp-surface='hero']:has(> .kp-side-note) {
+            position: relative;
+        }
+    }
+
+    /* Laurels: a bold lead-in and a rust hairline either side, the way a
+       printed spec sheet sets its own tick marks. */
+    [data-theme='solstice'] .kp-laurels {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.6875rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] .kp-laurels li {
+        position: relative;
+        padding-inline: 0.85rem;
+    }
+
+    [data-theme='solstice'] .kp-laurels li::before,
+    [data-theme='solstice'] .kp-laurels li::after {
+        content: '';
+        position: absolute;
+        inset-block: 0.15rem;
+        inline-size: 1px;
+        background: var(--accent);
+    }
+
+    [data-theme='solstice'] .kp-laurels li::before {
+        inset-inline-start: 0;
+    }
+
+    [data-theme='solstice'] .kp-laurels li::after {
+        inset-inline-end: 0;
+    }
+
+    [data-theme='solstice'] .kp-laurels b {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    /* The platforms line: the names in the full ink and a heavier weight
+       over the line's muted ink, spaced by the package's own gap — no tick
+       or mark before a name [scope-100: this comment used to promise a
+       rust tick the rules never drew]. */
+    [data-theme='solstice'] .kp-platforms {
+        font-weight: 500;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] .kp-platforms span {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* The spec sheet: the plain card the demo shows — no ramp, no chrome. */
+    [data-theme='solstice'] .kp-spec {
+        border-radius: var(--radius);
+    }
+

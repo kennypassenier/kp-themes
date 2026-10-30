@@ -4,133 +4,269 @@
     {
       "open": "@layer kp.register {\n",
       "files": [
-        "base.css",
-        "nav.css",
-        "the-hero-furniture.css",
-        "button.css",
-        "fields.css",
-        "the-dossier-card.css",
-        "the-confirm-dialog.css",
-        "alert.css",
-        "data.css",
-        "navigation-and-steps.css",
-        "motion-guarded.css",
+        "tokens/register.css",
+        "base/register.css",
+        "navbar/register.css",
+        "page-header/register.css",
+        "base/register-2.css",
+        "button/register.css",
+        "form-field/register.css",
+        "card/register.css",
+        "toast/register.css",
+        "alert/register.css",
+        "small-patterns/register.css",
+        "table/register.css",
+        "small-patterns/register-2.css",
+        "tabs.css",
+        "breadcrumb-pagination.css",
+        "master-detail.css",
+        "page-header/register-2.css",
+        "card/register-2.css",
+        "motion/register.css",
+        "navbar/register-2.css",
         "sidenav.css",
-        "the-dot-becomes-a-lamp.css",
-        "the-alarm.css",
-        "the-case-its-figures.css"
+        "button/register-2.css",
+        "key-figures/register.css",
+        "button/register-3.css",
+        "navbar/register-3.css",
+        "alarm.css",
+        "key-figures/register-2.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* nostromo's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/nostromo.css and research/signature-elements/themes/nostromo.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/base.css",
-        "signature-base/wizard.css",
-        "the-waiting-screen.css",
-        "live-update.css",
-        "the-meter-with-a-mark-this.css",
-        "the-mark-past-the-end.css",
-        "pairs.css"
+        "progress-spinner-skeleton/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "toast/signature.css",
+        "dialog/signature.css",
+        "upload-wizard.css",
+        "state-plate.css",
+        "motion/signature.css",
+        "navbar/signature.css",
+        "form-field/signature-2.css",
+        "tokens/signature.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "motion/signature-2.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "key-figures/signature.css",
+        "motion/signature-3.css",
+        "toast/signature-2.css",
+        "meter.css",
+        "tokens/signature-2.css",
+        "motion/signature-4.css",
+        "navbar/signature-2.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "file": "properties.css"
     },
     {
-      "file": "register.css"
-    },
-    {
-      "file": "the-dashboard-parts/base.css"
-    },
-    {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
-    },
-    {
-      "file": "the-six-opt-in-options.css"
-    },
-    {
-      "open": "/* ── The kpadopt4 components in nostromo's grammar: data pieces, empty-state drawings [kpadopt4] ──\n   Nostromo's own (themes/nostromo/CHARACTER.md): the case is what you touch and the screen is what the ship reports\n   (G7). A mark is a label plate (tape, 2 px, G6) with a lamp-lit pattern when it is a picture; a share bar is a lit\n   window, its parts lit lenses and the free rest the unlit cells (G10's window); labels are tape, counts Michroma\n   (G15); a changed reading lights its lamp (G9); a failed carrier sounds the klaxon (G13); a block of code or a command\n   is a screen: amber phosphor on dark glass under scanlines, set in the plate's bezel (G7). Every drawing in an empty\n   state is a vector written on such a screen, the raster's order, frame by frame (G2, G4). */\n@layer kp.signature {\n",
+      "open": "/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/opening-of-the-signature-block.css",
-        "the-identity-mark.css",
-        "the-share-bar.css",
-        "code-and-commands-are.css",
-        "drawings-in-an-empty-state.css"
+        "segmented-toolbar/signature.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt4-components.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Nostromo's own (themes/nostromo/CHARACTER.md): a tile is a switch on the console, raised beige moulding with its\n   lamp before the title (G6, G7, G8): unlit at rest, lit under the hand, full when pressed, the LED with its glow on\n   keyboard focus; a press pushes the key into a well and nothing moves (G14); a warning sounds the klaxon, the carrier\n   framed all round in the tone (G13); label tape names, Michroma counts (G15); waiting is the lamp bank computing, the\n   LED window's unordered patterns on the frame clock (G10): a heat grid's row of cells is one LED window, a count one\n   short window, never a clipped word in every cell; a running run is that window lit along it. */\n@layer kp.signature {\n",
+      "files": [
+        "tokens/signature-3.css",
+        "action-tiles.css",
+        "status-rows/signature.css",
+        "heat-grid.css",
+        "week-agenda.css",
+        "status-rows/signature-2.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Nostromo's own (themes/nostromo/CHARACTER.md): the separator is a panel seam, a dark joint with its\n   light lip and one unlit lamp at its middle; lying down across the phone's list it is the same seam. A day on the axis\n   lights its rim in the LED orange under the pointer; pressed it is a key sunk in its well, its lamp lit under the\n   date. The upcoming list names today in the LED orange; the facet pattern is a key in its well. */\n@layer kp.signature {\n",
+      "files": [
+        "navbar/signature-3.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── The kpadopt4 components in nostromo's grammar: data pieces, empty-state drawings [kpadopt4] ──\n   Nostromo's own (themes/nostromo/CHARACTER.md): the case is what you touch and the screen is what the ship reports\n   (G7). A mark is a label plate (tape, 2 px, G6) with a lamp-lit pattern when it is a picture; a share bar is a lit\n   window, its parts lit lenses and the free rest the unlit cells (G10's window); labels are tape, counts Michroma\n   (G15); a changed reading lights its lamp (G9); a failed carrier sounds the klaxon (G13); a block of code or a command\n   is a screen: amber phosphor on dark glass under scanlines, set in the plate's bezel (G7). Every drawing in an empty\n   state is a vector written on such a screen, the raster's order, frame by frame (G2, G4). */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "key-value-grid.css",
+        "form-grid/signature.css",
+        "code-block/signature.css",
+        "small-patterns/signature.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── The kpadopt4 components in nostromo's grammar: rows, tiles, check lists, card states [kpadopt4] ──\n   A row of a list is a line on the console's log: its state is a lit bar along the start edge, and a row that warns or\n   fails sounds the klaxon, framed all round, 3 px, in the tone (G13); a payload a row folds away is the ship's printout\n   on its small screen (G7). A tile of choices is a moulded key: raised at rest, lit rim under the hand, sunk in its well\n   when it is ticked (G8, G14); its title is label tape. A fix written out for a check is a readout on a screen. */\n@layer kp.signature {\n",
+      "files": [
+        "action-columns.css",
+        "status-rows/signature-3.css",
+        "forms.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "open": "/* ── The kpadopt4 components in nostromo's grammar: pipeline, journey, moments, secret, dialog sections [kpadopt4] ──\n   The pipeline is a rack: a lane a moulded plate, its head label tape with the stage's lit strip, a card a key with its\n   lamp (G8): unlit at rest, lit under the hand, full when pressed, the LED orange on the open one; the board's words\n   are a plate, a failed read the klaxon (G13). A journey is the LED bargraph laid between its steps: the way travelled\n   lit in the step's own colour, the way to come unlit cells, a failed way alternate cells in red; the step it stands at\n   is a lamp lit in its key. A moment on the timeline is a lamp, a stretch a run of lit cells (G10's window). The secret\n   field is a screen: the value is written on it by the raster (G2) and the countdown is a bargraph that goes out cell by\n   cell (G9, G10); a dialog's sections are divided by the vent seam and its danger section is framed all round (G13). */\n@layer kp.signature {\n",
       "files": [
         "pipeline.css",
-        "journey.css",
-        "secret-field.css",
-        "dialog-in-sections.css"
+        "step-list.css",
+        "run-timeline/signature-2.css",
+        "small-patterns/signature-2.css",
+        "dialog/signature-2.css",
+        "typed-confirmation.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── The kpadopt4 components in nostromo's grammar: time, cooking and comparison [kpadopt4] ──\n   Everything that reads a time out is the ship's screen: the digits of a countdown, a timer's remaining time and the\n   timer disc are amber phosphor on dark glass in the case's bezel (G7, G15); an ended timer sounds the klaxon, framed\n   all round and never flashing (G13); the uptime strip is a lit window whose cells light by state (G10's window); the\n   wheel turns in whole frames of the ship's clock and its outcome is written on the screen (G1, G4); a three-way chip\n   is a switch with its lamp, lit in ink, in red for out (G8, G13); the quantity's figure is Michroma in its well and\n   its unit label tape (G15); a checklist is the log with its dotted seams; cook mode's ingredients are a printout. */\n@layer kp.signature {\n",
       "files": [
-        "signature-base/opening-of-the-signature-block-2.css",
+        "tokens/signature-4.css",
         "uptime-strip.css",
-        "the-wheel.css",
-        "checklist.css"
+        "kitchen-timers.css",
+        "countdown.css",
+        "visual-timer.css",
+        "range-picker.css",
+        "wheel.css",
+        "focus-steps.css",
+        "quantity.css",
+        "checklist-sink.css",
+        "segmented-toolbar/signature-2.css",
+        "compare-slider.css"
       ],
       "close": "}\n\n"
     },
     {
-      "file": "kpadopt4-repairs-found.css"
+      "open": "/* ── kpadopt4 repairs found at 390 px [kpadopt4] ──\n   A label set in this theme's wide letters needs more room than the aside leaves it in a narrow form: below 36rem of the\n   form's own width each row is its own column (label, control, then the aside under it), so no label ever runs into the aside. The countdown's\n   colon takes the room of a monospaced character. */\n@layer kp.signature {\n",
+      "files": [
+        "form-grid/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "sort-the-page-carries-out.css"
+      "open": "/* ── A sort the page carries out [kpadopt4]: the sorted header has its lamp lit (G8, G9) ──\n   Every sortable header keeps an unlit lamp before its name (25 %), so the header never changes width when it is the\n   sorted one; the sorted header's lamp is the LED, lit, and the arrow after the name keeps the direction. A column that\n   cannot be sorted now has no lamp and no arrow. */\n@layer kp.signature {\n",
+      "files": [
+        "table/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/base.css"
+      "open": "@layer kp.signature {\n",
+      "files": [
+        "dialog/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/base.css"
+      "open": "/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit.css"
+      "open": "/* ── kpadopt5/6 fit: the weekday chips [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "weekday-picker.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-2.css"
+      "open": "/* ── kpadopt5/6 fit: the fold button of a code cell [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-3.css"
+      "open": "/* ── kpadopt5/6 fit: the folded quote [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "quote-card.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-4.css"
+      "open": "/* ── kpadopt5/6 fit: the availability list on a phone [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "who-can-come.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-5.css"
+      "open": "/* ── kpadopt5/6 fit: the growing text box [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "form-field/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-fit/kpadopt5-6-fit-6.css"
+      "open": "/* ── kpadopt5/6 fit: the code box's tools [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "code-block/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-parts/base.css"
+      "open": "/* ── kpadopt5/6 parts: nostromo's own corners and chart kinds [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "time-chart.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "kpadopt5-6-parts/kpadopt5-6-parts.css"
+      "open": "/* ── kpadopt5/6 parts: nostromo's slider is a fader [t56-nostromo-1018] ── */\n@layer kp.signature {\n",
+      "files": [
+        "slider.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "signature/a-destructive-button-that.css"
+      "open": "/* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its\n   action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it\n   without a plate [t56-eye-1018]. */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "failed-area-is-a-screen.css"
+      "open": "/* ── A failed area is a screen with its fault lamp lit [t56-eye-1018] ──\n   Nostromo's own (themes/nostromo/CHARACTER.md, the raster and the lamps): the lamps tell the state. A failed part is the\n   raster over the destructive plate and an amber lamp with FAULT in the mono lettering over its title, not a flat slab. */\n@layer kp.signature {\n",
+      "files": [
+        "alert/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-shape-1.css"
+      "open": "/* ── graph loading · shape 1 · The CRT radar: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-no-load-2.css"
+      "open": "/* ── graph loading · r3-no-load-2 · Blips surface round the scope (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

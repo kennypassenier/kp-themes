@@ -1,0 +1,30 @@
+/* @part: switch: signature layer */
+    [data-theme='deco'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-border: 3px;
+        --kp-switch-inset: 1px;
+        --kp-switch-width: 2.75rem;
+    }
+
+    [data-theme='deco'] .kp-switch__input {
+        border: 3px double var(--border-strong);
+        background: var(--background);
+    }
+
+    [data-theme='deco'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    [data-theme='deco'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary-foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+

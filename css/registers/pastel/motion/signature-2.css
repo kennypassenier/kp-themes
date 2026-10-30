@@ -1,0 +1,85 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A dialog: the CSS entrance is 840 ms; js/motion.js keeps it and its
+           backdrop's, plays them forwards in its close time (560) to open and
+           backwards to close (`--kp-open: reverse-close`). */
+        [data-theme='pastel'] :is(.kp-dialog, .kp-palette, .kp-shortcuts) {
+            animation: kp-sig-pastel-stuck-in var(--kp-sig-pa-dialog) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] :is(.kp-dialog, .kp-palette, .kp-shortcuts)::backdrop {
+            animation: kp-sig-pastel-pass-in var(--kp-sig-pa-dialog) var(--kp-sig-pa-land) backwards;
+        }
+
+        /* A popover family member opens in the landing's 560 ms; js/motion.js
+           closes it with a copy that carries `[data-kp-closing]`, and the
+           date picker's script puts that mark on the panel itself. */
+        [data-theme='pastel'] :is(.kp-popover:not(.kp-tooltip), .kp-theme-menu__list, .kp-menu-button > .kp-menu, .kp-combobox__list) {
+            animation: kp-sig-pastel-stuck-placed-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] .kp-datepicker__panel {
+            animation: kp-sig-pastel-stuck-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel']
+            :is(
+                .kp-popover:not(.kp-tooltip),
+                .kp-theme-menu__list,
+                .kp-menu-button > .kp-menu,
+                .kp-datepicker__panel,
+                .kp-combobox__list,
+                .kp-sidenav__tip
+            ):popover-open::backdrop {
+            animation: kp-sig-pastel-pass-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel']
+            :is(.kp-popover:not(.kp-tooltip), .kp-theme-menu__list, .kp-menu-button > .kp-menu, .kp-combobox__list)[data-kp-closing] {
+            animation: kp-sig-pastel-stuck-placed-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+        }
+
+        [data-theme='pastel'] .kp-datepicker__panel[data-kp-closing] {
+            animation: kp-sig-pastel-stuck-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+        }
+
+        [data-theme='pastel']
+            :is(
+                .kp-popover:not(.kp-tooltip),
+                .kp-theme-menu__list,
+                .kp-menu-button > .kp-menu,
+                .kp-datepicker__panel,
+                .kp-combobox__list,
+                .kp-sidenav__tip
+            )[data-kp-closing]::backdrop {
+            animation: kp-sig-pastel-pass-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+        }
+
+        /* The rail's label tip: a pill stuck on beside its item. */
+        [data-theme='pastel'] .kp-sidenav__tip:popover-open {
+            transform-origin: var(--kp-sig-pa-corner);
+            animation: kp-sig-pastel-stuck-placed-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav__tip[data-kp-closing] {
+            animation: kp-sig-pastel-stuck-placed-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+        }
+
+        /* js/sidenav.js takes the tip off as its entrance backwards
+           (`[data-kp-reversing]`, which the package turns round on the part
+           and its ::before and ::after only): its pass, the ::backdrop, goes
+           with it, so the pill peels off before its pass slides away. */
+        [data-theme='pastel'] .kp-sidenav__tip:popover-open[data-kp-reversing='reset']::backdrop {
+            animation-name: none;
+        }
+
+        [data-theme='pastel'] .kp-sidenav__tip:popover-open[data-kp-reversing='play']::backdrop {
+            animation: kp-sig-pastel-pass-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse both;
+        }
+
+        /* A menu inside a popover is not stuck on twice: the popover is. */
+        [data-theme='pastel'] :is(.kp-popover, .kp-theme-menu__list) :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+    }
+

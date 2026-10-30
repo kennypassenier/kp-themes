@@ -1,0 +1,8 @@
+/* @part: alert: signature layer */
+    [data-theme='nostromo'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 4px 0 0 var(--destructive);
+    }
+

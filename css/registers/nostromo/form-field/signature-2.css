@@ -1,0 +1,27 @@
+/* @part: form-field: signature layer; also progress-spinner-skeleton */
+    @keyframes kp-sig-nostromo-lamp-on {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-reel {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-sig-nostromo-no-punch {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+

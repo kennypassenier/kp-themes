@@ -1,0 +1,55 @@
+/* @part: run-timeline: signature layer; also motion, week-agenda */
+    [data-theme='forest'] :is(.kp-week__pill, .kp-gantt__run):is(button) {
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] :is(.kp-week__pill, .kp-gantt__run):is(button):hover:not(:focus-visible) {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='forest'] :is(.kp-gantt__lane, .kp-gantt__tick, .kp-week__axis) {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        --kp-gantt-ink: var(--foreground);
+        border-color: var(--primary);
+        background: linear-gradient(to top, var(--primary) 0 1.5px, transparent 1.5px), var(--muted);
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='running']::before,
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='running']::after {
+        content: '';
+        position: absolute;
+        inset-block: 1px 0;
+        background: var(--primary);
+        pointer-events: none;
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='running']::before {
+        inset-inline: 0 calc(var(--kp-gantt-bar, 1.125rem) / 2);
+        mask: var(--kp-fo-trees) 0 0 / calc(var(--kp-gantt-bar, 1.125rem) / 2 * 7) 100% repeat-x;
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='running']::after {
+        inset-inline: auto 0;
+        inline-size: calc(var(--kp-gantt-bar, 1.125rem) / 2);
+        mask: var(--kp-fo-stages) 100% 100% / 300% 100% no-repeat;
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='running'] .kp-gantt__label {
+        display: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-gantt__run[data-kp-state='running'] {
+            animation: none;
+        }
+        [data-theme='forest'] .kp-gantt__run[data-kp-state='running']::after {
+            animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end infinite;
+        }
+        [data-theme='forest'] :is(.kp-week__pill, .kp-gantt__run):is(button) {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }

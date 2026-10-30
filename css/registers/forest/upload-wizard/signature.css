@@ -1,0 +1,81 @@
+/* @part: upload-wizard: signature layer; also state-plate, checklist-sink */
+    [data-theme='forest'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.4rem;
+        block-size: 2px;
+        margin-inline: 0.3rem;
+        background: repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.55) 0 4px, transparent 4px 7px);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='done']::after {
+        background: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        box-sizing: border-box;
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='current']::before {
+        margin-inline: 4px;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        font-weight: 700;
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* The empty state is a clearing on the map [G14; Kenny, 2026-10-07: the
+       rings "do not convince"]: a plot of ground with a dashed boundary (leaf
+       corners, the theme's own), one seedling just planted on its mound, and
+       the survey's trig point in clay at the plot's corner. One ink, one clay;
+       drawn at 1 px = 1/16 rem so the dashes stay crisp. The seedling grows
+       once, 1000 ms on the growth curve; reduced motion shows it grown. */
+    /* The clearing, its seedling and the trig point are ONE picture on the `::before` (three masks, three inks), so they stay
+       together wherever the plate puts it: in a plate that centres its words the clearing sits in the middle and the seedling
+       used to stay at the plate's top (absolute `::after`). The seedling's ink is a layer that rises from the foot of its
+       box (`--kp-fo-sprout-rise`, 1000 ms on the growth curve; reduced motion shows it grown). The checklist's "nothing
+       yet" box is the same plate. */
+    @property --kp-fo-sprout-rise {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+
+    [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed]))) {
+        --kp-fo-clearing: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Cpath d='M2 2H56A14 14 0 0 1 70 16V50H16A14 14 0 0 1 2 36Z' fill='none' stroke='%23000' stroke-width='1.25' stroke-dasharray='4 3'/%3E%3Cellipse cx='36' cy='43' rx='8' ry='2'/%3E%3C/svg%3E");
+        --kp-fo-sprout: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Crect x='35.4' y='27' width='1.2' height='16'/%3E%3Cellipse cx='31.8' cy='27.5' rx='5.2' ry='2.4' transform='rotate(-48 31.8 27.5)'/%3E%3Cellipse cx='40.2' cy='27.5' rx='5.2' ry='2.4' transform='rotate(48 40.2 27.5)'/%3E%3C/svg%3E");
+        --kp-fo-trig: radial-gradient(circle, var(--foreground) 0 1.5px, transparent 2px 4px, var(--foreground) 4px 5px, transparent 5.5px);
+        position: relative;
+        padding: 1.25rem 1rem 1.4rem;
+        border: 1px solid var(--border);
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-checklist__empty:not([data-kp-checklist-failed]) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+

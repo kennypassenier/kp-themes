@@ -1,0 +1,60 @@
+/* @part: datatable: signature layer; also button, menu-button, meter */
+    /* A strip well at the foot of a busy part. */
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        ) {
+        --kp-sig-br-well: 1rem;
+        position: relative;
+    }
+
+    /* A small part takes a small well, so its words stay readable above it. */
+    [data-theme='brutalism'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        --kp-sig-br-well: 0.75rem;
+    }
+
+    /* A button is one line high and its label fills it: its well is a strip
+       along the foot of its own box, inside the button's line, in the
+       padding under the capitals, so nothing hangs out of it, nothing
+       follows it differently and the button does not grow when it is busy;
+       the label stays uncovered. */
+    [data-theme='brutalism'] .kp-button.kp-button[aria-busy='true'][aria-busy='true'] {
+        --kp-sig-br-well: 0.5rem;
+    }
+
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        block-size: var(--kp-sig-br-well);
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        border-block-end: 0;
+        pointer-events: none;
+    }
+
+    /* The two plates that carry a busy spinner are slabs [G7], with room at
+       the foot for the well. */
+    [data-theme='brutalism'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+        padding-block-end: calc(var(--kp-space-md, 1rem) + var(--kp-sig-br-well));
+    }
+
+    /* A loading meter is its own well: the track's blocks give way to it. */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-meter-walls: none;
+    }
+

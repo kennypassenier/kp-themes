@@ -1,0 +1,127 @@
+/* @part: tokens: register layer — the theme's knobs (custom properties on the theme root) */
+    /* @kp-soft/themes — css/nostromo-register.css
+   The nostromo register, 5.0.0 [S48, LIFT_PLAN nostromo row]: cassette
+   futurism, the case not the screen. Scoped to [data-theme='nostromo']
+   and inert elsewhere; opt-in, imported after themes.css. The approved
+   concept demo ("Beige Freight", 2026-09-08) is the reference for every
+   value here — its own comment block names the sources: Terminal
+   Industries' clip-inset popdown reveal (ported as the headline and
+   stamp mechanism), its tracked mono "label tape" button, and its
+   ratio-dimensioned spec-sheet plate; the rest is this package's own
+   established concept-demo grammar, repainted in nostromo's tokens.
+
+   What this file does, in order: the knobs; the headings (correcting the
+   pre-lift placeholder in css/_rules.css, which this layer outranks
+   regardless); the focus ring; the nav strip and its dropdown (KT14);
+   the hero furniture (side note, laurels, platforms, spec plates); the
+   headline and stamp pop-down and the section-rule underline; the
+   dividers; buttons as label tape; fields and the checkbox; the dossier
+   card, its stamp and its redactions; the confirm dialog; the footer;
+   then one answer per remaining component root (TH124), and the motion
+   block last.
+
+   Colour discipline (DI9): nothing here names a colour. Every value is
+   var(--token) or a relative colour of one. The one texture (vent ribs)
+   is declared in css/_rules.css, corrected at this lift to the demo's
+   own direction; it stays under DI9's 0.06 ceiling at 0.05, so no
+   per-theme ceiling override is needed.
+
+   The only loops on this page: none. The LED does not blink — the one
+   thing the reference hardware did that this theme refuses — and every
+   reveal here plays once. Full inventory in reports/di5.md.
+
+   The grammar (Kenny, 07/10/2026 23:18, research/nostromo-character,
+   themes/nostromo/CHARACTER.md): the anchor is the raster, a picture
+   written row by row from the top. Motion runs on the ship's frame clock
+   of 80 ms (--fx-ease is the register's curve held per frame); contact is
+   2 frames, a panel drawn 4, a figure printed 8, a loop 20. What opens,
+   arrives or leaves is drawn and erased by the raster, every close its
+   open played backwards. Corners are moulded: plates --radius, keys
+   0.3rem, label tape 2px, glass 0.875rem; the focus ring keeps the part's
+   corner. Ink acts, the LED orange only lights. Every switch has its
+   lamp: unlit at rest, lit in ink under the pointer, full when pressed,
+   lit orange (the LED) on keyboard focus; a press turns the raised
+   moulding into a well and never moves the part. A warning sounds the
+   klaxon: its carrier framed 3px in the tone's ink. Label tape names,
+   Michroma counts. */
+
+    [data-theme='nostromo'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 31.5rem;
+        /* The configuration surface [AR43], the demo's own values. */
+        --kp-reveal-threshold: 0.5;
+        --kp-reveal-stagger: 90ms;
+        --kp-classified-delay: 0ms;
+        --kp-rule-delay: 60ms;
+        --kp-stamp-delay: 120ms;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+       and leaves a theme that declares none at rest. No arrival: this
+       theme boots straight into its content, like cyberpunk. */
+        --kp-reveal-headline: popdown;
+        --kp-reveal-emphasis: stamp;
+        --kp-reveal-rule: ruler;
+        /* The redaction ink and the highlight underline, both relative
+       colours of tokens the demo measured as literal hex (DI9). */
+        --kp-redact-ink: var(--foreground);
+        --kp-underline: hsl(from var(--selected) h s l / 0.28);
+        --kp-backdrop: hsl(from var(--foreground) h s l / 0.55);
+        /* The ship's frame clock [G1, G4]: one frame is 80 ms; contact is 2
+           frames (--fx-duration), a panel drawn by the raster 4, a figure
+           printed 8, a loop 20. A move runs on the register's curve
+           cubic-bezier(0.2, 0, 0, 1) held per frame (each frame shows the
+           curve's value at its start, so it lands in visible frames and stops
+           hard); --fx-ease is the 2-frame one. The raster draws in equal
+           bands, steps(n, end). */
+        --kp-sig-no-frame: 80ms;
+        --kp-sig-no-contact: 160ms;
+        --kp-sig-no-strike: 320ms;
+        --kp-sig-no-print: 640ms;
+        --kp-sig-no-loop: 1600ms;
+        --kp-sig-no-f2: linear(0 0%, 0 50%, 0.878 50%, 0.878 99.99%, 1 100%);
+        --kp-sig-no-f4: linear(0 0%, 0 25%, 0.607 25%, 0.607 50%, 0.878 50%, 0.878 75%, 0.975 75%, 0.975 99.99%, 1 100%);
+        --kp-sig-no-f8: linear(
+            0 0%,
+            0 12.5%,
+            0.256 12.5%,
+            0.256 25%,
+            0.607 25%,
+            0.607 37.5%,
+            0.778 37.5%,
+            0.778 50%,
+            0.878 50%,
+            0.878 62.5%,
+            0.939 62.5%,
+            0.939 75%,
+            0.975 75%,
+            0.975 87.5%,
+            0.994 87.5%,
+            0.994 99.99%,
+            1 100%
+        );
+        --kp-sig-no-frames: var(--kp-sig-no-f4);
+        /* js/motion.js reads its caps from the root: a close and a size glide
+           are one panel drawn, 4 frames (its defaults, 600 and 480 ms, are
+           other themes'). */
+        --kp-close-max: var(--kp-sig-no-strike);
+        --kp-size-max: var(--kp-sig-no-strike);
+        /* The moulded corners [G6]: plates --radius (0.75rem), keys and
+           controls 0.3rem, label tape 2 px, a screen's glass 0.875rem. */
+        --kp-sig-no-key: 0.3rem;
+        --kp-sig-no-tape: 2px;
+        --kp-sig-no-glass: 0.875rem;
+        --kp-radius-sm: var(--kp-sig-no-key);
+        /* The raster's beam: a bright edge with a fading phosphor tail,
+           riding the edge of what is written (research/nostromo-anchor). */
+        --kp-sig-no-beam: linear-gradient(
+            to bottom,
+            transparent,
+            hsl(from var(--sidebar-primary) h s l / 0.35) 70%,
+            var(--sidebar-primary) 88%,
+            hsl(from var(--sidebar-primary) h s calc(l + 25)) 100%
+        );
+        /* How far past a drawn part its own shadow may show while it is
+           drawn. */
+        --kp-sig-no-reach: 16px;
+    }
+

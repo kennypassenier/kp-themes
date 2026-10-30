@@ -1,0 +1,76 @@
+/* @part: badge: signature layer; also month-heatmap, navbar, accordion, colour-picker */
+    /* The machine's prefixes [G15]: `//` before a badge, tag, table head, timestamp and a group
+       label, `!!` before a failure's badge; tracked as the labels are. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-badge,
+            .kp-tag,
+            .kp-table th:not(:has(input)),
+            .kp-timestamp,
+            .kp-theme-group__label,
+            .kp-shortcuts__group-label,
+            .kp-alert__label
+        )::before {
+        content: '// ';
+        content: '// ' / '';
+        opacity: 0.7;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-badge--destructive, .kp-badge--warning, .kp-badge[data-status='rejected'])::before {
+        content: '!! ';
+        content: '!! ' / '';
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-theme-group__label, .kp-shortcuts__group-label, .kp-alert__label, .kp-progress__label) {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-timestamp {
+        letter-spacing: 0.12em;
+    }
+
+    /* ── Leftovers of the notch round [Kenny, 2026-10-12] ───────────────────────────────────
+       The check, the calendar and date picker days, the date picker's title and the table's search
+       field were still rectangles. A control is cut 8 px; a part too small for that (the check, 18 px)
+       by a share of its height (`--kp-cp-clip-mini`). The radio and the graph stay round (G6). The
+       focus brackets and the split edge are drawn inside the box, so the cut does not take them:
+       the corner brackets sit half a cut clear of the diagonal (`--kp-cp-nbr`). A bare accordion
+       item has no chrome, so no plate and no cut. */
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-datepicker__day, .kp-datepicker__title, .kp-datatable__search) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        --kp-cp-nbr: calc(var(--kp-cp-notch-sm) + 2px);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__search-trigger {
+        --kp-cp-nbr: calc(var(--kp-cp-notch-sm) + 2px);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-nav__search-trigger, .kp-combobox__clear) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    /* A colour sample and a legend swatch are small parts: the cut is a share of their height. */
+    [data-theme='cyberpunk'] :is(.kp-colorpicker__swatch, .kp-calendar__swatch, .kp-spec__swatch, .kp-datatable__edit, .kp-datatable__pill-edit) {
+        --kp-cp-clip: var(--kp-cp-clip-mini);
+        --kp-cp-wide: var(--kp-cp-wide-mini);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__item--bare {
+        clip-path: none;
+    }
+
+    /* The item is a plate now: its words keep clear of the rim and the notch. */
+    [data-theme='cyberpunk'] .kp-accordion__item:not(.kp-accordion__item--bare) > :is(.kp-accordion__summary, .kp-accordion__body) {
+        padding-inline: 1rem;
+    }
+

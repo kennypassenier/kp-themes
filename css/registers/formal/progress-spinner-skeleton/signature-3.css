@@ -1,0 +1,67 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* ── Loading is ruling the lines on every waiting surface [G10; Kenny,
+       2026-10-08, question 10: the trend's pick, "The ledger is ruled",
+       carried everywhere]. Three navy rules of 2 px are ruled across the
+       surface one after the other, top down, at the ruling pace (400 ms),
+       held, lifted from the start and ruled again: one loop of 2400 ms, the
+       next rule 300 ms behind the one before. The lines fill the whole
+       element and take its shape: a small part (a busy button, a loading menu
+       entry, a day) gets them at its foot, a panel or a tile at its foot with
+       room for its words, a chart's plot and a skeleton block over the whole
+       of it, and a skeleton line is a single ruled line (above). Standing
+       still the three are ruled and closed. One number, --kp-fm-l (0 to 1,
+       @property at the top of this file), is the loop; each line reads it
+       300 ms (an eighth) later than the one before. Nothing is dotted,
+       pressed or shimmering. The surfaces are the package's own: the skeleton
+       blocks and circles, the busy table's panel, the loading menu entry,
+       the busy button and card, the busy calendar and its days, the loading
+       chart, the busy tile grid; the key figures' and columns' skeleton lines
+       are skeleton lines. ── */
+    [data-theme='formal']
+        :where(
+            [aria-busy='true'],
+            [data-kp-busy],
+            [data-kp-loading],
+            [data-kp-state='loading'],
+            .kp-skeleton--block,
+            .kp-skeleton--circle,
+            .kp-datatable__busy-panel,
+            .kp-calendar__busy,
+            .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        --kp-fm-ink: var(--primary);
+        /* The three rules, read from one loop: line i is ruled (17 % of its
+           own time), held (to 62 %), lifted from the start (to 79 %) and
+           gone, an eighth of the loop (300 ms) after the one before. The stack
+           is a custom property so that a research variant can lay it as its
+           own picture (research/character-*, formal.css). */
+        --kp-fm-u0: var(--kp-fm-l);
+        --kp-fm-u1: mod(var(--kp-fm-l) - 0.125, 1);
+        --kp-fm-u2: mod(var(--kp-fm-l) - 0.25, 1);
+        --kp-fm-r0: clamp(0, var(--kp-fm-u0) / 0.17, 1);
+        --kp-fm-r1: clamp(0, var(--kp-fm-u1) / 0.17, 1);
+        --kp-fm-r2: clamp(0, var(--kp-fm-u2) / 0.17, 1);
+        --kp-fm-x0: clamp(0, (var(--kp-fm-u0) - 0.62) / 0.17, 1);
+        --kp-fm-x1: clamp(0, (var(--kp-fm-u1) - 0.62) / 0.17, 1);
+        --kp-fm-x2: clamp(0, (var(--kp-fm-u2) - 0.62) / 0.17, 1);
+        --kp-fm-stack:
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x0) * 100%),
+                var(--kp-fm-ink) calc(var(--kp-fm-x0) * 100%) calc(var(--kp-fm-r0) * 100%),
+                transparent calc(var(--kp-fm-r0) * 100%)
+            ),
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x1) * 100%),
+                var(--kp-fm-ink) calc(var(--kp-fm-x1) * 100%) calc(var(--kp-fm-r1) * 100%),
+                transparent calc(var(--kp-fm-r1) * 100%)
+            ),
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x2) * 100%),
+                var(--kp-fm-ink) calc(var(--kp-fm-x2) * 100%) calc(var(--kp-fm-r2) * 100%),
+                transparent calc(var(--kp-fm-r2) * 100%)
+            );
+    }
+

@@ -1,0 +1,123 @@
+/* @part: card: register layer */
+    /* ── Cards, the dossier stamp and its redactions ───────────────────── */
+
+    [data-theme='pastel'] .kp-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-card__title {
+        font-weight: 700;
+    }
+
+    /* The stamp: the demo's rotated plate in the derived stamp colour
+       [X0, above]. The demo's own markup sets it inline at the top of the
+       card; the package's Card only carries a label through
+       data-kp-label, synthesised on ::before as every other lifted theme
+       does (retro, phantom, terminal), so it is placed as their corner
+       badge is — a component constraint, not a demo choice, and named in
+       the anatomy's closing section.
+       It floats at the card's top end rather than being placed absolutely
+       (Kenny, 2026-09-15, stamp-cards "Op elke kaart met een label"
+       [scope-98]): an absolute stamp only landed on a card that was
+       positioned, the dossier, and in the portrait's narrow dossier it lay
+       over the title. A float lives in the card's own flow on every labelled
+       card, and the header beside it is a flex container, which never
+       overlaps a float: it narrows beside the plate, or drops below it when
+       the title's longest word no longer fits. The margins hold the -3deg
+       rotation's corners clear of the title. */
+    [data-theme='pastel'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        float: inline-end;
+        margin-block: 0.1rem 0.4rem;
+        margin-inline: 0.6rem 0;
+        rotate: -3deg;
+        display: inline-flex;
+        align-items: center;
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        color: var(--kp-stamp-ink);
+        background: var(--kp-stamp);
+        border-radius: 0.4rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    /* The header beside the stamp keeps at least its title's longest word,
+       so where that no longer fits beside the stamp the header is placed
+       below it instead of being squeezed under it [scope-98]. */
+    [data-theme='pastel'] .kp-card[data-kp-label] > .kp-card__header {
+        min-inline-size: min-content;
+    }
+
+    [data-theme='pastel'] .kp-card[data-kp-open][data-kp-label-open]::before {
+        content: attr(data-kp-label-open);
+    }
+
+    [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    /* The redactions: an ink bar over the word, the way the demo's own
+       .kp-redaction spans work — here painted as the mark's own background,
+       cloned onto every line the phrase takes, so the mechanism reaches the
+       package's real dossier markup (three <mark> phrases inside the Card,
+       not standalone spans) and a phrase that wraps is covered line by line
+       [fix-33, scope-93]. The plate reaches 0.05em above and below the
+       words and 0.15em past each end as padding, room the words around it
+       make, so no plate reaches past the line it sits on. At rest, and
+       on any page without the effects module attached, the words are
+       plain: a permanently covered redaction with no way to open it would
+       be a trap, not a reveal (the pattern every lifted theme's dossier
+       already holds). */
+    [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
+        --kp-redact-alpha: 0;
+        --kp-redact-ink: color-mix(in srgb, var(--foreground) calc(var(--kp-redact-alpha) * 100%), transparent);
+        background: linear-gradient(var(--kp-redact-ink), var(--kp-redact-ink)) left center / 0% 100% no-repeat;
+        color: inherit;
+        padding: 0.05em 0.15em;
+        border-radius: 0.25rem;
+        position: relative;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+    }
+
+    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        --kp-redact-alpha: 1;
+        color: transparent;
+        background-size: 100% 100%;
+    }
+
+    /* Opened, the plate is gone — stated here because the lede's own
+       cleared mark fills in (kp-fill), and that rule would reach these too. */
+    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        --kp-redact-alpha: 0;
+        background-size: 0% 100%;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The plate fades over 220ms while it narrows back toward the
+           phrase's start over 380ms, both staggered, as the ::after bar did
+           before fix-33 [scope-94]; the word switches colour 220ms in, in no
+           time at all — the plate is the word's own ink, so it reads only
+           where the plate has gone, and KT8's mid-transition colour can
+           never be read. */
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                --kp-redact-alpha 220ms ease,
+                background-size 380ms var(--fx-ease),
+                color 0s linear 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), var(--kp-redact-stagger), 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(2 * var(--kp-redact-stagger)), 220ms;
+        }
+    }
+

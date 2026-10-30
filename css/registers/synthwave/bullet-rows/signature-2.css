@@ -1,0 +1,77 @@
+/* @part: bullet-rows: signature layer; also key-value-grid, form-grid */
+    /* ── Bullet rows: the figure is the OSD's read-out; a tone is the neon ring before it, the figure glowing in its ink ── */
+    [data-theme='synthwave'] .kp-bullets__figure {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.06em;
+        border-radius: 0;
+    }
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        padding-inline: 0;
+        background: transparent;
+    }
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        --kp-sw4-tone: var(--destructive);
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        --kp-sw4-tone: var(--warning-foreground);
+        color: var(--warning-foreground);
+        text-shadow: 0 0 6px hsl(from var(--warning-foreground) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-bullets__row:has(.kp-bullets__link:is(:hover, :focus-visible)) .kp-bullets__label {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-bullets__detail {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+        [data-theme='synthwave'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(2) {
+            animation-delay: var(--kp-sw4-beat);
+        }
+        [data-theme='synthwave'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(n + 3) {
+            animation-delay: calc(2 * var(--kp-sw4-beat));
+        }
+    }
+
+    /* ── Key-value grid and form rows: the key is the OSD after a cyan arrow, the failed row takes the neon ring ── */
+    [data-theme='synthwave'] .kp-kv__row > dt,
+    [data-theme='synthwave'] .kp-formrow__label {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-kv__row > dt::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-formrow__label > small {
+        font-family: var(--theme-font-body);
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--muted-foreground);
+    }
+    [data-theme='synthwave'] .kp-kv__row[data-kp-state='error'] > dt,
+    [data-theme='synthwave'] .kp-formrow[data-kp-state='error'] .kp-formrow__label {
+        --kp-sw4-tone: var(--destructive);
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='synthwave'] .kp-formrow[data-kp-state='error']::before {
+        display: none;
+    }
+    [data-theme='synthwave'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--primary);
+        text-shadow: var(--kp-tube-pink);
+    }

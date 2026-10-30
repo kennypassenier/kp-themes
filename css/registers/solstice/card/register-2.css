@@ -1,0 +1,52 @@
+/* @part: card: register layer; also page-header, log */
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='solstice'] .kp-log {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-spec__swatch {
+        border-radius: 5px;
+    }
+
+    [data-theme='solstice'] .kp-spec__font[data-font='display'] {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation of this register lives here, inside the
+       no-preference guard, so a reader who asked for reduced motion never
+       receives one: the rest states above (headline solid, rule drawn,
+       redaction covered) are what they get. The durations are literal
+       because check-motion.mjs computes DI5's rate from them; the
+       matching --kp-* knobs above are what a consumer can retune
+       [AR43]. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-kp-reveal='headline'].is-calibrating::after {
+            animation: kp-cal-slide calc(var(--kp-cal-duration) + 2 * var(--kp-cal-stagger)) var(--fx-ease) 1 forwards;
+        }
+
+        [data-theme='solstice'] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-cal-rule var(--kp-rule-duration) var(--fx-ease) var(--kp-rule-delay) 1 both;
+        }
+
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+            animation: kp-cal-redact var(--kp-redact-duration) var(--fx-ease) 1 both;
+            transition: color 0s linear var(--kp-redact-duration);
+        }
+
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
+            animation-delay: var(--kp-redact-stagger);
+            transition-delay: calc(var(--kp-redact-duration) + var(--kp-redact-stagger));
+        }
+
+        [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
+            animation-delay: calc(2 * var(--kp-redact-stagger));
+            transition-delay: calc(var(--kp-redact-duration) + 2 * var(--kp-redact-stagger));
+        }
+    }
+

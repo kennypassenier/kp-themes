@@ -1,0 +1,96 @@
+/* @part: month-heatmap: signature layer; also motion */
+    /* The calendar's busy layers (the whole month's card and a day's sunburst)
+       arrive as deco's leave for a part with no dressing (the fan's sector
+       folding, kp-sig-deco-wipe, 360 ms) played backwards (kp-sig-deco-unwipe),
+       and leave by it:
+       js/calendar.js marks a layer `[data-kp-leaving]` while its state goes
+       (`--kp-calendar-busy-leave: hold`, cyberpunk's mechanism) and the rules
+       below keep it drawn through the leave. At rest the sector stands open
+       (0 to 180deg), so the mask shows the whole layer. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            transition: none;
+        }
+
+        [data-theme='deco']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-deco-unwipe calc(var(--kp-sig-deco-leave) / 2) linear backwards;
+            mask-image: conic-gradient(
+                from -90deg at 50% 100%,
+                transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                transparent calc(var(--kp-sig-deco-a2) + 1deg)
+            );
+        }
+
+        [data-theme='deco'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='deco'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='deco'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+    }
+
+    /* The tour's dim grows out of the target and the ring is drawn in on the
+       card's own arrival (480 ms, the settle); css/components.css takes both
+       back in the same time on the settle's reflection. `backwards`, not
+       `both`: a ring a finished animation holds cannot be taken back by the
+       transition (lesson 21). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-kp-tour-target] {
+            animation: kp-sig-deco-tour-ring var(--kp-sig-deco-arrive) var(--kp-sig-deco-settle) backwards;
+            transition:
+                box-shadow var(--kp-sig-deco-arrive) var(--kp-sig-deco-settle),
+                outline-color var(--kp-sig-deco-arrive) var(--kp-sig-deco-settle);
+        }
+    }
+
+    /* kp-sig-deco-wipe played backwards under a name of its own, so the
+       calendar layer's leave (the wipe, on `[data-kp-leaving]`) starts as a
+       new animation instead of turning the finished arrival round (lesson 8):
+       the settle is the point reflection of the wipe's settle-out. */
+    @keyframes kp-sig-deco-unwipe {
+        from {
+            --kp-sig-deco-a1: 182deg;
+            --kp-sig-deco-a2: 182deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+        }
+    }
+
+    @keyframes kp-sig-deco-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+

@@ -1,0 +1,47 @@
+/* @part: command-palette: signature layer; also dialog, popover */
+    /* A menu inside a popover is the popover's: one plate. */
+    [data-theme='pastel'] :is(.kp-popover, .kp-theme-menu__list) :is(.kp-menu, .kp-popover) {
+        min-inline-size: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    @supports not (anchor-name: --a) {
+        [data-theme='pastel']
+            :is(
+                .kp-dialog,
+                .kp-palette,
+                .kp-shortcuts,
+                .kp-popover:not(.kp-tooltip),
+                .kp-theme-menu__list,
+                .kp-menu-button > .kp-menu,
+                .kp-datepicker__panel,
+                .kp-combobox__list
+            ) {
+            box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+        }
+
+        [data-theme='pastel'] :is(.kp-dialog, .kp-palette, .kp-shortcuts)::backdrop {
+            background: hsl(from var(--foreground) h 30% 12% / 0.2);
+        }
+    }
+
+    /* The dialog and the drawer are stuck to the page: a strip of washi tape
+       across the top-start corner (G7), swinging and fading with them. */
+    [data-theme='pastel'] :is(.kp-dialog, .kp-palette)::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: 0.3rem;
+        inset-inline-start: 0.4rem;
+        inline-size: 2.75rem;
+        block-size: 0.8rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: calc(-14deg * var(--kp-sig-pa-dir));
+        opacity: 0.94;
+        pointer-events: none;
+    }
+

@@ -1,0 +1,52 @@
+/* @part: step-list: signature layer */
+    /* The journey: the sun's path. */
+    [data-theme='solstice'] .kp-steplist--journey {
+        --kp-journey-rule: 2px;
+    }
+    [data-theme='solstice'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        background: transparent;
+    }
+    [data-theme='solstice'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.0625rem;
+    }
+    [data-theme='solstice'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: var(--border-strong);
+    }
+    [data-theme='solstice'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: linear-gradient(to right, var(--accent), var(--kp-step-tone, var(--primary)));
+    }
+    [data-theme='solstice'] .kp-steplist--journey > .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='solstice'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--kp-step-tone, var(--primary));
+        background: var(--kp-step-tone, var(--primary));
+        box-shadow:
+            0 0 0 4px var(--card),
+            0 0 0 5px hsl(from var(--kp-step-tone, var(--primary)) h s l / 0.6),
+            0 0 0.9rem 0.2rem hsl(from var(--kp-step-tone, var(--primary)) h s l / 0.45);
+    }
+    [data-theme='solstice'] .kp-steplist--journey .kp-steplist__item[data-state='failed'] .kp-steplist__mark {
+        box-shadow: 0 0 0.6rem hsl(from var(--destructive) h s l / 0.5);
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='solstice'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: var(--border-strong);
+        }
+        [data-theme='solstice']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: linear-gradient(to bottom, var(--accent), var(--kp-step-tone, var(--primary)));
+        }
+        [data-theme='solstice'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
+    }
+

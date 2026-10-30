@@ -1,0 +1,23 @@
+/* @part: step-list: register layer */
+    /* The step list is a stack of slabs: the heavy line, the hard shadow,
+       square marks with the same line. */
+    [data-theme='brutalism'] .kp-steplist {
+        --kp-steplist-gap: 0.75rem;
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='brutalism'] .kp-steplist__item {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-steplist__mark {
+        border-width: var(--kp-line);
+    }
+
+    [data-theme='brutalism'] .kp-steplist__item[data-state='running'] {
+        border-color: var(--border-strong);
+        background: var(--muted);
+    }
+

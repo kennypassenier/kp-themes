@@ -1,0 +1,49 @@
+/* @part: card: signature layer */
+    /* ── The leaf corner [G6; Kenny, 2026-10-07 on research/forest-character:
+       the leaf corner on every plate and every small part, replacing
+       proposal-14's two radii]. One rule, one token (--kp-sig-fo-leaf): the
+       top-right and bottom-left corners rounded, the other two square. A
+       plate takes the token (--kp-sig-fo-plate), a small part half of it
+       (--kp-sig-fo-part); the field note, the change on a tile, is a small
+       part too, so the grammar has no square corner left. The instruments
+       keep the routed 3 px of their wood (the meter, the bar's track), and
+       what is round in a wood stays round (the radio, a ring, a dot, the
+       switch's thumb). ── */
+    [data-theme='forest']
+        :is(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-spec,
+            .kp-log,
+            .kp-diff,
+            .kp-media,
+            .kp-dialog,
+            .kp-popover,
+            .kp-toast,
+            .kp-tour,
+            .kp-nav__menu,
+            .kp-menu-button > .kp-menu,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-shortcuts,
+            .kp-datepicker__panel,
+            .kp-form__summary,
+            .kp-split,
+            .kp-grid__tile,
+            .kp-upload__zone,
+            .kp-upload__file,
+            .kp-reorder [data-kp-item],
+            .kp-fieldset,
+            .kp-datatable,
+            .kp-wizard,
+            .kp-datatable__busy-panel,
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-chart__plot,
+            .kp-chart__state,
+            .kp-chart__tip
+        ) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+

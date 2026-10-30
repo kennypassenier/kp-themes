@@ -1,0 +1,10 @@
+/* @part: graph: signature layer */
+    [data-theme='titanium'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='titanium'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 8 92;
+        --kp-graph-edge-anim: kp-graph-signal 1500ms linear infinite;
+        --kp-graph-edge-stagger: 130ms;
+    }

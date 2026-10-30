@@ -1,0 +1,39 @@
+/* @part: sidenav: register layer; also back-to-top */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar underlines the page you are on; the column cuts its corner
+       off instead. The notch is this theme's whole grammar and it belongs
+       on the one row that is different from the others. */
+    [data-theme='cyberpunk'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-list-pad: 0;
+        --kp-sidenav-gap: 0;
+        border-inline-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__link,
+    [data-theme='cyberpunk'] .kp-sidenav__category-toggle {
+        padding-inline: 1.1rem;
+        font-weight: 600;
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm, 8px)), calc(100% - var(--fx-notch-sm, 8px)) 100%, 0 100%);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The notch again: the control is cut, and the frame is cut the other
+       way, so a picture reads as a panel bolted into the page. */
+    [data-theme='cyberpunk'] .kp-to-top {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%);
+    }
+

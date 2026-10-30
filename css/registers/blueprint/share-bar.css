@@ -1,0 +1,78 @@
+/* @part: share-bar: signature layer */
+    /* Share bar: a dimensioned measure: every part a hatched section in its own ink, framed square, the free rest an
+       empty frame; the threshold is the amber pointer on the scale; the part pointed at has the pen's frame and its
+       legend row the amber witness lines; the legend's names are lettering, its figures the readout. */
+    [data-theme='blueprint'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg {
+        background:
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px),
+            color-mix(in oklab, var(--kp-stackbar-colour, var(--chart-1)) 22%, transparent);
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg[data-kp-stackbar-hatch] {
+        background-image:
+            repeating-linear-gradient(-45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px),
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px);
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__mark {
+        inline-size: 1px;
+        inset-block: -5px;
+        background: var(--accent);
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: -5px;
+        inset-inline-start: 50%;
+        inline-size: 9px;
+        block-size: 6px;
+        translate: -4.5px 0;
+        background: conic-gradient(from 135deg at 50% 0, var(--accent) 90deg, transparent 0);
+    }
+    [data-theme='blueprint'] .kp-stackbar__item {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-stackbar__swatch {
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 3px),
+            transparent;
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-stackbar__label {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-stackbar__note {
+        border-radius: 0;
+    }
+

@@ -1,0 +1,48 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-spinner::before {
+            animation: kp-sig-nostromo-no-reel var(--kp-sig-dur) steps(20, end) infinite;
+        }
+
+        /* The radio's lens is a lamp: it switches on in one frame, never
+           bouncing (G1). The tick is printed start to end in 2 frames. */
+        [data-theme='nostromo'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-nostromo-lamp-on var(--kp-sig-no-frame) steps(1, end) backwards;
+        }
+
+        [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-nostromo-no-punch var(--kp-sig-no-contact) steps(2, end) backwards;
+        }
+
+        [data-theme='nostromo'] .kp-switch__input::before {
+            transition: transform var(--kp-sig-no-contact) var(--kp-sig-no-f2);
+        }
+
+        /* The raster draws them from the top edge down, a band per frame; the
+           toast's lamp is drawn with its plate (it no longer strikes on with
+           a bounce of its own). Closing is this played backwards: the dialog
+           by js/motion.js, the tooltip by playEntranceBackwards(), the toast
+           by its leave below, which is this draw reversed. */
+        [data-theme='nostromo'] :is(.kp-dialog, .kp-tooltip) {
+            animation: kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+
+        [data-theme='nostromo'] .kp-dialog::after {
+            animation: kp-sig-nostromo-beam var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+
+        /* The toast's beam rides the same edge on the same frames, as a
+           background layer (its ::before is the lamp). */
+        [data-theme='nostromo'] .kp-toast {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+
+        /* The tour's card opens as a panel does, and the tour plays it
+           backwards when it closes (js/tour.js, playEntranceBackwards()). */
+        [data-theme='nostromo'] .kp-tour[open] {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) backwards;
+        }
+    }
+

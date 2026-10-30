@@ -1,0 +1,33 @@
+/* @part: month-heatmap: signature layer */
+    [data-theme='forest'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        min-inline-size: min(14rem, 100%);
+        min-block-size: 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: var(--kp-space-sm, 0.5rem);
+    }
+
+    [data-theme='forest'] .kp-calendar__busy-text {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-align: center;
+        color: var(--foreground);
+        margin-block-end: calc(var(--kp-fo-h, 1rem) + 0.35rem);
+    }
+
+    /* The busy month's card grows up out of its own line and withers back
+       into it (F-33), like every arrival; the transitions run each way on
+       the curve of the state they go to. */
+    [data-theme='forest'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        translate: 0 100%;
+        clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    [data-theme='forest'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        translate: 0 0;
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) -1px calc(-1 * var(--kp-sig-fo-reach)));
+    }
+

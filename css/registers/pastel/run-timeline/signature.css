@@ -1,0 +1,65 @@
+/* @part: run-timeline: signature layer; also week-agenda, motion */
+    [data-theme='pastel'] .kp-week__pill {
+        padding-inline: 0.625rem;
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-week__pill:is(button):hover {
+        translate: 0 -2px;
+        box-shadow: 0 4px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-week__pill:is(button):active {
+        translate: 0 2px;
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 3px 0 1px var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-week__pill:is([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-week__pill:focus-visible {
+        outline-offset: 1px;
+    }
+    [data-theme='pastel'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-gantt__run:is(button):hover {
+        translate: 0 -1px;
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
+        border-width: 1.5px;
+    }
+    [data-theme='pastel'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        border-color: var(--kp-sig-pa-peel);
+        background: var(--kp-sig-pa-tape-bg);
+        color: var(--accent-foreground);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-pastel-tape-drift 600ms linear infinite;
+        }
+        [data-theme='pastel'] :is(.kp-week__pill, .kp-gantt__run) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* The tape's stripes drift one stripe start to end. */
+    @keyframes kp-sig-pastel-tape-drift {
+        from {
+            background-position:
+                0 0,
+                0 0;
+        }
+
+        to {
+            background-position:
+                12px 0,
+                0 0;
+        }
+    }

@@ -1,0 +1,78 @@
+/* @part: month-heatmap: signature layer */
+    [data-theme='formal']
+        :where(
+            .kp-skeleton--block,
+            .kp-skeleton--circle,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        --kp-fm-ink: var(--primary);
+        --kp-fm-foot: 0.9rem;
+        position: relative;
+        animation: none;
+    }
+
+    [data-theme='formal']
+        :where(
+            .kp-skeleton--block,
+            .kp-skeleton--circle,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        )::before {
+        content: '';
+        position: absolute;
+        inset: auto 0.75rem 0.5rem;
+        block-size: var(--kp-fm-foot);
+        border: 0;
+        border-radius: 0;
+        opacity: 1;
+        pointer-events: none;
+        background-image: var(--kp-fm-stack);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+    }
+
+    /* A small part gets them tight at its foot; a panel makes room for its
+       words; a chart's plot and a skeleton block are ruled over the whole
+       of them. */
+    [data-theme='formal']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        --kp-fm-foot: 0.5rem;
+    }
+
+    [data-theme='formal']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        )::before {
+        inset-inline: 0.5rem;
+        inset-block-end: 0.2rem;
+    }
+

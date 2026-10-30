@@ -1,0 +1,22 @@
+/* @part: typed-confirmation: signature layer */
+    [data-theme='titanium'] .kp-type-confirm__loses {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: inset 0 3px 0 var(--destructive);
+        clip-path: polygon(0.4rem 0, 100% 0, 100% calc(100% - 0.4rem), calc(100% - 0.4rem) 100%, 0 100%, 0 0.4rem);
+    }
+    [data-theme='titanium'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-type-confirm__name {
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }

@@ -1,0 +1,74 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also navbar */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-spinner::after {
+            animation: kp-sig-solstice-solstice-arc var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='solstice'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-solstice-solstice-light var(--kp-sig-dur) ease-in-out infinite;
+        }
+
+        [data-theme='solstice'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 240ms;
+        }
+
+        [data-theme='solstice'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 480ms;
+        }
+
+        [data-theme='solstice'] .kp-switch__input::before {
+            transition: transform 360ms var(--fx-ease);
+        }
+
+        [data-theme='solstice'] .kp-field__check:checked::before {
+            animation: kp-sig-solstice-solstice-warm var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        /* G3 · what opens is kindled (decided 2026-10-07, research/solstice-character,
+           "opening": "dome"; built 2026-10-13): the toast, the dialog (and the drawer, a
+           dialog too) and the tooltip open as a dome of first light growing from the middle
+           of their foot, overbright and cooling, 2 units (480 ms) on G1's coming curve; the
+           close is the same frames backwards (js/motion.js), the dome sinking into the foot.
+           The dialog that is not yet open runs one and a half times as long, so the close
+           js/motion.js reads off it (two thirds) is the opening's own 480 ms. */
+        [data-theme='solstice'] .kp-toast {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-dialog {
+            animation: kp-sig-solstice-kindled calc(var(--kp-sig-solstice-open) * 1.5) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-dialog[open] {
+            animation-duration: var(--kp-sig-solstice-open);
+        }
+
+        [data-theme='solstice'] .kp-tooltip {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        /* A toast leaves as its kindling played backwards (G3: closing is the dome sinking
+           back into the foot), under the same name, so js/motion.js lets it arrive as that
+           leave turned round: one picture, mirrored. The class is doubled to outweigh the
+           theme's general leave on `[data-kp-leaving]`. */
+        [data-theme='solstice'] .kp-toast.kp-toast[data-kp-leaving] {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
+        }
+    }
+
+    /* G3's dome: from nothing at the middle of the foot to past every corner (at rest the
+       ellipse holds the whole panel and its glow), overbright and warm, cooling to its own
+       colour. No timing function inside: the animation's curve (G1) plays it, and played
+       backwards it is the same frames in reverse. */
+    @keyframes kp-sig-solstice-kindled {
+        from {
+            clip-path: ellipse(0 0 at 50% 100%);
+            filter: brightness(1.35) saturate(1.3);
+        }
+
+        to {
+            clip-path: ellipse(150% 150% at 50% 100%);
+            filter: brightness(1) saturate(1);
+        }
+    }
+

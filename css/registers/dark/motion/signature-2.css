@@ -1,0 +1,125 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* ── The opening is a pass [G3, G13; Kenny, 2026-10-09, question 3:
+       "Swept in from its own left edge, left to right"]. A dialog, a menu, a
+       popover, a combobox list, a date picker, a palette, a toast, a tooltip
+       and a drawer open the same way: the line starts at the left edge of the
+       element that opens (never at its button) and crosses only that
+       element's own box at one pace, laying the panel behind it, the film
+       edge turning; it stops dead at the end and the turn settles 220 ms
+       later (880 ms in all). The close is the pass back, right to left,
+       taking the panel off behind it: js/motion.js plays this entrance
+       backwards (`--kp-open: reverse-close`), frame t of the close being
+       frame (T - t) of the open. The panel is revealed by a mask of three
+       layers (the box, and the reach of its halo on either side, which come
+       with the line's first and last 4 %), so the halo and the cut follow
+       what is laid instead of being cut square. The line is the panel's
+       ::after; the film turn is one number on the panel (the film's own
+       @property, kp-sig-dark-film). ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark']
+            :is(.kp-dialog, .kp-menu, .kp-popover, .kp-toast, .kp-combobox__list, .kp-datepicker__panel, .kp-palette, .kp-theme-menu__list) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list
+            ) {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list,
+                .kp-nav__menu
+            )::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
+            clip-path: none;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+
+        /* A menu inside a popover is not swept twice: the popover is. */
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover)::after {
+            content: none;
+        }
+
+        /* The drawer comes in from its own left edge too, over its own height
+           and width: it casts no halo, so there is no reach. */
+        [data-theme='dark'] dialog.kp-drawer {
+            --kp-sig-dk-r: 0px;
+        }
+
+        /* A dialog's backdrop is not swept; js/motion.js fades it with the
+           dialog. */
+
+        /* The nav dropdown opens by hovering or focusing its item, with no script
+           in between: the same pass, and the close is the pass back. While it
+           closes the item keeps the panel on screen for the whole pass back
+           (`display` is a discrete transition), and the closed style plays the
+           entrance reversed. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='dark'] .kp-nav__menu {
+                --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+                opacity: 1;
+                transition: display var(--kp-sig-dk-time) allow-discrete;
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear reverse forwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+            }
+        }
+
+        /* The tooltip's halo is none: its reach is none. */
+        [data-theme='dark'] .kp-tooltip {
+            --kp-sig-dk-r: 0px;
+        }
+    }
+

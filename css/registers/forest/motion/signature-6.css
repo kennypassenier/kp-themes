@@ -1,0 +1,56 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also month-heatmap, navbar, datatable */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-tree [role='treeitem']::after {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) var(--fx-ease) allow-discrete,
+                background-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='forest'] .kp-calendar__day,
+        [data-theme='forest'] button.kp-datepicker__title,
+        [data-theme='forest'] .kp-table th[data-kp-sort],
+        [data-theme='forest'] .kp-tag__remove {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) var(--fx-ease) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Row 8, one loading picture: while the busy table's overlay plants its
+       row over the rows, the status line's small tree stays out. */
+    [data-theme='forest'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* Row 13, the phone bar's toggle: its tint follows aria-expanded, which the
+       script flips when the close starts, not data-kp-nav-open, which stays
+       until the close has played. */
+    [data-theme='forest'] .kp-nav[data-kp-nav-open] > .kp-nav__toggle:not([aria-expanded='true']) {
+        background: transparent;
+        color: inherit;
+        border-color: var(--border-strong);
+    }
+
+    /* A day of the month takes DI2's two channels (F-14), its log rings
+       kept inside, today's green ring too. */
+    [data-theme='forest'] .kp-calendar__day:focus-visible,
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-today]:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+    }

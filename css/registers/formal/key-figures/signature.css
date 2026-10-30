@@ -1,0 +1,69 @@
+/* @part: key-figures: signature layer; also menu-button, problem-alert, alert */
+    /* ── A warning is a red-ink entry [G5, G8; Kenny, 2026-10-08, questions 5
+       and 8: navy rules, red ink marks, gold never acts; the red-ink entry].
+       A warning or failed key figure, trend tile, strip column, destructive
+       menu entry and alert is ruled off along its start edge in 3 px red
+       ink; its figure is in red ink on the paper, never on a tinted plate;
+       the change sits on a square plate inside a hairline, its ground
+       paper. Never a stamp, never a frame all round. The warning-ink nudges
+       the register held for the old amber plates went with the plates. ── */
+    [data-theme='formal'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        --kp-kpi-meter-fill: var(--destructive);
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-kpi__delta {
+        border-radius: 0;
+    }
+
+    [data-theme='formal'] .kp-kpi__delta[data-kp-tone='bad'] {
+        border: 1px solid var(--destructive);
+        background: var(--card);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-menu__item--destructive {
+        border-radius: 0;
+        box-shadow: inset 3px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    /* The red edge bar and the two-channel focus ring share the box-shadow
+       property, and the bar's rule outranks the plain `:focus-visible` one, so
+       the keyboard saw only the paper-coloured outer half of the ring (an
+       almost invisible mark on this entry). Like the mirror button above, the
+       combined rule keeps both: the bar, then the inner ring, as every other
+       entry of the menu shows it [G14, G16; the dashboard's destructive menu
+       item, suite triage 10.0.0]. */
+    [data-theme='formal'] .kp-menu__item--destructive:focus-visible {
+        box-shadow:
+            inset 3px 0 0 var(--destructive),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    [data-theme='formal'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) {
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: inset 3px 0 0 var(--destructive);
+        color: var(--foreground);
+    }
+
+    /* The problem alert on paper [kpadopt5]: a problem in a container carries formal's red-ink edge on the plate and
+       needs no second one on its border. */
+    [data-theme='formal'] .kp-problems > .kp-problem:is(.kp-alert--warning, .kp-alert--destructive) {
+        border-inline-start-width: 1px;
+    }
+
+    [data-theme='formal'] .kp-problems > .kp-problem:is(.kp-alert--warning, .kp-alert--destructive) > .kp-alert__icon {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+

@@ -1,0 +1,31 @@
+/* @part: datatable: signature layer; also tree-reorder-split */
+    /* A tree branch's children glide shut as they glided open (js/motion.js
+       glideGroup(), lesson 26): the group is kept drawn through the shut
+       glide while its height closes. */
+    [data-theme='deco'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='deco'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows
+       (its lift doors), the status line's small spinner stays out, so it
+       holds back no arrival of the layer and needs no leave of its own
+       (lesson 23; cyberpunk's rule). */
+    [data-theme='deco'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The rows under the busy layer dim as the layer's fan opens over them and
+       come up as it folds away: the layer's own 360 ms, the settle in and its
+       reflection out, so the dim is part of the pair (forest dims them on its
+       growth the same way). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-datatable .kp-table tbody {
+            transition: opacity calc(var(--kp-sig-deco-leave) / 2) var(--kp-sig-deco-settle-out);
+        }
+
+        [data-theme='deco'] .kp-datatable[aria-busy='true'] .kp-table tbody {
+            transition: opacity calc(var(--kp-sig-deco-leave) / 2) var(--kp-sig-deco-settle);
+        }
+    }
+

@@ -1,0 +1,24 @@
+/* @part: question-card: register layer */
+    [data-theme='blueprint'] [data-kp-measure]:not(.kp-question) {
+        position: absolute;
+        inset-inline-end: 0;
+        inset-block-end: 0.2rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        opacity: 0;
+    }
+
+    [data-theme='blueprint'] [data-kp-measured='live'] [data-kp-measure]:not(.kp-question) {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-kp-measure]:not(.kp-question) {
+            transition: opacity var(--kp-measure-duration, 400ms) var(--fx-ease, ease);
+        }
+    }
+

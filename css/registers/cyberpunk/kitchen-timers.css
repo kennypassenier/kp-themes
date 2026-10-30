@@ -1,0 +1,28 @@
+/* @part: kitchen-timers: signature layer */
+    /* ── Kitchen timers: a holo card; a timer that has ended is locked as a target in red, with its state word ── */
+    [data-theme='cyberpunk'] .kp-timer {
+        --kp-timer-font: var(--theme-font-display);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-cp4-tone: var(--destructive);
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-timer__state,
+    [data-theme='cyberpunk'] .kp-timer__name {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-timer__time {
+        font-family: var(--theme-font-display);
+    }
+

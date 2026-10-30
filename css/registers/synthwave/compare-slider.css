@@ -1,0 +1,28 @@
+/* @part: compare-slider: signature layer */
+    /* ── Compare slider: the divider is the horizon, a pink tube with its bloom; the grip a 2 px control; the labels the
+       OSD ── */
+    [data-theme='synthwave'] .kp-compare {
+        --kp-compare-line: 2px;
+    }
+    [data-theme='synthwave'] .kp-compare__divider {
+        background: var(--kp-core);
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 16px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='synthwave'] .kp-compare__handle,
+    [data-theme='synthwave'] .kp-compare__grip {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-compare__label {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-compare__label--before::before,
+    [data-theme='synthwave'] .kp-compare__label--after::before {
+        content: '▶ ';
+        color: var(--accent);
+    }

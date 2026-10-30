@@ -1,0 +1,35 @@
+/* @part: visual-timer: signature layer */
+    /* Visual timer and countdown. */
+    [data-theme='solstice'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--primary);
+        --kp-timer-disc-marks: var(--border-strong);
+        --kp-timer-disc-ring: hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='solstice'] .kp-timer-disc__face {
+        border-color: var(--border-strong);
+        background: radial-gradient(ellipse 80% 55% at 50% 100%, hsl(from var(--accent) h s l / 0.3), transparent 75%), var(--card);
+    }
+    [data-theme='solstice'] .kp-timer-disc__sector {
+        filter: drop-shadow(0 0 0.5rem hsl(from var(--primary) h s l / 0.45));
+    }
+    [data-theme='solstice'] .kp-timer-disc__hub {
+        inset: 45%;
+        border-color: var(--card);
+        background: var(--primary);
+        box-shadow: 0 0 0.6rem 0.1rem hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='solstice'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            0 0 0 4px var(--card),
+            0 0 0 6px var(--primary),
+            0 0 1.4rem 0.2rem hsl(from var(--primary) h s l / 0.4);
+    }
+    [data-theme='solstice'] :is(.kp-timer-disc__caption, .kp-countdown__name) {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.125rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }

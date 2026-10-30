@@ -1,0 +1,81 @@
+/* @part: popover: signature layer; also command-palette */
+    /* ── 2 · The pass outside the part (A: top layer) ──────────────────── */
+
+    /* A modal (a dialog, the drawer, the palette, the shortcut sheet): its
+       backdrop is the pass, anchored on the dialog 6 px off register, and its
+       200vmax border is the page's dim, so the whole window still answers a
+       click outside the dialog. The dim fades on the pass's clock. */
+    @supports (anchor-name: --a) {
+        [data-theme='pastel'] :is(.kp-dialog, .kp-palette, .kp-shortcuts)::backdrop {
+            position-anchor: auto;
+            inset: auto;
+            box-sizing: content-box;
+            inline-size: anchor-size(width);
+            block-size: anchor-size(height);
+            left: calc(anchor(left) + var(--kp-sig-pa-off) * var(--kp-sig-pa-dir) - 200vmax);
+            top: calc(anchor(top) + var(--kp-sig-pa-off) - 200vmax);
+            margin: 0;
+            padding: 0;
+            border: 200vmax solid hsl(from var(--foreground) h 30% 12% / 0.2);
+            border-radius: calc(200vmax + var(--kp-sig-pa-r-plate));
+            background: var(--kp-sig-pa-pass-c) padding-box;
+        }
+
+        /* A popover, a menu, the date picker's panel, the combobox's list:
+           the backdrop is the pass alone, and lets every click through. */
+        [data-theme='pastel']
+            :is(
+                .kp-popover:not(.kp-tooltip),
+                .kp-theme-menu__list,
+                .kp-menu-button > .kp-menu,
+                .kp-datepicker__panel,
+                .kp-combobox__list
+            ):popover-open::backdrop {
+            position-anchor: auto;
+            inset: auto;
+            box-sizing: border-box;
+            inline-size: anchor-size(width);
+            block-size: anchor-size(height);
+            left: calc(anchor(left) + var(--kp-sig-pa-off) * var(--kp-sig-pa-dir));
+            top: calc(anchor(top) + var(--kp-sig-pa-off));
+            margin: 0;
+            border: 0;
+            border-radius: var(--kp-sig-pa-r-plate);
+            background: var(--kp-sig-pa-pass-c);
+            pointer-events: none;
+        }
+
+        /* The rail's label tip is a pill. */
+        [data-theme='pastel'] :is(.kp-sidenav__tip):popover-open::backdrop {
+            position-anchor: auto;
+            inset: auto;
+            inline-size: anchor-size(width);
+            block-size: anchor-size(height);
+            left: calc(anchor(left) + 3px * var(--kp-sig-pa-dir));
+            top: calc(anchor(top) + 3px);
+            margin: 0;
+            border: 0;
+            border-radius: var(--kp-sig-pa-r-chip);
+            background: var(--kp-sig-pa-pass-c);
+            pointer-events: none;
+        }
+    }
+
+    /* The parts themselves: paper, round, no shadow of their own (the pass
+       is their shadow), swung from the corner that holds them. */
+    [data-theme='pastel']
+        :is(
+            .kp-dialog,
+            .kp-palette,
+            .kp-shortcuts,
+            .kp-popover:not(.kp-tooltip),
+            .kp-theme-menu__list,
+            .kp-menu-button > .kp-menu,
+            .kp-datepicker__panel,
+            .kp-combobox__list
+        ) {
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: none;
+        transform-origin: var(--kp-sig-pa-corner);
+    }
+

@@ -1,0 +1,54 @@
+/* @part: progress-spinner-skeleton: signature layer; also dialog, popover */
+    /* The planting, one tree: seedling, sapling, tree, the tree stands. Each
+       stage is a step along the three-cell drawing. */
+    @keyframes kp-sig-forest-plant {
+        0% {
+            mask-position: 0% 100%;
+            opacity: 0.7;
+        }
+
+        22% {
+            mask-position: 50% 100%;
+            opacity: 0.85;
+        }
+
+        45%,
+        100% {
+            mask-position: 100% 100%;
+            opacity: 1;
+        }
+    }
+
+    /* Growth [G2, G3]: a part grows up out of its own base line, its top
+       edge first. It is moved up out of the ground and clipped at the line
+       it grows from, so it comes out of that line (never squashed or
+       scaled: the words keep their shape). The line it grows from stays the
+       clip's edge for the whole growth (F-23: the clip used to open past it
+       as the part travelled, drawing a menu over its own button); the other
+       sides reach out for its shadow. */
+    @keyframes kp-sig-forest-grow {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)));
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+        }
+    }
+
+    /* Growth out of an anchor [G3]: a part that hangs from what it belongs to
+       grows down out of that part's edge, its far end first, like a root. */
+    @keyframes kp-sig-forest-root {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+        }
+    }
+

@@ -1,0 +1,5 @@
+/* @part: sidenav: register layer */
+    /* A submenu item's mark [Kenny, 2026-09-20]: the double slash this register already speaks in. */
+    [data-theme='cyberpunk'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '//';
+    }

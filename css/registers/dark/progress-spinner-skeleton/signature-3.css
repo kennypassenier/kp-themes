@@ -1,0 +1,46 @@
+/* @part: progress-spinner-skeleton: signature layer; also button */
+    /* The skeleton line is a slot: the accent plate, a hairline of film at its
+       foot, the chamfer; its sibling lines are crossed 120 ms apart. */
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        block-size: 0.9rem;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--accent), var(--accent)) top / 100% calc(100% - 1px) no-repeat,
+            var(--kp-iris);
+        clip-path: var(--kp-sig-dark-cut);
+        animation: none;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: none;
+    }
+
+    /* The block and the circle are slots of the accent plate too. */
+    [data-theme='dark'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
+        overflow: clip;
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] .kp-skeleton--block {
+        border-radius: 0;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+
+    /* A busy button wears its comet on its own ground (its brackets are the
+       ::before and ::after). */
+    [data-theme='dark'] .kp-button[aria-busy='true'][aria-busy='true'] {
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+

@@ -1,0 +1,28 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root); also tree-reorder-split, datatable */
+    /* ── 13 · Closes that are their opens reversed: the package's hooks ── */
+
+    /* A tree branch's children glide shut as they glided open (js/motion.js
+       glideGroup(), lesson 26): the group is kept drawn while it shuts. */
+    [data-theme='pastel'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='pastel'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows,
+       the status line's small spinner stays out, so it holds back no arrival
+       of the layer and needs no leave of its own (lesson 23). */
+    [data-theme='pastel'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The tour (lessons 11, 21, 22): the page's dim and the target's ring
+       come on the landing in its 560 ms and go in the same time on the
+       landing turned around, shrinking back into the target; the ring is
+       drawn in from transparent, `backwards` so the close's transition can
+       take it back. */
+    [data-theme='pastel'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: var(--kp-sig-pa-window);
+        --kp-tour-dim-close-ease: var(--kp-sig-pa-land-back);
+    }
+

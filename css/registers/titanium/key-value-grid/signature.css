@@ -1,0 +1,24 @@
+/* @part: key-value-grid: signature layer */
+    /* ── The key-value grid: engraved labels, a milled groove between rows ── */
+    [data-theme='titanium'] .kp-kv__row > dt {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-kv--lines > .kp-kv__row {
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-kv--lines > .kp-kv__row:last-child {
+        border-block-end: 0;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--primary);
+    }
+    [data-theme='titanium'] .kp-kv__row[data-kp-state='error']::before {
+        inline-size: 3px;
+        box-shadow: 1px 0 0 hsl(from var(--foreground) h s l / 0.12);
+    }
+

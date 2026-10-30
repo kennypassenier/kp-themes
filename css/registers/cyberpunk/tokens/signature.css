@@ -1,0 +1,78 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root); also card, dialog, toast */
+    [data-theme='cyberpunk'] {
+        --kp-cp-notch: var(--fx-notch, 14px);
+        --kp-cp-notch-sm: var(--fx-notch-sm, 8px);
+        --kp-cp-notch-pair: 18px;
+        /* The part's own cut, and the same cut with 40 px of room round it: a copy that
+           plays outside the box keeps the notch's diagonal and nothing else. */
+        --kp-cp-clip-plate: polygon(0 0, calc(100% - var(--kp-cp-notch)) 0, 100% var(--kp-cp-notch), 100% 100%, 0 100%);
+        --kp-cp-wide-plate: polygon(
+            -40px -40px,
+            calc(100% - var(--kp-cp-notch) - 40px) -40px,
+            calc(100% + 40px) calc(var(--kp-cp-notch) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        --kp-cp-clip-ctl: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-cp-notch-sm)), calc(100% - var(--kp-cp-notch-sm)) 100%, 0 100%);
+        --kp-cp-wide-ctl: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - var(--kp-cp-notch-sm) - 40px),
+            calc(100% - var(--kp-cp-notch-sm) - 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        --kp-cp-clip-pair: polygon(
+            0 0,
+            calc(100% - var(--kp-cp-notch-pair)) 0,
+            100% var(--kp-cp-notch-pair),
+            100% 100%,
+            var(--kp-cp-notch-pair) 100%,
+            0 calc(100% - var(--kp-cp-notch-pair))
+        );
+        --kp-cp-wide-pair: polygon(
+            -40px -40px,
+            calc(100% - var(--kp-cp-notch-pair) - 40px) -40px,
+            calc(100% + 40px) calc(var(--kp-cp-notch-pair) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            calc(var(--kp-cp-notch-pair) + 40px) calc(100% + 40px),
+            -40px calc(100% - var(--kp-cp-notch-pair) - 40px)
+        );
+        /* The reticle's corners: four 9 px tiles. */
+        --kp-cp-corners:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 9px 9px no-repeat, linear-gradient(var(--foreground) 0 0) 100% 0 / 9px 9px no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 100% / 9px 9px no-repeat, linear-gradient(var(--foreground) 0 0) 100% 100% / 9px 9px no-repeat;
+        /* A box that changes size takes it in whole ticks: eight of 60 ms. */
+        --kp-size-ease: steps(8, end);
+        /* The accordion and a tree branch take those ticks too (js/motion.js sizeEase()), not
+           the entrance's single step. */
+        --kp-accordion-size: own;
+    }
+
+    /* The two copies, as the part's own silhouette: yellow right and up, cyan right and
+       down (the live stutter's 6, 4, 2, 1 px). Every part that is a plate carries them;
+       a part without a plate has none and only its text splits. */
+    [data-theme='cyberpunk']
+        :is(.kp-card, .kp-kpi, .kp-popover, .kp-dialog, .kp-toast, .kp-alert, .kp-tooltip, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu) {
+        --kp-cp-rest: 0 0 transparent;
+        --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+        --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+        --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+        --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+    }
+
+    /* Each part's own cut. */
+    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover, .kp-datepicker__panel, .kp-combobox__list) {
+        --kp-cp-clip: var(--kp-cp-clip-plate);
+        --kp-cp-wide: var(--kp-cp-wide-plate);
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog {
+        --kp-cp-clip: var(--kp-cp-clip-pair);
+        --kp-cp-wide: var(--kp-cp-wide-pair);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-toast, .kp-alert, .kp-tooltip, .kp-field__input, .kp-badge, .kp-tag) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+    }
+

@@ -1,0 +1,66 @@
+/* @part: small-patterns: signature layer; also typed-confirmation, dialog */
+    /* A secret: the value is a label taped on (a dashed edge); the time left drains as a strip of washi tape, peeled
+       from its end along the line; a failure to read is a sticker on the red's plate. */
+    [data-theme='pastel'] .kp-secret {
+        --kp-secret-drain-size: 6px;
+    }
+    [data-theme='pastel'] .kp-secret__value {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--card);
+    }
+    [data-theme='pastel'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+    }
+    [data-theme='pastel'] .kp-secret__drain {
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        transform-origin: 0 50%;
+    }
+    [data-theme='pastel'] .kp-secret__drain:dir(rtl) {
+        transform-origin: 100% 50%;
+    }
+    [data-theme='pastel'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0.55rem;
+        border-inline-start: 0;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+
+    /* A dialog in sections: a section's rule is a thread of pearls; a danger section has a round-ended bar; what still
+       depends on the thing is a taped-in note (a dashed edge on paper); the name to type is a marked word on mint. */
+    [data-theme='pastel'] .kp-dialog__section {
+        border-block-start: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='pastel'] .kp-dialog__section--danger {
+        border-inline-start-width: 5px;
+        border-radius: 5px;
+    }
+    [data-theme='pastel'] :is(.kp-confirm__dependents, .kp-type-confirm__loses) {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--card);
+    }
+    [data-theme='pastel'] .kp-type-confirm__loses-title {
+        justify-self: start;
+        padding: 0 0.55rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-type-confirm__name {
+        padding: 0 0.4em;
+        border-radius: 0.4rem;
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-type-confirm__status[data-kp-matched] {
+        color: var(--foreground);
+        font-weight: 600;
+    }

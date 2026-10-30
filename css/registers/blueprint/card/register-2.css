@@ -1,0 +1,76 @@
+/* @part: card: register layer */
+    /* ── Motion, guarded [DI5, DI7] ────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get. The
+       durations are literal because check-motion.mjs computes DI5's rate
+       from them; the matching TIMINGS rows are what js/effects.js and the
+       DI5 report read. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The headline settles in behind the two dimension lines the
+           moment the module arms the page — gated on `[data-kp-effects]`
+           alone, never a class this module toggles, because the headline
+           text itself is never touched (see the header comment). */
+        [data-theme='blueprint'] [data-kp-surface='hero'] h1[data-kp-reveal='headline'] {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        [data-theme='blueprint'][data-kp-effects] [data-kp-surface='hero'] h1[data-kp-reveal='headline'] {
+            animation: kp-headline-fade 300ms ease-out 600ms both;
+        }
+
+        /* The frame arrives after the headline has settled: the brackets
+           together, the readout behind them. Two animations where the two
+           dimension lines needed four. */
+        [data-theme='blueprint'][data-kp-effects] [data-kp-measure-bracket] {
+            animation: kp-dim-label 300ms ease-out 1000ms both;
+        }
+
+        [data-theme='blueprint'][data-kp-effects] [data-kp-measure]:not(.kp-question) {
+            animation: kp-dim-label 300ms ease-out 1300ms both;
+        }
+
+        [data-theme='blueprint'] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-rule-in 420ms ease-out both;
+        }
+
+        [data-theme='blueprint'] mark {
+            transition: background-size 500ms ease-out;
+        }
+
+        /* The redactions: the ink block narrows away from the left,
+           staggered 150ms apart — a size, not a colour cross-fade, so no
+           mid-transition shade is ever legible [KT8]. The words take their
+           ink in no time once their block is gone, because the block is a
+           different colour from the words it hides. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background-size 400ms ease-out,
+                color 0s linear;
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), 0s;
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), 0s;
+        }
+
+        /* Opened, each phrase's words wait for its own block to go; covered
+           again, they go at once, before the block grows. */
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+            transition-delay: 0s, 400ms;
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), calc(400ms + var(--kp-redact-stagger));
+        }
+
+        [data-theme='blueprint'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(400ms + 2 * var(--kp-redact-stagger));
+        }
+    }
+

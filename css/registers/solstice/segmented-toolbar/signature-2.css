@@ -1,0 +1,39 @@
+/* @part: segmented-toolbar: signature layer */
+    /* Three-way chips. */
+    [data-theme='solstice'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-glyph-check: '\2600\FE0E';
+        --kp-glyph-cross: '\263E\FE0E';
+        --kp-tri-out-edge: hsl(from var(--destructive) h s 62%);
+        --kp-tri-mark-radius: 50%;
+    }
+    [data-theme='solstice'] .kp-segmented__mark {
+        font-family: var(--theme-font-display, inherit);
+        border-width: 1px;
+    }
+    [data-theme='solstice'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
+    }
+    [data-theme='solstice'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        background: linear-gradient(to top, hsl(from var(--destructive) h s l / 0.25), transparent 85%), var(--kp-chip-ground, var(--card));
+        box-shadow: inset 0 -2px 0 var(--kp-tri-out-edge);
+    }
+    [data-theme='solstice'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        background: transparent;
+        border-color: var(--kp-tri-out-edge);
+        color: var(--kp-tri-out-edge);
+    }
+    [data-theme='solstice'] .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        color: var(--kp-chip-on-ink, var(--background));
+    }
+    [data-theme='solstice'] .kp-segmented__summary {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+    @media (hover: hover) {
+        [data-theme='solstice'] .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri]:hover {
+            box-shadow:
+                inset 0 -2px 0 var(--primary),
+                0 0.3rem 0.5rem -0.3rem hsl(from var(--primary) h s l / 0.7);
+        }
+    }
+

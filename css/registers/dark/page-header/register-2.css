@@ -1,0 +1,61 @@
+/* @part: page-header: register layer; also showing-data, progress-spinner-skeleton, badge */
+    /* ── The footer: one step darker than the ground ───────────────────── */
+
+    [data-theme='dark'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-footer h4 {
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-footer a {
+        color: var(--muted-foreground);
+        font-size: 0.92rem;
+    }
+
+    [data-theme='dark'] .kp-footer a:hover,
+    [data-theme='dark'] .kp-footer a:focus-visible {
+        color: var(--foreground);
+    }
+
+    /* ── Badges, tags, status ───────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-badge,
+    [data-theme='dark'] .kp-tag {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-skeleton {
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-id,
+    [data-theme='dark'] .kp-url,
+    [data-theme='dark'] .kp-numeric,
+    [data-theme='dark'] .kp-timestamp,
+    [data-theme='dark'] .kp-masked,
+    [data-theme='dark'] .kp-copyable,
+    [data-theme='dark'] .kp-truncate,
+    [data-theme='dark'] .kp-cell-break,
+    [data-theme='dark'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='dark'] .kp-timestamp,
+    [data-theme='dark'] .kp-id {
+        color: var(--muted-foreground);
+    }
+

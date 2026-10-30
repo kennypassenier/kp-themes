@@ -1,0 +1,69 @@
+/* @part: datatable: register layer; also step-list, small-patterns, tree-reorder-split, diff */
+    [data-theme='dark'] .kp-datatable {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
+    }
+
+    [data-theme='dark'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-datatable__status,
+    [data-theme='dark'] .kp-datatable__page {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-diff {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-diff__line,
+    [data-theme='dark'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is a status board: machined rows, squared lamps, the
+       time in the mono face. */
+    [data-theme='dark'] .kp-steplist {
+        --kp-steplist-mark-radius: 3px;
+    }
+
+    [data-theme='dark'] .kp-steplist__item {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='dark'] .kp-timeline {
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-timeline__when {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-tree {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* A branch's children are kept drawn while they glide shut
+       (js/motion.js glideGroup(), lesson 26): the state is already
+       `aria-expanded="false"` while the glide plays. */
+    [data-theme='dark'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='dark'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+

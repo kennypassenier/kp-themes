@@ -1,0 +1,34 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component; also drawer-tour */
+    /* ── A new value is slammed onto its offset [G9; Kenny, 2026-10-07
+       23:44, "live = slam"]: the headline's slam (2026-09-08) as the live
+       update. js/update.js writes the new value at once and marks the host
+       `[data-kp-updating='slam']`: it appears 6 px up-left of its place and
+       falls onto it on the fall curve in 3 units, landing on a yellow copy of
+       itself 3 px down-right; the yellow offset stands for 12 units and is
+       struck off in one cut. The words never change, the box keeps its
+       space, and on a carrier without words (a state block, a trend line, a
+       tile's body) the carrier falls onto its yellow copy the same way. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] {
+            --kp-update: slam;
+        }
+
+        [data-theme='brutalism'] [data-kp-updating='slam'] {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-update-slam {
+        0% {
+            translate: -6px -6px;
+            filter: drop-shadow(9px 9px 0 var(--secondary));
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+
+        20%,
+        100% {
+            translate: 0 0;
+            filter: drop-shadow(3px 3px 0 var(--secondary));
+        }
+    }
+

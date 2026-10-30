@@ -1,0 +1,47 @@
+/* @part: card: signature layer; also gallery */
+    /* A waiting gallery tile has the final tile's shape (the package says so), but this theme's skeleton line gives every
+       skeleton a fixed block size and margins, so the tiles collapsed to a strip and Loading drew 70 px in a 456 px footprint
+       (kpadopt6-media/gallery-states). The tile is square again, as the picture it waits for. */
+    [data-theme='forest'] .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+        margin-block: 0;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
+    }
+
+    /* A card in a state (js/card-state.js): the note fills the stage (the plate was as high as its words, in the middle of a tall
+       stage), and a failed card says it at the heading size in the middle with its Retry under it, as an empty one does
+       (kpadopt4-rows/today-states, kpadopt6-calm/quote-states, kpadopt5-lists/request-inspector). */
+    [data-theme='forest'] .kp-card__state {
+        align-content: stretch;
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    [data-theme='forest'] .kp-card__state > .kp-card__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    [data-theme='forest'] .kp-card__failure > .kp-alert__body {
+        flex: none;
+        justify-items: center;
+        max-inline-size: 100%;
+    }
+
+    [data-theme='forest'] :is(.kp-card__state-title, .kp-card__failure .kp-alert__what) {
+        font-size: var(--kp-text-lg, 1.125rem);
+    }
+
+    /* The failed title is the alert's own ink (the page's ink was dark plum on the red plate). */
+    [data-theme='forest'] .kp-card__failure :is(.kp-card__state-title, .kp-alert__what) {
+        color: inherit;
+    }
+
+    /* The card's Retry is the package's small button (28 px, 13 px text); a state's action is a normal-size one. */
+    [data-theme='forest'] .kp-card__failure > .kp-card__retry.kp-button--sm {
+        font-size: var(--kp-text-md, 1rem);
+        padding-inline: 1rem;
+    }

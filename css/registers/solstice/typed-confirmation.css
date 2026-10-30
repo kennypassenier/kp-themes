@@ -1,0 +1,26 @@
+/* @part: typed-confirmation: signature layer */
+    /* Typed confirmation. */
+    [data-theme='solstice'] .kp-type-confirm__loses {
+        border-inline-start-width: 1px;
+        border-radius: calc(var(--radius) * 0.7);
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.22), transparent 85%),
+            var(--muted);
+    }
+    [data-theme='solstice'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.0625rem;
+        font-weight: 400;
+        color: hsl(from var(--destructive) h s 72%);
+    }
+    [data-theme='solstice'] .kp-type-confirm__name {
+        background: linear-gradient(to top, hsl(from var(--primary) h s l / 0.3), transparent 80%), var(--muted);
+        box-shadow: inset 0 -1px 0 var(--primary);
+        font-weight: 500;
+    }
+    [data-theme='solstice'] .kp-type-confirm[data-kp-matched] .kp-type-confirm__input {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+

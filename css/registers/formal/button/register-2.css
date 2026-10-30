@@ -1,0 +1,81 @@
+/* @part: button: register layer; also toast */
+    /* ── Pointing, focus and the press [G14 to G17; the anchor, Kenny,
+       2026-10-08, research/formal-anchor: "the hover rule inside a button
+       doubled on press"; research/formal-character questions 14 to 17:
+       hover = a rule under the label, focus = DI2's two-channel ring, the
+       press = the rule doubles, every control inside a composite formal's
+       own]. The inner rule is the register's own gesture from gap-4
+       (2026-09-12): a thin navy line two pixels inside the control.
+
+       Hover rules a 2 px navy line under the label, inside the face
+       (the menu's quill underline carried to every control): the underline
+       is there at rest in no colour and takes navy in the contact time; on a
+       filled button it takes the label's colour. No lift, no shadow. A press
+       draws the inner rule and its second rule three pixels further in (the
+       first on ::after, the second on ::before) and the face takes its
+       pressed ground; nothing moves, and a release lifts the second rule.
+       Focus is the system's ring (DI2, in kp.components and kp.base), which
+       this block never replaces, so it wins when both apply and the rule
+       under the label stays drawn beneath it. One selector list serves every
+       button, link and entry wherever it stands: a header, a menu, a tile, a
+       drawer, a tour or alone. ─────────────────────────────────────────── */
+    [data-theme='formal'] :is(.kp-button, .kp-menu__item) {
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='formal'] .kp-button::after,
+    [data-theme='formal'] .kp-button::before,
+    [data-theme='formal'] .kp-icon-button::after,
+    [data-theme='formal'] .kp-icon-button::before {
+        content: '';
+        position: absolute;
+        inset: var(--kp-double-rule-inset, 2px);
+        border: 1px solid var(--primary);
+        border-radius: calc(var(--radius) - 1px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='formal'] :is(.kp-button, .kp-icon-button)::before {
+        inset: calc(var(--kp-double-rule-inset, 2px) + 3px);
+        border-radius: calc(var(--radius) - 4px);
+    }
+
+    /* On a filled button a primary-coloured rule vanishes into its own
+       ground; there the rule takes the label's colour (Kenny, catalogue
+       note 2026-09-13). */
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive)::after,
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive)::before,
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) :is(.kp-button, .kp-icon-button)::after,
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) :is(.kp-button, .kp-icon-button)::before {
+        border-color: currentColor;
+    }
+
+    [data-theme='formal'] .kp-button:hover:not(:disabled, [aria-disabled='true']),
+    [data-theme='formal'] .kp-menu__item:hover:not(:disabled, [aria-disabled='true']) {
+        text-decoration-color: var(--primary);
+    }
+
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled, [aria-disabled='true']),
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) .kp-button:hover:not(:disabled, [aria-disabled='true']) {
+        text-decoration-color: currentColor;
+    }
+
+    /* An icon has no label: the rule is ruled under the glyph, start to end. */
+    [data-theme='formal'] .kp-icon-button {
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-repeat: no-repeat;
+        background-position: calc(50% - 0.6em) calc(50% + 0.9em);
+        background-size: 0 2px;
+    }
+
+    [data-theme='formal'] .kp-icon-button:hover:not(:disabled, [aria-disabled='true']) {
+        background-size: 1.2em 2px;
+    }
+
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) .kp-icon-button {
+        background-image: linear-gradient(currentColor, currentColor);
+    }
+

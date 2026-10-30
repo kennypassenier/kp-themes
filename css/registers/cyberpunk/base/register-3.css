@@ -1,0 +1,51 @@
+/* @part: base: register layer — rules that belong to no one component */
+    /* ── Compatibility with the 4.x register ──────────────────────────── */
+
+    /* Three of the old opt-in classes keep a meaning: a glitch is the new
+       slice on hover, a rule is the drawn hairline, a bracket frame is the
+       heading's. The flicker, pulse, cell-pop and media classes are gone
+       with the theme they belonged to (S39, A1); MIGRATION.md lists them. */
+    [data-theme='cyberpunk'] .fx-glitch {
+        position: relative;
+        display: inline-block;
+    }
+
+    [data-theme='cyberpunk'] .fx-glitch::before {
+        content: attr(data-kp-text);
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .fx-rule {
+        display: block;
+        height: var(--kp-rule-weight);
+        background: linear-gradient(to right, var(--accent) 0 35%, hsl(from var(--accent) h s l / 0.35) 70%, transparent);
+    }
+
+    [data-theme='cyberpunk'] .fx-brackets {
+        position: relative;
+        padding-top: 0.9rem;
+        background:
+            linear-gradient(var(--primary), var(--primary)) top left / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top left / 2px 0.8rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 1.2rem 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 2px 0.8rem no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .fx-notch {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch)), calc(100% - var(--fx-notch)) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] .fx-signal-badge {
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.15rem 0.5rem;
+    }
+

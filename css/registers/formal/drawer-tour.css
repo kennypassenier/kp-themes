@@ -1,0 +1,81 @@
+/* @part: drawer-tour: signature layer; also datatable */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The ring is drawn in only round a live tour's target (a frozen
+           example on a page is no opening). */
+        [data-theme='formal'] body:has(> dialog.kp-tour[open]) [data-kp-tour-target],
+        [data-theme='formal']:has(dialog.kp-tour[open]) [data-kp-tour-target] {
+            animation: kp-sig-formal-tour-ring 740ms linear backwards;
+        }
+
+        /* The card's lines are turned round with it: js/motion.js
+           playEntranceBackwards() reverses the card and its pseudo-elements
+           (css/components.css), and its title, text and foot are ruled lines
+           of their own, so they take the same reversal here, bottom first. */
+        [data-theme='formal'] .kp-tour[data-kp-reversing='reset'] > *,
+        [data-theme='formal'] .kp-tour[data-kp-reversing='reset'] > *::after {
+            animation-name: none !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > *,
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > *::after {
+            animation-direction: reverse !important;
+            animation-fill-mode: both !important;
+        }
+
+        /* A reversed animation waits its delay first, so each line's wait is
+           turned round with it: the 740 ms span minus the line's end (the line
+           ends at its wait + 400 ms, its pen at its wait + 560 ms, the pen on
+           the card's top edge at 560 ms), the line that came in last goes first. */
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play']::before {
+            animation-delay: 180ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(1) {
+            animation-delay: 340ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(1)::after {
+            animation-delay: 180ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(2) {
+            animation-delay: 280ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(2)::after {
+            animation-delay: 120ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(3) {
+            animation-delay: 220ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(3)::after {
+            animation-delay: 60ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(n + 4) {
+            animation-delay: 160ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(n + 4)::after {
+            animation-delay: 0ms !important;
+        }
+
+        /* The busy table's rows (and the table, layout.css) dim and come back
+           in the busy layer's own 560 ms, at the even pace, so the table
+           under the layer is part of the same pair (they changed at once). */
+        [data-theme='formal'] .kp-datatable {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 560ms linear;
+        }
+
+        [data-theme='formal'] .kp-datatable .kp-table tbody {
+            transition: opacity 560ms linear;
+        }
+
+    }
+

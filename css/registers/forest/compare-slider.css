@@ -1,0 +1,45 @@
+/* @part: compare-slider: signature layer */
+    /* Compare slider: a kraft frame with the leaf corner; the divider is a trail of green dashes with a node for its
+       handle, which is blazed when pointed at; the two labels are field notes; the divider glides on the growth curve. */
+    [data-theme='forest'] .kp-compare {
+        --kp-compare-line: 2px;
+        --kp-compare-ink: var(--primary);
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-compare__divider {
+        border-inline-start: 0;
+        background: repeating-linear-gradient(to bottom, var(--primary) 0 8px, transparent 8px 13px);
+        inline-size: 2px;
+    }
+    [data-theme='forest'] .kp-compare__handle {
+        inset-inline-start: -1px;
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-compare__handle:hover {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-compare__handle:active {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-compare__handle:focus-visible {
+        outline-style: solid;
+        outline-color: var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-compare__label {
+        border-radius: 0;
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-compare__handle {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+        [data-theme='forest'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+    }

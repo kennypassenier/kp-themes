@@ -1,0 +1,5 @@
+/* @part: badge: signature layer */
+    /* The badge is a square plate like every dark part; its digest stays inside the row by the package's own rule. */
+    [data-theme='dark'] .kp-badge--version {
+        border-radius: 0;
+    }

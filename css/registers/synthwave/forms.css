@@ -1,0 +1,43 @@
+/* @part: forms: signature layer; also form-field, card */
+    /* ── Choices as tiles: a tape with its stripe; pointing turns the tube up; checked it is lit pink ── */
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 2px;
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--primary) 10%, var(--card));
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        background-image: var(--kp-sw4-stripe);
+        background-size: 100% 2px;
+        background-repeat: no-repeat;
+        background-position: 0 0;
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--kp-pink-text);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) .kp-field__option-title {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        box-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            0 0 10px hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='synthwave'] .kp-field__option-title {
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='synthwave'] .kp-field__option-hint {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+    }
+
+    /* ── A card in four data states ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+

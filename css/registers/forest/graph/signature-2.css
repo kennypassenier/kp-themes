@@ -1,0 +1,17 @@
+/* @part: graph: signature layer */
+    [data-theme='forest'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='forest'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 8 92;
+        --kp-graph-edge-anim: kp-graph-spark 2600ms linear infinite;
+        --kp-graph-edge-stagger: -120ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+            animation: kp-graph-glow 2600ms ease-in-out infinite;
+            animation-delay: calc(var(--i) * 190ms);
+        }
+    }

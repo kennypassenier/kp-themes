@@ -1,0 +1,27 @@
+/* @part: month-heatmap: signature layer */
+    /* The busy month's card is held on screen through its leave (lesson 19):
+       js/calendar.js marks it `[data-kp-leaving]` while its state goes. */
+    [data-theme='pastel'] .kp-calendar__busy {
+        --kp-calendar-busy-leave: hold;
+        /* ... with its words on it, so the card that peels off is the card
+           that was stuck on (js/calendar.js empties them when it is gone). */
+        --kp-calendar-busy-words: hold;
+        transition: none;
+    }
+
+    [data-theme='pastel'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+        --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+        z-index: 1;
+        display: grid;
+        place-self: center;
+        place-items: center;
+        padding: var(--kp-space-md, 1rem);
+        line-height: 0;
+    }
+
+    /* A loading day is the caterpillar's body itself (section 10): its own
+       spinner stands down, so no second picture comes or goes. */
+    [data-theme='pastel'] .kp-calendar__day-busy {
+        display: none !important;
+    }
+

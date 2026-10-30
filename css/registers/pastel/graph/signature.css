@@ -1,0 +1,25 @@
+/* @part: graph: signature layer */
+    [data-theme='pastel'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: var(--card);
+        --kp-graph-load-cap: round;
+        --kp-graph-load-edge-w: 3.5;
+        --kp-graph-load-edge-on-w: 5;
+        --kp-graph-load-edge-mix: 70%;
+        --kp-graph-load-dash: 8 7;
+        --kp-graph-load-dot: 0.5 7;
+        --kp-graph-load-long: 16 8;
+        --kp-graph-load-ring-w: 3;
+        --kp-graph-load-node-mix: 72%;
+        --kp-graph-load-core: var(--card);
+        --kp-graph-load-core-op: 0.55;
+        --kp-graph-load-weight: 700;
+    }
+
+    [data-theme='pastel'] .kp-graph[data-kp-state='loading'] .kp-graph__node {
+        --kp-graph-load-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    [data-theme='pastel'] .kp-graph[data-kp-state='loading'] .kp-graph__core {
+        r: 4px;
+        transform: translate(-3px, -3px);
+    }

@@ -1,0 +1,68 @@
+/* @part: week-agenda: signature layer; also heat-grid, run-timeline, bar-cell */
+    /* Under the busy card (js/busy-card.js: the data table's loading card, centred over the data) the card is the one
+       loading picture: the deciphered LOADING gives way to it, never stands beside or on it. */
+    [data-theme='cyberpunk'] :is(.kp-heat, .kp-matrix):has(> .kp-datatable__busy-card.kp-datatable__busy-overlay)::after,
+    [data-theme='cyberpunk'] .kp-gantt[data-kp-state='loading']:has(.kp-datatable__busy-card) .kp-gantt__plot::after {
+        content: none;
+        animation: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-heat:has(.kp-heat__cell.kp-skeleton)::after,
+        [data-theme='cyberpunk'] .kp-matrix:has(.kp-matrix__cell.kp-skeleton)::after,
+        [data-theme='cyberpunk'] .kp-gantt[data-kp-state='loading'] .kp-gantt__plot::after {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) infinite;
+        }
+    }
+    [data-theme='cyberpunk'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-family: var(--kp-mono);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: HUD read-outs. One notched corner (cut outwards past the box so the focus ring
+       stays whole), a hard 3 px bar on the leading edge in the series' ink, the time in mono; the line for now is the
+       primary. A running run is a data stream: the void in a yellow rim with cyan dashes moving through it. */
+    [data-theme='cyberpunk'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
+    }
+    /* A planned run [gaps-time-1019]: scanlines, the screen the plan is shown on. */
+    [data-theme='cyberpunk'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--kp-gantt-fill) 60%, transparent) 0 1px, transparent 1px 4px);
+    }
+    [data-theme='cyberpunk'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] :is(.kp-week__pill, .kp-gantt__run) {
+        --kp-cp-pill-notch: var(--fx-notch-sm, 8px);
+        clip-path: polygon(
+            -8px -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-cp-pill-notch) - 8px),
+            calc(100% - var(--kp-cp-pill-notch) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px)
+        );
+    }
+    /* A bar can be a few pixels wide: its cut is the small one, so a short run stays a bar and not a wedge. */
+    [data-theme='cyberpunk'] .kp-gantt__run {
+        --kp-cp-pill-notch: 4px;
+    }
+    [data-theme='cyberpunk'] .kp-week__pill {
+        border-color: var(--kp-hairline, var(--border));
+        border-inline-start: 3px solid var(--kp-week-ink);
+    }
+    [data-theme='cyberpunk'] .kp-week__pill:is(button):hover {
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='cyberpunk'] :is(.kp-week__time, .kp-week__head, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-week__now::before {
+        border-radius: 0;
+    }

@@ -34,10 +34,10 @@ const files = execFileSync('git', ['ls-files', '--', ...SHIPPED.map((d) => `${d}
     encoding: 'utf8',
 })
     .split('\n')
-    .filter(Boolean)
-    // The part files under css/components/ and css/registers/ are slices of the generated stylesheets (a few end
-    // inside a nested @media block); the generated files they build are parsed instead.
-    .filter((f) => !f.startsWith('css/components/') && !f.startsWith('css/registers/'));
+    .filter(Boolean);
+
+// The part files under css/components/ and css/registers/ are parsed too: each one is valid, self-contained CSS (balanced
+// braces, whole rules), so a part can be read and linted on its own. They sit under `css/`, so the pathspec above has them.
 
 /** @type {string[]} */
 const failures = [];

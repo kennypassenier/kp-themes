@@ -1,0 +1,31 @@
+/* @part: motion: signature layer — keyframes and motion that belong to no one component */
+    /* A live number is read again as it counts: a short ruler is set under it with an amber pointer that slides from the
+       old reading to the new on the feed (G9, as every live change here); the number itself never moves. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-kp-tick][data-kp-tick-state='running'] {
+            position: relative;
+            display: inline-block;
+        }
+        [data-theme='blueprint'] [data-kp-tick][data-kp-tick-state='running']::after {
+            content: '';
+            position: absolute;
+            inset-block-start: calc(100% + 2px);
+            inset-inline: 0;
+            block-size: 12px;
+            pointer-events: none;
+            --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+            background-repeat: no-repeat;
+            background-image:
+                conic-gradient(from 135deg at 50% 0, var(--kp-bp-n1) 90deg, transparent 0), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+                repeating-linear-gradient(90deg, var(--kp-bp-n1) 0 1px, transparent 1px 5px);
+            background-size:
+                9px 6px,
+                100% 1px,
+                100% 4px;
+            background-position:
+                calc(var(--kp-bp-p) * 100%) bottom,
+                left 5px,
+                left 1px;
+            animation: kp-sig-blueprint-update-read var(--kp-sig-bp-revision) linear both;
+        }
+    }

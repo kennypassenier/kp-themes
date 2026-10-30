@@ -1,0 +1,58 @@
+/* @part: menu-button: signature layer */
+    /* A menu entry is the theme's own entry [composites, hover]: pointed at, it
+       is read on a scale exactly like a button: two amber witness lines at its
+       ends, overhanging its top and its foot, and along its foot a short ruler
+       with a pointer at each end (--kp-bp-hv the lines, --kp-bp-sv the scale).
+       No wash, no tint: the ground of an entry never changes, hovered, held or
+       focused. The keyboard's place is told by two channels: the package's focus
+       ring round the entry, which only the keyboard sets, and the amber lines
+       and ruler (which a pointer sets too). */
+    [data-theme='blueprint'] :is(.kp-menu__item, .kp-nav__menu a) {
+        position: relative;
+        --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+        --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
+    }
+
+    [data-theme='blueprint'] .kp-menu__item::before,
+    [data-theme='blueprint'] .kp-nav__menu a::after {
+        content: '';
+        position: absolute;
+        inset-block: -0.2rem;
+        inset-inline: calc(0.35rem - 4px);
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+            linear-gradient(var(--kp-bp-n2), var(--kp-bp-n2)), repeating-linear-gradient(90deg, var(--kp-bp-n2) 0 1px, transparent 1px 5px),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0);
+        background-size:
+            1px 100%,
+            1px 100%,
+            calc(100% - 8px) 1px,
+            calc(100% - 8px) 3px,
+            9px 5px,
+            9px 5px;
+        background-position:
+            4px top,
+            calc(100% - 4px) top,
+            left 4px bottom calc(0.2rem + 5px),
+            left 4px bottom calc(0.2rem + 6px),
+            left bottom 0.2rem,
+            right bottom 0.2rem;
+    }
+
+    /* The package lights a hovered entry, and a focused one of a rich menu, with
+       a wash of the ink; here the ground stays and the lines and the ruler (and
+       the keyboard's ring) carry it. */
+    [data-theme='blueprint'] .kp-menu__item:is(:hover, :focus):not(:disabled, [aria-disabled='true']),
+    [data-theme='blueprint'] .kp-menu--rich .kp-menu__item:focus {
+        background: none;
+    }
+
+    [data-theme='blueprint'] .kp-menu__item:is(:hover, :focus-visible):not([aria-disabled='true']),
+    [data-theme='blueprint'] .kp-nav__menu a:is(:hover, :focus-visible) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+

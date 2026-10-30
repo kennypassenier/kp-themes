@@ -1,0 +1,4 @@
+/* @part: focus-steps: signature layer */
+    [data-theme='deco'] .kp-focus-steps__choice {
+        padding-block: 0.75rem;
+    }

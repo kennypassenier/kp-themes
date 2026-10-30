@@ -1,0 +1,52 @@
+/* @part: share-bar: signature layer */
+    /* Share bar: one pill with its sky pass beside it; the part pointed at lifts out of the bar on its own peel and its
+       legend row takes the mint wash; the threshold is a pearl on its thread; a swatch is a pearl. */
+    [data-theme='pastel'] .kp-stackbar {
+        --kp-stackbar-radius: 999px;
+    }
+    [data-theme='pastel'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        border-radius: 999px;
+        translate: 0 -2px;
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card),
+            0 3px 0 hsl(from var(--kp-stackbar-colour, var(--chart-1)) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-stackbar__mark {
+        inline-size: 2px;
+        background: var(--primary);
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.3rem;
+        inset-inline-start: 50%;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        translate: calc(-50% * var(--kp-sig-pa-dir)) 0;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='pastel'] .kp-stackbar__swatch {
+        border-radius: 50%;
+        box-shadow: 0 1.5px 0 hsl(from var(--kp-stackbar-colour, var(--chart-1)) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-stackbar__item {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-stackbar__item[data-kp-stackbar-lit] .kp-stackbar__value {
+        color: inherit;
+    }
+    [data-theme='pastel'] .kp-stackbar__note {
+        border-radius: var(--kp-sig-pa-r-plate);
+        border-width: 2px;
+    }
+

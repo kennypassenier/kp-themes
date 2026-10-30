@@ -1,0 +1,25 @@
+/* @part: navbar: signature layer */
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='blueprint'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.3em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='blueprint']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 1px 0.55em no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 100% / 1px 0.55em no-repeat;
+        text-decoration-color: var(--primary);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='blueprint'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+            background: none;
+        }
+    }
+

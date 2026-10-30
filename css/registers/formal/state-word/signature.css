@@ -1,0 +1,80 @@
+/* @part: state-word: signature layer; also sidenav */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-sig-formal-ruling {
+            from {
+                --kp-fm-t: 0;
+            }
+
+            to {
+                --kp-fm-t: 1;
+            }
+        }
+    }
+
+    /* ── A live update is ruled again and closed [G9; Kenny, 2026-10-08,
+       question 9: "ruled again and closed"]. js/update.js writes the new
+       value at once and marks the element `[data-kp-updating='closed']`; a
+       navy rule is ruled under the changed figure from the start (400 of
+       850 ms), the second rule closes it at the end (the account closed on
+       the new figure), then both are lifted from the start; the figure, the
+       word, the line never move and the box keeps its space. The stamp that
+       landed askew (the register's old idea) is retired. Both rules are
+       drawn on one pseudo-element from one number, --kp-fm-u (0 to 1 over
+       the theme's update time, @property at the top of this file). That time
+       is 850 ms, said by `--kp-update-time`: without it js/update.js takes
+       the dialog's close time times 1.25, which is 925 ms here, and the rules
+       would not be the demo's 400 ms. A state
+       word keeps its width-holding ::after, so its rules are drawn on
+       ::before. Applies to the key figure, the state word, the trend, the
+       strip column and the tile alike. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] {
+            --kp-update: closed;
+            --kp-update-time: 850ms;
+        }
+
+        [data-theme='formal'] [data-kp-updating='closed'] {
+            position: relative;
+        }
+
+        /* The rules lie under the digits, not across the tile. */
+        [data-theme='formal'] .kp-kpi > .kp-kpi__value[data-kp-updating='closed'] {
+            justify-self: start;
+            inline-size: fit-content;
+        }
+
+        [data-theme='formal'] [data-kp-updating='closed']:not(.kp-state-word)::after,
+        [data-theme='formal'] .kp-state-word[data-kp-updating='closed']::before {
+            content: '';
+            position: absolute;
+            inset-inline: 0;
+            inset-block-start: calc(100% - 0.05em);
+            block-size: 5px;
+            pointer-events: none;
+            --kp-fm-r1: clamp(0, var(--kp-fm-u) / 0.47, 1);
+            --kp-fm-r2: clamp(0, (var(--kp-fm-u) - 0.47) / 0.19, 1);
+            --kp-fm-x: clamp(0, (var(--kp-fm-u) - 0.72) / 0.28, 1);
+            background-image:
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r1) * 100%),
+                    transparent calc(var(--kp-fm-r1) * 100%)
+                ),
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r2) * 100%),
+                    transparent calc(var(--kp-fm-r2) * 100%)
+                );
+            background-repeat: no-repeat;
+            background-size:
+                100% 2px,
+                100% 1px;
+            background-position:
+                0 0,
+                0 4px;
+            animation: kp-sig-formal-update-closed var(--kp-update-duration, 850ms) linear both;
+        }
+    }
+

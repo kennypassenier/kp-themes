@@ -1,0 +1,41 @@
+/* @part: small-patterns: register layer; also accordion, tree-reorder-split */
+    [data-theme='nostromo'] .kp-timeline {
+        border-inline-start: 2px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-timeline__marker {
+        background: var(--selected);
+        box-shadow: 0 0 0 2px var(--background);
+    }
+
+    [data-theme='nostromo'] .kp-timeline__when {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    [data-theme='nostromo'] .kp-tree {
+        font-family: var(--theme-font-mono);
+        font-size: 0.85rem;
+    }
+
+    /* The accordion [gap-12]: the console mono capitals its tabs use. */
+    [data-theme='nostromo'] .kp-accordion__summary {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-reorder {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+

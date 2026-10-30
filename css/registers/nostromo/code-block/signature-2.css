@@ -1,0 +1,6 @@
+/* @part: code-block: signature layer */
+    /* "Show all 38 lines" sizes the button to its longest word; in a 200 px cell its wide capitals outgrew the button. */
+    [data-theme='nostromo'] .kp-code--cell .kp-code__foot .kp-button {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+    }

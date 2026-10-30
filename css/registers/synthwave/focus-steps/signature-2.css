@@ -1,0 +1,9 @@
+/* @part: focus-steps: signature layer */
+    /* Back and Next of the cook mode keep their words whole on a phone: less ink round the label, a tighter track. */
+    [data-theme='synthwave'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 0.75rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: keep-all;
+    }

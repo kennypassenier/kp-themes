@@ -1,0 +1,73 @@
+/* @part: tokens: register layer — the theme's knobs (custom properties on the theme root) */
+    /* @kp-soft/themes — css/forest-register.css
+   The forest register, 5.0.0 [S48, LIFT_PLAN forest row]: the contour-map
+   register. Scoped to [data-theme='forest'] and inert elsewhere; opt-in,
+   imported after themes.css. The approved concept demo ("Contour
+   Register", 2026-09-08) is the reference for every value here — read in
+   full at lift time from the scratchpad's `forest-demo.html`, whose own
+   header comment cites docs/archive/RESEARCH_2026-09.md §7 (the perturbed-circle
+   contour field and the trace) and §2 (the razor tear and the second,
+   concentric-ring divider).
+
+   Cyberpunk emits light; phantom is print; forest is a field guide. What
+   this file does, in order: the knobs and the texture (the contour field
+   itself, felt not seen); the hooks of S45 — a plain highlight on a
+   phrase, a redaction that clears on a trigger, a rule that draws under a
+   heading, the torn-paper divider and its concentric-ring second form,
+   the headline's own contour trace; the hero; the navbar with its
+   dropdown; the buttons; the fields; the dossier's stamp and redactions;
+   the footer; the confirm dialog; and one answer per component root
+   (TH124).
+
+   Colour discipline (DI9): nothing here names a colour. Every value is
+   var(--token) or a relative colour of one.
+
+   Nothing here flickers: the contour field and both dividers are static,
+   every reveal plays once, and the headline's fade and trace are single,
+   forward-filled changes — 0.56 opposing changes/s at the worst case (the
+   1.8s trace), far under DI5's 3/s. */
+
+    [data-theme='forest'] {
+        /* The configuration surface [AR43], the demo's own durations. */
+        --kp-reveal-threshold: 0.6;
+        /* Parts of a group stand 80 ms apart, the grammar's one stagger
+           (themes/forest/CHARACTER.md G4). */
+        --kp-reveal-stagger: 80ms;
+        --kp-redact-stagger: 80ms;
+        --kp-classified-delay: 1500ms;
+        --kp-headline-delay: 100ms;
+        --kp-trace-delay: 150ms;
+        --kp-tear-height: 32px;
+        --kp-ring-height: 44px;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+       and leaves a theme that declares none at rest. The headline's own
+       contour trace is CSS-only (no routine — see the type section
+       below), which is the demo's own verdict: "the reduced-motion path
+       is the default, not a fallback", so the trace never depends on
+       this module to be complete. */
+        --kp-reveal-emphasis: plate;
+        --kp-reveal-rule: draw;
+
+        /* The texture [DI9, AR46]: one seamless, periodic contour field
+       (900 px tile, drawn in css/themes.css, forest) as a static
+       background of the page: it scrolls with the content and does not
+       drift. Since 2026-10-07 its lines continue across every tile edge
+       instead of being cut off by a 900 x 460 px tile; the ink is
+       alpha 0.05 (DI9's ceiling is 0.06), measured at about the weight
+       of the old field. */
+    }
+
+    /* ── The headline's own trace: CSS-only, no routine [S45] ─────────── */
+
+    /* This theme declares no --kp-reveal-headline: js/effects.js treats
+       that as quiet and leaves the text alone (it already is the text).
+       The fade-in and the contour trace beside it are the demo's own
+       mechanism, entirely CSS, so the field never depends on this module
+       or on any script to be complete — the demo's own verdict. Rest
+       state (below, unconditioned) is the finished state; the motion
+       lives in the guarded block at the foot of this file. */
+    [data-theme='forest'] [data-kp-reveal='headline'] {
+        opacity: 1;
+        transform: none;
+    }
+

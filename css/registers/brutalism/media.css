@@ -1,0 +1,71 @@
+/* @part: media: register layer; also button, sidenav, back-to-top */
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Slabs. The control sits on its shadow and moves into it when
+       pressed; the frame has the same border and never rounds. */
+    [data-theme='brutalism'] .kp-to-top {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-to-top:active {
+        translate: 3px 3px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 6px 6px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media-figure > figcaption {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='brutalism'] .kp-media-figure {
+        color: var(--foreground);
+        text-align: start;
+    }
+
+    /* ── The thing names itself [scope-12, approved 2026-09-11] ────────
+       Brutalism labels its own construction: services on the outside,
+       functions painted on the wall. So a control says what it IS when
+       you touch it, in a small block-letter tag beside it.
+
+       Kenny's two conditions, 2026-09-11: it reaches many elements rather
+       than only buttons, and the words are English by default and
+       replaceable. `--kp-label` is that door — a page or a single element
+       sets it and the tag says whatever it was given. The defaults below
+       are the fallbacks in that same declaration, which is why there is
+       no string here a consumer cannot reach. */
+    [data-theme='brutalism'] .kp-button,
+    [data-theme='brutalism'] .kp-field__input,
+    [data-theme='brutalism'] .kp-card,
+    [data-theme='brutalism'] .kp-alert,
+    [data-theme='brutalism'] .kp-badge {
+        position: relative;
+    }
+
+    /* The side navigation says where it sits, and this tag may not argue
+       with it [fix-42]. A register wins over the base layer whatever its
+       specificity, so `position: relative` here took the `position: fixed`
+       an `over` or `push` panel gets from css/components.css away with it
+       and put the closed panel back in the flow, standing on the page
+       before it was opened — Kenny, 2026-09-16, brutalism's over-the-page
+       menu: "Hier staat het menu al meer dan volledig op de pagina voor ik
+       het open. Het moet normaal toch 'uit het zicht' zijn?" Measured on
+       catalogue/navigation.html#sidenav-over in firefox: the closed panel's
+       right edge stood 621px onto the page where every other theme has it
+       at 0. Those two modes are positioned already, and a positioned box is
+       all the tag needs; only the `side` panel, a flex item of the page's
+       own layout, has to be given one. */
+    [data-theme='brutalism'] .kp-sidenav:not([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+        position: relative;
+    }
+

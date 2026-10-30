@@ -1,0 +1,45 @@
+/* @part: navbar: signature layer */
+    /* The phone panel's own paper and pass (B), only while it is a panel. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+            --kp-sig-pa-plate: var(--card);
+            --kp-sig-pa-edge: var(--border-strong);
+            position: relative;
+            isolation: isolate;
+            margin-block: 0.5rem calc(var(--kp-sig-pa-off) + 0.25rem);
+            padding: 0.5rem;
+            border-radius: var(--kp-sig-pa-r-plate);
+            transform-origin: var(--kp-sig-pa-corner);
+        }
+
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            inset: 0;
+            border-radius: inherit;
+            background: var(--kp-sig-pa-pass-c);
+            transform-origin: var(--kp-sig-pa-corner);
+            rotate: calc(9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir)) * (1 - var(--kp-sig-pa-ink)));
+            transform: translate(
+                calc((var(--kp-sig-pa-off) + 18px * (1 - var(--kp-sig-pa-pass))) * var(--kp-sig-pa-dir)),
+                calc(var(--kp-sig-pa-off) + 16px * (1 - var(--kp-sig-pa-pass)) + 8px * (1 - var(--kp-sig-pa-ink)))
+            );
+            opacity: clamp(0, var(--kp-sig-pa-pass), 1);
+            pointer-events: none;
+        }
+
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            inset: 0;
+            box-sizing: border-box;
+            border: 1px solid var(--kp-sig-pa-edge);
+            border-radius: inherit;
+            background: var(--kp-sig-pa-plate);
+            opacity: clamp(0, var(--kp-sig-pa-ink), 1);
+            pointer-events: none;
+        }
+    }
+

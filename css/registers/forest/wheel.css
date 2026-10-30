@@ -1,0 +1,27 @@
+/* @part: wheel: signature layer */
+    /* Wheel: a cross-section of a trunk. The hub is the heartwood with its tree rings, the pointer a clay trig
+       mark; the wheel spins up out of nothing and settles on the growth curve; the winner is named in the note voice. */
+    [data-theme='forest'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-fo-grow);
+        --kp-wheel-pointer: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-wheel__spin.kp-button {
+        background: repeating-radial-gradient(
+            circle closest-side,
+            var(--primary) 0 4px,
+            hsl(from var(--primary) h s calc(l * 1.4)) 4px 5px
+        );
+    }
+    [data-theme='forest'] .kp-wheel__rim {
+        stroke-width: 2.5;
+    }
+    [data-theme='forest'] .kp-wheel__segment {
+        stroke-width: 1.6;
+    }
+    [data-theme='forest'] .kp-wheel__label {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-wheel__caption {
+        font-style: italic;
+    }
+

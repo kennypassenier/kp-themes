@@ -1,0 +1,54 @@
+/* @part: alarm: signature layer; also button, datatable, media, command-palette */
+    [data-theme='cyberpunk'] :is(.kp-datatable__sort-order, .kp-chart__dot, .kp-swatch, .kp-tag__remove) {
+        --kp-cp-clip: var(--kp-cp-clip-mini);
+        --kp-cp-wide: var(--kp-cp-wide-mini);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    /* A cut part has no room outside its box for an outline, so its focus is the ring drawn
+       inset in two channels, as the button's is. */
+    [data-theme='cyberpunk'] :is(.kp-icon-button, .kp-tab, .kp-switch__input, .kp-combobox__input, .kp-skip-link, .kp-chart__source):focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    /* ── D. Prose is Rajdhani, the machine's names are mono [G15, lesson 18] ────────────────
+       The register had put the mono face on whole parts; the words inside them are prose. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-alarm__detail,
+            .kp-field__help,
+            .kp-field__error,
+            .kp-empty__body,
+            .kp-toast__body,
+            .kp-palette,
+            .kp-palette__option,
+            .kp-palette__description,
+            .kp-theme-menu__status,
+            .kp-cell-truncate,
+            .kp-truncate,
+            .kp-accordion__summary,
+            .kp-shortcuts__row dd,
+            .kp-error,
+            .kp-media-figure > figcaption
+        ) {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='cyberpunk'] .kp-media-figure > figcaption {
+        text-transform: none;
+        font-size: 0.8125rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-palette__keys {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__error::before {
+        font-family: var(--kp-mono);
+    }
+

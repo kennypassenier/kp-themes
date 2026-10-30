@@ -1,0 +1,35 @@
+/* @part: focus-steps: signature layer */
+    /* Cook mode: the step comes up into the light, in the serif; the wake light is a small sun. */
+    [data-theme='solstice'] .kp-focus-steps {
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.14), transparent 30%), var(--background);
+    }
+    [data-theme='solstice'] .kp-focus-steps__count {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.25rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-focus-steps__text {
+        font-family: var(--theme-font-display, inherit);
+        line-height: 1.35;
+    }
+    [data-theme='solstice'] .kp-focus-steps__needs-title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-display, inherit);
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-focus-steps__name {
+        font-family: var(--theme-font-display, inherit);
+    }
+    [data-theme='solstice'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        box-shadow: 0 0 0.5rem 0.1rem hsl(from var(--primary) h s l / 0.6);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-focus-steps__step {
+            animation: kp-sig-solstice-secret-rise calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-come) both;
+        }
+    }
+

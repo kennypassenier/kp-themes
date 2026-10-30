@@ -1,0 +1,178 @@
+/* @part: progress-spinner-skeleton: signature layer */
+    /* ── 11 · The spinner: the caterpillar's round trip (G11, b-curl-2) ── */
+
+    /* A small round white sticker like a day, and the caterpillar crawling
+       round it clockwise, its hump running through it (2400 ms a round).
+       js/loading-pieces.js adds the three pom-poms and the head; without it
+       the four go round as one. Every size is this one drawing. */
+    [data-theme='pastel'] .kp-spinner {
+        --kp-sig-pa-q: calc(var(--kp-spinner-size, 1.25rem) * 0.17);
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        font-size: var(--kp-spinner-size, 1.25rem);
+        animation: none;
+        filter: drop-shadow(1.5px 1.5px 0 var(--kp-sig-pa-pass-c));
+    }
+
+    [data-theme='pastel'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        box-sizing: border-box;
+        inline-size: 0.46em;
+        block-size: 0.46em;
+        border: max(1px, 0.04em) solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--card);
+        translate: -50% -50%;
+        opacity: 1;
+        mix-blend-mode: normal;
+        animation: none;
+    }
+
+    [data-theme='pastel'] .kp-spinner:not([data-kp-pieces])::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 50% 17%, var(--primary) 0 0.1em, transparent calc(0.1em + 0.5px)),
+            radial-gradient(circle at 25% 29%, var(--accent) 0 0.085em, transparent calc(0.085em + 0.5px)),
+            radial-gradient(circle at 13% 50%, var(--accent) 0 0.085em, transparent calc(0.085em + 0.5px)),
+            radial-gradient(circle at 17% 71%, var(--accent) 0 0.085em, transparent calc(0.085em + 0.5px));
+        opacity: 1;
+        mix-blend-mode: normal;
+        translate: none;
+    }
+
+    [data-theme='pastel'] .kp-spinner[data-kp-pieces]::after {
+        content: none;
+    }
+
+    [data-theme='pastel'] .kp-spinner > .kp-pieces {
+        filter: none;
+    }
+
+    [data-theme='pastel'] .kp-spinner .kp-pieces__orbit > i {
+        --q: var(--kp-sig-pa-q);
+        --s: var(--kp-sig-pa-q);
+        offset-path: circle(0.33em at 50% 50%);
+        offset-anchor: center;
+        offset-rotate: auto;
+        offset-distance: calc(70% - var(--lag, 0em));
+    }
+
+    [data-theme='pastel'] .kp-spinner .kp-pieces__orbit {
+        position: absolute;
+        inset: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-spinner:not([data-kp-pieces])::after {
+            animation: kp-sig-pastel-curl-turn var(--kp-sig-pa-loop) linear infinite;
+        }
+
+        [data-theme='pastel'] .kp-spinner .kp-pieces__orbit > i {
+            animation:
+                kp-sig-pastel-curl-orbit var(--kp-sig-pa-loop) linear infinite,
+                kp-sig-pastel-curl-lift calc(var(--kp-sig-pa-loop) / 2) ease-in-out calc(var(--k, 0) * 150ms) infinite;
+        }
+    }
+
+    @keyframes kp-sig-pastel-curl-turn {
+        to {
+            rotate: 360deg;
+        }
+    }
+
+    @keyframes kp-sig-pastel-curl-orbit {
+        from {
+            offset-distance: calc(0% - var(--lag, 0em));
+        }
+
+        to {
+            offset-distance: calc(100% - var(--lag, 0em));
+        }
+    }
+
+    @keyframes kp-sig-pastel-curl-lift {
+        0%,
+        100% {
+            transform: none;
+        }
+
+        50% {
+            transform: translateY(calc(var(--q, 0.2em) * -0.26));
+        }
+    }
+
+    /* ── 12 · The signature elements (scope-140), in the grammar ─────────── */
+
+    /* The progress bar: a dotted fill with its sky pass 2 px off and a round
+       sticker head with its peel (the reference for G7's pass); the share
+       moves on the landing in a pass's time. While it waits it is the
+       caterpillar (section 10). */
+    [data-theme='pastel'] .kp-progressbar {
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-head: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-inset: calc(0.1875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-drop: calc(2px * var(--kp-progressbar-scale, 1));
+    }
+
+    [data-theme='pastel'] .kp-progressbar__track {
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    [data-theme='pastel'] .kp-progressbar:not([data-kp-indeterminate]) .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: calc(var(--kp-ps-head) / 2);
+        background: var(--border-strong);
+        opacity: 0.55;
+        mask:
+            linear-gradient(black 0 0) center / 100% 2px no-repeat,
+            radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%) center / calc(0.75rem * var(--kp-progressbar-scale, 1))
+                calc(0.375rem * var(--kp-progressbar-scale, 1)) space no-repeat;
+    }
+
+    [data-theme='pastel'] .kp-progressbar__fill {
+        inset-block: var(--kp-ps-inset) calc(var(--kp-ps-inset) + var(--kp-ps-drop));
+        inset-inline: 0;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--primary);
+        box-shadow: var(--kp-ps-drop) var(--kp-ps-drop) 0 0 var(--kp-sig-pa-pass-c);
+        clip-path: inset(
+            calc(-1 * var(--kp-ps-drop)) calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) calc(-1 * var(--kp-ps-drop))
+                calc(-1 * var(--kp-ps-drop)) round 999px
+        );
+    }
+
+    [data-theme='pastel'] .kp-progressbar__head {
+        inset-block-start: 0;
+        inset-block-end: auto;
+        inline-size: var(--kp-ps-head);
+        block-size: var(--kp-ps-head);
+        border-radius: 50%;
+        background: radial-gradient(circle closest-side, var(--primary) 0 28%, var(--card) calc(28% + 0.6px));
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            calc(1px * var(--kp-progressbar-scale, 1)) var(--kp-ps-drop) 0 0 var(--kp-sig-pa-peel);
+        transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-head))));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-progressbar__fill {
+            transition: clip-path 440ms var(--kp-sig-pa-land);
+        }
+
+        [data-theme='pastel'] .kp-progressbar__head {
+            transition: transform 440ms var(--kp-sig-pa-land);
+        }
+    }
+

@@ -1,0 +1,51 @@
+/* @part: facet-list: signature layer; also heat-grid, matrix */
+    /* Facets: square rows; pointing lights the circuit in the row; the title and the counts are mono read-outs. The
+       counts on their way are notched slots whose lock blinks cyan, yellow, cyan in hard ticks. */
+    [data-theme='cyberpunk'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+    [data-theme='cyberpunk'] .kp-facet:hover {
+        background-image:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.3) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.3) 0 1px, transparent 1px 14px);
+    }
+    [data-theme='cyberpunk'] :is(.kp-facets__title, .kp-facet__count) {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-facets__title {
+        color: var(--accent);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-facets__title::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--accent);
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-cyberpunk-blink 1800ms steps(1, end) infinite;
+        }
+    }
+
+    /* Heat grid and matrix: neon tubes in the void. A cell is a dark tinted ground in its tone's neon edge with a glow
+       of the same hue; the pick is a cyan tube; pointing lights the cell's tube (G8). Waiting, the cells dim and one
+       word is deciphered over the grid, not one per cell. */
+    [data-theme='cyberpunk'] .kp-heat {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-gap: 2px;
+        --kp-heat-gap-y: 6px;
+        position: relative;
+    }
+    [data-theme='cyberpunk'] .kp-matrix {
+        --kp-heat-cell-radius: 0;
+        --kp-matrix-gap: 4px;
+    }

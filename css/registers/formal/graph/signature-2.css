@@ -1,0 +1,10 @@
+/* @part: graph: signature layer */
+    [data-theme='formal'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='formal'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 7 93;
+        --kp-graph-edge-anim: kp-graph-signal 2000ms linear infinite;
+        --kp-graph-edge-stagger: 170ms;
+    }

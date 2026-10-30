@@ -1,0 +1,40 @@
+/* @part: dialog: signature layer */
+    /* The dialog in sections. */
+    [data-theme='brutalism'] .kp-dialog__section {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='brutalism'] .kp-dialog__heading {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-dialog__note {
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-dialog__section--danger {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+        padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
+        border-inline-start: 0;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat;
+    }
+    [data-theme='brutalism'] .kp-dialog__section--danger:last-child {
+        padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
+    }
+    [data-theme='brutalism'] .kp-confirm__dependents {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-confirm__dependents .kp-dialog__heading {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+    }
+    [data-theme='brutalism'] .kp-confirm__list {
+        font-weight: 700;
+    }
+

@@ -1,0 +1,24 @@
+/* @part: small-patterns: signature layer; also state-plate */
+    [data-theme='blueprint'] .kp-empty[data-kp-art]::before {
+        content: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-art > g[data-kp-art-set='drawing'] > path {
+            stroke-dasharray: 1;
+            animation: kp-sig-blueprint-art-pen calc(3 * var(--kp-sig-bp-unit)) var(--kp-sig-bp-feed) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 0.5 * var(--kp-sig-bp-unit));
+        }
+    }
+    @keyframes kp-sig-blueprint-art-pen {
+        from {
+            stroke-dashoffset: 1;
+            stroke: var(--primary);
+        }
+        65% {
+            stroke-dashoffset: 0;
+            stroke: var(--primary);
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }

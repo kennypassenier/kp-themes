@@ -1,0 +1,53 @@
+/* @part: status-rows: signature layer; also calm-status */
+    /* Status rows: plates lit from below, fainter; the detail in the serif's sentence case. A failed row's sky reddens;
+       a loading row watches the low sun cross along its foot. */
+    [data-theme='solstice'] .kp-statuslist {
+        --kp-statuslist-gap: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-statusrow {
+        --kp-statusrow-radius: var(--radius);
+        --kp-statusrow-edge: var(--border);
+        --kp-so-sky: var(--accent);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.45);
+        position: relative;
+        overflow: clip;
+        background:
+            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.14), transparent) 0 100% / 100% 45% no-repeat,
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border);
+        --kp-so-sky: var(--destructive);
+        --kp-so-foot: var(--destructive);
+    }
+    [data-theme='solstice'] .kp-statusrow[data-state='failed'] .kp-statusrow__detail {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+    [data-theme='solstice'] .kp-statusrow[data-state='empty'] {
+        --kp-so-sky: transparent;
+        --kp-so-foot: var(--border);
+        border-style: dashed;
+    }
+    [data-theme='solstice'] .kp-statusrow[data-state='loading']::after {
+        content: '';
+        position: absolute;
+        inset-block: auto 0;
+        inset-inline-start: 0;
+        inline-size: 37%;
+        block-size: 1.2rem;
+        background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.28rem, hsl(from var(--primary) h s l / 0.35) 0.3rem, transparent 0.9rem);
+        transform: translateX(-100%);
+        pointer-events: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-statusrow[data-state='loading']::after {
+            animation: kp-sig-solstice-solstice-light 3600ms linear infinite;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='solstice'] .kp-statusrow[data-state='loading']::after {
+            transform: translateX(85%);
+        }
+    }
+

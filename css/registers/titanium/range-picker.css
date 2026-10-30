@@ -1,0 +1,23 @@
+/* @part: range-picker: signature layer */
+    /* ── Range picker ── */
+    [data-theme='titanium'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: var(--muted);
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='titanium'] .kp-range__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-range__time {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+

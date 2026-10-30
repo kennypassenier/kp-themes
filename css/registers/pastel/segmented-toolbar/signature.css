@@ -1,0 +1,35 @@
+/* @part: segmented-toolbar: signature layer */
+    [data-theme='pastel'] .kp-segmented {
+        --kp-seg-radius: var(--kp-sig-pa-r-ctl, 0.85rem);
+        --kp-seg-pad: 4px;
+        --kp-seg-track: var(--secondary);
+        --kp-seg-thumb: var(--primary);
+        --kp-seg-thumb-ink: var(--primary-foreground);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: 0 3px 0 var(--kp-sig-pa-peel, hsl(from var(--primary) h s calc(l * 0.55)));
+        --kp-chip-radius: var(--kp-sig-pa-r-ctl, 0.85rem);
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+    }
+    [data-theme='pastel'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='pastel'] .kp-toolbar__label {
+        letter-spacing: 0.05em;
+    }
+    [data-theme='pastel'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='pastel'] .kp-kbd {
+        --kp-kbd-radius: 0.5rem;
+        --kp-kbd-edge: var(--border-strong);
+        --kp-kbd-ground: var(--card);
+        --kp-kbd-foot: 3px;
+    }
+    /* Washi tape: the track's edge is the dashed cut of a tape, not a rule. */
+    [data-theme='pastel'] .kp-segmented:not(.kp-segmented--chips) {
+        border-style: dashed;
+    }
+    [data-theme='pastel'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel, hsl(from var(--primary) h s calc(l * 0.55)));
+    }

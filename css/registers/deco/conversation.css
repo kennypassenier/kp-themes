@@ -1,0 +1,41 @@
+/* @part: conversation: signature layer; also gallery, code-block */
+    /* The bubbles of a conversation, the tiles of a gallery and the plate of a QR code are lobby plates in little: lacquer
+       with the wallpaper, a hairline and the second hairline 3 px inside it (G5, G7). A picture and a code keep their own
+       ground (the tile's picture, the white a scanner needs), so their second rule stands 3 px outside, in the gap. */
+    [data-theme='deco'] .kp-thread__bubble {
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        border-radius: 0;
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+        padding-inline: 1rem;
+        padding-block: 0.75rem;
+    }
+    [data-theme='deco'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-thread__item[data-kp-first='true'] > .kp-thread__bubble {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-gallery__tile,
+    [data-theme='deco'] .kp-qr__plate {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        overflow: visible;
+        box-shadow:
+            0 0 0 3px var(--background),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    /* The code box's tools wrap under the title when the line is short, instead of pushing Copy past the box's edge. */
+    [data-theme='deco'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='deco'] .kp-code__head {
+        min-inline-size: 0;
+    }

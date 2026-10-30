@@ -1,0 +1,42 @@
+/* @part: visual-timer: signature layer */
+    /* ── Visual timer: the sun sets. The share left is the striped sun, its stripes thickening toward the horizon as it
+       sinks, standing on the face's cyan horizon ring ── */
+    [data-theme='synthwave'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--accent);
+        --kp-timer-disc-ring: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__face {
+        border-color: var(--accent);
+        background: var(--sidebar-background);
+        box-shadow: 0 0 10px hsl(from var(--accent) h s l / 0.35);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__sector {
+        background:
+            repeating-linear-gradient(to bottom, transparent 0 56%, var(--sidebar-background) 56% 60%, transparent 60% 68%, var(--sidebar-background) 68% 74%, transparent 74% 82%, var(--sidebar-background) 82% 90%, transparent 90%),
+            var(--kp-sw4-sun);
+        -webkit-mask: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        mask: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__hub {
+        border-color: var(--sidebar-background);
+        background: var(--kp-core);
+        box-shadow: 0 0 6px var(--primary);
+    }
+    [data-theme='synthwave'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        border-color: var(--destructive);
+        box-shadow: 0 0 12px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__caption,
+    [data-theme='synthwave'] .kp-timer-disc__status {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-timer-disc__caption {
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        color: var(--destructive);
+    }
+

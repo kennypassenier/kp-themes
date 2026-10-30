@@ -1,0 +1,83 @@
+/* @part: signature: signature layer — rules that belong to no one component */
+    /* ── The approved grammar [scope-143; Kenny, 2026-10-07 23:52, 18 of 18 on
+       research/cyberpunk-character; the anchor is the glitch] ─────────────
+       What this block draws, once, for every part below it and for the exits:
+       the notch in two sizes (14 px on a plate at its dossier corner, 8 px on a
+       control, 18 px on the dialog's pair), the holo plate (a yellow rim glowing
+       inward, scan lines at 135 degrees), the channel split that opens, closes,
+       arrives and leaves a part (four ticks of 120 ms: a yellow copy right and
+       up, a cyan copy right and down, 6, 4, 2, 1 px, then the part itself), the
+       split edge under the pointer, the target brackets of focus, the closed
+       circuit of a press. Hard ticks everywhere: `steps()`, never an ease.
+       Colours are tokens only; every copy is the part's own silhouette (a box
+       shadow) and the part's own text (a text shadow), so the copies need no
+       SVG filter. The clip is the part's own cut, wide around it while a copy
+       plays outside its box, so the notch is cut at every frame. */
+
+    /* The clocks. A hover or a focus is four ticks (3, 2, 1, 0 left of the entrance), and its
+       leave is the same four the other way round: `t` counts the ticks left, `p` says
+       whether the part is pointed, so a pose is a function of the two. */
+    /* The mega menu's hold: it changes with the panel's state so a transition runs for as long as
+       the close does, and the script that keeps the panel drawn waits for it. */
+    @property --kp-cp-hold {
+        syntax: '<number>';
+        inherits: false;
+        initial-value: 0;
+    }
+
+    @property --kp-cp-t {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 4;
+    }
+
+    @property --kp-cp-p {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+    }
+
+    @property --kp-cp-ft {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 4;
+    }
+
+    @property --kp-cp-fp {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+    }
+
+    /* The lock-on of a target brackets: the inset the brackets close to. */
+    @property --kp-cp-lk {
+        syntax: '<length>';
+        inherits: true;
+        initial-value: 3px;
+    }
+
+    /* The four bars of the spinner, one height each (a share of its box). */
+    @property --kp-cp-h1 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 56.5%;
+    }
+
+    @property --kp-cp-h2 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+
+    @property --kp-cp-h3 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 30.4%;
+    }
+
+    @property --kp-cp-h4 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 82.6%;
+    }
+

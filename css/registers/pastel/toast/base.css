@@ -1,0 +1,14 @@
+/* @part: toast: base layer */
+    [data-theme='pastel']
+        :is(
+            .kp-toast,
+            .kp-alert,
+            .kp-tour,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-datatable__busy-panel,
+            .kp-calendar__busy
+        )
+        > *,
+    [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > * {
+        opacity: clamp(0, var(--kp-sig-pa-ink), 1);
+    }

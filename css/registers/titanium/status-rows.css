@@ -1,0 +1,37 @@
+/* @part: status-rows: signature layer; also calm-status */
+    /* Status rows: machined rows on the small chamfer with the tool edge, the detail in Martian Mono. A failed row's
+       edge is the red; a loading row is in the bath, the oxide drifting through it. */
+    [data-theme='titanium'] .kp-statuslist {
+        --kp-statuslist-gap: 0.5rem;
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='titanium'] .kp-statusrow {
+        --kp-sig-ti-c: 0.35rem;
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 0;
+        box-shadow: inset 0 2px 0 hsl(from var(--foreground) h s l / 0.18);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-statusrow[data-state='loading'] {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+    [data-theme='titanium'] .kp-statusrow[data-state='empty'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-statusrow__detail {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+

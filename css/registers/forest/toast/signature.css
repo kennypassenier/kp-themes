@@ -1,0 +1,29 @@
+/* @part: toast: signature layer */
+    [data-theme='forest'] .kp-toast {
+        --kp-sig-dur: var(--kp-sig-fo-time);
+        position: relative;
+        padding-inline-start: 1.15rem;
+    }
+
+    /* The plain and success toasts as approved; info, warning and destructive keep
+       the register's own plates, which the approved demo never showed and whose
+       words read at 4.5:1 only on them [scope-60]. */
+    [data-theme='forest'] .kp-toast:not(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-block: 0.55rem;
+        inset-inline-start: 0.5rem;
+        inline-size: 3px;
+        border-radius: 2px;
+        background: var(--accent-foreground);
+        transform-origin: 50% 0;
+    }
+
+    [data-theme='forest'] .kp-toast--success::before {
+        background: var(--success-foreground);
+    }
+

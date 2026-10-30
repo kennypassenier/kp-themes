@@ -1,0 +1,28 @@
+/* @part: compare-slider: signature layer */
+    /* Compare slider: a square frame; the divider is the pen's line, the handle the compass's circle with its centre
+       lines; the labels are lettering on the sheet's ground; the divider glides on the plotter's feed. */
+    [data-theme='blueprint'] .kp-compare {
+        --kp-compare-line: 1px;
+        --kp-compare-ink: var(--primary);
+        border-color: var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-compare__handle {
+        border-width: 1px;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat,
+            var(--background);
+    }
+    [data-theme='blueprint'] .kp-compare__label {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        background: var(--background);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-bp-feed);
+        }
+    }

@@ -1,0 +1,33 @@
+/* @part: showing-data: register layer */
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='brutalism'] .kp-id,
+    [data-theme='brutalism'] .kp-url,
+    [data-theme='brutalism'] .kp-numeric,
+    [data-theme='brutalism'] .kp-timestamp,
+    [data-theme='brutalism'] .kp-masked,
+    [data-theme='brutalism'] .kp-copyable,
+    [data-theme='brutalism'] .kp-truncate,
+    [data-theme='brutalism'] .kp-cell-break,
+    [data-theme='brutalism'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+
+    /* Dates and identifiers are bold mono in ink, never the muted 400 [G15,
+       Kenny 2026-10-07: "some text is too thin, like the date"]. */
+    [data-theme='brutalism'] .kp-id,
+    [data-theme='brutalism'] .kp-url,
+    [data-theme='brutalism'] .kp-numeric,
+    [data-theme='brutalism'] .kp-timestamp,
+    [data-theme='brutalism'] .kp-masked,
+    [data-theme='brutalism'] .kp-copyable {
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] .kp-timestamp,
+    [data-theme='brutalism'] .kp-id {
+        color: var(--foreground);
+        font-size: max(0.75rem, 0.9375em);
+    }
+

@@ -1,0 +1,21 @@
+/* @part: tokens: signature layer — the theme's knobs (custom properties on the theme root) */
+    [data-theme='cyberpunk'] {
+        --kp-cp4-tick: 60ms;
+        --kp-cp4-grid:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.3) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.3) 0 1px, transparent 1px 14px);
+        --kp-cp4-grid-press:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px);
+        --kp-cp4-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        --kp-cp4-trip: repeating-linear-gradient(90deg, var(--primary) 0 6px, transparent 6px 10px);
+        --kp-cp4-n: 8px;
+        --kp-cp4-cut: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-cp4-n)), calc(100% - var(--kp-cp4-n)) 100%, 0 100%);
+        --kp-cp4-cut-top: polygon(0 0, calc(100% - var(--kp-cp4-n)) 0, 100% var(--kp-cp4-n), 100% 100%, 0 100%);
+        --kp-cp4-cut-open: polygon(-12% -40%, 140% -40%, 140% calc(100% - var(--kp-cp4-n)), calc(100% - var(--kp-cp4-n)) 100%, -12% 100%);
+        --kp-art-rule: var(--primary);
+        --kp-art-line: var(--border-strong);
+        --kp-art-ink: var(--accent);
+        --kp-art-red: var(--destructive);
+        --kp-art-stroke: 1.5px;
+    }

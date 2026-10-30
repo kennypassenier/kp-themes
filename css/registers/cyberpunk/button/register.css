@@ -1,0 +1,215 @@
+/* @part: button: register layer; also forms, alert, navbar, dialog */
+    /* ── Buttons [TH118] ──────────────────────────────────────────────── */
+
+    /* The frame is the element's background colour; the face, the slit and
+       the frame line along the notch are background layers painted over
+       it (top to bottom: the slit, the notch line, the face). Nothing is a
+       pseudo-element, so the focus ring — an inset box-shadow, two
+       channels — paints above all of it, inside the clip (MR-NOTCH), and
+       the charge sweep has ::after to itself. The four looks set three
+       custom properties and nothing else. */
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-btn-fg: var(--primary);
+        --kp-btn-frame: var(--primary);
+        --kp-btn-ground: var(--background);
+        --kp-btn-face: var(--kp-btn-fill, var(--kp-btn-ground));
+        position: relative;
+        isolation: isolate;
+        border: 0;
+        border-radius: 0;
+        padding-inline: 1.4rem;
+        font-weight: 700;
+        font-size: 0.9em;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-btn-fg);
+        background-color: var(--kp-btn-frame);
+        background-image:
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(135deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-size:
+            100% var(--kp-button-slit),
+            var(--kp-button-notch) var(--kp-button-notch),
+            calc(100% - 4px) calc(100% - 4px);
+        background-position:
+            0 50%,
+            right bottom,
+            2px 2px;
+        background-repeat: no-repeat;
+        box-shadow: none;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-button-notch)), calc(100% - var(--kp-button-notch)) 100%, 0 100%);
+    }
+
+    /* The charge sweep, in a colour that stands off the face it crosses
+       [scope-80]. It used to be white at half strength in `overlay`, and
+       overlay leaves a near-black or a saturated face almost where it was:
+       measured on catalogue/button.html, the band read 1.00:1 against the
+       primary's yellow, 1.03:1 on the bare button's black and 1.28:1 on the
+       destructive red — only the ghost, whose face is nearly transparent,
+       showed it (1.16:1 blended, but over the page it read white), which is
+       Kenny's "the Cancel button has the animation, the others don't
+       quite". Now it is painted normally in `--kp-btn-charge`: the cyan
+       accent over the dark faces and the face's own ink over the filled
+       ones, each at least 3:1 against the face it runs on. */
+    [data-theme='cyberpunk'] .kp-button::after {
+        content: '';
+        position: absolute;
+        inset: -1rem -2rem;
+        z-index: -1;
+        background: linear-gradient(105deg, transparent 0 40%, var(--kp-btn-charge) 45% 55%, transparent 60% 100%);
+        transform: translateX(-120%);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-btn-charge: hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary {
+        --kp-btn-charge: hsl(from var(--primary-foreground) h s l / 0.6);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive {
+        --kp-btn-charge: hsl(from var(--destructive-foreground) h s l / 0.6);
+    }
+
+    [data-theme='cyberpunk'] .kp-button:hover:not(:disabled) {
+        background-color: var(--kp-btn-frame);
+    }
+
+    /* The mirrored notch, bottom-left [AR43]. A button that points backwards
+       — a pager's Previous, marked `data-kp-direction="back"` — carries the
+       notch on the side it points to [Kenny's note of 2026-09-13]. Not the
+       --mirror class: nine other registers paint --mirror as a device of
+       their own (an offset shadow, a sheen, a chamfer), so a Previous
+       wearing it would stop looking like its Next there. */
+    [data-theme='cyberpunk'] .kp-button--mirror,
+    [data-theme='cyberpunk'] .kp-button[data-kp-direction='back'] {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, var(--kp-button-notch) 100%, 0 calc(100% - var(--kp-button-notch)));
+        background-image:
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(225deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-position:
+            0 50%,
+            left bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary {
+        --kp-btn-fill: var(--primary);
+        --kp-btn-fg: var(--primary-foreground);
+        --kp-btn-frame: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary:hover:not(:disabled) {
+        --kp-btn-fill: var(--primary-hover);
+        --kp-btn-frame: var(--primary-hover);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary:active:not(:disabled) {
+        --kp-btn-fill: var(--primary-active);
+        --kp-btn-frame: var(--primary-active);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive {
+        --kp-btn-fill: var(--destructive);
+        --kp-btn-fg: var(--destructive-foreground);
+        --kp-btn-frame: var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive:hover:not(:disabled) {
+        --kp-btn-fill: var(--destructive-hover);
+        --kp-btn-frame: var(--destructive-hover);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive:active:not(:disabled) {
+        --kp-btn-fill: var(--destructive-active);
+        --kp-btn-frame: var(--destructive-active);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--ghost {
+        --kp-btn-fg: var(--foreground);
+        --kp-btn-frame: transparent;
+        --kp-btn-ground: transparent;
+    }
+
+    /* In the bar the ghost takes the bar's ink; the rule above paints it
+       for the page [fix-77]. */
+    [data-theme='cyberpunk'] .kp-nav .kp-button--ghost {
+        --kp-btn-fg: currentColor;
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--ghost:hover:not(:disabled) {
+        background-color: transparent;
+        --kp-btn-fill: hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    /* Disabled reads the derived tokens rather than an opacity [AR43]. */
+    [data-theme='cyberpunk'] .kp-button:disabled {
+        --kp-btn-fg: var(--muted-foreground);
+        --kp-btn-frame: var(--border-strong);
+        transform: none;
+    }
+
+    /* A ghost has no ground, so its disabled frame colour is the whole plate
+       its label sits on, and the muted label read 1.12:1 painted on that
+       olive (Kenny's note of 2026-09-13, a pager's disabled Previous). The
+       page's ink on the plate reads at 6.02:1 from the tokens; the plate
+       stays the unsaturated olive, so the button still looks unavailable
+       beside a live one. */
+    [data-theme='cyberpunk'] .kp-button--ghost:disabled {
+        --kp-btn-fg: var(--background);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--primary:disabled {
+        --kp-btn-fill: var(--primary-disabled);
+        --kp-btn-frame: var(--primary-disabled);
+        --kp-btn-fg: var(--primary-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--destructive:disabled {
+        --kp-btn-fill: var(--destructive-disabled);
+        --kp-btn-frame: var(--destructive-disabled);
+        --kp-btn-fg: var(--destructive-foreground);
+    }
+
+    /* The focus ring lives on the face, inside the frame, where a clip-path
+       cannot reach it (MR-NOTCH): two channels, inset, DI2. */
+    [data-theme='cyberpunk'] .kp-button:focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    [data-theme='cyberpunk'] .kp-icon-button {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='cyberpunk'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-confirm {
+        border-radius: 0;
+    }
+
+    /* ── Fields ───────────────────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    [data-theme='cyberpunk'] .kp-form__summary {
+        border-radius: 0;
+        border-left: 3px solid var(--destructive);
+    }
+

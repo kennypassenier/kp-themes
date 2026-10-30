@@ -1,0 +1,9 @@
+/* @part: dialog: signature layer */
+    /* A dialog's buttons stay whole words in this theme's wide letters: in a narrow dialog they take a second row rather
+       than break inside a word. */
+    [data-theme='titanium'] .kp-dialog__actions {
+        flex-wrap: wrap;
+    }
+    [data-theme='titanium'] .kp-dialog__actions > .kp-button {
+        white-space: nowrap;
+    }

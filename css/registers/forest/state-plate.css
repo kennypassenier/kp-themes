@@ -1,0 +1,62 @@
+/* @part: state-plate: signature layer; also navbar, checklist-sink */
+    [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
+        content: '';
+        display: block;
+        inline-size: 4.5rem;
+        block-size: 3.25rem;
+        margin: 0 auto 0.6rem;
+        pointer-events: none;
+        background:
+            linear-gradient(to top, var(--primary) var(--kp-fo-sprout-rise), transparent 0) 50% 70% / 30% 42% no-repeat,
+            linear-gradient(var(--accent-foreground), var(--accent-foreground)) 87% 0.125rem / 0.75rem 0.75rem no-repeat,
+            var(--border-strong);
+        mask-image: var(--kp-fo-clearing), var(--kp-fo-sprout), var(--kp-fo-trig);
+        mask-position: 50% 50%, 50% 50%, 87% 0.125rem;
+        mask-size: 100% 100%, 100% 100%, 0.75rem 0.75rem;
+        mask-repeat: no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
+            animation: kp-sig-forest-sprout var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+    }
+
+    @keyframes kp-sig-forest-sprout {
+        from {
+            --kp-fo-sprout-rise: 0%;
+        }
+    }
+
+    /* The failed checklist box is the package's destructive alert plate (leaf corners, the destructive ground). */
+    [data-theme='forest'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-radius: var(--kp-sig-fo-plate);
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='forest'] .kp-empty__title {
+        margin: 0 0 0.25rem;
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='forest'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-line: underline;
+        text-decoration-style: dashed;
+        text-decoration-color: var(--accent-foreground);
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 0.24em;
+    }
+
+    [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        text-decoration-style: solid;
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+    }
+

@@ -1,0 +1,100 @@
+/* @part: action-tiles: signature layer */
+    [data-theme='blueprint'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='blueprint'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-edge: transparent;
+        --kp-action-edge-hover: transparent;
+        --kp-action-ground: transparent;
+        --kp-action-ground-active: transparent;
+        --kp-action-press: 0 0;
+        --kp-action-title-font: var(--theme-font-display);
+        --kp-bp-wv: 0;
+        --kp-bp-dmv: 0;
+        --kp-bp-w: hsl(from var(--accent) h s l / var(--kp-bp-wv));
+        --kp-bp-d: hsl(from var(--accent) h s l / var(--kp-bp-dmv));
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    /* The witness lines at the tile's two ends, overhanging its top and its foot by a few pixels, and the dimension
+       across its foot between them with a slash at each end. */
+    [data-theme='blueprint'] .kp-action::before {
+        content: '';
+        position: absolute;
+        inset-block: -0.3rem;
+        inset-inline: 0.4rem;
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(var(--kp-bp-w), var(--kp-bp-w)), linear-gradient(var(--kp-bp-w), var(--kp-bp-w)),
+            linear-gradient(var(--kp-bp-d), var(--kp-bp-d)),
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            );
+        background-size:
+            1px 100%,
+            1px 100%,
+            calc(100% - 2px) 1px,
+            7px 7px,
+            7px 7px;
+        background-position:
+            left top,
+            right top,
+            1px calc(100% - 0.5rem),
+            left -3px bottom calc(0.5rem - 3px),
+            right -3px bottom calc(0.5rem - 3px);
+    }
+    [data-theme='blueprint'] .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-bp-wv: 1;
+    }
+    [data-theme='blueprint'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-bp-wv: 1;
+        --kp-bp-dmv: 1;
+    }
+    [data-theme='blueprint'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        --kp-action-ground-disabled: transparent;
+        border-color: transparent;
+        color: var(--muted-foreground);
+    }
+    [data-theme='blueprint'] .kp-action--destructive::after {
+        display: none;
+    }
+    /* Destructive: flagged. The filled triangle in the red before the title, the title in the red; no side bar. */
+    [data-theme='blueprint'] .kp-action--destructive {
+        --kp-action-tone-edge: transparent;
+        --kp-action-tone-edge-hover: transparent;
+    }
+    [data-theme='blueprint'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title {
+        color: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title::before {
+        content: '▲';
+        margin-inline-end: 0.5ch;
+        font-size: 0.8em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-action {
+            transition:
+                --kp-bp-wv var(--fx-duration) var(--kp-sig-bp-feed),
+                --kp-bp-dmv calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed);
+        }
+    }
+

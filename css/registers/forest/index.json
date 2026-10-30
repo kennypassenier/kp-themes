@@ -2,96 +2,237 @@
   "output": "css/forest-register.css",
   "items": [
     {
-      "open": "/* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),\n   registered so the keyframes interpolate it; at the top level because\n   Firefox does not register an @property inside a layer. */\n@property --kp-fo-breath {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* How far a growth ring is drawn round what changed, 0 (nothing) to 360 deg\n   (all the way round), registered so the keyframes interpolate it. */\n@property --kp-fo-arc {\n    syntax: '<angle>';\n    inherits: false;\n    initial-value: 360deg;\n}\n\n/* How far the treatment of a ticking number has gone, 0 (nothing) to 1 (all of it). */\n@property --kp-fo-grown {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* How much of the treatment is left in the colour of a ticking number: 1 (all of it) cooling to 0 (the plain ink). */\n@property --kp-fo-ember {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* The skeleton block's and circle's one clock, 0 (bare ground) to 1 (the\n   finished treeline), registered so the keyframes interpolate it; it stays 1\n   standing still. At the top level for the same Firefox reason. */\n@property --kp-fo-grow {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@layer kp.register {\n",
+      "file": "properties.css"
+    },
+    {
+      "open": "@layer kp.register {\n",
       "files": [
+        "tokens/register.css",
         "base.css",
-        "the-hooks.css",
-        "the-hero.css",
-        "the-navbar.css",
-        "button.css",
-        "fields.css",
-        "card.css",
-        "data.css",
-        "motion-guarded.css"
+        "page-header/register.css",
+        "navbar/register.css",
+        "button/register.css",
+        "menu-button/register.css",
+        "upload-wizard/register.css",
+        "button/register-2.css",
+        "form-field/register.css",
+        "card/register.css",
+        "toast/register.css",
+        "alert.css",
+        "page-header/register-2.css",
+        "showing-data.css",
+        "small-patterns/register.css",
+        "tree-reorder-split/register.css",
+        "combobox/register.css",
+        "navbar/register-2.css",
+        "motion/register.css",
+        "navbar/register-3.css",
+        "sidenav/register.css",
+        "button/register-3.css",
+        "navbar/register-4.css",
+        "alarm/register.css"
       ],
       "close": "}\n\n"
     },
     {
       "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* forest's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/forest.css and research/signature-elements/themes/forest.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
       "files": [
-        "forests-grammar-as-tokens.css",
-        "the-spinner-plants-a-tree/base.css",
-        "the-spinner-plants-a-tree/growth.css",
-        "the-meter-with-a-mark-this.css",
-        "the-mark-past-the-end.css",
-        "activity-feed.css",
-        "skeleton-block-and-circle.css",
-        "live-change-lays-a-growth.css",
-        "the-leaf-corner.css",
-        "notes-are-italic.css",
-        "the-dashboard-port.css",
-        "forest-straightened/base.css",
-        "forest-straightened/tree.css",
-        "audit-round-research.css"
+        "tokens/signature.css",
+        "progress-spinner-skeleton/signature.css",
+        "switch.css",
+        "form-field/signature.css",
+        "toast/signature.css",
+        "dialog.css",
+        "popover.css",
+        "upload-wizard/signature.css",
+        "state-plate.css",
+        "motion/signature.css",
+        "progress-spinner-skeleton/signature-2.css",
+        "motion/signature-2.css",
+        "progress-spinner-skeleton/signature-3.css",
+        "motion/signature-3.css",
+        "meter.css",
+        "progress-spinner-skeleton/signature-4.css",
+        "state-word.css",
+        "card/signature.css",
+        "combobox/signature.css",
+        "key-figures/signature.css",
+        "menu-button/signature.css",
+        "tiles.css",
+        "key-figures/signature-2.css",
+        "month-heatmap/signature.css",
+        "motion/signature-4.css",
+        "drawer-tour/signature.css",
+        "navbar/signature.css",
+        "sidenav/signature.css",
+        "drawer-tour/signature-2.css",
+        "alarm/signature.css",
+        "datatable.css",
+        "month-heatmap/signature-2.css",
+        "motion/signature-5.css",
+        "tree-reorder-split/signature.css",
+        "menu-button/signature-2.css",
+        "month-heatmap/signature-3.css",
+        "motion/signature-6.css"
       ],
       "close": "}\n"
     },
     {
-      "file": "end-of-the-signature.css"
+      "open": "/* ── End of the signature ── */\n\n/* The code block is the layout layer's (css/layout.css sits after kp.signature, so\n   its 0.5rem radius wins over the plate list above). A block of code is a plate:\n   forest's leaf, 0 and the token (audit row 14). */\n@layer kp.layout {\n",
+      "files": [
+        "code-block/layout.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "segmented-toolbar.css"
+      "open": "/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "register.css"
+      "open": "@layer kp.register {\n",
+      "files": [
+        "tabbar.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/base.css"
+      "open": "/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the\n   week agenda and the run timeline [kpadopt2] ──\n   Forest's own (themes/forest/CHARACTER.md): a tile is a kraft card with the leaf corner (G6, Kenny's pick); pointing\n   is blazing, the dashed trail ring laid 2 px round the part, and a press closes the blaze in, 1 px and solid, and\n   nothing moves (G12); the field-note voice is italic beside upright titles and figures (G13); a tone is a field note,\n   a square tag on the status pair, its edge a short blaze (G5, G14); waiting is planting (G9): a waiting cell is the\n   treeline, a count with no room for a row plants one tree in three stages; a running run is a planted row with a\n   tree being planted at its growing head; the line for now is the clay trail mark. */\n@layer kp.signature {\n",
+      "files": [
+        "action-tiles.css",
+        "status-rows/signature.css",
+        "facet-list.css",
+        "heat-grid.css",
+        "run-timeline/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-dashboard-parts/the-dashboard-parts.css"
+      "open": "/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──\n   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a\n   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run\n   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the\n   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-six-opt-in-options.css"
+      "open": "/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──\n   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and\n   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).\n   Forest's own (themes/forest/CHARACTER.md): the separator is a twig, a green hairline with one leaf at\n   its head; lying down across the phone's list the leaf sits on its start. A day on the axis is a leaf: the small leaf\n   corner on its ground, pointing blazes it in the moss wash, pressed it is the green leaf with the trail's foot under it.\n   A series' finished run grows from the ground in its own colour; the facet pattern is a leaf of its hue. */\n@layer kp.signature {\n",
+      "files": [
+        "navbar/signature-2.css",
+        "run-timeline/signature-3.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-fourth-adoption-round.css"
+      "open": "/* ── The fourth adoption round in this theme [kpadopt4]: data pieces ──\n   Forest's own (themes/forest/CHARACTER.md): the ground is a map on kraft paper, what stands on it is the wood the map\n   describes. A mark or a tag is light wood with its grain, routed in (G7); a plate is kraft with the leaf corner (G6);\n   pointing is blazing, a dashed green ring laid 2 px round the part, a press closes it in solid, nothing moves (G12);\n   what the trail marks is clay, never green (G5, G14); the field-note voice is italic beside upright titles and figures\n   (G13); a live change lays a growth ring round it (G8); a trig point is a mark on a scale (G14). Every motion on the\n   growth curve and under no-preference (G1, G15). */\n@layer kp.signature {\n",
+      "files": [
+        "identity-mark.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "code-block/signature.css",
+        "motion/signature-7.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "rows-cards-and-choices.css"
+      "open": "/* ── Rows, cards and choices [kpadopt4]: tiles, status rows, the action list, secrets, dialogs ── */\n@layer kp.signature {\n",
+      "files": [
+        "forms.css",
+        "status-rows/signature-2.css",
+        "action-columns.css",
+        "small-patterns/signature.css",
+        "typed-confirmation.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "time-and-flows.css"
+      "open": "/* ── Time and flows [kpadopt4]: moments, the journey, the pipeline, the drawings ── */\n@layer kp.signature {\n",
+      "files": [
+        "run-timeline/signature-4.css",
+        "step-list.css",
+        "pipeline.css",
+        "small-patterns/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-calm-components.css"
+      "open": "/* ── The calm components and the seven new ones [kpadopt4] ── */\n@layer kp.signature {\n",
+      "files": [
+        "segmented-toolbar/signature-2.css",
+        "checklist-sink.css",
+        "kitchen-timers.css",
+        "wheel.css",
+        "uptime-strip.css",
+        "visual-timer.css",
+        "compare-slider.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "the-kpadopt5-and-kpadopt6.css"
+      "open": "/* ── The kpadopt5 and kpadopt6 components in forest [t56-forest-1018] ────────────────────────────────────────────────\n   What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */\n@layer kp.signature {\n",
+      "files": [
+        "request-inspector.css",
+        "auto-refresh.css",
+        "card/signature-2.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "t56-q.css"
+      "open": "/* ── t56-q: the failed chart is the failed plate ── */\n@layer kp.signature {\n",
+      "files": [
+        "time-chart/signature.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q/base.css"
+      "open": "/* ── end t56-q ── */\n\n/* ── t56-q: the too-early plate stays off the axis ── */\n@layer kp.signature {\n",
+      "files": [
+        "time-chart/signature-2.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q/end-t56-q.css"
+      "open": "/* ── end t56-q ── */\n\n/* ── t56-q2 confirm: Stop keeps its plate on the red card ── */\n@layer kp.signature {\n",
+      "files": [
+        "question-card.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-confirm.css"
+      "open": "/* ── end t56-q2 confirm ── */\n\n/* ── t56-q2 choose: the waiting picker's panel fits its room ── */\n@layer kp.signature {\n",
+      "files": [
+        "usual-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-choose.css"
+      "open": "/* ── end t56-q2 choose ── */\n\n/* ── t56-q2 schedule: the quiet buttons have a plate ── */\n@layer kp.signature {\n",
+      "files": [
+        "weekday-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/base.css"
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── t56-q2 schedule: the snooze tiles share one grid ── */\n@layer kp.signature {\n",
+      "files": [
+        "snooze-picker.css"
+      ],
+      "close": "}\n"
     },
     {
-      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+      "open": "/* ── end t56-q2 schedule ── */\n\n/* ── graph loading · shape 3 · The mushroom ring: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "graph-loading-r3-fr-load-3.css"
+      "open": "/* ── graph loading · r3-fr-load-3 · Fireflies trace the clearing (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */\n@layer kp.signature {\n",
+      "files": [
+        "graph/signature-2.css"
+      ],
+      "close": "}\n"
     }
   ]
 }

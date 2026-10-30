@@ -1,0 +1,34 @@
+/* @part: identity-mark: signature layer; also avatar */
+    /* Identity mark: a wooden tag with the leaf corner, its grain and its routed edge in the name's own colour; a round
+       one is a tree ring (a ring inside a ring); the current one in a list is ringed in solid green (the pick); the
+       glyph is a clay trig mark. */
+    [data-theme='forest'] .kp-idmark:not(.kp-idmark--round) {
+        --kp-idmark-radius: 0 min(var(--kp-sig-fo-leaf), calc(var(--kp-idmark-s) * 0.36));
+    }
+    [data-theme='forest'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) {
+        background-image: var(--kp-sig-fo-wood);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-idmark--round:not(.kp-skeleton, [data-kp-idmark-empty]) {
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px hsl(from var(--kp-idmark-c) h s l / 0.7);
+    }
+    [data-theme='forest'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        background: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='forest'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-idmark-group > :is(.kp-idmark, .kp-idmark-group__more) {
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='forest'] .kp-idmark-group__more {
+        border-radius: 0 min(var(--kp-sig-fo-leaf), calc(var(--kp-idmark-s) * 0.36));
+        font-style: italic;
+    }
+

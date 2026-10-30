@@ -1,0 +1,54 @@
+/* @part: upload-wizard: signature layer */
+    [data-theme='titanium'] .kp-wizard__steps {
+        gap: 0.5rem 0;
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1rem;
+        block-size: 1px;
+        margin-inline: 0.3rem 0.45rem;
+        background: var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li::before {
+        content: counter(kp-step, decimal-leading-zero);
+        inline-size: auto;
+        min-inline-size: 1.9rem;
+        block-size: 1.5rem;
+        padding-inline: 0.3rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow:
+            var(--kp-sig-ti-edge),
+            inset 0 0 0 1px var(--border-strong);
+        clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-wizard__steps li[data-state='current']::before {
+        background: var(--primary);
+        box-shadow: var(--kp-sig-ti-edge);
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
