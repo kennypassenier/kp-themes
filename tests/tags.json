@@ -375,6 +375,7 @@
         { "path": "js/segmented.js", "tags": ["@component:data"], "why": "the segmented control and filter chips [kpadopt-controls]" },
         { "path": "js/segmented/*.js", "tags": ["@component:data"] },
         { "path": "js/toolbar.js", "tags": ["@component:data"], "why": "the list toolbar [kpadopt-controls]" },
+        { "path": "js/toolbar/*.js", "tags": ["@component:data"], "why": "the list toolbar [kpadopt-controls]" },
         { "path": "js/heat.js", "tags": ["@component:data"], "why": "the heat grid and the matrix [kpadopt2-grids]" },
         { "path": "js/heat/*.js", "tags": ["@component:data"], "why": "the heat grid and the matrix [kpadopt2-grids]" },
         { "path": "js/busy-card.js", "tags": ["@component:data"], "why": "the busy table's loading card over any data area [kpadopt2]" },
