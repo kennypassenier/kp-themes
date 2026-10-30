@@ -1,13 +1,4 @@
-/** The scrollers this module looks after. */
-export declare const FOLLOW = "[data-kp-follow]";
-/** Fired on the scroller when following starts or stops, or the count changes: `{ following, paused, unseen }`. */
-export declare const FOLLOW_EVENT = "kp-follow-change";
-/** Fired on the scroller when the pill is pressed: `{ unseen }`. */
-export declare const NEWPILL_JUMP_EVENT = "kp-newpill-jump";
-/** px from the end that still count as following. */
-export declare const FOLLOW_THRESHOLD = 24;
-/** How often a screen reader hears the count [ms]. */
-export declare const NEWPILL_SAY_MS = 10000;
+export { FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS } from './newpill/values.js';
 export type NewPillOptions = {
     follow?: 'tail' | 'head';
     threshold?: number;
@@ -43,6 +34,25 @@ export type NewPillHandle = {
     unseen: () => number;
     following: () => boolean;
 };
+/**
+ * @typedef {object} NewPillOptions
+ * @property {'tail' | 'head'} [follow]
+ * @property {number} [threshold]
+ * @property {'bottom' | 'top'} [placement]
+ * @property {string} [unit] "line,lines"
+ * @property {boolean} [sinceLeft]
+ * @property {string} [key]
+ * @property {boolean} [space]
+ * @property {'children' | 'tbody'} [rows] where the rows arrive: the scroller's children (default) or the rows of a table body inside it
+ */
+/**
+ * @typedef {object} NewPillHandle
+ * @property {() => void} pause stop following; new rows are counted
+ * @property {() => void} resume jump to the end and follow
+ * @property {() => void} jump same as resume
+ * @property {() => number} unseen how many shown rows arrived out of sight
+ * @property {() => boolean} following
+ */
 /**
  * The handle of a scroller.
  * @param {Element} el

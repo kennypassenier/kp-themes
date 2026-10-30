@@ -27830,6 +27830,454 @@ var init_selection_bar = __esm({
   }
 });
 
+// js/newpill/parts.js
+function buildPill(doc, placement) {
+  const pill = (
+    /** @type {HTMLButtonElement} */
+    doc.createElement("button")
+  );
+  pill.type = "button";
+  pill.className = "kp-newpill kp-button";
+  pill.setAttribute("data-kp-pill-placement", placement);
+  pill.hidden = true;
+  const number = doc.createElement("span");
+  number.className = "kp-newpill__count";
+  const back = doc.createElement("span");
+  back.className = "kp-newpill__back";
+  pill.append(number, back);
+  const live4 = doc.createElement("div");
+  live4.className = "kp-sr-only";
+  live4.setAttribute("role", "status");
+  live4.setAttribute("aria-live", "polite");
+  return { pill, number, back, live: live4 };
+}
+var init_parts2 = __esm({
+  "js/newpill/parts.js"() {
+    "use strict";
+  }
+});
+
+// js/newpill/values.js
+var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, LEAVE_FALLBACK_MS, DIVIDER_COLSPAN;
+var init_values8 = __esm({
+  "js/newpill/values.js"() {
+    "use strict";
+    FOLLOW = "[data-kp-follow]";
+    FOLLOW_EVENT = "kp-follow-change";
+    NEWPILL_JUMP_EVENT = "kp-newpill-jump";
+    FOLLOW_THRESHOLD = 24;
+    NEWPILL_SAY_MS = 1e4;
+    LEAVE_FALLBACK_MS = 700;
+    DIVIDER_COLSPAN = 99;
+  }
+});
+
+// js/newpill/options.js
+function readNewPillOptions(el16, options) {
+  const strings = getStrings();
+  const head = (options.follow ?? el16.getAttribute("data-kp-follow")) === "head";
+  const unitRaw = (options.unit ?? el16.getAttribute("data-kp-pill-unit") ?? "").split(/[,/]/).map((w) => w.trim());
+  return {
+    strings,
+    head,
+    threshold: options.threshold ?? (Number(el16.getAttribute("data-kp-follow-threshold")) || FOLLOW_THRESHOLD),
+    unitOne: unitRaw[0] || strings.newpillUnitOne,
+    unitMany: unitRaw[1] || (unitRaw[0] ? `${unitRaw[0]}s` : strings.newpillUnitMany),
+    keyName: options.key ?? el16.getAttribute("data-kp-follow-key") ?? (head ? "Home" : "End"),
+    space: options.space ?? el16.hasAttribute("data-kp-follow-space"),
+    inTbody: (options.rows ?? el16.getAttribute("data-kp-follow-rows")) === "tbody"
+  };
+}
+function placementOf(el16, options, head) {
+  const asked = options.placement ?? el16.getAttribute("data-kp-pill-placement");
+  return asked === "top" ? "top" : asked === "bottom" ? "bottom" : head ? "top" : "bottom";
+}
+function sinceLeftOf(el16, options) {
+  return options.sinceLeft ?? !["off", "false"].includes(el16.getAttribute("data-kp-since-left") ?? "");
+}
+var init_options3 = __esm({
+  "js/newpill/options.js"() {
+    "use strict";
+    init_strings();
+    init_values8();
+  }
+});
+
+// js/newpill/core.js
+var NewPillCore;
+var init_core7 = __esm({
+  "js/newpill/core.js"() {
+    "use strict";
+    init_controller();
+    init_parts2();
+    init_options3();
+    NewPillCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host the scroller
+       * @param {NewPillOptions} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.doc = host.ownerDocument;
+        this.view = this.doc.defaultView;
+        this.pillOptions = options;
+        this.read = readNewPillOptions(host, options);
+        this.strings = this.read.strings;
+        this.head = this.read.head;
+        const { pill, number, back, live: live4 } = buildPill(this.doc, this.placementNow());
+        this.pill = pill;
+        this.number = number;
+        this.back = back;
+        this.live = live4;
+        this.following = true;
+        this.paused = false;
+        this.unseen = /* @__PURE__ */ new Set();
+        this.programmatic = false;
+        this.known = /* @__PURE__ */ new Set();
+        this.lastSaid = 0;
+        this.sayLater = void 0;
+      }
+      /** Set whether the list follows its end and whether the reader paused it. @param {boolean} following @param {boolean} paused */
+      setFollowing(following, paused) {
+        this.following = following;
+        this.paused = paused;
+      }
+      /** The pill's end, read from the page's options and the attribute. */
+      placementNow() {
+        return placementOf(this.host, this.pillOptions, this.head);
+      }
+      /** How many unseen rows are still shown. */
+      count() {
+        return [...this.unseen].filter((row) => row.isConnected && !/** @type {HTMLElement} */
+        row.hidden && !row.closest("[hidden]")).length;
+      }
+      atEnd() {
+        const el16 = this.host;
+        return this.head ? el16.scrollTop <= this.read.threshold : el16.scrollHeight - el16.clientHeight - el16.scrollTop <= this.read.threshold;
+      }
+      /** Scroll to the end the rows arrive at, without it reading as the reader leaving. */
+      toEnd() {
+        const { view } = this;
+        this.programmatic = true;
+        this.host.scrollTop = this.head ? 0 : this.host.scrollHeight;
+        view?.requestAnimationFrame(() => view.requestAnimationFrame(() => this.programmatic = false));
+      }
+      /** The buttons that pause and resume this list. */
+      toggles() {
+        const { id } = this.host;
+        return (
+          /** @type {HTMLElement[]} */
+          id ? [...this.doc.querySelectorAll(`[data-kp-follow-toggle="${id}"]`)] : []
+        );
+      }
+      /** Whether the list is following and not paused. */
+      isFollowing() {
+        return this.following && !this.paused;
+      }
+    };
+  }
+});
+
+// js/newpill/draw.js
+var NewPillDraw;
+var init_draw5 = __esm({
+  "js/newpill/draw.js"() {
+    "use strict";
+    init_core7();
+    init_values8();
+    NewPillDraw = class extends NewPillCore {
+      /** The pill is ruled in, and taken out the way it came [prefers-reduced-motion: at once]. @param {boolean} on */
+      show(on) {
+        const { pill, view } = this;
+        const reduce = typeof view?.matchMedia === "function" && view.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (on) {
+          pill.removeAttribute("data-kp-leaving");
+          pill.hidden = false;
+          return;
+        }
+        if (pill.hidden || pill.hasAttribute("data-kp-leaving")) return;
+        if (reduce) {
+          pill.hidden = true;
+          return;
+        }
+        pill.setAttribute("data-kp-leaving", "");
+        const finish2 = () => {
+          if (!pill.hasAttribute("data-kp-leaving")) return;
+          pill.removeAttribute("data-kp-leaving");
+          pill.hidden = true;
+        };
+        pill.addEventListener("animationend", finish2, { once: true });
+        view?.setTimeout(finish2, LEAVE_FALLBACK_MS);
+      }
+      /** The unit word for a count. @param {number} n */
+      unitFor(n) {
+        return n === 1 ? this.read.unitOne : this.read.unitMany;
+      }
+      /** The pause buttons say what they will do. */
+      paintToggles() {
+        const { strings } = this;
+        const off = this.paused || !this.following;
+        for (const toggle2 of this.toggles()) {
+          toggle2.setAttribute("aria-pressed", String(off));
+          toggle2.textContent = off ? strings.newpillResume : strings.newpillPause;
+        }
+      }
+      draw() {
+        if (this.destroyed) return;
+        const { strings, number, back, host } = this;
+        const n = this.count();
+        this.show(n > 0);
+        if (n > 0) {
+          number.textContent = strings.newpillNew(n, this.unitFor(n));
+          back.textContent = this.head ? strings.newpillBackHead : strings.newpillBackTail;
+        }
+        host.setAttribute("data-kp-following", String(this.isFollowing()));
+        this.paintToggles();
+        host.dispatchEvent(new CustomEvent(FOLLOW_EVENT, { bubbles: true, detail: { following: this.isFollowing(), paused: this.paused, unseen: n } }));
+        if (n > 0) this.sayCount();
+      }
+      /** A screen reader hears the count now and then, not on every row. */
+      sayCount() {
+        const wait = NEWPILL_SAY_MS - (performance.now() - this.lastSaid);
+        if (wait <= 0) this.say();
+        else if (this.sayLater === void 0) {
+          this.sayLater = this.view?.setTimeout(() => {
+            this.sayLater = void 0;
+            this.say();
+          }, wait);
+        }
+      }
+      say() {
+        this.lastSaid = performance.now();
+        const m = this.count();
+        if (m > 0) this.live.textContent = this.strings.newpillAnnounce(m, this.unitFor(m));
+      }
+    };
+  }
+});
+
+// js/newpill/away.js
+var NewPillAway;
+var init_away = __esm({
+  "js/newpill/away.js"() {
+    "use strict";
+    init_draw5();
+    init_options3();
+    init_values8();
+    NewPillAway = class extends NewPillDraw {
+      /**
+       * @param {HTMLElement} host the scroller
+       * @param {import('../newpill.js').NewPillOptions} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.hiddenAt = 0;
+        this.firstAway = null;
+      }
+      /** A row came in: the first one that came while the tab was away is where the divider goes. @param {Element} node */
+      noteRow(node) {
+        if (this.hiddenAt && !this.firstAway) this.firstAway = node;
+      }
+      onVisibility() {
+        if (!sinceLeftOf(this.host, this.pillOptions)) return;
+        if (this.doc.visibilityState === "hidden") {
+          this.noteAway();
+          return;
+        }
+        if (!this.hiddenAt) return;
+        const row = this.firstAway;
+        const left = new Date(this.hiddenAt);
+        this.hiddenAt = 0;
+        this.firstAway = null;
+        const selector = this.read.inTbody ? ".kp-newpill__since" : ":scope > .kp-newpill__since";
+        for (const old of this.host.querySelectorAll(selector)) old.remove();
+        if (!row || !row.isConnected) return;
+        row.before(this.divider(row, left));
+      }
+      /** The tab went away: remember when, and wait for the first row that comes. */
+      noteAway() {
+        this.hiddenAt = Date.now();
+        this.firstAway = null;
+      }
+      /** @param {Element} row @param {Date} left */
+      divider(row, left) {
+        const el16 = this.host;
+        const tag = row.tagName === "TR" ? "tr" : el16.tagName === "UL" || el16.tagName === "OL" ? "li" : el16.tagName === "TBODY" ? "tr" : "div";
+        const line = this.doc.createElement(tag);
+        line.className = "kp-newpill__since";
+        line.setAttribute("role", "separator");
+        const time = `${String(left.getHours()).padStart(2, "0")}:${String(left.getMinutes()).padStart(2, "0")}`;
+        if (tag === "tr") {
+          const cell = this.doc.createElement("td");
+          cell.colSpan = DIVIDER_COLSPAN;
+          cell.textContent = this.strings.newpillSince(time);
+          line.append(cell);
+        } else line.textContent = this.strings.newpillSince(time);
+        return line;
+      }
+    };
+  }
+});
+
+// js/newpill/rows.js
+var isRow, isTableRow, rowKeyOf;
+var init_rows3 = __esm({
+  "js/newpill/rows.js"() {
+    "use strict";
+    isRow = (el16) => !el16.classList.contains("kp-newpill__since") && !el16.hasAttribute("data-kp-newpill-skip");
+    isTableRow = (el16) => el16.tagName === "TR" && isRow(el16) && !el16.matches("[data-kp-row-detail], [data-kp-row-group], [data-kp-row-hidden]");
+    rowKeyOf = (row) => (
+      /** @type {HTMLElement} */
+      row.dataset?.kpRowKey || row.id || ""
+    );
+  }
+});
+
+// js/newpill/controller.js
+var NewPill;
+var init_controller16 = __esm({
+  "js/newpill/controller.js"() {
+    "use strict";
+    init_live_options();
+    init_away();
+    init_rows3();
+    init_values8();
+    NewPill = class extends NewPillAway {
+      /**
+       * @param {HTMLElement} host the scroller
+       * @param {NewPillOptions} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.handle = {
+          pause: () => this.pause(),
+          resume: () => this.jump(),
+          jump: () => this.jump(),
+          unseen: () => this.count(),
+          following: () => this.isFollowing()
+        };
+      }
+      connect() {
+        const { host, doc, view, pill, live: live4 } = this;
+        this.own(() => host.removeAttribute("data-kp-following"));
+        this.own(() => live4.remove());
+        this.own(() => pill.remove());
+        this.own(() => view?.clearTimeout(this.sayLater));
+        host.parentElement?.setAttribute("data-kp-newpill-host", "");
+        host.parentElement?.append(pill, live4);
+        this.seedKnown();
+        this.watchRows();
+        this.listen(host, "scroll", () => this.onScroll(), { passive: true });
+        this.listen(host, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(pill, "click", () => this.jump());
+        this.listen(doc, "click", (event) => this.onToggle(event));
+        this.listen(doc, "visibilitychange", () => this.onVisibility());
+        view?.requestAnimationFrame(() => view.requestAnimationFrame(() => this.openAtEnd()));
+        this.draw();
+        const stop = watchOptions(host, ["data-kp-pill-placement"], () => pill.setAttribute("data-kp-pill-placement", this.placementNow()));
+        this.own(stop);
+      }
+      openAtEnd() {
+        if (!this.destroyed && this.isFollowing() && this.host.scrollHeight > this.host.clientHeight) this.toEnd();
+      }
+      /** In `tbody` mode the rows already there are known, so a sort or a filter that brings them back counts none. */
+      seedKnown() {
+        if (!this.read.inTbody) return;
+        for (const row of this.host.querySelectorAll("tbody > tr")) if (isTableRow(row) && rowKeyOf(row)) this.known.add(rowKeyOf(row));
+      }
+      watchRows() {
+        const { view, host } = this;
+        if (!view || !("MutationObserver" in view)) return;
+        const observer = this.observe(new view.MutationObserver((records) => this.onRows(records)));
+        observer.observe(host, this.read.inTbody ? { childList: true, subtree: true } : { childList: true });
+      }
+      /** Whether a node added to the list is a new row to count. @param {MutationRecord} record @param {Node} node */
+      isNewRow(record, node) {
+        if (!(node instanceof Element)) return false;
+        if (!this.read.inTbody) return isRow(node);
+        if (!(record.target instanceof Element) || record.target.tagName !== "TBODY" || !isTableRow(node)) return false;
+        const key = rowKeyOf(node);
+        if (key && this.known.has(key)) return false;
+        if (key) this.known.add(key);
+        return true;
+      }
+      /** @param {MutationRecord[]} records */
+      onRows(records) {
+        let added = false;
+        for (const record of records) {
+          for (const node of record.addedNodes) {
+            if (!this.isNewRow(record, node)) continue;
+            added = true;
+            this.noteRow(
+              /** @type {Element} */
+              node
+            );
+            if (!this.isFollowing()) this.unseen.add(
+              /** @type {Element} */
+              node
+            );
+          }
+        }
+        if (!added) return;
+        if (this.isFollowing()) this.toEnd();
+        this.draw();
+      }
+      jump() {
+        this.setFollowing(true, false);
+        this.unseen.clear();
+        this.toEnd();
+        this.draw();
+        this.host.dispatchEvent(new CustomEvent(NEWPILL_JUMP_EVENT, { bubbles: true, detail: { unseen: 0 } }));
+      }
+      pause() {
+        this.setFollowing(false, true);
+        this.draw();
+      }
+      /** The reader scrolled: away from the end stops following, back to it follows again. */
+      onScroll() {
+        if (this.programmatic) return;
+        if (this.atEnd()) {
+          if (!this.following || this.paused) {
+            this.setFollowing(true, false);
+            this.unseen.clear();
+            this.draw();
+          }
+        } else if (this.following) {
+          this.setFollowing(false, this.paused);
+          this.draw();
+        }
+      }
+      /** Jump back to the tail, or pause and resume with Space. @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        const target = event.target instanceof Element ? event.target : null;
+        if (target?.closest("input, textarea, select, button, a")) return;
+        if (event.key === this.read.keyName) {
+          event.preventDefault();
+          this.jump();
+        } else if (this.read.space && event.key === " ") {
+          event.preventDefault();
+          this.toggle();
+        }
+      }
+      /** Resume when paused or away from the end, otherwise pause. */
+      toggle() {
+        if (this.paused || !this.following) this.jump();
+        else this.pause();
+      }
+      /** @param {Event} event */
+      onToggle(event) {
+        const toggle2 = event.target instanceof Element ? event.target.closest("[data-kp-follow-toggle]") : null;
+        if (!toggle2 || toggle2.getAttribute("data-kp-follow-toggle") !== this.host.id) return;
+        this.toggle();
+      }
+    };
+  }
+});
+
 // js/newpill.js
 var newpill_exports = {};
 __export(newpill_exports, {
@@ -27842,268 +28290,18 @@ __export(newpill_exports, {
   newPill: () => newPill
 });
 function newPill(el16) {
-  return HANDLES2.get(el16) ?? null;
-}
-function attachOne2(el16, options) {
-  if (HANDLES2.has(el16)) return () => void 0;
-  const doc = el16.ownerDocument;
-  const view = doc.defaultView;
-  const strings = getStrings();
-  const head = (options.follow ?? el16.getAttribute("data-kp-follow")) === "head";
-  const threshold = options.threshold ?? (Number(el16.getAttribute("data-kp-follow-threshold")) || FOLLOW_THRESHOLD);
-  const placementNow = () => {
-    const asked = options.placement ?? el16.getAttribute("data-kp-pill-placement");
-    return asked === "top" ? "top" : asked === "bottom" ? "bottom" : head ? "top" : "bottom";
-  };
-  const unitRaw = (options.unit ?? el16.getAttribute("data-kp-pill-unit") ?? "").split(/[,/]/).map((w) => w.trim());
-  const unitOne = unitRaw[0] || strings.newpillUnitOne;
-  const unitMany = unitRaw[1] || (unitRaw[0] ? `${unitRaw[0]}s` : strings.newpillUnitMany);
-  const sinceLeft = () => options.sinceLeft ?? !["off", "false"].includes(el16.getAttribute("data-kp-since-left") ?? "");
-  const keyName2 = options.key ?? el16.getAttribute("data-kp-follow-key") ?? (head ? "Home" : "End");
-  const space = options.space ?? el16.hasAttribute("data-kp-follow-space");
-  const inTbody = (options.rows ?? el16.getAttribute("data-kp-follow-rows")) === "tbody";
-  const host = el16.parentElement;
-  host?.setAttribute("data-kp-newpill-host", "");
-  const pill = (
-    /** @type {HTMLButtonElement} */
-    doc.createElement("button")
-  );
-  pill.type = "button";
-  pill.className = "kp-newpill kp-button";
-  pill.setAttribute("data-kp-pill-placement", placementNow());
-  const stopOptions = watchOptions(el16, ["data-kp-pill-placement"], () => pill.setAttribute("data-kp-pill-placement", placementNow()));
-  pill.hidden = true;
-  const number = doc.createElement("span");
-  number.className = "kp-newpill__count";
-  const back = doc.createElement("span");
-  back.className = "kp-newpill__back";
-  pill.append(number, back);
-  const live4 = doc.createElement("div");
-  live4.className = "kp-sr-only";
-  live4.setAttribute("role", "status");
-  live4.setAttribute("aria-live", "polite");
-  host?.append(pill, live4);
-  let following = true;
-  let paused = false;
-  const unseen = /* @__PURE__ */ new Set();
-  let programmatic = false;
-  const known4 = /* @__PURE__ */ new Set();
-  if (inTbody) {
-    for (const row of el16.querySelectorAll("tbody > tr")) if (isTableRow(row) && rowKeyOf(row)) known4.add(rowKeyOf(row));
-  }
-  let lastSaid = 0;
-  let sayLater;
-  const count2 = () => [...unseen].filter((row) => row.isConnected && !/** @type {HTMLElement} */
-  row.hidden && !row.closest("[hidden]")).length;
-  const atEnd = () => head ? el16.scrollTop <= threshold : el16.scrollHeight - el16.clientHeight - el16.scrollTop <= threshold;
-  const toEnd = () => {
-    programmatic = true;
-    el16.scrollTop = head ? 0 : el16.scrollHeight;
-    view?.requestAnimationFrame(() => view.requestAnimationFrame(() => programmatic = false));
-  };
-  const toggles = () => (
-    /** @type {HTMLElement[]} */
-    el16.id ? [...doc.querySelectorAll(`[data-kp-follow-toggle="${el16.id}"]`)] : []
-  );
-  const show = (on) => {
-    const reduce = typeof view?.matchMedia === "function" && view.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (on) {
-      pill.removeAttribute("data-kp-leaving");
-      pill.hidden = false;
-      return;
-    }
-    if (pill.hidden || pill.hasAttribute("data-kp-leaving")) return;
-    if (reduce) {
-      pill.hidden = true;
-      return;
-    }
-    pill.setAttribute("data-kp-leaving", "");
-    const finish2 = () => {
-      if (!pill.hasAttribute("data-kp-leaving")) return;
-      pill.removeAttribute("data-kp-leaving");
-      pill.hidden = true;
-    };
-    pill.addEventListener("animationend", finish2, { once: true });
-    view?.setTimeout(finish2, 700);
-  };
-  const draw7 = () => {
-    const n = count2();
-    show(n > 0);
-    if (n > 0) {
-      number.textContent = strings.newpillNew(n, n === 1 ? unitOne : unitMany);
-      back.textContent = head ? strings.newpillBackHead : strings.newpillBackTail;
-    }
-    el16.setAttribute("data-kp-following", String(following && !paused));
-    for (const toggle2 of toggles()) {
-      const off = paused || !following;
-      toggle2.setAttribute("aria-pressed", String(off));
-      toggle2.textContent = off ? strings.newpillResume : strings.newpillPause;
-    }
-    el16.dispatchEvent(new CustomEvent(FOLLOW_EVENT, { bubbles: true, detail: { following: following && !paused, paused, unseen: n } }));
-    if (n > 0) {
-      const now = performance.now();
-      const wait = NEWPILL_SAY_MS - (now - lastSaid);
-      const say17 = () => {
-        lastSaid = performance.now();
-        const m = count2();
-        if (m > 0) live4.textContent = strings.newpillAnnounce(m, m === 1 ? unitOne : unitMany);
-      };
-      if (wait <= 0) say17();
-      else if (sayLater === void 0) {
-        sayLater = view?.setTimeout(() => {
-          sayLater = void 0;
-          say17();
-        }, wait);
-      }
-    }
-  };
-  const jump = () => {
-    paused = false;
-    following = true;
-    unseen.clear();
-    toEnd();
-    draw7();
-    el16.dispatchEvent(new CustomEvent(NEWPILL_JUMP_EVENT, { bubbles: true, detail: { unseen: 0 } }));
-  };
-  const pause = () => {
-    paused = true;
-    following = false;
-    draw7();
-  };
-  let hiddenAt = 0;
-  let firstAway = null;
-  const observer = view && "MutationObserver" in view ? new view.MutationObserver((records) => {
-    let added = false;
-    for (const record of records) {
-      for (const node of record.addedNodes) {
-        if (!(node instanceof Element)) continue;
-        if (inTbody) {
-          if (!(record.target instanceof Element) || record.target.tagName !== "TBODY" || !isTableRow(node)) continue;
-          const key = rowKeyOf(node);
-          if (key && known4.has(key)) continue;
-          if (key) known4.add(key);
-        } else if (!isRow(node)) continue;
-        added = true;
-        if (hiddenAt && !firstAway) firstAway = node;
-        if (!(following && !paused)) unseen.add(node);
-      }
-    }
-    if (!added) return;
-    if (following && !paused) toEnd();
-    draw7();
-  }) : null;
-  observer?.observe(el16, inTbody ? { childList: true, subtree: true } : { childList: true });
-  const onScroll = () => {
-    if (programmatic) return;
-    if (atEnd()) {
-      if (!following || paused) {
-        paused = false;
-        following = true;
-        unseen.clear();
-        draw7();
-      }
-    } else if (following) {
-      following = false;
-      draw7();
-    }
-  };
-  const onKey5 = (event) => {
-    if (event.ctrlKey || event.metaKey || event.altKey) return;
-    const target = event.target instanceof Element ? event.target : null;
-    if (target?.closest("input, textarea, select, button, a")) return;
-    if (event.key === keyName2) {
-      event.preventDefault();
-      jump();
-    } else if (space && event.key === " ") {
-      event.preventDefault();
-      if (paused || !following) jump();
-      else pause();
-    }
-  };
-  const onToggle = (event) => {
-    const toggle2 = event.target instanceof Element ? event.target.closest("[data-kp-follow-toggle]") : null;
-    if (!toggle2 || toggle2.getAttribute("data-kp-follow-toggle") !== el16.id) return;
-    if (paused || !following) jump();
-    else pause();
-  };
-  const onVisibility2 = () => {
-    if (!sinceLeft()) return;
-    if (doc.visibilityState === "hidden") {
-      hiddenAt = Date.now();
-      firstAway = null;
-      return;
-    }
-    if (!hiddenAt) return;
-    const row = firstAway;
-    const left = new Date(hiddenAt);
-    hiddenAt = 0;
-    firstAway = null;
-    for (const old of el16.querySelectorAll(inTbody ? ".kp-newpill__since" : ":scope > .kp-newpill__since")) old.remove();
-    if (!row || !row.isConnected) return;
-    const tag = row.tagName === "TR" ? "tr" : el16.tagName === "UL" || el16.tagName === "OL" ? "li" : el16.tagName === "TBODY" ? "tr" : "div";
-    const line = doc.createElement(tag);
-    line.className = "kp-newpill__since";
-    line.setAttribute("role", "separator");
-    const time = `${String(left.getHours()).padStart(2, "0")}:${String(left.getMinutes()).padStart(2, "0")}`;
-    if (tag === "tr") {
-      const cell = doc.createElement("td");
-      cell.colSpan = 99;
-      cell.textContent = strings.newpillSince(time);
-      line.append(cell);
-    } else line.textContent = strings.newpillSince(time);
-    row.before(line);
-  };
-  el16.addEventListener("scroll", onScroll, { passive: true });
-  el16.addEventListener("keydown", onKey5);
-  pill.addEventListener("click", jump);
-  doc.addEventListener("click", onToggle);
-  doc.addEventListener("visibilitychange", onVisibility2);
-  view?.requestAnimationFrame(() => view.requestAnimationFrame(() => following && !paused && el16.scrollHeight > el16.clientHeight && toEnd()));
-  draw7();
-  HANDLES2.set(el16, { pause, resume: jump, jump, unseen: count2, following: () => following && !paused });
-  return () => {
-    stopOptions();
-    observer?.disconnect();
-    el16.removeEventListener("scroll", onScroll);
-    el16.removeEventListener("keydown", onKey5);
-    doc.removeEventListener("click", onToggle);
-    doc.removeEventListener("visibilitychange", onVisibility2);
-    view?.clearTimeout(sayLater);
-    pill.remove();
-    live4.remove();
-    el16.removeAttribute("data-kp-following");
-    HANDLES2.delete(el16);
-  };
+  return controllerOf(el16, NewPill)?.handle ?? null;
 }
 function attachNewPills(root = document, options = {}) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(FOLLOW) ? [root] : [],
-      ...root.querySelectorAll(FOLLOW)
-    ]
-  );
-  const undo = found.map((el16) => attachOne2(el16, options));
-  return () => undo.forEach((u) => u());
+  return attachAll(root, FOLLOW, NewPill, options);
 }
-var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, HANDLES2, isRow, isTableRow, rowKeyOf;
 var init_newpill = __esm({
   "js/newpill.js"() {
     "use strict";
-    init_strings();
-    init_live_options();
-    FOLLOW = "[data-kp-follow]";
-    FOLLOW_EVENT = "kp-follow-change";
-    NEWPILL_JUMP_EVENT = "kp-newpill-jump";
-    FOLLOW_THRESHOLD = 24;
-    NEWPILL_SAY_MS = 1e4;
-    HANDLES2 = /* @__PURE__ */ new WeakMap();
-    isRow = (el16) => !el16.classList.contains("kp-newpill__since") && !el16.hasAttribute("data-kp-newpill-skip");
-    isTableRow = (el16) => el16.tagName === "TR" && isRow(el16) && !el16.matches("[data-kp-row-detail], [data-kp-row-group], [data-kp-row-hidden]");
-    rowKeyOf = (row) => (
-      /** @type {HTMLElement} */
-      row.dataset?.kpRowKey || row.id || ""
-    );
+    init_controller();
+    init_controller16();
+    init_values8();
+    init_values8();
   }
 });
 
@@ -29026,7 +29224,7 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
@@ -29268,7 +29466,7 @@ var init_api9 = __esm({
     "use strict";
     init_controller();
     init_constants12();
-    init_controller16();
+    init_controller17();
   }
 });
 
@@ -29736,7 +29934,7 @@ var init_list2 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -29861,7 +30059,7 @@ var init_api10 = __esm({
     init_card_state();
     init_controller();
     init_strings();
-    init_controller17();
+    init_controller18();
     init_format2();
     init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
@@ -29893,7 +30091,7 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller17();
+    init_controller18();
     init_format2();
     init_format2();
     init_api10();
@@ -30333,7 +30531,7 @@ function paint3(root) {
   }
 }
 var LABEL_MIN, LABEL_COMFORT, LABEL_MAX2;
-var init_draw5 = __esm({
+var init_draw6 = __esm({
   "js/wheel/draw.js"() {
     "use strict";
     init_strings();
@@ -30502,7 +30700,7 @@ var init_spin = __esm({
     init_busy_card();
     init_calm();
     init_strings();
-    init_draw5();
+    init_draw6();
     init_state11();
     reduced3 = () => !motionAllowed();
   }
@@ -30510,11 +30708,11 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
-    init_draw5();
+    init_draw6();
     init_spin();
     init_state11();
     WheelControl = class extends Controller {
@@ -30575,7 +30773,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller18();
+    init_controller19();
     init_state11();
     init_state11();
     init_spin();
@@ -31258,7 +31456,7 @@ function buildParts2(doc) {
   said.setAttribute("role", "status");
   return { title, time, digits, spoken, line, said };
 }
-var init_parts2 = __esm({
+var init_parts3 = __esm({
   "js/countdown/parts.js"() {
     "use strict";
   }
@@ -31303,7 +31501,7 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
@@ -31314,7 +31512,7 @@ var init_controller19 = __esm({
     init_clock();
     init_digits();
     init_duration();
-    init_parts2();
+    init_parts3();
     init_until();
     init_zones();
     CountdownController = class extends Controller {
@@ -31537,7 +31735,7 @@ var init_api11 = __esm({
     "use strict";
     init_controller();
     init_constants15();
-    init_controller19();
+    init_controller20();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -31574,7 +31772,7 @@ var init_countdown = __esm({
     init_zones();
     init_until();
     init_clock();
-    init_parts2();
+    init_parts3();
     init_api11();
   }
 });
@@ -33970,7 +34168,7 @@ function say7(list, message) {
   setTimeout(() => region.textContent = message, 60);
 }
 var el8;
-var init_parts3 = __esm({
+var init_parts4 = __esm({
   "js/checklist/parts.js"() {
     "use strict";
     el8 = (className, tag = "div") => {
@@ -34057,10 +34255,10 @@ function rowFor(row, item) {
   return row;
 }
 var shownOrder;
-var init_rows3 = __esm({
+var init_rows4 = __esm({
   "js/checklist/rows.js"() {
     "use strict";
-    init_parts3();
+    init_parts4();
     init_state14();
     shownOrder = (list, items) => sinks(list) ? [...items.filter((i) => !i.checked), ...items.filter((i) => i.checked)] : items;
   }
@@ -34230,8 +34428,8 @@ var init_render = __esm({
     init_calm();
     init_state_plate();
     init_strings();
-    init_parts3();
-    init_rows3();
+    init_parts4();
+    init_rows4();
     init_state14();
     HEADING_LEVEL = 3;
     HEADING_MIN = 2;
@@ -34302,7 +34500,7 @@ var init_api13 = __esm({
     "use strict";
     init_busy_card();
     init_strings();
-    init_parts3();
+    init_parts4();
     init_render();
     init_state14();
     emit2 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
@@ -34311,15 +34509,15 @@ var init_api13 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_api13();
-    init_parts3();
+    init_parts4();
     init_render();
-    init_rows3();
+    init_rows4();
     init_state14();
     Checklist = class extends Controller {
       /** @param {HTMLElement} list */
@@ -34458,7 +34656,7 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller20();
+    init_controller21();
     init_state14();
     init_state14();
     init_api13();
@@ -34467,7 +34665,7 @@ var init_checklist = __esm({
 
 // js/quantity/values.js
 var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, HOLD_SLOW_REPEATS, PAGE_STEPS;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/quantity/values.js"() {
     "use strict";
     QUANTITY = "[data-kp-quantity]";
@@ -34713,7 +34911,7 @@ var init_paint5 = __esm({
   "js/quantity/paint.js"() {
     "use strict";
     init_strings();
-    init_values8();
+    init_values9();
     init_build3();
     init_math2();
     init_read3();
@@ -34722,11 +34920,11 @@ var init_paint5 = __esm({
 
 // js/quantity/controller.js
 var RELEASE_EVENTS, QuantityControl;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
-    init_values8();
+    init_values9();
     init_math2();
     init_paint5();
     init_read3();
@@ -34884,11 +35082,11 @@ var init_quantity = __esm({
   "js/quantity.js"() {
     "use strict";
     init_controller();
-    init_values8();
-    init_controller21();
+    init_values9();
+    init_controller22();
     init_math2();
     init_paint5();
-    init_values8();
+    init_values9();
     init_math2();
     init_read3();
   }
@@ -35103,7 +35301,7 @@ var init_constants17 = __esm({
 
 // js/sidenav/options.js
 var OPTIONS3;
-var init_options3 = __esm({
+var init_options4 = __esm({
   "js/sidenav/options.js"() {
     "use strict";
     OPTIONS3 = {
@@ -35379,7 +35577,7 @@ var init_basics = __esm({
   "js/sidenav/attach/basics.js"() {
     "use strict";
     init_remember();
-    init_options3();
+    init_options4();
     init_motion();
   }
 });
@@ -35467,7 +35665,7 @@ function installGeometry(c) {
 var init_geometry2 = __esm({
   "js/sidenav/attach/geometry.js"() {
     "use strict";
-    init_options3();
+    init_options4();
     init_constants17();
   }
 });
@@ -35552,7 +35750,7 @@ var init_shift = __esm({
   "js/sidenav/attach/shift.js"() {
     "use strict";
     init_helpers();
-    init_options3();
+    init_options4();
     init_constants17();
   }
 });
@@ -35614,7 +35812,7 @@ var init_launchers = __esm({
   "js/sidenav/attach/launchers.js"() {
     "use strict";
     init_constants17();
-    init_options3();
+    init_options4();
     init_strings();
     init_helpers();
   }
@@ -35669,7 +35867,7 @@ var init_backdrop = __esm({
   "js/sidenav/attach/backdrop.js"() {
     "use strict";
     init_motion();
-    init_options3();
+    init_options4();
     init_helpers();
   }
 });
@@ -35776,7 +35974,7 @@ var init_open2 = __esm({
   "js/sidenav/attach/open.js"() {
     "use strict";
     init_constants17();
-    init_options3();
+    init_options4();
     init_calm();
     init_helpers();
   }
@@ -35829,7 +36027,7 @@ function installSlim(c) {
 var init_slim = __esm({
   "js/sidenav/attach/slim.js"() {
     "use strict";
-    init_options3();
+    init_options4();
     init_strings();
     init_helpers();
     init_constants17();
@@ -35952,7 +36150,7 @@ var init_tip2 = __esm({
     "use strict";
     init_constants17();
     init_motion();
-    init_options3();
+    init_options4();
   }
 });
 
@@ -36054,7 +36252,7 @@ function installFlyout(c) {
 var init_flyout = __esm({
   "js/sidenav/attach/flyout.js"() {
     "use strict";
-    init_options3();
+    init_options4();
     init_helpers();
     init_constants17();
   }
@@ -36117,7 +36315,7 @@ function installPeek(c) {
 var init_peek = __esm({
   "js/sidenav/attach/peek.js"() {
     "use strict";
-    init_options3();
+    init_options4();
   }
 });
 
@@ -36204,7 +36402,7 @@ function installControls(c) {
 var init_controls = __esm({
   "js/sidenav/attach/controls.js"() {
     "use strict";
-    init_options3();
+    init_options4();
     init_helpers();
     init_remember();
   }
@@ -36295,7 +36493,7 @@ function installNarrow(c) {
 var init_narrow = __esm({
   "js/sidenav/attach/narrow.js"() {
     "use strict";
-    init_options3();
+    init_options4();
     init_constants17();
   }
 });
@@ -36408,7 +36606,7 @@ function installResizer(c) {
 var init_resizer = __esm({
   "js/sidenav/attach/resizer.js"() {
     "use strict";
-    init_options3();
+    init_options4();
     init_strings();
     init_constants17();
   }
@@ -36487,7 +36685,7 @@ var init_rail = __esm({
   "js/sidenav/attach/rail.js"() {
     "use strict";
     init_constants17();
-    init_options3();
+    init_options4();
   }
 });
 
@@ -36789,7 +36987,7 @@ function installHandle(c) {
 var init_handle = __esm({
   "js/sidenav/attach/handle.js"() {
     "use strict";
-    init_options3();
+    init_options4();
     init_constants17();
   }
 });
@@ -36874,7 +37072,7 @@ var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
     init_constants17();
-    init_options3();
+    init_options4();
     init_helpers();
     init_attach9();
   }
@@ -36949,7 +37147,7 @@ function resolveListbox(given2) {
   };
 }
 var OPTION_SELECTOR, HIGHLIGHT_EVENT, CHOOSE_EVENT, DISABLED_SELECTOR, TYPEAHEAD_MS, FALLBACK_PREFIX;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/listbox/values.js"() {
     "use strict";
     OPTION_SELECTOR = "[data-kp-option]";
@@ -36963,12 +37161,12 @@ var init_values9 = __esm({
 
 // js/listbox/core.js
 var ListboxCore;
-var init_core7 = __esm({
+var init_core8 = __esm({
   "js/listbox/core.js"() {
     "use strict";
     init_controller();
     init_scroll();
-    init_values9();
+    init_values10();
     ListboxCore = class extends Controller {
       /**
        * @param {HTMLElement} list the element with role="listbox"
@@ -37112,10 +37310,10 @@ var init_core7 = __esm({
 
 // js/listbox/controller.js
 var ListboxController;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/listbox/controller.js"() {
     "use strict";
-    init_core7();
+    init_core8();
     ListboxController = class extends ListboxCore {
       connect() {
         this.own(() => this.takeBackStamps());
@@ -37285,9 +37483,9 @@ function createListbox(options) {
 var init_listbox = __esm({
   "js/listbox.js"() {
     "use strict";
-    init_controller22();
+    init_controller23();
     init_scroll();
-    init_values9();
+    init_values10();
     init_match();
   }
 });
@@ -40634,7 +40832,7 @@ function partsOf3(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -40819,7 +41017,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller23();
+    init_controller24();
   }
 });
 
@@ -46453,7 +46651,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED4, CalendarController;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -46707,7 +46905,7 @@ var init_api15 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller24();
+    init_controller25();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -47298,7 +47496,7 @@ function heatArea(el16) {
     }
   ];
 }
-var init_draw6 = __esm({
+var init_draw7 = __esm({
   "js/heat/draw.js"() {
     "use strict";
     init_strings();
@@ -47495,7 +47693,7 @@ var init_wire3 = __esm({
     "use strict";
     init_hovercard();
     init_constants22();
-    init_draw6();
+    init_draw7();
     init_grid_state();
     init_legend2();
     init_paging();
@@ -48285,7 +48483,7 @@ function leaveUsesMap(el16) {
   el16.removeAttribute("data-kp-collapsed");
   el16.removeAttribute("data-kp-lit");
 }
-var init_draw7 = __esm({
+var init_draw8 = __esm({
   "js/uses-map/draw.js"() {
     "use strict";
     init_state_plate();
@@ -48319,7 +48517,7 @@ var init_uses_map = __esm({
     init_constants23();
     init_memory2();
     init_relation();
-    init_draw7();
+    init_draw8();
   }
 });
 
@@ -48549,7 +48747,7 @@ var init_matrix = __esm({
     init_card2();
     init_constants22();
     init_dom6();
-    init_draw6();
+    init_draw7();
     init_grid_state();
   }
 });
@@ -48707,7 +48905,7 @@ var init_matrix_wire = __esm({
     "use strict";
     init_hovercard();
     init_constants22();
-    init_draw6();
+    init_draw7();
     init_grid_state();
     init_matrix();
     MATRIX_WIRED = /* @__PURE__ */ new WeakMap();
@@ -48743,7 +48941,7 @@ var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
     init_constants22();
-    init_draw6();
+    init_draw7();
     init_pick();
     init_paging();
     init_legend2();
@@ -53347,7 +53545,7 @@ var init_gantt = __esm({
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make17;
-var init_values10 = __esm({
+var init_values11 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -53368,12 +53566,12 @@ var init_values10 = __esm({
 
 // js/pipeline/core.js
 var PipelineCore;
-var init_core8 = __esm({
+var init_core9 = __esm({
   "js/pipeline/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values10();
+    init_values11();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -53458,8 +53656,8 @@ var PipelineLanes;
 var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
-    init_core8();
-    init_values10();
+    init_core9();
+    init_values11();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -53595,7 +53793,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values10();
+    init_values11();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -53707,11 +53905,11 @@ var init_view2 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values10();
+    init_values11();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -53856,9 +54054,9 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller25();
-    init_values10();
-    init_values10();
+    init_controller26();
+    init_values11();
+    init_values11();
   }
 });
 
@@ -54266,7 +54464,7 @@ function draw6(el16, spec) {
     if (left?.last) GROUPS2.delete(left.host);
   }
 }
-var init_draw8 = __esm({
+var init_draw9 = __esm({
   "js/uptime/draw.js"() {
     "use strict";
     init_strings();
@@ -54547,7 +54745,7 @@ var init_attach17 = __esm({
     init_motion();
     init_top_layer();
     init_constants27();
-    init_draw8();
+    init_draw9();
     init_figures();
     init_fit();
     init_group4();
@@ -54576,7 +54774,7 @@ var init_uptime = __esm({
     "use strict";
     init_constants27();
     init_figures();
-    init_draw8();
+    init_draw9();
     init_attach17();
   }
 });
@@ -55064,7 +55262,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values11 = __esm({
+var init_values12 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -55205,14 +55403,14 @@ var init_build8 = __esm({
 
 // js/range/core.js
 var seq2, DEFAULT_PRESET_AT, RangeCore;
-var init_core9 = __esm({
+var init_core10 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_segmented();
     init_chart();
-    init_values11();
+    init_values12();
     init_build8();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -55287,7 +55485,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build8();
-    init_values11();
+    init_values12();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -55459,11 +55657,11 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core9();
+    init_core10();
     init_panel();
     RangeController = class extends RangeCore {
       connect() {
@@ -55540,9 +55738,9 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller26();
-    init_values11();
-    init_values11();
+    init_controller27();
+    init_values12();
+    init_values12();
   }
 });
 
@@ -55974,7 +56172,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values12 = __esm({
+var init_values13 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -56096,11 +56294,11 @@ function paintAction(host, p) {
   if (shown5 === p.action || shown5 && shown5.isEqualNode(p.action)) return;
   actions.replaceChildren(p.action);
 }
-var init_parts4 = __esm({
+var init_parts5 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values12();
+    init_values13();
   }
 });
 
@@ -56140,8 +56338,8 @@ var init_alert = __esm({
     "use strict";
     init_motion();
     init_strings();
-    init_parts4();
-    init_values12();
+    init_parts5();
+    init_values13();
   }
 });
 
@@ -56206,8 +56404,8 @@ var init_summary2 = __esm({
     "use strict";
     init_strings();
     init_each();
-    init_parts4();
-    init_values12();
+    init_parts5();
+    init_values13();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -56355,7 +56553,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values12();
+    init_values13();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -56464,8 +56662,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values12();
-    init_values12();
+    init_values13();
+    init_values13();
   }
 });
 
@@ -56962,7 +57160,7 @@ var init_folding = __esm({
 
 // js/master-detail/parts.js
 var paneOf, columns, DetailParts;
-var init_parts5 = __esm({
+var init_parts6 = __esm({
   "js/master-detail/parts.js"() {
     "use strict";
     init_strings();
@@ -57034,7 +57232,7 @@ var init_parts5 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -57043,7 +57241,7 @@ var init_controller27 = __esm({
     init_constants28();
     init_detail_state();
     init_folding();
-    init_parts5();
+    init_parts6();
     MasterDetailController = class extends Controller {
       /**
        * @param {HTMLElement} host
@@ -57321,8 +57519,8 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller27();
-    init_parts5();
+    init_controller28();
+    init_parts6();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
   }
@@ -57602,7 +57800,7 @@ var init_connection = __esm({
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values13 = __esm({
+var init_values14 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -57627,7 +57825,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values13();
+    init_values14();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -57677,7 +57875,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values13();
+    init_values14();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -57709,7 +57907,7 @@ var init_read4 = __esm({
 
 // js/transfer/core.js
 var FULL, TransferCore;
-var init_core10 = __esm({
+var init_core11 = __esm({
   "js/transfer/core.js"() {
     "use strict";
     init_controller();
@@ -57718,7 +57916,7 @@ var init_core10 = __esm({
     init_strings();
     init_math3();
     init_read4();
-    init_values13();
+    init_values14();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -57913,7 +58111,7 @@ function build7(row) {
   }
   return { label, bar, value, rate, eta, status };
 }
-var init_parts6 = __esm({
+var init_parts7 = __esm({
   "js/transfer/parts.js"() {
     "use strict";
     init_progressbar();
@@ -57944,8 +58142,8 @@ var live3, ticker;
 var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
-    init_parts6();
-    init_values13();
+    init_parts7();
+    init_values14();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -57959,11 +58157,11 @@ var init_row2 = __esm({
     init_progressbar();
     init_motion();
     init_strings();
-    init_core10();
-    init_parts6();
+    init_core11();
+    init_parts7();
     init_read4();
     init_ticker();
-    init_values13();
+    init_values14();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -58117,8 +58315,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row2();
-    init_values13();
-    init_values13();
+    init_values14();
+    init_values14();
     init_math3();
   }
 });
@@ -58350,7 +58548,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -58364,13 +58562,13 @@ var init_values14 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core11 = __esm({
+var init_core12 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build9();
-    init_values14();
+    init_values15();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -58499,8 +58697,8 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core11();
-    init_values14();
+    init_core12();
+    init_values15();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -58576,12 +58774,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
     init_build9();
-    init_values14();
+    init_values15();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -58816,15 +59014,15 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller28();
-    init_values14();
-    init_values14();
+    init_controller29();
+    init_values15();
+    init_values15();
   }
 });
 
 // js/page-contents/values.js
 var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/page-contents/values.js"() {
     "use strict";
     CONTENTS = "[data-kp-contents]";
@@ -58869,11 +59067,11 @@ var init_slug = __esm({
 
 // js/page-contents/core.js
 var serial5, ContentsCore;
-var init_core12 = __esm({
+var init_core13 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
-    init_values15();
+    init_values16();
     serial5 = 0;
     ContentsCore = class extends Controller {
       /**
@@ -58986,9 +59184,9 @@ var ContentsRead;
 var init_read5 = __esm({
   "js/page-contents/read.js"() {
     "use strict";
-    init_values15();
+    init_values16();
     init_slug();
-    init_core12();
+    init_core13();
     ContentsRead = class extends ContentsCore {
       /** The entries the page gave, each with the section it names. @param {ContentsItem[]} given @returns {{ item: ContentsItem, target: HTMLElement }[]} */
       readGiven(given2) {
@@ -59042,7 +59240,7 @@ var ContentsSpy;
 var init_spy = __esm({
   "js/page-contents/spy.js"() {
     "use strict";
-    init_values15();
+    init_values16();
     init_slug();
     init_read5();
     ContentsSpy = class extends ContentsRead {
@@ -59101,7 +59299,7 @@ var init_spy = __esm({
 
 // js/page-contents/draw.js
 var ContentsDraw;
-var init_draw9 = __esm({
+var init_draw10 = __esm({
   "js/page-contents/draw.js"() {
     "use strict";
     init_spy();
@@ -59157,11 +59355,11 @@ var init_draw9 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
-    init_values15();
-    init_draw9();
+    init_values16();
+    init_draw10();
     init_strings();
     ContentsList = class extends ContentsDraw {
       /**
@@ -59275,9 +59473,9 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller29();
-    init_values15();
-    init_values15();
+    init_controller30();
+    init_values16();
+    init_values16();
     init_slug();
   }
 });
@@ -59962,7 +60160,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -60169,7 +60367,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller30();
+    init_controller31();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -60263,13 +60461,13 @@ function monthSummary(days) {
   return s2.weekdaysOnThe(joinWords(parts2));
 }
 function weekdays(element) {
-  return HANDLES3.get(element) ?? null;
+  return HANDLES2.get(element) ?? null;
 }
 function weekdaysOf(element) {
-  return HANDLES3.get(element)?.values() ?? [];
+  return HANDLES2.get(element)?.values() ?? [];
 }
 function setWeekdays(element, values) {
-  HANDLES3.get(element)?.set(values);
+  HANDLES2.get(element)?.set(values);
 }
 function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: weekOption } = {}) {
   const cleanups = [];
@@ -60281,7 +60479,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     ]
   );
   for (const el16 of found) {
-    if (HANDLES3.has(el16)) continue;
+    if (HANDLES2.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-weekdays-${++seq3}`;
@@ -60410,12 +60608,12 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     set(initial);
     paint12();
     const handle = { element: el16, values, set, summary: words3, valid };
-    HANDLES3.set(el16, handle);
+    HANDLES2.set(el16, handle);
     cleanups.push(() => {
       group.removeEventListener(SEGMENTED_EVENT, onChips);
       quick.removeEventListener("click", onPreset);
       detachSegmented();
-      HANDLES3.delete(el16);
+      HANDLES2.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-describedby");
       el16.removeAttribute("aria-invalid");
@@ -60426,7 +60624,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     for (const c of cleanups) c();
   };
 }
-var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES3, seq3;
+var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES2, seq3;
 var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
@@ -60443,7 +60641,7 @@ var init_weekdays = __esm({
       every: [0, 1, 2, 3, 4, 5, 6]
     };
     NAMES2 = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-    HANDLES3 = /* @__PURE__ */ new WeakMap();
+    HANDLES2 = /* @__PURE__ */ new WeakMap();
     seq3 = 0;
   }
 });
@@ -60491,8 +60689,8 @@ function severityWord2(key) {
     { critical: s2.quietCritical, warning: s2.quietWarning, info: s2.quietInfo, ok: s2.quietOk }[key] ?? key
   );
 }
-function attachOne3(root) {
-  if (HANDLES4.has(root)) return () => void 0;
+function attachOne2(root) {
+  if (HANDLES3.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
   const id = root.id || (root.id = `kp-quiet-${serial6 += 1}`);
@@ -60657,7 +60855,7 @@ function attachOne3(root) {
     paint12();
   });
   watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
-  HANDLES4.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
+  HANDLES3.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
   return () => {
     root.removeEventListener(TIME_EVENT, onTime);
     root.removeEventListener(WEEKDAYS_EVENT, onDays);
@@ -60665,24 +60863,24 @@ function attachOne3(root) {
     through.removeEventListener("change", changed2);
     watch2.disconnect();
     root.replaceChildren();
-    HANDLES4.delete(root);
+    HANDLES3.delete(root);
   };
 }
 function quietValue(el16) {
-  return HANDLES4.get(el16)?.value() ?? null;
+  return HANDLES3.get(el16)?.value() ?? null;
 }
 function setQuiet(el16, value) {
-  HANDLES4.get(el16)?.set({ ...HANDLES4.get(el16)?.value() ?? DEFAULT, ...value });
+  HANDLES3.get(el16)?.set({ ...HANDLES3.get(el16)?.value() ?? DEFAULT, ...value });
 }
 function attachQuietHours(root = document) {
   const found = (
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(QUIET) ? [root] : [], ...root.querySelectorAll(QUIET)]
   );
-  const undo = found.map((el16) => attachOne3(el16));
+  const undo = found.map((el16) => attachOne2(el16));
   return () => undo.forEach((u) => u());
 }
-var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES4;
+var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES3;
 var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
@@ -60695,13 +60893,13 @@ var init_quiet_hours = __esm({
     ["critical", "warning", "info", "ok"];
     DEFAULT = { on: false, from: "22:00", to: "07:00", days: [0, 1, 2, 3, 4, 5, 6], through: ["critical"] };
     serial6 = 0;
-    HANDLES4 = /* @__PURE__ */ new WeakMap();
+    HANDLES3 = /* @__PURE__ */ new WeakMap();
   }
 });
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -60792,7 +60990,7 @@ var init_build11 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values16();
+    init_values17();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -60825,7 +61023,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values16();
+    init_values17();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -60834,13 +61032,13 @@ var init_title = __esm({
 
 // js/question-card/core.js
 var QuestionCore;
-var init_core13 = __esm({
+var init_core14 = __esm({
   "js/question-card/core.js"() {
     "use strict";
     init_controller();
     init_freshness();
     init_strings();
-    init_values16();
+    init_values17();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -60957,9 +61155,9 @@ var init_run3 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values16();
+    init_values17();
     init_title();
-    init_core13();
+    init_core14();
     QuestionRun = class extends QuestionCore {
       /**
        * @param {HTMLElement} host the card
@@ -61118,7 +61316,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values16();
+    init_values17();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -61169,8 +61367,8 @@ var init_question_card = __esm({
     init_build11();
     init_run3();
     init_spec();
-    init_values16();
-    init_values16();
+    init_values17();
+    init_values17();
   }
 });
 
@@ -61307,7 +61505,7 @@ function feedOptions(el16) {
   };
 }
 var optionAttr, dayKey3;
-var init_options4 = __esm({
+var init_options5 = __esm({
   "js/feed/options.js"() {
     "use strict";
     init_strings();
@@ -61366,7 +61564,7 @@ var init_words3 = __esm({
     "use strict";
     init_strings();
     init_constants30();
-    init_options4();
+    init_options5();
     counted = (n, unit2) => `${n} ${n === 1 ? unit2.one : unit2.many}`;
   }
 });
@@ -61489,7 +61687,7 @@ var init_row3 = __esm({
     init_strings();
     init_constants30();
     init_dom8();
-    init_options4();
+    init_options5();
     init_state21();
     init_words3();
   }
@@ -61544,7 +61742,7 @@ var init_days = __esm({
     init_strings();
     init_constants30();
     init_dom8();
-    init_options4();
+    init_options5();
     init_row3();
     init_words3();
   }
@@ -61687,21 +61885,21 @@ var init_render3 = __esm({
     init_days();
     init_dom8();
     init_frame2();
-    init_options4();
+    init_options5();
     init_words3();
   }
 });
 
 // js/feed/controller.js
 var FeedController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_constants30();
     init_frame2();
-    init_options4();
+    init_options5();
     init_render3();
     init_state21();
     FeedController = class extends Controller {
@@ -61853,7 +62051,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller31();
+    init_controller32();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -61974,7 +62172,7 @@ function mountParts2(el16, p, isPage) {
   p.panel.append(p.head, p.body, p.sourcesBox, p.foot);
   el16.replaceChildren(p.trigger, p.panel, p.voice);
 }
-var init_parts7 = __esm({
+var init_parts8 = __esm({
   "js/notices/parts.js"() {
     "use strict";
   }
@@ -62068,7 +62266,7 @@ var init_row4 = __esm({
   "js/notices/row.js"() {
     "use strict";
     init_freshness();
-    init_parts7();
+    init_parts8();
     severityWord3 = (t, severity) => severity === "critical" ? t.attentionCritical : severity === "warning" ? t.attentionWarning : t.attentionInfo;
   }
 });
@@ -62086,7 +62284,7 @@ var init_view3 = __esm({
     init_strings();
     init_events2();
     init_model6();
-    init_parts7();
+    init_parts8();
     init_row4();
     DATE_LENGTH = 10;
     TIME_START2 = 11;
@@ -62284,12 +62482,12 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
     init_events2();
-    init_parts7();
+    init_parts8();
     init_view3();
     idSeq3 = 0;
     NoticesCentre = class extends NoticesView {
@@ -62425,7 +62623,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller32();
+    init_controller33();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -62887,7 +63085,7 @@ var init_keys12 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -63157,7 +63355,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller33();
+    init_controller34();
     init_build12();
     init_commit();
     init_math4();
@@ -63445,7 +63643,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -63678,7 +63876,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller34();
+    init_controller35();
     init_list4();
     init_render4();
   }
@@ -64814,7 +65012,7 @@ var init_group6 = __esm({
 
 // js/toggle/parts.js
 var SAY_AFTER_MS, COUNT_DIGITS, ToggleParts;
-var init_parts8 = __esm({
+var init_parts9 = __esm({
   "js/toggle/parts.js"() {
     "use strict";
     init_controller();
@@ -65016,7 +65214,7 @@ var init_handle4 = __esm({
   "js/toggle/handle.js"() {
     "use strict";
     init_group6();
-    init_parts8();
+    init_parts9();
     ToggleAnswers = class extends ToggleParts {
       /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
       constructor(button6, options = {}) {
@@ -65121,7 +65319,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -65312,7 +65510,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller35();
+    init_controller36();
     init_group6();
     init_group6();
   }
@@ -65320,7 +65518,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -65389,7 +65587,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values17();
+    init_values18();
   }
 });
 
@@ -65403,12 +65601,12 @@ function toneMap(text) {
   return map;
 }
 var shown4, near, ChipCore;
-var init_core14 = __esm({
+var init_core15 = __esm({
   "js/version-delta/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values17();
+    init_values18();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -65493,8 +65691,8 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values17();
-    init_core14();
+    init_values18();
+    init_core15();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
       markChip(v) {
@@ -65601,10 +65799,10 @@ var init_view4 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values17();
+    init_values18();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -65708,9 +65906,9 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller36();
-    init_values17();
-    init_values17();
+    init_controller37();
+    init_values18();
+    init_values18();
     init_level();
     init_links2();
   }
@@ -65718,7 +65916,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -65785,11 +65983,11 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core15 = __esm({
+var init_core16 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values18();
+    init_values19();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -65895,13 +66093,13 @@ var init_core15 = __esm({
 
 // js/deplist/rows.js
 var DeplistRows;
-var init_rows4 = __esm({
+var init_rows5 = __esm({
   "js/deplist/rows.js"() {
     "use strict";
     init_idmark();
     init_strings();
-    init_values18();
-    init_core15();
+    init_values19();
+    init_core16();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -66003,17 +66201,17 @@ var init_rows4 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values18();
+    init_values19();
     init_order();
-    init_core15();
-    init_rows4();
+    init_core16();
+    init_rows5();
     DependencyList = class extends DeplistRows {
       connect() {
         const { host, heading, body, list, foot } = this;
@@ -66187,9 +66385,9 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller37();
-    init_values18();
-    init_values18();
+    init_controller38();
+    init_values19();
+    init_values19();
     init_order();
   }
 });
@@ -66235,10 +66433,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el16) {
-  return HANDLES5.get(el16) ?? null;
+  return HANDLES4.get(el16) ?? null;
 }
-function attachOne4(el16) {
-  if (HANDLES5.has(el16)) return () => void 0;
+function attachOne3(el16) {
+  if (HANDLES4.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-trace");
@@ -66376,10 +66574,10 @@ function attachOne4(el16) {
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES5.set(el16, handle);
+  HANDLES4.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES5.delete(el16);
+    HANDLES4.delete(el16);
   });
   const watch2 = new MutationObserver(draw7);
   watch2.observe(el16, {
@@ -66421,14 +66619,14 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne4(el16));
+  const undo = found.map((el16) => attachOne3(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES5.has(el16)) attachOne4(el16);
-  HANDLES5.get(el16)?.set(hops);
+  if (!HANDLES4.has(el16)) attachOne3(el16);
+  HANDLES4.get(el16)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES5, made5;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES4, made5;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -66442,7 +66640,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES5 = /* @__PURE__ */ new WeakMap();
+    HANDLES4 = /* @__PURE__ */ new WeakMap();
     made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -67354,7 +67552,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -67474,7 +67672,7 @@ function buildAlert(doc, s2, refused, savedCount, onDismiss) {
   alert.append(body, dismiss);
   return alert;
 }
-var init_parts9 = __esm({
+var init_parts10 = __esm({
   "js/unsaved/parts.js"() {
     "use strict";
   }
@@ -67562,7 +67760,7 @@ var init_paint11 = __esm({
     "use strict";
     init_menu_button();
     init_config();
-    init_parts9();
+    init_parts10();
   }
 });
 
@@ -67692,8 +67890,8 @@ var init_actions5 = __esm({
     init_overlays();
     init_config();
     init_paint11();
-    init_parts9();
-    init_values19();
+    init_parts10();
+    init_values20();
   }
 });
 
@@ -67703,7 +67901,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values19();
+    init_values20();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -67823,7 +68021,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values19();
+    init_values20();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -68098,7 +68296,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -68106,7 +68304,7 @@ var init_controller38 = __esm({
     init_controller();
     init_config();
     init_state24();
-    init_parts9();
+    init_parts10();
     init_actions5();
     init_paint11();
     init_changes();
@@ -68351,7 +68549,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller38();
+    init_controller39();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -68697,7 +68895,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -69002,7 +69200,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller39();
+    init_controller40();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -69140,7 +69338,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -69213,7 +69411,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values20();
+    init_values21();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -69485,7 +69683,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values20();
+    init_values21();
   }
 });
 
@@ -69522,13 +69720,13 @@ var init_keys13 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core16 = __esm({
+var init_core17 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values20();
+    init_values21();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -69644,9 +69842,9 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values20();
+    init_values21();
     init_kinds();
-    init_core16();
+    init_core17();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -69815,7 +70013,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values20();
+    init_values21();
     init_kinds();
     init_keys13();
     init_run4();
@@ -69937,8 +70135,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values20();
-    init_values20();
+    init_values21();
+    init_values21();
     init_kinds();
     init_glyph();
     init_open3();
@@ -70839,7 +71037,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -70978,7 +71176,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build13 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values21();
+    init_values22();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -70992,13 +71190,13 @@ var init_build13 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core17 = __esm({
+var init_core18 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build13();
-    init_values21();
+    init_values22();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -71113,12 +71311,12 @@ var init_core17 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build13();
-    init_core17();
-    init_values21();
+    init_core18();
+    init_values22();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -71343,9 +71541,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller40();
-    init_values21();
-    init_values21();
+    init_controller41();
+    init_values22();
+    init_values22();
   }
 });
 
@@ -71511,7 +71709,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -71740,7 +71938,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller41();
+    init_controller42();
     init_fields();
     init_fields();
   }
@@ -71834,7 +72032,7 @@ function nameLine(c, parent, o) {
   }
 }
 var stamp2, titleOf2;
-var init_rows5 = __esm({
+var init_rows6 = __esm({
   "js/dated-options/rows.js"() {
     "use strict";
     init_range();
@@ -71917,7 +72115,7 @@ var init_combobox_draw = __esm({
   "js/dated-options/combobox-draw.js"() {
     "use strict";
     init_combobox();
-    init_rows5();
+    init_rows6();
   }
 });
 
@@ -72029,7 +72227,7 @@ function drawRadios(c) {
 var init_radios = __esm({
   "js/dated-options/radios.js"() {
     "use strict";
-    init_rows5();
+    init_rows6();
   }
 });
 
@@ -72080,7 +72278,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -72091,7 +72289,7 @@ var init_controller42 = __esm({
     init_combobox_draw();
     init_note();
     init_radios();
-    init_rows5();
+    init_rows6();
     init_settings2();
     init_time2();
     DatedController = class extends Controller {
@@ -72331,7 +72529,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller42();
+    init_controller43();
   }
 });
 
@@ -72400,13 +72598,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES6.get(element) ?? null;
+  return HANDLES5.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES6.get(element)?.set(times, options);
+  HANDLES5.get(element)?.set(times, options);
 }
 function setRunsState(element, state12, options) {
-  HANDLES6.get(element)?.setState(state12, options);
+  HANDLES5.get(element)?.setState(state12, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -72415,7 +72613,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES6.has(el16)) continue;
+    if (HANDLES5.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq6}`;
@@ -72564,7 +72762,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state12
     };
-    HANDLES6.set(el16, handle);
+    HANDLES5.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -72585,7 +72783,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button6.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES6.delete(el16);
+      HANDLES5.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -72595,7 +72793,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES6, seq6;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES5, seq6;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -72610,7 +72808,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES6 = /* @__PURE__ */ new WeakMap();
+    HANDLES5 = /* @__PURE__ */ new WeakMap();
     seq6 = 0;
   }
 });
@@ -72936,7 +73134,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -73195,7 +73393,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller43();
+    init_controller44();
     init_choices();
   }
 });
@@ -73259,7 +73457,7 @@ function setGraphOptions(el16, options) {
     else el16.setAttribute(name, value === true ? "" : String(value));
   }
 }
-var init_options5 = __esm({
+var init_options6 = __esm({
   "js/graph/options.js"() {
     "use strict";
   }
@@ -74043,11 +74241,11 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 var SIDE_ROOM;
-var init_draw10 = __esm({
+var init_draw11 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
-    init_options5();
+    init_options6();
     init_view5();
     init_instance3();
     init_layout3();
@@ -74130,7 +74328,7 @@ var init_api26 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
-    init_draw10();
+    init_draw11();
     init_view5();
   }
 });
@@ -74559,9 +74757,9 @@ var init_attach20 = __esm({
     init_constants38();
     init_instance3();
     init_api26();
-    init_options5();
+    init_options6();
     init_layout3();
-    init_draw10();
+    init_draw11();
     init_view5();
   }
 });
@@ -74596,7 +74794,7 @@ var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
     init_constants38();
-    init_options5();
+    init_options6();
     init_layout3();
     init_labels3();
     init_api26();
@@ -75065,7 +75263,7 @@ function fillRow(list, row, item) {
   }
 }
 var mode, among;
-var init_rows6 = __esm({
+var init_rows7 = __esm({
   "js/claim/rows.js"() {
     "use strict";
     init_strings();
@@ -75291,7 +75489,7 @@ var init_decorate = __esm({
     init_state_plate();
     init_constants39();
     init_model8();
-    init_rows6();
+    init_rows7();
   }
 });
 
@@ -75514,7 +75712,7 @@ var init_request2 = __esm({
     init_constants39();
     init_decorate();
     init_model8();
-    init_rows6();
+    init_rows7();
   }
 });
 
@@ -75680,7 +75878,7 @@ var init_attach21 = __esm({
     init_decorate();
     init_model8();
     init_request2();
-    init_rows6();
+    init_rows7();
     init_state27();
   }
 });
@@ -77758,7 +77956,7 @@ function drawCanvas(root, m) {
   return canvas;
 }
 var QUIET2, THEME_CONTRAST, CANVAS_SCALE, CANVAS_SCALE_MIN;
-var init_draw11 = __esm({
+var init_draw12 = __esm({
   "js/qr/draw.js"() {
     "use strict";
     init_matrix2();
@@ -77948,7 +78146,7 @@ var init_render6 = __esm({
     init_reason();
     init_state_plate();
     init_strings();
-    init_draw11();
+    init_draw12();
     init_matrix2();
     init_state28();
     TIMER_MAX_MS = 2 ** 31 - 1;
@@ -78049,7 +78247,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -78153,7 +78351,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_state28();
     init_state28();
     init_matrix2();
@@ -79530,7 +79728,7 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
-var init_parts10 = __esm({
+var init_parts11 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
@@ -79617,7 +79815,7 @@ function collect(root, reset = false) {
   for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
-var init_rows7 = __esm({
+var init_rows8 = __esm({
   "js/logviewer/rows.js"() {
     "use strict";
     init_strings();
@@ -79773,7 +79971,7 @@ var init_refresh = __esm({
     init_constants42();
     init_model10();
     init_reads();
-    init_rows7();
+    init_rows8();
   }
 });
 
@@ -79917,10 +80115,10 @@ var init_api30 = __esm({
     init_newpill();
     init_levels();
     init_model10();
-    init_parts10();
+    init_parts11();
     init_reads();
     init_refresh();
-    init_rows7();
+    init_rows8();
   }
 });
 
@@ -80126,9 +80324,9 @@ var init_attach24 = __esm({
     init_api30();
     init_constants42();
     init_model10();
-    init_parts10();
+    init_parts11();
     init_reads();
-    init_rows7();
+    init_rows8();
   }
 });
 

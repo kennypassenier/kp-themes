@@ -401,6 +401,7 @@
         },
         { "path": "js/feed/*.js", "tags": ["@component:data"] },
         { "path": "js/newpill.js", "tags": ["@component:data"], "why": "the N new lines pill on a live list [kpadopt5]" },
+        { "path": "js/newpill/*.js", "tags": ["@component:data"], "why": "the N new lines pill on a live list [kpadopt5]" },
         { "path": "js/json-field.js", "tags": ["@component:field"], "why": "a text box that checks JSON [kpadopt5]" },
         { "path": "js/json-field/*.js", "tags": ["@component:field"] },
         { "path": "js/request-inspector.js", "tags": ["@component:data"], "why": "the request inspector [kpadopt5]" },

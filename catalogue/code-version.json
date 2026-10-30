@@ -75,7 +75,7 @@
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/nav-fold.js": { "digest": "2eca5d0e82887f01", "when": "[data-kp-nav-fold]" },
-        "js/newpill.js": { "digest": "246504af4e4fa59b", "when": "[data-kp-follow]" },
+        "js/newpill.js": { "digest": "121aad4eb4c83fbb", "when": "[data-kp-follow]" },
         "js/notices.js": { "digest": "487e5c7a5f863fda", "when": "[data-kp-notices]" },
         "js/page-contents.js": { "digest": "b7b2442f7e05adb7", "when": "[data-kp-contents]" },
         "js/palette.js": { "digest": "efcd5d4e4cb28ecd", "when": "[data-kp-palette], [data-kp-shortcuts]" },
