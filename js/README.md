@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -582,3 +582,13 @@ The notification centre, as a NoticesCentre controller. 6 files.
 | `parts.js`       | Builds the centre's elements and mounts them for its look.                               |
 | `row.js`         | One notice row and one source switch.                                                    |
 | `view.js`        | NoticesView: the model read through the host's options and the render of every part.     |
+
+## js/row-select.js → js/row-select/
+
+The row keys (j/k, x, Shift+x, Esc, Enter, Ctrl+A, Shift-click, long press), as a RowSelector controller. 3 files.
+
+| File            | Does                                                                                    |
+| --------------- | --------------------------------------------------------------------------------------- |
+| `controller.js` | RowSelector: the keys, the mouse and touch ticks, the focus, the hint and the wiring.   |
+| `core.js`       | RowSelectCore: the options, the voice, the rows and the cursor, and setting boxes.      |
+| `rows.js`       | The selector, events and numbers, and the helpers that find rows, boxes, keys, labels.  |

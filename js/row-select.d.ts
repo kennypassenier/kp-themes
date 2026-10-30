@@ -1,17 +1,4 @@
-/** An element that gets the keys whether or not it is a data table. */
-export declare const ROW_SELECT = "[data-kp-select-keys]";
-/** A data table that carries a select column gets them too. */
-export declare const ROW_SELECT_AUTO = "[data-kp-datatable]:has([data-kp-select-row])";
-/** The boxes this module sets. */
-export declare const SELECT_BOX = "[data-kp-select-row]";
-/** Fired on the element after this module changed the ticks: `{ keys, count, source, skipped }`. */
-export declare const ROW_SELECT_EVENT = "kp-rows-select";
-/** Fired on a row when Enter is pressed on the row itself, the event js/actions.js' row keys fire too: `{ row }`. */
-export declare const ROW_OPEN_EVENT = "kp-row-open";
-/** The cursor row. */
-export declare const CURSOR_CLASS = "is-cursor";
-/** How long a finger rests on a row before selection mode starts [ms]. */
-export declare const LONG_PRESS_MS = 500;
+export { ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT, CURSOR_CLASS, LONG_PRESS_MS, } from './row-select/rows.js';
 export type RowSelectOptions = {
     range?: 'shift' | 'off';
     arrows?: boolean;
@@ -36,6 +23,13 @@ export type RowSelectHandle = {
      */
     clear: () => void;
 };
+/**
+ * @typedef {object} RowSelectOptions
+ * @property {'shift' | 'off'} [range]
+ * @property {boolean} [arrows]
+ * @property {boolean} [allKey]
+ * @property {'nearest' | 'center'} [scroll]
+ */
 /**
  * @typedef {object} RowSelectHandle
  * @property {() => string[]} keys the keys of every ticked row

@@ -4,7 +4,7 @@
    (ackGateExports, actionTilesExports, actionsExports, alarmExports, anchorsExports, artExports, attentionExports, autoRefreshExports, autoExports, autosizeExports, availabilityExports, barcellExports, bulletsExports, busyCardExports, calendarExports, calmTonesExports, calmExports, cardStateExports, chartExports, checklistExports, claimExports, codeFieldExports, codeExports, colorpickerExports, comboboxExports, commandExports, compareExports, componentsExports, connectionExports, consoleExports, contrastExports, countdownExports, datatableExports, datedOptionsExports, datepickerExports, deplistExports, diagnosticsExports, diffExports, docpreviewExports, effectsExports, entityCardExports, facetsExports, feedExports, flashExports, focusStepsExports, footprintExports, formsExports, freshnessExports, galleryExports, ganttExports, graphExports, gridlayoutExports, heatExports, hovercardExports, idmarkExports, intentExports, jobLineExports, jsonFieldExports, keysExports, kpiExports, lazyRegisterExports, ledeExports, listboxExports, liveOptionsExports, loadingPiecesExports, logviewerExports, markdownExports, masterDetailExports, menuButtonExports, motionExports, navFoldExports, newpillExports, noFlashExports, noticesExports, overlaysExports, pageContentsExports, paletteExports, passkeysExports, pathTraceExports, patternsExports, pipelineExports, printExports, problemsExports, progressbarExports, qrExports, quantityExports, questionCardExports, quietHoursExports, quoteExports, rangeExports, ratingExports, reasonExports, rememberExports, requestInspectorExports, rowSelectExports, runsExports, segmentedExports, selectionBarExports, sentenceExports, sequencerExports, shortcutsExports, sidenavExports, sliderExports, snoozeExports, stackbarExports, statusrowExports, steplistExports, stringsExports, structureExports, tabbarExports, tablesExports, themeCoreExports, themePickerExports, themeRegistryExports, threadExports, tickExports, tilesExports, timefieldExports, timerDiscExports, timerExports, toggleExports, toolbarExports, tourExports, transferExports, undoToastExports, unsavedExports, updateExports, uploadExports, uptimeExports, usesMapExports, usualPickerExports, versionDeltaExports, viewerExports, weekExports, weekdaysExports, wheelExports, wizardExports),
    plus every export that exactly one module declares, flat.
    Reachable only through a namespace, because more than one module
-   declares them: ROW_OPEN_EVENT, setProgress. */
+   declares them: setProgress. */
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __esm = (fn, res, err) => function __init() {
@@ -34961,6 +34961,449 @@ var init_keys3 = __esm({
   }
 });
 
+// js/row-select/rows.js
+function markCursor(row, on) {
+  row.classList.toggle(CURSOR_CLASS, on);
+  if (on) row.setAttribute("aria-current", "true");
+  else row.removeAttribute("aria-current");
+}
+var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf, boxOf, keyOfRow, labelOfRow, shown2, tickable;
+var init_rows = __esm({
+  "js/row-select/rows.js"() {
+    "use strict";
+    ROW_SELECT = "[data-kp-select-keys]";
+    ROW_SELECT_AUTO = "[data-kp-datatable]:has([data-kp-select-row])";
+    SELECT_BOX = "[data-kp-select-row]";
+    ROW_SELECT_EVENT = "kp-rows-select";
+    ROW_OPEN_EVENT2 = "kp-row-open";
+    CURSOR_CLASS = "is-cursor";
+    LONG_PRESS_MS = 500;
+    ROW_LIKE = '[data-kp-row-key], tr, li, [role="row"]';
+    CONTROLS = "a, button, input, select, textarea";
+    LABEL_MAX = 60;
+    onByDefault = (el16, name) => el16.getAttribute(name) !== "false";
+    boxesOf = (el16) => (
+      /** @type {HTMLInputElement[]} */
+      [...el16.querySelectorAll(SELECT_BOX)].filter((b) => b instanceof HTMLInputElement)
+    );
+    rowOf = (box) => (
+      /** @type {HTMLElement | null} */
+      box.closest(ROW_LIKE)
+    );
+    boxOf = (row) => (
+      /** @type {HTMLInputElement | null} */
+      row.querySelector(SELECT_BOX)
+    );
+    keyOfRow = (row, index) => row.dataset.kpRowKey ?? (row.id || boxOf(row)?.value || `row-${index}`);
+    labelOfRow = (row) => {
+      const box = row.querySelector(SELECT_BOX);
+      const named = row.dataset.kpRowLabel ?? box?.getAttribute("aria-label")?.replace(/^select\s+/i, "");
+      return (named ?? row.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, LABEL_MAX);
+    };
+    shown2 = (row) => !row.hidden && !row.closest("[hidden]");
+    tickable = (box) => !box.disabled && box.getAttribute("aria-disabled") !== "true";
+  }
+});
+
+// js/row-select/core.js
+var RowSelectCore;
+var init_core = __esm({
+  "js/row-select/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_rows();
+    RowSelectCore = class extends Controller {
+      /** @param {HTMLElement} el @param {RowSelectOptions} [options] */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.opts = options;
+        this.doc = el16.ownerDocument;
+        this.live = this.doc.createElement("div");
+        this.cursorKey = null;
+        this.anchorKey = null;
+      }
+      // The options are read when they are used, so a page that flips an attribute is heard at once.
+      isRange() {
+        return (this.opts.range ?? this.host.getAttribute("data-kp-select-range") ?? "shift") !== "off";
+      }
+      /** A `data-kp-grid` owns the arrow keys. */
+      owned() {
+        return this.host.matches("[data-kp-grid]") || this.host.querySelector("[data-kp-grid]") !== null;
+      }
+      useArrows() {
+        return (this.opts.arrows ?? onByDefault(this.host, "data-kp-select-arrows")) && !this.owned();
+      }
+      useAllKey() {
+        return this.opts.allKey ?? onByDefault(this.host, "data-kp-select-all-key");
+      }
+      scrollTo() {
+        return (this.opts.scroll ?? this.host.getAttribute("data-kp-cursor-scroll")) === "center" ? "center" : "nearest";
+      }
+      /** Put the voice in the element. */
+      mountVoice() {
+        this.live.className = "kp-sr-only";
+        this.live.setAttribute("role", "status");
+        this.live.setAttribute("aria-live", "polite");
+        this.host.append(this.live);
+      }
+      /** @param {string} text */
+      say(text) {
+        this.live.textContent = "";
+        this.doc.defaultView?.requestAnimationFrame(() => this.live.textContent = text);
+      }
+      /** Every row with a box, shown or not, in the order they are drawn. @returns {HTMLElement[]} */
+      allRows() {
+        const out = [];
+        for (const box of boxesOf(this.host)) {
+          const row = rowOf(box);
+          if (row && !out.includes(row)) out.push(row);
+        }
+        return out;
+      }
+      /** The rows the walk may land on, in the order they are drawn. */
+      rows() {
+        return this.allRows().filter(shown2);
+      }
+      /** @param {string | null} key */
+      rowByKey(key) {
+        return key === null ? null : this.rows().find((r, i) => keyOfRow(r, i) === key) ?? null;
+      }
+      keys() {
+        return boxesOf(this.host).filter((b) => b.checked).map((b, i) => keyOfRow(rowOf(b) ?? this.host, i));
+      }
+      count() {
+        return boxesOf(this.host).filter((b) => b.checked).length;
+      }
+      /**
+       * Rows are focusable, one of them in the tab order. Every row, hidden or not: the walk skips a hidden row, the
+       * roving tabindex does not. Only shown rows were made roving until 11.0.0, and nothing settles again when a row
+       * or a section around the element is shown later (a `hidden` flip is not a child added), so a row a data table's
+       * page or a hidden section kept out at attach stayed out of the walk once shown, and the markup depended on which
+       * of the two modules attached first (tests/auto-lazy.spec.mjs: the catalogue's tables, the fixture's paged row).
+       * The tab stop is the cursor row, else the first shown row, else the first row.
+       */
+      settle() {
+        const every = this.allRows();
+        const current2 = this.rowByKey(this.cursorKey);
+        const stop = current2 ?? every.find(shown2) ?? every[0];
+        for (const row of every) {
+          if (!row.hasAttribute("tabindex") || row.hasAttribute("data-kp-roving")) {
+            row.setAttribute("data-kp-roving", "");
+            row.tabIndex = row === stop ? 0 : -1;
+          }
+          markCursor(row, row === current2);
+        }
+      }
+      /** Move the cursor to a row, or take it away. @param {HTMLElement | null} row @param {{ focus?: boolean }} [how] */
+      place(row, { focus = true } = {}) {
+        this.cursorKey = row ? keyOfRow(row, this.rows().indexOf(row)) : null;
+        for (const r of this.allRows()) {
+          if (r.hasAttribute("data-kp-roving")) r.tabIndex = r === row ? 0 : -1;
+          markCursor(r, r === row);
+        }
+        if (row && focus) {
+          row.focus({ preventScroll: true });
+          row.scrollIntoView({ block: this.scrollTo(), inline: "nearest" });
+        }
+      }
+      /** Set one box and let the table hear it as a click. @param {HTMLInputElement} box @param {boolean} checked */
+      setBox(box, checked) {
+        if (box.checked === checked || !tickable(box)) return false;
+        box.checked = checked;
+        box.dispatchEvent(new Event("change", { bubbles: true }));
+        return true;
+      }
+      /** @param {string} source @param {number} [skipped] */
+      fire(source, skipped = 0) {
+        const detail = { keys: this.keys(), count: this.count(), source, skipped };
+        this.host.dispatchEvent(new CustomEvent(ROW_SELECT_EVENT, { bubbles: true, detail }));
+      }
+      /** Untick every box. */
+      clearAll() {
+        for (const box of boxesOf(this.host)) this.setBox(box, false);
+        this.anchorKey = null;
+      }
+      /** Set the boxes from the anchor to a row. @param {HTMLElement} to @param {boolean} checked */
+      tickRange(to, checked) {
+        const list = this.rows();
+        const a = list.indexOf(this.rowByKey(this.anchorKey) ?? to);
+        const b = list.indexOf(to);
+        if (a < 0 || b < 0) return { changed: 0, skipped: 0 };
+        let changed2 = 0;
+        let skipped = 0;
+        for (const row of list.slice(Math.min(a, b), Math.max(a, b) + 1)) {
+          const box = boxOf(row);
+          if (!box) continue;
+          if (!tickable(box)) skipped += 1;
+          else if (this.setBox(box, checked)) changed2 += 1;
+        }
+        return { changed: changed2, skipped };
+      }
+      /** Say how many are ticked (and how many could not be), then fire. @param {string} source @param {number} skipped */
+      said(source, skipped) {
+        const strings = getStrings();
+        this.say([strings.rowSelectCount(this.count()), skipped > 0 ? strings.rowSelectSkipped(skipped) : ""].filter(Boolean).join(". "));
+        this.fire(source, skipped);
+      }
+      /** Make a row the start of the next range. @param {HTMLElement} row */
+      anchorAt(row) {
+        this.anchorKey = keyOfRow(row, this.rows().indexOf(row));
+      }
+      /** Whether a box is one of ours. @param {EventTarget | null} target @returns {target is HTMLInputElement} */
+      static isBox(target) {
+        return target instanceof HTMLInputElement && target.matches(SELECT_BOX);
+      }
+    };
+  }
+});
+
+// js/row-select/controller.js
+var TEXT_ENTRY, RowSelector;
+var init_controller2 = __esm({
+  "js/row-select/controller.js"() {
+    "use strict";
+    init_keys3();
+    init_strings();
+    init_core();
+    init_rows();
+    TEXT_ENTRY = "textarea, select, [contenteditable]";
+    RowSelector = class _RowSelector extends RowSelectCore {
+      /** @param {HTMLElement} el @param {import('../row-select.js').RowSelectOptions} [options] */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.hold = null;
+        this.heldRow = false;
+        this.handle = {
+          keys: () => this.keys(),
+          cursor: () => this.cursorKey,
+          moveTo: (key) => this.place(this.rowByKey(key), { focus: false }),
+          clear: () => {
+            this.clearAll();
+            this.fire("clear");
+          }
+        };
+      }
+      connect() {
+        const el16 = this.host;
+        this.mountVoice();
+        this.own(() => this.unmark());
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(el16, "change", (event) => this.onChange(event), true);
+        this.listen(el16, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(el16, "mousedown", (event) => this.onDown(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(el16, "pointerdown", (event) => this.onPressStart(
+          /** @type {PointerEvent} */
+          event
+        ));
+        for (const type of ["pointerup", "pointercancel", "pointermove"]) this.listen(el16, type, () => this.onPressEnd());
+        this.listen(el16, "click", (event) => this.onTap(
+          /** @type {MouseEvent} */
+          event
+        ), true);
+        this.listen(el16, "focusin", (event) => this.onFocusIn(event));
+        this.own(() => this.onPressEnd());
+        const view = this.doc.defaultView;
+        if (view && "MutationObserver" in view) this.observe(new view.MutationObserver(() => this.settle())).observe(el16, { childList: true, subtree: true });
+        this.settle();
+        this.writeHint();
+      }
+      /** Take away the voice, the roving tab stops, the cursor and the mode marks. */
+      unmark() {
+        this.live.remove();
+        for (const row of this.host.querySelectorAll("[data-kp-roving]")) {
+          row.removeAttribute("data-kp-roving");
+          row.removeAttribute("tabindex");
+          row.classList.remove(CURSOR_CLASS);
+          row.removeAttribute("aria-current");
+        }
+        this.host.removeAttribute("data-kp-selecting");
+        this.host.removeAttribute("data-kp-cursor-visible");
+      }
+      /** The keys, written as a `.kp-keys` line into the element's `data-kp-select-hint`. */
+      writeHint() {
+        const el16 = this.host;
+        const hint2 = (
+          /** @type {HTMLElement | null} */
+          el16.querySelector("[data-kp-select-hint]") ?? this.doc.querySelector(`[data-kp-select-hint="${el16.id}"]`)
+        );
+        if (!hint2) return;
+        const strings = getStrings();
+        const pairs = [
+          [["j", "k"], strings.rowKeysMove],
+          ["x", strings.rowKeysTick],
+          [["Shift", "x"], strings.rowKeysRange],
+          ["Esc", strings.rowKeysClear],
+          ["Enter", strings.rowKeysOpen]
+        ];
+        if (this.useAllKey()) pairs.push([["Mod", "A"], strings.rowKeysAll]);
+        setKeys(hint2, pairs);
+      }
+      // --- The keys. ---
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const target = event.target instanceof HTMLElement ? event.target : null;
+        if (!target || target.closest(TEXT_ENTRY)) return;
+        if (target instanceof HTMLInputElement && !target.matches(SELECT_BOX) && target.type !== "button") return;
+        const list = this.rows();
+        const inRow = list.find((r) => r === target || r.contains(target)) ?? null;
+        const bare = !event.ctrlKey && !event.metaKey && !event.altKey;
+        const onElement = inRow !== null || target === this.host;
+        if (event.key === "Escape" && bare && this.count() > 0 && onElement) return this.escape(event);
+        if (this.useAllKey() && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "a" && onElement) return this.tickShown(event, list);
+        if (!bare || !inRow) return;
+        if (this.walk(event, list, inRow)) return;
+        const key = event.key;
+        if (key.toLowerCase() === "x") return event.shiftKey ? this.rangeKey(event, list, inRow) : this.tickKey(event, list, inRow);
+        if (key === "Enter" && target === inRow) {
+          event.preventDefault();
+          inRow.dispatchEvent(new CustomEvent(ROW_OPEN_EVENT2, { bubbles: true, detail: { row: inRow } }));
+        }
+      }
+      /** @param {KeyboardEvent} event */
+      escape(event) {
+        event.preventDefault();
+        this.clearAll();
+        this.host.removeAttribute("data-kp-selecting");
+        this.say(getStrings().selectionCleared);
+        this.fire("clear");
+      }
+      /** Ctrl+A ticks every row shown, Ctrl+Shift+A unticks them. @param {KeyboardEvent} event @param {HTMLElement[]} list */
+      tickShown(event, list) {
+        event.preventDefault();
+        const on = !event.shiftKey;
+        for (const row of list) {
+          const box = boxOf(row);
+          if (box) this.setBox(box, on);
+        }
+        const strings = getStrings();
+        this.say(on ? strings.rowSelectAllShown(list.length) : strings.rowSelectCount(this.count()));
+        this.fire(on ? "all" : "clear");
+      }
+      /**
+       * j / k (and the arrows) walk one row, Home and End on a row go to the ends. Returns whether the key was one of these.
+       * @param {KeyboardEvent} event @param {HTMLElement[]} list @param {HTMLElement} inRow
+       */
+      walk(event, list, inRow) {
+        const key = event.key;
+        const down = key === "j" || this.useArrows() && key === "ArrowDown";
+        const up = key === "k" || this.useArrows() && key === "ArrowUp";
+        const atRow = event.target === inRow;
+        let to;
+        if (down || up) to = list[Math.max(0, Math.min(list.length - 1, list.indexOf(inRow) + (down ? 1 : -1)))];
+        else if (key === "Home" && atRow) to = list[0];
+        else if (key === "End" && atRow) to = list[list.length - 1];
+        if (!to) return false;
+        event.preventDefault();
+        this.host.setAttribute("data-kp-cursor-visible", "");
+        this.place(to);
+        if (down || up) this.say(getStrings().rowSelectCursor(labelOfRow(to), list.indexOf(to) + 1, list.length));
+        return true;
+      }
+      /** x ticks or unticks the cursor row. @param {KeyboardEvent} event @param {HTMLElement[]} list @param {HTMLElement} inRow */
+      tickKey(event, list, inRow) {
+        event.preventDefault();
+        const row = this.rowByKey(this.cursorKey) ?? inRow;
+        const box = boxOf(row);
+        if (!box || !tickable(box)) return this.say(getStrings().rowSelectSkipped(1));
+        this.host.setAttribute("data-kp-cursor-visible", "");
+        this.place(row, { focus: row !== inRow });
+        this.setBox(box, !box.checked);
+        if (box.checked) this.anchorAt(row);
+        this.said("key", 0);
+      }
+      /** Shift+x ticks everything from the last tick to the cursor. @param {KeyboardEvent} event @param {HTMLElement[]} list @param {HTMLElement} inRow */
+      rangeKey(event, list, inRow) {
+        event.preventDefault();
+        const row = this.rowByKey(this.cursorKey) ?? inRow;
+        this.host.setAttribute("data-kp-cursor-visible", "");
+        const { skipped } = this.tickRange(row, true);
+        this.anchorAt(row);
+        this.said("range", skipped);
+      }
+      // --- The mouse, the finger and the focus. ---
+      /** Follows the box the reader ticks with the mouse: the next range starts here. @param {Event} event */
+      onChange(event) {
+        if (!_RowSelector.isBox(event.target)) return;
+        const row = rowOf(event.target);
+        if (row && event.target.checked) this.anchorAt(row);
+        if (this.count() === 0) this.host.removeAttribute("data-kp-selecting");
+      }
+      /** Shift-click on a box ticks the range from the last tick [data-kp-select-range]. @param {MouseEvent} event */
+      onClick(event) {
+        const box = event.target;
+        if (!_RowSelector.isBox(box)) return;
+        const row = rowOf(box);
+        if (!row) return;
+        this.place(row, { focus: false });
+        if (!this.isRange() || !event.shiftKey || this.anchorKey === null) return;
+        const { skipped } = this.tickRange(row, box.checked);
+        this.anchorAt(row);
+        this.said("range", skipped);
+      }
+      /** A shift-press on a box would select the text between rows. @param {MouseEvent} event */
+      onDown(event) {
+        if (this.isRange() && event.shiftKey && event.target instanceof Element && event.target.matches(SELECT_BOX)) event.preventDefault();
+        this.host.removeAttribute("data-kp-cursor-visible");
+      }
+      /** Selection mode on a phone: a long press on a row ticks it and starts the mode. @param {PointerEvent} event */
+      onPressStart(event) {
+        if (event.pointerType !== "touch") return;
+        const target = event.target instanceof Element ? event.target : null;
+        const row = target?.closest(ROW_LIKE);
+        if (!(row instanceof HTMLElement) || target?.closest(CONTROLS)) return;
+        const box = boxOf(row);
+        if (!box || !tickable(box)) return;
+        this.hold = setTimeout(() => {
+          this.hold = null;
+          this.heldRow = true;
+          this.host.setAttribute("data-kp-selecting", "");
+          this.setBox(box, true);
+          this.anchorAt(row);
+          this.say(getStrings().rowSelectMode);
+          this.fire("mode");
+        }, LONG_PRESS_MS);
+      }
+      onPressEnd() {
+        if (this.hold) clearTimeout(this.hold);
+        this.hold = null;
+      }
+      /** In selection mode every tap on a row ticks it, until the last tick goes. @param {MouseEvent} event */
+      onTap(event) {
+        if (this.heldRow) {
+          this.heldRow = false;
+          event.preventDefault();
+          return;
+        }
+        if (!this.host.hasAttribute("data-kp-selecting")) return;
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target || target.closest(CONTROLS)) return;
+        const row = target.closest(ROW_LIKE);
+        const box = row instanceof HTMLElement ? boxOf(row) : null;
+        if (!box || !tickable(box)) return;
+        this.setBox(box, !box.checked);
+        if (this.count() > 0) return this.said("mode", 0);
+        this.host.removeAttribute("data-kp-selecting");
+        this.say(getStrings().rowSelectModeEnd);
+      }
+      /** @param {Event} event */
+      onFocusIn(event) {
+        const row = event.target instanceof Element ? event.target.closest("[data-kp-roving]") : null;
+        if (row instanceof HTMLElement && row !== this.rowByKey(this.cursorKey)) this.place(row, { focus: false });
+      }
+    };
+  }
+});
+
 // js/row-select.js
 var row_select_exports = {};
 __export(row_select_exports, {
@@ -34976,7 +35419,7 @@ __export(row_select_exports, {
   rowSelectKeys: () => rowSelectKeys
 });
 function rowSelectKeys(el16) {
-  const known4 = HANDLES2.get(el16);
+  const known4 = rowSelect(el16);
   if (known4) return known4.keys();
   return boxesOf(el16).filter((b) => b.checked).map((b, i) => {
     const row = rowOf(b);
@@ -34984,319 +35427,7 @@ function rowSelectKeys(el16) {
   });
 }
 function rowSelect(el16) {
-  return HANDLES2.get(el16) ?? null;
-}
-function attachOne3(el16, options = {}) {
-  if (HANDLES2.has(el16)) return () => void 0;
-  const doc = el16.ownerDocument;
-  const isRange = () => (options.range ?? el16.getAttribute("data-kp-select-range") ?? "shift") !== "off";
-  const owned = () => el16.matches("[data-kp-grid]") || el16.querySelector("[data-kp-grid]") !== null;
-  const useArrows = () => (options.arrows ?? onByDefault(el16, "data-kp-select-arrows")) && !owned();
-  const useAllKey = () => options.allKey ?? onByDefault(el16, "data-kp-select-all-key");
-  const scrollTo = () => (options.scroll ?? el16.getAttribute("data-kp-cursor-scroll")) === "center" ? "center" : "nearest";
-  const live4 = doc.createElement("div");
-  live4.className = "kp-sr-only";
-  live4.setAttribute("role", "status");
-  live4.setAttribute("aria-live", "polite");
-  el16.append(live4);
-  const say19 = (text) => {
-    live4.textContent = "";
-    el16.ownerDocument.defaultView?.requestAnimationFrame(() => live4.textContent = text);
-  };
-  const allRows = () => {
-    const out = [];
-    for (const box of boxesOf(el16)) {
-      const row = rowOf(box);
-      if (row && !out.includes(row)) out.push(row);
-    }
-    return out;
-  };
-  const rows = () => allRows().filter(shown2);
-  const boxOf = (row) => (
-    /** @type {HTMLInputElement | null} */
-    row.querySelector(SELECT_BOX)
-  );
-  let cursorKey = null;
-  let anchorKey = null;
-  const rowByKey = (key) => key === null ? null : rows().find((r, i) => keyOfRow(r, i) === key) ?? null;
-  const keys = () => boxesOf(el16).filter((b) => b.checked).map((b, i) => keyOfRow(rowOf(b) ?? el16, i));
-  const count2 = () => boxesOf(el16).filter((b) => b.checked).length;
-  const settle2 = () => {
-    const every = allRows();
-    const current2 = rowByKey(cursorKey);
-    const stop = current2 ?? every.find(shown2) ?? every[0];
-    for (const row of every) {
-      if (!row.hasAttribute("tabindex") || row.hasAttribute("data-kp-roving")) {
-        row.setAttribute("data-kp-roving", "");
-        row.tabIndex = row === stop ? 0 : -1;
-      }
-      row.classList.toggle(CURSOR_CLASS, row === current2);
-      if (row === current2) row.setAttribute("aria-current", "true");
-      else row.removeAttribute("aria-current");
-    }
-  };
-  const place3 = (row, { focus = true } = {}) => {
-    const list = rows();
-    cursorKey = row ? keyOfRow(row, list.indexOf(row)) : null;
-    for (const r of allRows()) {
-      if (r.hasAttribute("data-kp-roving")) r.tabIndex = r === row ? 0 : -1;
-      r.classList.toggle(CURSOR_CLASS, r === row);
-      if (r === row) r.setAttribute("aria-current", "true");
-      else r.removeAttribute("aria-current");
-    }
-    if (row && focus) {
-      row.focus({ preventScroll: true });
-      row.scrollIntoView({ block: scrollTo(), inline: "nearest" });
-    }
-  };
-  const setBox = (box, checked) => {
-    if (box.checked === checked || !tickable(box)) return false;
-    box.checked = checked;
-    box.dispatchEvent(new Event("change", { bubbles: true }));
-    return true;
-  };
-  const fire2 = (source, skipped = 0) => {
-    el16.dispatchEvent(new CustomEvent(ROW_SELECT_EVENT, { bubbles: true, detail: { keys: keys(), count: count2(), source, skipped } }));
-  };
-  const tickRange = (to, checked) => {
-    const list = rows();
-    const from = rowByKey(anchorKey) ?? to;
-    const a = list.indexOf(from);
-    const b = list.indexOf(to);
-    if (a < 0 || b < 0) return { changed: 0, skipped: 0 };
-    let changed2 = 0;
-    let skipped = 0;
-    for (const row of list.slice(Math.min(a, b), Math.max(a, b) + 1)) {
-      const box = boxOf(row);
-      if (!box) continue;
-      if (!tickable(box)) {
-        skipped += 1;
-        continue;
-      }
-      if (setBox(box, checked)) changed2 += 1;
-    }
-    return { changed: changed2, skipped };
-  };
-  const said = (source, skipped) => {
-    const strings = getStrings();
-    say19([strings.rowSelectCount(count2()), skipped > 0 ? strings.rowSelectSkipped(skipped) : ""].filter(Boolean).join(". "));
-    fire2(source, skipped);
-  };
-  const onKey4 = (event) => {
-    const target = event.target instanceof HTMLElement ? event.target : null;
-    if (!target) return;
-    if (target.closest("textarea, select, [contenteditable]")) return;
-    if (target instanceof HTMLInputElement && !target.matches(SELECT_BOX) && target.type !== "button") return;
-    const list = rows();
-    const inRow = list.find((r) => r === target || r.contains(target)) ?? null;
-    const key = event.key;
-    const bare = !event.ctrlKey && !event.metaKey && !event.altKey;
-    const strings = getStrings();
-    if (key === "Escape" && bare && count2() > 0 && (inRow || target === el16)) {
-      event.preventDefault();
-      for (const box of boxesOf(el16)) setBox(box, false);
-      anchorKey = null;
-      el16.removeAttribute("data-kp-selecting");
-      say19(strings.selectionCleared);
-      fire2("clear");
-      return;
-    }
-    if (useAllKey() && (event.ctrlKey || event.metaKey) && key.toLowerCase() === "a" && (inRow || target === el16)) {
-      event.preventDefault();
-      const on = !event.shiftKey;
-      let changed2 = 0;
-      for (const row of list) {
-        const box = boxOf(row);
-        if (box && setBox(box, on)) changed2 += 1;
-      }
-      say19(on ? strings.rowSelectAllShown(list.length) : strings.rowSelectCount(count2()));
-      fire2(on ? "all" : "clear");
-      return;
-    }
-    if (!bare || !inRow) return;
-    const at = list.indexOf(inRow);
-    const down = key === "j" || useArrows() && key === "ArrowDown";
-    const up = key === "k" || useArrows() && key === "ArrowUp";
-    if (down || up) {
-      event.preventDefault();
-      const to = list[Math.max(0, Math.min(list.length - 1, at + (down ? 1 : -1)))];
-      el16.setAttribute("data-kp-cursor-visible", "");
-      place3(to);
-      say19(strings.rowSelectCursor(labelOfRow(to), list.indexOf(to) + 1, list.length));
-      return;
-    }
-    if (key === "Home" && target === inRow) {
-      event.preventDefault();
-      el16.setAttribute("data-kp-cursor-visible", "");
-      place3(list[0]);
-      return;
-    }
-    if (key === "End" && target === inRow) {
-      event.preventDefault();
-      el16.setAttribute("data-kp-cursor-visible", "");
-      place3(list[list.length - 1]);
-      return;
-    }
-    if (key.toLowerCase() === "x" && !event.shiftKey) {
-      event.preventDefault();
-      const row = rowByKey(cursorKey) ?? inRow;
-      const box = boxOf(row);
-      if (!box || !tickable(box)) {
-        say19(strings.rowSelectSkipped(1));
-        return;
-      }
-      el16.setAttribute("data-kp-cursor-visible", "");
-      place3(row, { focus: row !== inRow });
-      setBox(box, !box.checked);
-      if (box.checked) anchorKey = keyOfRow(row, list.indexOf(row));
-      said("key", 0);
-      return;
-    }
-    if (key.toLowerCase() === "x" && event.shiftKey) {
-      event.preventDefault();
-      const row = rowByKey(cursorKey) ?? inRow;
-      el16.setAttribute("data-kp-cursor-visible", "");
-      const { skipped } = tickRange(row, true);
-      anchorKey = keyOfRow(row, list.indexOf(row));
-      said("range", skipped);
-      return;
-    }
-    if (key === "Enter" && target === inRow) {
-      event.preventDefault();
-      inRow.dispatchEvent(new CustomEvent(ROW_OPEN_EVENT2, { bubbles: true, detail: { row: inRow } }));
-    }
-  };
-  const onChange = (event) => {
-    const box = event.target instanceof HTMLInputElement && event.target.matches(SELECT_BOX) ? event.target : null;
-    if (!box) return;
-    const row = rowOf(box);
-    if (row && box.checked) anchorKey = keyOfRow(row, rows().indexOf(row));
-    if (count2() === 0) el16.removeAttribute("data-kp-selecting");
-  };
-  const onClick = (event) => {
-    const box = event.target instanceof HTMLInputElement && event.target.matches(SELECT_BOX) ? event.target : null;
-    if (!box) return;
-    const row = rowOf(box);
-    if (!row) return;
-    place3(row, { focus: false });
-    if (!isRange() || !event.shiftKey || anchorKey === null) return;
-    const { skipped } = tickRange(row, box.checked);
-    anchorKey = keyOfRow(row, rows().indexOf(row));
-    said("range", skipped);
-  };
-  const onDown2 = (event) => {
-    if (isRange() && event.shiftKey && event.target instanceof Element && event.target.matches(SELECT_BOX)) event.preventDefault();
-    el16.removeAttribute("data-kp-cursor-visible");
-  };
-  let hold = null;
-  let heldRow = false;
-  const onPressStart = (event) => {
-    if (event.pointerType !== "touch") return;
-    const target = event.target instanceof Element ? event.target : null;
-    const row = target?.closest('[data-kp-row-key], tr, li, [role="row"]');
-    if (!row || !(row instanceof HTMLElement) || target?.closest("a, button, input, select, textarea")) return;
-    const box = boxOf(row);
-    if (!box || !tickable(box)) return;
-    hold = setTimeout(() => {
-      hold = null;
-      heldRow = true;
-      el16.setAttribute("data-kp-selecting", "");
-      setBox(box, true);
-      anchorKey = keyOfRow(row, rows().indexOf(row));
-      say19(getStrings().rowSelectMode);
-      fire2("mode");
-    }, LONG_PRESS_MS);
-  };
-  const onPressEnd = () => {
-    if (hold) clearTimeout(hold);
-    hold = null;
-  };
-  const onTap = (event) => {
-    if (heldRow) {
-      heldRow = false;
-      event.preventDefault();
-      return;
-    }
-    if (!el16.hasAttribute("data-kp-selecting")) return;
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target || target.closest("a, button, input, select, textarea")) return;
-    const row = target.closest('[data-kp-row-key], tr, li, [role="row"]');
-    const box = row instanceof HTMLElement ? boxOf(row) : null;
-    if (!box || !tickable(box)) return;
-    setBox(box, !box.checked);
-    if (count2() === 0) {
-      el16.removeAttribute("data-kp-selecting");
-      say19(getStrings().rowSelectModeEnd);
-    } else said("mode", 0);
-  };
-  const onFocusIn = (event) => {
-    const target = event.target instanceof Element ? event.target : null;
-    const row = target?.closest("[data-kp-roving]");
-    if (row instanceof HTMLElement && row !== rowByKey(cursorKey)) place3(row, { focus: false });
-  };
-  el16.addEventListener("keydown", onKey4);
-  el16.addEventListener("change", onChange, true);
-  el16.addEventListener("click", onClick);
-  el16.addEventListener("mousedown", onDown2);
-  el16.addEventListener("pointerdown", onPressStart);
-  el16.addEventListener("pointerup", onPressEnd);
-  el16.addEventListener("pointercancel", onPressEnd);
-  el16.addEventListener("pointermove", onPressEnd);
-  el16.addEventListener("click", onTap, true);
-  el16.addEventListener("focusin", onFocusIn);
-  const view = doc.defaultView;
-  const watcher = view && "MutationObserver" in view ? new view.MutationObserver(() => settle2()) : null;
-  watcher?.observe(el16, { childList: true, subtree: true });
-  settle2();
-  const hint2 = (
-    /** @type {HTMLElement | null} */
-    el16.querySelector("[data-kp-select-hint]") ?? doc.querySelector(`[data-kp-select-hint="${el16.id}"]`)
-  );
-  if (hint2) {
-    const strings = getStrings();
-    const pairs = [
-      [["j", "k"], strings.rowKeysMove],
-      ["x", strings.rowKeysTick],
-      [["Shift", "x"], strings.rowKeysRange],
-      ["Esc", strings.rowKeysClear],
-      ["Enter", strings.rowKeysOpen]
-    ];
-    if (useAllKey()) pairs.push([["Mod", "A"], strings.rowKeysAll]);
-    setKeys(hint2, pairs);
-  }
-  HANDLES2.set(el16, {
-    keys,
-    cursor: () => cursorKey,
-    moveTo: (key) => place3(rowByKey(key), { focus: false }),
-    clear: () => {
-      for (const box of boxesOf(el16)) setBox(box, false);
-      anchorKey = null;
-      fire2("clear");
-    }
-  });
-  return () => {
-    el16.removeEventListener("keydown", onKey4);
-    el16.removeEventListener("change", onChange, true);
-    el16.removeEventListener("click", onClick);
-    el16.removeEventListener("mousedown", onDown2);
-    el16.removeEventListener("pointerdown", onPressStart);
-    el16.removeEventListener("pointerup", onPressEnd);
-    el16.removeEventListener("pointercancel", onPressEnd);
-    el16.removeEventListener("pointermove", onPressEnd);
-    el16.removeEventListener("click", onTap, true);
-    el16.removeEventListener("focusin", onFocusIn);
-    watcher?.disconnect();
-    live4.remove();
-    for (const row of el16.querySelectorAll("[data-kp-roving]")) {
-      row.removeAttribute("data-kp-roving");
-      row.removeAttribute("tabindex");
-      row.classList.remove(CURSOR_CLASS);
-      row.removeAttribute("aria-current");
-    }
-    el16.removeAttribute("data-kp-selecting");
-    el16.removeAttribute("data-kp-cursor-visible");
-    HANDLES2.delete(el16);
-  };
+  return controllerOf(el16, RowSelector)?.handle ?? null;
 }
 function attachRowSelect(root = document, options = {}) {
   const found = /* @__PURE__ */ new Set(
@@ -35304,45 +35435,21 @@ function attachRowSelect(root = document, options = {}) {
     [...root.querySelectorAll(`${ROW_SELECT}, ${ROW_SELECT_AUTO}`)]
   );
   if (root instanceof HTMLElement && root.matches(`${ROW_SELECT}, ${ROW_SELECT_AUTO}`)) found.add(root);
-  const undo = [];
+  const made6 = [];
   for (const el16 of found) {
-    if (el16.getAttribute("data-kp-select-keys") === "false") continue;
-    undo.push(attachOne3(el16, options));
+    if (el16.getAttribute("data-kp-select-keys") === "false" || controllerOf(el16, RowSelector)) continue;
+    const selector = attachOne2(el16, RowSelector, options);
+    if (selector) made6.push(selector);
   }
-  return () => undo.forEach((u) => u());
+  return () => made6.forEach((selector) => selector.destroy());
 }
-var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, onByDefault, boxesOf, rowOf, keyOfRow, labelOfRow, shown2, tickable, HANDLES2;
 var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
-    init_strings();
-    init_keys3();
-    ROW_SELECT = "[data-kp-select-keys]";
-    ROW_SELECT_AUTO = "[data-kp-datatable]:has([data-kp-select-row])";
-    SELECT_BOX = "[data-kp-select-row]";
-    ROW_SELECT_EVENT = "kp-rows-select";
-    ROW_OPEN_EVENT2 = "kp-row-open";
-    CURSOR_CLASS = "is-cursor";
-    LONG_PRESS_MS = 500;
-    onByDefault = (el16, name) => el16.getAttribute(name) !== "false";
-    boxesOf = (el16) => (
-      /** @type {HTMLInputElement[]} */
-      [...el16.querySelectorAll(SELECT_BOX)].filter((b) => b instanceof HTMLInputElement)
-    );
-    rowOf = (box) => (
-      /** @type {HTMLElement | null} */
-      box.closest('[data-kp-row-key], tr, li, [role="row"]')
-    );
-    keyOfRow = (row, index) => row.dataset.kpRowKey ?? (row.id || /** @type {HTMLInputElement | null} */
-    row.querySelector(SELECT_BOX)?.value || `row-${index}`);
-    labelOfRow = (row) => {
-      const box = row.querySelector(SELECT_BOX);
-      const named = row.dataset.kpRowLabel ?? box?.getAttribute("aria-label")?.replace(/^select\s+/i, "");
-      return (named ?? row.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 60);
-    };
-    shown2 = (row) => !row.hidden && !row.closest("[hidden]");
-    tickable = (box) => !box.disabled && box.getAttribute("aria-disabled") !== "true";
-    HANDLES2 = /* @__PURE__ */ new WeakMap();
+    init_controller();
+    init_controller2();
+    init_rows();
+    init_rows();
   }
 });
 
@@ -35641,7 +35748,7 @@ function sync(bar, memory) {
     );
   }
 }
-function attachOne4(bar, options) {
+function attachOne3(bar, options) {
   if (MEMORY6.has(bar)) return () => void 0;
   const doc = bar.ownerDocument;
   const placement = options.placement ?? bar.getAttribute("data-kp-placement") ?? "sticky-top";
@@ -35796,7 +35903,7 @@ function attachSelectionBars(root = document, options = {}) {
       ...root.querySelectorAll(SELECTION)
     ]
   );
-  const undo = bars.map((bar) => attachOne4(bar, options));
+  const undo = bars.map((bar) => attachOne3(bar, options));
   return () => undo.forEach((u) => u());
 }
 function setSelection(bar, items, options = {}) {
@@ -35925,10 +36032,10 @@ __export(newpill_exports, {
   newPill: () => newPill
 });
 function newPill(el16) {
-  return HANDLES3.get(el16) ?? null;
+  return HANDLES2.get(el16) ?? null;
 }
-function attachOne5(el16, options) {
-  if (HANDLES3.has(el16)) return () => void 0;
+function attachOne4(el16, options) {
+  if (HANDLES2.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const view = doc.defaultView;
   const strings = getStrings();
@@ -36143,7 +36250,7 @@ function attachOne5(el16, options) {
   doc.addEventListener("visibilitychange", onVisibility2);
   view?.requestAnimationFrame(() => view.requestAnimationFrame(() => following && !paused && el16.scrollHeight > el16.clientHeight && toEnd()));
   draw8();
-  HANDLES3.set(el16, { pause, resume: jump, jump, unseen: count2, following: () => following && !paused });
+  HANDLES2.set(el16, { pause, resume: jump, jump, unseen: count2, following: () => following && !paused });
   return () => {
     stopOptions();
     observer?.disconnect();
@@ -36155,7 +36262,7 @@ function attachOne5(el16, options) {
     pill.remove();
     live4.remove();
     el16.removeAttribute("data-kp-following");
-    HANDLES3.delete(el16);
+    HANDLES2.delete(el16);
   };
 }
 function attachNewPills(root = document, options = {}) {
@@ -36166,10 +36273,10 @@ function attachNewPills(root = document, options = {}) {
       ...root.querySelectorAll(FOLLOW)
     ]
   );
-  const undo = found.map((el16) => attachOne5(el16, options));
+  const undo = found.map((el16) => attachOne4(el16, options));
   return () => undo.forEach((u) => u());
 }
-var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, HANDLES3, isRow, isTableRow, rowKeyOf;
+var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, HANDLES2, isRow, isTableRow, rowKeyOf;
 var init_newpill = __esm({
   "js/newpill.js"() {
     "use strict";
@@ -36180,7 +36287,7 @@ var init_newpill = __esm({
     NEWPILL_JUMP_EVENT = "kp-newpill-jump";
     FOLLOW_THRESHOLD = 24;
     NEWPILL_SAY_MS = 1e4;
-    HANDLES3 = /* @__PURE__ */ new WeakMap();
+    HANDLES2 = /* @__PURE__ */ new WeakMap();
     isRow = (el16) => !el16.classList.contains("kp-newpill__since") && !el16.hasAttribute("data-kp-newpill-skip");
     isTableRow = (el16) => el16.tagName === "TR" && isRow(el16) && !el16.matches("[data-kp-row-detail], [data-kp-row-group], [data-kp-row-hidden]");
     rowKeyOf = (row) => (
@@ -36226,8 +36333,8 @@ function explainJson(text) {
     return { ok: false, why, line, column };
   }
 }
-function attachOne6(area, options) {
-  if (HANDLES4.has(area)) return () => void 0;
+function attachOne5(area, options) {
+  if (HANDLES3.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
   const strings = getStrings();
@@ -36595,7 +36702,7 @@ function attachOne6(area, options) {
   lock();
   check();
   grow();
-  HANDLES4.set(area, { state: () => state2, check, format, minify, value: () => parsed });
+  HANDLES3.set(area, { state: () => state2, check, format, minify, value: () => parsed });
   return () => {
     view?.clearTimeout(debounce);
     view?.clearTimeout(copyTimer);
@@ -36613,11 +36720,11 @@ function attachOne6(area, options) {
     area.style.blockSize = "";
     area.style.overflowY = "";
     root.replaceWith(area);
-    HANDLES4.delete(area);
+    HANDLES3.delete(area);
   };
 }
 function jsonField(area) {
-  return HANDLES4.get(area) ?? null;
+  return HANDLES3.get(area) ?? null;
 }
 function attachJsonFields(root = document, options = {}) {
   const found = (
@@ -36627,10 +36734,10 @@ function attachJsonFields(root = document, options = {}) {
       ...root.querySelectorAll(JSON_FIELD)
     ]
   );
-  const undo = found.map((area) => attachOne6(area, options));
+  const undo = found.map((area) => attachOne5(area, options));
   return () => undo.forEach((u) => u());
 }
-var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, HANDLES4, serial4;
+var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, HANDLES3, serial4;
 var init_json_field = __esm({
   "js/json-field.js"() {
     "use strict";
@@ -36642,7 +36749,7 @@ var init_json_field = __esm({
     JSON_CHECK_MS = 300;
     JSON_MAX_ROWS = 20;
     JSON_COPIED_MS = 1500;
-    HANDLES4 = /* @__PURE__ */ new WeakMap();
+    HANDLES3 = /* @__PURE__ */ new WeakMap();
     serial4 = 0;
   }
 });
@@ -37036,7 +37143,7 @@ async function copy(el16, memory, button2) {
   }
   view?.setTimeout(() => word.textContent = idle, REQUESTS_COPIED_MS);
 }
-function attachOne7(el16, given2) {
+function attachOne6(el16, given2) {
   if (MEMORY7.has(el16)) return () => void 0;
   const options = { ...readOptions(el16), ...given2 };
   const memory = { list: [], filter: "all", shown: options.max ?? REQUESTS_MAX, opened: /* @__PURE__ */ new Set(), closed: /* @__PURE__ */ new Set(), options, given: given2 };
@@ -37130,7 +37237,7 @@ function attachRequestInspectors(root = document, options = {}) {
       ...root.querySelectorAll(REQUESTS)
     ]
   );
-  const undo = found.map((el16) => attachOne7(el16, options));
+  const undo = found.map((el16) => attachOne6(el16, options));
   return () => undo.forEach((u) => u());
 }
 function setRequests(el16, requests) {
@@ -37520,7 +37627,7 @@ function fitLabel(group, names, half, measure) {
     const two9 = halves(text);
     for (const lines of two9 ? [[text], two9] : [[text]]) {
       const rows = lines.length;
-      const allowed2 = Math.min(LABEL_MAX, 2 * mid * sin * 0.62 / (rows === 2 ? 1.5 : 1));
+      const allowed2 = Math.min(LABEL_MAX2, 2 * mid * sin * 0.62 / (rows === 2 ? 1.5 : 1));
       if (allowed2 < LABEL_MIN) continue;
       const start = Math.max(LABEL_IN, allowed2 * 0.75 * (rows === 2 ? 1.5 : 1) / sin);
       const room = LABEL_OUT - start;
@@ -37787,7 +37894,7 @@ function attachWheels(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, WIRED, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el5, stateOf, part, LABEL_MIN, LABEL_COMFORT, LABEL_MAX, reduced3;
+var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, WIRED, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el5, stateOf, part, LABEL_MIN, LABEL_COMFORT, LABEL_MAX2, reduced3;
 var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
@@ -37834,7 +37941,7 @@ var init_wheel = __esm({
     );
     LABEL_MIN = 4.5;
     LABEL_COMFORT = 6.5;
-    LABEL_MAX = 9;
+    LABEL_MAX2 = 9;
     reduced3 = () => !motionAllowed();
   }
 });
@@ -52952,8 +53059,8 @@ function caretPosition(text, offset) {
   const line = before.split("\n").length;
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
-function attachOne8(area) {
-  if (HANDLES5.has(area)) return () => void 0;
+function attachOne7(area) {
+  if (HANDLES4.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
   const strings = getStrings();
@@ -53253,7 +53360,7 @@ function attachOne8(area) {
   drawGutter();
   drawReadout();
   grow();
-  HANDLES5.set(area, {
+  HANDLES4.set(area, {
     position: () => caretPosition(area.value, area.selectionStart ?? 0),
     setError: setError2,
     check,
@@ -53282,14 +53389,14 @@ function attachOne8(area) {
     area.style.blockSize = "";
     area.style.overflowY = "";
     root.replaceWith(area);
-    HANDLES5.delete(area);
+    HANDLES4.delete(area);
   };
 }
 function codeField(area) {
-  return HANDLES5.get(area) ?? null;
+  return HANDLES4.get(area) ?? null;
 }
 function setCodeFieldError(area, line, column = null, message = "") {
-  HANDLES5.get(area)?.setError(line, column, message);
+  HANDLES4.get(area)?.setError(line, column, message);
 }
 function attachCodeFields(root = document) {
   const found = (
@@ -53299,10 +53406,10 @@ function attachCodeFields(root = document) {
       ...root.querySelectorAll(CODE_FIELD)
     ]
   );
-  const undo = found.map((area) => attachOne8(area));
+  const undo = found.map((area) => attachOne7(area));
   return () => undo.forEach((u) => u());
 }
-var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES5, serial6;
+var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES4, serial6;
 var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
@@ -53314,7 +53421,7 @@ var init_code_field = __esm({
     CODE_FIELD_CARET_EVENT = "kp-code-field-caret";
     CODE_FIELD_CHECK_MS = 300;
     CODE_FIELD_MAX_ROWS = 20;
-    HANDLES5 = /* @__PURE__ */ new WeakMap();
+    HANDLES4 = /* @__PURE__ */ new WeakMap();
     serial6 = 0;
   }
 });
@@ -53343,8 +53450,8 @@ function currentSection(boxes, offset, atEnd) {
   });
   return found;
 }
-function attachOne9(nav) {
-  if (HANDLES6.has(nav)) return () => void 0;
+function attachOne8(nav) {
+  if (HANDLES5.has(nav)) return () => void 0;
   const doc = nav.ownerDocument;
   const view = (
     /** @type {Window & typeof globalThis} */
@@ -53563,7 +53670,7 @@ function attachOne9(nav) {
     attributes: true,
     attributeFilter: ["data-kp-contents-for", "data-kp-contents-headings", "data-kp-contents-min", "data-kp-contents-title", "data-kp-state", "data-kp-contents-offset"]
   });
-  HANDLES6.set(nav, {
+  HANDLES5.set(nav, {
     current: () => current2,
     refresh: draw8,
     setItems(items) {
@@ -53582,31 +53689,31 @@ function attachOne9(nav) {
     options.disconnect();
     nav.replaceChildren();
     nav.removeAttribute("data-kp-contents-sig");
-    HANDLES6.delete(nav);
+    HANDLES5.delete(nav);
   };
 }
 function contents(nav) {
-  return HANDLES6.get(nav) ?? null;
+  return HANDLES5.get(nav) ?? null;
 }
 function setContents(nav, items) {
-  HANDLES6.get(nav)?.setItems(items);
+  HANDLES5.get(nav)?.setItems(items);
 }
 function attachContents(root = document) {
   const found = (
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(CONTENTS) ? [root] : [], ...root.querySelectorAll(CONTENTS)]
   );
-  const undo = found.map((nav) => attachOne9(nav));
+  const undo = found.map((nav) => attachOne8(nav));
   return () => undo.forEach((u) => u());
 }
-var CONTENTS, CONTENTS_EVENT, HANDLES6, serial7;
+var CONTENTS, CONTENTS_EVENT, HANDLES5, serial7;
 var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_strings();
     CONTENTS = "[data-kp-contents]";
     CONTENTS_EVENT = "kp-contents-change";
-    HANDLES6 = /* @__PURE__ */ new WeakMap();
+    HANDLES5 = /* @__PURE__ */ new WeakMap();
     serial7 = 0;
   }
 });
@@ -54384,13 +54491,13 @@ function monthSummary(days) {
   return s2.weekdaysOnThe(joinWords(parts2));
 }
 function weekdays(element) {
-  return HANDLES7.get(element) ?? null;
+  return HANDLES6.get(element) ?? null;
 }
 function weekdaysOf(element) {
-  return HANDLES7.get(element)?.values() ?? [];
+  return HANDLES6.get(element)?.values() ?? [];
 }
 function setWeekdays(element, values) {
-  HANDLES7.get(element)?.set(values);
+  HANDLES6.get(element)?.set(values);
 }
 function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: weekOption } = {}) {
   const cleanups = [];
@@ -54402,7 +54509,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     ]
   );
   for (const el16 of found) {
-    if (HANDLES7.has(el16)) continue;
+    if (HANDLES6.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-weekdays-${++seq4}`;
@@ -54531,12 +54638,12 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     set(initial);
     paint15();
     const handle = { element: el16, values, set, summary: words2, valid };
-    HANDLES7.set(el16, handle);
+    HANDLES6.set(el16, handle);
     cleanups.push(() => {
       group.removeEventListener(SEGMENTED_EVENT, onChips);
       quick.removeEventListener("click", onPreset);
       detachSegmented();
-      HANDLES7.delete(el16);
+      HANDLES6.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-describedby");
       el16.removeAttribute("aria-invalid");
@@ -54547,7 +54654,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     for (const c of cleanups) c();
   };
 }
-var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES7, seq4;
+var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES6, seq4;
 var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
@@ -54564,7 +54671,7 @@ var init_weekdays = __esm({
       every: [0, 1, 2, 3, 4, 5, 6]
     };
     NAMES2 = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-    HANDLES7 = /* @__PURE__ */ new WeakMap();
+    HANDLES6 = /* @__PURE__ */ new WeakMap();
     seq4 = 0;
   }
 });
@@ -54612,8 +54719,8 @@ function severityWord2(key) {
     { critical: s2.quietCritical, warning: s2.quietWarning, info: s2.quietInfo, ok: s2.quietOk }[key] ?? key
   );
 }
-function attachOne10(root) {
-  if (HANDLES8.has(root)) return () => void 0;
+function attachOne9(root) {
+  if (HANDLES7.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
   const id = root.id || (root.id = `kp-quiet-${serial9 += 1}`);
@@ -54778,7 +54885,7 @@ function attachOne10(root) {
     paint15();
   });
   watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
-  HANDLES8.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write3(readQuiet(next2), false) });
+  HANDLES7.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write3(readQuiet(next2), false) });
   return () => {
     root.removeEventListener(TIME_EVENT, onTime);
     root.removeEventListener(WEEKDAYS_EVENT, onDays);
@@ -54786,24 +54893,24 @@ function attachOne10(root) {
     through.removeEventListener("change", changed2);
     watch2.disconnect();
     root.replaceChildren();
-    HANDLES8.delete(root);
+    HANDLES7.delete(root);
   };
 }
 function quietValue(el16) {
-  return HANDLES8.get(el16)?.value() ?? null;
+  return HANDLES7.get(el16)?.value() ?? null;
 }
 function setQuiet(el16, value) {
-  HANDLES8.get(el16)?.set({ ...HANDLES8.get(el16)?.value() ?? DEFAULT, ...value });
+  HANDLES7.get(el16)?.set({ ...HANDLES7.get(el16)?.value() ?? DEFAULT, ...value });
 }
 function attachQuietHours(root = document) {
   const found = (
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(QUIET) ? [root] : [], ...root.querySelectorAll(QUIET)]
   );
-  const undo = found.map((el16) => attachOne10(el16));
+  const undo = found.map((el16) => attachOne9(el16));
   return () => undo.forEach((u) => u());
 }
-var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial9, HANDLES8;
+var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial9, HANDLES7;
 var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
@@ -54816,7 +54923,7 @@ var init_quiet_hours = __esm({
     ["critical", "warning", "info", "ok"];
     DEFAULT = { on: false, from: "22:00", to: "07:00", days: [0, 1, 2, 3, 4, 5, 6], through: ["critical"] };
     serial9 = 0;
-    HANDLES8 = /* @__PURE__ */ new WeakMap();
+    HANDLES7 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -55999,7 +56106,7 @@ var init_view = __esm({
 
 // js/notices/controller.js
 var idSeq5, NoticesCentre;
-var init_controller2 = __esm({
+var init_controller3 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -56140,7 +56247,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller2();
+    init_controller3();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -58144,7 +58251,7 @@ __export(toggle_exports, {
   togglePressedKeys: () => togglePressedKeys
 });
 function toggle(el16) {
-  return HANDLES9.get(el16) ?? null;
+  return HANDLES8.get(el16) ?? null;
 }
 function toggleGroup(button2) {
   const holder = (
@@ -58177,8 +58284,8 @@ function togglePressedKeys(anyMember) {
   const list = g ? g.members : [anyMember];
   return list.filter((m) => !m.hasAttribute("data-kp-toggle-all") && stateOf4(m) === "true").map(toggleKey);
 }
-function attachOne11(button2, options) {
-  if (HANDLES9.has(button2)) return () => void 0;
+function attachOne10(button2, options) {
+  if (HANDLES8.has(button2)) return () => void 0;
   const doc = button2.ownerDocument;
   const s2 = getStrings();
   const undo = [];
@@ -58530,7 +58637,7 @@ function attachOne11(button2, options) {
       }, options.refusedMs ?? TOGGLE_REFUSED_MS);
     }
   };
-  HANDLES9.set(button2, handle0);
+  HANDLES8.set(button2, handle0);
   {
     const g = group0;
     const holder = g?.container?.hasAttribute("data-kp-remember") ? g.container : button2.hasAttribute("data-kp-remember") ? button2 : null;
@@ -58633,7 +58740,7 @@ function attachOne11(button2, options) {
     refusedWord?.remove();
     spinner?.remove();
     for (const fn of undo.reverse()) fn();
-    HANDLES9.delete(button2);
+    HANDLES8.delete(button2);
   };
 }
 function attachToggles(root = document, options = {}) {
@@ -58644,10 +58751,10 @@ function attachToggles(root = document, options = {}) {
       ...root.querySelectorAll(TOGGLE)
     ]
   );
-  const undo = found.map((el16) => attachOne11(el16, options));
+  const undo = found.map((el16) => attachOne10(el16, options));
   return () => undo.forEach((u) => u());
 }
-var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, HANDLES9, stateOf4, toggleKey, storeKey, readStore, writeStore, made2;
+var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, HANDLES8, stateOf4, toggleKey, storeKey, readStore, writeStore, made2;
 var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
@@ -58662,7 +58769,7 @@ var init_toggle = __esm({
     TOGGLE_MODES = /** @type {const} */
     ["multi", "single", "single-or-none"];
     TOGGLE_REFUSED_MS = 3e3;
-    HANDLES9 = /* @__PURE__ */ new WeakMap();
+    HANDLES8 = /* @__PURE__ */ new WeakMap();
     stateOf4 = (el16) => {
       const v = el16.getAttribute("aria-pressed");
       return v === "true" || v === "mixed" ? v : "false";
@@ -59011,10 +59118,10 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
   return { rows: ordered2.map((r, i) => ({ item: r.item, number: numbers2 ? i + 1 : null })), cycles };
 }
 function deplist(el16) {
-  return HANDLES10.get(el16) ?? null;
+  return HANDLES9.get(el16) ?? null;
 }
-function attachOne12(el16) {
-  if (HANDLES10.has(el16)) return () => void 0;
+function attachOne11(el16) {
+  if (HANDLES9.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-deplist");
@@ -59218,10 +59325,10 @@ function attachOne12(el16) {
     },
     rows: () => drawn2
   };
-  HANDLES10.set(el16, handle);
+  HANDLES9.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES10.delete(el16);
+    HANDLES9.delete(el16);
   });
   const watch2 = new MutationObserver(() => draw8());
   watch2.observe(el16, {
@@ -59253,14 +59360,14 @@ function attachDeplists(root = document) {
       ...root.querySelectorAll(DEPLIST)
     ]
   );
-  const undo = found.map((el16) => attachOne12(el16));
+  const undo = found.map((el16) => attachOne11(el16));
   return () => undo.forEach((u) => u());
 }
 function setDeplist(el16, items) {
-  if (!HANDLES10.has(el16)) attachOne12(el16);
-  HANDLES10.get(el16)?.set(items);
+  if (!HANDLES9.has(el16)) attachOne11(el16);
+  HANDLES9.get(el16)?.set(items);
 }
-var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES10, made3;
+var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES9, made3;
 var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
@@ -59273,7 +59380,7 @@ var init_deplist = __esm({
     DEPLIST_RETRY_EVENT = "kp-deplist-retry";
     DEPLIST_COLLAPSE = 8;
     depText = (items) => items.map((i) => `${i.from} -> ${i.to}`).join("\n");
-    HANDLES10 = /* @__PURE__ */ new WeakMap();
+    HANDLES9 = /* @__PURE__ */ new WeakMap();
     made3 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -59323,10 +59430,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el16) {
-  return HANDLES11.get(el16) ?? null;
+  return HANDLES10.get(el16) ?? null;
 }
-function attachOne13(el16) {
-  if (HANDLES11.has(el16)) return () => void 0;
+function attachOne12(el16) {
+  if (HANDLES10.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-trace");
@@ -59464,10 +59571,10 @@ function attachOne13(el16) {
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES11.set(el16, handle);
+  HANDLES10.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES11.delete(el16);
+    HANDLES10.delete(el16);
   });
   const watch2 = new MutationObserver(draw8);
   watch2.observe(el16, {
@@ -59509,14 +59616,14 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne13(el16));
+  const undo = found.map((el16) => attachOne12(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES11.has(el16)) attachOne13(el16);
-  HANDLES11.get(el16)?.set(hops);
+  if (!HANDLES10.has(el16)) attachOne12(el16);
+  HANDLES10.get(el16)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES11, made4;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES10, made4;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -59530,7 +59637,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES11 = /* @__PURE__ */ new WeakMap();
+    HANDLES10 = /* @__PURE__ */ new WeakMap();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -60355,19 +60462,19 @@ function configureUnsaved(next2) {
   if (next2.storage !== void 0) config4.storage = next2.storage;
 }
 function unsaved(element) {
-  return HANDLES12.get(element) ?? null;
+  return HANDLES11.get(element) ?? null;
 }
 function unsavedSaved(element, result) {
-  HANDLES12.get(element)?.saved(result);
+  HANDLES11.get(element)?.saved(result);
 }
 function markUnsavedClean(element) {
-  HANDLES12.get(element)?.markClean();
+  HANDLES11.get(element)?.markClean();
 }
 function discardUnsaved(element) {
-  HANDLES12.get(element)?.discard();
+  HANDLES11.get(element)?.discard();
 }
 function setUnsavedSaving(element, saving) {
-  HANDLES12.get(element)?.setSaving(saving);
+  HANDLES11.get(element)?.setSaving(saving);
 }
 function readValue(c) {
   if (c instanceof HTMLInputElement && c.type === "checkbox") return c.checked ? "on" : "off";
@@ -60435,7 +60542,7 @@ function attachUnsaved(root = document, options = {}) {
     ]
   );
   for (const el16 of found) {
-    if (HANDLES12.has(el16)) continue;
+    if (HANDLES11.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const win = doc.defaultView ?? window;
@@ -60907,7 +61014,7 @@ function attachUnsaved(root = document, options = {}) {
         paint15();
       }
     };
-    HANDLES12.set(el16, handle);
+    HANDLES11.set(el16, handle);
     let lower = null;
     const place3 = (p) => {
       const box = chip.getBoundingClientRect();
@@ -61074,7 +61181,7 @@ function attachUnsaved(root = document, options = {}) {
       doc.removeEventListener("pointerdown", onOutside, true);
       doc.removeEventListener("click", onLink, true);
       win.removeEventListener("beforeunload", onBeforeUnload);
-      HANDLES12.delete(el16);
+      HANDLES11.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("data-kp-docked");
       el16.removeAttribute("data-kp-state");
@@ -61087,7 +61194,7 @@ function attachUnsaved(root = document, options = {}) {
     for (const c of cleanups) c();
   };
 }
-var config4, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, HANDLES12, seq5;
+var config4, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, HANDLES11, seq5;
 var init_unsaved = __esm({
   "js/unsaved.js"() {
     "use strict";
@@ -61107,7 +61214,7 @@ var init_unsaved = __esm({
     UNSAVED_REVERT_EVENT = "kp-unsaved-revert";
     ROW = ".kp-formrow, .kp-kv__row, [data-kp-row]";
     CONTROL = 'input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="file"], [type="image"]), select, textarea';
-    HANDLES12 = /* @__PURE__ */ new WeakMap();
+    HANDLES11 = /* @__PURE__ */ new WeakMap();
     seq5 = 0;
   }
 });
@@ -61182,13 +61289,13 @@ function dropTwin(area) {
   TWINS.delete(area);
 }
 function autosize(element) {
-  return HANDLES13.get(element) ?? null;
+  return HANDLES12.get(element) ?? null;
 }
 function refreshAutosize(element) {
-  HANDLES13.get(element)?.refresh();
+  HANDLES12.get(element)?.refresh();
 }
 function setAutosizeState(element, state2, message) {
-  HANDLES13.get(element)?.setState(state2, message);
+  HANDLES12.get(element)?.setState(state2, message);
 }
 function cssAutosizeSupported() {
   return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
@@ -61213,7 +61320,7 @@ function attachAutosize(root = document, options = {}) {
       }
     };
     var remember3 = remember4;
-    if (HANDLES13.has(area) || area.getAttribute("data-kp-autosize") === "off") continue;
+    if (HANDLES12.has(area) || area.getAttribute("data-kp-autosize") === "off") continue;
     const doc = area.ownerDocument;
     const view = (
       /** @type {Window} */
@@ -61425,7 +61532,7 @@ function attachAutosize(root = document, options = {}) {
     let unregister = null;
     if (attr8(area, "data-kp-submit-key", "off") === "mod-enter") {
       void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
-        if (!HANDLES13.has(area)) return;
+        if (!HANDLES12.has(area)) return;
         unregister = registerShortcuts2(
           area,
           [
@@ -61527,7 +61634,7 @@ function attachAutosize(root = document, options = {}) {
         );
       }
     };
-    HANDLES13.set(area, handle);
+    HANDLES12.set(area, handle);
     area.addEventListener("input", onInput);
     area.addEventListener("paste", onPaste);
     area.addEventListener("change", onChange);
@@ -61556,14 +61663,14 @@ function attachAutosize(root = document, options = {}) {
       area.classList.remove("kp-autosize");
       area.removeAttribute("data-kp-autosize-engine-used");
       area.removeAttribute("data-kp-autosize-capped");
-      HANDLES13.delete(area);
+      HANDLES12.delete(area);
     });
   }
   return () => {
     for (const clean of cleanups) clean();
   };
 }
-var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, px3, WRAP_PROPS, TWINS, HANDLES13, seq6, attr8;
+var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, px3, WRAP_PROPS, TWINS, HANDLES12, seq6, attr8;
 var init_autosize = __esm({
   "js/autosize.js"() {
     "use strict";
@@ -61613,7 +61720,7 @@ var init_autosize = __esm({
       "borderLeftStyle"
     ];
     TWINS = /* @__PURE__ */ new WeakMap();
-    HANDLES13 = /* @__PURE__ */ new WeakMap();
+    HANDLES12 = /* @__PURE__ */ new WeakMap();
     seq6 = 0;
     attr8 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
   }
@@ -62954,16 +63061,16 @@ function parseSliderText(text, unit2 = "") {
   return /^[+-]?(\d+\.?\d*|\.\d+)$/.test(t) ? Number(t) : Number.NaN;
 }
 function slider(element) {
-  return HANDLES14.get(element) ?? null;
+  return HANDLES13.get(element) ?? null;
 }
 function sliderValues(element) {
-  return HANDLES14.get(element)?.values() ?? [];
+  return HANDLES13.get(element)?.values() ?? [];
 }
 function setSliderValues(element, values) {
-  HANDLES14.get(element)?.set(values);
+  HANDLES13.get(element)?.set(values);
 }
 function setSliderState(element, state2) {
-  HANDLES14.get(element)?.setState(state2);
+  HANDLES13.get(element)?.setState(state2);
 }
 function attachSliders(root = document) {
   const cleanups = [];
@@ -62975,7 +63082,7 @@ function attachSliders(root = document) {
     ]
   );
   for (const el16 of found) {
-    if (HANDLES14.has(el16)) continue;
+    if (HANDLES13.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = el16.id || `kp-slider-${++seq7}`;
@@ -63328,7 +63435,7 @@ function attachSliders(root = document) {
       setState: setState2,
       text: () => isRange ? `${text(values[0] ?? min)} \u2013 ${text(values[1] ?? max)}` : text(values[0] ?? min)
     };
-    HANDLES14.set(el16, handle);
+    HANDLES13.set(el16, handle);
     if (disabledByPage && el16.dataset.kpDisabledReason) {
       why.classList.remove("kp-field__error");
       why.classList.add("kp-slider__reason");
@@ -63356,7 +63463,7 @@ function attachSliders(root = document) {
       doc.removeEventListener("pointerup", onUp2);
       for (const box of boxes) box.removeEventListener("blur", onBoxBlur);
       showWatch.disconnect();
-      HANDLES14.delete(el16);
+      HANDLES13.delete(el16);
       el16.replaceChildren();
       for (const p of ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"])
         el16.style.removeProperty(p);
@@ -63368,7 +63475,7 @@ function attachSliders(root = document) {
     for (const c of cleanups) c();
   };
 }
-var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, HANDLES14, seq7;
+var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, HANDLES13, seq7;
 var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
@@ -63385,7 +63492,7 @@ var init_slider = __esm({
       const at = text.indexOf(".");
       return at < 0 ? 0 : text.length - at - 1;
     };
-    HANDLES14 = /* @__PURE__ */ new WeakMap();
+    HANDLES13 = /* @__PURE__ */ new WeakMap();
     seq7 = 0;
   }
 });
@@ -63457,7 +63564,7 @@ function setSentenceInvalid(element, name, why) {
   const control = [...element.querySelectorAll("[name]")].find((c) => c.getAttribute("name") === name);
   if (!control) return;
   const field = control.closest(".kp-sentence__field");
-  const line = HANDLES15.get(element)?.line;
+  const line = HANDLES14.get(element)?.line;
   if (why === null) {
     control.removeAttribute("aria-invalid");
     control.removeAttribute("aria-describedby");
@@ -63473,7 +63580,7 @@ function setSentenceInvalid(element, name, why) {
   }
 }
 function setSentenceWhy(element, text) {
-  const line = HANDLES15.get(element)?.line;
+  const line = HANDLES14.get(element)?.line;
   if (!line) return;
   line.textContent = text ?? "";
   line.hidden = !text;
@@ -63494,7 +63601,7 @@ function setSentenceFieldState(field, state2) {
     bar.className = "kp-skeleton kp-skeleton--block kp-sentence__bar";
     skeleton2.append(bar);
     field.append(skeleton2);
-    for (const c of field.querySelectorAll(CONTROLS)) {
+    for (const c of field.querySelectorAll(CONTROLS2)) {
       if (c instanceof HTMLElement && !c.hasAttribute("disabled")) {
         c.setAttribute("disabled", "");
         c.setAttribute("data-kp-was-enabled", "");
@@ -63512,7 +63619,7 @@ function setSentenceFieldState(field, state2) {
   }
 }
 function sentence(element) {
-  return HANDLES15.get(element) ?? null;
+  return HANDLES14.get(element) ?? null;
 }
 function valueOfControl(root, name) {
   const controls = [...root.querySelectorAll("[name]")].filter((c2) => c2.getAttribute("name") === name);
@@ -63540,7 +63647,7 @@ function attachSentences(root = document, { computed = {} } = {}) {
     ]
   );
   for (const el16 of found) {
-    if (HANDLES15.has(el16)) continue;
+    if (HANDLES14.has(el16)) continue;
     const doc = el16.ownerDocument;
     const id = `kp-sentence-${++seq8}`;
     el16.classList.add("kp-sentence");
@@ -63598,7 +63705,7 @@ function attachSentences(root = document, { computed = {} } = {}) {
         if (phrase.hidden === !show) continue;
         phrase.hidden = !show;
         phrase.toggleAttribute("inert", !show);
-        for (const c of phrase.querySelectorAll(CONTROLS)) {
+        for (const c of phrase.querySelectorAll(CONTROLS2)) {
           if (!(c instanceof HTMLElement)) continue;
           if (!show && !c.hasAttribute("disabled")) {
             c.setAttribute("disabled", "");
@@ -63701,7 +63808,7 @@ function attachSentences(root = document, { computed = {} } = {}) {
         live4.textContent = sentenceSummary(el16);
       }
     };
-    HANDLES15.set(el16, handle);
+    HANDLES14.set(el16, handle);
     for (const output of el16.querySelectorAll("[data-kp-sentence-computed]"))
       setSentenceComputed(el16, output.getAttribute("data-kp-sentence-computed") ?? "", output.textContent);
     refresh3();
@@ -63716,14 +63823,14 @@ function attachSentences(root = document, { computed = {} } = {}) {
       watch2?.disconnect();
       live4.remove();
       reasonLine?.remove();
-      HANDLES15.delete(el16);
+      HANDLES14.delete(el16);
     });
   }
   return () => {
     for (const c of cleanups) c();
   };
 }
-var SENTENCE, SENTENCE_EVENT, CONTROLS, tidy, COMPUTED_NONE, HANDLES15, seq8;
+var SENTENCE, SENTENCE_EVENT, CONTROLS2, tidy, COMPUTED_NONE, HANDLES14, seq8;
 var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
@@ -63731,10 +63838,10 @@ var init_sentence = __esm({
     init_weekdays();
     SENTENCE = "[data-kp-sentence]";
     SENTENCE_EVENT = "kp-sentence-change";
-    CONTROLS = 'input, select, textarea, button, [role="combobox"]';
+    CONTROLS2 = 'input, select, textarea, button, [role="combobox"]';
     tidy = (text) => text.replace(/\s+/g, " ").replace(/\s+([.,;:!?])/g, "$1").trim();
     COMPUTED_NONE = "\u2014";
-    HANDLES15 = /* @__PURE__ */ new WeakMap();
+    HANDLES14 = /* @__PURE__ */ new WeakMap();
     seq8 = 0;
   }
 });
@@ -63772,16 +63879,16 @@ function orderDated(options, order2 = "newest") {
   }).map((x) => x.o);
 }
 function datedOptions(element) {
-  return HANDLES16.get(element) ?? null;
+  return HANDLES15.get(element) ?? null;
 }
 function setDatedOptions(element, options, value) {
-  HANDLES16.get(element)?.set(options, value);
+  HANDLES15.get(element)?.set(options, value);
 }
 function setDatedState(element, state2, options) {
-  HANDLES16.get(element)?.setState(state2, options);
+  HANDLES15.get(element)?.setState(state2, options);
 }
 function datedValue(element) {
-  return HANDLES16.get(element)?.value() ?? null;
+  return HANDLES15.get(element)?.value() ?? null;
 }
 function attachDatedOptions(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -63790,7 +63897,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(DATED) ? [root] : [], ...root.querySelectorAll(DATED)]
   );
   for (const el16 of found) {
-    if (HANDLES16.has(el16)) continue;
+    if (HANDLES15.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = el16.id || `kp-dated-${++seq9}`;
@@ -64104,7 +64211,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       options: () => shown4.slice(),
       state: () => state2
     };
-    HANDLES16.set(el16, handle);
+    HANDLES15.set(el16, handle);
     const onChange = (event) => {
       const target = event.target;
       if (target instanceof HTMLInputElement && target.type === "radio" && body.contains(target)) choose3(target.value, true);
@@ -64155,7 +64262,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       el16.removeEventListener("keydown", onType);
       detachCombobox?.();
       busy?.remove();
-      HANDLES16.delete(el16);
+      HANDLES15.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-dated-rows");
       delete el16.dataset.kpDatedAttached;
@@ -64166,7 +64273,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES16, seq9;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES15, seq9;
 var init_dated_options = __esm({
   "js/dated-options.js"() {
     "use strict";
@@ -64181,7 +64288,7 @@ var init_dated_options = __esm({
     DATED_RETRY_EVENT = "kp-dated-retry";
     DATED_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
-    HANDLES16 = /* @__PURE__ */ new WeakMap();
+    HANDLES15 = /* @__PURE__ */ new WeakMap();
     seq9 = 0;
   }
 });
@@ -64227,13 +64334,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES17.get(element) ?? null;
+  return HANDLES16.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES17.get(element)?.set(times, options);
+  HANDLES16.get(element)?.set(times, options);
 }
 function setRunsState(element, state2, options) {
-  HANDLES17.get(element)?.setState(state2, options);
+  HANDLES16.get(element)?.setState(state2, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -64242,7 +64349,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES17.has(el16)) continue;
+    if (HANDLES16.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq10}`;
@@ -64391,7 +64498,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state2
     };
-    HANDLES17.set(el16, handle);
+    HANDLES16.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -64412,7 +64519,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button2.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES17.delete(el16);
+      HANDLES16.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -64422,7 +64529,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES17, seq10;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES16, seq10;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -64437,7 +64544,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES17 = /* @__PURE__ */ new WeakMap();
+    HANDLES16 = /* @__PURE__ */ new WeakMap();
     seq10 = 0;
   }
 });
@@ -64523,16 +64630,16 @@ function snoozeChoices({
   return out;
 }
 function snooze(element) {
-  return HANDLES18.get(element) ?? null;
+  return HANDLES17.get(element) ?? null;
 }
 function setSnoozedUntil(element, until) {
-  HANDLES18.get(element)?.setUntil(until);
+  HANDLES17.get(element)?.setUntil(until);
 }
 function setSnoozeBusy(element, busy) {
-  HANDLES18.get(element)?.setBusy(busy);
+  HANDLES17.get(element)?.setBusy(busy);
 }
 function openSnoozePanel(element, open4 = true) {
-  const h2 = HANDLES18.get(element);
+  const h2 = HANDLES17.get(element);
   if (open4) h2?.openPanel();
   else h2?.closePanel();
 }
@@ -64546,7 +64653,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     ]
   );
   for (const el16 of found) {
-    if (HANDLES18.has(el16)) continue;
+    if (HANDLES17.has(el16)) continue;
     const s2 = snoozeWords(el16);
     const doc = el16.ownerDocument;
     const id = `kp-snooze-${++seq11}`;
@@ -64903,7 +65010,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       openPanel,
       closePanel: () => void closePanel(false)
     };
-    HANDLES18.set(el16, handle);
+    HANDLES17.set(el16, handle);
     handle.setUntil(el16.dataset.kpSnoozedUntil ?? null);
     paintStatus();
     fill2();
@@ -64919,7 +65026,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       end.removeEventListener("click", onEnd);
       doc.removeEventListener("pointerdown", onOutside, true);
       if (tick6) clearInterval(tick6);
-      HANDLES18.delete(el16);
+      HANDLES17.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-busy");
       delete el16.dataset.kpSnoozeAttached;
@@ -64930,7 +65037,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES18, seq11;
+var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES17, seq11;
 var init_snooze = __esm({
   "js/snooze.js"() {
     "use strict";
@@ -64974,7 +65081,7 @@ var init_snooze = __esm({
       ["data-kp-snooze-apply", "snoozeApply"],
       ["data-kp-snooze-saving", "snoozeSaving"]
     ];
-    HANDLES18 = /* @__PURE__ */ new WeakMap();
+    HANDLES17 = /* @__PURE__ */ new WeakMap();
     seq11 = 0;
   }
 });
@@ -66844,7 +66951,7 @@ function fillRow(list, row, item) {
   }
 }
 var mode, among;
-var init_rows = __esm({
+var init_rows2 = __esm({
   "js/claim/rows.js"() {
     "use strict";
     init_strings();
@@ -67070,7 +67177,7 @@ var init_decorate = __esm({
     init_state_plate();
     init_constants20();
     init_model6();
-    init_rows();
+    init_rows2();
   }
 });
 
@@ -67293,7 +67400,7 @@ var init_request = __esm({
     init_constants20();
     init_decorate();
     init_model6();
-    init_rows();
+    init_rows2();
   }
 });
 
@@ -67459,7 +67566,7 @@ var init_attach17 = __esm({
     init_decorate();
     init_model6();
     init_request();
-    init_rows();
+    init_rows2();
     init_state11();
   }
 });
@@ -71323,7 +71430,7 @@ function collect(root, reset = false) {
   for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
-var init_rows2 = __esm({
+var init_rows3 = __esm({
   "js/logviewer/rows.js"() {
     "use strict";
     init_strings();
@@ -71479,7 +71586,7 @@ var init_refresh = __esm({
     init_constants23();
     init_model8();
     init_reads();
-    init_rows2();
+    init_rows3();
   }
 });
 
@@ -71626,7 +71733,7 @@ var init_api12 = __esm({
     init_parts2();
     init_reads();
     init_refresh();
-    init_rows2();
+    init_rows3();
   }
 });
 
@@ -71834,7 +71941,7 @@ var init_attach20 = __esm({
     init_model8();
     init_parts2();
     init_reads();
-    init_rows2();
+    init_rows3();
   }
 });
 
@@ -74770,7 +74877,6 @@ export {
   COUNTDOWN_STEP,
   COUNT_FROM_KNOB,
   COUNT_KNOB,
-  CURSOR_CLASS,
   DATED,
   DATED_EVENT,
   DATED_RETRY_EVENT,
@@ -74858,7 +74964,6 @@ export {
   LIGHT_KNOB,
   LIGHT_REACH,
   LIGHT_SELECTOR,
-  LONG_PRESS_MS,
   MARKDOWN_LIMIT,
   MARQUEE_KNOB,
   MARQUEE_PAUSE_KNOB,
@@ -74993,9 +75098,7 @@ export {
   ROUTINES,
   ROW_ACTIONS,
   ROW_KEYS,
-  ROW_SELECT,
-  ROW_SELECT_AUTO,
-  ROW_SELECT_EVENT,
+  ROW_OPEN_EVENT,
   RUNS,
   RUNS_RETRY_EVENT,
   RUNS_STATES,
@@ -75010,7 +75113,6 @@ export {
   SELECTION_MATCHING_EVENT,
   SELECTION_NAMES,
   SELECTION_SAY_MS,
-  SELECT_BOX,
   SENTENCE,
   SENTENCE_EVENT,
   SEVERITIES,

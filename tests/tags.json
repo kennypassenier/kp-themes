@@ -341,6 +341,7 @@
         { "path": "js/timer/*.js", "tags": ["@component:feedback"], "why": "kitchen timers, named countdowns that keep running [kpadopt4]" },
         { "path": "js/checklist.js", "tags": ["@component:data"], "why": "a checklist whose ticked items sink [kpadopt4]" },
         { "path": "js/row-select.js", "tags": ["@component:data"], "why": "rows ticked with the keyboard and with Shift-click [kpadopt5]" },
+        { "path": "js/row-select/*.js", "tags": ["@component:data"], "why": "rows ticked with the keyboard and with Shift-click [kpadopt5]" },
         { "path": "js/selection-bar.js", "tags": ["@component:data"], "why": "the selection bar over a table or a list [kpadopt5]" },
         { "path": "js/undo-toast.js", "tags": ["@component:feedback"], "why": "a toast with Undo and a visible clock [kpadopt5]" },
         {

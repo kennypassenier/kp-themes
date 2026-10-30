@@ -95,7 +95,7 @@
         "js/rating.js": { "digest": "6b7dc7c2d535d9aa", "when": "[data-kp-rating]" },
         "js/reason.js": { "digest": "e03846b46d464fbe", "when": "[data-kp-disabled-reason]" },
         "js/request-inspector.js": { "digest": "bad69c26fc325a7f", "when": "[data-kp-requests]" },
-        "js/row-select.js": { "digest": "32a882863433b369", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
+        "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
         "js/runs.js": { "digest": "cd531b566e90970e", "when": "[data-kp-runs]" },
         "js/segmented.js": { "digest": "6e3008e03db4a58f", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "6f9045d70b5053ea", "when": "[data-kp-selection]" },
