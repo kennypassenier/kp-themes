@@ -1,5 +1,7 @@
 # research/medicine-1030: the Medicine Cabinet package
 
+**Decided (2026-10-31 00:41):** Kenny approved every pair (formal) over two rounds: eleven sections in round 1, pills-none and dialogs in round 2. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kenny approved all thirteen items of `~/Projects/kp-gaps/medicine-cabinet-workpackage.md` on 2026-10-30 20:05 (item 13 of the app's list, the chassis-rs wiring of
 `attachSegmented`, is not here). Round 1 (page round `medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5`) was judged 2026-10-31 00:01: eleven approved, two not
 (`VERDICTS.json`). **Round 2** shows only those two, formal only (DEMO_RULES ch. 6), and keeps round 1 in `_previous/`:

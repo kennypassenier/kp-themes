@@ -460,25 +460,10 @@
             },
             "fingerprint": "83f012d2600f0685",
             "update": null
-        },
-        "research/medicine-1030/demo.html": {
-            "facts": {
-                "id": "medicine-1030",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 1 of the Medicine Cabinet package (2026-10-31): eleven of the thirteen items are approved and have left this page; two come back. The pills and their field now stay in step in both directions and the field is only there when the choices are more than the pills; the accept button of the add-stock dialog says what will happen with the amount and follows the stepper. Formal only, on the app’s own shapes (the names, counts and times are mock). 2 sections, 2 pairs.",
-                "sections": [
-                    { "item": "pills-none", "themes": null, "topic": "form", "mode": null },
-                    { "item": "dialogs", "themes": null, "topic": "dialogs", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"medicine-1030-759a7e85-a5d3-4774-91f6-ca1c26ad6b77\", \"received\": [\"medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5\"] }\n        "
-            },
-            "fingerprint": "66b288815cc02de1",
-            "update": null
         }
     },
     "decided": {
+        "research/medicine-1030/demo.html": "2026-10-31 00:41, Kenny: every pair approved over two rounds (research/medicine-1030/VERDICTS.json)",
         "research/chassis-storage/demo.html": "",
         "research/wishes-1120/demo.html": "2026-10-20, Kenny: 17 of 22 approved; the other 5 fixed directly in c649bfb5 and judged in the real app (research/wishes-1120/VERDICTS.json)",
         "research/align-grid-1019/demo.html": "2026-10-19 18:55, Kenny: every pair approved (research/align-grid-1019/VERDICTS.json)",
