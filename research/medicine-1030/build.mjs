@@ -375,6 +375,7 @@ const SECTIONS = [
                     <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span><span>Active</span></label>
                     <span class="pg-switch-name">No word</span>
                     <label class="kp-switch" data-kp-switch-state="none"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span><span>Active</span></label>
+                    </div><div class="${label === 'Before' ? 'pg-before ' : ''}pg-switches"><p class="pg-case__title">With words (unchanged)</p>
                     <span class="pg-switch-name">On / Off words</span>
                     <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span><span>Active</span></label></div>`,
             )
