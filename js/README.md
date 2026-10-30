@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The forty-seven largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The forty-eight largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -846,3 +846,14 @@ The toggle button and its groups, as a ToggleControl controller. 4 files.
 | `group.js`      | Selector, events, looks and modes, a group and its keys, what a press would make of it.      |
 | `handle.js`     | ToggleAnswers: the handle (set, count, hint, done, refuse), the async answer, the memory.    |
 | `parts.js`      | ToggleParts: stamps, label, tick, count, hint, refusal, spinner, the live line and Clear.    |
+
+## js/snooze.js → js/snooze/
+
+The snooze picker, as a SnoozePicker controller. 4 files.
+
+| File            | Does                                                                                     |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| `build.js`      | The bar (chips or a menu button, End snooze), the status line and the date/time panel.  |
+| `choices.js`    | Selector, events, the picker's words, the moments its choices stand for, what it offers. |
+| `controller.js` | SnoozePicker: wiring, status, choices, a pick from chips, menu or panel, End, handle.    |
+| `panel.js`      | SnoozePanel: the state, and the panel opened, placed, closed and checked.               |

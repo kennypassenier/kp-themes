@@ -1322,7 +1322,7 @@ var init_snooze_dated_slider = __esm({
       datedLoading: "Loading the options\u2026",
       // The sentence form (js/sentence.js) [kpadopt5-time].
       sentenceEmpty: (label) => `(${label || "\u2026"})`,
-      sentenceWhy: (field, why) => `${field}: ${why}`,
+      sentenceWhy: (field2, why) => `${field2}: ${why}`,
       sentenceField: "Field",
       // The slider (js/slider.js) [kpadopt5-time].
       sliderGroup: "Value",
@@ -4490,17 +4490,17 @@ function attachDialogs(root = document, { modal = true } = {}) {
     });
   }
   for (const el16 of root.querySelectorAll("[data-kp-dialog-close]")) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement} */
       el16
     );
-    if (button4.dataset.kpDialogCloseAttached !== void 0) continue;
-    button4.dataset.kpDialogCloseAttached = "";
-    const close = () => button4.closest("dialog")?.close(button4.dataset.kpDialogClose || void 0);
-    button4.addEventListener("click", close);
+    if (button5.dataset.kpDialogCloseAttached !== void 0) continue;
+    button5.dataset.kpDialogCloseAttached = "";
+    const close = () => button5.closest("dialog")?.close(button5.dataset.kpDialogClose || void 0);
+    button5.addEventListener("click", close);
     cleanups.push(() => {
-      button4.removeEventListener("click", close);
-      delete button4.dataset.kpDialogCloseAttached;
+      button5.removeEventListener("click", close);
+      delete button5.dataset.kpDialogCloseAttached;
     });
   }
   return () => {
@@ -4749,12 +4749,12 @@ function toast(content, {
   else body.append(content);
   el16.append(body);
   if (action) {
-    const button4 = document.createElement("button");
-    button4.type = "button";
-    button4.className = "kp-button kp-button--ghost";
-    button4.textContent = action.label;
-    button4.addEventListener("click", action.onClick);
-    el16.append(button4);
+    const button5 = document.createElement("button");
+    button5.type = "button";
+    button5.className = "kp-button kp-button--ghost";
+    button5.textContent = action.label;
+    button5.addEventListener("click", action.onClick);
+    el16.append(button5);
   }
   if (close || sticky) {
     const closer = document.createElement("button");
@@ -5380,15 +5380,15 @@ function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
   const onClick = (event) => {
     if (dismissHandled.has(event)) return;
     const target = event.target instanceof Element ? event.target : null;
-    const button4 = target?.closest(".kp-alert__close, .kp-toast__close");
-    if (!button4) return;
-    if (ownedBy !== "" && button4.matches(ownedBy)) return;
+    const button5 = target?.closest(".kp-alert__close, .kp-toast__close");
+    if (!button5) return;
+    if (ownedBy !== "" && button5.matches(ownedBy)) return;
     dismissHandled.add(event);
     const toastEl = (
       /** @type {(HTMLElement & { dismiss?: () => void }) | null} */
-      button4.closest(".kp-toast")
+      button5.closest(".kp-toast")
     );
-    if (button4.classList.contains("kp-toast__close") && toastEl) {
+    if (button5.classList.contains("kp-toast__close") && toastEl) {
       if (typeof toastEl.dismiss === "function") {
         toastEl.dismiss();
         return;
@@ -5401,10 +5401,10 @@ function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
     }
     const alert = (
       /** @type {HTMLElement | null} */
-      button4.closest(".kp-alert")
+      button5.closest(".kp-alert")
     );
     if (!alert) return;
-    const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button: button4 } }));
+    const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button: button5 } }));
     if (!proceed) return;
     if (alert.hasAttribute("data-kp-remember")) memoryFor(alert, "alert")?.write("dismissed", true);
     void leave(alert, { hide: true }).then(() => {
@@ -5576,16 +5576,16 @@ function watchScrollbar(box) {
     if (event.clientX < right - bar || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
     event.preventDefault();
     if (!box.hasAttribute(SCROLL_OVERFLOW)) return;
-    const button4 = Math.min(length("--kp-scrollbar-button") || bar, (bottom - top) / 2);
+    const button5 = Math.min(length("--kp-scrollbar-button") || bar, (bottom - top) / 2);
     const line = parseFloat(getComputedStyle(box).lineHeight) || 20;
-    if (event.clientY < top + button4) box.scrollTop -= line;
-    else if (event.clientY > bottom - button4) box.scrollTop += line;
+    if (event.clientY < top + button5) box.scrollTop -= line;
+    else if (event.clientY > bottom - button5) box.scrollTop += line;
     else {
-      const track = bottom - top - 2 * button4;
+      const track = bottom - top - 2 * button5;
       const thumb = Math.max(8, track * (box.clientHeight / box.scrollHeight));
       const travel = track - thumb;
       const range = box.scrollHeight - box.clientHeight;
-      const start = top + button4 + travel * (box.scrollTop / range);
+      const start = top + button5 + travel * (box.scrollTop / range);
       if (event.clientY < start) box.scrollTop -= box.clientHeight;
       else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
       else if (travel > 0) {
@@ -6022,18 +6022,18 @@ function attachOne2(gate) {
   gate.classList.add(toneClass);
   gate.setAttribute("role", "group");
   const key = () => gate.getAttribute("data-kp-ack-key") ?? gate.id ?? id;
-  const make27 = (className, tag = "div") => {
+  const make28 = (className, tag = "div") => {
     const el16 = doc.createElement(tag);
     el16.className = className;
     return el16;
   };
-  const side = make27("kp-ack__side");
+  const side = make28("kp-ack__side");
   const link = gate.getAttribute("data-kp-ack-link");
   let anchor = null;
   let linkOpened = false;
   if (link) {
     anchor = /** @type {HTMLAnchorElement} */
-    make27("kp-ack__link", "a");
+    make28("kp-ack__link", "a");
     anchor.href = link;
     anchor.target = "_blank";
     anchor.rel = "noopener noreferrer";
@@ -6042,33 +6042,33 @@ function attachOne2(gate) {
   }
   const tick6 = (
     /** @type {HTMLLabelElement} */
-    make27("kp-ack__tick", "label")
+    make28("kp-ack__tick", "label")
   );
   const box = (
     /** @type {HTMLInputElement} */
-    make27("kp-field__check", "input")
+    make28("kp-field__check", "input")
   );
   box.type = "checkbox";
   box.id = `${id}-box`;
-  const words2 = make27("kp-ack__label", "span");
+  const words2 = make28("kp-ack__label", "span");
   tick6.append(box, words2);
   side.append(tick6);
-  const live4 = make27("kp-sr-only", "span");
+  const live4 = make28("kp-sr-only", "span");
   live4.setAttribute("role", "status");
   live4.setAttribute("aria-live", "polite");
   let busy = null;
-  const problem = make27("kp-ack__problem");
+  const problem = make28("kp-ack__problem");
   problem.hidden = true;
-  const problemText = make27("kp-ack__problem-text", "span");
+  const problemText = make28("kp-ack__problem-text", "span");
   const retry = (
     /** @type {HTMLButtonElement} */
-    make27("kp-button kp-ack__retry", "button")
+    make28("kp-button kp-ack__retry", "button")
   );
   retry.type = "button";
   retry.textContent = s2.ackRetry;
   retry.hidden = true;
   problem.append(problemText, retry);
-  const frame3 = make27("kp-ack__frame");
+  const frame3 = make28("kp-ack__frame");
   const authored = [...gate.childNodes];
   side.prepend(problem);
   frame3.append(...authored, side);
@@ -6213,10 +6213,10 @@ function attachOne2(gate) {
     }
     if (notes === null) {
       notes = /** @type {HTMLDetailsElement} */
-      make27("kp-ack__notes", "details");
-      const summary2 = make27("kp-ack__notes-summary", "summary");
+      make28("kp-ack__notes", "details");
+      const summary2 = make28("kp-ack__notes-summary", "summary");
       summary2.textContent = s2.ackNotes;
-      const body2 = make27("kp-ack__notes-body kp-markdown");
+      const body2 = make28("kp-ack__notes-body kp-markdown");
       body2.tabIndex = 0;
       body2.setAttribute("role", "region");
       notes.append(summary2, body2);
@@ -6502,8 +6502,8 @@ __export(actions_exports, {
 });
 function rowRoles(buttons) {
   const seen = /* @__PURE__ */ new Map();
-  return buttons.map((button4, at) => {
-    const base = button4.role || `end-${buttons.length - 1 - at}`;
+  return buttons.map((button5, at) => {
+    const base = button5.role || `end-${buttons.length - 1 - at}`;
     const count2 = (seen.get(base) ?? 0) + 1;
     seen.set(base, count2);
     return count2 > 1 ? `${base}#${count2}` : base;
@@ -6535,21 +6535,21 @@ function fitActionColumns(list) {
     /** @type {HTMLElement[]} */
     [...box.children].filter((child) => !child.hidden)
   ));
-  const roles = rows.map((row) => rowRoles(row.map((button4) => ({ role: button4.dataset.kpAction ?? null }))));
+  const roles = rows.map((row) => rowRoles(row.map((button5) => ({ role: button5.dataset.kpAction ?? null }))));
   const order2 = mergeRoles(roles);
-  const named = rows.some((row) => row.some((button4) => button4.dataset.kpAction !== void 0));
-  for (const row of rows) for (const button4 of row) button4.style.removeProperty("--kp-action-col");
+  const named = rows.some((row) => row.some((button5) => button5.dataset.kpAction !== void 0));
+  for (const row of rows) for (const button5 of row) button5.style.removeProperty("--kp-action-col");
   for (const name of ["--kp-action-count", "--kp-action-widths", "--kp-action-stack"]) list.style.removeProperty(name);
   if (order2.length === 0 || !isTable && !named) return;
   if (isTable) {
     list.dataset.kpActionMeasuring = "";
     const widths2 = order2.map(() => 0);
     rows.forEach(
-      (row, r) => row.forEach((button4, b) => {
+      (row, r) => row.forEach((button5, b) => {
         const k = order2.indexOf(roles[r][b]);
-        const style = getComputedStyle(button4);
+        const style = getComputedStyle(button5);
         const margins = (parseFloat(style.marginInlineStart) || 0) + (parseFloat(style.marginInlineEnd) || 0);
-        widths2[k] = Math.max(widths2[k], button4.getBoundingClientRect().width + margins);
+        widths2[k] = Math.max(widths2[k], button5.getBoundingClientRect().width + margins);
       })
     );
     delete list.dataset.kpActionMeasuring;
@@ -6558,7 +6558,7 @@ function fitActionColumns(list) {
   } else {
     list.style.setProperty("--kp-action-count", String(order2.length));
   }
-  rows.forEach((row, r) => row.forEach((button4, b) => button4.style.setProperty("--kp-action-col", String(order2.indexOf(roles[r][b]) + 1))));
+  rows.forEach((row, r) => row.forEach((button5, b) => button5.style.setProperty("--kp-action-col", String(order2.indexOf(roles[r][b]) + 1))));
 }
 function attachActionColumns(root = document) {
   const doc = root instanceof Document ? root : root.ownerDocument ?? document;
@@ -6605,7 +6605,7 @@ function attachActionColumns(root = document) {
     if (queued2) view.cancelAnimationFrame(queued2);
   };
 }
-function setRowBusy(row, busy = true, button4 = null) {
+function setRowBusy(row, busy = true, button5 = null) {
   const doc = row.ownerDocument;
   const buttons = (
     /** @type {HTMLElement[]} */
@@ -6618,9 +6618,9 @@ function setRowBusy(row, busy = true, button4 = null) {
       b.setAttribute("aria-disabled", "true");
       b.setAttribute("data-kp-row-blocked", "");
     }
-    if (button4 && !button4.hasAttribute("data-kp-busy")) {
-      button4.style.setProperty("min-inline-size", `${button4.getBoundingClientRect().width}px`);
-      for (const node of [...button4.childNodes])
+    if (button5 && !button5.hasAttribute("data-kp-busy")) {
+      button5.style.setProperty("min-inline-size", `${button5.getBoundingClientRect().width}px`);
+      for (const node of [...button5.childNodes])
         if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
           const words2 = doc.createElement("span");
           words2.className = "kp-button__text";
@@ -6633,8 +6633,8 @@ function setRowBusy(row, busy = true, button4 = null) {
       const wheel = doc.createElement("span");
       wheel.className = "kp-spinner";
       holder.append(wheel);
-      button4.append(holder);
-      button4.setAttribute("data-kp-busy", "");
+      button5.append(holder);
+      button5.setAttribute("data-kp-busy", "");
     }
     if (!blockers.has(row)) {
       const block2 = (event) => {
@@ -7654,12 +7654,12 @@ function install6(ctx) {
       const el16 = pressed(event);
       if (!el16) return;
       if (asked() === "size") return letter(el16);
-      const button4 = el16.closest(".kp-button");
-      if (asked() !== "point" || !(button4 instanceof HTMLElement)) return;
-      const box = button4.getBoundingClientRect();
-      button4.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
-      button4.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
-      marked.add(button4);
+      const button5 = el16.closest(".kp-button");
+      if (asked() !== "point" || !(button5 instanceof HTMLElement)) return;
+      const box = button5.getBoundingClientRect();
+      button5.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
+      button5.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
+      marked.add(button5);
     };
     const onKey6 = (event) => {
       const key = (
@@ -7674,11 +7674,11 @@ function install6(ctx) {
       const el16 = pressed(event);
       if (!el16 || key !== " " && key !== "Enter") return;
       if (asked() === "size") return letter(el16);
-      const button4 = el16.closest(".kp-button");
-      if (asked() !== "point" || !(button4 instanceof HTMLElement)) return;
-      button4.style.removeProperty(PRESS.x);
-      button4.style.removeProperty(PRESS.y);
-      marked.delete(button4);
+      const button5 = el16.closest(".kp-button");
+      if (asked() !== "point" || !(button5 instanceof HTMLElement)) return;
+      button5.style.removeProperty(PRESS.x);
+      button5.style.removeProperty(PRESS.y);
+      marked.delete(button5);
     };
     doc.addEventListener("pointerdown", onDown2, { passive: true });
     doc.addEventListener("keydown", onKey6);
@@ -9824,12 +9824,12 @@ var init_marks = __esm({
         const id = this.idFor(el16);
         if (!el16.id) el16.id = id;
         el16.setAttribute("data-kp-anchored", kind);
-        const button4 = this.makeMark(el16, kind);
+        const button5 = this.makeMark(el16, kind);
         const before = (el16.getAttribute("data-kp-anchor-position") ?? this.host.getAttribute("data-kp-anchor-position") ?? (kind === "row" ? "before" : "after")) === "before";
         const into = kind === "row" && el16.matches('tr, [role="row"]') ? el16.querySelector('th, td, [role="cell"], [role="gridcell"], [role="rowheader"]') ?? el16 : el16;
-        if (before) into.prepend(button4);
-        else into.append(button4);
-        this.marks.set(el16, button4);
+        if (before) into.prepend(button5);
+        else into.append(button5);
+        this.marks.set(el16, button5);
       }
       /**
        * The mark: a button whose faces carry their words as an attribute the stylesheet prints. The mark has no text of its own, so
@@ -9838,11 +9838,11 @@ var init_marks = __esm({
        * @param {HTMLElement} el @param {'heading' | 'row'} kind
        */
       makeMark(el16, kind) {
-        const button4 = this.doc.createElement("button");
-        button4.type = "button";
-        button4.className = "kp-anchor";
-        button4.setAttribute("data-kp-anchor-mark", "");
-        button4.setAttribute("aria-label", this.strings.anchorCopyLink(nameOf(el16)));
+        const button5 = this.doc.createElement("button");
+        button5.type = "button";
+        button5.className = "kp-anchor";
+        button5.setAttribute("data-kp-anchor-mark", "");
+        button5.setAttribute("aria-label", this.strings.anchorCopyLink(nameOf(el16)));
         const face = (className, text) => {
           const span4 = this.doc.createElement("span");
           span4.className = className;
@@ -9850,8 +9850,8 @@ var init_marks = __esm({
           span4.setAttribute("data-kp-text", text);
           return span4;
         };
-        button4.append(face("kp-anchor__hash", "#"), face("kp-anchor__done", kind === "row" ? "\u2713" : this.strings.anchorCopied));
-        return button4;
+        button5.append(face("kp-anchor__hash", "#"), face("kp-anchor__done", kind === "row" ? "\u2713" : this.strings.anchorCopied));
+        return button5;
       }
       /** Mark what the mode asks for, and take the marks of rows that left. */
       scan() {
@@ -9867,17 +9867,17 @@ var init_marks = __esm({
           for (const row of box.querySelectorAll(`[data-kp-anchor], ${KEYED_ROWS}`)) if (row instanceof HTMLElement && !isHeading(row)) this.mark(row, "row");
         }
         for (const lone of box.querySelectorAll("[data-kp-anchor]")) if (lone instanceof HTMLElement && isHeading(lone)) this.mark(lone, "heading");
-        for (const [el16, button4] of this.marks) {
+        for (const [el16, button5] of this.marks) {
           if (!el16.isConnected || !box.contains(el16)) {
-            button4.remove();
+            button5.remove();
             this.marks.delete(el16);
           }
         }
       }
       /** Take every mark off. */
       unmark() {
-        for (const [el16, button4] of this.marks) {
-          button4.remove();
+        for (const [el16, button5] of this.marks) {
+          button5.remove();
           el16.removeAttribute("data-kp-anchored");
         }
         this.marks.clear();
@@ -10042,24 +10042,24 @@ var init_controller2 = __esm({
       // --- Copying. ---
       /** A press copies; with Shift, as a Markdown link. @param {Event} event */
       async onClick(event) {
-        const button4 = event.target instanceof Element ? (
+        const button5 = event.target instanceof Element ? (
           /** @type {HTMLButtonElement | null} */
           event.target.closest("[data-kp-anchor-mark]")
         ) : null;
-        if (!button4 || !this.host.contains(button4)) return;
-        const el16 = [...this.marks].find(([, b]) => b === button4)?.[0];
+        if (!button5 || !this.host.contains(button5)) return;
+        const el16 = [...this.marks].find(([, b]) => b === button5)?.[0];
         if (!el16) return;
-        await this.copyLink(el16, button4, event instanceof MouseEvent && event.shiftKey);
+        await this.copyLink(el16, button5, event instanceof MouseEvent && event.shiftKey);
       }
       /** The `y l` provider: a way to copy the focused row's link, or null when no row of this container is focused. */
       copyFocused() {
         const active = this.doc.activeElement;
         if (!(active instanceof Element) || !this.host.contains(active)) return null;
-        for (const [el16, button4] of this.marks) if (el16.contains(active) && el16.getAttribute("data-kp-anchored") === "row") return () => void this.copyLink(el16, button4);
+        for (const [el16, button5] of this.marks) if (el16.contains(active) && el16.getAttribute("data-kp-anchored") === "row") return () => void this.copyLink(el16, button5);
         return null;
       }
       /** @param {HTMLElement} el @param {HTMLButtonElement} button @param {boolean} [markdownWanted] */
-      async copyLink(el16, button4, markdownWanted = false) {
+      async copyLink(el16, button5, markdownWanted = false) {
         const view = this.view;
         const id = el16.id;
         const hash = `#${encodeURIComponent(id)}`;
@@ -10071,15 +10071,15 @@ var init_controller2 = __esm({
         } catch {
         }
         const ok = await copyText(this.doc, text);
-        this.showCopied(el16, button4, ok);
-        button4.dispatchEvent(new CustomEvent(ANCHOR_COPY_EVENT, { bubbles: true, detail: { id, url, text, markdown, ok } }));
-        this.timers.push(view.setTimeout(() => button4.removeAttribute("data-kp-anchor-state"), this.copiedMs()));
+        this.showCopied(el16, button5, ok);
+        button5.dispatchEvent(new CustomEvent(ANCHOR_COPY_EVENT, { bubbles: true, detail: { id, url, text, markdown, ok } }));
+        this.timers.push(view.setTimeout(() => button5.removeAttribute("data-kp-anchor-state"), this.copiedMs()));
       }
       /** The mark says Copied (a tick on a row) or that it failed, and the voice says it. @param {HTMLElement} el @param {HTMLButtonElement} button @param {boolean} ok */
-      showCopied(el16, button4, ok) {
+      showCopied(el16, button5, ok) {
         const s2 = this.strings;
-        button4.setAttribute("data-kp-anchor-state", ok ? "copied" : "failed");
-        const done = button4.querySelector(".kp-anchor__done");
+        button5.setAttribute("data-kp-anchor-state", ok ? "copied" : "failed");
+        const done = button5.querySelector(".kp-anchor__done");
         const row = el16.getAttribute("data-kp-anchored") === "row";
         if (done) done.setAttribute("data-kp-text", ok ? row ? "\u2713" : s2.anchorCopied : row ? "!" : s2.anchorFailed);
         this.say(ok ? s2.anchorCopiedAnnounce(nameOf(el16)) : s2.anchorFailedAnnounce);
@@ -11456,7 +11456,7 @@ function raiseOverlay(element, place3) {
     clearBlockSide(element);
   };
 }
-function placeBlockSide(element, field) {
+function placeBlockSide(element, field2) {
   clearBlockSide(element);
   const drawn2 = layoutRect(element);
   const style = getComputedStyle(element);
@@ -11466,22 +11466,22 @@ function placeBlockSide(element, field) {
     element.style.maxBlockSize = `${Math.max(0, Math.floor(room - outside))}px`;
     element.style.overflowY = "auto";
   };
-  const gap = Math.max(0, drawn2.top - field.bottom);
+  const gap = Math.max(0, drawn2.top - field2.bottom);
   const view = document.documentElement.clientHeight;
   const below = view - drawn2.top;
-  const above = field.top - gap;
+  const above = field2.top - gap;
   if (height <= below || below >= above) {
     if (height > below) cap(below);
     return "below";
   }
   const size2 = Math.min(height, above);
   const top = Number.parseFloat(element.style.top) || 0;
-  element.style.top = `${top + (field.top - gap - size2 - drawn2.top)}px`;
+  element.style.top = `${top + (field2.top - gap - size2 - drawn2.top)}px`;
   if (height > above) cap(above);
   element.dataset.kpOverlaySide = "above";
   return "above";
 }
-function raiseInPlace(element, anchor, field = anchor) {
+function raiseInPlace(element, anchor, field2 = anchor) {
   const drawn2 = layoutRect(element);
   const from = anchor.getBoundingClientRect();
   const dx = drawn2.left - from.left;
@@ -11493,7 +11493,7 @@ function raiseInPlace(element, anchor, field = anchor) {
     element.style.left = `${at.left + dx - (Number.parseFloat(style.marginLeft) || 0)}px`;
     element.style.top = `${at.top + dy - (Number.parseFloat(style.marginTop) || 0)}px`;
     element.style.width = `${width}px`;
-    placeBlockSide(element, field.getBoundingClientRect());
+    placeBlockSide(element, field2.getBoundingClientRect());
   });
   return () => {
     lower();
@@ -11516,7 +11516,7 @@ var init_top_layer = __esm({
 });
 
 // js/menu-button/placement.js
-function menuPlacement({ button: button4, menu, height, gap, room }) {
+function menuPlacement({ button: button5, menu, height, gap, room }) {
   const width = menu.right - menu.left;
   const across = room.right - room.left;
   const fits = (x) => x >= room.left - 0.5 && x + width <= room.right + 0.5;
@@ -11526,12 +11526,12 @@ function menuPlacement({ button: button4, menu, height, gap, room }) {
     left = room.left;
     capWidth = across;
   } else if (!fits(left)) {
-    const start = button4.left;
-    const end = button4.right - width;
+    const start = button5.left;
+    const end = button5.right - width;
     left = fits(start) ? start : fits(end) ? end : Math.min(Math.max(left, room.left), room.right - width);
   }
-  const below = room.bottom - (button4.bottom + gap);
-  const above = button4.top - gap - room.top;
+  const below = room.bottom - (button5.bottom + gap);
+  const above = button5.top - gap - room.top;
   let side = "below";
   let capHeight = null;
   if (height > below + 0.5) {
@@ -11542,7 +11542,7 @@ function menuPlacement({ button: button4, menu, height, gap, room }) {
     }
   }
   const tall = capHeight ?? height;
-  const top = side === "below" ? button4.bottom + gap : button4.top - gap - tall;
+  const top = side === "below" ? button5.bottom + gap : button5.top - gap - tall;
   return { left, top, width: capWidth, height: capHeight, side };
 }
 function coveredEdges(view, wrapper, skip) {
@@ -11621,9 +11621,9 @@ function clipped(wrapper, view) {
 function raiseMenu(s2, view) {
   if (!clipped(s2.wrapper, view)) return;
   const box = layoutRect(s2.menu);
-  const button4 = s2.button.getBoundingClientRect();
-  const dx = box.left - button4.left;
-  const dy = box.top - button4.top;
+  const button5 = s2.button.getBoundingClientRect();
+  const dx = box.left - button5.left;
+  const dy = box.top - button5.top;
   s2.lower = raiseOverlay(s2.menu, (menu) => {
     const at = s2.button.getBoundingClientRect();
     menu.style.setProperty("left", `${at.left + dx}px`);
@@ -11651,16 +11651,16 @@ function placeMenu(s2, view, covered) {
     top: covered.top + MENU_GUTTER,
     bottom: html.clientHeight - covered.bottom - MENU_GUTTER
   };
-  const button4 = s2.button.getBoundingClientRect();
-  if (room.right - room.left < button4.width) {
+  const button5 = s2.button.getBoundingClientRect();
+  if (room.right - room.left < button5.width) {
     room.left = MENU_GUTTER;
     room.right = html.clientWidth - MENU_GUTTER;
   }
-  if (button4.bottom < 0 || button4.top > html.clientHeight) {
+  if (button5.bottom < 0 || button5.top > html.clientHeight) {
     room.top = Number.NEGATIVE_INFINITY;
     room.bottom = Number.POSITIVE_INFINITY;
   }
-  if (button4.right < 0 || button4.left > html.clientWidth) {
+  if (button5.right < 0 || button5.left > html.clientWidth) {
     room.left = Number.NEGATIVE_INFINITY;
     room.right = Number.POSITIVE_INFINITY;
   }
@@ -11670,7 +11670,7 @@ function placeMenu(s2, view, covered) {
   const borders = box.height - menu.clientHeight;
   const whole = menu.scrollHeight + borders;
   const height = Number.isFinite(cap) ? Math.min(whole, cap) : whole;
-  const at = menuPlacement({ button: button4, menu: box, height, gap: Math.max(0, box.top - button4.bottom), room });
+  const at = menuPlacement({ button: button5, menu: box, height, gap: Math.max(0, box.top - button5.bottom), room });
   if (Math.abs(at.left - box.left) > 0.5 || at.width != null) {
     const usedLeft = parseFloat(style.left);
     menu.style.setProperty("left", `${(Number.isFinite(usedLeft) ? usedLeft : menu.offsetLeft) + at.left - box.left}px`);
@@ -11687,7 +11687,7 @@ function placeMenu(s2, view, covered) {
   menu.setAttribute("data-kp-menu-side", at.side);
   if (at.side === "below") {
     const width = at.width ?? box.width;
-    const x = Math.min(Math.max(button4.left + button4.width / 2 - at.left, ANCHOR_EDGE), Math.max(width - ANCHOR_EDGE, ANCHOR_EDGE));
+    const x = Math.min(Math.max(button5.left + button5.width / 2 - at.left, ANCHOR_EDGE), Math.max(width - ANCHOR_EDGE, ANCHOR_EDGE));
     menu.style.setProperty("--kp-menu-anchor-x", `${Math.round(x * 10) / 10}px`);
   }
 }
@@ -11928,7 +11928,7 @@ function setMenu(wrapper, groups) {
   drawMenu(s2, groups);
 }
 function wireMenu(wrapper, { decorate: decorate2, strings }) {
-  const button4 = (
+  const button5 = (
     /** @type {HTMLElement | null} */
     wrapper.querySelector(":scope > button")
   );
@@ -11936,13 +11936,13 @@ function wireMenu(wrapper, { decorate: decorate2, strings }) {
     /** @type {HTMLElement | null} */
     wrapper.querySelector(':scope > [role="menu"]')
   );
-  if (!button4 || !menu) return null;
+  if (!button5 || !menu) return null;
   if (!menu.id) menu.id = nextId("kp-menu");
-  button4.setAttribute("aria-haspopup", "menu");
-  button4.setAttribute("aria-controls", menu.id);
-  button4.setAttribute("aria-expanded", "false");
+  button5.setAttribute("aria-haspopup", "menu");
+  button5.setAttribute("aria-controls", menu.id);
+  button5.setAttribute("aria-expanded", "false");
   menu.hidden = true;
-  const s2 = { wrapper, button: button4, menu, decorate: decorate2, strings, drawn: "", pending: null, open: false, empty: false, off: [] };
+  const s2 = { wrapper, button: button5, menu, decorate: decorate2, strings, drawn: "", pending: null, open: false, empty: false, off: [] };
   menus.set(wrapper, s2);
   decorateButton(s2);
   menuItems(s2).forEach((item, index) => {
@@ -13176,12 +13176,12 @@ function wire(el16, clock4) {
   if (typeof remembered === "number" && remembered >= 0) interval = remembered;
   el16.classList.add("kp-refresh");
   const s2 = () => getStrings();
-  const make27 = (tag, className) => {
+  const make28 = (tag, className) => {
     const node = doc.createElement(tag);
     node.className = className;
     return node;
   };
-  const chooser = make27("div", "kp-refresh__chooser");
+  const chooser = make28("div", "kp-refresh__chooser");
   let menuHost = null;
   let segHost = null;
   let menuButton = null;
@@ -13192,19 +13192,19 @@ function wire(el16, clock4) {
     segHost = null;
     menuButton = null;
     if (drawnLook === "menu") {
-      menuHost = make27("div", "kp-menu-button kp-refresh__menu");
+      menuHost = make28("div", "kp-menu-button kp-refresh__menu");
       menuHost.setAttribute("data-kp-menu-button", "");
       menuButton = /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-refresh__button");
+      make28("button", "kp-button kp-refresh__button");
       menuButton.type = "button";
       menuButton.setAttribute("aria-label", s2().refreshLabel);
-      const menu = make27("div", "kp-menu kp-menu--rich");
+      const menu = make28("div", "kp-menu kp-menu--rich");
       menu.setAttribute("role", "menu");
       menu.setAttribute("aria-label", s2().refreshLabel);
       menuHost.append(menuButton, menu);
       chooser.replaceChildren(menuHost);
     } else {
-      segHost = make27("div", "kp-segmented kp-refresh__segments");
+      segHost = make28("div", "kp-segmented kp-refresh__segments");
       segHost.setAttribute("data-kp-segmented", "single");
       segHost.setAttribute("role", "radiogroup");
       segHost.setAttribute("aria-label", s2().refreshLabel);
@@ -13212,17 +13212,17 @@ function wire(el16, clock4) {
     }
   };
   buildChooser();
-  const custom = make27("form", "kp-refresh__custom");
+  const custom = make28("form", "kp-refresh__custom");
   custom.hidden = true;
   custom.setAttribute("novalidate", "");
   const customLabel = (
     /** @type {HTMLLabelElement} */
-    make27("label", "kp-refresh__custom-label")
+    make28("label", "kp-refresh__custom-label")
   );
   customLabel.textContent = s2().refreshCustomLabel;
   const input = (
     /** @type {HTMLInputElement} */
-    make27("input", "kp-field__input kp-refresh__input")
+    make28("input", "kp-field__input kp-refresh__input")
   );
   input.type = "number";
   input.min = "1";
@@ -13232,45 +13232,45 @@ function wire(el16, clock4) {
   customLabel.htmlFor = input.id;
   const apply2 = (
     /** @type {HTMLButtonElement} */
-    make27("button", "kp-button kp-refresh__apply")
+    make28("button", "kp-button kp-refresh__apply")
   );
   apply2.type = "submit";
   apply2.textContent = s2().refreshApply;
-  const problem = make27("span", "kp-refresh__problem");
+  const problem = make28("span", "kp-refresh__problem");
   problem.setAttribute("role", "alert");
   custom.append(customLabel, input, apply2, problem);
-  const line = make27("span", "kp-refresh__line");
+  const line = make28("span", "kp-refresh__line");
   const ago = (
     /** @type {HTMLElement} */
-    make27("time", "kp-ago kp-refresh__ago")
+    make28("time", "kp-ago kp-refresh__ago")
   );
   ago.setAttribute("data-kp-ago", "");
-  const busyWords = make27("span", "kp-refresh__busy");
+  const busyWords = make28("span", "kp-refresh__busy");
   busyWords.textContent = s2().refreshUpdating;
   busyWords.hidden = true;
   line.append(ago, busyWords);
   const now = (
     /** @type {HTMLButtonElement} */
-    make27("button", "kp-button kp-button--sm kp-refresh__now")
+    make28("button", "kp-button kp-button--sm kp-refresh__now")
   );
   now.type = "button";
   now.textContent = s2().refreshNow;
   now.setAttribute("aria-keyshortcuts", "R");
-  const count2 = make27("span", "kp-refresh__count");
+  const count2 = make28("span", "kp-refresh__count");
   count2.setAttribute("aria-hidden", "true");
-  const note2 = make27("p", "kp-refresh__note");
+  const note2 = make28("p", "kp-refresh__note");
   note2.setAttribute("role", "status");
   const retry = (
     /** @type {HTMLButtonElement} */
-    make27("button", "kp-button kp-button--sm kp-refresh__retry")
+    make28("button", "kp-button kp-button--sm kp-refresh__retry")
   );
   retry.type = "button";
   retry.textContent = s2().refreshRetryNow;
   retry.hidden = true;
-  const failure = make27("div", "kp-alert kp-alert--warning kp-refresh__failure");
+  const failure = make28("div", "kp-alert kp-alert--warning kp-refresh__failure");
   failure.hidden = true;
   failure.append(note2, retry);
-  const bar = make27("div", "kp-refresh__bar");
+  const bar = make28("div", "kp-refresh__bar");
   bar.append(chooser, line, now);
   const slotted = (
     /** @type {HTMLElement | null} */
@@ -13285,7 +13285,7 @@ function wire(el16, clock4) {
       return;
     }
     if (!titleCell) {
-      titleCell = make27("span", "kp-refresh__title kp-formgrid__label");
+      titleCell = make28("span", "kp-refresh__title kp-formgrid__label");
       bar.prepend(titleCell);
       if (labelCell) titleCell.after(labelCell);
       if (slotted) titleCell.append(slotted);
@@ -13293,7 +13293,7 @@ function wire(el16, clock4) {
     if (words2) {
       if (slotted?.parentElement === titleCell) slotted.hidden = true;
       titleCell.querySelector(":scope > .kp-refresh__title-words")?.remove();
-      const text = make27("span", "kp-refresh__title-words");
+      const text = make28("span", "kp-refresh__title-words");
       text.textContent = words2;
       titleCell.append(text);
     } else if (slotted) slotted.hidden = false;
@@ -13307,7 +13307,7 @@ function wire(el16, clock4) {
       return;
     }
     if (!labelCell) {
-      labelCell = make27("span", "kp-refresh__label kp-formgrid__label");
+      labelCell = make28("span", "kp-refresh__label kp-formgrid__label");
       bar.insertBefore(labelCell, titleCell ? titleCell.nextSibling : bar.firstChild);
     }
     labelCell.textContent = words2;
@@ -13732,11 +13732,11 @@ var init_type_confirm = __esm({
 });
 
 // js/components/confirm-dialog.js
-function openConfirmation(button4, { phrase, strings, onAccept, onCancel: onCancel2, className = "", initialFocus = "cancel", dependents, blocked, typeName, anyCase, loses, acceptLabel } = {}) {
+function openConfirmation(button5, { phrase, strings, onAccept, onCancel: onCancel2, className = "", initialFocus = "cancel", dependents, blocked, typeName, anyCase, loses, acceptLabel } = {}) {
   const s2 = { ...getStrings(), ...strings };
-  const text = phrase ?? button4.getAttribute("data-kp-confirm") ?? s2.confirm;
-  const users = (dependents ?? (button4.getAttribute("data-kp-confirm-dependents") ?? "").split(";").map((name2) => name2.trim()).filter(Boolean)).slice();
-  const blockedAttribute = button4.getAttribute("data-kp-confirm-blocked");
+  const text = phrase ?? button5.getAttribute("data-kp-confirm") ?? s2.confirm;
+  const users = (dependents ?? (button5.getAttribute("data-kp-confirm-dependents") ?? "").split(";").map((name2) => name2.trim()).filter(Boolean)).slice();
+  const blockedAttribute = button5.getAttribute("data-kp-confirm-blocked");
   const stop = blocked === void 0 ? blockedAttribute === null ? null : blockedAttribute.trim() || s2.confirmBlocked : blocked === false ? null : blocked === true ? s2.confirmBlocked : blocked;
   const displaced = [...document.querySelectorAll("[popover]")].filter((el16) => el16.matches(":popover-open"));
   const id = `kp-confirm-${++dialogSeq}`;
@@ -13791,13 +13791,13 @@ function openConfirmation(button4, { phrase, strings, onAccept, onCancel: onCanc
     dialog.append(block);
     dialog.setAttribute("aria-describedby", `${id}-description ${id}-dependents`);
   }
-  const name = typeName ?? button4.getAttribute("data-kp-confirm-type") ?? "";
-  let field = null;
+  const name = typeName ?? button5.getAttribute("data-kp-confirm-type") ?? "";
+  let field2 = null;
   if (name.trim() !== "" && stop === null) {
     dialog.classList.add("kp-confirm--typed");
-    const own = (button4.textContent ?? "").trim().replace(/\s*(?:…|\.\.\.)$/, "");
-    accept.textContent = acceptLabel ?? button4.getAttribute("data-kp-confirm-label") ?? (own || s2.confirmAccept);
-    const lostId = button4.getAttribute("data-kp-confirm-loses");
+    const own = (button5.textContent ?? "").trim().replace(/\s*(?:…|\.\.\.)$/, "");
+    accept.textContent = acceptLabel ?? button5.getAttribute("data-kp-confirm-label") ?? (own || s2.confirmAccept);
+    const lostId = button5.getAttribute("data-kp-confirm-loses");
     const lostSource = lostId ? document.getElementById(lostId) : null;
     const lost = loses ?? (lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null);
     if (lost instanceof Element) {
@@ -13808,7 +13808,7 @@ function openConfirmation(button4, { phrase, strings, onAccept, onCancel: onCanc
     body.className = "kp-dialog__body";
     const typed = buildTypeConfirm(document, {
       name,
-      anyCase: anyCase ?? button4.getAttribute("data-kp-confirm-case") === "any",
+      anyCase: anyCase ?? button5.getAttribute("data-kp-confirm-case") === "any",
       loses: lost,
       strings,
       onChange: (matched) => {
@@ -13823,7 +13823,7 @@ function openConfirmation(button4, { phrase, strings, onAccept, onCancel: onCanc
       }
     });
     body.append(typed.block);
-    field = typed.input;
+    field2 = typed.input;
     dialog.append(body);
   }
   dialog.append(actions);
@@ -13834,12 +13834,12 @@ function openConfirmation(button4, { phrase, strings, onAccept, onCancel: onCanc
     for (const popover of displaced) {
       if (popover.isConnected && !popover.matches(":popover-open")) popover.showPopover();
     }
-    if (button4.isConnected) button4.focus();
+    if (button5.isConnected) button5.focus();
     if (taken) onAccept?.();
     else onCancel2?.();
   });
   dialog.showModal();
-  (field ?? (initialFocus === "accept" && stop === null ? accept : cancel)).focus();
+  (field2 ?? (initialFocus === "accept" && stop === null ? accept : cancel)).focus();
   return dialog;
 }
 function attachTypeConfirms(root = document, { strings } = {}) {
@@ -13853,8 +13853,8 @@ function attachTypeConfirms(root = document, { strings } = {}) {
     block.dataset.kpTypeConfirmAttached = "";
     const doc = block.ownerDocument;
     const target = block.dataset.kpTypeConfirmFor ? doc.getElementById(block.dataset.kpTypeConfirmFor) : null;
-    const button4 = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
-    const wasDisabled = button4?.disabled ?? false;
+    const button5 = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
+    const wasDisabled = button5?.disabled ?? false;
     const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
     const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
     if (lost instanceof Element) {
@@ -13868,16 +13868,16 @@ function attachTypeConfirms(root = document, { strings } = {}) {
       strings,
       block,
       onChange: (matched) => {
-        if (button4) button4.disabled = !matched || wasDisabled;
+        if (button5) button5.disabled = !matched || wasDisabled;
       }
     });
-    if (button4) button4.disabled = !typed.matched() || wasDisabled;
+    if (button5) button5.disabled = !typed.matched() || wasDisabled;
     cleanups.push(() => {
       block.replaceChildren();
       block.classList.remove("kp-type-confirm", "kp-field");
       delete block.dataset.kpMatched;
       delete block.dataset.kpTypeConfirmAttached;
-      if (button4) button4.disabled = wasDisabled;
+      if (button5) button5.disabled = wasDisabled;
     });
   }
   return () => {
@@ -13922,12 +13922,12 @@ function enforceContracts(root = document, { disable = true, rules, exempt, log 
   for (const v of violations) {
     const before = {};
     if (disable && v.rule === "DI10" && "disabled" in v.element) {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
         v.element
       );
-      before.disabled = button4.disabled;
-      button4.disabled = true;
+      before.disabled = button5.disabled;
+      button5.disabled = true;
     }
     changed.set(v.element, before);
     v.element.setAttribute("data-kp-contract-error", v.rule);
@@ -13948,45 +13948,45 @@ function restore(el16) {
 function attachConfirmations(root = document, { mode: mode2 = "dialog", windowMs = CONFIRM_WINDOW_MS, disarmOnBlur = true, strings, ownedBy = CONFIRM_OWNED, dialogClassName = "" } = {}) {
   const cleanups = [];
   for (const el16 of root.querySelectorAll("[data-kp-confirm]")) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
       el16
     );
-    if (ownedBy !== "" && button4.matches(ownedBy)) continue;
-    if (!button4.matches('button, a[href], input[type="button"], input[type="submit"], [role="button"]')) continue;
-    if (button4.dataset.kpConfirmAttached === "1") continue;
-    button4.dataset.kpConfirmAttached = "1";
-    const original = button4.textContent ?? "";
-    const phrase = button4.dataset.kpConfirm || getStrings().confirm;
-    const elementMode = button4.dataset.kpConfirmMode === "inline" || button4.dataset.kpConfirmMode === "dialog" ? button4.dataset.kpConfirmMode : mode2;
-    const window_ = Number(button4.dataset.kpConfirmMs) || windowMs;
+    if (ownedBy !== "" && button5.matches(ownedBy)) continue;
+    if (!button5.matches('button, a[href], input[type="button"], input[type="submit"], [role="button"]')) continue;
+    if (button5.dataset.kpConfirmAttached === "1") continue;
+    button5.dataset.kpConfirmAttached = "1";
+    const original = button5.textContent ?? "";
+    const phrase = button5.dataset.kpConfirm || getStrings().confirm;
+    const elementMode = button5.dataset.kpConfirmMode === "inline" || button5.dataset.kpConfirmMode === "dialog" ? button5.dataset.kpConfirmMode : mode2;
+    const window_ = Number(button5.dataset.kpConfirmMs) || windowMs;
     let armed = false;
     let timer2 = 0;
     let open4 = null;
     const disarm = () => {
       armed = false;
-      button4.textContent = original;
-      button4.removeAttribute("data-kp-armed");
+      button5.textContent = original;
+      button5.removeAttribute("data-kp-armed");
       clearTimeout(timer2);
     };
     const onBlur = () => {
       if (disarmOnBlur) disarm();
     };
     const onDialogClick = (event) => {
-      if (unlocked === button4) {
+      if (unlocked === button5) {
         unlocked = null;
         return;
       }
       event.preventDefault();
       event.stopImmediatePropagation();
       if (open4?.open) return;
-      open4 = openConfirmation(button4, {
+      open4 = openConfirmation(button5, {
         phrase,
         strings,
         className: dialogClassName,
         onAccept: () => {
-          unlocked = button4;
-          button4.click();
+          unlocked = button5;
+          button5.click();
         }
       });
     };
@@ -13998,18 +13998,18 @@ function attachConfirmations(root = document, { mode: mode2 = "dialog", windowMs
       event.preventDefault();
       event.stopImmediatePropagation();
       armed = true;
-      button4.textContent = phrase;
-      button4.setAttribute("data-kp-armed", "true");
+      button5.textContent = phrase;
+      button5.setAttribute("data-kp-armed", "true");
       timer2 = window.setTimeout(disarm, window_);
     };
     const onClick = elementMode === "inline" ? onInlineClick : onDialogClick;
-    button4.addEventListener("click", onClick, { capture: true });
-    if (elementMode === "inline") button4.addEventListener("blur", onBlur);
+    button5.addEventListener("click", onClick, { capture: true });
+    if (elementMode === "inline") button5.addEventListener("blur", onBlur);
     cleanups.push(() => {
-      button4.removeEventListener("click", onClick, { capture: true });
-      if (elementMode === "inline") button4.removeEventListener("blur", onBlur);
-      delete button4.dataset.kpConfirmAttached;
-      if (unlocked === button4) unlocked = null;
+      button5.removeEventListener("click", onClick, { capture: true });
+      if (elementMode === "inline") button5.removeEventListener("blur", onBlur);
+      delete button5.dataset.kpConfirmAttached;
+      if (unlocked === button5) unlocked = null;
       open4?.close("");
       disarm();
     });
@@ -14076,30 +14076,30 @@ var init_skip_links = __esm({
 function attachToTop(root = document, { strings, after } = {}) {
   const cleanups = [];
   for (const el16 of root.querySelectorAll(TO_TOP)) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement} */
       el16
     );
-    if (button4.dataset.kpToTopAttached !== void 0) continue;
-    button4.dataset.kpToTopAttached = "";
-    const doc = button4.ownerDocument;
+    if (button5.dataset.kpToTopAttached !== void 0) continue;
+    button5.dataset.kpToTopAttached = "";
+    const doc = button5.ownerDocument;
     const view = doc.defaultView;
     if (!view) continue;
-    const threshold = after ?? Number(button4.getAttribute("data-kp-to-top-after") ?? "400");
-    const target = button4.getAttribute("data-kp-to-top-target") ?? "";
+    const threshold = after ?? Number(button5.getAttribute("data-kp-to-top-after") ?? "400");
+    const target = button5.getAttribute("data-kp-to-top-target") ?? "";
     const s2 = { ...getStrings(), ...strings };
-    if (button4.getAttribute("aria-label") === null && button4.textContent?.trim() === "") {
-      button4.setAttribute("aria-label", s2.backToTop);
+    if (button5.getAttribute("aria-label") === null && button5.textContent?.trim() === "") {
+      button5.setAttribute("aria-label", s2.backToTop);
     }
     let glyph3 = null;
-    if (button4.children.length === 0 && button4.textContent?.trim() === "") {
+    if (button5.children.length === 0 && button5.textContent?.trim() === "") {
       glyph3 = doc.createElement("span");
       glyph3.className = "kp-to-top__glyph";
       glyph3.setAttribute("aria-hidden", "true");
-      button4.append(glyph3);
+      button5.append(glyph3);
     }
     const scroller = () => {
-      for (let box = button4.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
+      for (let box = button5.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
         const overflow = view.getComputedStyle(box).overflowY;
         if (/auto|scroll|overlay/.test(overflow) && box.scrollHeight > box.clientHeight + 1) return box;
       }
@@ -14113,8 +14113,8 @@ function attachToTop(root = document, { strings, after } = {}) {
       const next2 = (box ? box.scrollTop : view.scrollY) > threshold;
       if (next2 === shown5) return;
       shown5 = next2;
-      button4.toggleAttribute("data-kp-to-top-shown", next2);
-      button4.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next2 } }));
+      button5.toggleAttribute("data-kp-to-top-shown", next2);
+      button5.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next2 } }));
     };
     const onScroll = () => {
       if (queued2) return;
@@ -14132,13 +14132,13 @@ function attachToTop(root = document, { strings, after } = {}) {
     };
     decide();
     doc.addEventListener("scroll", onScroll, { passive: true, capture: true });
-    button4.addEventListener("click", onClick);
+    button5.addEventListener("click", onClick);
     cleanups.push(() => {
       doc.removeEventListener("scroll", onScroll, { capture: true });
-      button4.removeEventListener("click", onClick);
-      button4.removeAttribute("data-kp-to-top-shown");
+      button5.removeEventListener("click", onClick);
+      button5.removeAttribute("data-kp-to-top-shown");
       glyph3?.remove();
-      delete button4.dataset.kpToTopAttached;
+      delete button5.dataset.kpToTopAttached;
     });
   }
   return () => {
@@ -14159,26 +14159,26 @@ var init_to_top = __esm({
 function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
   const cleanups = [];
   for (const el16 of root.querySelectorAll("[data-kp-nav-toggle]")) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement} */
       el16
     );
-    if (ownedBy !== "" && button4.matches(ownedBy)) continue;
-    if (button4.dataset.kpNavToggleAttached !== void 0) continue;
-    button4.dataset.kpNavToggleAttached = "";
-    const nav = button4.closest(".kp-nav") ?? button4.parentElement;
+    if (ownedBy !== "" && button5.matches(ownedBy)) continue;
+    if (button5.dataset.kpNavToggleAttached !== void 0) continue;
+    button5.dataset.kpNavToggleAttached = "";
+    const nav = button5.closest(".kp-nav") ?? button5.parentElement;
     if (!nav) continue;
     const links = nav.querySelector(".kp-nav__links");
     if (links && !links.id) links.id = `kp-nav-links-${cleanups.length}-${Math.random().toString(36).slice(2, 8)}`;
-    if (links) button4.setAttribute("aria-controls", links.id);
+    if (links) button5.setAttribute("aria-controls", links.id);
     const label = () => {
       const s2 = { ...getStrings(), ...strings };
       return nav.hasAttribute("data-kp-nav-open") ? s2.closeMenu : s2.menu;
     };
     const write2 = (open4) => {
       nav.toggleAttribute("data-kp-nav-open", open4);
-      button4.setAttribute("aria-expanded", String(open4));
-      button4.setAttribute("aria-label", label());
+      button5.setAttribute("aria-expanded", String(open4));
+      button5.setAttribute("aria-label", label());
     };
     let closing2 = false;
     const set = (open4) => {
@@ -14192,8 +14192,8 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
         if (closing2 || !nav.hasAttribute("data-kp-nav-open")) return;
         closing2 = true;
         nav.setAttribute("data-kp-nav-closing", "");
-        button4.setAttribute("aria-expanded", "false");
-        button4.setAttribute("aria-label", label());
+        button5.setAttribute("aria-expanded", "false");
+        button5.setAttribute("aria-label", label());
         const navStyle = getComputedStyle(nav);
         const durVal = (navStyle.getPropertyValue("--kp-nav-close-time") || navStyle.getPropertyValue("--kp-sig-fo-time")).trim();
         const dur = durVal ? durVal.endsWith("ms") ? parseFloat(durVal) : parseFloat(durVal) * 1e3 : 300;
@@ -14214,7 +14214,7 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
     const onKey6 = (event) => {
       if (event.key !== "Escape" || !nav.hasAttribute("data-kp-nav-open")) return;
       set(false);
-      button4.focus();
+      button5.focus();
     };
     const onOutside = (event) => {
       if (!nav.hasAttribute("data-kp-nav-open")) return;
@@ -14224,7 +14224,7 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
       )) return;
       set(false);
     };
-    button4.addEventListener("click", onClick);
+    button5.addEventListener("click", onClick);
     nav.addEventListener(
       "keydown",
       /** @type {EventListener} */
@@ -14232,7 +14232,7 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
     );
     document.addEventListener("click", onOutside, true);
     cleanups.push(() => {
-      button4.removeEventListener("click", onClick);
+      button5.removeEventListener("click", onClick);
       nav.removeEventListener(
         "keydown",
         /** @type {EventListener} */
@@ -14240,10 +14240,10 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
       );
       document.removeEventListener("click", onOutside, true);
       nav.removeAttribute("data-kp-nav-open");
-      button4.removeAttribute("aria-expanded");
-      button4.removeAttribute("aria-label");
-      button4.removeAttribute("aria-controls");
-      delete button4.dataset.kpNavToggleAttached;
+      button5.removeAttribute("aria-expanded");
+      button5.removeAttribute("aria-label");
+      button5.removeAttribute("aria-controls");
+      delete button5.dataset.kpNavToggleAttached;
     });
   }
   return () => {
@@ -14449,20 +14449,20 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       [...nav.querySelectorAll("[data-kp-nav-disclosure]")]
     );
     const wired3 = /* @__PURE__ */ new Map();
-    for (const button4 of buttons) {
-      const panel = button4.parentElement?.querySelector(":scope > .kp-nav__menu--wide") ?? null;
+    for (const button5 of buttons) {
+      const panel = button5.parentElement?.querySelector(":scope > .kp-nav__menu--wide") ?? null;
       const stamped = ["aria-expanded"];
       if (panel && !panel.id) panel.id = `kp-nav-panel-${Math.random().toString(36).slice(2, 10)}`;
-      if (panel && !button4.hasAttribute("aria-controls")) {
-        button4.setAttribute("aria-controls", panel.id);
+      if (panel && !button5.hasAttribute("aria-controls")) {
+        button5.setAttribute("aria-controls", panel.id);
         stamped.push("aria-controls");
       }
-      if (!(button4.textContent ?? "").trim() && !button4.hasAttribute("aria-label") && !button4.hasAttribute("aria-labelledby")) {
-        button4.setAttribute("aria-label", { ...getStrings(), ...strings }.navDisclosure);
+      if (!(button5.textContent ?? "").trim() && !button5.hasAttribute("aria-label") && !button5.hasAttribute("aria-labelledby")) {
+        button5.setAttribute("aria-label", { ...getStrings(), ...strings }.navDisclosure);
         stamped.push("aria-label");
       }
-      button4.setAttribute("aria-expanded", "false");
-      wired3.set(button4, { panel, stamped });
+      button5.setAttribute("aria-expanded", "false");
+      wired3.set(button5, { panel, stamped });
     }
     const openButton = () => buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
     const settleClosing = (item, panel) => {
@@ -14473,15 +14473,15 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
         void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(() => item.removeAttribute("data-kp-nav-closing"));
       });
     };
-    const set = (button4, open4) => {
+    const set = (button5, open4) => {
       if (open4) {
-        for (const other of buttons) if (other !== button4 && other.getAttribute("aria-expanded") === "true") set(other, false);
+        for (const other of buttons) if (other !== button5 && other.getAttribute("aria-expanded") === "true") set(other, false);
       }
-      const was = button4.getAttribute("aria-expanded") === "true";
-      const panel = wired3.get(button4)?.panel;
-      const item = button4.parentElement;
+      const was = button5.getAttribute("aria-expanded") === "true";
+      const panel = wired3.get(button5)?.panel;
+      const item = button5.parentElement;
       if (open4) item?.removeAttribute("data-kp-nav-closing");
-      button4.setAttribute("aria-expanded", String(open4));
+      button5.setAttribute("aria-expanded", String(open4));
       if (open4 && panel) placeNavPanel(panel);
       if (!open4 && was && item) settleClosing(item, panel);
     };
@@ -14512,33 +14512,33 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       if (item?.hasAttribute("data-kp-nav-closing") && item.querySelector(DROPDOWN)) item.removeAttribute("data-kp-nav-closing");
     };
     const onClick = (event) => {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLElement} */
         event.currentTarget
       );
-      set(button4, button4.getAttribute("aria-expanded") !== "true");
+      set(button5, button5.getAttribute("aria-expanded") !== "true");
     };
     const onKey6 = (event) => {
-      const button4 = openButton();
-      if (event.key !== "Escape" || !button4) return;
-      set(button4, false);
-      button4.focus();
+      const button5 = openButton();
+      if (event.key !== "Escape" || !button5) return;
+      set(button5, false);
+      button5.focus();
     };
     const onOutside = (event) => {
-      const button4 = openButton();
-      if (!button4) return;
-      if (button4.parentElement?.contains(
+      const button5 = openButton();
+      if (!button5) return;
+      if (button5.parentElement?.contains(
         /** @type {Node} */
         event.target
       )) return;
-      set(button4, false);
+      set(button5, false);
     };
     const onFocusOut = (event) => {
-      const button4 = openButton();
+      const button5 = openButton();
       const to = event.relatedTarget;
-      if (!button4 || !(to instanceof Node)) return;
-      if (button4.parentElement?.contains(to)) return;
-      set(button4, false);
+      if (!button5 || !(to instanceof Node)) return;
+      if (button5.parentElement?.contains(to)) return;
+      set(button5, false);
     };
     nav.addEventListener("pointerover", onEnter2);
     nav.addEventListener("focusin", onEnter2);
@@ -14556,7 +14556,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       /** @type {EventListener} */
       onFocusOut
     );
-    for (const button4 of buttons) button4.addEventListener("click", onClick);
+    for (const button5 of buttons) button5.addEventListener("click", onClick);
     document.addEventListener("click", onOutside, true);
     window.addEventListener("resize", placeOpen);
     placeOpen();
@@ -14579,9 +14579,9 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       );
       document.removeEventListener("click", onOutside, true);
       window.removeEventListener("resize", placeOpen);
-      for (const [button4, { stamped }] of wired3) {
-        button4.removeEventListener("click", onClick);
-        for (const name of stamped) button4.removeAttribute(name);
+      for (const [button5, { stamped }] of wired3) {
+        button5.removeEventListener("click", onClick);
+        for (const name of stamped) button5.removeAttribute(name);
       }
       for (const menu of nav.querySelectorAll("[data-kp-nav-menu-end]")) menu.removeAttribute("data-kp-nav-menu-end");
       for (const menu of nav.querySelectorAll(".kp-nav__menu")) {
@@ -17710,13 +17710,13 @@ function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttri
     plate.append(line);
   }
   if (actionLabel) {
-    const button4 = doc.createElement("button");
-    button4.type = "button";
-    button4.className = "kp-button kp-stateplate__action";
-    button4.textContent = actionLabel;
-    if (actionAttribute) button4.setAttribute(actionAttribute, "");
-    if (onAction) button4.addEventListener("click", onAction);
-    plate.append(button4);
+    const button5 = doc.createElement("button");
+    button5.type = "button";
+    button5.className = "kp-button kp-stateplate__action";
+    button5.textContent = actionLabel;
+    if (actionAttribute) button5.setAttribute(actionAttribute, "");
+    if (onAction) button5.addEventListener("click", onAction);
+    plate.append(button5);
   }
   return plate;
 }
@@ -19064,7 +19064,7 @@ var init_tables = __esm({
 function installIdentity(c) {
   const { cleanups, regions, wrap } = c;
   c.add = add;
-  c.make = make27;
+  c.make = make28;
   const id = `kp-datatable-${datatableState.instances}`;
   c.id = id;
   const added = [];
@@ -19082,7 +19082,7 @@ function installIdentity(c) {
     added.push(node);
     return node;
   }
-  function make27(tag, className) {
+  function make28(tag, className) {
     const node = document.createElement(tag);
     if (className) node.className = className;
     return node;
@@ -19186,7 +19186,7 @@ var init_controls2 = __esm({
 
 // js/datatable/attach/details.js
 function installDetails(c) {
-  const { add, body, decorate: decorate2, detailFn, expandSingle, make: make27, s0, search, table, wrap } = c;
+  const { add, body, decorate: decorate2, detailFn, expandSingle, make: make28, s0, search, table, wrap } = c;
   const headRow = table.tHead?.rows[0];
   c.headRow = headRow;
   const details = /* @__PURE__ */ new Map();
@@ -19225,10 +19225,10 @@ function installDetails(c) {
   const expanded = /* @__PURE__ */ new Set();
   c.expanded = expanded;
   if (expandable && headRow !== void 0 && headRow.querySelector(EXPAND_COLUMN) === null) {
-    const th = add(make27("th"));
+    const th = add(make28("th"));
     th.setAttribute("scope", "col");
     th.dataset.kpExpandColumn = "";
-    const label = make27("span", "kp-sr-only");
+    const label = make28("span", "kp-sr-only");
     label.textContent = s0.tableDetailsColumn;
     th.append(label);
     headRow.prepend(th);
@@ -19236,10 +19236,10 @@ function installDetails(c) {
   const reorderable = wrap.dataset.kpRowsReorder !== void 0 && headRow !== void 0;
   c.reorderable = reorderable;
   if (reorderable && headRow !== void 0 && headRow.querySelector(REORDER_COLUMN) === null) {
-    const th = add(make27("th"));
+    const th = add(make28("th"));
     th.setAttribute("scope", "col");
     th.dataset.kpReorderColumn = "";
-    const label = make27("span", "kp-sr-only");
+    const label = make28("span", "kp-sr-only");
     label.textContent = s0.tableReorderColumn;
     th.append(label);
     headRow.prepend(th);
@@ -19249,24 +19249,24 @@ function installDetails(c) {
       return;
     const cell = (
       /** @type {HTMLTableCellElement} */
-      make27("td")
+      make28("td")
     );
     cell.dataset.kpReorderCell = "";
     cell.dataset.label = "";
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__handle")
+      make28("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__handle")
     );
-    button4.type = "button";
-    button4.dataset.kpReorderHandle = "";
-    button4.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
-    const grip = make27("span", "kp-datatable__grip");
+    button5.type = "button";
+    button5.dataset.kpReorderHandle = "";
+    button5.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
+    const grip = make28("span", "kp-datatable__grip");
     grip.setAttribute("aria-hidden", "true");
-    button4.append(grip);
-    cell.append(button4);
+    button5.append(grip);
+    cell.append(button5);
     row.prepend(cell);
     const rowKey = row.dataset.kpRowKey ?? row.id ?? "";
-    decoratePart(button4, { kind: "reorder-handle", value: rowKey, label: rowKey });
+    decoratePart(button5, { kind: "reorder-handle", value: rowKey, label: rowKey });
   };
   c.insertReorderCell = insertReorderCell;
   const insertExpandCell = (row) => {
@@ -19274,22 +19274,22 @@ function installDetails(c) {
       return;
     const cell = (
       /** @type {HTMLTableCellElement} */
-      make27("td")
+      make28("td")
     );
     cell.dataset.kpExpandCell = "";
     cell.dataset.label = "";
-    let button4 = null;
+    let button5 = null;
     if (details.has(row) || detailFn !== void 0 || details.size === 0) {
-      button4 = /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand");
-      button4.type = "button";
-      button4.dataset.kpRowToggle = "";
-      cell.append(button4);
+      button5 = /** @type {HTMLButtonElement} */
+      make28("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand");
+      button5.type = "button";
+      button5.dataset.kpRowToggle = "";
+      cell.append(button5);
     }
     row.prepend(cell);
-    if (button4 !== null) {
+    if (button5 !== null) {
       const rowKey = row.dataset.kpRowKey ?? row.id ?? "";
-      decoratePart(button4, { kind: "row-toggle", value: rowKey, label: s0.tableRowDetails(rowKey) });
+      decoratePart(button5, { kind: "row-toggle", value: rowKey, label: s0.tableRowDetails(rowKey) });
     }
   };
   c.insertExpandCell = insertExpandCell;
@@ -19413,7 +19413,7 @@ var init_model2 = __esm({
 
 // js/datatable/attach/busy.js
 function installBusy(c) {
-  const { make: make27, table, wrap } = c;
+  const { make: make28, table, wrap } = c;
   const busySeconds = () => Math.max(0, Math.floor((Date.now() - /** @type {number} */
   c.busySince) / 1e3));
   c.busySeconds = busySeconds;
@@ -19451,15 +19451,15 @@ function installBusy(c) {
     }
     const host = wrap;
     if (c.state !== "loading" || !c.busyOverlay) return;
-    const layer = make27("div", "kp-datatable__busy-overlay");
+    const layer = make28("div", "kp-datatable__busy-overlay");
     layer.setAttribute("aria-hidden", "true");
-    const panel = make27("div", "kp-datatable__busy-panel");
-    const spinner = make27("span", "kp-spinner");
-    const words2 = make27("span", "kp-datatable__busy-words");
+    const panel = make28("div", "kp-datatable__busy-panel");
+    const spinner = make28("span", "kp-spinner");
+    const words2 = make28("span", "kp-datatable__busy-words");
     words2.textContent = c.busyText ?? s2.busy;
     panel.append(spinner, words2);
     if (c.busySince !== null) {
-      c.overlayClock = make27("span", "kp-datatable__busy-clock");
+      c.overlayClock = make28("span", "kp-datatable__busy-clock");
       c.overlayClock.textContent = s2.tableBusyElapsed(busySeconds());
       panel.append(c.overlayClock);
     }
@@ -19548,7 +19548,7 @@ var init_busy = __esm({
 
 // js/datatable/attach/chrome.js
 function installChrome(c) {
-  const { add, controlColumn, densitySelect, headers, labelOf: labelOf7, make: make27, s0, scopeSelect, selectAll, status, table, undo, wrap } = c;
+  const { add, controlColumn, densitySelect, headers, labelOf: labelOf7, make: make28, s0, scopeSelect, selectAll, status, table, undo, wrap } = c;
   const themeBox = (box) => {
     if (box === null || box.classList.contains(CHECK_CLASS)) return;
     box.classList.add(CHECK_CLASS);
@@ -19580,7 +19580,7 @@ function installChrome(c) {
   ) ?? null;
   const ensureTopBar = () => {
     if (c.topBar !== null) return c.topBar;
-    c.topBar = add(make27("div", "kp-datatable__bar"));
+    c.topBar = add(make28("div", "kp-datatable__bar"));
     wrap.insertBefore(c.topBar, wrap.firstElementChild);
     return c.topBar;
   };
@@ -19596,7 +19596,7 @@ function installChrome(c) {
   c.putUnder = putUnder;
   if (scopeSelect !== null) {
     if (scopeSelect.options.length === 0) {
-      const every = make27("option");
+      const every = make28("option");
       every.setAttribute("value", "");
       every.textContent = s0.tableSearchAllColumns;
       scopeSelect.append(add(every));
@@ -19604,7 +19604,7 @@ function installChrome(c) {
         if (header.dataset.kpSearch === "false" || controlColumn(at) || labelOf7(at) === "") return;
         const option = (
           /** @type {HTMLOptionElement} */
-          make27("option")
+          make28("option")
         );
         option.value = String(at);
         option.textContent = labelOf7(at);
@@ -19625,7 +19625,7 @@ function installChrome(c) {
       ]) {
         const option = (
           /** @type {HTMLOptionElement} */
-          make27("option")
+          make28("option")
         );
         option.value = value ?? "";
         option.textContent = text ?? "";
@@ -19786,17 +19786,17 @@ function stepsFor(ctl, s2) {
   }[ctl.views.view];
 }
 function buildStep(ctl, label, glyph3, to, slot) {
-  const button4 = document.createElement("button");
-  button4.type = "button";
-  button4.className = "kp-button kp-button--ghost";
-  button4.setAttribute("aria-label", label);
-  button4.textContent = glyph3;
-  button4.addEventListener("click", () => {
+  const button5 = document.createElement("button");
+  button5.type = "button";
+  button5.className = "kp-button kp-button--ghost";
+  button5.setAttribute("aria-label", label);
+  button5.textContent = glyph3;
+  button5.addEventListener("click", () => {
     ctl.cursor = to();
     ctl.views.redraw();
     ctl.panel.querySelector(".kp-datepicker__head")?.children[slot]?.focus();
   });
-  return button4;
+  return button5;
 }
 function buildHead(ctl, s2, names) {
   const { view } = ctl.views;
@@ -19851,18 +19851,18 @@ function holdSize(ctl, grid2) {
   }
 }
 function jumpCell(text, current2, off) {
-  const button4 = document.createElement("button");
-  button4.type = "button";
-  button4.className = "kp-datepicker__day";
-  button4.setAttribute("role", "gridcell");
-  button4.setAttribute("aria-selected", String(current2));
+  const button5 = document.createElement("button");
+  button5.type = "button";
+  button5.className = "kp-datepicker__day";
+  button5.setAttribute("role", "gridcell");
+  button5.setAttribute("aria-selected", String(current2));
   if (off) {
-    button4.setAttribute("aria-disabled", "true");
-    button4.dataset.kpDisabled = "";
+    button5.setAttribute("aria-disabled", "true");
+    button5.dataset.kpDisabled = "";
   }
-  button4.tabIndex = current2 ? 0 : -1;
-  button4.textContent = text;
-  return button4;
+  button5.tabIndex = current2 ? 0 : -1;
+  button5.textContent = text;
+  return button5;
 }
 function fillMonths(ctl, grid2, s2, names) {
   const { min, max } = ctl.settings;
@@ -19902,21 +19902,21 @@ function addWeekdays(ctl, grid2, names) {
   }
 }
 function dayCell(ctl, s2, names, date, chosen) {
-  const button4 = document.createElement("button");
-  button4.type = "button";
-  button4.className = "kp-datepicker__day";
-  button4.dataset.kpDay = toISO(date);
-  button4.setAttribute("role", "gridcell");
-  button4.setAttribute("aria-label", s2.dayLabel(date.getDate(), names.months[date.getMonth()] ?? "", date.getFullYear()));
-  button4.textContent = String(date.getDate());
-  button4.setAttribute("aria-selected", String(chosen !== null && toISO(chosen) === toISO(date)));
+  const button5 = document.createElement("button");
+  button5.type = "button";
+  button5.className = "kp-datepicker__day";
+  button5.dataset.kpDay = toISO(date);
+  button5.setAttribute("role", "gridcell");
+  button5.setAttribute("aria-label", s2.dayLabel(date.getDate(), names.months[date.getMonth()] ?? "", date.getFullYear()));
+  button5.textContent = String(date.getDate());
+  button5.setAttribute("aria-selected", String(chosen !== null && toISO(chosen) === toISO(date)));
   if (ctl.disabled(date)) {
-    button4.setAttribute("aria-disabled", "true");
-    button4.dataset.kpDisabled = "";
+    button5.setAttribute("aria-disabled", "true");
+    button5.dataset.kpDisabled = "";
   }
-  button4.tabIndex = date.getDate() === ctl.cursor.getDate() ? 0 : -1;
-  ctl.settings.renderDay?.(button4, date);
-  return button4;
+  button5.tabIndex = date.getDate() === ctl.cursor.getDate() ? 0 : -1;
+  ctl.settings.renderDay?.(button5, date);
+  return button5;
 }
 function fillDays(ctl, grid2, s2, names, chosen) {
   const year = ctl.cursor.getFullYear();
@@ -20500,7 +20500,7 @@ var init_datepicker = __esm({
 
 // js/datatable/attach/filter-ui.js
 function installFilterUi(c) {
-  const { add, choiceText, decoratePart, ensureTopBar, filterKinds, filterMode, headers, id, labelOf: labelOf7, locale, make: make27, orders, s0, undo, wrap } = c;
+  const { add, choiceText, decoratePart, ensureTopBar, filterKinds, filterMode, headers, id, labelOf: labelOf7, locale, make: make28, orders, s0, undo, wrap } = c;
   c.choiceValues = choiceValues;
   c.fillChoices = fillChoices;
   c.datePickerFor = datePickerFor;
@@ -20523,7 +20523,7 @@ function installFilterUi(c) {
     wrap.querySelector(ADD_FILTER);
     if (c.addButton === null) {
       c.addButton = /** @type {HTMLButtonElement} */
-      add(make27("button", "kp-button kp-datatable__add-filter"));
+      add(make28("button", "kp-button kp-datatable__add-filter"));
       c.addButton.type = "button";
       c.addButton.dataset.kpDatatableAddFilter = "";
       ensureTopBar().append(c.addButton);
@@ -20553,17 +20553,17 @@ function installFilterUi(c) {
     c.addButton.setAttribute("aria-controls", popId);
     c.addButton.setAttribute("popovertarget", popId);
     c.addButton.style.setProperty("anchor-name", `--${popId}`);
-    c.addPop = add(make27("div", "kp-popover kp-datatable__add-menu"));
+    c.addPop = add(make28("div", "kp-popover kp-datatable__add-menu"));
     c.addPop.id = popId;
     c.addPop.setAttribute("popover", "auto");
     c.addPop.dataset.kpDatatableAddMenu = "";
     c.addPop.style.setProperty("position-anchor", `--${popId}`);
-    c.addMenu = make27("ul", "kp-menu");
+    c.addMenu = make28("ul", "kp-menu");
     c.addMenu.setAttribute("aria-label", s2.tableAddFilterMenu);
     c.addPop.append(c.addMenu);
     c.addButton.after(c.addPop);
     c.filterEditor = /** @type {HTMLFormElement} */
-    add(make27("form", "kp-datatable__filter-editor"));
+    add(make28("form", "kp-datatable__filter-editor"));
     c.filterEditor.id = `${id}-filter-editor`;
     c.filterEditor.dataset.kpDatatableFilterEditor = "";
     c.filterEditor.noValidate = true;
@@ -20574,7 +20574,7 @@ function installFilterUi(c) {
     c.panel = /** @type {HTMLElement | null} */
     wrap.querySelector(FILTERS);
     if (c.panel === null) {
-      c.panel = add(make27("div", "kp-datatable__filters"));
+      c.panel = add(make28("div", "kp-datatable__filters"));
       c.panel.dataset.kpDatatableFilters = "";
       c.panel.hidden = wrap.dataset.kpFiltersOpen === void 0;
       wrap.insertBefore(c.panel, c.tableBlock);
@@ -20592,18 +20592,18 @@ function installFilterUi(c) {
         filterKinds[at]
       );
       const label = labelOf7(at);
-      const set = add(make27("fieldset", "kp-fieldset kp-datatable__filter"));
+      const set = add(make28("fieldset", "kp-fieldset kp-datatable__filter"));
       set.dataset.kpFilterColumn = String(at);
-      const legend = make27("legend", "kp-field__label");
+      const legend = make28("legend", "kp-field__label");
       legend.textContent = label;
       set.append(legend);
       if (kind === "choice") fillChoices(set, at, []);
       else {
-        const range = make27("div", "kp-datatable__range");
+        const range = make28("div", "kp-datatable__range");
         for (const bound of ["from", "to"]) {
           const input = (
             /** @type {HTMLInputElement} */
-            make27("input", "kp-field__input")
+            make28("input", "kp-field__input")
           );
           input.dataset.kpFilterBound = bound;
           input.setAttribute("aria-label", bound === "from" ? s0.tableFilterFrom(label) : s0.tableFilterTo(label));
@@ -20627,7 +20627,7 @@ function installFilterUi(c) {
     wrap.querySelector(FILTER_TOGGLE);
     if (c.toggle === null) {
       c.toggle = /** @type {HTMLButtonElement} */
-      add(make27("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
+      add(make28("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
       c.toggle.type = "button";
       c.toggle.dataset.kpDatatableFilterToggle = "";
       if (c.topBar !== null) c.topBar.append(c.toggle);
@@ -20640,7 +20640,7 @@ function installFilterUi(c) {
     c.pills = /** @type {HTMLElement | null} */
     wrap.querySelector(PILLS);
     if (c.pills === null) {
-      c.pills = add(make27("div", "kp-datatable__pills"));
+      c.pills = add(make28("div", "kp-datatable__pills"));
       c.pills.dataset.kpDatatablePills = "";
       wrap.insertBefore(c.pills, c.tableBlock);
     }
@@ -20662,10 +20662,10 @@ function installFilterUi(c) {
     if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
     for (const box of boxes) box.closest(".kp-field__option")?.remove();
     for (const value of values) {
-      const option = make27("label", "kp-field__option");
+      const option = make28("label", "kp-field__option");
       const box = (
         /** @type {HTMLInputElement} */
-        make27("input", CHECK_CLASS)
+        make28("input", CHECK_CLASS)
       );
       box.type = "checkbox";
       box.value = value;
@@ -20675,7 +20675,7 @@ function installFilterUi(c) {
     }
   }
   function datePickerFor(input) {
-    const picker = make27("div", "kp-datepicker");
+    const picker = make28("div", "kp-datepicker");
     picker.dataset.kpDatepicker = "";
     picker.dataset.kpLocale = locale;
     input.type = "text";
@@ -20684,17 +20684,17 @@ function installFilterUi(c) {
     const s2 = getStrings();
     const opener = (
       /** @type {HTMLButtonElement} */
-      make27("button", "kp-button")
+      make28("button", "kp-button")
     );
     opener.type = "button";
     opener.dataset.kpDateOpen = "";
     opener.setAttribute("aria-label", s2.calendarOpen);
     opener.title = s2.calendarOpen;
-    const glyph3 = make27("span");
+    const glyph3 = make28("span");
     glyph3.setAttribute("aria-hidden", "true");
     glyph3.textContent = s2.calendarButton;
     opener.append(glyph3);
-    const datePanel = make27("div", "kp-datepicker__panel");
+    const datePanel = make28("div", "kp-datepicker__panel");
     datePanel.dataset.kpDatePanel = "";
     datePanel.hidden = true;
     picker.append(input, opener, datePanel);
@@ -20715,22 +20715,22 @@ var init_filter_ui = __esm({
 
 // js/datatable/attach/sort-setup.js
 function installSortSetup(c) {
-  const { add, controlColumn, editKinds, ensureTopBar, headers, id, keyColumn, labelOf: labelOf7, make: make27, multi, putUnder, s0, wrap } = c;
+  const { add, controlColumn, editKinds, ensureTopBar, headers, id, keyColumn, labelOf: labelOf7, make: make28, multi, putUnder, s0, wrap } = c;
   const sortable = headers.flatMap((header, at) => header.dataset.kpSort === void 0 ? [] : [at]);
   c.sortBy = null;
   c.sortDirection = null;
   if (wrap.dataset.kpCards !== void 0 && sortable.length > 0 && wrap.querySelector(CARD_SORT) === null) {
-    const control = add(make27("div", "kp-datatable__card-sort"));
+    const control = add(make28("div", "kp-datatable__card-sort"));
     control.dataset.kpDatatableCardSort = "";
-    const label = make27("label", "kp-datatable__label");
+    const label = make28("label", "kp-datatable__label");
     label.append(s0.tableSortBy, " ");
     c.sortBy = /** @type {HTMLSelectElement} */
-    make27("select", "kp-field__input kp-datatable__select");
+    make28("select", "kp-field__input kp-datatable__select");
     c.sortBy.dataset.kpDatatableSortBy = "";
     c.sortBy.setAttribute("aria-label", s0.tableSortBy);
     const none = (
       /** @type {HTMLOptionElement} */
-      make27("option")
+      make28("option")
     );
     none.value = "";
     none.textContent = s0.tableSortNone;
@@ -20738,7 +20738,7 @@ function installSortSetup(c) {
     for (const at of sortable) {
       const option = (
         /** @type {HTMLOptionElement} */
-        make27("option")
+        make28("option")
       );
       option.value = String(at);
       option.textContent = labelOf7(at);
@@ -20746,7 +20746,7 @@ function installSortSetup(c) {
     }
     label.append(c.sortBy);
     c.sortDirection = /** @type {HTMLButtonElement} */
-    make27("button", "kp-button kp-button--ghost");
+    make28("button", "kp-button kp-button--ghost");
     c.sortDirection.type = "button";
     c.sortDirection.dataset.kpDatatableSortDirection = "";
     control.append(label, c.sortDirection);
@@ -20758,15 +20758,15 @@ function installSortSetup(c) {
     c.sortSummary = /** @type {HTMLElement | null} */
     wrap.querySelector(SORT_SUMMARY);
     if (c.sortSummary === null) {
-      const line = add(make27("div", "kp-datatable__bar kp-datatable__sort-line"));
-      c.sortSummary = make27("p", "kp-datatable__status kp-datatable__sort-summary");
+      const line = add(make28("div", "kp-datatable__bar kp-datatable__sort-line"));
+      c.sortSummary = make28("p", "kp-datatable__status kp-datatable__sort-summary");
       c.sortSummary.dataset.kpDatatableSortSummary = "";
       c.sortSummary.setAttribute("aria-live", "polite");
       line.append(c.sortSummary);
       if (wrap.querySelector(SORT_RESET) === null) {
         const back = (
           /** @type {HTMLButtonElement} */
-          make27("button", "kp-button kp-button--ghost kp-button--sm")
+          make28("button", "kp-button kp-button--ghost kp-button--sm")
         );
         back.type = "button";
         back.dataset.kpDatatableSortReset = "";
@@ -20788,40 +20788,40 @@ function installSortSetup(c) {
   if (wrap.dataset.kpColumnMenu !== void 0 && choosable.length > 0) {
     const bar = ensureTopBar();
     const popId = `${id}-columns`;
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
-      add(make27("button", "kp-button kp-button--ghost kp-datatable__columns-toggle"))
+      add(make28("button", "kp-button kp-button--ghost kp-datatable__columns-toggle"))
     );
-    button4.type = "button";
-    button4.dataset.kpDatatableColumnsToggle = "";
-    button4.textContent = s0.tableColumns;
-    button4.setAttribute("aria-haspopup", "true");
-    button4.setAttribute("aria-expanded", "false");
-    button4.setAttribute("aria-controls", popId);
-    button4.setAttribute("popovertarget", popId);
-    button4.style.setProperty("anchor-name", `--${popId}`);
-    const pop2 = add(make27("div", "kp-popover kp-datatable__columns"));
+    button5.type = "button";
+    button5.dataset.kpDatatableColumnsToggle = "";
+    button5.textContent = s0.tableColumns;
+    button5.setAttribute("aria-haspopup", "true");
+    button5.setAttribute("aria-expanded", "false");
+    button5.setAttribute("aria-controls", popId);
+    button5.setAttribute("popovertarget", popId);
+    button5.style.setProperty("anchor-name", `--${popId}`);
+    const pop2 = add(make28("div", "kp-popover kp-datatable__columns"));
     pop2.id = popId;
     pop2.setAttribute("popover", "auto");
     pop2.dataset.kpDatatableColumns = "";
     pop2.style.setProperty("position-anchor", `--${popId}`);
     pop2.addEventListener("toggle", (event) => {
-      button4.setAttribute("aria-expanded", String(
+      button5.setAttribute("aria-expanded", String(
         /** @type {ToggleEvent} */
         event.newState === "open"
       ));
     });
-    c.columnList = make27("ul", "kp-menu");
+    c.columnList = make28("ul", "kp-menu");
     c.columnList.setAttribute("aria-label", s0.tableColumnsLabel);
     pop2.append(c.columnList);
-    c.columnCount = add(make27("span", "kp-datatable__status kp-datatable__columns-count"));
+    c.columnCount = add(make28("span", "kp-datatable__status kp-datatable__columns-count"));
     c.columnCount.dataset.kpDatatableColumnsCount = "";
-    bar.append(button4, pop2, c.columnCount);
+    bar.append(button5, pop2, c.columnCount);
   }
   const editable2 = editKinds.some((kind) => kind !== null);
   c.editLog = null;
   if (editable2) {
-    c.editLog = add(make27("p", "kp-datatable__status kp-datatable__edit-log"));
+    c.editLog = add(make28("p", "kp-datatable__status kp-datatable__edit-log"));
     c.editLog.dataset.kpDatatableEditLog = "";
     c.editLog.setAttribute("role", "status");
     c.editLog.setAttribute("aria-live", "polite");
@@ -20838,28 +20838,28 @@ var init_sort_setup = __esm({
 
 // js/datatable/attach/layout-setup.js
 function installLayoutSetup(c) {
-  const { add, make: make27, pager, putUnder, s0, sizes, undo, wrap } = c;
+  const { add, make: make28, pager, putUnder, s0, sizes, undo, wrap } = c;
   const gridMode = wrap.dataset.kpGrid !== void 0;
   c.gridMode = gridMode;
   c.gridReadout = null;
   if (gridMode) {
-    c.gridReadout = add(make27("p", "kp-datatable__status kp-datatable__grid-readout"));
+    c.gridReadout = add(make28("p", "kp-datatable__status kp-datatable__grid-readout"));
     c.gridReadout.dataset.kpDatatableGridReadout = "";
     c.gridReadout.setAttribute("aria-live", "polite");
     c.gridReadout.textContent = s0.tableGridStart;
     putUnder(c.gridReadout);
   }
   if (c.failedSlot === null) {
-    c.failedSlot = add(make27("div", "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error"));
+    c.failedSlot = add(make28("div", "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error"));
     c.failedSlot.dataset.kpDatatableFailed = "";
     c.failedSlot.setAttribute("role", "alert");
     c.failedSlot.hidden = true;
-    const text = make27("p", "kp-stateplate__title");
+    const text = make28("p", "kp-stateplate__title");
     text.dataset.kpDatatableFailedReason = "";
     text.textContent = s0.tableFailed;
     const retry = (
       /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-stateplate__action")
+      make28("button", "kp-button kp-stateplate__action")
     );
     retry.type = "button";
     retry.dataset.kpDatatableRetry = "";
@@ -20872,12 +20872,12 @@ function installLayoutSetup(c) {
     undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--error"));
   }
   if (c.empty === null) {
-    c.empty = add(make27("div", "kp-empty kp-stateplate kp-stateplate--empty"));
+    c.empty = add(make28("div", "kp-empty kp-stateplate kp-stateplate--empty"));
     c.empty.dataset.kpDatatableEmpty = "";
     c.empty.setAttribute("role", "status");
     c.empty.hidden = true;
     c.emptyHidden = true;
-    const none = make27("strong", "kp-empty__title");
+    const none = make28("strong", "kp-empty__title");
     none.textContent = s0.tableEmpty;
     c.empty.append(none);
     wrap.insertBefore(c.empty, c.tableBlock);
@@ -20892,7 +20892,7 @@ function installLayoutSetup(c) {
   }
   if (c.empty !== null && c.empty.querySelector(".kp-empty__title, .kp-stateplate__title") === null) {
     const authored = c.empty;
-    const heading = make27("strong", "kp-empty__title");
+    const heading = make28("strong", "kp-empty__title");
     heading.textContent = s0.tableEmpty;
     authored.prepend(heading);
     undo.push(() => heading.remove());
@@ -20900,7 +20900,7 @@ function installLayoutSetup(c) {
   if (c.empty !== null) {
     for (const node of [...c.empty.childNodes]) {
       if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? "").trim() === "") continue;
-      const words2 = make27("span", "kp-stateplate__text");
+      const words2 = make28("span", "kp-stateplate__text");
       node.replaceWith(words2);
       words2.append(node);
       undo.push(() => words2.replaceWith(node));
@@ -20913,7 +20913,7 @@ function installLayoutSetup(c) {
       reason.classList.add("kp-stateplate__title");
       undo.push(() => reason.classList.remove("kp-stateplate__title"));
     } else {
-      const heading = make27("strong", "kp-stateplate__title");
+      const heading = make28("strong", "kp-stateplate__title");
       heading.dataset.kpDatatableFailedReason = "";
       heading.textContent = s0.tableFailed;
       authoredFailed.prepend(heading);
@@ -20955,15 +20955,15 @@ function installLayoutSetup(c) {
   c.sizeSelect = null;
   if (pager !== null && sizes.length > 0) {
     c.sizeLabel = /** @type {HTMLLabelElement} */
-    make27("label", "kp-datatable__label");
+    make28("label", "kp-datatable__label");
     c.sizeSelect = /** @type {HTMLSelectElement} */
-    make27("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
+    make28("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
     c.sizeSelect.dataset.kpDatatablePageSize = "";
     c.sizeSelect.setAttribute("aria-label", s0.tableRowsPerPage);
     for (const n of sizes) {
       const option = (
         /** @type {HTMLOptionElement} */
-        make27("option")
+        make28("option")
       );
       option.value = String(n);
       option.textContent = String(n);
@@ -20995,7 +20995,7 @@ function installReorder(c) {
     keyColumn,
     keyOf: keyOf8,
     labelOf: labelOf7,
-    make: make27,
+    make: make28,
     pager,
     rendered,
     reorderable,
@@ -21016,17 +21016,17 @@ function installReorder(c) {
     editKinds.forEach((kind, at) => {
       const cell = row.cells[at];
       if (kind === null || cell === void 0 || cell.querySelector(EDIT_CELL) !== null) return;
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
-        make27("button", "kp-datatable__edit")
+        make28("button", "kp-datatable__edit")
       );
-      button4.type = "button";
-      button4.dataset.kpEditCell = "";
-      const value = make27("span");
+      button5.type = "button";
+      button5.dataset.kpEditCell = "";
+      const value = make28("span");
       value.dataset.kpEditValue = "";
       value.append(...cell.childNodes);
-      button4.append(value);
-      cell.append(button4);
+      button5.append(value);
+      cell.append(button5);
     });
     if (c.hiddenColumns.size > 0) {
       for (const at of c.hiddenColumns) if (row.cells[at]) row.cells[at].hidden = true;
@@ -21036,9 +21036,9 @@ function installReorder(c) {
   const unprepareRow = (row) => {
     row.querySelector("[data-kp-expand-cell]")?.remove();
     row.querySelector("[data-kp-reorder-cell]")?.remove();
-    for (const button4 of row.querySelectorAll(EDIT_CELL)) {
-      const value = button4.querySelector(EDIT_VALUE);
-      if (value !== null) button4.replaceWith(...value.childNodes);
+    for (const button5 of row.querySelectorAll(EDIT_CELL)) {
+      const value = button5.querySelector(EDIT_VALUE);
+      if (value !== null) button5.replaceWith(...value.childNodes);
     }
     for (const cell of row.cells) cell.hidden = false;
   };
@@ -21059,12 +21059,12 @@ function installReorder(c) {
       if (detail !== void 0) toggleButton.setAttribute("aria-controls", detail.id);
       else toggleButton.removeAttribute("aria-controls");
     }
-    for (const button4 of row.querySelectorAll(EDIT_CELL)) {
+    for (const button5 of row.querySelectorAll(EDIT_CELL)) {
       const cell = (
         /** @type {HTMLTableCellElement} */
-        button4.closest("td, th")
+        button5.closest("td, th")
       );
-      button4.setAttribute("aria-label", s2.tableEdit(labelOf7(cell.cellIndex), key, cellText(row, cell.cellIndex)));
+      button5.setAttribute("aria-label", s2.tableEdit(labelOf7(cell.cellIndex), key, cellText(row, cell.cellIndex)));
     }
     const grip = row.querySelector(REORDER_HANDLE);
     if (grip !== null) {
@@ -21096,7 +21096,7 @@ function installReorder(c) {
     c.render();
     row.querySelector(REORDER_HANDLE)?.focus({ preventScroll: true });
     if (reorderLive === null) {
-      reorderLive = make27("span", "kp-sr-only");
+      reorderLive = make28("span", "kp-sr-only");
       reorderLive.setAttribute("role", "status");
       reorderLive.setAttribute("aria-live", "polite");
       wrap.append(reorderLive);
@@ -21189,7 +21189,7 @@ var init_reorder = __esm({
 
 // js/datatable/attach/groups.js
 function installGroups(c) {
-  const { body, builtDetails, decoratePart, details, glyphs, headers, id, make: make27, rendered, serverMode } = c;
+  const { body, builtDetails, decoratePart, details, glyphs, headers, id, make: make28, rendered, serverMode } = c;
   const visibleColumns = () => headers.filter((_, at) => !c.hiddenColumns.has(at)).length;
   c.visibleColumns = visibleColumns;
   const groups = /* @__PURE__ */ new Map();
@@ -21224,14 +21224,14 @@ function installGroups(c) {
     const name = heading.dataset.kpGroupLabel ?? (copy3.textContent ?? "").replace(/\s+/g, " ").trim();
     groupNames.set(heading, name);
     preparedGroups.set(heading, { span: heading.cells.length === 1 ? cell.getAttribute("colspan") : null, hidden: heading.hidden === true });
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand kp-datatable__group-toggle")
+      make28("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand kp-datatable__group-toggle")
     );
-    button4.type = "button";
-    button4.dataset.kpGroupToggle = "";
-    cell.prepend(button4);
-    decoratePart(button4, { kind: "row-group-toggle", value: key, label: name });
+    button5.type = "button";
+    button5.dataset.kpGroupToggle = "";
+    cell.prepend(button5);
+    decoratePart(button5, { kind: "row-group-toggle", value: key, label: name });
   };
   const collectGroups = () => {
     if (serverMode) return;
@@ -21350,14 +21350,14 @@ function installGroups(c) {
       const count2 = matched.get(key) ?? 0;
       const open4 = !folded2.has(key);
       heading.hidden = !onPage.has(key) && heading.dataset.kpGroupAlways === void 0;
-      const button4 = heading.querySelector(GROUP_TOGGLE);
-      if (button4 !== null) {
-        button4.setAttribute("aria-expanded", String(open4));
-        button4.setAttribute("aria-label", s2.tableGroupRows(groupNames.get(heading) ?? key, count2));
-        button4.textContent = open4 ? glyphs.collapse : glyphs.expand;
+      const button5 = heading.querySelector(GROUP_TOGGLE);
+      if (button5 !== null) {
+        button5.setAttribute("aria-expanded", String(open4));
+        button5.setAttribute("aria-label", s2.tableGroupRows(groupNames.get(heading) ?? key, count2));
+        button5.textContent = open4 ? glyphs.collapse : glyphs.expand;
         const ids = onPage.get(key) ?? [];
-        if (ids.length > 0) button4.setAttribute("aria-controls", ids.join(" "));
-        else button4.removeAttribute("aria-controls");
+        if (ids.length > 0) button5.setAttribute("aria-controls", ids.join(" "));
+        else button5.removeAttribute("aria-controls");
       }
       for (const slot of heading.querySelectorAll(GROUP_COUNT)) slot.textContent = String(count2);
       const cell = heading.cells[0];
@@ -21398,7 +21398,7 @@ function installSync(c) {
     labelOf: labelOf7,
     loadingSlot,
     locked,
-    make: make27,
+    make: make28,
     orders,
     selectAll,
     serverMode,
@@ -21414,10 +21414,10 @@ function installSync(c) {
       const hasMarkup = [...detailsWereHidden.keys()].length > 0;
       if (detailFn === void 0 && hasMarkup) return void 0;
       detail = /** @type {HTMLTableRowElement} */
-      make27("tr");
+      make28("tr");
       detail.dataset.kpRowDetail = "";
       detail.hidden = true;
-      const cell2 = make27("td");
+      const cell2 = make28("td");
       detail.append(cell2);
       details.set(row, detail);
       builtDetails.add(detail);
@@ -21507,13 +21507,13 @@ function installSync(c) {
     }
     if (have.length > 0) return;
     for (let i = 0; i < 3; i += 1) {
-      const row = make27("tr");
+      const row = make28("tr");
       row.dataset.kpSkeletonRow = "";
       row.setAttribute("aria-hidden", "true");
       headers.forEach((_, at) => {
-        const cell = make27("td");
+        const cell = make28("td");
         if (c.hiddenColumns.has(at)) cell.hidden = true;
-        if (!controlColumn(at)) cell.append(make27("span", "kp-skeleton"));
+        if (!controlColumn(at)) cell.append(make28("span", "kp-skeleton"));
         row.append(cell);
       });
       body.append(row);
@@ -21548,7 +21548,7 @@ function installSync(c) {
       const key = c.sorts[index];
       header.setAttribute("aria-sort", key === void 0 ? "none" : key.direction);
       if (key === void 0 || c.sorts.length < 2) return;
-      const mark = make27("span", "kp-datatable__sort-order");
+      const mark = make28("span", "kp-datatable__sort-order");
       mark.setAttribute("aria-hidden", "true");
       mark.textContent = String(index + 1);
       (header.querySelector("button") ?? header).append(mark);
@@ -21593,14 +21593,14 @@ function installSync(c) {
     } else if (c.columnList !== null) {
       const s2 = getStrings();
       for (const at of choosable) {
-        const item = make27("li");
+        const item = make28("li");
         const label = (
           /** @type {HTMLLabelElement} */
-          make27("label", "kp-menu__item kp-datatable__column-option")
+          make28("label", "kp-menu__item kp-datatable__column-option")
         );
         const box = (
           /** @type {HTMLInputElement} */
-          make27("input", CHECK_CLASS)
+          make28("input", CHECK_CLASS)
         );
         box.type = "checkbox";
         box.value = String(at);
@@ -21611,12 +21611,12 @@ function installSync(c) {
         item.append(label);
         c.columnList.append(item);
       }
-      const separator = make27("li", "kp-menu__separator");
+      const separator = make28("li", "kp-menu__separator");
       separator.setAttribute("role", "separator");
-      const resetItem = make27("li");
+      const resetItem = make28("li");
       const reset = (
         /** @type {HTMLButtonElement} */
-        make27("button", "kp-menu__item")
+        make28("button", "kp-menu__item")
       );
       reset.type = "button";
       reset.dataset.kpDatatableColumnsReset = "";
@@ -21690,7 +21690,7 @@ function installRender(c) {
     keyOf: keyOf8,
     labelCells,
     labelRow,
-    make: make27,
+    make: make28,
     pageLabel,
     pager,
     pagerClassName,
@@ -21737,7 +21737,7 @@ function installRender(c) {
     if (status !== null) {
       status.textContent = "";
       if (c.state === "loading") {
-        const spinner = make27("span", "kp-spinner");
+        const spinner = make28("span", "kp-spinner");
         spinner.setAttribute("aria-hidden", "true");
         status.append(spinner, " ");
       }
@@ -21746,7 +21746,7 @@ function installRender(c) {
       );
       stopBusyClock();
       if (c.state === "loading" && c.busySince !== null) {
-        c.busyClock = make27("span", "kp-datatable__busy-clock");
+        c.busyClock = make28("span", "kp-datatable__busy-clock");
         c.busyClock.dataset.kpBusyClock = "";
         c.busyClock.setAttribute("aria-hidden", "true");
         c.busyClock.textContent = s2.tableBusyElapsed(busySeconds());
@@ -21790,24 +21790,24 @@ function installRender(c) {
   };
   c.render = render7;
   const pagerButton = (text, enabled, go, direction) => {
-    const button4 = document.createElement("button");
-    button4.type = "button";
-    button4.className = pagerClassName;
-    if (direction !== void 0) button4.dataset.kpDirection = direction;
-    button4.textContent = text;
-    button4.disabled = !enabled;
-    button4.addEventListener("click", () => {
+    const button5 = document.createElement("button");
+    button5.type = "button";
+    button5.className = pagerClassName;
+    if (direction !== void 0) button5.dataset.kpDirection = direction;
+    button5.textContent = text;
+    button5.disabled = !enabled;
+    button5.addEventListener("click", () => {
       go();
       if (serverMode) c.request();
       else render7();
     });
-    return button4;
+    return button5;
   };
-  const pillsList = add(make27("ul", "kp-tag-list"));
+  const pillsList = add(make28("ul", "kp-tag-list"));
   c.pillsList = pillsList;
   const clearButton = (
     /** @type {HTMLButtonElement} */
-    add(make27("button", `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? " kp-button--sm" : ""}`))
+    add(make28("button", `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? " kp-button--sm" : ""}`))
   );
   c.clearButton = clearButton;
   clearButton.type = "button";
@@ -21842,7 +21842,7 @@ function installPills(c) {
     id,
     labelOf: labelOf7,
     locale,
-    make: make27,
+    make: make28,
     pillsList,
     removeGlyph
   } = c;
@@ -21865,10 +21865,10 @@ function installPills(c) {
       );
       for (const pill of filterPills(kind, labelOf7(at), filters.get(at), s2, locale)) {
         count2 += 1;
-        const item = make27("li", "kp-tag");
+        const item = make28("li", "kp-tag");
         const remove2 = (
           /** @type {HTMLButtonElement} */
-          make27("button", "kp-tag__remove")
+          make28("button", "kp-tag__remove")
         );
         remove2.type = "button";
         remove2.setAttribute("aria-label", s2.tableRemoveFilter(pill.label));
@@ -21902,10 +21902,10 @@ function installPills(c) {
       const label = filterPillLabel(kind, labelOf7(at), value, s2, locale);
       if (label === null) continue;
       count2 += 1;
-      const item = make27("li", "kp-tag");
+      const item = make28("li", "kp-tag");
       const edit = (
         /** @type {HTMLButtonElement} */
-        make27("button", "kp-datatable__pill-edit")
+        make28("button", "kp-datatable__pill-edit")
       );
       edit.type = "button";
       edit.dataset.kpFilterPill = String(at);
@@ -21915,7 +21915,7 @@ function installPills(c) {
       edit.textContent = label;
       const remove2 = (
         /** @type {HTMLButtonElement} */
-        make27("button", "kp-tag__remove")
+        make28("button", "kp-tag__remove")
       );
       remove2.type = "button";
       remove2.dataset.kpFilterUnpill = String(at);
@@ -21940,25 +21940,25 @@ function installPills(c) {
     c.addMenu.textContent = "";
     for (const at of filterColumns) {
       const on = filters.has(at);
-      const item = make27("li");
-      const button4 = (
+      const item = make28("li");
+      const button5 = (
         /** @type {HTMLButtonElement} */
-        make27("button", "kp-menu__item kp-datatable__add-item")
+        make28("button", "kp-menu__item kp-datatable__add-item")
       );
-      button4.type = "button";
-      button4.dataset.kpFilterColumn = String(at);
-      button4.setAttribute("aria-label", on ? s2.tableAddFilterItemActive(labelOf7(at)) : s2.tableAddFilterItem(labelOf7(at)));
-      button4.append(labelOf7(at));
+      button5.type = "button";
+      button5.dataset.kpFilterColumn = String(at);
+      button5.setAttribute("aria-label", on ? s2.tableAddFilterItemActive(labelOf7(at)) : s2.tableAddFilterItem(labelOf7(at)));
+      button5.append(labelOf7(at));
       if (on) {
-        button4.dataset.kpFilterMarked = "";
-        const mark = make27("span", "kp-badge");
+        button5.dataset.kpFilterMarked = "";
+        const mark = make28("span", "kp-badge");
         mark.setAttribute("aria-hidden", "true");
         mark.textContent = s2.tableFilterMarked;
-        button4.append(" ", mark);
+        button5.append(" ", mark);
       }
-      item.append(button4);
+      item.append(button5);
       c.addMenu.append(item);
-      if (focused === String(at)) button4.focus();
+      if (focused === String(at)) button5.focus();
     }
   };
   const openFilterEditor = (at, returnTo) => {
@@ -21977,19 +21977,19 @@ function installPills(c) {
     editorReturn = returnTo;
     form2.setAttribute("aria-label", s2.tableFilterEditor(label));
     form2.dataset.kpFilterColumn = String(at);
-    const title = make27("p", "kp-datatable__filter-editor-title");
+    const title = make28("p", "kp-datatable__filter-editor-title");
     title.textContent = label;
     form2.append(title);
     if (kind === "choice") {
-      const set = make27("fieldset", "kp-fieldset");
-      const legend = make27("legend", "kp-sr-only");
+      const set = make28("fieldset", "kp-fieldset");
+      const legend = make28("legend", "kp-sr-only");
       legend.textContent = s2.tableFilterChoicesLegend(label);
-      const choices = make27("div", "kp-datatable__filter-editor-choices");
+      const choices = make28("div", "kp-datatable__filter-editor-choices");
       for (const value of choiceValues(at)) {
-        const option = make27("label", "kp-field__option");
+        const option = make28("label", "kp-field__option");
         const box = (
           /** @type {HTMLInputElement} */
-          make27("input", CHECK_CLASS)
+          make28("input", CHECK_CLASS)
         );
         box.type = "checkbox";
         box.name = "values";
@@ -22001,7 +22001,7 @@ function installPills(c) {
       set.append(legend, choices);
       form2.append(set);
     } else {
-      const pair = make27("div", "kp-datatable__filter-editor-pair");
+      const pair = make28("div", "kp-datatable__filter-editor-pair");
       for (
         const bound of
         /** @type {const} */
@@ -22009,7 +22009,7 @@ function installPills(c) {
       ) {
         const input = (
           /** @type {HTMLInputElement} */
-          make27("input", "kp-field__input")
+          make28("input", "kp-field__input")
         );
         input.id = `${id}-filter-editor-${bound}`;
         input.dataset.kpFilterBound = bound;
@@ -22017,7 +22017,7 @@ function installPills(c) {
         input.setAttribute("aria-describedby", `${id}-filter-editor-error`);
         const text = (
           /** @type {HTMLLabelElement} */
-          make27("label", "kp-field__label")
+          make28("label", "kp-field__label")
         );
         text.htmlFor = input.id;
         text.textContent = s2.tableFilterBound(kind, bound, label);
@@ -22025,9 +22025,9 @@ function installPills(c) {
           input.type = "text";
           input.inputMode = "decimal";
           input.value = range?.[bound] ?? "";
-          const field = make27("div", "kp-field");
-          field.append(text, input);
-          pair.append(field);
+          const field2 = make28("div", "kp-field");
+          field2.append(text, input);
+          pair.append(field2);
         } else {
           const picker = datePickerFor(input);
           picker.prepend(text);
@@ -22036,21 +22036,21 @@ function installPills(c) {
       }
       form2.append(pair);
     }
-    const error = make27("p", "kp-field__error");
+    const error = make28("p", "kp-field__error");
     error.id = `${id}-filter-editor-error`;
     error.dataset.kpFilterError = "";
     error.setAttribute("role", "alert");
     error.hidden = true;
-    const actions = make27("div", "kp-datatable__filter-editor-actions");
+    const actions = make28("div", "kp-datatable__filter-editor-actions");
     const apply2 = (
       /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-button--primary kp-button--sm")
+      make28("button", "kp-button kp-button--primary kp-button--sm")
     );
     apply2.type = "submit";
     apply2.textContent = s2.tableFilterApply;
     const cancel = (
       /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-button--ghost kp-button--sm")
+      make28("button", "kp-button kp-button--ghost kp-button--sm")
     );
     cancel.type = "button";
     cancel.dataset.kpFilterCancel = "";
@@ -22130,12 +22130,12 @@ function installPills(c) {
         );
         error.textContent = result.error;
         error.hidden = false;
-        const field = (
+        const field2 = (
           /** @type {HTMLElement} */
           form2.querySelector(`[data-kp-filter-bound="${result.bound}"]`)
         );
-        field.setAttribute("aria-invalid", "true");
-        field.focus();
+        field2.setAttribute("aria-invalid", "true");
+        field2.focus();
         return;
       }
       next2 = result.value;
@@ -22164,13 +22164,13 @@ function installPills(c) {
   };
   c.onEditorKeydown = onEditorKeydown;
   const onAddMenuClick = (event) => {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement | null} */
       /** @type {HTMLElement} */
       event.target.closest("[data-kp-filter-column]")
     );
-    if (button4 === null) return;
-    const at = Number(button4.dataset.kpFilterColumn);
+    if (button5 === null) return;
+    const at = Number(button5.dataset.kpFilterColumn);
     if (c.addPop?.matches(":popover-open")) c.addPop.hidePopover();
     openFilterEditor(at, filters.has(at) ? at : null);
   };
@@ -22417,7 +22417,7 @@ function installServer(c) {
     keyOf: keyOf8,
     labelOf: labelOf7,
     loadFn,
-    make: make27,
+    make: make28,
     prepareRow,
     render: render7,
     rowKeyFn,
@@ -22433,17 +22433,17 @@ function installServer(c) {
     if (item instanceof HTMLTableRowElement) return item;
     const row = (
       /** @type {HTMLTableRowElement} */
-      make27("tr")
+      make28("tr")
     );
-    const field = wrap.dataset.kpRowKeyField ?? headers[keyColumn]?.dataset.kpField;
-    row.dataset.kpRowKey = rowKeyFn ? rowKeyFn(item) : String((field === void 0 ? void 0 : item[field]) ?? item.key ?? item.id ?? "");
+    const field2 = wrap.dataset.kpRowKeyField ?? headers[keyColumn]?.dataset.kpField;
+    row.dataset.kpRowKey = rowKeyFn ? rowKeyFn(item) : String((field2 === void 0 ? void 0 : item[field2]) ?? item.key ?? item.id ?? "");
     headers.forEach((header, at) => {
       if (header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN)) return;
-      const cell = make27("td");
+      const cell = make28("td");
       if (header.querySelector(SELECT_ALL) !== null) {
         const box = (
           /** @type {HTMLInputElement} */
-          make27("input", CHECK_CLASS)
+          make28("input", CHECK_CLASS)
         );
         box.type = "checkbox";
         box.dataset.kpSelectRow = "";
@@ -22995,7 +22995,7 @@ function installEdit(c) {
     keyOf: keyOf8,
     labelOf: labelOf7,
     labelRow,
-    make: make27,
+    make: make28,
     onClear,
     onClearSelection,
     onEdit,
@@ -23011,14 +23011,14 @@ function installEdit(c) {
     if (c.editLog === null) return;
     c.editLog.textContent = text;
     if (!withUndo) return;
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-button--ghost kp-button--sm")
+      make28("button", "kp-button kp-button--ghost kp-button--sm")
     );
-    button4.type = "button";
-    button4.dataset.kpDatatableUndo = "";
-    button4.textContent = getStrings().undo;
-    c.editLog.append(" ", button4);
+    button5.type = "button";
+    button5.dataset.kpDatatableUndo = "";
+    button5.textContent = getStrings().undo;
+    c.editLog.append(" ", button5);
   };
   const writeCell = (cell, value) => {
     const holder = (
@@ -23043,20 +23043,20 @@ function installEdit(c) {
     if (c.editing !== null && !await commitEdit(true)) return;
     const kind = editKinds[column];
     const cell = row.cells[column];
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement | null} */
       cell?.querySelector(EDIT_CELL) ?? null
     );
-    if (kind === null || kind === void 0 || cell === void 0 || button4 === null) return;
+    if (kind === null || kind === void 0 || cell === void 0 || button5 === null) return;
     const s2 = getStrings();
     const header = headers[column];
     const key = keyOf8(row);
     const previous = cellText(row, column);
-    const holder = make27("div", "kp-datatable__editor");
+    const holder = make28("div", "kp-datatable__editor");
     holder.dataset.kpDatatableEditorWrap = "";
     holder.setAttribute("data-density", "compact");
     const errorId = `${id}-edit-error`;
-    const error = make27("p", "kp-field__error");
+    const error = make28("p", "kp-field__error");
     error.id = errorId;
     error.hidden = true;
     let control;
@@ -23065,7 +23065,7 @@ function installEdit(c) {
     if (kind === "select") {
       const select2 = (
         /** @type {HTMLSelectElement} */
-        make27("select", "kp-field__input")
+        make28("select", "kp-field__input")
       );
       const declared2 = splitList2(header?.dataset.kpEditOptions);
       const values = declared2.length > 0 ? declared2 : [...new Set(c.all.map((r) => cellText(r, column)).filter((v) => v !== ""))];
@@ -23073,7 +23073,7 @@ function installEdit(c) {
       for (const value of values) {
         const option = (
           /** @type {HTMLOptionElement} */
-          make27("option")
+          make28("option")
         );
         option.value = value;
         option.textContent = value;
@@ -23085,7 +23085,7 @@ function installEdit(c) {
     } else {
       const input = (
         /** @type {HTMLInputElement} */
-        make27("input", "kp-field__input")
+        make28("input", "kp-field__input")
       );
       input.value = kind === "date" ? "" : previous;
       if (kind === "number") {
@@ -23104,7 +23104,7 @@ function installEdit(c) {
     control.setAttribute("aria-describedby", errorId);
     if (header?.dataset.kpEditRequired !== void 0) control.setAttribute("aria-required", "true");
     holder.append(error);
-    button4.hidden = true;
+    button5.hidden = true;
     cell.append(holder);
     if (kind === "select" && drawsSelect(control)) detachControl = attachSelect(
       /** @type {HTMLSelectElement} */
@@ -23117,7 +23117,7 @@ function installEdit(c) {
       if (previous !== "") handle?.set(previous);
       detachControl = detachPickers;
     }
-    c.editing = { row, column, kind, button: button4, holder, control, error, previous, detach: detachControl, busy: false };
+    c.editing = { row, column, kind, button: button5, holder, control, error, previous, detach: detachControl, busy: false };
     control.focus();
     if (control instanceof HTMLInputElement && kind !== "date") control.select();
     logEdit(s2.tableEditing(labelOf7(column), key));
@@ -23174,12 +23174,12 @@ function installEdit(c) {
     if (current2 === null) return true;
     if (current2.busy) return false;
     const s2 = getStrings();
-    const { row, column, kind, button: button4, control, previous } = current2;
+    const { row, column, kind, button: button5, control, previous } = current2;
     const key = keyOf8(row);
     if (!save2) {
       closeEditor();
       logEdit(s2.tableEditCancelled);
-      button4.focus();
+      button5.focus();
       return true;
     }
     const value = kind === "date" ? control.dataset.kpDateValue ?? (control.value.trim() === "" ? "" : control.value.trim()) : control.value.trim();
@@ -23193,7 +23193,7 @@ function installEdit(c) {
     }
     if (value === previous) {
       closeEditor();
-      button4.focus();
+      button5.focus();
       return true;
     }
     current2.busy = true;
@@ -23213,7 +23213,7 @@ function installEdit(c) {
     lastEdit = { row, column, before: previous, after: value };
     labelRow(row);
     logEdit(s2.tableEdited(key, labelOf7(column), previous, value), { undo: true });
-    button4.focus();
+    button5.focus();
     return true;
   };
   c.commitEdit = commitEdit;
@@ -24146,47 +24146,47 @@ __export(forms_exports, {
   nameOf: () => nameOf2,
   showError: () => showError
 });
-function nameOf2(field) {
-  if (field.getAttribute("type") === "radio") {
-    const legend = field.closest("fieldset")?.querySelector("legend")?.textContent?.trim();
+function nameOf2(field2) {
+  if (field2.getAttribute("type") === "radio") {
+    const legend = field2.closest("fieldset")?.querySelector("legend")?.textContent?.trim();
     if (legend !== void 0 && legend !== "") return legend;
   }
-  const id = field.getAttribute("id");
-  const label = id === null ? null : field.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
+  const id = field2.getAttribute("id");
+  const label = id === null ? null : field2.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
   const text = label?.textContent?.trim();
   if (text !== void 0 && text !== "") return text;
-  return field.getAttribute("aria-label") ?? field.getAttribute("name") ?? getStrings().fieldFallbackName;
+  return field2.getAttribute("aria-label") ?? field2.getAttribute("name") ?? getStrings().fieldFallbackName;
 }
-function stateHolder(field) {
-  if (field.getAttribute("type") !== "radio") return field;
+function stateHolder(field2) {
+  if (field2.getAttribute("type") !== "radio") return field2;
   return (
     /** @type {HTMLElement | null} */
-    field.closest('[role="radiogroup"], fieldset') ?? field
+    field2.closest('[role="radiogroup"], fieldset') ?? field2
   );
 }
-function showError(field, message, { wrapper = ".kp-field", invalidClass = "kp-field--invalid" } = {}) {
-  const box = field.closest(wrapper);
+function showError(field2, message, { wrapper = ".kp-field", invalidClass = "kp-field--invalid" } = {}) {
+  const box = field2.closest(wrapper);
   const holder = (
     /** @type {HTMLElement | null} */
     box?.querySelector(FIELD_ERROR) ?? null
   );
-  const marked = stateHolder(field);
+  const marked = stateHolder(field2);
   marked.setAttribute("aria-invalid", "true");
   box?.classList.add(invalidClass);
   if (holder === null) return;
-  if (holder.id === "") holder.id = `${field.getAttribute("id") ?? `kp-field-${++counter3}`}-error`;
+  if (holder.id === "") holder.id = `${field2.getAttribute("id") ?? `kp-field-${++counter3}`}-error`;
   holder.textContent = message;
   holder.hidden = false;
   const described = (marked.getAttribute("aria-describedby") ?? "").split(/\s+/).filter(Boolean);
   if (!described.includes(holder.id)) marked.setAttribute("aria-describedby", [...described, holder.id].join(" "));
 }
-function clearError(field, { wrapper = ".kp-field", invalidClass = "kp-field--invalid" } = {}) {
-  const box = field.closest(wrapper);
+function clearError(field2, { wrapper = ".kp-field", invalidClass = "kp-field--invalid" } = {}) {
+  const box = field2.closest(wrapper);
   const holder = (
     /** @type {HTMLElement | null} */
     box?.querySelector(FIELD_ERROR) ?? null
   );
-  const marked = stateHolder(field);
+  const marked = stateHolder(field2);
   marked.removeAttribute("aria-invalid");
   box?.classList.remove(invalidClass);
   if (holder === null) return;
@@ -24237,41 +24237,41 @@ function attachForms(root = document, {
       /** @type {HTMLElement[]} */
       [...form2.elements].filter((el16) => el16 instanceof HTMLElement && "checkValidity" in el16 && el16.getAttribute("type") !== "submit")
     );
-    const validate = (field) => {
+    const validate = (field2) => {
       const control = (
         /** @type {HTMLInputElement} */
-        field
+        field2
       );
       const valid = control.checkValidity();
-      if (valid) clearError(field, marks);
-      else showError(field, control.validationMessage || fallback(), marks);
-      field.dispatchEvent(
+      if (valid) clearError(field2, marks);
+      else showError(field2, control.validationMessage || fallback(), marks);
+      field2.dispatchEvent(
         new CustomEvent(FIELD_EVENT, { bubbles: true, detail: { valid, message: valid ? "" : control.validationMessage || fallback() } })
       );
       return valid;
     };
     const fieldOf = (event) => {
-      const field = (
+      const field2 = (
         /** @type {HTMLElement} */
         event.target
       );
-      return field instanceof HTMLElement && "checkValidity" in field && field.getAttribute("type") !== "submit" ? field : null;
+      return field2 instanceof HTMLElement && "checkValidity" in field2 && field2.getAttribute("type") !== "submit" ? field2 : null;
     };
     const onFocusOut = (event) => {
-      const field = fieldOf(event);
-      if (field === null) return;
-      if (when === "blur" || again2 === "blur" && stateHolder(field).getAttribute("aria-invalid") === "true") validate(field);
+      const field2 = fieldOf(event);
+      if (field2 === null) return;
+      if (when === "blur" || again2 === "blur" && stateHolder(field2).getAttribute("aria-invalid") === "true") validate(field2);
     };
     const onInput = (event) => {
-      const field = fieldOf(event);
-      if (field === null) return;
-      if (when === "input" || again2 === "input" && stateHolder(field).getAttribute("aria-invalid") === "true") validate(field);
+      const field2 = fieldOf(event);
+      if (field2 === null) return;
+      if (when === "input" || again2 === "input" && stateHolder(field2).getAttribute("aria-invalid") === "true") validate(field2);
     };
     const dedupe = (list) => {
       const groups = /* @__PURE__ */ new Set();
-      return list.filter((field) => {
-        if (field.getAttribute("type") !== "radio") return true;
-        const name = field.getAttribute("name") ?? "";
+      return list.filter((field2) => {
+        if (field2.getAttribute("type") !== "radio") return true;
+        const name = field2.getAttribute("name") ?? "";
         if (groups.has(name)) return false;
         groups.add(name);
         return true;
@@ -24288,14 +24288,14 @@ function attachForms(root = document, {
       const s2 = getStrings();
       heading.textContent = bad.length === 1 ? s2.formSummaryOne : s2.formSummaryMany(bad.length);
       const list = document.createElement("ul");
-      for (const field of bad) {
+      for (const field2 of bad) {
         const item = document.createElement("li");
         const link = document.createElement("a");
-        link.href = `#${field.getAttribute("id") ?? ""}`;
-        link.textContent = nameOf2(field);
+        link.href = `#${field2.getAttribute("id") ?? ""}`;
+        link.textContent = nameOf2(field2);
         link.addEventListener("click", (click) => {
           click.preventDefault();
-          field.focus();
+          field2.focus();
         });
         item.append(link);
         list.append(item);
@@ -24305,7 +24305,7 @@ function attachForms(root = document, {
       if (focusOnError) summary2.focus();
     };
     const validateAll = () => {
-      const bad = dedupe(fields().filter((field) => !validate(field)));
+      const bad = dedupe(fields().filter((field2) => !validate(field2)));
       if (bad.length === 0) {
         if (summary2 !== null) summary2.hidden = true;
         return true;
@@ -24333,15 +24333,15 @@ function attachForms(root = document, {
       errors: (errors) => {
         const bad = [];
         for (const [name, message] of Object.entries(errors)) {
-          const field = fields().find((f) => f.getAttribute("name") === name);
-          if (field === void 0) continue;
-          showError(field, message, marks);
-          bad.push(field);
+          const field2 = fields().find((f) => f.getAttribute("name") === name);
+          if (field2 === void 0) continue;
+          showError(field2, message, marks);
+          bad.push(field2);
         }
         if (bad.length > 0) showSummary(dedupe(bad));
       },
       clear: () => {
-        for (const field of fields()) clearError(field, marks);
+        for (const field2 of fields()) clearError(field2, marks);
         if (summary2 !== null) summary2.hidden = true;
       },
       done
@@ -24359,38 +24359,38 @@ function attachForms(root = document, {
     });
   }
   for (const element of root.querySelectorAll(SUBMIT)) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
       element
     );
-    if (button4.dataset.kpSubmitAttached !== void 0) continue;
-    button4.dataset.kpSubmitAttached = "";
-    const owner = button4.closest("form");
-    const busyText = button4.dataset.kpBusy ?? getStrings().busy;
-    const idleText = button4.textContent ?? "";
+    if (button5.dataset.kpSubmitAttached !== void 0) continue;
+    button5.dataset.kpSubmitAttached = "";
+    const owner = button5.closest("form");
+    const busyText = button5.dataset.kpBusy ?? getStrings().busy;
+    const idleText = button5.textContent ?? "";
     let ownsFaces = false;
     const onValid = () => {
-      button4.disabled = true;
-      button4.setAttribute("aria-busy", "true");
-      ownsFaces = button4.querySelector(":scope > .kp-flash__stack") !== null;
+      button5.disabled = true;
+      button5.setAttribute("aria-busy", "true");
+      ownsFaces = button5.querySelector(":scope > .kp-flash__stack") !== null;
       if (ownsFaces) {
-        button4.setAttribute("data-kp-flash-state", "busy");
+        button5.setAttribute("data-kp-flash-state", "busy");
         return;
       }
-      const label = button4.ownerDocument.createElement("span");
+      const label = button5.ownerDocument.createElement("span");
       label.className = "kp-button__label";
       label.textContent = busyText;
-      button4.replaceChildren(label);
+      button5.replaceChildren(label);
     };
     const onDone = () => {
-      button4.disabled = false;
-      button4.removeAttribute("aria-busy");
+      button5.disabled = false;
+      button5.removeAttribute("aria-busy");
       if (ownsFaces) {
         ownsFaces = false;
-        if (button4.getAttribute("data-kp-flash-state") === "busy") button4.setAttribute("data-kp-flash-state", "rest");
+        if (button5.getAttribute("data-kp-flash-state") === "busy") button5.setAttribute("data-kp-flash-state", "rest");
         return;
       }
-      button4.textContent = idleText;
+      button5.textContent = idleText;
     };
     owner?.addEventListener(VALID_EVENT, onValid);
     owner?.addEventListener(DONE_EVENT, onDone);
@@ -24398,7 +24398,7 @@ function attachForms(root = document, {
       owner?.removeEventListener(VALID_EVENT, onValid);
       owner?.removeEventListener(DONE_EVENT, onDone);
       onDone();
-      delete button4.dataset.kpSubmitAttached;
+      delete button5.dataset.kpSubmitAttached;
     });
   }
   const detach = () => {
@@ -24556,12 +24556,12 @@ var init_constants10 = __esm({
 });
 
 // js/patterns/clipboard.js
-function clearClipboardLater(field, secret, wait, say18) {
+function clearClipboardLater(field2, secret, wait, say18) {
   const s2 = getStrings();
   let dropFocus = null;
   const done = (cleared, reason) => {
     if (cleared) say18(s2.secretClipboardCleared);
-    field.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
+    field2.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
   };
   const clear = async () => {
     let reason = "timer";
@@ -24605,17 +24605,17 @@ var init_clipboard = __esm({
 });
 
 // js/patterns/secret-api.js
-function revealSecret(field) {
-  secrets.get(field)?.reveal("call");
+function revealSecret(field2) {
+  secrets.get(field2)?.reveal("call");
 }
-function hideSecret(field) {
-  secrets.get(field)?.hide("call");
+function hideSecret(field2) {
+  secrets.get(field2)?.hide("call");
 }
-function secretInputValue(field) {
-  return secretInputs.get(field)?.value ?? "";
+function secretInputValue(field2) {
+  return secretInputs.get(field2)?.value ?? "";
 }
-function setSecretInputValue(field, value) {
-  const input = secretInputs.get(field);
+function setSecretInputValue(field2, value) {
+  const input = secretInputs.get(field2);
   if (!input) return;
   input.value = value;
   input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -24630,29 +24630,29 @@ var init_secret_api = __esm({
 });
 
 // js/patterns/secret-input.js
-function wireSecretInput(field, { copiedMs, clearAfterMs }) {
-  const doc = field.ownerDocument;
+function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
+  const doc = field2.ownerDocument;
   const s2 = getStrings();
-  const make27 = (tag, className) => {
+  const make28 = (tag, className) => {
     const el16 = doc.createElement(tag);
     el16.className = className;
     return el16;
   };
-  field.classList.add("kp-secret");
-  if (!field.hasAttribute("role")) field.setAttribute("role", "group");
-  const name = field.getAttribute("aria-label") ?? field.dataset.kpSecretLabel ?? s2.secretLabel;
-  if (!field.hasAttribute("aria-label") && !field.hasAttribute("aria-labelledby")) field.setAttribute("aria-label", name);
+  field2.classList.add("kp-secret");
+  if (!field2.hasAttribute("role")) field2.setAttribute("role", "group");
+  const name = field2.getAttribute("aria-label") ?? field2.dataset.kpSecretLabel ?? s2.secretLabel;
+  if (!field2.hasAttribute("aria-label") && !field2.hasAttribute("aria-labelledby")) field2.setAttribute("aria-label", name);
   const built = (
     /** @type {Element[]} */
     []
   );
   let entry = (
     /** @type {HTMLElement | null} */
-    field.querySelector(":scope > .kp-secret__entry")
+    field2.querySelector(":scope > .kp-secret__entry")
   );
   if (!entry) {
-    entry = make27("div", "kp-secret__entry");
-    field.prepend(entry);
+    entry = make28("div", "kp-secret__entry");
+    field2.prepend(entry);
     built.push(entry);
   }
   let input = (
@@ -24662,7 +24662,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   const authored = input !== null;
   if (!input) {
     input = /** @type {HTMLInputElement} */
-    make27("input", "kp-field__input kp-secret__input");
+    make28("input", "kp-field__input kp-secret__input");
     entry.append(input);
   }
   input.classList.add("kp-secret__input");
@@ -24670,51 +24670,51 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   input.spellcheck = false;
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("autocorrect", "off");
-  if (!input.hasAttribute("autocomplete")) input.setAttribute("autocomplete", field.dataset.kpSecretAutocomplete ?? "off");
-  if (!input.name && field.dataset.kpSecretName) input.name = field.dataset.kpSecretName;
-  if (!input.placeholder && field.dataset.kpSecretPlaceholder) input.placeholder = field.dataset.kpSecretPlaceholder;
+  if (!input.hasAttribute("autocomplete")) input.setAttribute("autocomplete", field2.dataset.kpSecretAutocomplete ?? "off");
+  if (!input.name && field2.dataset.kpSecretName) input.name = field2.dataset.kpSecretName;
+  if (!input.placeholder && field2.dataset.kpSecretPlaceholder) input.placeholder = field2.dataset.kpSecretPlaceholder;
   if (!input.hasAttribute("aria-label") && !input.id) input.setAttribute("aria-label", name);
-  secretInputs.set(field, input);
+  secretInputs.set(field2, input);
   let actions = (
     /** @type {HTMLElement | null} */
-    field.querySelector(":scope > .kp-secret__actions")
+    field2.querySelector(":scope > .kp-secret__actions")
   );
   if (!actions) {
-    actions = make27("div", "kp-secret__actions");
+    actions = make28("div", "kp-secret__actions");
     entry.after(actions);
     built.push(actions);
   }
-  const button4 = (className, marker) => {
+  const button5 = (className, marker) => {
     const el16 = (
       /** @type {HTMLButtonElement} */
-      make27("button", className)
+      make28("button", className)
     );
     el16.type = "button";
     el16.setAttribute(marker, "");
     actions.append(el16);
     return el16;
   };
-  const reveal = button4("kp-button kp-secret__reveal", "data-kp-secret-reveal");
-  const paste = field.dataset.kpSecretPaste === "false" ? null : button4("kp-button kp-secret__paste", "data-kp-secret-paste-button");
-  const copy3 = field.dataset.kpSecretCopy === "false" ? null : button4("kp-button kp-copyable__button kp-secret__copy", "data-kp-secret-copy");
+  const reveal = button5("kp-button kp-secret__reveal", "data-kp-secret-reveal");
+  const paste = field2.dataset.kpSecretPaste === "false" ? null : button5("kp-button kp-secret__paste", "data-kp-secret-paste-button");
+  const copy3 = field2.dataset.kpSecretCopy === "false" ? null : button5("kp-button kp-copyable__button kp-secret__copy", "data-kp-secret-copy");
   for (const part7 of [reveal, paste, copy3]) if (part7) built.push(part7);
   let line = (
     /** @type {HTMLElement | null} */
-    field.querySelector(":scope > .kp-secret__line")
+    field2.querySelector(":scope > .kp-secret__line")
   );
   if (!line) {
-    line = make27("p", "kp-secret__line");
-    field.append(line);
+    line = make28("p", "kp-secret__line");
+    field2.append(line);
     built.push(line);
   }
-  const words2 = make27("span", "kp-secret__words");
-  const drain = make27("span", "kp-secret__drain");
+  const words2 = make28("span", "kp-secret__words");
+  const drain = make28("span", "kp-secret__drain");
   drain.setAttribute("aria-hidden", "true");
   line.replaceChildren(words2, drain);
-  const spoken = make27("span", "kp-sr-only kp-secret__live");
+  const spoken = make28("span", "kp-sr-only kp-secret__live");
   spoken.setAttribute("role", "status");
   spoken.setAttribute("aria-live", "polite");
-  field.append(spoken);
+  field2.append(spoken);
   built.push(spoken);
   const lineId = line.id || `kp-secret-line-${Math.random().toString(36).slice(2, 9)}`;
   line.id = lineId;
@@ -24730,13 +24730,13 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   };
   let pasteProblem = "";
   const readOptions4 = () => {
-    const ms = clearDelay(field.dataset.kpSecretTtl, SECRET_TTL * 1e3);
+    const ms = clearDelay(field2.dataset.kpSecretTtl, SECRET_TTL * 1e3);
     seconds = Math.round(ms / 1e3);
   };
   readOptions4();
-  const hidesOnBlur = () => !["false", "off"].includes(field.dataset.kpSecretHideOnBlur ?? "");
-  const disabledWhy = () => field.dataset.kpSecretDisabled;
-  const invalidWhy = () => field.dataset.kpSecretInvalid;
+  const hidesOnBlur = () => !["false", "off"].includes(field2.dataset.kpSecretHideOnBlur ?? "");
+  const disabledWhy = () => field2.dataset.kpSecretDisabled;
+  const invalidWhy = () => field2.dataset.kpSecretInvalid;
   const say18 = (text) => {
     spoken.textContent = "";
     window.setTimeout(() => spoken.textContent = text, 30);
@@ -24749,7 +24749,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     const why = disabledWhy();
     const bad = invalidWhy();
     const empty = input.value === "";
-    field.dataset.kpSecretState = why !== void 0 ? "disabled" : bad !== void 0 || pasteProblem ? "error" : shown5 ? "shown" : "hidden";
+    field2.dataset.kpSecretState = why !== void 0 ? "disabled" : bad !== void 0 || pasteProblem ? "error" : shown5 ? "shown" : "hidden";
     input.type = shown5 ? "text" : "password";
     input.disabled = why !== void 0;
     if (bad !== void 0) input.setAttribute("aria-invalid", "true");
@@ -24772,7 +24772,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     stop();
     paint15();
     say18(s2.secretHidden);
-    field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
+    field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
   };
   const tick6 = () => {
     left -= 1;
@@ -24789,7 +24789,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     drain.style.removeProperty("animation");
     paint15();
     say18(s2.secretShown(seconds));
-    field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
+    field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
     if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
   };
   const onReveal = () => {
@@ -24844,13 +24844,13 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
       paint15();
     }, copiedMs);
     cancelClear();
-    const wait = clearDelay(field.dataset.kpSecretClear, clearAfterMs);
-    if (wait > 0) cancelClear = clearClipboardLater(field, text, wait, say18);
+    const wait = clearDelay(field2.dataset.kpSecretClear, clearAfterMs);
+    if (wait > 0) cancelClear = clearClipboardLater(field2, text, wait, say18);
   };
   const onFocusOut = (event) => {
     if (!shown5 || !hidesOnBlur()) return;
     const next2 = event.relatedTarget;
-    if (next2 instanceof Node && field.contains(next2)) return;
+    if (next2 instanceof Node && field2.contains(next2)) return;
     hide2("away");
   };
   const onAway = () => {
@@ -24860,15 +24860,15 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   reveal.addEventListener("click", onReveal);
   paste?.addEventListener("click", onPaste);
   copy3?.addEventListener("click", onCopy);
-  field.addEventListener("focusout", onFocusOut);
+  field2.addEventListener("focusout", onFocusOut);
   doc.addEventListener("visibilitychange", onAway);
   paint15();
   const watch2 = new MutationObserver(() => {
     if (disabledWhy() !== void 0) hide2("call");
     paint15();
   });
-  watch2.observe(field, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
-  const stopOptions = watchOptions(field, ["data-kp-secret-ttl"], () => {
+  watch2.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
+  const stopOptions = watchOptions(field2, ["data-kp-secret-ttl"], () => {
     readOptions4();
     if (shown5) {
       stop();
@@ -24877,7 +24877,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     }
     paint15();
   });
-  secrets.set(field, { reveal: (reason) => show(reason), hide: (reason) => hide2(reason) });
+  secrets.set(field2, { reveal: (reason) => show(reason), hide: (reason) => hide2(reason) });
   return () => {
     watch2.disconnect();
     stopOptions();
@@ -24887,16 +24887,16 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     reveal.removeEventListener("click", onReveal);
     paste?.removeEventListener("click", onPaste);
     copy3?.removeEventListener("click", onCopy);
-    field.removeEventListener("focusout", onFocusOut);
+    field2.removeEventListener("focusout", onFocusOut);
     doc.removeEventListener("visibilitychange", onAway);
     shown5 = false;
     input.value = "";
     input.type = "password";
     for (const part7 of built) part7.remove();
     if (authored) input.classList.remove("kp-secret__input");
-    delete field.dataset.kpSecretState;
-    secrets.delete(field);
-    secretInputs.delete(field);
+    delete field2.dataset.kpSecretState;
+    secrets.delete(field2);
+    secretInputs.delete(field2);
   };
 }
 var init_secret_input = __esm({
@@ -24920,32 +24920,32 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       ...root.querySelectorAll(SECRET)
     ]
   );
-  for (const field of fields) {
-    if (secrets.has(field)) continue;
-    if (field.dataset.kpSecretMode === "input") {
-      cleanups.push(wireSecretInput(field, { copiedMs, clearAfterMs }));
+  for (const field2 of fields) {
+    if (secrets.has(field2)) continue;
+    if (field2.dataset.kpSecretMode === "input") {
+      cleanups.push(wireSecretInput(field2, { copiedMs, clearAfterMs }));
       continue;
     }
-    const doc = field.ownerDocument;
+    const doc = field2.ownerDocument;
     const s2 = getStrings();
-    const make27 = (tag, className) => {
+    const make28 = (tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
       return el16;
     };
-    field.classList.add("kp-secret");
-    if (!field.hasAttribute("role")) field.setAttribute("role", "group");
-    if (!field.hasAttribute("aria-label") && !field.hasAttribute("aria-labelledby"))
-      field.setAttribute("aria-label", field.dataset.kpSecretLabel ?? s2.secretLabel);
+    field2.classList.add("kp-secret");
+    if (!field2.hasAttribute("role")) field2.setAttribute("role", "group");
+    if (!field2.hasAttribute("aria-label") && !field2.hasAttribute("aria-labelledby"))
+      field2.setAttribute("aria-label", field2.dataset.kpSecretLabel ?? s2.secretLabel);
     let hold = false;
     let seconds = SECRET_TTL;
     let mask = "";
     const readOptions4 = () => {
-      hold = field.dataset.kpSecretRevealOn === "hold";
-      const ttl = Math.max(0, Number.parseInt(field.dataset.kpSecretTtl ?? "", 10));
+      hold = field2.dataset.kpSecretRevealOn === "hold";
+      const ttl = Math.max(0, Number.parseInt(field2.dataset.kpSecretTtl ?? "", 10));
       seconds = Number.isFinite(ttl) ? ttl : SECRET_TTL;
-      const maskLength = Math.max(1, Number.parseInt(field.dataset.kpSecretMask ?? "", 10) || SECRET_MASK);
-      mask = (field.dataset.kpSecretMaskChar ?? "\u2022").repeat(maskLength);
+      const maskLength = Math.max(1, Number.parseInt(field2.dataset.kpSecretMask ?? "", 10) || SECRET_MASK);
+      mask = (field2.dataset.kpSecretMaskChar ?? "\u2022").repeat(maskLength);
     };
     readOptions4();
     const built = (
@@ -24954,21 +24954,21 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     );
     let value = (
       /** @type {HTMLElement | null} */
-      field.querySelector(":scope > .kp-secret__value")
+      field2.querySelector(":scope > .kp-secret__value")
     );
     if (!value) {
-      value = make27("code", "kp-secret__value");
-      field.prepend(value);
+      value = make28("code", "kp-secret__value");
+      field2.prepend(value);
       built.push(value);
     }
     value.classList.add("kp-masked");
     value.textContent = mask;
     let actions = (
       /** @type {HTMLElement | null} */
-      field.querySelector(":scope > .kp-secret__actions")
+      field2.querySelector(":scope > .kp-secret__actions")
     );
     if (!actions) {
-      actions = make27("div", "kp-secret__actions");
+      actions = make28("div", "kp-secret__actions");
       value.after(actions);
       built.push(actions);
     }
@@ -24978,7 +24978,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     );
     if (!reveal) {
       reveal = /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-secret__reveal");
+      make28("button", "kp-button kp-secret__reveal");
       reveal.type = "button";
       reveal.setAttribute("data-kp-secret-reveal", "");
       actions.append(reveal);
@@ -24988,9 +24988,9 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       /** @type {HTMLButtonElement | null} */
       actions.querySelector("[data-kp-secret-copy]")
     );
-    if (!copy3 && field.dataset.kpSecretCopy !== "false") {
+    if (!copy3 && field2.dataset.kpSecretCopy !== "false") {
       copy3 = /** @type {HTMLButtonElement} */
-      make27("button", "kp-button kp-copyable__button kp-secret__copy");
+      make28("button", "kp-button kp-copyable__button kp-secret__copy");
       copy3.type = "button";
       copy3.setAttribute("data-kp-secret-copy", "");
       copy3.textContent = s2.secretCopy;
@@ -24999,28 +24999,28 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     }
     let line = (
       /** @type {HTMLElement | null} */
-      field.querySelector(":scope > .kp-secret__line")
+      field2.querySelector(":scope > .kp-secret__line")
     );
     if (!line) {
-      line = make27("p", "kp-secret__line");
-      field.append(line);
+      line = make28("p", "kp-secret__line");
+      field2.append(line);
       built.push(line);
     }
-    const words2 = make27("span", "kp-secret__words");
-    const drain = make27("span", "kp-secret__drain");
+    const words2 = make28("span", "kp-secret__words");
+    const drain = make28("span", "kp-secret__drain");
     drain.setAttribute("aria-hidden", "true");
     line.replaceChildren(words2, drain);
-    const spoken = make27("span", "kp-sr-only kp-secret__live");
+    const spoken = make28("span", "kp-sr-only kp-secret__live");
     spoken.setAttribute("role", "status");
     spoken.setAttribute("aria-live", "polite");
-    field.append(spoken);
+    field2.append(spoken);
     built.push(spoken);
     const valueId = value.id || `kp-secret-${Math.random().toString(36).slice(2, 9)}`;
     value.id = valueId;
     reveal.setAttribute("aria-controls", valueId);
-    field.style.setProperty("--kp-secret-ttl", `${seconds}s`);
-    const lines = Number.parseInt(field.dataset.kpSecretLines ?? "", 10);
-    if (lines > 0) field.style.setProperty("--kp-secret-lines", String(lines));
+    field2.style.setProperty("--kp-secret-ttl", `${seconds}s`);
+    const lines = Number.parseInt(field2.dataset.kpSecretLines ?? "", 10);
+    if (lines > 0) field2.style.setProperty("--kp-secret-lines", String(lines));
     let state6 = "hidden";
     let left = seconds;
     let timer2 = 0;
@@ -25033,11 +25033,11 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       spoken.textContent = "";
       window.setTimeout(() => spoken.textContent = text, 30);
     };
-    const disabledWhy = () => field.dataset.kpSecretDisabled;
+    const disabledWhy = () => field2.dataset.kpSecretDisabled;
     const label = () => state6 === "shown" ? s2.secretHide : state6 === "error" ? s2.secretRetry : hold ? s2.secretHold : s2.secretReveal;
     const setState2 = (next2) => {
       state6 = next2;
-      field.dataset.kpSecretState = next2;
+      field2.dataset.kpSecretState = next2;
       const why = disabledWhy();
       reveal.textContent = label();
       reveal.disabled = why !== void 0 || next2 === "loading";
@@ -25047,7 +25047,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       if (copy3) copy3.disabled = why !== void 0;
       value.setAttribute("aria-busy", String(next2 === "loading"));
       if (next2 !== "shown") {
-        field.removeAttribute("data-kp-secret-overflow");
+        field2.removeAttribute("data-kp-secret-overflow");
         value.textContent = mask;
         value.classList.add("kp-masked");
         value.removeAttribute("tabindex");
@@ -25056,13 +25056,13 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     const writeLine = () => {
       const why = disabledWhy();
       if (why !== void 0) {
-        field.dataset.kpSecretState = "disabled";
+        field2.dataset.kpSecretState = "disabled";
         words2.textContent = why;
         return;
       }
       if (state6 === "loading") {
         words2.replaceChildren();
-        const spinner = make27("span", "kp-spinner kp-secret__spinner");
+        const spinner = make28("span", "kp-spinner kp-secret__spinner");
         spinner.setAttribute("aria-hidden", "true");
         words2.append(spinner, doc.createTextNode(s2.secretReading));
       } else if (state6 === "shown") words2.textContent = seconds === 0 ? s2.secretStaysShown : paused ? s2.secretPaused : s2.secretHidesIn(left);
@@ -25077,13 +25077,13 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       ticket += 1;
       stop();
       paused = false;
-      field.removeAttribute("data-kp-secret-paused");
+      field2.removeAttribute("data-kp-secret-paused");
       const was = state6;
       setState2("hidden");
       writeLine();
       if (was === "shown") {
         say18(s2.secretHidden);
-        field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
+        field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
       }
     };
     const read = (purpose) => new Promise((resolve, reject) => {
@@ -25099,13 +25099,13 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
         reject(why);
       };
       const event = new CustomEvent(SECRET_REQUEST_EVENT, { bubbles: true, cancelable: true, detail: { respond, fail, purpose } });
-      field.dispatchEvent(event);
+      field2.dispatchEvent(event);
       if (event.defaultPrevented) return;
       if (load) {
-        Promise.resolve().then(() => load(field, purpose)).then(respond, fail);
+        Promise.resolve().then(() => load(field2, purpose)).then(respond, fail);
         return;
       }
-      const inline2 = field.dataset.kpSecretValue;
+      const inline2 = field2.dataset.kpSecretValue;
       if (inline2 !== void 0) respond(inline2);
       else fail(new Error(s2.secretNoSource));
     });
@@ -25136,12 +25136,12 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
         return;
       }
       if (mine !== ticket) return;
-      const shown5 = make27("span", "kp-secret__text");
+      const shown5 = make28("span", "kp-secret__text");
       shown5.textContent = text;
       value.replaceChildren(shown5);
       value.classList.remove("kp-masked");
       value.tabIndex = 0;
-      field.toggleAttribute("data-kp-secret-overflow", value.scrollWidth > value.clientWidth + 1);
+      field2.toggleAttribute("data-kp-secret-overflow", value.scrollWidth > value.clientWidth + 1);
       left = seconds;
       paused = false;
       setState2("shown");
@@ -25150,13 +25150,13 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       drain.style.removeProperty("animation");
       writeLine();
       say18(s2.secretShown(seconds));
-      field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
+      field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
       if (seconds > 0 && !hold) timer2 = window.setInterval(tick6, 1e3);
     };
     const pause = (on) => {
       if (state6 !== "shown" || paused === on || seconds === 0) return;
       paused = on;
-      field.toggleAttribute("data-kp-secret-paused", on);
+      field2.toggleAttribute("data-kp-secret-paused", on);
       writeLine();
     };
     const onReveal = () => {
@@ -25195,7 +25195,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       copy3.textContent = s2.copied;
       copy3.dataset.kpCopied = "";
       copy3.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
-      say18(s2.copiedAnnouncement(field.getAttribute("aria-label") ?? s2.secretLabel));
+      say18(s2.copiedAnnouncement(field2.getAttribute("aria-label") ?? s2.secretLabel));
       window.clearTimeout(copiedTimer);
       copiedTimer = window.setTimeout(() => {
         copy3.textContent = idle;
@@ -25205,9 +25205,9 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     };
     const scheduleClear = (secret) => {
       cancelClear();
-      const wait = clearDelay(field.dataset.kpSecretClear, clearAfterMs);
+      const wait = clearDelay(field2.dataset.kpSecretClear, clearAfterMs);
       if (!(wait > 0)) return;
-      cancelClear = clearClipboardLater(field, secret, wait, say18);
+      cancelClear = clearClipboardLater(field2, secret, wait, say18);
     };
     const onFocusIn = (event) => {
       if (event.target === value) pause(true);
@@ -25234,8 +25234,8 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     reveal.addEventListener("keyup", onHoldKey);
     reveal.addEventListener("blur", onHoldUp);
     copy3?.addEventListener("click", onCopy);
-    field.addEventListener("focusin", onFocusIn);
-    field.addEventListener("focusout", onFocusOut);
+    field2.addEventListener("focusin", onFocusIn);
+    field2.addEventListener("focusout", onFocusOut);
     doc.addEventListener("selectionchange", onSelection);
     doc.addEventListener("visibilitychange", onAway);
     setState2(disabledWhy() !== void 0 ? "disabled" : "hidden");
@@ -25245,15 +25245,15 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       setState2(disabledWhy() !== void 0 ? "disabled" : state6 === "disabled" ? "hidden" : state6);
       writeLine();
     });
-    watch2.observe(field, { attributes: true, attributeFilter: ["data-kp-secret-disabled"] });
+    watch2.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled"] });
     const stopOptions = watchOptions(
-      field,
+      field2,
       ["data-kp-secret-ttl", "data-kp-secret-reveal-on", "data-kp-secret-mask", "data-kp-secret-mask-char"],
       (names) => {
         const wasHold = hold;
         if (names.includes("data-kp-secret-reveal-on") && (state6 === "shown" || state6 === "loading")) hide2("call");
         readOptions4();
-        field.style.setProperty("--kp-secret-ttl", `${seconds}s`);
+        field2.style.setProperty("--kp-secret-ttl", `${seconds}s`);
         if (hold !== wasHold) setState2(state6);
         if (names.includes("data-kp-secret-mask") || names.includes("data-kp-secret-mask-char")) {
           if (state6 !== "shown") value.textContent = mask;
@@ -25262,7 +25262,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
           stop();
           left = seconds;
           paused = false;
-          field.removeAttribute("data-kp-secret-paused");
+          field2.removeAttribute("data-kp-secret-paused");
           drain.style.animation = "none";
           void drain.offsetWidth;
           drain.style.removeProperty("animation");
@@ -25271,7 +25271,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
         }
       }
     );
-    secrets.set(field, { reveal: (reason) => void show(reason), hide: (reason) => hide2(reason) });
+    secrets.set(field2, { reveal: (reason) => void show(reason), hide: (reason) => hide2(reason) });
     cleanups.push(() => {
       watch2.disconnect();
       stopOptions();
@@ -25286,15 +25286,15 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       reveal.removeEventListener("keyup", onHoldKey);
       reveal.removeEventListener("blur", onHoldUp);
       copy3?.removeEventListener("click", onCopy);
-      field.removeEventListener("focusin", onFocusIn);
-      field.removeEventListener("focusout", onFocusOut);
+      field2.removeEventListener("focusin", onFocusIn);
+      field2.removeEventListener("focusout", onFocusOut);
       doc.removeEventListener("selectionchange", onSelection);
       doc.removeEventListener("visibilitychange", onAway);
       ticket += 1;
       value.textContent = mask;
       for (const part7 of built) part7.remove();
-      delete field.dataset.kpSecretState;
-      secrets.delete(field);
+      delete field2.dataset.kpSecretState;
+      secrets.delete(field2);
     });
   }
   return () => {
@@ -25325,60 +25325,60 @@ function attachPatterns(root = document, {
   const cleanups = [];
   cleanups.push(attachSecrets(root, { copiedMs, clearAfterMs, ...secretLoad ? { load: secretLoad } : {} }));
   for (const element of root.querySelectorAll(COPY)) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
       element
     );
-    if (button4.dataset.kpCopyAttached !== void 0) continue;
-    button4.dataset.kpCopyAttached = "";
-    const idle = button4.textContent ?? "";
-    const done = button4.dataset.kpCopiedText ?? getStrings().copied;
-    const revertMs = Number.parseInt(button4.dataset.kpCopiedMs ?? "", 10) || copiedMs;
+    if (button5.dataset.kpCopyAttached !== void 0) continue;
+    button5.dataset.kpCopyAttached = "";
+    const idle = button5.textContent ?? "";
+    const done = button5.dataset.kpCopiedText ?? getStrings().copied;
+    const revertMs = Number.parseInt(button5.dataset.kpCopiedMs ?? "", 10) || copiedMs;
     let revert = 0;
     const onClick = async () => {
-      const target = button4.dataset.kpCopy ?? "";
+      const target = button5.dataset.kpCopy ?? "";
       const source = target === "" ? null : document.getElementById(target);
-      const text = source?.textContent?.trim() ?? button4.dataset.kpCopyValue ?? "";
+      const text = source?.textContent?.trim() ?? button5.dataset.kpCopyValue ?? "";
       try {
         await navigator.clipboard.writeText(text);
       } catch (error) {
-        button4.dataset.kpCopyFailed = "";
-        if (toastOnCopyFailure && button4.dataset.kpCopyToast !== "false") toast(getStrings().copyBlockedAnnouncement);
-        button4.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text, error } }));
+        button5.dataset.kpCopyFailed = "";
+        if (toastOnCopyFailure && button5.dataset.kpCopyToast !== "false") toast(getStrings().copyBlockedAnnouncement);
+        button5.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text, error } }));
         return;
       }
-      delete button4.dataset.kpCopyFailed;
-      button4.textContent = done;
-      button4.dataset.kpCopied = "";
-      button4.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text } }));
+      delete button5.dataset.kpCopyFailed;
+      button5.textContent = done;
+      button5.dataset.kpCopied = "";
+      button5.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text } }));
       clearTimeout(revert);
       revert = window.setTimeout(() => {
-        button4.textContent = idle;
-        delete button4.dataset.kpCopied;
+        button5.textContent = idle;
+        delete button5.dataset.kpCopied;
       }, revertMs);
     };
-    button4.addEventListener("click", onClick);
+    button5.addEventListener("click", onClick);
     cleanups.push(() => {
-      button4.removeEventListener("click", onClick);
+      button5.removeEventListener("click", onClick);
       clearTimeout(revert);
-      button4.textContent = idle;
-      delete button4.dataset.kpCopied;
-      delete button4.dataset.kpCopyFailed;
-      delete button4.dataset.kpCopyAttached;
+      button5.textContent = idle;
+      delete button5.dataset.kpCopied;
+      delete button5.dataset.kpCopyFailed;
+      delete button5.dataset.kpCopyAttached;
     });
   }
   for (const element of root.querySelectorAll(UNDO)) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
       element
     );
-    if (button4.dataset.kpUndoAttached !== void 0) continue;
-    button4.dataset.kpUndoAttached = "";
-    const ms = Number.parseInt(button4.dataset.kpUndoMs ?? "", 10) || undoMs;
+    if (button5.dataset.kpUndoAttached !== void 0) continue;
+    button5.dataset.kpUndoAttached = "";
+    const ms = Number.parseInt(button5.dataset.kpUndoMs ?? "", 10) || undoMs;
     const inFlight = /* @__PURE__ */ new Set();
     const onClick = () => {
-      const selector = button4.dataset.kpUndoSelector;
-      const target = (selector ? button4.closest(selector) : null) ?? button4.closest("[data-kp-undo-target]") ?? button4.closest("tr") ?? button4.parentElement;
+      const selector = button5.dataset.kpUndoSelector;
+      const target = (selector ? button5.closest(selector) : null) ?? button5.closest("[data-kp-undo-target]") ?? button5.closest("tr") ?? button5.parentElement;
       if (!(target instanceof HTMLElement)) return;
       const key = target.dataset.kpRowKey ?? target.dataset.kpKey ?? (target.id || null);
       target.hidden = true;
@@ -25388,12 +25388,12 @@ function attachPatterns(root = document, {
         target.hidden = false;
         delete target.dataset.kpUndoPending;
       };
-      const detail = { target, button: button4, key, restore: restore2 };
+      const detail = { target, button: button5, key, restore: restore2 };
       let timer2 = 0;
-      const message = toast(button4.dataset.kpUndoText ?? getStrings().deleted, {
-        ms: Number.parseInt(button4.dataset.kpUndoToastMs ?? "", 10) || ms,
+      const message = toast(button5.dataset.kpUndoText ?? getStrings().deleted, {
+        ms: Number.parseInt(button5.dataset.kpUndoToastMs ?? "", 10) || ms,
         action: {
-          label: button4.dataset.kpUndoLabel ?? getStrings().undo,
+          label: button5.dataset.kpUndoLabel ?? getStrings().undo,
           onClick: () => {
             if (settled) return;
             settled = true;
@@ -25422,11 +25422,11 @@ function attachPatterns(root = document, {
       };
       inFlight.add(cancel);
     };
-    button4.addEventListener("click", onClick);
+    button5.addEventListener("click", onClick);
     cleanups.push(() => {
-      button4.removeEventListener("click", onClick);
+      button5.removeEventListener("click", onClick);
       for (const cancel of inFlight) cancel();
-      delete button4.dataset.kpUndoAttached;
+      delete button5.dataset.kpUndoAttached;
     });
   }
   return () => {
@@ -26191,15 +26191,15 @@ function attachUploads(root = document, { locale: localeOption, validate, render
       input.value = "";
     };
     const onListClick = (event) => {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLElement | null} */
         /** @type {HTMLElement} */
         event.target.closest("[data-kp-upload-remove]")
       );
-      if (button4 === null) return;
+      if (button5 === null) return;
       const item = (
         /** @type {HTMLElement | null} */
-        button4.closest("li, [data-kp-upload-file]")
+        button5.closest("li, [data-kp-upload-file]")
       );
       if (item === null || item.hasAttribute("data-kp-leaving")) return;
       const ask = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: rows.get(item), item } });
@@ -26383,7 +26383,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
         );
       }
     };
-    const formOwns = (field) => field.form?.dataset.kpFormAttached !== void 0;
+    const formOwns = (field2) => field2.form?.dataset.kpFormAttached !== void 0;
     const stepIsValid = () => {
       const current2 = steps[at];
       if (current2 === void 0) return true;
@@ -26391,24 +26391,24 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
         /** @type {HTMLInputElement[]} */
         [...current2.querySelectorAll("input, select, textarea")]
       );
-      return fields.every((field) => {
-        if (field.checkValidity()) {
-          if (!formOwns(field)) clearError(field);
+      return fields.every((field2) => {
+        if (field2.checkValidity()) {
+          if (!formOwns(field2)) clearError(field2);
           return true;
         }
-        if (formOwns(field)) field.dispatchEvent(new Event("focusout", { bubbles: true }));
-        else showError(field, field.validationMessage || getStrings().formInvalid);
-        field.focus();
+        if (formOwns(field2)) field2.dispatchEvent(new Event("focusout", { bubbles: true }));
+        else showError(field2, field2.validationMessage || getStrings().formInvalid);
+        field2.focus();
         return false;
       });
     };
     const onFieldInput = (event) => {
-      const field = (
+      const field2 = (
         /** @type {HTMLInputElement} */
         event.target
       );
-      if (!(field instanceof HTMLElement) || !("checkValidity" in field) || formOwns(field)) return;
-      if (field.getAttribute("aria-invalid") === "true" && field.checkValidity()) clearError(field);
+      if (!(field2 instanceof HTMLElement) || !("checkValidity" in field2) || formOwns(field2)) return;
+      if (field2.getAttribute("aria-invalid") === "true" && field2.checkValidity()) clearError(field2);
     };
     const goTo = async (to) => {
       if (to < 0 || to >= steps.length || to === at) return false;
@@ -27605,19 +27605,19 @@ function attachHoverCards(root = document, options = {}) {
   };
   const place3 = (el16) => {
     if (current2 === null || !current2.isConnected) return;
-    const field = current2.getBoundingClientRect();
+    const field2 = current2.getBoundingClientRect();
     const rtl = getComputedStyle(current2).direction === "rtl";
     const view = doc.documentElement.clientWidth;
     el16.style.setProperty("right", "auto");
     el16.style.setProperty("bottom", "auto");
-    el16.style.setProperty("top", `${field.bottom}px`);
+    el16.style.setProperty("top", `${field2.bottom}px`);
     el16.style.setProperty("left", `${EDGE}px`);
     const width = layoutRect(el16).width;
     const gap = Number.parseFloat(getComputedStyle(el16).marginLeft) || 0;
-    const wanted2 = rtl ? field.right - width : field.left;
+    const wanted2 = rtl ? field2.right - width : field2.left;
     const left = Math.max(EDGE - gap, Math.min(wanted2, view - EDGE - width - gap));
     el16.style.setProperty("left", `${left}px`);
-    placeBlockSide(el16, field);
+    placeBlockSide(el16, field2);
   };
   const describe = (anchor) => {
     described = anchor.getAttribute("aria-describedby");
@@ -28938,11 +28938,11 @@ var init_group2 = __esm({
           for (const b of buttons) b.setAttribute("aria-pressed", String(b.dataset.kpChartRange === el16.dataset.kpChartSpan));
         };
         const onClick = (event) => {
-          const button4 = (
+          const button5 = (
             /** @type {HTMLElement} */
             event.currentTarget
           );
-          const range = button4.dataset.kpChartRange ?? "";
+          const range = button5.dataset.kpChartRange ?? "";
           const span4 = parseSpan(range);
           if (span4 == null) return;
           el16.dataset.kpChartSpan = range;
@@ -29730,7 +29730,7 @@ function installLegend(c) {
       const focused = doc.activeElement instanceof HTMLElement && annKey.contains(doc.activeElement) ? doc.activeElement.getAttribute("data-kp-kind") : null;
       const items = [...kinds].map(([k, v]) => {
         const dot = h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": v.tone, "aria-hidden": "true" });
-        const button4 = h(
+        const button5 = h(
           doc,
           "button",
           { type: "button", class: "kp-chart__annkey-item", "data-kp-kind": k, title: strings.kindOn(kindWord(k)) },
@@ -29738,13 +29738,13 @@ function installLegend(c) {
           h(doc, "span", {}, kindWord(k)),
           h(doc, "b", { class: "kp-chart__annkey-count" }, String(v.count))
         );
-        button4.addEventListener("click", () => {
+        button5.addEventListener("click", () => {
           if (kindsOff.has(k)) kindsOff.delete(k);
           else kindsOff.add(k);
           host.dispatchEvent(new CustomEvent("kp-chart-kinds", { bubbles: true, detail: { off: [...kindsOff] } }));
           c.draw();
         });
-        return button4;
+        return button5;
       });
       const extra = notes.map(
         (n) => n === "median" ? h(
@@ -29764,10 +29764,10 @@ function installLegend(c) {
       annKey.replaceChildren(...items, ...extra);
       if (focused) annKey.querySelector(`[data-kp-kind="${CSS.escape(focused)}"]`)?.focus();
     }
-    for (const button4 of annKey.querySelectorAll("[data-kp-kind]")) {
-      const off = kindsOff.has(button4.getAttribute("data-kp-kind") ?? "");
-      button4.setAttribute("aria-pressed", String(!off));
-      button4.toggleAttribute("data-kp-off", off);
+    for (const button5 of annKey.querySelectorAll("[data-kp-kind]")) {
+      const off = kindsOff.has(button5.getAttribute("data-kp-kind") ?? "");
+      button5.setAttribute("aria-pressed", String(!off));
+      button5.toggleAttribute("data-kp-off", off);
     }
     const note2 = annKey.querySelector('[data-kp-note="median"]');
     if (note2 && c.medians.length === 1) {
@@ -29786,7 +29786,7 @@ function installLegend(c) {
     c.items = c.data.series.map((series, i) => {
       const swatch = h(doc, "i", { class: "kp-chart__swatch", "aria-hidden": "true" });
       const value = h(doc, "b", { class: "kp-chart__value" });
-      const button4 = h(
+      const button5 = h(
         doc,
         "button",
         { type: "button", class: "kp-chart__source", title: strings.source(series.label) },
@@ -29794,21 +29794,21 @@ function installLegend(c) {
         h(doc, "span", { class: "kp-chart__source-label" }, series.label),
         value
       );
-      paintSeries(button4, series, i);
+      paintSeries(button5, series, i);
       const isolate = (v) => () => {
         c.hot = v;
         c.draw();
       };
-      button4.addEventListener("pointerenter", isolate(i));
-      button4.addEventListener("pointerleave", isolate(null));
-      button4.addEventListener("focus", isolate(i));
-      button4.addEventListener("blur", isolate(null));
-      button4.addEventListener("click", () => {
+      button5.addEventListener("pointerenter", isolate(i));
+      button5.addEventListener("pointerleave", isolate(null));
+      button5.addEventListener("focus", isolate(i));
+      button5.addEventListener("blur", isolate(null));
+      button5.addEventListener("click", () => {
         setSel(toggleSource(c.sel, i, c.data.series.length));
         c.draw();
       });
-      decorateWith(decorate2, button4, { kind: "source", host, key: key(), index: i, label: series.label });
-      return { button: button4, value };
+      decorateWith(decorate2, button5, { kind: "source", host, key: key(), index: i, label: series.label });
+      return { button: button5, value };
     });
     legend.replaceChildren(...c.items.map((it) => it.button), showAll);
   }
@@ -30904,13 +30904,13 @@ function foldNav(nav, { strings } = {}) {
   const wrapper = doc.createElement("div");
   wrapper.className = "kp-menu-button kp-nav__more-wrap";
   wrapper.setAttribute("data-kp-menu-button", "");
-  const button4 = doc.createElement("button");
-  button4.type = "button";
-  button4.className = "kp-nav__link kp-nav__more-button";
+  const button5 = doc.createElement("button");
+  button5.type = "button";
+  button5.className = "kp-nav__link kp-nav__more-button";
   const menu = doc.createElement("div");
   menu.className = "kp-menu kp-menu--rich kp-nav__more-menu";
   menu.setAttribute("role", "menu");
-  wrapper.append(button4, menu);
+  wrapper.append(button5, menu);
   more.append(wrapper);
   const label = doc.createElement("span");
   const dot = doc.createElement("span");
@@ -30920,7 +30920,7 @@ function foldNav(nav, { strings } = {}) {
   const alertText = doc.createElement("span");
   alertText.className = "kp-sr-only";
   alertText.hidden = true;
-  button4.append(label, dot, alertText);
+  button5.append(label, dot, alertText);
   const writeWords = () => {
     const s2 = words2();
     label.textContent = s2.navMore;
@@ -31066,7 +31066,7 @@ function foldNav(nav, { strings } = {}) {
     nav.toggleAttribute("data-kp-nav-folding", folded2.length > 0);
     if (folded2.length === 0 && foldedNow.length > 0) closeMenu(wrapper);
     const active = doc.activeElement;
-    if (active && folded2.some((li) => li.contains(active))) button4.focus();
+    if (active && folded2.some((li) => li.contains(active))) button5.focus();
     foldedNow = folded2;
     const groups = groupsOf2(leaving);
     ruledAt = groups.filter((g) => g.items.length).map((g, i) => ruled.has(g) ? i : -1).filter((i) => i > 0);
@@ -31078,8 +31078,8 @@ function foldNav(nav, { strings } = {}) {
     more.toggleAttribute("data-kp-nav-more-alert", alert);
     dot.hidden = !alert;
     alertText.hidden = !alert;
-    if (more.hasAttribute("data-kp-nav-more-current")) button4.setAttribute("aria-current", "true");
-    else button4.removeAttribute("aria-current");
+    if (more.hasAttribute("data-kp-nav-more-current")) button5.setAttribute("aria-current", "true");
+    else button5.removeAttribute("aria-current");
     const next2 = JSON.stringify([
       groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? "", i.disabled ?? "", i.attrs ?? null])]),
       ruledAt
@@ -31104,7 +31104,7 @@ function foldNav(nav, { strings } = {}) {
     event.preventDefault();
     source.click();
     queueMicrotask(() => {
-      if (doc.activeElement === doc.body || doc.activeElement === null) button4.focus();
+      if (doc.activeElement === doc.body || doc.activeElement === null) button5.focus();
     });
   };
   menu.addEventListener("click", onPick, true);
@@ -31892,11 +31892,11 @@ function buildNote(note2, state6, options) {
   body.append(...lines);
   alert.append(body);
   if (options.retry !== false) {
-    const button4 = el2(doc, "kp-button kp-card__retry kp-stateplate__action", "button");
-    button4.type = "button";
-    button4.setAttribute("data-kp-card-retry", "");
-    button4.textContent = s2.cardRetry;
-    alert.append(button4);
+    const button5 = el2(doc, "kp-button kp-card__retry kp-stateplate__action", "button");
+    button5.type = "button";
+    button5.setAttribute("data-kp-card-retry", "");
+    button5.textContent = s2.cardRetry;
+    alert.append(button5);
   }
   note2.setAttribute("role", "alert");
   note2.replaceChildren(alert);
@@ -31959,8 +31959,8 @@ function attachCardStates(root = document) {
   for (const card of found) {
     syncCard(card);
     const press2 = (event) => {
-      const button4 = event.target instanceof Element ? event.target.closest("[data-kp-card-retry]") : null;
-      if (!button4 || !card.contains(button4) || button4.closest(".kp-card") !== card) return;
+      const button5 = event.target instanceof Element ? event.target.closest("[data-kp-card-retry]") : null;
+      if (!button5 || !card.contains(button5) || button5.closest(".kp-card") !== card) return;
       card.dispatchEvent(new CustomEvent(CARD_RETRY_EVENT, { bubbles: true, detail: { card } }));
     };
     card.addEventListener("click", press2);
@@ -32152,20 +32152,20 @@ function syncAction(item, state6, list) {
   let cell = item.querySelector(":scope > .kp-statusrow__action");
   if (!cell) {
     cell = el3("kp-statusrow__action");
-    const button5 = document.createElement("button");
-    button5.type = "button";
-    button5.className = "kp-button kp-button--sm";
-    button5.setAttribute("data-kp-status-retry-button", "");
-    cell.append(button5);
+    const button6 = document.createElement("button");
+    button6.type = "button";
+    button6.className = "kp-button kp-button--sm";
+    button6.setAttribute("data-kp-status-retry-button", "");
+    cell.append(button6);
     item.append(cell);
   }
-  const button4 = cell.querySelector("button");
-  if (button4) {
+  const button5 = cell.querySelector("button");
+  if (button5) {
     const s2 = getStrings();
-    button4.textContent = s2.statusRetry;
-    button4.setAttribute("aria-label", s2.statusRetryLabel(labelOf4(item)));
+    button5.textContent = s2.statusRetry;
+    button5.setAttribute("aria-label", s2.statusRetryLabel(labelOf4(item)));
     const hide2 = state6 !== "failed";
-    if (hide2 && document.activeElement === button4) {
+    if (hide2 && document.activeElement === button5) {
       const body = (
         /** @type {HTMLElement | null} */
         item.querySelector(".kp-statusrow__body")
@@ -32235,10 +32235,10 @@ function syncCalmActions(item_, state6, list) {
   );
   const showResume = state6 === "paused" && list?.getAttribute("data-kp-today-resume") !== "off";
   const showPause = state6 === "open" && list?.hasAttribute("data-kp-today-pause") === true && list.getAttribute("data-kp-today-pause") !== "off";
-  const place3 = (button4, shown5) => {
+  const place3 = (button5, shown5) => {
     const holder = (
       /** @type {HTMLElement} */
-      button4.closest(".kp-tooltip-anchor") ?? button4
+      button5.closest(".kp-tooltip-anchor") ?? button5
     );
     if (!shown5 && holder.contains(document.activeElement)) {
       item.tabIndex = -1;
@@ -32321,21 +32321,21 @@ function settleToday(list) {
   if (long.length === 0) return;
   const line = document.createElement("li");
   line.className = "kp-statusrow kp-statusrow--fold";
-  const button4 = document.createElement("button");
-  button4.type = "button";
-  button4.className = "kp-button kp-button--ghost kp-statusrow__fold";
-  button4.textContent = getStrings().statusFoldLine(long.length, after);
-  button4.setAttribute("aria-expanded", "false");
+  const button5 = document.createElement("button");
+  button5.type = "button";
+  button5.className = "kp-button kp-button--ghost kp-statusrow__fold";
+  button5.textContent = getStrings().statusFoldLine(long.length, after);
+  button5.setAttribute("aria-expanded", "false");
   for (const row of long) {
     row.setAttribute("data-kp-folded", "");
     row.hidden = true;
   }
-  button4.addEventListener("click", () => {
-    const open4 = button4.getAttribute("aria-expanded") !== "true";
-    button4.setAttribute("aria-expanded", String(open4));
+  button5.addEventListener("click", () => {
+    const open4 = button5.getAttribute("aria-expanded") !== "true";
+    button5.setAttribute("aria-expanded", String(open4));
     for (const row of long) row.hidden = !open4;
   });
-  line.append(button4);
+  line.append(button5);
   list.append(line);
 }
 function regionOf2(list) {
@@ -32418,8 +32418,8 @@ function wireCalmKeys(list) {
       when: focusedPaused,
       run: () => {
         const row = rows().find((r) => r.contains(document.activeElement));
-        const button4 = row?.querySelector("[data-kp-status-resume-button]");
-        if (row && button4 instanceof HTMLButtonElement && !button4.disabled) turn(list, row, "resume");
+        const button5 = row?.querySelector("[data-kp-status-resume-button]");
+        if (row && button5 instanceof HTMLButtonElement && !button5.disabled) turn(list, row, "resume");
       }
     }
   ]);
@@ -32451,9 +32451,9 @@ function attachStatusLists(root = document) {
         turn(list, calmItem, resume ? "resume" : "pause");
         return;
       }
-      const button4 = target?.closest("[data-kp-status-retry-button]");
-      const item = button4?.closest(".kp-statusrow");
-      if (!button4 || !item || !list.contains(item)) return;
+      const button5 = target?.closest("[data-kp-status-retry-button]");
+      const item = button5?.closest(".kp-statusrow");
+      if (!button5 || !item || !list.contains(item)) return;
       list.dispatchEvent(new CustomEvent(STATUS_RETRY_EVENT, { bubbles: true, detail: { item, id: item.getAttribute(STATUS_ID_ATTRIBUTE) } }));
     };
     list.addEventListener("click", press2);
@@ -33299,7 +33299,7 @@ function wire3(el16, memory) {
     }
   });
 }
-function askRemove(el16, memory, row, button4) {
+function askRemove(el16, memory, row, button5) {
   const options = passkeyOptions(el16, memory.spec);
   const strings = getStrings();
   if (memory.busy.has(row.key)) return;
@@ -33309,7 +33309,7 @@ function askRemove(el16, memory, row, button4) {
   const loses = [strings.passkeysLosesWay(row.label)];
   if (last) loses.push(strings.passkeysLosesLast);
   else if (row.current) loses.push(strings.passkeysLosesCurrent);
-  openConfirmation(button4, {
+  openConfirmation(button5, {
     phrase: strings.passkeysRemoveTitle(row.label),
     acceptLabel: strings.passkeysRemove,
     ...typed ? { typeName: row.label, loses } : {},
@@ -33875,23 +33875,23 @@ function wire4(el16, memory) {
       el16.dispatchEvent(new CustomEvent(THREAD_ACTION_EVENT, { bubbles: true, detail: { key, id: act.getAttribute("data-kp-thread-act") } }));
   });
 }
-async function copyText2(button4, text) {
+async function copyText2(button5, text) {
   const strings = getStrings();
   try {
-    await button4.ownerDocument.defaultView?.navigator.clipboard.writeText(text);
+    await button5.ownerDocument.defaultView?.navigator.clipboard.writeText(text);
   } catch {
-    button4.textContent = strings.threadCopyFailed;
+    button5.textContent = strings.threadCopyFailed;
     return;
   }
-  const before = button4.getAttribute("data-kp-label") ?? button4.textContent ?? "";
-  button4.setAttribute("data-kp-label", before);
-  button4.style.minInlineSize = `${button4.offsetWidth}px`;
-  button4.textContent = strings.copied;
-  button4.setAttribute("data-kp-copied", "");
-  button4.ownerDocument.defaultView?.setTimeout(() => {
-    button4.textContent = before;
-    button4.removeAttribute("data-kp-copied");
-    button4.style.minInlineSize = "";
+  const before = button5.getAttribute("data-kp-label") ?? button5.textContent ?? "";
+  button5.setAttribute("data-kp-label", before);
+  button5.style.minInlineSize = `${button5.offsetWidth}px`;
+  button5.textContent = strings.copied;
+  button5.setAttribute("data-kp-copied", "");
+  button5.ownerDocument.defaultView?.setTimeout(() => {
+    button5.textContent = before;
+    button5.removeAttribute("data-kp-copied");
+    button5.style.minInlineSize = "";
   }, 1500);
 }
 function scrollToNewest(el16, memory, smooth) {
@@ -34172,11 +34172,11 @@ function messageItem(doc, message, { options, first, newestKey, memory, locale, 
   copy3.textContent = strings.threadCopy;
   tools.append(copy3);
   for (const action of spec.actions ?? []) {
-    const button4 = make3(doc, "kp-button kp-button--sm kp-button--ghost kp-thread__action", "button");
-    button4.setAttribute("type", "button");
-    button4.setAttribute("data-kp-thread-act", action.id);
-    button4.textContent = action.label;
-    tools.append(button4);
+    const button5 = make3(doc, "kp-button kp-button--sm kp-button--ghost kp-thread__action", "button");
+    button5.setAttribute("type", "button");
+    button5.setAttribute("data-kp-thread-act", action.id);
+    button5.textContent = action.label;
+    tools.append(button5);
   }
   foot.append(tools);
   bubble.append(foot);
@@ -34199,11 +34199,11 @@ function applyFold(item, memory, key) {
     /** @type {HTMLElement | null} */
     item.querySelector(".kp-thread__text[data-kp-fold-lines]")
   );
-  const button4 = (
+  const button5 = (
     /** @type {HTMLElement | null} */
     item.querySelector(".kp-thread__fold")
   );
-  if (!body || !button4) return;
+  if (!body || !button5) return;
   const limit = Number(body.getAttribute("data-kp-fold-lines"));
   const open4 = memory.expanded.has(key);
   const before = body.getAttribute("data-kp-fold");
@@ -34214,13 +34214,13 @@ function applyFold(item, memory, key) {
   body.setAttribute("data-kp-fold", before ?? "folded");
   if (lines <= limit) {
     body.removeAttribute("data-kp-fold");
-    button4.hidden = true;
+    button5.hidden = true;
     return;
   }
   body.setAttribute("data-kp-fold", open4 ? "open" : "folded");
-  button4.hidden = false;
-  button4.textContent = open4 ? strings.threadShowLess : strings.threadShowAll(lines);
-  button4.setAttribute("aria-expanded", String(open4));
+  button5.hidden = false;
+  button5.textContent = open4 ? strings.threadShowLess : strings.threadShowAll(lines);
+  button5.setAttribute("aria-expanded", String(open4));
 }
 function attachThreads(root = document) {
   for (
@@ -35611,27 +35611,27 @@ function onLayoutChange(ctl, event) {
   drawBody(ctl);
   ctl.host.dispatchEvent(new CustomEvent("kp-code-layout", { bubbles: true, detail: { layout: layout3 } }));
 }
-function toggleWrap(ctl, button4) {
+function toggleWrap(ctl, button5) {
   ctl.wrap = !ctl.wrap;
-  button4.setAttribute("aria-pressed", String(ctl.wrap));
+  button5.setAttribute("aria-pressed", String(ctl.wrap));
   ctl.host.toggleAttribute("data-kp-code-wrap", ctl.wrap);
   ctl.host.dispatchEvent(new CustomEvent("kp-code-wrap", { bubbles: true, detail: { wrap: ctl.wrap } }));
 }
-function toggleFold(ctl, button4) {
+function toggleFold(ctl, button5) {
   const strings = getStrings();
   ctl.folded = !ctl.folded;
   ctl.host.toggleAttribute("data-kp-code-folded", ctl.folded);
-  button4.setAttribute("aria-expanded", String(!ctl.folded));
+  button5.setAttribute("aria-expanded", String(!ctl.folded));
   markBeyond(ctl);
-  button4.firstElementChild.textContent = ctl.folded ? strings.codeShowAll(ctl.lines) : strings.codeShowLess;
+  button5.firstElementChild.textContent = ctl.folded ? strings.codeShowAll(ctl.lines) : strings.codeShowLess;
   ctl.host.dispatchEvent(new CustomEvent("kp-code-fold", { bubbles: true, detail: { folded: ctl.folded } }));
 }
-async function copyText3(ctl, button4) {
+async function copyText3(ctl, button5) {
   const strings = getStrings();
   const el16 = ctl.host;
   const word = (
     /** @type {HTMLElement} */
-    button4.firstElementChild
+    button5.firstElementChild
   );
   const status = (
     /** @type {HTMLElement | null} */
@@ -35642,32 +35642,32 @@ async function copyText3(ctl, button4) {
   try {
     await navigator.clipboard.writeText(ctl.shown);
     word.textContent = strings.copied;
-    button4.setAttribute("data-kp-code-copied", "");
+    button5.setAttribute("data-kp-code-copied", "");
     if (status) status.textContent = strings.codeCopiedAnnouncement(ctl.spec.title ?? ctl.spec.language ?? strings.codeLabel);
     el16.dispatchEvent(new CustomEvent("kp-code-copy", { bubbles: true, detail: { text: ctl.shown } }));
   } catch (error) {
     word.textContent = strings.copyBlocked;
-    button4.setAttribute("data-kp-code-copied", "");
+    button5.setAttribute("data-kp-code-copied", "");
     if (status) status.textContent = strings.copyBlockedAnnouncement;
     el16.dispatchEvent(new CustomEvent("kp-code-copy-failed", { bubbles: true, detail: { error } }));
   }
   ctl.revert = view?.setTimeout(() => {
     word.textContent = getStrings().copy;
-    button4.removeAttribute("data-kp-code-copied");
+    button5.removeAttribute("data-kp-code-copied");
     if (status) status.textContent = "";
   }, CODE_COPIED_MS) ?? 0;
 }
 async function onToolClick(ctl, event) {
-  const button4 = event.target instanceof Element ? (
+  const button5 = event.target instanceof Element ? (
     /** @type {HTMLButtonElement | null} */
     event.target.closest("[data-kp-code-tool]")
   ) : null;
-  if (!button4 || button4.disabled) return;
-  const tool = button4.dataset.kpCodeTool;
-  if (tool === "wrap") toggleWrap(ctl, button4);
-  else if (tool === "fold" && button4.dataset.kpCodeOpen === "dialog") openInDialog(ctl);
-  else if (tool === "fold") toggleFold(ctl, button4);
-  else if (tool === "copy") await copyText3(ctl, button4);
+  if (!button5 || button5.disabled) return;
+  const tool = button5.dataset.kpCodeTool;
+  if (tool === "wrap") toggleWrap(ctl, button5);
+  else if (tool === "fold" && button5.dataset.kpCodeOpen === "dialog") openInDialog(ctl);
+  else if (tool === "fold") toggleFold(ctl, button5);
+  else if (tool === "copy") await copyText3(ctl, button5);
 }
 var init_actions3 = __esm({
   "js/code/actions.js"() {
@@ -36631,36 +36631,36 @@ function draw4(bar, memory) {
   const offerable = memory.matchingTotal > items.length && shown5 > 0 && shownTicked === shown5 && !memory.matching;
   p.offer.hidden = !(offerable || memory.matching);
   if (!p.offer.hidden) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
       make7(bar.ownerDocument, "kp-button kp-button--ghost kp-button--sm kp-selection__take", "button")
     );
-    button4.type = "button";
-    button4.textContent = memory.matching ? strings.selectionOnlyShown(shown5) : strings.selectionMatching(memory.matchingTotal);
-    button4.setAttribute("data-kp-selection-take", memory.matching ? "off" : "on");
-    p.offer.replaceChildren(button4);
+    button5.type = "button";
+    button5.textContent = memory.matching ? strings.selectionOnlyShown(shown5) : strings.selectionMatching(memory.matchingTotal);
+    button5.setAttribute("data-kp-selection-take", memory.matching ? "off" : "on");
+    p.offer.replaceChildren(button5);
   }
   const reasons = [];
   for (
-    const button4 of
+    const button5 of
     /** @type {NodeListOf<HTMLElement>} */
     p.actions.querySelectorAll("[data-kp-selection-action]")
   ) {
-    const id = button4.getAttribute("data-kp-selection-action") ?? "";
+    const id = button5.getAttribute("data-kp-selection-action") ?? "";
     const reason = memory.busy ? "" : memory.rules[id]?.(items) ?? "";
     const off = Boolean(memory.busy) || Boolean(reason);
-    button4.toggleAttribute("data-kp-selection-off", off);
-    if (off) button4.setAttribute("aria-disabled", "true");
-    else button4.removeAttribute("aria-disabled");
+    button5.toggleAttribute("data-kp-selection-off", off);
+    if (off) button5.setAttribute("aria-disabled", "true");
+    else button5.removeAttribute("aria-disabled");
     if (reason) {
-      button4.setAttribute("data-kp-disabled-reason", reason);
-      button4.title = reason;
+      button5.setAttribute("data-kp-disabled-reason", reason);
+      button5.title = reason;
       reasons.push(reason);
     } else {
-      button4.removeAttribute("data-kp-disabled-reason");
-      if (button4.title && button4.hasAttribute("data-kp-selection-titled")) button4.removeAttribute("title");
+      button5.removeAttribute("data-kp-disabled-reason");
+      if (button5.title && button5.hasAttribute("data-kp-selection-titled")) button5.removeAttribute("title");
     }
-    if (reason) button4.setAttribute("data-kp-selection-titled", "");
+    if (reason) button5.setAttribute("data-kp-selection-titled", "");
   }
   p.result.hidden = reasons.length === 0 && !p.result.hasAttribute("data-kp-selection-result");
   if (reasons.length && !p.result.hasAttribute("data-kp-selection-result")) {
@@ -36848,12 +36848,12 @@ function attachOne3(bar, options) {
       bar.toggleAttribute("data-kp-selection-open", open4);
       return;
     }
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement | null} */
       target.closest("[data-kp-selection-action]")
     );
-    if (button4) {
-      if (button4.getAttribute("aria-disabled") === "true") {
+    if (button5) {
+      if (button5.getAttribute("aria-disabled") === "true") {
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
@@ -36863,8 +36863,8 @@ function attachOne3(bar, options) {
           bubbles: true,
           cancelable: true,
           detail: {
-            action: button4.getAttribute("data-kp-selection-action") ?? "",
-            button: button4,
+            action: button5.getAttribute("data-kp-selection-action") ?? "",
+            button: button5,
             keys: memory.items.map((i) => i.key),
             items: memory.items,
             matching: memory.matching,
@@ -37425,10 +37425,10 @@ function attachOne5(area, options) {
   let errorLine = 0;
   let debounce;
   let escaped = false;
-  const field = area.closest(".kp-field");
+  const field2 = area.closest(".kp-field");
   const holder = (
     /** @type {HTMLElement | null} */
-    field?.querySelector("[data-kp-field-error]") ?? null
+    field2?.querySelector("[data-kp-field-error]") ?? null
   );
   const lineHeight = () => {
     const cs = view?.getComputedStyle(area);
@@ -37500,7 +37500,7 @@ function attachOne5(area, options) {
       if (broken) area.setAttribute("aria-invalid", "true");
       else area.removeAttribute("aria-invalid");
     }
-    field?.classList.toggle("kp-field--invalid", broken);
+    field2?.classList.toggle("kp-field--invalid", broken);
     if (changed2)
       area.dispatchEvent(
         new CustomEvent(JSON_STATE_EVENT, {
@@ -37625,18 +37625,18 @@ function attachOne5(area, options) {
     escaped = false;
   };
   const onTool = async (event) => {
-    const button4 = event.target instanceof Element ? (
+    const button5 = event.target instanceof Element ? (
       /** @type {HTMLButtonElement | null} */
       event.target.closest("[data-kp-json-tool]")
     ) : null;
-    if (!button4 || button4.disabled) return;
-    const which = button4.dataset.kpJsonTool;
+    if (!button5 || button5.disabled) return;
+    const which = button5.dataset.kpJsonTool;
     if (which === "format") format();
     else if (which === "minify") minify();
     else if (which === "wrap") {
       wrap = !wrap;
       root.setAttribute("data-kp-json-wrap", String(wrap));
-      button4.setAttribute("aria-pressed", String(wrap));
+      button5.setAttribute("aria-pressed", String(wrap));
       drawGutter();
       grow();
     } else if (which === "copy") {
@@ -38069,7 +38069,7 @@ function drawRequest(el16, memory, request3, index, slot) {
     }
     const actions = make8(doc, "kp-inspector__actions");
     const what = options.copyAs ?? ["curl", "json", "body"];
-    const button4 = (which, label, real) => {
+    const button5 = (which, label, real) => {
       const b = (
         /** @type {HTMLButtonElement} */
         make8(doc, "kp-button kp-button--sm", "button")
@@ -38083,12 +38083,12 @@ function drawRequest(el16, memory, request3, index, slot) {
       b.append(w);
       return b;
     };
-    if (what.includes("curl")) actions.append(button4("curl", strings.reqCopyCurl, false));
-    if (what.includes("json")) actions.append(button4("json", strings.reqCopyJson, false));
+    if (what.includes("curl")) actions.append(button5("curl", strings.reqCopyCurl, false));
+    if (what.includes("json")) actions.append(button5("json", strings.reqCopyJson, false));
     if (what.includes("curl") && options.secretsInCopy !== "masked-only" && options.secretsInCopy !== "real" && pairs.some(([n]) => secret.has(n.toLowerCase())))
-      actions.append(button4("curl", strings.reqCopyCurlSecrets, true));
+      actions.append(button5("curl", strings.reqCopyCurlSecrets, true));
     if (what.includes("body") && (text === "" || binary)) {
-      const b = button4("body", strings.reqCopyBody, false);
+      const b = button5("body", strings.reqCopyBody, false);
       b.disabled = true;
       actions.append(b);
     }
@@ -38116,20 +38116,20 @@ function drawRequest(el16, memory, request3, index, slot) {
   ITEM_REQUEST.set(item, request3);
   return item;
 }
-async function copy(el16, memory, button4) {
+async function copy(el16, memory, button5) {
   const strings = getStrings();
-  const item = button4.closest(".kp-inspector__item");
+  const item = button5.closest(".kp-inspector__item");
   const request3 = item ? ITEM_REQUEST.get(item) : void 0;
   if (!request3) return;
   const options = memory.options;
-  const real = button4.hasAttribute("data-kp-requests-real") || options.secretsInCopy === "real";
+  const real = button5.hasAttribute("data-kp-requests-real") || options.secretsInCopy === "real";
   const mask = !real;
-  const which = button4.dataset.kpRequestsCopy;
+  const which = button5.dataset.kpRequestsCopy;
   const secretHeaders = options.secretHeaders ?? SECRET_HEADERS;
   const text = which === "curl" ? toCurl(request3, { mask, secretHeaders, origin: options.origin ?? "" }) : which === "json" ? toJson(request3, { mask, secretHeaders }) : request3.body ?? "";
   const word = (
     /** @type {HTMLElement} */
-    button4.querySelector(".kp-code__word")
+    button5.querySelector(".kp-code__word")
   );
   const idle = word.getAttribute("data-kp-code-words")?.split("\n")[0] ?? "";
   const view = el16.ownerDocument.defaultView;
@@ -39071,7 +39071,7 @@ ${strings.focusStopReading}`);
   );
   next2.type = "button";
   for (
-    const [button4, word, glyph3] of
+    const [button5, word, glyph3] of
     /** @type {const} */
     [
       [prev, strings.focusPrevious, "prev"],
@@ -39082,8 +39082,8 @@ ${strings.focusStopReading}`);
     mark.setAttribute("aria-hidden", "true");
     const text = el6("kp-button__text", "span");
     text.textContent = word;
-    if (glyph3 === "prev") button4.append(mark, text);
-    else button4.append(text, mark);
+    if (glyph3 === "prev") button5.append(mark, text);
+    else button5.append(text, mark);
   }
   nav.append(prev, next2);
   const live4 = el6("kp-sr-only kp-focus-steps__live", "span");
@@ -39454,16 +39454,16 @@ function countdownClock({ seconds, now = () => performance.now(), onEnd, onChang
   };
 }
 function timerButton(doc, className, words2, title) {
-  const button4 = doc.createElement("button");
-  button4.type = "button";
-  button4.className = `kp-button kp-button--sm ${className}`;
+  const button5 = doc.createElement("button");
+  button5.type = "button";
+  button5.className = `kp-button kp-button--sm ${className}`;
   const label = doc.createElement("span");
   label.className = "kp-button__text kp-state-word kp-state-word--center";
   label.setAttribute("data-kp-words", words2.join("\n"));
   label.textContent = words2[0];
-  button4.append(label);
-  if (title) button4.title = title;
-  return { button: button4, label };
+  button5.append(label);
+  if (title) button5.title = title;
+  return { button: button5, label };
 }
 function attachCountdowns(root = document, { now, wall } = {}) {
   const cleanups = [];
@@ -39806,21 +39806,21 @@ function dropLanes(root) {
   for (const name of ["role", "aria-labelledby"]) panel?.removeAttribute(name);
 }
 function buildLane(lane, at) {
-  const button4 = (
+  const button5 = (
     /** @type {HTMLButtonElement} */
     el6("kp-button kp-focus-steps__lane", "button")
   );
-  button4.type = "button";
-  button4.setAttribute("role", "tab");
-  button4.setAttribute("data-kp-track-at", String(at));
-  button4.setAttribute("data-kp-track-key", lane.key);
-  for (const name of ["name", "time", "step", "state", "count"]) button4.append(el6(`kp-focus-steps__lane-${name}`, "span"));
+  button5.type = "button";
+  button5.setAttribute("role", "tab");
+  button5.setAttribute("data-kp-track-at", String(at));
+  button5.setAttribute("data-kp-track-key", lane.key);
+  for (const name of ["name", "time", "step", "state", "count"]) button5.append(el6(`kp-focus-steps__lane-${name}`, "span"));
   const bar = el6("kp-progressbar kp-focus-steps__lane-bar", "span");
   bar.setAttribute("aria-hidden", "true");
   buildProgressbar(bar);
   bar.removeAttribute("role");
-  button4.append(bar);
-  return button4;
+  button5.append(bar);
+  return button5;
 }
 function paintLanes(root, lanes = laneSummaries(root)) {
   const section = root.querySelector(".kp-focus-steps__lanes");
@@ -39835,40 +39835,40 @@ function paintLanes(root, lanes = laneSummaries(root)) {
     list.replaceChildren(...lanes.map(buildLane));
   list.style.setProperty("--kp-focus-lanes", String(lanes.length));
   lanes.forEach((lane, i) => {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement} */
       list.children[i]
     );
     const total = lane.track.order.length;
     const words2 = lane.status === "running" && lane.timer ? strings.focusLaneRunning(lane.timer.name) : lane.status === "paused" && lane.timer ? strings.focusLanePaused(lane.timer.name) : lane.status === "waiting" ? strings.focusLaneWaiting(blockerNames(state6, lane.blocks)) : lane.status === "ringing" ? strings.focusLaneRinging : lane.status === "finished" ? strings.focusLaneFinished : lane.active ? strings.focusLaneHere : strings.focusLaneReady;
-    setText(button4, ".kp-focus-steps__lane-name", lane.name);
+    setText(button5, ".kp-focus-steps__lane-name", lane.name);
     setText(
-      button4,
+      button5,
       ".kp-focus-steps__lane-time",
       lane.timer ? lane.status === "ringing" ? clockOfTimer({ ...lane.timer, remaining: 0 }) : clockOfTimer(lane.timer) : ""
     );
-    setText(button4, ".kp-focus-steps__lane-step", stepLabel(state6, lane.track.order[lane.track.pos] ?? 0));
-    setText(button4, ".kp-focus-steps__lane-state", words2);
-    setText(button4, ".kp-focus-steps__lane-count", strings.focusLaneStep(lane.track.pos + 1, total));
-    if (button4.getAttribute("data-kp-lane-status") !== lane.status) button4.setAttribute("data-kp-lane-status", lane.status);
+    setText(button5, ".kp-focus-steps__lane-step", stepLabel(state6, lane.track.order[lane.track.pos] ?? 0));
+    setText(button5, ".kp-focus-steps__lane-state", words2);
+    setText(button5, ".kp-focus-steps__lane-count", strings.focusLaneStep(lane.track.pos + 1, total));
+    if (button5.getAttribute("data-kp-lane-status") !== lane.status) button5.setAttribute("data-kp-lane-status", lane.status);
     const selected = String(lane.active);
-    if (button4.getAttribute("aria-selected") !== selected) button4.setAttribute("aria-selected", selected);
+    if (button5.getAttribute("aria-selected") !== selected) button5.setAttribute("aria-selected", selected);
     const stop = lane.active ? "0" : "-1";
-    if (button4.getAttribute("tabindex") !== stop) button4.setAttribute("tabindex", stop);
-    if (!button4.id) button4.id = `${list.id}-${i}`;
+    if (button5.getAttribute("tabindex") !== stop) button5.setAttribute("tabindex", stop);
+    if (!button5.id) button5.id = `${list.id}-${i}`;
     if (lane.active) {
       const panel = root.querySelector(".kp-focus-steps__body");
       if (panel) {
         if (!panel.id) panel.id = `${list.id}-panel`;
         if (panel.getAttribute("role") !== "tabpanel") panel.setAttribute("role", "tabpanel");
-        if (panel.getAttribute("aria-labelledby") !== button4.id) panel.setAttribute("aria-labelledby", button4.id);
-        if (button4.getAttribute("aria-controls") !== panel.id) button4.setAttribute("aria-controls", panel.id);
+        if (panel.getAttribute("aria-labelledby") !== button5.id) panel.setAttribute("aria-labelledby", button5.id);
+        if (button5.getAttribute("aria-controls") !== panel.id) button5.setAttribute("aria-controls", panel.id);
       }
-    } else button4.removeAttribute("aria-controls");
+    } else button5.removeAttribute("aria-controls");
     const share = String(lane.status === "finished" ? 1 : (lane.track.pos + 1) / total);
     const bar = (
       /** @type {HTMLElement} */
-      button4.querySelector(".kp-focus-steps__lane-bar")
+      button5.querySelector(".kp-focus-steps__lane-bar")
     );
     if (bar.style.getPropertyValue("--kp-value") !== share) bar.style.setProperty("--kp-value", share);
   });
@@ -40068,19 +40068,19 @@ function paint4(root, arrive2) {
     }
     if (step.timer && step.timer.seconds > 0) {
       const minutes = Math.round(step.timer.seconds / 60);
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
         el6("kp-button kp-focus-steps__timer", "button")
       );
-      button4.type = "button";
-      button4.setAttribute("data-kp-timer-start", String(step.timer.seconds));
-      button4.setAttribute("data-kp-timer-name", step.timer.name ?? strings.focusCount(index + 1, total));
-      button4.setAttribute("data-kp-timer-id", timerIdOf(state6, index));
-      if (blocks.length) button4.setAttribute("aria-disabled", "true");
+      button5.type = "button";
+      button5.setAttribute("data-kp-timer-start", String(step.timer.seconds));
+      button5.setAttribute("data-kp-timer-name", step.timer.name ?? strings.focusCount(index + 1, total));
+      button5.setAttribute("data-kp-timer-id", timerIdOf(state6, index));
+      if (blocks.length) button5.setAttribute("aria-disabled", "true");
       const list = root.getAttribute("data-kp-focus-steps-timers");
-      if (list) button4.setAttribute("data-kp-timer-for", list);
-      button4.textContent = strings.focusTimer(step.timer.seconds < 60 ? `${step.timer.seconds} s` : `${minutes} min`);
-      holder.append(button4);
+      if (list) button5.setAttribute("data-kp-timer-for", list);
+      button5.textContent = strings.focusTimer(step.timer.seconds < 60 ? `${step.timer.seconds} s` : `${minutes} min`);
+      holder.append(button5);
     }
     if (step.note) {
       const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
@@ -40295,13 +40295,13 @@ function goNext(root) {
   memoryOf(root)?.forget("progress");
   root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail }));
 }
-function pressAnswer(root, button4) {
+function pressAnswer(root, button5) {
   const state6 = stateOf2(root);
   const answer2 = state6.steps[state6.index]?.answer;
   if (!answer2) return false;
-  if (button4.classList.contains("kp-focus-steps__choice")) {
-    if (button4.getAttribute("aria-disabled") === "true") return true;
-    const value = button4.dataset.kpValue ?? "";
+  if (button5.classList.contains("kp-focus-steps__choice")) {
+    if (button5.getAttribute("aria-disabled") === "true") return true;
+    const value = button5.dataset.kpValue ?? "";
     if (answer2.kind === "multi") {
       const held2 = (
         /** @type {string[]} */
@@ -40320,8 +40320,8 @@ function pressAnswer(root, button4) {
     }
     return true;
   }
-  if (button4.classList.contains("kp-focus-steps__same")) {
-    const which = button4.dataset.kpSame === "usual" ? "usual" : "yesterday";
+  if (button5.classList.contains("kp-focus-steps__same")) {
+    const which = button5.dataset.kpSame === "usual" ? "usual" : "yesterday";
     const value = which === "usual" ? answer2.usual : answer2.previous;
     if (value === void 0) return true;
     if (takeAnswer(root, value, "same", { same: which })) {
@@ -40330,7 +40330,7 @@ function pressAnswer(root, button4) {
     }
     return true;
   }
-  if (button4.classList.contains("kp-focus-steps__skip")) {
+  if (button5.classList.contains("kp-focus-steps__skip")) {
     if (takeAnswer(root, null, "skip")) {
       paintAnswerState(root);
       scheduleAdvance(root);
@@ -40346,16 +40346,16 @@ function paintAnswerState(root) {
   const value = currentValue(root, answer2);
   const given2 = state6.answers[answer2.id];
   for (
-    const button4 of
+    const button5 of
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(".kp-focus-steps__choice")]
   ) {
-    const v = button4.dataset.kpValue ?? "";
+    const v = button5.dataset.kpValue ?? "";
     const on = !(given2?.source === "skip") && (Array.isArray(value) ? value.includes(v) : value === v);
-    button4.setAttribute("aria-pressed", String(on));
-    button4.toggleAttribute("data-kp-chosen", on);
+    button5.setAttribute("aria-pressed", String(on));
+    button5.toggleAttribute("data-kp-chosen", on);
   }
-  for (const button4 of root.querySelectorAll(".kp-focus-steps__skip")) button4.setAttribute("aria-pressed", String(given2?.source === "skip"));
+  for (const button5 of root.querySelectorAll(".kp-focus-steps__skip")) button5.setAttribute("aria-pressed", String(given2?.source === "skip"));
   const next2 = (
     /** @type {HTMLElement} */
     part2(root, "next")
@@ -40422,14 +40422,14 @@ function buildAnswer(root, holder, step, text) {
       wrap.append(hint2);
     }
     for (const choice of choices) {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
         el6("kp-button kp-button--lg kp-focus-steps__choice", "button")
       );
-      button4.type = "button";
-      button4.dataset.kpValue = choice.value;
-      button4.setAttribute("aria-pressed", "false");
-      if ("pinned" in choice) button4.setAttribute("data-kp-pinned", "");
+      button5.type = "button";
+      button5.dataset.kpValue = choice.value;
+      button5.setAttribute("aria-pressed", "false");
+      if ("pinned" in choice) button5.setAttribute("data-kp-pinned", "");
       const mark = el6("kp-focus-steps__mark", "span");
       mark.setAttribute("aria-hidden", "true");
       const label = el6("kp-focus-steps__choice-label", "span");
@@ -40437,18 +40437,18 @@ function buildAnswer(root, holder, step, text) {
       const said = el6("kp-sr-only", "span");
       said.textContent = `, ${strings.focusPickedMark}`;
       said.hidden = true;
-      button4.append(mark, label);
+      button5.append(mark, label);
       if (choice.disabled) {
-        button4.setAttribute("aria-disabled", "true");
+        button5.setAttribute("aria-disabled", "true");
         if (choice.reason) {
           const reason = el6("kp-focus-steps__reason", "span");
           reason.id = `kp-focus-steps-${focusState.serial}-${group.childElementCount}-why`;
           reason.textContent = choice.reason;
-          button4.setAttribute("aria-describedby", reason.id);
-          button4.append(reason);
+          button5.setAttribute("aria-describedby", reason.id);
+          button5.append(reason);
         }
       }
-      group.append(button4);
+      group.append(button5);
     }
     wrap.append(group);
     const sameMode = opt(root, "same", "both");
@@ -40460,15 +40460,15 @@ function buildAnswer(root, holder, step, text) {
       ];
       for (const [which, value] of kinds) {
         if (value === void 0 || Array.isArray(value) && value.length === 0) continue;
-        const button4 = (
+        const button5 = (
           /** @type {HTMLButtonElement} */
           el6("kp-button kp-focus-steps__same", "button")
         );
-        button4.type = "button";
-        button4.dataset.kpSame = which;
+        button5.type = "button";
+        button5.dataset.kpSame = which;
         const words2 = wordsOf2(answer2, value);
-        button4.textContent = which === "usual" ? strings.focusSameUsual(words2) : strings.focusSameYesterday(words2);
-        same.append(button4);
+        button5.textContent = which === "usual" ? strings.focusSameUsual(words2) : strings.focusSameYesterday(words2);
+        same.append(button5);
       }
       if (same.childElementCount > 0) wrap.append(same);
     }
@@ -40664,14 +40664,14 @@ function paintLive(root, timers) {
   const state6 = stateOf2(root);
   const strings = getStrings();
   const holder = part2(root, "step");
-  const button4 = holder.querySelector(".kp-focus-steps__timer");
+  const button5 = holder.querySelector(".kp-focus-steps__timer");
   const step = state6.steps[state6.index];
-  if (button4 && step?.timer) {
+  if (button5 && step?.timer) {
     const timer2 = timers.find((t) => t.id === timerIdOf(state6, state6.index));
     const minutes = Math.round(step.timer.seconds / 60);
     const base = strings.focusTimer(step.timer.seconds < 60 ? `${step.timer.seconds} s` : `${minutes} min`);
     const words2 = !timer2 ? base : timer2.state === "running" ? strings.focusTimerRunning(clockOfTimer(timer2)) : timer2.state === "paused" ? strings.focusTimerPaused(clockOfTimer(timer2)) : strings.focusTimerDone;
-    if (button4.textContent !== words2) button4.textContent = words2;
+    if (button5.textContent !== words2) button5.textContent = words2;
   }
   const line = holder.querySelector(".kp-focus-steps__wait-line");
   if (line) {
@@ -41427,21 +41427,21 @@ function attachTimers(root = document) {
     part3(list, "list");
     sync2(list);
     const click = (event) => {
-      const button4 = event.target instanceof Element ? event.target.closest("button") : null;
-      const card = button4?.closest(".kp-timer");
-      if (!button4 || !card || !list.contains(card)) return;
+      const button5 = event.target instanceof Element ? event.target.closest("button") : null;
+      const card = button5?.closest(".kp-timer");
+      if (!button5 || !card || !list.contains(card)) return;
       const id = card.getAttribute("data-kp-timer-id") ?? "";
       const timer2 = find(list, id);
       if (!timer2) return;
-      if (button4.classList.contains("kp-timer__toggle")) {
+      if (button5.classList.contains("kp-timer__toggle")) {
         if (timer2.state === "running") pauseTimer(list, id);
         else if (timer2.state === "paused") resumeTimer(list, id);
         else {
           stopRing(timer2);
           stopTimer(list, id);
         }
-      } else if (button4.classList.contains("kp-timer__more")) addTimerTime(list, id, 60);
-      else if (button4.classList.contains("kp-timer__remove")) {
+      } else if (button5.classList.contains("kp-timer__more")) addTimerTime(list, id, 60);
+      else if (button5.classList.contains("kp-timer__remove")) {
         const next2 = card.nextElementSibling ?? card.previousElementSibling;
         stopTimer(list, id);
         (next2?.querySelector(".kp-timer__toggle") ?? null)?.focus();
@@ -41759,39 +41759,39 @@ function attachFocusSteps(scope = document) {
     };
     const prev = () => tracksOn(root) ? trackPrev(root) : goToStep(root, state6.index - 1);
     const click = (event) => {
-      const button4 = event.target instanceof Element ? event.target.closest("button") : null;
-      if (!button4 || !root.contains(button4) || button4.getAttribute("aria-disabled") === "true") return;
-      if (pressAnswer(root, button4)) return;
-      const go = button4.getAttribute("data-kp-focus-go");
-      if (button4.classList.contains("kp-focus-steps__lane")) {
-        switchTrack(root, button4.getAttribute("data-kp-track-key") ?? "", "tap");
+      const button5 = event.target instanceof Element ? event.target.closest("button") : null;
+      if (!button5 || !root.contains(button5) || button5.getAttribute("aria-disabled") === "true") return;
+      if (pressAnswer(root, button5)) return;
+      const go = button5.getAttribute("data-kp-focus-go");
+      if (button5.classList.contains("kp-focus-steps__lane")) {
+        switchTrack(root, button5.getAttribute("data-kp-track-key") ?? "", "tap");
         return;
       }
       if (go !== null) {
         const to = state6.tracks[Number(go)];
-        if (to) switchTrack(root, to.key, button4.closest(".kp-focus-steps__band") ? "attention" : "tap");
+        if (to) switchTrack(root, to.key, button5.closest(".kp-focus-steps__band") ? "attention" : "tap");
         return;
       }
-      const dismiss = button4.getAttribute("data-kp-focus-dismiss");
+      const dismiss = button5.getAttribute("data-kp-focus-dismiss");
       if (dismiss !== null) {
         const gone = state6.tracks[Number(dismiss)];
         if (gone) clearAlert(root, gone.key);
         return;
       }
-      if (button4.hasAttribute("data-kp-focus-retry")) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_RETRY_EVENT, { bubbles: true }));
-      else if (button4.hasAttribute("data-kp-focus-empty-action"))
+      if (button5.hasAttribute("data-kp-focus-retry")) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_RETRY_EVENT, { bubbles: true }));
+      else if (button5.hasAttribute("data-kp-focus-empty-action"))
         root.dispatchEvent(new CustomEvent(FOCUS_STEPS_EMPTY_ACTION_EVENT, { bubbles: true }));
-      else if (button4.hasAttribute("data-kp-focus-save-retry")) {
+      else if (button5.hasAttribute("data-kp-focus-save-retry")) {
         root.dispatchEvent(new CustomEvent(FOCUS_STEPS_SAVE_RETRY_EVENT, { bubbles: true }));
         if (state6.finished) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { ...state6.finished } }));
-      } else if (button4.classList.contains("kp-focus-steps__resume-go") && state6.pendingResume) applyProgress(root, state6.pendingResume);
-      else if (button4.classList.contains("kp-focus-steps__resume-restart")) {
+      } else if (button5.classList.contains("kp-focus-steps__resume-go") && state6.pendingResume) applyProgress(root, state6.pendingResume);
+      else if (button5.classList.contains("kp-focus-steps__resume-restart")) {
         memoryOf(root)?.forget("progress");
         state6.pendingResume = null;
         paint4(root, false);
-      } else if (button4.classList.contains("kp-focus-steps__next")) next2();
-      else if (button4.classList.contains("kp-focus-steps__prev")) prev();
-      else if (button4.classList.contains("kp-focus-steps__speak")) {
+      } else if (button5.classList.contains("kp-focus-steps__next")) next2();
+      else if (button5.classList.contains("kp-focus-steps__prev")) prev();
+      else if (button5.classList.contains("kp-focus-steps__speak")) {
         const strings = getStrings();
         if (speechSynthesis.speaking) {
           speechSynthesis.cancel();
@@ -41803,13 +41803,13 @@ function attachFocusSteps(scope = document) {
         utterance.lang = root.closest("[lang]")?.getAttribute("lang") ?? "";
         const word = (
           /** @type {HTMLElement} */
-          button4.querySelector(".kp-focus-steps__speak-text")
+          button5.querySelector(".kp-focus-steps__speak-text")
         );
         word.textContent = strings.focusStopReading;
-        button4.setAttribute("aria-pressed", "true");
+        button5.setAttribute("aria-pressed", "true");
         utterance.onend = utterance.onerror = () => {
           word.textContent = strings.focusReadAloud;
-          button4.setAttribute("aria-pressed", "false");
+          button5.setAttribute("aria-pressed", "false");
         };
         speechSynthesis.speak(utterance);
       }
@@ -41881,11 +41881,11 @@ function attachFocusSteps(scope = document) {
     root.addEventListener("pointercancel", cancel);
     document.addEventListener("visibilitychange", back);
     const tap = (selector) => () => {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLElement | null} */
         root.querySelector(selector)
       );
-      if (button4 && button4.getAttribute("aria-disabled") !== "true") pressAnswer(root, button4);
+      if (button5 && button5.getAttribute("aria-disabled") !== "true") pressAnswer(root, button5);
     };
     const inView = () => answering(root) && root.contains(document.activeElement) && state6.steps[state6.index]?.answer !== void 0;
     const unkey = registerShortcuts(root, [
@@ -42303,20 +42303,20 @@ function renderBar(list, items, strings) {
     bar.querySelector(".kp-checklist__said")
   );
   if (!UNDO2.has(list)) said.textContent = total ? strings.checklistSummary(done, total) : "";
-  const button4 = (name) => (
+  const button5 = (name) => (
     /** @type {HTMLButtonElement} */
     bar.querySelector(`.kp-checklist__${name}`)
   );
-  const all = button4("all");
+  const all = button5("all");
   all.textContent = strings.checklistCheckAll;
   all.disabled = total === 0 || done === total || rest;
-  const none = button4("none");
+  const none = button5("none");
   none.textContent = strings.checklistUncheckAll;
   none.disabled = done === 0 || rest;
-  const clear = button4("clear");
+  const clear = button5("clear");
   clear.textContent = strings.checklistClear;
   clear.disabled = done === 0 || rest;
-  button4("undo").textContent = strings.checklistUndo;
+  button5("undo").textContent = strings.checklistUndo;
 }
 function renderEmpty(list, body, total, strings) {
   const empty = part4(list, "empty");
@@ -42417,12 +42417,12 @@ function endUndo(list) {
   if (!undo) return;
   clearTimeout(undo.timer);
   UNDO2.delete(list);
-  const button4 = (
+  const button5 = (
     /** @type {HTMLButtonElement} */
     part4(list, "bar").querySelector(".kp-checklist__undo")
   );
-  const hadFocus = button4 === document.activeElement;
-  button4.hidden = true;
+  const hadFocus = button5 === document.activeElement;
+  button5.hidden = true;
   render(list);
   if (hadFocus)
     part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
@@ -42540,13 +42540,13 @@ var init_controller7 = __esm({
         const strings = getStrings();
         const bar = part4(list, "bar");
         bar.querySelector(".kp-checklist__said").textContent = strings.checklistCleared(removed.length);
-        const button4 = (
+        const button5 = (
           /** @type {HTMLButtonElement} */
           bar.querySelector(".kp-checklist__undo")
         );
-        button4.hidden = false;
+        button5.hidden = false;
         render(list);
-        button4.focus();
+        button5.focus();
         say8(list, strings.checklistCleared(removed.length));
         emit3(list, CHECKLIST_CLEAR_EVENT, { removed: removed.map((i) => ({ ...i })) });
       }
@@ -42674,15 +42674,15 @@ function build3(root) {
     input.className = "kp-quantity__input";
     root.append(input);
   }
-  let field = (
+  let field2 = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-quantity__field")
   );
-  if (!field) {
-    field = document.createElement("span");
-    field.className = "kp-quantity__field";
-    input.before(field);
-    field.append(input);
+  if (!field2) {
+    field2 = document.createElement("span");
+    field2.className = "kp-quantity__field";
+    input.before(field2);
+    field2.append(input);
   }
   let unit2 = (
     /** @type {HTMLElement | null} */
@@ -42693,13 +42693,13 @@ function build3(root) {
     unit2 = document.createElement("span");
     unit2.className = "kp-quantity__unit";
     unit2.setAttribute("aria-hidden", "true");
-    field.append(unit2);
+    field2.append(unit2);
   }
   if (unit2) {
     const one = root.getAttribute("data-kp-quantity-unit-one");
     unit2.setAttribute("data-kp-words", [unitWord ?? "", one ?? ""].filter(Boolean).join("\n"));
   }
-  const button4 = (by) => {
+  const button5 = (by) => {
     let b = (
       /** @type {HTMLButtonElement | null} */
       root.querySelector(`.kp-quantity__step[data-kp-quantity-by="${by}"]`)
@@ -42713,14 +42713,14 @@ function build3(root) {
       glyph3.className = "kp-quantity__glyph";
       glyph3.setAttribute("aria-hidden", "true");
       b.append(glyph3);
-      if (by < 0) field?.before(b);
-      else field?.after(b);
+      if (by < 0) field2?.before(b);
+      else field2?.after(b);
     }
     b.setAttribute("aria-label", by < 0 ? strings.quantityLess(label) : strings.quantityMore(label));
     return b;
   };
-  button4(-1);
-  button4(1);
+  button5(-1);
+  button5(1);
   input.setAttribute("role", "spinbutton");
   input.setAttribute("autocomplete", "off");
   input.setAttribute("inputmode", rulesOf(root).decimals > 0 || rulesOf(root).min < 0 ? "decimal" : "numeric");
@@ -42954,20 +42954,20 @@ function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\x
     toolbar.append(row);
   }
   let list = row.querySelector(LIST3);
-  let button4 = (
+  let button5 = (
     /** @type {HTMLElement | null} */
     row.querySelector(CLEAR2)
   );
-  if (!list || !button4) {
+  if (!list || !button5) {
     const word2 = document.createElement("span");
     word2.className = "kp-toolbar__active-label";
     list = document.createElement("ul");
     list.className = "kp-tag-list kp-toolbar__active-list";
-    button4 = document.createElement("button");
-    button4.setAttribute("type", "button");
-    button4.className = "kp-button kp-button--ghost kp-button--sm";
-    button4.setAttribute("data-kp-toolbar-clear", "");
-    row.replaceChildren(word2, list, button4);
+    button5 = document.createElement("button");
+    button5.setAttribute("type", "button");
+    button5.className = "kp-button kp-button--ghost kp-button--sm";
+    button5.setAttribute("data-kp-toolbar-clear", "");
+    row.replaceChildren(word2, list, button5);
   }
   const word = row.querySelector(".kp-toolbar__active-label");
   if (word) word.textContent = strings.toolbarShowingOnly;
@@ -42988,9 +42988,9 @@ function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\x
       return item;
     })
   );
-  button4.textContent = strings.toolbarClearAll;
-  mark(button4, { kind: "clear-all", label: strings.toolbarClearAll });
-  button4.hidden = !clearAll;
+  button5.textContent = strings.toolbarClearAll;
+  mark(button5, { kind: "clear-all", label: strings.toolbarClearAll });
+  button5.hidden = !clearAll;
   row.hidden = filters.length === 0;
 }
 function attachToolbars(root = document) {
@@ -43315,18 +43315,18 @@ function buildHead2(doc, locale, firstDay) {
 }
 function buildCell(doc) {
   const td = make9(doc, "td");
-  const button4 = make9(doc, "button", "kp-calendar__day");
-  button4.type = "button";
+  const button5 = make9(doc, "button", "kp-calendar__day");
+  button5.type = "button";
   const num3 = make9(doc, "span", "kp-calendar__num");
   const count2 = make9(doc, "span", "kp-calendar__count", " ");
   const busy = make9(doc, "span", "kp-calendar__day-busy");
   busy.setAttribute("aria-hidden", "true");
   busy.append(make9(doc, "span", "kp-spinner"));
-  button4.append(num3, count2, busy);
+  button5.append(num3, count2, busy);
   const pad2 = make9(doc, "span", "kp-calendar__pad");
   pad2.setAttribute("aria-hidden", "true");
-  td.append(button4, pad2);
-  return { td, button: button4, num: num3, count: count2, pad: pad2 };
+  td.append(button5, pad2);
+  return { td, button: button5, num: num3, count: count2, pad: pad2 };
 }
 function buildBody(doc) {
   const body = make9(doc, "tbody");
@@ -44103,10 +44103,10 @@ function setHeatPaging(el16, paging = {}) {
   if (!bar) {
     if (!el16.parentNode) return null;
     bar = make10(doc, "div", "kp-heat__pager", { role: "group" });
-    const button4 = (part7) => make10(doc, "button", `kp-button kp-button--ghost kp-button--sm kp-heat__pager-${part7}`, { type: "button", "data-kp-heat-page": part7 });
+    const button5 = (part7) => make10(doc, "button", `kp-button kp-button--ghost kp-button--sm kp-heat__pager-${part7}`, { type: "button", "data-kp-heat-page": part7 });
     const words2 = make10(doc, "span", "kp-heat__pager-label");
     words2.setAttribute("aria-live", "polite");
-    bar.append(button4("earlier"), button4("today"), button4("later"), words2);
+    bar.append(button5("earlier"), button5("today"), button5("later"), words2);
     el16.before(bar);
     bar.addEventListener("click", (event) => {
       const target = event.target instanceof Element ? event.target.closest("[data-kp-heat-page]") : null;
@@ -44346,7 +44346,7 @@ function setHeat(el16, spec, options) {
         calmTone(cell?.tone ?? "quiet", el16)
       ) : toneOf2(cell?.tone);
       const said = calm && tone === "quiet" ? el16.getAttribute("data-kp-quiet-words") === "none" ? "" : calmWord("quiet") ?? "" : cell?.label;
-      const button4 = make10(doc, "button", "kp-heat__cell", {
+      const button5 = make10(doc, "button", "kp-heat__cell", {
         type: "button",
         role: "gridcell",
         tabindex: "-1",
@@ -44357,20 +44357,20 @@ function setHeat(el16, spec, options) {
         "data-col-key": col.key,
         "aria-label": cell?.aria && !(calm && tone === "quiet") ? cell.aria : `${row.label}, ${col.label}${said ? `: ${said}` : ""}`
       });
-      if (tone === "level") button4.style.setProperty("--kp-heat-level", unit(cell?.level));
-      if (summary2 && cell?.share != null) button4.style.setProperty("--kp-heat-share", unit(cell.share));
-      if (summary2) button4.setAttribute("data-kp-share", "");
+      if (tone === "level") button5.style.setProperty("--kp-heat-level", unit(cell?.level));
+      if (summary2 && cell?.share != null) button5.style.setProperty("--kp-heat-share", unit(cell.share));
+      if (summary2) button5.setAttribute("data-kp-share", "");
       if (cell?.disabled) {
-        button4.setAttribute("aria-disabled", "true");
-        button4.setAttribute("data-kp-inert", "");
+        button5.setAttribute("aria-disabled", "true");
+        button5.setAttribute("data-kp-inert", "");
       }
-      if (cell?.tip !== void 0) button4.setAttribute("data-kp-hovercard", cell.tip === true ? "" : cell.tip);
+      if (cell?.tip !== void 0) button5.setAttribute("data-kp-hovercard", cell.tip === true ? "" : cell.tip);
       if (picked != null && col.key === picked) {
-        button4.setAttribute("data-kp-picked", "");
-        button4.setAttribute("aria-selected", "true");
+        button5.setAttribute("data-kp-picked", "");
+        button5.setAttribute("aria-selected", "true");
       }
-      mark(button4, { kind: "cell", value: `${row.key}/${col.key}`, index: c, label: button4.getAttribute("aria-label") ?? "" });
-      cells.append(button4);
+      mark(button5, { kind: "cell", value: `${row.key}/${col.key}`, index: c, label: button5.getAttribute("aria-label") ?? "" });
+      cells.append(button5);
     });
     node.append(label, cells);
     return node;
@@ -44453,11 +44453,11 @@ function setHeatRows(el16, keys) {
   const set = new Set(keys);
   LIT.set(el16, set);
   for (
-    const button4 of
+    const button5 of
     /** @type {NodeListOf<HTMLElement>} */
     el16.querySelectorAll(".kp-heat__label-button")
   ) {
-    button4.setAttribute("aria-pressed", String(set.has(button4.dataset.key ?? "")));
+    button5.setAttribute("aria-pressed", String(set.has(button5.dataset.key ?? "")));
   }
 }
 var init_pick = __esm({
@@ -45326,7 +45326,7 @@ function setMatrix(el16, spec) {
         return;
       }
       const tone = toneOf2(cell.tone);
-      const button4 = make10(doc, "button", "kp-matrix__cell", {
+      const button5 = make10(doc, "button", "kp-matrix__cell", {
         type: "button",
         role: "gridcell",
         tabindex: "-1",
@@ -45338,19 +45338,19 @@ function setMatrix(el16, spec) {
         "aria-pressed": String(picked?.row === row.key && picked?.column === col.key),
         "aria-label": cell.aria ?? `${row.label} to ${col.label}${cell.label ? `: ${cell.label}` : ""}`
       });
-      if (cell.text) button4.textContent = cell.text;
-      else if (tone in GLYPHS3) button4.setAttribute("data-kp-glyph", GLYPHS3[
+      if (cell.text) button5.textContent = cell.text;
+      else if (tone in GLYPHS3) button5.setAttribute("data-kp-glyph", GLYPHS3[
         /** @type {keyof typeof GLYPHS} */
         tone
       ]);
-      if (cell.ringed) button4.setAttribute("data-kp-ringed", "");
-      if (cell.mark) button4.setAttribute("data-kp-mark", "");
+      if (cell.ringed) button5.setAttribute("data-kp-ringed", "");
+      if (cell.mark) button5.setAttribute("data-kp-mark", "");
       if (cell.disabled) {
-        button4.setAttribute("aria-disabled", "true");
-        button4.setAttribute("data-kp-inert", "");
+        button5.setAttribute("aria-disabled", "true");
+        button5.setAttribute("data-kp-inert", "");
       }
-      if (cell.tip !== void 0) button4.setAttribute("data-kp-hovercard", cell.tip === true ? "" : cell.tip);
-      node.append(button4);
+      if (cell.tip !== void 0) button5.setAttribute("data-kp-hovercard", cell.tip === true ? "" : cell.tip);
+      node.append(button5);
     });
     body.push(node);
   });
@@ -45810,23 +45810,23 @@ function pillCapacity(height, pill, gap = GAP) {
   return Math.max(1, Math.floor((height - pill) / (pill + gap)) + 1);
 }
 function pillFor(c, e) {
-  let button4 = c.pills.get(e.id);
+  let button5 = c.pills.get(e.id);
   const doc = c.el.ownerDocument;
   const reference = e.state === "reference";
-  if (button4 && button4.tagName === "BUTTON" === reference) {
-    button4.remove();
-    button4 = void 0;
+  if (button5 && button5.tagName === "BUTTON" === reference) {
+    button5.remove();
+    button5 = void 0;
   }
-  if (!button4) {
-    button4 = /** @type {HTMLButtonElement} */
+  if (!button5) {
+    button5 = /** @type {HTMLButtonElement} */
     make12(doc, reference ? "span" : "button", "kp-week__pill");
-    if (!reference) button4.type = "button";
-    button4.append(make12(doc, "b", "kp-week__time"), make12(doc, "span", "kp-week__label"));
-    c.pills.set(e.id, button4);
-    c.decorate?.(button4, { kind: "pill", host: c.el, key: keyOf5(c.el), id: e.id });
+    if (!reference) button5.type = "button";
+    button5.append(make12(doc, "b", "kp-week__time"), make12(doc, "span", "kp-week__label"));
+    c.pills.set(e.id, button5);
+    c.decorate?.(button5, { kind: "pill", host: c.el, key: keyOf5(c.el), id: e.id });
   }
-  button4.dataset.kpId = e.id;
-  return button4;
+  button5.dataset.kpId = e.id;
+  return button5;
 }
 var init_pills2 = __esm({
   "js/week/pills.js"() {
@@ -45838,10 +45838,10 @@ var init_pills2 = __esm({
 
 // js/week/build.js
 function stepButton(doc, name, path) {
-  const button4 = make12(doc, "button", "kp-segmented__item kp-week__step kp-week__step--icon");
-  button4.type = "button";
-  button4.setAttribute("aria-label", name);
-  button4.title = name;
+  const button5 = make12(doc, "button", "kp-segmented__item kp-week__step kp-week__step--icon");
+  button5.type = "button";
+  button5.setAttribute("aria-label", name);
+  button5.title = name;
   const svg2 = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg2.setAttribute("viewBox", "0 0 24 24");
   svg2.setAttribute("aria-hidden", "true");
@@ -45850,8 +45850,8 @@ function stepButton(doc, name, path) {
   const line = doc.createElementNS("http://www.w3.org/2000/svg", "path");
   line.setAttribute("d", path);
   svg2.append(line);
-  button4.append(svg2);
-  return button4;
+  button5.append(svg2);
+  return button5;
 }
 function watchArrivals(c) {
   if (c.motion.asked) return;
@@ -46036,15 +46036,15 @@ function foldMenu(c, col, top = 0) {
   if (!col.more) {
     const wrapper = make12(doc, "div", "kp-menu-button kp-week__more");
     wrapper.setAttribute("data-kp-menu-button", "");
-    const button4 = make12(doc, "button", "kp-week__pill kp-week__pill--more");
-    button4.type = "button";
+    const button5 = make12(doc, "button", "kp-week__pill kp-week__pill--more");
+    button5.type = "button";
     const menu = make12(doc, "div", "kp-menu kp-menu--rich");
     menu.setAttribute("role", "menu");
-    wrapper.append(button4, menu);
+    wrapper.append(button5, menu);
     col.track.append(wrapper);
     col.more = wrapper;
-    col.moreButton = button4;
-    c.decorate?.(button4, { kind: "more", host: c.el, key: keyOf5(c.el), id: col.iso });
+    col.moreButton = button5;
+    c.decorate?.(button5, { kind: "more", host: c.el, key: keyOf5(c.el), id: col.iso });
     menuModule ??= Promise.resolve().then(() => (init_menu_button(), menu_button_exports));
     void menuModule.then((m) => {
       m.attachMenuButtons(wrapper);
@@ -46277,30 +46277,30 @@ function paint7(c) {
     const list = byDay.get(day);
     if (!list) continue;
     const { hhmm, at } = timeOfDay(c, ms);
-    const button4 = pillFor(c, event);
+    const button5 = pillFor(c, event);
     live4.add(event.id);
-    button4.dataset.kpSeries = String(event.series ?? 1);
-    if (event.state) button4.dataset.kpState = event.state;
-    else delete button4.dataset.kpState;
+    button5.dataset.kpSeries = String(event.series ?? 1);
+    if (event.state) button5.dataset.kpState = event.state;
+    else delete button5.dataset.kpState;
     const time = (
       /** @type {HTMLElement} */
-      button4.querySelector(".kp-week__time")
+      button5.querySelector(".kp-week__time")
     );
     const label = (
       /** @type {HTMLElement} */
-      button4.querySelector(".kp-week__label")
+      button5.querySelector(".kp-week__label")
     );
     if (time.textContent !== hhmm) time.textContent = hhmm;
     if (label.textContent !== event.label) label.textContent = event.label;
     const name = nameOf4(c, event, hhmm, day);
-    if (button4.getAttribute("aria-label") !== name) button4.setAttribute("aria-label", name);
-    button4.setAttribute("data-kp-hovercard", event.detail || `${event.label} \xB7 ${hhmm}`);
-    if (event.state === "reference") button4.setAttribute("role", "note");
-    list.push({ event, ms, at, hhmm, button: button4, day });
+    if (button5.getAttribute("aria-label") !== name) button5.setAttribute("aria-label", name);
+    button5.setAttribute("data-kp-hovercard", event.detail || `${event.label} \xB7 ${hhmm}`);
+    if (event.state === "reference") button5.setAttribute("role", "note");
+    list.push({ event, ms, at, hhmm, button: button5, day });
   }
-  for (const [id, button4] of c.pills)
+  for (const [id, button5] of c.pills)
     if (!live4.has(id)) {
-      button4.remove();
+      button5.remove();
       c.pills.delete(id);
     }
   for (const col of c.cols) {
@@ -49960,15 +49960,15 @@ function attachGantts(root = document, options = {}) {
         );
         return;
       }
-      const button4 = event.target instanceof Element ? event.target.closest("button") : null;
-      if (!button4) return;
-      if (button4 === c.liveButton) {
+      const button5 = event.target instanceof Element ? event.target.closest("button") : null;
+      if (!button5) return;
+      if (button5 === c.liveButton) {
         setLive(c, !c.live);
-      } else if (button4.hasAttribute("data-kp-gantt-day")) {
-        const day = button4.dataset.kpGanttDay ?? "";
+      } else if (button5.hasAttribute("data-kp-gantt-day")) {
+        const day = button5.dataset.kpGanttDay ?? "";
         c.dayStop = day;
         const bounds = dayBounds(c, day);
-        const lift = button4.getAttribute("aria-pressed") === "true";
+        const lift = button5.getAttribute("aria-pressed") === "true";
         setGanttSelection(el16, lift ? null : bounds);
         el16.dispatchEvent(
           new CustomEvent(GANTT_SELECT_EVENT, {
@@ -49976,10 +49976,10 @@ function attachGantts(root = document, options = {}) {
             detail: lift ? { from: null, to: null, source: "clear" } : { ...bounds, source: "day", day }
           })
         );
-      } else if (button4.hasAttribute("data-kp-gantt-clear")) {
+      } else if (button5.hasAttribute("data-kp-gantt-clear")) {
         setGanttSelection(el16, null);
         el16.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail: { from: null, to: null, source: "clear" } }));
-      } else if (button4.hasAttribute("data-kp-gantt-zoom") && c.selected) {
+      } else if (button5.hasAttribute("data-kp-gantt-zoom") && c.selected) {
         const { from, to } = c.selected;
         c.span = Math.max(60, (to - from) / 1e3);
         c.live = false;
@@ -52517,11 +52517,11 @@ function attachLedes(root = document) {
           toggle2.textContent = s2.ledeMore;
           lede.after(toggle2);
           const hiddenRest = rest;
-          const button4 = toggle2;
-          button4.addEventListener("click", () => {
+          const button5 = toggle2;
+          button5.addEventListener("click", () => {
             hiddenRest.hidden = !hiddenRest.hidden;
-            button4.setAttribute("aria-expanded", String(!hiddenRest.hidden));
-            button4.textContent = hiddenRest.hidden ? s2.ledeMore : s2.ledeLess;
+            button5.setAttribute("aria-expanded", String(!hiddenRest.hidden));
+            button5.textContent = hiddenRest.hidden ? s2.ledeMore : s2.ledeLess;
           });
         }
       }
@@ -52707,16 +52707,16 @@ function paintAlert2(existing, p, doc, remedyLabel, container) {
   paintAction(el16, p);
   const close = el16.querySelector(":scope > .kp-alert__close");
   if (p.dismissible && !close) {
-    const button4 = doc.createElement("button");
-    button4.type = "button";
-    button4.className = "kp-alert__close kp-icon-button";
-    button4.setAttribute("aria-label", getStrings().close);
-    button4.textContent = "\xD7";
-    button4.addEventListener("click", () => {
+    const button5 = doc.createElement("button");
+    button5.type = "button";
+    button5.className = "kp-alert__close kp-icon-button";
+    button5.setAttribute("aria-label", getStrings().close);
+    button5.textContent = "\xD7";
+    button5.addEventListener("click", () => {
       const go = container.dispatchEvent(new CustomEvent(PROBLEM_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { key: p.key } }));
       if (go) void leave(el16).then(() => el16.remove());
     });
-    el16.append(button4);
+    el16.append(button5);
   } else if (!p.dismissible && close) close.remove();
   return el16;
 }
@@ -52978,21 +52978,21 @@ __export(flash_exports, {
   attachFlashButtons: () => attachFlashButtons,
   runFlashButton: () => runFlashButton
 });
-function wire7(button4, options) {
-  const known4 = wired2.get(button4);
+function wire7(button5, options) {
+  const known4 = wired2.get(button5);
   if (known4) return known4;
-  const doc = button4.ownerDocument;
+  const doc = button5.ownerDocument;
   const s2 = getStrings();
   const rest = doc.createElement("span");
   rest.className = "kp-flash__face kp-flash__face--rest";
-  rest.append(...button4.childNodes);
+  rest.append(...button5.childNodes);
   const busy = doc.createElement("span");
   busy.className = "kp-flash__face kp-flash__face--busy";
   busy.setAttribute("aria-hidden", "true");
   const spin = doc.createElement("span");
   spin.className = "kp-spinner kp-button__spin";
   busy.append(spin);
-  const label = options.busyLabel ?? button4.getAttribute("data-kp-busy-label");
+  const label = options.busyLabel ?? button5.getAttribute("data-kp-busy-label");
   if (label) busy.append(label);
   const result = doc.createElement("span");
   result.className = "kp-flash__face kp-flash__face--result";
@@ -53000,7 +53000,7 @@ function wire7(button4, options) {
   const stack = doc.createElement("span");
   stack.className = "kp-flash__stack";
   stack.append(rest, busy, result);
-  const words2 = (button4.getAttribute("data-kp-flash-words") ?? `${attr3(button4, "data-kp-flash-word", s2.flashDone)},${attr3(button4, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
+  const words2 = (button5.getAttribute("data-kp-flash-words") ?? `${attr3(button5, "data-kp-flash-word", s2.flashDone)},${attr3(button5, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
   for (const word of words2) {
     const ghost = doc.createElement("span");
     ghost.className = "kp-flash__ghost";
@@ -53008,13 +53008,13 @@ function wire7(button4, options) {
     ghost.textContent = `\u2713 ${word}`;
     stack.append(ghost);
   }
-  button4.replaceChildren(stack);
-  button4.classList.add("kp-flash");
-  button4.setAttribute("data-kp-flash-state", "rest");
+  button5.replaceChildren(stack);
+  button5.classList.add("kp-flash");
+  button5.setAttribute("data-kp-flash-state", "rest");
   const status = doc.createElement("span");
   status.className = "kp-sr-only";
   status.setAttribute("role", "status");
-  const slot = button4.getAttribute("data-kp-flash-line");
+  const slot = button5.getAttribute("data-kp-flash-line");
   const own = slot ? doc.querySelector(slot) : null;
   const ownLine = own === null;
   const line = (
@@ -53026,7 +53026,7 @@ function wire7(button4, options) {
     line.hidden = true;
   }
   line.setAttribute("role", "status");
-  button4.after(status);
+  button5.after(status);
   if (ownLine) status.after(line);
   const handle = {
     stack,
@@ -53040,36 +53040,36 @@ function wire7(button4, options) {
     running: false,
     off: () => {
       window.clearTimeout(handle.timer);
-      button4.replaceChildren(...rest.childNodes);
-      button4.classList.remove("kp-flash");
-      button4.removeAttribute("data-kp-flash-state");
-      button4.removeAttribute("aria-busy");
-      button4.removeAttribute("aria-disabled");
+      button5.replaceChildren(...rest.childNodes);
+      button5.classList.remove("kp-flash");
+      button5.removeAttribute("data-kp-flash-state");
+      button5.removeAttribute("aria-busy");
+      button5.removeAttribute("aria-disabled");
       status.remove();
       if (ownLine) line.remove();
       else {
         line.textContent = "";
         line.removeAttribute("data-kp-tone");
       }
-      wired2.delete(button4);
+      wired2.delete(button5);
     }
   };
-  wired2.set(button4, handle);
+  wired2.set(button5, handle);
   return handle;
 }
-function setState(button4, w, state6, detail = {}) {
-  button4.setAttribute("data-kp-flash-state", state6);
+function setState(button5, w, state6, detail = {}) {
+  button5.setAttribute("data-kp-flash-state", state6);
   if (state6 === "busy") {
-    button4.setAttribute("aria-busy", "true");
-    button4.setAttribute("aria-disabled", "true");
+    button5.setAttribute("aria-busy", "true");
+    button5.setAttribute("aria-disabled", "true");
   } else {
-    button4.removeAttribute("aria-busy");
-    button4.removeAttribute("aria-disabled");
+    button5.removeAttribute("aria-busy");
+    button5.removeAttribute("aria-disabled");
   }
-  button4.dispatchEvent(new CustomEvent(FLASH_EVENT, { bubbles: true, detail: { state: state6, ...detail } }));
+  button5.dispatchEvent(new CustomEvent(FLASH_EVENT, { bubbles: true, detail: { state: state6, ...detail } }));
 }
-async function runFlashButton(button4, work, options = {}) {
-  const w = wire7(button4, options);
+async function runFlashButton(button5, work, options = {}) {
+  const w = wire7(button5, options);
   if (w.running) return null;
   const s2 = getStrings();
   w.running = true;
@@ -53079,10 +53079,10 @@ async function runFlashButton(button4, work, options = {}) {
   }
   w.line.textContent = "";
   w.line.removeAttribute("data-kp-tone");
-  if (options.width) button4.setAttribute("data-kp-width", options.width);
-  if (options.refusal) button4.setAttribute("data-kp-refusal", options.refusal);
-  setState(button4, w, "busy");
-  const label = options.busyLabel ?? button4.getAttribute("data-kp-busy-label") ?? "";
+  if (options.width) button5.setAttribute("data-kp-width", options.width);
+  if (options.refusal) button5.setAttribute("data-kp-refusal", options.refusal);
+  setState(button5, w, "busy");
+  const label = options.busyLabel ?? button5.getAttribute("data-kp-busy-label") ?? "";
   if (label !== "") w.status.textContent = label;
   let ok = true;
   let word = "";
@@ -53091,29 +53091,29 @@ async function runFlashButton(button4, work, options = {}) {
     const answer2 = await work();
     if (answer2 && typeof answer2 === "object" && "error" in answer2) {
       ok = false;
-      word = answer2.word ?? attr3(button4, "data-kp-refused-word", s2.flashRefused);
+      word = answer2.word ?? attr3(button5, "data-kp-refused-word", s2.flashRefused);
       line = [answer2.error, answer2.remedy].filter(Boolean).join(" ");
     } else if (answer2 && typeof answer2 === "object") {
-      word = answer2.word ?? attr3(button4, "data-kp-flash-word", s2.flashDone);
+      word = answer2.word ?? attr3(button5, "data-kp-flash-word", s2.flashDone);
       line = answer2.line ?? "";
-    } else word = typeof answer2 === "string" && answer2 !== "" ? answer2 : attr3(button4, "data-kp-flash-word", s2.flashDone);
+    } else word = typeof answer2 === "string" && answer2 !== "" ? answer2 : attr3(button5, "data-kp-flash-word", s2.flashDone);
   } catch (error) {
     ok = false;
-    word = attr3(button4, "data-kp-failed-word", s2.flashFailed);
+    word = attr3(button5, "data-kp-failed-word", s2.flashFailed);
     line = error instanceof Error ? error.message : String(error);
   }
   const refusal = (
     /** @type {'line' | 'button' | 'toast'} */
-    options.refusal ?? attr3(button4, "data-kp-refusal", "line")
+    options.refusal ?? attr3(button5, "data-kp-refusal", "line")
   );
   const onButton = !ok && refusal === "button" ? line : "";
   w.result.replaceChildren();
-  const glyph3 = button4.ownerDocument.createElement("span");
+  const glyph3 = button5.ownerDocument.createElement("span");
   glyph3.className = "kp-flash__glyph";
   glyph3.textContent = ok ? "\u2713" : "\u2715";
   w.result.append(glyph3, ` ${onButton || word}`);
-  const handWidth = button4.getAttribute("data-kp-width");
-  if (onButton) button4.setAttribute("data-kp-width", "grow");
+  const handWidth = button5.getAttribute("data-kp-width");
+  if (onButton) button5.setAttribute("data-kp-width", "grow");
   w.status.textContent = "";
   window.setTimeout(() => {
     w.status.textContent = line ? `${word}. ${line}` : word;
@@ -53125,22 +53125,22 @@ async function runFlashButton(button4, work, options = {}) {
   }
   if (!ok && refusal === "toast" && line) toast(line);
   w.running = false;
-  setState(button4, w, ok ? "success" : "refused", { ok, word, line });
-  const ms = ok ? num2(button4, "data-kp-flash-ms", options.flashMs ?? FLASH_MS) : num2(button4, "data-kp-flash-error-ms", options.errorMs ?? FLASH_ERROR_MS);
+  setState(button5, w, ok ? "success" : "refused", { ok, word, line });
+  const ms = ok ? num2(button5, "data-kp-flash-ms", options.flashMs ?? FLASH_MS) : num2(button5, "data-kp-flash-error-ms", options.errorMs ?? FLASH_ERROR_MS);
   w.timer = window.setTimeout(() => {
-    if (!wired2.has(button4)) return;
+    if (!wired2.has(button5)) return;
     if (onButton && options.width === void 0) {
-      if (handWidth === null) button4.removeAttribute("data-kp-width");
-      else button4.setAttribute("data-kp-width", handWidth);
+      if (handWidth === null) button5.removeAttribute("data-kp-width");
+      else button5.setAttribute("data-kp-width", handWidth);
     }
-    setState(button4, w, "rest");
+    setState(button5, w, "rest");
   }, ms);
   return { ok, word, line };
 }
-async function post(button4) {
-  const url = button4.getAttribute("data-kp-post") ?? "";
-  const method = (button4.getAttribute("data-kp-method") ?? "POST").toUpperCase();
-  const body = button4.getAttribute("data-kp-post-body");
+async function post(button5) {
+  const url = button5.getAttribute("data-kp-post") ?? "";
+  const method = (button5.getAttribute("data-kp-method") ?? "POST").toUpperCase();
+  const body = button5.getAttribute("data-kp-post-body");
   const response = await fetch(url, {
     method,
     headers: body ? { "content-type": "application/json" } : {},
@@ -53152,39 +53152,39 @@ async function post(button4) {
   } catch {
   }
   if (!response.ok) return { error: json?.error ?? (response.statusText || `HTTP ${response.status}`), remedy: json?.remedy };
-  const reload = attr3(button4, "data-kp-reload", "none");
+  const reload = attr3(button5, "data-kp-reload", "none");
   if (reload === "page") window.setTimeout(() => location.reload(), 600);
   else if (reload === "region")
-    button4.dispatchEvent(
-      new CustomEvent(FLASH_RELOAD_EVENT, { bubbles: true, detail: { target: button4.getAttribute("data-kp-reload-target") } })
+    button5.dispatchEvent(
+      new CustomEvent(FLASH_RELOAD_EVENT, { bubbles: true, detail: { target: button5.getAttribute("data-kp-reload-target") } })
     );
   return typeof json?.message === "string" ? { line: json.message } : void 0;
 }
 function attachFlashButtons(root = document, options = {}) {
   const cleanups = [];
   for (const found of root.querySelectorAll(FLASH_BUTTON)) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement} */
       found
     );
-    if (wired2.has(button4)) continue;
-    const w = wire7(button4, options);
+    if (wired2.has(button5)) continue;
+    const w = wire7(button5, options);
     const onClick = (event) => {
-      if (!button4.hasAttribute("data-kp-post")) return;
+      if (!button5.hasAttribute("data-kp-post")) return;
       event.preventDefault();
-      void runFlashButton(button4, () => post(button4), options);
+      void runFlashButton(button5, () => post(button5), options);
     };
     const guard = (event) => {
-      if (w.running || button4.getAttribute("aria-disabled") === "true") {
+      if (w.running || button5.getAttribute("aria-disabled") === "true") {
         event.stopImmediatePropagation();
         event.preventDefault();
       }
     };
-    button4.addEventListener("click", guard, true);
-    button4.addEventListener("click", onClick);
+    button5.addEventListener("click", guard, true);
+    button5.addEventListener("click", onClick);
     cleanups.push(() => {
-      button4.removeEventListener("click", guard, true);
-      button4.removeEventListener("click", onClick);
+      button5.removeEventListener("click", guard, true);
+      button5.removeEventListener("click", onClick);
       w.off();
     });
   }
@@ -53204,9 +53204,9 @@ var init_flash = __esm({
     FLASH_MS = 1500;
     FLASH_ERROR_MS = 3e3;
     wired2 = /* @__PURE__ */ new WeakMap();
-    attr3 = (button4, name, fallback2) => button4.getAttribute(name) ?? fallback2;
-    num2 = (button4, name, fallback2) => {
-      const n = Number.parseInt(button4.getAttribute(name) ?? "", 10);
+    attr3 = (button5, name, fallback2) => button5.getAttribute(name) ?? fallback2;
+    num2 = (button5, name, fallback2) => {
+      const n = Number.parseInt(button5.getAttribute(name) ?? "", 10);
       return Number.isFinite(n) && n >= 0 ? n : fallback2;
     };
   }
@@ -53683,7 +53683,7 @@ function wire9(el16) {
     doc.defaultView
   );
   const s2 = () => getStrings();
-  const make27 = (tag, className) => {
+  const make28 = (tag, className) => {
     const node = doc.createElement(tag);
     node.className = className;
     return node;
@@ -53705,21 +53705,21 @@ function wire9(el16) {
   };
   el16.classList.add("kp-connection");
   el16.hidden = true;
-  const band = make27("div", "kp-alert kp-connection__band");
-  const mark = make27("span", "kp-connection__mark");
+  const band = make28("div", "kp-alert kp-connection__band");
+  const mark = make28("span", "kp-connection__mark");
   mark.setAttribute("aria-hidden", "true");
-  const body = make27("div", "kp-alert__body kp-connection__body");
-  const title = make27("strong", "kp-connection__title");
-  const why = make27("span", "kp-connection__why");
-  const meta = make27("span", "kp-connection__meta");
+  const body = make28("div", "kp-alert__body kp-connection__body");
+  const title = make28("strong", "kp-connection__title");
+  const why = make28("span", "kp-connection__why");
+  const meta = make28("span", "kp-connection__meta");
   body.append(title, why, meta);
   const retry = (
     /** @type {HTMLButtonElement} */
-    make27("button", "kp-button kp-connection__retry")
+    make28("button", "kp-button kp-connection__retry")
   );
   retry.type = "button";
   band.append(mark, body, retry);
-  const voice = make27("span", "kp-sr-only");
+  const voice = make28("span", "kp-sr-only");
   voice.setAttribute("role", "status");
   el16.replaceChildren(band, voice);
   if (el16.getAttribute("data-kp-placement") !== "top") el16.setAttribute("data-kp-placement", "bottom");
@@ -53760,7 +53760,7 @@ function wire9(el16) {
     band.classList.toggle("kp-alert--success", state6 === "back");
     band.classList.toggle("kp-alert--destructive", state6 === "refused");
     mark.replaceChildren();
-    if (state6 === "reconnecting") mark.append(make27("span", "kp-spinner"));
+    if (state6 === "reconnecting") mark.append(make28("span", "kp-spinner"));
     else mark.textContent = state6 === "back" ? "\u2713" : "!";
     const t = s2();
     const text = state6 === "offline" ? [t.connOffline, t.connOfflineWhy] : state6 === "reconnecting" ? [t.connReconnecting, attempt > 1 ? t.connAttempt(attempt) : t.connReconnectingWhy] : state6 === "back" ? [t.connBack, pending5 > 0 ? t.connBackSending(pending5) : t.connBackWhy] : [t.connRefused, refusedWhy || t.connRefusedWhy];
@@ -54479,10 +54479,10 @@ function attachOne7(area) {
   let copyTimer;
   let escaped = false;
   let lastCaret = "";
-  const field = area.closest(".kp-field");
+  const field2 = area.closest(".kp-field");
   const holder = (
     /** @type {HTMLElement | null} */
-    field?.querySelector("[data-kp-field-error]") ?? null
+    field2?.querySelector("[data-kp-field-error]") ?? null
   );
   const lineHeight = () => {
     const n = Number.parseFloat(view?.getComputedStyle(area).lineHeight ?? "");
@@ -54567,7 +54567,7 @@ function attachOne7(area) {
       if (broken) area.setAttribute("aria-invalid", "true");
       else area.removeAttribute("aria-invalid");
     }
-    field?.classList.toggle("kp-field--invalid", broken);
+    field2?.classList.toggle("kp-field--invalid", broken);
     drawGutter();
     if (before?.message !== problem?.message || before?.line !== problem?.line || before?.column !== problem?.column || before === null !== (problem === null))
       area.dispatchEvent(
@@ -54638,15 +54638,15 @@ function attachOne7(area) {
     escaped = false;
   };
   const onTool = async (event) => {
-    const button4 = event.target instanceof Element ? (
+    const button5 = event.target instanceof Element ? (
       /** @type {HTMLButtonElement | null} */
       event.target.closest("[data-kp-code-tool]")
     ) : null;
-    if (!button4 || button4.disabled) return;
-    if (button4.dataset.kpCodeTool === "wrap") {
+    if (!button5 || button5.disabled) return;
+    if (button5.dataset.kpCodeTool === "wrap") {
       wrap = !wrap;
       root.setAttribute("data-kp-json-wrap", String(wrap));
-      button4.setAttribute("aria-pressed", String(wrap));
+      button5.setAttribute("aria-pressed", String(wrap));
       drawGutter();
       grow();
     } else {
@@ -55290,8 +55290,8 @@ var init_list = __esm({
     init_parse();
     TimeList = class {
       /** @param {TimeField} field */
-      constructor(field) {
-        this.field = field;
+      constructor(field2) {
+        this.field = field2;
         this.popup = /** @type {HTMLElement} */
         /** @type {unknown} */
         null;
@@ -55339,7 +55339,7 @@ var init_list = __esm({
       /** One option of the list. @param {TimeEntry} item @param {number} index */
       buildOption(item, index) {
         const s2 = getStrings();
-        const { field, popup } = this;
+        const { field: field2, popup } = this;
         const o = (
           /** @type {HTMLElement} */
           el9("kp-combobox__option kp-time__option", "li")
@@ -55347,7 +55347,7 @@ var init_list = __esm({
         o.id = `${popup.id}-o${index}`;
         o.setAttribute("role", "option");
         o.setAttribute("data-kp-time-pick", item.value);
-        o.setAttribute("aria-selected", String(item.value === field.value && item.kind === "time"));
+        o.setAttribute("aria-selected", String(item.value === field2.value && item.kind === "time"));
         o.tabIndex = -1;
         const t = el9("kp-time__option-time", "span");
         t.textContent = item.kind === "clear" ? s2.timeNone : item.value;
@@ -55357,7 +55357,7 @@ var init_list = __esm({
           n.textContent = s2.timeNow;
           o.append(n);
         }
-        const near2 = item.kind === "time" ? nearOf(field.root, item.value) : null;
+        const near2 = item.kind === "time" ? nearOf(field2.root, item.value) : null;
         if (near2) {
           o.setAttribute("data-kp-time-near-mark", "");
           const n = el9("kp-time__option-note", "span");
@@ -55386,18 +55386,18 @@ var init_list = __esm({
       /** Draw the list for the current value. */
       draw() {
         const s2 = getStrings();
-        const { field, popup } = this;
+        const { field: field2, popup } = this;
         popup.replaceChildren();
         const sheetTitle = el9("kp-time__sheet-title", "p");
-        sheetTitle.textContent = field.input.getAttribute("aria-label") ?? s2.timeChoose;
+        sheetTitle.textContent = field2.input.getAttribute("aria-label") ?? s2.timeChoose;
         popup.append(sheetTitle);
-        const presets = field.presets;
+        const presets = field2.presets;
         if (presets === "loading" || presets === "error" || Array.isArray(presets) && presets.length) popup.append(this.buildPresets(presets));
         const list = el9("kp-time__list", "ul");
         list.setAttribute("role", "listbox");
         list.setAttribute("aria-label", s2.timeList);
         list.id = `${popup.id}-list`;
-        const items = entries2(field.root);
+        const items = entries2(field2.root);
         items.forEach((item, index) => list.append(this.buildOption(item, index)));
         popup.append(list);
         const best = this.nearestIndex(items);
@@ -55406,7 +55406,7 @@ var init_list = __esm({
       }
       /** Mark the active option and, when asked or on the first time, scroll it to the middle. @param {boolean} [scroll] */
       markActive(scroll = true) {
-        const { field, popup } = this;
+        const { field: field2, popup } = this;
         const options = (
           /** @type {HTMLElement[]} */
           [...popup.querySelectorAll(".kp-time__option")]
@@ -55417,10 +55417,10 @@ var init_list = __esm({
         });
         const at = options[this.active];
         if (!at) {
-          field.input.removeAttribute("aria-activedescendant");
+          field2.input.removeAttribute("aria-activedescendant");
           return;
         }
-        field.input.setAttribute("aria-activedescendant", at.id);
+        field2.input.setAttribute("aria-activedescendant", at.id);
         const list = (
           /** @type {HTMLElement} */
           popup.querySelector(".kp-time__list")
@@ -55428,7 +55428,7 @@ var init_list = __esm({
         if (scroll || !list.hasAttribute("data-kp-time-placed")) {
           list.setAttribute("data-kp-time-placed", "");
           const top = at.offsetTop - list.clientHeight / 2 + at.offsetHeight / 2;
-          list.scrollTo({ top: Math.max(0, top), behavior: scroll && motionAllowed(field.root) ? "smooth" : "auto" });
+          list.scrollTo({ top: Math.max(0, top), behavior: scroll && motionAllowed(field2.root) ? "smooth" : "auto" });
         }
       }
       /** Place the list: a sheet at the foot of a narrow screen, else under (or over) the field. @param {HTMLElement} popup */
@@ -55453,28 +55453,28 @@ var init_list = __esm({
         popup.style.setProperty("width", `${Math.max(r.width, POPUP_MIN_WIDTH_PX)}px`);
       }
       show() {
-        const { field, popup } = this;
-        if (this.open || attr4(field.root, "popup", "list") === "none" || field.input.disabled) return;
+        const { field: field2, popup } = this;
+        if (this.open || attr4(field2.root, "popup", "list") === "none" || field2.input.disabled) return;
         this.open = true;
         this.draw();
         popup.hidden = false;
-        field.input.setAttribute("aria-expanded", "true");
-        field.root.setAttribute("data-kp-open", "");
+        field2.input.setAttribute("aria-expanded", "true");
+        field2.root.setAttribute("data-kp-open", "");
         this.lower = raiseOverlay(popup, (p) => this.place(p));
         this.markActive(false);
       }
       /** @param {{ focus?: boolean }} [options] */
       close({ focus = false } = {}) {
-        const { field, popup } = this;
+        const { field: field2, popup } = this;
         if (!this.open) return;
         this.open = false;
         this.lower?.();
         this.lower = null;
         popup.hidden = true;
-        field.input.setAttribute("aria-expanded", "false");
-        field.input.removeAttribute("aria-activedescendant");
-        field.root.removeAttribute("data-kp-open");
-        if (focus) field.input.focus();
+        field2.input.setAttribute("aria-expanded", "false");
+        field2.input.removeAttribute("aria-activedescendant");
+        field2.root.removeAttribute("data-kp-open");
+        if (focus) field2.input.focus();
       }
     };
   }
@@ -55484,10 +55484,10 @@ var init_list = __esm({
 function fieldFor(root) {
   const known4 = FIELDS.get(root);
   if (known4) return known4;
-  const field = new TimeField(root);
-  field.build();
-  FIELDS.set(root, field);
-  return field;
+  const field2 = new TimeField(root);
+  field2.build();
+  FIELDS.set(root, field2);
+  return field2;
 }
 var TimeField;
 var init_field = __esm({
@@ -55666,30 +55666,30 @@ var init_field = __esm({
 });
 
 // js/timefield/keys.js
-function onEnter(field, event) {
-  const { list, input } = field;
+function onEnter(field2, event) {
+  const { list, input } = field2;
   if (list.open) {
     event.preventDefault();
     const option = (
       /** @type {HTMLElement | undefined} */
       [...list.popup.querySelectorAll(".kp-time__option")][list.active]
     );
-    if (option) field.pick(option.getAttribute("data-kp-time-pick") ?? "");
+    if (option) field2.pick(option.getAttribute("data-kp-time-pick") ?? "");
     return;
   }
-  if (!field.commitText(input.value)) event.preventDefault();
+  if (!field2.commitText(input.value)) event.preventDefault();
 }
-function onEscape(field, event) {
-  if (!field.list.open) return;
+function onEscape(field2, event) {
+  if (!field2.list.open) return;
   event.preventDefault();
   event.stopPropagation();
-  field.list.close({ focus: true });
+  field2.list.close({ focus: true });
 }
-function stepValue(field, event, up) {
-  const { root, input } = field;
+function stepValue(field2, event, up) {
+  const { root, input } = field2;
   const amount = event.key.startsWith("Page") || event.shiftKey ? MINUTES_PER_HOUR : stepOf(root);
   const typed = parseTimeOfDay(input.value, { seconds: hasSeconds(root) });
-  const from = typed ? typed.value : field.value;
+  const from = typed ? typed.value : field2.value;
   const result = stepTime(from, up ? 1 : -1, amount);
   const min = root.getAttribute("data-kp-time-min");
   const max = root.getAttribute("data-kp-time-max");
@@ -55701,30 +55701,30 @@ function stepValue(field, event, up) {
       tries += 1;
     }
   }
-  field.setInvalid("");
-  field.write(hasSeconds(root) ? `${next2}:00` : next2);
+  field2.setInvalid("");
+  field2.write(hasSeconds(root) ? `${next2}:00` : next2);
   input.select();
-  if (result.wrapped) field.say(up ? getStrings().timeWrappedNext(next2) : getStrings().timeWrappedPrevious(next2));
+  if (result.wrapped) field2.say(up ? getStrings().timeWrappedNext(next2) : getStrings().timeWrappedPrevious(next2));
 }
-function onKey4(field, event) {
-  if (event.key === "Enter") return onEnter(field, event);
-  if (event.key === "Escape") return onEscape(field, event);
+function onKey4(field2, event) {
+  if (event.key === "Enter") return onEnter(field2, event);
+  if (event.key === "Escape") return onEscape(field2, event);
   if (event.key === "ArrowDown" && event.altKey) {
     event.preventDefault();
-    return field.list.show();
+    return field2.list.show();
   }
   const up = event.key === "ArrowUp" || event.key === "PageUp";
   const down = event.key === "ArrowDown" || event.key === "PageDown";
   if (!up && !down) return;
   event.preventDefault();
-  const { list } = field;
+  const { list } = field2;
   if (list.open && event.key.startsWith("Arrow")) {
     const options = list.popup.querySelectorAll(".kp-time__option");
     list.active = Math.max(0, Math.min(options.length - 1, list.active + (down ? 1 : -1)));
     list.markActive();
     return;
   }
-  stepValue(field, event, up);
+  stepValue(field2, event, up);
 }
 var init_keys8 = __esm({
   "js/timefield/keys.js"() {
@@ -55770,21 +55770,21 @@ var init_controller9 = __esm({
       connect() {
         const root = this.host;
         const initial = root.getAttribute("data-kp-value") ?? "";
-        const field = this.field = fieldFor(root);
+        const field2 = this.field = fieldFor(root);
         const remembered = memoryFor(root, "time")?.read("value", null);
         const start = initial || (typeof remembered === "string" ? remembered : "");
         const parsed = start ? parseTimeOfDay(start, { seconds: hasSeconds(root) }) : null;
-        field.write(parsed ? parsed.value : "", { silent: true });
-        field.sync();
+        field2.write(parsed ? parsed.value : "", { silent: true });
+        field2.sync();
         this.own(attachDisabledReasons(root));
-        this.own(() => field.list.close());
+        this.own(() => field2.list.close());
         this.watchAttributes();
         const doc = root.ownerDocument;
         this.listen(doc, "pointerdown", (event) => this.onOutside(
           /** @type {PointerEvent} */
           event
         ), true);
-        this.listen(field.list.popup, "pointerdown", (event) => this.onPopupDown(
+        this.listen(field2.list.popup, "pointerdown", (event) => this.onPopupDown(
           /** @type {PointerEvent} */
           event
         ));
@@ -55797,36 +55797,36 @@ var init_controller9 = __esm({
           /** @type {MouseEvent} */
           event
         ));
-        this.listen(field.input, "paste", (event) => this.onPaste(
+        this.listen(field2.input, "paste", (event) => this.onPaste(
           /** @type {ClipboardEvent} */
           event
         ));
-        this.listen(field.input, "keydown", (event) => onKey4(
-          field,
+        this.listen(field2.input, "keydown", (event) => onKey4(
+          field2,
           /** @type {KeyboardEvent} */
           event
         ));
-        this.listen(field.input, "input", () => this.onInput());
+        this.listen(field2.input, "input", () => this.onInput());
       }
       /** Every option is live: presets and the list's entries follow their attributes. */
       watchAttributes() {
-        const { field, host } = this;
+        const { field: field2, host } = this;
         const observer = this.observe(
           new MutationObserver(() => {
-            field.sync();
-            if (Array.isArray(field.presets) || field.presets.length === 0) field.presets = presetsFromAttribute(host);
-            if (field.list.open) field.list.draw();
+            field2.sync();
+            if (Array.isArray(field2.presets) || field2.presets.length === 0) field2.presets = presetsFromAttribute(host);
+            if (field2.list.open) field2.list.draw();
           })
         );
         observer.observe(host, { attributes: true, attributeFilter: WATCHED4 });
       }
       /** Digits typed fast: 0230 becomes 02:30 as the fourth digit arrives; an open list follows the typed time. */
       onInput() {
-        const { field, host } = this;
-        const { input, list } = field;
+        const { field: field2, host } = this;
+        const { input, list } = field2;
         const v = input.value;
         if (new RegExp(`^\\d{${BARE_DIGITS}}$`).test(v)) input.value = `${v.slice(0, 2)}:${v.slice(2)}`;
-        if (field.invalid) field.setInvalid("");
+        if (field2.invalid) field2.setInvalid("");
         if (!list.open) return;
         const p = parseTimeOfDay(input.value, { seconds: hasSeconds(host) });
         if (!p) return;
@@ -55854,17 +55854,17 @@ var init_controller9 = __esm({
         return best;
       }
       onBlur() {
-        const { field, host } = this;
-        if (field.list.open) return;
-        if (field.input.value.trim() !== field.value || field.invalid) field.commitText(field.input.value);
-        else if (field.input.value.trim() === "" && host.hasAttribute("data-kp-time-required") && host.hasAttribute("data-kp-time-touched"))
-          field.setInvalid(getStrings().timeRequired);
+        const { field: field2, host } = this;
+        if (field2.list.open) return;
+        if (field2.input.value.trim() !== field2.value || field2.invalid) field2.commitText(field2.input.value);
+        else if (field2.input.value.trim() === "" && host.hasAttribute("data-kp-time-required") && host.hasAttribute("data-kp-time-touched"))
+          field2.setInvalid(getStrings().timeRequired);
         host.setAttribute("data-kp-time-touched", "");
       }
       /** @param {MouseEvent} event */
       onClick(event) {
-        const { field, host } = this;
-        const { list, input } = field;
+        const { field: field2, host } = this;
+        const { list, input } = field2;
         const t = event.target instanceof Element ? event.target : null;
         if (!t) return;
         if (t.closest(".kp-time__toggle")) {
@@ -55876,7 +55876,7 @@ var init_controller9 = __esm({
           return;
         }
         const choice = t.closest("[data-kp-time-pick]");
-        if (choice && list.popup.contains(choice)) return field.pick(choice.getAttribute("data-kp-time-pick") ?? "");
+        if (choice && list.popup.contains(choice)) return field2.pick(choice.getAttribute("data-kp-time-pick") ?? "");
         if (t.closest("[data-kp-time-retry]")) {
           host.dispatchEvent(new CustomEvent(TIME_RETRY_EVENT, { bubbles: true }));
           return;
@@ -55922,22 +55922,22 @@ var init_controller9 = __esm({
 // js/timefield/api.js
 function setTime(root, value, { fire: fire2 = false } = {}) {
   if (!(root instanceof HTMLElement)) return;
-  const field = fieldFor(root);
-  field.setInvalid("");
-  field.write(value, { silent: !fire2 });
+  const field2 = fieldFor(root);
+  field2.setInvalid("");
+  field2.write(value, { silent: !fire2 });
 }
 function timeValue(root) {
   return FIELDS.get(root)?.value ?? "";
 }
 function timeValid(root) {
-  const field = FIELDS.get(root);
-  if (!field) return true;
-  return field.invalid === "" && !(root.hasAttribute("data-kp-time-required") && field.value === "");
+  const field2 = FIELDS.get(root);
+  if (!field2) return true;
+  return field2.invalid === "" && !(root.hasAttribute("data-kp-time-required") && field2.value === "");
 }
 function setTimePresets(root, presets) {
-  const field = fieldFor(root);
-  field.presets = presets;
-  if (field.list.open) field.list.draw();
+  const field2 = fieldFor(root);
+  field2.presets = presets;
+  if (field2.list.open) field2.list.draw();
 }
 var attachTimes;
 var init_api11 = __esm({
@@ -56109,15 +56109,15 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     quick.hidden = presets.length === 0;
     const quickButtons = /* @__PURE__ */ new Map();
     for (const name of presets) {
-      const button4 = doc.createElement("button");
-      button4.type = "button";
-      button4.className = "kp-button kp-button--ghost kp-button--sm kp-weekdays__preset";
-      button4.dataset.kpWeekdaysPreset = name;
-      button4.disabled = disabled2;
-      button4.setAttribute("aria-pressed", "false");
-      button4.textContent = name === "weekdays" ? s2.weekdaysPresetWeekdays : name === "weekend" ? s2.weekdaysPresetWeekend : s2.weekdaysPresetEvery;
-      quick.append(button4);
-      quickButtons.set(name, button4);
+      const button5 = doc.createElement("button");
+      button5.type = "button";
+      button5.className = "kp-button kp-button--ghost kp-button--sm kp-weekdays__preset";
+      button5.dataset.kpWeekdaysPreset = name;
+      button5.disabled = disabled2;
+      button5.setAttribute("aria-pressed", "false");
+      button5.textContent = name === "weekdays" ? s2.weekdaysPresetWeekdays : name === "weekend" ? s2.weekdaysPresetWeekend : s2.weekdaysPresetEvery;
+      quick.append(button5);
+      quickButtons.set(name, button5);
     }
     el16.replaceChildren(group, quick, summary2, why, reason);
     setSegmentedItems(group, items);
@@ -56145,12 +56145,12 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
       el16.toggleAttribute("data-kp-invalid", !ok);
       if (!ok) el16.setAttribute("aria-invalid", "true");
       else el16.removeAttribute("aria-invalid");
-      for (const [name, button4] of quickButtons) {
+      for (const [name, button5] of quickButtons) {
         const set2 = SETS[
           /** @type {keyof typeof SETS} */
           name
         ];
-        button4.setAttribute("aria-pressed", String(!month && set2.length === have.length && set2.every((d) => have.includes(d))));
+        button5.setAttribute("aria-pressed", String(!month && set2.length === have.length && set2.every((d) => have.includes(d))));
       }
     };
     const set = (next2) => {
@@ -56170,13 +56170,13 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
       change2(true);
     };
     const onPreset = (event) => {
-      const button4 = event.target instanceof Element ? event.target.closest("[data-kp-weekdays-preset]") : null;
-      if (!(button4 instanceof HTMLButtonElement) || button4.disabled || !quick.contains(button4)) return;
+      const button5 = event.target instanceof Element ? event.target.closest("[data-kp-weekdays-preset]") : null;
+      if (!(button5 instanceof HTMLButtonElement) || button5.disabled || !quick.contains(button5)) return;
       const name = (
         /** @type {keyof typeof SETS} */
-        button4.dataset.kpWeekdaysPreset
+        button5.dataset.kpWeekdaysPreset
       );
-      const same = button4.getAttribute("aria-pressed") === "true";
+      const same = button5.getAttribute("aria-pressed") === "true";
       set(same ? [] : SETS[name]);
       change2(true);
     };
@@ -56274,7 +56274,7 @@ function attachOne9(root) {
   const id = root.id || (root.id = `kp-quiet-${serial7 += 1}`);
   root.classList.add("kp-quiet");
   root.setAttribute("role", "group");
-  const make27 = (className, tag = "div") => {
+  const make28 = (className, tag = "div") => {
     const node = doc.createElement(tag);
     node.className = className;
     return node;
@@ -56285,55 +56285,55 @@ function attachOne9(root) {
   });
   const onLabel = (
     /** @type {HTMLLabelElement} */
-    make27("kp-switch kp-quiet__on", "label")
+    make28("kp-switch kp-quiet__on", "label")
   );
   const onInput = (
     /** @type {HTMLInputElement} */
-    make27("kp-switch__input", "input")
+    make28("kp-switch__input", "input")
   );
   onInput.type = "checkbox";
   onInput.setAttribute("role", "switch");
-  const onWords = make27("kp-quiet__on-label", "span");
+  const onWords = make28("kp-quiet__on-label", "span");
   onLabel.append(onInput, onWords);
-  const body = make27("kp-quiet__body");
-  const field = (name, text, control) => {
-    const row = make27(`kp-quiet__field kp-quiet__field--${name}`);
-    const label = make27("kp-quiet__label kp-field__label", "span");
+  const body = make28("kp-quiet__body");
+  const field2 = (name, text, control) => {
+    const row = make28(`kp-quiet__field kp-quiet__field--${name}`);
+    const label = make28("kp-quiet__label kp-field__label", "span");
     label.id = `${id}-${name}`;
     label.textContent = text;
     row.append(label, control);
     return row;
   };
-  const fromBox = make27("kp-time");
+  const fromBox = make28("kp-time");
   fromBox.setAttribute("data-kp-time", "");
   fromBox.setAttribute("data-kp-name", `${id}-from`);
-  const toBox = make27("kp-time");
+  const toBox = make28("kp-time");
   toBox.setAttribute("data-kp-time", "");
   toBox.setAttribute("data-kp-name", `${id}-to`);
-  const dayBox = make27("kp-weekdays");
+  const dayBox = make28("kp-weekdays");
   dayBox.setAttribute("data-kp-weekdays", "");
   dayBox.setAttribute("data-kp-presets", "weekdays,weekend,every");
-  const through = make27("kp-quiet__through");
+  const through = make28("kp-quiet__through");
   through.setAttribute("role", "group");
   const rows = [
-    field("from", s2.quietFrom, fromBox),
-    field("to", s2.quietTo, toBox),
-    field("days", s2.quietDays, dayBox),
-    field("through", s2.quietThroughLabel, through)
+    field2("from", s2.quietFrom, fromBox),
+    field2("to", s2.quietTo, toBox),
+    field2("days", s2.quietDays, dayBox),
+    field2("through", s2.quietThroughLabel, through)
   ];
   through.setAttribute("aria-labelledby", `${id}-through`);
-  const problem = make27("kp-quiet__problem kp-field__error", "p");
+  const problem = make28("kp-quiet__problem kp-field__error", "p");
   problem.id = `${id}-problem`;
   problem.hidden = true;
   body.append(...rows, problem);
-  const summary2 = make27("kp-quiet__summary", "p");
+  const summary2 = make28("kp-quiet__summary", "p");
   summary2.id = `${id}-summary`;
   summary2.setAttribute("aria-live", "polite");
-  const reason = make27("kp-quiet__reason kp-field__help", "p");
+  const reason = make28("kp-quiet__reason kp-field__help", "p");
   reason.hidden = true;
-  const wait = make27("kp-quiet__wait");
+  const wait = make28("kp-quiet__wait");
   wait.setAttribute("aria-hidden", "true");
-  for (let i = 0; i < 4; i += 1) wait.append(make27("kp-skeleton kp-quiet__bone", "span"));
+  for (let i = 0; i < 4; i += 1) wait.append(make28("kp-skeleton kp-quiet__bone", "span"));
   root.replaceChildren(onLabel, body, summary2, reason, wait);
   let value = readQuiet(root.getAttribute("data-kp-value") ?? DEFAULT);
   const checks = () => (
@@ -56343,15 +56343,15 @@ function attachOne9(root) {
   const drawSeverities = () => {
     through.replaceChildren(
       ...severities().map(({ key, label }) => {
-        const row = make27("kp-field__option kp-quiet__severity", "label");
+        const row = make28("kp-field__option kp-quiet__severity", "label");
         const box = (
           /** @type {HTMLInputElement} */
-          make27("kp-field__check", "input")
+          make28("kp-field__check", "input")
         );
         box.type = "checkbox";
         box.value = key;
         box.checked = value.through.includes(key);
-        const words2 = make27("kp-field__option-title", "span");
+        const words2 = make28("kp-field__option-title", "span");
         words2.textContent = label;
         row.append(box, words2);
         return row;
@@ -56517,68 +56517,68 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
   ];
   const countdown = spec.countdown ?? "ring";
   const expiredMode = spec.expired ?? "keep";
-  const make27 = (tag, className, text = "") => {
+  const make28 = (tag, className, text = "") => {
     const node = doc.createElement(tag);
     node.className = className;
     if (text) node.textContent = text;
     return node;
   };
-  const card = make27("article", "kp-question kp-alert kp-alert--warning");
+  const card = make28("article", "kp-question kp-alert kp-alert--warning");
   card.id ||= `kp-question-${spec.id}`;
   card.tabIndex = 0;
   card.setAttribute("role", "group");
   card.setAttribute("data-kp-key", spec.id);
   card.setAttribute("data-kp-measure", countdown);
-  const head = make27("div", "kp-question__head");
-  const title = make27("strong", "kp-question__title", spec.question);
+  const head = make28("div", "kp-question__head");
+  const title = make28("strong", "kp-question__title", spec.question);
   title.id = `${card.id}-title`;
   card.setAttribute("aria-labelledby", title.id);
   head.append(title);
-  if (spec.text) head.append(make27("span", "kp-question__text", spec.text));
-  const time = make27("div", "kp-question__time");
-  const left = make27("span", "kp-question__left");
+  if (spec.text) head.append(make28("span", "kp-question__text", spec.text));
+  const time = make28("div", "kp-question__time");
+  const left = make28("span", "kp-question__left");
   const fallback2 = answers.find((a) => a.value === spec.defaultAnswer);
-  const ifNobody = make27("span", "kp-question__default", fallback2 ? s2().questionDefault(fallback2.label) : "");
+  const ifNobody = make28("span", "kp-question__default", fallback2 ? s2().questionDefault(fallback2.label) : "");
   let measure = null;
   if (countdown === "bar") {
-    measure = make27("span", "kp-question__bar");
+    measure = make28("span", "kp-question__bar");
     measure.setAttribute("aria-hidden", "true");
-    measure.append(make27("span", "kp-question__fill"));
+    measure.append(make28("span", "kp-question__fill"));
   } else if (countdown === "ring") {
-    measure = make27("span", "kp-question__ring");
+    measure = make28("span", "kp-question__ring");
     measure.setAttribute("aria-hidden", "true");
     measure.innerHTML = '<svg viewBox="0 0 36 36"><circle class="kp-question__ring-track" cx="18" cy="18" r="15.9155"/><circle class="kp-question__ring-fill" cx="18" cy="18" r="15.9155" pathLength="100"/></svg>';
   }
   time.append(...measure ? [measure] : [], left, ifNobody);
-  const list = make27("div", "kp-question__answers");
+  const list = make28("div", "kp-question__answers");
   const buttons = /* @__PURE__ */ new Map();
   answers.forEach((a, at) => {
-    const row = make27("div", "kp-question__answer");
-    const button4 = (
+    const row = make28("div", "kp-question__answer");
+    const button5 = (
       /** @type {HTMLButtonElement} */
-      make27("button", `kp-button kp-question__button${a.tone === "destructive" ? " kp-button--destructive" : ""}`)
+      make28("button", `kp-button kp-question__button${a.tone === "destructive" ? " kp-button--destructive" : ""}`)
     );
-    button4.type = "button";
-    button4.textContent = a.label;
-    button4.setAttribute("data-kp-value", a.value);
-    button4.setAttribute("aria-keyshortcuts", String(at + 1));
-    const why = make27("span", "kp-question__consequence", a.consequence ?? "");
+    button5.type = "button";
+    button5.textContent = a.label;
+    button5.setAttribute("data-kp-value", a.value);
+    button5.setAttribute("aria-keyshortcuts", String(at + 1));
+    const why = make28("span", "kp-question__consequence", a.consequence ?? "");
     why.id = `${card.id}-c${at}`;
-    if (a.consequence) button4.setAttribute("aria-describedby", why.id);
-    row.append(button4, why);
+    if (a.consequence) button5.setAttribute("aria-describedby", why.id);
+    row.append(button5, why);
     list.append(row);
-    buttons.set(a.value, button4);
+    buttons.set(a.value, button5);
   });
-  const outcome = make27("p", "kp-question__outcome");
+  const outcome = make28("p", "kp-question__outcome");
   outcome.setAttribute("role", "status");
   outcome.hidden = true;
   const dismiss = (
     /** @type {HTMLButtonElement} */
-    make27("button", "kp-button kp-button--sm kp-question__dismiss", s2().questionDismiss)
+    make28("button", "kp-button kp-button--sm kp-question__dismiss", s2().questionDismiss)
   );
   dismiss.type = "button";
   dismiss.hidden = true;
-  const voice = make27("span", "kp-sr-only");
+  const voice = make28("span", "kp-sr-only");
   voice.setAttribute("role", "status");
   card.append(head, time, list, outcome, dismiss, voice);
   let state6 = "waiting";
@@ -56680,8 +56680,8 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
   }
   card.addEventListener("click", (event) => {
     const target = event.target instanceof Element ? event.target : null;
-    const button4 = target?.closest(".kp-question__button");
-    if (button4 instanceof HTMLButtonElement && !button4.disabled) choose3(button4.getAttribute("data-kp-value") ?? "");
+    const button5 = target?.closest(".kp-question__button");
+    if (button5 instanceof HTMLButtonElement && !button5.disabled) choose3(button5.getAttribute("data-kp-value") ?? "");
     else if (target?.closest(".kp-question__dismiss")) {
       card.dispatchEvent(new CustomEvent(QUESTION_DISMISS_EVENT, { bubbles: true, detail: { id: spec.id } }));
       void remove2();
@@ -56801,7 +56801,7 @@ function attachFeeds(root = document, { now = () => Date.now(), timeZone = FEED_
 function wire10(el16, now, zone) {
   const doc = el16.ownerDocument;
   const s2 = () => getStrings();
-  const make27 = (tag, className, text = "") => {
+  const make28 = (tag, className, text = "") => {
     const node = doc.createElement(tag);
     node.className = className;
     if (text) node.textContent = text;
@@ -56816,31 +56816,31 @@ function wire10(el16, now, zone) {
   let lastSaid = 0;
   let drawnDay = "";
   let nextFlip = Infinity;
-  const head = make27("div", "kp-feed__head");
-  const count2 = make27("span", "kp-feed__count");
+  const head = make28("div", "kp-feed__head");
+  const count2 = make28("span", "kp-feed__count");
   const fresh = (
     /** @type {HTMLElement} */
-    make27("time", "kp-ago kp-feed__fresh")
+    make28("time", "kp-ago kp-feed__fresh")
   );
   fresh.setAttribute("data-kp-ago", "");
-  const stale = make27("div", "kp-feed__stale");
-  const staleText = make27("span", "kp-feed__stale-text");
+  const stale = make28("div", "kp-feed__stale");
+  const staleText = make28("span", "kp-feed__stale-text");
   const staleAction = (
     /** @type {HTMLButtonElement} */
-    make27("button", "kp-button kp-button--sm kp-feed__stale-action")
+    make28("button", "kp-button kp-button--sm kp-feed__stale-action")
   );
   staleAction.type = "button";
   staleAction.setAttribute("data-kp-feed-retry", "");
   stale.append(staleText, staleAction);
   head.append(count2, fresh, stale);
-  const body = make27("div", "kp-feed__body");
-  const skeleton2 = make27("div", "kp-feed__skeleton");
+  const body = make28("div", "kp-feed__body");
+  const skeleton2 = make28("div", "kp-feed__skeleton");
   skeleton2.setAttribute("aria-hidden", "true");
-  const list = make27("ol", "kp-feed__list");
-  const state6 = make27("div", "kp-feed__state");
+  const list = make28("ol", "kp-feed__list");
+  const state6 = make28("div", "kp-feed__state");
   body.append(skeleton2, list, state6);
-  const foot = make27("div", "kp-feed__foot");
-  const voice = make27("span", "kp-sr-only");
+  const foot = make28("div", "kp-feed__foot");
+  const voice = make28("span", "kp-sr-only");
   voice.setAttribute("role", "status");
   voice.setAttribute("aria-live", "polite");
   el16.replaceChildren(head, body, foot, voice);
@@ -56881,7 +56881,7 @@ function wire10(el16, now, zone) {
     if (relative) {
       const when2 = (
         /** @type {HTMLElement} */
-        make27("time", "kp-ago kp-feed__when")
+        make28("time", "kp-ago kp-feed__when")
       );
       when2.setAttribute("data-kp-ago-bare", "");
       setAgo(when2, row.at);
@@ -56890,61 +56890,61 @@ function wire10(el16, now, zone) {
       return when2;
     }
     const moment = agoMoment(row.at, zone);
-    const when = make27("time", "kp-feed__when", mode2 === "clock" && grouped ? moment.slice(11) : moment);
+    const when = make28("time", "kp-feed__when", mode2 === "clock" && grouped ? moment.slice(11) : moment);
     when.setAttribute("datetime", iso);
     when.title = moment;
     return when;
   }
   function rowItem2(row, slots, grouped) {
     const t = s2();
-    const li = make27("li", "kp-feed__row");
+    const li = make28("li", "kp-feed__row");
     li.setAttribute("data-kp-key", row.key);
     if (row.state) li.setAttribute("data-state", row.state);
-    const mark = make27("span", "kp-feed__mark");
+    const mark = make28("span", "kp-feed__mark");
     mark.setAttribute("aria-hidden", "true");
-    if (row.state === "running") mark.append(make27("span", "kp-spinner"));
-    const cell = make27("span", "kp-feed__mark-cell");
+    if (row.state === "running") mark.append(make28("span", "kp-spinner"));
+    const cell = make28("span", "kp-feed__mark-cell");
     cell.append(mark);
-    const text = make27("div", "kp-feed__text");
+    const text = make28("div", "kp-feed__text");
     const openable = expandMode() !== "off" && !!row.more?.length;
     const regionId = `${id}-more-${idSeq3 += 1}`;
     let title;
     if (openable) {
       const toggle2 = (
         /** @type {HTMLButtonElement} */
-        make27("button", "kp-feed__toggle")
+        make28("button", "kp-feed__toggle")
       );
       toggle2.type = "button";
       toggle2.setAttribute("aria-expanded", String(open4.has(row.key)));
       toggle2.setAttribute("aria-controls", regionId);
-      toggle2.append(make27("span", "kp-feed__title-text", row.title), make27("span", "kp-feed__chevron"));
+      toggle2.append(make28("span", "kp-feed__title-text", row.title), make28("span", "kp-feed__chevron"));
       title = toggle2;
     } else if (row.href) {
       const link = (
         /** @type {HTMLAnchorElement} */
-        make27("a", "kp-feed__link")
+        make28("a", "kp-feed__link")
       );
       link.href = row.href;
-      link.append(make27("span", "kp-feed__title-text", row.title));
+      link.append(make28("span", "kp-feed__title-text", row.title));
       title = link;
-    } else title = make27("span", "kp-feed__title-text", row.title);
-    const head2 = make27("div", "kp-feed__title");
+    } else title = make28("span", "kp-feed__title-text", row.title);
+    const head2 = make28("div", "kp-feed__title");
     head2.append(title);
     const word = stateWord4(row.state);
-    if (word) head2.append(make27("span", "kp-sr-only", `, ${word}`));
+    if (word) head2.append(make28("span", "kp-sr-only", `, ${word}`));
     text.append(head2);
-    if (row.detail) text.append(make27("div", "kp-feed__detail", row.detail));
+    if (row.detail) text.append(make28("div", "kp-feed__detail", row.detail));
     if (openable) {
-      const region = make27("div", "kp-feed__more");
+      const region = make28("div", "kp-feed__more");
       region.id = regionId;
       region.setAttribute("role", "region");
       region.setAttribute("aria-label", t.feedMoreLabel(row.title));
       region.hidden = !open4.has(row.key);
-      for (const line of row.more ?? []) region.append(make27("div", "kp-feed__line", line));
+      for (const line of row.more ?? []) region.append(make28("div", "kp-feed__line", line));
       if (row.href) {
         const out = (
           /** @type {HTMLAnchorElement} */
-          make27("a", "kp-feed__open", t.feedOpen)
+          make28("a", "kp-feed__open", t.feedOpen)
         );
         out.href = row.href;
         region.append(out);
@@ -56952,18 +56952,18 @@ function wire10(el16, now, zone) {
       text.append(region);
       li.toggleAttribute("data-kp-open", open4.has(row.key));
     }
-    const meta = make27("div", "kp-feed__meta");
+    const meta = make28("div", "kp-feed__meta");
     if (row.actor && actorMode() !== "off") {
-      const actor = make27("span", "kp-feed__actor");
-      const chip = make27("span", "kp-idmark-name kp-idmark-name--wrap");
-      const mk = make27("span", `kp-idmark kp-idmark--xs${["person", "agent"].includes(row.actor.kind ?? "") ? " kp-idmark--round" : ""}`);
+      const actor = make28("span", "kp-feed__actor");
+      const chip = make28("span", "kp-idmark-name kp-idmark-name--wrap");
+      const mk = make28("span", `kp-idmark kp-idmark--xs${["person", "agent"].includes(row.actor.kind ?? "") ? " kp-idmark--round" : ""}`);
       setIdmark(mk, row.actor.name, { slot: slots.get(row.actor.name), title: actorMode() === "mark" });
       if (actorMode() === "mark") {
-        chip.append(mk, make27("span", "kp-sr-only", row.actor.name));
-      } else chip.append(mk, make27("span", "kp-feed__actor-name", row.actor.name));
-      actor.append(make27("span", "kp-sr-only", `${t.feedBy} `), chip);
+        chip.append(mk, make28("span", "kp-sr-only", row.actor.name));
+      } else chip.append(mk, make28("span", "kp-feed__actor-name", row.actor.name));
+      actor.append(make28("span", "kp-sr-only", `${t.feedBy} `), chip);
       meta.append(actor);
-    } else if (actorMode() !== "off") meta.append(make27("span", "kp-feed__actor"));
+    } else if (actorMode() !== "off") meta.append(make28("span", "kp-feed__actor"));
     meta.append(whenCell(row, grouped));
     li.append(cell, text, meta);
     return li;
@@ -56971,15 +56971,15 @@ function wire10(el16, now, zone) {
   function skeletonRows() {
     const out = [];
     for (let day = 0; day < 2; day += 1) {
-      const group2 = make27("div", "kp-feed__skel-group");
-      group2.append(make27("span", "kp-feed__skel-day kp-skeleton"));
+      const group2 = make28("div", "kp-feed__skel-group");
+      group2.append(make28("span", "kp-feed__skel-day kp-skeleton"));
       for (let row = 0; row < 4; row += 1) {
-        const line = make27("div", "kp-feed__skel-row");
+        const line = make28("div", "kp-feed__skel-row");
         line.append(
-          make27("span", "kp-feed__skel-mark kp-skeleton kp-skeleton--circle"),
-          make27("span", "kp-feed__skel-text kp-skeleton"),
-          make27("span", "kp-feed__skel-chip kp-skeleton"),
-          make27("span", "kp-feed__skel-when kp-skeleton")
+          make28("span", "kp-feed__skel-mark kp-skeleton kp-skeleton--circle"),
+          make28("span", "kp-feed__skel-text kp-skeleton"),
+          make28("span", "kp-feed__skel-chip kp-skeleton"),
+          make28("span", "kp-feed__skel-when kp-skeleton")
         );
         group2.append(line);
       }
@@ -57032,23 +57032,23 @@ function wire10(el16, now, zone) {
     list.setAttribute("aria-label", el16.getAttribute("aria-label") ?? t.feedLabel);
     list.replaceChildren(
       ...st === "ready" ? days.map((day) => {
-        const li = make27("li", "kp-feed__group");
+        const li = make28("li", "kp-feed__group");
         if (grouped) {
-          const heading = make27("div", "kp-feed__day");
+          const heading = make28("div", "kp-feed__day");
           heading.setAttribute("role", "heading");
           heading.setAttribute("aria-level", String(level()));
           const failed = day.rows.filter((row) => row.state === "failed").length;
           const iso = new Date(day.at).toISOString();
-          const word = make27("span", "kp-feed__day-word", dayWord(day.at, day.key));
+          const word = make28("span", "kp-feed__day-word", dayWord(day.at, day.key));
           const date = (
             /** @type {HTMLElement} */
-            make27("time", "kp-feed__day-date", agoMoment(day.at, zone).slice(0, 10))
+            make28("time", "kp-feed__day-date", agoMoment(day.at, zone).slice(0, 10))
           );
           date.setAttribute("datetime", iso);
-          heading.append(word, date, make27("span", "kp-feed__day-rule"));
+          heading.append(word, date, make28("span", "kp-feed__day-rule"));
           if (attr16("summary") !== "off")
             heading.append(
-              make27(
+              make28(
                 "span",
                 "kp-feed__day-summary",
                 `${counted(day.rows.length)} \xB7 ${failed ? t.feedFailed(failed) : t.feedAllOk}`
@@ -57056,7 +57056,7 @@ function wire10(el16, now, zone) {
             );
           li.append(heading);
         }
-        const rowList = make27("ol", "kp-feed__rows");
+        const rowList = make28("ol", "kp-feed__rows");
         for (const row of day.rows) rowList.append(rowItem2(row, slots, grouped));
         li.append(rowList);
         return li;
@@ -57095,32 +57095,32 @@ function wire10(el16, now, zone) {
     foot.replaceChildren(
       ...earlier === "more" || earlier === "loading" ? [
         (() => {
-          const button4 = (
+          const button5 = (
             /** @type {HTMLButtonElement} */
-            make27("button", "kp-button kp-feed__earlier")
+            make28("button", "kp-button kp-feed__earlier")
           );
-          button4.type = "button";
-          button4.setAttribute("data-kp-feed-earlier", "");
+          button5.type = "button";
+          button5.setAttribute("data-kp-feed-earlier", "");
           if (earlier === "loading") {
-            button4.setAttribute("aria-busy", "true");
-            button4.disabled = true;
-            button4.append(make27("span", "kp-spinner"), make27("span", "kp-feed__earlier-label", t.feedEarlierLoading));
-          } else button4.append(make27("span", "kp-feed__earlier-label", t.feedEarlier));
-          return button4;
+            button5.setAttribute("aria-busy", "true");
+            button5.disabled = true;
+            button5.append(make28("span", "kp-spinner"), make28("span", "kp-feed__earlier-label", t.feedEarlierLoading));
+          } else button5.append(make28("span", "kp-feed__earlier-label", t.feedEarlier));
+          return button5;
         })(),
-        make27("span", "kp-feed__foot-note", t.feedBackTo(rows.length, total, back))
+        make28("span", "kp-feed__foot-note", t.feedBackTo(rows.length, total, back))
       ] : earlier === "error" ? [
-        make27("span", "kp-feed__foot-note kp-feed__foot-note--error", t.feedEarlierError),
+        make28("span", "kp-feed__foot-note kp-feed__foot-note--error", t.feedEarlierError),
         (() => {
-          const button4 = (
+          const button5 = (
             /** @type {HTMLButtonElement} */
-            make27("button", "kp-button kp-feed__earlier", t.feedEarlierRetry)
+            make28("button", "kp-button kp-feed__earlier", t.feedEarlierRetry)
           );
-          button4.type = "button";
-          button4.setAttribute("data-kp-feed-earlier", "");
-          return button4;
+          button5.type = "button";
+          button5.setAttribute("data-kp-feed-earlier", "");
+          return button5;
         })()
-      ] : earlier === "end" ? [make27("span", "kp-feed__foot-note", t.feedEnd(rows.length, back))] : []
+      ] : earlier === "end" ? [make28("span", "kp-feed__foot-note", t.feedEnd(rows.length, back))] : []
     );
     if (focusKey && focusPart) {
       const again2 = list.querySelector(`[data-kp-key="${CSS.escape(focusKey)}"] ${focusPart}`);
@@ -57925,13 +57925,13 @@ function buildRating(el16, max) {
   live4.setAttribute("aria-live", "polite");
   const { failure, failureText, retry } = buildFailure();
   const name = el16.getAttribute("data-kp-rating-name");
-  const field = name ? Object.assign(make18("input"), { type: "hidden", name }) : null;
+  const field2 = name ? Object.assign(make18("input"), { type: "hidden", name }) : null;
   const foot = make18("span", "kp-rating__foot");
   foot.append(caption, actions);
   const body = make18("span", "kp-rating__body");
-  body.append(row, foot, reason, flash, failure, live4, ...field ? [field] : []);
+  body.append(row, foot, reason, flash, failure, live4, ...field2 ? [field2] : []);
   el16.replaceChildren(body);
-  return { row, stars, caption, actions, clear, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field };
+  return { row, stars, caption, actions, clear, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field: field2 };
 }
 var make18;
 var init_build6 = __esm({
@@ -58450,11 +58450,11 @@ var init_controller11 = __esm({
       /** Clear, Save and Cancel. @param {MouseEvent} event */
       onActions(event) {
         const { clear, save: save2, drop } = this.parts;
-        const button4 = event.target instanceof Element ? event.target.closest("button") : null;
-        if (!button4) return;
-        if (button4 === clear) commit2(this, 0, "clear");
-        else if (button4 === save2) commit2(this, this.draft, "pointer");
-        else if (button4 === drop) {
+        const button5 = event.target instanceof Element ? event.target.closest("button") : null;
+        if (!button5) return;
+        if (button5 === clear) commit2(this, 0, "clear");
+        else if (button5 === save2) commit2(this, this.draft, "pointer");
+        else if (button5 === drop) {
           this.draft = this.value;
           paint14(this);
         }
@@ -58719,27 +58719,27 @@ function hide(m) {
 }
 async function copy2(m) {
   const s2 = getStrings();
-  const button4 = (
+  const button5 = (
     /** @type {HTMLButtonElement | null} */
     m.el.querySelector(".kp-quote__copy")
   );
   try {
     await navigator.clipboard.writeText(m.text);
-    if (button4) {
-      button4.textContent = s2.quoteCopied;
+    if (button5) {
+      button5.textContent = s2.quoteCopied;
       window.clearTimeout(m.copyTimer);
       m.copyTimer = window.setTimeout(() => {
-        button4.textContent = getStrings().quoteCopy;
+        button5.textContent = getStrings().quoteCopy;
       }, 1500);
     }
     say10(m, s2.quoteCopied);
   } catch {
     say10(m, s2.quoteCopyFailed);
-    if (button4) {
-      button4.textContent = s2.quoteCopyFailed;
+    if (button5) {
+      button5.textContent = s2.quoteCopyFailed;
       window.clearTimeout(m.copyTimer);
       m.copyTimer = window.setTimeout(() => {
-        button4.textContent = getStrings().quoteCopy;
+        button5.textContent = getStrings().quoteCopy;
       }, 1500);
     }
   }
@@ -58766,14 +58766,14 @@ function wire11(el16, options) {
   const states3 = attachCardStates(el16);
   render2(m);
   const onClick = (event) => {
-    const button4 = event.target instanceof Element ? event.target.closest("button") : null;
-    if (!button4 || !el16.contains(button4)) return;
-    if (button4.classList.contains("kp-quote__more")) {
+    const button5 = event.target instanceof Element ? event.target.closest("button") : null;
+    if (!button5 || !el16.contains(button5)) return;
+    if (button5.classList.contains("kp-quote__more")) {
       m.expanded = !m.expanded;
       measureFold(m);
       el16.dispatchEvent(new CustomEvent(QUOTE_FOLD_EVENT, { bubbles: true, detail: { expanded: m.expanded } }));
-    } else if (button4.classList.contains("kp-quote__hide")) hide(m);
-    else if (button4.classList.contains("kp-quote__copy")) void copy2(m);
+    } else if (button5.classList.contains("kp-quote__hide")) hide(m);
+    else if (button5.classList.contains("kp-quote__copy")) void copy2(m);
   };
   const onRetry = () => el16.dispatchEvent(new CustomEvent(QUOTE_RETRY_EVENT, { bubbles: true }));
   const onState = () => {
@@ -59390,11 +59390,11 @@ function syncCheck(m) {
             ["not", s2.usualNotToday]
           ]
         ) {
-          const button4 = make20("button", "kp-segmented__item", words2);
-          button4.type = "button";
-          button4.dataset.value = kind;
-          button4.setAttribute("aria-pressed", "false");
-          pair.append(button4);
+          const button5 = make20("button", "kp-segmented__item", words2);
+          button5.type = "button";
+          button5.dataset.value = kind;
+          button5.setAttribute("aria-pressed", "false");
+          pair.append(button5);
         }
         grid2.append(name, pair);
       }
@@ -59454,12 +59454,12 @@ function syncCheck(m) {
         pair.dataset.value ?? ""
       );
       const state6 = answerOf(m, value);
-      for (const button4 of pair.querySelectorAll("button")) {
-        button4.setAttribute("aria-pressed", String(
+      for (const button5 of pair.querySelectorAll("button")) {
+        button5.setAttribute("aria-pressed", String(
           /** @type {HTMLElement} */
-          button4.dataset.value === state6
+          button5.dataset.value === state6
         ));
-        button4.disabled = off;
+        button5.disabled = off;
       }
     }
   } else {
@@ -59580,14 +59580,14 @@ function addName(m, label, nearTo) {
     return;
   }
   const words2 = make20("span", "kp-usual__note-text", s2.usualAddedNote(label));
-  const button4 = make20("button", "kp-button kp-button--ghost kp-button--sm kp-usual__undo", s2.usualUndo);
-  button4.type = "button";
-  button4.setAttribute("aria-label", s2.usualUndoName(label));
-  button4.addEventListener("click", () => {
+  const button5 = make20("button", "kp-button kp-button--ghost kp-button--sm kp-usual__undo", s2.usualUndo);
+  button5.type = "button";
+  button5.setAttribute("aria-label", s2.usualUndoName(label));
+  button5.addEventListener("click", () => {
     undo();
     m.input.focus();
   });
-  m.noteEl.replaceChildren(words2, button4);
+  m.noteEl.replaceChildren(words2, button5);
   m.noteEl.hidden = false;
 }
 var init_add = __esm({
@@ -59814,13 +59814,13 @@ function wire12(box) {
       if (typed) addName(m, typed, null);
       else input.focus();
     } else {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement | null} */
         target?.closest(".kp-usual__check-pair button") ?? null
       );
-      const pair = button4?.closest(".kp-usual__check-pair");
-      if (!button4 || button4.disabled || !(pair instanceof HTMLElement)) return;
-      const kind = button4.dataset.value === "not" ? "not" : "had";
+      const pair = button5?.closest(".kp-usual__check-pair");
+      if (!button5 || button5.disabled || !(pair instanceof HTMLElement)) return;
+      const kind = button5.dataset.value === "not" ? "not" : "had";
       const value = pair.dataset.value ?? "";
       answer(m, value, answerOf(m, value) === kind ? "none" : kind);
     }
@@ -59987,15 +59987,15 @@ var init_usual_picker = __esm({
 });
 
 // js/toggle/group.js
-function toggleGroup(button4) {
+function toggleGroup(button5) {
   const holder = (
     /** @type {HTMLElement | null} */
-    button4.closest("[data-kp-toggle-group]")
+    button5.closest("[data-kp-toggle-group]")
   );
   if (!holder) return null;
   const name = holder.dataset.kpToggleGroup ?? "";
-  const own = holder === button4;
-  const members = own ? [...button4.ownerDocument.querySelectorAll(TOGGLE)].filter((m) => (
+  const own = holder === button5;
+  const members = own ? [...button5.ownerDocument.querySelectorAll(TOGGLE)].filter((m) => (
     /** @type {HTMLElement} */
     m.dataset.kpToggleGroup === name
   )) : [...holder.querySelectorAll(TOGGLE)];
@@ -60104,10 +60104,10 @@ var init_parts3 = __esm({
     COUNT_DIGITS = 2;
     ToggleParts = class extends Controller {
       /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
-      constructor(button4, options = {}) {
-        super(button4, options);
-        this.button = button4;
-        this.doc = button4.ownerDocument;
+      constructor(button5, options = {}) {
+        super(button5, options);
+        this.button = button5;
+        this.doc = button5.ownerDocument;
         this.s = getStrings();
         this.label = null;
         this.mark = null;
@@ -60267,23 +60267,23 @@ var init_parts3 = __esm({
       }
       /** @param {boolean} on */
       setBusy(on) {
-        const button4 = this.button;
+        const button5 = this.button;
         if (!on) {
-          button4.removeAttribute("data-kp-busy");
-          button4.removeAttribute("aria-busy");
-          button4.removeAttribute("aria-disabled");
+          button5.removeAttribute("data-kp-busy");
+          button5.removeAttribute("aria-busy");
+          button5.removeAttribute("aria-disabled");
           this.spinner?.remove();
           this.spinner = null;
           return;
         }
-        button4.setAttribute("data-kp-busy", "");
-        button4.setAttribute("aria-busy", "true");
-        button4.setAttribute("aria-disabled", "true");
+        button5.setAttribute("data-kp-busy", "");
+        button5.setAttribute("aria-busy", "true");
+        button5.setAttribute("aria-disabled", "true");
         if (!this.spinner) {
           this.spinner = made2(this.doc, "kp-button__busy");
           this.spinner.setAttribute("aria-hidden", "true");
           this.spinner.append(made2(this.doc, "kp-spinner"));
-          button4.append(this.spinner);
+          button5.append(this.spinner);
         }
       }
     };
@@ -60299,13 +60299,13 @@ var init_handle4 = __esm({
     init_parts3();
     ToggleAnswers = class extends ToggleParts {
       /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
-      constructor(button4, options = {}) {
-        super(button4, options);
+      constructor(button5, options = {}) {
+        super(button5, options);
         this.pending = null;
         this.refusedTimer = void 0;
         this.handle = {
-          element: button4,
-          state: () => stateOf4(button4),
+          element: button5,
+          state: () => stateOf4(button5),
           set: (next2, how) => this.setValue(next2, how),
           setCount: (n) => this.setCount(n),
           setHint: (text) => this.setHint(text),
@@ -60346,11 +60346,11 @@ var init_handle4 = __esm({
       }
       /** Set the state without the press event; a group keeps its rules. @param {boolean | 'mixed'} next @param {{ silent?: boolean }} [how] */
       setValue(next2, { silent = false } = {}) {
-        const button4 = this.button;
-        const plan = /* @__PURE__ */ new Map([[button4, next2 === "mixed" ? "mixed" : next2 ? "true" : "false"]]);
-        const g = toggleGroup(button4);
+        const button5 = this.button;
+        const plan = /* @__PURE__ */ new Map([[button5, next2 === "mixed" ? "mixed" : next2 ? "true" : "false"]]);
+        const g = toggleGroup(button5);
         if (g && next2 === true && g.mode !== "multi") {
-          for (const m of g.members) if (m !== button4) plan.set(m, "false");
+          for (const m of g.members) if (m !== button5) plan.set(m, "false");
         }
         if (g) withAll(g, plan);
         applyPlan(plan);
@@ -60358,8 +60358,8 @@ var init_handle4 = __esm({
         this.paintClear();
         if (silent) return;
         this.remember();
-        const detail = { button: button4, pressed: stateOf4(button4) === "true", group: g?.name ?? null, pressedKeys: togglePressedKeys(button4), source: "script" };
-        button4.dispatchEvent(new CustomEvent(TOGGLE_CHANGED_EVENT, { bubbles: true, detail }));
+        const detail = { button: button5, pressed: stateOf4(button5) === "true", group: g?.name ?? null, pressedKeys: togglePressedKeys(button5), source: "script" };
+        button5.dispatchEvent(new CustomEvent(TOGGLE_CHANGED_EVENT, { bubbles: true, detail }));
       }
       /** @param {number | 'loading' | null} n */
       setCount(n) {
@@ -60380,12 +60380,12 @@ var init_handle4 = __esm({
       }
       /** The app refused: the states go back and the refusal's word shows for a moment. @param {string} [message] */
       refuse(message) {
-        const button4 = this.button;
+        const button5 = this.button;
         const back = this.pending;
         this.pending = null;
         this.setBusy(false);
         if (back) this.settle(back.before);
-        const word = button4.getAttribute("data-kp-refused-word") ?? this.s.toggleRefused;
+        const word = button5.getAttribute("data-kp-refused-word") ?? this.s.toggleRefused;
         this.showRefused(word, message);
         this.say(message ? `${word}. ${message}` : word);
         window.clearTimeout(this.refusedTimer);
@@ -60410,30 +60410,30 @@ var init_controller12 = __esm({
     init_handle4();
     ToggleControl = class extends ToggleAnswers {
       connect() {
-        const button4 = this.button;
-        if (button4 instanceof HTMLButtonElement && !button4.hasAttribute("type")) this.stamp("type", "button");
+        const button5 = this.button;
+        if (button5 instanceof HTMLButtonElement && !button5.hasAttribute("type")) this.stamp("type", "button");
         this.stamp("aria-pressed", "false");
-        if (!button4.dataset.kpLook) this.stamp("data-kp-look", "button");
+        if (!button5.dataset.kpLook) this.stamp("data-kp-look", "button");
         this.buildParts();
-        const group0 = toggleGroup(button4);
+        const group0 = toggleGroup(button5);
         this.readRemembered(group0);
         this.writeHint();
         queueMicrotask(() => this.paintClear());
-        this.listen(button4, "click", (event) => {
+        this.listen(button5, "click", (event) => {
           event.preventDefault();
-          this.press(button4);
+          this.press(button5);
         });
-        this.listen(button4, "kp-toggle-press", (event) => this.press(button4, Boolean(
+        this.listen(button5, "kp-toggle-press", (event) => this.press(button5, Boolean(
           /** @type {CustomEvent} */
           event.detail?.forceClear
         )));
-        this.listen(button4, "keydown", (event) => this.arrows(
+        this.listen(button5, "keydown", (event) => this.arrows(
           /** @type {KeyboardEvent} */
           event
         ));
         if (group0?.mode === "single") this.rove();
         this.registerKey();
-        this.own(button4.hasAttribute("data-kp-disabled-reason") && button4.parentElement ? attachDisabledReasons(button4.parentElement) : () => void 0);
+        this.own(button5.hasAttribute("data-kp-disabled-reason") && button5.parentElement ? attachDisabledReasons(button5.parentElement) : () => void 0);
         this.own(() => {
           window.clearTimeout(this.sayTimer);
           window.clearTimeout(this.refusedTimer);
@@ -60443,12 +60443,12 @@ var init_controller12 = __esm({
       }
       /** The label, the tick, the count and the hint, each only when the markup asks for it. */
       buildParts() {
-        const button4 = this.button;
-        const hasCount = button4.hasAttribute("data-kp-count");
-        const hasHint = button4.hasAttribute("data-kp-pressed-hint");
-        if (hasCount || hasHint || button4.dataset.kpPressedMark === "check" || button4.hasAttribute("data-kp-toggle-async")) this.ensureLabel();
+        const button5 = this.button;
+        const hasCount = button5.hasAttribute("data-kp-count");
+        const hasHint = button5.hasAttribute("data-kp-pressed-hint");
+        if (hasCount || hasHint || button5.dataset.kpPressedMark === "check" || button5.hasAttribute("data-kp-toggle-async")) this.ensureLabel();
         this.syncMark();
-        this.observe(new MutationObserver(() => this.syncMark())).observe(button4, { attributes: true, attributeFilter: ["data-kp-pressed-mark"] });
+        this.observe(new MutationObserver(() => this.syncMark())).observe(button5, { attributes: true, attributeFilter: ["data-kp-pressed-mark"] });
         this.own(() => this.mark?.remove());
         if (hasCount) {
           this.makeCount();
@@ -60459,35 +60459,35 @@ var init_controller12 = __esm({
           this.own(() => this.hint?.remove());
         }
         if (hasCount) {
-          const raw = button4.getAttribute("data-kp-count");
+          const raw = button5.getAttribute("data-kp-count");
           this.writeCount(raw === "loading" ? "loading" : raw === "" || raw === null || Number.isNaN(Number(raw)) ? null : Number(raw));
         }
         this.writeHint();
-        this.observe(new MutationObserver(() => this.writeHint())).observe(button4, { attributes: true, attributeFilter: ["aria-pressed", "data-kp-pressed-hint"] });
+        this.observe(new MutationObserver(() => this.writeHint())).observe(button5, { attributes: true, attributeFilter: ["aria-pressed", "data-kp-pressed-hint"] });
       }
       /** Remembered state, read before the first press; the All member reads the others once they have all been attached. @param {ReturnType<typeof toggleGroup>} g */
       readRemembered(g) {
-        const button4 = this.button;
+        const button5 = this.button;
         const holder = this.rememberHolder(g);
         const name = holder?.getAttribute("data-kp-remember");
         if (holder && name) {
           const kept = readStore(storeKey(name, "value"));
-          if (holder === button4 && !g?.container && typeof kept === "boolean") button4.setAttribute("aria-pressed", String(kept));
+          if (holder === button5 && !g?.container && typeof kept === "boolean") button5.setAttribute("aria-pressed", String(kept));
           else if (Array.isArray(kept) && g?.container === holder)
-            button4.setAttribute("aria-pressed", kept.includes(toggleKey(button4)) && !button4.hasAttribute("data-kp-toggle-all") ? "true" : stateOf4(button4));
+            button5.setAttribute("aria-pressed", kept.includes(toggleKey(button5)) && !button5.hasAttribute("data-kp-toggle-all") ? "true" : stateOf4(button5));
         }
-        if (g?.all === button4)
+        if (g?.all === button5)
           queueMicrotask(() => {
-            const on = g.members.some((m) => m !== button4 && stateOf4(m) === "true");
-            button4.setAttribute("aria-pressed", String(!on));
+            const on = g.members.some((m) => m !== button5 && stateOf4(m) === "true");
+            button5.setAttribute("aria-pressed", String(!on));
           });
       }
       /** @param {HTMLElement} member @param {boolean} [forceClear] */
       press(member, forceClear = false) {
-        const button4 = this.button;
-        if (member !== button4) return void member.dispatchEvent(new CustomEvent("kp-toggle-press", { detail: { forceClear } }));
-        if (button4.getAttribute("aria-disabled") === "true" || button4.hasAttribute("data-kp-busy") || /** @type {any} */
-        button4.disabled) return;
+        const button5 = this.button;
+        if (member !== button5) return void member.dispatchEvent(new CustomEvent("kp-toggle-press", { detail: { forceClear } }));
+        if (button5.getAttribute("aria-disabled") === "true" || button5.hasAttribute("data-kp-busy") || /** @type {any} */
+        button5.disabled) return;
         const plan = planFor(member, forceClear);
         if (plan.size === 0) return;
         const g = toggleGroup(member);
@@ -60534,33 +60534,33 @@ var init_controller12 = __esm({
       }
       /** A single group is one stop in the Tab order: the member that is on, else the first. */
       rove() {
-        const button4 = this.button;
+        const button5 = this.button;
         const sync3 = () => {
-          const g = toggleGroup(button4);
+          const g = toggleGroup(button5);
           if (!g) return;
           const on = g.members.find((m) => stateOf4(m) === "true") ?? g.members[0];
           for (const m of g.members) m.tabIndex = m === on ? 0 : -1;
         };
-        this.observe(new MutationObserver(sync3)).observe(button4, { attributes: true, attributeFilter: ["aria-pressed"] });
+        this.observe(new MutationObserver(sync3)).observe(button5, { attributes: true, attributeFilter: ["aria-pressed"] });
         sync3();
-        this.own(() => button4.removeAttribute("tabindex"));
+        this.own(() => button5.removeAttribute("tabindex"));
       }
       /** `data-kp-toggle-key`: the shortcut that presses the toggle (never a bare digit, which AZERTY types as a sign). */
       registerKey() {
-        const button4 = this.button;
-        const key = button4.dataset.kpToggleKey;
+        const button5 = this.button;
+        const key = button5.dataset.kpToggleKey;
         if (!key) return;
         if (/^[0-9]$/.test(key)) return void console.warn(`[kp-toggle] "${key}" is a bare digit: an unshifted digit on AZERTY types & \xE9 ", so the key is not registered.`);
-        button4.setAttribute("aria-keyshortcuts", key);
+        button5.setAttribute("aria-keyshortcuts", key);
         const off = registerShortcuts(
-          button4,
-          [{ keys: key, what: this.s.toggleKeyWhat(this.labelText()), group: this.s.toggleKeyGroup, run: () => button4.click(), when: () => !/** @type {any} */
-          button4.disabled && button4.getAttribute("aria-disabled") !== "true" }],
+          button5,
+          [{ keys: key, what: this.s.toggleKeyWhat(this.labelText()), group: this.s.toggleKeyGroup, run: () => button5.click(), when: () => !/** @type {any} */
+          button5.disabled && button5.getAttribute("aria-disabled") !== "true" }],
           { layoutGuard: "warn" }
         );
         this.own(() => {
           off();
-          button4.removeAttribute("aria-keyshortcuts");
+          button5.removeAttribute("aria-keyshortcuts");
         });
       }
     };
@@ -61563,27 +61563,27 @@ function listenForStarKey(card) {
       event.target
     );
     if (target.closest("input, textarea, select, [contenteditable], .kp-menu")) return;
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement | null} */
       card.querySelector(":scope > .kp-entity__id .kp-entity__star")
     );
-    if (!button4) return;
+    if (!button5) return;
     event.preventDefault();
-    button4.click();
+    button5.click();
   });
 }
 function appendStar(card, el16, data, pressed, starKey) {
   const doc = card.ownerDocument;
   const ns = "http://www.w3.org/2000/svg";
-  const button4 = (
+  const button5 = (
     /** @type {HTMLButtonElement} */
     made5(doc, "button", "kp-button kp-button--ghost kp-entity__star")
   );
-  button4.type = "button";
-  button4.setAttribute("data-kp-toggle", "");
-  button4.setAttribute("data-kp-look", "icon");
-  button4.setAttribute("aria-pressed", String(pressed));
-  if (starKey !== "off") button4.setAttribute("aria-keyshortcuts", starKey);
+  button5.type = "button";
+  button5.setAttribute("data-kp-toggle", "");
+  button5.setAttribute("data-kp-look", "icon");
+  button5.setAttribute("aria-pressed", String(pressed));
+  if (starKey !== "off") button5.setAttribute("aria-keyshortcuts", starKey);
   const glyph3 = doc.createElementNS(ns, "svg");
   glyph3.setAttribute("class", "kp-entity__star-glyph");
   glyph3.setAttribute("viewBox", "0 0 24 24");
@@ -61593,10 +61593,10 @@ function appendStar(card, el16, data, pressed, starKey) {
   glyph3.append(outline);
   const name = made5(doc, "span", "kp-sr-only");
   name.textContent = getStrings().entityStar(data.name);
-  button4.append(glyph3, name);
-  el16.append(button4);
-  attachToggles(button4);
-  button4.addEventListener("kp-toggle-changed", (event) => {
+  button5.append(glyph3, name);
+  el16.append(button5);
+  attachToggles(button5);
+  button5.addEventListener("kp-toggle-changed", (event) => {
     const detail = (
       /** @type {CustomEvent} */
       event.detail
@@ -61611,8 +61611,8 @@ function appendStar(card, el16, data, pressed, starKey) {
   listenForStarKey(card);
 }
 function syncStar(card, star) {
-  const button4 = card.querySelector(":scope > .kp-entity__id .kp-entity__star");
-  if (button4 && button4.getAttribute("aria-pressed") !== String(star)) button4.setAttribute("aria-pressed", String(star));
+  const button5 = card.querySelector(":scope > .kp-entity__id .kp-entity__star");
+  if (button5 && button5.getAttribute("aria-pressed") !== String(star)) button5.setAttribute("aria-pressed", String(star));
 }
 var KEYED;
 var init_star = __esm({
@@ -61776,8 +61776,8 @@ function fitActions(host, inline2) {
       if (!row || row.hidden || row.clientWidth === 0 || card.dataset.kpState === "error") return false;
       const edge = row.getBoundingClientRect().right + 0.5;
       return [...row.children].some((child) => {
-        const button4 = child.matches("button") ? child : child.querySelector("button");
-        return child.getBoundingClientRect().right > edge || button4 !== null && button4.scrollWidth > button4.clientWidth;
+        const button5 = child.matches("button") ? child : child.querySelector("button");
+        return child.getBoundingClientRect().right > edge || button5 !== null && button5.scrollWidth > button5.clientWidth;
       });
     });
     if (!tooWide) return;
@@ -61900,17 +61900,17 @@ function setEntity(card, data) {
       const wrap = made5(doc, "div", "kp-menu-button kp-entity__more-flags");
       wrap.setAttribute("data-kp-menu-button", "");
       wrap.setAttribute("data-kp-key", `${key}-flags`);
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
         made5(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-entity__plus")
       );
-      button4.type = "button";
-      button4.textContent = `+${rest.length}`;
-      button4.setAttribute("aria-label", s2.entityMoreFlags(rest.length));
+      button5.type = "button";
+      button5.textContent = `+${rest.length}`;
+      button5.setAttribute("aria-label", s2.entityMoreFlags(rest.length));
       const menu = made5(doc, "div", "kp-menu kp-menu--rich");
       menu.setAttribute("role", "menu");
       menu.setAttribute("aria-label", s2.entityFlagsLabel);
-      wrap.append(button4, menu);
+      wrap.append(button5, menu);
       el16.append(wrap);
       attachMenuButtons(el16);
       setMenu(wrap, [{ group: "", items: rest.map((f) => ({ label: f.label, value: f.label })) }]);
@@ -61976,36 +61976,36 @@ function setEntity(card, data) {
     const shown5 = all.slice(0, inline2);
     const rest = all.slice(inline2);
     for (const a of shown5) {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
         made5(doc, "button", `kp-button kp-button--sm kp-entity__action${a.danger ? " kp-button--destructive" : ""}`)
       );
-      button4.type = "button";
-      button4.textContent = a.label;
+      button5.type = "button";
+      button5.textContent = a.label;
       if (a.disabled) {
-        button4.setAttribute("aria-disabled", "true");
-        button4.setAttribute("data-kp-disabled-reason", a.disabled);
+        button5.setAttribute("aria-disabled", "true");
+        button5.setAttribute("data-kp-disabled-reason", a.disabled);
       }
-      button4.addEventListener("click", () => {
+      button5.addEventListener("click", () => {
         if (a.disabled) return;
         card.dispatchEvent(new CustomEvent(ENTITY_ACTION_EVENT, { bubbles: true, detail: { key, id: a.id } }));
       });
-      el16.append(button4);
+      el16.append(button5);
     }
     if (rest.length > 0) {
       const wrap = made5(doc, "div", "kp-menu-button kp-entity__more");
       wrap.setAttribute("data-kp-menu-button", "");
       wrap.setAttribute("data-kp-key", `${key}-more`);
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
         made5(doc, "button", "kp-button kp-button--sm")
       );
-      button4.type = "button";
-      button4.textContent = s2.entityMore;
+      button5.type = "button";
+      button5.textContent = s2.entityMore;
       const menu = made5(doc, "div", "kp-menu kp-menu--rich");
       menu.setAttribute("role", "menu");
       menu.setAttribute("aria-label", s2.entityMoreLabel);
-      wrap.append(button4, menu);
+      wrap.append(button5, menu);
       el16.append(wrap);
       attachMenuButtons(el16);
       setMenu(wrap, [
@@ -63699,11 +63699,11 @@ function attachAutosize(root = document, options = {}) {
     };
     const setState2 = (next2, message) => {
       if (next2 === state6 && next2 !== "error") return;
-      const field = area.closest(".kp-field");
+      const field2 = area.closest(".kp-field");
       const holder = () => {
         let h2 = (
           /** @type {HTMLElement | null} */
-          field?.querySelector("[data-kp-field-error]") ?? null
+          field2?.querySelector("[data-kp-field-error]") ?? null
         );
         if (!h2) {
           h2 = doc.createElement("p");
@@ -63735,17 +63735,17 @@ function attachAutosize(root = document, options = {}) {
         h2.hidden = false;
         area.setAttribute("aria-invalid", "true");
         area.setAttribute("aria-describedby", [...new Set([...(area.getAttribute("aria-describedby") ?? "").split(/\s+/), h2.id].filter(Boolean))].join(" "));
-        field?.classList.add("kp-field--invalid");
+        field2?.classList.add("kp-field--invalid");
       } else {
         const h2 = (
           /** @type {HTMLElement | null} */
-          field?.querySelector("[data-kp-field-error]") ?? null
+          field2?.querySelector("[data-kp-field-error]") ?? null
         );
         if (h2 && state6 === "error") {
           h2.hidden = true;
           h2.textContent = "";
           area.removeAttribute("aria-invalid");
-          field?.classList.remove("kp-field--invalid");
+          field2?.classList.remove("kp-field--invalid");
         }
       }
       state6 = next2;
@@ -63917,14 +63917,14 @@ function attachPrint(root = document, options = {}) {
   );
   const view = doc.defaultView;
   const cleanups = [];
-  for (const button4 of root.querySelectorAll(PRINT_ACTION)) {
-    if (!(button4 instanceof HTMLElement) || button4.dataset.kpPrintAttached !== void 0) continue;
-    button4.dataset.kpPrintAttached = "";
+  for (const button5 of root.querySelectorAll(PRINT_ACTION)) {
+    if (!(button5 instanceof HTMLElement) || button5.dataset.kpPrintAttached !== void 0) continue;
+    button5.dataset.kpPrintAttached = "";
     const onClick = () => view?.print();
-    button4.addEventListener("click", onClick);
+    button5.addEventListener("click", onClick);
     cleanups.push(() => {
-      button4.removeEventListener("click", onClick);
-      delete button4.dataset.kpPrintAttached;
+      button5.removeEventListener("click", onClick);
+      delete button5.dataset.kpPrintAttached;
     });
   }
   if (view && !HOOKED.has(doc)) {
@@ -64050,26 +64050,26 @@ function openViewer(options) {
         }
         foot.append(link);
       } else {
-        const button4 = (
+        const button5 = (
           /** @type {HTMLButtonElement} */
           make22(doc, "button", `kp-button${action.tone === "destructive" ? " kp-button--destructive" : ""} kp-viewer__action kp-viewer__action--${action.kind}`)
         );
-        button4.type = "button";
-        button4.setAttribute("data-kp-viewer-action", action.kind);
-        button4.textContent = label;
+        button5.type = "button";
+        button5.setAttribute("data-kp-viewer-action", action.kind);
+        button5.textContent = label;
         if (action.kind === "copy-link") {
-          button4.setAttribute("data-kp-flash-words", strings.copied);
-          button4.addEventListener(
+          button5.setAttribute("data-kp-flash-words", strings.copied);
+          button5.addEventListener(
             "click",
-            () => runFlashButton(button4, async () => {
+            () => runFlashButton(button5, async () => {
               const text = new URL(action.href ?? "", doc.baseURI).href;
               await navigator.clipboard.writeText(text);
               action.run?.();
               return strings.copied;
             })
           );
-        } else if (action.run) button4.addEventListener("click", () => action.run?.());
-        foot.append(button4);
+        } else if (action.run) button5.addEventListener("click", () => action.run?.());
+        foot.append(button5);
       }
     }
     foot.hidden = actions.length === 0;
@@ -65028,17 +65028,17 @@ var init_lightbox = __esm({
       /** A wide edge zone with its arrow button. @param {'previous' | 'next'} side @param {string} label @param {string} glyph */
       addZone(side, label, glyph3) {
         const holder = make23(this.doc, "div", `kp-gallery__zone kp-gallery__zone--${side}`);
-        const button4 = (
+        const button5 = (
           /** @type {HTMLButtonElement} */
           make23(this.doc, "button", `kp-icon-button kp-gallery__nav kp-gallery__nav--${side}`)
         );
-        button4.type = "button";
-        button4.setAttribute("aria-label", label);
-        button4.setAttribute("data-kp-disabled-reason", "");
-        button4.textContent = glyph3;
-        holder.append(button4);
+        button5.type = "button";
+        button5.setAttribute("aria-label", label);
+        button5.setAttribute("data-kp-disabled-reason", "");
+        button5.textContent = glyph3;
+        holder.append(button5);
         this.viewer.stage.append(holder);
-        return button4;
+        return button5;
       }
       /** @param {number} by */
       canGo(by) {
@@ -65979,20 +65979,20 @@ function setSentenceComputed(element, name, text) {
     output.setAttribute("aria-live", "off");
   }
 }
-function fieldText(field) {
+function fieldText(field2) {
   const s2 = getStrings();
-  const computed = field.querySelector("[data-kp-sentence-computed]");
+  const computed = field2.querySelector("[data-kp-sentence-computed]");
   if (computed) return computedText(computed);
-  const picker = field.querySelector(".kp-weekdays");
+  const picker = field2.querySelector(".kp-weekdays");
   if (picker) return weekdays(picker)?.summary() ?? "";
-  const select2 = field.querySelector("select");
+  const select2 = field2.querySelector("select");
   if (select2 instanceof HTMLSelectElement) return select2.selectedOptions[0]?.textContent?.trim() || s2.sentenceEmpty(nameOf5(select2));
-  const input = field.querySelector('input:not([type="hidden"]), textarea');
+  const input = field2.querySelector('input:not([type="hidden"]), textarea');
   if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
     if (input instanceof HTMLInputElement && (input.type === "checkbox" || input.type === "radio")) return input.checked ? nameOf5(input) : "";
     return input.value.trim() || s2.sentenceEmpty(nameOf5(input));
   }
-  return field.textContent?.trim() ?? "";
+  return field2.textContent?.trim() ?? "";
 }
 function sentenceSummary(element) {
   const walk = (node) => {
@@ -66009,17 +66009,17 @@ function sentenceSummary(element) {
 function setSentenceInvalid(element, name, why) {
   const control = [...element.querySelectorAll("[name]")].find((c) => c.getAttribute("name") === name);
   if (!control) return;
-  const field = control.closest(".kp-sentence__field");
+  const field2 = control.closest(".kp-sentence__field");
   const line = LINES.get(element);
   if (why === null) {
     control.removeAttribute("aria-invalid");
     control.removeAttribute("aria-describedby");
-    field?.removeAttribute("data-kp-invalid");
+    field2?.removeAttribute("data-kp-invalid");
     if (line && !element.querySelector('[aria-invalid="true"]')) setSentenceWhy(element, null);
     return;
   }
   control.setAttribute("aria-invalid", "true");
-  field?.setAttribute("data-kp-invalid", "");
+  field2?.setAttribute("data-kp-invalid", "");
   if (line) {
     control.setAttribute("aria-describedby", line.id);
     setSentenceWhy(element, getStrings().sentenceWhy(nameOf5(control), why));
@@ -66031,23 +66031,23 @@ function setSentenceWhy(element, text) {
   line.textContent = text ?? "";
   line.hidden = !text;
 }
-function setSentenceFieldState(field, state6) {
-  if (!(field instanceof HTMLElement)) return;
-  const doc = field.ownerDocument;
-  const old = field.querySelector(":scope > .kp-sentence__skeleton");
+function setSentenceFieldState(field2, state6) {
+  if (!(field2 instanceof HTMLElement)) return;
+  const doc = field2.ownerDocument;
+  const old = field2.querySelector(":scope > .kp-sentence__skeleton");
   if (state6 === "loading") {
     if (old) return;
-    field.style.minInlineSize = `${field.getBoundingClientRect().width}px`;
-    field.dataset.kpState = "loading";
-    field.setAttribute("aria-busy", "true");
+    field2.style.minInlineSize = `${field2.getBoundingClientRect().width}px`;
+    field2.dataset.kpState = "loading";
+    field2.setAttribute("aria-busy", "true");
     const skeleton2 = doc.createElement("span");
     skeleton2.className = "kp-sentence__skeleton";
     skeleton2.setAttribute("aria-hidden", "true");
     const bar = doc.createElement("span");
     bar.className = "kp-skeleton kp-skeleton--block kp-sentence__bar";
     skeleton2.append(bar);
-    field.append(skeleton2);
-    for (const c of field.querySelectorAll(CONTROLS2)) {
+    field2.append(skeleton2);
+    for (const c of field2.querySelectorAll(CONTROLS2)) {
       if (c instanceof HTMLElement && !c.hasAttribute("disabled")) {
         c.setAttribute("disabled", "");
         c.setAttribute("data-kp-was-enabled", "");
@@ -66055,10 +66055,10 @@ function setSentenceFieldState(field, state6) {
     }
   } else {
     old?.remove();
-    field.style.minInlineSize = "";
-    delete field.dataset.kpState;
-    field.removeAttribute("aria-busy");
-    for (const c of field.querySelectorAll("[data-kp-was-enabled]")) {
+    field2.style.minInlineSize = "";
+    delete field2.dataset.kpState;
+    field2.removeAttribute("aria-busy");
+    for (const c of field2.querySelectorAll("[data-kp-was-enabled]")) {
       c.removeAttribute("disabled");
       c.removeAttribute("data-kp-was-enabled");
     }
@@ -66089,9 +66089,9 @@ function reach2(c, show) {
     c.removeAttribute("data-kp-hidden-off");
   }
 }
-function wordsBefore(field) {
+function wordsBefore(field2) {
   const before = [];
-  for (let n = field.previousSibling; n && before.length < NAME_WORDS; n = n.previousSibling) {
+  for (let n = field2.previousSibling; n && before.length < NAME_WORDS; n = n.previousSibling) {
     if (n.nodeType !== Node.TEXT_NODE) break;
     const words2 = (n.textContent ?? "").trim().split(/\s+/).filter(Boolean);
     before.unshift(...words2.reverse().slice(0, NAME_WORDS - before.length).reverse());
@@ -66223,10 +66223,10 @@ var init_controller15 = __esm({
       }
       /** Every control has a name of its own: the words before it when the page gave none. */
       nameControls() {
-        for (const field of this.host.querySelectorAll(".kp-sentence__field")) {
-          for (const control of field.querySelectorAll(NAMEABLE)) {
+        for (const field2 of this.host.querySelectorAll(".kp-sentence__field")) {
+          for (const control of field2.querySelectorAll(NAMEABLE)) {
             if (nameOf5(control) || control.id && this.doc.querySelector(`label[for="${CSS.escape(control.id)}"]`)) continue;
-            control.setAttribute("aria-label", wordsBefore(field).join(" ") || getStrings().sentenceField);
+            control.setAttribute("aria-label", wordsBefore(field2).join(" ") || getStrings().sentenceField);
           }
         }
       }
@@ -66247,19 +66247,19 @@ var init_controller15 = __esm({
       place() {
         const text = this.host.querySelector(".kp-sentence__text") ?? this.host;
         const room = (text instanceof HTMLElement ? text : this.host).clientWidth;
-        for (const field of this.host.querySelectorAll(".kp-sentence__field")) {
-          if (!(field instanceof HTMLElement) || field.closest("[hidden]")) continue;
+        for (const field2 of this.host.querySelectorAll(".kp-sentence__field")) {
+          if (!(field2 instanceof HTMLElement) || field2.closest("[hidden]")) continue;
           let own = false;
-          if (field.hasAttribute("data-kp-block")) own = true;
+          if (field2.hasAttribute("data-kp-block")) own = true;
           else if (this.narrow === "stack") own = room < STACK_BELOW_PX;
           else if (this.narrow === "wrap" && room > 0) {
-            field.removeAttribute("data-kp-own-line");
-            const was = field.style.inlineSize;
-            field.style.inlineSize = "max-content";
-            own = field.getBoundingClientRect().width > room * this.ratio;
-            field.style.inlineSize = was;
+            field2.removeAttribute("data-kp-own-line");
+            const was = field2.style.inlineSize;
+            field2.style.inlineSize = "max-content";
+            own = field2.getBoundingClientRect().width > room * this.ratio;
+            field2.style.inlineSize = was;
           }
-          field.toggleAttribute("data-kp-own-line", own);
+          field2.toggleAttribute("data-kp-own-line", own);
         }
       }
       /** Work every computed field out from the controls as they stand. */
@@ -66882,16 +66882,16 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     note2.className = "kp-runs__state";
     note2.hidden = true;
     stage.append(list, note2);
-    const button4 = doc.createElement("button");
-    button4.type = "button";
-    button4.className = "kp-button kp-button--ghost kp-button--sm kp-runs__more";
-    button4.hidden = true;
-    button4.setAttribute("aria-expanded", "false");
+    const button5 = doc.createElement("button");
+    button5.type = "button";
+    button5.className = "kp-button kp-button--ghost kp-button--sm kp-runs__more";
+    button5.hidden = true;
+    button5.setAttribute("aria-expanded", "false");
     const live4 = doc.createElement("p");
     live4.className = "kp-sr-only";
     live4.setAttribute("role", "status");
     live4.setAttribute("aria-live", "polite");
-    el16.replaceChildren(title, stage, button4, live4);
+    el16.replaceChildren(title, stage, button5, live4);
     let all = [];
     let state6 = "ready";
     let given2 = {};
@@ -66946,9 +66946,9 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       list.toggleAttribute("inert", state6 !== "ready");
       if (state6 === "loading") list.setAttribute("aria-busy", "true");
       else list.removeAttribute("aria-busy");
-      button4.hidden = !(more > 0 && state6 === "ready" && all.length > count2);
-      button4.textContent = expanded ? s2.runsFewer : s2.runsMore(Math.min(more, all.length - count2));
-      button4.setAttribute("aria-expanded", String(expanded));
+      button5.hidden = !(more > 0 && state6 === "ready" && all.length > count2);
+      button5.textContent = expanded ? s2.runsFewer : s2.runsMore(Math.min(more, all.length - count2));
+      button5.setAttribute("aria-expanded", String(expanded));
     };
     const paintNote = () => {
       note2.replaceChildren();
@@ -67015,14 +67015,14 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       draw8();
     };
     el16.addEventListener("click", onClick);
-    button4.addEventListener("click", onMore);
+    button5.addEventListener("click", onMore);
     const tick6 = Number.isFinite(fixed) || nowOption ? 0 : window.setInterval(() => state6 === "ready" && draw8(), 6e4);
     const initial = (el16.dataset.kpRunsValues ?? "").split(",").map((v) => v.trim()).filter(Boolean);
     if (el16.dataset.kpState === "loading") handle.setState("loading");
     else handle.set(initial);
     cleanups.push(() => {
       el16.removeEventListener("click", onClick);
-      button4.removeEventListener("click", onMore);
+      button5.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
       HANDLES12.delete(el16);
@@ -67055,23 +67055,7 @@ var init_runs = __esm({
   }
 });
 
-// js/snooze.js
-var snooze_exports = {};
-__export(snooze_exports, {
-  SNOOZE: () => SNOOZE,
-  SNOOZE_CHOICES: () => SNOOZE_CHOICES,
-  SNOOZE_END_EVENT: () => SNOOZE_END_EVENT,
-  SNOOZE_EVENT: () => SNOOZE_EVENT,
-  attachSnoozes: () => attachSnoozes,
-  dayAt: () => dayAt,
-  openSnoozePanel: () => openSnoozePanel,
-  registerSnoozeWords: () => registerSnoozeWords,
-  setSnoozeBusy: () => setSnoozeBusy,
-  setSnoozedUntil: () => setSnoozedUntil,
-  snooze: () => snooze,
-  snoozeChoices: () => snoozeChoices,
-  snoozeWords: () => snoozeWords
-});
+// js/snooze/choices.js
 function clock2(text, fallback2) {
   return parseTime(text ?? "") ?? /** @type {{ hour: number, minute: number }} */
   parseTime(fallback2);
@@ -67135,426 +67119,14 @@ function snoozeChoices({
   if (choices.includes("pick")) out.push({ key: "pick", label: s2.snoozePick, at: null, hint: "", moment: "" });
   return out;
 }
-function snooze(element) {
-  return HANDLES13.get(element) ?? null;
-}
-function setSnoozedUntil(element, until) {
-  HANDLES13.get(element)?.setUntil(until);
-}
-function setSnoozeBusy(element, busy) {
-  HANDLES13.get(element)?.setBusy(busy);
-}
-function openSnoozePanel(element, open4 = true) {
-  const h2 = HANDLES13.get(element);
-  if (open4) h2?.openPanel();
-  else h2?.closePanel();
-}
-function attachSnoozes(root = document, { now: nowOption } = {}) {
-  const cleanups = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(SNOOZE) ? [root] : [],
-      ...root.querySelectorAll(SNOOZE)
-    ]
-  );
-  for (const el16 of found) {
-    if (HANDLES13.has(el16)) continue;
-    const s2 = snoozeWords(el16);
-    const doc = el16.ownerDocument;
-    const id = `kp-snooze-${++seq10}`;
-    const zone = el16.dataset.kpTimeZone || CHART_TIME_ZONE;
-    const locale = el16.lang || void 0;
-    const choices = (el16.dataset.kpSnoozeChoices ?? SNOOZE_CHOICES.join(" ")).split(/[\s,]+/).filter(Boolean);
-    const morning = el16.dataset.kpSnoozeMorning;
-    const evening = el16.dataset.kpSnoozeEvening;
-    const max = el16.dataset.kpSnoozeMax ?? "7d";
-    const chips = el16.dataset.kpLook !== "menu";
-    const fixed = Date.parse(el16.dataset.kpNow ?? "");
-    const now = nowOption ?? (Number.isFinite(fixed) ? () => fixed : () => Date.now());
-    const memory = el16.dataset.kpRemember ? `kp-remember:snooze:${el16.dataset.kpRemember}` : "";
-    el16.classList.add("kp-snooze");
-    el16.dataset.kpSnoozeAttached = "";
-    let until = null;
-    let last = null;
-    let busy = false;
-    if (memory) {
-      try {
-        const kept = Number(localStorage.getItem(memory));
-        if (Number.isFinite(kept) && kept > 0) last = kept;
-      } catch {
-      }
-    }
-    const bar = doc.createElement("div");
-    bar.className = "kp-snooze__bar";
-    const status = doc.createElement("p");
-    status.className = "kp-snooze__status";
-    status.id = `${id}-status`;
-    status.setAttribute("aria-live", "polite");
-    const end = doc.createElement("button");
-    end.type = "button";
-    end.className = "kp-button kp-button--ghost kp-snooze__end";
-    end.textContent = s2.snoozeEnd;
-    end.hidden = true;
-    let trigger;
-    let wrapper = null;
-    let row = null;
-    if (chips) {
-      row = doc.createElement("div");
-      row.className = "kp-segmented kp-segmented--chips kp-snooze__chips";
-      row.setAttribute("role", "group");
-      row.setAttribute("aria-label", s2.snoozeChoicesLabel);
-      trigger = row;
-      bar.append(row, end);
-    } else {
-      wrapper = doc.createElement("div");
-      wrapper.className = "kp-menu-button kp-snooze__menu";
-      wrapper.dataset.kpMenuButton = "";
-      const button4 = doc.createElement("button");
-      button4.type = "button";
-      button4.className = "kp-button kp-snooze__trigger";
-      const menu = doc.createElement("div");
-      menu.className = "kp-menu kp-menu--rich kp-snooze__list";
-      menu.setAttribute("role", "menu");
-      menu.setAttribute("aria-label", s2.snoozeTrigger);
-      wrapper.append(button4, menu);
-      trigger = button4;
-      bar.append(wrapper, end);
-    }
-    const panel = doc.createElement("div");
-    panel.className = "kp-popover kp-snooze__panel";
-    panel.id = `${id}-panel`;
-    panel.setAttribute("role", "dialog");
-    panel.setAttribute("aria-label", s2.snoozePickTitle);
-    panel.hidden = true;
-    const title = doc.createElement("p");
-    title.className = "kp-snooze__panel-title";
-    title.textContent = s2.snoozePickTitle;
-    const inputs = doc.createElement("div");
-    inputs.className = "kp-snooze__inputs";
-    const picker = doc.createElement("div");
-    picker.className = "kp-datepicker kp-snooze__date";
-    picker.dataset.kpDatepicker = "";
-    const date = doc.createElement("input");
-    date.className = "kp-field__input";
-    date.type = "text";
-    date.inputMode = "numeric";
-    date.autocomplete = "off";
-    date.dataset.kpDateInput = "";
-    date.setAttribute("aria-label", s2.snoozeDateLabel);
-    const open4 = doc.createElement("button");
-    open4.type = "button";
-    open4.className = "kp-button";
-    open4.dataset.kpDateOpen = "";
-    open4.setAttribute("aria-label", s2.calendarOpen);
-    open4.title = s2.calendarOpen;
-    const glyph3 = doc.createElement("span");
-    glyph3.setAttribute("aria-hidden", "true");
-    glyph3.textContent = s2.calendarButton;
-    open4.append(glyph3);
-    const datePanel = doc.createElement("div");
-    datePanel.className = "kp-datepicker__panel";
-    datePanel.dataset.kpDatePanel = "";
-    datePanel.hidden = true;
-    picker.append(date, open4, datePanel);
-    const time = doc.createElement("input");
-    time.className = "kp-field__input kp-snooze__time";
-    time.type = "text";
-    time.inputMode = "numeric";
-    time.autocomplete = "off";
-    time.placeholder = s2.rangeTimeHint;
-    time.setAttribute("aria-label", s2.snoozeTimeLabel);
-    inputs.append(picker, time);
-    const error = doc.createElement("p");
-    error.className = "kp-field__error kp-snooze__error";
-    error.id = `${id}-error`;
-    error.setAttribute("role", "alert");
-    const actions = doc.createElement("div");
-    actions.className = "kp-snooze__actions";
-    const cancel = doc.createElement("button");
-    cancel.type = "button";
-    cancel.className = "kp-button";
-    cancel.textContent = s2.snoozeCancel;
-    const apply2 = doc.createElement("button");
-    apply2.type = "button";
-    apply2.className = "kp-button kp-button--primary";
-    apply2.textContent = s2.snoozeApply;
-    actions.append(cancel, apply2);
-    panel.append(title, inputs, error, actions);
-    el16.replaceChildren(bar, status, panel);
-    const detachPickers = attachDatePickers(panel);
-    const detachMenu = wrapper ? attachMenuButtons(el16) : () => void 0;
-    const rules = () => ({ now: now(), choices, morning, evening, max, zone, last, locale, strings: s2 });
-    const offered = () => snoozeChoices(rules());
-    const paintStatus = () => {
-      const snoozed = until !== null && until > now();
-      const when = snoozed && until !== null ? `${runMoment(until, zone, locale)} \xB7 ${runsRelative(until, now(), s2)}` : "";
-      status.textContent = snoozed ? s2.snoozeUntil(when) : s2.snoozeNone;
-      status.dataset.kpSnoozed = String(snoozed);
-      end.hidden = !snoozed;
-      end.disabled = busy;
-      el16.dataset.kpSnoozedState = snoozed ? "snoozed" : "idle";
-      if (!chips) {
-        trigger.replaceChildren();
-        const text = doc.createElement("span");
-        text.className = "kp-button__text";
-        text.textContent = snoozed ? s2.snoozeChange : s2.snoozeTrigger;
-        trigger.append(text);
-        trigger.setAttribute("aria-describedby", status.id);
-        if (busy) {
-          const layer = doc.createElement("span");
-          layer.className = "kp-button__busy";
-          layer.setAttribute("aria-hidden", "true");
-          const spin = doc.createElement("span");
-          spin.className = "kp-spinner";
-          layer.append(spin);
-          trigger.append(layer);
-        }
-        trigger.toggleAttribute("data-kp-busy", busy);
-        trigger.toggleAttribute("aria-busy", busy);
-        trigger.setAttribute("aria-disabled", String(busy));
-      }
-    };
-    const fill2 = () => {
-      const list = offered();
-      if (wrapper) {
-        setMenu(wrapper, [
-          {
-            group: "",
-            items: list.map((c) => ({
-              label: c.label,
-              hint: c.at === null ? s2.snoozePickHint : c.hint,
-              value: c.key,
-              disabled: busy ? s2.snoozeSaving : null
-            }))
-          }
-        ]);
-      } else if (row) {
-        row.replaceChildren(
-          ...list.map((c) => {
-            const chip = doc.createElement("button");
-            chip.type = "button";
-            chip.className = "kp-segmented__item kp-snooze__chip";
-            chip.dataset.value = c.key;
-            chip.disabled = busy;
-            const label = doc.createElement("span");
-            label.className = "kp-snooze__chip-label";
-            label.textContent = c.label;
-            chip.append(label);
-            const when = doc.createElement("span");
-            when.className = "kp-snooze__chip-when";
-            when.textContent = c.at === null ? s2.snoozePickHint : c.moment;
-            chip.append(when);
-            return chip;
-          })
-        );
-      }
-    };
-    const choose3 = (ms, key) => {
-      until = ms;
-      if (key === "pick") {
-        last = ms;
-        if (memory) {
-          try {
-            localStorage.setItem(memory, String(ms));
-          } catch {
-          }
-        }
-      }
-      paintStatus();
-      fill2();
-      el16.dispatchEvent(new CustomEvent(SNOOZE_EVENT, { bubbles: true, detail: { until: new Date(ms).toISOString(), choice: key } }));
-    };
-    let lower = null;
-    const anchor = () => wrapper ? trigger : el16;
-    const place3 = (p) => {
-      const box = anchor().getBoundingClientRect();
-      const width = p.offsetWidth;
-      const left = Math.max(8, Math.min(box.left, doc.documentElement.clientWidth - width - 8));
-      p.style.setProperty("left", `${left}px`);
-      p.style.setProperty("top", `${box.bottom + 6}px`);
-      placeBlockSide(p, box);
-    };
-    const openPanel = () => {
-      if (!panel.hidden) return;
-      stopClose(panel);
-      const base = last !== null && last > now() ? last : dayAt(now(), 1, clock2(morning, "09:00"), zone) ?? now() + 864e5;
-      const w = wallTime(base, zone);
-      datePicker(picker)?.set(`${w.year}-${two7(w.month)}-${two7(w.day)}`);
-      time.value = `${two7(w.hour)}:${two7(w.minute)}`;
-      error.textContent = "";
-      for (const input of [date, time]) {
-        input.removeAttribute("aria-invalid");
-        input.removeAttribute("aria-describedby");
-      }
-      panel.hidden = false;
-      lower = raiseOverlay(panel, place3);
-      arriveShown(panel);
-      date.focus();
-    };
-    const closePanel = async (refocus = true) => {
-      if (panel.hidden) return;
-      datePicker(picker)?.close();
-      const done = await playClose(panel);
-      if (!done) return;
-      panel.hidden = true;
-      lower?.();
-      lower = null;
-      stopClose(panel);
-      if (refocus) (chips ? row?.querySelector("button") ?? el16 : trigger).focus();
-    };
-    const onApply = () => {
-      const day = datePicker(picker)?.get() ?? null;
-      const t = parseTime(time.value);
-      const bad = [];
-      const words2 = [];
-      if (!day) {
-        bad.push(date);
-        words2.push(s2.snoozeErrorDate);
-      }
-      if (!t) {
-        bad.push(time);
-        words2.push(s2.snoozeErrorTime);
-      }
-      if (day && t) {
-        const ms = zonedTime(day.getFullYear(), day.getMonth() + 1, day.getDate(), t.hour, t.minute, zone);
-        if (ms === null) {
-          bad.push(time);
-          words2.push(s2.snoozeErrorTime);
-        } else if (ms <= now() + MINUTE2) {
-          bad.push(date, time);
-          words2.push(s2.snoozeErrorPast);
-        } else if (ms - now() > (presetMs(max) || presetMs("7d"))) {
-          bad.push(date);
-          words2.push(s2.snoozeErrorMax(Math.round((presetMs(max) || presetMs("7d")) / 864e5)));
-        } else {
-          void closePanel();
-          choose3(ms, "pick");
-          return;
-        }
-      }
-      error.textContent = words2.join(" ");
-      for (const input of [date, time]) {
-        if (bad.includes(input)) {
-          input.setAttribute("aria-invalid", "true");
-          input.setAttribute("aria-describedby", error.id);
-        } else {
-          input.removeAttribute("aria-invalid");
-          input.removeAttribute("aria-describedby");
-        }
-      }
-      bad[0]?.focus();
-    };
-    const onKey6 = (event) => {
-      if (event.key === "Escape" && !panel.hidden) {
-        if (panel.querySelector("[data-kp-date-panel]:not([hidden])")) return;
-        event.preventDefault();
-        void closePanel();
-      } else if (event.key === "Enter" && event.target === time) {
-        event.preventDefault();
-        onApply();
-      }
-    };
-    const onOutside = (event) => {
-      if (panel.hidden) return;
-      const target = (
-        /** @type {Node} */
-        event.target
-      );
-      if (panel.contains(target) || anchor().contains(target)) return;
-      void closePanel(false);
-    };
-    const pick2 = (key) => {
-      if (busy) return;
-      if (key === "pick") {
-        openPanel();
-        return;
-      }
-      const match = offered().find((c) => c.key === key);
-      if (match?.at != null) choose3(match.at, key);
-    };
-    const onSelect = (event) => pick2(String(
-      /** @type {CustomEvent} */
-      event.detail?.value ?? ""
-    ));
-    const onChip = (event) => {
-      const chip = event.target instanceof Element ? event.target.closest(".kp-snooze__chip") : null;
-      if (chip instanceof HTMLElement && row?.contains(chip)) pick2(chip.dataset.value ?? "");
-    };
-    const refresh3 = () => fill2();
-    const onEnd = () => {
-      if (busy) return;
-      until = null;
-      paintStatus();
-      fill2();
-      el16.dispatchEvent(new CustomEvent(SNOOZE_END_EVENT, { bubbles: true, detail: {} }));
-    };
-    wrapper?.addEventListener(MENU_SELECT_EVENT, onSelect);
-    wrapper?.addEventListener("pointerdown", refresh3, true);
-    wrapper?.addEventListener("keydown", refresh3, true);
-    row?.addEventListener("click", onChip);
-    end.addEventListener("click", onEnd);
-    cancel.addEventListener("click", () => void closePanel());
-    apply2.addEventListener("click", onApply);
-    panel.addEventListener("keydown", onKey6);
-    doc.addEventListener("pointerdown", onOutside, true);
-    const handle = {
-      element: el16,
-      until: () => until !== null && until > now() ? until : null,
-      setUntil(next2) {
-        const ms = next2 === null ? NaN : next2 instanceof Date ? next2.getTime() : typeof next2 === "number" ? next2 : Date.parse(next2);
-        until = Number.isFinite(ms) ? ms : null;
-        paintStatus();
-      },
-      setBusy(next2) {
-        busy = next2;
-        el16.toggleAttribute("aria-busy", next2);
-        paintStatus();
-        fill2();
-      },
-      choices: offered,
-      openPanel,
-      closePanel: () => void closePanel(false)
-    };
-    HANDLES13.set(el16, handle);
-    handle.setUntil(el16.dataset.kpSnoozedUntil ?? null);
-    paintStatus();
-    fill2();
-    const tick6 = Number.isFinite(fixed) || nowOption ? 0 : window.setInterval(() => (paintStatus(), fill2()), 3e4);
-    cleanups.push(() => {
-      lower?.();
-      detachPickers();
-      detachMenu();
-      wrapper?.removeEventListener(MENU_SELECT_EVENT, onSelect);
-      wrapper?.removeEventListener("pointerdown", refresh3, true);
-      wrapper?.removeEventListener("keydown", refresh3, true);
-      row?.removeEventListener("click", onChip);
-      end.removeEventListener("click", onEnd);
-      doc.removeEventListener("pointerdown", onOutside, true);
-      if (tick6) clearInterval(tick6);
-      HANDLES13.delete(el16);
-      el16.replaceChildren();
-      el16.removeAttribute("aria-busy");
-      delete el16.dataset.kpSnoozeAttached;
-      delete el16.dataset.kpSnoozedState;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES13, seq10;
-var init_snooze = __esm({
-  "js/snooze.js"() {
+var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES;
+var init_choices = __esm({
+  "js/snooze/choices.js"() {
     "use strict";
     init_strings();
-    init_menu_button();
-    init_datepicker();
     init_range();
     init_chart();
     init_runs();
-    init_top_layer();
-    init_motion();
     SNOOZE = "[data-kp-snooze]";
     SNOOZE_EVENT = "kp-snooze";
     SNOOZE_END_EVENT = "kp-snooze-end";
@@ -67587,8 +67159,484 @@ var init_snooze = __esm({
       ["data-kp-snooze-apply", "snoozeApply"],
       ["data-kp-snooze-saving", "snoozeSaving"]
     ];
-    HANDLES13 = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/snooze/build.js
+function make25(doc, tag, className, text) {
+  const node = doc.createElement(tag);
+  node.className = className;
+  if (text !== void 0) node.textContent = text;
+  return node;
+}
+function button3(doc, className, text) {
+  const b = (
+    /** @type {HTMLButtonElement} */
+    doc.createElement("button")
+  );
+  b.type = "button";
+  b.className = className;
+  if (text !== void 0) b.textContent = text;
+  return b;
+}
+function buildBar2(doc, s2, id, chips) {
+  const bar = make25(doc, "div", "kp-snooze__bar");
+  const status = make25(doc, "p", "kp-snooze__status");
+  status.id = `${id}-status`;
+  status.setAttribute("aria-live", "polite");
+  const end = button3(doc, "kp-button kp-button--ghost kp-snooze__end", s2.snoozeEnd);
+  end.hidden = true;
+  if (chips) {
+    const row = make25(doc, "div", "kp-segmented kp-segmented--chips kp-snooze__chips");
+    row.setAttribute("role", "group");
+    row.setAttribute("aria-label", s2.snoozeChoicesLabel);
+    bar.append(row, end);
+    return { bar, status, end, trigger: row, wrapper: null, row };
+  }
+  const wrapper = make25(doc, "div", "kp-menu-button kp-snooze__menu");
+  wrapper.dataset.kpMenuButton = "";
+  const trigger = button3(doc, "kp-button kp-snooze__trigger");
+  const menu = make25(doc, "div", "kp-menu kp-menu--rich kp-snooze__list");
+  menu.setAttribute("role", "menu");
+  menu.setAttribute("aria-label", s2.snoozeTrigger);
+  wrapper.append(trigger, menu);
+  bar.append(wrapper, end);
+  return { bar, status, end, trigger, wrapper, row: null };
+}
+function field(doc, className, label) {
+  const input = (
+    /** @type {HTMLInputElement} */
+    make25(doc, "input", className)
+  );
+  input.type = "text";
+  input.inputMode = "numeric";
+  input.autocomplete = "off";
+  input.setAttribute("aria-label", label);
+  return input;
+}
+function buildPanel2(doc, s2, id) {
+  const panel = make25(doc, "div", "kp-popover kp-snooze__panel");
+  panel.id = `${id}-panel`;
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-label", s2.snoozePickTitle);
+  panel.hidden = true;
+  const picker = make25(doc, "div", "kp-datepicker kp-snooze__date");
+  picker.dataset.kpDatepicker = "";
+  const date = field(doc, "kp-field__input", s2.snoozeDateLabel);
+  date.dataset.kpDateInput = "";
+  const open4 = button3(doc, "kp-button");
+  open4.dataset.kpDateOpen = "";
+  open4.setAttribute("aria-label", s2.calendarOpen);
+  open4.title = s2.calendarOpen;
+  const glyph3 = make25(doc, "span", "", s2.calendarButton);
+  glyph3.removeAttribute("class");
+  glyph3.setAttribute("aria-hidden", "true");
+  open4.append(glyph3);
+  const datePanel = make25(doc, "div", "kp-datepicker__panel");
+  datePanel.dataset.kpDatePanel = "";
+  datePanel.hidden = true;
+  picker.append(date, open4, datePanel);
+  const time = field(doc, "kp-field__input kp-snooze__time", s2.snoozeTimeLabel);
+  time.placeholder = s2.rangeTimeHint;
+  const inputs = make25(doc, "div", "kp-snooze__inputs");
+  inputs.append(picker, time);
+  const error = make25(doc, "p", "kp-field__error kp-snooze__error");
+  error.id = `${id}-error`;
+  error.setAttribute("role", "alert");
+  const cancel = button3(doc, "kp-button", s2.snoozeCancel);
+  const apply2 = button3(doc, "kp-button kp-button--primary", s2.snoozeApply);
+  const actions = make25(doc, "div", "kp-snooze__actions");
+  actions.append(cancel, apply2);
+  panel.append(make25(doc, "p", "kp-snooze__panel-title", s2.snoozePickTitle), inputs, error, actions);
+  return { panel, picker, date, time, error, cancel, apply: apply2 };
+}
+var init_build8 = __esm({
+  "js/snooze/build.js"() {
+    "use strict";
+  }
+});
+
+// js/snooze/panel.js
+var seq10, DAY_MS2, EDGE_PX, GAP_PX, MAX_DEFAULT, SnoozePanel;
+var init_panel2 = __esm({
+  "js/snooze/panel.js"() {
+    "use strict";
+    init_controller();
+    init_chart();
+    init_datepicker();
+    init_motion();
+    init_range();
+    init_top_layer();
+    init_build8();
+    init_choices();
     seq10 = 0;
+    DAY_MS2 = 864e5;
+    EDGE_PX = 8;
+    GAP_PX = 6;
+    MAX_DEFAULT = "7d";
+    SnoozePanel = class extends Controller {
+      /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.s = snoozeWords(el16);
+        this.doc = el16.ownerDocument;
+        this.id = `kp-snooze-${++seq10}`;
+        this.zone = el16.dataset.kpTimeZone || CHART_TIME_ZONE;
+        this.locale = el16.lang || void 0;
+        this.choiceKeys = (el16.dataset.kpSnoozeChoices ?? SNOOZE_CHOICES.join(" ")).split(/[\s,]+/).filter(Boolean);
+        this.morning = el16.dataset.kpSnoozeMorning;
+        this.evening = el16.dataset.kpSnoozeEvening;
+        this.max = el16.dataset.kpSnoozeMax ?? MAX_DEFAULT;
+        this.chips = el16.dataset.kpLook !== "menu";
+        this.fixed = Date.parse(el16.dataset.kpNow ?? "");
+        this.nowGiven = options.now;
+        const fixed = this.fixed;
+        this.now = options.now ?? (Number.isFinite(fixed) ? () => fixed : () => Date.now());
+        this.memory = el16.dataset.kpRemember ? `kp-remember:snooze:${el16.dataset.kpRemember}` : "";
+        this.until = null;
+        this.last = null;
+        this.busy = false;
+        this.lower = null;
+        this.bar = buildBar2(this.doc, this.s, this.id, this.chips);
+        this.p = buildPanel2(this.doc, this.s, this.id);
+      }
+      /** The element the panel stands under: the menu button, or the picker. */
+      anchor() {
+        return this.bar.wrapper ? this.bar.trigger : this.host;
+      }
+      /** @param {HTMLElement} p */
+      place(p) {
+        const box = this.anchor().getBoundingClientRect();
+        const left = Math.max(EDGE_PX, Math.min(box.left, this.doc.documentElement.clientWidth - p.offsetWidth - EDGE_PX));
+        p.style.setProperty("left", `${left}px`);
+        p.style.setProperty("top", `${box.bottom + GAP_PX}px`);
+        placeBlockSide(p, box);
+      }
+      /** Open the panel at the last moment picked, else tomorrow morning. */
+      openPanel() {
+        const { panel, picker, date, time, error } = this.p;
+        if (!panel.hidden) return;
+        stopClose(panel);
+        const now = this.now();
+        const base = this.last !== null && this.last > now ? this.last : dayAt(now, 1, clock2(this.morning, "09:00"), this.zone) ?? now + DAY_MS2;
+        const w = wallTime(base, this.zone);
+        datePicker(picker)?.set(`${w.year}-${two7(w.month)}-${two7(w.day)}`);
+        time.value = `${two7(w.hour)}:${two7(w.minute)}`;
+        error.textContent = "";
+        this.markBad([]);
+        panel.hidden = false;
+        this.lower = raiseOverlay(panel, (p) => this.place(p));
+        arriveShown(panel);
+        date.focus();
+      }
+      /** @param {boolean} [refocus] */
+      async closePanel(refocus = true) {
+        const panel = this.p.panel;
+        if (panel.hidden) return;
+        datePicker(this.p.picker)?.close();
+        if (!await playClose(panel)) return;
+        panel.hidden = true;
+        this.lower?.();
+        this.lower = null;
+        stopClose(panel);
+        if (refocus) (this.chips ? this.bar.row?.querySelector("button") ?? this.host : this.bar.trigger).focus();
+      }
+      /** Mark the fields that are wrong, and only those. @param {HTMLInputElement[]} bad */
+      markBad(bad) {
+        for (const input of [this.p.date, this.p.time]) {
+          if (bad.includes(input)) {
+            input.setAttribute("aria-invalid", "true");
+            input.setAttribute("aria-describedby", this.p.error.id);
+          } else {
+            input.removeAttribute("aria-invalid");
+            input.removeAttribute("aria-describedby");
+          }
+        }
+      }
+      /**
+       * The moment the panel says, or what is wrong with it: no date, no time, in the past, or beyond the picker's longest.
+       * @returns {{ ms: number } | { bad: HTMLInputElement[], words: string[] }}
+       */
+      readPanel() {
+        const { date, time } = this.p;
+        const s2 = this.s;
+        const day = datePicker(this.p.picker)?.get() ?? null;
+        const t = parseTime(time.value);
+        if (!day || !t) return { bad: [...day ? [] : [date], ...t ? [] : [time]], words: [...day ? [] : [s2.snoozeErrorDate], ...t ? [] : [s2.snoozeErrorTime]] };
+        const ms = zonedTime(day.getFullYear(), day.getMonth() + 1, day.getDate(), t.hour, t.minute, this.zone);
+        const longest = presetMs(this.max) || presetMs(MAX_DEFAULT);
+        if (ms === null) return { bad: [time], words: [s2.snoozeErrorTime] };
+        if (ms <= this.now() + MINUTE2) return { bad: [date, time], words: [s2.snoozeErrorPast] };
+        if (ms - this.now() > longest) return { bad: [date], words: [s2.snoozeErrorMax(Math.round(longest / DAY_MS2))] };
+        return { ms };
+      }
+    };
+  }
+});
+
+// js/snooze/controller.js
+var TICK_MS3, SnoozePicker;
+var init_controller16 = __esm({
+  "js/snooze/controller.js"() {
+    "use strict";
+    init_datepicker();
+    init_menu_button();
+    init_runs();
+    init_choices();
+    init_panel2();
+    TICK_MS3 = 3e4;
+    SnoozePicker = class extends SnoozePanel {
+      /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.handle = {
+          element: el16,
+          until: () => this.until !== null && this.until > this.now() ? this.until : null,
+          setUntil: (next2) => this.setUntil(next2),
+          setBusy: (next2) => this.setBusy(next2),
+          choices: () => this.offered(),
+          openPanel: () => this.openPanel(),
+          closePanel: () => void this.closePanel(false)
+        };
+      }
+      connect() {
+        const el16 = this.host;
+        const { bar, status, end, wrapper, row } = this.bar;
+        const p = this.p;
+        el16.classList.add("kp-snooze");
+        el16.dataset.kpSnoozeAttached = "";
+        this.readMemory();
+        el16.replaceChildren(bar, status, p.panel);
+        this.own(() => {
+          el16.replaceChildren();
+          el16.removeAttribute("aria-busy");
+          delete el16.dataset.kpSnoozeAttached;
+          delete el16.dataset.kpSnoozedState;
+        });
+        this.own(attachDatePickers(p.panel));
+        this.own(wrapper ? attachMenuButtons(el16) : () => void 0);
+        this.own(() => this.lower?.());
+        if (wrapper) {
+          this.listen(wrapper, MENU_SELECT_EVENT, (event) => this.pick(String(
+            /** @type {CustomEvent} */
+            event.detail?.value ?? ""
+          )));
+          this.listen(wrapper, "pointerdown", () => this.fill(), true);
+          this.listen(wrapper, "keydown", () => this.fill(), true);
+        }
+        if (row) this.listen(row, "click", (event) => this.onChip(event));
+        this.listen(end, "click", () => this.onEnd());
+        this.listen(p.cancel, "click", () => void this.closePanel());
+        this.listen(p.apply, "click", () => this.onApply());
+        this.listen(p.panel, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(this.doc, "pointerdown", (event) => this.onOutside(event), true);
+        this.setUntil(el16.dataset.kpSnoozedUntil ?? null);
+        this.paintStatus();
+        this.fill();
+        if (!Number.isFinite(this.fixed) && !this.nowGiven) {
+          const tick6 = window.setInterval(() => (this.paintStatus(), this.fill()), TICK_MS3);
+          this.own(() => clearInterval(tick6));
+        }
+      }
+      /** The last moment picked, kept across visits when the picker asks to be remembered. */
+      readMemory() {
+        if (!this.memory) return;
+        try {
+          const kept = Number(localStorage.getItem(this.memory));
+          if (Number.isFinite(kept) && kept > 0) this.last = kept;
+        } catch {
+        }
+      }
+      offered() {
+        const { morning, evening, max, zone, last, locale, s: s2 } = this;
+        return snoozeChoices({ now: this.now(), choices: this.choiceKeys, morning, evening, max, zone, last, locale, strings: s2 });
+      }
+      /** The words on the trigger and under the bar, in step with what is snoozed. */
+      paintStatus() {
+        const { status, end, trigger } = this.bar;
+        const s2 = this.s;
+        const snoozed = this.until !== null && this.until > this.now();
+        const when = snoozed && this.until !== null ? `${runMoment(this.until, this.zone, this.locale)} \xB7 ${runsRelative(this.until, this.now(), s2)}` : "";
+        status.textContent = snoozed ? s2.snoozeUntil(when) : s2.snoozeNone;
+        status.dataset.kpSnoozed = String(snoozed);
+        end.hidden = !snoozed;
+        end.disabled = this.busy;
+        this.host.dataset.kpSnoozedState = snoozed ? "snoozed" : "idle";
+        if (this.chips) return;
+        trigger.replaceChildren();
+        const text = this.doc.createElement("span");
+        text.className = "kp-button__text";
+        text.textContent = snoozed ? s2.snoozeChange : s2.snoozeTrigger;
+        trigger.append(text);
+        trigger.setAttribute("aria-describedby", status.id);
+        if (this.busy) {
+          const layer = this.doc.createElement("span");
+          layer.className = "kp-button__busy";
+          layer.setAttribute("aria-hidden", "true");
+          const spin = this.doc.createElement("span");
+          spin.className = "kp-spinner";
+          layer.append(spin);
+          trigger.append(layer);
+        }
+        trigger.toggleAttribute("data-kp-busy", this.busy);
+        trigger.toggleAttribute("aria-busy", this.busy);
+        trigger.setAttribute("aria-disabled", String(this.busy));
+      }
+      /** Fill the menu or the chips with what is offered now. */
+      fill() {
+        const list = this.offered();
+        const s2 = this.s;
+        const { wrapper, row } = this.bar;
+        if (wrapper) {
+          const items = list.map((c) => ({ label: c.label, hint: c.at === null ? s2.snoozePickHint : c.hint, value: c.key, disabled: this.busy ? s2.snoozeSaving : null }));
+          setMenu(wrapper, [{ group: "", items }]);
+        } else if (row) row.replaceChildren(...list.map((c) => this.chip(c)));
+      }
+      /** @param {import('./choices.js').SnoozeChoice} c */
+      chip(c) {
+        const chip = this.doc.createElement("button");
+        chip.type = "button";
+        chip.className = "kp-segmented__item kp-snooze__chip";
+        chip.dataset.value = c.key;
+        chip.disabled = this.busy;
+        const label = this.doc.createElement("span");
+        label.className = "kp-snooze__chip-label";
+        label.textContent = c.label;
+        const when = this.doc.createElement("span");
+        when.className = "kp-snooze__chip-when";
+        when.textContent = c.at === null ? this.s.snoozePickHint : c.moment;
+        chip.append(label, when);
+        return chip;
+      }
+      /** @param {number} ms @param {string} key */
+      choose(ms, key) {
+        this.until = ms;
+        if (key === "pick") {
+          this.last = ms;
+          if (this.memory) {
+            try {
+              localStorage.setItem(this.memory, String(ms));
+            } catch {
+            }
+          }
+        }
+        this.paintStatus();
+        this.fill();
+        this.host.dispatchEvent(new CustomEvent(SNOOZE_EVENT, { bubbles: true, detail: { until: new Date(ms).toISOString(), choice: key } }));
+      }
+      onApply() {
+        const read = this.readPanel();
+        if ("ms" in read) {
+          void this.closePanel();
+          return this.choose(read.ms, "pick");
+        }
+        this.p.error.textContent = read.words.join(" ");
+        this.markBad(read.bad);
+        read.bad[0]?.focus();
+      }
+      /** Esc closes the panel (unless the calendar in it is open); Enter in the time applies. @param {KeyboardEvent} event */
+      onKey(event) {
+        const panel = this.p.panel;
+        if (event.key === "Escape" && !panel.hidden) {
+          if (panel.querySelector("[data-kp-date-panel]:not([hidden])")) return;
+          event.preventDefault();
+          void this.closePanel();
+        } else if (event.key === "Enter" && event.target === this.p.time) {
+          event.preventDefault();
+          this.onApply();
+        }
+      }
+      /** @param {Event} event */
+      onOutside(event) {
+        const panel = this.p.panel;
+        if (panel.hidden) return;
+        const target = (
+          /** @type {Node} */
+          event.target
+        );
+        if (panel.contains(target) || this.anchor().contains(target)) return;
+        void this.closePanel(false);
+      }
+      /** @param {string} key */
+      pick(key) {
+        if (this.busy) return;
+        if (key === "pick") return this.openPanel();
+        const match = this.offered().find((c) => c.key === key);
+        if (match?.at != null) this.choose(match.at, key);
+      }
+      /** @param {Event} event */
+      onChip(event) {
+        const chip = event.target instanceof Element ? event.target.closest(".kp-snooze__chip") : null;
+        if (chip instanceof HTMLElement && this.bar.row?.contains(chip)) this.pick(chip.dataset.value ?? "");
+      }
+      onEnd() {
+        if (this.busy) return;
+        this.until = null;
+        this.paintStatus();
+        this.fill();
+        this.host.dispatchEvent(new CustomEvent(SNOOZE_END_EVENT, { bubbles: true, detail: {} }));
+      }
+      /** @param {number | string | Date | null} next */
+      setUntil(next2) {
+        const ms = next2 === null ? NaN : next2 instanceof Date ? next2.getTime() : typeof next2 === "number" ? next2 : Date.parse(next2);
+        this.until = Number.isFinite(ms) ? ms : null;
+        this.paintStatus();
+      }
+      /** @param {boolean} next */
+      setBusy(next2) {
+        this.busy = next2;
+        this.host.toggleAttribute("aria-busy", next2);
+        this.paintStatus();
+        this.fill();
+      }
+    };
+  }
+});
+
+// js/snooze.js
+var snooze_exports = {};
+__export(snooze_exports, {
+  SNOOZE: () => SNOOZE,
+  SNOOZE_CHOICES: () => SNOOZE_CHOICES,
+  SNOOZE_END_EVENT: () => SNOOZE_END_EVENT,
+  SNOOZE_EVENT: () => SNOOZE_EVENT,
+  attachSnoozes: () => attachSnoozes,
+  dayAt: () => dayAt,
+  openSnoozePanel: () => openSnoozePanel,
+  registerSnoozeWords: () => registerSnoozeWords,
+  setSnoozeBusy: () => setSnoozeBusy,
+  setSnoozedUntil: () => setSnoozedUntil,
+  snooze: () => snooze,
+  snoozeChoices: () => snoozeChoices,
+  snoozeWords: () => snoozeWords
+});
+function snooze(element) {
+  return controllerOf(element, SnoozePicker)?.handle ?? null;
+}
+function setSnoozedUntil(element, until) {
+  snooze(element)?.setUntil(until);
+}
+function setSnoozeBusy(element, busy) {
+  snooze(element)?.setBusy(busy);
+}
+function openSnoozePanel(element, open4 = true) {
+  const h2 = snooze(element);
+  if (open4) h2?.openPanel();
+  else h2?.closePanel();
+}
+function attachSnoozes(root = document, { now } = {}) {
+  return attachAll(root, SNOOZE, SnoozePicker, { now });
+}
+var init_snooze = __esm({
+  "js/snooze.js"() {
+    "use strict";
+    init_controller();
+    init_choices();
+    init_controller16();
+    init_choices();
   }
 });
 
@@ -67658,7 +67706,7 @@ var init_options2 = __esm({
 });
 
 // js/graph/instance.js
-var radiusOf, isShown, make25, SVG_NS3, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP;
+var radiusOf, isShown, make26, SVG_NS3, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP;
 var init_instance3 = __esm({
   "js/graph/instance.js"() {
     "use strict";
@@ -67668,7 +67716,7 @@ var init_instance3 = __esm({
       return base === 14 ? r : r * base / 14;
     };
     isShown = (el16) => !!el16 && el16.isConnected && el16.getClientRects().length > 0;
-    make25 = (doc, tag, className, text) => {
+    make26 = (doc, tag, className, text) => {
       const el16 = doc.createElement(tag);
       if (className) el16.className = className;
       if (text != null) el16.textContent = text;
@@ -67959,8 +68007,8 @@ function restyleGraph(g) {
     node.classList.toggle("is-picked", g.selected.has(id));
     node.setAttribute("aria-pressed", String(g.selected.has(id)));
   }
-  for (const button4 of g.legend.querySelectorAll("[data-kp-kind]"))
-    button4.setAttribute("aria-pressed", String(!g.hidden.has(button4.getAttribute("data-kp-kind") ?? "")));
+  for (const button5 of g.legend.querySelectorAll("[data-kp-kind]"))
+    button5.setAttribute("aria-pressed", String(!g.hidden.has(button5.getAttribute("data-kp-kind") ?? "")));
   g.showAll.toggleAttribute("data-kp-idle", g.selected.size === 0 && g.hidden.size === 0 && !g.detail);
 }
 function fitDrawnLabels(labels, W, H) {
@@ -68104,15 +68152,15 @@ function renderDetail(g) {
   if (g.detailShown === node.id && !panel.hidden) return;
   const doc = g.el.ownerDocument;
   detailCount += 1;
-  const title = make25(doc, "h3", "kp-graph__detail-title", node.label);
+  const title = make26(doc, "h3", "kp-graph__detail-title", node.label);
   title.id = `kp-graph-detail-${detailCount}`;
   title.setAttribute("data-kp-anchors", "off");
-  const close = make25(doc, "button", "kp-button kp-button--sm kp-graph__detail-close", g.strings.graphDetailClose);
+  const close = make26(doc, "button", "kp-button kp-button--sm kp-graph__detail-close", g.strings.graphDetailClose);
   close.type = "button";
   close.title = g.strings.graphDetailCloseTitle;
   g.decorate?.(close, { kind: "detail-close", host: g.el, key: keyOf7(g.el), value: node.id, label: node.label });
-  const body = make25(doc, "div", "kp-graph__detail-body");
-  panel.replaceChildren(make25(doc, "div", "kp-graph__detail-head"), body);
+  const body = make26(doc, "div", "kp-graph__detail-body");
+  panel.replaceChildren(make26(doc, "div", "kp-graph__detail-head"), body);
   panel.firstElementChild.append(title, close);
   panel.setAttribute("aria-labelledby", title.id);
   panel.hidden = false;
@@ -68122,7 +68170,7 @@ function renderDetail(g) {
   g.el.dispatchEvent(new CustomEvent(GRAPH_DETAIL_EVENT, { bubbles: true, detail: info }));
   const made6 = g.detailHook?.(info);
   if (made6 != null && made6 !== void 0) body.append(made6 instanceof Node ? made6 : doc.createTextNode(String(made6)));
-  if (!body.childNodes.length) body.append(make25(doc, "p", "kp-graph__detail-text", node.description));
+  if (!body.childNodes.length) body.append(make26(doc, "p", "kp-graph__detail-text", node.description));
 }
 var detailCount, insetOf;
 var init_view2 = __esm({
@@ -68412,19 +68460,19 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   const present = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
   g.legend.replaceChildren(
     ...present.map((k, index) => {
-      const li = make25(doc, "li");
-      const button4 = make25(doc, "button", "kp-graph__kind");
-      button4.type = "button";
-      button4.dataset.kpKind = k.kind;
-      button4.title = k.hint;
-      button4.setAttribute("aria-pressed", String(!g.hidden.has(k.kind)));
+      const li = make26(doc, "li");
+      const button5 = make26(doc, "button", "kp-graph__kind");
+      button5.type = "button";
+      button5.dataset.kpKind = k.kind;
+      button5.title = k.hint;
+      button5.setAttribute("aria-pressed", String(!g.hidden.has(k.kind)));
       const sample = svgEl(doc, "svg", { class: "kp-graph__sample", viewBox: "0 0 24 8", "aria-hidden": "true" });
       const line = svgEl(doc, "line", { x1: 1, y1: 4, x2: 23, y2: 4, "data-kp-style": k.style });
       line.setAttribute("style", `--kp-graph-edge-colour: ${k.colour}`);
       sample.append(line);
-      button4.append(sample, make25(doc, "span", "", k.label));
-      li.append(button4);
-      g.decorate?.(button4, { kind: "kind", host: g.el, key: keyOf7(g.el), index, value: k.kind, label: k.label });
+      button5.append(sample, make26(doc, "span", "", k.label));
+      li.append(button5);
+      g.decorate?.(button5, { kind: "kind", host: g.el, key: keyOf7(g.el), index, value: k.kind, label: k.label });
       return li;
     })
   );
@@ -68541,35 +68589,35 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
     const view = doc.defaultView;
     const initial = dataChild(el16);
     const script = el16.querySelector(":scope > script[data-kp-graph-data]");
-    const bar = make25(doc, "div", "kp-graph__bar");
-    const legend = make25(doc, "ul", "kp-graph__kinds");
+    const bar = make26(doc, "div", "kp-graph__bar");
+    const legend = make26(doc, "ul", "kp-graph__kinds");
     legend.setAttribute("aria-label", s2.graphKinds);
     legend.hidden = true;
-    const showAll = make25(doc, "button", "kp-button kp-button--sm kp-graph__show-all", s2.graphShowAll);
+    const showAll = make26(doc, "button", "kp-button kp-button--sm kp-graph__show-all", s2.graphShowAll);
     showAll.type = "button";
     showAll.title = s2.graphShowAllTitle;
     showAll.setAttribute("data-kp-idle", "");
     bar.append(legend, showAll);
-    const box = make25(doc, "div", "kp-graph__box");
+    const box = make26(doc, "div", "kp-graph__box");
     const svg2 = (
       /** @type {SVGSVGElement} */
       /** @type {unknown} */
       svgEl(doc, "svg", { class: "kp-graph__svg", role: "group" })
     );
     svg2.setAttribute("aria-label", `${el16.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint}`);
-    const note2 = make25(doc, "p", "kp-graph__note");
+    const note2 = make26(doc, "p", "kp-graph__note");
     note2.setAttribute("role", "status");
-    const plate = make25(doc, "div", "kp-graph__state");
+    const plate = make26(doc, "div", "kp-graph__state");
     plate.hidden = true;
-    const zoomBox = make25(doc, "div", "kp-graph__zoom");
+    const zoomBox = make26(doc, "div", "kp-graph__zoom");
     zoomBox.setAttribute("role", "group");
     zoomBox.setAttribute("aria-label", s2.graphZoom);
     zoomBox.hidden = true;
-    const zoomOut = make25(doc, "button", "kp-button kp-button--sm kp-graph__zoom-out", "\u2212");
-    const zoomIn = make25(doc, "button", "kp-button kp-button--sm kp-graph__zoom-in", "+");
-    const zoomReset = make25(doc, "button", "kp-button kp-button--sm kp-graph__zoom-reset", s2.graphZoomReset);
+    const zoomOut = make26(doc, "button", "kp-button kp-button--sm kp-graph__zoom-out", "\u2212");
+    const zoomIn = make26(doc, "button", "kp-button kp-button--sm kp-graph__zoom-in", "+");
+    const zoomReset = make26(doc, "button", "kp-button kp-button--sm kp-graph__zoom-reset", s2.graphZoomReset);
     for (
-      const [button4, label] of
+      const [button5, label] of
       /** @type {const} */
       [
         [zoomOut, s2.graphZoomOut],
@@ -68577,16 +68625,16 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
         [zoomReset, s2.graphZoomResetTitle]
       ]
     ) {
-      button4.type = "button";
-      button4.title = label;
-      button4.setAttribute("aria-label", label);
+      button5.type = "button";
+      button5.title = label;
+      button5.setAttribute("aria-label", label);
     }
     zoomBox.append(zoomOut, zoomIn, zoomReset);
-    const panel = make25(doc, "aside", "kp-graph__detail");
+    const panel = make26(doc, "aside", "kp-graph__detail");
     panel.setAttribute("role", "region");
     panel.hidden = true;
     box.append(svg2, note2, plate, zoomBox, panel);
-    const hint2 = make25(doc, "p", "kp-graph__hint", s2.graphHint);
+    const hint2 = make26(doc, "p", "kp-graph__hint", s2.graphHint);
     el16.replaceChildren(bar, box, hint2, ...script ? [script] : []);
     const g = {
       el: el16,
@@ -68818,9 +68866,9 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       return true;
     };
     const onZoomBox = (event) => {
-      const button4 = event.target instanceof Element ? event.target.closest("button") : null;
-      if (!button4 || button4.getAttribute("aria-disabled") === "true") return;
-      graphZoom(el16, button4 === zoomIn ? "in" : button4 === zoomOut ? "out" : "reset");
+      const button5 = event.target instanceof Element ? event.target.closest("button") : null;
+      if (!button5 || button5.getAttribute("aria-disabled") === "true") return;
+      graphZoom(el16, button5 === zoomIn ? "in" : button5 === zoomOut ? "out" : "reset");
     };
     const onKey6 = (event) => {
       const node = nodeOf(event.target);
@@ -68854,12 +68902,12 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       focusNode(nodes[to]);
     };
     const onKind = (event) => {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLElement | null} */
         event.target instanceof Element ? event.target.closest("[data-kp-kind]") : null
       );
-      if (!button4) return;
-      const kind = button4.dataset.kpKind ?? "";
+      if (!button5) return;
+      const kind = button5.dataset.kpKind ?? "";
       graphHideKind(el16, kind, !g.hidden.has(kind));
     };
     const onShowAll = () => clear();
@@ -69320,12 +69368,12 @@ function cellFor(list, row) {
 }
 function buildButton(list) {
   const s2 = getStrings();
-  const button4 = (
+  const button5 = (
     /** @type {HTMLButtonElement} */
     el10("kp-button kp-button--sm kp-claim__button", "button")
   );
-  button4.type = "button";
-  button4.setAttribute("data-kp-claim-action", "");
+  button5.type = "button";
+  button5.setAttribute("data-kp-claim-action", "");
   const take = el10("kp-claim__face kp-claim__face--take", "span");
   take.textContent = attr10(list, "self-label", s2.claimTake);
   const held2 = el10("kp-claim__face kp-claim__face--held", "span");
@@ -69333,8 +69381,8 @@ function buildButton(list) {
   const busy = el10("kp-claim__face kp-claim__face--busy", "span");
   const spin = el10("kp-spinner", "span");
   busy.append(spin);
-  button4.append(take, held2, busy);
-  return button4;
+  button5.append(take, held2, busy);
+  return button5;
 }
 function fillRow(list, row, item) {
   const s2 = getStrings();
@@ -69396,27 +69444,27 @@ function fillRow(list, row, item) {
   );
   const off = whyOff(list, item, by);
   if (!assign) {
-    let button4 = (
+    let button5 = (
       /** @type {HTMLButtonElement | null} */
       control.querySelector(".kp-claim__button")
     );
-    if (!button4) {
-      button4 = buildButton(list);
-      control.replaceChildren(button4);
+    if (!button5) {
+      button5 = buildButton(list);
+      control.replaceChildren(button5);
     }
     const mine = among(st.viewer, by);
-    const takeFace = button4.querySelector(".kp-claim__face--take");
+    const takeFace = button5.querySelector(".kp-claim__face--take");
     if (takeFace && takeFace.textContent !== attr10(list, "self-label", s2.claimTake)) takeFace.textContent = attr10(list, "self-label", s2.claimTake);
-    button4.setAttribute("data-kp-claim-face", busy ? "busy" : mine ? "held" : "take");
-    button4.setAttribute("aria-pressed", String(mine));
-    button4.setAttribute("aria-label", mine ? s2.claimHeldLabel(item.label) : s2.claimTakeLabel(item.label));
-    button4.classList.toggle("kp-button--primary", !mine && by.length === 0);
-    button4.toggleAttribute("aria-busy", busy);
+    button5.setAttribute("data-kp-claim-face", busy ? "busy" : mine ? "held" : "take");
+    button5.setAttribute("aria-pressed", String(mine));
+    button5.setAttribute("aria-label", mine ? s2.claimHeldLabel(item.label) : s2.claimTakeLabel(item.label));
+    button5.classList.toggle("kp-button--primary", !mine && by.length === 0);
+    button5.toggleAttribute("aria-busy", busy);
     const blocked = off !== null || busy;
-    button4.disabled = blocked && off !== null;
-    button4.setAttribute("aria-disabled", String(blocked));
-    if (off !== null) button4.setAttribute("data-kp-disabled-reason", off);
-    else button4.removeAttribute("data-kp-disabled-reason");
+    button5.disabled = blocked && off !== null;
+    button5.setAttribute("aria-disabled", String(blocked));
+    if (off !== null) button5.setAttribute("data-kp-disabled-reason", off);
+    else button5.removeAttribute("data-kp-disabled-reason");
   } else {
     let wrapper = (
       /** @type {HTMLElement | null} */
@@ -69947,11 +69995,11 @@ function attachClaims(root = document) {
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (!target) return;
-      const button4 = target.closest(".kp-claim__button");
-      if (button4 instanceof HTMLButtonElement) {
+      const button5 = target.closest(".kp-claim__button");
+      if (button5 instanceof HTMLButtonElement) {
         event.preventDefault();
-        const row = button4.closest(".kp-checklist__item");
-        if (row instanceof HTMLElement && button4.getAttribute("aria-disabled") !== "true") press(list, row);
+        const row = button5.closest(".kp-checklist__item");
+        if (row instanceof HTMLElement && button5.getAttribute("aria-disabled") !== "true") press(list, row);
         return;
       }
       const chip = target.closest(".kp-claim__chips [data-value]");
@@ -72281,7 +72329,7 @@ function renderCaption(root, caption, value, state6, st) {
   if (state6 === "loading") caption.textContent = "";
   return full;
 }
-function button3(className, text) {
+function button4(className, text) {
   const b = (
     /** @type {HTMLButtonElement} */
     el12(className, "button")
@@ -72298,24 +72346,24 @@ function renderActions(root, value, full, state6, drawn2, hidden2, st, s2) {
   actions.replaceChildren();
   const live4 = state6 === "ready" || state6 === "error";
   if (attr12(root, "copy", "true") !== "false") {
-    const copy3 = button3("kp-button kp-qr__copy", s2.qrCopy);
+    const copy3 = button4("kp-button kp-qr__copy", s2.qrCopy);
     copy3.setAttribute("data-kp-flash-words", `${s2.qrCopied},${s2.qrCopyFailed}`);
     copy3.disabled = !live4 || value === "";
     if (copy3.disabled) copy3.setAttribute("data-kp-disabled-reason", value === "" ? s2.qrNoLink : s2.qrCopyOff);
     actions.append(copy3);
   }
   if (full.length > QR_FOLD && state6 !== "loading") {
-    const more = button3("kp-button kp-button--ghost kp-qr__more", st.open ? s2.qrShowLess : s2.qrShowAllChars(full.length));
+    const more = button4("kp-button kp-button--ghost kp-qr__more", st.open ? s2.qrShowLess : s2.qrShowAllChars(full.length));
     more.setAttribute("aria-expanded", String(st.open));
     actions.append(more);
   }
   const dl = attr12(root, "download", "false");
   if ((dl === "png" || dl === "svg") && drawn2 && !hidden2) {
-    const b = button3("kp-button kp-button--ghost kp-qr__download", dl === "png" ? s2.qrDownloadPng : s2.qrDownloadSvg);
+    const b = button4("kp-button kp-button--ghost kp-qr__download", dl === "png" ? s2.qrDownloadPng : s2.qrDownloadSvg);
     b.setAttribute("data-kp-qr-download-as", dl);
     actions.append(b);
   }
-  if (attr12(root, "reveal", "shown") === "click" && state6 === "ready" && st.shown) actions.append(button3("kp-button kp-button--ghost kp-qr__hide", s2.qrHide));
+  if (attr12(root, "reveal", "shown") === "click" && state6 === "ready" && st.shown) actions.append(button4("kp-button kp-button--ghost kp-qr__hide", s2.qrHide));
   attachDisabledReasons(actions);
 }
 function renderWarn(root, bytes, state6, s2) {
@@ -72366,14 +72414,14 @@ function qrSvg(root) {
   return svg2 ? new XMLSerializer().serializeToString(svg2) : null;
 }
 async function copyLink(root) {
-  const button4 = (
+  const button5 = (
     /** @type {HTMLButtonElement | null} */
     root.querySelector(".kp-qr__copy")
   );
   const value = valueOf2(root);
-  if (!button4 || value === "") return;
+  if (!button5 || value === "") return;
   const s2 = getStrings();
-  await runFlashButton(button4, async () => {
+  await runFlashButton(button5, async () => {
     try {
       await navigator.clipboard.writeText(value);
     } catch {
@@ -72441,7 +72489,7 @@ var init_actions5 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -72545,7 +72593,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller16();
+    init_controller17();
     init_state20();
     init_state20();
     init_matrix2();
@@ -73304,7 +73352,7 @@ function clearConsole(root, { undo = true } = {}) {
       }
     });
 }
-async function useTool(root, tool, b, button4) {
+async function useTool(root, tool, b, button5) {
   const st = stateOf8(root);
   const s2 = getStrings();
   if (tool === "collapse") {
@@ -73328,7 +73376,7 @@ async function useTool(root, tool, b, button4) {
     return;
   }
   const text = tool === "copy-command" ? b.command : b.output;
-  await runFlashButton(button4, async () => {
+  await runFlashButton(button5, async () => {
     try {
       await navigator.clipboard.writeText(text);
       return s2.consoleCopied;
@@ -73747,31 +73795,31 @@ function ensureParts4(root) {
   const id = `kp-logviewer-${logViewerState.serial}`;
   const bar = el14("kp-logviewer__bar");
   const search = el14("kp-logviewer__search");
-  const field = (
+  const field2 = (
     /** @type {HTMLInputElement} */
     el14("kp-field__input kp-logviewer__find", "input")
   );
-  field.type = "search";
-  field.id = `${id}-find`;
-  field.setAttribute("autocomplete", "off");
-  field.setAttribute("spellcheck", "false");
-  field.setAttribute("aria-label", s2.logviewerSearch);
-  field.placeholder = s2.logviewerSearchHint;
+  field2.type = "search";
+  field2.id = `${id}-find`;
+  field2.setAttribute("autocomplete", "off");
+  field2.setAttribute("spellcheck", "false");
+  field2.setAttribute("aria-label", s2.logviewerSearch);
+  field2.placeholder = s2.logviewerSearchHint;
   const matches2 = el14("kp-logviewer__matches", "span");
   const stepper = (step, glyph3, words2) => {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLButtonElement} */
       el14("kp-button kp-button--ghost kp-button--sm kp-logviewer__step", "button")
     );
-    button4.type = "button";
-    button4.setAttribute("data-kp-logviewer-step", step);
-    button4.setAttribute("aria-label", words2);
-    button4.title = words2;
+    button5.type = "button";
+    button5.setAttribute("data-kp-logviewer-step", step);
+    button5.setAttribute("aria-label", words2);
+    button5.title = words2;
     const mark = el14("kp-logviewer__glyph", "span");
     mark.setAttribute("aria-hidden", "true");
     mark.textContent = glyph3;
-    button4.append(mark);
-    return button4;
+    button5.append(mark);
+    return button5;
   };
   const previous = stepper("-1", "\u2191", s2.logviewerPrevious);
   const next2 = stepper("1", "\u2193", s2.logviewerNext);
@@ -73782,7 +73830,7 @@ function ensureParts4(root) {
   only.type = "button";
   only.setAttribute("data-kp-logviewer-only", "");
   only.textContent = s2.logviewerOnly;
-  search.append(field, matches2, previous, next2, only);
+  search.append(field2, matches2, previous, next2, only);
   const tools = el14("kp-logviewer__tools");
   const follow3 = (
     /** @type {HTMLButtonElement} */
@@ -74831,17 +74879,17 @@ function lineEl(line, segments) {
   return row;
 }
 function rowButton(className, words2) {
-  const button4 = (
+  const button5 = (
     /** @type {HTMLButtonElement} */
     el15(`${className} kp-diff__row-button`, "button")
   );
-  button4.type = "button";
+  button5.type = "button";
   const glyph3 = el15("kp-diff__row-glyph", "span");
   glyph3.setAttribute("aria-hidden", "true");
   const label = el15("kp-diff__row-label", "span");
   label.textContent = words2;
-  button4.append(glyph3, el15("kp-diff__row-gap", "span"), label);
-  return button4;
+  button5.append(glyph3, el15("kp-diff__row-gap", "span"), label);
+  return button5;
 }
 function fillBody(root, st, file, body) {
   const s2 = getStrings();
@@ -75067,14 +75115,14 @@ function barEl(root, st) {
       ["expand", s2.diffExpandAll],
       ["collapse", s2.diffCollapseAll]
     ]) {
-      const button4 = (
+      const button5 = (
         /** @type {HTMLButtonElement} */
         el15("kp-button kp-button--ghost kp-button--sm", "button")
       );
-      button4.type = "button";
-      button4.textContent = words2;
-      button4.setAttribute("data-kp-diff-all", name);
-      tools.append(button4);
+      button5.type = "button";
+      button5.textContent = words2;
+      button5.setAttribute("data-kp-diff-all", name);
+      tools.append(button5);
     }
     bar.append(tools);
   }
@@ -75092,11 +75140,11 @@ function syncBar(root) {
       ["collapse", open4 === 0, s2.diffAllClosed]
     ]
   ) {
-    const button4 = root.querySelector(`[data-kp-diff-all="${name}"]`);
-    if (!button4) continue;
-    button4.toggleAttribute("disabled", off);
-    if (off) button4.setAttribute("data-kp-disabled-reason", reason);
-    else button4.removeAttribute("data-kp-disabled-reason");
+    const button5 = root.querySelector(`[data-kp-diff-all="${name}"]`);
+    if (!button5) continue;
+    button5.toggleAttribute("disabled", off);
+    if (off) button5.setAttribute("data-kp-disabled-reason", reason);
+    else button5.removeAttribute("data-kp-disabled-reason");
   }
 }
 var init_file = __esm({
@@ -75247,11 +75295,11 @@ function toggleFile(root, path, open4, announce4 = true) {
   syncBar(root);
   if (announce4) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
 }
-async function copyPath(root, button4) {
-  const path = button4.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
+async function copyPath(root, button5) {
+  const path = button5.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
   if (path === "") return;
   const s2 = getStrings();
-  await runFlashButton(button4, async () => {
+  await runFlashButton(button5, async () => {
     try {
       await navigator.clipboard.writeText(path);
     } catch {
@@ -75805,14 +75853,14 @@ function showSaveState(root, failed) {
 }
 function markSelection(root, theme) {
   for (const el16 of root.querySelectorAll(OPTION)) {
-    const button4 = (
+    const button5 = (
       /** @type {HTMLElement} */
       el16
     );
-    const selected = button4.dataset.kpTheme === theme;
-    button4.setAttribute("aria-pressed", String(selected));
-    button4.dataset.selected = String(selected);
-    button4.classList.toggle("is-selected", selected);
+    const selected = button5.dataset.kpTheme === theme;
+    button5.setAttribute("aria-pressed", String(selected));
+    button5.dataset.selected = String(selected);
+    button5.classList.toggle("is-selected", selected);
   }
 }
 function clearMarks(root) {
@@ -77024,7 +77072,7 @@ function resolveTarget(step, doc) {
 }
 var idSeq5 = 0;
 var nextId2 = (prefix) => `${prefix}-${idSeq5 += 1}`;
-var make26 = (doc, tag, className, text) => {
+var make27 = (doc, tag, className, text) => {
   const el16 = doc.createElement(tag);
   el16.className = className;
   if (text != null) el16.textContent = text;
@@ -77061,25 +77109,25 @@ function startTour(steps, { start = 0, remember: remember3, decorate: decorate2,
   let target = null;
   const card = (
     /** @type {HTMLDialogElement} */
-    make26(doc, "dialog", "kp-tour")
+    make27(doc, "dialog", "kp-tour")
   );
   card.dataset.kpArrive = "none";
-  const title = make26(doc, "h3", "kp-tour__title");
+  const title = make27(doc, "h3", "kp-tour__title");
   title.id = nextId2("kp-tour-title");
-  const text = make26(doc, "p", "kp-tour__text");
+  const text = make27(doc, "p", "kp-tour__text");
   text.id = nextId2("kp-tour-text");
   card.setAttribute("aria-labelledby", title.id);
   card.setAttribute("aria-describedby", text.id);
-  const foot = make26(doc, "footer", "kp-tour__foot");
-  const count2 = make26(doc, "span", "kp-tour__count");
-  const buttons = make26(doc, "span", "kp-tour__buttons");
-  const backButton = make26(doc, "button", "kp-button kp-button--sm", strings.tourBack);
+  const foot = make27(doc, "footer", "kp-tour__foot");
+  const count2 = make27(doc, "span", "kp-tour__count");
+  const buttons = make27(doc, "span", "kp-tour__buttons");
+  const backButton = make27(doc, "button", "kp-button kp-button--sm", strings.tourBack);
   backButton.type = "button";
   backButton.title = strings.tourBackTitle;
-  const skipButton = make26(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
+  const skipButton = make27(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
   skipButton.type = "button";
   skipButton.title = strings.tourSkipTitle;
-  const nextButton = make26(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
+  const nextButton = make27(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
   nextButton.type = "button";
   buttons.append(backButton, skipButton, nextButton);
   foot.append(count2, buttons);
@@ -77635,10 +77683,6 @@ export {
   SHORTCUT_EVENT,
   SHORTCUT_HINT_PLACES,
   SHORTCUT_PENDING_EVENT,
-  SNOOZE,
-  SNOOZE_CHOICES,
-  SNOOZE_END_EVENT,
-  SNOOZE_EVENT,
   SORT_VALUE_ATTRIBUTE,
   SPARK,
   STACKBAR,
@@ -77901,7 +77945,6 @@ export {
   dated_options_exports as datedOptionsExports,
   datedValue,
   datepicker_exports as datepickerExports,
-  dayAt,
   dayLabel,
   dayNames,
   dayNumber,
@@ -78084,7 +78127,6 @@ export {
   registerLink,
   registerLoaded,
   registerShortcuts,
-  registerSnoozeWords,
   registersPresent,
   releaseUrl,
   remember_exports as rememberExports,
@@ -78204,9 +78246,7 @@ export {
   slider_exports as sliderExports,
   sliderValues,
   snooze,
-  snoozeChoices,
   snooze_exports as snoozeExports,
-  snoozeWords,
   sortAttention,
   sortPasskeys,
   sparkPaths,
