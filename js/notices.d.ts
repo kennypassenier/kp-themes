@@ -1,14 +1,4 @@
-/** A notification centre. */
-export declare const NOTICES = "[data-kp-notices]";
-export declare const NOTICE_FIX_EVENT = "kp-notice-fix";
-export declare const NOTICE_READ_EVENT = "kp-notice-read";
-export declare const NOTICES_READ_ALL_EVENT = "kp-notices-read-all";
-export declare const NOTICES_SOURCE_EVENT = "kp-notices-source";
-export declare const NOTICES_RETRY_EVENT = "kp-notices-retry";
-export declare const NOTICES_END_QUIET_EVENT = "kp-notices-end-quiet";
-export declare const NOTICES_INBOX_EVENT = "kp-notices-open-inbox";
-/** The severities, worst first. */
-export declare const NOTICE_SEVERITIES: readonly ['critical', 'warning', 'info'];
+export { NOTICES, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_SOURCE_EVENT, NOTICES_RETRY_EVENT, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICE_SEVERITIES, } from './notices/events.js';
 export type Notice = {
     /**
      * stable id: the same key is the same row on every refresh
@@ -73,7 +63,32 @@ export type NoticesHandle = {
      */
     open: () => void;
 };
-/** The handle of an attached centre. @param {Element} element */
+/**
+ * @typedef {object} Notice
+ * @property {string} key stable id: the same key is the same row on every refresh
+ * @property {'critical' | 'warning' | 'info'} severity
+ * @property {string} title what happened, in one line
+ * @property {number} since when, ms since the epoch
+ * @property {string} [consequence] what it affects
+ * @property {string} [remedy] what to do
+ * @property {{ label: string }} [fix] the action that fixes it
+ * @property {boolean} [read]
+ * @property {string} [source] the source it came from (a key of `sources`)
+ * @typedef {object} NoticeSource
+ * @property {string} key @property {string} label @property {boolean} [muted]
+ * @typedef {object} NoticesModel
+ * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
+ * @property {Notice[]} [items]
+ * @property {NoticeSource[]} [sources]
+ * @property {number | string | null} [quietUntil] ISO or epoch ms
+ * @property {string} [error] why it could not be read
+ * @typedef {object} NoticesHandle
+ * @property {HTMLElement} element
+ * @property {(model: NoticesModel) => void} set
+ * @property {() => number} count the number the counter shows
+ * @property {() => void} open open the panel
+ */
+/** The handle of an attached centre. @param {Element} element @returns {NoticesHandle | null} */
 export declare const noticesOf: (element: Element) => NoticesHandle | null;
 /**
  * Give a centre its notices.
@@ -81,7 +96,7 @@ export declare const noticesOf: (element: Element) => NoticesHandle | null;
  */
 export declare function setNotices(element: Element, model: NoticesModel): void;
 /**
- * Wire every notification centre under `root`.
+ * Wire every notification centre under `root`, and the "since" times in it.
  * @param {ParentNode} [root]
  * @returns {() => void} detach
  */

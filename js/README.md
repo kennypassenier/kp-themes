@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -569,3 +569,16 @@ The combobox and the drawn select. 8 files.
 | `select.js`    | The drawn select: its test, its handles and its attach.                      |
 | `state.js`     | The counter the drawn selects share to give each select its own id.          |
 | `types.js`     | The types of the combobox and the drawn select: matchers, handles and hooks. |
+
+## js/notices.js → js/notices/
+
+The notification centre, as a NoticesCentre controller. 6 files.
+
+| File             | Does                                                                                     |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| `controller.js`  | NoticesCentre: wires one centre and handles its clicks, source switches, toggle, keys. |
+| `events.js`      | The selector, the event names, the severities and the fixed numbers.                    |
+| `model.js`       | Reading a time, ordering the notices and taking the panel's newest per severity.         |
+| `parts.js`       | Builds the centre's elements and mounts them for its look.                               |
+| `row.js`         | One notice row and one source switch.                                                    |
+| `view.js`        | NoticesView: the model read through the host's options and the render of every part.     |
