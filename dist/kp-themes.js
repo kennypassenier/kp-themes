@@ -45524,6 +45524,311 @@ var init_structure = __esm({
   }
 });
 
+// js/upload/accepts.js
+function acceptsFile(file, accept) {
+  const rules = accept.split(",").map((r) => r.trim().toLowerCase()).filter(Boolean);
+  if (rules.length === 0) return true;
+  const name = file.name.toLowerCase();
+  const type = file.type.toLowerCase();
+  return rules.some((rule) => {
+    if (rule.startsWith(".")) return name.endsWith(rule);
+    if (rule.endsWith("/*")) return type.startsWith(rule.slice(0, -1));
+    return type === rule;
+  });
+}
+var init_accepts = __esm({
+  "js/upload/accepts.js"() {
+    "use strict";
+  }
+});
+
+// js/upload/values.js
+var UPLOAD, UPLOAD_INPUT, UPLOAD_ZONE, UPLOAD_LIST, FILE_EVENT, REJECT_EVENT, REMOVE_EVENT, REMOVE_CLASS, REMOVE_GLYPH, PERCENT2;
+var init_values13 = __esm({
+  "js/upload/values.js"() {
+    "use strict";
+    UPLOAD = "[data-kp-upload]";
+    UPLOAD_INPUT = "[data-kp-upload-input]";
+    UPLOAD_ZONE = "[data-kp-upload-zone]";
+    UPLOAD_LIST = "[data-kp-upload-list]";
+    FILE_EVENT = "kp-upload-file";
+    REJECT_EVENT = "kp-upload-reject";
+    REMOVE_EVENT = "kp-upload-remove";
+    REMOVE_CLASS = "kp-button kp-button--ghost";
+    REMOVE_GLYPH = "\xD7";
+    PERCENT2 = 100;
+  }
+});
+
+// js/upload/item.js
+function setProgress2(item, percent) {
+  const value = Math.max(0, Math.min(PERCENT2, Math.round(percent)));
+  item.dataset.state = value >= PERCENT2 ? "done" : "uploading";
+  delete item.dataset.error;
+  item.style.setProperty("--kp-progress", `${value}%`);
+  item.querySelector('[role="progressbar"]')?.setAttribute("aria-valuenow", String(value));
+}
+function setDone(item, message = "") {
+  setProgress2(item, PERCENT2);
+  item.querySelector(".kp-upload__message")?.replaceChildren(message);
+}
+function setError(item, message) {
+  item.dataset.state = "error";
+  item.dataset.error = message;
+  item.querySelector(".kp-upload__message")?.replaceChildren(message);
+}
+var init_item = __esm({
+  "js/upload/item.js"() {
+    "use strict";
+    init_values13();
+  }
+});
+
+// js/upload/row.js
+function buildBar2(file, s2) {
+  const bar = document.createElement("span");
+  bar.className = "kp-upload__bar";
+  bar.setAttribute("role", "progressbar");
+  bar.setAttribute("aria-valuemin", "0");
+  bar.setAttribute("aria-valuemax", String(PERCENT2));
+  bar.setAttribute("aria-valuenow", "0");
+  bar.setAttribute("aria-label", s2.uploadProgress(file.name));
+  return bar;
+}
+function buildRow2(file, { locale, removeClassName, glyph: glyph3 }) {
+  const s2 = getStrings();
+  const item = document.createElement("li");
+  item.className = "kp-upload__file";
+  item.dataset.kpUploadFile = file.name;
+  item.dataset.state = "waiting";
+  const name = document.createElement("span");
+  name.className = "kp-upload__name";
+  name.textContent = file.name;
+  const size2 = document.createElement("span");
+  size2.className = "kp-upload__size";
+  size2.textContent = formatBytes(file.size, locale);
+  const bar = buildBar2(file, s2);
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = removeClassName;
+  remove.setAttribute("aria-label", s2.removeNamed(file.name));
+  remove.textContent = glyph3;
+  remove.dataset.kpUploadRemove = "";
+  const message = document.createElement("span");
+  message.className = "kp-upload__message";
+  message.setAttribute("role", "status");
+  message.setAttribute("aria-live", "polite");
+  item.append(name, size2, bar, message, remove);
+  return item;
+}
+var init_row2 = __esm({
+  "js/upload/row.js"() {
+    "use strict";
+    init_strings();
+    init_locale();
+    init_values13();
+  }
+});
+
+// js/upload/core.js
+var UploadCore;
+var init_core9 = __esm({
+  "js/upload/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_locale();
+    init_accepts();
+    init_item();
+    init_row2();
+    init_values13();
+    UploadCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host the upload
+       * @param {UploadOptions} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.cfg = options;
+        this.input = /** @type {HTMLInputElement} */
+        host.querySelector(UPLOAD_INPUT);
+        this.zone = /** @type {HTMLElement} */
+        host.querySelector(UPLOAD_ZONE);
+        this.list = /** @type {HTMLElement} */
+        host.querySelector(UPLOAD_LIST);
+        this.locale = resolveLocale(host.dataset.kpLocale ?? options.locale, host);
+        this.maxBytes = Number.parseInt(host.dataset.kpMaxBytes ?? "", 10) || Infinity;
+        this.maxFiles = Number.parseInt(host.dataset.kpMaxFiles ?? "", 10) || Infinity;
+        this.maxTotal = Number.parseInt(host.dataset.kpMaxTotal ?? "", 10) || Infinity;
+        this.dropping = host.dataset.kpDrop === void 0 ? options.drop ?? true : host.dataset.kpDrop !== "false";
+        this.rows = /* @__PURE__ */ new Map();
+      }
+      /** @param {File} file */
+      row(file) {
+        const { renderRow, removeLabel, removeClassName = REMOVE_CLASS } = this.cfg;
+        if (renderRow !== void 0) return renderRow(file);
+        return buildRow2(file, { locale: this.locale, removeClassName, glyph: this.host.dataset.kpRemoveGlyph ?? removeLabel ?? REMOVE_GLYPH });
+      }
+      /** @param {File} file @param {string} reason @param {string} text */
+      reject(file, reason, text) {
+        const item = this.row(file);
+        setError(item, text);
+        this.list.append(item);
+        this.rows.set(item, file);
+        this.host.dispatchEvent(new CustomEvent(REJECT_EVENT, { bubbles: true, detail: { file, reason, item } }));
+      }
+      /**
+       * Why a file is refused, or null: too many, too large, too large with the others, the wrong type, or the page's own validator.
+       * @param {File} file @param {File[]} accepted the files already taken
+       * @returns {{ reason: string, text: string } | null}
+       */
+      refusal(file, accepted) {
+        const s2 = getStrings();
+        const { maxFiles, maxBytes, maxTotal, locale } = this;
+        if (accepted.length >= maxFiles) return { reason: "too-many", text: s2.uploadTooMany(maxFiles) };
+        if (file.size > maxBytes) return { reason: "too-large", text: s2.uploadTooLarge(formatBytes(maxBytes, locale)) };
+        if (accepted.reduce((sum, f) => sum + f.size, 0) + file.size > maxTotal) return { reason: "total-too-large", text: s2.uploadTotalTooLarge(formatBytes(maxTotal, locale)) };
+        if (this.input.accept && !acceptsFile(file, this.input.accept)) return { reason: "wrong-type", text: s2.uploadWrongType(this.input.accept) };
+        const custom = this.cfg.validate?.(file, accepted) ?? null;
+        return custom === null ? null : { reason: custom, text: custom };
+      }
+      /** @param {FileList | File[]} files */
+      take(files) {
+        for (const file of files) {
+          const accepted = [...this.rows.entries()].filter(([item2]) => item2.dataset.state !== "error").map(([, f]) => f);
+          const refused = this.refusal(file, accepted);
+          if (refused) {
+            this.reject(file, refused.reason, refused.text);
+            continue;
+          }
+          const item = this.row(file);
+          this.list.append(item);
+          this.rows.set(item, file);
+          this.host.dispatchEvent(new CustomEvent(FILE_EVENT, { bubbles: true, detail: { file, item } }));
+        }
+      }
+      /** Take every row out. */
+      clear() {
+        for (const item of this.rows.keys()) item.remove();
+        this.rows.clear();
+      }
+    };
+  }
+});
+
+// js/upload/controller.js
+var UploadZone;
+var init_controller25 = __esm({
+  "js/upload/controller.js"() {
+    "use strict";
+    init_motion();
+    init_core9();
+    init_values13();
+    UploadZone = class extends UploadCore {
+      /**
+       * @param {HTMLElement} host
+       * @param {import('./core.js').UploadOptions} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.handle = {
+          element: host,
+          files: () => [...this.rows.values()],
+          add: (files) => this.take(files),
+          clear: () => this.clear()
+        };
+      }
+      connect() {
+        const { host, input, list, zone } = this;
+        host.dataset.kpUploadAttached = "";
+        this.own(() => delete host.dataset.kpUploadAttached);
+        this.own(() => this.clear());
+        this.own(() => delete zone.dataset.kpDragging);
+        this.listen(input, "change", () => this.onChange());
+        this.listen(list, "click", (event) => this.onListClick(event));
+        if (!this.dropping) return;
+        this.listen(zone, "dragenter", (event) => this.onDragEnter(
+          /** @type {DragEvent} */
+          event
+        ));
+        this.listen(zone, "dragover", (event) => this.onDragOver(
+          /** @type {DragEvent} */
+          event
+        ));
+        this.listen(zone, "dragleave", (event) => this.onDragLeave(
+          /** @type {DragEvent} */
+          event
+        ));
+        this.listen(zone, "drop", (event) => this.onDrop(
+          /** @type {DragEvent} */
+          event
+        ));
+      }
+      onChange() {
+        if (this.input.files !== null) this.take(this.input.files);
+        this.input.value = "";
+      }
+      /** @param {Event} event */
+      onListClick(event) {
+        const button6 = (
+          /** @type {HTMLElement | null} */
+          /** @type {HTMLElement} */
+          event.target.closest("[data-kp-upload-remove]")
+        );
+        if (button6 === null) return;
+        const item = (
+          /** @type {HTMLElement | null} */
+          button6.closest("li, [data-kp-upload-file]")
+        );
+        if (item === null || item.hasAttribute("data-kp-leaving")) return;
+        const ask = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: this.rows.get(item), item } });
+        if (!item.dispatchEvent(ask)) return;
+        this.rows.delete(item);
+        if (leavesState(item)) {
+          item.inert = true;
+          void leave(item);
+        } else item.remove();
+      }
+      /**
+       * The zone takes the drag at its first event. Before, only dragover was
+       * answered: dragenter went uncancelled and set nothing, and the HTML
+       * drag-and-drop model then makes the body the drop target, so the zone
+       * need never see a dragover — Kenny dragged a real file over the live
+       * zone and saw no change (second nostromo pass, 2026-09-13).
+       *
+       * @param {DragEvent} event
+       */
+      onDragEnter(event) {
+        event.preventDefault();
+        this.zone.dataset.kpDragging = "";
+      }
+      /** @param {DragEvent} event */
+      onDragOver(event) {
+        event.preventDefault();
+        this.zone.dataset.kpDragging = "";
+      }
+      /**
+       * Leaving for a child of the zone is not leaving: an icon inside a
+       * consumer's zone would otherwise switch the state off under the pointer.
+       *
+       * @param {DragEvent} event
+       */
+      onDragLeave(event) {
+        const to = event.relatedTarget;
+        if (to instanceof Node && this.zone.contains(to)) return;
+        delete this.zone.dataset.kpDragging;
+      }
+      /** @param {DragEvent} event */
+      onDrop(event) {
+        event.preventDefault();
+        delete this.zone.dataset.kpDragging;
+        const files = event.dataTransfer?.files;
+        if (files !== void 0 && files.length > 0) this.take(files);
+      }
+    };
+  }
+});
+
 // js/upload.js
 var upload_exports = {};
 __export(upload_exports, {
@@ -45537,228 +45842,30 @@ __export(upload_exports, {
   setProgress: () => setProgress2,
   upload: () => upload
 });
-function acceptsFile(file, accept) {
-  const rules = accept.split(",").map((r) => r.trim().toLowerCase()).filter(Boolean);
-  if (rules.length === 0) return true;
-  const name = file.name.toLowerCase();
-  const type = file.type.toLowerCase();
-  return rules.some((rule) => {
-    if (rule.startsWith(".")) return name.endsWith(rule);
-    if (rule.endsWith("/*")) return type.startsWith(rule.slice(0, -1));
-    return type === rule;
-  });
-}
 function upload(element) {
-  return handles6.get(element) ?? null;
+  return controllerOf(element, UploadZone)?.handle ?? null;
 }
-function attachUploads(root = document, { locale: localeOption, validate, renderRow, drop = true, removeLabel, removeClassName = "kp-button kp-button--ghost" } = {}) {
-  const cleanups = [];
-  const created = [];
-  for (const element of root.querySelectorAll(UPLOAD)) {
-    const upload2 = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (upload2.dataset.kpUploadAttached !== void 0) continue;
-    const input = (
-      /** @type {HTMLInputElement | null} */
-      upload2.querySelector("[data-kp-upload-input]")
-    );
-    const zone = (
-      /** @type {HTMLElement | null} */
-      upload2.querySelector("[data-kp-upload-zone]")
-    );
-    const list = (
-      /** @type {HTMLElement | null} */
-      upload2.querySelector("[data-kp-upload-list]")
-    );
-    if (input === null || zone === null || list === null) continue;
-    upload2.dataset.kpUploadAttached = "";
-    const locale = resolveLocale(upload2.dataset.kpLocale ?? localeOption, upload2);
-    const maxBytes = Number.parseInt(upload2.dataset.kpMaxBytes ?? "", 10) || Infinity;
-    const maxFiles = Number.parseInt(upload2.dataset.kpMaxFiles ?? "", 10) || Infinity;
-    const maxTotal = Number.parseInt(upload2.dataset.kpMaxTotal ?? "", 10) || Infinity;
-    const dropping = upload2.dataset.kpDrop === void 0 ? drop : upload2.dataset.kpDrop !== "false";
-    const rows = /* @__PURE__ */ new Map();
-    const row = (file) => {
-      if (renderRow !== void 0) return renderRow(file);
-      const s2 = getStrings();
-      const item = document.createElement("li");
-      item.className = "kp-upload__file";
-      item.dataset.kpUploadFile = file.name;
-      item.dataset.state = "waiting";
-      const name = document.createElement("span");
-      name.className = "kp-upload__name";
-      name.textContent = file.name;
-      const size2 = document.createElement("span");
-      size2.className = "kp-upload__size";
-      size2.textContent = formatBytes(file.size, locale);
-      const bar = document.createElement("span");
-      bar.className = "kp-upload__bar";
-      bar.setAttribute("role", "progressbar");
-      bar.setAttribute("aria-valuemin", "0");
-      bar.setAttribute("aria-valuemax", "100");
-      bar.setAttribute("aria-valuenow", "0");
-      bar.setAttribute("aria-label", s2.uploadProgress(file.name));
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.className = removeClassName;
-      remove.setAttribute("aria-label", s2.removeNamed(file.name));
-      remove.textContent = upload2.dataset.kpRemoveGlyph ?? removeLabel ?? "\xD7";
-      remove.dataset.kpUploadRemove = "";
-      const message = document.createElement("span");
-      message.className = "kp-upload__message";
-      message.setAttribute("role", "status");
-      message.setAttribute("aria-live", "polite");
-      item.append(name, size2, bar, message, remove);
-      return item;
-    };
-    const reject = (file, reason, text) => {
-      const item = row(file);
-      setError(item, text);
-      list.append(item);
-      rows.set(item, file);
-      upload2.dispatchEvent(new CustomEvent(REJECT_EVENT, { bubbles: true, detail: { file, reason, item } }));
-    };
-    const take = (files) => {
-      const s2 = getStrings();
-      for (const file of files) {
-        const accepted = [...rows.entries()].filter(([item2]) => item2.dataset.state !== "error").map(([, f]) => f);
-        if (accepted.length >= maxFiles) {
-          reject(file, "too-many", s2.uploadTooMany(maxFiles));
-          continue;
-        }
-        if (file.size > maxBytes) {
-          reject(file, "too-large", s2.uploadTooLarge(formatBytes(maxBytes, locale)));
-          continue;
-        }
-        if (accepted.reduce((sum, f) => sum + f.size, 0) + file.size > maxTotal) {
-          reject(file, "total-too-large", s2.uploadTotalTooLarge(formatBytes(maxTotal, locale)));
-          continue;
-        }
-        if (input.accept && !acceptsFile(file, input.accept)) {
-          reject(file, "wrong-type", s2.uploadWrongType(input.accept));
-          continue;
-        }
-        const custom = validate?.(file, accepted) ?? null;
-        if (custom !== null) {
-          reject(file, custom, custom);
-          continue;
-        }
-        const item = row(file);
-        list.append(item);
-        rows.set(item, file);
-        upload2.dispatchEvent(new CustomEvent(FILE_EVENT, { bubbles: true, detail: { file, item } }));
-      }
-    };
-    const onChange = () => {
-      if (input.files !== null) take(input.files);
-      input.value = "";
-    };
-    const onListClick = (event) => {
-      const button6 = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-upload-remove]")
-      );
-      if (button6 === null) return;
-      const item = (
-        /** @type {HTMLElement | null} */
-        button6.closest("li, [data-kp-upload-file]")
-      );
-      if (item === null || item.hasAttribute("data-kp-leaving")) return;
-      const ask = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: rows.get(item), item } });
-      if (!item.dispatchEvent(ask)) return;
-      rows.delete(item);
-      if (leavesState(item)) {
-        item.inert = true;
-        void leave(item);
-      } else item.remove();
-    };
-    const onDragOver = (event) => {
-      event.preventDefault();
-      zone.dataset.kpDragging = "";
-    };
-    const onDragEnter = (event) => {
-      event.preventDefault();
-      zone.dataset.kpDragging = "";
-    };
-    const onDragLeave = (event) => {
-      const to = event.relatedTarget;
-      if (to instanceof Node && zone.contains(to)) return;
-      delete zone.dataset.kpDragging;
-    };
-    const onDrop = (event) => {
-      event.preventDefault();
-      delete zone.dataset.kpDragging;
-      const files = event.dataTransfer?.files;
-      if (files !== void 0 && files.length > 0) take(files);
-    };
-    input.addEventListener("change", onChange);
-    list.addEventListener("click", onListClick);
-    if (dropping) {
-      zone.addEventListener("dragenter", onDragEnter);
-      zone.addEventListener("dragover", onDragOver);
-      zone.addEventListener("dragleave", onDragLeave);
-      zone.addEventListener("drop", onDrop);
-    }
-    const handle = {
-      element: upload2,
-      files: () => [...rows.values()],
-      add: take,
-      clear: () => {
-        for (const item of rows.keys()) item.remove();
-        rows.clear();
-      }
-    };
-    handles6.set(upload2, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      input.removeEventListener("change", onChange);
-      list.removeEventListener("click", onListClick);
-      zone.removeEventListener("dragenter", onDragEnter);
-      zone.removeEventListener("dragover", onDragOver);
-      zone.removeEventListener("dragleave", onDragLeave);
-      zone.removeEventListener("drop", onDrop);
-      delete zone.dataset.kpDragging;
-      handle.clear();
-      handles6.delete(upload2);
-      delete upload2.dataset.kpUploadAttached;
-    });
-  }
+function attachUploads(root = document, options = {}) {
+  const made6 = [...root.querySelectorAll(UPLOAD)].filter((node) => !node.hasAttribute("data-kp-upload-attached") && node.querySelector(UPLOAD_INPUT) && node.querySelector(UPLOAD_ZONE) && node.querySelector(UPLOAD_LIST)).map((node) => attachOne(
+    /** @type {HTMLElement} */
+    node,
+    UploadZone,
+    options
+  )).filter((controller) => controller !== void 0);
   const detach = () => {
-    for (const c of cleanups) c();
+    for (const controller of made6) controller.destroy();
   };
-  return Object.assign(detach, { handles: created });
+  return Object.assign(detach, { handles: made6.map((controller) => controller.handle) });
 }
-function setProgress2(item, percent) {
-  const value = Math.max(0, Math.min(100, Math.round(percent)));
-  item.dataset.state = value >= 100 ? "done" : "uploading";
-  delete item.dataset.error;
-  item.style.setProperty("--kp-progress", `${value}%`);
-  item.querySelector('[role="progressbar"]')?.setAttribute("aria-valuenow", String(value));
-}
-function setDone(item, message = "") {
-  setProgress2(item, 100);
-  item.querySelector(".kp-upload__message")?.replaceChildren(message);
-}
-function setError(item, message) {
-  item.dataset.state = "error";
-  item.dataset.error = message;
-  item.querySelector(".kp-upload__message")?.replaceChildren(message);
-}
-var UPLOAD, FILE_EVENT, REJECT_EVENT, REMOVE_EVENT, handles6;
 var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
-    init_strings();
-    init_locale();
-    init_motion();
-    UPLOAD = "[data-kp-upload]";
-    FILE_EVENT = "kp-upload-file";
-    REJECT_EVENT = "kp-upload-reject";
-    REMOVE_EVENT = "kp-upload-remove";
-    handles6 = /* @__PURE__ */ new WeakMap();
+    init_controller();
+    init_controller25();
+    init_values13();
+    init_values13();
+    init_accepts();
+    init_item();
   }
 });
 
@@ -45772,7 +45879,7 @@ __export(wizard_exports, {
   wizard: () => wizard
 });
 function wizard(element) {
-  return handles7.get(element) ?? null;
+  return handles6.get(element) ?? null;
 }
 function attachWizards(root = document, { validate = true, focusStep = true, navigableLabels = false, beforeStep } = {}) {
   const cleanups = [];
@@ -45917,7 +46024,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
     wizard2.addEventListener("input", onFieldInput);
     show({ announce: false });
     const handle = { element: wizard2, step: () => at, goTo, next: () => goTo(at + 1), back: () => goTo(at - 1) };
-    handles7.set(wizard2, handle);
+    handles6.set(wizard2, handle);
     created.push(handle);
     cleanups.push(() => {
       next2?.removeEventListener("click", onNext);
@@ -45945,7 +46052,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
       if (back !== null) back.disabled = before.back;
       if (next2 !== null) next2.textContent = before.next;
       if (status !== null) status.textContent = before.status;
-      handles7.delete(wizard2);
+      handles6.delete(wizard2);
       delete wizard2.dataset.kpWizardAttached;
     });
   }
@@ -45954,7 +46061,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
   };
   return Object.assign(detach, { handles: created });
 }
-var WIZARD, STEP_EVENT, BEFORE_STEP_EVENT, FINISH_EVENT, handles7;
+var WIZARD, STEP_EVENT, BEFORE_STEP_EVENT, FINISH_EVENT, handles6;
 var init_wizard = __esm({
   "js/wizard.js"() {
     "use strict";
@@ -45964,7 +46071,7 @@ var init_wizard = __esm({
     STEP_EVENT = "kp-wizard-step";
     BEFORE_STEP_EVENT = "kp-wizard-before-step";
     FINISH_EVENT = "kp-wizard-finish";
-    handles7 = /* @__PURE__ */ new WeakMap();
+    handles6 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -46055,7 +46162,7 @@ __export(colorpicker_exports, {
   colorPicker: () => colorPicker
 });
 function colorPicker(element) {
-  return handles8.get(element) ?? null;
+  return handles7.get(element) ?? null;
 }
 function attachColorPickers(root = document, { followTheme = true } = {}) {
   const cleanups = [];
@@ -46138,7 +46245,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       },
       measure: () => void update2(false)
     };
-    handles8.set(picker, handle);
+    handles7.set(picker, handle);
     created.push(handle);
     cleanups.push(() => {
       for (const channel of ["h", "s", "l"]) slider2(channel)?.removeEventListener("input", onInput);
@@ -46148,7 +46255,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       if (value !== null) value.textContent = before.value;
       if (report2 !== null) report2.textContent = before.report;
       delete picker.dataset.kpContrastOk;
-      handles8.delete(picker);
+      handles7.delete(picker);
       delete picker.dataset.kpColorpickerAttached;
     });
   }
@@ -46157,7 +46264,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
   };
   return Object.assign(detach, { handles: created });
 }
-var PICKER3, COLOR_EVENT, handles8;
+var PICKER3, COLOR_EVENT, handles7;
 var init_colorpicker = __esm({
   "js/colorpicker.js"() {
     "use strict";
@@ -46165,7 +46272,7 @@ var init_colorpicker = __esm({
     init_strings();
     PICKER3 = "[data-kp-colorpicker]";
     COLOR_EVENT = "kp-color-change";
-    handles8 = /* @__PURE__ */ new WeakMap();
+    handles7 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -46239,7 +46346,7 @@ function place(tile) {
   if (!tile.hasAttribute("aria-label") && tile.dataset.kpLabel !== void 0) tile.setAttribute("aria-label", tile.dataset.kpLabel);
 }
 function grid(element) {
-  return handles9.get(element) ?? null;
+  return handles8.get(element) ?? null;
 }
 function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = COMMIT_MS, pointer = true } = {}) {
   const cleanups = [];
@@ -46348,7 +46455,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       },
       refresh: placeAll
     };
-    handles9.set(grid2, handle);
+    handles8.set(grid2, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(timer);
@@ -46370,7 +46477,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       }
       if (hadColumns === "") grid2.style.removeProperty("--kp-grid-columns");
       else grid2.style.setProperty("--kp-grid-columns", hadColumns);
-      handles9.delete(grid2);
+      handles8.delete(grid2);
       delete grid2.dataset.kpGridAttached;
     });
   }
@@ -46379,7 +46486,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
   };
   return Object.assign(detach, { handles: created });
 }
-var GRID2, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, handles9;
+var GRID2, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, handles8;
 var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
@@ -46390,7 +46497,7 @@ var init_gridlayout = __esm({
     LAYOUT_COMMIT_EVENT = "kp-grid-commit";
     COLUMNS = 6;
     COMMIT_MS = 400;
-    handles9 = /* @__PURE__ */ new WeakMap();
+    handles8 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -46909,7 +47016,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED4, CalendarController;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -47163,7 +47270,7 @@ var init_api15 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller25();
+    init_controller26();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -53802,8 +53909,8 @@ var init_gantt = __esm({
 });
 
 // js/pipeline/values.js
-var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make17;
-var init_values13 = __esm({
+var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT3, make17;
+var init_values14 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -53812,7 +53919,7 @@ var init_values13 = __esm({
     PIPELINE_MORE_EVENT = "kp-pipeline-more";
     GHOST_CARDS = 2;
     GHOST_CARDS_CLOSED = 3;
-    PERCENT2 = 100;
+    PERCENT3 = 100;
     make17 = (doc, tag, className, text) => {
       const el16 = doc.createElement(tag);
       if (className) el16.className = className;
@@ -53824,12 +53931,12 @@ var init_values13 = __esm({
 
 // js/pipeline/core.js
 var PipelineCore;
-var init_core9 = __esm({
+var init_core10 = __esm({
   "js/pipeline/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values13();
+    init_values14();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -53914,8 +54021,8 @@ var PipelineLanes;
 var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
-    init_core9();
-    init_values13();
+    init_core10();
+    init_values14();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -54027,7 +54134,7 @@ var init_lanes3 = __esm({
         node.append(this.laneHead(lane, cards2.length, id));
         if (this.host.dataset.kpPipelineShare !== "false" && !lane.closed) {
           const share = make17(doc, "p", "kp-pipeline__share");
-          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards2.length / total * PERCENT2));
+          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards2.length / total * PERCENT3));
           node.append(share);
         }
         const list = make17(doc, "div", "kp-pipeline__cards");
@@ -54051,7 +54158,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values13();
+    init_values14();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -54163,11 +54270,11 @@ var init_view2 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values13();
+    init_values14();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -54312,9 +54419,9 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller26();
-    init_values13();
-    init_values13();
+    init_controller27();
+    init_values14();
+    init_values14();
   }
 });
 
@@ -55520,7 +55627,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -55534,7 +55641,7 @@ var init_values14 = __esm({
 });
 
 // js/range/build.js
-function buildBar2(doc, s2, presets, disabled2) {
+function buildBar3(doc, s2, presets, disabled2) {
   const bar = doc.createElement("div");
   bar.className = "kp-range__bar";
   const group = doc.createElement("div");
@@ -55661,14 +55768,14 @@ var init_build9 = __esm({
 
 // js/range/core.js
 var seq2, DEFAULT_PRESET_AT, RangeCore;
-var init_core10 = __esm({
+var init_core11 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_segmented();
     init_chart();
-    init_values14();
+    init_values15();
     init_build9();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -55690,7 +55797,7 @@ var init_core10 = __esm({
         this.disabled = el16.hasAttribute("data-kp-range-disabled");
         this.future = el16.hasAttribute("data-kp-range-future");
         this.maxDays = Number(el16.dataset.kpRangeMaxDays) || 0;
-        const { bar, group } = buildBar2(this.doc, this.s, this.presets, this.disabled);
+        const { bar, group } = buildBar3(this.doc, this.s, this.presets, this.disabled);
         this.bar = bar;
         this.group = group;
         this.line = this.doc.createElement("p");
@@ -55743,7 +55850,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build9();
-    init_values14();
+    init_values15();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -55915,11 +56022,11 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core10();
+    init_core11();
     init_panel();
     RangeController = class extends RangeCore {
       connect() {
@@ -55996,9 +56103,9 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller27();
-    init_values14();
-    init_values14();
+    init_controller28();
+    init_values15();
+    init_values15();
   }
 });
 
@@ -56430,7 +56537,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -56556,7 +56663,7 @@ var init_parts5 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values15();
+    init_values16();
   }
 });
 
@@ -56597,7 +56704,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts5();
-    init_values15();
+    init_values16();
   }
 });
 
@@ -56663,7 +56770,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts5();
-    init_values15();
+    init_values16();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -56811,7 +56918,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values15();
+    init_values16();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -56920,8 +57027,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values15();
-    init_values15();
+    init_values16();
+    init_values16();
   }
 });
 
@@ -57490,7 +57597,7 @@ var init_parts6 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -57777,7 +57884,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller28();
+    init_controller29();
     init_parts6();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -57823,7 +57930,7 @@ __export(connection_exports, {
   setConnection: () => setConnection
 });
 function setConnection(element, state12, detail) {
-  handles10.get(element)?.set(state12, detail);
+  handles9.get(element)?.set(state12, detail);
 }
 function attachConnection(root = document) {
   const found = (
@@ -57834,7 +57941,7 @@ function attachConnection(root = document) {
     ]
   );
   const undo = [];
-  for (const el16 of found) if (!handles10.has(el16)) undo.push(wire2(el16));
+  for (const el16 of found) if (!handles9.has(el16)) undo.push(wire2(el16));
   return () => undo.forEach((u) => u());
 }
 function wire2(el16) {
@@ -58028,7 +58135,7 @@ function wire2(el16) {
   view.addEventListener("online", onOnline);
   if (source() !== "app" && view.navigator.onLine === false) set("offline");
   const handle = { element: el16, state: () => shown5, set };
-  handles10.set(el16, handle);
+  handles9.set(el16, handle);
   return () => {
     view.clearTimeout(graceTimer);
     view.clearTimeout(backTimer);
@@ -58036,10 +58143,10 @@ function wire2(el16) {
     retry.removeEventListener("click", onRetry);
     view.removeEventListener("offline", onOffline);
     view.removeEventListener("online", onOnline);
-    handles10.delete(el16);
+    handles9.delete(el16);
   };
 }
-var CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_STATES, handles10, connectionOf;
+var CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_STATES, handles9, connectionOf;
 var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
@@ -58051,14 +58158,14 @@ var init_connection = __esm({
     CONNECTION_RETRY_EVENT = "kp-connection-retry";
     CONNECTION_STATES = /** @type {const} */
     ["online", "offline", "reconnecting", "back", "refused"];
-    handles10 = /* @__PURE__ */ new WeakMap();
-    connectionOf = (element) => handles10.get(element) ?? null;
+    handles9 = /* @__PURE__ */ new WeakMap();
+    connectionOf = (element) => handles9.get(element) ?? null;
   }
 });
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -58083,7 +58190,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values16();
+    init_values17();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -58133,7 +58240,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values16();
+    init_values17();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -58165,7 +58272,7 @@ var init_read4 = __esm({
 
 // js/transfer/core.js
 var FULL, TransferCore;
-var init_core11 = __esm({
+var init_core12 = __esm({
   "js/transfer/core.js"() {
     "use strict";
     init_controller();
@@ -58174,7 +58281,7 @@ var init_core11 = __esm({
     init_strings();
     init_math3();
     init_read4();
-    init_values16();
+    init_values17();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -58401,7 +58508,7 @@ var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts7();
-    init_values16();
+    init_values17();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -58409,17 +58516,17 @@ var init_ticker = __esm({
 
 // js/transfer/row.js
 var TransferRow;
-var init_row2 = __esm({
+var init_row3 = __esm({
   "js/transfer/row.js"() {
     "use strict";
     init_progressbar();
     init_motion();
     init_strings();
-    init_core11();
+    init_core12();
     init_parts7();
     init_read4();
     init_ticker();
-    init_values16();
+    init_values17();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -58572,9 +58679,9 @@ var init_transfer = __esm({
     "use strict";
     init_controller();
     init_group5();
-    init_row2();
-    init_values16();
-    init_values16();
+    init_row3();
+    init_values17();
+    init_values17();
     init_math3();
   }
 });
@@ -58806,7 +58913,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -58820,13 +58927,13 @@ var init_values17 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core12 = __esm({
+var init_core13 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build10();
-    init_values17();
+    init_values18();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -58955,8 +59062,8 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core12();
-    init_values17();
+    init_core13();
+    init_values18();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -59032,12 +59139,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
     init_build10();
-    init_values17();
+    init_values18();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -59272,15 +59379,15 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller29();
-    init_values17();
-    init_values17();
+    init_controller30();
+    init_values18();
+    init_values18();
   }
 });
 
 // js/page-contents/values.js
 var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/page-contents/values.js"() {
     "use strict";
     CONTENTS = "[data-kp-contents]";
@@ -59325,11 +59432,11 @@ var init_slug = __esm({
 
 // js/page-contents/core.js
 var serial5, ContentsCore;
-var init_core13 = __esm({
+var init_core14 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
-    init_values18();
+    init_values19();
     serial5 = 0;
     ContentsCore = class extends Controller {
       /**
@@ -59442,9 +59549,9 @@ var ContentsRead;
 var init_read5 = __esm({
   "js/page-contents/read.js"() {
     "use strict";
-    init_values18();
+    init_values19();
     init_slug();
-    init_core13();
+    init_core14();
     ContentsRead = class extends ContentsCore {
       /** The entries the page gave, each with the section it names. @param {ContentsItem[]} given @returns {{ item: ContentsItem, target: HTMLElement }[]} */
       readGiven(given2) {
@@ -59498,7 +59605,7 @@ var ContentsSpy;
 var init_spy = __esm({
   "js/page-contents/spy.js"() {
     "use strict";
-    init_values18();
+    init_values19();
     init_slug();
     init_read5();
     ContentsSpy = class extends ContentsRead {
@@ -59613,10 +59720,10 @@ var init_draw10 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
-    init_values18();
+    init_values19();
     init_draw10();
     init_strings();
     ContentsList = class extends ContentsDraw {
@@ -59731,9 +59838,9 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller30();
-    init_values18();
-    init_values18();
+    init_controller31();
+    init_values19();
+    init_values19();
     init_slug();
   }
 });
@@ -60418,7 +60525,7 @@ var init_keys12 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -60625,7 +60732,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller31();
+    init_controller32();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -60661,7 +60768,7 @@ var init_timefield = __esm({
 
 // js/weekdays/values.js
 var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, WEEK2, MONTH_DAYS, DEFAULT_MIN;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/weekdays/values.js"() {
     "use strict";
     WEEKDAYS = "[data-kp-weekdays]";
@@ -60700,7 +60807,7 @@ var init_options5 = __esm({
   "js/weekdays/options.js"() {
     "use strict";
     init_locale();
-    init_values19();
+    init_values20();
   }
 });
 
@@ -60731,7 +60838,7 @@ var init_names = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_values19();
+    init_values20();
     DICTIONARY_ORDER = [6, 0, 1, 2, 3, 4, 5];
     SUNDAY = 7;
   }
@@ -60802,7 +60909,7 @@ var init_parts8 = __esm({
   "js/weekdays/parts.js"() {
     "use strict";
     init_names();
-    init_values19();
+    init_values20();
   }
 });
 
@@ -60835,13 +60942,13 @@ var init_summary3 = __esm({
     "use strict";
     init_strings();
     init_names();
-    init_values19();
+    init_values20();
   }
 });
 
 // js/weekdays/core.js
 var seq3, WeekdaysCore;
-var init_core14 = __esm({
+var init_core15 = __esm({
   "js/weekdays/core.js"() {
     "use strict";
     init_controller();
@@ -60851,7 +60958,7 @@ var init_core14 = __esm({
     init_parts8();
     init_names();
     init_summary3();
-    init_values19();
+    init_values20();
     seq3 = 0;
     WeekdaysCore = class extends Controller {
       /**
@@ -60926,13 +61033,13 @@ var init_core14 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
-    init_core14();
+    init_core15();
     init_names();
-    init_values19();
+    init_values20();
     WeekdayPicker = class extends WeekdaysCore {
       /**
        * @param {HTMLElement} host
@@ -61041,9 +61148,9 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller32();
-    init_values19();
-    init_values19();
+    init_controller33();
+    init_values20();
+    init_values20();
     init_names();
     init_summary3();
   }
@@ -61302,7 +61409,7 @@ var init_quiet_hours = __esm({
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -61393,7 +61500,7 @@ var init_build12 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values20();
+    init_values21();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -61426,7 +61533,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values20();
+    init_values21();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -61435,13 +61542,13 @@ var init_title = __esm({
 
 // js/question-card/core.js
 var QuestionCore;
-var init_core15 = __esm({
+var init_core16 = __esm({
   "js/question-card/core.js"() {
     "use strict";
     init_controller();
     init_freshness();
     init_strings();
-    init_values20();
+    init_values21();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -61558,9 +61665,9 @@ var init_run3 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values20();
+    init_values21();
     init_title();
-    init_core15();
+    init_core16();
     QuestionRun = class extends QuestionCore {
       /**
        * @param {HTMLElement} host the card
@@ -61719,7 +61826,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values20();
+    init_values21();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -61770,8 +61877,8 @@ var init_question_card = __esm({
     init_build12();
     init_run3();
     init_spec();
-    init_values20();
-    init_values20();
+    init_values21();
+    init_values21();
   }
 });
 
@@ -62082,7 +62189,7 @@ function rowItem2(c, row, slots, grouped) {
   li.append(cell, text, meta);
   return li;
 }
-var init_row3 = __esm({
+var init_row4 = __esm({
   "js/feed/row.js"() {
     "use strict";
     init_freshness();
@@ -62146,7 +62253,7 @@ var init_days = __esm({
     init_constants30();
     init_dom8();
     init_options6();
-    init_row3();
+    init_row4();
     init_words3();
   }
 });
@@ -62295,7 +62402,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -62454,7 +62561,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller33();
+    init_controller34();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -62665,7 +62772,7 @@ function sourceSwitch(doc, t, src) {
   return label;
 }
 var severityWord3;
-var init_row4 = __esm({
+var init_row5 = __esm({
   "js/notices/row.js"() {
     "use strict";
     init_freshness();
@@ -62688,7 +62795,7 @@ var init_view3 = __esm({
     init_events2();
     init_model6();
     init_parts9();
-    init_row4();
+    init_row5();
     DATE_LENGTH = 10;
     TIME_START2 = 11;
     NoticesView = class extends Controller {
@@ -62885,7 +62992,7 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -63026,7 +63133,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller34();
+    init_controller35();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -63107,7 +63214,7 @@ function glyph2() {
   }
   return wrap;
 }
-function buildRow2(max) {
+function buildRow3(max) {
   const row = make22("div", "kp-rating__row");
   const stars = Array.from({ length: max }, (_, i) => {
     const star = make22("span", "kp-rating__star");
@@ -63141,7 +63248,7 @@ function buildFailure2() {
 }
 function buildRating(el16, max) {
   const serial9 = nextRatingNumber();
-  const { row, stars } = buildRow2(max);
+  const { row, stars } = buildRow3(max);
   const caption = make22("span", "kp-rating__caption");
   caption.id = `kp-rating-${serial9}-caption`;
   const { actions, clear, save: save2, drop } = buildActions2();
@@ -63488,7 +63595,7 @@ var init_keys13 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -63758,7 +63865,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller35();
+    init_controller36();
     init_build13();
     init_commit();
     init_math4();
@@ -64046,7 +64153,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -64279,7 +64386,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller36();
+    init_controller37();
     init_list4();
     init_render4();
   }
@@ -65722,7 +65829,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -65913,7 +66020,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller37();
+    init_controller38();
     init_group6();
     init_group6();
   }
@@ -65921,7 +66028,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -65990,7 +66097,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values21();
+    init_values22();
   }
 });
 
@@ -66004,12 +66111,12 @@ function toneMap(text) {
   return map;
 }
 var shown4, near, ChipCore;
-var init_core16 = __esm({
+var init_core17 = __esm({
   "js/version-delta/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values21();
+    init_values22();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -66094,8 +66201,8 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values21();
-    init_core16();
+    init_values22();
+    init_core17();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
       markChip(v) {
@@ -66202,10 +66309,10 @@ var init_view4 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values21();
+    init_values22();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -66309,9 +66416,9 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller38();
-    init_values21();
-    init_values21();
+    init_controller39();
+    init_values22();
+    init_values22();
     init_level();
     init_links2();
   }
@@ -66319,7 +66426,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -66386,11 +66493,11 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core17 = __esm({
+var init_core18 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values22();
+    init_values23();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -66501,8 +66608,8 @@ var init_rows5 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values22();
-    init_core17();
+    init_values23();
+    init_core18();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -66604,16 +66711,16 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values22();
+    init_values23();
     init_order();
-    init_core17();
+    init_core18();
     init_rows5();
     DependencyList = class extends DeplistRows {
       connect() {
@@ -66788,16 +66895,16 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller39();
-    init_values22();
-    init_values22();
+    init_controller40();
+    init_values23();
+    init_values23();
     init_order();
   }
 });
 
 // js/path-trace/core.js
 var TraceCore;
-var init_core18 = __esm({
+var init_core19 = __esm({
   "js/path-trace/core.js"() {
     "use strict";
     init_controller();
@@ -66900,7 +67007,7 @@ var init_states = __esm({
 
 // js/path-trace/values.js
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, GHOST_HOPS, WATCHED_ATTRIBUTES5;
-var init_values23 = __esm({
+var init_values24 = __esm({
   "js/path-trace/values.js"() {
     "use strict";
     TRACE = "[data-kp-trace]";
@@ -66928,9 +67035,9 @@ var init_draw11 = __esm({
     init_strings();
     init_state_plate();
     init_flash();
-    init_core18();
+    init_core19();
     init_states();
-    init_values23();
+    init_values24();
     TraceDraw = class extends TraceCore {
       draw() {
         const { host, stage, foot, summary: summary2 } = this;
@@ -67053,14 +67160,14 @@ var init_draw11 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
     init_strings();
     init_draw11();
     init_states();
-    init_values23();
+    init_values24();
     Trace = class extends TraceDraw {
       /**
        * @param {HTMLElement} host
@@ -67140,9 +67247,9 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller40();
-    init_values23();
-    init_values23();
+    init_controller41();
+    init_values24();
+    init_values24();
     init_states();
   }
 });
@@ -68050,7 +68157,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values24 = __esm({
+var init_values25 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -68070,7 +68177,7 @@ function make25(doc, tag, className) {
   node.className = className;
   return node;
 }
-function buildBar3(doc, s2, id) {
+function buildBar4(doc, s2, id) {
   const bar = make25(doc, "div", "kp-unsaved__bar");
   bar.setAttribute("role", "group");
   bar.setAttribute("aria-label", s2.unsavedGroup);
@@ -68115,7 +68222,7 @@ function buildParts5(doc, s2, id) {
   const live4 = make25(doc, "p", "kp-sr-only");
   live4.setAttribute("role", "status");
   live4.setAttribute("aria-live", "polite");
-  return { ...buildBar3(doc, s2, id), problem, live: live4, ...buildPanel2(doc, s2, id) };
+  return { ...buildBar4(doc, s2, id), problem, live: live4, ...buildPanel2(doc, s2, id) };
 }
 function paintSaveButton(doc, save2, label, saving) {
   save2.replaceChildren();
@@ -68389,7 +68496,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts11();
-    init_values24();
+    init_values25();
   }
 });
 
@@ -68399,7 +68506,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values24();
+    init_values25();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -68519,7 +68626,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values24();
+    init_values25();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -68794,7 +68901,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -69047,7 +69154,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller41();
+    init_controller42();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -69393,7 +69500,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -69698,7 +69805,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller42();
+    init_controller43();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -69836,7 +69943,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values25 = __esm({
+var init_values26 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -69909,7 +70016,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values25();
+    init_values26();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -70181,7 +70288,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values25();
+    init_values26();
   }
 });
 
@@ -70218,13 +70325,13 @@ var init_keys14 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core19 = __esm({
+var init_core20 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values25();
+    init_values26();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -70340,9 +70447,9 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values25();
+    init_values26();
     init_kinds();
-    init_core19();
+    init_core20();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -70511,7 +70618,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values25();
+    init_values26();
     init_kinds();
     init_keys14();
     init_run4();
@@ -70633,8 +70740,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values25();
-    init_values25();
+    init_values26();
+    init_values26();
     init_kinds();
     init_glyph();
     init_open3();
@@ -71535,7 +71642,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values26 = __esm({
+var init_values27 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -71674,7 +71781,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build14 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values26();
+    init_values27();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -71688,13 +71795,13 @@ var init_build14 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core20 = __esm({
+var init_core21 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build14();
-    init_values26();
+    init_values27();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -71809,12 +71916,12 @@ var init_core20 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build14();
-    init_core20();
-    init_values26();
+    init_core21();
+    init_values27();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -72039,9 +72146,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller43();
-    init_values26();
-    init_values26();
+    init_controller44();
+    init_values27();
+    init_values27();
   }
 });
 
@@ -72207,7 +72314,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -72436,7 +72543,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_fields();
     init_fields();
   }
@@ -72776,7 +72883,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -73027,7 +73134,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller45();
+    init_controller46();
   }
 });
 
@@ -73070,7 +73177,7 @@ var init_input = __esm({
 
 // js/runs/values.js
 var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS2;
-var init_values27 = __esm({
+var init_values28 = __esm({
   "js/runs/values.js"() {
     "use strict";
     RUNS = "[data-kp-runs]";
@@ -73104,7 +73211,7 @@ var init_options7 = __esm({
   "js/runs/options.js"() {
     "use strict";
     init_chart();
-    init_values27();
+    init_values28();
   }
 });
 
@@ -73169,14 +73276,14 @@ var init_time3 = __esm({
     init_weekdays();
     init_freshness();
     init_chart();
-    init_values27();
+    init_values28();
     two6 = (n) => String(n).padStart(2, "0");
   }
 });
 
 // js/runs/core.js
 var seq6, RunsCore;
-var init_core21 = __esm({
+var init_core22 = __esm({
   "js/runs/core.js"() {
     "use strict";
     init_controller();
@@ -73251,7 +73358,7 @@ var RunsRows;
 var init_rows7 = __esm({
   "js/runs/rows.js"() {
     "use strict";
-    init_core21();
+    init_core22();
     init_time3();
     RunsRows = class extends RunsCore {
       /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
@@ -73351,11 +73458,11 @@ var init_note2 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note2();
-    init_values27();
+    init_values28();
     RunsList = class extends RunsNote {
       /**
        * @param {HTMLElement} host
@@ -73462,9 +73569,9 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller46();
-    init_values27();
-    init_values27();
+    init_controller47();
+    init_values28();
+    init_values28();
     init_time3();
   }
 });
@@ -73593,7 +73700,7 @@ function button4(doc, className, text) {
   if (text !== void 0) b.textContent = text;
   return b;
 }
-function buildBar4(doc, s2, id, chips) {
+function buildBar5(doc, s2, id, chips) {
   const bar = make29(doc, "div", "kp-snooze__bar");
   const status = make29(doc, "p", "kp-snooze__status");
   status.id = `${id}-status`;
@@ -73711,7 +73818,7 @@ var init_panel3 = __esm({
         this.last = null;
         this.busy = false;
         this.lower = null;
-        this.bar = buildBar4(this.doc, this.s, this.id, this.chips);
+        this.bar = buildBar5(this.doc, this.s, this.id, this.chips);
         this.p = buildPanel3(this.doc, this.s, this.id);
       }
       /** The element the panel stands under: the menu button, or the picker. */
@@ -73790,7 +73897,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -74049,7 +74156,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller47();
+    init_controller48();
     init_choices();
   }
 });
@@ -78903,7 +79010,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -79007,7 +79114,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller48();
+    init_controller49();
     init_state28();
     init_state28();
     init_matrix2();

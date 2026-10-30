@@ -121,7 +121,7 @@
         "js/toolbar.js": { "digest": "003f88eb5b82ec8c", "when": "[data-kp-toolbar]" },
         "js/transfer.js": { "digest": "299493b3bb8d006d", "when": "[data-kp-transfer]" },
         "js/unsaved.js": { "digest": "135c7dac08f60a50", "when": "[data-kp-unsaved]" },
-        "js/upload.js": { "digest": "fe77364297c65175", "when": "[data-kp-upload]" },
+        "js/upload.js": { "digest": "f9c0b58f932650de", "when": "[data-kp-upload]" },
         "js/uptime.js": { "digest": "f6cd49448c01299a", "when": "[data-kp-uptime]" },
         "js/usual-picker.js": { "digest": "85358b46b1c1a7cc", "when": "[data-kp-usual]" },
         "js/version-delta.js": {
@@ -14582,6 +14582,7 @@
                 "data-kp-step",
                 "data-kp-step-label",
                 "data-kp-upload",
+                "data-kp-upload-attached",
                 "data-kp-upload-file",
                 "data-kp-upload-input",
                 "data-kp-upload-list",
