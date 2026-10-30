@@ -3614,12 +3614,12 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     if (entries2.some((entry) => entry.target !== box)) settle2();
     else if (!running2) last = box.offsetHeight;
   });
-  const watch = () => {
+  const watch2 = () => {
     sizes.disconnect();
     sizes.observe(box);
     for (const child of box.children) sizes.observe(child);
   };
-  watch();
+  watch2();
   const list = new MutationObserver((records) => {
     const modeOf2 = (target) => fresh() ? "none" : arriveMode(target instanceof Element ? target : box, fallback2);
     const any = records.some((record) => modeOf2(record.target) !== "none");
@@ -3645,7 +3645,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
           arrive(node, motion);
         }
     }
-    watch();
+    watch2();
     settle2();
   });
   list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"], attributeOldValue: true });
@@ -5300,9 +5300,9 @@ __export(remember_exports, {
   treeItemId: () => treeItemId
 });
 function attachRemembered(root = document) {
-  const watch = new RememberWatch(root);
-  watch.start();
-  return () => watch.stop();
+  const watch2 = new RememberWatch(root);
+  watch2.start();
+  return () => watch2.stop();
 }
 var init_remember = __esm({
   "js/remember.js"() {
@@ -6072,11 +6072,11 @@ var init_notes = __esm({
        * @param {import('../strings.js').Strings} s
        * @param {() => void} paint called when the fold opens or closes
        */
-      constructor(gate, before, s2, paint13) {
+      constructor(gate, before, s2, paint12) {
         this.gate = gate;
         this.before = before;
         this.s = s2;
-        this.paint = paint13;
+        this.paint = paint12;
         this.fold = null;
         this.opened = false;
       }
@@ -6601,9 +6601,9 @@ function attachActionTiles(root = document) {
     ]
   );
   for (const tile of tiles) syncTile(tile);
-  let watch = null;
+  let watch2 = null;
   if (typeof MutationObserver !== "undefined") {
-    watch = new MutationObserver((records) => {
+    watch2 = new MutationObserver((records) => {
       for (const record of records) {
         const target = (
           /** @type {Element} */
@@ -6612,7 +6612,7 @@ function attachActionTiles(root = document) {
         if (target.matches(ACTION_TILE)) syncTile(target, { announce: true });
       }
     });
-    watch.observe(root instanceof Document ? root.documentElement : root, {
+    watch2.observe(root instanceof Document ? root.documentElement : root, {
       attributes: true,
       attributeFilter: ["aria-busy"],
       subtree: true
@@ -6620,7 +6620,7 @@ function attachActionTiles(root = document) {
   }
   return () => {
     root.removeEventListener("click", guard, true);
-    watch?.disconnect();
+    watch2?.disconnect();
   };
 }
 var ACTION_TILE, ACTION_BUSY_EVENT, ACTION_SIZES, synced, inert, span;
@@ -7763,7 +7763,7 @@ function install6(ctx) {
         (el16) => view.getComputedStyle(el16).getPropertyValue(LIGHT_KNOB).trim() === "pointer"
       );
     };
-    const paint13 = () => {
+    const paint12 = () => {
       const here = at;
       if (!here || reduced4()) {
         for (const el16 of lit) clear(el16);
@@ -7793,7 +7793,7 @@ function install6(ctx) {
       queued = view.requestAnimationFrame(() => {
         frames.delete(queued);
         queued = 0;
-        paint13();
+        paint12();
       });
       frames.add(queued);
     };
@@ -7813,7 +7813,7 @@ function install6(ctx) {
         frames.delete(recollect);
         recollect = 0;
         collect2();
-        paint13();
+        paint12();
       });
       frames.add(recollect);
     });
@@ -7836,7 +7836,7 @@ function install6(ctx) {
       /** @param {PointerEvent | MouseEvent} event */
       put(event) {
         at = "pointerType" in event && event.pointerType === "touch" ? null : { x: event.clientX, y: event.clientY };
-        paint13();
+        paint12();
       }
     };
   };
@@ -8608,12 +8608,12 @@ var init_engine = __esm({
       watchThemes() {
         const { html } = this;
         if (!this.rootStyle || typeof MutationObserver !== "function") return;
-        const watch = new MutationObserver(() => this.armThemeBuses());
-        watch.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
+        const watch2 = new MutationObserver(() => this.armThemeBuses());
+        watch2.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
         const onRegister = () => this.armThemeBuses();
         html.addEventListener("kp-register-load", onRegister);
         this.cleanups.push(() => {
-          watch.disconnect();
+          watch2.disconnect();
           html.removeEventListener("kp-register-load", onRegister);
         });
       }
@@ -11500,15 +11500,15 @@ function attachArt(root = document) {
     return () => {
       for (const svg2 of made7) svg2.remove();
     };
-  const watch = new MutationObserver((records) => {
+  const watch2 = new MutationObserver((records) => {
     for (const record of records) place3(
       /** @type {HTMLElement} */
       record.target
     );
   });
-  for (const host of hosts) watch.observe(host, { attributes: true, attributeFilter: ["data-kp-art"] });
+  for (const host of hosts) watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-art"] });
   return () => {
-    watch.disconnect();
+    watch2.disconnect();
     for (const svg2 of made7) svg2.remove();
   };
 }
@@ -11680,7 +11680,7 @@ function attachAttention(root = document) {
   }
   const options = { childList: true, subtree: true, attributes: true, attributeFilter: ["data-kp-severity"] };
   const watchers = /* @__PURE__ */ new Map();
-  const watch = (band) => {
+  const watch2 = (band) => {
     if (watchers.has(band)) return;
     sortAttention(band);
     const watcher = new view.MutationObserver(() => {
@@ -11691,11 +11691,11 @@ function attachAttention(root = document) {
     watcher.observe(band, options);
     watchers.set(band, watcher);
   };
-  for (const band of bandsIn(root)) watch(band);
+  for (const band of bandsIn(root)) watch2(band);
   const later = new view.MutationObserver((records) => {
     let removed = false;
     for (const record of records) {
-      for (const node of record.addedNodes) if (node instanceof view.Element) for (const band of bandsIn(node)) watch(band);
+      for (const node of record.addedNodes) if (node instanceof view.Element) for (const band of bandsIn(node)) watch2(band);
       if (record.removedNodes.length) removed = true;
     }
     if (removed)
@@ -14420,7 +14420,7 @@ function attachSteplists(root = document) {
   }
   if (typeof MutationObserver === "undefined" || lists.length === 0) return () => {
   };
-  const watch = new MutationObserver((records) => {
+  const watch2 = new MutationObserver((records) => {
     for (const record of records) {
       const target = (
         /** @type {Element} */
@@ -14429,8 +14429,8 @@ function attachSteplists(root = document) {
       if (target.classList.contains("kp-steplist__item")) syncItem(target, { announce: true });
     }
   });
-  for (const list of lists) watch.observe(list, { attributes: true, attributeFilter: ["data-state"], subtree: true });
-  return () => watch.disconnect();
+  for (const list of lists) watch2.observe(list, { attributes: true, attributeFilter: ["data-state"], subtree: true });
+  return () => watch2.disconnect();
 }
 var STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEPLIST_EVENT, STEP_STATES, synced2, pending, known, stateWord, span2;
 var init_steplist = __esm({
@@ -14517,7 +14517,7 @@ function attachSparklines(root = document) {
   );
   if (!view) return () => {
   };
-  const watch = new view.MutationObserver((records) => {
+  const watch2 = new view.MutationObserver((records) => {
     for (const record of records) {
       const svg2 = (
         /** @type {Element} */
@@ -14530,7 +14530,7 @@ function attachSparklines(root = document) {
       );
     }
   });
-  watch.observe(root instanceof Document ? root.documentElement : (
+  watch2.observe(root instanceof Document ? root.documentElement : (
     /** @type {Node} */
     root
   ), {
@@ -14538,7 +14538,7 @@ function attachSparklines(root = document) {
     attributes: true,
     attributeFilter: ["data-kp-spark"]
   });
-  return () => watch.disconnect();
+  return () => watch2.disconnect();
 }
 function attachKpiToggles(root = document) {
   const onClick = (event) => {
@@ -14788,7 +14788,7 @@ function attachHoverCards(root = document, options = {}) {
   let going = false;
   let overCard = false;
   let lower = null;
-  let watch = null;
+  let watch2 = null;
   const anchorOf = (event) => {
     const target = event?.target;
     const found = target instanceof Element ? target.closest(cfg.selector) : null;
@@ -14856,10 +14856,10 @@ function attachHoverCards(root = document, options = {}) {
       card.hidden = false;
       lower = raiseOverlay(card, place3);
     } else place3(card);
-    watch ??= new MutationObserver(() => {
+    watch2 ??= new MutationObserver(() => {
       if (current2 !== null && !current2.isConnected) hide2();
     });
-    watch.observe(doc.body, { childList: true, subtree: true });
+    watch2.observe(doc.body, { childList: true, subtree: true });
     announce4(true, anchor);
   };
   const hide2 = () => {
@@ -14869,7 +14869,7 @@ function attachHoverCards(root = document, options = {}) {
     if (anchor === null || going) return;
     current2 = null;
     overCard = false;
-    watch?.disconnect();
+    watch2?.disconnect();
     if (anchor.isConnected) undescribe(anchor);
     else described = null;
     going = true;
@@ -15050,7 +15050,7 @@ function attachHoverCards(root = document, options = {}) {
       onTouchDown,
       true
     );
-    watch?.disconnect();
+    watch2?.disconnect();
     if (current2?.isConnected) undescribe(current2);
     current2 = null;
     going = false;
@@ -15576,9 +15576,9 @@ function attachTileSets(root = document) {
     return () => {
     };
   }
-  const watch = new TileSetWatch(root, view);
-  watch.connect();
-  return () => watch.destroy();
+  const watch2 = new TileSetWatch(root, view);
+  watch2.connect();
+  return () => watch2.destroy();
 }
 function attachTileKeys(root = document) {
   const doc = root instanceof Document ? root : root.ownerDocument ?? document;
@@ -16137,7 +16137,7 @@ var init_group2 = __esm({
           /** @type {HTMLElement[]} */
           [...el16.querySelectorAll("[data-kp-chart-range]")].filter((b) => b.closest(CHART_GROUP) === el16)
         );
-        const paint13 = () => {
+        const paint12 = () => {
           for (const b of buttons) b.setAttribute("aria-pressed", String(b.dataset.kpChartRange === el16.dataset.kpChartSpan));
         };
         const onClick = (event) => {
@@ -16150,7 +16150,7 @@ var init_group2 = __esm({
           if (span5 == null) return;
           el16.dataset.kpChartSpan = range;
           this.span = span5;
-          paint13();
+          paint12();
           this.zoom = null;
           el16.dispatchEvent(new CustomEvent(CHART_RANGE_EVENT, { bubbles: true, detail: { range, span: span5 } }));
           this.setZoom(null);
@@ -16164,7 +16164,7 @@ var init_group2 = __esm({
             value: b.dataset.kpChartRange
           });
         }
-        paint13();
+        paint12();
         this.stops.push(() => buttons.forEach((b) => b.removeEventListener("click", onClick)));
       }
       /** The newest point of any plot in the group. */
@@ -17937,11 +17937,11 @@ var init_pointer2 = __esm({
 // js/chart/plot/api.js
 function installApi(c) {
   const { buildLegend, decorateOwn, doc, draw: draw8, drawnKey, group, host, key, label, legend, parts: parts2, plot, range, setSel, strings } = c;
-  const watch = new (doc.defaultView ?? globalThis).MutationObserver(() => {
+  const watch2 = new (doc.defaultView ?? globalThis).MutationObserver(() => {
     const asked = `${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
     if (!c.drawnFor.endsWith(asked)) draw8();
   });
-  watch.observe(host, { attributes: true, attributeFilter: ["data-kp-chart-loading", "data-kp-chart-sources"] });
+  watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-chart-loading", "data-kp-chart-sources"] });
   const setData = (next2) => {
     const sameSources = next2.series.length === c.data.series.length && next2.series.every((sr, i) => sr.label === c.data.series[i].label);
     const keyBefore = key();
@@ -18002,7 +18002,7 @@ function installApi(c) {
       return Number.isFinite(max) ? max : null;
     },
     destroy: () => {
-      watch.disconnect();
+      watch2.disconnect();
       if (group.owner === state12) group.owner = null;
       for (const part7 of parts2) part7.remove();
       host.classList.remove("kp-chart");
@@ -18070,7 +18070,7 @@ function attachMatching(root, options, selector) {
     now: options.now ?? (() => Date.now())
   };
   const touched = /* @__PURE__ */ new Set();
-  const states3 = [];
+  const states2 = [];
   const lazy = options.lazy ?? 12;
   const hosts = (
     /** @type {HTMLElement[]} */
@@ -18111,7 +18111,7 @@ function attachMatching(root, options, selector) {
     CHARTS.set(host, state12);
     group.charts.add(state12);
     touched.add(group);
-    states3.push(state12);
+    states2.push(state12);
     resize.observe(host);
     if (hold) seen?.observe(host);
   }
@@ -18120,7 +18120,7 @@ function attachMatching(root, options, selector) {
     for (const c of group.charts) c.draw();
   }
   return () => {
-    for (const state12 of states3) if (CHARTS.get(state12.host) === state12) detachChart(state12.host);
+    for (const state12 of states2) if (CHARTS.get(state12.host) === state12) detachChart(state12.host);
     resize.disconnect();
     seen?.disconnect();
   };
@@ -19034,10 +19034,10 @@ function attachTabCounts(root = document) {
   for (const tab of askingTabs(root)) drawTabCount(tab);
   if (!view || typeof view.MutationObserver !== "function") return () => {
   };
-  const watch = new view.MutationObserver((records) => {
+  const watch2 = new view.MutationObserver((records) => {
     for (const tab of changedTabs(records, view)) drawTabCount(tab);
   });
-  watch.observe(root instanceof Document ? root.documentElement : (
+  watch2.observe(root instanceof Document ? root.documentElement : (
     /** @type {Node} */
     root
   ), {
@@ -19046,7 +19046,7 @@ function attachTabCounts(root = document) {
     attributes: true,
     attributeFilter: COUNT_ATTRIBUTES
   });
-  return () => watch.disconnect();
+  return () => watch2.disconnect();
 }
 var ASKED;
 var init_count_watch = __esm({
@@ -19239,7 +19239,7 @@ function attachCardStates(root = document) {
     card.addEventListener("click", press2);
     undo.push(() => card.removeEventListener("click", press2));
   }
-  const watch = typeof MutationObserver === "undefined" || found.length === 0 ? null : new MutationObserver((records) => {
+  const watch2 = typeof MutationObserver === "undefined" || found.length === 0 ? null : new MutationObserver((records) => {
     for (const record of records) {
       const card = (
         /** @type {HTMLElement} */
@@ -19248,9 +19248,9 @@ function attachCardStates(root = document) {
       if (synced3.get(card) !== card.getAttribute("data-kp-state")) syncCard(card, { announce: true });
     }
   });
-  for (const card of found) watch?.observe(card, { attributes: true, attributeFilter: ["data-kp-state"] });
+  for (const card of found) watch2?.observe(card, { attributes: true, attributeFilter: ["data-kp-state"] });
   return () => {
-    watch?.disconnect();
+    watch2?.disconnect();
     undo.forEach((u) => u());
     for (const card of found) {
       cards.get(card)?.remove();
@@ -19514,7 +19514,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     window.clearInterval(timer2);
     timer2 = 0;
   };
-  const paint13 = () => {
+  const paint12 = () => {
     const why = disabledWhy();
     const bad = invalidWhy();
     const empty = input.value === "";
@@ -19539,7 +19539,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     if (!shown5) return;
     shown5 = false;
     stop();
-    paint13();
+    paint12();
     say17(s2.secretHidden);
     field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
   };
@@ -19547,7 +19547,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     left -= 1;
     if (left === 10 && seconds > 10) say17(s2.secretHidesIn(10));
     if (left <= 0) hide2("timer");
-    else paint13();
+    else paint12();
   };
   const show = (reason = "press") => {
     if (shown5 || disabledWhy() !== void 0 || input.value === "") return;
@@ -19556,7 +19556,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     drain.style.animation = "none";
     void drain.offsetWidth;
     drain.style.removeProperty("animation");
-    paint13();
+    paint12();
     say17(s2.secretShown(seconds));
     field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
     if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
@@ -19569,7 +19569,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
   const onInput = () => {
     pasteProblem = "";
     if (input.value === "" && shown5) hide2("call");
-    else paint13();
+    else paint12();
   };
   const onPaste = async () => {
     if (!paste) return;
@@ -19578,7 +19578,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
       text = await navigator.clipboard.readText();
     } catch {
       pasteProblem = s2.secretPasteBlocked;
-      paint13();
+      paint12();
       say17(pasteProblem);
       input.focus();
       return;
@@ -19610,7 +19610,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     window.clearTimeout(copiedTimer);
     copiedTimer = window.setTimeout(() => {
       delete copy3.dataset.kpCopied;
-      paint13();
+      paint12();
     }, copiedMs);
     cancelClear();
     const wait = clearDelay(field2.dataset.kpSecretClear, clearAfterMs);
@@ -19631,12 +19631,12 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
   copy3?.addEventListener("click", onCopy);
   field2.addEventListener("focusout", onFocusOut);
   doc.addEventListener("visibilitychange", onAway);
-  paint13();
-  const watch = new MutationObserver(() => {
+  paint12();
+  const watch2 = new MutationObserver(() => {
     if (disabledWhy() !== void 0) hide2("call");
-    paint13();
+    paint12();
   });
-  watch.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
+  watch2.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
   const stopOptions = watchOptions(field2, ["data-kp-secret-ttl"], () => {
     readOptions5();
     if (shown5) {
@@ -19644,11 +19644,11 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
       left = seconds;
       if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
     }
-    paint13();
+    paint12();
   });
   secrets.set(field2, { reveal: (reason) => show(reason), hide: (reason) => hide2(reason) });
   return () => {
-    watch.disconnect();
+    watch2.disconnect();
     stopOptions();
     stop();
     window.clearTimeout(copiedTimer);
@@ -20009,12 +20009,12 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     doc.addEventListener("visibilitychange", onAway);
     setState3(disabledWhy() !== void 0 ? "disabled" : "hidden");
     writeLine();
-    const watch = new MutationObserver(() => {
+    const watch2 = new MutationObserver(() => {
       if (disabledWhy() !== void 0) hide2("call");
       setState3(disabledWhy() !== void 0 ? "disabled" : state12 === "disabled" ? "hidden" : state12);
       writeLine();
     });
-    watch.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled"] });
+    watch2.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled"] });
     const stopOptions = watchOptions(
       field2,
       ["data-kp-secret-ttl", "data-kp-secret-reveal-on", "data-kp-secret-mask", "data-kp-secret-mask-char"],
@@ -20042,7 +20042,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     );
     secrets.set(field2, { reveal: (reason) => void show(reason), hide: (reason) => hide2(reason) });
     cleanups.push(() => {
-      watch.disconnect();
+      watch2.disconnect();
       stopOptions();
       stop();
       window.clearTimeout(copiedTimer);
@@ -28151,10 +28151,10 @@ var init_formgrid_columns = __esm({
     FormgridColumnsController = class extends Controller {
       connect() {
         const grid2 = this.host;
-        const watch = this.observe(new ResizeObserver(() => this.decide()));
+        const watch2 = this.observe(new ResizeObserver(() => this.decide()));
         this.decide();
-        watch.observe(grid2);
-        for (const group of grid2.children) watch.observe(group);
+        watch2.observe(grid2);
+        for (const group of grid2.children) watch2.observe(group);
         this.own(() => grid2.removeAttribute("data-kp-formgrid-wide"));
       }
       /** The shown children of the grid: no templates, scripts, styles or hidden elements. */
@@ -28210,8 +28210,8 @@ var init_formgrid_stage = __esm({
       connect() {
         const stage = this.host;
         this.count();
-        const watch = this.observe(new MutationObserver(() => this.count()));
-        watch.observe(stage, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden", "data-kp-formgrid-rows"] });
+        const watch2 = this.observe(new MutationObserver(() => this.count()));
+        watch2.observe(stage, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden", "data-kp-formgrid-rows"] });
         this.own(() => stage.style.removeProperty("--kp-formgrid-rows"));
       }
       /** Write the row count of the longest card, when it changed. */
@@ -30165,14 +30165,14 @@ function attachProgressbars(root = document) {
   for (const bar of bars) syncProgressbar(buildProgressbar(bar));
   if (typeof MutationObserver === "undefined" || bars.length === 0) return () => {
   };
-  const watch = new MutationObserver((records) => {
+  const watch2 = new MutationObserver((records) => {
     for (const record of records) syncProgressbar(
       /** @type {HTMLElement} */
       record.target
     );
   });
-  for (const bar of bars) watch.observe(bar, { attributes: true, attributeFilter: ["aria-valuenow", "aria-valuemin", "aria-valuemax"] });
-  return () => watch.disconnect();
+  for (const bar of bars) watch2.observe(bar, { attributes: true, attributeFilter: ["aria-valuenow", "aria-valuemin", "aria-valuemax"] });
+  return () => watch2.disconnect();
 }
 var PROGRESSBAR_SELECTOR, VALUE_PROPERTY, PROGRESSBAR_RETRY_EVENT, INDETERMINATE_ATTRIBUTE, numberAttribute, FAILED;
 var init_progressbar = __esm({
@@ -45756,7 +45756,7 @@ var init_controller20 = __esm({
       /** The legend follows its option: `hide` takes the calm legend away, anything else puts it back. */
       watchOptions() {
         const { el: el16, strings: s2 } = this;
-        const watch = this.observe(
+        const watch2 = this.observe(
           new MutationObserver(() => {
             if (isCalmTones(el16)) {
               if (el16.getAttribute("data-kp-legend") === "hide") this.setLegend([]);
@@ -45765,7 +45765,7 @@ var init_controller20 = __esm({
             paintCalendar(this);
           })
         );
-        watch.observe(el16, { attributes: true, attributeFilter: WATCHED4 });
+        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED4 });
       }
       /** Move by whole months and say so. @param {number} months */
       step(months) {
@@ -48036,7 +48036,7 @@ function attachBarCells(root = document) {
   const view = doc.defaultView;
   if (!view) return () => {
   };
-  const watch = new view.MutationObserver((records) => {
+  const watch2 = new view.MutationObserver((records) => {
     for (const record of records) {
       const el16 = (
         /** @type {HTMLElement} */
@@ -48045,7 +48045,7 @@ function attachBarCells(root = document) {
       if (el16.matches?.(BAR_CELL)) fill(el16);
     }
   });
-  watch.observe(root instanceof Document ? root.documentElement : (
+  watch2.observe(root instanceof Document ? root.documentElement : (
     /** @type {Node} */
     root
   ), {
@@ -48053,7 +48053,7 @@ function attachBarCells(root = document) {
     attributes: true,
     attributeFilter: ["data-kp-bar", "data-kp-bar-text", "data-kp-bar-tone", "data-kp-bar-mark", "data-kp-bar-loading"]
   });
-  return () => watch.disconnect();
+  return () => watch2.disconnect();
 }
 var BAR_CELL, SORT_VALUE_ATTRIBUTE, numberOf;
 var init_barcell = __esm({
@@ -56799,34 +56799,273 @@ var init_connection = __esm({
   }
 });
 
-// js/transfer.js
-var transfer_exports = {};
-__export(transfer_exports, {
-  TRANSFER: () => TRANSFER,
-  TRANSFER_DONE_EVENT: () => TRANSFER_DONE_EVENT,
-  TRANSFER_LEAVE_EVENT: () => TRANSFER_LEAVE_EVENT,
-  TRANSFER_RETRY_EVENT: () => TRANSFER_RETRY_EVENT,
-  attachTransfers: () => attachTransfers,
-  resetTransfer: () => resetTransfer,
-  setTransfer: () => setTransfer,
-  transferEta: () => transferEta,
-  transferRate: () => transferRate
+// js/transfer/values.js
+var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS3, ANNOUNCE_STEP;
+var init_values7 = __esm({
+  "js/transfer/values.js"() {
+    "use strict";
+    TRANSFER = "[data-kp-transfer]";
+    TRANSFER_DONE_EVENT = "kp-transfer-done";
+    TRANSFER_RETRY_EVENT = "kp-transfer-retry";
+    TRANSFER_LEAVE_EVENT = "kp-transfer-leave";
+    TRANSFER_GROUP = ".kp-progress-group--transfer";
+    DEFAULT_RATE_WINDOW_S = 5;
+    DEFAULT_ETA_AFTER_S = 3;
+    DEFAULT_STALL_AFTER_S = 10;
+    DEFAULT_LINGER_S = 30;
+    MS = 1e3;
+    DEFAULT_FOLD_AT = "46rem";
+    TICK_MS3 = 1e3;
+    ANNOUNCE_STEP = 25;
+  }
 });
-function transferRate(samples, windowS = 5) {
+
+// js/transfer/group.js
+var TransferGroup;
+var init_group5 = __esm({
+  "js/transfer/group.js"() {
+    "use strict";
+    init_controller();
+    init_values7();
+    TransferGroup = class extends Controller {
+      /** @param {HTMLElement} group */
+      constructor(group) {
+        super(group);
+        this.probe = group.ownerDocument.createElement("div");
+      }
+      connect() {
+        const group = this.host;
+        this.probe.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;block-size:0;overflow:hidden";
+        this.fit();
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(() => this.fit())).observe(group);
+      }
+      /** Measure the fold width and the group's own, and mark the group narrow when it is below it (`data-kp-fold-at`, 46rem). */
+      fit() {
+        const group = this.host;
+        const probe = this.probe;
+        probe.style.inlineSize = group.getAttribute("data-kp-fold-at") ?? DEFAULT_FOLD_AT;
+        group.append(probe);
+        const limit = probe.getBoundingClientRect().width;
+        probe.remove();
+        const width = group.getBoundingClientRect().width;
+        if (width > 0) group.toggleAttribute("data-kp-narrow", width < limit);
+      }
+    };
+  }
+});
+
+// js/transfer/math.js
+function transferRate(samples, windowS = DEFAULT_RATE_WINDOW_S) {
   const last = samples.at(-1);
   if (!last || samples.length < 2) return null;
-  const from = last.t - windowS * 1e3;
+  const from = last.t - windowS * MS;
   const inside = samples.filter((s2) => s2.t >= from);
   const first = inside.length >= 2 ? inside[0] : samples.at(-2);
   if (!first || last.t <= first.t) return null;
-  return Math.max(0, (last.done - first.done) / ((last.t - first.t) / 1e3));
+  return Math.max(0, (last.done - first.done) / ((last.t - first.t) / MS));
 }
 function transferEta(seconds) {
   const s2 = getStrings();
   const n = Math.max(0, Math.round(seconds));
-  const coarse = n < 10 ? n : n < 60 ? Math.round(n / 5) * 5 : n < 3600 ? Math.round(n / 60) * 60 : Math.round(n / 300) * 300;
+  const coarse = n < EXACT_BELOW_S ? n : n < MINUTE_S2 ? Math.round(n / FIVE_S) * FIVE_S : n < HOUR_S2 ? Math.round(n / MINUTE_S2) * MINUTE_S2 : Math.round(n / FIVE_MIN_S) * FIVE_MIN_S;
   return humanDuration(coarse, s2);
 }
+var EXACT_BELOW_S, MINUTE_S2, HOUR_S2, FIVE_S, FIVE_MIN_S;
+var init_math = __esm({
+  "js/transfer/math.js"() {
+    "use strict";
+    init_freshness();
+    init_strings();
+    init_values7();
+    EXACT_BELOW_S = 10;
+    MINUTE_S2 = 60;
+    HOUR_S2 = 3600;
+    FIVE_S = 5;
+    FIVE_MIN_S = 300;
+  }
+});
+
+// js/transfer/read.js
+var BASE_DECIMAL, BASE_BINARY, baseOf, numberOf2, size, shows;
+var init_read3 = __esm({
+  "js/transfer/read.js"() {
+    "use strict";
+    init_locale();
+    BASE_DECIMAL = 1e3;
+    BASE_BINARY = 1024;
+    baseOf = (row) => row.getAttribute("data-kp-bytes-base") === String(BASE_BINARY) ? BASE_BINARY : BASE_DECIMAL;
+    numberOf2 = (row, name, fallback2) => {
+      const n = Number(row.getAttribute(name));
+      return row.hasAttribute(name) && Number.isFinite(n) && n >= 0 ? n : fallback2;
+    };
+    size = (row, bytes) => formatBytes(bytes, void 0, { base: baseOf(row) });
+    shows = (row, part7) => {
+      const list = row.getAttribute("data-kp-show");
+      return list === null || list.split(/[\s,]+/).includes(part7);
+    };
+  }
+});
+
+// js/transfer/core.js
+var FULL, TransferCore;
+var init_core7 = __esm({
+  "js/transfer/core.js"() {
+    "use strict";
+    init_controller();
+    init_freshness();
+    init_progressbar();
+    init_strings();
+    init_math();
+    init_read3();
+    init_values7();
+    FULL = 100;
+    TransferCore = class extends Controller {
+      /**
+       * @param {HTMLElement} row
+       * @param {{ prepare?: boolean }} [options] `prepare`: made by attachTransfers, so the row is zeroed and waits for the first report
+       */
+      constructor(row, options = {}) {
+        super(row, options);
+        this.st = null;
+      }
+      /** Start a transfer's state at its first report. @param {number} at @param {(() => number) | undefined} now */
+      begin(at, now) {
+        this.st = {
+          samples: [],
+          start: at,
+          lastMove: at,
+          lastDone: 0,
+          total: null,
+          phase: "running",
+          announced: 0,
+          now: now ?? (() => Date.now()),
+          leaveTimer: 0
+        };
+        return this.st;
+      }
+      /** Forget the transfer: the next report starts a new one. */
+      forget() {
+        this.st = null;
+      }
+      /**
+       * The numbers a paint is drawn from.
+       * @param {TransferState} st
+       */
+      measure(st) {
+        const row = this.host;
+        const now = st.now();
+        const last = st.samples.at(-1);
+        const done = last?.done ?? 0;
+        const total = st.total;
+        const known4 = total !== null && total > 0;
+        const stalledFor = (now - st.lastMove) / MS;
+        const stalled = st.phase === "running" && stalledFor >= numberOf2(row, "data-kp-stall-after", DEFAULT_STALL_AFTER_S);
+        const rate = stalled ? 0 : transferRate(st.samples, numberOf2(row, "data-kp-rate-window", DEFAULT_RATE_WINDOW_S));
+        const measured2 = (last?.t ?? now) - st.start;
+        const percent = known4 ? Math.min(FULL, Math.floor(done / /** @type {number} */
+        total * FULL)) : null;
+        return { now, last, done, total, known: known4, stalledFor, stalled, rate, measured: measured2, percent };
+      }
+      /**
+       * The bar: ARIA is the source. A transfer of unknown size has no share to fill, and a bar that sweeps or restarts reads
+       * as stuck or hectic (kpadopt5-ops rounds 1 and 2). `data-kp-transfer-unknown` makes the bar one full band of stripes that
+       * drifts at an even pace, a loop that is the same picture every period so nothing restarts; the words beside it say the
+       * size is unknown and the bytes so far count up. When the size turns out the band settles into the normal bar, which
+       * shrinks from full to the real share instead of jumping.
+       * @param {Parts} p @param {ReturnType<TransferCore['measure']>} v
+       */
+      paintBar(p, v) {
+        const row = this.host;
+        if (v.known && row.hasAttribute("data-kp-transfer-unknown")) {
+          const fill2 = p.bar.querySelector(".kp-progressbar__fill");
+          if (fill2) {
+            row.setAttribute("data-kp-transfer-settle", "");
+            fill2.addEventListener("animationend", () => row.removeAttribute("data-kp-transfer-settle"), { once: true });
+          }
+        }
+        row.toggleAttribute("data-kp-transfer-unknown", !v.known);
+        if (v.known) {
+          setProgress(p.bar, v.percent ?? 0);
+          p.bar.removeAttribute("aria-valuetext");
+        } else {
+          setIndeterminate(p.bar, true);
+          const s2 = getStrings();
+          p.bar.setAttribute("aria-valuetext", `${s2.transferSizeUnknown}, ${s2.transferSoFar(size(row, v.done))}`);
+        }
+      }
+      /** The reading: "1.2 GB of 4.1 GB · 29 %". @param {TransferState} st @param {ReturnType<TransferCore['measure']>} v @returns {string} */
+      readingText(st, v) {
+        const row = this.host;
+        const s2 = getStrings();
+        const total = (
+          /** @type {number} */
+          v.total
+        );
+        if (st.phase === "done" && v.known) return size(row, total);
+        if (!v.known) return s2.transferSoFar(size(row, v.done));
+        const bits = [];
+        if (shows(row, "done")) bits.push(shows(row, "total") ? s2.transferOf(size(row, v.done), size(row, total)) : size(row, v.done));
+        else if (shows(row, "total")) bits.push(size(row, total));
+        if (shows(row, "percent") && v.percent !== null) bits.push(`${v.percent} %`);
+        return bits.join(" \xB7 ");
+      }
+      /** The speed and the time left of a transfer that is still going. @param {ReturnType<TransferCore['measure']>} v @returns {{ rateText: string, etaText: string }} */
+      runningTexts(v) {
+        const row = this.host;
+        const s2 = getStrings();
+        if (v.stalled) return { rateText: s2.transferStalled(humanDuration(Math.round(v.stalledFor), s2)), etaText: "" };
+        const rateText = v.rate !== null && shows(row, "rate") ? `${size(row, v.rate)}/s` : "";
+        let etaText = "";
+        if (shows(row, "eta") && !v.known) etaText = s2.transferSizeUnknown;
+        if (shows(row, "eta") && v.known) {
+          if (v.rate === null || v.measured < numberOf2(row, "data-kp-eta-after", DEFAULT_ETA_AFTER_S) * MS || v.rate <= 0) etaText = s2.transferEstimating;
+          else etaText = s2.transferLeft(transferEta(
+            /** @type {number} */
+            (v.total - v.done) / v.rate
+          ));
+        }
+        return { rateText, etaText };
+      }
+      /** The speed and the time left, by phase: the average and the duration when done, nothing when failed. @param {TransferState} st @param {ReturnType<TransferCore['measure']>} v @returns {{ rateText: string, etaText: string }} */
+      rateTexts(st, v) {
+        const row = this.host;
+        const s2 = getStrings();
+        if (st.phase === "failed") return { rateText: "", etaText: "" };
+        if (st.phase !== "done") return this.runningTexts(v);
+        const ms = (v.last?.t ?? v.now) - st.start;
+        const avg = ms > 0 ? (v.total ?? v.done) / ms * MS : null;
+        return {
+          rateText: avg !== null && shows(row, "rate") ? s2.transferAverage(`${size(row, avg)}/s`) : "",
+          etaText: shows(row, "eta") ? s2.transferTook(humanDuration(Math.round(ms / MS), s2)) : ""
+        };
+      }
+      /** A screen reader hears 25, 50, 75 and 100 %, never every second. @param {TransferState} st @param {Parts} p @param {number | null} percent */
+      announce(st, p, percent) {
+        if (percent === null || this.host.getAttribute("data-kp-announce") === "off") return;
+        const step = Math.floor(percent / ANNOUNCE_STEP);
+        if (step > st.announced && st.phase === "running") {
+          st.announced = step;
+          p.status.textContent = getStrings().transferAnnounce(p.label.textContent ?? "", step * ANNOUNCE_STEP);
+        }
+      }
+      /** @param {TransferState} st @param {Parts} p */
+      paint(st, p) {
+        const row = this.host;
+        const v = this.measure(st);
+        row.setAttribute("data-kp-state", st.phase === "running" ? v.stalled ? "stalled" : "running" : st.phase);
+        this.paintBar(p, v);
+        p.value.textContent = this.readingText(st, v);
+        const { rateText, etaText } = this.rateTexts(st, v);
+        p.rate.textContent = rateText;
+        p.rate.toggleAttribute("data-kp-stalled", v.stalled);
+        p.eta.textContent = etaText;
+        this.announce(st, p, v.percent);
+      }
+    };
+  }
+});
+
+// js/transfer/parts.js
 function part6(row, className, tag = "span") {
   let node = (
     /** @type {HTMLElement | null} */
@@ -56873,270 +57112,213 @@ function build7(row) {
   }
   return { label, bar, value, rate, eta, status };
 }
-function paint10(row, st, p) {
-  const s2 = getStrings();
-  const now = st.now();
-  const last = st.samples.at(-1);
-  const done = last?.done ?? 0;
-  const total = st.total;
-  const known4 = total !== null && total > 0;
-  const stalledFor = (now - st.lastMove) / 1e3;
-  const stalled = st.phase === "running" && stalledFor >= numberOf2(row, "data-kp-stall-after", 10);
-  row.setAttribute("data-kp-state", st.phase === "running" ? stalled ? "stalled" : "running" : st.phase);
-  const rate = stalled ? 0 : transferRate(st.samples, numberOf2(row, "data-kp-rate-window", 5));
-  const measured2 = (last?.t ?? now) - st.start;
-  const percent = known4 ? Math.min(100, Math.floor(done / /** @type {number} */
-  total * 100)) : null;
-  if (known4 && row.hasAttribute("data-kp-transfer-unknown")) {
-    const fill2 = p.bar.querySelector(".kp-progressbar__fill");
-    if (fill2) {
-      row.setAttribute("data-kp-transfer-settle", "");
-      fill2.addEventListener("animationend", () => row.removeAttribute("data-kp-transfer-settle"), { once: true });
-    }
+var init_parts5 = __esm({
+  "js/transfer/parts.js"() {
+    "use strict";
+    init_progressbar();
+    init_strings();
   }
-  row.toggleAttribute("data-kp-transfer-unknown", !known4);
-  if (known4) {
-    setProgress(p.bar, percent ?? 0);
-    p.bar.removeAttribute("aria-valuetext");
-  } else {
-    setIndeterminate(p.bar, true);
-    p.bar.setAttribute("aria-valuetext", `${s2.transferSizeUnknown}, ${s2.transferSoFar(size(row, done))}`);
-  }
-  const readingParts = [];
-  if (st.phase === "done" && known4) {
-    readingParts.push(size(
-      row,
-      /** @type {number} */
-      total
-    ));
-  } else if (known4) {
-    const bits = [];
-    if (shows(row, "done"))
-      bits.push(shows(row, "total") ? s2.transferOf(size(row, done), size(
-        row,
-        /** @type {number} */
-        total
-      )) : size(row, done));
-    else if (shows(row, "total")) bits.push(size(
-      row,
-      /** @type {number} */
-      total
-    ));
-    if (shows(row, "percent") && percent !== null) bits.push(`${percent} %`);
-    readingParts.push(bits.join(" \xB7 "));
-  } else readingParts.push(s2.transferSoFar(size(row, done)));
-  p.value.textContent = readingParts.join("");
-  let rateText = "";
-  let etaText = "";
-  if (st.phase === "done") {
-    const ms = (last?.t ?? now) - st.start;
-    const avg = ms > 0 ? (total ?? done) / ms * 1e3 : null;
-    rateText = avg !== null && shows(row, "rate") ? s2.transferAverage(`${size(row, avg)}/s`) : "";
-    etaText = shows(row, "eta") ? s2.transferTook(humanDuration(Math.round(ms / 1e3), s2)) : "";
-  } else if (st.phase === "failed") {
-    rateText = "";
-    etaText = "";
-  } else if (stalled) {
-    rateText = s2.transferStalled(humanDuration(Math.round(stalledFor), s2));
-    etaText = "";
-  } else {
-    rateText = rate !== null && shows(row, "rate") ? `${size(row, rate)}/s` : "";
-    if (shows(row, "eta") && !known4) etaText = s2.transferSizeUnknown;
-    if (shows(row, "eta") && known4) {
-      if (rate === null || measured2 < numberOf2(row, "data-kp-eta-after", 3) * 1e3 || rate <= 0) etaText = s2.transferEstimating;
-      else etaText = s2.transferLeft(transferEta(
-        /** @type {number} */
-        (total - done) / rate
-      ));
-    }
-  }
-  p.rate.textContent = rateText;
-  p.rate.toggleAttribute("data-kp-stalled", stalled);
-  p.eta.textContent = etaText;
-  if (percent !== null && row.getAttribute("data-kp-announce") !== "off") {
-    const step = Math.floor(percent / 25);
-    if (step > st.announced && st.phase === "running") {
-      st.announced = step;
-      p.status.textContent = s2.transferAnnounce(p.label.textContent ?? "", step * 25);
-    }
-  }
-}
+});
+
+// js/transfer/ticker.js
 function tick5() {
   for (const row of live3) {
-    const st = states2.get(row);
-    if (!row.isConnected || !st) {
+    const st = row.st;
+    if (!row.host.isConnected || !st) {
       live3.delete(row);
       continue;
     }
-    if (st.phase === "running") paint10(row, st, build7(row));
+    if (st.phase === "running") row.paint(st, build7(row.host));
   }
   if (!live3.size) {
     clearInterval(ticker);
     ticker = 0;
   }
 }
-function setTransfer(row, sample, { now } = {}) {
-  const p = build7(row);
-  let st = states2.get(row);
-  const at = sample.at ?? (now ? now() : Date.now());
-  if (!st) {
-    st = {
-      samples: [],
-      start: at,
-      lastMove: at,
-      lastDone: 0,
-      total: null,
-      phase: "running",
-      announced: 0,
-      now: now ?? (() => Date.now()),
-      leaveTimer: 0
-    };
-    states2.set(row, st);
-  } else if (now) st.now = now;
-  if (sample.name !== void 0) p.label.textContent = sample.name;
-  if (sample.total !== void 0) st.total = sample.total > 0 ? sample.total : null;
-  row.querySelector(":scope > .kp-transfer__failure")?.remove();
-  if (sample.failed !== void 0) {
-    st.phase = "failed";
-    live3.delete(row);
-    paint10(row, st, p);
-    const s2 = getStrings();
-    const note2 = row.ownerDocument.createElement("div");
-    note2.className = "kp-alert kp-alert--destructive kp-transfer__failure";
-    note2.setAttribute("role", "alert");
-    const words3 = row.ownerDocument.createElement("span");
-    words3.className = "kp-alert__body";
-    words3.textContent = `${s2.transferFailed}: ${sample.failed}`;
-    const retry = row.ownerDocument.createElement("button");
-    retry.type = "button";
-    retry.className = "kp-button kp-button--sm kp-transfer__retry";
-    retry.textContent = s2.transferRetry;
-    retry.addEventListener("click", () => {
-      st.phase = "running";
-      st.samples = [];
-      st.announced = 0;
-      note2.remove();
-      row.dispatchEvent(new CustomEvent(TRANSFER_RETRY_EVENT, { bubbles: true, detail: {} }));
-    });
-    note2.append(words3, retry);
-    row.append(note2);
-    return;
-  }
-  if (st.phase !== "running") return;
-  const done = sample.done ?? st.lastDone;
-  st.samples.push({ t: at, done });
-  const keep = numberOf2(row, "data-kp-rate-window", 5) * 1e3 * 2;
-  while (st.samples.length > 2 && at - (st.samples[0]?.t ?? at) > keep) st.samples.shift();
-  if (done > st.lastDone) st.lastMove = at;
-  st.lastDone = done;
-  if (st.total !== null && done >= st.total) {
-    st.phase = "done";
-    live3.delete(row);
-    paint10(row, st, p);
-    p.status.textContent = getStrings().transferAnnounce(p.label.textContent ?? "", 100);
-    row.dispatchEvent(new CustomEvent(TRANSFER_DONE_EVENT, { bubbles: true, detail: { total: st.total, ms: at - st.start } }));
-    const linger = numberOf2(row, "data-kp-linger", 30);
-    if (linger > 0) {
-      st.leaveTimer = window.setTimeout(() => {
-        row.dispatchEvent(new CustomEvent(TRANSFER_LEAVE_EVENT, { bubbles: true, detail: {} }));
-        void leave(row);
-      }, linger * 1e3);
-    }
-    return;
-  }
-  paint10(row, st, p);
+function watch(row) {
   live3.add(row);
-  if (!ticker) ticker = window.setInterval(tick5, 1e3);
+  if (!ticker) ticker = window.setInterval(tick5, TICK_MS3);
+}
+var live3, ticker;
+var init_ticker = __esm({
+  "js/transfer/ticker.js"() {
+    "use strict";
+    init_parts5();
+    init_values7();
+    live3 = /* @__PURE__ */ new Set();
+    ticker = 0;
+  }
+});
+
+// js/transfer/row.js
+var TransferRow;
+var init_row2 = __esm({
+  "js/transfer/row.js"() {
+    "use strict";
+    init_progressbar();
+    init_motion();
+    init_strings();
+    init_core7();
+    init_parts5();
+    init_read3();
+    init_ticker();
+    init_values7();
+    TransferRow = class extends TransferCore {
+      connect() {
+        const row = this.host;
+        this.own(() => {
+          live3.delete(this);
+          window.clearTimeout(this.st?.leaveTimer);
+        });
+        if (!this.options.prepare) return;
+        const p = build7(row);
+        p.bar.setAttribute("aria-valuenow", "0");
+        p.value.textContent = "";
+      }
+      /**
+       * Report a transfer's progress. The first report starts it; a report whose `done` reaches `total` finishes it.
+       * @param {TransferSample} sample @param {(() => number) | undefined} now
+       */
+      report(sample, now) {
+        const row = this.host;
+        const p = build7(row);
+        const at = sample.at ?? (now ? now() : Date.now());
+        let st = this.st;
+        if (!st) st = this.begin(at, now);
+        else if (now) st.now = now;
+        if (sample.name !== void 0) p.label.textContent = sample.name;
+        if (sample.total !== void 0) st.total = sample.total > 0 ? sample.total : null;
+        row.querySelector(":scope > .kp-transfer__failure")?.remove();
+        if (sample.failed !== void 0) {
+          this.fail(st, p, sample.failed);
+          return;
+        }
+        if (st.phase !== "running") return;
+        const done = sample.done ?? st.lastDone;
+        this.push(st, at, done);
+        if (st.total !== null && done >= st.total) {
+          this.finish(st, p, at);
+          return;
+        }
+        this.paint(st, p);
+        watch(this);
+      }
+      /** Add a sample, keeping the window and a little more; the rate never needs older samples. @param {TransferState} st @param {number} at @param {number} done */
+      push(st, at, done) {
+        st.samples.push({ t: at, done });
+        const keep = numberOf2(this.host, "data-kp-rate-window", DEFAULT_RATE_WINDOW_S) * MS * 2;
+        while (st.samples.length > 2 && at - (st.samples[0]?.t ?? at) > keep) st.samples.shift();
+        if (done > st.lastDone) st.lastMove = at;
+        st.lastDone = done;
+      }
+      /** The transfer reached its total: painted done, announced, and left after its linger. @param {TransferState} st @param {ReturnType<typeof build>} p @param {number} at */
+      finish(st, p, at) {
+        const row = this.host;
+        st.phase = "done";
+        live3.delete(this);
+        this.paint(st, p);
+        p.status.textContent = getStrings().transferAnnounce(p.label.textContent ?? "", 100);
+        row.dispatchEvent(new CustomEvent(TRANSFER_DONE_EVENT, { bubbles: true, detail: { total: st.total, ms: at - st.start } }));
+        const linger = numberOf2(row, "data-kp-linger", DEFAULT_LINGER_S);
+        if (linger > 0) {
+          st.leaveTimer = window.setTimeout(() => {
+            row.dispatchEvent(new CustomEvent(TRANSFER_LEAVE_EVENT, { bubbles: true, detail: {} }));
+            void leave(row);
+          }, linger * MS);
+        }
+      }
+      /** The transfer failed: painted failed, with the app's own sentence and a Retry that runs it again. @param {TransferState} st @param {ReturnType<typeof build>} p @param {string} why */
+      fail(st, p, why) {
+        const row = this.host;
+        st.phase = "failed";
+        live3.delete(this);
+        this.paint(st, p);
+        const s2 = getStrings();
+        const note2 = row.ownerDocument.createElement("div");
+        note2.className = "kp-alert kp-alert--destructive kp-transfer__failure";
+        note2.setAttribute("role", "alert");
+        const words3 = row.ownerDocument.createElement("span");
+        words3.className = "kp-alert__body";
+        words3.textContent = `${s2.transferFailed}: ${why}`;
+        const retry = row.ownerDocument.createElement("button");
+        retry.type = "button";
+        retry.className = "kp-button kp-button--sm kp-transfer__retry";
+        retry.textContent = s2.transferRetry;
+        retry.addEventListener("click", () => {
+          st.phase = "running";
+          st.samples = [];
+          st.announced = 0;
+          note2.remove();
+          row.dispatchEvent(new CustomEvent(TRANSFER_RETRY_EVENT, { bubbles: true, detail: {} }));
+        });
+        note2.append(words3, retry);
+        row.append(note2);
+      }
+      /** Take the transfer back to before its first report (a new run in the same row). */
+      reset() {
+        const row = this.host;
+        live3.delete(this);
+        window.clearTimeout(this.st?.leaveTimer);
+        this.forget();
+        row.querySelector(":scope > .kp-transfer__failure")?.remove();
+        row.removeAttribute("data-kp-state");
+        const p = build7(row);
+        p.bar.setAttribute("aria-valuenow", "0");
+        setProgress(p.bar, 0);
+        p.value.textContent = "";
+        p.rate.textContent = "";
+        row.removeAttribute("data-kp-transfer-unknown");
+        row.removeAttribute("data-kp-transfer-settle");
+        p.bar.removeAttribute("aria-valuetext");
+        p.rate.removeAttribute("data-kp-stalled");
+        p.eta.textContent = "";
+      }
+    };
+  }
+});
+
+// js/transfer.js
+var transfer_exports = {};
+__export(transfer_exports, {
+  TRANSFER: () => TRANSFER,
+  TRANSFER_DONE_EVENT: () => TRANSFER_DONE_EVENT,
+  TRANSFER_LEAVE_EVENT: () => TRANSFER_LEAVE_EVENT,
+  TRANSFER_RETRY_EVENT: () => TRANSFER_RETRY_EVENT,
+  attachTransfers: () => attachTransfers,
+  resetTransfer: () => resetTransfer,
+  setTransfer: () => setTransfer,
+  transferEta: () => transferEta,
+  transferRate: () => transferRate
+});
+function setTransfer(row, sample, { now } = {}) {
+  (controllerOf(row, TransferRow) ?? attachOne(row, TransferRow))?.report(sample, now);
 }
 function resetTransfer(row) {
-  live3.delete(row);
-  window.clearTimeout(states2.get(row)?.leaveTimer);
-  states2.delete(row);
-  row.querySelector(":scope > .kp-transfer__failure")?.remove();
-  row.removeAttribute("data-kp-state");
-  const p = build7(row);
-  p.bar.setAttribute("aria-valuenow", "0");
-  setProgress(p.bar, 0);
-  p.value.textContent = "";
-  p.rate.textContent = "";
-  row.removeAttribute("data-kp-transfer-unknown");
-  row.removeAttribute("data-kp-transfer-settle");
-  p.bar.removeAttribute("aria-valuetext");
-  p.rate.removeAttribute("data-kp-stalled");
-  p.eta.textContent = "";
+  (controllerOf(row, TransferRow) ?? attachOne(row, TransferRow))?.reset();
 }
 function attachTransfers(root = document) {
-  const rows = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(TRANSFER) ? [root] : [],
-      ...root.querySelectorAll(TRANSFER)
-    ]
-  );
-  for (const row of rows) {
-    const p = build7(row);
-    p.bar.setAttribute("aria-valuenow", "0");
-    p.value.textContent = "";
-  }
-  const groups = new Set(rows.map((row) => row.closest(".kp-progress-group--transfer")).filter((g) => g instanceof HTMLElement));
-  const watchers = [];
-  for (
-    const group of
-    /** @type {Set<HTMLElement>} */
-    groups
-  ) {
-    const probe = group.ownerDocument.createElement("div");
-    probe.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;block-size:0;overflow:hidden";
-    const fit2 = () => {
-      probe.style.inlineSize = group.getAttribute("data-kp-fold-at") ?? "46rem";
-      group.append(probe);
-      const limit = probe.getBoundingClientRect().width;
-      probe.remove();
-      const width = group.getBoundingClientRect().width;
-      if (width > 0) group.toggleAttribute("data-kp-narrow", width < limit);
-    };
-    fit2();
-    if (typeof ResizeObserver === "function") {
-      const watcher = new ResizeObserver(fit2);
-      watcher.observe(group);
-      watchers.push(watcher);
-    }
-  }
+  const rows = hostsOf(root, TRANSFER);
+  const detachRows = attachAll(root, TRANSFER, TransferRow, { prepare: true });
+  const groups = new Set(rows.map((row) => row.closest(TRANSFER_GROUP)).filter((g) => g instanceof HTMLElement));
+  const made7 = [...groups].filter((group) => !controllerOf(group, TransferGroup)).map((group) => attachOne(
+    /** @type {HTMLElement} */
+    group,
+    TransferGroup
+  )).filter((controller) => controller !== void 0);
   return () => {
-    for (const watcher of watchers) watcher.disconnect();
-    for (const row of rows) {
-      live3.delete(row);
-      window.clearTimeout(states2.get(row)?.leaveTimer);
-      states2.delete(row);
-    }
+    for (const controller of made7) controller.destroy();
+    detachRows();
   };
 }
-var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, states2, live3, ticker, baseOf, numberOf2, size, shows;
 var init_transfer = __esm({
   "js/transfer.js"() {
     "use strict";
-    init_progressbar();
-    init_freshness();
-    init_locale();
-    init_motion();
-    init_strings();
-    TRANSFER = "[data-kp-transfer]";
-    TRANSFER_DONE_EVENT = "kp-transfer-done";
-    TRANSFER_RETRY_EVENT = "kp-transfer-retry";
-    TRANSFER_LEAVE_EVENT = "kp-transfer-leave";
-    states2 = /* @__PURE__ */ new WeakMap();
-    live3 = /* @__PURE__ */ new Set();
-    ticker = 0;
-    baseOf = (row) => row.getAttribute("data-kp-bytes-base") === "1024" ? 1024 : 1e3;
-    numberOf2 = (row, name, fallback2) => {
-      const n = Number(row.getAttribute(name));
-      return row.hasAttribute(name) && Number.isFinite(n) && n >= 0 ? n : fallback2;
-    };
-    size = (row, bytes) => formatBytes(bytes, void 0, { base: baseOf(row) });
-    shows = (row, part7) => {
-      const list = row.getAttribute("data-kp-show");
-      return list === null || list.split(/[\s,]+/).includes(part7);
-    };
+    init_controller();
+    init_group5();
+    init_row2();
+    init_values7();
+    init_values7();
+    init_math();
   }
 });
 
@@ -57215,7 +57397,7 @@ function stepPosition(list) {
   const index = at >= 0 ? at : waiting >= 0 ? waiting : items.length - 1;
   return { step: Math.max(0, index) + 1, steps: items.length };
 }
-function paint11(line, report2) {
+function paint10(line, report2) {
   const base = (
     /** @type {1000 | 1024} */
     line.getAttribute("data-kp-bytes-base") === "1024" ? 1024 : 1e3
@@ -57240,7 +57422,7 @@ function setJobLine(line, report2) {
   }
   reports.set(line, next2);
   const list = listOf4(line);
-  paint11(line, list && !("step" in report2) ? { ...next2, ...stepPosition(list) } : next2);
+  paint10(line, list && !("step" in report2) ? { ...next2, ...stepPosition(list) } : next2);
 }
 function buildJobLine({ label, steplist } = {}) {
   const line = document.createElement("p");
@@ -57260,7 +57442,7 @@ function attachJobLines(root = document) {
     line.setAttribute("aria-live", "off");
     line.setAttribute("aria-atomic", "true");
     const list = listOf4(line);
-    paint11(line, list ? { ...reports.get(line) ?? {}, ...stepPosition(list) } : reports.get(line) ?? {});
+    paint10(line, list ? { ...reports.get(line) ?? {}, ...stepPosition(list) } : reports.get(line) ?? {});
   }
   const onStep = (event) => {
     const list = event.target instanceof Element ? event.target.closest(STEPLIST_SELECTOR) : null;
@@ -57363,7 +57545,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -57377,13 +57559,13 @@ var init_values7 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core7 = __esm({
+var init_core8 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build8();
-    init_values7();
+    init_values8();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -57512,8 +57694,8 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core7();
-    init_values7();
+    init_core8();
+    init_values8();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -57594,7 +57776,7 @@ var init_controller24 = __esm({
     "use strict";
     init_problem();
     init_build8();
-    init_values7();
+    init_values8();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -57830,8 +58012,8 @@ var init_code_field = __esm({
     "use strict";
     init_controller();
     init_controller24();
-    init_values7();
-    init_values7();
+    init_values8();
+    init_values8();
   }
 });
 
@@ -59202,7 +59384,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
       { firstDay, names: dayNames("short", locale) }
     );
     const valid = () => values().length >= min;
-    const paint13 = () => {
+    const paint12 = () => {
       const have = values();
       summary2.textContent = words3();
       const ok = have.length >= min;
@@ -59227,10 +59409,10 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
         next2.map((v) => month ? String(v).toLowerCase() === "last" ? "last" : String(Math.round(Number(v))) : String(dayNumber(v))).filter((v) => month ? v === "last" || Number(v) >= 1 && Number(v) <= 31 : v !== "null")
       );
       setSegmentedValues(group, wanted);
-      paint13();
+      paint12();
     };
     const change2 = (fire2) => {
-      paint13();
+      paint12();
       if (fire2)
         el16.dispatchEvent(new CustomEvent(WEEKDAYS_EVENT, { bubbles: true, detail: { values: values(), summary: words3(), valid: valid() } }));
     };
@@ -59253,7 +59435,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     quick.addEventListener("click", onPreset);
     const initial = (el16.dataset.kpValue ?? "").split(/[\s,]+/).map((v) => v.trim()).filter(Boolean);
     set(initial);
-    paint13();
+    paint12();
     const handle = { element: el16, values, set, summary: words3, valid };
     HANDLES4.set(el16, handle);
     cleanups.push(() => {
@@ -59428,7 +59610,7 @@ function attachOne4(root) {
     );
   };
   const valid = () => !value.on || value.from !== value.to;
-  const paint13 = () => {
+  const paint12 = () => {
     onWords.textContent = root.getAttribute("data-kp-quiet-label") ?? s2.quietLabel;
     root.setAttribute("aria-label", onWords.textContent);
     onInput.checked = value.on;
@@ -59451,12 +59633,12 @@ function attachOne4(root) {
     setTime(fromBox, value.from);
     setTime(toBox, value.to);
     setWeekdays(dayBox, value.days);
-    paint13();
+    paint12();
     if (fire2) root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   const changed2 = () => {
     value = { on: onInput.checked, from: value.from, to: value.to, days: value.days, through: checks().filter((b) => b.checked).map((b) => b.value) };
-    paint13();
+    paint12();
     root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   drawSeverities();
@@ -59480,7 +59662,7 @@ function attachOne4(root) {
     if (target === fromBox || fromBox.contains(target)) value = { ...value, from: detail.value };
     else if (target === toBox || toBox.contains(target)) value = { ...value, to: detail.value };
     else return;
-    paint13();
+    paint12();
     root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   const onDays = (event) => {
@@ -59489,26 +59671,26 @@ function attachOne4(root) {
       event.detail
     );
     value = { ...value, days: (detail?.values ?? []).filter((d) => typeof d === "number") };
-    paint13();
+    paint12();
     root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   root.addEventListener(TIME_EVENT, onTime);
   root.addEventListener(WEEKDAYS_EVENT, onDays);
   onInput.addEventListener("change", changed2);
   through.addEventListener("change", changed2);
-  const watch = new MutationObserver(() => {
+  const watch2 = new MutationObserver(() => {
     severities();
     drawSeverities();
-    paint13();
+    paint12();
   });
-  watch.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
+  watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
   HANDLES5.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
   return () => {
     root.removeEventListener(TIME_EVENT, onTime);
     root.removeEventListener(WEEKDAYS_EVENT, onDays);
     onInput.removeEventListener("change", changed2);
     through.removeEventListener("change", changed2);
-    watch.disconnect();
+    watch2.disconnect();
     root.replaceChildren();
     HANDLES5.delete(root);
   };
@@ -60144,7 +60326,7 @@ function rowItem2(c, row, slots, grouped) {
   li.append(cell, text, meta);
   return li;
 }
-var init_row2 = __esm({
+var init_row3 = __esm({
   "js/feed/row.js"() {
     "use strict";
     init_freshness();
@@ -60208,7 +60390,7 @@ var init_days = __esm({
     init_constants30();
     init_dom8();
     init_options4();
-    init_row2();
+    init_row3();
     init_words3();
   }
 });
@@ -60637,7 +60819,7 @@ function mountParts2(el16, p, isPage) {
   p.panel.append(p.head, p.body, p.sourcesBox, p.foot);
   el16.replaceChildren(p.trigger, p.panel, p.voice);
 }
-var init_parts5 = __esm({
+var init_parts6 = __esm({
   "js/notices/parts.js"() {
     "use strict";
   }
@@ -60727,11 +60909,11 @@ function sourceSwitch(doc, t, src) {
   return label;
 }
 var severityWord3;
-var init_row3 = __esm({
+var init_row4 = __esm({
   "js/notices/row.js"() {
     "use strict";
     init_freshness();
-    init_parts5();
+    init_parts6();
     severityWord3 = (t, severity) => severity === "critical" ? t.attentionCritical : severity === "warning" ? t.attentionWarning : t.attentionInfo;
   }
 });
@@ -60749,8 +60931,8 @@ var init_view3 = __esm({
     init_strings();
     init_events2();
     init_model6();
-    init_parts5();
-    init_row3();
+    init_parts6();
+    init_row4();
     DATE_LENGTH = 10;
     TIME_START2 = 11;
     NoticesView = class extends Controller {
@@ -60952,7 +61134,7 @@ var init_controller27 = __esm({
     "use strict";
     init_strings();
     init_events2();
-    init_parts5();
+    init_parts6();
     init_view3();
     idSeq3 = 0;
     NoticesCentre = class extends NoticesView {
@@ -61134,7 +61316,7 @@ function parseLabels(raw) {
   return text.split("|").map((word) => word.trim());
 }
 var clamp, plain, levelOf;
-var init_math = __esm({
+var init_math2 = __esm({
   "js/rating/math.js"() {
     "use strict";
     clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
@@ -61256,11 +61438,11 @@ function wordsOf4(m, value) {
   return label ?? s2.ratingOutOf(plain(value), m.max);
 }
 var attr5, itemName, disabled, readonly, state8, interactive, focusable, announceLevel;
-var init_read3 = __esm({
+var init_read4 = __esm({
   "js/rating/read.js"() {
     "use strict";
     init_strings();
-    init_math();
+    init_math2();
     attr5 = (m, name) => m.el.getAttribute(`data-kp-rating-${name}`) ?? void 0;
     itemName = (m) => m.el.getAttribute("data-kp-rating-for") ?? m.el.getAttribute("aria-label") ?? "";
     disabled = (m) => m.el.hasAttribute("data-kp-disabled");
@@ -61370,7 +61552,7 @@ function paintActions(m) {
   if (pending4) m.caption.textContent = s2.ratingPending(plain(m.draft), m.max);
   if (m.field) m.field.value = m.value > 0 ? String(plain(m.value)) : "";
 }
-function paint12(m) {
+function paint11(m) {
   const shown5 = m.preview ?? m.draft;
   paintHost2(m);
   paintStars(m, shown5);
@@ -61382,8 +61564,8 @@ var init_paint8 = __esm({
   "js/rating/paint.js"() {
     "use strict";
     init_strings();
-    init_read3();
-    init_math();
+    init_read4();
+    init_math2();
   }
 });
 
@@ -61412,7 +61594,7 @@ function pop(m, value) {
 }
 function afterChange(m, value, previous, source, s2, item) {
   m.busy = false;
-  paint12(m);
+  paint11(m);
   if (announceLevel(m) !== "off") say8(m, value > 0 ? s2.ratingAnnounce(item, plain(value), m.max) : s2.ratingAnnounceCleared(item));
   const ms = m.el.hasAttribute("data-kp-undo-ms") ? Number(m.el.getAttribute("data-kp-undo-ms")) : DEFAULT_UNDO_MS;
   if (source !== "undo" && ms > 0) {
@@ -61429,7 +61611,7 @@ function commit2(m, next2, source) {
   const value = snapRating(next2, m.max, m.step);
   if (value === previous) {
     m.draft = previous;
-    paint12(m);
+    paint11(m);
     return;
   }
   const waits = [];
@@ -61443,7 +61625,7 @@ function commit2(m, next2, source) {
   const kept = m.el.dispatchEvent(event);
   if (!kept) {
     m.value = m.draft = previous;
-    paint12(m);
+    paint11(m);
     return;
   }
   const s2 = getStrings();
@@ -61454,13 +61636,13 @@ function commit2(m, next2, source) {
     return;
   }
   m.busy = true;
-  paint12(m);
+  paint11(m);
   void Promise.all(waits).then(
     () => afterChange(m, value, previous, source, s2, item),
     () => {
       m.value = m.draft = previous;
       m.busy = false;
-      paint12(m);
+      paint11(m);
       tell(m, s2.ratingSaveFailed(item));
     }
   );
@@ -61479,7 +61661,7 @@ function choose2(m, value, source) {
   const next2 = snapRating(value, m.max, m.step);
   if (confirm && source !== "clear" && source !== "undo") {
     m.draft = next2;
-    paint12(m);
+    paint11(m);
     return;
   }
   if (attr5(m, "clear") !== "off" && next2 === m.value && next2 > 0 && source !== "keyboard") commit2(m, 0, "clear");
@@ -61497,8 +61679,8 @@ var init_commit = __esm({
     init_undo_toast();
     init_constants31();
     init_paint8();
-    init_read3();
-    init_math();
+    init_read4();
+    init_math2();
   }
 });
 
@@ -61541,9 +61723,9 @@ var starNumber;
 var init_keys12 = __esm({
   "js/rating/keys.js"() {
     "use strict";
-    init_math();
+    init_math2();
     init_commit();
-    init_read3();
+    init_read4();
     starNumber = (target) => target instanceof HTMLElement ? Number(target.closest(".kp-rating__star")?.getAttribute("data-kp-star")) : 0;
   }
 });
@@ -61559,9 +61741,9 @@ var init_controller28 = __esm({
     init_build10();
     init_commit();
     init_keys12();
-    init_math();
+    init_math2();
     init_paint8();
-    init_read3();
+    init_read4();
     REDRAW = ["data-kp-rating-max", "data-kp-rating-step", "data-kp-rating-mode"];
     WATCHED6 = [
       ...REDRAW,
@@ -61695,7 +61877,7 @@ var init_controller28 = __esm({
         retry.textContent = s2.ratingRetry;
         row.inert = foot.inert = st === "error";
         this.el.toggleAttribute("data-kp-loading", st === "loading");
-        paint12(this);
+        paint11(this);
       }
       /** A change of the scale, the step or the mode draws the row again; the other options are read as they are used. @param {MutationRecord[]} records */
       onAttributes(records) {
@@ -61713,7 +61895,7 @@ var init_controller28 = __esm({
         const next2 = attachOne(el16, _RatingController, options);
         if (!next2) return;
         next2.value = next2.draft = snapRating(value, next2.max, next2.valueStep);
-        paint12(next2);
+        paint11(next2);
       }
       /** @param {Event} event @returns {number} the star's number, 0 when none */
       starOf(event) {
@@ -61726,12 +61908,12 @@ var init_controller28 = __esm({
         const n = this.starOf(event);
         if (!n) return;
         this.preview = valueAt(this, n, event);
-        paint12(this);
+        paint11(this);
       }
       onLeave() {
         if (this.preview === null) return;
         this.preview = null;
-        paint12(this);
+        paint11(this);
       }
       /** @param {MouseEvent} event */
       onClick(event) {
@@ -61749,7 +61931,7 @@ var init_controller28 = __esm({
         else if (button6 === save2) commit2(this, this.draft, "pointer");
         else if (button6 === drop) {
           this.draft = this.value;
-          paint12(this);
+          paint11(this);
         }
       }
     };
@@ -61781,7 +61963,7 @@ function setRating(element, value) {
   if (!m) return;
   m.value = m.draft = snapRating(value, m.max, m.valueStep);
   m.el.setAttribute("data-kp-rating-value", String(m.value));
-  paint12(m);
+  paint11(m);
 }
 function setRatingState(element, next2) {
   if (!(element instanceof HTMLElement)) return;
@@ -61808,7 +61990,7 @@ function ratingCell(cell, value, { max = DEFAULT_STARS, count: count2, for: item
   const known4 = controllerOf(host, RatingController);
   if (known4) {
     known4.value = known4.draft = snapRating(value, known4.max, DISPLAY_STEP);
-    paint12(known4);
+    paint11(known4);
   } else {
     attachRatings(host);
   }
@@ -61823,7 +62005,7 @@ var init_api22 = __esm({
     init_controller28();
     init_build10();
     init_commit();
-    init_math();
+    init_math2();
     init_paint8();
     attachRatings = (root = document, options = {}) => attachAll(root, RATING, RatingController, options);
   }
@@ -61847,7 +62029,7 @@ var init_rating = __esm({
   "js/rating.js"() {
     "use strict";
     init_constants31();
-    init_math();
+    init_math2();
     init_api22();
   }
 });
@@ -63221,8 +63403,8 @@ function wire4(box) {
   const unkey = registerShortcuts(box, [
     { keys: "Alt U", what: getStrings().usualJump, group: "Picker", when: () => bandValues(m).length > 0, run: () => false }
   ]);
-  const watch = new MutationObserver(() => render3(m));
-  watch.observe(box, {
+  const watch2 = new MutationObserver(() => render3(m));
+  watch2.observe(box, {
     attributes: true,
     attributeFilter: [
       "data-kp-usual",
@@ -63250,7 +63432,7 @@ function wire4(box) {
   syncHint(m);
   syncCheck(m);
   return () => {
-    watch.disconnect();
+    watch2.disconnect();
     unkey();
     box.removeEventListener(CHANGE_EVENT, onChange);
     box.removeEventListener("click", onClick);
@@ -63436,7 +63618,7 @@ function applyPlan(plan) {
   for (const [member, next2] of plan) member.setAttribute("aria-pressed", next2);
 }
 var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, stateOf4, toggleKey, storeKey, readStore, writeStore, made3;
-var init_group5 = __esm({
+var init_group6 = __esm({
   "js/toggle/group.js"() {
     "use strict";
     TOGGLE = "[data-kp-toggle]";
@@ -63477,12 +63659,12 @@ var init_group5 = __esm({
 
 // js/toggle/parts.js
 var SAY_AFTER_MS, COUNT_DIGITS, ToggleParts;
-var init_parts6 = __esm({
+var init_parts7 = __esm({
   "js/toggle/parts.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_group5();
+    init_group6();
     SAY_AFTER_MS = 40;
     COUNT_DIGITS = 2;
     ToggleParts = class extends Controller {
@@ -63678,8 +63860,8 @@ var ToggleAnswers;
 var init_handle4 = __esm({
   "js/toggle/handle.js"() {
     "use strict";
-    init_group5();
-    init_parts6();
+    init_group6();
+    init_parts7();
     ToggleAnswers = class extends ToggleParts {
       /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
       constructor(button6, options = {}) {
@@ -63789,7 +63971,7 @@ var init_controller30 = __esm({
     "use strict";
     init_reason();
     init_shortcuts();
-    init_group5();
+    init_group6();
     init_handle4();
     ToggleControl = class extends ToggleAnswers {
       connect() {
@@ -63976,8 +64158,8 @@ var init_toggle = __esm({
     "use strict";
     init_controller();
     init_controller30();
-    init_group5();
-    init_group5();
+    init_group6();
+    init_group6();
   }
 });
 
@@ -64201,8 +64383,8 @@ function attachVersionDeltas(root = document, options = {}) {
     el16.dataset.kpVersionAttached = "";
     const before = el16.className;
     draw7(el16, options);
-    const watch = new MutationObserver(() => draw7(el16, options));
-    watch.observe(el16, { attributes: true, attributeFilter: [...ATTRIBUTES] });
+    const watch2 = new MutationObserver(() => draw7(el16, options));
+    watch2.observe(el16, { attributes: true, attributeFilter: [...ATTRIBUTES] });
     const onClick = async (event) => {
       if (!event.shiftKey || event.target instanceof Element && event.target.closest("a")) return;
       const from = el16.getAttribute("data-kp-version-from") ?? "";
@@ -64218,7 +64400,7 @@ function attachVersionDeltas(root = document, options = {}) {
     };
     el16.addEventListener("click", onClick);
     undo.push(() => {
-      watch.disconnect();
+      watch2.disconnect();
       el16.removeEventListener("click", onClick);
       el16.replaceChildren();
       el16.className = before;
@@ -64513,8 +64695,8 @@ function attachOne5(el16) {
     busy?.remove();
     HANDLES6.delete(el16);
   });
-  const watch = new MutationObserver(() => draw8());
-  watch.observe(el16, {
+  const watch2 = new MutationObserver(() => draw8());
+  watch2.observe(el16, {
     attributes: true,
     attributeFilter: [
       "data-kp-dep-order",
@@ -64531,7 +64713,7 @@ function attachOne5(el16) {
       "data-kp-dep-rows"
     ]
   });
-  undo.push(() => watch.disconnect());
+  undo.push(() => watch2.disconnect());
   draw8();
   return () => undo.reverse().forEach((u) => u());
 }
@@ -64759,8 +64941,8 @@ function attachOne6(el16) {
     busy?.remove();
     HANDLES7.delete(el16);
   });
-  const watch = new MutationObserver(draw8);
-  watch.observe(el16, {
+  const watch2 = new MutationObserver(draw8);
+  watch2.observe(el16, {
     attributes: true,
     attributeFilter: [
       "data-kp-trace-stop",
@@ -64771,7 +64953,7 @@ function attachOne6(el16) {
       "data-kp-trace-swap"
     ]
   });
-  undo.push(() => watch.disconnect());
+  undo.push(() => watch2.disconnect());
   if (el16.hasAttribute("data-kp-trace-swap")) {
     const s2 = getStrings();
     const off = registerShortcuts(
@@ -65547,7 +65729,7 @@ function attachEntityCards(root = document) {
     }) : null;
     resize?.observe(grid2);
     undo.push(() => resize?.disconnect());
-    const watch = new MutationObserver(() => {
+    const watch2 = new MutationObserver(() => {
       apply2();
       delete grid2.dataset.kpEntityFit;
       for (
@@ -65561,7 +65743,7 @@ function attachEntityCards(root = document) {
         setEntity(card, was.data);
       }
     });
-    watch.observe(grid2, {
+    watch2.observe(grid2, {
       attributes: true,
       attributeFilter: [
         "data-kp-entity-meters",
@@ -65578,7 +65760,7 @@ function attachEntityCards(root = document) {
         "data-kp-entity-star-key"
       ]
     });
-    undo.push(() => watch.disconnect());
+    undo.push(() => watch2.disconnect());
     fold2();
   }
   return () => undo.forEach((u) => u());
@@ -65732,7 +65914,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -65852,7 +66034,7 @@ function buildAlert(doc, s2, refused, savedCount, onDismiss) {
   alert.append(body, dismiss);
   return alert;
 }
-var init_parts7 = __esm({
+var init_parts8 = __esm({
   "js/unsaved/parts.js"() {
     "use strict";
   }
@@ -65940,7 +66122,7 @@ var init_paint9 = __esm({
     "use strict";
     init_menu_button();
     init_config();
-    init_parts7();
+    init_parts8();
   }
 });
 
@@ -66070,8 +66252,8 @@ var init_actions5 = __esm({
     init_overlays();
     init_config();
     init_paint9();
-    init_parts7();
-    init_values8();
+    init_parts8();
+    init_values9();
   }
 });
 
@@ -66081,7 +66263,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values8();
+    init_values9();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -66201,7 +66383,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values8();
+    init_values9();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -66484,7 +66666,7 @@ var init_controller31 = __esm({
     init_controller();
     init_config();
     init_state23();
-    init_parts7();
+    init_parts8();
     init_actions5();
     init_paint9();
     init_changes();
@@ -68997,7 +69179,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -69136,7 +69318,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build11 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values9();
+    init_values10();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -69150,13 +69332,13 @@ var init_build11 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core8 = __esm({
+var init_core9 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build11();
-    init_values9();
+    init_values10();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -69275,8 +69457,8 @@ var init_controller33 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build11();
-    init_core8();
-    init_values9();
+    init_core9();
+    init_values10();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -69502,8 +69684,8 @@ var init_slider = __esm({
     "use strict";
     init_controller();
     init_controller33();
-    init_values9();
-    init_values9();
+    init_values10();
+    init_values10();
   }
 });
 
@@ -69905,7 +70087,7 @@ var init_sentence = __esm({
 });
 
 // js/dated-options/constants.js
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS, MINUTE_S2, DAY_S2, SECOND_MS3;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS, MINUTE_S3, DAY_S2, SECOND_MS3;
 var init_constants37 = __esm({
   "js/dated-options/constants.js"() {
     "use strict";
@@ -69918,7 +70100,7 @@ var init_constants37 = __esm({
     DEFAULT_ROWS4 = 4;
     COMBOBOX_ROWS = 2;
     TYPEAHEAD_MS = 700;
-    MINUTE_S2 = 60;
+    MINUTE_S3 = 60;
     DAY_S2 = 86400;
     SECOND_MS3 = 1e3;
   }
@@ -69927,7 +70109,7 @@ var init_constants37 = __esm({
 // js/dated-options/time.js
 function datedAge(ms, now, strings = getStrings()) {
   const seconds = Math.floor((now - ms) / SECOND_MS3);
-  if (seconds < MINUTE_S2) return strings.datedJustNow;
+  if (seconds < MINUTE_S3) return strings.datedJustNow;
   if (seconds >= DAY_S2) return strings.datedAgo(strings.agoDays(Math.floor(seconds / DAY_S2)));
   return strings.datedAgo(humanDuration(seconds, strings));
 }
@@ -71093,7 +71275,7 @@ var init_panel3 = __esm({
 });
 
 // js/snooze/controller.js
-var TICK_MS3, SnoozePicker;
+var TICK_MS4, SnoozePicker;
 var init_controller36 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
@@ -71102,7 +71284,7 @@ var init_controller36 = __esm({
     init_runs();
     init_choices();
     init_panel3();
-    TICK_MS3 = 3e4;
+    TICK_MS4 = 3e4;
     SnoozePicker = class extends SnoozePanel {
       /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
       constructor(el16, options = {}) {
@@ -71155,7 +71337,7 @@ var init_controller36 = __esm({
         this.paintStatus();
         this.fill();
         if (!Number.isFinite(this.fixed) && !this.nowGiven) {
-          const tick6 = window.setInterval(() => (this.paintStatus(), this.fill()), TICK_MS3);
+          const tick6 = window.setInterval(() => (this.paintStatus(), this.fill()), TICK_MS4);
           this.own(() => clearInterval(tick6));
         }
       }
@@ -72913,7 +73095,7 @@ function attachLoadingPieces(root = document) {
     waiting.add(el16);
     schedule();
   };
-  const watch = new MutationObserver((records) => {
+  const watch2 = new MutationObserver((records) => {
     for (const r of records) {
       const target2 = (
         /** @type {Element} */
@@ -72948,12 +73130,12 @@ function attachLoadingPieces(root = document) {
     /** @type {Node} */
     root instanceof Document ? root.documentElement : root
   );
-  watch.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED7 });
-  if (target !== document.documentElement) watch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  watch2.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED7 });
+  if (target !== document.documentElement) watch2.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   everything = true;
   schedule();
   return () => {
-    watch.disconnect();
+    watch2.disconnect();
     sizes?.disconnect();
     if (frame3) cancelAnimationFrame(frame3);
     for (const el16 of dressed) undress(
@@ -77688,7 +77870,7 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
-var init_parts8 = __esm({
+var init_parts9 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
@@ -78075,7 +78257,7 @@ var init_api30 = __esm({
     init_newpill();
     init_levels();
     init_model10();
-    init_parts8();
+    init_parts9();
     init_reads();
     init_refresh();
     init_rows6();
@@ -78284,7 +78466,7 @@ var init_attach24 = __esm({
     init_api30();
     init_constants42();
     init_model10();
-    init_parts8();
+    init_parts9();
     init_reads();
     init_rows6();
   }
@@ -78576,7 +78758,7 @@ function textOf3(text, segments) {
   return node;
 }
 var kindOf4;
-var init_read4 = __esm({
+var init_read5 = __esm({
   "js/diff/read.js"() {
     "use strict";
     init_constants43();
@@ -78690,7 +78872,7 @@ var init_lines2 = __esm({
     init_constants43();
     init_fold2();
     init_model11();
-    init_read4();
+    init_read5();
     init_words4();
   }
 });
@@ -78871,7 +79053,7 @@ var init_file = __esm({
     init_strings();
     init_lines2();
     init_model11();
-    init_read4();
+    init_read5();
     init_state30();
   }
 });
@@ -78974,7 +79156,7 @@ var init_render7 = __esm({
     init_reason();
     init_file();
     init_model11();
-    init_read4();
+    init_read5();
   }
 });
 
@@ -79042,7 +79224,7 @@ var init_actions7 = __esm({
     init_file();
     init_lines2();
     init_model11();
-    init_read4();
+    init_read5();
     init_render7();
   }
 });
@@ -79147,7 +79329,7 @@ var init_attach25 = __esm({
     init_constants43();
     init_lines2();
     init_model11();
-    init_read4();
+    init_read5();
     init_render7();
   }
 });
@@ -79758,15 +79940,15 @@ var carries = (root, selector) => root instanceof Element && root.matches(select
 var everyUnder = (root) => [...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")];
 var drawing = (root, drawn2, attach) => {
   if (typeof MutationObserver !== "function") return attach();
-  const watch = new MutationObserver(() => void 0);
-  watch.observe(root, { childList: true, subtree: true });
+  const watch2 = new MutationObserver(() => void 0);
+  watch2.observe(root, { childList: true, subtree: true });
   try {
     return attach();
   } finally {
-    for (const record of watch.takeRecords()) {
+    for (const record of watch2.takeRecords()) {
       for (const node of record.addedNodes) if (node instanceof Element) for (const element of everyUnder(node)) drawn2.add(element);
     }
-    watch.disconnect();
+    watch2.disconnect();
   }
 };
 
@@ -81432,10 +81614,6 @@ export {
   TRACE_RETRY_EVENT,
   TRACE_RULE_EVENT,
   TRACE_SWAP_EVENT,
-  TRANSFER,
-  TRANSFER_DONE_EVENT,
-  TRANSFER_LEAVE_EVENT,
-  TRANSFER_RETRY_EVENT,
   UNKNOWN_THEME_EVENT,
   UPDATE_PROPERTY,
   UPDATE_STYLE,
@@ -81875,9 +82053,7 @@ export {
   traceStates,
   traceSummary,
   traceText,
-  transferEta,
   transfer_exports as transferExports,
-  transferRate,
   undoToast,
   undo_toast_exports as undoToastExports,
   unmarkUpdating,

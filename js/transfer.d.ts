@@ -1,11 +1,5 @@
-/** A transfer row. */
-export declare const TRANSFER = "[data-kp-transfer]";
-/** Fired when a transfer finished: `{ total, ms }`. */
-export declare const TRANSFER_DONE_EVENT = "kp-transfer-done";
-/** Fired when Retry is pressed on a failed transfer. */
-export declare const TRANSFER_RETRY_EVENT = "kp-transfer-retry";
-/** Fired when a finished transfer left the list after its linger. */
-export declare const TRANSFER_LEAVE_EVENT = "kp-transfer-leave";
+export { TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT } from './transfer/values.js';
+export { transferRate, transferEta } from './transfer/math.js';
 export type TransferSample = {
     /**
      * bytes so far
@@ -52,22 +46,26 @@ export type TransferState = {
     leaveTimer: number;
 };
 /**
- * Moving-average speed in bytes per second over the last `windowS` seconds of samples; null with fewer than two.
- * @param {{ t: number, done: number }[]} samples oldest first
- * @param {number} windowS
- * @returns {number | null}
+ * One report from the app.
+ * @typedef {object} TransferSample
+ * @property {number} [done] bytes so far
+ * @property {number} [total] bytes in all; left out when unknown
+ * @property {number} [at] the moment of this report, ms since the epoch (default: now)
+ * @property {string} [name] the file's name
+ * @property {string} [failed] why it failed (the app's own sentence); ends the transfer
  */
-export declare function transferRate(samples: {
-    t: number;
-    done: number;
-}[], windowS?: number): number | null;
 /**
- * The time left in human words, coarse so it does not shimmer: exact under 10 s, to 5 s under a minute, to the minute under
- * an hour.
- * @param {number} seconds
- * @returns {string}
+ * @typedef {object} TransferState
+ * @property {{ t: number, done: number }[]} samples
+ * @property {number} start the first report
+ * @property {number} lastMove when `done` last grew
+ * @property {number} lastDone
+ * @property {number | null} total
+ * @property {'running' | 'done' | 'failed'} phase
+ * @property {number} announced the highest announced step, 0 to 4
+ * @property {() => number} now
+ * @property {number} leaveTimer
  */
-export declare function transferEta(seconds: number): string;
 /**
  * Report a transfer's progress. The first report starts it; a report whose `done` reaches `total` finishes it.
  * @param {HTMLElement} row a `[data-kp-transfer]`
