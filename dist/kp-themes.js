@@ -14897,6 +14897,447 @@ var init_kpi = __esm({
   }
 });
 
+// js/hovercard/values.js
+var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, OPEN_DELAY_MS, CLOSE_DELAY_MS, TAP_ANSWERED_MS, CONTROL_SELECTOR, ID_RADIX2, ID_RANDOM_START, ID_RANDOM_END;
+var init_values3 = __esm({
+  "js/hovercard/values.js"() {
+    "use strict";
+    HOVERCARD_ATTRIBUTE = "data-kp-hovercard";
+    HOVERCARD_EVENT = "kp-hovercard";
+    HOVERCARD_CARD = "data-kp-hovercard-card";
+    EDGE = 8;
+    OPEN_DELAY_MS = 300;
+    CLOSE_DELAY_MS = 100;
+    TAP_ANSWERED_MS = 400;
+    CONTROL_SELECTOR = 'a[href], button, input, select, textarea, summary, [role="button"], [role="link"]';
+    ID_RADIX2 = 36;
+    ID_RANDOM_START = 2;
+    ID_RANDOM_END = 8;
+  }
+});
+
+// js/hovercard/core.js
+var made, stripped, HoverCardCore;
+var init_core2 = __esm({
+  "js/hovercard/core.js"() {
+    "use strict";
+    init_top_layer();
+    init_controller();
+    init_values3();
+    made = 0;
+    stripped = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== void 0));
+    HoverCardCore = class extends Controller {
+      /**
+       * @param {Document | Element} root the root the listeners sit on, which is this controller's host
+       * @param {HoverCardOptions} [options]
+       */
+      constructor(root, options = {}) {
+        super(
+          /** @type {HTMLElement} */
+          /** @type {unknown} */
+          root,
+          options
+        );
+        this.root = root;
+        this.cfg = {
+          selector: `[${HOVERCARD_ATTRIBUTE}]`,
+          openDelayMs: OPEN_DELAY_MS,
+          closeDelayMs: CLOSE_DELAY_MS,
+          closeOnEscape: true,
+          touch: true,
+          ...stripped(options)
+        };
+        this.doc = root instanceof Document ? root : root.ownerDocument;
+        this.card = this.makeCard();
+        this.current = null;
+        this.wanted = null;
+        this.described = null;
+        this.timer = 0;
+        this.openedAt = 0;
+        this.going = false;
+        this.overCard = false;
+        this.lower = null;
+        this.watch = null;
+      }
+      /** The one card node, made but not yet on the page. */
+      makeCard() {
+        const card = this.doc.createElement("div");
+        card.className = `kp-popover kp-tooltip${this.cfg.cardClass ? ` ${this.cfg.cardClass}` : ""}`;
+        card.setAttribute("role", "tooltip");
+        card.setAttribute(HOVERCARD_CARD, "");
+        card.id = `kp-hovercard-${made += 1}-${Math.random().toString(ID_RADIX2).slice(ID_RANDOM_START, ID_RANDOM_END)}`;
+        card.hidden = true;
+        return card;
+      }
+      /** A second attach on the same root hands its options to this card. @param {HoverCardOptions} options */
+      merge(options) {
+        for (const [key, value] of Object.entries(options)) if (value !== void 0) this.cfg[key] = value;
+      }
+      /** @param {Event | null} event @returns {HTMLElement | null} */
+      anchorOf(event) {
+        const target = event?.target;
+        const found = target instanceof Element ? target.closest(this.cfg.selector) : null;
+        return found instanceof HTMLElement && this.root.contains(found) ? found : null;
+      }
+      /** @param {HTMLElement} anchor @param {string} name @param {number} fallback */
+      number(anchor, name, fallback2) {
+        const value = anchor.getAttribute(name);
+        return value === null || Number.isNaN(Number(value)) ? fallback2 : Number(value);
+      }
+      /** @param {HTMLElement} anchor @returns {boolean} whether there is anything to say */
+      fillFor(anchor) {
+        const own = anchor.getAttribute(HOVERCARD_ATTRIBUTE) ?? "";
+        const content = own !== "" ? own : this.cfg.fill?.(anchor, this.card) ?? null;
+        if (content === null || content === void 0 || content === false || content === "") return false;
+        if (typeof content === "string") this.card.textContent = content;
+        else this.card.replaceChildren(...content instanceof Node ? [content] : content);
+        return true;
+      }
+      /** Under the anchor, start edges aligned, kept in the window; above when there is no room below. @param {HTMLElement} el */
+      place(el16) {
+        const anchor = this.current;
+        if (anchor === null || !anchor.isConnected) return;
+        const field2 = anchor.getBoundingClientRect();
+        const rtl = getComputedStyle(anchor).direction === "rtl";
+        const view = this.doc.documentElement.clientWidth;
+        el16.style.setProperty("right", "auto");
+        el16.style.setProperty("bottom", "auto");
+        el16.style.setProperty("top", `${field2.bottom}px`);
+        el16.style.setProperty("left", `${EDGE}px`);
+        const width = layoutRect(el16).width;
+        const gap = Number.parseFloat(getComputedStyle(el16).marginLeft) || 0;
+        const startEdge = rtl ? field2.right - width : field2.left;
+        const left = Math.max(EDGE - gap, Math.min(startEdge, view - EDGE - width - gap));
+        el16.style.setProperty("left", `${left}px`);
+        placeBlockSide(el16, field2);
+      }
+      /** @param {HTMLElement} anchor */
+      describe(anchor) {
+        this.described = anchor.getAttribute("aria-describedby");
+        const ids = (this.described ?? "").split(/\s+/).filter(Boolean);
+        if (!ids.includes(this.card.id)) anchor.setAttribute("aria-describedby", [...ids, this.card.id].join(" "));
+      }
+      /** @param {HTMLElement} anchor */
+      undescribe(anchor) {
+        if (this.described === null) anchor.removeAttribute("aria-describedby");
+        else anchor.setAttribute("aria-describedby", this.described);
+        this.described = null;
+      }
+      /** @param {boolean} open @param {HTMLElement} anchor */
+      announce(open4, anchor) {
+        anchor.dispatchEvent(new CustomEvent(HOVERCARD_EVENT, { bubbles: true, detail: { open: open4, card: this.card, anchor } }));
+      }
+      /** @param {HTMLElement | null} anchor */
+      setCurrent(anchor) {
+        this.current = anchor;
+      }
+      /** @param {HTMLElement | null} anchor */
+      setWanted(anchor) {
+        this.wanted = anchor;
+      }
+      /** @param {boolean} going */
+      setGoing(going) {
+        this.going = going;
+      }
+      /** @param {boolean} over */
+      setOverCard(over) {
+        this.overCard = over;
+      }
+      /** Forget the pending ask. */
+      unwant() {
+        this.wanted = null;
+      }
+      /** Stop the pending timer. */
+      stopTimer() {
+        clearTimeout(this.timer);
+      }
+      /** Put a timer on a step. @param {() => void} step @param {number} delay */
+      startTimer(step, delay) {
+        this.timer = window.setTimeout(step, delay);
+      }
+      /** Put the card away without the going-out: the anchor is released, the card leaves the page. */
+      release() {
+        this.watch?.disconnect();
+        if (this.current?.isConnected) this.undescribe(this.current);
+        this.current = null;
+        this.going = false;
+      }
+    };
+  }
+});
+
+// js/hovercard/show.js
+var HoverCardShow;
+var init_show = __esm({
+  "js/hovercard/show.js"() {
+    "use strict";
+    init_motion();
+    init_top_layer();
+    init_core2();
+    HoverCardShow = class extends HoverCardCore {
+      /** Opens for `anchor`, or moves to it when already open. @param {HTMLElement} anchor */
+      open(anchor) {
+        const card = this.card;
+        this.unwant();
+        if (!anchor.isConnected || anchor === this.current) return;
+        if (!this.fillFor(anchor)) {
+          if (this.current !== null) this.close(0);
+          return;
+        }
+        if (this.going) {
+          this.setGoing(false);
+          stopReversing(card);
+        }
+        const was = this.current;
+        if (was !== null) {
+          this.undescribe(was);
+          this.announce(false, was);
+        }
+        this.arrive(anchor);
+        this.announce(true, anchor);
+      }
+      /** The card is now for this anchor: described, shown or moved, and watched for the anchor's removal. @param {HTMLElement} anchor */
+      arrive(anchor) {
+        this.setCurrent(anchor);
+        this.openedAt = performance.now();
+        this.describe(anchor);
+        if (this.card.hidden) {
+          this.card.hidden = false;
+          this.lower = raiseOverlay(this.card, (el16) => this.place(el16));
+        } else this.place(this.card);
+        this.watch ??= new MutationObserver(() => {
+          if (this.current !== null && !this.current.isConnected) this.hide();
+        });
+        this.watch.observe(this.doc.body, { childList: true, subtree: true });
+      }
+      /** The card goes the way it came, then is hidden. */
+      hide() {
+        this.stopTimer();
+        this.unwant();
+        const anchor = this.current;
+        if (anchor === null || this.going) return;
+        this.setCurrent(null);
+        this.overCard = false;
+        this.watch?.disconnect();
+        if (anchor.isConnected) this.undescribe(anchor);
+        else this.described = null;
+        this.setGoing(true);
+        void playEntranceBackwards(this.card).then(() => {
+          if (this.going) this.finish();
+        });
+        this.announce(false, anchor);
+      }
+      /** The going-out is over: the card is hidden, lowered and emptied. */
+      finish() {
+        this.setGoing(false);
+        this.card.hidden = true;
+        stopReversing(this.card);
+        this.lower?.();
+        this.lower = null;
+        this.card.replaceChildren();
+      }
+      /** @param {number} delay */
+      close(delay) {
+        this.stopTimer();
+        if (delay <= 0) this.hide();
+        else this.startTimer(() => this.hide(), delay);
+      }
+      /** @param {HTMLElement} anchor @param {number} delay */
+      schedule(anchor, delay) {
+        this.stopTimer();
+        this.setWanted(anchor);
+        if (delay <= 0 || this.current !== null) this.open(anchor);
+        else this.startTimer(() => this.open(anchor), delay);
+      }
+      /** Fill the card again for the open anchor (data that changed under the pointer). */
+      refresh() {
+        if (this.current !== null && this.current.isConnected && this.fillFor(this.current)) this.place(this.card);
+        else this.hide();
+      }
+    };
+  }
+});
+
+// js/hovercard/touch.js
+var HoverCardTouch;
+var init_touch = __esm({
+  "js/hovercard/touch.js"() {
+    "use strict";
+    init_values3();
+    init_show();
+    HoverCardTouch = class extends HoverCardShow {
+      /** Whether a tap on this anchor is the anchor's own (a link, a button, a field). @param {HTMLElement} anchor */
+      isControl(anchor) {
+        return anchor.matches(CONTROL_SELECTOR);
+      }
+      /** What a tap on this anchor does: `tap` opens the card, `off` leaves the anchor alone. @param {HTMLElement} anchor */
+      touchMode(anchor) {
+        const own = anchor.getAttribute("data-kp-touch");
+        if (this.cfg.touch === false || own === "off") return "off";
+        return own === "tap" || !this.isControl(anchor) ? "tap" : "off";
+      }
+      /** A tap outside the card and its anchor closes it, before the tap does anything else. @param {PointerEvent} event */
+      onTouchDown(event) {
+        if (event.pointerType !== "touch" || this.current === null) return;
+        const target = event.target;
+        if (target instanceof Node && (this.card.contains(target) || this.current.contains(target))) return;
+        this.hide();
+      }
+      /** A tap on an anchor opens the card, or closes it when it is the open one. @param {MouseEvent} event */
+      onTap(event) {
+        if (
+          /** @type {PointerEvent} */
+          event.pointerType !== "touch"
+        ) return;
+        const anchor = this.anchorOf(event);
+        if (anchor === null || this.touchMode(anchor) === "off") return;
+        if (anchor === this.current) {
+          if (performance.now() - this.openedAt > TAP_ANSWERED_MS) this.hide();
+          else if (this.isControl(anchor)) event.preventDefault();
+          return;
+        }
+        this.stopTimer();
+        this.open(anchor);
+        if (this.current === anchor && this.isControl(anchor)) event.preventDefault();
+      }
+    };
+  }
+});
+
+// js/hovercard/controller.js
+var HoverCard;
+var init_controller5 = __esm({
+  "js/hovercard/controller.js"() {
+    "use strict";
+    init_motion();
+    init_values3();
+    init_touch();
+    HoverCard = class extends HoverCardTouch {
+      /**
+       * @param {Document | Element} root
+       * @param {import('../hovercard.js').HoverCardOptions} [options]
+       */
+      constructor(root, options) {
+        super(root, options);
+        this.handle = this.makeHandle();
+      }
+      connect() {
+        const { root, doc, card } = this;
+        this.doc.body.append(card);
+        this.own(() => {
+          this.release();
+          stopReversing(card);
+          this.lower?.();
+          card.remove();
+        });
+        this.listen(root, "pointerover", (event) => this.onOver(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(root, "pointerout", (event) => this.onOut(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(root, "focusin", (event) => this.onFocusIn(
+          /** @type {FocusEvent} */
+          event
+        ));
+        this.listen(root, "focusout", (event) => this.onFocusOut(
+          /** @type {FocusEvent} */
+          event
+        ));
+        this.listen(card, "pointerenter", () => this.onCardEnter());
+        this.listen(card, "pointerleave", (event) => this.onCardLeave(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(doc, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(root, "click", (event) => this.onTap(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(doc, "pointerdown", (event) => this.onTouchDown(
+          /** @type {PointerEvent} */
+          event
+        ), true);
+        this.own(() => this.stopTimer());
+      }
+      /** The detach function a page gets, with the card's members on it. @returns {import('../hovercard.js').HoverCardHandle} */
+      makeHandle() {
+        return Object.assign(() => this.destroy(), {
+          card: this.card,
+          open: (anchor) => this.schedule(anchor, 0),
+          hide: () => this.hide(),
+          refresh: () => this.refresh(),
+          anchor: () => this.current
+        });
+      }
+      /** @param {PointerEvent} event */
+      onOver(event) {
+        if (event.pointerType === "touch") return;
+        const anchor = this.anchorOf(event);
+        if (anchor === null || anchor === this.current) {
+          if (anchor !== null) this.stopTimer();
+          return;
+        }
+        this.schedule(anchor, this.number(anchor, "data-kp-open-delay", this.cfg.openDelayMs ?? OPEN_DELAY_MS));
+      }
+      /** @param {PointerEvent} event */
+      onOut(event) {
+        if (event.pointerType === "touch") return;
+        const anchor = this.anchorOf(event);
+        if (anchor === null) return;
+        const to = event.relatedTarget;
+        if (to instanceof Node && (anchor.contains(to) || this.card.contains(to))) return;
+        if (anchor === this.wanted) {
+          this.stopTimer();
+          this.unwant();
+        }
+        if (anchor !== this.current) return;
+        if (anchor.contains(this.doc.activeElement) && anchor.matches(":focus-visible, :has(:focus-visible)")) return;
+        this.close(this.number(anchor, "data-kp-close-delay", this.cfg.closeDelayMs ?? CLOSE_DELAY_MS));
+      }
+      onCardEnter() {
+        this.setOverCard(true);
+        this.stopTimer();
+      }
+      /** @param {PointerEvent} event */
+      onCardLeave(event) {
+        if (event.pointerType === "touch") return;
+        this.setOverCard(false);
+        const to = event.relatedTarget;
+        if (this.current !== null && to instanceof Node && this.current.contains(to)) return;
+        this.close(this.cfg.closeDelayMs ?? CLOSE_DELAY_MS);
+      }
+      /** @param {FocusEvent} event */
+      onFocusIn(event) {
+        const anchor = this.anchorOf(event);
+        if (anchor !== null) this.schedule(anchor, 0);
+      }
+      /** @param {FocusEvent} event */
+      onFocusOut(event) {
+        const anchor = this.anchorOf(event);
+        if (anchor === null) return;
+        if (event.relatedTarget instanceof Node && anchor.contains(event.relatedTarget)) return;
+        if (anchor === this.current && !this.overCard) this.close(0);
+        else if (anchor === this.wanted) {
+          this.stopTimer();
+          this.unwant();
+        }
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.key !== "Escape" || this.current === null) return;
+        if (this.cfg.closeOnEscape === false || this.current.getAttribute("data-kp-close-on-escape") === "false") return;
+        this.hide();
+      }
+    };
+  }
+});
+
 // js/hovercard.js
 var hovercard_exports = {};
 __export(hovercard_exports, {
@@ -14906,330 +15347,26 @@ __export(hovercard_exports, {
   attachHoverCards: () => attachHoverCards
 });
 function attachHoverCards(root = document, options = {}) {
-  const held2 = attached2.get(root);
+  const host = (
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    root
+  );
+  const held2 = controllerOf(host, HoverCard);
   if (held2 !== void 0) {
-    for (const [key, value] of Object.entries(options)) if (value !== void 0) held2.cfg[key] = value;
+    held2.merge(options);
     return held2.handle;
   }
-  const cfg = { selector: `[${HOVERCARD_ATTRIBUTE}]`, openDelayMs: 300, closeDelayMs: 100, closeOnEscape: true, touch: true, ...stripped(options) };
-  const doc = root instanceof Document ? root : root.ownerDocument;
-  const card = doc.createElement("div");
-  card.className = `kp-popover kp-tooltip${cfg.cardClass ? ` ${cfg.cardClass}` : ""}`;
-  card.setAttribute("role", "tooltip");
-  card.setAttribute(HOVERCARD_CARD, "");
-  card.id = `kp-hovercard-${made += 1}-${Math.random().toString(36).slice(2, 8)}`;
-  card.hidden = true;
-  doc.body.append(card);
-  let current2 = null;
-  let wanted = null;
-  let described = null;
-  let timer = 0;
-  let openedAt = 0;
-  let going = false;
-  let overCard = false;
-  let lower = null;
-  let watch2 = null;
-  const anchorOf = (event) => {
-    const target = event?.target;
-    const found = target instanceof Element ? target.closest(cfg.selector) : null;
-    return found instanceof HTMLElement && root.contains(found) ? found : null;
-  };
-  const number = (anchor, name, fallback2) => {
-    const value = anchor.getAttribute(name);
-    return value === null || Number.isNaN(Number(value)) ? fallback2 : Number(value);
-  };
-  const fillFor = (anchor) => {
-    const own = anchor.getAttribute(HOVERCARD_ATTRIBUTE) ?? "";
-    const content = own !== "" ? own : cfg.fill?.(anchor, card) ?? null;
-    if (content === null || content === void 0 || content === false || content === "") return false;
-    if (typeof content === "string") card.textContent = content;
-    else card.replaceChildren(...content instanceof Node ? [content] : content);
-    return true;
-  };
-  const place3 = (el16) => {
-    if (current2 === null || !current2.isConnected) return;
-    const field2 = current2.getBoundingClientRect();
-    const rtl = getComputedStyle(current2).direction === "rtl";
-    const view = doc.documentElement.clientWidth;
-    el16.style.setProperty("right", "auto");
-    el16.style.setProperty("bottom", "auto");
-    el16.style.setProperty("top", `${field2.bottom}px`);
-    el16.style.setProperty("left", `${EDGE}px`);
-    const width = layoutRect(el16).width;
-    const gap = Number.parseFloat(getComputedStyle(el16).marginLeft) || 0;
-    const wanted2 = rtl ? field2.right - width : field2.left;
-    const left = Math.max(EDGE - gap, Math.min(wanted2, view - EDGE - width - gap));
-    el16.style.setProperty("left", `${left}px`);
-    placeBlockSide(el16, field2);
-  };
-  const describe = (anchor) => {
-    described = anchor.getAttribute("aria-describedby");
-    const ids = (described ?? "").split(/\s+/).filter(Boolean);
-    if (!ids.includes(card.id)) anchor.setAttribute("aria-describedby", [...ids, card.id].join(" "));
-  };
-  const undescribe = (anchor) => {
-    if (described === null) anchor.removeAttribute("aria-describedby");
-    else anchor.setAttribute("aria-describedby", described);
-    described = null;
-  };
-  const announce4 = (open5, anchor) => anchor.dispatchEvent(new CustomEvent(HOVERCARD_EVENT, { bubbles: true, detail: { open: open5, card, anchor } }));
-  const open4 = (anchor) => {
-    wanted = null;
-    if (!anchor.isConnected || anchor === current2) return;
-    if (!fillFor(anchor)) {
-      if (current2 !== null) close(0);
-      return;
-    }
-    if (going) {
-      going = false;
-      stopReversing(card);
-    }
-    const was = current2;
-    if (was !== null) {
-      undescribe(was);
-      announce4(false, was);
-    }
-    current2 = anchor;
-    openedAt = performance.now();
-    describe(anchor);
-    if (card.hidden) {
-      card.hidden = false;
-      lower = raiseOverlay(card, place3);
-    } else place3(card);
-    watch2 ??= new MutationObserver(() => {
-      if (current2 !== null && !current2.isConnected) hide2();
-    });
-    watch2.observe(doc.body, { childList: true, subtree: true });
-    announce4(true, anchor);
-  };
-  const hide2 = () => {
-    clearTimeout(timer);
-    wanted = null;
-    const anchor = current2;
-    if (anchor === null || going) return;
-    current2 = null;
-    overCard = false;
-    watch2?.disconnect();
-    if (anchor.isConnected) undescribe(anchor);
-    else described = null;
-    going = true;
-    const finish2 = () => {
-      going = false;
-      card.hidden = true;
-      stopReversing(card);
-      lower?.();
-      lower = null;
-      card.replaceChildren();
-    };
-    void playEntranceBackwards(card).then(() => {
-      if (going) finish2();
-    });
-    announce4(false, anchor);
-  };
-  const close = (delay) => {
-    clearTimeout(timer);
-    if (delay <= 0) hide2();
-    else timer = window.setTimeout(hide2, delay);
-  };
-  const schedule = (anchor, delay) => {
-    clearTimeout(timer);
-    wanted = anchor;
-    if (delay <= 0 || current2 !== null) open4(anchor);
-    else timer = window.setTimeout(() => open4(anchor), delay);
-  };
-  const onOver = (event) => {
-    if (event.pointerType === "touch") return;
-    const anchor = anchorOf(event);
-    if (anchor === null || anchor === current2) {
-      if (anchor !== null) clearTimeout(timer);
-      return;
-    }
-    schedule(anchor, number(anchor, "data-kp-open-delay", cfg.openDelayMs ?? 300));
-  };
-  const onOut = (event) => {
-    if (event.pointerType === "touch") return;
-    const anchor = anchorOf(event);
-    if (anchor === null) return;
-    const to = event.relatedTarget;
-    if (to instanceof Node && (anchor.contains(to) || card.contains(to))) return;
-    if (anchor === wanted) {
-      clearTimeout(timer);
-      wanted = null;
-    }
-    if (anchor !== current2) return;
-    if (anchor.contains(doc.activeElement) && anchor.matches(":focus-visible, :has(:focus-visible)")) return;
-    close(number(anchor, "data-kp-close-delay", cfg.closeDelayMs ?? 100));
-  };
-  const onCardEnter = () => {
-    overCard = true;
-    clearTimeout(timer);
-  };
-  const onCardLeave = (event) => {
-    if (event.pointerType === "touch") return;
-    overCard = false;
-    const to = event.relatedTarget;
-    if (current2 !== null && to instanceof Node && current2.contains(to)) return;
-    close(cfg.closeDelayMs ?? 100);
-  };
-  const onFocusIn = (event) => {
-    const anchor = anchorOf(event);
-    if (anchor !== null) schedule(anchor, 0);
-  };
-  const onFocusOut = (event) => {
-    const anchor = anchorOf(event);
-    if (anchor === null) return;
-    if (event.relatedTarget instanceof Node && anchor.contains(event.relatedTarget)) return;
-    if (anchor === current2 && !overCard) close(0);
-    else if (anchor === wanted) {
-      clearTimeout(timer);
-      wanted = null;
-    }
-  };
-  const isControl = (anchor) => anchor.matches('a[href], button, input, select, textarea, summary, [role="button"], [role="link"]');
-  const touchMode = (anchor) => {
-    const own = anchor.getAttribute("data-kp-touch");
-    if (cfg.touch === false || own === "off") return "off";
-    return own === "tap" || !isControl(anchor) ? "tap" : "off";
-  };
-  const onTouchDown = (event) => {
-    if (event.pointerType !== "touch" || current2 === null) return;
-    const target = event.target;
-    if (target instanceof Node && (card.contains(target) || current2.contains(target))) return;
-    hide2();
-  };
-  const onTap = (event) => {
-    if (
-      /** @type {PointerEvent} */
-      event.pointerType !== "touch"
-    ) return;
-    const anchor = anchorOf(event);
-    if (anchor === null || touchMode(anchor) === "off") return;
-    if (anchor === current2) {
-      if (performance.now() - openedAt > 400) hide2();
-      else if (isControl(anchor)) event.preventDefault();
-      return;
-    }
-    clearTimeout(timer);
-    open4(anchor);
-    if (current2 === anchor && isControl(anchor)) event.preventDefault();
-  };
-  const onKey5 = (event) => {
-    if (event.key !== "Escape" || current2 === null) return;
-    if (cfg.closeOnEscape === false || current2.getAttribute("data-kp-close-on-escape") === "false") return;
-    hide2();
-  };
-  root.addEventListener(
-    "pointerover",
-    /** @type {EventListener} */
-    onOver
-  );
-  root.addEventListener(
-    "pointerout",
-    /** @type {EventListener} */
-    onOut
-  );
-  root.addEventListener(
-    "focusin",
-    /** @type {EventListener} */
-    onFocusIn
-  );
-  root.addEventListener(
-    "focusout",
-    /** @type {EventListener} */
-    onFocusOut
-  );
-  card.addEventListener("pointerenter", onCardEnter);
-  card.addEventListener(
-    "pointerleave",
-    /** @type {EventListener} */
-    onCardLeave
-  );
-  doc.addEventListener("keydown", onKey5);
-  root.addEventListener(
-    "click",
-    /** @type {EventListener} */
-    onTap
-  );
-  doc.addEventListener(
-    "pointerdown",
-    /** @type {EventListener} */
-    onTouchDown,
-    true
-  );
-  const detach = () => {
-    clearTimeout(timer);
-    root.removeEventListener(
-      "pointerover",
-      /** @type {EventListener} */
-      onOver
-    );
-    root.removeEventListener(
-      "pointerout",
-      /** @type {EventListener} */
-      onOut
-    );
-    root.removeEventListener(
-      "focusin",
-      /** @type {EventListener} */
-      onFocusIn
-    );
-    root.removeEventListener(
-      "focusout",
-      /** @type {EventListener} */
-      onFocusOut
-    );
-    doc.removeEventListener("keydown", onKey5);
-    root.removeEventListener(
-      "click",
-      /** @type {EventListener} */
-      onTap
-    );
-    doc.removeEventListener(
-      "pointerdown",
-      /** @type {EventListener} */
-      onTouchDown,
-      true
-    );
-    watch2?.disconnect();
-    if (current2?.isConnected) undescribe(current2);
-    current2 = null;
-    going = false;
-    stopReversing(card);
-    lower?.();
-    card.remove();
-  };
-  const handle = Object.assign(
-    () => {
-      attached2.delete(root);
-      detach();
-    },
-    {
-      card,
-      open: (anchor) => schedule(anchor, 0),
-      hide: hide2,
-      refresh: () => {
-        if (current2 !== null && current2.isConnected && fillFor(current2)) place3(card);
-        else hide2();
-      },
-      anchor: () => current2
-    }
-  );
-  attached2.set(root, { cfg, handle });
-  return handle;
+  const card = attachOne(host, HoverCard, options);
+  if (!card) throw new Error("The hover card could not be set up; the cause was reported.");
+  return card.handle;
 }
-var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, made, attached2, stripped;
 var init_hovercard = __esm({
   "js/hovercard.js"() {
     "use strict";
-    init_motion();
-    init_top_layer();
-    HOVERCARD_ATTRIBUTE = "data-kp-hovercard";
-    HOVERCARD_EVENT = "kp-hovercard";
-    HOVERCARD_CARD = "data-kp-hovercard-card";
-    EDGE = 8;
-    made = 0;
-    attached2 = /* @__PURE__ */ new WeakMap();
-    stripped = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== void 0));
+    init_controller();
+    init_controller5();
+    init_values3();
   }
 });
 
@@ -18546,7 +18683,7 @@ var init_plan = __esm({
 
 // js/nav-fold/core.js
 var ROOM_SAFETY_PX, NavFoldCore;
-var init_core2 = __esm({
+var init_core3 = __esm({
   "js/nav-fold/core.js"() {
     "use strict";
     init_controller();
@@ -18730,11 +18867,11 @@ var init_core2 = __esm({
 
 // js/nav-fold/controller.js
 var NavFold;
-var init_controller5 = __esm({
+var init_controller6 = __esm({
   "js/nav-fold/controller.js"() {
     "use strict";
     init_menu_button();
-    init_core2();
+    init_core3();
     NavFold = class extends NavFoldCore {
       connect() {
         const { list, menu, more, doc, view } = this;
@@ -18840,7 +18977,7 @@ var init_nav_fold = __esm({
   "js/nav-fold.js"() {
     "use strict";
     init_controller();
-    init_controller5();
+    init_controller6();
     init_read2();
     init_read2();
     init_plan();
@@ -19096,7 +19233,7 @@ var init_dialog = __esm({
 
 // js/tabbar/controller.js
 var TabbarController;
-var init_controller6 = __esm({
+var init_controller7 = __esm({
   "js/tabbar/controller.js"() {
     "use strict";
     init_controller();
@@ -19220,7 +19357,7 @@ var init_tabbar = __esm({
   "js/tabbar.js"() {
     "use strict";
     init_controller();
-    init_controller6();
+    init_controller7();
     init_badge();
     init_badge();
     init_count3();
@@ -20387,7 +20524,7 @@ var init_patterns = __esm({
 
 // js/undo-toast/values.js
 var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, MS_PER_SECOND2, CLOCK_TICK_MS;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/undo-toast/values.js"() {
     "use strict";
     UNDO_TOAST = "kp-toast--undo";
@@ -20474,18 +20611,18 @@ var init_build2 = __esm({
     "use strict";
     init_patterns();
     init_strings();
-    init_values3();
+    init_values4();
   }
 });
 
 // js/undo-toast/core.js
 var UndoCore;
-var init_core3 = __esm({
+var init_core4 = __esm({
   "js/undo-toast/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values3();
+    init_values4();
     UndoCore = class extends Controller {
       /**
        * @param {HTMLElement} host the toast (it carries `dismiss`)
@@ -20628,9 +20765,9 @@ var UndoRun;
 var init_run = __esm({
   "js/undo-toast/run.js"() {
     "use strict";
-    init_core3();
+    init_core4();
     init_stack();
-    init_values3();
+    init_values4();
     UndoRun = class extends UndoCore {
       /**
        * @param {HTMLElement} host the toast
@@ -20862,8 +20999,8 @@ var init_undo_toast = __esm({
     init_strings();
     init_build2();
     init_run();
-    init_values3();
-    init_values3();
+    init_values4();
+    init_values4();
   }
 });
 
@@ -21310,7 +21447,7 @@ var init_list = __esm({
 
 // js/statusrow/controller.js
 var CALM_OPTIONS, ROWS, StatusList;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/statusrow/controller.js"() {
     "use strict";
     init_controller();
@@ -21442,7 +21579,7 @@ var init_statusrow = __esm({
   "js/statusrow.js"() {
     "use strict";
     init_controller();
-    init_controller7();
+    init_controller8();
     init_state6();
     init_state6();
     init_list();
@@ -21683,7 +21820,7 @@ var init_api5 = __esm({
 
 // js/facets/values.js
 var FACETS, FACET_EVENT;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/facets/values.js"() {
     "use strict";
     FACETS = "[data-kp-facets]";
@@ -21693,14 +21830,14 @@ var init_values4 = __esm({
 
 // js/facets/controller.js
 var SAY_FIRST_MS, SAY_MS, FacetGroup;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/facets/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_api5();
     init_rows();
-    init_values4();
+    init_values5();
     SAY_FIRST_MS = 100;
     SAY_MS = 30;
     FacetGroup = class extends Controller {
@@ -21784,9 +21921,9 @@ var init_facets = __esm({
   "js/facets.js"() {
     "use strict";
     init_controller();
-    init_controller8();
-    init_values4();
-    init_values4();
+    init_controller9();
+    init_values5();
+    init_values5();
     init_pattern();
     init_api5();
   }
@@ -23705,7 +23842,7 @@ var init_paint3 = __esm({
 
 // js/passkeys/controller.js
 var reasonOf, PasskeysController;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/passkeys/controller.js"() {
     "use strict";
     init_controller();
@@ -23950,7 +24087,7 @@ var init_api6 = __esm({
     "use strict";
     init_controller();
     init_constants10();
-    init_controller9();
+    init_controller10();
   }
 });
 
@@ -24480,7 +24617,7 @@ async function copyText2(button6, text) {
   }, COPIED_MS2);
 }
 var COPIED_MS2, ThreadControl;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/thread/controller.js"() {
     "use strict";
     init_strings();
@@ -24617,7 +24754,7 @@ var init_thread = __esm({
   "js/thread.js"() {
     "use strict";
     init_controller();
-    init_controller10();
+    init_controller11();
     init_options2();
     init_options2();
   }
@@ -26089,7 +26226,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -26232,7 +26369,7 @@ var init_attach6 = __esm({
     init_controller();
     init_locale();
     init_constants11();
-    init_controller11();
+    init_controller12();
   }
 });
 
@@ -26358,7 +26495,7 @@ var init_rows2 = __esm({
 
 // js/row-select/core.js
 var RowSelectCore;
-var init_core4 = __esm({
+var init_core5 = __esm({
   "js/row-select/core.js"() {
     "use strict";
     init_controller();
@@ -26511,12 +26648,12 @@ var init_core4 = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys5();
     init_strings();
-    init_core4();
+    init_core5();
     init_rows2();
     TEXT_ENTRY = "textarea, select, [contenteditable]";
     RowSelector = class _RowSelector extends RowSelectCore {
@@ -26798,7 +26935,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_rows2();
     init_rows2();
   }
@@ -27126,7 +27263,7 @@ var init_draw4 = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -27374,7 +27511,7 @@ var init_api7 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_controller13();
+    init_controller14();
     init_draw4();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -27406,7 +27543,7 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller13();
+    init_controller14();
     init_model2();
     init_model2();
     init_api7();
@@ -28609,7 +28746,7 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
@@ -28851,7 +28988,7 @@ var init_api9 = __esm({
     "use strict";
     init_controller();
     init_constants12();
-    init_controller14();
+    init_controller15();
   }
 });
 
@@ -29319,7 +29456,7 @@ var init_list2 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -29444,7 +29581,7 @@ var init_api10 = __esm({
     init_card_state();
     init_controller();
     init_strings();
-    init_controller15();
+    init_controller16();
     init_format2();
     init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
@@ -29476,7 +29613,7 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller15();
+    init_controller16();
     init_format2();
     init_format2();
     init_api10();
@@ -30093,7 +30230,7 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
@@ -30158,7 +30295,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller16();
+    init_controller17();
     init_state11();
     init_state11();
     init_spin();
@@ -30886,7 +31023,7 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
@@ -31120,7 +31257,7 @@ var init_api11 = __esm({
     "use strict";
     init_controller();
     init_constants15();
-    init_controller17();
+    init_controller18();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -33894,7 +34031,7 @@ var init_api13 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
@@ -34041,7 +34178,7 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller18();
+    init_controller19();
     init_state14();
     init_state14();
     init_api13();
@@ -34050,7 +34187,7 @@ var init_checklist = __esm({
 
 // js/quantity/values.js
 var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, HOLD_SLOW_REPEATS, PAGE_STEPS;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/quantity/values.js"() {
     "use strict";
     QUANTITY = "[data-kp-quantity]";
@@ -34296,7 +34433,7 @@ var init_paint5 = __esm({
   "js/quantity/paint.js"() {
     "use strict";
     init_strings();
-    init_values5();
+    init_values6();
     init_build3();
     init_math();
     init_read3();
@@ -34305,11 +34442,11 @@ var init_paint5 = __esm({
 
 // js/quantity/controller.js
 var RELEASE_EVENTS, QuantityControl;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
-    init_values5();
+    init_values6();
     init_math();
     init_paint5();
     init_read3();
@@ -34467,11 +34604,11 @@ var init_quantity = __esm({
   "js/quantity.js"() {
     "use strict";
     init_controller();
-    init_values5();
-    init_controller19();
+    init_values6();
+    init_controller20();
     init_math();
     init_paint5();
-    init_values5();
+    init_values6();
     init_math();
     init_read3();
   }
@@ -40082,7 +40219,7 @@ function partsOf3(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -40267,7 +40404,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller20();
+    init_controller21();
   }
 });
 
@@ -45901,7 +46038,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED4, CalendarController;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -46155,7 +46292,7 @@ var init_api15 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller21();
+    init_controller22();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -52795,7 +52932,7 @@ var init_gantt = __esm({
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make18;
-var init_values6 = __esm({
+var init_values7 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -52816,12 +52953,12 @@ var init_values6 = __esm({
 
 // js/pipeline/core.js
 var PipelineCore;
-var init_core5 = __esm({
+var init_core6 = __esm({
   "js/pipeline/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values6();
+    init_values7();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -52906,8 +53043,8 @@ var PipelineLanes;
 var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
-    init_core5();
-    init_values6();
+    init_core6();
+    init_values7();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -53043,7 +53180,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values6();
+    init_values7();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -53155,11 +53292,11 @@ var init_view2 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values6();
+    init_values7();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -53304,9 +53441,9 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller22();
-    init_values6();
-    init_values6();
+    init_controller23();
+    init_values7();
+    init_values7();
   }
 });
 
@@ -54512,7 +54649,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -54653,14 +54790,14 @@ var init_build8 = __esm({
 
 // js/range/core.js
 var seq2, DEFAULT_PRESET_AT, RangeCore;
-var init_core6 = __esm({
+var init_core7 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_segmented();
     init_chart();
-    init_values7();
+    init_values8();
     init_build8();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -54735,7 +54872,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build8();
-    init_values7();
+    init_values8();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -54907,11 +55044,11 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core6();
+    init_core7();
     init_panel();
     RangeController = class extends RangeCore {
       connect() {
@@ -54988,9 +55125,9 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller23();
-    init_values7();
-    init_values7();
+    init_controller24();
+    init_values8();
+    init_values8();
   }
 });
 
@@ -55422,7 +55559,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -55548,7 +55685,7 @@ var init_parts3 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values8();
+    init_values9();
   }
 });
 
@@ -55589,7 +55726,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts3();
-    init_values8();
+    init_values9();
   }
 });
 
@@ -55655,7 +55792,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts3();
-    init_values8();
+    init_values9();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -55803,7 +55940,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values8();
+    init_values9();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -55912,8 +56049,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values8();
-    init_values8();
+    init_values9();
+    init_values9();
   }
 });
 
@@ -56482,7 +56619,7 @@ var init_parts4 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -56769,7 +56906,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller24();
+    init_controller25();
     init_parts4();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -57050,7 +57187,7 @@ var init_connection = __esm({
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -57075,7 +57212,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values9();
+    init_values10();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -57125,7 +57262,7 @@ var init_math2 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values9();
+    init_values10();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -57157,7 +57294,7 @@ var init_read4 = __esm({
 
 // js/transfer/core.js
 var FULL, TransferCore;
-var init_core7 = __esm({
+var init_core8 = __esm({
   "js/transfer/core.js"() {
     "use strict";
     init_controller();
@@ -57166,7 +57303,7 @@ var init_core7 = __esm({
     init_strings();
     init_math2();
     init_read4();
-    init_values9();
+    init_values10();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -57393,7 +57530,7 @@ var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts5();
-    init_values9();
+    init_values10();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -57407,11 +57544,11 @@ var init_row2 = __esm({
     init_progressbar();
     init_motion();
     init_strings();
-    init_core7();
+    init_core8();
     init_parts5();
     init_read4();
     init_ticker();
-    init_values9();
+    init_values10();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -57565,8 +57702,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row2();
-    init_values9();
-    init_values9();
+    init_values10();
+    init_values10();
     init_math2();
   }
 });
@@ -57798,7 +57935,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values10 = __esm({
+var init_values11 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -57812,13 +57949,13 @@ var init_values10 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core8 = __esm({
+var init_core9 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build9();
-    init_values10();
+    init_values11();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -57947,8 +58084,8 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core8();
-    init_values10();
+    init_core9();
+    init_values11();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -58024,12 +58161,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
     init_build9();
-    init_values10();
+    init_values11();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -58264,9 +58401,9 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller25();
-    init_values10();
-    init_values10();
+    init_controller26();
+    init_values11();
+    init_values11();
   }
 });
 
@@ -59242,7 +59379,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -59449,7 +59586,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller26();
+    init_controller27();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -60792,7 +60929,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -60951,7 +61088,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller27();
+    init_controller28();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -61382,7 +61519,7 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -61523,7 +61660,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller28();
+    init_controller29();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -61985,7 +62122,7 @@ var init_keys12 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -62255,7 +62392,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller29();
+    init_controller30();
     init_build11();
     init_commit();
     init_math3();
@@ -62543,7 +62680,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -62776,7 +62913,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller30();
+    init_controller31();
     init_list4();
     init_render4();
   }
@@ -64219,7 +64356,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -64410,7 +64547,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller31();
+    init_controller32();
     init_group6();
     init_group6();
   }
@@ -64694,7 +64831,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values11 = __esm({
+var init_values12 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -64761,11 +64898,11 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core9 = __esm({
+var init_core10 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values11();
+    init_values12();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -64876,8 +65013,8 @@ var init_rows4 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values11();
-    init_core9();
+    init_values12();
+    init_core10();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -64979,16 +65116,16 @@ var init_rows4 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values11();
+    init_values12();
     init_order();
-    init_core9();
+    init_core10();
     init_rows4();
     DependencyList = class extends DeplistRows {
       connect() {
@@ -65163,9 +65300,9 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller32();
-    init_values11();
-    init_values11();
+    init_controller33();
+    init_values12();
+    init_values12();
     init_order();
   }
 });
@@ -66330,7 +66467,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values12 = __esm({
+var init_values13 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -66669,7 +66806,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts8();
-    init_values12();
+    init_values13();
   }
 });
 
@@ -66679,7 +66816,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values12();
+    init_values13();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -66799,7 +66936,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values12();
+    init_values13();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -67074,7 +67211,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -67327,7 +67464,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller33();
+    init_controller34();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -67673,7 +67810,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -67978,7 +68115,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller34();
+    init_controller35();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -68116,7 +68253,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values13 = __esm({
+var init_values14 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -68189,7 +68326,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values13();
+    init_values14();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -68461,7 +68598,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values13();
+    init_values14();
   }
 });
 
@@ -68498,13 +68635,13 @@ var init_keys13 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core10 = __esm({
+var init_core11 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values13();
+    init_values14();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -68620,9 +68757,9 @@ var init_run3 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values13();
+    init_values14();
     init_kinds();
-    init_core10();
+    init_core11();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -68791,7 +68928,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values13();
+    init_values14();
     init_kinds();
     init_keys13();
     init_run3();
@@ -68913,8 +69050,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values13();
-    init_values13();
+    init_values14();
+    init_values14();
     init_kinds();
     init_glyph();
     init_open3();
@@ -69815,7 +69952,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -69954,7 +70091,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build12 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values14();
+    init_values15();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -69968,13 +70105,13 @@ var init_build12 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core11 = __esm({
+var init_core12 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build12();
-    init_values14();
+    init_values15();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -70089,12 +70226,12 @@ var init_core11 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build12();
-    init_core11();
-    init_values14();
+    init_core12();
+    init_values15();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -70319,9 +70456,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller35();
-    init_values14();
-    init_values14();
+    init_controller36();
+    init_values15();
+    init_values15();
   }
 });
 
@@ -70487,7 +70624,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -70716,7 +70853,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_fields();
     init_fields();
   }
@@ -71056,7 +71193,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -71307,7 +71444,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller37();
+    init_controller38();
   }
 });
 
@@ -71912,7 +72049,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -72171,7 +72308,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller38();
+    init_controller39();
     init_choices();
   }
 });
@@ -77025,7 +77162,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -77129,7 +77266,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller39();
+    init_controller40();
     init_state28();
     init_state28();
     init_matrix2();
@@ -81104,8 +81241,8 @@ if (typeof document !== "undefined") {
     }
   }
   const start = () => {
-    const attached3 = attachAll2();
-    attached3.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached3.modules.join(" ")));
+    const attached2 = attachAll2();
+    attached2.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached2.modules.join(" ")));
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
   else start();
@@ -82209,9 +82346,6 @@ export {
   FOOTPRINT_HOSTS,
   FOOTPRINT_MAX,
   HIGHLIGHT_EVENT,
-  HOVERCARD_ATTRIBUTE,
-  HOVERCARD_CARD,
-  HOVERCARD_EVENT,
   INDETERMINATE_ATTRIBUTE,
   INTENT_MAX_SHOWN,
   JOBLINE,
