@@ -79505,7 +79505,8 @@ __export(theme_core_exports, {
   storeTheme: () => storeTheme,
   storedTheme: () => storedTheme
 });
-init_strings();
+
+// js/theme-core/values.js
 var THEME_EVENT = "kp-theme-change";
 var BEFORE_THEME_EVENT = "kp-theme-before-change";
 var UNKNOWN_THEME_EVENT = "kp-theme-unknown";
@@ -79531,6 +79532,10 @@ var NAMES = (
 var DARK = new Set(THEMES.filter((t) => t.dark).map((t) => t.name));
 var isTheme = (value) => typeof value === "string" && NAMES.includes(value);
 var asTheme = (value) => isTheme(value) ? value : null;
+var isDropped = (raw) => raw !== null && raw !== "" && !isTheme(raw);
+
+// js/theme-core/report.js
+init_strings();
 var REPORT_KEY = "kp-themes-unknown-reported";
 var reported2 = /* @__PURE__ */ new Set();
 function alreadyReported(name) {
@@ -79564,7 +79569,8 @@ function reportUnknown(requested, applied, source, root) {
   element.dispatchEvent(new CustomEvent(UNKNOWN_THEME_EVENT, { bubbles: true, detail: { requested: name, applied, source } }));
   return true;
 }
-var isDropped = (raw) => raw !== null && raw !== "" && !isTheme(raw);
+
+// js/theme-core/read.js
 function currentTheme({ root } = {}) {
   if (typeof document === "undefined") return DEFAULT_THEME;
   const element = rootOf(root);
@@ -79576,30 +79582,8 @@ function pendingTheme({ root } = {}) {
   if (typeof document === "undefined") return null;
   return asTheme(rootOf(root).getAttribute(PENDING_THEME_ATTRIBUTE));
 }
-function applyTheme(theme, { root, darkClass, strict = false, announce: announce4 = true } = {}) {
-  const known4 = asTheme(theme);
-  if (known4 === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
-  const next2 = known4 ?? DEFAULT_THEME;
-  const element = rootOf(root);
-  if (known4 === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next2, "apply", element);
-  const previous = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme"));
-  if (announce4 && previous !== next2) {
-    const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
-    if (!element.dispatchEvent(ask)) {
-      endPreview({ root: element, darkClass });
-      return previous ?? DEFAULT_THEME;
-    }
-  }
-  element.removeAttribute(PREVIEW_THEME_ATTRIBUTE);
-  element.setAttribute("data-theme", next2);
-  element.removeAttribute(PENDING_THEME_ATTRIBUTE);
-  const cls = darkClass === void 0 ? config2.darkClass : darkClass;
-  if (cls) element.classList.toggle(cls, DARK.has(next2));
-  if (announce4 && previous !== next2) {
-    element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next2, previous, root: element } }));
-  }
-  return next2;
-}
+
+// js/theme-core/preview.js
 function previewTheme(theme, { root, darkClass } = {}) {
   const known4 = asTheme(theme);
   if (known4 === null || typeof document === "undefined") return null;
@@ -79633,6 +79617,8 @@ function previewedTheme({ root } = {}) {
   const element = rootOf(root);
   return element.hasAttribute(PREVIEW_THEME_ATTRIBUTE) ? asTheme(element.getAttribute("data-theme")) : null;
 }
+
+// js/theme-core/store.js
 function storeTheme(theme, { key, storage: storage2 } = {}) {
   try {
     (storage2 ?? localStorage).setItem(key ?? config2.storageKey, theme);
@@ -79651,9 +79637,37 @@ function storedTheme({ key, storage: storage2 } = {}) {
   if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "stored");
   return asTheme(raw);
 }
+
+// js/theme-core/apply.js
+function applyTheme(theme, { root, darkClass, strict = false, announce: announce4 = true } = {}) {
+  const known4 = asTheme(theme);
+  if (known4 === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
+  const next2 = known4 ?? DEFAULT_THEME;
+  const element = rootOf(root);
+  if (known4 === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next2, "apply", element);
+  const previous = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme"));
+  if (announce4 && previous !== next2) {
+    const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
+    if (!element.dispatchEvent(ask)) {
+      endPreview({ root: element, darkClass });
+      return previous ?? DEFAULT_THEME;
+    }
+  }
+  element.removeAttribute(PREVIEW_THEME_ATTRIBUTE);
+  element.setAttribute("data-theme", next2);
+  element.removeAttribute(PENDING_THEME_ATTRIBUTE);
+  const cls = darkClass === void 0 ? config2.darkClass : darkClass;
+  if (cls) element.classList.toggle(cls, DARK.has(next2));
+  if (announce4 && previous !== next2) {
+    element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next2, previous, root: element } }));
+  }
+  return next2;
+}
 function initializeTheme(fallback2 = DEFAULT_THEME, { root, key } = {}) {
   return applyTheme(storedTheme({ key }) ?? fallback2, { root });
 }
+
+// js/theme-core/subscribe.js
 function onThemeChange(listener, { crossTab = true, root, key } = {}) {
   if (typeof document === "undefined") return () => {
   };
@@ -81476,7 +81490,6 @@ export {
   ATTENTION,
   BAR_CELL,
   BEFORE_STEP_EVENT,
-  BEFORE_THEME_EVENT,
   BULLETS,
   BULLETS_PICK_EVENT,
   BULLETS_RETRY_EVENT,
@@ -81554,7 +81567,6 @@ export {
   NO_FLASH_SNIPPET,
   OPTION_SELECTOR,
   OPT_OUT,
-  PENDING_THEME_ATTRIBUTE,
   PICK_EVENT,
   PIECES_ATTRIBUTE,
   PIECES_PROPERTY,
@@ -81562,7 +81574,6 @@ export {
   PREVIEW,
   PREVIEW_EVENT,
   PREVIEW_LEAVE_MS,
-  PREVIEW_THEME_ATTRIBUTE,
   PREVIEW_TIMEOUT_MS,
   PRINT_ACTION,
   PRINT_EVENT,
@@ -81607,7 +81618,6 @@ export {
   STORAGE_KEY,
   THEMES,
   THEME_ATTRIBUTE,
-  THEME_EVENT,
   THEME_MENU_ICON,
   TICK,
   TICK_EVENT,
@@ -81622,7 +81632,6 @@ export {
   TRACE_RETRY_EVENT,
   TRACE_RULE_EVENT,
   TRACE_SWAP_EVENT,
-  UNKNOWN_THEME_EVENT,
   UPDATE_PROPERTY,
   UPDATE_STYLE,
   UPDATING_ATTRIBUTE,
@@ -81652,7 +81661,6 @@ export {
   applyLayout,
   applyStoredCalm,
   applyStoredTheme,
-  applyTheme,
   art_exports as artExports,
   askQuestion,
   attachAckGates,
@@ -81774,7 +81782,6 @@ export {
   compareVersions,
   components_exports as componentsExports,
   configureShortcuts,
-  configureTheme,
   connection_exports as connectionExports,
   connectionOf,
   console_exports as consoleExports,
@@ -81785,7 +81792,6 @@ export {
   countdown_exports as countdownExports,
   createListbox,
   currentSection,
-  currentTheme,
   datatable_exports as datatableExports,
   dated_options_exports as datedOptionsExports,
   datepicker_exports as datepickerExports,
@@ -81806,7 +81812,6 @@ export {
   docpreview_exports as docpreviewExports,
   drawSparkline,
   effects_exports as effectsExports,
-  endPreview,
   ensureRegister,
   entity_card_exports as entityCardExports,
   facets_exports as facetsExports,
@@ -81837,7 +81842,6 @@ export {
   humanDuration,
   idmark_exports as idmarkExports,
   inPausedRange,
-  initializeTheme,
   intent_exports as intentExports,
   intentRanges,
   intentScore,
@@ -81845,7 +81849,6 @@ export {
   intentWords,
   isCalm,
   isCalmTones,
-  isTheme,
   job_line_exports as jobLineExports,
   jobLineText,
   joinWords,
@@ -81887,7 +81890,6 @@ export {
   noiseGlyph,
   notices_exports as noticesExports,
   noticesOf,
-  onThemeChange,
   openBusyCard,
   openDocPreview,
   openSnoozePanel,
@@ -81902,13 +81904,10 @@ export {
   passkeys_exports as passkeysExports,
   path_trace_exports as pathTraceExports,
   patterns_exports as patternsExports,
-  pendingTheme,
   pipeline_exports as pipelineExports,
   plainFileName,
   preparePrint,
-  previewTheme,
   previewTypeOf,
-  previewedTheme,
   print_exports as printExports,
   problems_exports as problemsExports,
   progressbar_exports as progressbarExports,
@@ -82026,8 +82025,6 @@ export {
   statusrow_exports as statusrowExports,
   stepPosition,
   steplist_exports as steplistExports,
-  storeTheme,
-  storedTheme,
   strings_exports as stringsExports,
   structure,
   structure_exports as structureExports,

@@ -438,6 +438,7 @@
         },
         { "path": "js/theme-picker.js", "tags": ["@component:picker"] },
         { "path": "js/theme-core.js", "tags": ["@component:picker"] },
+        { "path": "js/theme-core/*.js", "tags": ["@component:picker"] },
         { "path": "js/no-flash.js", "tags": ["@component:picker"] },
         { "path": "js/lazy-register.js", "tags": ["@component:picker"] },
         { "path": "js/diagnostics.js", "tags": ["@component:picker"] },

@@ -148,6 +148,14 @@ export const VENDORED = [
     'js/components/sticky-nav.js',
     'js/components/to-top.js',
     'js/components/type-confirm.js',
+    // Since the 2026-10-30 split js/theme-core.js is a facade over js/theme-core/; chassis-rs bakes the parts in beside it.
+    'js/theme-core/apply.js',
+    'js/theme-core/preview.js',
+    'js/theme-core/read.js',
+    'js/theme-core/report.js',
+    'js/theme-core/store.js',
+    'js/theme-core/subscribe.js',
+    'js/theme-core/values.js',
 ];
 
 /**
