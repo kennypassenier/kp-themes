@@ -63,7 +63,7 @@
         "js/kpi.js": { "digest": "0cd9853cc958c091", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
         "js/lede.js": { "digest": "a2229dfa4db44e34", "when": ".kp-lede" },
         "js/loading-pieces.js": {
-            "digest": "50d7cde51e8410d8",
+            "digest": "2430ccec0d32f0db",
             "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
         },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },

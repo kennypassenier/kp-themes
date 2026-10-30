@@ -142,6 +142,7 @@
         { "path": "js/log.js", "tags": ["@component:data"] },
         { "path": "js/progressbar.js", "tags": ["@component:feedback"] },
         { "path": "js/loading-pieces.js", "tags": ["@component:feedback"] },
+        { "path": "js/loading-pieces/*.js", "tags": ["@component:feedback"] },
         {
             "path": "js/motion.js",
             "tags": [
