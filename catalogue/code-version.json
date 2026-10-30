@@ -36,7 +36,7 @@
         "js/datatable.js": { "digest": "1be3b502058229e5", "when": "[data-kp-datatable]" },
         "js/dated-options.js": { "digest": "afb0ac71fb0d5b32", "when": "[data-kp-dated]" },
         "js/datepicker.js": { "digest": "6f75f91c571f28f2", "when": "[data-kp-datepicker]" },
-        "js/deplist.js": { "digest": "333fc5061bfe72cd", "when": "[data-kp-deplist]" },
+        "js/deplist.js": { "digest": "358dfdc6949bc335", "when": "[data-kp-deplist]" },
         "js/diff.js": { "digest": "efdcb2db5f17f9f4", "when": "[data-kp-diffview]" },
         "js/docpreview.js": { "digest": "4f49b358fdd6715f", "when": "[data-kp-preview], .kp-docglyph" },
         "js/entity-card.js": { "digest": "b9ca787027783791", "when": "[data-kp-entity-grid]" },

@@ -1,9 +1,5 @@
-/** The lists this module draws. */
-export declare const DEPLIST = "[data-kp-deplist]";
-/** Fired on the list when its Retry is pressed. */
-export declare const DEPLIST_RETRY_EVENT = "kp-deplist-retry";
-/** How many rows show before "Show all". */
-export declare const DEPLIST_COLLAPSE = 8;
+export { DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE } from './deplist/values.js';
+export { orderDependencies, depText } from './deplist/order.js';
 export type DepItem = {
     /**
      * the thing that needs
@@ -29,35 +25,6 @@ export type DepRow = {
      */
     number: number | null;
 };
-/**
- * @typedef {object} DepItem
- * @property {string} from the thing that needs
- * @property {string} to the thing needed
- * @property {string} [label] a word for the link between them
- * @property {'running' | 'stopped' | 'unknown'} [state] the state of the needed thing
- */
-/**
- * @typedef {object} DepRow
- * @property {DepItem} item
- * @property {number | null} number its place in the order things must go (null when unnumbered)
- */
-/**
- * The rows in the order things must go: a row stands after the rows of the things it needs (a thing's depth is one more than the
- * deepest thing it needs that is itself listed as needing something), numbered from 1. Rows in a cycle are not ordered: they
- * come back as `cycles`, each a path of names.
- *
- * @param {readonly DepItem[]} items
- * @param {{ numbers?: boolean }} [options]
- * @returns {{ rows: DepRow[], cycles: string[][] }}
- */
-export declare function orderDependencies(items: readonly DepItem[], { numbers }?: {
-    numbers?: boolean;
-}): {
-    rows: DepRow[];
-    cycles: string[][];
-};
-/** The rows as plain text, one per line: "paperless -> postgres". @param {readonly DepItem[]} items */
-export declare const depText: (items: readonly DepItem[]) => string;
 export type DeplistHandle = {
     element: HTMLElement;
     /**
@@ -72,6 +39,25 @@ export type DeplistHandle = {
      */
     rows: () => DepRow[];
 };
+/**
+ * @typedef {object} DepItem
+ * @property {string} from the thing that needs
+ * @property {string} to the thing needed
+ * @property {string} [label] a word for the link between them
+ * @property {'running' | 'stopped' | 'unknown'} [state] the state of the needed thing
+ */
+/**
+ * @typedef {object} DepRow
+ * @property {DepItem} item
+ * @property {number | null} number its place in the order things must go (null when unnumbered)
+ */
+/**
+ * @typedef {object} DeplistHandle
+ * @property {HTMLElement} element
+ * @property {(items: readonly DepItem[]) => void} set draw the rows (clears any state)
+ * @property {(state: 'ready' | 'loading' | 'empty' | 'error', options?: { message?: string }) => void} setState
+ * @property {() => DepRow[]} rows the rows as drawn
+ */
 /**
  * The handle of a list.
  * @param {Element} el

@@ -64447,18 +64447,34 @@ var init_version_delta = __esm({
   }
 });
 
-// js/deplist.js
-var deplist_exports = {};
-__export(deplist_exports, {
-  DEPLIST: () => DEPLIST,
-  DEPLIST_COLLAPSE: () => DEPLIST_COLLAPSE,
-  DEPLIST_RETRY_EVENT: () => DEPLIST_RETRY_EVENT,
-  attachDeplists: () => attachDeplists,
-  depText: () => depText,
-  deplist: () => deplist,
-  orderDependencies: () => orderDependencies,
-  setDeplist: () => setDeplist
+// js/deplist/values.js
+var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
+var init_values9 = __esm({
+  "js/deplist/values.js"() {
+    "use strict";
+    DEPLIST = "[data-kp-deplist]";
+    DEPLIST_RETRY_EVENT = "kp-deplist-retry";
+    DEPLIST_COLLAPSE = 8;
+    DEPLIST_MIN_ROWS = 3;
+    DEPLIST_GHOST_ROWS = 3;
+    DEPLIST_OBSERVED = [
+      "data-kp-dep-order",
+      "data-kp-dep-direction",
+      "data-kp-dep-group",
+      "data-kp-dep-arrow",
+      "data-kp-dep-states",
+      "data-kp-dep-collapse",
+      "data-kp-dep-link",
+      "data-kp-dep-self",
+      "data-kp-dep-empty",
+      "data-kp-dep-heading",
+      "data-kp-dep-copy",
+      "data-kp-dep-rows"
+    ];
+  }
 });
+
+// js/deplist/order.js
 function orderDependencies(items, { numbers: numbers2 = true } = {}) {
   const needs = /* @__PURE__ */ new Map();
   for (const { from, to } of items) needs.set(from, [...needs.get(from) ?? [], to]);
@@ -64490,275 +64506,422 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
   if (numbers2) ordered2.sort((a, b) => a.d - b.d || a.at - b.at);
   return { rows: ordered2.map((r, i) => ({ item: r.item, number: numbers2 ? i + 1 : null })), cycles };
 }
-function deplist(el16) {
-  return HANDLES6.get(el16) ?? null;
-}
-function attachOne5(el16) {
-  if (HANDLES6.has(el16)) return () => void 0;
-  const doc = el16.ownerDocument;
-  const undo = [];
-  el16.classList.add("kp-deplist");
-  el16.setAttribute("role", "group");
-  undo.push(() => el16.classList.remove("kp-deplist"));
-  const heading = made4(doc, "p", "kp-deplist__heading");
-  heading.setAttribute("aria-live", "polite");
-  const body = made4(doc, "div", "kp-deplist__body");
-  const list = made4(doc, "ol", "kp-deplist__list");
-  list.setAttribute("role", "list");
-  const foot = made4(doc, "div", "kp-deplist__foot");
-  body.append(list);
-  el16.replaceChildren(heading, body, foot);
-  undo.push(() => el16.replaceChildren());
-  let items = [];
-  let state12 = "ready";
-  let stateMessage = "";
-  let expanded = false;
-  let drawn2 = [];
-  let busy = null;
-  let plate = null;
-  const attr16 = (name, fallback2) => el16.getAttribute(name) ?? fallback2;
-  const nameNode = (name, needed = false) => {
-    const link = el16.getAttribute("data-kp-dep-link");
-    const holder = link ? made4(doc, "a", "kp-deplist__name") : made4(doc, "span", "kp-deplist__name");
-    if (needed) holder.classList.add("kp-deplist__name--to");
-    if (holder instanceof HTMLAnchorElement && link) holder.href = link.replace("{name}", encodeURIComponent(name));
-    const mark = made4(doc, "span", "kp-idmark kp-idmark--xs");
-    setIdmark(mark, name);
-    holder.append(mark, made4(doc, "span", "kp-deplist__text"));
-    holder.lastElementChild.textContent = name;
-    return holder;
-  };
-  const draw8 = () => {
-    const s2 = getStrings();
-    const numbers2 = attr16("data-kp-dep-order", "numbers") !== "none";
-    const self = attr16("data-kp-dep-self", "hide") === "show";
-    const reaches2 = attr16("data-kp-dep-direction", "from-needs-to") === "from-reaches-to";
-    const arrow = attr16("data-kp-dep-arrow", "\u2192");
-    const withStates = el16.hasAttribute("data-kp-dep-states");
-    const collapse = Math.max(1, Number(attr16("data-kp-dep-collapse", String(DEPLIST_COLLAPSE))) || DEPLIST_COLLAPSE);
-    const group = numbers2 ? "none" : attr16("data-kp-dep-group", "none");
-    const shown5 = items.filter((i) => self || i.from !== i.to);
-    const { rows, cycles } = orderDependencies(shown5, { numbers: numbers2 });
-    drawn2 = rows;
-    let total = rows.length + cycles.length;
-    const template = el16.getAttribute("data-kp-dep-heading");
-    heading.textContent = state12 === "ready" || state12 === "empty" ? template ? template.replace("{n}", String(total)) : s2.deplistCount(total) : s2.deplistReading;
-    list.replaceChildren();
-    list.removeAttribute("aria-busy");
-    busy?.remove();
-    busy = null;
-    plate?.remove();
-    plate = null;
-    list.hidden = false;
-    if (list.parentElement !== body) body.append(list);
-    list.dataset.kpCols = numbers2 ? "numbered" : "plain";
-    el16.style.setProperty("--kp-deplist-arrow", `'${arrow.replace(/'/g, "")}'`);
-    foot.replaceChildren();
-    el16.setAttribute("data-kp-state", state12);
-    body.style.removeProperty("min-block-size");
-    el16.style.setProperty("--kp-deplist-min-rows", String(Math.max(1, Number(attr16("data-kp-dep-rows", "3")) || 3)));
-    const rowFor3 = (item, no) => {
-      const li = made4(doc, "li", "kp-deplist__row");
-      if (numbers2) {
-        const n = made4(doc, "span", "kp-deplist__no");
-        n.textContent = no === null ? "" : String(no);
-        li.append(n);
-      }
-      const arrowNode = made4(doc, "span", "kp-deplist__arrow");
-      arrowNode.setAttribute("aria-hidden", "true");
-      arrowNode.textContent = arrow;
-      li.append(nameNode(item.from), arrowNode, nameNode(item.to, true));
-      if (withStates) {
-        const word = item.state === "running" ? s2.deplistRunning : item.state === "stopped" ? s2.deplistStopped : s2.deplistUnknown;
-        const badge = made4(
-          doc,
-          "span",
-          `kp-badge kp-deplist__state${item.state === "running" ? " kp-badge--success" : item.state === "stopped" ? " kp-badge--destructive" : ""}`
-        );
-        badge.textContent = word;
-        li.append(badge);
-      }
-      const spoken = made4(doc, "span", "kp-sr-only");
-      spoken.textContent = `, ${reaches2 ? s2.deplistReaches(item.from, item.to) : s2.deplistNeeds(item.from, item.to)}`;
-      li.append(spoken);
-      if (item.label) li.title = item.label;
-      return li;
-    };
-    if (state12 === "loading") {
-      list.setAttribute("aria-busy", "true");
-      for (let i = 0; i < 3; i++) {
-        const ghost = made4(doc, "li", "kp-deplist__row kp-deplist__row--ghost");
-        ghost.setAttribute("aria-hidden", "true");
-        ghost.append(made4(doc, "span", "kp-skeleton kp-deplist__bone"));
-        list.append(ghost);
-      }
-      busy = openBusyCard(body, { words: s2.deplistLoading, area: () => [body], className: "kp-deplist__busy", arrive: true });
-      return;
-    }
-    if (state12 === "error") {
-      plate = statePlate(doc, {
-        kind: "error",
-        title: s2.deplistFailed,
-        text: stateMessage || s2.deplistFailedText,
-        actionLabel: s2.deplistRetry,
-        onAction: () => el16.dispatchEvent(new CustomEvent(DEPLIST_RETRY_EVENT, { bubbles: true }))
-      });
-      body.prepend(plate);
-      list.hidden = true;
-      return;
-    }
-    list.hidden = false;
-    if (total === 0 || state12 === "empty") {
-      plate = statePlate(doc, { kind: "empty", title: el16.getAttribute("data-kp-dep-empty") ?? s2.deplistEmpty });
-      body.prepend(plate);
-      list.hidden = true;
-      return;
-    }
-    for (const cycle of cycles) {
-      const li = made4(doc, "li", "kp-deplist__row kp-deplist__row--cycle");
-      const alert = made4(doc, "span", "kp-alert kp-alert--destructive kp-deplist__cycle");
-      alert.setAttribute("role", "alert");
-      for (const [i, name] of [...cycle, cycle[0]].entries()) {
-        if (i > 0) alert.append(" ", s2.deplistNeedsWord, " ");
-        alert.append(nameNode(name));
-      }
-      li.append(alert);
-      list.append(li);
-    }
-    let current2 = null;
-    const rowEls = [];
-    const grouped = group === "by-to" || group === "by-from" ? [...rows].sort((a, b) => (group === "by-to" ? a.item.to : a.item.from).localeCompare(group === "by-to" ? b.item.to : b.item.from)) : rows;
-    for (const row of grouped) {
-      if (group !== "none") {
-        const key = group === "by-to" ? row.item.to : row.item.from;
-        if (key !== current2) {
-          current2 = key;
-          const head = made4(doc, "li", "kp-deplist__group");
-          head.setAttribute("role", "presentation");
-          head.append(nameNode(key));
-          list.append(head);
-        }
-      }
-      const li = rowFor3(row.item, row.number);
-      rowEls.push(li);
-      list.append(li);
-    }
-    const folded2 = rowEls.length > collapse && !expanded;
-    rowEls.forEach((li, i) => li.hidden = folded2 && i >= collapse);
-    if (rowEls.length > collapse) {
-      const more = (
-        /** @type {HTMLButtonElement} */
-        made4(doc, "button", "kp-button kp-button--ghost kp-deplist__more")
-      );
-      more.type = "button";
-      more.setAttribute("aria-expanded", String(!folded2));
-      more.textContent = folded2 ? s2.deplistMore(rowEls.length) : s2.deplistFewer;
-      more.addEventListener("click", () => {
-        expanded = !expanded;
-        draw8();
-        el16.querySelector(".kp-deplist__more")?.focus();
-      });
-      foot.append(more);
-    }
-    if (el16.hasAttribute("data-kp-dep-copy")) {
-      const copy3 = (
-        /** @type {HTMLButtonElement} */
-        made4(doc, "button", "kp-button kp-button--ghost kp-deplist__copy")
-      );
-      copy3.type = "button";
-      copy3.textContent = s2.deplistCopy;
-      copy3.setAttribute("data-kp-flash-words", s2.deplistCopied);
-      copy3.addEventListener("click", () => {
-        void runFlashButton(copy3, async () => {
-          await navigator.clipboard.writeText(depText(rows.map((r) => r.item)));
-          return s2.deplistCopied;
-        });
-      });
-      foot.append(copy3);
-    }
-  };
-  const go = (next2) => {
-    if (state12 === "ready" && next2 !== "ready" && list.offsetHeight > 0) body.dataset.kpKeep = String(list.offsetHeight);
-    state12 = next2;
-    draw8();
-    if (state12 !== "ready" && state12 !== "loading" && body.dataset.kpKeep) body.style.setProperty("min-block-size", `${body.dataset.kpKeep}px`);
-    if (state12 === "loading" && body.dataset.kpKeep) body.style.setProperty("min-block-size", `${body.dataset.kpKeep}px`);
-  };
-  const handle = {
-    element: el16,
-    set(next2) {
-      items = next2;
-      state12 = "ready";
-      delete body.dataset.kpKeep;
-      draw8();
-    },
-    setState(next2, options = {}) {
-      stateMessage = options.message ?? "";
-      go(next2);
-    },
-    rows: () => drawn2
-  };
-  HANDLES6.set(el16, handle);
-  undo.push(() => {
-    busy?.remove();
-    HANDLES6.delete(el16);
-  });
-  const watch2 = new MutationObserver(() => draw8());
-  watch2.observe(el16, {
-    attributes: true,
-    attributeFilter: [
-      "data-kp-dep-order",
-      "data-kp-dep-direction",
-      "data-kp-dep-group",
-      "data-kp-dep-arrow",
-      "data-kp-dep-states",
-      "data-kp-dep-collapse",
-      "data-kp-dep-link",
-      "data-kp-dep-self",
-      "data-kp-dep-empty",
-      "data-kp-dep-heading",
-      "data-kp-dep-copy",
-      "data-kp-dep-rows"
-    ]
-  });
-  undo.push(() => watch2.disconnect());
-  draw8();
-  return () => undo.reverse().forEach((u) => u());
-}
-function attachDeplists(root = document) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(DEPLIST) ? [root] : [],
-      ...root.querySelectorAll(DEPLIST)
-    ]
-  );
-  const undo = found.map((el16) => attachOne5(el16));
-  return () => undo.forEach((u) => u());
-}
-function setDeplist(el16, items) {
-  if (!HANDLES6.has(el16)) attachOne5(el16);
-  HANDLES6.get(el16)?.set(items);
-}
-var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES6, made4;
-var init_deplist = __esm({
-  "js/deplist.js"() {
+var depText;
+var init_order = __esm({
+  "js/deplist/order.js"() {
     "use strict";
-    init_idmark();
-    init_strings();
-    init_busy_card();
-    init_state_plate();
-    init_flash();
-    DEPLIST = "[data-kp-deplist]";
-    DEPLIST_RETRY_EVENT = "kp-deplist-retry";
-    DEPLIST_COLLAPSE = 8;
     depText = (items) => items.map((i) => `${i.from} -> ${i.to}`).join("\n");
-    HANDLES6 = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/deplist/core.js
+var made4, DeplistCore;
+var init_core9 = __esm({
+  "js/deplist/core.js"() {
+    "use strict";
+    init_controller();
+    init_values9();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
       return el16;
     };
+    DeplistCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.doc = host.ownerDocument;
+        this.items = [];
+        this.state = "ready";
+        this.stateMessage = "";
+        this.expanded = false;
+        this.drawn = [];
+        this.busy = null;
+        this.plate = null;
+        this.heading = made4(this.doc, "p", "kp-deplist__heading");
+        this.body = made4(this.doc, "div", "kp-deplist__body");
+        this.list = made4(this.doc, "ol", "kp-deplist__list");
+        this.foot = made4(this.doc, "div", "kp-deplist__foot");
+        this.handle = this.makeHandle();
+      }
+      /** Take away the busy card and the plate the last draw stood in for the rows. */
+      clearStandIns() {
+        this.busy?.remove();
+        this.busy = null;
+        this.plate?.remove();
+        this.plate = null;
+      }
+      /** @param {import('../busy-card.js').BusyCard} card */
+      setBusy(card) {
+        this.busy = card;
+      }
+      /** @param {HTMLElement} plate */
+      setPlate(plate) {
+        this.plate = plate;
+      }
+      /** Fold or unfold the rows past the limit. */
+      toggleExpanded() {
+        this.expanded = !this.expanded;
+      }
+      /** @param {string} name @param {string} fallback */
+      attr(name, fallback2) {
+        return this.host.getAttribute(name) ?? fallback2;
+      }
+      /** What the list's attributes ask for right now. @returns {DeplistSettings} */
+      settings() {
+        const numbers2 = this.attr("data-kp-dep-order", "numbers") !== "none";
+        return {
+          numbers: numbers2,
+          self: this.attr("data-kp-dep-self", "hide") === "show",
+          reaches: this.attr("data-kp-dep-direction", "from-needs-to") === "from-reaches-to",
+          arrow: this.attr("data-kp-dep-arrow", "\u2192"),
+          withStates: this.host.hasAttribute("data-kp-dep-states"),
+          collapse: Math.max(1, Number(this.attr("data-kp-dep-collapse", String(DEPLIST_COLLAPSE))) || DEPLIST_COLLAPSE),
+          group: numbers2 ? "none" : this.attr("data-kp-dep-group", "none")
+        };
+      }
+      /** The least rows the list stands as high as. */
+      minRows() {
+        return Math.max(1, Number(this.attr("data-kp-dep-rows", String(DEPLIST_MIN_ROWS))) || DEPLIST_MIN_ROWS);
+      }
+      /** @returns {DeplistHandle} */
+      makeHandle() {
+        return {
+          element: this.host,
+          set: (next2) => {
+            this.items = next2;
+            this.state = "ready";
+            delete this.body.dataset.kpKeep;
+            this.draw();
+          },
+          setState: (next2, options = {}) => {
+            this.stateMessage = options.message ?? "";
+            this.go(next2);
+          },
+          rows: () => this.drawn
+        };
+      }
+      /** Draw the list. The controller overrides it. */
+      draw() {
+      }
+      /**
+       * Show a state. The height the list has with its rows is kept for the states that stand in for them.
+       * @param {DeplistState} next
+       */
+      go(next2) {
+        const { list, body } = this;
+        if (this.state === "ready" && next2 !== "ready" && list.offsetHeight > 0) body.dataset.kpKeep = String(list.offsetHeight);
+        this.state = next2;
+        this.draw();
+        if (this.state !== "ready" && this.state !== "loading" && body.dataset.kpKeep)
+          body.style.setProperty("min-block-size", `${body.dataset.kpKeep}px`);
+        if (this.state === "loading" && body.dataset.kpKeep) body.style.setProperty("min-block-size", `${body.dataset.kpKeep}px`);
+      }
+    };
+  }
+});
+
+// js/deplist/rows.js
+var DeplistRows;
+var init_rows4 = __esm({
+  "js/deplist/rows.js"() {
+    "use strict";
+    init_idmark();
+    init_strings();
+    init_values9();
+    init_core9();
+    DeplistRows = class extends DeplistCore {
+      /**
+       * A thing's name with its identity mark, a link when the list has a template.
+       * @param {string} name
+       * @param {boolean} [needed]
+       */
+      nameNode(name, needed = false) {
+        const doc = this.doc;
+        const link = this.host.getAttribute("data-kp-dep-link");
+        const holder = link ? made4(doc, "a", "kp-deplist__name") : made4(doc, "span", "kp-deplist__name");
+        if (needed) holder.classList.add("kp-deplist__name--to");
+        if (holder instanceof HTMLAnchorElement && link) holder.href = link.replace("{name}", encodeURIComponent(name));
+        const mark = made4(doc, "span", "kp-idmark kp-idmark--xs");
+        setIdmark(mark, name);
+        holder.append(mark, made4(doc, "span", "kp-deplist__text"));
+        holder.lastElementChild.textContent = name;
+        return holder;
+      }
+      /**
+       * The badge beside a needed thing: its state in words and a tone.
+       * @param {import('../deplist.js').DepItem} item
+       */
+      stateBadge(item) {
+        const s2 = getStrings();
+        const word = item.state === "running" ? s2.deplistRunning : item.state === "stopped" ? s2.deplistStopped : s2.deplistUnknown;
+        const tone = item.state === "running" ? " kp-badge--success" : item.state === "stopped" ? " kp-badge--destructive" : "";
+        const badge = made4(this.doc, "span", `kp-badge kp-deplist__state${tone}`);
+        badge.textContent = word;
+        return badge;
+      }
+      /**
+       * One row: the number, the thing that needs, the arrow, the thing needed, its state, and the sentence a screen reader hears.
+       * @param {import('../deplist.js').DepItem} item
+       * @param {number | null} no
+       * @param {DeplistSettings} o
+       */
+      rowFor(item, no, o) {
+        const s2 = getStrings();
+        const doc = this.doc;
+        const li = made4(doc, "li", "kp-deplist__row");
+        if (o.numbers) {
+          const n = made4(doc, "span", "kp-deplist__no");
+          n.textContent = no === null ? "" : String(no);
+          li.append(n);
+        }
+        const arrowNode = made4(doc, "span", "kp-deplist__arrow");
+        arrowNode.setAttribute("aria-hidden", "true");
+        arrowNode.textContent = o.arrow;
+        li.append(this.nameNode(item.from), arrowNode, this.nameNode(item.to, true));
+        if (o.withStates) li.append(this.stateBadge(item));
+        const spoken = made4(doc, "span", "kp-sr-only");
+        spoken.textContent = `, ${o.reaches ? s2.deplistReaches(item.from, item.to) : s2.deplistNeeds(item.from, item.to)}`;
+        li.append(spoken);
+        if (item.label) li.title = item.label;
+        return li;
+      }
+      /** The placeholder rows of the loading state. */
+      ghostRows() {
+        for (let i = 0; i < DEPLIST_GHOST_ROWS; i++) {
+          const ghost = made4(this.doc, "li", "kp-deplist__row kp-deplist__row--ghost");
+          ghost.setAttribute("aria-hidden", "true");
+          ghost.append(made4(this.doc, "span", "kp-skeleton kp-deplist__bone"));
+          this.list.append(ghost);
+        }
+      }
+      /** One destructive row naming each thing of a cycle. @param {string[]} cycle */
+      cycleRow(cycle) {
+        const s2 = getStrings();
+        const li = made4(this.doc, "li", "kp-deplist__row kp-deplist__row--cycle");
+        const alert = made4(this.doc, "span", "kp-alert kp-alert--destructive kp-deplist__cycle");
+        alert.setAttribute("role", "alert");
+        for (const [i, name] of [...cycle, cycle[0]].entries()) {
+          if (i > 0) alert.append(" ", s2.deplistNeedsWord, " ");
+          alert.append(this.nameNode(name));
+        }
+        li.append(alert);
+        return li;
+      }
+      /** A heading row over a group of rows. @param {string} key */
+      groupHeading(key) {
+        const head = made4(this.doc, "li", "kp-deplist__group");
+        head.setAttribute("role", "presentation");
+        head.append(this.nameNode(key));
+        return head;
+      }
+      /**
+       * The rows in the order they stand: sorted by the grouped name when the list is grouped.
+       * @param {import('../deplist.js').DepRow[]} rows
+       * @param {string} group
+       */
+      groupedRows(rows, group) {
+        if (group !== "by-to" && group !== "by-from") return rows;
+        const keyOf8 = (r) => group === "by-to" ? r.item.to : r.item.from;
+        return [...rows].sort((a, b) => keyOf8(a).localeCompare(keyOf8(b)));
+      }
+    };
+  }
+});
+
+// js/deplist/controller.js
+var DependencyList;
+var init_controller31 = __esm({
+  "js/deplist/controller.js"() {
+    "use strict";
+    init_busy_card();
+    init_flash();
+    init_state_plate();
+    init_strings();
+    init_values9();
+    init_order();
+    init_core9();
+    init_rows4();
+    DependencyList = class extends DeplistRows {
+      connect() {
+        const { host, heading, body, list, foot } = this;
+        host.classList.add("kp-deplist");
+        host.setAttribute("role", "group");
+        this.own(() => host.classList.remove("kp-deplist"));
+        heading.setAttribute("aria-live", "polite");
+        list.setAttribute("role", "list");
+        body.append(list);
+        host.replaceChildren(heading, body, foot);
+        this.own(() => host.replaceChildren());
+        this.own(() => this.busy?.remove());
+        this.observe(new MutationObserver(() => this.draw())).observe(host, { attributes: true, attributeFilter: DEPLIST_OBSERVED });
+        this.draw();
+      }
+      /** The heading is the exact count, whatever is folded. @param {number} total */
+      writeHeading(total) {
+        const s2 = getStrings();
+        const template = this.host.getAttribute("data-kp-dep-heading");
+        const counting = this.state === "ready" || this.state === "empty";
+        this.heading.textContent = counting ? template ? template.replace("{n}", String(total)) : s2.deplistCount(total) : s2.deplistReading;
+      }
+      /** Clear what the last draw left and set what every state shares. @param {DeplistSettings} o */
+      resetList(o) {
+        const { host, body, list, foot } = this;
+        list.replaceChildren();
+        list.removeAttribute("aria-busy");
+        this.clearStandIns();
+        list.hidden = false;
+        if (list.parentElement !== body) body.append(list);
+        list.dataset.kpCols = o.numbers ? "numbered" : "plain";
+        host.style.setProperty("--kp-deplist-arrow", `'${o.arrow.replace(/'/g, "")}'`);
+        foot.replaceChildren();
+        host.setAttribute("data-kp-state", this.state);
+        body.style.removeProperty("min-block-size");
+        host.style.setProperty("--kp-deplist-min-rows", String(this.minRows()));
+      }
+      /** Redraw the list from its rows, its state and its attributes. */
+      draw() {
+        const o = this.settings();
+        const shown5 = this.items.filter((i) => o.self || i.from !== i.to);
+        const { rows, cycles } = orderDependencies(shown5, { numbers: o.numbers });
+        this.drawn = rows;
+        const total = rows.length + cycles.length;
+        this.writeHeading(total);
+        this.resetList(o);
+        if (this.drawState(total)) return;
+        for (const cycle of cycles) this.list.append(this.cycleRow(cycle));
+        const rowEls = this.drawRows(rows, o);
+        if (rowEls.length > o.collapse) this.foot.append(this.moreButton(rowEls.length));
+        if (this.host.hasAttribute("data-kp-dep-copy")) this.foot.append(this.copyButton(rows));
+      }
+      /**
+       * Loading, failed and empty stand in for the rows.
+       * @param {number} total
+       * @returns {boolean} whether a state was drawn, so there are no rows to draw
+       */
+      drawState(total) {
+        const s2 = getStrings();
+        const { host, body, list, doc } = this;
+        if (this.state === "loading") {
+          list.setAttribute("aria-busy", "true");
+          this.ghostRows();
+          this.setBusy(openBusyCard(body, { words: s2.deplistLoading, area: () => [body], className: "kp-deplist__busy", arrive: true }));
+          return true;
+        }
+        let plate;
+        if (this.state === "error") {
+          plate = statePlate(doc, {
+            kind: "error",
+            title: s2.deplistFailed,
+            text: this.stateMessage || s2.deplistFailedText,
+            actionLabel: s2.deplistRetry,
+            onAction: () => host.dispatchEvent(new CustomEvent(DEPLIST_RETRY_EVENT, { bubbles: true }))
+          });
+        } else if (total === 0 || this.state === "empty") {
+          plate = statePlate(doc, { kind: "empty", title: host.getAttribute("data-kp-dep-empty") ?? s2.deplistEmpty });
+        } else {
+          return false;
+        }
+        this.setPlate(plate);
+        body.prepend(plate);
+        list.hidden = true;
+        return true;
+      }
+      /**
+       * The rows, grouped when asked, folded past the limit with an exact "Show all 23".
+       * @param {import('../deplist.js').DepRow[]} rows
+       * @param {DeplistSettings} o
+       * @returns {HTMLElement[]} the row elements, hidden ones included
+       */
+      drawRows(rows, o) {
+        let current2 = null;
+        const rowEls = [];
+        for (const row of this.groupedRows(rows, o.group)) {
+          const key = o.group === "by-to" ? row.item.to : row.item.from;
+          if (o.group !== "none" && key !== current2) {
+            current2 = key;
+            this.list.append(this.groupHeading(key));
+          }
+          const li = this.rowFor(row.item, row.number, o);
+          rowEls.push(li);
+          this.list.append(li);
+        }
+        const folded2 = rowEls.length > o.collapse && !this.expanded;
+        rowEls.forEach((li, i) => li.hidden = folded2 && i >= o.collapse);
+        return rowEls;
+      }
+      /** The "Show all 23" / "Show fewer" button. @param {number} count the rows there are */
+      moreButton(count2) {
+        const s2 = getStrings();
+        const folded2 = !this.expanded;
+        const more = (
+          /** @type {HTMLButtonElement} */
+          made4(this.doc, "button", "kp-button kp-button--ghost kp-deplist__more")
+        );
+        more.type = "button";
+        more.setAttribute("aria-expanded", String(!folded2));
+        more.textContent = folded2 ? s2.deplistMore(count2) : s2.deplistFewer;
+        more.addEventListener("click", () => {
+          this.toggleExpanded();
+          this.draw();
+          this.host.querySelector(".kp-deplist__more")?.focus();
+        });
+        return more;
+      }
+      /** The button that copies the rows as text. @param {import('../deplist.js').DepRow[]} rows */
+      copyButton(rows) {
+        const s2 = getStrings();
+        const copy3 = (
+          /** @type {HTMLButtonElement} */
+          made4(this.doc, "button", "kp-button kp-button--ghost kp-deplist__copy")
+        );
+        copy3.type = "button";
+        copy3.textContent = s2.deplistCopy;
+        copy3.setAttribute("data-kp-flash-words", s2.deplistCopied);
+        copy3.addEventListener("click", () => {
+          void runFlashButton(copy3, async () => {
+            await navigator.clipboard.writeText(depText(rows.map((r) => r.item)));
+            return s2.deplistCopied;
+          });
+        });
+        return copy3;
+      }
+    };
+  }
+});
+
+// js/deplist.js
+var deplist_exports = {};
+__export(deplist_exports, {
+  DEPLIST: () => DEPLIST,
+  DEPLIST_COLLAPSE: () => DEPLIST_COLLAPSE,
+  DEPLIST_RETRY_EVENT: () => DEPLIST_RETRY_EVENT,
+  attachDeplists: () => attachDeplists,
+  depText: () => depText,
+  deplist: () => deplist,
+  orderDependencies: () => orderDependencies,
+  setDeplist: () => setDeplist
+});
+function deplist(el16) {
+  return controllerOf(el16, DependencyList)?.handle ?? null;
+}
+function attachDeplists(root = document) {
+  return attachAll(root, DEPLIST, DependencyList);
+}
+function setDeplist(el16, items) {
+  (controllerOf(el16, DependencyList) ?? attachOne(el16, DependencyList))?.handle.set(items);
+}
+var init_deplist = __esm({
+  "js/deplist.js"() {
+    "use strict";
+    init_controller();
+    init_controller31();
+    init_values9();
+    init_values9();
+    init_order();
   }
 });
 
@@ -64803,10 +64966,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el16) {
-  return HANDLES7.get(el16) ?? null;
+  return HANDLES6.get(el16) ?? null;
 }
-function attachOne6(el16) {
-  if (HANDLES7.has(el16)) return () => void 0;
+function attachOne5(el16) {
+  if (HANDLES6.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-trace");
@@ -64944,10 +65107,10 @@ function attachOne6(el16) {
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES7.set(el16, handle);
+  HANDLES6.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES7.delete(el16);
+    HANDLES6.delete(el16);
   });
   const watch2 = new MutationObserver(draw8);
   watch2.observe(el16, {
@@ -64989,14 +65152,14 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne6(el16));
+  const undo = found.map((el16) => attachOne5(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES7.has(el16)) attachOne6(el16);
-  HANDLES7.get(el16)?.set(hops);
+  if (!HANDLES6.has(el16)) attachOne5(el16);
+  HANDLES6.get(el16)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES7, made5;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES6, made5;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -65010,7 +65173,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES7 = /* @__PURE__ */ new WeakMap();
+    HANDLES6 = /* @__PURE__ */ new WeakMap();
     made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -65922,7 +66085,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -66261,7 +66424,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint9();
     init_parts8();
-    init_values9();
+    init_values10();
   }
 });
 
@@ -66271,7 +66434,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values9();
+    init_values10();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -66391,7 +66554,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values9();
+    init_values10();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -66666,7 +66829,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -66919,7 +67082,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller31();
+    init_controller32();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -67265,7 +67428,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -67570,7 +67733,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller32();
+    init_controller33();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -69187,7 +69350,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values10 = __esm({
+var init_values11 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -69326,7 +69489,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build11 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values10();
+    init_values11();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -69340,13 +69503,13 @@ var init_build11 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core9 = __esm({
+var init_core10 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build11();
-    init_values10();
+    init_values11();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -69461,12 +69624,12 @@ var init_core9 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build11();
-    init_core9();
-    init_values10();
+    init_core10();
+    init_values11();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -69691,9 +69854,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller33();
-    init_values10();
-    init_values10();
+    init_controller34();
+    init_values11();
+    init_values11();
   }
 });
 
@@ -69859,7 +70022,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -70088,7 +70251,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller34();
+    init_controller35();
     init_fields();
     init_fields();
   }
@@ -70182,7 +70345,7 @@ function nameLine(c, parent, o) {
   }
 }
 var stamp2, titleOf2;
-var init_rows4 = __esm({
+var init_rows5 = __esm({
   "js/dated-options/rows.js"() {
     "use strict";
     init_range();
@@ -70265,7 +70428,7 @@ var init_combobox_draw = __esm({
   "js/dated-options/combobox-draw.js"() {
     "use strict";
     init_combobox();
-    init_rows4();
+    init_rows5();
   }
 });
 
@@ -70377,7 +70540,7 @@ function drawRadios(c) {
 var init_radios = __esm({
   "js/dated-options/radios.js"() {
     "use strict";
-    init_rows4();
+    init_rows5();
   }
 });
 
@@ -70428,7 +70591,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -70439,7 +70602,7 @@ var init_controller35 = __esm({
     init_combobox_draw();
     init_note();
     init_radios();
-    init_rows4();
+    init_rows5();
     init_settings2();
     init_time2();
     DatedController = class extends Controller {
@@ -70679,7 +70842,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller35();
+    init_controller36();
   }
 });
 
@@ -70748,13 +70911,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES8.get(element) ?? null;
+  return HANDLES7.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES8.get(element)?.set(times, options);
+  HANDLES7.get(element)?.set(times, options);
 }
 function setRunsState(element, state12, options) {
-  HANDLES8.get(element)?.setState(state12, options);
+  HANDLES7.get(element)?.setState(state12, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -70763,7 +70926,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES8.has(el16)) continue;
+    if (HANDLES7.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq6}`;
@@ -70912,7 +71075,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state12
     };
-    HANDLES8.set(el16, handle);
+    HANDLES7.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -70933,7 +71096,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button6.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES8.delete(el16);
+      HANDLES7.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -70943,7 +71106,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES8, seq6;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES7, seq6;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -70958,7 +71121,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES8 = /* @__PURE__ */ new WeakMap();
+    HANDLES7 = /* @__PURE__ */ new WeakMap();
     seq6 = 0;
   }
 });
@@ -71284,7 +71447,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS4, SnoozePicker;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -71543,7 +71706,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller36();
+    init_controller37();
     init_choices();
   }
 });
@@ -73413,7 +73576,7 @@ function fillRow(list, row, item) {
   }
 }
 var mode, among;
-var init_rows5 = __esm({
+var init_rows6 = __esm({
   "js/claim/rows.js"() {
     "use strict";
     init_strings();
@@ -73639,7 +73802,7 @@ var init_decorate = __esm({
     init_state_plate();
     init_constants39();
     init_model8();
-    init_rows5();
+    init_rows6();
   }
 });
 
@@ -73862,7 +74025,7 @@ var init_request2 = __esm({
     init_constants39();
     init_decorate();
     init_model8();
-    init_rows5();
+    init_rows6();
   }
 });
 
@@ -74028,7 +74191,7 @@ var init_attach21 = __esm({
     init_decorate();
     init_model8();
     init_request2();
-    init_rows5();
+    init_rows6();
     init_state26();
   }
 });
@@ -76397,7 +76560,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -76501,7 +76664,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller37();
+    init_controller38();
     init_state27();
     init_state27();
     init_matrix2();
@@ -77965,7 +78128,7 @@ function collect(root, reset = false) {
   for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
-var init_rows6 = __esm({
+var init_rows7 = __esm({
   "js/logviewer/rows.js"() {
     "use strict";
     init_strings();
@@ -78121,7 +78284,7 @@ var init_refresh = __esm({
     init_constants42();
     init_model10();
     init_reads();
-    init_rows6();
+    init_rows7();
   }
 });
 
@@ -78268,7 +78431,7 @@ var init_api30 = __esm({
     init_parts9();
     init_reads();
     init_refresh();
-    init_rows6();
+    init_rows7();
   }
 });
 
@@ -78476,7 +78639,7 @@ var init_attach24 = __esm({
     init_model10();
     init_parts9();
     init_reads();
-    init_rows6();
+    init_rows7();
   }
 });
 
@@ -81520,9 +81683,6 @@ export {
   CONTENTS,
   CONTENTS_EVENT,
   DEFAULT_THEME,
-  DEPLIST,
-  DEPLIST_COLLAPSE,
-  DEPLIST_RETRY_EVENT,
   DISABLED_REASON,
   DOC_GLYPH,
   DOC_KINDS,
@@ -81798,7 +81958,6 @@ export {
   dayNames,
   dayNumber,
   decimalsOf,
-  depText,
   deplist,
   deplist_exports as deplistExports,
   diagnose,
@@ -81894,7 +82053,6 @@ export {
   openDocPreview,
   openSnoozePanel,
   openViewer,
-  orderDependencies,
   overlays_exports as overlaysExports,
   page_contents_exports as pageContentsExports,
   palette_exports as paletteExports,
