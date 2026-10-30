@@ -1,0 +1,152 @@
+/* @part: rules: links, selection, text elements, surfaces, dividers and rules */
+    /* ------------------------------------------------------------------
+   Element-level rules [L6].
+
+   Everything below styles plain HTML, not classes. A theme that leaves
+   these to the browser is not complete: the browser's own link blue
+   scores 1.99 against the dark theme's background, 2.09 against
+   cyberpunk's and 2.06 against terminal's, where 4.5 is the floor. A
+   consumer who takes this stylesheet and writes ordinary markup should
+   get a themed page, not a themed page with browser-default holes.
+   ------------------------------------------------------------------ */
+
+    /* Links [TH31]. Underlined, always: colour is never the only carrier
+   (DI4), and a link that is only a colour disappears for anyone who
+   cannot see that colour. */
+    a {
+        color: var(--link);
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    a:visited {
+        color: var(--link-visited);
+    }
+
+    a:hover {
+        text-decoration-thickness: 2px;
+    }
+
+    /* Text selection [TH31]. The primary pair, which the contrast gate
+   already holds at AA — the browser's default highlight ignores the
+   theme entirely and can land unreadably on a dark ground. */
+    ::selection {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* Ordinary text elements [TH32]. */
+    code,
+    kbd,
+    samp,
+    pre {
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    }
+
+    code,
+    kbd,
+    samp {
+        background: var(--muted);
+        color: var(--foreground);
+        padding: 0.1em 0.35em;
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+        font-size: 0.9em;
+    }
+
+    kbd {
+        border: 1px solid var(--border-strong);
+        /* A key looks pressable; a code span does not. */
+        box-shadow: 0 1px 0 var(--border-strong);
+    }
+
+    pre {
+        background: var(--muted);
+        color: var(--foreground);
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius, 0.5rem);
+        /* Long lines scroll inside the block instead of widening the page:
+       SC 1.4.10 asks for no two-dimensional scrolling of the document. */
+        overflow-x: auto;
+    }
+
+    pre code {
+        background: none;
+        padding: 0;
+    }
+
+    mark {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        padding: 0 0.15em;
+    }
+
+    /* A surface paints its own ground [TH116, AR38]. The generated hero block
+       in themes.css remaps what a component reads inside
+       [data-kp-surface='hero']; this is the rule that paints it — without it
+       the remap changes every colour but the ground, which is what the
+       critic's blocking objection to AR38 was about. The app surface paints
+       the theme's own background, so a page with both is two grounds. */
+    /* The hidden attribute wins over every display rule in the package
+       [KT13]: a layout class (`.kp-stack`, `display: flex`) beat it on the
+       compare page and a button frame beat it in the synthwave demo. The
+       rule every reset carries, and this package did not. */
+    [hidden] {
+        display: none !important;
+    }
+
+    [data-kp-surface] {
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    /* `data-kp-surface-align="center"` sets a surface's content on its
+       middle — a landing hero, an empty state — and is off unless a page
+       asks for it [Kenny, 2026-09-15]. The text centres; a narrower child (a
+       prose measure) takes auto margins, which centre it in a block surface
+       and in a flex column alike; a row keeps its full width and centres its
+       controls instead — auto margins would shrink a wrapping row to its
+       widest control in firefox and stack the buttons. A row modifier that
+       says otherwise (`.kp-row--between`) sits in a later layer and wins. */
+    [data-kp-surface][data-kp-surface-align='center'] {
+        text-align: center;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] > :not(.kp-row) {
+        margin-inline: auto;
+    }
+
+    [data-kp-surface][data-kp-surface-align='center'] .kp-row {
+        justify-content: center;
+    }
+
+    /* A divider between surfaces [S45, TH121]: the quiet answer is room —
+       one step of the spacing scale — so a section and what follows never
+       touch (the rhythm gate measured 0px under formal); a register may
+       paint a tear across it. */
+    [data-kp-divider] {
+        display: block;
+        block-size: var(--kp-space-xl);
+    }
+
+    blockquote {
+        margin-inline-start: 0;
+        padding-inline-start: 1rem;
+        border-inline-start: 3px solid var(--border-strong);
+        color: var(--muted-foreground);
+    }
+
+    /* A rule between blocks. The browser draws <hr> in its own grey — colour
+ * AND border, 128,128,128 in Chromium and Firefox alike — which the
+ * foreign-colour test found on every fixture: the one element on the page
+ * that wore no theme at all [KT8]. Both are the theme's now. */
+    hr {
+        color: inherit;
+        border: 0;
+        border-block-start: 1px solid var(--border);
+        margin-block: 1rem;
+    }
+
+    ::marker {
+        color: var(--muted-foreground);
+    }
+

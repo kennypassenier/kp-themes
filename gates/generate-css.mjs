@@ -1,8 +1,8 @@
 // The CSS source generator.
 //
-// css/components.css and the twelve css/<theme>-register.css files are
+// css/components.css, css/_rules.css and the twelve css/<theme>-register.css files are
 // GENERATED. Their source is the part files under css/components/ and
-// css/registers/<theme>/, joined in the fixed order each folder's
+// css/rules/ and css/registers/<theme>/, joined in the fixed order each folder's
 // index.json lists. Nobody edits the generated files by hand; `--check`
 // fails when one has drifted from its parts, which is also the gate that
 // refuses a hand edit.
@@ -40,9 +40,9 @@ function walk(dir) {
     return readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
 }
 
-/** The manifests, in a fixed order: components first, then the registers by theme name. */
+/** The manifests, in a fixed order: components and the base rules first, then the registers by theme name. */
 function manifestDirs() {
-    const dirs = ['css/components'];
+    const dirs = ['css/components', 'css/rules'];
     for (const e of readdirSync(join(ROOT, 'css/registers'), { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
         if (e.isDirectory()) dirs.push(`css/registers/${e.name}`);
     }

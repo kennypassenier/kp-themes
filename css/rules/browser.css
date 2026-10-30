@@ -1,0 +1,27 @@
+/* @part: rules: the browser's own hooks and form validity */
+    /* The browser's own hooks [TH34]. These are the surfaces a stylesheet
+   cannot repaint — it can only tell the browser which colours to use. */
+    :root {
+        accent-color: var(--primary);
+        caret-color: var(--foreground);
+    }
+
+    ::placeholder {
+        color: var(--muted-foreground);
+        opacity: 1; /* Firefox dims placeholders by default, on top of the colour. */
+    }
+
+    :disabled {
+        cursor: not-allowed;
+    }
+
+    /* `:user-invalid`, not `:invalid` [fix-74]: an empty required field is
+       invalid the moment the page loads, and kyu's login opened with its
+       token field already red. The user-invalid state waits until someone
+       has touched the field or tried to submit. */
+    input:user-invalid,
+    select:user-invalid,
+    textarea:user-invalid {
+        border-color: var(--destructive);
+    }
+

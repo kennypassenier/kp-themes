@@ -1,0 +1,136 @@
+/* @part: rules: one motion signature per theme */
+    /* ------------------------------------------------------------------
+   One signature per theme [HA2].
+
+   Kenny's brief: motion should give a theme extra flavour, and a formal
+   theme should be more careful with it than cyberpunk. "Less is more,
+   but not always."
+
+   So each theme gets exactly one gesture of its own, and three of them
+   answer "none" on purpose — that is a character too. Everything here
+   sits inside a reduced-motion guard, and none of it opposes its own
+   direction fast enough to approach the flash threshold; check-motion.mjs
+   measures both and reads this file.
+
+   Cyberpunk is absent: it already has a whole register of its own, which
+   is its signature.
+   ------------------------------------------------------------------ */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* formal — lifted to a register [S48, LIFT_PLAN row 16]: the rule
+       under a heading is now the register's own `rule` hook, drawn when
+       the heading scrolls into view instead of firing on every load.
+       The block that stood here animated the very same `h2::after` the
+       register uses, and an animation outranks the register's armed
+       `scaleX(0)`, so the rule painted itself drawn before it was ever
+       seen. Removed, as academia's was for the same reason. */
+
+        /* light and dark — the restrained pair. Their signature is that a
+       raised surface lifts under the cursor, which --fx-lift already
+       carries; nothing is added here. */
+
+        /* pastel — the only theme that overshoots. A badge arrives with a
+       small bounce, which its easing does for free. */
+        [data-theme='pastel'] .kp-badge {
+            animation: kp-settle var(--fx-duration) var(--fx-ease) both;
+        }
+
+        /* forest — the contour field does not move: it is a static page background
+       (see the forest texture rule above). */
+
+        /* blueprint — lifted to a register [S48, LIFT_PLAN row 6]: the
+       ruled line under a heading is now the register's own `rule` hook,
+       drawn when the heading enters the viewport. The block that stood
+       here animated the same `h2::after` the hook uses, which is how it
+       outranked formal's armed start state; removed with the lift. */
+
+        /* deco — lifted to a register [S48, LIFT_PLAN row 8]: the double
+       gold rule under a heading is now the register's own `rule` hook,
+       drawn when the heading enters the viewport. The block that stood
+       here animated the same `h2::after` the hook uses, the conflict
+       formal's lift measured; removed with the lift. */
+
+        /* academia — lifted to a register [S48, LIFT_PLAN row 10]: the
+       gesture is now the register's own headline and rule draw, gated on
+       the heading entering the viewport rather than firing on every load.
+       Two of them ran at once until this went. */
+
+        /* woodblock — lifted to a register [S48]: the hanko after a heading
+       is the register's own, and this block animated the same `h1::after`
+       the `rule` hook uses, the conflict formal's lift measured.
+       Removed with the lift. */
+
+        /* solstice — an ember: the primary colour warms and cools once when a
+       card appears. Slow, small, and never repeated. */
+        [data-theme='solstice'] [data-slot='card'] {
+            animation: kp-ember calc(var(--fx-duration) * 6) var(--fx-ease) both;
+        }
+    }
+
+    @keyframes kp-slide-in {
+        from {
+            translate: -6px 0;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-rule-in {
+        from {
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        to {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+    }
+
+    @keyframes kp-settle {
+        from {
+            transform: scale(0.92);
+        }
+
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes kp-blink {
+        0%,
+        49% {
+            opacity: 1;
+        }
+
+        50%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-drift {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 360px 360px;
+        }
+    }
+
+    @keyframes kp-ember {
+        0% {
+            box-shadow: 0 0 0 0 transparent;
+        }
+
+        40% {
+            box-shadow: 0 0 12px 0 var(--primary);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 transparent;
+        }
+    }

@@ -118,6 +118,7 @@
         { "path": "themes/**", "tags": ["@sweep", "@component:picker"], "why": "order.json, hooks.json, known-asymmetry.json: every theme at once" },
         { "path": "css/themes.css", "css": "selectors", "fallback": ["@sweep"], "why": "generated token blocks per theme; a block names its theme" },
         { "path": "css/_rules.css", "css": "selectors", "fallback": ["@sweep"] },
+        { "path": "css/rules/**", "css": "selectors", "fallback": ["@sweep"] },
         { "path": "css/_header.css", "tags": ["@sweep"] },
         { "path": "css/_density.css", "tags": ["@sweep", "@component:button", "@component:field"] },
         { "path": "css/_print.css", "tags": ["@sweep"] },

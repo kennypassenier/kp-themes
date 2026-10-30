@@ -1,0 +1,18 @@
+{
+    "output": "css/_rules.css",
+    "items": [
+        {
+            "open": "@layer kp.base {\n",
+            "files": [
+                "textures.css",
+                "typography.css",
+                "flourishes.css",
+                "page.css",
+                "elements.css",
+                "browser.css",
+                "signatures.css"
+            ],
+            "close": "}\n"
+        }
+    ]
+}

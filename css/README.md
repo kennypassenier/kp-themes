@@ -1,6 +1,7 @@
 # css/ source index
 
-Generated, never hand-edited: `css/components.css` and `css/<theme>-register.css` (twelve themes). They are built
+Generated, never hand-edited: `css/components.css`, `css/_rules.css` (the `kp.base` rules, exported as `css/rules`) and
+`css/<theme>-register.css` (twelve themes). They are built
 by `node gates/generate-css.mjs` (`npm run generate:css`) by joining part files in the order of an `index.json`
 manifest. `node gates/generate-css.mjs --check` (inside `npm run gates`) fails when a generated file differs from
 its parts, so a hand edit of a generated file is refused. Edit a part, regenerate, commit both.
@@ -24,10 +25,25 @@ its parts, so a hand edit of a generated file is refused. Edit a part, regenerat
 
 ## How the generated files are built
 
-`css/components/index.json` and `css/registers/<theme>/index.json` each list their parts in the fixed output order.
+`css/components/index.json`, `css/rules/index.json` and `css/registers/<theme>/index.json` each list their parts in the fixed output order.
 Add a part by creating the file with its `@part` header and adding it to the manifest at the right place; the
 generator refuses a part that is not listed, a listed part that is missing and a part without a header. Then run
 `npm run generate:css`.
+
+## css/rules/
+
+The base layer every page gets (`@layer kp.base`), joined into `css/_rules.css`; `gates/generate-themes.mjs` then
+concatenates that file into `css/themes.css`.
+
+| File             | Styles                                                                   |
+| ---------------- | ------------------------------------------------------------------------ |
+| `textures.css`   | the page textures every theme lays under its content                     |
+| `typography.css` | the typefaces, heading sizes and surface headlines                       |
+| `flourishes.css` | the theme flourishes                                                     |
+| `page.css`       | the page ground, the theme cross-fade, the focus ring and reduced motion |
+| `elements.css`   | links, selection, text elements, surfaces, dividers and rules            |
+| `browser.css`    | the browser's own hooks and form validity                                |
+| `signatures.css` | one motion signature per theme                                           |
 
 ## css/components/
 
