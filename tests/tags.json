@@ -427,6 +427,7 @@
         { "path": "js/nav-fold.js", "tags": ["@component:navigation"], "why": "the nav bar that folds behind More [kpadopt-nav]" },
         { "path": "js/nav-fold/*.js", "tags": ["@component:navigation"], "why": "the nav bar that folds behind More [kpadopt-nav]" },
         { "path": "js/gridlayout.js", "tags": ["@component:media"] },
+        { "path": "js/gridlayout/*.js", "tags": ["@component:media"] },
         { "path": "js/colorpicker.js", "tags": ["@component:colorpicker"] },
         { "path": "js/contrast.js", "tags": ["@component:colorpicker"] },
         { "path": "js/sidenav.js", "tags": ["@component:navigation"] },
