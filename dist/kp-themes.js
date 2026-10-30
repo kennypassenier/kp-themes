@@ -80307,8 +80307,83 @@ __export(tour_exports, {
   tourRemembered: () => tourRemembered,
   tourStepsOnPage: () => tourStepsOnPage
 });
+init_controller();
+init_strings();
+
+// js/tour/build.js
+var idSeq4 = 0;
+var nextId2 = (prefix) => `${prefix}-${idSeq4 += 1}`;
+var make31 = (doc, tag, className, text) => {
+  const el16 = doc.createElement(tag);
+  el16.className = className;
+  if (text != null) el16.textContent = text;
+  return el16;
+};
+function buildCard2(doc, strings) {
+  const card = (
+    /** @type {HTMLDialogElement} */
+    make31(doc, "dialog", "kp-tour")
+  );
+  card.dataset.kpArrive = "none";
+  const title = make31(doc, "h3", "kp-tour__title");
+  title.id = nextId2("kp-tour-title");
+  const text = make31(doc, "p", "kp-tour__text");
+  text.id = nextId2("kp-tour-text");
+  card.setAttribute("aria-labelledby", title.id);
+  card.setAttribute("aria-describedby", text.id);
+  const foot = make31(doc, "footer", "kp-tour__foot");
+  const count2 = make31(doc, "span", "kp-tour__count");
+  const buttons = make31(doc, "span", "kp-tour__buttons");
+  const back = make31(doc, "button", "kp-button kp-button--sm", strings.tourBack);
+  back.type = "button";
+  back.title = strings.tourBackTitle;
+  const skip = make31(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
+  skip.type = "button";
+  skip.title = strings.tourSkipTitle;
+  const next2 = make31(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
+  next2.type = "button";
+  buttons.append(back, skip, next2);
+  foot.append(count2, buttons);
+  card.append(title, text, foot);
+  return { card, title, text, count: count2, back, skip, next: next2 };
+}
+function fixShape(card, steps, title, text) {
+  const was = [title.textContent, text.textContent];
+  card.style.removeProperty("min-block-size");
+  let tallest = 0;
+  for (const step of steps) {
+    title.textContent = step.title;
+    text.textContent = step.text;
+    tallest = Math.max(tallest, card.getBoundingClientRect().height);
+  }
+  [title.textContent, text.textContent] = was;
+  if (tallest > 0) card.style.minBlockSize = `${Math.ceil(tallest)}px`;
+}
+
+// js/tour/run.js
 init_motion();
+
+// js/tour/memory.js
 init_remember();
+var TOUR_SLOT = "done";
+function tourMemory(name, storage2) {
+  const holder = (
+    /** @type {Element} */
+    /** @type {unknown} */
+    { getAttribute: (attr16) => attr16 === REMEMBER_ATTRIBUTE ? name : null, isConnected: false }
+  );
+  return memoryFor(holder, "tour", storage2 === void 0 ? {} : { storage: storage2 });
+}
+var tourMemoryKey = (name) => tourMemory(name)?.key(TOUR_SLOT) ?? "";
+var tourRemembered = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.read(
+  TOUR_SLOT,
+  /** @type {unknown} */
+  false
+) === true;
+var forgetTour = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.forget(TOUR_SLOT);
+
+// js/tour/core.js
+init_controller();
 init_strings();
 
 // js/update.js
@@ -80458,25 +80533,9 @@ async function update(el16, next2) {
   return new Promise((resolve) => enqueue({ el: el16, host, spark, resolve }));
 }
 
-// js/tour.js
+// js/tour/place.js
 var TOUR_GUTTER = 16;
 var TOUR_GAP = 12;
-var TOUR_SLOT = "done";
-function tourMemory(name, storage2) {
-  const holder = (
-    /** @type {Element} */
-    /** @type {unknown} */
-    { getAttribute: (attr16) => attr16 === REMEMBER_ATTRIBUTE ? name : null, isConnected: false }
-  );
-  return memoryFor(holder, "tour", storage2 === void 0 ? {} : { storage: storage2 });
-}
-var tourMemoryKey = (name) => tourMemory(name)?.key(TOUR_SLOT) ?? "";
-var tourRemembered = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.read(
-  TOUR_SLOT,
-  /** @type {unknown} */
-  false
-) === true;
-var forgetTour = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.forget(TOUR_SLOT);
 function shouldStartTour({ search = "", remembered = false, automated = false }) {
   const asked = new URLSearchParams(search).get("tour");
   if (asked != null) return Math.max(0, (Number.parseInt(asked, 10) || 1) - 1);
@@ -80500,232 +80559,271 @@ function resolveTarget(step, doc) {
     [...doc.querySelectorAll(step.target)].find((el16) => isShown2(el16)) ?? null
   );
 }
-var idSeq4 = 0;
-var nextId2 = (prefix) => `${prefix}-${idSeq4 += 1}`;
-var make31 = (doc, tag, className, text) => {
-  const el16 = doc.createElement(tag);
-  el16.className = className;
-  if (text != null) el16.textContent = text;
-  return el16;
-};
-var endRunning = null;
-function fixShape(card, steps, title, text) {
-  const was = [title.textContent, text.textContent];
-  card.style.removeProperty("min-block-size");
-  let tallest = 0;
-  for (const step of steps) {
-    title.textContent = step.title;
-    text.textContent = step.text;
-    tallest = Math.max(tallest, card.getBoundingClientRect().height);
+
+// js/tour/core.js
+var STEP_MARK_FALLBACK_MS = 1200;
+var TourCore = class extends Controller {
+  /**
+   * @param {HTMLElement} host the tour's card (a dialog); the controller's host
+   * @param {TourRunOptions} options
+   */
+  constructor(host, options) {
+    super(host, options);
+    this.card = /** @type {HTMLDialogElement} */
+    host;
+    this.doc = host.ownerDocument;
+    this.view = /** @type {Window} */
+    this.doc.defaultView;
+    this.strings = resolveStrings(options.strings);
+    this.ui = options.ui;
+    this.remember = options.remember;
+    this.decorate = options.decorate;
+    this.onEnd = options.onEnd;
+    this.live = options.live;
+    this.back = /** @type {HTMLElement | null} */
+    options.returnFocus ?? (this.doc.activeElement instanceof HTMLElement ? this.doc.activeElement : null);
+    this.index = Math.min(Math.max(0, options.start), this.live.length - 1);
+    this.target = null;
+    this.unmarkStep = () => {
+    };
   }
-  [title.textContent, text.textContent] = was;
-  if (tallest > 0) card.style.minBlockSize = `${Math.ceil(tallest)}px`;
-}
-function startTour(steps, { start = 0, remember: remember3, decorate: decorate2, returnFocus, onEnd, strings: own } = {}) {
-  endRunning?.();
-  const doc = document;
-  const view = (
-    /** @type {Window} */
-    doc.defaultView
-  );
-  const strings = resolveStrings(own);
-  let live4 = tourStepsOnPage(steps, (s2) => resolveTarget(s2, doc));
-  if (!live4.length) return null;
-  const back = (
-    /** @type {HTMLElement | null} */
-    returnFocus ?? (doc.activeElement instanceof HTMLElement ? doc.activeElement : null)
-  );
-  let index = Math.min(Math.max(0, start), live4.length - 1);
-  let target = null;
-  const card = (
-    /** @type {HTMLDialogElement} */
-    make31(doc, "dialog", "kp-tour")
-  );
-  card.dataset.kpArrive = "none";
-  const title = make31(doc, "h3", "kp-tour__title");
-  title.id = nextId2("kp-tour-title");
-  const text = make31(doc, "p", "kp-tour__text");
-  text.id = nextId2("kp-tour-text");
-  card.setAttribute("aria-labelledby", title.id);
-  card.setAttribute("aria-describedby", text.id);
-  const foot = make31(doc, "footer", "kp-tour__foot");
-  const count2 = make31(doc, "span", "kp-tour__count");
-  const buttons = make31(doc, "span", "kp-tour__buttons");
-  const backButton = make31(doc, "button", "kp-button kp-button--sm", strings.tourBack);
-  backButton.type = "button";
-  backButton.title = strings.tourBackTitle;
-  const skipButton = make31(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
-  skipButton.type = "button";
-  skipButton.title = strings.tourSkipTitle;
-  const nextButton = make31(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
-  nextButton.type = "button";
-  buttons.append(backButton, skipButton, nextButton);
-  foot.append(count2, buttons);
-  card.append(title, text, foot);
-  decorate2?.(nextButton, { kind: "tour-next", host: card });
-  decorate2?.(backButton, { kind: "tour-back", host: card });
-  decorate2?.(skipButton, { kind: "tour-skip", host: card });
-  const unmark = () => {
-    if (!target) return;
-    target.removeAttribute("data-kp-tour-target");
-    target = null;
-  };
-  const mark = (el16) => {
-    unmark();
-    target = el16;
+  /** Ends the tour; the running tour overrides it. @param {boolean} _finished */
+  finish(_finished) {
+  }
+  unmark() {
+    if (!this.target) return;
+    this.target.removeAttribute("data-kp-tour-target");
+    this.target = null;
+  }
+  /** @param {HTMLElement} el */
+  mark(el16) {
+    this.unmark();
+    this.target = el16;
     el16.setAttribute("data-kp-tour-target", "");
-  };
-  const place3 = () => {
-    if (!target || !card.open) return;
-    if (!isShown2(target)) {
-      const again2 = resolveTarget(live4[index], doc);
-      if (again2) mark(again2);
-      else {
-        live4 = live4.filter((_, i) => i !== index);
-        if (!live4.length) {
-          finish2(false);
-          return;
-        }
-        show(Math.min(index, live4.length - 1), false);
-        return;
-      }
+  }
+  /** A target replaced or hidden by a live update: find it again, or leave its step out. @returns {boolean} whether the step has a target again */
+  refind() {
+    const again2 = resolveTarget(
+      /** @type {TourStep} */
+      this.live[this.index],
+      this.doc
+    );
+    if (again2) {
+      this.mark(again2);
+      return true;
     }
+    this.skipMissing(false);
+    return false;
+  }
+  /** Leave the current step out, and end the tour when none is left. @param {boolean} scroll */
+  skipMissing(scroll) {
+    this.live = this.live.filter((_, i) => i !== this.index);
+    if (!this.live.length) {
+      this.finish(false);
+      return;
+    }
+    this.show(Math.min(this.index, this.live.length - 1), scroll);
+  }
+  /** Put the card beside its target. */
+  place() {
+    const card = this.card;
+    if (!this.target || !card.open) return;
+    if (!isShown2(this.target) && !this.refind()) return;
     const at = tourCardPlace(
       /** @type {HTMLElement} */
-      target.getBoundingClientRect(),
+      this.target.getBoundingClientRect(),
       card.getBoundingClientRect(),
       {
-        width: view.innerWidth,
-        height: view.innerHeight
+        width: this.view.innerWidth,
+        height: this.view.innerHeight
       }
     );
     card.style.left = `${at.left}px`;
     card.style.top = `${at.top}px`;
-  };
-  let unmarkStep = () => {
-  };
-  const markStep = () => {
-    unmarkStep();
-    const view2 = doc.defaultView;
-    if (!view2) return;
-    const idea = updateIdea(view2.getComputedStyle(card).getPropertyValue("--kp-update"));
+  }
+  /**
+   * The card changes in place on a step after the first: it carries the
+   * theme's update moment (js/update.js, `[data-kp-updating]` with the
+   * idea the register's `--kp-update` names), so the next step reads as
+   * news the way any value updated in place does.
+   */
+  markStep() {
+    this.unmarkStep();
+    const card = this.card;
+    const view = this.doc.defaultView;
+    if (!view) return;
+    const idea = updateIdea(view.getComputedStyle(card).getPropertyValue("--kp-update"));
     if (!updatePlays(idea)) return;
     const timing = updateTiming(card);
-    void view2.getComputedStyle(card).animationName;
+    void view.getComputedStyle(card).animationName;
     const before = markUpdating(card, idea, timing);
-    const done = view2.setTimeout(() => unmarkStep(), timing.duration || 1200);
-    unmarkStep = () => {
-      view2.clearTimeout(done);
+    const done = view.setTimeout(() => this.unmarkStep(), timing.duration || STEP_MARK_FALLBACK_MS);
+    this.unmarkStep = () => {
+      view.clearTimeout(done);
       unmarkUpdating(card, before);
-      unmarkStep = () => {
+      this.unmarkStep = () => {
       };
     };
-  };
-  const show = (i, scroll = true) => {
-    const stepping = card.open;
-    index = i;
-    const step = live4[index];
-    const el16 = resolveTarget(step, doc);
-    if (!el16) {
-      live4 = live4.filter((_, k) => k !== index);
-      if (!live4.length) {
-        finish2(false);
-        return;
-      }
-      show(Math.min(index, live4.length - 1), scroll);
-      return;
-    }
-    mark(el16);
-    const host = el16.closest("dialog[open]") ?? doc.body;
+  }
+  /** The card goes where the target is: into an open modal dialog when the target is in one, or it would sit behind it, inert. @param {HTMLElement} el */
+  seat(el16) {
+    const card = this.card;
+    const host = el16.closest("dialog[open]") ?? this.doc.body;
     if (card.parentElement !== host) {
       if (card.open) card.close();
       host.append(card);
     }
     if (!card.open) card.show();
-    if (!stepping) fixShape(card, live4, title, text);
+  }
+  /** The words, the count and the buttons of a step. @param {TourStep} step @param {boolean} stepping */
+  writeStep(step, stepping) {
+    const { title, text, count: count2, back, next: next2 } = this.ui;
     title.textContent = step.title;
     text.textContent = step.text;
     if (stepping) {
-      card.setAttribute("data-kp-tour-stepping", "");
-      markStep();
+      this.card.setAttribute("data-kp-tour-stepping", "");
+      this.markStep();
     }
-    count2.textContent = strings.tourCount(index + 1, live4.length);
-    backButton.hidden = index === 0;
-    const last = index === live4.length - 1;
-    nextButton.textContent = last ? strings.tourDone : strings.tourNext;
-    nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
-    if (scroll) {
-      const rect = el16.getBoundingClientRect();
-      const inView = rect.top >= 0 && rect.bottom <= (view.innerHeight || doc.documentElement.clientHeight) && rect.left >= 0 && rect.right <= (view.innerWidth || doc.documentElement.clientWidth);
-      if (!inView) {
-        el16.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+    count2.textContent = this.strings.tourCount(this.index + 1, this.live.length);
+    back.hidden = this.index === 0;
+    const last = this.index === this.live.length - 1;
+    next2.textContent = last ? this.strings.tourDone : this.strings.tourNext;
+    next2.title = last ? this.strings.tourDoneTitle : this.strings.tourNextTitle;
+  }
+  /** Scroll the target into view unless it is already all in the window. @param {HTMLElement} el */
+  scrollInto(el16) {
+    const { view, doc } = this;
+    const rect = el16.getBoundingClientRect();
+    const inView = rect.top >= 0 && rect.bottom <= (view.innerHeight || doc.documentElement.clientHeight) && rect.left >= 0 && rect.right <= (view.innerWidth || doc.documentElement.clientWidth);
+    if (!inView) el16.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+  }
+  /** Show a step: mark its target, seat the card, write the words, scroll and place. @param {number} i @param {boolean} [scroll] */
+  show(i, scroll = true) {
+    const card = this.card;
+    const stepping = card.open;
+    this.index = i;
+    const step = (
+      /** @type {TourStep} */
+      this.live[this.index]
+    );
+    const el16 = resolveTarget(step, this.doc);
+    if (!el16) {
+      this.skipMissing(scroll);
+      return;
+    }
+    this.mark(el16);
+    this.seat(el16);
+    if (!stepping) fixShape(card, this.live, this.ui.title, this.ui.text);
+    this.writeStep(step, stepping);
+    if (scroll) this.scrollInto(el16);
+    this.place();
+    this.ui.next.focus({ preventScroll: true });
+  }
+};
+
+// js/tour/run.js
+var endRunning = null;
+var TourRun = class extends TourCore {
+  /**
+   * @param {HTMLElement} host the tour's card
+   * @param {import('./core.js').TourRunOptions} options
+   */
+  constructor(host, options) {
+    super(host, options);
+    this.ended = false;
+    this.frame = 0;
+  }
+  connect() {
+    const { ui, view, doc, decorate: decorate2 } = this;
+    decorate2?.(ui.next, { kind: "tour-next", host: ui.card });
+    decorate2?.(ui.back, { kind: "tour-back", host: ui.card });
+    decorate2?.(ui.skip, { kind: "tour-skip", host: ui.card });
+    this.listen(ui.next, "click", () => this.index >= this.live.length - 1 ? this.finish(true) : this.show(this.index + 1));
+    this.listen(ui.back, "click", () => this.index > 0 && this.show(this.index - 1));
+    this.listen(ui.skip, "click", () => this.finish(false));
+    this.listen(view, "keydown", (event) => this.onKey(
+      /** @type {KeyboardEvent} */
+      event
+    ), true);
+    this.listen(view, "resize", () => this.onMove());
+    this.listen(doc, "scroll", () => this.onMove(), true);
+    endRunning = () => this.finish(false);
+    this.show(this.index);
+  }
+  /** What startTour hands back: end it, or go to a step. @returns {import('../tour.js').TourHandle} */
+  handle() {
+    return {
+      end: () => this.finish(false),
+      goto: (i) => {
+        if (!this.ended) this.show(Math.min(Math.max(0, i), this.live.length - 1));
       }
-    }
-    place3();
-    nextButton.focus({ preventScroll: true });
-  };
-  let ended = false;
-  const finish2 = (finished) => {
-    if (ended) return;
-    ended = true;
-    unmarkStep();
+    };
+  }
+  /** End the running tour, if there is one. */
+  static endRunning() {
+    endRunning?.();
+  }
+  /** @param {boolean} finished */
+  finish(finished) {
+    if (this.ended) return;
+    this.ended = true;
+    this.unmarkStep();
+    const card = this.card;
     card.inert = true;
     card.removeAttribute("data-kp-tour-stepping");
-    void playEntranceBackwards(card).then(() => {
-      unmark();
-      if (card.open) card.close();
-      card.remove();
-      stopReversing(card);
-      if (back?.isConnected) back.focus();
-    });
-    view.removeEventListener("keydown", onKey5, true);
-    view.removeEventListener("resize", onMove2);
-    doc.removeEventListener("scroll", onMove2, true);
+    void playEntranceBackwards(card).then(() => this.leave(card));
+    this.destroy();
     endRunning = null;
-    if (remember3) tourMemory(remember3)?.write(TOUR_SLOT, true);
-    onEnd?.(finished);
-  };
-  let frame3 = 0;
-  const onMove2 = () => {
-    if (frame3) return;
-    frame3 = view.requestAnimationFrame(() => {
-      frame3 = 0;
-      place3();
+    if (this.remember) tourMemory(this.remember)?.write(TOUR_SLOT, true);
+    this.onEnd?.(finished);
+  }
+  /** The card has played out: the mark goes, the card is closed and taken off, and the focus returns. @param {HTMLDialogElement} card */
+  leave(card) {
+    this.unmark();
+    if (card.open) card.close();
+    card.remove();
+    stopReversing(card);
+    if (this.back?.isConnected) this.back.focus();
+  }
+  /** Place the card on the next frame, once however many moves come. */
+  onMove() {
+    if (this.frame) return;
+    this.frame = this.view.requestAnimationFrame(() => {
+      this.frame = 0;
+      this.place();
     });
-  };
-  const onKey5 = (event) => {
+  }
+  /** @param {KeyboardEvent} event */
+  onKey(event) {
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
-      finish2(false);
+      this.finish(false);
       return;
     }
-    if (!card.contains(
+    if (!this.host.contains(
       /** @type {Node} */
       event.target
     )) return;
     if (event.key === "ArrowRight") {
       event.preventDefault();
-      nextButton.click();
-    } else if (event.key === "ArrowLeft" && index > 0) {
+      this.ui.next.click();
+    } else if (event.key === "ArrowLeft" && this.index > 0) {
       event.preventDefault();
-      backButton.click();
+      this.ui.back.click();
     }
-  };
-  nextButton.addEventListener("click", () => index >= live4.length - 1 ? finish2(true) : show(index + 1));
-  backButton.addEventListener("click", () => index > 0 && show(index - 1));
-  skipButton.addEventListener("click", () => finish2(false));
-  view.addEventListener("keydown", onKey5, true);
-  view.addEventListener("resize", onMove2);
-  doc.addEventListener("scroll", onMove2, true);
-  endRunning = () => finish2(false);
-  show(index);
-  return {
-    end: () => finish2(false),
-    goto: (i) => {
-      if (!ended) show(Math.min(Math.max(0, i), live4.length - 1));
-    }
-  };
+  }
+};
+
+// js/tour.js
+function startTour(steps, { start = 0, remember: remember3, decorate: decorate2, returnFocus, onEnd, strings: own } = {}) {
+  TourRun.endRunning();
+  const doc = document;
+  const live4 = tourStepsOnPage(steps, (s2) => resolveTarget(s2, doc));
+  if (!live4.length) return null;
+  const ui = buildCard2(doc, resolveStrings(own));
+  const run = attachOne(ui.card, TourRun, { live: live4, start, ui, returnFocus, strings: own, remember: remember3, decorate: decorate2, onEnd });
+  return run?.handle() ?? null;
 }
 
 // kp-themes-entry.js
@@ -80984,8 +81082,6 @@ export {
   TOOLBAR,
   TOOLBAR_CLEAR_EVENT,
   TOOLBAR_REMOVE_EVENT,
-  TOUR_GAP,
-  TOUR_GUTTER,
   TRACE,
   TRACE_RETRY_EVENT,
   TRACE_RULE_EVENT,
@@ -81193,7 +81289,6 @@ export {
   focus_steps_exports as focusStepsExports,
   foldNav,
   footprint_exports as footprintExports,
-  forgetTour,
   formatHsl,
   formatQuantity,
   forms_exports as formsExports,
@@ -81392,7 +81487,6 @@ export {
   shareText,
   shortcutClaims,
   shortcuts_exports as shortcutsExports,
-  shouldStartTour,
   showAlarm,
   sidenav_exports as sidenavExports,
   slider,
@@ -81439,11 +81533,7 @@ export {
   tokenColour,
   toolbar_exports as toolbarExports,
   toolbarSearch,
-  tourCardPlace,
   tour_exports as tourExports,
-  tourMemoryKey,
-  tourRemembered,
-  tourStepsOnPage,
   trace,
   traceStates,
   traceSummary,

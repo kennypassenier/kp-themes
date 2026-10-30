@@ -207,6 +207,7 @@
         { "path": "js/menu-button.js", "tags": ["@component:overlays"], "why": "the menu button with its rich menu [scope-143]" },
         { "path": "js/menu-button/*.js", "tags": ["@component:overlays"], "why": "the menu button with its rich menu [scope-143]" },
         { "path": "js/tour.js", "tags": ["@component:overlays"], "why": "the guided tour and its memory [scope-143]" },
+        { "path": "js/tour/*.js", "tags": ["@component:overlays"], "why": "the guided tour and its memory [scope-143]" },
         { "path": "js/week.js", "tags": ["@component:data"], "why": "the week agenda [kpadopt-time]" },
         { "path": "js/week/*.js", "tags": ["@component:data"], "why": "the week agenda [kpadopt-time]" },
         { "path": "js/gantt.js", "tags": ["@component:data"], "why": "the run timeline [kpadopt-time]" },
