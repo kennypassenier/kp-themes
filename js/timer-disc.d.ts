@@ -1,12 +1,5 @@
-/** A visual timer. */
-export declare const TIMER_DISC = "[data-kp-timer-disc], [data-kp-timer-disc-until]";
-/** The custom property the disc is drawn by: 1 full, 0 gone. */
-export declare const TIMER_DISC_LEFT = "--kp-timer-disc-left";
-/**
- * The share of the disc left: the time left over the face's scale.
- * @param {number} remainingMs @param {number} scaleMs the face's whole turn
- */
-export declare function discShare(remainingMs: number, scaleMs: number): number;
+export { TIMER_DISC, TIMER_DISC_LEFT } from './timer-disc/values.js';
+export { discShare } from './timer-disc/share.js';
 /** The clock of an attached visual timer, to drive it from a script. @param {Element} el */
 export declare const timerDiscOf: (el: Element) => import("./countdown/constants.js").CountdownClock | null;
 /**
@@ -16,7 +9,7 @@ export declare const timerDiscOf: (el: Element) => import("./countdown/constants
  *   date and time (Date.now), which an `until` option is counted against
  * @returns {() => void} detach
  */
-export declare function attachTimerDiscs(root?: ParentNode, { now, wall }?: {
+export declare function attachTimerDiscs(root?: ParentNode, options?: {
     now?: () => number;
     wall?: () => number;
 }): () => void;

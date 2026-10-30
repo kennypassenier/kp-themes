@@ -115,7 +115,7 @@
         "js/tick.js": { "digest": "127ccd885a791759", "when": "[data-kp-tick]" },
         "js/tiles.js": { "digest": "8318ace37b833416", "when": "[data-kp-tiles-set]" },
         "js/timefield.js": { "digest": "a59b8c1d42b14163", "when": "[data-kp-time]" },
-        "js/timer-disc.js": { "digest": "8e809a08eaf3cfde", "when": "[data-kp-timer-disc], [data-kp-timer-disc-until]" },
+        "js/timer-disc.js": { "digest": "7e7cf5f976812b90", "when": "[data-kp-timer-disc], [data-kp-timer-disc-until]" },
         "js/timer.js": { "digest": "6ac699d7c93858cf", "when": "[data-kp-timers], [data-kp-timer-start]" },
         "js/toggle.js": { "digest": "51e547f7c4a417b9", "when": "[data-kp-toggle]" },
         "js/toolbar.js": { "digest": "003f88eb5b82ec8c", "when": "[data-kp-toolbar]" },

@@ -24095,9 +24095,9 @@ function stateNote(doc, spec, failed, height) {
     retry.setAttribute("data-kp-passkeys-retry", "");
     note2.append(retry);
   } else if (!failed && spec.register !== false) {
-    const register2 = noteButton(doc, "kp-button--primary ", strings.passkeysRegister);
-    register2.setAttribute("data-kp-passkeys-register", "");
-    note2.append(register2);
+    const register = noteButton(doc, "kp-button--primary ", strings.passkeysRegister);
+    register.setAttribute("data-kp-passkeys-register", "");
+    note2.append(register);
   }
   return note2;
 }
@@ -55324,6 +55324,373 @@ var init_command = __esm({
   }
 });
 
+// js/timer-disc/values.js
+var TIMER_DISC, TIMER_DISC_LEFT, WATCHED_OPTIONS, RESTARTING_OPTIONS, MINUTE_MS2, SECOND_MS4, TENTHS_OF_A_TURN, MIN_FILL_MS, DEFAULT_FILL_S, FALLBACK_FILL_MS;
+var init_values15 = __esm({
+  "js/timer-disc/values.js"() {
+    "use strict";
+    TIMER_DISC = "[data-kp-timer-disc], [data-kp-timer-disc-until]";
+    TIMER_DISC_LEFT = "--kp-timer-disc-left";
+    WATCHED_OPTIONS = [
+      "data-kp-timer-disc",
+      "data-kp-timer-disc-until",
+      "data-kp-timer-disc-timezone",
+      "data-kp-timer-disc-name",
+      "data-kp-timer-disc-scale",
+      "data-kp-timer-disc-controls",
+      "data-kp-timer-disc-disabled"
+    ];
+    RESTARTING_OPTIONS = ["data-kp-timer-disc", "data-kp-timer-disc-until", "data-kp-timer-disc-timezone"];
+    MINUTE_MS2 = 6e4;
+    SECOND_MS4 = 1e3;
+    TENTHS_OF_A_TURN = 3600;
+    MIN_FILL_MS = 240;
+    DEFAULT_FILL_S = 0.2;
+    FALLBACK_FILL_MS = 200;
+  }
+});
+
+// js/timer-disc/register.js
+function registerDiscProperty() {
+  if (registered || typeof CSS === "undefined" || typeof CSS.registerProperty !== "function") return;
+  registered = true;
+  try {
+    CSS.registerProperty({ name: TIMER_DISC_LEFT, syntax: "<number>", inherits: true, initialValue: "1" });
+  } catch {
+  }
+}
+var registered, isDiscPropertyRegistered;
+var init_register2 = __esm({
+  "js/timer-disc/register.js"() {
+    "use strict";
+    init_values15();
+    registered = false;
+    isDiscPropertyRegistered = () => registered;
+  }
+});
+
+// js/timer-disc/core.js
+var DiscCore;
+var init_core11 = __esm({
+  "js/timer-disc/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_calm();
+    init_countdown2();
+    DiscCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ now?: () => number, wall?: () => number }} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.s = getStrings();
+        this.doc = host.ownerDocument;
+        this.view = this.doc.defaultView ?? window;
+        this.wallNow = options.wall ?? (() => Date.now());
+        this.seconds = 0;
+        this.scaleSeconds = 0;
+        this.name = "";
+        this.disabled = false;
+        this.bare = false;
+        this.until = null;
+        this.read();
+        this.parts = this.buildParts();
+      }
+      /** The options, read again when an attribute changes. */
+      read() {
+        const el16 = this.host;
+        const at = this.wallNow();
+        this.until = parseUntil(el16.dataset.kpTimerDiscUntil, at, timerZone(el16, "data-kp-timer-disc-timezone"));
+        this.seconds = this.until !== null ? Math.max(0, Math.ceil((this.until - at) / 1e3)) : parseDuration(el16.dataset.kpTimerDisc);
+        this.scaleSeconds = parseDuration(el16.dataset.kpTimerDiscScale ? `${el16.dataset.kpTimerDiscScale}m` : "") || 0;
+        this.name = el16.dataset.kpTimerDiscName ?? "";
+        this.disabled = el16.hasAttribute("data-kp-timer-disc-disabled");
+        this.bare = this.until !== null || el16.dataset.kpTimerDiscControls === "none";
+      }
+      /** Whether motion is off, so the edge steps instead of gliding. */
+      still() {
+        return !motionAllowed(this.doc);
+      }
+      /** The face with its sector, marks and hub, the caption, the status line and the spoken status. */
+      buildParts() {
+        const { doc } = this;
+        const face = doc.createElement("div");
+        face.className = "kp-timer-disc__face";
+        face.setAttribute("role", "img");
+        const sector = doc.createElement("span");
+        sector.className = "kp-timer-disc__sector";
+        const marks = doc.createElement("span");
+        marks.className = "kp-timer-disc__marks";
+        const hub = doc.createElement("span");
+        hub.className = "kp-timer-disc__hub";
+        for (const part7 of [sector, marks, hub]) part7.setAttribute("aria-hidden", "true");
+        face.append(sector, marks, hub);
+        const caption = doc.createElement("p");
+        caption.className = "kp-timer-disc__caption";
+        const line = doc.createElement("p");
+        line.className = "kp-timer-disc__status";
+        const said = doc.createElement("span");
+        said.className = "kp-sr-only";
+        said.setAttribute("role", "status");
+        return { face, caption, line, said };
+      }
+    };
+  }
+});
+
+// js/timer-disc/share.js
+function discShare(remainingMs, scaleMs) {
+  if (scaleMs <= 0) return 0;
+  return Math.min(1, Math.max(0, remainingMs / scaleMs));
+}
+var init_share = __esm({
+  "js/timer-disc/share.js"() {
+    "use strict";
+  }
+});
+
+// js/timer-disc/draw.js
+var DiscDraw;
+var init_draw10 = __esm({
+  "js/timer-disc/draw.js"() {
+    "use strict";
+    init_components();
+    init_countdown2();
+    init_core11();
+    init_share();
+    init_values15();
+    DiscDraw = class extends DiscCore {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ now?: () => number, wall?: () => number }} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.drawn = -1;
+        this.frame = 0;
+        this.minute = -1;
+        this.go = null;
+        this.reset = null;
+        this.controls = null;
+        this.clock = countdownClock({
+          seconds: this.seconds,
+          now: options.now,
+          onChange: (state12) => this.onClockChange(state12),
+          onEnd: () => this.onClockEnd()
+        });
+      }
+      scaleMs() {
+        return this.scaleSeconds > 0 ? this.scaleSeconds * SECOND_MS4 : this.clock.total();
+      }
+      /** @param {boolean} [force] */
+      draw(force = false) {
+        const ms = this.clock.remaining();
+        let share = discShare(ms, this.scaleMs());
+        if (this.still() && this.clock.state() === "running") {
+          const unit2 = ms > MINUTE_MS2 ? MINUTE_MS2 : SECOND_MS4;
+          share = discShare(Math.ceil(ms / unit2) * unit2, this.scaleMs());
+        }
+        if (!force && Math.abs(share - this.drawn) * TENTHS_OF_A_TURN < 1) return;
+        this.drawn = share;
+        this.host.style.setProperty(TIMER_DISC_LEFT, share.toFixed(5));
+      }
+      /** The face says the time left in whole minutes (under a minute at the last), so a screen reader is not told every second. */
+      label() {
+        const { s: s2, clock: clock4 } = this;
+        const ms = clock4.remaining();
+        const minutes = Math.ceil(ms / MINUTE_MS2);
+        const left = ms <= 0 ? "" : minutes > 1 ? s2.timerDuration(minutes * 60) : s2.timerUnderMinute;
+        this.parts.face.setAttribute("aria-label", ms <= 0 ? s2.timerEnded : s2.timerDiscLeft(left, s2.timerDuration(Math.round(clock4.total() / SECOND_MS4))));
+      }
+      captionText() {
+        const { s: s2, host, until, clock: clock4 } = this;
+        const length = until !== null ? s2.timerUntil(untilLabel(until, this.wallNow(), untilZone(host.dataset.kpTimerDiscUntil, timerZone(host, "data-kp-timer-disc-timezone")))) : s2.timerDuration(Math.round(clock4.total() / SECOND_MS4));
+        return this.name ? s2.timerDiscCaption(this.name, length) : length;
+      }
+      show() {
+        const { s: s2, clock: clock4, go, reset } = this;
+        const state12 = clock4.state();
+        this.host.dataset.kpTimerDiscState = state12;
+        if (go) {
+          setStateWord(go.label, state12 === "running" ? s2.timerPause : state12 === "paused" ? s2.timerResume : s2.timerStart);
+          go.button.disabled = this.disabled || state12 === "ended";
+        }
+        if (reset) reset.button.disabled = this.disabled || state12 === "idle" && clock4.total() === this.seconds * SECOND_MS4;
+        this.parts.caption.textContent = this.captionText();
+        this.parts.line.textContent = state12 === "paused" ? s2.timerPaused : state12 === "ended" ? s2.timerEnded : "";
+        this.label();
+      }
+      loop() {
+        cancelAnimationFrame(this.frame);
+        if (this.clock.state() !== "running") return;
+        this.draw();
+        const m = Math.ceil(this.clock.remaining() / MINUTE_MS2);
+        if (m !== this.minute) {
+          this.minute = m;
+          this.label();
+        }
+        this.frame = requestAnimationFrame(() => this.loop());
+      }
+      /** @param {string} state */
+      onClockChange(state12) {
+        if (state12 === "ended") return;
+        this.draw(true);
+        this.show();
+        if (state12 === "running") this.loop();
+        this.host.dispatchEvent(
+          new CustomEvent(COUNTDOWN_EVENT, { bubbles: true, detail: { state: state12, remaining: this.clock.remaining(), total: this.clock.total() } })
+        );
+      }
+      onClockEnd() {
+        this.draw(true);
+        this.show();
+        this.parts.said.textContent = this.name ? this.s.timerEndedNamed(this.name) : this.s.timerEnded;
+        this.host.dispatchEvent(new CustomEvent(COUNTDOWN_END_EVENT, { bubbles: true, detail: { total: this.clock.total() } }));
+      }
+      /**
+       * The controls are built when the disc has them and left out of the document (and the tab order) when it has none.
+       * @param {() => void} onGo @param {() => void} onReset
+       */
+      mountControls(onGo, onReset) {
+        const { host, doc, s: s2 } = this;
+        if (this.bare) {
+          this.controls?.remove();
+          this.controls = this.go = this.reset = null;
+          host.toggleAttribute("data-kp-timer-disc-bare", true);
+          return;
+        }
+        host.removeAttribute("data-kp-timer-disc-bare");
+        if (this.controls) return;
+        const controls = doc.createElement("div");
+        controls.className = "kp-timer-disc__controls";
+        const go = timerButton(doc, "kp-button--primary kp-timer-disc__go", [s2.timerStart, s2.timerPause, s2.timerResume]);
+        const reset = timerButton(doc, "kp-button--ghost kp-timer-disc__reset", [s2.timerReset]);
+        controls.append(go.button, reset.button);
+        this.listen(go.button, "click", onGo);
+        this.listen(reset.button, "click", onReset);
+        host.insertBefore(controls, this.parts.said);
+        this.controls = controls;
+        this.go = go;
+        this.reset = reset;
+      }
+    };
+  }
+});
+
+// js/timer-disc/controller.js
+var TimerDisc;
+var init_controller28 = __esm({
+  "js/timer-disc/controller.js"() {
+    "use strict";
+    init_live_options();
+    init_draw10();
+    init_register2();
+    init_values15();
+    TimerDisc = class extends DiscDraw {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ now?: () => number, wall?: () => number }} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.filling = null;
+      }
+      connect() {
+        const el16 = this.host;
+        const { face, caption, line, said } = this.parts;
+        el16.classList.add("kp-timer-disc");
+        el16.replaceChildren(face, caption, line, said);
+        this.own(() => {
+          el16.replaceChildren();
+          el16.removeAttribute("data-kp-timer-disc-bare");
+          el16.style.removeProperty(TIMER_DISC_LEFT);
+          delete el16.dataset.kpTimerDiscState;
+        });
+        this.own(() => this.clock.stop());
+        this.own(() => this.filling?.cancel());
+        this.own(() => cancelAnimationFrame(this.frame));
+        this.mount();
+        this.draw(true);
+        this.show();
+        this.startUntil();
+        this.listen(this.doc, "visibilitychange", () => this.onVisible());
+        this.own(watchOptions(el16, WATCHED_OPTIONS, (names) => this.onOptions(names)));
+      }
+      mount() {
+        this.mountControls(
+          () => this.onGo(),
+          () => this.onReset()
+        );
+      }
+      /** Counting down to a moment starts at once; the clock then runs to it whatever the page does. */
+      startUntil() {
+        if (this.until !== null && this.seconds > 0) this.clock.start();
+      }
+      onGo() {
+        const { clock: clock4, s: s2 } = this;
+        const state12 = clock4.state();
+        this.filling?.finish();
+        if (state12 === "running") {
+          clock4.pause();
+          this.parts.said.textContent = s2.timerPaused;
+        } else {
+          clock4.start();
+          this.parts.said.textContent = state12 === "paused" ? s2.timerResumed : s2.timerStarted;
+        }
+      }
+      onReset() {
+        const from = this.drawn;
+        this.clock.reset(this.seconds);
+        this.parts.said.textContent = "";
+        this.draw(true);
+        if (!this.still() && typeof this.host.animate === "function" && isDiscPropertyRegistered() && from < this.drawn) this.fill(from);
+        this.show();
+      }
+      /** Play the fill from where the disc was to where it is, in the theme's own duration and easing. @param {number} from */
+      fill(from) {
+        const el16 = this.host;
+        const style = this.view.getComputedStyle(el16);
+        const raw = style.getPropertyValue("--fx-duration").trim();
+        const duration2 = (Number.parseFloat(raw) || DEFAULT_FILL_S) * (/[^m]s$/.test(raw) ? SECOND_MS4 : 1) || FALLBACK_FILL_MS;
+        const easing = style.getPropertyValue("--fx-ease").trim() || "ease-out";
+        this.filling?.cancel();
+        try {
+          this.filling = el16.animate([{ [TIMER_DISC_LEFT]: String(from) }, { [TIMER_DISC_LEFT]: String(this.drawn) }], {
+            duration: Math.max(duration2, MIN_FILL_MS),
+            easing
+          });
+        } catch {
+          this.filling = null;
+        }
+      }
+      /** A tab that slept keeps the device's clock, not the timer's: when it is visible again the moment is counted anew. */
+      onVisible() {
+        if (this.until === null || this.doc.visibilityState !== "visible") return;
+        this.read();
+        this.filling?.cancel();
+        this.clock.reset(this.seconds);
+        this.startUntil();
+      }
+      /** @param {string[]} names the options that changed */
+      onOptions(names) {
+        this.read();
+        this.mount();
+        if (names.some((name) => RESTARTING_OPTIONS.includes(name))) {
+          this.filling?.cancel();
+          this.parts.said.textContent = "";
+          this.clock.reset(this.seconds);
+          this.startUntil();
+        } else {
+          this.draw(true);
+          this.show();
+        }
+      }
+    };
+  }
+});
+
 // js/timer-disc.js
 var timer_disc_exports = {};
 __export(timer_disc_exports, {
@@ -55333,268 +55700,21 @@ __export(timer_disc_exports, {
   discShare: () => discShare,
   timerDiscOf: () => timerDiscOf
 });
-function discShare(remainingMs, scaleMs) {
-  if (scaleMs <= 0) return 0;
-  return Math.min(1, Math.max(0, remainingMs / scaleMs));
+function attachTimerDiscs(root = document, options = {}) {
+  registerDiscProperty();
+  return attachAll(root, TIMER_DISC, TimerDisc, options);
 }
-function attachTimerDiscs(root = document, { now, wall } = {}) {
-  register();
-  const cleanups = [];
-  const timers = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(TIMER_DISC) ? [root] : [],
-      ...root.querySelectorAll(TIMER_DISC)
-    ]
-  );
-  for (const el16 of timers) {
-    if (CLOCKS.has(el16)) continue;
-    const s2 = getStrings();
-    const doc = el16.ownerDocument;
-    const view = doc.defaultView ?? window;
-    const wallNow = wall ?? (() => Date.now());
-    let seconds = 0;
-    let scaleSeconds = 0;
-    let name = "";
-    let disabled2 = false;
-    let bare = false;
-    let until = null;
-    const read = () => {
-      const at = wallNow();
-      until = parseUntil(el16.dataset.kpTimerDiscUntil, at, timerZone(el16, "data-kp-timer-disc-timezone"));
-      seconds = until !== null ? Math.max(0, Math.ceil((until - at) / 1e3)) : parseDuration(el16.dataset.kpTimerDisc);
-      scaleSeconds = parseDuration(el16.dataset.kpTimerDiscScale ? `${el16.dataset.kpTimerDiscScale}m` : "") || 0;
-      name = el16.dataset.kpTimerDiscName ?? "";
-      disabled2 = el16.hasAttribute("data-kp-timer-disc-disabled");
-      bare = until !== null || el16.dataset.kpTimerDiscControls === "none";
-    };
-    read();
-    const still = () => !motionAllowed(doc);
-    el16.classList.add("kp-timer-disc");
-    const face = doc.createElement("div");
-    face.className = "kp-timer-disc__face";
-    face.setAttribute("role", "img");
-    const sector = doc.createElement("span");
-    sector.className = "kp-timer-disc__sector";
-    const marks = doc.createElement("span");
-    marks.className = "kp-timer-disc__marks";
-    const hub = doc.createElement("span");
-    hub.className = "kp-timer-disc__hub";
-    for (const part7 of [sector, marks, hub]) part7.setAttribute("aria-hidden", "true");
-    face.append(sector, marks, hub);
-    const caption = doc.createElement("p");
-    caption.className = "kp-timer-disc__caption";
-    const line = doc.createElement("p");
-    line.className = "kp-timer-disc__status";
-    const said = doc.createElement("span");
-    said.className = "kp-sr-only";
-    said.setAttribute("role", "status");
-    el16.replaceChildren(face, caption, line, said);
-    let go = null;
-    let reset = null;
-    let controls = null;
-    let drawn2 = -1;
-    let frame3 = 0;
-    let filling = null;
-    const scaleMs = () => scaleSeconds > 0 ? scaleSeconds * 1e3 : clock4.total();
-    const draw7 = (force = false) => {
-      const ms = clock4.remaining();
-      let share = discShare(ms, scaleMs());
-      if (still() && clock4.state() === "running") {
-        const unit2 = ms > 6e4 ? 6e4 : 1e3;
-        share = discShare(Math.ceil(ms / unit2) * unit2, scaleMs());
-      }
-      if (!force && Math.abs(share - drawn2) * 3600 < 1) return;
-      drawn2 = share;
-      el16.style.setProperty(TIMER_DISC_LEFT, share.toFixed(5));
-    };
-    const name_ = () => {
-      const ms = clock4.remaining();
-      const minutes = Math.ceil(ms / 6e4);
-      const left = ms <= 0 ? "" : minutes > 1 ? s2.timerDuration(minutes * 60) : s2.timerUnderMinute;
-      face.setAttribute("aria-label", ms <= 0 ? s2.timerEnded : s2.timerDiscLeft(left, s2.timerDuration(Math.round(clock4.total() / 1e3))));
-    };
-    const captionText = () => {
-      const length = until !== null ? s2.timerUntil(untilLabel(until, wallNow(), untilZone(el16.dataset.kpTimerDiscUntil, timerZone(el16, "data-kp-timer-disc-timezone")))) : s2.timerDuration(Math.round(clock4.total() / 1e3));
-      return name ? s2.timerDiscCaption(name, length) : length;
-    };
-    const show = () => {
-      const state12 = clock4.state();
-      el16.dataset.kpTimerDiscState = state12;
-      if (go) {
-        setStateWord(go.label, state12 === "running" ? s2.timerPause : state12 === "paused" ? s2.timerResume : s2.timerStart);
-        go.button.disabled = disabled2 || state12 === "ended";
-      }
-      if (reset) reset.button.disabled = disabled2 || state12 === "idle" && clock4.total() === seconds * 1e3;
-      caption.textContent = captionText();
-      line.textContent = state12 === "paused" ? s2.timerPaused : state12 === "ended" ? s2.timerEnded : "";
-      name_();
-    };
-    let minute = -1;
-    const loop = () => {
-      cancelAnimationFrame(frame3);
-      if (clock4.state() !== "running") return;
-      draw7();
-      const m = Math.ceil(clock4.remaining() / 6e4);
-      if (m !== minute) {
-        minute = m;
-        name_();
-      }
-      frame3 = requestAnimationFrame(loop);
-    };
-    const clock4 = countdownClock({
-      seconds,
-      now,
-      onChange: (state12) => {
-        if (state12 === "ended") return;
-        draw7(true);
-        show();
-        if (state12 === "running") loop();
-        el16.dispatchEvent(
-          new CustomEvent(COUNTDOWN_EVENT, { bubbles: true, detail: { state: state12, remaining: clock4.remaining(), total: clock4.total() } })
-        );
-      },
-      onEnd: () => {
-        draw7(true);
-        show();
-        said.textContent = name ? s2.timerEndedNamed(name) : s2.timerEnded;
-        el16.dispatchEvent(new CustomEvent(COUNTDOWN_END_EVENT, { bubbles: true, detail: { total: clock4.total() } }));
-      }
-    });
-    CLOCKS.set(el16, clock4);
-    const onGo = () => {
-      const state12 = clock4.state();
-      filling?.finish();
-      if (state12 === "running") {
-        clock4.pause();
-        said.textContent = s2.timerPaused;
-      } else {
-        clock4.start();
-        said.textContent = state12 === "paused" ? s2.timerResumed : s2.timerStarted;
-      }
-    };
-    const onReset = () => {
-      const from = drawn2;
-      clock4.reset(seconds);
-      said.textContent = "";
-      draw7(true);
-      if (!still() && typeof el16.animate === "function" && registered && from < drawn2) {
-        const style = view.getComputedStyle(el16);
-        const raw = style.getPropertyValue("--fx-duration").trim();
-        const duration2 = (Number.parseFloat(raw) || 0.2) * (/[^m]s$/.test(raw) ? 1e3 : 1) || 200;
-        const easing = style.getPropertyValue("--fx-ease").trim() || "ease-out";
-        filling?.cancel();
-        try {
-          filling = el16.animate([{ [TIMER_DISC_LEFT]: String(from) }, { [TIMER_DISC_LEFT]: String(drawn2) }], {
-            duration: Math.max(duration2, 240),
-            easing
-          });
-        } catch {
-          filling = null;
-        }
-      }
-      show();
-    };
-    const mountControls = () => {
-      if (bare) {
-        controls?.remove();
-        controls = go = reset = null;
-        el16.toggleAttribute("data-kp-timer-disc-bare", true);
-        return;
-      }
-      el16.removeAttribute("data-kp-timer-disc-bare");
-      if (controls) return;
-      controls = doc.createElement("div");
-      controls.className = "kp-timer-disc__controls";
-      go = timerButton(doc, "kp-button--primary kp-timer-disc__go", [s2.timerStart, s2.timerPause, s2.timerResume]);
-      reset = timerButton(doc, "kp-button--ghost kp-timer-disc__reset", [s2.timerReset]);
-      controls.append(go.button, reset.button);
-      go.button.addEventListener("click", onGo);
-      reset.button.addEventListener("click", onReset);
-      el16.insertBefore(controls, said);
-    };
-    mountControls();
-    const startUntil = () => {
-      if (until !== null && seconds > 0) clock4.start();
-    };
-    draw7(true);
-    show();
-    startUntil();
-    const onVisible = () => {
-      if (until === null || doc.visibilityState !== "visible") return;
-      read();
-      filling?.cancel();
-      clock4.reset(seconds);
-      startUntil();
-    };
-    doc.addEventListener("visibilitychange", onVisible);
-    const stopWatching = watchOptions(
-      el16,
-      [
-        "data-kp-timer-disc",
-        "data-kp-timer-disc-until",
-        "data-kp-timer-disc-timezone",
-        "data-kp-timer-disc-name",
-        "data-kp-timer-disc-scale",
-        "data-kp-timer-disc-controls",
-        "data-kp-timer-disc-disabled"
-      ],
-      (names) => {
-        read();
-        mountControls();
-        if (names.includes("data-kp-timer-disc") || names.includes("data-kp-timer-disc-until") || names.includes("data-kp-timer-disc-timezone")) {
-          filling?.cancel();
-          said.textContent = "";
-          clock4.reset(seconds);
-          startUntil();
-        } else {
-          draw7(true);
-          show();
-        }
-      }
-    );
-    cleanups.push(() => {
-      stopWatching();
-      doc.removeEventListener("visibilitychange", onVisible);
-      cancelAnimationFrame(frame3);
-      filling?.cancel();
-      clock4.stop();
-      CLOCKS.delete(el16);
-      el16.replaceChildren();
-      el16.removeAttribute("data-kp-timer-disc-bare");
-      el16.style.removeProperty(TIMER_DISC_LEFT);
-      delete el16.dataset.kpTimerDiscState;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-var TIMER_DISC, TIMER_DISC_LEFT, registered, register, CLOCKS, timerDiscOf;
+var timerDiscOf;
 var init_timer_disc = __esm({
   "js/timer-disc.js"() {
     "use strict";
-    init_strings();
-    init_calm();
-    init_components();
-    init_countdown2();
-    init_live_options();
-    TIMER_DISC = "[data-kp-timer-disc], [data-kp-timer-disc-until]";
-    TIMER_DISC_LEFT = "--kp-timer-disc-left";
-    registered = false;
-    register = () => {
-      if (registered || typeof CSS === "undefined" || typeof CSS.registerProperty !== "function") return;
-      registered = true;
-      try {
-        CSS.registerProperty({ name: TIMER_DISC_LEFT, syntax: "<number>", inherits: true, initialValue: "1" });
-      } catch {
-      }
-    };
-    CLOCKS = /* @__PURE__ */ new WeakMap();
-    timerDiscOf = (el16) => CLOCKS.get(
-      /** @type {HTMLElement} */
-      el16
-    ) ?? null;
+    init_controller();
+    init_register2();
+    init_controller28();
+    init_values15();
+    init_values15();
+    init_share();
+    timerDiscOf = (el16) => controllerOf(el16, TimerDisc)?.clock ?? null;
   }
 });
 
@@ -55627,7 +55747,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -55768,14 +55888,14 @@ var init_build9 = __esm({
 
 // js/range/core.js
 var seq2, DEFAULT_PRESET_AT, RangeCore;
-var init_core11 = __esm({
+var init_core12 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_segmented();
     init_chart();
-    init_values15();
+    init_values16();
     init_build9();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -55850,7 +55970,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build9();
-    init_values15();
+    init_values16();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -56022,11 +56142,11 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core11();
+    init_core12();
     init_panel();
     RangeController = class extends RangeCore {
       connect() {
@@ -56103,9 +56223,9 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller28();
-    init_values15();
-    init_values15();
+    init_controller29();
+    init_values16();
+    init_values16();
   }
 });
 
@@ -56537,7 +56657,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -56663,7 +56783,7 @@ var init_parts5 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values16();
+    init_values17();
   }
 });
 
@@ -56704,7 +56824,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts5();
-    init_values16();
+    init_values17();
   }
 });
 
@@ -56770,7 +56890,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts5();
-    init_values16();
+    init_values17();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -56918,7 +57038,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values16();
+    init_values17();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -57027,8 +57147,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values16();
-    init_values16();
+    init_values17();
+    init_values17();
   }
 });
 
@@ -57597,7 +57717,7 @@ var init_parts6 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -57884,7 +58004,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller29();
+    init_controller30();
     init_parts6();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -58165,7 +58285,7 @@ var init_connection = __esm({
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -58190,7 +58310,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values17();
+    init_values18();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -58240,7 +58360,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values17();
+    init_values18();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -58272,7 +58392,7 @@ var init_read4 = __esm({
 
 // js/transfer/core.js
 var FULL, TransferCore;
-var init_core12 = __esm({
+var init_core13 = __esm({
   "js/transfer/core.js"() {
     "use strict";
     init_controller();
@@ -58281,7 +58401,7 @@ var init_core12 = __esm({
     init_strings();
     init_math3();
     init_read4();
-    init_values17();
+    init_values18();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -58508,7 +58628,7 @@ var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts7();
-    init_values17();
+    init_values18();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -58522,11 +58642,11 @@ var init_row3 = __esm({
     init_progressbar();
     init_motion();
     init_strings();
-    init_core12();
+    init_core13();
     init_parts7();
     init_read4();
     init_ticker();
-    init_values17();
+    init_values18();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -58680,8 +58800,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row3();
-    init_values17();
-    init_values17();
+    init_values18();
+    init_values18();
     init_math3();
   }
 });
@@ -58913,7 +59033,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -58927,13 +59047,13 @@ var init_values18 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core13 = __esm({
+var init_core14 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build10();
-    init_values18();
+    init_values19();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -59062,8 +59182,8 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core13();
-    init_values18();
+    init_core14();
+    init_values19();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -59139,12 +59259,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
     init_build10();
-    init_values18();
+    init_values19();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -59379,15 +59499,15 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller30();
-    init_values18();
-    init_values18();
+    init_controller31();
+    init_values19();
+    init_values19();
   }
 });
 
 // js/page-contents/values.js
 var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/page-contents/values.js"() {
     "use strict";
     CONTENTS = "[data-kp-contents]";
@@ -59432,11 +59552,11 @@ var init_slug = __esm({
 
 // js/page-contents/core.js
 var serial5, ContentsCore;
-var init_core14 = __esm({
+var init_core15 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
-    init_values19();
+    init_values20();
     serial5 = 0;
     ContentsCore = class extends Controller {
       /**
@@ -59549,9 +59669,9 @@ var ContentsRead;
 var init_read5 = __esm({
   "js/page-contents/read.js"() {
     "use strict";
-    init_values19();
+    init_values20();
     init_slug();
-    init_core14();
+    init_core15();
     ContentsRead = class extends ContentsCore {
       /** The entries the page gave, each with the section it names. @param {ContentsItem[]} given @returns {{ item: ContentsItem, target: HTMLElement }[]} */
       readGiven(given2) {
@@ -59605,7 +59725,7 @@ var ContentsSpy;
 var init_spy = __esm({
   "js/page-contents/spy.js"() {
     "use strict";
-    init_values19();
+    init_values20();
     init_slug();
     init_read5();
     ContentsSpy = class extends ContentsRead {
@@ -59664,7 +59784,7 @@ var init_spy = __esm({
 
 // js/page-contents/draw.js
 var ContentsDraw;
-var init_draw10 = __esm({
+var init_draw11 = __esm({
   "js/page-contents/draw.js"() {
     "use strict";
     init_spy();
@@ -59720,11 +59840,11 @@ var init_draw10 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
-    init_values19();
-    init_draw10();
+    init_values20();
+    init_draw11();
     init_strings();
     ContentsList = class extends ContentsDraw {
       /**
@@ -59838,9 +59958,9 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller31();
-    init_values19();
-    init_values19();
+    init_controller32();
+    init_values20();
+    init_values20();
     init_slug();
   }
 });
@@ -60525,7 +60645,7 @@ var init_keys12 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -60732,7 +60852,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller32();
+    init_controller33();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -60768,7 +60888,7 @@ var init_timefield = __esm({
 
 // js/weekdays/values.js
 var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, WEEK2, MONTH_DAYS, DEFAULT_MIN;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/weekdays/values.js"() {
     "use strict";
     WEEKDAYS = "[data-kp-weekdays]";
@@ -60807,7 +60927,7 @@ var init_options5 = __esm({
   "js/weekdays/options.js"() {
     "use strict";
     init_locale();
-    init_values20();
+    init_values21();
   }
 });
 
@@ -60838,7 +60958,7 @@ var init_names = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_values20();
+    init_values21();
     DICTIONARY_ORDER = [6, 0, 1, 2, 3, 4, 5];
     SUNDAY = 7;
   }
@@ -60909,7 +61029,7 @@ var init_parts8 = __esm({
   "js/weekdays/parts.js"() {
     "use strict";
     init_names();
-    init_values20();
+    init_values21();
   }
 });
 
@@ -60942,13 +61062,13 @@ var init_summary3 = __esm({
     "use strict";
     init_strings();
     init_names();
-    init_values20();
+    init_values21();
   }
 });
 
 // js/weekdays/core.js
 var seq3, WeekdaysCore;
-var init_core15 = __esm({
+var init_core16 = __esm({
   "js/weekdays/core.js"() {
     "use strict";
     init_controller();
@@ -60958,7 +61078,7 @@ var init_core15 = __esm({
     init_parts8();
     init_names();
     init_summary3();
-    init_values20();
+    init_values21();
     seq3 = 0;
     WeekdaysCore = class extends Controller {
       /**
@@ -61033,13 +61153,13 @@ var init_core15 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
-    init_core15();
+    init_core16();
     init_names();
-    init_values20();
+    init_values21();
     WeekdayPicker = class extends WeekdaysCore {
       /**
        * @param {HTMLElement} host
@@ -61148,9 +61268,9 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller33();
-    init_values20();
-    init_values20();
+    init_controller34();
+    init_values21();
+    init_values21();
     init_names();
     init_summary3();
   }
@@ -61409,7 +61529,7 @@ var init_quiet_hours = __esm({
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -61500,7 +61620,7 @@ var init_build12 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values21();
+    init_values22();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -61533,7 +61653,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values21();
+    init_values22();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -61542,13 +61662,13 @@ var init_title = __esm({
 
 // js/question-card/core.js
 var QuestionCore;
-var init_core16 = __esm({
+var init_core17 = __esm({
   "js/question-card/core.js"() {
     "use strict";
     init_controller();
     init_freshness();
     init_strings();
-    init_values21();
+    init_values22();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -61665,9 +61785,9 @@ var init_run3 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values21();
+    init_values22();
     init_title();
-    init_core16();
+    init_core17();
     QuestionRun = class extends QuestionCore {
       /**
        * @param {HTMLElement} host the card
@@ -61826,7 +61946,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values21();
+    init_values22();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -61877,8 +61997,8 @@ var init_question_card = __esm({
     init_build12();
     init_run3();
     init_spec();
-    init_values21();
-    init_values21();
+    init_values22();
+    init_values22();
   }
 });
 
@@ -62402,7 +62522,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -62561,7 +62681,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller34();
+    init_controller35();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -62992,7 +63112,7 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -63133,7 +63253,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller35();
+    init_controller36();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -63595,7 +63715,7 @@ var init_keys13 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -63865,7 +63985,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller36();
+    init_controller37();
     init_build13();
     init_commit();
     init_math4();
@@ -64153,7 +64273,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -64386,7 +64506,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller37();
+    init_controller38();
     init_list4();
     init_render4();
   }
@@ -65829,7 +65949,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -66020,7 +66140,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller38();
+    init_controller39();
     init_group6();
     init_group6();
   }
@@ -66028,7 +66148,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -66097,7 +66217,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values22();
+    init_values23();
   }
 });
 
@@ -66111,12 +66231,12 @@ function toneMap(text) {
   return map;
 }
 var shown4, near, ChipCore;
-var init_core17 = __esm({
+var init_core18 = __esm({
   "js/version-delta/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values22();
+    init_values23();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -66201,8 +66321,8 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values22();
-    init_core17();
+    init_values23();
+    init_core18();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
       markChip(v) {
@@ -66309,10 +66429,10 @@ var init_view4 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values22();
+    init_values23();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -66416,9 +66536,9 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller39();
-    init_values22();
-    init_values22();
+    init_controller40();
+    init_values23();
+    init_values23();
     init_level();
     init_links2();
   }
@@ -66426,7 +66546,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values23 = __esm({
+var init_values24 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -66493,11 +66613,11 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core18 = __esm({
+var init_core19 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values23();
+    init_values24();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -66608,8 +66728,8 @@ var init_rows5 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values23();
-    init_core18();
+    init_values24();
+    init_core19();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -66711,16 +66831,16 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values23();
+    init_values24();
     init_order();
-    init_core18();
+    init_core19();
     init_rows5();
     DependencyList = class extends DeplistRows {
       connect() {
@@ -66895,16 +67015,16 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller40();
-    init_values23();
-    init_values23();
+    init_controller41();
+    init_values24();
+    init_values24();
     init_order();
   }
 });
 
 // js/path-trace/core.js
 var TraceCore;
-var init_core19 = __esm({
+var init_core20 = __esm({
   "js/path-trace/core.js"() {
     "use strict";
     init_controller();
@@ -67007,7 +67127,7 @@ var init_states = __esm({
 
 // js/path-trace/values.js
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, GHOST_HOPS, WATCHED_ATTRIBUTES5;
-var init_values24 = __esm({
+var init_values25 = __esm({
   "js/path-trace/values.js"() {
     "use strict";
     TRACE = "[data-kp-trace]";
@@ -67028,16 +67148,16 @@ var init_values24 = __esm({
 
 // js/path-trace/draw.js
 var TraceDraw;
-var init_draw11 = __esm({
+var init_draw12 = __esm({
   "js/path-trace/draw.js"() {
     "use strict";
     init_steplist();
     init_strings();
     init_state_plate();
     init_flash();
-    init_core19();
+    init_core20();
     init_states();
-    init_values24();
+    init_values25();
     TraceDraw = class extends TraceCore {
       draw() {
         const { host, stage, foot, summary: summary2 } = this;
@@ -67160,14 +67280,14 @@ var init_draw11 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
     init_strings();
-    init_draw11();
+    init_draw12();
     init_states();
-    init_values24();
+    init_values25();
     Trace = class extends TraceDraw {
       /**
        * @param {HTMLElement} host
@@ -67247,9 +67367,9 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller41();
-    init_values24();
-    init_values24();
+    init_controller42();
+    init_values25();
+    init_values25();
     init_states();
   }
 });
@@ -68157,7 +68277,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values25 = __esm({
+var init_values26 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -68496,7 +68616,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts11();
-    init_values25();
+    init_values26();
   }
 });
 
@@ -68506,7 +68626,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values25();
+    init_values26();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -68626,7 +68746,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values25();
+    init_values26();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -68901,7 +69021,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -69154,7 +69274,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller42();
+    init_controller43();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -69500,7 +69620,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -69805,7 +69925,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller43();
+    init_controller44();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -69943,7 +70063,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values26 = __esm({
+var init_values27 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -70016,7 +70136,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values26();
+    init_values27();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -70288,7 +70408,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values26();
+    init_values27();
   }
 });
 
@@ -70325,13 +70445,13 @@ var init_keys14 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core20 = __esm({
+var init_core21 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values26();
+    init_values27();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -70447,9 +70567,9 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values26();
+    init_values27();
     init_kinds();
-    init_core20();
+    init_core21();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -70618,7 +70738,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values26();
+    init_values27();
     init_kinds();
     init_keys14();
     init_run4();
@@ -70740,8 +70860,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values26();
-    init_values26();
+    init_values27();
+    init_values27();
     init_kinds();
     init_glyph();
     init_open3();
@@ -71642,7 +71762,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values27 = __esm({
+var init_values28 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -71781,7 +71901,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build14 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values27();
+    init_values28();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -71795,13 +71915,13 @@ var init_build14 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core21 = __esm({
+var init_core22 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build14();
-    init_values27();
+    init_values28();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -71916,12 +72036,12 @@ var init_core21 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build14();
-    init_core21();
-    init_values27();
+    init_core22();
+    init_values28();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -72146,9 +72266,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller44();
-    init_values27();
-    init_values27();
+    init_controller45();
+    init_values28();
+    init_values28();
   }
 });
 
@@ -72314,7 +72434,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -72543,14 +72663,14 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_fields();
     init_fields();
   }
 });
 
 // js/dated-options/constants.js
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS2, MINUTE_S3, DAY_S2, SECOND_MS4;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS2, MINUTE_S3, DAY_S2, SECOND_MS5;
 var init_constants37 = __esm({
   "js/dated-options/constants.js"() {
     "use strict";
@@ -72565,13 +72685,13 @@ var init_constants37 = __esm({
     TYPEAHEAD_MS2 = 700;
     MINUTE_S3 = 60;
     DAY_S2 = 86400;
-    SECOND_MS4 = 1e3;
+    SECOND_MS5 = 1e3;
   }
 });
 
 // js/dated-options/time.js
 function datedAge(ms, now, strings = getStrings()) {
-  const seconds = Math.floor((now - ms) / SECOND_MS4);
+  const seconds = Math.floor((now - ms) / SECOND_MS5);
   if (seconds < MINUTE_S3) return strings.datedJustNow;
   if (seconds >= DAY_S2) return strings.datedAgo(strings.agoDays(Math.floor(seconds / DAY_S2)));
   return strings.datedAgo(humanDuration(seconds, strings));
@@ -72883,7 +73003,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -73134,7 +73254,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller46();
+    init_controller47();
   }
 });
 
@@ -73176,8 +73296,8 @@ var init_input = __esm({
 });
 
 // js/runs/values.js
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS2;
-var init_values28 = __esm({
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS3;
+var init_values29 = __esm({
   "js/runs/values.js"() {
     "use strict";
     RUNS = "[data-kp-runs]";
@@ -73189,7 +73309,7 @@ var init_values28 = __esm({
     MINUTE_S4 = 60;
     DAY_S3 = 86400;
     NOW_S = 30;
-    MINUTE_MS2 = 6e4;
+    MINUTE_MS3 = 6e4;
   }
 });
 
@@ -73211,7 +73331,7 @@ var init_options7 = __esm({
   "js/runs/options.js"() {
     "use strict";
     init_chart();
-    init_values28();
+    init_values29();
   }
 });
 
@@ -73258,7 +73378,7 @@ function runsRelative(ms, now, strings = getStrings()) {
 }
 function zoneOffset2(ms, zone = CHART_TIME_ZONE) {
   const w = wallTime(ms, zone);
-  return (Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute) - Math.floor(ms / MINUTE_MS2) * MINUTE_MS2) / MINUTE_MS2;
+  return (Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute) - Math.floor(ms / MINUTE_MS3) * MINUTE_MS3) / MINUTE_MS3;
 }
 function runMoment(ms, zone = CHART_TIME_ZONE, locale) {
   const w = wallTime(ms, zone);
@@ -73276,14 +73396,14 @@ var init_time3 = __esm({
     init_weekdays();
     init_freshness();
     init_chart();
-    init_values28();
+    init_values29();
     two6 = (n) => String(n).padStart(2, "0");
   }
 });
 
 // js/runs/core.js
 var seq6, RunsCore;
-var init_core22 = __esm({
+var init_core23 = __esm({
   "js/runs/core.js"() {
     "use strict";
     init_controller();
@@ -73358,7 +73478,7 @@ var RunsRows;
 var init_rows7 = __esm({
   "js/runs/rows.js"() {
     "use strict";
-    init_core22();
+    init_core23();
     init_time3();
     RunsRows = class extends RunsCore {
       /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
@@ -73458,11 +73578,11 @@ var init_note2 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note2();
-    init_values28();
+    init_values29();
     RunsList = class extends RunsNote {
       /**
        * @param {HTMLElement} host
@@ -73569,9 +73689,9 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller47();
-    init_values28();
-    init_values28();
+    init_controller48();
+    init_values29();
+    init_values29();
     init_time3();
   }
 });
@@ -73897,7 +74017,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -74156,7 +74276,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller48();
+    init_controller49();
     init_choices();
   }
 });
@@ -75004,7 +75124,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 var SIDE_ROOM;
-var init_draw12 = __esm({
+var init_draw13 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
@@ -75091,7 +75211,7 @@ var init_api26 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
-    init_draw12();
+    init_draw13();
     init_view5();
   }
 });
@@ -75522,7 +75642,7 @@ var init_attach20 = __esm({
     init_api26();
     init_options8();
     init_layout3();
-    init_draw12();
+    init_draw13();
     init_view5();
   }
 });
@@ -78719,7 +78839,7 @@ function drawCanvas(root, m) {
   return canvas;
 }
 var QUIET2, THEME_CONTRAST, CANVAS_SCALE, CANVAS_SCALE_MIN;
-var init_draw13 = __esm({
+var init_draw14 = __esm({
   "js/qr/draw.js"() {
     "use strict";
     init_matrix2();
@@ -78909,7 +79029,7 @@ var init_render6 = __esm({
     init_reason();
     init_state_plate();
     init_strings();
-    init_draw13();
+    init_draw14();
     init_matrix2();
     init_state28();
     TIMER_MAX_MS = 2 ** 31 - 1;
@@ -79010,7 +79130,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -79114,7 +79234,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller49();
+    init_controller50();
     init_state28();
     init_state28();
     init_matrix2();
@@ -82048,8 +82168,8 @@ function jsString(value) {
 }
 var REGISTER_PATTERN_DEFAULT = "/css/{theme}-register.css";
 var attributeText = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false, register: register2 = false } = {}) {
-  if (register2) return registerSnippet({ key, attribute, effects, ...register2 === true ? {} : register2 });
+function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false, register = false } = {}) {
+  if (register) return registerSnippet({ key, attribute, effects, ...register === true ? {} : register });
   const arm = effects ? `
         document.documentElement.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
   return `(function () {
