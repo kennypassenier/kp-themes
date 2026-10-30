@@ -36457,24 +36457,7 @@ var init_row_select = __esm({
   }
 });
 
-// js/selection-bar.js
-var selection_bar_exports = {};
-__export(selection_bar_exports, {
-  SELECTION: () => SELECTION,
-  SELECTION_ACTION_EVENT: () => SELECTION_ACTION_EVENT,
-  SELECTION_CLEAR_EVENT: () => SELECTION_CLEAR_EVENT,
-  SELECTION_EVENT: () => SELECTION_EVENT,
-  SELECTION_MATCHING_EVENT: () => SELECTION_MATCHING_EVENT,
-  SELECTION_NAMES: () => SELECTION_NAMES,
-  SELECTION_SAY_MS: () => SELECTION_SAY_MS,
-  attachSelectionBars: () => attachSelectionBars,
-  getSelection: () => getSelection,
-  setSelection: () => setSelection,
-  setSelectionBusy: () => setSelectionBusy,
-  setSelectionProgress: () => setSelectionProgress,
-  setSelectionResult: () => setSelectionResult,
-  setSelectionRules: () => setSelectionRules
-});
+// js/selection-bar/model.js
 function sourcesOf(bar) {
   const doc = bar.ownerDocument;
   const named = (bar.getAttribute("data-kp-selection-for") ?? "").split(/\s+/).filter(Boolean);
@@ -36511,6 +36494,39 @@ function readSources(memory) {
   }
   return { items: [...items.values()], known: known4, shown: shown5, shownTicked };
 }
+var SELECTION, BOX, SELECTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_MATCHING_EVENT, SELECTION_ACTION_EVENT, SELECTION_NAMES, SELECTION_SAY_MS, make7, labelOf5, rowOf2, keyOf2, shownRow;
+var init_model3 = __esm({
+  "js/selection-bar/model.js"() {
+    "use strict";
+    SELECTION = "[data-kp-selection]";
+    BOX = "[data-kp-select-row]";
+    SELECTION_EVENT = "kp-selection-change";
+    SELECTION_CLEAR_EVENT = "kp-selection-clear";
+    SELECTION_MATCHING_EVENT = "kp-selection-matching";
+    SELECTION_ACTION_EVENT = "kp-selection-action";
+    SELECTION_NAMES = 6;
+    SELECTION_SAY_MS = 350;
+    make7 = (doc, className, tag = "div") => {
+      const node = doc.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    labelOf5 = (row) => {
+      const box = row.querySelector(BOX);
+      const named = row.dataset.kpRowLabel ?? box?.getAttribute("aria-label")?.replace(/^select\s+/i, "");
+      return (named ?? row.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 80);
+    };
+    rowOf2 = (box) => (
+      /** @type {HTMLElement | null} */
+      box.closest('[data-kp-row-key], tr, li, [role="row"]')
+    );
+    keyOf2 = (row, index) => row.dataset.kpRowKey ?? (row.id || /** @type {HTMLInputElement | null} */
+    row.querySelector(BOX)?.value || `row-${index}`);
+    shownRow = (row) => !row.hidden && !row.closest("[hidden]");
+  }
+});
+
+// js/selection-bar/draw.js
 function parts(bar, memory) {
   const doc = bar.ownerDocument;
   let panel = (
@@ -36752,166 +36768,182 @@ function sync(bar, memory) {
     );
   }
 }
-function attachOne3(bar, options) {
-  if (MEMORY5.has(bar)) return () => void 0;
-  const doc = bar.ownerDocument;
-  const placement = options.placement ?? bar.getAttribute("data-kp-placement") ?? "sticky-top";
-  bar.setAttribute("data-kp-placement", ["inline", "floating-bottom"].includes(placement) ? placement : "sticky-top");
-  if (options.names) bar.setAttribute("data-kp-selection-names", options.names);
-  if (options.maxNames) bar.setAttribute("data-kp-selection-max", String(options.maxNames));
-  const matchingTotal = Number(options.matching ?? bar.getAttribute("data-kp-select-matching")) || 0;
-  const memory = {
-    sources: sourcesOf(bar),
-    items: [],
-    known: /* @__PURE__ */ new Set(),
-    manual: false,
-    matchingTotal,
-    matching: false,
-    namesOpen: false,
-    busy: "",
-    progress: null,
-    rules: {},
-    sayTimer: 0,
-    refresh: () => sync(bar, memory)
-  };
-  MEMORY5.set(bar, memory);
-  parts(bar, memory);
-  const view0 = doc.defaultView;
-  const optionWatch = view0 && "MutationObserver" in view0 ? new view0.MutationObserver(() => {
-    memory.matchingTotal = Number(bar.getAttribute("data-kp-select-matching")) || 0;
-    if (!memory.matchingTotal) memory.matching = false;
-    draw4(bar, memory);
-  }) : null;
-  optionWatch?.observe(bar, { attributes: true, attributeFilter: ["data-kp-selection-names", "data-kp-selection-max", "data-kp-select-matching"] });
-  let queued2 = false;
-  const refresh3 = () => {
-    if (queued2) return;
-    queued2 = true;
-    queueMicrotask(() => {
-      queued2 = false;
-      sync(bar, memory);
-    });
-  };
-  const onSourceEvent = (event) => {
-    if (event.type === "change" && !(event.target instanceof Element && event.target.matches(`${BOX}, [data-kp-select-all]`))) return;
-    if (memory.manual) return;
-    refresh3();
-  };
-  for (const source of memory.sources) {
-    source.addEventListener("change", onSourceEvent);
-    source.addEventListener("kp-datatable-select", onSourceEvent);
-    source.addEventListener("kp-rows-select", onSourceEvent);
+var init_draw3 = __esm({
+  "js/selection-bar/draw.js"() {
+    "use strict";
+    init_row_select();
+    init_strings();
+    init_model3();
   }
-  const view = doc.defaultView;
-  const watchers = view && "MutationObserver" in view ? memory.sources.map((s2) => new view.MutationObserver(refresh3)) : [];
-  watchers.forEach((w, i) => w.observe(memory.sources[i], { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] }));
-  const onClick = (event) => {
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
-    if (target.closest(".kp-selection__clear")) {
-      const keys = memory.items.map((i) => i.key);
-      memory.matching = false;
-      if (memory.manual) {
-        memory.items = [];
-        draw4(bar, memory);
-        bar.dispatchEvent(new CustomEvent(SELECTION_EVENT, { bubbles: true, detail: { keys: [], items: [], count: 0, matching: false } }));
-      } else untick(memory);
-      bar.dispatchEvent(new CustomEvent(SELECTION_CLEAR_EVENT, { bubbles: true, detail: { keys } }));
-      return;
-    }
-    const more = target.closest(".kp-selection__more");
-    if (more) {
-      memory.namesOpen = !memory.namesOpen;
-      draw4(bar, memory);
-      bar.querySelector(".kp-selection__more")?.focus();
-      return;
-    }
-    const take = target.closest("[data-kp-selection-take]");
-    if (take) {
-      memory.matching = take.getAttribute("data-kp-selection-take") === "on";
-      draw4(bar, memory);
-      bar.dispatchEvent(
-        new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: memory.matching, total: memory.matchingTotal } })
-      );
-      say5(
-        bar,
-        memory,
-        memory.matching ? getStrings().selectionMatchingOn(memory.matchingTotal) : getStrings().selectionCount(memory.items.length)
-      );
-      bar.querySelector(".kp-selection__take")?.focus();
-      return;
-    }
-    const toggle2 = target.closest(".kp-selection__toggle");
-    if (toggle2) {
-      const open4 = toggle2.getAttribute("aria-expanded") !== "true";
-      toggle2.setAttribute("aria-expanded", String(open4));
-      bar.toggleAttribute("data-kp-selection-open", open4);
-      return;
-    }
-    const button5 = (
-      /** @type {HTMLElement | null} */
-      target.closest("[data-kp-selection-action]")
-    );
-    if (button5) {
-      if (button5.getAttribute("aria-disabled") === "true") {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        return;
+});
+
+// js/selection-bar/controller.js
+var UNDO_MS2, OPTIONS2, SOURCE_EVENTS, SelectionBar;
+var init_controller6 = __esm({
+  "js/selection-bar/controller.js"() {
+    "use strict";
+    init_controller();
+    init_row_select();
+    init_strings();
+    init_draw3();
+    init_model3();
+    UNDO_MS2 = 6e3;
+    OPTIONS2 = ["data-kp-selection-names", "data-kp-selection-max", "data-kp-select-matching"];
+    SOURCE_EVENTS = ["change", "kp-datatable-select", "kp-rows-select"];
+    SelectionBar = class extends Controller {
+      /** @param {HTMLElement} bar @param {SelectionOptions} [options] */
+      constructor(bar, options = {}) {
+        super(bar, options);
+        this.doc = bar.ownerDocument;
+        this.queued = false;
+        this.memory = {
+          sources: [],
+          items: [],
+          known: /* @__PURE__ */ new Set(),
+          manual: false,
+          matchingTotal: 0,
+          matching: false,
+          namesOpen: false,
+          busy: "",
+          progress: null,
+          rules: {},
+          sayTimer: 0,
+          refresh: () => sync(bar, this.memory)
+        };
       }
-      bar.dispatchEvent(
-        new CustomEvent(SELECTION_ACTION_EVENT, {
-          bubbles: true,
-          cancelable: true,
-          detail: {
-            action: button5.getAttribute("data-kp-selection-action") ?? "",
-            button: button5,
-            keys: memory.items.map((i) => i.key),
-            items: memory.items,
-            matching: memory.matching,
-            undoMs: Number(bar.getAttribute("data-kp-undo-ms") ?? 6e3)
-          }
-        })
-      );
-    }
-  };
-  const onKey6 = (event) => {
-    if (event.key !== "Escape" || event.defaultPrevented || memory.items.length === 0 || memory.busy) return;
-    const target = event.target instanceof Node ? event.target : null;
-    const inside = target !== null && (bar.contains(target) || memory.sources.some((s2) => s2.contains(target)));
-    if (!inside || target instanceof Element && target.closest("input:not([data-kp-select-row]), textarea, select, dialog[open]")) return;
-    if (target instanceof Element && memory.sources.some((s2) => rowSelect(s2) && s2.contains(target))) return;
-    event.preventDefault();
-    bar.querySelector(".kp-selection__clear")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-  };
-  bar.addEventListener("click", onClick);
-  doc.addEventListener("keydown", onKey6);
-  sync(bar, memory);
-  return () => {
-    bar.removeEventListener("click", onClick);
-    doc.removeEventListener("keydown", onKey6);
-    for (const source of memory.sources) {
-      source.removeEventListener("change", onSourceEvent);
-      source.removeEventListener("kp-datatable-select", onSourceEvent);
-      source.removeEventListener("kp-rows-select", onSourceEvent);
-    }
-    watchers.forEach((w) => w.disconnect());
-    optionWatch?.disconnect();
-    MEMORY5.delete(bar);
-  };
-}
-function attachSelectionBars(root = document, options = {}) {
-  const bars = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(SELECTION) ? [root] : [],
-      ...root.querySelectorAll(SELECTION)
-    ]
-  );
-  const undo = bars.map((bar) => attachOne3(bar, options));
-  return () => undo.forEach((u) => u());
-}
+      connect() {
+        const bar = this.host;
+        const options = (
+          /** @type {SelectionOptions} */
+          this.options
+        );
+        const placement = options.placement ?? bar.getAttribute("data-kp-placement") ?? "sticky-top";
+        bar.setAttribute("data-kp-placement", ["inline", "floating-bottom"].includes(placement) ? placement : "sticky-top");
+        if (options.names) bar.setAttribute("data-kp-selection-names", options.names);
+        if (options.maxNames) bar.setAttribute("data-kp-selection-max", String(options.maxNames));
+        this.memory.matchingTotal = Number(options.matching ?? bar.getAttribute("data-kp-select-matching")) || 0;
+        this.memory.sources = sourcesOf(bar);
+        parts(bar, this.memory);
+        const view = this.doc.defaultView;
+        const watching = view && "MutationObserver" in view;
+        if (watching) this.observe(new view.MutationObserver(() => this.onOptions())).observe(bar, { attributes: true, attributeFilter: OPTIONS2 });
+        for (const source of this.memory.sources) for (const type of SOURCE_EVENTS) this.listen(source, type, (event) => this.onSourceEvent(event));
+        if (watching)
+          for (const source of this.memory.sources) this.observe(new view.MutationObserver(() => this.refresh())).observe(source, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
+        this.listen(bar, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(this.doc, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        sync(bar, this.memory);
+      }
+      onOptions() {
+        this.memory.matchingTotal = Number(this.host.getAttribute("data-kp-select-matching")) || 0;
+        if (!this.memory.matchingTotal) this.memory.matching = false;
+        draw4(this.host, this.memory);
+      }
+      /** Read the sources again at the end of this task, once for a burst. */
+      refresh() {
+        if (this.queued) return;
+        this.queued = true;
+        queueMicrotask(() => {
+          this.queued = false;
+          sync(this.host, this.memory);
+        });
+      }
+      /** @param {Event} event */
+      onSourceEvent(event) {
+        if (event.type === "change" && !(event.target instanceof Element && event.target.matches(`${BOX}, [data-kp-select-all]`))) return;
+        if (!this.memory.manual) this.refresh();
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        if (target.closest(".kp-selection__clear")) return this.clear();
+        if (target.closest(".kp-selection__more")) return this.toggleNames();
+        const take = target.closest("[data-kp-selection-take]");
+        if (take) return this.take(take.getAttribute("data-kp-selection-take") === "on");
+        const toggle2 = target.closest(".kp-selection__toggle");
+        if (toggle2) {
+          const open4 = toggle2.getAttribute("aria-expanded") !== "true";
+          toggle2.setAttribute("aria-expanded", String(open4));
+          this.host.toggleAttribute("data-kp-selection-open", open4);
+          return;
+        }
+        const button5 = (
+          /** @type {HTMLElement | null} */
+          target.closest("[data-kp-selection-action]")
+        );
+        if (button5) this.act(event, button5);
+      }
+      /** Untick all, or empty a bar fed by hand, and say which keys were selected. */
+      clear() {
+        const bar = this.host;
+        const memory = this.memory;
+        const keys = memory.items.map((i) => i.key);
+        memory.matching = false;
+        if (memory.manual) {
+          memory.items = [];
+          draw4(bar, memory);
+          bar.dispatchEvent(new CustomEvent(SELECTION_EVENT, { bubbles: true, detail: { keys: [], items: [], count: 0, matching: false } }));
+        } else untick(memory);
+        bar.dispatchEvent(new CustomEvent(SELECTION_CLEAR_EVENT, { bubbles: true, detail: { keys } }));
+      }
+      toggleNames() {
+        this.memory.namesOpen = !this.memory.namesOpen;
+        draw4(this.host, this.memory);
+        this.host.querySelector(".kp-selection__more")?.focus();
+      }
+      /** Take, or give back, the offer for every matching row. @param {boolean} on */
+      take(on) {
+        const bar = this.host;
+        const memory = this.memory;
+        memory.matching = on;
+        draw4(bar, memory);
+        bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: memory.matching, total: memory.matchingTotal } }));
+        say5(bar, memory, memory.matching ? getStrings().selectionMatchingOn(memory.matchingTotal) : getStrings().selectionCount(memory.items.length));
+        bar.querySelector(".kp-selection__take")?.focus();
+      }
+      /** An action button: refused while it is off, else told to the page with what is selected. @param {MouseEvent} event @param {HTMLElement} button */
+      act(event, button5) {
+        if (button5.getAttribute("aria-disabled") === "true") {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          return;
+        }
+        const memory = this.memory;
+        const detail = {
+          action: button5.getAttribute("data-kp-selection-action") ?? "",
+          button: button5,
+          keys: memory.items.map((i) => i.key),
+          items: memory.items,
+          matching: memory.matching,
+          undoMs: Number(this.host.getAttribute("data-kp-undo-ms") ?? UNDO_MS2)
+        };
+        this.host.dispatchEvent(new CustomEvent(SELECTION_ACTION_EVENT, { bubbles: true, cancelable: true, detail }));
+      }
+      /** Esc unticks all while the focus is in the bar or its list. @param {KeyboardEvent} event */
+      onKey(event) {
+        const memory = this.memory;
+        if (event.key !== "Escape" || event.defaultPrevented || memory.items.length === 0 || memory.busy) return;
+        const target = event.target instanceof Node ? event.target : null;
+        const inside = target !== null && (this.host.contains(target) || memory.sources.some((s2) => s2.contains(target)));
+        if (!inside || target instanceof Element && target.closest("input:not([data-kp-select-row]), textarea, select, dialog[open]")) return;
+        if (target instanceof Element && memory.sources.some((s2) => rowSelect(s2) && s2.contains(target))) return;
+        event.preventDefault();
+        this.host.querySelector(".kp-selection__clear")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      }
+    };
+  }
+});
+
+// js/selection-bar/api.js
 function setSelection(bar, items, options = {}) {
-  const memory = MEMORY5.get(bar);
+  const memory = memoryOf(bar);
   if (!memory) return;
   memory.manual = true;
   if (options.matching !== void 0) memory.matchingTotal = options.matching;
@@ -36919,7 +36951,7 @@ function setSelection(bar, items, options = {}) {
   sync(bar, memory);
 }
 function getSelection(bar) {
-  const memory = MEMORY5.get(bar);
+  const memory = memoryOf(bar);
   if (!memory) return { keys: [], items: [], count: 0, matching: false };
   return {
     keys: memory.items.map((i) => i.key),
@@ -36929,7 +36961,7 @@ function getSelection(bar) {
   };
 }
 function setSelectionBusy(bar, words2 = "") {
-  const memory = MEMORY5.get(bar);
+  const memory = memoryOf(bar);
   if (!memory) return;
   memory.busy = words2 ? words2 : "";
   memory.progress = null;
@@ -36938,7 +36970,7 @@ function setSelectionBusy(bar, words2 = "") {
   draw4(bar, memory);
 }
 function setSelectionProgress(bar, progress) {
-  const memory = MEMORY5.get(bar);
+  const memory = memoryOf(bar);
   if (!memory) return;
   const total = Math.max(0, Math.floor(progress.total));
   const done = Math.min(total, Math.max(0, Math.floor(progress.done)));
@@ -36951,7 +36983,7 @@ function setSelectionProgress(bar, progress) {
   draw4(bar, memory);
 }
 function setSelectionResult(bar, result) {
-  const memory = MEMORY5.get(bar);
+  const memory = memoryOf(bar);
   if (!memory) return;
   const strings = getStrings();
   memory.busy = "";
@@ -36984,43 +37016,53 @@ function setSelectionResult(bar, result) {
   if (live4) live4.textContent = p.result.textContent;
 }
 function setSelectionRules(bar, rules) {
-  const memory = MEMORY5.get(bar);
+  const memory = memoryOf(bar);
   if (!memory) return;
   memory.rules = rules;
   draw4(bar, memory);
 }
-var SELECTION, BOX, SELECTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_MATCHING_EVENT, SELECTION_ACTION_EVENT, SELECTION_NAMES, SELECTION_SAY_MS, MEMORY5, make7, labelOf5, rowOf2, keyOf2, shownRow;
+var memoryOf;
+var init_api5 = __esm({
+  "js/selection-bar/api.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_controller6();
+    init_draw3();
+    init_model3();
+    memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
+  }
+});
+
+// js/selection-bar.js
+var selection_bar_exports = {};
+__export(selection_bar_exports, {
+  SELECTION: () => SELECTION,
+  SELECTION_ACTION_EVENT: () => SELECTION_ACTION_EVENT,
+  SELECTION_CLEAR_EVENT: () => SELECTION_CLEAR_EVENT,
+  SELECTION_EVENT: () => SELECTION_EVENT,
+  SELECTION_MATCHING_EVENT: () => SELECTION_MATCHING_EVENT,
+  SELECTION_NAMES: () => SELECTION_NAMES,
+  SELECTION_SAY_MS: () => SELECTION_SAY_MS,
+  attachSelectionBars: () => attachSelectionBars,
+  getSelection: () => getSelection,
+  setSelection: () => setSelection,
+  setSelectionBusy: () => setSelectionBusy,
+  setSelectionProgress: () => setSelectionProgress,
+  setSelectionResult: () => setSelectionResult,
+  setSelectionRules: () => setSelectionRules
+});
+function attachSelectionBars(root = document, options = {}) {
+  return attachAll(root, SELECTION, SelectionBar, options);
+}
 var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
-    init_strings();
-    init_row_select();
-    SELECTION = "[data-kp-selection]";
-    BOX = "[data-kp-select-row]";
-    SELECTION_EVENT = "kp-selection-change";
-    SELECTION_CLEAR_EVENT = "kp-selection-clear";
-    SELECTION_MATCHING_EVENT = "kp-selection-matching";
-    SELECTION_ACTION_EVENT = "kp-selection-action";
-    SELECTION_NAMES = 6;
-    SELECTION_SAY_MS = 350;
-    MEMORY5 = /* @__PURE__ */ new WeakMap();
-    make7 = (doc, className, tag = "div") => {
-      const node = doc.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    labelOf5 = (row) => {
-      const box = row.querySelector(BOX);
-      const named = row.dataset.kpRowLabel ?? box?.getAttribute("aria-label")?.replace(/^select\s+/i, "");
-      return (named ?? row.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 80);
-    };
-    rowOf2 = (box) => (
-      /** @type {HTMLElement | null} */
-      box.closest('[data-kp-row-key], tr, li, [role="row"]')
-    );
-    keyOf2 = (row, index) => row.dataset.kpRowKey ?? (row.id || /** @type {HTMLInputElement | null} */
-    row.querySelector(BOX)?.value || `row-${index}`);
-    shownRow = (row) => !row.hidden && !row.closest("[hidden]");
+    init_controller();
+    init_controller6();
+    init_model3();
+    init_model3();
+    init_api5();
   }
 });
 
@@ -37038,7 +37080,7 @@ __export(newpill_exports, {
 function newPill(el16) {
   return HANDLES2.get(el16) ?? null;
 }
-function attachOne4(el16, options) {
+function attachOne3(el16, options) {
   if (HANDLES2.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const view = doc.defaultView;
@@ -37277,7 +37319,7 @@ function attachNewPills(root = document, options = {}) {
       ...root.querySelectorAll(FOLLOW)
     ]
   );
-  const undo = found.map((el16) => attachOne4(el16, options));
+  const undo = found.map((el16) => attachOne3(el16, options));
   return () => undo.forEach((u) => u());
 }
 var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, HANDLES2, isRow, isTableRow, rowKeyOf;
@@ -37337,7 +37379,7 @@ function explainJson(text) {
     return { ok: false, why, line, column };
   }
 }
-function attachOne5(area, options) {
+function attachOne4(area, options) {
   if (HANDLES3.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
@@ -37738,7 +37780,7 @@ function attachJsonFields(root = document, options = {}) {
       ...root.querySelectorAll(JSON_FIELD)
     ]
   );
-  const undo = found.map((area) => attachOne5(area, options));
+  const undo = found.map((area) => attachOne4(area, options));
   return () => undo.forEach((u) => u());
 }
 var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, HANDLES3, serial3;
@@ -38147,11 +38189,11 @@ async function copy(el16, memory, button5) {
   }
   view?.setTimeout(() => word.textContent = idle, REQUESTS_COPIED_MS);
 }
-function attachOne6(el16, given2) {
-  if (MEMORY6.has(el16)) return () => void 0;
+function attachOne5(el16, given2) {
+  if (MEMORY5.has(el16)) return () => void 0;
   const options = { ...readOptions(el16), ...given2 };
   const memory = { list: [], filter: "all", shown: options.max ?? REQUESTS_MAX, opened: /* @__PURE__ */ new Set(), closed: /* @__PURE__ */ new Set(), options, given: given2 };
-  MEMORY6.set(el16, memory);
+  MEMORY5.set(el16, memory);
   partsOf3(el16);
   el16.style.setProperty("--kp-card-stage-min", "var(--kp-inspector-min, 22rem)");
   el16.setAttribute("data-kp-state", el16.getAttribute("data-kp-state") ?? "loading");
@@ -38230,7 +38272,7 @@ function attachOne6(el16, given2) {
     el16.removeEventListener("kp-card-retry", onRetry);
     watch2?.disconnect();
     detachStates();
-    MEMORY6.delete(el16);
+    MEMORY5.delete(el16);
   };
 }
 function attachRequestInspectors(root = document, options = {}) {
@@ -38241,11 +38283,11 @@ function attachRequestInspectors(root = document, options = {}) {
       ...root.querySelectorAll(REQUESTS)
     ]
   );
-  const undo = found.map((el16) => attachOne6(el16, options));
+  const undo = found.map((el16) => attachOne5(el16, options));
   return () => undo.forEach((u) => u());
 }
 function setRequests(el16, requests) {
-  const memory = MEMORY6.get(el16);
+  const memory = MEMORY5.get(el16);
   if (!memory) return;
   memory.list = [...requests];
   memory.shown = memory.options.max ?? REQUESTS_MAX;
@@ -38272,7 +38314,7 @@ function setRequestsState(el16, state6, options = {}) {
   }
   setCardState(el16, state6, state6 === "loading" ? { words: strings.reqLoading } : void 0);
 }
-var REQUESTS, SECRET_HEADERS, MASK, REQUESTS_MAX, REQUESTS_COPY_EVENT, REQUESTS_TEST_EVENT, REQUESTS_RETRY_EVENT, REQUESTS_COPIED_MS, MEMORY6, ITEM_REQUEST, make8, pairsOf, classOf, msOf2, quote, keyOf3;
+var REQUESTS, SECRET_HEADERS, MASK, REQUESTS_MAX, REQUESTS_COPY_EVENT, REQUESTS_TEST_EVENT, REQUESTS_RETRY_EVENT, REQUESTS_COPIED_MS, MEMORY5, ITEM_REQUEST, make8, pairsOf, classOf, msOf2, quote, keyOf3;
 var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
@@ -38290,7 +38332,7 @@ var init_request_inspector = __esm({
     REQUESTS_TEST_EVENT = "kp-requests-test";
     REQUESTS_RETRY_EVENT = "kp-requests-retry";
     REQUESTS_COPIED_MS = 1500;
-    MEMORY6 = /* @__PURE__ */ new WeakMap();
+    MEMORY5 = /* @__PURE__ */ new WeakMap();
     ITEM_REQUEST = /* @__PURE__ */ new WeakMap();
     make8 = (doc, className, tag = "div") => {
       const node = doc.createElement(tag);
@@ -38738,7 +38780,7 @@ function paint3(root) {
   }
 }
 var LABEL_MIN, LABEL_COMFORT, LABEL_MAX2;
-var init_draw3 = __esm({
+var init_draw4 = __esm({
   "js/wheel/draw.js"() {
     "use strict";
     init_strings();
@@ -38907,7 +38949,7 @@ var init_spin = __esm({
     init_busy_card();
     init_calm();
     init_strings();
-    init_draw3();
+    init_draw4();
     init_state8();
     reduced3 = () => !motionAllowed();
   }
@@ -38915,11 +38957,11 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller6 = __esm({
+var init_controller7 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
-    init_draw3();
+    init_draw4();
     init_spin();
     init_state8();
     WheelControl = class extends Controller {
@@ -38980,7 +39022,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller6();
+    init_controller7();
     init_state8();
     init_state8();
     init_spin();
@@ -40141,7 +40183,7 @@ function stepsKey(root) {
   return stateOf2(root).steps.map((step) => step.id ?? step.answer?.id ?? step.title ?? step.text.slice(0, 24)).join("|");
 }
 function remember2(root) {
-  const memory = memoryOf(root);
+  const memory = memoryOf2(root);
   if (!memory) return;
   const state6 = stateOf2(root);
   if (!state6.steps.length) return;
@@ -40155,7 +40197,7 @@ function remember2(root) {
   });
 }
 function storedProgress(root) {
-  const memory = memoryOf(root);
+  const memory = memoryOf2(root);
   if (!memory) return null;
   const stored = memory.read(
     /** @type {string} */
@@ -40223,7 +40265,7 @@ function startResume(root) {
     paint4(root, false);
   } else applyProgress(root, stored);
 }
-var memoryOf, hasMoved;
+var memoryOf2, hasMoved;
 var init_memory = __esm({
   "js/focus-steps/memory.js"() {
     "use strict";
@@ -40238,7 +40280,7 @@ var init_memory = __esm({
     init_track_nav();
     init_flow();
     init_constants13();
-    memoryOf = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
+    memoryOf2 = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
     hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
   }
 });
@@ -40292,7 +40334,7 @@ function goNext(root) {
     state6.finished = { total: state6.steps.length, answers: { ...state6.answers }, startedAt: state6.startedAt || finishedAt, finishedAt };
     Object.assign(detail, state6.finished);
   }
-  memoryOf(root)?.forget("progress");
+  memoryOf2(root)?.forget("progress");
   root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail }));
 }
 function pressAnswer(root, button5) {
@@ -40518,7 +40560,7 @@ var init_flow = __esm({
     init_resume();
     init_tracks();
     init_track_nav();
-    init_api5();
+    init_api6();
   }
 });
 
@@ -40709,7 +40751,7 @@ function trackNext(root) {
   );
   recompute(root);
   if (state6.tracks.every((t) => t.order.every((i) => state6.done.has(i)))) {
-    memoryOf(root)?.forget("progress");
+    memoryOf2(root)?.forget("progress");
     root.dispatchEvent(
       new CustomEvent(FOCUS_STEPS_DONE_EVENT, {
         bubbles: true,
@@ -40883,7 +40925,7 @@ function say7(list, message, where = "live") {
   setTimeout(() => region.textContent = message, 60);
 }
 var clockOf, leftOf, stateOf3, el7, listOf2;
-var init_model3 = __esm({
+var init_model4 = __esm({
   "js/timer/model.js"() {
     "use strict";
     init_countdown();
@@ -41022,7 +41064,7 @@ var init_card = __esm({
     "use strict";
     init_strings();
     init_progressbar();
-    init_model3();
+    init_model4();
     init_state10();
   }
 });
@@ -41257,7 +41299,7 @@ var init_sync2 = __esm({
     init_state_plate();
     init_card();
     init_constants14();
-    init_model3();
+    init_model4();
     init_sound();
     init_state10();
     BUSY = /* @__PURE__ */ new WeakMap();
@@ -41397,7 +41439,7 @@ var init_run = __esm({
     init_strings();
     init_card();
     init_constants14();
-    init_model3();
+    init_model4();
     init_sound();
     init_state10();
     init_sync2();
@@ -41511,7 +41553,7 @@ var init_attach11 = __esm({
     init_strings();
     init_countdown();
     init_constants14();
-    init_model3();
+    init_model4();
     init_run();
     init_sound();
     init_state10();
@@ -41550,7 +41592,7 @@ var init_timer = __esm({
   "js/timer.js"() {
     "use strict";
     init_constants14();
-    init_model3();
+    init_model4();
     init_sync2();
     init_sound();
     init_run();
@@ -41647,7 +41689,7 @@ function setFocusStepsState(root, kind, message) {
   paint4(root, false);
 }
 var getStepIndex, getSteps, typing3;
-var init_api5 = __esm({
+var init_api6 = __esm({
   "js/focus-steps/api.js"() {
     "use strict";
     init_strings();
@@ -41786,7 +41828,7 @@ function attachFocusSteps(scope = document) {
         if (state6.finished) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { ...state6.finished } }));
       } else if (button5.classList.contains("kp-focus-steps__resume-go") && state6.pendingResume) applyProgress(root, state6.pendingResume);
       else if (button5.classList.contains("kp-focus-steps__resume-restart")) {
-        memoryOf(root)?.forget("progress");
+        memoryOf2(root)?.forget("progress");
         state6.pendingResume = null;
         paint4(root, false);
       } else if (button5.classList.contains("kp-focus-steps__next")) next2();
@@ -42005,7 +42047,7 @@ var init_attach12 = __esm({
     init_flow();
     init_tracks();
     init_track_nav();
-    init_api5();
+    init_api6();
     init_band();
     init_memory();
     init_lanes();
@@ -42040,7 +42082,7 @@ var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
     init_constants13();
-    init_api5();
+    init_api6();
     init_attach12();
   }
 });
@@ -42428,7 +42470,7 @@ function endUndo(list) {
     part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
 }
 var emit3;
-var init_api6 = __esm({
+var init_api7 = __esm({
   "js/checklist/api.js"() {
     "use strict";
     init_busy_card();
@@ -42442,12 +42484,12 @@ var init_api6 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_api6();
+    init_api7();
     init_parts();
     init_render2();
     init_rows2();
@@ -42589,10 +42631,10 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller7();
+    init_controller8();
     init_state11();
     init_state11();
-    init_api6();
+    init_api7();
   }
 });
 
@@ -43572,7 +43614,7 @@ var init_paint3 = __esm({
 
 // js/calendar/controller.js
 var WATCHED3, CalendarController;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -43821,12 +43863,12 @@ function attachCalendars(root = document, options = {}) {
   };
 }
 var calendarOf;
-var init_api7 = __esm({
+var init_api8 = __esm({
   "js/calendar/api.js"() {
     "use strict";
     init_controller();
     init_constants15();
-    init_controller8();
+    init_controller9();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -43860,7 +43902,7 @@ var init_calendar = __esm({
     "use strict";
     init_constants15();
     init_dates2();
-    init_api7();
+    init_api8();
   }
 });
 
@@ -44417,7 +44459,7 @@ function heatArea(el16) {
     }
   ];
 }
-var init_draw4 = __esm({
+var init_draw5 = __esm({
   "js/heat/draw.js"() {
     "use strict";
     init_strings();
@@ -44614,7 +44656,7 @@ var init_wire3 = __esm({
     "use strict";
     init_hovercard();
     init_constants16();
-    init_draw4();
+    init_draw5();
     init_grid_state();
     init_legend2();
     init_paging();
@@ -44706,10 +44748,10 @@ function drawUsesMap(el16, spec, ctx) {
   const strings = getStrings();
   const state6 = spec.state ?? "ready";
   const loading = state6 === "loading";
-  let memory = MEMORY7.get(el16);
+  let memory = MEMORY6.get(el16);
   if (!memory) {
     memory = { pin: null, lit: null, stop: null, off: null };
-    MEMORY7.set(el16, memory);
+    MEMORY6.set(el16, memory);
     const key = rememberKey(el16);
     if (key) {
       try {
@@ -45173,14 +45215,14 @@ function setUsesPin(el16, key) {
   if (card instanceof HTMLElement && card.getAttribute("aria-pressed") !== "true") card.click();
 }
 function leaveUsesMap(el16) {
-  const memory = MEMORY7.get(el16);
+  const memory = MEMORY6.get(el16);
   memory?.off?.();
   if (memory) memory.off = null;
   el16.classList.remove("kp-matrix--lines");
   el16.removeAttribute("data-kp-collapsed");
   el16.removeAttribute("data-kp-lit");
 }
-var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, TONES2, TONE_GLYPH, MEMORY7, make11, attr2, rememberKey;
+var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, TONES2, TONE_GLYPH, MEMORY6, make11, attr2, rememberKey;
 var init_uses_map = __esm({
   "js/uses-map.js"() {
     "use strict";
@@ -45192,7 +45234,7 @@ var init_uses_map = __esm({
     USES_COLLAPSE_BELOW = 640;
     TONES2 = ["ok", "warn", "bad", "muted"];
     TONE_GLYPH = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013" });
-    MEMORY7 = /* @__PURE__ */ new WeakMap();
+    MEMORY6 = /* @__PURE__ */ new WeakMap();
     make11 = (doc, tag, cls) => {
       const node = doc.createElement(tag);
       node.className = cls;
@@ -45432,7 +45474,7 @@ var init_matrix = __esm({
     init_card2();
     init_constants16();
     init_dom5();
-    init_draw4();
+    init_draw5();
     init_grid_state();
   }
 });
@@ -45590,7 +45632,7 @@ var init_matrix_wire = __esm({
     "use strict";
     init_hovercard();
     init_constants16();
-    init_draw4();
+    init_draw5();
     init_grid_state();
     init_matrix();
     MATRIX_WIRED = /* @__PURE__ */ new WeakMap();
@@ -45626,7 +45668,7 @@ var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
     init_constants16();
-    init_draw4();
+    init_draw5();
     init_pick();
     init_paging();
     init_legend2();
@@ -46474,7 +46516,7 @@ function setWeekLegend(el16, entries3) {
   );
   c.legend.hidden = entries3.length === 0;
 }
-var init_api8 = __esm({
+var init_api9 = __esm({
   "js/week/api.js"() {
     "use strict";
     init_build2();
@@ -46654,7 +46696,7 @@ var init_attach13 = __esm({
     init_calendar();
     init_locale();
     init_strings();
-    init_api8();
+    init_api9();
     init_build2();
     init_busy3();
     init_constants17();
@@ -46687,7 +46729,7 @@ var init_week = __esm({
     init_constants17();
     init_pills2();
     init_attach13();
-    init_api8();
+    init_api9();
   }
 });
 
@@ -48407,7 +48449,7 @@ function setSequencerSelection(el16, id) {
   c.focusId = c.selected ?? c.focusId;
   paint8(c, { fit: false });
 }
-var init_api9 = __esm({
+var init_api10 = __esm({
   "js/sequencer/api.js"() {
     "use strict";
     init_instance2();
@@ -48463,7 +48505,7 @@ var init_sequencer = __esm({
     init_links();
     init_timeline();
     init_attach14();
-    init_api9();
+    init_api10();
   }
 });
 
@@ -49823,7 +49865,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint9(c);
 }
-var init_api10 = __esm({
+var init_api11 = __esm({
   "js/gantt/api.js"() {
     "use strict";
     init_constants19();
@@ -50189,7 +50231,7 @@ var init_attach15 = __esm({
     init_paint6();
     init_selection3();
     init_axis();
-    init_api10();
+    init_api11();
     init_scale();
     init_chrome2();
   }
@@ -50224,7 +50266,7 @@ var init_gantt = __esm({
     init_constants19();
     init_scale();
     init_attach15();
-    init_api10();
+    init_api11();
   }
 });
 
@@ -50999,7 +51041,7 @@ function draw6(el16, spec) {
     if (left?.last) GROUPS2.delete(left.host);
   }
 }
-var init_draw5 = __esm({
+var init_draw6 = __esm({
   "js/uptime/draw.js"() {
     "use strict";
     init_strings();
@@ -51280,7 +51322,7 @@ var init_attach16 = __esm({
     init_motion();
     init_top_layer();
     init_constants20();
-    init_draw5();
+    init_draw6();
     init_figures();
     init_fit();
     init_group3();
@@ -51309,7 +51351,7 @@ var init_uptime = __esm({
     "use strict";
     init_constants20();
     init_figures();
-    init_draw5();
+    init_draw6();
     init_attach16();
   }
 });
@@ -54399,7 +54441,7 @@ function caretPosition(text, offset) {
   const line = before.split("\n").length;
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
-function attachOne7(area) {
+function attachOne6(area) {
   if (HANDLES4.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
@@ -54746,7 +54788,7 @@ function attachCodeFields(root = document) {
       ...root.querySelectorAll(CODE_FIELD)
     ]
   );
-  const undo = found.map((area) => attachOne7(area));
+  const undo = found.map((area) => attachOne6(area));
   return () => undo.forEach((u) => u());
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES4, serial5;
@@ -54790,7 +54832,7 @@ function currentSection(boxes, offset, atEnd) {
   });
   return found;
 }
-function attachOne8(nav) {
+function attachOne7(nav) {
   if (HANDLES5.has(nav)) return () => void 0;
   const doc = nav.ownerDocument;
   const view = (
@@ -55043,7 +55085,7 @@ function attachContents(root = document) {
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(CONTENTS) ? [root] : [], ...root.querySelectorAll(CONTENTS)]
   );
-  const undo = found.map((nav) => attachOne8(nav));
+  const undo = found.map((nav) => attachOne7(nav));
   return () => undo.forEach((u) => u());
 }
 var CONTENTS, CONTENTS_EVENT, HANDLES5, serial6;
@@ -55738,7 +55780,7 @@ var init_keys8 = __esm({
 
 // js/timefield/controller.js
 var WATCHED4, TimeController;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -55940,12 +55982,12 @@ function setTimePresets(root, presets) {
   if (field2.list.open) field2.list.draw();
 }
 var attachTimes;
-var init_api11 = __esm({
+var init_api12 = __esm({
   "js/timefield/api.js"() {
     "use strict";
     init_controller();
     init_constants21();
-    init_controller9();
+    init_controller10();
     init_field();
     init_state15();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -55975,7 +56017,7 @@ var init_timefield = __esm({
     "use strict";
     init_constants21();
     init_parse();
-    init_api11();
+    init_api12();
   }
 });
 
@@ -56267,7 +56309,7 @@ function severityWord2(key) {
     { critical: s2.quietCritical, warning: s2.quietWarning, info: s2.quietInfo, ok: s2.quietOk }[key] ?? key
   );
 }
-function attachOne9(root) {
+function attachOne8(root) {
   if (HANDLES7.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
@@ -56455,7 +56497,7 @@ function attachQuietHours(root = document) {
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(QUIET) ? [root] : [], ...root.querySelectorAll(QUIET)]
   );
-  const undo = found.map((el16) => attachOne9(el16));
+  const undo = found.map((el16) => attachOne8(el16));
   return () => undo.forEach((u) => u());
 }
 var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial7, HANDLES7;
@@ -57191,7 +57233,7 @@ function wire10(el16, now, zone) {
   el16.addEventListener("click", onClick);
   el16.addEventListener("keydown", onKey6);
   const watcher = new MutationObserver(() => render7());
-  watcher.observe(el16, { attributes: true, attributeFilter: OPTIONS2 });
+  watcher.observe(el16, { attributes: true, attributeFilter: OPTIONS3 });
   const view = doc.defaultView;
   const tick6 = view?.setInterval(() => {
     if (model.state === "ready" && (now() >= nextFlip || dayKey3(now(), zone) !== drawnDay)) render7();
@@ -57214,7 +57256,7 @@ function wire10(el16, now, zone) {
     handles15.delete(el16);
   };
 }
-var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles15, feedOf, OPTION_ATTRIBUTES2, OPTIONS2, idSeq3, dayKey3;
+var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles15, feedOf, OPTION_ATTRIBUTES2, OPTIONS3, idSeq3, dayKey3;
 var init_feed = __esm({
   "js/feed.js"() {
     "use strict";
@@ -57251,7 +57293,7 @@ var init_feed = __esm({
       max: "data-kp-feed-max",
       level: "data-kp-feed-level"
     };
-    OPTIONS2 = Object.values(OPTION_ATTRIBUTES2);
+    OPTIONS3 = Object.values(OPTION_ATTRIBUTES2);
     idSeq3 = 0;
     dayKey3 = (ms, zone) => agoMoment(ms, zone).slice(0, 10).split("/").reverse().join("-");
   }
@@ -57361,7 +57403,7 @@ function panelSlice(ordered2, given2) {
   return ordered2.filter((n) => (taken[n.severity] += 1) <= max);
 }
 var toMs4;
-var init_model4 = __esm({
+var init_model5 = __esm({
   "js/notices/model.js"() {
     "use strict";
     init_events2();
@@ -57455,7 +57497,7 @@ var init_view = __esm({
     init_state_plate();
     init_strings();
     init_events2();
-    init_model4();
+    init_model5();
     init_parts2();
     init_row();
     DATE_LENGTH = 10;
@@ -57654,7 +57696,7 @@ var init_view = __esm({
 
 // js/notices/controller.js
 var idSeq4, NoticesCentre;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -57795,7 +57837,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller10();
+    init_controller11();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -58257,7 +58299,7 @@ var init_keys9 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED5, RatingController;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -58522,12 +58564,12 @@ function ratingCell(cell, value, { max = DEFAULT_STARS, count: count2, for: item
   return host;
 }
 var attachRatings;
-var init_api12 = __esm({
+var init_api13 = __esm({
   "js/rating/api.js"() {
     "use strict";
     init_controller();
     init_constants22();
-    init_controller11();
+    init_controller12();
     init_build6();
     init_commit();
     init_math();
@@ -58555,7 +58597,7 @@ var init_rating = __esm({
     "use strict";
     init_constants22();
     init_math();
-    init_api12();
+    init_api13();
   }
 });
 
@@ -59085,7 +59127,7 @@ function say11(m, text) {
   if (m.status) m.status.textContent = text;
 }
 var models2, make20, attr7, clamp2, realOptions;
-var init_model5 = __esm({
+var init_model6 = __esm({
   "js/usual-picker/model.js"() {
     "use strict";
     init_listbox();
@@ -59113,7 +59155,7 @@ var exactItem, pickedValues, nearOf2;
 var init_lookup = __esm({
   "js/usual-picker/lookup.js"() {
     "use strict";
-    init_model5();
+    init_model6();
     init_names();
     exactItem = (m, typed) => m.items.find((i) => normaliseName(i.label) === normaliseName(typed));
     pickedValues = (m) => m.box.hasAttribute("data-kp-tags") ? m.handle.values() : [];
@@ -59265,7 +59307,7 @@ var init_layout = __esm({
     "use strict";
     init_strings();
     init_lookup();
-    init_model5();
+    init_model6();
     init_state17();
   }
 });
@@ -59314,7 +59356,7 @@ var init_picking = __esm({
   "js/usual-picker/picking.js"() {
     "use strict";
     init_listbox();
-    init_model5();
+    init_model6();
     sayAfter = (m, text) => window.setTimeout(() => say11(m, text), 0);
   }
 });
@@ -59541,7 +59583,7 @@ var init_sync3 = __esm({
     init_segmented();
     init_constants23();
     init_layout();
-    init_model5();
+    init_model6();
     init_picking();
     init_state17();
   }
@@ -59597,7 +59639,7 @@ var init_add = __esm({
     init_undo_toast();
     init_constants23();
     init_layout();
-    init_model5();
+    init_model6();
     init_picking();
     init_sync3();
   }
@@ -59896,7 +59938,7 @@ var init_wire4 = __esm({
     init_constants23();
     init_layout();
     init_lookup();
-    init_model5();
+    init_model6();
     init_names();
     init_picking();
     init_state17();
@@ -59952,7 +59994,7 @@ var init_attach17 = __esm({
   "js/usual-picker/attach.js"() {
     "use strict";
     init_constants23();
-    init_model5();
+    init_model6();
     init_sync3();
     init_wire4();
   }
@@ -60401,7 +60443,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -60592,7 +60634,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_group4();
     init_group4();
   }
@@ -60920,7 +60962,7 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
 function deplist(el16) {
   return HANDLES8.get(el16) ?? null;
 }
-function attachOne10(el16) {
+function attachOne9(el16) {
   if (HANDLES8.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
@@ -61160,11 +61202,11 @@ function attachDeplists(root = document) {
       ...root.querySelectorAll(DEPLIST)
     ]
   );
-  const undo = found.map((el16) => attachOne10(el16));
+  const undo = found.map((el16) => attachOne9(el16));
   return () => undo.forEach((u) => u());
 }
 function setDeplist(el16, items) {
-  if (!HANDLES8.has(el16)) attachOne10(el16);
+  if (!HANDLES8.has(el16)) attachOne9(el16);
   HANDLES8.get(el16)?.set(items);
 }
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES8, made3;
@@ -61232,7 +61274,7 @@ function traceText(hops, stop = "first-refusal") {
 function trace(el16) {
   return HANDLES9.get(el16) ?? null;
 }
-function attachOne11(el16) {
+function attachOne10(el16) {
   if (HANDLES9.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
@@ -61416,11 +61458,11 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne11(el16));
+  const undo = found.map((el16) => attachOne10(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES9.has(el16)) attachOne11(el16);
+  if (!HANDLES9.has(el16)) attachOne10(el16);
   HANDLES9.get(el16)?.set(hops);
 }
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES9, made4;
@@ -63093,7 +63135,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -63346,7 +63388,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller13();
+    init_controller14();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -65719,7 +65761,7 @@ var init_core2 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build7();
@@ -65949,7 +65991,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller14();
+    init_controller15();
     init_values2();
     init_values2();
   }
@@ -66117,7 +66159,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq7, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -66346,7 +66388,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller15();
+    init_controller16();
     init_fields();
     init_fields();
   }
@@ -67376,7 +67418,7 @@ var init_panel2 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -67635,7 +67677,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller16();
+    init_controller17();
     init_choices();
   }
 });
@@ -68483,7 +68525,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 var SIDE_ROOM;
-var init_draw6 = __esm({
+var init_draw7 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
@@ -68566,11 +68608,11 @@ function dataChild(el16) {
     return null;
   }
 }
-var init_api13 = __esm({
+var init_api14 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
-    init_draw6();
+    init_draw7();
     init_view2();
   }
 });
@@ -68998,10 +69040,10 @@ var init_attach19 = __esm({
     init_strings();
     init_constants26();
     init_instance3();
-    init_api13();
+    init_api14();
     init_options2();
     init_layout2();
-    init_draw6();
+    init_draw7();
     init_view2();
   }
 });
@@ -69039,7 +69081,7 @@ var init_graph = __esm({
     init_options2();
     init_layout2();
     init_labels2();
-    init_api13();
+    init_api14();
     init_attach19();
   }
 });
@@ -69314,7 +69356,7 @@ function write(list, id, by) {
   );
 }
 var STATE4, el10, attr10, stateOf5, byOf, itemOf;
-var init_model6 = __esm({
+var init_model7 = __esm({
   "js/claim/model.js"() {
     "use strict";
     init_checklist();
@@ -69511,7 +69553,7 @@ var init_rows3 = __esm({
     init_strings();
     init_idmark();
     init_menu_button();
-    init_model6();
+    init_model7();
     mode = (list) => attr10(list, "mode", "claim") === "assign" ? "assign" : "claim";
     among = (person, by) => person !== null && by.some((p) => p.id === person.id);
   }
@@ -69730,7 +69772,7 @@ var init_decorate = __esm({
     init_remember();
     init_state_plate();
     init_constants27();
-    init_model6();
+    init_model7();
     init_rows3();
   }
 });
@@ -69756,12 +69798,12 @@ function setClaim(list, id, claim) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
   );
 }
-var init_api14 = __esm({
+var init_api15 = __esm({
   "js/claim/api.js"() {
     "use strict";
     init_checklist();
     init_decorate();
-    init_model6();
+    init_model7();
   }
 });
 
@@ -69826,7 +69868,7 @@ var init_bulk = __esm({
     init_checklist();
     init_undo_toast();
     init_constants27();
-    init_model6();
+    init_model7();
   }
 });
 
@@ -69953,7 +69995,7 @@ var init_request = __esm({
     init_undo_toast();
     init_constants27();
     init_decorate();
-    init_model6();
+    init_model7();
     init_rows3();
   }
 });
@@ -70118,7 +70160,7 @@ var init_attach20 = __esm({
     init_bulk();
     init_constants27();
     init_decorate();
-    init_model6();
+    init_model7();
     init_request();
     init_rows3();
     init_state19();
@@ -70147,8 +70189,8 @@ var init_claim2 = __esm({
   "js/claim.js"() {
     "use strict";
     init_constants27();
-    init_model6();
-    init_api14();
+    init_model7();
+    init_api15();
     init_decorate();
     init_attach20();
   }
@@ -70796,7 +70838,7 @@ function paintKeys(root, person, keys) {
   }
   paintSummary(root);
 }
-var init_api15 = __esm({
+var init_api16 = __esm({
   "js/availability/api.js"() {
     "use strict";
     init_strings();
@@ -70944,7 +70986,7 @@ var init_request2 = __esm({
     "use strict";
     init_strings();
     init_undo_toast();
-    init_api15();
+    init_api16();
     init_constants28();
     init_facts();
     init_paint9();
@@ -71299,7 +71341,7 @@ var init_attach21 = __esm({
     init_shortcuts();
     init_remember();
     init_reason();
-    init_api15();
+    init_api16();
     init_constants28();
     init_facts();
     init_menu2();
@@ -71333,7 +71375,7 @@ var init_availability = __esm({
     init_constants28();
     init_dates3();
     init_facts();
-    init_api15();
+    init_api16();
     init_attach21();
   }
 });
@@ -72198,7 +72240,7 @@ function drawCanvas(root, m) {
   return canvas;
 }
 var QUIET2, THEME_CONTRAST, CANVAS_SCALE, CANVAS_SCALE_MIN;
-var init_draw7 = __esm({
+var init_draw8 = __esm({
   "js/qr/draw.js"() {
     "use strict";
     init_matrix2();
@@ -72388,7 +72430,7 @@ var init_render4 = __esm({
     init_reason();
     init_state_plate();
     init_strings();
-    init_draw7();
+    init_draw8();
     init_matrix2();
     init_state20();
     TIMER_MAX_MS = 2 ** 31 - 1;
@@ -72489,7 +72531,7 @@ var init_actions5 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -72593,7 +72635,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller17();
+    init_controller18();
     init_state20();
     init_state20();
     init_matrix2();
@@ -72679,7 +72721,7 @@ function say15(root, message) {
   setTimeout(() => target.textContent = message, 60);
 }
 var STATE7, el13, attr13;
-var init_model7 = __esm({
+var init_model8 = __esm({
   "js/console/model.js"() {
     "use strict";
     STATE7 = /* @__PURE__ */ new WeakMap();
@@ -72873,7 +72915,7 @@ var init_bar = __esm({
   "js/console/bar.js"() {
     "use strict";
     init_strings();
-    init_model7();
+    init_model8();
     init_state21();
   }
 });
@@ -73131,7 +73173,7 @@ var init_blocks = __esm({
     init_state_plate();
     init_busy_card();
     init_bar();
-    init_model7();
+    init_model8();
   }
 });
 
@@ -73173,7 +73215,7 @@ var init_history = __esm({
   "js/console/history.js"() {
     "use strict";
     init_constants29();
-    init_model7();
+    init_model8();
   }
 });
 
@@ -73301,7 +73343,7 @@ var init_run2 = __esm({
     init_blocks();
     init_constants29();
     init_history();
-    init_model7();
+    init_model8();
   }
 });
 
@@ -73385,7 +73427,7 @@ async function useTool(root, tool, b, button5) {
     }
   });
 }
-var init_api16 = __esm({
+var init_api17 = __esm({
   "js/console/api.js"() {
     "use strict";
     init_strings();
@@ -73393,7 +73435,7 @@ var init_api16 = __esm({
     init_flash();
     init_bar();
     init_blocks();
-    init_model7();
+    init_model8();
     init_run2();
   }
 });
@@ -73605,12 +73647,12 @@ var init_attach22 = __esm({
     init_shortcuts();
     init_newpill();
     init_reason();
-    init_api16();
+    init_api17();
     init_bar();
     init_blocks();
     init_constants29();
     init_history();
-    init_model7();
+    init_model8();
     init_run2();
   }
 });
@@ -73638,7 +73680,7 @@ var init_console3 = __esm({
   "js/console.js"() {
     "use strict";
     init_constants29();
-    init_api16();
+    init_api17();
     init_attach22();
   }
 });
@@ -73718,7 +73760,7 @@ function stateOf9(root) {
   return st;
 }
 var STATE8, BUILT, el14, attr14;
-var init_model8 = __esm({
+var init_model9 = __esm({
   "js/logviewer/model.js"() {
     "use strict";
     STATE8 = /* @__PURE__ */ new WeakMap();
@@ -73760,7 +73802,7 @@ var init_reads = __esm({
     "use strict";
     init_constants30();
     init_levels();
-    init_model8();
+    init_model9();
     signature = (root) => ["max", "wrap", "time", "level", "search", "search-only", "tools", "error", "error-title"].map((n) => attr14(root, n, "")).join("") + `${root.getAttribute("data-kp-state") ?? ""}`;
     logOf = (root) => (
       /** @type {HTMLElement} */
@@ -73974,7 +74016,7 @@ var init_parts5 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
-    init_model8();
+    init_model9();
     init_reads();
     init_state22();
   }
@@ -74064,7 +74106,7 @@ var init_rows4 = __esm({
     init_log();
     init_constants30();
     init_levels();
-    init_model8();
+    init_model9();
     init_reads();
   }
 });
@@ -74211,7 +74253,7 @@ var init_refresh = __esm({
     init_state_plate();
     init_busy_card();
     init_constants30();
-    init_model8();
+    init_model9();
     init_reads();
     init_rows4();
   }
@@ -74351,12 +74393,12 @@ function syncOptions(root) {
   const log = logOf(root);
   if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
 }
-var init_api17 = __esm({
+var init_api18 = __esm({
   "js/logviewer/api.js"() {
     "use strict";
     init_newpill();
     init_levels();
-    init_model8();
+    init_model9();
     init_parts5();
     init_reads();
     init_refresh();
@@ -74563,9 +74605,9 @@ var init_attach23 = __esm({
     init_reason();
     init_shortcuts();
     init_flash();
-    init_api17();
+    init_api18();
     init_constants30();
-    init_model8();
+    init_model9();
     init_parts5();
     init_reads();
     init_rows4();
@@ -74595,7 +74637,7 @@ var init_logviewer = __esm({
     "use strict";
     init_constants30();
     init_levels();
-    init_api17();
+    init_api18();
     init_attach23();
   }
 });
@@ -74757,7 +74799,7 @@ function stateOf10(root) {
   return st;
 }
 var STATE9, el15, attr15;
-var init_model9 = __esm({
+var init_model10 = __esm({
   "js/diff/model.js"() {
     "use strict";
     STATE9 = /* @__PURE__ */ new WeakMap();
@@ -74862,7 +74904,7 @@ var init_read3 = __esm({
   "js/diff/read.js"() {
     "use strict";
     init_constants31();
-    init_model9();
+    init_model10();
     kindOf3 = (kind) => kind === "added" || kind === "removed" ? kind : "same";
   }
 });
@@ -74971,7 +75013,7 @@ var init_lines = __esm({
     init_state_plate();
     init_constants31();
     init_fold2();
-    init_model9();
+    init_model10();
     init_read3();
     init_words2();
   }
@@ -75152,7 +75194,7 @@ var init_file = __esm({
     "use strict";
     init_strings();
     init_lines();
-    init_model9();
+    init_model10();
     init_read3();
     init_state23();
   }
@@ -75255,7 +75297,7 @@ var init_render5 = __esm({
     init_busy_card();
     init_reason();
     init_file();
-    init_model9();
+    init_model10();
     init_read3();
   }
 });
@@ -75323,7 +75365,7 @@ var init_actions6 = __esm({
     init_constants31();
     init_file();
     init_lines();
-    init_model9();
+    init_model10();
     init_read3();
     init_render5();
   }
@@ -75428,7 +75470,7 @@ var init_attach24 = __esm({
     init_actions6();
     init_constants31();
     init_lines();
-    init_model9();
+    init_model10();
     init_read3();
     init_render5();
   }
@@ -77671,13 +77713,6 @@ export {
   RUNS_RETRY_EVENT,
   RUNS_STATES,
   SECRET_HEADERS,
-  SELECTION,
-  SELECTION_ACTION_EVENT,
-  SELECTION_CLEAR_EVENT,
-  SELECTION_EVENT,
-  SELECTION_MATCHING_EVENT,
-  SELECTION_NAMES,
-  SELECTION_SAY_MS,
   SEVERITIES,
   SHORTCUTS_LIVE_SHEET,
   SHORTCUT_EVENT,
@@ -77991,7 +78026,6 @@ export {
   gantt_exports as ganttExports,
   getFacetValues,
   getQuantity,
-  getSelection,
   githubRepo,
   glyphCells,
   graph_exports as graphExports,
@@ -78208,11 +78242,6 @@ export {
   setRowBusy,
   setRuns,
   setRunsState,
-  setSelection,
-  setSelectionBusy,
-  setSelectionProgress,
-  setSelectionResult,
-  setSelectionRules,
   setSliderState,
   setSliderValues,
   setSnoozeBusy,

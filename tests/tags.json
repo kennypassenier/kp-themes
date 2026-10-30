@@ -361,6 +361,7 @@
         { "path": "js/row-select.js", "tags": ["@component:data"], "why": "rows ticked with the keyboard and with Shift-click [kpadopt5]" },
         { "path": "js/row-select/*.js", "tags": ["@component:data"], "why": "rows ticked with the keyboard and with Shift-click [kpadopt5]" },
         { "path": "js/selection-bar.js", "tags": ["@component:data"], "why": "the selection bar over a table or a list [kpadopt5]" },
+        { "path": "js/selection-bar/*.js", "tags": ["@component:data"], "why": "the selection bar over a table or a list [kpadopt5]" },
         { "path": "js/undo-toast.js", "tags": ["@component:feedback"], "why": "a toast with Undo and a visible clock [kpadopt5]" },
         {
             "path": "js/feed.js",

@@ -98,7 +98,7 @@
         "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
         "js/runs.js": { "digest": "cd531b566e90970e", "when": "[data-kp-runs]" },
         "js/segmented.js": { "digest": "5c828afd0ada8091", "when": "[data-kp-segmented]" },
-        "js/selection-bar.js": { "digest": "6f9045d70b5053ea", "when": "[data-kp-selection]" },
+        "js/selection-bar.js": { "digest": "a31499eaaf2be336", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "0c9a0472084b1b72", "when": "[data-kp-sentence]" },
         "js/sequencer.js": { "digest": "fcbfcdd9356781f7", "when": "[data-kp-sequencer]" },
         "js/shortcuts.js": { "digest": "58496115a807b312", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
