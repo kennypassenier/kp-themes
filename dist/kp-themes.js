@@ -46296,7 +46296,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       /** @type {HTMLElement | null} */
       picker.querySelector("[data-kp-colorpicker-value]")
     );
-    const report2 = (
+    const report3 = (
       /** @type {HTMLElement | null} */
       picker.querySelector("[data-kp-colorpicker-contrast]")
     );
@@ -46310,7 +46310,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       /** @type {HTMLInputElement | null} */
       picker.querySelector(`[data-kp-channel="${channel}"]`)
     );
-    const before = { swatch: swatch?.style.background ?? "", value: value?.textContent ?? "", report: report2?.textContent ?? "" };
+    const before = { swatch: swatch?.style.background ?? "", value: value?.textContent ?? "", report: report3?.textContent ?? "" };
     const read = () => ({ h: Number(slider2("h")?.value ?? 0), s: Number(slider2("s")?.value ?? 0), l: Number(slider2("l")?.value ?? 0) });
     const update2 = (announce4) => {
       const colour = read();
@@ -46325,12 +46325,12 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       let ok = null;
       const s2 = getStrings();
       if (ground === null) {
-        if (report2 !== null) report2.textContent = s2.contrastMissing(against);
+        if (report3 !== null) report3.textContent = s2.contrastMissing(against);
         delete picker.dataset.kpContrastOk;
       } else {
         ratio = contrast(hslToRgb(colour), ground);
         ok = meets(ratio, kind);
-        if (report2 !== null) report2.textContent = s2.contrastReport(ratio.toFixed(2), against, ok ? s2.contrastPasses : s2.contrastFails);
+        if (report3 !== null) report3.textContent = s2.contrastReport(ratio.toFixed(2), against, ok ? s2.contrastPasses : s2.contrastFails);
         if (ok) picker.dataset.kpContrastOk = "";
         else delete picker.dataset.kpContrastOk;
       }
@@ -46367,7 +46367,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       picker.style.removeProperty("--kp-color");
       if (swatch !== null) swatch.style.background = before.swatch;
       if (value !== null) value.textContent = before.value;
-      if (report2 !== null) report2.textContent = before.report;
+      if (report3 !== null) report3.textContent = before.report;
       delete picker.dataset.kpContrastOk;
       handles7.delete(picker);
       delete picker.dataset.kpColorpickerAttached;
@@ -59293,10 +59293,10 @@ function sharedSize(done, total, base) {
   const scaled = new Intl.NumberFormat(void 0, { maximumFractionDigits: power === 0 ? 0 : 1 }).format(done / base ** power);
   return getStrings().jobLineBytes(scaled, all);
 }
-function jobLineText(report2, { base = 1e3 } = {}) {
+function jobLineText(report3, { base = 1e3 } = {}) {
   const s2 = getStrings();
   const parts2 = [];
-  const { step, steps, done, total } = report2;
+  const { step, steps, done, total } = report3;
   if (Number.isFinite(step) && Number.isFinite(steps) && /** @type {number} */
   steps > 0)
     parts2.push(s2.jobLineStep(
@@ -59324,16 +59324,16 @@ function jobLineText(report2, { base = 1e3 } = {}) {
     void 0,
     { base }
   )));
-  let eta = report2.etaSeconds;
-  if (!Number.isFinite(eta) && Number.isFinite(report2.rate) && /** @type {number} */
-  report2.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
+  let eta = report3.etaSeconds;
+  if (!Number.isFinite(eta) && Number.isFinite(report3.rate) && /** @type {number} */
+  report3.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
     eta = Math.max(
       0,
       /** @type {number} */
       total - /** @type {number} */
       done
     ) / /** @type {number} */
-    report2.rate;
+    report3.rate;
   }
   if (Number.isFinite(eta)) parts2.push(s2.transferLeft(transferEta(
     /** @type {number} */
@@ -59349,12 +59349,12 @@ function stepPosition(list) {
   const index = at >= 0 ? at : waiting >= 0 ? waiting : items.length - 1;
   return { step: Math.max(0, index) + 1, steps: items.length };
 }
-function paint10(line, report2) {
+function paint10(line, report3) {
   const base = (
     /** @type {1000 | 1024} */
     line.getAttribute("data-kp-bytes-base") === "1024" ? 1024 : 1e3
   );
-  const text = jobLineText(report2, { base });
+  const text = jobLineText(report3, { base });
   if (line.textContent !== text) {
     line.textContent = text;
     line.dispatchEvent(new CustomEvent(JOBLINE_EVENT, { bubbles: true, detail: { text } }));
@@ -59365,16 +59365,16 @@ function listOf4(line) {
   const found = target ? document.querySelector(target) : null;
   return found?.matches(STEPLIST_SELECTOR) ? found : null;
 }
-function setJobLine(line, report2) {
+function setJobLine(line, report3) {
   const next2 = { ...reports.get(line) ?? {} };
-  for (const [key, value] of Object.entries(report2)) {
+  for (const [key, value] of Object.entries(report3)) {
     if (value === null || value === void 0) delete /** @type {any} */
     next2[key];
     else next2[key] = value;
   }
   reports.set(line, next2);
   const list = listOf4(line);
-  paint10(line, list && !("step" in report2) ? { ...next2, ...stepPosition(list) } : next2);
+  paint10(line, list && !("step" in report3) ? { ...next2, ...stepPosition(list) } : next2);
 }
 function buildJobLine({ label, steplist } = {}) {
   const line = document.createElement("p");
@@ -83971,22 +83971,22 @@ function scriptSide() {
 function diagnose(stylesheet, script, strings = getStrings()) {
   const onlyInStylesheet = stylesheet.themes.filter((name) => !script.themes.includes(name));
   const onlyInScript = script.themes.filter((name) => !stylesheet.themes.includes(name));
-  const report2 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
-  if (stylesheet.version === null) return report2("no-version", strings.diagnosticsNoVersion);
+  const report3 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
+  if (stylesheet.version === null) return report3("no-version", strings.diagnosticsNoVersion);
   const order = compareVersions(stylesheet.version, script.version ?? "");
   if (order === null || order === 0) {
-    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report2("match", strings.diagnosticsMatch);
-    return report2("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
+    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report3("match", strings.diagnosticsMatch);
+    return report3("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
   }
-  if (order < 0) return report2("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
-  return report2("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
+  if (order < 0) return report3("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
+  return report3("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
 }
 function diagnostics({ root, strings } = {}) {
   return diagnose(stylesheetSide({ root }), scriptSide(), strings ?? getStrings());
 }
 function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   const s2 = strings ?? getStrings();
-  const report2 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
+  const report3 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
   const unknown = s2.diagnosticsUnknownVersion;
   const heading = document.createElement("h2");
   heading.textContent = s2.diagnosticsHeading;
@@ -84018,29 +84018,29 @@ function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   thead.append(head);
   const tbody = document.createElement("tbody");
   tbody.append(
-    row(s2.diagnosticsVersion, report2.stylesheet.version ?? unknown, report2.script.version ?? unknown, "version"),
-    row(s2.diagnosticsThemes, report2.stylesheet.themes.join(" "), report2.script.themes.join(" "), "themes"),
+    row(s2.diagnosticsVersion, report3.stylesheet.version ?? unknown, report3.script.version ?? unknown, "version"),
+    row(s2.diagnosticsThemes, report3.stylesheet.themes.join(" "), report3.script.themes.join(" "), "themes"),
     row(
       s2.diagnosticsEffects,
       "\u2014",
-      report2.script.unknownEffects?.length ? report2.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
+      report3.script.unknownEffects?.length ? report3.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
       "effects"
     )
   );
   table.append(thead, tbody);
   const verdict = document.createElement("p");
-  verdict.className = report2.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
+  verdict.className = report3.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
   verdict.dataset.kpDiagnostic = "verdict";
-  verdict.dataset.kpStatus = report2.status;
-  verdict.textContent = report2.verdict;
+  verdict.dataset.kpStatus = report3.status;
+  verdict.textContent = report3.verdict;
   const detail = document.createElement("ul");
   detail.dataset.kpDiagnostic = "detail";
   for (
     const [names, sentence2] of
     /** @type {[string[], (n: string) => string][]} */
     [
-      [report2.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
-      [report2.onlyInScript, s2.diagnosticsOnlyInScript]
+      [report3.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
+      [report3.onlyInScript, s2.diagnosticsOnlyInScript]
     ]
   ) {
     if (names.length === 0) continue;
@@ -84049,7 +84049,7 @@ function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
     detail.append(li);
   }
   target.replaceChildren(heading, verdict, table, detail);
-  return report2;
+  return report3;
 }
 
 // kp-themes-entry.js
@@ -84091,11 +84091,17 @@ __export(lazy_register_exports, {
   registerLoaded: () => registerLoaded,
   registersPresent: () => registersPresent
 });
-init_strings();
+
+// js/lazy-register/controller.js
+init_controller();
+
+// js/lazy-register/values.js
 var REGISTER_ATTRIBUTE = "data-kp-register";
 var REGISTER_PATTERN = "/css/{theme}-register.css";
 var REGISTER_LOAD_EVENT = "kp-register-load";
 var REGISTER_ERROR_EVENT = "kp-register-error";
+
+// js/lazy-register/links.js
 var loadsByDocument = /* @__PURE__ */ new WeakMap();
 var loadedByDocument = /* @__PURE__ */ new WeakMap();
 function stateOf11(doc) {
@@ -84136,103 +84142,163 @@ function registerLoaded(theme, { pattern = REGISTER_PATTERN, doc = document } = 
   const link = registerLink(theme, { pattern, doc });
   return link !== null && hasLoaded(link);
 }
+
+// js/lazy-register/ensure.js
+init_strings();
+var RegisterLoad = class {
+  /**
+   * @param {string} theme
+   * @param {string} href
+   * @param {Document} doc
+   * @param {HTMLLinkElement | null} existing a link already in the document that serves this register
+   */
+  constructor(theme, href, doc, existing) {
+    this.theme = theme;
+    this.href = href;
+    this.doc = doc;
+    this.existing = existing;
+    this.link = existing ?? doc.createElement("link");
+    this.state = stateOf11(doc);
+  }
+  /** The promise that settles when the link has loaded or failed; the listeners are on the link before it returns. @returns {Promise<HTMLLinkElement>} */
+  start() {
+    return new Promise((resolve, reject) => {
+      if (this.existing && hasLoaded(this.existing)) {
+        this.state.loaded.add(this.href);
+        resolve(this.existing);
+        return;
+      }
+      this.link.addEventListener("load", () => this.onLoad(resolve), { once: true });
+      this.link.addEventListener("error", () => this.onError(reject), { once: true });
+    });
+  }
+  /** @param {(link: HTMLLinkElement) => void} resolve */
+  onLoad(resolve) {
+    this.state.loaded.add(this.href);
+    this.emit(REGISTER_LOAD_EVENT);
+    resolve(this.link);
+  }
+  /** A failed load is forgotten and its link removed, so the next call tries again. @param {(error: Error) => void} reject */
+  onError(reject) {
+    this.state.loads.delete(this.href);
+    if (!this.existing) this.link.remove();
+    this.emit(REGISTER_ERROR_EVENT);
+    reject(new Error(getStrings().registerLoadFailed(this.theme, this.link.href)));
+  }
+  /** @param {string} type */
+  emit(type) {
+    this.doc.documentElement.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { theme: this.theme, href: this.link.href } }));
+  }
+  /** Put a link of our own into <head>; a link already there is left alone. */
+  insert() {
+    if (this.existing) return;
+    const { link } = this;
+    link.rel = "stylesheet";
+    link.href = this.href;
+    link.setAttribute(REGISTER_ATTRIBUTE, this.theme);
+    link.setAttribute("blocking", "render");
+    this.doc.head.append(link);
+  }
+};
 function ensureRegister(theme, { pattern = REGISTER_PATTERN, doc = document } = {}) {
-  const { loads, loaded } = stateOf11(doc);
+  const { loads } = stateOf11(doc);
   const href = registerHref(theme, { pattern, doc });
   const known4 = loads.get(href);
   if (known4) return known4;
-  const existing = registerLink(theme, { pattern, doc });
-  const link = existing ?? doc.createElement("link");
-  const root = doc.documentElement;
-  const promise = new Promise((resolve, reject) => {
-    if (existing && hasLoaded(existing)) {
-      loaded.add(href);
-      resolve(existing);
-      return;
-    }
-    link.addEventListener(
-      "load",
-      () => {
-        loaded.add(href);
-        root.dispatchEvent(new CustomEvent(REGISTER_LOAD_EVENT, { bubbles: true, detail: { theme, href: link.href } }));
-        resolve(link);
-      },
-      { once: true }
-    );
-    link.addEventListener(
-      "error",
-      () => {
-        loads.delete(href);
-        if (!existing) link.remove();
-        root.dispatchEvent(new CustomEvent(REGISTER_ERROR_EVENT, { bubbles: true, detail: { theme, href: link.href } }));
-        reject(new Error(getStrings().registerLoadFailed(theme, link.href)));
-      },
-      { once: true }
-    );
-  });
+  const load = new RegisterLoad(theme, href, doc, registerLink(theme, { pattern, doc }));
+  const promise = load.start();
   loads.set(href, promise);
-  if (!existing) {
-    link.rel = "stylesheet";
-    link.href = href;
-    link.setAttribute(REGISTER_ATTRIBUTE, theme);
-    link.setAttribute("blocking", "render");
-    doc.head.append(link);
-  }
+  load.insert();
   return promise;
 }
-function attachLazyRegisters({ pattern = REGISTER_PATTERN, hold = true, prune = false, root } = {}) {
-  if (typeof document === "undefined") return () => {
-  };
-  const doc = root?.ownerDocument ?? document;
-  const html = root ?? doc.documentElement;
-  const options = { pattern, doc };
-  const report2 = (error) => console.error(error instanceof Error ? error.message : error);
-  const onBefore = (e) => {
-    if (!hold || e.defaultPrevented) return;
+
+// js/lazy-register/controller.js
+var report2 = (error) => console.error(error instanceof Error ? error.message : error);
+var LazyRegisters = class extends Controller {
+  /**
+   * @param {HTMLElement} host the element that wears the theme (default: theme-core's root)
+   * @param {{ pattern?: string, hold?: boolean, prune?: boolean }} [options]
+   */
+  constructor(host, options = {}) {
+    super(host, options);
+    const { pattern = REGISTER_PATTERN, hold = true, prune = false } = options;
+    this.hold = hold;
+    this.prune = prune;
+    this.doc = host.ownerDocument;
+    this.loadOptions = { pattern, doc: this.doc };
+  }
+  connect() {
+    this.listen(this.host, BEFORE_THEME_EVENT, (e) => this.onBefore(e));
+    this.own(onThemeChange((theme, { previous }) => this.onChange(theme, previous), { root: this.host }));
+    this.own(() => this.dropHeld());
+    ensureRegister(currentTheme({ root: this.host }), this.loadOptions).catch(report2);
+  }
+  /**
+   * Before a change: when the new register is not here yet, refuse the
+   * change, mark it held, fetch, then ask again. The second ask finds the
+   * register loaded and goes through, so the root never wears a theme
+   * ahead of its register. A choice made in the meantime removes the
+   * mark (applyTheme does), and the stale load then applies nothing.
+   * @param {Event} e
+   */
+  onBefore(e) {
+    if (!this.hold || e.defaultPrevented) return;
     const { theme } = (
       /** @type {CustomEvent<{ theme: string }>} */
       e.detail
     );
-    if (registerLoaded(theme, options)) return;
+    if (registerLoaded(theme, this.loadOptions)) return;
     const element = (
       /** @type {Element} */
       e.target
     );
     e.preventDefault();
     element.setAttribute(PENDING_THEME_ATTRIBUTE, theme);
-    ensureRegister(theme, options).then(
-      () => {
-        if (element.getAttribute(PENDING_THEME_ATTRIBUTE) !== theme) return;
-        applyTheme(theme, { root: element });
-      },
-      (error) => {
-        if (element.getAttribute(PENDING_THEME_ATTRIBUTE) === theme) element.removeAttribute(PENDING_THEME_ATTRIBUTE);
-        report2(error);
-      }
+    ensureRegister(theme, this.loadOptions).then(
+      () => this.land(element, theme),
+      (error) => this.giveUp(element, theme, error)
     );
-  };
-  html.addEventListener(BEFORE_THEME_EVENT, onBefore);
-  const unsubscribe = onThemeChange(
-    (theme, { previous }) => {
-      ensureRegister(theme, options).catch(report2);
-      if (prune && previous && previous !== theme) {
-        const link = registerLink(previous, options);
-        if (link) {
-          link.remove();
-          const href = registerHref(previous, options);
-          stateOf11(doc).loads.delete(href);
-          stateOf11(doc).loaded.delete(href);
-        }
-      }
-    },
-    { root: html }
+  }
+  /** The register has arrived: the held change goes through unless a later choice superseded it. @param {Element} element @param {string} theme */
+  land(element, theme) {
+    if (this.destroyed || element.getAttribute(PENDING_THEME_ATTRIBUTE) !== theme) return;
+    applyTheme(theme, { root: element });
+  }
+  /** The register failed: the held change is dropped and the error reported. @param {Element} element @param {string} theme @param {unknown} error */
+  giveUp(element, theme, error) {
+    if (element.getAttribute(PENDING_THEME_ATTRIBUTE) === theme) element.removeAttribute(PENDING_THEME_ATTRIBUTE);
+    report2(error);
+  }
+  /** A theme was worn: fetch its register, and prune the previous one when asked to. @param {string} theme @param {string | null | undefined} previous */
+  onChange(theme, previous) {
+    ensureRegister(theme, this.loadOptions).catch(report2);
+    if (!this.prune || !previous || previous === theme) return;
+    const link = registerLink(previous, this.loadOptions);
+    if (!link) return;
+    link.remove();
+    const href = registerHref(previous, this.loadOptions);
+    stateOf11(this.doc).loads.delete(href);
+    stateOf11(this.doc).loaded.delete(href);
+  }
+  /** A held change is dropped rather than left to land after detach. */
+  dropHeld() {
+    for (const el16 of [this.host, ...this.host.querySelectorAll(`[${PENDING_THEME_ATTRIBUTE}]`)]) el16.removeAttribute(PENDING_THEME_ATTRIBUTE);
+  }
+};
+function followRegisters({ pattern, hold, prune, root }) {
+  const host = (
+    /** @type {HTMLElement} */
+    root ?? document.documentElement
   );
-  ensureRegister(currentTheme({ root: html }), options).catch(report2);
-  return () => {
-    html.removeEventListener(BEFORE_THEME_EVENT, onBefore);
-    for (const el16 of [html, ...html.querySelectorAll(`[${PENDING_THEME_ATTRIBUTE}]`)]) el16.removeAttribute(PENDING_THEME_ATTRIBUTE);
-    unsubscribe();
+  const made6 = controllerOf(host, LazyRegisters) ? void 0 : attachOne(host, LazyRegisters, { pattern, hold, prune });
+  return () => made6?.destroy();
+}
+
+// js/lazy-register.js
+function attachLazyRegisters(options = {}) {
+  if (typeof document === "undefined") return () => {
   };
+  return followRegisters(options);
 }
 
 // kp-themes-entry.js

@@ -1,11 +1,6 @@
-/** The attribute a register link carries, with the theme it serves as its value. A contract value. */
-export declare const REGISTER_ATTRIBUTE = "data-kp-register";
-/** Where a register is served from by default; `{theme}` is replaced by the name. */
-export declare const REGISTER_PATTERN = "/css/{theme}-register.css";
-/** Dispatched on the root, bubbling, when a register has loaded: `{ theme, href }`. */
-export declare const REGISTER_LOAD_EVENT = "kp-register-load";
-/** Dispatched on the root, bubbling, when a register failed to load: `{ theme, href }`. The theme stays what it was. */
-export declare const REGISTER_ERROR_EVENT = "kp-register-error";
+export { REGISTER_ATTRIBUTE, REGISTER_PATTERN, REGISTER_LOAD_EVENT, REGISTER_ERROR_EVENT } from './lazy-register/values.js';
+export { registerHref, registerLink, registersPresent, registerLoaded } from './lazy-register/links.js';
+export { ensureRegister } from './lazy-register/ensure.js';
 export type LazyRegisterOptions = {
     /**
      * where a register is served from, with `{theme}` in it (default REGISTER_PATTERN)
@@ -17,51 +12,10 @@ export type LazyRegisterOptions = {
     doc?: Document;
 };
 /**
- * The URL of a theme's register.
- *
- * @param {string} theme
- * @param {{ pattern?: string, doc?: Document }} [options]
- * @returns {string} absolute, resolved against the document
+ * @typedef {object} LazyRegisterOptions
+ * @property {string} [pattern] where a register is served from, with `{theme}` in it (default REGISTER_PATTERN)
+ * @property {Document} [doc] the document to insert into (default: the current one)
  */
-export declare function registerHref(theme: string, { pattern, doc }?: {
-    pattern?: string;
-    doc?: Document;
-}): string;
-/**
- * The link in the document that serves `theme`'s register: one carrying
- * REGISTER_ATTRIBUTE for it, or else a plain stylesheet link at its URL.
- *
- * @param {string} theme
- * @param {LazyRegisterOptions} [options]
- * @returns {HTMLLinkElement | null}
- */
-export declare function registerLink(theme: string, { pattern, doc }?: LazyRegisterOptions): HTMLLinkElement | null;
-/**
- * The themes whose register links are in the document, in document order.
- *
- * @param {Document} [doc]
- * @returns {string[]}
- */
-export declare function registersPresent(doc?: Document): string[];
-/**
- * Whether `theme`'s register is in the document and has loaded.
- *
- * @param {string} theme
- * @param {LazyRegisterOptions} [options]
- */
-export declare function registerLoaded(theme: string, { pattern, doc }?: LazyRegisterOptions): boolean;
-/**
- * Make sure `theme`'s register is in the document, and resolve when it has
- * loaded. A link already there — the no-flash snippet's, a hand-written
- * one, an earlier call's — is reused, so a register is fetched once. A
- * failed load is forgotten and its link removed, so the next call tries
- * again.
- *
- * @param {string} theme
- * @param {LazyRegisterOptions} [options]
- * @returns {Promise<HTMLLinkElement>}
- */
-export declare function ensureRegister(theme: string, { pattern, doc }?: LazyRegisterOptions): Promise<HTMLLinkElement>;
 /**
  * Keep the document's registers in step with its theme.
  *
@@ -75,7 +29,7 @@ export declare function ensureRegister(theme: string, { pattern, doc }?: LazyReg
  *   root: the element that wears the theme (default: theme-core's root).
  * @returns {() => void} detach: stop following theme changes and drop a held change; links already inserted stay
  */
-export declare function attachLazyRegisters({ pattern, hold, prune, root }?: {
+export declare function attachLazyRegisters(options?: {
     pattern?: string;
     hold?: boolean;
     prune?: boolean;
