@@ -8,7 +8,7 @@
         "js/alarm.js": { "digest": "f1234069084dbbb7", "when": "[data-kp-alarm]" },
         "js/anchors.js": { "digest": "1cf5841c25e107ad", "when": "[data-kp-anchors]" },
         "js/art.js": { "digest": "22eeb301a2b92523", "when": "[data-kp-art]" },
-        "js/attention.js": { "digest": "76a2e4da0f8bdd07", "when": ".kp-attention" },
+        "js/attention.js": { "digest": "7c49c3476fb34989", "when": ".kp-attention" },
         "js/auto-refresh.js": { "digest": "eb67311c1d2d3d41", "when": "[data-kp-refresh]" },
         "js/autosize.js": { "digest": "3a0cba6ee822ba7d", "when": "textarea[data-kp-autosize]" },
         "js/availability.js": { "digest": "554dafbb1e66f83c", "when": "[data-kp-availability]" },
