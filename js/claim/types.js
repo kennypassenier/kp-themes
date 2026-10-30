@@ -23,6 +23,6 @@
  * @property {(answer: Promise<unknown>) => void} settle  hold the row on its spinner until the server has answered
  */
 
-/** @typedef {{ viewer: ClaimPerson | null, people: ClaimPerson[], busy: Set<string>, refused: Map<string, number>, filter: string, off: (() => void)[], said: string }} ClaimState */
+/** @typedef {{ viewer: ClaimPerson | null, people: ClaimPerson[], busy: Set<string>, refused: Map<string, number>, filter: string, said: string }} ClaimState */
 
 export {};

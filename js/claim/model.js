@@ -27,7 +27,7 @@ export const attr = (list, name, fallback) => list.getAttribute(`data-kp-claim-$
 export const stateOf = (list) => {
     let s = STATE.get(list);
     if (!s) {
-        s = { viewer: null, people: [], busy: new Set(), refused: new Map(), filter: 'all', off: [], said: '' };
+        s = { viewer: null, people: [], busy: new Set(), refused: new Map(), filter: 'all', said: '' };
         STATE.set(list, s);
     }
     return s;

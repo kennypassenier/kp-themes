@@ -80046,7 +80046,7 @@ var init_model8 = __esm({
     stateOf6 = (list) => {
       let s2 = STATE2.get(list);
       if (!s2) {
-        s2 = { viewer: null, people: [], busy: /* @__PURE__ */ new Set(), refused: /* @__PURE__ */ new Map(), filter: "all", off: [], said: "" };
+        s2 = { viewer: null, people: [], busy: /* @__PURE__ */ new Set(), refused: /* @__PURE__ */ new Map(), filter: "all", said: "" };
         STATE2.set(list, s2);
       }
       return s2;
@@ -80687,6 +80687,159 @@ var init_state27 = __esm({
   }
 });
 
+// js/claim/controller.js
+var LIVE_OPTIONS, ClaimList;
+var init_controller65 = __esm({
+  "js/claim/controller.js"() {
+    "use strict";
+    init_controller();
+    init_checklist();
+    init_menu_button();
+    init_reason();
+    init_remember();
+    init_shortcuts();
+    init_strings();
+    init_bulk();
+    init_constants39();
+    init_decorate();
+    init_model8();
+    init_request2();
+    init_rows8();
+    init_state27();
+    LIVE_OPTIONS = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
+      (n) => `data-kp-claim-${n}`
+    );
+    ClaimList = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.lastSort = attr10(host, "gap-sort", "keep");
+      }
+      connect() {
+        const list = this.host;
+        this.own(() => {
+          claimState.serial += 1;
+        });
+        this.readStart();
+        this.own(attachDisabledReasons(list));
+        this.listen(list, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(list, CHECKLIST_RENDER_EVENT, () => decorate(list));
+        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS });
+        this.listen(list, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(list, CHECKLIST_RETRY_EVENT, () => list.dispatchEvent(new CustomEvent(CLAIM_RETRY_EVENT, { bubbles: true })));
+        this.listen(list, MENU_SELECT_EVENT, (event) => this.onMenu(event));
+        if (list.getAttribute("data-kp-claim-keys") !== "false") this.registerKeys();
+        decorate(list);
+      }
+      /** The viewer the markup names and the filter: the remembered one, else the asked one, else all. */
+      readStart() {
+        const list = this.host;
+        const st = stateOf6(list);
+        const viewerId = list.getAttribute("data-kp-claim-viewer");
+        if (viewerId && !st.viewer) st.viewer = { id: viewerId, name: list.getAttribute("data-kp-claim-viewer-name") ?? viewerId };
+        const remembered = memoryFor(list, "claim")?.read("filter", null);
+        const asked = list.getAttribute("data-kp-claim-filter");
+        st.filter = typeof remembered === "string" && CLAIM_FILTERS.includes(remembered) ? remembered : CLAIM_FILTERS.includes(asked ?? "") ? (
+          /** @type {string} */
+          asked
+        ) : "all";
+      }
+      /** The keys of the list in the shortcut sheet: take or let go of the focused row, and the gaps filter. */
+      registerKeys() {
+        const list = this.host;
+        const s2 = getStrings();
+        const here = () => list.contains(document.activeElement) && document.activeElement?.closest(".kp-checklist__item") !== null;
+        this.own(
+          registerShortcuts(
+            list,
+            [
+              {
+                keys: "c",
+                what: s2.claimKeyTake,
+                group: s2.claimKeyGroup,
+                when: () => here() && mode(list) === "claim" && stateOf6(list).viewer !== null,
+                reason: s2.claimKeyReason,
+                run: () => {
+                  const row2 = document.activeElement?.closest(".kp-checklist__item");
+                  if (row2 instanceof HTMLElement) press(list, row2);
+                }
+              },
+              {
+                keys: "Shift C",
+                what: s2.claimKeyGaps,
+                group: s2.claimKeyGroup,
+                run: () => setClaimFilter(list, stateOf6(list).filter === "gaps" ? "all" : "gaps")
+              }
+            ],
+            { layoutGuard: "off" }
+          )
+        );
+      }
+      /** Every option is live: change the attribute and the rows are drawn again (a page that switches a look at run time). */
+      onAttributes() {
+        const list = this.host;
+        const sort = attr10(list, "gap-sort", "keep");
+        if (sort !== this.lastSort) {
+          this.lastSort = sort;
+          setChecklistItems(list, getChecklistItems(list));
+        } else decorate(list);
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const list = this.host;
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        const button6 = target.closest(".kp-claim__button");
+        if (button6 instanceof HTMLButtonElement) {
+          event.preventDefault();
+          const row2 = button6.closest(".kp-checklist__item");
+          if (row2 instanceof HTMLElement && button6.getAttribute("aria-disabled") !== "true") press(list, row2);
+          return;
+        }
+        const chip = target.closest(".kp-claim__chips [data-value]");
+        if (chip) return setClaimFilter(list, chip.getAttribute("data-value") ?? "all");
+        if (target.closest(".kp-claim__take-all")) return void takeAll(list);
+        if (target.closest(".kp-claim__copy")) return void copyGaps(list);
+      }
+      /** A person picked in a row's assign menu: assign them, or take them off. @param {Event} event */
+      onMenu(event) {
+        const list = this.host;
+        const detail = (
+          /** @type {CustomEvent} */
+          event.detail
+        );
+        const wrapper = event.target instanceof Element ? event.target.closest(".kp-claim__assign") : null;
+        const id = wrapper?.getAttribute("data-kp-key");
+        if (!id || !detail?.value) return;
+        const person = [...stateOf6(list).people, ...byOf(itemOf(list, id) ?? {})].find((p) => p.id === detail.value) ?? null;
+        if (!person) return;
+        const item = itemOf(list, id);
+        void request(list, id, among(person, byOf(item ?? {})) ? "unassign" : "assign", person);
+      }
+      /**
+       * The shortcut engine never fires a letter while an input has the focus, and a row's tick box is one: c works there too.
+       * @param {KeyboardEvent} event
+       */
+      onKey(event) {
+        const list = this.host;
+        const target = event.target;
+        if (event.key !== "c" || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey || event.repeat) return;
+        if (!(target instanceof HTMLInputElement) || target.type !== "checkbox" || mode(list) !== "claim") return;
+        const row2 = target.closest(".kp-checklist__item");
+        if (!(row2 instanceof HTMLElement) || list.getAttribute("data-kp-claim-keys") === "false") return;
+        event.preventDefault();
+        press(list, row2);
+      }
+    };
+  }
+});
+
 // js/claim/attach.js
 function attachClaims(root = document) {
   const lists = (
@@ -80696,150 +80849,17 @@ function attachClaims(root = document) {
       ...root.querySelectorAll(CLAIM)
     ]
   );
-  const undo = [];
-  for (const list of lists) {
-    const st = stateOf6(list);
-    if (st.off.length) continue;
-    const viewerId = list.getAttribute("data-kp-claim-viewer");
-    if (viewerId && !st.viewer) st.viewer = { id: viewerId, name: list.getAttribute("data-kp-claim-viewer-name") ?? viewerId };
-    const remembered = memoryFor(list, "claim")?.read("filter", null);
-    const asked = list.getAttribute("data-kp-claim-filter");
-    st.filter = typeof remembered === "string" && CLAIM_FILTERS.includes(remembered) ? remembered : CLAIM_FILTERS.includes(asked ?? "") ? (
-      /** @type {string} */
-      asked
-    ) : "all";
-    const stopReasons = attachDisabledReasons(list);
-    const onRender = () => decorate(list);
-    const onClick = (event) => {
-      const target = event.target instanceof Element ? event.target : null;
-      if (!target) return;
-      const button6 = target.closest(".kp-claim__button");
-      if (button6 instanceof HTMLButtonElement) {
-        event.preventDefault();
-        const row2 = button6.closest(".kp-checklist__item");
-        if (row2 instanceof HTMLElement && button6.getAttribute("aria-disabled") !== "true") press(list, row2);
-        return;
-      }
-      const chip = target.closest(".kp-claim__chips [data-value]");
-      if (chip) return setClaimFilter(list, chip.getAttribute("data-value") ?? "all");
-      if (target.closest(".kp-claim__take-all")) return void takeAll(list);
-      if (target.closest(".kp-claim__copy")) return void copyGaps(list);
-    };
-    const onMenu = (event) => {
-      const detail = (
-        /** @type {CustomEvent} */
-        event.detail
-      );
-      const wrapper = event.target instanceof Element ? event.target.closest(".kp-claim__assign") : null;
-      const id = wrapper?.getAttribute("data-kp-key");
-      if (!id || !detail?.value) return;
-      const person = [...st.people, ...byOf(itemOf(list, id) ?? {})].find((p) => p.id === detail.value) ?? null;
-      if (!person) return;
-      const item = itemOf(list, id);
-      void request(list, id, among(person, byOf(item ?? {})) ? "unassign" : "assign", person);
-    };
-    const onKey5 = (event) => {
-      const target = event.target;
-      if (event.key !== "c" || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey || event.repeat) return;
-      if (!(target instanceof HTMLInputElement) || target.type !== "checkbox" || mode(list) !== "claim") return;
-      const row2 = target.closest(".kp-checklist__item");
-      if (!(row2 instanceof HTMLElement) || list.getAttribute("data-kp-claim-keys") === "false") return;
-      event.preventDefault();
-      press(list, row2);
-    };
-    list.addEventListener("keydown", onKey5);
-    list.addEventListener(CHECKLIST_RENDER_EVENT, onRender);
-    let lastSort = attr10(list, "gap-sort", "keep");
-    const watcher = new MutationObserver(() => {
-      const sort = attr10(list, "gap-sort", "keep");
-      if (sort !== lastSort) {
-        lastSort = sort;
-        setChecklistItems(list, getChecklistItems(list));
-      } else decorate(list);
-    });
-    watcher.observe(list, {
-      attributes: true,
-      attributeFilter: [
-        "mode",
-        "gap",
-        "gap-sort",
-        "person",
-        "count",
-        "self-label",
-        "max",
-        "disabled",
-        "disabled-reason",
-        "take-all",
-        "copy",
-        "filter-chips"
-      ].map((n) => `data-kp-claim-${n}`)
-    });
-    list.addEventListener("click", onClick);
-    const onRetry = () => list.dispatchEvent(new CustomEvent(CLAIM_RETRY_EVENT, { bubbles: true }));
-    list.addEventListener(CHECKLIST_RETRY_EVENT, onRetry);
-    list.addEventListener(MENU_SELECT_EVENT, onMenu);
-    let stopKeys;
-    if (list.getAttribute("data-kp-claim-keys") !== "false") {
-      const here = () => list.contains(document.activeElement) && document.activeElement?.closest(".kp-checklist__item") !== null;
-      stopKeys = registerShortcuts(
-        list,
-        [
-          {
-            keys: "c",
-            what: getStrings().claimKeyTake,
-            group: getStrings().claimKeyGroup,
-            when: () => here() && mode(list) === "claim" && stateOf6(list).viewer !== null,
-            reason: getStrings().claimKeyReason,
-            run: () => {
-              const row2 = document.activeElement?.closest(".kp-checklist__item");
-              if (row2 instanceof HTMLElement) press(list, row2);
-            }
-          },
-          {
-            keys: "Shift C",
-            what: getStrings().claimKeyGaps,
-            group: getStrings().claimKeyGroup,
-            run: () => setClaimFilter(list, stateOf6(list).filter === "gaps" ? "all" : "gaps")
-          }
-        ],
-        { layoutGuard: "off" }
-      );
-    }
-    st.off = [
-      () => list.removeEventListener(CHECKLIST_RENDER_EVENT, onRender),
-      () => watcher.disconnect(),
-      () => list.removeEventListener("keydown", onKey5),
-      () => list.removeEventListener("click", onClick),
-      () => list.removeEventListener(CHECKLIST_RETRY_EVENT, onRetry),
-      () => list.removeEventListener(MENU_SELECT_EVENT, onMenu),
-      () => stopKeys?.(),
-      stopReasons
-    ];
-    decorate(list);
-    undo.push(() => {
-      for (const stop of st.off) stop();
-      st.off = [];
-      claimState.serial += 1;
-    });
-  }
-  return () => undo.forEach((u) => u());
+  const made6 = lists.filter((list) => !controllerOf(list, ClaimList)).map((list) => attachOne(list, ClaimList));
+  return () => {
+    for (const control of made6) control?.destroy();
+  };
 }
 var init_attach23 = __esm({
   "js/claim/attach.js"() {
     "use strict";
-    init_strings();
-    init_checklist();
-    init_menu_button();
-    init_reason();
-    init_shortcuts();
-    init_remember();
-    init_bulk();
+    init_controller();
     init_constants39();
-    init_decorate();
-    init_model8();
-    init_request2();
-    init_rows8();
-    init_state27();
+    init_controller65();
   }
 });
 
@@ -83206,8 +83226,8 @@ var init_actions7 = __esm({
 });
 
 // js/qr/controller.js
-var LIVE_OPTIONS, QrControl;
-var init_controller65 = __esm({
+var LIVE_OPTIONS2, QrControl;
+var init_controller66 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83216,7 +83236,7 @@ var init_controller65 = __esm({
     init_actions7();
     init_render6();
     init_state28();
-    LIVE_OPTIONS = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
+    LIVE_OPTIONS2 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -83232,7 +83252,7 @@ var init_controller65 = __esm({
             window.cancelAnimationFrame(this.queued);
             this.queued = window.requestAnimationFrame(() => render5(root));
           })
-        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS.map((n) => `data-kp-qr-${n}`) });
+        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS2.map((n) => `data-kp-qr-${n}`) });
         this.own(this.copyKey());
         render5(root);
       }
@@ -83311,7 +83331,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller65();
+    init_controller66();
     init_state28();
     init_state28();
     init_matrix2();
