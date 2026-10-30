@@ -53401,20 +53401,7 @@ var init_timer_disc = __esm({
   }
 });
 
-// js/range.js
-var range_exports = {};
-__export(range_exports, {
-  RANGE: () => RANGE,
-  RANGE_EVENT: () => RANGE_EVENT,
-  RANGE_PRESETS: () => RANGE_PRESETS,
-  attachRanges: () => attachRanges,
-  parseTime: () => parseTime,
-  presetMs: () => presetMs,
-  rangeFaults: () => rangeFaults,
-  rangeMoment: () => rangeMoment,
-  rangeOf: () => rangeOf,
-  setRange: () => setRange
-});
+// js/range/values.js
 function presetMs(key) {
   const m = /^(\d+)\s*([mhdw])$/.exec(key.trim().toLowerCase());
   return m ? Number(m[1]) * UNIT[
@@ -53438,238 +53425,287 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   const faults = [];
   if (start === null || end === null) return faults;
   if (end <= start) faults.push("order");
-  if (!future && end > now + 6e4) faults.push("future");
+  if (!future && end > now + FUTURE_SLACK_MS) faults.push("future");
   if (maxDays > 0 && end - start > maxDays * UNIT.d) faults.push("span");
   return faults;
 }
-function rangeOf(el16) {
-  const st = STATE3.get(
-    /** @type {HTMLElement} */
-    el16
-  );
-  return st ? { preset: st.value.preset, start: new Date(st.value.start).toISOString(), end: new Date(st.value.end).toISOString() } : null;
+var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
+var init_values = __esm({
+  "js/range/values.js"() {
+    "use strict";
+    init_chart();
+    RANGE = "[data-kp-range]";
+    RANGE_EVENT = "kp-range-change";
+    RANGE_PRESETS = ["1h", "6h", "24h", "7d", "30d"];
+    UNIT = { m: 6e4, h: 36e5, d: 864e5, w: 6048e5 };
+    FUTURE_SLACK_MS = 6e4;
+    two5 = (n) => String(n).padStart(2, "0");
+  }
+});
+
+// js/range/build.js
+function buildBar2(doc, s2, presets, disabled2) {
+  const bar = doc.createElement("div");
+  bar.className = "kp-range__bar";
+  const group = doc.createElement("div");
+  group.className = "kp-segmented kp-range__presets";
+  group.dataset.kpSegmented = "single";
+  group.setAttribute("role", "radiogroup");
+  group.setAttribute("aria-label", s2.rangePresets);
+  if (disabled2) group.setAttribute("aria-disabled", "true");
+  for (const key of presets) {
+    const item = doc.createElement("button");
+    item.type = "button";
+    item.className = "kp-segmented__item";
+    item.dataset.value = key;
+    item.setAttribute("role", "radio");
+    item.setAttribute("aria-checked", "false");
+    item.title = s2.rangePresetName(key);
+    const label = doc.createElement("span");
+    label.className = "kp-segmented__label";
+    label.textContent = s2.rangePresetShort(key);
+    item.append(label);
+    group.append(item);
+  }
+  bar.append(group);
+  return { bar, group };
 }
-function setRange(el16, next2) {
-  const st = STATE3.get(
-    /** @type {HTMLElement} */
-    el16
-  );
-  if (!st) return;
-  const ms = (v) => v === void 0 ? NaN : new Date(v).getTime();
-  if (next2.preset) st.set({ preset: next2.preset, start: 0, end: 0 }, false);
-  else if (Number.isFinite(ms(next2.start)) && Number.isFinite(ms(next2.end)))
-    st.set({ preset: null, start: ms(next2.start), end: ms(next2.end) }, false);
+function buildCustomButton(doc, s2, id, disabled2) {
+  const button6 = doc.createElement("button");
+  button6.type = "button";
+  button6.className = "kp-button kp-button--sm kp-range__custom";
+  button6.setAttribute("aria-haspopup", "dialog");
+  button6.setAttribute("aria-expanded", "false");
+  button6.setAttribute("aria-pressed", "false");
+  button6.setAttribute("aria-controls", `${id}-panel`);
+  button6.disabled = disabled2;
+  const text = doc.createElement("span");
+  text.className = "kp-button__text";
+  text.textContent = s2.rangeCustom;
+  button6.append(text);
+  return button6;
 }
-function attachRanges(root = document, { now = () => Date.now() } = {}) {
-  const cleanups = [];
-  const pickers = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(RANGE) ? [root] : [],
-      ...root.querySelectorAll(RANGE)
-    ]
-  );
-  for (const el16 of pickers) {
-    if (STATE3.has(el16)) continue;
-    const s2 = getStrings();
-    const doc = el16.ownerDocument;
-    const id = `kp-range-${++seq2}`;
-    const zone = el16.dataset.kpTimeZone || CHART_TIME_ZONE;
-    const presets = (el16.dataset.kpRangePresets ?? RANGE_PRESETS.join(" ")).split(/\s+/).filter((k) => presetMs(k) > 0);
-    const withCustom = el16.dataset.kpRangeCustom !== "off";
-    const disabled2 = el16.hasAttribute("data-kp-range-disabled");
-    const future = el16.hasAttribute("data-kp-range-future");
-    const maxDays = Number(el16.dataset.kpRangeMaxDays) || 0;
-    el16.classList.add("kp-range");
-    if (!el16.hasAttribute("role")) el16.setAttribute("role", "group");
-    const bar = doc.createElement("div");
-    bar.className = "kp-range__bar";
-    const group = doc.createElement("div");
-    group.className = "kp-segmented kp-range__presets";
-    group.dataset.kpSegmented = "single";
-    group.setAttribute("role", "radiogroup");
-    group.setAttribute("aria-label", s2.rangePresets);
-    if (disabled2) group.setAttribute("aria-disabled", "true");
-    for (const key of presets) {
-      const item = doc.createElement("button");
-      item.type = "button";
-      item.className = "kp-segmented__item";
-      item.dataset.value = key;
-      item.setAttribute("role", "radio");
-      item.setAttribute("aria-checked", "false");
-      item.title = s2.rangePresetName(key);
-      const label = doc.createElement("span");
-      label.className = "kp-segmented__label";
-      label.textContent = s2.rangePresetShort(key);
-      item.append(label);
-      group.append(item);
-    }
-    let custom = null;
-    let teardownCustom = () => {
+function buildBound(doc, s2, which) {
+  const set = doc.createElement("fieldset");
+  set.className = "kp-range__bound";
+  const legend = doc.createElement("legend");
+  legend.className = "kp-field__label";
+  legend.textContent = which === "from" ? s2.rangeFrom : s2.rangeTo;
+  const row = doc.createElement("div");
+  row.className = "kp-range__inputs";
+  const picker = doc.createElement("div");
+  picker.className = "kp-datepicker kp-range__date";
+  picker.dataset.kpDatepicker = "";
+  const date = doc.createElement("input");
+  date.className = "kp-field__input";
+  date.type = "text";
+  date.inputMode = "numeric";
+  date.autocomplete = "off";
+  date.dataset.kpDateInput = "";
+  date.setAttribute("aria-label", s2.rangeDateLabel(legend.textContent ?? ""));
+  const open4 = doc.createElement("button");
+  open4.type = "button";
+  open4.className = "kp-button";
+  open4.dataset.kpDateOpen = "";
+  open4.setAttribute("aria-label", s2.calendarOpen);
+  open4.title = s2.calendarOpen;
+  const glyph3 = doc.createElement("span");
+  glyph3.setAttribute("aria-hidden", "true");
+  glyph3.textContent = s2.calendarButton;
+  open4.append(glyph3);
+  const datePanel = doc.createElement("div");
+  datePanel.className = "kp-datepicker__panel";
+  datePanel.dataset.kpDatePanel = "";
+  datePanel.hidden = true;
+  picker.append(date, open4, datePanel);
+  const time = doc.createElement("input");
+  time.className = "kp-field__input kp-range__time";
+  time.type = "text";
+  time.inputMode = "numeric";
+  time.autocomplete = "off";
+  time.placeholder = s2.rangeTimeHint;
+  time.setAttribute("aria-label", s2.rangeTimeLabel(legend.textContent ?? ""));
+  row.append(picker, time);
+  set.append(legend, row);
+  return { set, picker, date, time };
+}
+function buildPanel(doc, s2, id) {
+  const panel = doc.createElement("div");
+  panel.className = "kp-popover kp-range__panel";
+  panel.id = `${id}-panel`;
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-label", s2.rangeCustomTitle);
+  panel.hidden = true;
+  const title = doc.createElement("p");
+  title.className = "kp-range__title";
+  title.textContent = s2.rangeCustomTitle;
+  const from = buildBound(doc, s2, "from");
+  const to = buildBound(doc, s2, "to");
+  const error = doc.createElement("p");
+  error.className = "kp-field__error kp-range__error";
+  error.id = `${id}-error`;
+  error.setAttribute("role", "alert");
+  const actions = doc.createElement("div");
+  actions.className = "kp-range__actions";
+  const cancel = doc.createElement("button");
+  cancel.type = "button";
+  cancel.className = "kp-button";
+  cancel.textContent = s2.rangeCancel;
+  const apply2 = doc.createElement("button");
+  apply2.type = "button";
+  apply2.className = "kp-button kp-button--primary";
+  apply2.textContent = s2.rangeApply;
+  actions.append(cancel, apply2);
+  panel.append(title, from.set, to.set, error, actions);
+  return { panel, from, to, error, cancel, apply: apply2 };
+}
+var init_build5 = __esm({
+  "js/range/build.js"() {
+    "use strict";
+  }
+});
+
+// js/range/core.js
+var seq2, DEFAULT_PRESET_AT, RangeCore;
+var init_core2 = __esm({
+  "js/range/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_segmented();
+    init_chart();
+    init_values();
+    init_build5();
+    seq2 = 0;
+    DEFAULT_PRESET_AT = 2;
+    RangeCore = class extends Controller {
+      /**
+       * @param {HTMLElement} el
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.s = getStrings();
+        this.doc = el16.ownerDocument;
+        this.id = `kp-range-${++seq2}`;
+        this.now = /** @type {(() => number) | undefined} */
+        options.now ?? (() => Date.now());
+        this.zone = el16.dataset.kpTimeZone || CHART_TIME_ZONE;
+        this.presets = (el16.dataset.kpRangePresets ?? RANGE_PRESETS.join(" ")).split(/\s+/).filter((k) => presetMs(k) > 0);
+        this.withCustom = el16.dataset.kpRangeCustom !== "off";
+        this.disabled = el16.hasAttribute("data-kp-range-disabled");
+        this.future = el16.hasAttribute("data-kp-range-future");
+        this.maxDays = Number(el16.dataset.kpRangeMaxDays) || 0;
+        const { bar, group } = buildBar2(this.doc, this.s, this.presets, this.disabled);
+        this.bar = bar;
+        this.group = group;
+        this.line = this.doc.createElement("p");
+        this.custom = null;
+        this.value = {
+          preset: this.presets.includes(el16.dataset.kpRange ?? "") ? (
+            /** @type {string} */
+            el16.dataset.kpRange
+          ) : this.presets[DEFAULT_PRESET_AT] ?? this.presets[0] ?? null,
+          start: 0,
+          end: 0
+        };
+      }
+      /** The line under the control: the window's name and its two moments. */
+      describe() {
+        const s2 = this.s;
+        const name = this.value.preset ? s2.rangePresetName(this.value.preset) : s2.rangeCustomName;
+        return s2.rangeLabel(name, rangeMoment(this.value.start, this.zone), rangeMoment(this.value.end, this.zone));
+      }
+      /** Set the window: a preset's key (the span counts back from now) or a custom start and end. @param {RangeValue} next @param {boolean} fire */
+      set(next2, fire2) {
+        if (!next2.preset && !this.withCustom) return;
+        if (next2.preset) {
+          const end = this.now();
+          this.value = { preset: next2.preset, start: end - presetMs(next2.preset), end };
+        } else this.value = next2;
+        const { value, host } = this;
+        setSegmentedValues(this.group, value.preset ? [value.preset] : []);
+        this.custom?.setAttribute("aria-pressed", String(value.preset === null));
+        host.dataset.kpRangeValue = value.preset ?? "custom";
+        this.line.textContent = this.describe();
+        if (fire2) host.dispatchEvent(new CustomEvent(RANGE_EVENT, { bubbles: true, detail: this.detail() }));
+      }
+      /** What `kp-range-change` carries: the key or null, the two moments as ISO strings and the line. */
+      detail() {
+        const { value } = this;
+        return { preset: value.preset, start: new Date(value.start).toISOString(), end: new Date(value.end).toISOString(), label: this.line.textContent };
+      }
     };
-    bar.append(group);
-    const line = doc.createElement("p");
-    line.className = "kp-range__label";
-    line.id = `${id}-label`;
-    line.setAttribute("aria-live", "polite");
-    el16.setAttribute("aria-describedby", line.id);
-    let value = {
-      preset: presets.includes(el16.dataset.kpRange ?? "") ? (
-        /** @type {string} */
-        el16.dataset.kpRange
-      ) : presets[2] ?? presets[0] ?? null,
-      start: 0,
-      end: 0
-    };
-    const describe = () => {
-      const name = value.preset ? s2.rangePresetName(value.preset) : s2.rangeCustomName;
-      return s2.rangeLabel(name, rangeMoment(value.start, zone), rangeMoment(value.end, zone));
-    };
-    const set = (next2, fire2) => {
-      if (!next2.preset && !withCustom) return;
-      if (next2.preset) {
-        const end = now();
-        value = { preset: next2.preset, start: end - presetMs(next2.preset), end };
-      } else value = next2;
-      setSegmentedValues(group, value.preset ? [value.preset] : []);
-      custom?.setAttribute("aria-pressed", String(value.preset === null));
-      el16.dataset.kpRangeValue = value.preset ?? "custom";
-      line.textContent = describe();
-      if (fire2)
-        el16.dispatchEvent(
-          new CustomEvent(RANGE_EVENT, {
-            bubbles: true,
-            detail: {
-              preset: value.preset,
-              start: new Date(value.start).toISOString(),
-              end: new Date(value.end).toISOString(),
-              label: line.textContent
-            }
-          })
-        );
-    };
-    STATE3.set(el16, {
-      get value() {
-        return value;
-      },
-      set
-    });
-    const onPreset = (event) => {
-      if (event.target !== group) return;
-      const key = (
-        /** @type {CustomEvent} */
-        event.detail.value
-      );
-      if (key) set({ preset: key, start: 0, end: 0 }, true);
-    };
-    group.addEventListener(SEGMENTED_EVENT, onPreset);
-    el16.replaceChildren(bar, line);
-    const detachSegmented = attachSegmented(el16);
-    if (withCustom) {
-      const customButton = doc.createElement("button");
-      custom = customButton;
-      customButton.type = "button";
-      customButton.className = "kp-button kp-button--sm kp-range__custom";
-      customButton.setAttribute("aria-haspopup", "dialog");
-      customButton.setAttribute("aria-expanded", "false");
-      customButton.setAttribute("aria-pressed", "false");
-      customButton.setAttribute("aria-controls", `${id}-panel`);
-      customButton.disabled = disabled2;
-      const customText = doc.createElement("span");
-      customText.className = "kp-button__text";
-      customText.textContent = s2.rangeCustom;
-      customButton.append(customText);
-      bar.append(customButton);
-      const panel = doc.createElement("div");
-      panel.className = "kp-popover kp-range__panel";
-      panel.id = `${id}-panel`;
-      panel.setAttribute("role", "dialog");
-      panel.setAttribute("aria-label", s2.rangeCustomTitle);
-      panel.hidden = true;
-      const title = doc.createElement("p");
-      title.className = "kp-range__title";
-      title.textContent = s2.rangeCustomTitle;
-      const bound = (which) => {
-        const set2 = doc.createElement("fieldset");
-        set2.className = "kp-range__bound";
-        const legend = doc.createElement("legend");
-        legend.className = "kp-field__label";
-        legend.textContent = which === "from" ? s2.rangeFrom : s2.rangeTo;
-        const row = doc.createElement("div");
-        row.className = "kp-range__inputs";
-        const picker = doc.createElement("div");
-        picker.className = "kp-datepicker kp-range__date";
-        picker.dataset.kpDatepicker = "";
-        const date = doc.createElement("input");
-        date.className = "kp-field__input";
-        date.type = "text";
-        date.inputMode = "numeric";
-        date.autocomplete = "off";
-        date.dataset.kpDateInput = "";
-        date.setAttribute("aria-label", s2.rangeDateLabel(legend.textContent ?? ""));
-        const open4 = doc.createElement("button");
-        open4.type = "button";
-        open4.className = "kp-button";
-        open4.dataset.kpDateOpen = "";
-        open4.setAttribute("aria-label", s2.calendarOpen);
-        open4.title = s2.calendarOpen;
-        const glyph3 = doc.createElement("span");
-        glyph3.setAttribute("aria-hidden", "true");
-        glyph3.textContent = s2.calendarButton;
-        open4.append(glyph3);
-        const datePanel = doc.createElement("div");
-        datePanel.className = "kp-datepicker__panel";
-        datePanel.dataset.kpDatePanel = "";
-        datePanel.hidden = true;
-        picker.append(date, open4, datePanel);
-        const time = doc.createElement("input");
-        time.className = "kp-field__input kp-range__time";
-        time.type = "text";
-        time.inputMode = "numeric";
-        time.autocomplete = "off";
-        time.placeholder = s2.rangeTimeHint;
-        time.setAttribute("aria-label", s2.rangeTimeLabel(legend.textContent ?? ""));
-        row.append(picker, time);
-        set2.append(legend, row);
-        return { set: set2, picker, date, time };
-      };
-      const from = bound("from");
-      const to = bound("to");
-      const error = doc.createElement("p");
-      error.className = "kp-field__error kp-range__error";
-      error.id = `${id}-error`;
-      error.setAttribute("role", "alert");
-      const actions = doc.createElement("div");
-      actions.className = "kp-range__actions";
-      const cancel = doc.createElement("button");
-      cancel.type = "button";
-      cancel.className = "kp-button";
-      cancel.textContent = s2.rangeCancel;
-      const apply2 = doc.createElement("button");
-      apply2.type = "button";
-      apply2.className = "kp-button kp-button--primary";
-      apply2.textContent = s2.rangeApply;
-      actions.append(cancel, apply2);
-      panel.append(title, from.set, to.set, error, actions);
-      el16.append(panel);
-      const detachPickers = attachDatePickers(panel);
-      let lower = null;
-      const fill2 = (b, ms) => {
-        const w = wallTime(ms, zone);
+  }
+});
+
+// js/range/panel.js
+var EDGE_PX, GAP_PX, RangePanel;
+var init_panel = __esm({
+  "js/range/panel.js"() {
+    "use strict";
+    init_chart();
+    init_datepicker();
+    init_top_layer();
+    init_motion();
+    init_build5();
+    init_values();
+    EDGE_PX = 8;
+    GAP_PX = 6;
+    RangePanel = class {
+      /** @param {RangeCore} range the picker this panel belongs to */
+      constructor(range) {
+        this.range = range;
+        const { s: s2, doc, id, disabled: disabled2 } = range;
+        this.button = buildCustomButton(doc, s2, id, disabled2);
+        const parts2 = buildPanel(doc, s2, id);
+        this.panel = parts2.panel;
+        this.from = parts2.from;
+        this.to = parts2.to;
+        this.error = parts2.error;
+        this.cancel = parts2.cancel;
+        this.apply = parts2.apply;
+        this.lower = null;
+      }
+      /** Add the button and the panel to the picker and wire them. */
+      connect() {
+        const { range, panel, button: button6 } = this;
+        range.custom = button6;
+        range.bar.append(button6);
+        range.host.append(panel);
+        range.listen(range.doc, "pointerdown", (event) => this.onOutside(
+          /** @type {PointerEvent} */
+          event
+        ), true);
+        range.own(attachDatePickers(panel));
+        range.own(() => this.lower?.());
+        range.listen(button6, "click", () => panel.hidden ? this.open() : void this.close());
+        range.listen(this.cancel, "click", () => void this.close());
+        range.listen(this.apply, "click", () => this.onApply());
+        range.listen(panel, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+      }
+      /** @param {RangeBound} b @param {number} ms */
+      fill(b, ms) {
+        const w = wallTime(ms, this.range.zone);
         datePicker(b.picker)?.set(`${w.year}-${two5(w.month)}-${two5(w.day)}`);
         b.time.value = `${two5(w.hour)}:${two5(w.minute)}`;
-      };
-      const read = (b) => {
+      }
+      /** A bound as a moment, or the word of what is not whole. @param {RangeBound} b @returns {number | null | 'date' | 'time'} */
+      read(b) {
         const day = datePicker(b.picker)?.get() ?? null;
         if (!day) return "date";
         const t = parseTime(b.time.value);
         if (!t) return "time";
-        return zonedTime(day.getFullYear(), day.getMonth() + 1, day.getDate(), t.hour, t.minute, zone);
-      };
-      const mark = (bad) => {
+        return zonedTime(day.getFullYear(), day.getMonth() + 1, day.getDate(), t.hour, t.minute, this.range.zone);
+      }
+      /** Mark the given inputs wrong and the others right. @param {HTMLInputElement[]} bad */
+      mark(bad) {
+        const { from, to, error } = this;
         for (const input of [from.date, from.time, to.date, to.time]) {
-          const wrong = bad.includes(input);
-          if (wrong) {
+          if (bad.includes(input)) {
             input.setAttribute("aria-invalid", "true");
             input.setAttribute("aria-describedby", error.id);
           } else {
@@ -53677,43 +53713,48 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
             input.removeAttribute("aria-describedby");
           }
         }
-      };
-      const place3 = (p) => {
-        const box = el16.getBoundingClientRect();
+      }
+      /** Put the panel under the control, kept inside the page. @param {HTMLElement} p */
+      place(p) {
+        const box = this.range.host.getBoundingClientRect();
         const width = p.offsetWidth;
-        const left = Math.max(8, Math.min(box.left, doc.documentElement.clientWidth - width - 8));
+        const left = Math.max(EDGE_PX, Math.min(box.left, this.range.doc.documentElement.clientWidth - width - EDGE_PX));
         p.style.setProperty("left", `${left}px`);
-        p.style.setProperty("top", `${box.bottom + 6}px`);
+        p.style.setProperty("top", `${box.bottom + GAP_PX}px`);
         placeBlockSide(p, box);
-      };
-      const openPanel = () => {
-        if (!panel.hidden || disabled2) return;
+      }
+      open() {
+        const { panel, range } = this;
+        if (!panel.hidden || range.disabled) return;
         stopClose(panel);
-        fill2(from, value.start);
-        fill2(to, value.end);
-        error.textContent = "";
-        mark([]);
+        this.fill(this.from, range.value.start);
+        this.fill(this.to, range.value.end);
+        this.error.textContent = "";
+        this.mark([]);
         panel.hidden = false;
-        lower = raiseOverlay(panel, place3);
-        customButton.setAttribute("aria-expanded", "true");
+        this.lower = raiseOverlay(panel, (p) => this.place(p));
+        this.button.setAttribute("aria-expanded", "true");
         arriveShown(panel);
-        from.date.focus();
-      };
-      const closePanel = async (refocus = true) => {
+        this.from.date.focus();
+      }
+      /** @param {boolean} [refocus] */
+      async close(refocus = true) {
+        const { panel } = this;
         if (panel.hidden) return;
-        customButton.setAttribute("aria-expanded", "false");
-        for (const b of [from, to]) datePicker(b.picker)?.close();
+        this.button.setAttribute("aria-expanded", "false");
+        for (const b of [this.from, this.to]) datePicker(b.picker)?.close();
         const done = await playClose(panel);
         if (!done) return;
         panel.hidden = true;
-        lower?.();
-        lower = null;
+        this.lower?.();
+        this.lower = null;
         stopClose(panel);
-        if (refocus) customButton.focus();
-      };
-      const onApply = () => {
-        const a = read(from);
-        const b = read(to);
+        if (refocus) this.button.focus();
+      }
+      /** Every fault of the two bounds as the words to show and the inputs to mark, in the order they are found. @param {number | null | 'date' | 'time'} a @param {number | null | 'date' | 'time'} b */
+      faults(a, b) {
+        const { s: s2, future, maxDays } = this.range;
+        const { from, to } = this;
         const bad = [];
         const words3 = [];
         const wrong = (word, ...inputs) => {
@@ -53725,93 +53766,145 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
         if (b === "date") wrong(s2.rangeErrorDate(s2.rangeTo), to.date);
         if (b === "time" || b === null) wrong(s2.rangeErrorTime(s2.rangeTo), to.time);
         if (typeof a === "number" && typeof b === "number") {
-          for (const fault of rangeFaults(a, b, { now: now(), future, maxDays })) {
+          for (const fault of rangeFaults(a, b, { now: this.range.now(), future, maxDays })) {
             if (fault === "order") wrong(s2.rangeErrorOrder, from.date, from.time, to.date, to.time);
             if (fault === "future") wrong(s2.rangeErrorFuture, to.date, to.time);
             if (fault === "span") wrong(s2.rangeErrorSpan(maxDays), from.date, to.date);
           }
         }
+        return { bad, words: words3 };
+      }
+      onApply() {
+        const a = this.read(this.from);
+        const b = this.read(this.to);
+        const { bad, words: words3 } = this.faults(a, b);
         if (words3.length > 0) {
-          error.textContent = words3.join(" ");
-          mark(bad);
+          this.error.textContent = words3.join(" ");
+          this.mark(bad);
           bad[0]?.focus();
           return;
         }
-        set({ preset: null, start: (
+        this.range.set({ preset: null, start: (
           /** @type {number} */
           a
         ), end: (
           /** @type {number} */
           b
         ) }, true);
-        void closePanel();
-      };
-      const onKey5 = (event) => {
+        void this.close();
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const { panel } = this;
         if (event.key === "Escape" && !panel.hidden) {
           if (panel.querySelector("[data-kp-date-panel]:not([hidden])")) return;
           event.preventDefault();
-          void closePanel();
+          void this.close();
         } else if (event.key === "Enter" && event.target instanceof HTMLInputElement && event.target.classList.contains("kp-range__time")) {
           event.preventDefault();
-          onApply();
+          this.onApply();
         }
-      };
-      const onOutside = (event) => {
-        if (panel.hidden) return;
+      }
+      /** @param {PointerEvent} event */
+      onOutside(event) {
+        if (this.panel.hidden) return;
         const target = (
           /** @type {Node} */
           event.target
         );
-        if (panel.contains(target) || customButton.contains(target)) return;
-        void closePanel(false);
-      };
-      const onCustom = () => panel.hidden ? openPanel() : void closePanel();
-      customButton.addEventListener("click", onCustom);
-      cancel.addEventListener("click", () => void closePanel());
-      apply2.addEventListener("click", onApply);
-      panel.addEventListener("keydown", onKey5);
-      doc.addEventListener("pointerdown", onOutside, true);
-      teardownCustom = () => {
-        lower?.();
-        detachPickers();
-        doc.removeEventListener("pointerdown", onOutside, true);
-      };
-    }
-    const start0 = Date.parse(el16.dataset.kpRangeStart ?? "");
-    const end0 = Date.parse(el16.dataset.kpRangeEnd ?? "");
-    if (withCustom && Number.isFinite(start0) && Number.isFinite(end0)) set({ preset: null, start: start0, end: end0 }, false);
-    else if (value.preset) set({ preset: value.preset, start: 0, end: 0 }, false);
-    cleanups.push(() => {
-      teardownCustom();
-      detachSegmented();
-      group.removeEventListener(SEGMENTED_EVENT, onPreset);
-      STATE3.delete(el16);
-      el16.replaceChildren();
-      el16.removeAttribute("aria-describedby");
-      delete el16.dataset.kpRangeValue;
-    });
+        if (this.panel.contains(target) || this.button.contains(target)) return;
+        void this.close(false);
+      }
+    };
   }
-  return () => {
-    for (const c of cleanups) c();
-  };
+});
+
+// js/range/controller.js
+var RangeController;
+var init_controller17 = __esm({
+  "js/range/controller.js"() {
+    "use strict";
+    init_segmented();
+    init_core2();
+    init_panel();
+    RangeController = class extends RangeCore {
+      connect() {
+        const el16 = this.host;
+        this.own(() => this.unbuild());
+        el16.classList.add("kp-range");
+        if (!el16.hasAttribute("role")) el16.setAttribute("role", "group");
+        this.line.className = "kp-range__label";
+        this.line.id = `${this.id}-label`;
+        this.line.setAttribute("aria-live", "polite");
+        el16.setAttribute("aria-describedby", this.line.id);
+        this.listen(this.group, SEGMENTED_EVENT, (event) => this.onPreset(event));
+        el16.replaceChildren(this.bar, this.line);
+        this.own(attachSegmented(el16));
+        if (this.withCustom) new RangePanel(this).connect();
+        this.firstWindow();
+      }
+      /** The first window, as the markup asks; a custom start in the markup (`data-kp-range-start`, `-end`) wins. */
+      firstWindow() {
+        const start = Date.parse(this.host.dataset.kpRangeStart ?? "");
+        const end = Date.parse(this.host.dataset.kpRangeEnd ?? "");
+        if (this.withCustom && Number.isFinite(start) && Number.isFinite(end)) this.set({ preset: null, start, end }, false);
+        else if (this.value.preset) this.set({ preset: this.value.preset, start: 0, end: 0 }, false);
+      }
+      /** Takes the markup and the marks the picker added off the host again. */
+      unbuild() {
+        const el16 = this.host;
+        el16.replaceChildren();
+        el16.removeAttribute("aria-describedby");
+        delete el16.dataset.kpRangeValue;
+      }
+      /** @param {Event} event */
+      onPreset(event) {
+        if (event.target !== this.group) return;
+        const key = (
+          /** @type {CustomEvent} */
+          event.detail.value
+        );
+        if (key) this.set({ preset: key, start: 0, end: 0 }, true);
+      }
+    };
+  }
+});
+
+// js/range.js
+var range_exports = {};
+__export(range_exports, {
+  RANGE: () => RANGE,
+  RANGE_EVENT: () => RANGE_EVENT,
+  RANGE_PRESETS: () => RANGE_PRESETS,
+  attachRanges: () => attachRanges,
+  parseTime: () => parseTime,
+  presetMs: () => presetMs,
+  rangeFaults: () => rangeFaults,
+  rangeMoment: () => rangeMoment,
+  rangeOf: () => rangeOf,
+  setRange: () => setRange
+});
+function rangeOf(el16) {
+  const st = controllerOf(el16, RangeController);
+  return st ? { preset: st.value.preset, start: new Date(st.value.start).toISOString(), end: new Date(st.value.end).toISOString() } : null;
 }
-var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, two5, STATE3, seq2;
+function setRange(el16, next2) {
+  const st = controllerOf(el16, RangeController);
+  if (!st) return;
+  const ms = (v) => v === void 0 ? NaN : new Date(v).getTime();
+  if (next2.preset) st.set({ preset: next2.preset, start: 0, end: 0 }, false);
+  else if (Number.isFinite(ms(next2.start)) && Number.isFinite(ms(next2.end))) st.set({ preset: null, start: ms(next2.start), end: ms(next2.end) }, false);
+}
+function attachRanges(root = document, options = {}) {
+  return attachAll(root, RANGE, RangeController, options);
+}
 var init_range = __esm({
   "js/range.js"() {
     "use strict";
-    init_strings();
-    init_segmented();
-    init_datepicker();
-    init_chart();
-    init_top_layer();
-    init_motion();
-    RANGE = "[data-kp-range]";
-    RANGE_EVENT = "kp-range-change";
-    RANGE_PRESETS = ["1h", "6h", "24h", "7d", "30d"];
-    UNIT = { m: 6e4, h: 36e5, d: 864e5, w: 6048e5 };
-    two5 = (n) => String(n).padStart(2, "0");
-    STATE3 = /* @__PURE__ */ new WeakMap();
-    seq2 = 0;
+    init_controller();
+    init_controller17();
+    init_values();
+    init_values();
   }
 });
 
@@ -55165,7 +55258,7 @@ var init_parts3 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -55452,7 +55545,7 @@ var init_api18 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller17();
+    init_controller18();
     init_parts3();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -57098,7 +57191,7 @@ function buildParts2(root) {
   return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
 }
 var el9;
-var init_build5 = __esm({
+var init_build6 = __esm({
   "js/timefield/build.js"() {
     "use strict";
     init_strings();
@@ -57122,7 +57215,7 @@ var init_list3 = __esm({
     init_calm();
     init_constants29();
     init_attributes();
-    init_build5();
+    init_build6();
     init_parse();
     TimeList = class {
       /** @param {TimeField} field */
@@ -57333,7 +57426,7 @@ var init_field = __esm({
     init_remember();
     init_constants29();
     init_attributes();
-    init_build5();
+    init_build6();
     init_state19();
     init_parse();
     init_list3();
@@ -57574,7 +57667,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED4, TimeController;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -57781,7 +57874,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller18();
+    init_controller19();
     init_field();
     init_state19();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -59124,7 +59217,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -59283,7 +59376,7 @@ var init_api20 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller19();
+    init_controller20();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -59714,7 +59807,7 @@ var init_view2 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -59855,7 +59948,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller20();
+    init_controller21();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -59994,7 +60087,7 @@ function buildRating(el16, max) {
   return { row, stars, caption, actions, clear, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field: field2 };
 }
 var make21;
-var init_build6 = __esm({
+var init_build7 = __esm({
   "js/rating/build.js"() {
     "use strict";
     init_constants31();
@@ -60317,13 +60410,13 @@ var init_keys12 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED5, RatingController;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_constants31();
-    init_build6();
+    init_build7();
     init_commit();
     init_keys12();
     init_math();
@@ -60587,8 +60680,8 @@ var init_api21 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller21();
-    init_build6();
+    init_controller22();
+    init_build7();
     init_commit();
     init_math();
     init_paint8();
@@ -60875,7 +60968,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -61108,7 +61201,7 @@ var init_api22 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller22();
+    init_controller23();
     init_list4();
     init_render4();
   }
@@ -62551,7 +62644,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -62742,7 +62835,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller23();
+    init_controller24();
     init_group4();
     init_group4();
   }
@@ -64499,7 +64592,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values = __esm({
+var init_values2 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -64519,7 +64612,7 @@ function make24(doc, tag, className) {
   node.className = className;
   return node;
 }
-function buildBar2(doc, s2, id) {
+function buildBar3(doc, s2, id) {
   const bar = make24(doc, "div", "kp-unsaved__bar");
   bar.setAttribute("role", "group");
   bar.setAttribute("aria-label", s2.unsavedGroup);
@@ -64544,7 +64637,7 @@ function buildBar2(doc, s2, id) {
   bar.append(none, chip, actions);
   return { bar, none, chip, discard, save: save2, more, moreButton };
 }
-function buildPanel(doc, s2, id) {
+function buildPanel2(doc, s2, id) {
   const panel = make24(doc, "div", "kp-popover kp-unsaved__panel");
   panel.id = `${id}-list`;
   panel.setAttribute("role", "dialog");
@@ -64564,7 +64657,7 @@ function buildParts4(doc, s2, id) {
   const live4 = make24(doc, "p", "kp-sr-only");
   live4.setAttribute("role", "status");
   live4.setAttribute("aria-live", "polite");
-  return { ...buildBar2(doc, s2, id), problem, live: live4, ...buildPanel(doc, s2, id) };
+  return { ...buildBar3(doc, s2, id), problem, live: live4, ...buildPanel2(doc, s2, id) };
 }
 function paintSaveButton(doc, save2, label, saving) {
   save2.replaceChildren();
@@ -64838,7 +64931,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint9();
     init_parts6();
-    init_values();
+    init_values2();
   }
 });
 
@@ -64848,7 +64941,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values();
+    init_values2();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -64968,7 +65061,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values();
+    init_values2();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -65061,7 +65154,7 @@ var init_keeper = __esm({
 
 // js/unsaved/panel.js
 var ChangesPanel;
-var init_panel = __esm({
+var init_panel2 = __esm({
   "js/unsaved/panel.js"() {
     "use strict";
     init_top_layer();
@@ -65243,7 +65336,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -65256,7 +65349,7 @@ var init_controller24 = __esm({
     init_paint9();
     init_changes();
     init_keeper();
-    init_panel();
+    init_panel2();
     init_dock();
     init_leave2();
     UnsavedController = class extends Controller {
@@ -65496,7 +65589,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller24();
+    init_controller25();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -65842,7 +65935,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -66147,7 +66240,7 @@ var init_api23 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller25();
+    init_controller26();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -67764,7 +67857,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values2 = __esm({
+var init_values3 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -67900,10 +67993,10 @@ function buildLines(doc, id) {
   return { why, skeleton: skeleton2 };
 }
 var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
-var init_build7 = __esm({
+var init_build8 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values2();
+    init_values3();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -67917,13 +68010,13 @@ var init_build7 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core2 = __esm({
+var init_core3 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_build7();
-    init_values2();
+    init_build8();
+    init_values3();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -68038,12 +68131,12 @@ var init_core2 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/slider/controller.js"() {
     "use strict";
-    init_build7();
-    init_core2();
-    init_values2();
+    init_build8();
+    init_core3();
+    init_values3();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -68268,9 +68361,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller26();
-    init_values2();
-    init_values2();
+    init_controller27();
+    init_values3();
+    init_values3();
   }
 });
 
@@ -68436,7 +68529,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -68665,7 +68758,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller27();
+    init_controller28();
     init_fields();
     init_fields();
   }
@@ -69005,7 +69098,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -69256,7 +69349,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller28();
+    init_controller29();
   }
 });
 
@@ -69664,7 +69757,7 @@ function button4(doc, className, text) {
   if (text !== void 0) b.textContent = text;
   return b;
 }
-function buildBar3(doc, s2, id, chips) {
+function buildBar4(doc, s2, id, chips) {
   const bar = make28(doc, "div", "kp-snooze__bar");
   const status = make28(doc, "p", "kp-snooze__status");
   status.id = `${id}-status`;
@@ -69699,7 +69792,7 @@ function field(doc, className, label) {
   input.setAttribute("aria-label", label);
   return input;
 }
-function buildPanel2(doc, s2, id) {
+function buildPanel3(doc, s2, id) {
   const panel = make28(doc, "div", "kp-popover kp-snooze__panel");
   panel.id = `${id}-panel`;
   panel.setAttribute("role", "dialog");
@@ -69735,15 +69828,15 @@ function buildPanel2(doc, s2, id) {
   panel.append(make28(doc, "p", "kp-snooze__panel-title", s2.snoozePickTitle), inputs, error, actions);
   return { panel, picker, date, time, error, cancel, apply: apply2 };
 }
-var init_build8 = __esm({
+var init_build9 = __esm({
   "js/snooze/build.js"() {
     "use strict";
   }
 });
 
 // js/snooze/panel.js
-var seq7, DAY_MS4, EDGE_PX, GAP_PX, MAX_DEFAULT, SnoozePanel;
-var init_panel2 = __esm({
+var seq7, DAY_MS4, EDGE_PX2, GAP_PX2, MAX_DEFAULT, SnoozePanel;
+var init_panel3 = __esm({
   "js/snooze/panel.js"() {
     "use strict";
     init_controller();
@@ -69752,12 +69845,12 @@ var init_panel2 = __esm({
     init_motion();
     init_range();
     init_top_layer();
-    init_build8();
+    init_build9();
     init_choices();
     seq7 = 0;
     DAY_MS4 = 864e5;
-    EDGE_PX = 8;
-    GAP_PX = 6;
+    EDGE_PX2 = 8;
+    GAP_PX2 = 6;
     MAX_DEFAULT = "7d";
     SnoozePanel = class extends Controller {
       /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
@@ -69782,8 +69875,8 @@ var init_panel2 = __esm({
         this.last = null;
         this.busy = false;
         this.lower = null;
-        this.bar = buildBar3(this.doc, this.s, this.id, this.chips);
-        this.p = buildPanel2(this.doc, this.s, this.id);
+        this.bar = buildBar4(this.doc, this.s, this.id, this.chips);
+        this.p = buildPanel3(this.doc, this.s, this.id);
       }
       /** The element the panel stands under: the menu button, or the picker. */
       anchor() {
@@ -69792,9 +69885,9 @@ var init_panel2 = __esm({
       /** @param {HTMLElement} p */
       place(p) {
         const box = this.anchor().getBoundingClientRect();
-        const left = Math.max(EDGE_PX, Math.min(box.left, this.doc.documentElement.clientWidth - p.offsetWidth - EDGE_PX));
+        const left = Math.max(EDGE_PX2, Math.min(box.left, this.doc.documentElement.clientWidth - p.offsetWidth - EDGE_PX2));
         p.style.setProperty("left", `${left}px`);
-        p.style.setProperty("top", `${box.bottom + GAP_PX}px`);
+        p.style.setProperty("top", `${box.bottom + GAP_PX2}px`);
         placeBlockSide(p, box);
       }
       /** Open the panel at the last moment picked, else tomorrow morning. */
@@ -69861,14 +69954,14 @@ var init_panel2 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
     init_menu_button();
     init_runs();
     init_choices();
-    init_panel2();
+    init_panel3();
     TICK_MS3 = 3e4;
     SnoozePicker = class extends SnoozePanel {
       /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
@@ -70120,7 +70213,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller29();
+    init_controller30();
     init_choices();
   }
 });
@@ -71798,12 +71891,12 @@ function write(list, id, by) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...i.claim, by } } : i)
   );
 }
-var STATE4, el10, attr10, stateOf5, byOf, itemOf;
+var STATE3, el10, attr10, stateOf5, byOf, itemOf;
 var init_model8 = __esm({
   "js/claim/model.js"() {
     "use strict";
     init_checklist();
-    STATE4 = /* @__PURE__ */ new WeakMap();
+    STATE3 = /* @__PURE__ */ new WeakMap();
     el10 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -71811,10 +71904,10 @@ var init_model8 = __esm({
     };
     attr10 = (list, name, fallback2) => list.getAttribute(`data-kp-claim-${name}`) ?? fallback2;
     stateOf5 = (list) => {
-      let s2 = STATE4.get(list);
+      let s2 = STATE3.get(list);
       if (!s2) {
         s2 = { viewer: null, people: [], busy: /* @__PURE__ */ new Set(), refused: /* @__PURE__ */ new Map(), filter: "all", off: [], said: "" };
-        STATE4.set(list, s2);
+        STATE3.set(list, s2);
       }
       return s2;
     };
@@ -72769,12 +72862,12 @@ function tipOf(f) {
   const part7 = (word, names) => names.length ? `${word}: ${names.join(", ")}` : "";
   return [part7(s2.availabilityYes, f.names.yes), part7(s2.availabilityMaybe, f.names.maybe), part7(s2.availabilityNo, f.names.no)].filter(Boolean).join(". ") || s2.availabilityNobodyAnswered;
 }
-var STATE5, el11, attr11, cellKey, toneOf3, glyphOf, wordOf, stateOf6, viewerOf, allowed, editMode;
+var STATE4, el11, attr11, cellKey, toneOf3, glyphOf, wordOf, stateOf6, viewerOf, allowed, editMode;
 var init_facts = __esm({
   "js/availability/facts.js"() {
     "use strict";
     init_strings();
-    STATE5 = /* @__PURE__ */ new WeakMap();
+    STATE4 = /* @__PURE__ */ new WeakMap();
     el11 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -72790,7 +72883,7 @@ var init_facts = __esm({
     };
     stateOf6 = (root) => (
       /** @type {AvState} */
-      STATE5.get(root)
+      STATE4.get(root)
     );
     viewerOf = (st) => (st.spec.people ?? []).find((p) => p.mine) ?? null;
     allowed = (root) => attr11(root, "answers", "3") === "2" ? ["yes", "no"] : ["yes", "maybe", "no"];
@@ -73192,7 +73285,7 @@ var init_paint10 = __esm({
 function setAvailability(root, spec) {
   if (!(root instanceof HTMLElement)) return;
   ensureParts(root);
-  const old = STATE5.get(root);
+  const old = STATE4.get(root);
   const unit2 = spec.unit ?? old?.unit ?? "range";
   const set = spec.sets ? spec.sets[unit2] ?? spec.sets.range ?? spec.sets.day ?? { columns: [], answers: {} } : { columns: spec.columns ?? [], answers: spec.answers ?? {} };
   const st = {
@@ -73205,14 +73298,14 @@ function setAvailability(root, spec) {
     menu: old?.menu ?? null
   };
   if (spec.sets) st.spec.sets = structuredClone(spec.sets);
-  STATE5.set(root, st);
+  STATE4.set(root, st);
   render4(root);
 }
 function availabilityAnswers(root) {
-  return structuredClone(STATE5.get(root)?.set.answers ?? {});
+  return structuredClone(STATE4.get(root)?.set.answers ?? {});
 }
 function setAvailabilityAnswer(root, person, column, answer2) {
-  const st = STATE5.get(root);
+  const st = STATE4.get(root);
   if (!st) return;
   const row = st.set.answers[person] ??= {};
   if (answer2) row[column] = answer2;
@@ -73444,7 +73537,7 @@ function next(root, now) {
   return i + 1 < order.length ? order[i + 1] : null;
 }
 function closeMenu2(root) {
-  const st = STATE5.get(root);
+  const st = STATE4.get(root);
   st?.menu?.remove();
   if (st) st.menu = null;
 }
@@ -73544,8 +73637,8 @@ function attachAvailability(root = document) {
   const undo = [];
   for (const el_ of roots) {
     ensureParts(el_);
-    if (!STATE5.has(el_)) {
-      STATE5.set(el_, {
+    if (!STATE4.has(el_)) {
+      STATE4.set(el_, {
         spec: {},
         set: { columns: [], answers: {} },
         unit: "range",
@@ -74587,10 +74680,10 @@ var init_matrix2 = __esm({
 
 // js/qr/state.js
 function stateOf7(root) {
-  let st = STATE6.get(root);
+  let st = STATE5.get(root);
   if (!st) {
     st = { open: false, spec: {}, mode: attr12(root, "reveal", "shown"), timer: 0, shown: attr12(root, "reveal", "shown") !== "click", said: "", card: null, expired: false };
-    STATE6.set(root, st);
+    STATE5.set(root, st);
   }
   return st;
 }
@@ -74609,7 +74702,7 @@ function say14(root, message) {
   target.textContent = "";
   setTimeout(() => target.textContent = message, 60);
 }
-var QR, QR_COPY_EVENT, QR_REVEAL_EVENT, QR_EXPIRED_EVENT, QR_RETRY_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, STATE6, el12, attr12, valueOf2;
+var QR, QR_COPY_EVENT, QR_REVEAL_EVENT, QR_EXPIRED_EVENT, QR_RETRY_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, STATE5, el12, attr12, valueOf2;
 var init_state27 = __esm({
   "js/qr/state.js"() {
     "use strict";
@@ -74621,7 +74714,7 @@ var init_state27 = __esm({
     QR_FOLD = 160;
     QR_LEVELS = Object.freeze(["L", "M", "Q", "H"]);
     QR_PLATE = Object.freeze({ ground: "#ffffff", ink: "#000000" });
-    STATE6 = /* @__PURE__ */ new WeakMap();
+    STATE5 = /* @__PURE__ */ new WeakMap();
     el12 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -74974,7 +75067,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -75078,7 +75171,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller30();
+    init_controller31();
     init_state27();
     init_state27();
     init_matrix2();
@@ -75103,7 +75196,7 @@ var init_constants41 = __esm({
 
 // js/console/model.js
 function stateOf8(root) {
-  let st = STATE7.get(root);
+  let st = STATE6.get(root);
   if (!st) {
     st = {
       run: null,
@@ -75125,7 +75218,7 @@ function stateOf8(root) {
       barState: "",
       hintHeight: 0
     };
-    STATE7.set(root, st);
+    STATE6.set(root, st);
   }
   return st;
 }
@@ -75163,11 +75256,11 @@ function say15(root, message) {
   target.textContent = "";
   setTimeout(() => target.textContent = message, 60);
 }
-var STATE7, el13, attr13;
+var STATE6, el13, attr13;
 var init_model9 = __esm({
   "js/console/model.js"() {
     "use strict";
-    STATE7 = /* @__PURE__ */ new WeakMap();
+    STATE6 = /* @__PURE__ */ new WeakMap();
     el13 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -75813,7 +75906,7 @@ function setConsole(root, spec) {
   drawAll(root);
 }
 function consoleBlocks(root) {
-  return (STATE7.get(root)?.blocks ?? []).map((b) => ({ ...b }));
+  return (STATE6.get(root)?.blocks ?? []).map((b) => ({ ...b }));
 }
 function runConsoleCommand(root, command) {
   return runCommand(root, command);
@@ -76182,7 +76275,7 @@ var init_levels = __esm({
 
 // js/logviewer/model.js
 function stateOf9(root) {
-  let st = STATE8.get(root);
+  let st = STATE7.get(root);
   if (!st) {
     st = {
       lines: [],
@@ -76198,15 +76291,15 @@ function stateOf9(root) {
       tools: "",
       highlighted: ""
     };
-    STATE8.set(root, st);
+    STATE7.set(root, st);
   }
   return st;
 }
-var STATE8, BUILT, el14, attr14;
+var STATE7, BUILT, el14, attr14;
 var init_model10 = __esm({
   "js/logviewer/model.js"() {
     "use strict";
-    STATE8 = /* @__PURE__ */ new WeakMap();
+    STATE7 = /* @__PURE__ */ new WeakMap();
     BUILT = /* @__PURE__ */ new WeakMap();
     el14 = (className, tag = "div") => {
       const node = document.createElement(tag);
@@ -77223,7 +77316,7 @@ function count(root, name, fallback2) {
   return Number.isFinite(n) && n >= 0 ? Math.floor(n) : fallback2;
 }
 function stateOf10(root) {
-  let st = STATE9.get(root);
+  let st = STATE8.get(root);
   if (!st) {
     const first = root.getAttribute("data-kp-diff-state");
     st = {
@@ -77237,15 +77330,15 @@ function stateOf10(root) {
       mode: attr15(root, "open", "all"),
       said: ""
     };
-    STATE9.set(root, st);
+    STATE8.set(root, st);
   }
   return st;
 }
-var STATE9, el15, attr15;
+var STATE8, el15, attr15;
 var init_model11 = __esm({
   "js/diff/model.js"() {
     "use strict";
-    STATE9 = /* @__PURE__ */ new WeakMap();
+    STATE8 = /* @__PURE__ */ new WeakMap();
     el15 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -80087,9 +80180,6 @@ export {
   QUIET,
   QUIET_EVENT,
   QUIET_SEVERITIES,
-  RANGE,
-  RANGE_EVENT,
-  RANGE_PRESETS,
   READY_ATTRIBUTE,
   REGISTER_ATTRIBUTE,
   REGISTER_ERROR_EVENT,
@@ -80435,7 +80525,6 @@ export {
   parseHsl,
   parseQuantity,
   parseTick,
-  parseTime,
   passkeys_exports as passkeysExports,
   path_trace_exports as pathTraceExports,
   patterns_exports as patternsExports,
@@ -80445,7 +80534,6 @@ export {
   planFold,
   planSeparators,
   preparePrint,
-  presetMs,
   previewTheme,
   previewTypeOf,
   previewedTheme,
@@ -80462,8 +80550,6 @@ export {
   quietValue,
   quote_exports as quoteExports,
   range_exports as rangeExports,
-  rangeFaults,
-  rangeMoment,
   rangeOf,
   rankCommands,
   rating_exports as ratingExports,

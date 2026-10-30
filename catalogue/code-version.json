@@ -91,7 +91,7 @@
         "js/question-card.js": { "digest": "31b904cb4f4ad208", "when": "[data-kp-questions]" },
         "js/quiet-hours.js": { "digest": "a0e5be02f86e1a33", "when": "[data-kp-quiet]" },
         "js/quote.js": { "digest": "0e961a3a16537647", "when": "[data-kp-quote], [data-kp-quote-list]" },
-        "js/range.js": { "digest": "4661fd5f6c3e4e3c", "when": "[data-kp-range]" },
+        "js/range.js": { "digest": "0887145f847c0e6a", "when": "[data-kp-range]" },
         "js/rating.js": { "digest": "561fbe00f3e5aa4c", "when": "[data-kp-rating]" },
         "js/reason.js": { "digest": "e03846b46d464fbe", "when": "[data-kp-disabled-reason]" },
         "js/request-inspector.js": { "digest": "d79def1e0b5620d6", "when": "[data-kp-requests]" },
