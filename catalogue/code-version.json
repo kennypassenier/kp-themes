@@ -85,7 +85,7 @@
         "js/pipeline.js": { "digest": "605ca14ef529b4f9", "when": "[data-kp-pipeline]" },
         "js/print.js": { "digest": "780f04282cc64ba5", "when": "[data-kp-print-action], [data-kp-checklist], [data-kp-print-sheet]" },
         "js/problems.js": { "digest": "be69d397b102b4eb", "when": "[data-kp-problems]" },
-        "js/progressbar.js": { "digest": "caf64a556e471e75", "when": ".kp-progressbar" },
+        "js/progressbar.js": { "digest": "4e4d2ee0142c280c", "when": ".kp-progressbar" },
         "js/qr.js": { "digest": "68067eac28d8e8a5", "when": "[data-kp-qr]" },
         "js/quantity.js": { "digest": "dacff25b79751023", "when": "[data-kp-quantity]" },
         "js/question-card.js": { "digest": "4db574ad459e720f", "when": "[data-kp-questions]" },

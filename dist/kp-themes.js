@@ -31895,31 +31895,15 @@ function setProgressFailed(el16, failure) {
   FAILED.set(el16, { plate: plate2, row: row2 });
 }
 function attachProgressbars(root = document) {
-  const bars = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(PROGRESSBAR_SELECTOR) ? [root] : [],
-      ...root.querySelectorAll(PROGRESSBAR_SELECTOR)
-    ]
-  );
-  for (const bar of bars) syncProgressbar(buildProgressbar(bar));
-  if (typeof MutationObserver === "undefined" || bars.length === 0) return () => {
-  };
-  const watch2 = new MutationObserver((records) => {
-    for (const record of records) syncProgressbar(
-      /** @type {HTMLElement} */
-      record.target
-    );
-  });
-  for (const bar of bars) watch2.observe(bar, { attributes: true, attributeFilter: ["aria-valuenow", "aria-valuemin", "aria-valuemax"] });
-  return () => watch2.disconnect();
+  return attachAll(root, PROGRESSBAR_SELECTOR, ProgressbarController);
 }
-var PROGRESSBAR_SELECTOR, VALUE_PROPERTY, PROGRESSBAR_RETRY_EVENT, INDETERMINATE_ATTRIBUTE, numberAttribute, FAILED;
+var PROGRESSBAR_SELECTOR, VALUE_PROPERTY, PROGRESSBAR_RETRY_EVENT, INDETERMINATE_ATTRIBUTE, numberAttribute, FAILED, ProgressbarController;
 var init_progressbar = __esm({
   "js/progressbar.js"() {
     "use strict";
     init_state_plate();
     init_strings();
+    init_controller();
     PROGRESSBAR_SELECTOR = ".kp-progressbar";
     VALUE_PROPERTY = "--kp-value";
     PROGRESSBAR_RETRY_EVENT = "kp-progressbar-retry";
@@ -31930,6 +31914,24 @@ var init_progressbar = __esm({
       return Number.isFinite(value) ? value : fallback2;
     };
     FAILED = /* @__PURE__ */ new WeakMap();
+    ProgressbarController = class extends Controller {
+      connect() {
+        const bar = this.host;
+        syncProgressbar(buildProgressbar(bar));
+        if (typeof MutationObserver === "undefined") return;
+        this.observe(new MutationObserver((records) => this.onAria(records))).observe(bar, {
+          attributes: true,
+          attributeFilter: ["aria-valuenow", "aria-valuemin", "aria-valuemax"]
+        });
+      }
+      /** @param {MutationRecord[]} records */
+      onAria(records) {
+        for (const record of records) syncProgressbar(
+          /** @type {HTMLElement} */
+          record.target
+        );
+      }
+    };
   }
 });
 
