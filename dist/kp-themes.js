@@ -31488,6 +31488,206 @@ var init_tabbar = __esm({
   }
 });
 
+// js/card-state.js
+var card_state_exports = {};
+__export(card_state_exports, {
+  CARD_RETRY_EVENT: () => CARD_RETRY_EVENT,
+  CARD_STATE: () => CARD_STATE,
+  CARD_STATES: () => CARD_STATES,
+  CARD_STATE_EVENT: () => CARD_STATE_EVENT,
+  attachCardStates: () => attachCardStates,
+  setCardState: () => setCardState
+});
+function partsOf2(card) {
+  const doc = card.ownerDocument;
+  let stage = (
+    /** @type {HTMLElement | null} */
+    card.querySelector(":scope > .kp-card__stage")
+  );
+  if (!stage) {
+    stage = el2(doc, "kp-card__stage");
+    const footer = card.querySelector(":scope > .kp-card__footer");
+    if (footer) footer.before(stage);
+    else card.append(stage);
+  }
+  let data = (
+    /** @type {HTMLElement | null} */
+    stage.querySelector(":scope > .kp-card__data")
+  );
+  if (!data) {
+    data = el2(doc, "kp-card__data");
+    stage.prepend(data);
+  }
+  let note2 = (
+    /** @type {HTMLElement | null} */
+    stage.querySelector(":scope > .kp-card__state")
+  );
+  if (!note2) {
+    note2 = el2(doc, "kp-card__state");
+    note2.setAttribute("data-kp-card-built", "");
+    stage.append(note2);
+  }
+  return { stage, data, note: note2 };
+}
+function buildNote(note2, state6, options) {
+  if (!note2.hasAttribute("data-kp-card-built")) return;
+  const doc = note2.ownerDocument;
+  const s2 = getStrings();
+  const title = el2(doc, "kp-card__state-title kp-stateplate__title", "strong");
+  title.textContent = options.title ?? (state6 === "error" ? s2.cardFailed : s2.cardEmpty);
+  const lines = [title];
+  if (options.art) {
+    const art = el2(doc, "kp-card__state-art kp-stateplate__art", "span");
+    art.setAttribute("aria-hidden", "true");
+    if (typeof options.art === "string") art.textContent = options.art;
+    else art.append(options.art);
+    lines.unshift(art);
+  }
+  if (options.text) {
+    const text = el2(doc, "kp-card__state-text kp-stateplate__text", "span");
+    text.textContent = options.text;
+    lines.push(text);
+  }
+  if (state6 === "empty") {
+    const box = el2(doc, "kp-empty kp-card__empty kp-stateplate kp-stateplate--empty");
+    box.append(...lines);
+    if (options.action) {
+      const actions = el2(doc, "kp-card__state-actions");
+      actions.append(...Array.isArray(options.action) ? options.action : [options.action]);
+      box.append(actions);
+    }
+    note2.setAttribute("role", "status");
+    note2.replaceChildren(box);
+    return;
+  }
+  const alert = el2(doc, "kp-alert kp-alert--destructive kp-card__failure kp-stateplate kp-stateplate--error");
+  const body = el2(doc, "kp-alert__body");
+  body.append(...lines);
+  alert.append(body);
+  if (options.retry !== false) {
+    const button5 = el2(doc, "kp-button kp-card__retry kp-stateplate__action", "button");
+    button5.type = "button";
+    button5.setAttribute("data-kp-card-retry", "");
+    button5.textContent = s2.cardRetry;
+    alert.append(button5);
+  }
+  note2.setAttribute("role", "alert");
+  note2.replaceChildren(alert);
+}
+function syncCard(card, { announce: announce4 = false, options } = {}) {
+  const state6 = known2(card.getAttribute("data-kp-state"));
+  if (card.getAttribute("data-kp-state") !== state6) card.setAttribute("data-kp-state", state6);
+  const { stage, data, note: note2 } = partsOf2(card);
+  const previous = synced3.get(card);
+  const opts = options ?? given.get(card) ?? {};
+  if (options) given.set(card, options);
+  const doc = card.ownerDocument;
+  const active = doc.activeElement;
+  const leaving = active instanceof HTMLElement && (state6 !== "ready" && data.contains(active) || note2.contains(active) && previous !== state6);
+  if (leaving) {
+    stage.tabIndex = -1;
+    stage.focus({ preventScroll: true });
+  }
+  const loading = state6 === "loading";
+  data.toggleAttribute("inert", loading);
+  if (loading) data.setAttribute("aria-busy", "true");
+  else data.removeAttribute("aria-busy");
+  if (state6 === "empty" || state6 === "error") {
+    if (previous !== state6 || options || !note2.hasChildNodes()) buildNote(note2, state6, opts);
+    note2.hidden = false;
+  } else {
+    note2.hidden = true;
+    if (note2.hasAttribute("data-kp-card-built")) {
+      note2.removeAttribute("role");
+      note2.replaceChildren();
+    }
+  }
+  const busy = cards.get(card);
+  if (loading && !busy) {
+    const words2 = opts.words ?? card.getAttribute("data-kp-loading-words") ?? getStrings().cardLoading;
+    cards.set(card, openBusyCard(stage, { words: words2, area: () => [stage], className: "kp-card__busy", arrive: drawn.has(card) }));
+  } else if (!loading && busy) {
+    cards.delete(card);
+    void busy.close();
+  }
+  drawn.add(card);
+  synced3.set(card, state6);
+  if (announce4 && previous !== void 0 && previous !== state6)
+    card.dispatchEvent(new CustomEvent(CARD_STATE_EVENT, { bubbles: true, detail: { card, state: state6, previous } }));
+  return state6;
+}
+function setCardState(card, state6, options) {
+  card.setAttribute("data-kp-state", known2(state6));
+  return syncCard(card, { announce: true, options });
+}
+function attachCardStates(root = document) {
+  const found = (
+    /** @type {HTMLElement[]} */
+    [
+      ...root instanceof Element && root.matches(CARD_STATE) ? [root] : [],
+      ...root.querySelectorAll(CARD_STATE)
+    ]
+  );
+  const undo = [];
+  for (const card of found) {
+    syncCard(card);
+    const press2 = (event) => {
+      const button5 = event.target instanceof Element ? event.target.closest("[data-kp-card-retry]") : null;
+      if (!button5 || !card.contains(button5) || button5.closest(".kp-card") !== card) return;
+      card.dispatchEvent(new CustomEvent(CARD_RETRY_EVENT, { bubbles: true, detail: { card } }));
+    };
+    card.addEventListener("click", press2);
+    undo.push(() => card.removeEventListener("click", press2));
+  }
+  const watch2 = typeof MutationObserver === "undefined" || found.length === 0 ? null : new MutationObserver((records) => {
+    for (const record of records) {
+      const card = (
+        /** @type {HTMLElement} */
+        record.target
+      );
+      if (synced3.get(card) !== card.getAttribute("data-kp-state")) syncCard(card, { announce: true });
+    }
+  });
+  for (const card of found) watch2?.observe(card, { attributes: true, attributeFilter: ["data-kp-state"] });
+  return () => {
+    watch2?.disconnect();
+    undo.forEach((u) => u());
+    for (const card of found) {
+      cards.get(card)?.remove();
+      cards.delete(card);
+    }
+  };
+}
+var CARD_STATE, CARD_STATES, CARD_STATE_EVENT, CARD_RETRY_EVENT, synced3, cards, drawn, given, known2, el2;
+var init_card_state = __esm({
+  "js/card-state.js"() {
+    "use strict";
+    init_busy_card();
+    init_strings();
+    CARD_STATE = ".kp-card[data-kp-state]";
+    CARD_STATES = /** @type {const} */
+    ["loading", "empty", "error", "ready"];
+    CARD_STATE_EVENT = "kp-card-state";
+    CARD_RETRY_EVENT = "kp-card-retry";
+    synced3 = /* @__PURE__ */ new WeakMap();
+    cards = /* @__PURE__ */ new WeakMap();
+    drawn = /* @__PURE__ */ new WeakSet();
+    given = /* @__PURE__ */ new WeakMap();
+    known2 = (state6) => CARD_STATES.includes(
+      /** @type {any} */
+      state6
+    ) ? (
+      /** @type {CardState} */
+      state6
+    ) : "ready";
+    el2 = (doc, className, tag = "div") => {
+      const node = doc.createElement(tag);
+      node.className = className;
+      return node;
+    };
+  }
+});
+
 // js/undo-toast.js
 var undo_toast_exports = {};
 __export(undo_toast_exports, {
@@ -31815,225 +32015,7 @@ var init_undo_toast = __esm({
   }
 });
 
-// js/card-state.js
-var card_state_exports = {};
-__export(card_state_exports, {
-  CARD_RETRY_EVENT: () => CARD_RETRY_EVENT,
-  CARD_STATE: () => CARD_STATE,
-  CARD_STATES: () => CARD_STATES,
-  CARD_STATE_EVENT: () => CARD_STATE_EVENT,
-  attachCardStates: () => attachCardStates,
-  setCardState: () => setCardState
-});
-function partsOf2(card) {
-  const doc = card.ownerDocument;
-  let stage = (
-    /** @type {HTMLElement | null} */
-    card.querySelector(":scope > .kp-card__stage")
-  );
-  if (!stage) {
-    stage = el2(doc, "kp-card__stage");
-    const footer = card.querySelector(":scope > .kp-card__footer");
-    if (footer) footer.before(stage);
-    else card.append(stage);
-  }
-  let data = (
-    /** @type {HTMLElement | null} */
-    stage.querySelector(":scope > .kp-card__data")
-  );
-  if (!data) {
-    data = el2(doc, "kp-card__data");
-    stage.prepend(data);
-  }
-  let note2 = (
-    /** @type {HTMLElement | null} */
-    stage.querySelector(":scope > .kp-card__state")
-  );
-  if (!note2) {
-    note2 = el2(doc, "kp-card__state");
-    note2.setAttribute("data-kp-card-built", "");
-    stage.append(note2);
-  }
-  return { stage, data, note: note2 };
-}
-function buildNote(note2, state6, options) {
-  if (!note2.hasAttribute("data-kp-card-built")) return;
-  const doc = note2.ownerDocument;
-  const s2 = getStrings();
-  const title = el2(doc, "kp-card__state-title kp-stateplate__title", "strong");
-  title.textContent = options.title ?? (state6 === "error" ? s2.cardFailed : s2.cardEmpty);
-  const lines = [title];
-  if (options.art) {
-    const art = el2(doc, "kp-card__state-art kp-stateplate__art", "span");
-    art.setAttribute("aria-hidden", "true");
-    if (typeof options.art === "string") art.textContent = options.art;
-    else art.append(options.art);
-    lines.unshift(art);
-  }
-  if (options.text) {
-    const text = el2(doc, "kp-card__state-text kp-stateplate__text", "span");
-    text.textContent = options.text;
-    lines.push(text);
-  }
-  if (state6 === "empty") {
-    const box = el2(doc, "kp-empty kp-card__empty kp-stateplate kp-stateplate--empty");
-    box.append(...lines);
-    if (options.action) {
-      const actions = el2(doc, "kp-card__state-actions");
-      actions.append(...Array.isArray(options.action) ? options.action : [options.action]);
-      box.append(actions);
-    }
-    note2.setAttribute("role", "status");
-    note2.replaceChildren(box);
-    return;
-  }
-  const alert = el2(doc, "kp-alert kp-alert--destructive kp-card__failure kp-stateplate kp-stateplate--error");
-  const body = el2(doc, "kp-alert__body");
-  body.append(...lines);
-  alert.append(body);
-  if (options.retry !== false) {
-    const button5 = el2(doc, "kp-button kp-card__retry kp-stateplate__action", "button");
-    button5.type = "button";
-    button5.setAttribute("data-kp-card-retry", "");
-    button5.textContent = s2.cardRetry;
-    alert.append(button5);
-  }
-  note2.setAttribute("role", "alert");
-  note2.replaceChildren(alert);
-}
-function syncCard(card, { announce: announce4 = false, options } = {}) {
-  const state6 = known2(card.getAttribute("data-kp-state"));
-  if (card.getAttribute("data-kp-state") !== state6) card.setAttribute("data-kp-state", state6);
-  const { stage, data, note: note2 } = partsOf2(card);
-  const previous = synced3.get(card);
-  const opts = options ?? given.get(card) ?? {};
-  if (options) given.set(card, options);
-  const doc = card.ownerDocument;
-  const active = doc.activeElement;
-  const leaving = active instanceof HTMLElement && (state6 !== "ready" && data.contains(active) || note2.contains(active) && previous !== state6);
-  if (leaving) {
-    stage.tabIndex = -1;
-    stage.focus({ preventScroll: true });
-  }
-  const loading = state6 === "loading";
-  data.toggleAttribute("inert", loading);
-  if (loading) data.setAttribute("aria-busy", "true");
-  else data.removeAttribute("aria-busy");
-  if (state6 === "empty" || state6 === "error") {
-    if (previous !== state6 || options || !note2.hasChildNodes()) buildNote(note2, state6, opts);
-    note2.hidden = false;
-  } else {
-    note2.hidden = true;
-    if (note2.hasAttribute("data-kp-card-built")) {
-      note2.removeAttribute("role");
-      note2.replaceChildren();
-    }
-  }
-  const busy = cards.get(card);
-  if (loading && !busy) {
-    const words2 = opts.words ?? card.getAttribute("data-kp-loading-words") ?? getStrings().cardLoading;
-    cards.set(card, openBusyCard(stage, { words: words2, area: () => [stage], className: "kp-card__busy", arrive: drawn.has(card) }));
-  } else if (!loading && busy) {
-    cards.delete(card);
-    void busy.close();
-  }
-  drawn.add(card);
-  synced3.set(card, state6);
-  if (announce4 && previous !== void 0 && previous !== state6)
-    card.dispatchEvent(new CustomEvent(CARD_STATE_EVENT, { bubbles: true, detail: { card, state: state6, previous } }));
-  return state6;
-}
-function setCardState(card, state6, options) {
-  card.setAttribute("data-kp-state", known2(state6));
-  return syncCard(card, { announce: true, options });
-}
-function attachCardStates(root = document) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(CARD_STATE) ? [root] : [],
-      ...root.querySelectorAll(CARD_STATE)
-    ]
-  );
-  const undo = [];
-  for (const card of found) {
-    syncCard(card);
-    const press2 = (event) => {
-      const button5 = event.target instanceof Element ? event.target.closest("[data-kp-card-retry]") : null;
-      if (!button5 || !card.contains(button5) || button5.closest(".kp-card") !== card) return;
-      card.dispatchEvent(new CustomEvent(CARD_RETRY_EVENT, { bubbles: true, detail: { card } }));
-    };
-    card.addEventListener("click", press2);
-    undo.push(() => card.removeEventListener("click", press2));
-  }
-  const watch2 = typeof MutationObserver === "undefined" || found.length === 0 ? null : new MutationObserver((records) => {
-    for (const record of records) {
-      const card = (
-        /** @type {HTMLElement} */
-        record.target
-      );
-      if (synced3.get(card) !== card.getAttribute("data-kp-state")) syncCard(card, { announce: true });
-    }
-  });
-  for (const card of found) watch2?.observe(card, { attributes: true, attributeFilter: ["data-kp-state"] });
-  return () => {
-    watch2?.disconnect();
-    undo.forEach((u) => u());
-    for (const card of found) {
-      cards.get(card)?.remove();
-      cards.delete(card);
-    }
-  };
-}
-var CARD_STATE, CARD_STATES, CARD_STATE_EVENT, CARD_RETRY_EVENT, synced3, cards, drawn, given, known2, el2;
-var init_card_state = __esm({
-  "js/card-state.js"() {
-    "use strict";
-    init_busy_card();
-    init_strings();
-    CARD_STATE = ".kp-card[data-kp-state]";
-    CARD_STATES = /** @type {const} */
-    ["loading", "empty", "error", "ready"];
-    CARD_STATE_EVENT = "kp-card-state";
-    CARD_RETRY_EVENT = "kp-card-retry";
-    synced3 = /* @__PURE__ */ new WeakMap();
-    cards = /* @__PURE__ */ new WeakMap();
-    drawn = /* @__PURE__ */ new WeakSet();
-    given = /* @__PURE__ */ new WeakMap();
-    known2 = (state6) => CARD_STATES.includes(
-      /** @type {any} */
-      state6
-    ) ? (
-      /** @type {CardState} */
-      state6
-    ) : "ready";
-    el2 = (doc, className, tag = "div") => {
-      const node = doc.createElement(tag);
-      node.className = className;
-      return node;
-    };
-  }
-});
-
-// js/statusrow.js
-var statusrow_exports = {};
-__export(statusrow_exports, {
-  CALM_STATUS_STATES: () => CALM_STATUS_STATES,
-  STATUS_EVENT: () => STATUS_EVENT,
-  STATUS_ID_ATTRIBUTE: () => STATUS_ID_ATTRIBUTE,
-  STATUS_LIST: () => STATUS_LIST,
-  STATUS_PAUSE_EVENT: () => STATUS_PAUSE_EVENT,
-  STATUS_RESUME_EVENT: () => STATUS_RESUME_EVENT,
-  STATUS_RETRY_EVENT: () => STATUS_RETRY_EVENT,
-  STATUS_STATES: () => STATUS_STATES,
-  STATUS_UNDO_EVENT: () => STATUS_UNDO_EVENT,
-  attachStatusLists: () => attachStatusLists,
-  buildStatusList: () => buildStatusList,
-  countStatus: () => countStatus,
-  setStatus: () => setStatus,
-  setTodayState: () => setTodayState,
-  settleToday: () => settleToday
-});
+// js/statusrow/state.js
 function known3(state6, calm = false) {
   if (!calm) return STATUS_STATES.includes(
     /** @type {any} */
@@ -32058,26 +32040,93 @@ function known3(state6, calm = false) {
   }
   return "unknown";
 }
-function buildStatusList(rows, { label, retry = true, single = false, vocab = "standard" } = {}) {
-  const list = document.createElement("ul");
-  list.className = single ? "kp-statuslist kp-statuslist--rows" : "kp-statuslist";
-  if (label) list.setAttribute("aria-label", label);
-  if (!retry) list.setAttribute("data-kp-status-retry", "false");
-  if (vocab === "calm") list.setAttribute("data-kp-status-vocab", "calm");
-  rows.forEach((row) => {
-    const item = el3("kp-statusrow", "li");
-    item.setAttribute(STATUS_ID_ATTRIBUTE, row.id ?? row.label);
-    item.dataset.state = known3(row.state, vocab === "calm");
-    const body = el3("kp-statusrow__body");
-    body.append(el3("kp-statusrow__label"), el3("kp-statusrow__detail"));
-    if (row.fix !== void 0) body.append(el3("kp-statusrow__fix"));
-    item.append(el3("kp-statusrow__mark"), body);
-    list.append(item);
-    writeText2(item, row);
-    syncItem2(item);
-  });
-  return list;
+var STATUS_LIST, STATUS_ID_ATTRIBUTE, STATUS_EVENT, STATUS_RETRY_EVENT, STATUS_RESUME_EVENT, STATUS_PAUSE_EVENT, STATUS_UNDO_EVENT, STATUS_STATES, CALM_STATUS_STATES, synced4, pending3, isCalm2, warned2, stateWord2, el3;
+var init_state7 = __esm({
+  "js/statusrow/state.js"() {
+    "use strict";
+    init_strings();
+    STATUS_LIST = ".kp-statuslist";
+    STATUS_ID_ATTRIBUTE = "data-kp-status-id";
+    STATUS_EVENT = "kp-status-change";
+    STATUS_RETRY_EVENT = "kp-status-retry";
+    STATUS_RESUME_EVENT = "kp-status-resume";
+    STATUS_PAUSE_EVENT = "kp-status-pause";
+    STATUS_UNDO_EVENT = "kp-status-undo";
+    STATUS_STATES = /** @type {const} */
+    ["ok", "loading", "failed", "empty", "warn"];
+    CALM_STATUS_STATES = /** @type {const} */
+    ["open", "done", "paused", "unknown", "loading"];
+    synced4 = /* @__PURE__ */ new WeakMap();
+    pending3 = /* @__PURE__ */ new WeakMap();
+    isCalm2 = (list) => list?.getAttribute("data-kp-status-vocab") === "calm";
+    warned2 = /* @__PURE__ */ new Set();
+    stateWord2 = (state6) => {
+      const s2 = getStrings();
+      return {
+        ok: s2.statusOk,
+        loading: s2.statusLoading,
+        failed: s2.statusFailed,
+        empty: s2.statusEmpty,
+        warn: s2.statusWarn,
+        open: s2.statusOpen,
+        done: s2.statusDone,
+        paused: s2.statusPaused,
+        unknown: s2.statusUnknown
+      }[state6];
+    };
+    el3 = (className, tag = "span") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+  }
+});
+
+// js/statusrow/voice.js
+function sayText(list, text) {
+  const region = regionOf2(list);
+  region.textContent = "";
+  window.setTimeout(() => {
+    region.textContent = text;
+  }, 30);
 }
+function regionOf2(list) {
+  const next2 = list.nextElementSibling;
+  if (next2 instanceof HTMLElement && next2.classList.contains("kp-statuslist__live")) return next2;
+  const region = el3("kp-sr-only kp-statuslist__live");
+  region.setAttribute("role", "status");
+  region.setAttribute("aria-live", "polite");
+  list.after(region);
+  return region;
+}
+function say3(list, entry) {
+  const fresh = !(list.nextElementSibling?.classList.contains("kp-statuslist__live") ?? false);
+  const region = regionOf2(list);
+  const queue = pending3.get(region);
+  if (queue) {
+    queue.push(entry);
+    return;
+  }
+  pending3.set(region, [entry]);
+  setTimeout(
+    () => {
+      const entries3 = pending3.get(region) ?? [];
+      pending3.delete(region);
+      const s2 = getStrings();
+      region.textContent = entries3.length > 3 ? s2.statusAnnounceMany(entries3.length, entries3.filter((e) => e.state === "failed").length) : entries3.map((e) => s2.statusAnnounce(e.label, stateWord2(e.state), e.detail)).join(". ");
+    },
+    fresh ? 100 : 0
+  );
+}
+var init_voice = __esm({
+  "js/statusrow/voice.js"() {
+    "use strict";
+    init_strings();
+    init_state7();
+  }
+});
+
+// js/statusrow/sync.js
 function writeText2(item, { label, detail, fix, since }) {
   if (since !== void 0) item.setAttribute("data-kp-since", since);
   if (label !== void 0) item.querySelector(".kp-statusrow__label")?.replaceChildren(label);
@@ -32257,13 +32306,21 @@ function syncCalmActions(item_, state6, list) {
   place3(pause, showPause);
   cell.hidden = !(showResume || showPause);
 }
-function sayText(list, text) {
-  const region = regionOf2(list);
-  region.textContent = "";
-  window.setTimeout(() => {
-    region.textContent = text;
-  }, 30);
-}
+var labelOf4, daysBetween;
+var init_sync2 = __esm({
+  "js/statusrow/sync.js"() {
+    "use strict";
+    init_freshness();
+    init_reason();
+    init_strings();
+    init_state7();
+    init_voice();
+    labelOf4 = (item) => item.querySelector(".kp-statusrow__label")?.textContent?.trim() ?? "";
+    daysBetween = (from, to) => Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 864e5);
+  }
+});
+
+// js/statusrow/list.js
 function turn(list, item, action) {
   const s2 = getStrings();
   const id = item.getAttribute(STATUS_ID_ATTRIBUTE);
@@ -32338,34 +32395,6 @@ function settleToday(list) {
   line.append(button5);
   list.append(line);
 }
-function regionOf2(list) {
-  const next2 = list.nextElementSibling;
-  if (next2 instanceof HTMLElement && next2.classList.contains("kp-statuslist__live")) return next2;
-  const region = el3("kp-sr-only kp-statuslist__live");
-  region.setAttribute("role", "status");
-  region.setAttribute("aria-live", "polite");
-  list.after(region);
-  return region;
-}
-function say3(list, entry) {
-  const fresh = !(list.nextElementSibling?.classList.contains("kp-statuslist__live") ?? false);
-  const region = regionOf2(list);
-  const queue = pending3.get(region);
-  if (queue) {
-    queue.push(entry);
-    return;
-  }
-  pending3.set(region, [entry]);
-  setTimeout(
-    () => {
-      const entries3 = pending3.get(region) ?? [];
-      pending3.delete(region);
-      const s2 = getStrings();
-      region.textContent = entries3.length > 3 ? s2.statusAnnounceMany(entries3.length, entries3.filter((e) => e.state === "failed").length) : entries3.map((e) => s2.statusAnnounce(e.label, stateWord2(e.state), e.detail)).join(". ");
-    },
-    fresh ? 100 : 0
-  );
-}
 function setStatus(list, key, change2) {
   const items = [...list.querySelectorAll(":scope > .kp-statusrow")];
   const item = typeof key === "number" ? items[key] : items.find((row) => row.getAttribute(STATUS_ID_ATTRIBUTE) === key);
@@ -32383,118 +32412,6 @@ function countStatus(list) {
   }
   return counts;
 }
-function wireCalmKeys(list) {
-  const rows = () => (
-    /** @type {HTMLElement[]} */
-    [...list.querySelectorAll(":scope > .kp-statusrow:not(.kp-statusrow--fold)")].filter((row) => !row.hidden)
-  );
-  const rove = (stop) => {
-    for (const row of rows()) row.tabIndex = row === stop ? 0 : -1;
-  };
-  rove(rows()[0]);
-  const onFocus = (event) => {
-    const row = event.target instanceof Element ? event.target.closest(".kp-statusrow") : null;
-    if (row instanceof HTMLElement && rows().includes(row)) rove(row);
-  };
-  const onKey6 = (event) => {
-    if (event.key !== "ArrowDown" && event.key !== "ArrowUp" || event.altKey || event.ctrlKey || event.metaKey) return;
-    const all = rows();
-    const at = all.findIndex((row) => row.contains(document.activeElement));
-    if (at < 0) return;
-    event.preventDefault();
-    all[Math.max(0, Math.min(all.length - 1, at + (event.key === "ArrowDown" ? 1 : -1)))]?.focus();
-  };
-  list.addEventListener("focusin", onFocus);
-  list.addEventListener("keydown", onKey6);
-  const focusedPaused = () => {
-    const row = rows().find((r) => r.contains(document.activeElement));
-    return row !== void 0 && row.getAttribute("data-state") === "paused" && list.getAttribute("data-kp-today-resume") !== "off";
-  };
-  const unkey = registerShortcuts(list, [
-    {
-      keys: "r",
-      what: getStrings().statusResume,
-      group: "Today",
-      when: focusedPaused,
-      run: () => {
-        const row = rows().find((r) => r.contains(document.activeElement));
-        const button5 = row?.querySelector("[data-kp-status-resume-button]");
-        if (row && button5 instanceof HTMLButtonElement && !button5.disabled) turn(list, row, "resume");
-      }
-    }
-  ]);
-  return () => {
-    list.removeEventListener("focusin", onFocus);
-    list.removeEventListener("keydown", onKey6);
-    unkey();
-  };
-}
-function attachStatusLists(root = document) {
-  const lists = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(STATUS_LIST) ? [root] : [],
-      ...root.querySelectorAll(STATUS_LIST)
-    ]
-  );
-  const undo = [];
-  for (const list of lists) {
-    for (const item of list.querySelectorAll(":scope > .kp-statusrow")) syncItem2(item);
-    regionOf2(list);
-    settleToday(list);
-    const press2 = (event) => {
-      const target = event.target instanceof Element ? event.target : null;
-      const resume = target?.closest("[data-kp-status-resume-button]");
-      const pause = target?.closest("[data-kp-status-pause-button]");
-      const calmItem = (resume ?? pause)?.closest(".kp-statusrow");
-      if (calmItem && list.contains(calmItem)) {
-        turn(list, calmItem, resume ? "resume" : "pause");
-        return;
-      }
-      const button5 = target?.closest("[data-kp-status-retry-button]");
-      const item = button5?.closest(".kp-statusrow");
-      if (!button5 || !item || !list.contains(item)) return;
-      list.dispatchEvent(new CustomEvent(STATUS_RETRY_EVENT, { bubbles: true, detail: { item, id: item.getAttribute(STATUS_ID_ATTRIBUTE) } }));
-    };
-    list.addEventListener("click", press2);
-    undo.push(() => list.removeEventListener("click", press2));
-    if (isCalm2(list)) {
-      undo.push(wireCalmKeys(list));
-      const options = new MutationObserver(() => {
-        for (const item of list.querySelectorAll(":scope > .kp-statusrow:not(.kp-statusrow--fold)")) syncItem2(item);
-        settleToday(list);
-      });
-      options.observe(list, {
-        attributes: true,
-        attributeFilter: [
-          "data-kp-today-since",
-          "data-kp-today-resume",
-          "data-kp-today-pause",
-          "data-kp-today-order",
-          "data-kp-today-paused",
-          "data-kp-today-fold-after",
-          "data-kp-today-mark"
-        ]
-      });
-      undo.push(() => options.disconnect());
-    }
-  }
-  if (typeof MutationObserver === "undefined" || lists.length === 0) return () => undo.forEach((u) => u());
-  const watch2 = new MutationObserver((records) => {
-    for (const record of records) {
-      const target = (
-        /** @type {Element} */
-        record.target
-      );
-      if (target.classList.contains("kp-statusrow")) syncItem2(target, { announce: true });
-    }
-  });
-  for (const list of lists) watch2.observe(list, { attributes: true, attributeFilter: ["data-state"], subtree: true });
-  return () => {
-    watch2.disconnect();
-    undo.forEach((u) => u());
-  };
-}
 function setTodayState(card, state6, words2 = {}) {
   const s2 = getStrings();
   if (state6 === "empty") setCardState(card, "empty", { title: words2.title ?? s2.statusTodayEmptyTitle, text: words2.text ?? s2.statusTodayEmptyText });
@@ -32507,52 +32424,176 @@ function setTodayState(card, state6, words2 = {}) {
     retry.textContent = s2.statusTodayRetry;
   }
 }
-var STATUS_LIST, STATUS_ID_ATTRIBUTE, STATUS_EVENT, STATUS_RETRY_EVENT, STATUS_RESUME_EVENT, STATUS_PAUSE_EVENT, STATUS_UNDO_EVENT, STATUS_STATES, CALM_STATUS_STATES, synced4, pending3, isCalm2, warned2, stateWord2, el3, labelOf4, daysBetween;
+function buildStatusList(rows, { label, retry = true, single = false, vocab = "standard" } = {}) {
+  const list = document.createElement("ul");
+  list.className = single ? "kp-statuslist kp-statuslist--rows" : "kp-statuslist";
+  if (label) list.setAttribute("aria-label", label);
+  if (!retry) list.setAttribute("data-kp-status-retry", "false");
+  if (vocab === "calm") list.setAttribute("data-kp-status-vocab", "calm");
+  rows.forEach((row) => {
+    const item = el3("kp-statusrow", "li");
+    item.setAttribute(STATUS_ID_ATTRIBUTE, row.id ?? row.label);
+    item.dataset.state = known3(row.state, vocab === "calm");
+    const body = el3("kp-statusrow__body");
+    body.append(el3("kp-statusrow__label"), el3("kp-statusrow__detail"));
+    if (row.fix !== void 0) body.append(el3("kp-statusrow__fix"));
+    item.append(el3("kp-statusrow__mark"), body);
+    list.append(item);
+    writeText2(item, row);
+    syncItem2(item);
+  });
+  return list;
+}
+var init_list = __esm({
+  "js/statusrow/list.js"() {
+    "use strict";
+    init_card_state();
+    init_strings();
+    init_undo_toast();
+    init_state7();
+    init_sync2();
+    init_voice();
+  }
+});
+
+// js/statusrow/controller.js
+var CALM_OPTIONS, ROWS, StatusList;
+var init_controller4 = __esm({
+  "js/statusrow/controller.js"() {
+    "use strict";
+    init_controller();
+    init_shortcuts();
+    init_strings();
+    init_list();
+    init_state7();
+    init_sync2();
+    init_voice();
+    CALM_OPTIONS = ["data-kp-today-since", "data-kp-today-resume", "data-kp-today-pause", "data-kp-today-order", "data-kp-today-paused", "data-kp-today-fold-after", "data-kp-today-mark"];
+    ROWS = ":scope > .kp-statusrow:not(.kp-statusrow--fold)";
+    StatusList = class extends Controller {
+      connect() {
+        const list = this.host;
+        for (const item of list.querySelectorAll(":scope > .kp-statusrow")) syncItem2(item);
+        regionOf2(list);
+        settleToday(list);
+        this.listen(list, "click", (event) => this.press(event));
+        if (isCalm2(list)) {
+          this.wireCalmKeys();
+          this.observe(
+            new MutationObserver(() => {
+              for (const item of list.querySelectorAll(ROWS)) syncItem2(item);
+              settleToday(list);
+            })
+          ).observe(list, { attributes: true, attributeFilter: CALM_OPTIONS });
+        }
+        if (typeof MutationObserver !== "undefined")
+          this.observe(
+            new MutationObserver((records) => {
+              for (const record of records) {
+                const target = (
+                  /** @type {Element} */
+                  record.target
+                );
+                if (target.classList.contains("kp-statusrow")) syncItem2(target, { announce: true });
+              }
+            })
+          ).observe(list, { attributes: true, attributeFilter: ["data-state"], subtree: true });
+      }
+      /** Resume or Pause on a calm row; Retry on a failed one. @param {Event} event */
+      press(event) {
+        const list = this.host;
+        const target = event.target instanceof Element ? event.target : null;
+        const resume = target?.closest("[data-kp-status-resume-button]");
+        const pause = target?.closest("[data-kp-status-pause-button]");
+        const calmItem = (resume ?? pause)?.closest(".kp-statusrow");
+        if (calmItem && list.contains(calmItem)) return turn(list, calmItem, resume ? "resume" : "pause");
+        const button5 = target?.closest("[data-kp-status-retry-button]");
+        const item = button5?.closest(".kp-statusrow");
+        if (!button5 || !item || !list.contains(item)) return;
+        list.dispatchEvent(new CustomEvent(STATUS_RETRY_EVENT, { bubbles: true, detail: { item, id: item.getAttribute(STATUS_ID_ATTRIBUTE) } }));
+      }
+      rows() {
+        return (
+          /** @type {HTMLElement[]} */
+          [...this.host.querySelectorAll(ROWS)].filter((row) => !row.hidden)
+        );
+      }
+      /** @param {HTMLElement | undefined} stop */
+      rove(stop) {
+        for (const row of this.rows()) row.tabIndex = row === stop ? 0 : -1;
+      }
+      focusedRow() {
+        return this.rows().find((r) => r.contains(document.activeElement));
+      }
+      /**
+       * The keys of a calm list: one tab stop on the rows, ArrowUp and ArrowDown between them, `r` resumes the focused paused row
+       * (on the `?` sheet; no digit keys, which need Shift on AZERTY).
+       */
+      wireCalmKeys() {
+        const list = this.host;
+        this.rove(this.rows()[0]);
+        this.listen(list, "focusin", (event) => {
+          const row = event.target instanceof Element ? event.target.closest(".kp-statusrow") : null;
+          if (row instanceof HTMLElement && this.rows().includes(row)) this.rove(row);
+        });
+        this.listen(list, "keydown", (event) => this.walk(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        const focusedPaused = () => {
+          const row = this.focusedRow();
+          return row !== void 0 && row.getAttribute("data-state") === "paused" && list.getAttribute("data-kp-today-resume") !== "off";
+        };
+        const resume = () => {
+          const row = this.focusedRow();
+          const button5 = row?.querySelector("[data-kp-status-resume-button]");
+          if (row && button5 instanceof HTMLButtonElement && !button5.disabled) turn(list, row, "resume");
+        };
+        this.own(registerShortcuts(list, [{ keys: "r", what: getStrings().statusResume, group: "Today", when: focusedPaused, run: resume }]));
+      }
+      /** @param {KeyboardEvent} event */
+      walk(event) {
+        if (event.key !== "ArrowDown" && event.key !== "ArrowUp" || event.altKey || event.ctrlKey || event.metaKey) return;
+        const all = this.rows();
+        const at = all.findIndex((row) => row.contains(document.activeElement));
+        if (at < 0) return;
+        event.preventDefault();
+        all[Math.max(0, Math.min(all.length - 1, at + (event.key === "ArrowDown" ? 1 : -1)))]?.focus();
+      }
+    };
+  }
+});
+
+// js/statusrow.js
+var statusrow_exports = {};
+__export(statusrow_exports, {
+  CALM_STATUS_STATES: () => CALM_STATUS_STATES,
+  STATUS_EVENT: () => STATUS_EVENT,
+  STATUS_ID_ATTRIBUTE: () => STATUS_ID_ATTRIBUTE,
+  STATUS_LIST: () => STATUS_LIST,
+  STATUS_PAUSE_EVENT: () => STATUS_PAUSE_EVENT,
+  STATUS_RESUME_EVENT: () => STATUS_RESUME_EVENT,
+  STATUS_RETRY_EVENT: () => STATUS_RETRY_EVENT,
+  STATUS_STATES: () => STATUS_STATES,
+  STATUS_UNDO_EVENT: () => STATUS_UNDO_EVENT,
+  attachStatusLists: () => attachStatusLists,
+  buildStatusList: () => buildStatusList,
+  countStatus: () => countStatus,
+  setStatus: () => setStatus,
+  setTodayState: () => setTodayState,
+  settleToday: () => settleToday
+});
+function attachStatusLists(root = document) {
+  return attachAll(root, STATUS_LIST, StatusList);
+}
 var init_statusrow = __esm({
   "js/statusrow.js"() {
     "use strict";
-    init_strings();
-    init_undo_toast();
-    init_shortcuts();
-    init_reason();
-    init_freshness();
-    init_card_state();
-    STATUS_LIST = ".kp-statuslist";
-    STATUS_ID_ATTRIBUTE = "data-kp-status-id";
-    STATUS_EVENT = "kp-status-change";
-    STATUS_RETRY_EVENT = "kp-status-retry";
-    STATUS_RESUME_EVENT = "kp-status-resume";
-    STATUS_PAUSE_EVENT = "kp-status-pause";
-    STATUS_UNDO_EVENT = "kp-status-undo";
-    STATUS_STATES = /** @type {const} */
-    ["ok", "loading", "failed", "empty", "warn"];
-    CALM_STATUS_STATES = /** @type {const} */
-    ["open", "done", "paused", "unknown", "loading"];
-    synced4 = /* @__PURE__ */ new WeakMap();
-    pending3 = /* @__PURE__ */ new WeakMap();
-    isCalm2 = (list) => list?.getAttribute("data-kp-status-vocab") === "calm";
-    warned2 = /* @__PURE__ */ new Set();
-    stateWord2 = (state6) => {
-      const s2 = getStrings();
-      return {
-        ok: s2.statusOk,
-        loading: s2.statusLoading,
-        failed: s2.statusFailed,
-        empty: s2.statusEmpty,
-        warn: s2.statusWarn,
-        open: s2.statusOpen,
-        done: s2.statusDone,
-        paused: s2.statusPaused,
-        unknown: s2.statusUnknown
-      }[state6];
-    };
-    el3 = (className, tag = "span") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    labelOf4 = (item) => item.querySelector(".kp-statusrow__label")?.textContent?.trim() ?? "";
-    daysBetween = (from, to) => Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 864e5);
+    init_controller();
+    init_controller4();
+    init_state7();
+    init_state7();
+    init_list();
   }
 });
 
@@ -35254,7 +35295,7 @@ var init_highlight = __esm({
 
 // js/code/state.js
 var state, nextBodyNumber;
-var init_state7 = __esm({
+var init_state8 = __esm({
   "js/code/state.js"() {
     "use strict";
     state = { serial: 0 };
@@ -35407,7 +35448,7 @@ var init_body = __esm({
     init_dom2();
     init_language();
     init_highlight();
-    init_state7();
+    init_state8();
   }
 });
 
@@ -35742,7 +35783,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller4 = __esm({
+var init_controller5 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -35885,7 +35926,7 @@ var init_attach10 = __esm({
     init_controller();
     init_locale();
     init_constants12();
-    init_controller4();
+    init_controller5();
   }
 });
 
@@ -36164,7 +36205,7 @@ var init_core = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller5 = __esm({
+var init_controller6 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys6();
@@ -36451,7 +36492,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller5();
+    init_controller6();
     init_rows();
     init_rows();
   }
@@ -36779,7 +36820,7 @@ var init_draw3 = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS2, SOURCE_EVENTS, SelectionBar;
-var init_controller6 = __esm({
+var init_controller7 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -37027,7 +37068,7 @@ var init_api5 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_controller6();
+    init_controller7();
     init_draw3();
     init_model3();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -37059,7 +37100,7 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller6();
+    init_controller7();
     init_model3();
     init_model3();
     init_api5();
@@ -38230,7 +38271,7 @@ function draw5(el16, memory) {
   }
   p.list.replaceChildren(...nodes);
 }
-var init_list = __esm({
+var init_list2 = __esm({
   "js/request-inspector/list.js"() {
     "use strict";
     init_segmented();
@@ -38242,7 +38283,7 @@ var init_list = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS3, RequestInspector;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -38250,7 +38291,7 @@ var init_controller7 = __esm({
     init_strings();
     init_copy2();
     init_format2();
-    init_list();
+    init_list2();
     OPTIONS3 = ["data-kp-secrets-in-copy", "data-kp-requests-open", "data-kp-copy-as", "data-kp-secret-headers", "data-kp-requests-max"];
     RequestInspector = class extends Controller {
       /** @param {HTMLElement} el @param {InspectorOptions} [given] */
@@ -38367,9 +38408,9 @@ var init_api6 = __esm({
     init_card_state();
     init_controller();
     init_strings();
-    init_controller7();
+    init_controller8();
     init_format2();
-    init_list();
+    init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
   }
 });
@@ -38399,7 +38440,7 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller7();
+    init_controller8();
     init_format2();
     init_format2();
     init_api6();
@@ -38604,7 +38645,7 @@ function wheelAngles(weights) {
   });
 }
 var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el5, stateOf, part;
-var init_state8 = __esm({
+var init_state9 = __esm({
   "js/wheel/state.js"() {
     "use strict";
     WHEEL = "[data-kp-wheel]";
@@ -38843,7 +38884,7 @@ var init_draw4 = __esm({
   "js/wheel/draw.js"() {
     "use strict";
     init_strings();
-    init_state8();
+    init_state9();
     LABEL_MIN = 4.5;
     LABEL_COMFORT = 6.5;
     LABEL_MAX2 = 9;
@@ -39009,20 +39050,20 @@ var init_spin = __esm({
     init_calm();
     init_strings();
     init_draw4();
-    init_state8();
+    init_state9();
     reduced3 = () => !motionAllowed();
   }
 });
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
     init_draw4();
     init_spin();
-    init_state8();
+    init_state9();
     WheelControl = class extends Controller {
       connect() {
         const root = this.host;
@@ -39081,9 +39122,9 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller8();
-    init_state8();
-    init_state8();
+    init_controller9();
+    init_state9();
+    init_state9();
     init_spin();
   }
 });
@@ -39113,7 +39154,7 @@ var init_constants13 = __esm({
 
 // js/focus-steps/state.js
 var focusState;
-var init_state9 = __esm({
+var init_state10 = __esm({
   "js/focus-steps/state.js"() {
     "use strict";
     focusState = {
@@ -39199,7 +39240,7 @@ var init_dom3 = __esm({
     "use strict";
     init_progressbar();
     init_strings();
-    init_state9();
+    init_state10();
     init_constants13();
     el6 = (className, tag = "div") => {
       const node = document.createElement(tag);
@@ -39330,7 +39371,7 @@ var init_tracks = __esm({
   "js/focus-steps/tracks.js"() {
     "use strict";
     init_strings();
-    init_state9();
+    init_state10();
     init_dom3();
     init_resume();
     tracksOn = (root) => stateOf2(root).tracks.length > 1 && opt(root, "tracks", "auto") !== "off";
@@ -39986,7 +40027,7 @@ var init_lanes = __esm({
     "use strict";
     init_progressbar();
     init_strings();
-    init_state9();
+    init_state10();
     init_dom3();
     init_blockers();
     init_resume();
@@ -40225,7 +40266,7 @@ var init_paint2 = __esm({
     "use strict";
     init_strings();
     init_state_plate();
-    init_state9();
+    init_state10();
     init_dom3();
     init_resume();
     init_tracks();
@@ -40612,7 +40653,7 @@ var init_flow = __esm({
   "js/focus-steps/flow.js"() {
     "use strict";
     init_strings();
-    init_state9();
+    init_state10();
     init_dom3();
     init_constants13();
     init_memory();
@@ -40940,7 +40981,7 @@ var init_constants14 = __esm({
 
 // js/timer/state.js
 var LISTS, TICKERS, WIRED2, HANDLED2, timerState;
-var init_state10 = __esm({
+var init_state11 = __esm({
   "js/timer/state.js"() {
     "use strict";
     LISTS = /* @__PURE__ */ new WeakMap();
@@ -40988,7 +41029,7 @@ var init_model4 = __esm({
   "js/timer/model.js"() {
     "use strict";
     init_countdown();
-    init_state10();
+    init_state11();
     clockOf = (timer2, ms) => formatCountdown(ms, timer2.total >= 36e5);
     leftOf = (timer2) => timer2.state === "running" && timer2.endsAt !== null ? Math.max(0, timer2.endsAt - Date.now()) : timer2.left;
     stateOf3 = (timer2) => ({
@@ -41124,7 +41165,7 @@ var init_card = __esm({
     init_strings();
     init_progressbar();
     init_model4();
-    init_state10();
+    init_state11();
   }
 });
 
@@ -41201,7 +41242,7 @@ var TIMER_SOUNDS, SOUNDS;
 var init_sound = __esm({
   "js/timer/sound.js"() {
     "use strict";
-    init_state10();
+    init_state11();
     TIMER_SOUNDS = ["chime", "bell", "buzzer"];
     SOUNDS = {
       // A soft two-note chime.
@@ -41350,7 +41391,7 @@ function finish(list, timer2, { quiet = false } = {}) {
   list.dispatchEvent(new CustomEvent(TIMER_DONE_EVENT, { bubbles: true, detail: { timer: stateOf3(timer2) } }));
 }
 var BUSY, PLATE;
-var init_sync2 = __esm({
+var init_sync3 = __esm({
   "js/timer/sync.js"() {
     "use strict";
     init_strings();
@@ -41360,7 +41401,7 @@ var init_sync2 = __esm({
     init_constants14();
     init_model4();
     init_sound();
-    init_state10();
+    init_state11();
     BUSY = /* @__PURE__ */ new WeakMap();
     PLATE = /* @__PURE__ */ new WeakMap();
   }
@@ -41500,8 +41541,8 @@ var init_run = __esm({
     init_constants14();
     init_model4();
     init_sound();
-    init_state10();
-    init_sync2();
+    init_state11();
+    init_sync3();
     emit2 = (list, timer2, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf3(timer2), ...extra } }));
     find = (list, id) => LISTS.get(list)?.get(id) ?? null;
     targetOf = (starter) => {
@@ -41615,8 +41656,8 @@ var init_attach11 = __esm({
     init_model4();
     init_run();
     init_sound();
-    init_state10();
-    init_sync2();
+    init_state11();
+    init_sync3();
   }
 });
 
@@ -41652,7 +41693,7 @@ var init_timer = __esm({
     "use strict";
     init_constants14();
     init_model4();
-    init_sync2();
+    init_sync3();
     init_sound();
     init_run();
     init_attach11();
@@ -41753,7 +41794,7 @@ var init_api7 = __esm({
     "use strict";
     init_strings();
     init_busy_card();
-    init_state9();
+    init_state10();
     init_tracks();
     init_track_nav();
     init_dom3();
@@ -42218,7 +42259,7 @@ function getChecklistItems(list) {
   return (ITEMS.get(list) ?? []).map((item) => ({ ...item }));
 }
 var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RETRY_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, PLATE2, BUSY2, serial4, nextSerial, sinks;
-var init_state11 = __esm({
+var init_state12 = __esm({
   "js/checklist/state.js"() {
     "use strict";
     CHECKLIST = "[data-kp-checklist]";
@@ -42293,7 +42334,7 @@ var init_rows2 = __esm({
   "js/checklist/rows.js"() {
     "use strict";
     init_parts();
-    init_state11();
+    init_state12();
     shownOrder = (list, items) => sinks(list) ? [...items.filter((i) => !i.checked), ...items.filter((i) => i.checked)] : items;
   }
 });
@@ -42464,7 +42505,7 @@ var init_render2 = __esm({
     init_strings();
     init_parts();
     init_rows2();
-    init_state11();
+    init_state12();
     HEADING_LEVEL = 3;
     HEADING_MIN = 2;
     HEADING_MAX = 6;
@@ -42536,14 +42577,14 @@ var init_api8 = __esm({
     init_strings();
     init_parts();
     init_render2();
-    init_state11();
+    init_state12();
     emit3 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
   }
 });
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
@@ -42552,7 +42593,7 @@ var init_controller9 = __esm({
     init_parts();
     init_render2();
     init_rows2();
-    init_state11();
+    init_state12();
     Checklist = class extends Controller {
       /** @param {HTMLElement} list */
       constructor(list) {
@@ -42690,9 +42731,9 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller9();
-    init_state11();
-    init_state11();
+    init_controller10();
+    init_state12();
+    init_state12();
     init_api8();
   }
 });
@@ -43360,7 +43401,7 @@ var init_dom4 = __esm({
 
 // js/calendar/state.js
 var state2, nextTitleNumber;
-var init_state12 = __esm({
+var init_state13 = __esm({
   "js/calendar/state.js"() {
     "use strict";
     state2 = { seq: 0 };
@@ -43471,7 +43512,7 @@ var init_build = __esm({
     "use strict";
     init_constants15();
     init_dom4();
-    init_state12();
+    init_state13();
   }
 });
 
@@ -43673,7 +43714,7 @@ var init_paint3 = __esm({
 
 // js/calendar/controller.js
 var WATCHED3, CalendarController;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -43927,7 +43968,7 @@ var init_api9 = __esm({
     "use strict";
     init_controller();
     init_constants15();
-    init_controller10();
+    init_controller11();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -46526,7 +46567,7 @@ var init_paint4 = __esm({
 
 // js/week/state.js
 var weeks;
-var init_state13 = __esm({
+var init_state14 = __esm({
   "js/week/state.js"() {
     "use strict";
     weeks = /* @__PURE__ */ new WeakMap();
@@ -46581,7 +46622,7 @@ var init_api10 = __esm({
     init_build2();
     init_helpers3();
     init_paint4();
-    init_state13();
+    init_state14();
   }
 });
 
@@ -46761,7 +46802,7 @@ var init_attach13 = __esm({
     init_constants17();
     init_menu();
     init_paint4();
-    init_state13();
+    init_state14();
     init_upcoming();
   }
 });
@@ -50747,7 +50788,7 @@ var init_figures = __esm({
 
 // js/uptime/state.js
 var SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, uptimeState;
-var init_state14 = __esm({
+var init_state15 = __esm({
   "js/uptime/state.js"() {
     "use strict";
     SPECS = /* @__PURE__ */ new WeakMap();
@@ -50824,7 +50865,7 @@ var init_fit = __esm({
     init_strings();
     init_constants20();
     init_figures();
-    init_state14();
+    init_state15();
   }
 });
 
@@ -50880,7 +50921,7 @@ var init_group3 = __esm({
   "js/uptime/group.js"() {
     "use strict";
     init_busy_card();
-    init_state14();
+    init_state15();
     infoMode = (el16) => (SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen) === "info";
   }
 });
@@ -51112,7 +51153,7 @@ var init_draw6 = __esm({
     init_fit();
     init_group3();
     init_helpers4();
-    init_state14();
+    init_state15();
   }
 });
 
@@ -51386,7 +51427,7 @@ var init_attach16 = __esm({
     init_fit();
     init_group3();
     init_helpers4();
-    init_state14();
+    init_state15();
   }
 });
 
@@ -55292,7 +55333,7 @@ var init_attributes = __esm({
 
 // js/timefield/state.js
 var FIELDS, counter5, nextFieldNumber;
-var init_state15 = __esm({
+var init_state16 = __esm({
   "js/timefield/state.js"() {
     "use strict";
     FIELDS = /* @__PURE__ */ new WeakMap();
@@ -55368,7 +55409,7 @@ var init_build5 = __esm({
     "use strict";
     init_strings();
     init_attributes();
-    init_state15();
+    init_state16();
     el9 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -55379,7 +55420,7 @@ var init_build5 = __esm({
 
 // js/timefield/list.js
 var TimeList;
-var init_list2 = __esm({
+var init_list3 = __esm({
   "js/timefield/list.js"() {
     "use strict";
     init_strings();
@@ -55599,9 +55640,9 @@ var init_field = __esm({
     init_constants21();
     init_attributes();
     init_build5();
-    init_state15();
+    init_state16();
     init_parse();
-    init_list2();
+    init_list3();
     TimeField = class {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -55839,7 +55880,7 @@ var init_keys8 = __esm({
 
 // js/timefield/controller.js
 var WATCHED4, TimeController;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -56046,9 +56087,9 @@ var init_api13 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller11();
+    init_controller12();
     init_field();
-    init_state15();
+    init_state16();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
   }
 });
@@ -57755,7 +57796,7 @@ var init_view = __esm({
 
 // js/notices/controller.js
 var idSeq4, NoticesCentre;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -57896,7 +57937,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller12();
+    init_controller13();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -57953,7 +57994,7 @@ var init_math = __esm({
 
 // js/rating/state.js
 var state3, nextRatingNumber;
-var init_state16 = __esm({
+var init_state17 = __esm({
   "js/rating/state.js"() {
     "use strict";
     state3 = { serial: 0 };
@@ -58039,7 +58080,7 @@ var init_build6 = __esm({
   "js/rating/build.js"() {
     "use strict";
     init_constants22();
-    init_state16();
+    init_state17();
     make18 = (tag, className, text) => {
       const node = document.createElement(tag);
       if (className) node.className = className;
@@ -58358,7 +58399,7 @@ var init_keys9 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED5, RatingController;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -58628,7 +58669,7 @@ var init_api14 = __esm({
     "use strict";
     init_controller();
     init_constants22();
-    init_controller13();
+    init_controller14();
     init_build6();
     init_commit();
     init_math();
@@ -59224,7 +59265,7 @@ var init_lookup = __esm({
 
 // js/usual-picker/state.js
 var usualState;
-var init_state17 = __esm({
+var init_state18 = __esm({
   "js/usual-picker/state.js"() {
     "use strict";
     usualState = {
@@ -59367,7 +59408,7 @@ var init_layout = __esm({
     init_strings();
     init_lookup();
     init_model6();
-    init_state17();
+    init_state18();
   }
 });
 
@@ -59633,7 +59674,7 @@ function render3(m) {
   syncHint(m);
   syncCheck(m);
 }
-var init_sync3 = __esm({
+var init_sync4 = __esm({
   "js/usual-picker/sync.js"() {
     "use strict";
     init_strings();
@@ -59644,7 +59685,7 @@ var init_sync3 = __esm({
     init_layout();
     init_model6();
     init_picking();
-    init_state17();
+    init_state18();
   }
 });
 
@@ -59700,7 +59741,7 @@ var init_add = __esm({
     init_layout();
     init_model6();
     init_picking();
-    init_sync3();
+    init_sync4();
   }
 });
 
@@ -60000,8 +60041,8 @@ var init_wire4 = __esm({
     init_model6();
     init_names();
     init_picking();
-    init_state17();
-    init_sync3();
+    init_state18();
+    init_sync4();
   }
 });
 
@@ -60054,7 +60095,7 @@ var init_attach17 = __esm({
     "use strict";
     init_constants23();
     init_model6();
-    init_sync3();
+    init_sync4();
     init_wire4();
   }
 });
@@ -60502,7 +60543,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -60693,7 +60734,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller14();
+    init_controller15();
     init_group4();
     init_group4();
   }
@@ -62394,7 +62435,7 @@ var init_config = __esm({
 
 // js/unsaved/state.js
 var state5, nextBarNumber;
-var init_state18 = __esm({
+var init_state19 = __esm({
   "js/unsaved/state.js"() {
     "use strict";
     state5 = { seq: 0 };
@@ -63194,14 +63235,14 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
     init_menu_button();
     init_controller();
     init_config();
-    init_state18();
+    init_state19();
     init_parts4();
     init_actions4();
     init_paint8();
@@ -63447,7 +63488,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller15();
+    init_controller16();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -65820,7 +65861,7 @@ var init_core2 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build7();
@@ -66050,7 +66091,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller16();
+    init_controller17();
     init_values2();
     init_values2();
   }
@@ -66218,7 +66259,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq7, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -66447,7 +66488,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller17();
+    init_controller18();
     init_fields();
     init_fields();
   }
@@ -67477,7 +67518,7 @@ var init_panel2 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -67736,7 +67777,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller18();
+    init_controller19();
     init_choices();
   }
 });
@@ -70061,7 +70102,7 @@ var init_request2 = __esm({
 
 // js/claim/state.js
 var claimState;
-var init_state19 = __esm({
+var init_state20 = __esm({
   "js/claim/state.js"() {
     "use strict";
     claimState = {
@@ -70222,7 +70263,7 @@ var init_attach20 = __esm({
     init_model7();
     init_request2();
     init_rows3();
-    init_state19();
+    init_state20();
   }
 });
 
@@ -70498,7 +70539,7 @@ function columnsList(root, people, waiting = false) {
   return wrap;
 }
 var LIST_CARDS;
-var init_list3 = __esm({
+var init_list4 = __esm({
   "js/availability/list.js"() {
     "use strict";
     init_strings();
@@ -70800,7 +70841,7 @@ var init_paint9 = __esm({
     init_state_plate();
     init_remember();
     init_facts();
-    init_list3();
+    init_list4();
   }
 });
 
@@ -72226,7 +72267,7 @@ function say14(root, message) {
   setTimeout(() => target.textContent = message, 60);
 }
 var QR, QR_COPY_EVENT, QR_REVEAL_EVENT, QR_EXPIRED_EVENT, QR_RETRY_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, STATE6, el12, attr12, valueOf2;
-var init_state20 = __esm({
+var init_state21 = __esm({
   "js/qr/state.js"() {
     "use strict";
     QR = "[data-kp-qr]";
@@ -72303,7 +72344,7 @@ var init_draw8 = __esm({
   "js/qr/draw.js"() {
     "use strict";
     init_matrix2();
-    init_state20();
+    init_state21();
     QUIET2 = "4";
     THEME_CONTRAST = 7;
     CANVAS_SCALE = 4;
@@ -72491,7 +72532,7 @@ var init_render4 = __esm({
     init_strings();
     init_draw8();
     init_matrix2();
-    init_state20();
+    init_state21();
     TIMER_MAX_MS = 2 ** 31 - 1;
     SIZE_DEFAULT = "12rem";
     SIZE_LG = "16rem";
@@ -72582,7 +72623,7 @@ var init_actions5 = __esm({
     init_flash();
     init_strings();
     init_render4();
-    init_state20();
+    init_state21();
     REVOKE_AFTER_MS = 1e3;
     PNG_SCALE = 4;
   }
@@ -72590,7 +72631,7 @@ var init_actions5 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -72598,7 +72639,7 @@ var init_controller19 = __esm({
     init_strings();
     init_actions5();
     init_render4();
-    init_state20();
+    init_state21();
     LIVE_OPTIONS = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
@@ -72694,9 +72735,9 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller19();
-    init_state20();
-    init_state20();
+    init_controller20();
+    init_state21();
+    init_state21();
     init_matrix2();
     init_actions5();
   }
@@ -72795,7 +72836,7 @@ var init_model8 = __esm({
 
 // js/console/state.js
 var consoleState;
-var init_state21 = __esm({
+var init_state22 = __esm({
   "js/console/state.js"() {
     "use strict";
     consoleState = {
@@ -72975,7 +73016,7 @@ var init_bar = __esm({
     "use strict";
     init_strings();
     init_model8();
-    init_state21();
+    init_state22();
   }
 });
 
@@ -73876,7 +73917,7 @@ var init_reads = __esm({
 
 // js/logviewer/state.js
 var logViewerState;
-var init_state22 = __esm({
+var init_state23 = __esm({
   "js/logviewer/state.js"() {
     "use strict";
     logViewerState = {
@@ -74077,7 +74118,7 @@ var init_parts5 = __esm({
     init_strings();
     init_model9();
     init_reads();
-    init_state22();
+    init_state23();
   }
 });
 
@@ -75080,7 +75121,7 @@ var init_lines = __esm({
 
 // js/diff/state.js
 var diffState;
-var init_state23 = __esm({
+var init_state24 = __esm({
   "js/diff/state.js"() {
     "use strict";
     diffState = {
@@ -75255,7 +75296,7 @@ var init_file = __esm({
     init_lines();
     init_model10();
     init_read3();
-    init_state23();
+    init_state24();
   }
 });
 
@@ -77539,7 +77580,6 @@ export {
   CALM_ATTRIBUTE,
   CALM_EVENT,
   CALM_SCOPES,
-  CALM_STATUS_STATES,
   CALM_SWITCH,
   CALM_TONES,
   CALM_TONES_ATTRIBUTE,
@@ -77775,14 +77815,6 @@ export {
   STACKBAR_PICK_EVENT,
   STACKBAR_RETRY_EVENT,
   STATE,
-  STATUS_EVENT,
-  STATUS_ID_ATTRIBUTE,
-  STATUS_LIST,
-  STATUS_PAUSE_EVENT,
-  STATUS_RESUME_EVENT,
-  STATUS_RETRY_EVENT,
-  STATUS_STATES,
-  STATUS_UNDO_EVENT,
   STEPLIST_EVENT,
   STEPLIST_SELECTOR,
   STEP_EVENT,
@@ -77976,7 +78008,6 @@ export {
   buildAlarm,
   buildJobLine,
   buildProgressbar,
-  buildStatusList,
   buildSteplist,
   bulletTone,
   bullets_exports as bulletsExports,
@@ -78017,7 +78048,6 @@ export {
   contentsSlug,
   contrast,
   contrast_exports as contrastExports,
-  countStatus,
   countdownClock,
   countdown_exports as countdownExports,
   countdownOf,
@@ -78296,14 +78326,12 @@ export {
   setSnoozeBusy,
   setSnoozedUntil,
   setStackbar,
-  setStatus,
   setStep,
   setTabCount,
   setTabbarBadge,
   setTabbarBusy,
   setTabbarCurrent,
   setThread,
-  setTodayState,
   setToolbarActive,
   setTrace,
   setTransfer,
@@ -78312,7 +78340,6 @@ export {
   setVersionDelta,
   setWeekdays,
   settleQuantity,
-  settleToday,
   shareText,
   shortcutClaims,
   shortcuts_exports as shortcutsExports,

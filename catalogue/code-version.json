@@ -106,7 +106,7 @@
         "js/slider.js": { "digest": "107b919ff1e5724c", "when": "[data-kp-slider]" },
         "js/snooze.js": { "digest": "10036c96d84b271b", "when": "[data-kp-snooze]" },
         "js/stackbar.js": { "digest": "262f9782af3d2648", "when": "[data-kp-stackbar]" },
-        "js/statusrow.js": { "digest": "c8421a8c5dced579", "when": ".kp-statuslist" },
+        "js/statusrow.js": { "digest": "0fed80955a05324a", "when": ".kp-statuslist" },
         "js/steplist.js": { "digest": "755a25b21d821b06", "when": ".kp-steplist" },
         "js/structure.js": { "digest": "7181ac59520127cf", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
         "js/tabbar.js": { "digest": "9cc4d147a0f91925", "when": ".kp-tabbar" },
