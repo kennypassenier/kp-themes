@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The sixty-two largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The sixty-three largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1063,3 +1063,20 @@ The message thread, as a ThreadControl controller made by the first setThread().
 | `message.js`    | One message: a system line, or a bubble with avatar, head, folded text, files and foot. |
 | `options.js`    | Selector, events, time zone, the options, days, runs of messages, the newest end.       |
 | `view.js`       | ThreadView: the state, loading, the note, the messages in their days, scroll and folds.  |
+
+## js/uses-map.js → js/uses-map/
+
+The lines view of a matrix, drawn from a model and wired by one UsesWire controller per draw. 10 files.
+
+| File           | Does                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| `constants.js` | The names the lines view is found and heard by.                                                            |
+| `dom.js`       | The small DOM helpers: element making, attribute reads and the words of a line.                            |
+| `draw.js`      | Drawing: the empty and failed plates, the columns and phone list, pinning from a script, leaving the view. |
+| `keys.js`      | Which card an arrow, Home or End key moves to.                                                             |
+| `lines.js`     | The paths and the plates on them: building, placing and lighting.                                          |
+| `memory.js`    | What the view remembers on this device: the pinned node and the view.                                      |
+| `model.js`     | What one draw knows: the options, the nodes and the relation between them.                                 |
+| `nodes.js`     | The card of each source and user, and the phone's list of the same words.                                  |
+| `relation.js`  | Pure: the relation of a spec as lists, and the path of one line.                                           |
+| `wire.js`      | UsesWire: lighting, pinning, the one tab stop, the keys and the collapse to a list.                        |

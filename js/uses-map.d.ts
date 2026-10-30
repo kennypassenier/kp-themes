@@ -1,11 +1,7 @@
-/** The lines view of a matrix. */
-export declare const USES_MAP = "[data-kp-view=\"lines\"]";
-/** Fired on the matrix when a node was pinned or let go: `{ key, side, pinned, related }`. */
-export declare const USES_PIN_EVENT = "kp-uses-pin";
-/** Fired on the matrix when the Retry of a failed map was pressed. */
-export declare const USES_RETRY_EVENT = "kp-uses-retry";
-/** The narrowest the map draws lines at, in px. */
-export declare const USES_COLLAPSE_BELOW = 640;
+export { USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW } from './uses-map/constants.js';
+export { rememberedView, rememberView } from './uses-map/memory.js';
+export { usesRelation, usesPath } from './uses-map/relation.js';
+export { drawUsesMap, setUsesPin, leaveUsesMap } from './uses-map/draw.js';
 export type UsesNode = {
     key: string;
     label: string;
@@ -52,29 +48,6 @@ export type UsesLine = {
      */
     label?: string;
 };
-/** The view a matrix remembers on this device, or null. @param {Element} el @returns {'grid' | 'lines' | null} */
-export declare function rememberedView(el: Element): 'grid' | 'lines' | null;
-/** Remember the view a matrix shows. @param {Element} el @param {'grid' | 'lines'} view */
-export declare function rememberView(el: Element, view: 'grid' | 'lines'): void;
-/**
- * The relation of a spec, as lists. Pure.
- * @param {{ rows?: readonly UsesNode[], columns?: readonly UsesNode[], cell?: (row: string, column: string) => unknown }} spec
- * @returns {{ uses: Map<string, string[]>, usedBy: Map<string, string[]>, lines: Map<string, UsesLine> }} `lines` by `"<row>><column>"`
- */
-export declare function usesRelation(spec: {
-    rows?: readonly UsesNode[];
-    columns?: readonly UsesNode[];
-    cell?: (row: string, column: string) => unknown;
-}): {
-    uses: Map<string, string[]>;
-    usedBy: Map<string, string[]>;
-    lines: Map<string, UsesLine>;
-};
-/**
- * The path of one line between two points. Pure.
- * @param {'curve' | 'elbow' | 'straight'} shape @param {number} x1 @param {number} y1 @param {number} x2 @param {number} y2
- */
-export declare function usesPath(shape: 'curve' | 'elbow' | 'straight', x1: number, y1: number, x2: number, y2: number): string;
 export type Context = {
     replaceKeepingCard: (el: HTMLElement, nodes: Node[]) => void;
     syncCard: (el: HTMLElement, loading: boolean, words: string, area: () => readonly (Element | {
@@ -86,20 +59,28 @@ export type Context = {
     markDrawn: (el: HTMLElement) => void;
 };
 /**
- * Draw the lines view of a matrix.
- *
- * @param {HTMLElement} el
- * @param {any} spec a MatrixSpec with the lines fields
- * @param {Context} ctx
+ * @typedef {object} UsesNode
+ * @property {string} key
+ * @property {string} label
+ * @property {string} [sub] a line under the label
+ * @property {'pdf' | 'doc' | 'sheet' | 'image' | 'text' | 'unknown'} [glyph] a document mark before the label
+ * @property {string} [href] a link to the thing itself
+ * @property {string} [tone] `ok` `warn` `bad` `muted`
+ * @property {boolean} [ghost] not a real thing but still a group (a faint node)
+ * @property {boolean} [dashed] its lines are dashed
+ * @property {string} [disabledReason] the node cannot be opened, and why
+ * @property {string} [mark] kept from a matrix row: a colour
  */
-export declare function drawUsesMap(el: HTMLElement, spec: any, ctx: Context): void;
 /**
- * Pin a node (or none) from a script, without a page event beyond `kp-uses-pin`.
- * @param {HTMLElement} el @param {string | null} key
+ * What a line carries [r3r5-1019 line-tone].
+ * @typedef {object} UsesLine
+ * @property {'ok' | 'warn' | 'bad' | 'muted'} [tone] the line's colour (and its pattern)
+ * @property {string} [label] the words on the line
  */
-export declare function setUsesPin(el: HTMLElement, key: string | null): void;
 /**
- * Take the lines view off a matrix that goes back to its grid.
- * @param {HTMLElement} el
+ * The helpers heat.js hands over: the busy card's bookkeeping lives there.
+ * @typedef {object} Context
+ * @property {(el: HTMLElement, nodes: Node[]) => void} replaceKeepingCard
+ * @property {(el: HTMLElement, loading: boolean, words: string, area: () => readonly (Element | { top: number, right: number, bottom: number, left: number })[], className: string) => void} syncCard
+ * @property {(el: HTMLElement) => void} markDrawn
  */
-export declare function leaveUsesMap(el: HTMLElement): void;

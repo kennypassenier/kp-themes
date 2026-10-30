@@ -245,6 +245,7 @@
         { "path": "js/gallery.js", "tags": ["@component:media"], "why": "the picture gallery with its lightbox [kpadopt6-media]" },
         { "path": "js/gallery/*.js", "tags": ["@component:media"] },
         { "path": "js/uses-map.js", "tags": ["@component:data"], "why": "the lines view of the matrix [kpadopt6-media]" },
+        { "path": "js/uses-map/*.js", "tags": ["@component:data"], "why": "the lines view of the matrix [kpadopt6-media]" },
         { "path": "js/toggle.js", "tags": ["@component:button"], "why": "the toggle button [kpadopt6-ops]" },
         { "path": "js/toggle/*.js", "tags": ["@component:button"], "why": "the toggle button [kpadopt6-ops]" },
         { "path": "js/intent.js", "tags": ["@component:page"], "why": "the words-in-any-order matcher of the command palette [kpadopt6-ops]" },
