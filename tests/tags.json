@@ -232,6 +232,7 @@
         { "path": "js/uptime.js", "tags": ["@component:data"], "why": "the uptime strip [kpadopt4-ideas]" },
         { "path": "js/uptime/*.js", "tags": ["@component:data"], "why": "the uptime strip [kpadopt4-ideas]" },
         { "path": "js/command.js", "tags": ["@component:data"], "why": "the command block [kpadopt4-ideas]" },
+        { "path": "js/command/*.js", "tags": ["@component:data"], "why": "the command block [kpadopt4-ideas]" },
         {
             "path": "js/countdown.js",
             "tags": ["@component:data"],

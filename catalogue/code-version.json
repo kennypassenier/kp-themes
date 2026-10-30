@@ -24,7 +24,7 @@
         "js/code.js": { "digest": "edc2a6259799b797", "when": "[data-kp-code]" },
         "js/colorpicker.js": { "digest": "6792f52017de9605", "when": "[data-kp-colorpicker]" },
         "js/combobox.js": { "digest": "a9e082ef176acb02", "when": "[data-kp-combobox], select" },
-        "js/command.js": { "digest": "ff9014001a7c3f9d", "when": "[data-kp-command]" },
+        "js/command.js": { "digest": "5a8aae28e5329061", "when": "[data-kp-command]" },
         "js/compare.js": { "digest": "593b56b2dc26d88c", "when": "[data-kp-compare]" },
         "js/components.js": {
             "digest": "c49ba974ac2da58d",
