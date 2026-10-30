@@ -41778,62 +41778,78 @@ function nameFor(wrap, label) {
   return getStrings().tableRegion;
 }
 function attachTableRegions(root = document, { label, selector = WRAP_SELECTOR } = {}) {
-  const cleanups = [];
-  const created = [];
-  for (const element of root.querySelectorAll(selector)) {
-    const wrap = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (wrap.dataset[ATTACHED] !== void 0) continue;
-    if (wrap.matches(OPT_OUT)) continue;
-    wrap.dataset[ATTACHED] = "";
-    const before = {
-      tabindex: wrap.getAttribute("tabindex"),
-      role: wrap.getAttribute("role"),
-      ariaLabel: wrap.getAttribute("aria-label")
-    };
-    wrap.setAttribute("tabindex", "0");
-    if (before.role === null) wrap.setAttribute("role", "region");
-    const setLabel = (text) => {
-      if (wrap.hasAttribute("aria-labelledby")) return;
-      wrap.setAttribute("aria-label", text);
-    };
-    setLabel(nameFor(wrap, label));
-    created.push({
-      element: wrap,
-      label: () => wrap.getAttribute("aria-label") ?? "",
-      setLabel
-    });
-    cleanups.push(() => {
-      for (
-        const [attribute, value] of
-        /** @type {[string, string | null][]} */
-        [
-          ["tabindex", before.tabindex],
-          ["role", before.role],
-          ["aria-label", before.ariaLabel]
-        ]
-      ) {
-        if (value === null) wrap.removeAttribute(attribute);
-        else wrap.setAttribute(attribute, value);
-      }
-      delete wrap.dataset[ATTACHED];
-    });
-  }
+  const made6 = [...root.querySelectorAll(selector)].map((found) => (
+    /** @type {HTMLElement} */
+    found
+  )).filter((wrap) => !(wrap.dataset[ATTACHED] !== void 0 || controllerOf(wrap, TableRegionController)) && !wrap.matches(OPT_OUT)).map((wrap) => attachOne(wrap, TableRegionController, { label })).filter((controller) => controller !== void 0);
   const detach = () => {
-    for (const cleanup of cleanups) cleanup();
+    for (const controller of made6) controller.destroy();
   };
-  return Object.assign(detach, { handles: created });
+  return Object.assign(detach, { handles: made6.map((controller) => controller.handle) });
 }
-var WRAP_SELECTOR, ATTACHED, OPT_OUT;
+var WRAP_SELECTOR, ATTACHED, OPT_OUT, TableRegionController;
 var init_tables = __esm({
   "js/tables.js"() {
     "use strict";
     init_strings();
+    init_controller();
     WRAP_SELECTOR = ".kp-table-wrap";
     ATTACHED = "kpRegionAttached";
     OPT_OUT = '[data-kp-region="off"]';
+    TableRegionController = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.before = {
+          tabindex: host.getAttribute("tabindex"),
+          role: host.getAttribute("role"),
+          ariaLabel: host.getAttribute("aria-label")
+        };
+        this.handle = {
+          element: host,
+          label: () => host.getAttribute("aria-label") ?? "",
+          setLabel: (text) => this.setLabel(text)
+        };
+      }
+      connect() {
+        const wrap = this.host;
+        wrap.dataset[ATTACHED] = "";
+        this.own(() => {
+          delete wrap.dataset[ATTACHED];
+        });
+        this.own(() => this.restore());
+        wrap.setAttribute("tabindex", "0");
+        if (this.before.role === null) wrap.setAttribute("role", "region");
+        this.setLabel(nameFor(
+          wrap,
+          /** @type {Parameters<typeof nameFor>[1]} */
+          this.options.label
+        ));
+      }
+      /** @param {string} text */
+      setLabel(text) {
+        if (this.host.hasAttribute("aria-labelledby")) return;
+        this.host.setAttribute("aria-label", text);
+      }
+      /** Put back the three attributes as they were found. */
+      restore() {
+        for (
+          const [attribute, value] of
+          /** @type {[string, string | null][]} */
+          [
+            ["tabindex", this.before.tabindex],
+            ["role", this.before.role],
+            ["aria-label", this.before.ariaLabel]
+          ]
+        ) {
+          if (value === null) this.host.removeAttribute(attribute);
+          else this.host.setAttribute(attribute, value);
+        }
+      }
+    };
   }
 });
 
