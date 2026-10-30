@@ -432,6 +432,7 @@
         { "path": "js/strings.js", "all": "the dictionary every component and many specs read" },
         { "path": "js/strings/*.js", "all": "the dictionary every component and many specs read" },
         { "path": "js/auto.js", "all": "attaches every module on every fixture page" },
+        { "path": "js/auto/*.js", "all": "attaches every module on every fixture page" },
         { "path": "js/controller.js", "all": "the controller base every component class extends [closure-pattern B]" },
         { "path": "js/as-of.js", "all": "every late module and every effects hook attaches through it [scope-117]" },
         { "path": "index.js", "tags": ["@component:bundle", "@sweep"] },

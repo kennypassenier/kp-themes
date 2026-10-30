@@ -1,3 +1,4 @@
+export { NEEDS } from './auto/needs.js';
 export type Need = {
     /**
      * the module, as `detach.modules` reports it
@@ -22,8 +23,6 @@ export type Need = {
  * @property {(module: any, root: ParentNode) => unknown[]} attach
  * @property {boolean} [late] attaches after every other module the same attachAll() fetched, and is asked for then
  */
-/** @type {Need[]} */
-export declare const NEEDS: Need[];
 /** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */
 export declare const READY_ATTRIBUTE = "data-kp-auto-ready";
 /**

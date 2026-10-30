@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The sixty-four largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The sixty-five largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1095,3 +1095,16 @@ The shortcut engine, as one ShortcutBoard per document with a LiveSheet controll
 | `live.js`      | LiveSheet: a sheet filled from the registry and fresh each time it opens.                   |
 | `register.js`  | Registering shortcuts under a scope: the faults and the unregister.                         |
 | `sheet.js`     | The help sheet's body: groups and rows written from the registry.                           |
+
+## js/auto.js → js/auto/
+
+The loader: its table of selectors in three parts, and one AutoLoader per root. 6 files.
+
+| File           | Does                                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| `dashboard.js` | The loader's table, part two: dashboard components, tiles, charts, navigation and the data lists. |
+| `draw.js`      | What the loader asks of the document: carries a selector, what an attach drew.                    |
+| `loader.js`    | AutoLoader: one load of a root, the always-on modules, the fetched ones and the late ones.        |
+| `needs.js`     | The loader's table in full, the three parts joined in attach order.                               |
+| `page.js`      | The loader's table, part one: page furniture, forms and input widgets.                            |
+| `widgets.js`   | The loader's table, part three: calendars, grids, timers, ranges and the late `reason` module.    |
