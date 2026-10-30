@@ -2758,32 +2758,27 @@ function attachCalm(root = document, options = {}) {
     /** @type {any} */
     root
   );
-  const cleanups = [];
   applyStoredCalm(doc);
-  for (const el16 of root.querySelectorAll(CALM_SWITCH)) {
-    if (!(el16 instanceof HTMLInputElement) || el16.dataset.kpCalmAttached !== void 0) continue;
-    el16.dataset.kpCalmAttached = "";
-    const onChange = () => setCalm(el16.checked, { ...options, doc, remember: options.remember !== false && el16.getAttribute("data-kp-calm-remember") !== "false" });
-    el16.addEventListener("change", onChange);
-    cleanups.push(() => {
-      el16.removeEventListener("change", onChange);
-      delete el16.dataset.kpCalmAttached;
-    });
-  }
-  const query = doc.defaultView?.matchMedia?.(QUERY);
-  const onSystem = () => syncSwitches(doc);
-  query?.addEventListener("change", onSystem);
-  cleanups.push(() => query?.removeEventListener("change", onSystem));
+  const made6 = [...root.querySelectorAll(CALM_SWITCH)].filter((el16) => el16 instanceof HTMLInputElement && el16.dataset.kpCalmAttached === void 0 && !controllerOf(el16, CalmSwitch)).map((el16) => attachOne(
+    /** @type {HTMLInputElement} */
+    el16,
+    CalmSwitch,
+    { ...options, doc }
+  )).filter((controller) => controller !== void 0);
+  const system = new CalmSystem(doc.documentElement);
+  system.connect();
   syncSwitches(doc);
   return () => {
-    for (const clean of cleanups) clean();
+    for (const controller of made6) controller.destroy();
+    system.destroy();
   };
 }
-var CALM_ATTRIBUTE, CALM_SCOPES, CALM_SWITCH, CALM_EVENT, STORE_KEY, QUERY, docOf;
+var CALM_ATTRIBUTE, CALM_SCOPES, CALM_SWITCH, CALM_EVENT, STORE_KEY, QUERY, docOf, CalmSwitch, CalmSystem;
 var init_calm = __esm({
   "js/calm.js"() {
     "use strict";
     init_strings();
+    init_controller();
     CALM_ATTRIBUTE = "data-kp-calm";
     CALM_SCOPES = /** @type {const} */
     ["motion", "effects", "all"];
@@ -2793,6 +2788,34 @@ var init_calm = __esm({
     QUERY = "(prefers-reduced-motion: reduce)";
     docOf = (where) => where ? where.ownerDocument ?? /** @type {Document} */
     where : document;
+    CalmSwitch = class extends Controller {
+      connect() {
+        const el16 = (
+          /** @type {HTMLInputElement} */
+          this.host
+        );
+        el16.dataset.kpCalmAttached = "";
+        this.own(() => {
+          delete el16.dataset.kpCalmAttached;
+        });
+        this.listen(el16, "change", () => this.onChange(el16));
+      }
+      /** @param {HTMLInputElement} el */
+      onChange(el16) {
+        const options = (
+          /** @type {CalmOptions} */
+          this.options
+        );
+        setCalm(el16.checked, { ...options, remember: options.remember !== false && el16.getAttribute("data-kp-calm-remember") !== "false" });
+      }
+    };
+    CalmSystem = class extends Controller {
+      connect() {
+        const doc = this.host.ownerDocument;
+        const query = doc.defaultView?.matchMedia?.(QUERY);
+        if (query) this.listen(query, "change", () => syncSwitches(doc));
+      }
+    };
   }
 });
 
