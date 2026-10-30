@@ -286,6 +286,7 @@
             "why": "a data component holds its loaded height while a state shows [t56-statefix-1018]"
         },
         { "path": "js/problems.js", "tags": ["@component:feedback"], "why": "the problem alert [kpadopt5]" },
+        { "path": "js/problems/*.js", "tags": ["@component:feedback"], "why": "the problem alert [kpadopt5]" },
         { "path": "js/console.js", "tags": ["@component:data"], "why": "the interactive console [kpadopt6]" },
         { "path": "js/console/*.js", "tags": ["@component:data"], "why": "the interactive console [kpadopt6]" },
         { "path": "js/logviewer.js", "tags": ["@component:data"], "why": "the live log viewer [gap-log-viewer]" },

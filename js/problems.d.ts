@@ -1,11 +1,4 @@
-/** A container of problems. */
-export declare const PROBLEMS = "[data-kp-problems]";
-/** The severities, worst first. */
-export declare const PROBLEM_SEVERITIES: readonly ['critical', 'warning', 'info'];
-/** The layouts of several problems. */
-export declare const PROBLEM_MODES: readonly ['each', 'list', 'fold'];
-/** Fired on the container, bubbling and cancelable, when a dismissible problem is dismissed: `{ key }`. */
-export declare const PROBLEM_DISMISS_EVENT = "kp-problem-dismiss";
+export { PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT } from './problems/values.js';
 export type Problem = {
     /**
      * its stable id: the same key is the same element on every refresh
@@ -54,6 +47,24 @@ export type ProblemsOptions = {
      */
     remedyLabel?: string;
 };
+/**
+ * One problem.
+ * @typedef {object} Problem
+ * @property {string} key its stable id: the same key is the same element on every refresh
+ * @property {string} what what is wrong, in one line
+ * @property {string} [why] why it is
+ * @property {string} [remedy] what to do now
+ * @property {string} [command] a command that fixes it, set in code with a Copy button
+ * @property {'critical' | 'warning' | 'info'} [severity] default `warning`: most problems are "could not use this", not outages
+ * @property {Node | null} [action] the fix (a button or a link); a node equal in markup to the one shown keeps the one shown
+ * @property {boolean} [dismissible] a close button on this problem (default off)
+ */
+/**
+ * @typedef {object} ProblemsOptions
+ * @property {'each' | 'list' | 'fold'} [mode] default: the container's `data-kp-problems-mode`, else `each`
+ * @property {number} [foldFrom] with `fold`: the count from which the problems fold (default 5)
+ * @property {string} [remedyLabel] the word before the remedy (default the dictionary's "What now")
+ */
 /**
  * Set a container's problems, by key. Worst first, in the given order within a severity.
  *
