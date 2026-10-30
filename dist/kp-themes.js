@@ -14619,11 +14619,12 @@ var init_mode = __esm({
 function combobox(element) {
   return handles2.get(element) ?? null;
 }
-var handles2;
+var handles2, selectHandles;
 var init_handle = __esm({
   "js/combobox/handle.js"() {
     "use strict";
     handles2 = /* @__PURE__ */ new WeakMap();
+    selectHandles = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -40025,7 +40026,471 @@ var init_matchers = __esm({
   }
 });
 
+// js/combobox/core.js
+var ComboboxBase;
+var init_core9 = __esm({
+  "js/combobox/core.js"() {
+    "use strict";
+    init_listbox();
+    init_controller();
+    init_strings();
+    init_top_layer();
+    init_constants8();
+    init_helpers();
+    init_matchers();
+    ComboboxBase = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        const settings = (
+          /** @type {ComboboxSettings} */
+          options
+        );
+        this.settings = settings;
+        this.input = /** @type {HTMLInputElement} */
+        host.querySelector(INPUT);
+        this.list = /** @type {HTMLElement} */
+        host.querySelector(LIST);
+        this.status = host.querySelector(STATUS);
+        this.tagList = host.querySelector(TAGS);
+        this.isTags = host.dataset.kpTags !== void 0;
+        this.opens = this.flag("kpOpenOnFocus", settings.openOnFocus);
+        this.closes = this.flag("kpCloseOnBlur", settings.closeOnBlur);
+        this.backspaces = this.flag("kpBackspaceRemoves", settings.backspaceRemoves);
+        this.stays = this.flag("kpStayOpen", settings.stayOpen);
+        this.duplicates = this.flag("kpDuplicates", settings.allowDuplicates);
+        this.cap = Number.parseInt(host.dataset.kpMaxTags ?? "", 10) || settings.maxTags;
+        this.debounce = Number.parseInt(host.dataset.kpDebounce ?? "", 10) || settings.debounceMs;
+        const match = settings.match;
+        this.matcher = typeof match === "function" ? match : MATCHERS[host.dataset.kpMatch ?? match] ?? MATCHERS.substring;
+        this.showsEmpty = this.flag("kpEmptyRow", settings.emptyRow);
+        this.creates = this.flag("kpCreatable", settings.creatable);
+        this.empty = null;
+        this.serverEmpty = null;
+        this.emptyWasHidden = /** @type {HTMLElement['hidden']} */
+        true;
+        this.chosen = [];
+        this.tagsHidden = /** @type {HTMLElement['hidden']} */
+        false;
+        this.before = { expanded: (
+          /** @type {string | null} */
+          null
+        ), listHidden: (
+          /** @type {HTMLElement['hidden']} */
+          false
+        ), hidden: (
+          /** @type {HTMLElement['hidden'][]} */
+          []
+        ), tags: (
+          /** @type {Element[]} */
+          []
+        ), status: "" };
+        this.unslot = () => {
+        };
+        this.lower = () => {
+        };
+        this.hook = null;
+        this.listbox = /** @type {Listbox} */
+        /** @type {unknown} */
+        null;
+      }
+      /** A boolean option: the box's `data-kp-…` attribute when it has one, else the default. @param {string} name @param {boolean} fallback */
+      flag(name, fallback2) {
+        const box = this.host;
+        return box.dataset[name] === void 0 ? fallback2 : box.dataset[name] !== "false";
+      }
+      /** Keep the listbox and undo it on destroy. @param {Listbox} listbox */
+      setListbox(listbox) {
+        this.listbox = listbox;
+        this.own(() => listbox.destroy());
+      }
+      /** A layer on top of the combobox takes over (or lets go, with null). @param {ComboboxHook | null} next */
+      extend(next2) {
+        this.hook = next2;
+        this.filter();
+      }
+      /** The status line moves into a form-grid row where there is one. */
+      claimStatus() {
+        this.unslot = slotStatus(this.host, this.status);
+      }
+      // The row that says nothing matched, inside the list and directly under the input [gap-11]. Filtering to nothing used to
+      // close the list, and the only answer left was the status line. The server's own row is used when it wrote one (it may
+      // offer "add this"); otherwise one is built, and taken away again at detach.
+      addEmptyRow() {
+        this.serverEmpty = /** @type {HTMLElement | null} */
+        this.list.querySelector(EMPTY);
+        this.empty = this.serverEmpty;
+        if (this.showsEmpty && this.empty === null) {
+          this.empty = document.createElement("li");
+          this.empty.className = "kp-combobox__empty";
+          this.empty.setAttribute("role", "presentation");
+          this.empty.dataset.kpComboboxEmpty = "";
+          this.list.append(this.empty);
+        }
+        this.emptyWasHidden = this.serverEmpty?.hidden ?? true;
+      }
+      /** Tags the server rendered are the starting set, not invisible. */
+      readChosen() {
+        const { tagList } = this;
+        if (tagList)
+          this.chosen.push(...[...tagList.querySelectorAll(".kp-tag")].map((t) => (
+            /** @type {HTMLElement} */
+            t.dataset.value ?? (t.textContent ?? "").trim()
+          )));
+        this.tagsHidden = tagList?.hidden ?? false;
+      }
+      /** Remember the markup as the server wrote it, for detach. */
+      snapshot() {
+        const { input, list, tagList, status } = this;
+        this.before = {
+          expanded: input.getAttribute("aria-expanded"),
+          listHidden: list.hidden,
+          hidden: [...list.querySelectorAll(OPTION_SELECTOR)].map((o) => (
+            /** @type {HTMLElement} */
+            o.hidden
+          )),
+          tags: tagList ? [...tagList.children] : [],
+          status: status?.textContent ?? ""
+        };
+      }
+      /** Put the markup back as the server wrote it. */
+      restore() {
+        const { input, list, tagList, status, before } = this;
+        if (before.expanded === null) input.removeAttribute("aria-expanded");
+        else input.setAttribute("aria-expanded", before.expanded);
+        list.hidden = before.listHidden;
+        [...list.querySelectorAll(OPTION_SELECTOR)].forEach((o, i) => {
+          o.hidden = before.hidden[i] ?? false;
+        });
+        if (tagList) {
+          tagList.replaceChildren(...before.tags);
+          tagList.hidden = this.tagsHidden;
+        }
+        if (status) status.textContent = before.status;
+        this.unslot();
+        if (this.empty !== null && this.empty !== this.serverEmpty) this.empty.remove();
+        if (this.serverEmpty !== null) this.serverEmpty.hidden = this.emptyWasHidden;
+      }
+      /** @param {boolean} next */
+      setOpen(next2) {
+        const { list, input, host } = this;
+        const was = list.hidden === false;
+        if (!next2 && was) {
+          this.lower();
+          this.lower = () => {
+          };
+        }
+        list.hidden = !next2;
+        if (next2 && !was) this.lower = raiseInPlace(list, host, input);
+        input.setAttribute("aria-expanded", String(next2));
+        if (!next2) this.listbox.clear();
+        if (was !== next2) host.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: next2 } }));
+      }
+      open() {
+        this.setOpen(true);
+      }
+      close() {
+        this.setOpen(false);
+      }
+      /** Show only the options whose text matches, and say how many are left. @returns {number} */
+      filter() {
+        const { list, hook } = this;
+        const query = this.input.value.trim().toLowerCase();
+        let visible3 = 0;
+        for (const element of list.querySelectorAll(OPTION_SELECTOR)) {
+          const option = (
+            /** @type {HTMLElement} */
+            element
+          );
+          const text = (option.textContent ?? "").toLowerCase();
+          const taken = this.isTags && !this.duplicates && this.chosen.includes(option.dataset.value ?? text);
+          const matched = !taken && (query === "" || this.matcher(text, query));
+          const shown5 = hook?.shown && !taken ? hook.shown(option, query, matched) : matched;
+          option.hidden = !shown5;
+          if (shown5) visible3 += 1;
+        }
+        hook?.after?.(query, visible3);
+        if (hook?.after) visible3 = [...list.querySelectorAll(OPTION_SELECTOR)].filter((o) => !/** @type {HTMLElement} */
+        o.hidden).length;
+        this.listbox.refresh();
+        if (this.status !== null) this.status.textContent = hook?.status?.(query, visible3) ?? RESULTS_TEXT(visible3);
+        if (this.empty !== null) {
+          this.empty.hidden = !this.showsEmpty || visible3 > 0;
+          if (this.empty !== this.serverEmpty) this.empty.textContent = getStrings().noResults;
+        }
+        return visible3;
+      }
+      /** The option whose value (or text) is `value`. @param {string} value @returns {HTMLElement | null} */
+      optionFor(value) {
+        for (const element of this.list.querySelectorAll(OPTION_SELECTOR)) {
+          const option = (
+            /** @type {HTMLElement} */
+            element
+          );
+          if ((option.dataset.value ?? (option.textContent ?? "").trim()) === value) return option;
+        }
+        return null;
+      }
+      /** @param {string} value @param {string} label @param {'add' | 'remove' | 'set'} action */
+      announce(value, label, action) {
+        const values = this.isTags ? [...this.chosen] : [value];
+        this.host.dispatchEvent(new CustomEvent(CHANGE_EVENT, { bubbles: true, detail: { value, label, values, action } }));
+      }
+    };
+  }
+});
+
+// js/combobox/tags.js
+var ComboboxTags;
+var init_tags = __esm({
+  "js/combobox/tags.js"() {
+    "use strict";
+    init_listbox();
+    init_strings();
+    init_core9();
+    init_helpers();
+    ComboboxTags = class extends ComboboxBase {
+      /** A tag list written `hidden` is hidden while it holds no tag. */
+      showTags() {
+        if (this.tagList !== null && this.tagsHidden) this.tagList.hidden = this.chosen.length === 0;
+      }
+      /** @param {string} value @param {string} label */
+      tagElement(value, label) {
+        const { renderTag, removeGlyph } = this.settings;
+        if (renderTag !== void 0) {
+          const custom = renderTag(value, label);
+          custom.dataset.value = value;
+          custom.classList.add("kp-tag");
+          return custom;
+        }
+        const tag = document.createElement("span");
+        tag.className = "kp-tag";
+        tag.dataset.value = value;
+        const text = document.createElement("span");
+        text.textContent = label;
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "kp-tag__remove";
+        remove.setAttribute("aria-label", getStrings().removeNamed(label));
+        remove.textContent = this.host.dataset.kpRemoveGlyph ?? removeGlyph;
+        tag.append(text, remove);
+        return tag;
+      }
+      /** @param {string} value @param {string} label */
+      addTag(value, label) {
+        const { chosen, tagList } = this;
+        if (chosen.length >= this.cap) return;
+        if (this.duplicates || !chosen.includes(value)) {
+          chosen.push(value);
+          if (tagList !== null) tagList.append(this.tagElement(value, label));
+          this.showTags();
+        }
+        this.input.value = "";
+        this.filter();
+        if (this.stays) this.open();
+        else this.close();
+        this.announce(value, label, "add");
+      }
+      /** @param {HTMLElement} option */
+      take(option) {
+        if (this.hook?.choose?.(option)) return;
+        const label = labelOf3(option);
+        const value = option.dataset.value ?? label;
+        if (this.isTags) {
+          this.addTag(value, label);
+          return;
+        }
+        this.input.value = label;
+        this.close();
+        this.announce(value, label, "add");
+      }
+      /**
+       * Typed text ends a tag [scope-60]. Before this, Enter with nothing highlighted had nothing to take, so a tag input
+       * filtered and removed but never added from the keyboard. Text naming an option takes it; other text becomes its own tag
+       * where the box allows new values.
+       * @returns {boolean} whether a tag was added
+       */
+      addTyped() {
+        const typed = this.input.value.trim();
+        if (typed === "") return false;
+        const named = [...this.list.querySelectorAll(OPTION_SELECTOR)].find(
+          (element) => !element.matches('[aria-disabled="true"], [data-kp-disabled]') && (element.textContent ?? "").trim().toLowerCase() === typed.toLowerCase()
+        );
+        if (named instanceof HTMLElement) {
+          this.take(named);
+          return true;
+        }
+        if (!this.creates) return false;
+        this.addTag(typed, typed);
+        return true;
+      }
+      /** @param {string} value */
+      removeValue(value) {
+        const at = this.chosen.indexOf(value);
+        if (at === -1) return;
+        this.chosen.splice(at, 1);
+        const tag = (
+          /** @type {HTMLElement | null} */
+          this.tagList?.querySelector(`.kp-tag[data-value="${CSS.escape(value)}"]`) ?? null
+        );
+        const label = tag?.querySelector("span")?.textContent ?? value;
+        tag?.remove();
+        this.showTags();
+        this.filter();
+        this.announce(value, label, "remove");
+      }
+      /** Replace the held values (a combobox takes the first). @param {readonly string[]} values */
+      setValues(values) {
+        const { chosen, tagList, input } = this;
+        if (this.isTags) {
+          chosen.splice(0, chosen.length);
+          if (tagList) tagList.replaceChildren();
+          for (const value of values.slice(0, this.cap)) {
+            if (!this.duplicates && chosen.includes(value)) continue;
+            chosen.push(value);
+            tagList?.append(this.tagElement(value, labelOf3(this.optionFor(value), value)));
+          }
+          this.showTags();
+          this.filter();
+          this.announce(values[values.length - 1] ?? "", "", "set");
+        } else {
+          const value = values[0] ?? "";
+          input.value = labelOf3(this.optionFor(value), value);
+          this.announce(value, input.value, "set");
+        }
+      }
+    };
+  }
+});
+
+// js/combobox/controller.js
+var ComboboxControl;
+var init_controller30 = __esm({
+  "js/combobox/controller.js"() {
+    "use strict";
+    init_listbox();
+    init_handle();
+    init_tags();
+    ComboboxControl = class extends ComboboxTags {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.pending = 0;
+        this.handle = this.makeHandle();
+      }
+      connect() {
+        const { host: box, input, list, tagList } = this;
+        box.dataset.kpComboboxAttached = "";
+        list.dataset.kpArrive = "none";
+        this.own(() => {
+          handles2.delete(box);
+          delete box.dataset.kpComboboxAttached;
+        });
+        this.own(() => this.restore());
+        this.claimStatus();
+        this.addEmptyRow();
+        this.readChosen();
+        this.snapshot();
+        this.setListbox(
+          createListbox({ input, list, loop: this.flag("kpLoop", this.settings.loop), onChoose: (_, option) => this.take(option), onDismiss: () => this.close() })
+        );
+        this.own(() => this.lower());
+        this.own(() => clearTimeout(this.pending));
+        this.listen(input, "input", () => this.onInput());
+        this.listen(input, "keydown", (event) => this.onKeyDown(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(input, "focus", () => this.onFocus());
+        this.listen(box, "focusout", () => this.onFocusOut());
+        this.listen(list, "mousedown", (event) => event.preventDefault());
+        if (tagList) this.listen(tagList, "click", (event) => this.onTagClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.showTags();
+        this.filter();
+        list.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+        handles2.set(box, this.handle);
+      }
+      /** The handle a page gets back: read the values, replace them, open, close, type, refresh and extend. @returns {ComboboxHandle} */
+      makeHandle() {
+        return {
+          element: this.host,
+          values: () => this.isTags ? [...this.chosen] : [this.input.value],
+          set: (values) => this.setValues(values),
+          open: () => this.open(),
+          close: () => this.close(),
+          query: (text) => {
+            this.input.value = text;
+            this.onInput();
+          },
+          refresh: () => void this.filter(),
+          extend: (next2) => this.extend(next2)
+        };
+      }
+      onInput() {
+        clearTimeout(this.pending);
+        const run = () => {
+          const visible3 = this.filter();
+          if (visible3 > 0 || this.showsEmpty && this.input.value.trim() !== "") this.open();
+          else this.close();
+        };
+        if (this.debounce > 0) this.pending = window.setTimeout(run, this.debounce);
+        else run();
+      }
+      /** @param {KeyboardEvent} event */
+      onKeyDown(event) {
+        if (this.list.hidden && (event.key === "ArrowDown" || event.altKey && event.key === "ArrowDown")) {
+          event.preventDefault();
+          if (this.filter() > 0) this.open();
+          return;
+        }
+        if (!this.isTags) return;
+        if ((event.key === "Enter" || event.key === ",") && !event.defaultPrevented && !event.isComposing) {
+          if (event.key === "Enter" && this.listbox.index !== -1) return;
+          if (this.addTyped()) event.preventDefault();
+          return;
+        }
+        if (!this.backspaces) return;
+        const { chosen } = this;
+        if (event.key === "Backspace" && this.input.value === "" && chosen.length > 0) this.removeValue(chosen[chosen.length - 1] ?? "");
+      }
+      /** @param {MouseEvent} event */
+      onTagClick(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        const remove = target.closest(".kp-tag__remove, [data-kp-tag-remove]");
+        if (remove === null) return;
+        const tag = (
+          /** @type {HTMLElement | null} */
+          remove.closest(".kp-tag")
+        );
+        this.removeValue(tag?.dataset.value ?? "");
+        this.input.focus();
+      }
+      onFocus() {
+        if (this.opens && this.filter() > 0) this.open();
+      }
+      onFocusOut() {
+        if (!this.closes) return;
+        setTimeout(() => {
+          if (!this.destroyed && !this.host.contains(document.activeElement)) this.close();
+        }, 0);
+      }
+    };
+  }
+});
+
 // js/combobox/attach.js
+function wantsWiring(box) {
+  if (box.dataset.kpComboboxAttached !== void 0 || controllerOf(box, ComboboxControl)) return false;
+  if (box.hasAttribute("data-kp-usual") && box.dataset.kpUsualReady === void 0) return false;
+  return box.querySelector(INPUT) !== null && box.querySelector(LIST) !== null;
+}
 function attachComboboxes(root = document, {
   match = "substring",
   loop = false,
@@ -40041,355 +40506,27 @@ function attachComboboxes(root = document, {
   renderTag,
   removeGlyph = "\xD7"
 } = {}) {
-  const cleanups = [];
-  const created = [];
-  for (const element of root.querySelectorAll(COMBOBOX)) {
-    const box = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (box.dataset.kpComboboxAttached !== void 0) continue;
-    if (box.hasAttribute("data-kp-usual") && box.dataset.kpUsualReady === void 0) continue;
-    const input = (
-      /** @type {HTMLInputElement | null} */
-      box.querySelector(INPUT)
-    );
-    const list = (
-      /** @type {HTMLElement | null} */
-      box.querySelector(LIST)
-    );
-    if (input === null || list === null) continue;
-    box.dataset.kpComboboxAttached = "";
-    list.dataset.kpArrive = "none";
-    const status = (
-      /** @type {HTMLElement | null} */
-      box.querySelector(STATUS)
-    );
-    const unslot = slotStatus(box, status);
-    const tagList = (
-      /** @type {HTMLElement | null} */
-      box.querySelector(TAGS)
-    );
-    const isTags = box.dataset.kpTags !== void 0;
-    const flag = (name, fallback2) => box.dataset[name] === void 0 ? fallback2 : box.dataset[name] !== "false";
-    const opens = flag("kpOpenOnFocus", openOnFocus);
-    const closes = flag("kpCloseOnBlur", closeOnBlur);
-    const backspaces = flag("kpBackspaceRemoves", backspaceRemoves);
-    const stays = flag("kpStayOpen", stayOpen);
-    const duplicates = flag("kpDuplicates", allowDuplicates);
-    const cap2 = Number.parseInt(box.dataset.kpMaxTags ?? "", 10) || maxTags;
-    const debounce = Number.parseInt(box.dataset.kpDebounce ?? "", 10) || debounceMs;
-    const matcher = typeof match === "function" ? match : MATCHERS[box.dataset.kpMatch ?? match] ?? MATCHERS.substring;
-    const showsEmpty = flag("kpEmptyRow", emptyRow);
-    const creates = flag("kpCreatable", creatable);
-    const serverEmpty = (
-      /** @type {HTMLElement | null} */
-      list.querySelector(EMPTY)
-    );
-    let empty = serverEmpty;
-    if (showsEmpty && empty === null) {
-      empty = document.createElement("li");
-      empty.className = "kp-combobox__empty";
-      empty.setAttribute("role", "presentation");
-      empty.dataset.kpComboboxEmpty = "";
-      list.append(empty);
-    }
-    const emptyWasHidden = serverEmpty?.hidden ?? true;
-    const chosen = tagList ? [...tagList.querySelectorAll(".kp-tag")].map((t) => (
-      /** @type {HTMLElement} */
-      t.dataset.value ?? (t.textContent ?? "").trim()
-    )) : [];
-    const tagsHidden = tagList?.hidden ?? false;
-    const showTags = () => {
-      if (tagList !== null && tagsHidden) tagList.hidden = chosen.length === 0;
-    };
-    const before = {
-      expanded: input.getAttribute("aria-expanded"),
-      listHidden: list.hidden,
-      hidden: [...list.querySelectorAll(OPTION_SELECTOR)].map((o) => (
-        /** @type {HTMLElement} */
-        o.hidden
-      )),
-      tags: tagList ? [...tagList.children] : [],
-      status: status?.textContent ?? ""
-    };
-    let lower = () => {
-    };
-    const setOpen = (next2) => {
-      const was = list.hidden === false;
-      if (!next2 && was) {
-        lower();
-        lower = () => {
-        };
-      }
-      list.hidden = !next2;
-      if (next2 && !was) lower = raiseInPlace(list, box, input);
-      input.setAttribute("aria-expanded", String(next2));
-      if (!next2) listbox.clear();
-      if (was !== next2) box.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: next2 } }));
-    };
-    const open4 = () => setOpen(true);
-    const close = () => setOpen(false);
-    let hook = null;
-    const filter = () => {
-      const query = input.value.trim().toLowerCase();
-      let visible3 = 0;
-      for (const element2 of list.querySelectorAll(OPTION_SELECTOR)) {
-        const option = (
-          /** @type {HTMLElement} */
-          element2
-        );
-        const text = (option.textContent ?? "").toLowerCase();
-        const taken = isTags && !duplicates && chosen.includes(option.dataset.value ?? text);
-        const matched = !taken && (query === "" || matcher(text, query));
-        const shown5 = hook?.shown && !taken ? hook.shown(option, query, matched) : matched;
-        option.hidden = !shown5;
-        if (shown5) visible3 += 1;
-      }
-      hook?.after?.(query, visible3);
-      if (hook?.after) visible3 = [...list.querySelectorAll(OPTION_SELECTOR)].filter((o) => !/** @type {HTMLElement} */
-      o.hidden).length;
-      listbox.refresh();
-      if (status !== null) status.textContent = hook?.status?.(query, visible3) ?? RESULTS_TEXT(visible3);
-      if (empty !== null) {
-        empty.hidden = !showsEmpty || visible3 > 0;
-        if (empty !== serverEmpty) empty.textContent = getStrings().noResults;
-      }
-      return visible3;
-    };
-    const optionFor = (value) => {
-      for (const element2 of list.querySelectorAll(OPTION_SELECTOR)) {
-        const option = (
-          /** @type {HTMLElement} */
-          element2
-        );
-        if ((option.dataset.value ?? (option.textContent ?? "").trim()) === value) return option;
-      }
-      return null;
-    };
-    const announce4 = (value, label, action) => box.dispatchEvent(
-      new CustomEvent(CHANGE_EVENT, { bubbles: true, detail: { value, label, values: isTags ? [...chosen] : [value], action } })
-    );
-    const tagElement = (value, label) => {
-      if (renderTag !== void 0) {
-        const custom = renderTag(value, label);
-        custom.dataset.value = value;
-        custom.classList.add("kp-tag");
-        return custom;
-      }
-      const tag = document.createElement("span");
-      tag.className = "kp-tag";
-      tag.dataset.value = value;
-      const text = document.createElement("span");
-      text.textContent = label;
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.className = "kp-tag__remove";
-      remove.setAttribute("aria-label", getStrings().removeNamed(label));
-      remove.textContent = box.dataset.kpRemoveGlyph ?? removeGlyph;
-      tag.append(text, remove);
-      return tag;
-    };
-    const addTag = (value, label) => {
-      if (chosen.length >= cap2) return;
-      if (duplicates || !chosen.includes(value)) {
-        chosen.push(value);
-        if (tagList !== null) tagList.append(tagElement(value, label));
-        showTags();
-      }
-      input.value = "";
-      filter();
-      if (stays) open4();
-      else close();
-      announce4(value, label, "add");
-    };
-    const take = (option) => {
-      if (hook?.choose?.(option)) return;
-      const label = labelOf3(option);
-      const value = option.dataset.value ?? label;
-      if (isTags) {
-        addTag(value, label);
-        return;
-      }
-      input.value = label;
-      close();
-      announce4(value, label, "add");
-    };
-    const addTyped = () => {
-      const typed = input.value.trim();
-      if (typed === "") return false;
-      const named = [...list.querySelectorAll(OPTION_SELECTOR)].find(
-        (element2) => !element2.matches('[aria-disabled="true"], [data-kp-disabled]') && (element2.textContent ?? "").trim().toLowerCase() === typed.toLowerCase()
-      );
-      if (named instanceof HTMLElement) {
-        take(named);
-        return true;
-      }
-      if (!creates) return false;
-      addTag(typed, typed);
-      return true;
-    };
-    const removeValue = (value) => {
-      const at = chosen.indexOf(value);
-      if (at === -1) return;
-      chosen.splice(at, 1);
-      const tag = (
-        /** @type {HTMLElement | null} */
-        tagList?.querySelector(`.kp-tag[data-value="${CSS.escape(value)}"]`) ?? null
-      );
-      const label = tag?.querySelector("span")?.textContent ?? value;
-      tag?.remove();
-      showTags();
-      filter();
-      announce4(value, label, "remove");
-    };
-    const listbox = createListbox({
-      input,
-      list,
-      loop: flag("kpLoop", loop),
-      onChoose: (_, option) => take(option),
-      onDismiss: close
-    });
-    let pending2 = 0;
-    const onInput = () => {
-      clearTimeout(pending2);
-      const run = () => {
-        const visible3 = filter();
-        if (visible3 > 0 || showsEmpty && input.value.trim() !== "") open4();
-        else close();
-      };
-      if (debounce > 0) pending2 = window.setTimeout(run, debounce);
-      else run();
-    };
-    const onKeyDown = (event) => {
-      if (list.hidden && (event.key === "ArrowDown" || event.altKey && event.key === "ArrowDown")) {
-        event.preventDefault();
-        if (filter() > 0) open4();
-        return;
-      }
-      if (!isTags) return;
-      if ((event.key === "Enter" || event.key === ",") && !event.defaultPrevented && !event.isComposing) {
-        if (event.key === "Enter" && listbox.index !== -1) return;
-        if (addTyped()) event.preventDefault();
-        return;
-      }
-      if (!backspaces) return;
-      if (event.key === "Backspace" && input.value === "" && chosen.length > 0) removeValue(chosen[chosen.length - 1] ?? "");
-    };
-    const onTagClick = (event) => {
-      const target = (
-        /** @type {HTMLElement} */
-        event.target
-      );
-      const remove = target.closest(".kp-tag__remove, [data-kp-tag-remove]");
-      if (remove === null) return;
-      const tag = (
-        /** @type {HTMLElement | null} */
-        remove.closest(".kp-tag")
-      );
-      removeValue(tag?.dataset.value ?? "");
-      input.focus();
-    };
-    const onFocus = () => {
-      if (opens && filter() > 0) open4();
-    };
-    const onFocusOut = () => {
-      if (!closes) return;
-      setTimeout(() => {
-        if (!box.contains(document.activeElement)) close();
-      }, 0);
-    };
-    const onListMouseDown = (event) => event.preventDefault();
-    input.addEventListener("input", onInput);
-    input.addEventListener("keydown", onKeyDown);
-    input.addEventListener("focus", onFocus);
-    box.addEventListener("focusout", onFocusOut);
-    list.addEventListener("mousedown", onListMouseDown);
-    tagList?.addEventListener("click", onTagClick);
-    showTags();
-    filter();
-    list.hidden = true;
-    input.setAttribute("aria-expanded", "false");
-    const handle = {
-      element: box,
-      values: () => isTags ? [...chosen] : [input.value],
-      set: (values) => {
-        if (isTags) {
-          chosen.splice(0, chosen.length);
-          if (tagList) tagList.replaceChildren();
-          for (const value of values.slice(0, cap2)) {
-            if (!duplicates && chosen.includes(value)) continue;
-            chosen.push(value);
-            const option = optionFor(value);
-            tagList?.append(tagElement(value, labelOf3(option, value)));
-          }
-          showTags();
-          filter();
-          announce4(values[values.length - 1] ?? "", "", "set");
-        } else {
-          const value = values[0] ?? "";
-          const option = optionFor(value);
-          input.value = labelOf3(option, value);
-          announce4(value, input.value, "set");
-        }
-      },
-      open: open4,
-      close,
-      query: (text) => {
-        input.value = text;
-        onInput();
-      },
-      refresh: () => void filter(),
-      extend: (next2) => {
-        hook = next2;
-        filter();
-      }
-    };
-    handles2.set(box, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      clearTimeout(pending2);
-      lower();
-      listbox.destroy();
-      input.removeEventListener("input", onInput);
-      input.removeEventListener("keydown", onKeyDown);
-      input.removeEventListener("focus", onFocus);
-      box.removeEventListener("focusout", onFocusOut);
-      list.removeEventListener("mousedown", onListMouseDown);
-      tagList?.removeEventListener("click", onTagClick);
-      if (before.expanded === null) input.removeAttribute("aria-expanded");
-      else input.setAttribute("aria-expanded", before.expanded);
-      list.hidden = before.listHidden;
-      [...list.querySelectorAll(OPTION_SELECTOR)].forEach((o, i) => {
-        o.hidden = before.hidden[i] ?? false;
-      });
-      if (tagList) {
-        tagList.replaceChildren(...before.tags);
-        tagList.hidden = tagsHidden;
-      }
-      if (status) status.textContent = before.status;
-      unslot();
-      if (empty !== null && empty !== serverEmpty) empty.remove();
-      if (serverEmpty !== null) serverEmpty.hidden = emptyWasHidden;
-      handles2.delete(box);
-      delete box.dataset.kpComboboxAttached;
-    });
-  }
+  const settings = { match, loop, openOnFocus, closeOnBlur, backspaceRemoves, stayOpen, maxTags, allowDuplicates, debounceMs, emptyRow, creatable, renderTag, removeGlyph };
+  const made6 = [...root.querySelectorAll(COMBOBOX)].filter((box) => wantsWiring(
+    /** @type {HTMLElement} */
+    box
+  )).map((box) => attachOne(
+    /** @type {HTMLElement} */
+    box,
+    ComboboxControl,
+    settings
+  )).filter((control) => control !== void 0);
   const detach = () => {
-    for (const c of cleanups) c();
+    for (const control of made6) control.destroy();
   };
-  return Object.assign(detach, { handles: created });
+  return Object.assign(detach, { handles: made6.map((control) => control.handle) });
 }
 var init_attach10 = __esm({
   "js/combobox/attach.js"() {
     "use strict";
-    init_listbox();
-    init_strings();
-    init_top_layer();
+    init_controller();
     init_constants8();
-    init_handle();
-    init_helpers();
-    init_matchers();
+    init_controller30();
   }
 });
 
@@ -40404,6 +40541,245 @@ var init_state15 = __esm({
   }
 });
 
+// js/combobox/select-control.js
+var OPENING_KEYS, MAX_GAP, SelectControl;
+var init_select_control = __esm({
+  "js/combobox/select-control.js"() {
+    "use strict";
+    init_controller();
+    init_listbox();
+    init_top_layer();
+    init_constants8();
+    init_handle();
+    init_state15();
+    OPENING_KEYS = ["ArrowDown", "ArrowUp", "Home", "End", "Enter", " ", "F4"];
+    MAX_GAP = 8;
+    SelectControl = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.select = /** @type {HTMLSelectElement} */
+        host;
+        this.list = document.createElement("ul");
+        this.labelled = void 0;
+        this.before = { expanded: (
+          /** @type {string | null} */
+          null
+        ), controls: (
+          /** @type {string | null} */
+          null
+        ) };
+        this.lower = () => {
+        };
+        this.listbox = /** @type {Listbox} */
+        /** @type {unknown} */
+        null;
+        this.handle = { element: this.select, list: this.list, open: () => this.open(), close: () => this.close(), refresh: () => this.build() };
+      }
+      connect() {
+        const { select: select2, list } = this;
+        this.own(() => {
+          selectHandles.delete(select2);
+          delete select2.dataset.kpSelectAttached;
+        });
+        this.before = { expanded: select2.getAttribute("aria-expanded"), controls: select2.getAttribute("aria-controls") };
+        this.drawList();
+        this.own(() => this.restore());
+        this.listbox = createListbox({
+          input: select2,
+          list,
+          loop: this.options.loop === true,
+          typeahead: true,
+          typeaheadMs: (
+            /** @type {number} */
+            this.options.typeaheadMs
+          ),
+          onChoose: (_, option) => this.take(option),
+          onDismiss: () => this.close()
+        });
+        this.own(() => this.listbox.destroy());
+        this.own(() => this.lower());
+        this.listen(select2, "keydown", (event) => this.onKeyDownCapture(
+          /** @type {KeyboardEvent} */
+          event
+        ), { capture: true });
+        this.listen(select2, "mousedown", (event) => this.onMouseDown(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(select2, "focusout", () => this.onFocusOut());
+        this.listen(select2, "change", () => this.onChange());
+        this.listen(list, "mousedown", (event) => event.preventDefault());
+        this.build();
+        selectHandles.set(select2, this.handle);
+        select2.dataset.kpSelectAttached = "";
+      }
+      /** Make the list, name it after the select's label, and put it right after the select. */
+      drawList() {
+        const { select: select2, list } = this;
+        comboboxState.selectCount += 1;
+        list.className = "kp-combobox__list";
+        list.id = `${select2.id || "kp-select"}-drawn-${comboboxState.selectCount}`;
+        list.setAttribute("role", "listbox");
+        list.dataset.kpSelectList = "";
+        list.dataset.kpArrive = "none";
+        list.hidden = true;
+        this.labelled = /** @type {HTMLLabelElement | undefined} */
+        select2.labels?.[0];
+        if (this.labelled) {
+          if (!this.labelled.id) this.labelled.id = `${list.id}-label`;
+          list.setAttribute("aria-labelledby", this.labelled.id);
+        }
+        select2.after(list);
+        select2.setAttribute("aria-controls", list.id);
+        select2.setAttribute("aria-expanded", "false");
+      }
+      /** Take the list away and give the select back its attributes. */
+      restore() {
+        const { select: select2, list, labelled, before } = this;
+        list.remove();
+        if (labelled && labelled.id === `${list.id}-label`) labelled.removeAttribute("id");
+        for (
+          const [name, value] of
+          /** @type {const} */
+          [
+            ["aria-expanded", before.expanded],
+            ["aria-controls", before.controls]
+          ]
+        ) {
+          if (value === null) select2.removeAttribute(name);
+          else select2.setAttribute(name, value);
+        }
+        select2.removeAttribute("aria-activedescendant");
+      }
+      /** Rebuild the options from the select's own, and mark the chosen one. */
+      build() {
+        const { select: select2, list } = this;
+        list.replaceChildren(
+          ...[...select2.options].map((native, i) => {
+            const option = document.createElement("li");
+            option.className = "kp-combobox__option";
+            option.id = `${list.id}-option-${i}`;
+            option.setAttribute("role", "option");
+            option.setAttribute("aria-selected", "false");
+            option.dataset.kpOption = "";
+            option.dataset.value = native.value;
+            option.textContent = native.label || native.text;
+            if (native.disabled) option.setAttribute("aria-disabled", "true");
+            if (native.selected) option.dataset.kpChosen = "";
+            return option;
+          })
+        );
+        this.listbox.refresh();
+      }
+      /**
+       * Put the open list under the select and as wide as it. A first guess from the offsets both siblings share, then one
+       * correction measured against the paint, because a register may give the list a margin or the page a containing block the
+       * offsets do not see. The gap under the select is the list's own top margin, held to at most 0.5rem.
+       */
+      place() {
+        const { select: select2, list } = this;
+        list.style.left = `${select2.offsetLeft}px`;
+        list.style.top = `${select2.offsetTop + select2.offsetHeight}px`;
+        list.style.width = `${select2.offsetWidth}px`;
+        const box = select2.getBoundingClientRect();
+        const drawn = layoutRect(list);
+        const margin = Math.min(Math.max(Number.parseFloat(getComputedStyle(list).marginTop) || 0, 0), MAX_GAP);
+        list.style.left = `${select2.offsetLeft + (box.left - drawn.left)}px`;
+        list.style.top = `${select2.offsetTop + select2.offsetHeight + (box.bottom + margin - drawn.top)}px`;
+        list.style.width = `${box.width}px`;
+        if (raised(list)) placeBlockSide(list, box);
+      }
+      isOpen() {
+        return this.list.hidden === false;
+      }
+      open() {
+        const { select: select2, list } = this;
+        if (select2.disabled) return;
+        this.build();
+        list.hidden = false;
+        this.lower();
+        this.lower = raiseOverlay(list, () => this.place());
+        select2.setAttribute("aria-expanded", "true");
+        const chosen = this.listbox.options.findIndex((option) => option.dataset.kpChosen !== void 0);
+        this.listbox.highlight(Math.max(chosen, 0));
+        select2.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: true } }));
+      }
+      close() {
+        if (!this.isOpen()) return;
+        const { select: select2 } = this;
+        this.lower();
+        this.lower = () => {
+        };
+        this.list.hidden = true;
+        select2.setAttribute("aria-expanded", "false");
+        this.listbox.clear();
+        select2.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: false } }));
+      }
+      /** @param {HTMLElement} option */
+      take(option) {
+        const { select: select2 } = this;
+        const value = option.dataset.value ?? "";
+        const changed2 = select2.value !== value;
+        select2.value = value;
+        this.close();
+        select2.focus();
+        if (changed2) {
+          select2.dispatchEvent(new Event("input", { bubbles: true }));
+          select2.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+      /**
+       * What the listbox does not do: open from a closed box, and keep the browser's own select behaviour — its popup, its arrow
+       * keys and letters changing the value directly — out of the way.
+       * @param {KeyboardEvent} event
+       */
+      onKeyDownCapture(event) {
+        if (event.ctrlKey || event.metaKey) return;
+        const printable = event.key.length === 1 && !event.altKey;
+        if (!this.isOpen()) {
+          if (OPENING_KEYS.includes(event.key) || printable) {
+            event.preventDefault();
+            this.open();
+            if (!printable) event.stopImmediatePropagation();
+            else if (event.key === " ") event.stopImmediatePropagation();
+          }
+          return;
+        }
+        if (event.key === "Tab") {
+          this.close();
+          return;
+        }
+        if (event.key === " " && this.listbox.index !== -1) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          this.listbox.choose();
+          return;
+        }
+        if (event.key === "Escape") event.preventDefault();
+        if (printable || event.key === "Enter") event.preventDefault();
+      }
+      /** A press on the box opens the drawn list instead of the browser's. @param {MouseEvent} event */
+      onMouseDown(event) {
+        if (event.button !== 0 || this.select.disabled) return;
+        event.preventDefault();
+        this.select.focus();
+        if (this.isOpen()) this.close();
+        else this.open();
+      }
+      onFocusOut() {
+        setTimeout(() => {
+          if (!this.destroyed && document.activeElement !== this.select) this.close();
+        }, 0);
+      }
+      /** The page changed the value: the mark follows at once if the list is open. */
+      onChange() {
+        if (this.isOpen()) this.build();
+      }
+    };
+  }
+});
+
 // js/combobox/select.js
 function drawsSelect(element) {
   if (!(element instanceof HTMLSelectElement) || element.multiple) return false;
@@ -40414,176 +40790,15 @@ function drawsSelect(element) {
 function drawnSelect(element) {
   return selectHandles.get(element) ?? null;
 }
-function attachSelect(select2, { loop = false, typeaheadMs = 500 } = {}) {
-  const before = {
-    expanded: select2.getAttribute("aria-expanded"),
-    controls: select2.getAttribute("aria-controls")
-  };
-  comboboxState.selectCount += 1;
-  const list = document.createElement("ul");
-  list.className = "kp-combobox__list";
-  list.id = `${select2.id || "kp-select"}-drawn-${comboboxState.selectCount}`;
-  list.setAttribute("role", "listbox");
-  list.dataset.kpSelectList = "";
-  list.dataset.kpArrive = "none";
-  list.hidden = true;
-  const labelled = select2.labels?.[0];
-  if (labelled) {
-    if (!labelled.id) labelled.id = `${list.id}-label`;
-    list.setAttribute("aria-labelledby", labelled.id);
+function attachSelect(select2, { loop = false, typeaheadMs = TYPEAHEAD_MS2 } = {}) {
+  const control = new SelectControl(select2, { loop, typeaheadMs });
+  try {
+    control.connect();
+  } catch (error) {
+    control.destroy();
+    throw error;
   }
-  select2.after(list);
-  select2.setAttribute("aria-controls", list.id);
-  select2.setAttribute("aria-expanded", "false");
-  const build8 = () => {
-    list.replaceChildren(
-      ...[...select2.options].map((native, i) => {
-        const option = document.createElement("li");
-        option.className = "kp-combobox__option";
-        option.id = `${list.id}-option-${i}`;
-        option.setAttribute("role", "option");
-        option.setAttribute("aria-selected", "false");
-        option.dataset.kpOption = "";
-        option.dataset.value = native.value;
-        option.textContent = native.label || native.text;
-        if (native.disabled) option.setAttribute("aria-disabled", "true");
-        if (native.selected) option.dataset.kpChosen = "";
-        return option;
-      })
-    );
-    listbox.refresh();
-  };
-  const place3 = () => {
-    list.style.left = `${select2.offsetLeft}px`;
-    list.style.top = `${select2.offsetTop + select2.offsetHeight}px`;
-    list.style.width = `${select2.offsetWidth}px`;
-    const box = select2.getBoundingClientRect();
-    const drawn = layoutRect(list);
-    const margin = Math.min(Math.max(Number.parseFloat(getComputedStyle(list).marginTop) || 0, 0), 8);
-    list.style.left = `${select2.offsetLeft + (box.left - drawn.left)}px`;
-    list.style.top = `${select2.offsetTop + select2.offsetHeight + (box.bottom + margin - drawn.top)}px`;
-    list.style.width = `${box.width}px`;
-    if (raised(list)) placeBlockSide(list, box);
-  };
-  const isOpen3 = () => list.hidden === false;
-  let lower = () => {
-  };
-  const open4 = () => {
-    if (select2.disabled) return;
-    build8();
-    list.hidden = false;
-    lower();
-    lower = raiseOverlay(list, place3);
-    select2.setAttribute("aria-expanded", "true");
-    const chosen = listbox.options.findIndex((option) => option.dataset.kpChosen !== void 0);
-    listbox.highlight(Math.max(chosen, 0));
-    select2.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: true } }));
-  };
-  const close = () => {
-    if (!isOpen3()) return;
-    lower();
-    lower = () => {
-    };
-    list.hidden = true;
-    select2.setAttribute("aria-expanded", "false");
-    listbox.clear();
-    select2.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: false } }));
-  };
-  const take = (option) => {
-    const value = option.dataset.value ?? "";
-    const changed2 = select2.value !== value;
-    select2.value = value;
-    close();
-    select2.focus();
-    if (changed2) {
-      select2.dispatchEvent(new Event("input", { bubbles: true }));
-      select2.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-  };
-  const listbox = createListbox({
-    input: select2,
-    list,
-    loop,
-    typeahead: true,
-    typeaheadMs,
-    onChoose: (_, option) => take(option),
-    onDismiss: close
-  });
-  const onKeyDownCapture = (event) => {
-    if (event.ctrlKey || event.metaKey) return;
-    const printable = event.key.length === 1 && !event.altKey;
-    if (!isOpen3()) {
-      if (["ArrowDown", "ArrowUp", "Home", "End", "Enter", " ", "F4"].includes(event.key) || printable) {
-        event.preventDefault();
-        open4();
-        if (!printable) event.stopImmediatePropagation();
-        else if (event.key === " ") event.stopImmediatePropagation();
-      }
-      return;
-    }
-    if (event.key === "Tab") {
-      close();
-      return;
-    }
-    if (event.key === " " && listbox.index !== -1) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      listbox.choose();
-      return;
-    }
-    if (event.key === "Escape") event.preventDefault();
-    if (printable || event.key === "Enter") event.preventDefault();
-  };
-  const onMouseDown = (event) => {
-    if (event.button !== 0 || select2.disabled) return;
-    event.preventDefault();
-    select2.focus();
-    if (isOpen3()) close();
-    else open4();
-  };
-  const onListMouseDown = (event) => event.preventDefault();
-  const onFocusOut = () => {
-    setTimeout(() => {
-      if (document.activeElement !== select2) close();
-    }, 0);
-  };
-  const onChange = () => {
-    if (isOpen3()) build8();
-  };
-  select2.addEventListener("keydown", onKeyDownCapture, { capture: true });
-  select2.addEventListener("mousedown", onMouseDown);
-  select2.addEventListener("focusout", onFocusOut);
-  select2.addEventListener("change", onChange);
-  list.addEventListener("mousedown", onListMouseDown);
-  build8();
-  const handle = { element: select2, list, open: open4, close, refresh: build8 };
-  selectHandles.set(select2, handle);
-  select2.dataset.kpSelectAttached = "";
-  const detach = () => {
-    lower();
-    listbox.destroy();
-    select2.removeEventListener("keydown", onKeyDownCapture, { capture: true });
-    select2.removeEventListener("mousedown", onMouseDown);
-    select2.removeEventListener("focusout", onFocusOut);
-    select2.removeEventListener("change", onChange);
-    list.remove();
-    if (labelled && labelled.id === `${list.id}-label`) labelled.removeAttribute("id");
-    for (
-      const [name, value] of
-      /** @type {const} */
-      [
-        ["aria-expanded", before.expanded],
-        ["aria-controls", before.controls]
-      ]
-    ) {
-      if (value === null) select2.removeAttribute(name);
-      else select2.setAttribute(name, value);
-    }
-    select2.removeAttribute("aria-activedescendant");
-    selectHandles.delete(select2);
-    delete select2.dataset.kpSelectAttached;
-  };
-  return Object.assign(detach, { handle });
+  return Object.assign(() => control.destroy(), { handle: control.handle });
 }
 function attachSelects(root = document, options = {}) {
   const cleanups = [];
@@ -40603,15 +40818,13 @@ function attachSelects(root = document, options = {}) {
   };
   return Object.assign(detach, { handles: created });
 }
-var selectHandles;
+var TYPEAHEAD_MS2;
 var init_select = __esm({
   "js/combobox/select.js"() {
     "use strict";
-    init_listbox();
-    init_top_layer();
-    init_constants8();
-    init_state15();
-    selectHandles = /* @__PURE__ */ new WeakMap();
+    init_select_control();
+    init_handle();
+    TYPEAHEAD_MS2 = 500;
   }
 });
 
@@ -43389,7 +43602,7 @@ function partsOf4(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -43574,7 +43787,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller30();
+    init_controller31();
   }
 });
 
@@ -48009,7 +48222,7 @@ var init_row3 = __esm({
 
 // js/upload/core.js
 var UploadCore;
-var init_core9 = __esm({
+var init_core10 = __esm({
   "js/upload/core.js"() {
     "use strict";
     init_controller();
@@ -48095,11 +48308,11 @@ var init_core9 = __esm({
 
 // js/upload/controller.js
 var UploadZone;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/upload/controller.js"() {
     "use strict";
     init_motion();
-    init_core9();
+    init_core10();
     init_values24();
     UploadZone = class extends UploadCore {
       /**
@@ -48238,7 +48451,7 @@ var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
     init_controller();
-    init_controller31();
+    init_controller32();
     init_values24();
     init_values24();
     init_accepts();
@@ -48447,7 +48660,7 @@ var init_view2 = __esm({
 
 // js/wizard/controller.js
 var WizardController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/wizard/controller.js"() {
     "use strict";
     init_validate();
@@ -48547,7 +48760,7 @@ var init_attach14 = __esm({
   "js/wizard/attach.js"() {
     "use strict";
     init_controller();
-    init_controller32();
+    init_controller33();
     init_values25();
   }
 });
@@ -48939,7 +49152,7 @@ var init_layout2 = __esm({
 
 // js/gridlayout/controller.js
 var MovableGrid;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/gridlayout/controller.js"() {
     "use strict";
     init_controller();
@@ -49115,7 +49328,7 @@ var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_controller();
-    init_controller33();
+    init_controller34();
     init_values26();
     init_values26();
     init_layout2();
@@ -49723,7 +49936,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED7, CalendarController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -49977,7 +50190,7 @@ var init_api15 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller34();
+    init_controller35();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -56650,7 +56863,7 @@ var init_values27 = __esm({
 
 // js/pipeline/core.js
 var PipelineCore;
-var init_core10 = __esm({
+var init_core11 = __esm({
   "js/pipeline/core.js"() {
     "use strict";
     init_controller();
@@ -56740,7 +56953,7 @@ var PipelineLanes;
 var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
-    init_core10();
+    init_core11();
     init_values27();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
@@ -56989,7 +57202,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -57138,7 +57351,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller35();
+    init_controller36();
     init_values27();
     init_values27();
   }
@@ -57748,7 +57961,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -57933,7 +58146,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller36();
+    init_controller37();
   }
 });
 
@@ -58263,7 +58476,7 @@ var init_register3 = __esm({
 
 // js/timer-disc/core.js
 var DiscCore;
-var init_core11 = __esm({
+var init_core12 = __esm({
   "js/timer-disc/core.js"() {
     "use strict";
     init_controller();
@@ -58350,7 +58563,7 @@ var init_draw11 = __esm({
     "use strict";
     init_components();
     init_countdown2();
-    init_core11();
+    init_core12();
     init_share();
     init_values29();
     DiscDraw = class extends DiscCore {
@@ -58473,7 +58686,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -58602,7 +58815,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller37();
+    init_controller38();
     init_values29();
     init_values29();
     init_share();
@@ -58780,7 +58993,7 @@ var init_build10 = __esm({
 
 // js/range/core.js
 var seq, DEFAULT_PRESET_AT, RangeCore;
-var init_core12 = __esm({
+var init_core13 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
@@ -59034,11 +59247,11 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core12();
+    init_core13();
     init_panel2();
     RangeController = class extends RangeCore {
       connect() {
@@ -59115,7 +59328,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller38();
+    init_controller39();
     init_values30();
     init_values30();
   }
@@ -59181,7 +59394,7 @@ var init_parts6 = __esm({
 
 // js/compare/core.js
 var CompareCore;
-var init_core13 = __esm({
+var init_core14 = __esm({
   "js/compare/core.js"() {
     "use strict";
     init_controller();
@@ -59241,7 +59454,7 @@ var init_load = __esm({
   "js/compare/load.js"() {
     "use strict";
     init_busy_card();
-    init_core13();
+    init_core14();
     init_values31();
     CompareLoad = class extends CompareCore {
       /**
@@ -59337,7 +59550,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -59466,7 +59679,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller39();
+    init_controller40();
     init_values31();
     init_values31();
     init_keys12();
@@ -60470,7 +60683,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -60536,7 +60749,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller40();
+    init_controller41();
     init_values33();
     init_values33();
   }
@@ -60862,7 +61075,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -61149,7 +61362,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller41();
+    init_controller42();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -61271,7 +61484,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -61498,7 +61711,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -61614,7 +61827,7 @@ var init_read6 = __esm({
 
 // js/transfer/core.js
 var FULL, TransferCore;
-var init_core14 = __esm({
+var init_core15 = __esm({
   "js/transfer/core.js"() {
     "use strict";
     init_controller();
@@ -61864,7 +62077,7 @@ var init_row4 = __esm({
     init_progressbar();
     init_motion();
     init_strings();
-    init_core14();
+    init_core15();
     init_parts10();
     init_read6();
     init_ticker2();
@@ -62278,7 +62491,7 @@ var init_values36 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core15 = __esm({
+var init_core16 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
@@ -62413,7 +62626,7 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core15();
+    init_core16();
     init_values36();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
@@ -62490,7 +62703,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -62730,7 +62943,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller43();
+    init_controller44();
     init_values36();
     init_values36();
   }
@@ -62783,7 +62996,7 @@ var init_slug = __esm({
 
 // js/page-contents/core.js
 var serial5, ContentsCore;
-var init_core16 = __esm({
+var init_core17 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
@@ -62902,7 +63115,7 @@ var init_read7 = __esm({
     "use strict";
     init_values37();
     init_slug();
-    init_core16();
+    init_core17();
     ContentsRead = class extends ContentsCore {
       /** The entries the page gave, each with the section it names. @param {ContentsItem[]} given @returns {{ item: ContentsItem, target: HTMLElement }[]} */
       readGiven(given) {
@@ -63071,7 +63284,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -63189,7 +63402,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_values37();
     init_values37();
     init_slug();
@@ -63876,7 +64089,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -64083,7 +64296,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller45();
+    init_controller46();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -64299,7 +64512,7 @@ var init_summary3 = __esm({
 
 // js/weekdays/core.js
 var seq2, WeekdaysCore;
-var init_core17 = __esm({
+var init_core18 = __esm({
   "js/weekdays/core.js"() {
     "use strict";
     init_controller();
@@ -64384,11 +64597,11 @@ var init_core17 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
-    init_core17();
+    init_core18();
     init_names();
     init_values38();
     WeekdayPicker = class extends WeekdaysCore {
@@ -64499,7 +64712,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_values38();
     init_values38();
     init_names();
@@ -64640,7 +64853,7 @@ var init_value = __esm({
 
 // js/quiet-hours/core.js
 var serial6, QuietCore;
-var init_core18 = __esm({
+var init_core19 = __esm({
   "js/quiet-hours/core.js"() {
     "use strict";
     init_controller();
@@ -64744,12 +64957,12 @@ var init_core18 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
     init_weekdays();
-    init_core18();
+    init_core19();
     init_value();
     init_values39();
     QuietHours = class extends QuietCore {
@@ -64849,7 +65062,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller47();
+    init_controller48();
     init_values39();
     init_values39();
     init_value();
@@ -64991,7 +65204,7 @@ var init_title = __esm({
 
 // js/question-card/core.js
 var QuestionCore;
-var init_core19 = __esm({
+var init_core20 = __esm({
   "js/question-card/core.js"() {
     "use strict";
     init_controller();
@@ -65116,7 +65329,7 @@ var init_run4 = __esm({
     init_motion();
     init_values40();
     init_title();
-    init_core19();
+    init_core20();
     QuestionRun = class extends QuestionCore {
       /**
        * @param {HTMLElement} host the card
@@ -65851,7 +66064,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -66010,7 +66223,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller48();
+    init_controller49();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -66441,7 +66654,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -66582,7 +66795,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller49();
+    init_controller50();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -67044,7 +67257,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -67314,7 +67527,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller50();
+    init_controller51();
     init_build14();
     init_commit();
     init_math4();
@@ -67602,7 +67815,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -67835,7 +68048,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller51();
+    init_controller52();
     init_list4();
     init_render4();
   }
@@ -69278,7 +69491,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -69469,7 +69682,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller52();
+    init_controller53();
     init_group6();
     init_group6();
   }
@@ -69560,7 +69773,7 @@ function toneMap(text) {
   return map;
 }
 var shown4, near, ChipCore;
-var init_core20 = __esm({
+var init_core21 = __esm({
   "js/version-delta/core.js"() {
     "use strict";
     init_controller();
@@ -69651,7 +69864,7 @@ var init_view5 = __esm({
     "use strict";
     init_strings();
     init_values41();
-    init_core20();
+    init_core21();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
       markChip(v) {
@@ -69758,7 +69971,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -69865,7 +70078,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller53();
+    init_controller54();
     init_values41();
     init_values41();
     init_level();
@@ -69942,7 +70155,7 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core21 = __esm({
+var init_core22 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
@@ -70058,7 +70271,7 @@ var init_rows5 = __esm({
     init_idmark();
     init_strings();
     init_values42();
-    init_core21();
+    init_core22();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -70160,7 +70373,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -70169,7 +70382,7 @@ var init_controller54 = __esm({
     init_strings();
     init_values42();
     init_order();
-    init_core21();
+    init_core22();
     init_rows5();
     DependencyList = class extends DeplistRows {
       connect() {
@@ -70344,7 +70557,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller54();
+    init_controller55();
     init_values42();
     init_values42();
     init_order();
@@ -70353,7 +70566,7 @@ var init_deplist = __esm({
 
 // js/path-trace/core.js
 var TraceCore;
-var init_core22 = __esm({
+var init_core23 = __esm({
   "js/path-trace/core.js"() {
     "use strict";
     init_controller();
@@ -70484,7 +70697,7 @@ var init_draw13 = __esm({
     init_strings();
     init_state_plate();
     init_flash();
-    init_core22();
+    init_core23();
     init_states();
     init_values43();
     TraceDraw = class extends TraceCore {
@@ -70609,7 +70822,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -70696,7 +70909,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller55();
+    init_controller56();
     init_values43();
     init_values43();
     init_states();
@@ -72350,7 +72563,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -72603,7 +72816,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller56();
+    init_controller57();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -72949,7 +73162,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -73254,7 +73467,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller57();
+    init_controller58();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -73703,7 +73916,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -73837,7 +74050,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller58();
+    init_controller59();
     init_values46();
   }
 });
@@ -73909,7 +74122,7 @@ var init_keys15 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core23 = __esm({
+var init_core24 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
@@ -74033,7 +74246,7 @@ var init_run5 = __esm({
     init_locale();
     init_values45();
     init_kinds();
-    init_core23();
+    init_core24();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -75379,7 +75592,7 @@ var init_build15 = __esm({
 
 // js/slider/core.js
 var seq3, SliderCore;
-var init_core24 = __esm({
+var init_core25 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
@@ -75500,11 +75713,11 @@ var init_core24 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
-    init_core24();
+    init_core25();
     init_values47();
     BIG_STEP2 = 10;
     PAGE_SHARE = 10;
@@ -75730,7 +75943,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller59();
+    init_controller60();
     init_values47();
     init_values47();
   }
@@ -75898,7 +76111,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -76127,14 +76340,14 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller60();
+    init_controller61();
     init_fields();
     init_fields();
   }
 });
 
 // js/dated-options/constants.js
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS2, MINUTE_S3, DAY_S2, SECOND_MS6;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS3, MINUTE_S3, DAY_S2, SECOND_MS6;
 var init_constants37 = __esm({
   "js/dated-options/constants.js"() {
     "use strict";
@@ -76146,7 +76359,7 @@ var init_constants37 = __esm({
     DEFAULT_INLINE_MAX = 7;
     DEFAULT_ROWS4 = 4;
     COMBOBOX_ROWS = 2;
-    TYPEAHEAD_MS2 = 700;
+    TYPEAHEAD_MS3 = 700;
     MINUTE_S3 = 60;
     DAY_S2 = 86400;
     SECOND_MS6 = 1e3;
@@ -76467,7 +76680,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -76675,7 +76888,7 @@ var init_controller61 = __esm({
       onType(event) {
         if (this.kind !== "radio" || event.ctrlKey || event.metaKey || event.altKey || event.key.length !== 1 || !(event.target instanceof HTMLInputElement)) return;
         const t = Date.now();
-        this.typed = t - this.typedAt > TYPEAHEAD_MS2 ? event.key.toLowerCase() : this.typed + event.key.toLowerCase();
+        this.typed = t - this.typedAt > TYPEAHEAD_MS3 ? event.key.toLowerCase() : this.typed + event.key.toLowerCase();
         this.typedAt = t;
         const hit = this.shown.find((o) => !o.disabled && titleOf2(this, o).toLowerCase().startsWith(this.typed));
         if (!hit) return;
@@ -76718,7 +76931,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller61();
+    init_controller62();
   }
 });
 
@@ -76867,7 +77080,7 @@ var init_time3 = __esm({
 
 // js/runs/core.js
 var seq5, RunsCore;
-var init_core25 = __esm({
+var init_core26 = __esm({
   "js/runs/core.js"() {
     "use strict";
     init_controller();
@@ -76942,7 +77155,7 @@ var RunsRows;
 var init_rows7 = __esm({
   "js/runs/rows.js"() {
     "use strict";
-    init_core25();
+    init_core26();
     init_time3();
     RunsRows = class extends RunsCore {
       /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
@@ -77042,7 +77255,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -77153,7 +77366,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller62();
+    init_controller63();
     init_values48();
     init_values48();
     init_time3();
@@ -77481,7 +77694,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -77740,7 +77953,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller63();
+    init_controller64();
     init_choices();
   }
 });
@@ -82994,7 +83207,7 @@ var init_actions7 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83098,7 +83311,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller64();
+    init_controller65();
     init_state28();
     init_state28();
     init_matrix2();

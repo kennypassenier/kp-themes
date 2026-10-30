@@ -1,10 +1,6 @@
 import { MATCHERS } from './matchers.js';
 export type ComboboxHandle = import('./types.js').ComboboxHandle;
-export type ComboboxHook = import('./types.js').ComboboxHook;
 export type Matcher = import('./types.js').Matcher;
-/** @typedef {import('./types.js').ComboboxHandle} ComboboxHandle */
-/** @typedef {import('./types.js').ComboboxHook} ComboboxHook */
-/** @typedef {import('./types.js').Matcher} Matcher */
 /**
  * Attach every combobox and tag input under `root`.
  *

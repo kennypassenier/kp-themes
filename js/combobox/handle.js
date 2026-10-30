@@ -8,3 +8,6 @@ export const handles = new WeakMap();
 export function combobox(element) {
     return handles.get(element) ?? null;
 }
+
+/** @type {WeakMap<Element, import('./types.js').SelectHandle>} */
+export const selectHandles = new WeakMap();
