@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The one hundred and twenty-one largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The one hundred and twenty-two largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1820,3 +1820,14 @@ A live number that ticks to its new value: the names, the number reader, the Tic
 | `ticker.js` | One ticking number: the count from the number shown to the number written, on the page's frames, ending on the exact text. |
 | `values.js` | The marker, the knob, the default length and the event of a ticking number.                                                |
 | `watch.js`  | The watch on a root: it remembers the numbers under it, and ticks one whose text anyone but this module changed.           |
+
+## js/busy-card.js → js/busy-card/
+
+The busy card over a data area: the names, the scrolling ancestors, the geometry of the card, and the BusyCardLayer controller that builds, places and removes it. 4 files.
+
+| File          | Does                                                                                                                  |
+| ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `geometry.js` | Where the card lies: the union of the data area clipped to what is seen, and the room it lends the panel.             |
+| `layer.js`    | The busy card's layer: built, placed over the data area, kept in place while the host scrolls or resizes, and let go. |
+| `scroll.js`   | The ancestors that clip a host sideways, and the span of its width that no ancestor's scrolling hides.                |
+| `values.js`   | The class of every busy card, and the room a card gives its panel.                                                    |

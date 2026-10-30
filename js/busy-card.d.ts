@@ -1,5 +1,6 @@
-/** Every busy card, whatever component laid it. */
-export declare const BUSY_CARD = ".kp-datatable__busy-card";
+export { BUSY_CARD } from './busy-card/values.js';
+export { scrollersAround, seenAcross } from './busy-card/scroll.js';
+export { openBusyCard } from './busy-card/layer.js';
 export type BusyCardOptions = {
     /**
      * what the card says under the spinner
@@ -38,20 +39,18 @@ export type BusyCard = {
      */
     remove: () => void;
 };
-/** The ancestors of `host` that clip it sideways (overflow-x other than visible), nearest first. @param {HTMLElement} host */
-export declare function scrollersAround(host: HTMLElement): HTMLElement[];
 /**
- * The span of `host`'s width (left to right, in viewport pixels) that no ancestor's sideways scrolling hides.
- * @param {HTMLElement} host @param {number} left @param {number} right
+ * @typedef {object} BusyCardOptions
+ * @property {string} words what the card says under the spinner
+ * @property {() => readonly (Element | { top: number, right: number, bottom: number, left: number })[]} area
+ *   the boxes the card covers, in viewport coordinates (an element's border box, or a rectangle); measured on every placement
+ * @property {string} [className] the component's own class on the layer, beside `kp-datatable__busy-card`
+ * @property {boolean} [arrive] arrive the theme's way (default true); false for a component's first render
  */
-export declare function seenAcross(host: HTMLElement, left: number, right: number): {
-    left: number;
-    right: number;
-};
 /**
- * Lay the busy card over a data area of `host`.
- * @param {HTMLElement} host
- * @param {BusyCardOptions} options
- * @returns {BusyCard}
+ * @typedef {object} BusyCard
+ * @property {HTMLElement} layer
+ * @property {() => void} place measure and place it again
+ * @property {() => Promise<void>} close let it leave the theme's way; settles once it is gone
+ * @property {() => void} remove take it out at once (a new loading state while it was leaving)
  */
-export declare function openBusyCard(host: HTMLElement, { words, area, className, arrive }: BusyCardOptions): BusyCard;
