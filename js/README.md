@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The fifty-one largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The sixty-one largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -893,3 +893,162 @@ The status list and the calm today list, as a StatusList controller. 5 files.
 | `state.js`      | Selector, events, states, the per-row memory, and the shared helpers.                    |
 | `sync.js`       | One row kept in step with its state: words, Retry or calm actions, "since", the voice.   |
 | `voice.js`      | The list's polite region and what a row's change says.                                   |
+
+## js/passkeys.js → js/passkeys/
+
+The passkey list: the ways to sign in with their rows, renaming, removal and the empty, failed and loading states. 9 files.
+
+| File            | Does                                                                                                                                |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`        | The calls a page makes on a passkey list: draw it with setPasskeys(), or let attachPasskeys() draw the ones that carry JSON.        |
+| `constants.js`  | The selector, event names, kinds, glyphs, fixed numbers and the types of the passkey list.                                          |
+| `controller.js` | One passkey list: its rows, what is busy, being renamed or refused, and the removal and rename flows [kpadopt5-people].             |
+| `dom.js`        | Small DOM builders shared by the parts of the list: an element with a class, the way-in glyph and the row finders.                  |
+| `notes.js`      | Builds the parts of the list that are not rows: the empty or failed note, the waiting rows, the insecure warning and the live line. |
+| `options.js`    | Pure helpers: the options of a list, the order of its rows and the days a way has gone unused.                                      |
+| `paint.js`      | Draws the list: the waiting rows under the busy card, the empty or failed note, or the sorted rows, keeping focus where it was.     |
+| `row.js`        | Builds one row of the list: the way's glyph, its name or rename field, its facts, its flags, its hint and its two buttons.          |
+| `state.js`      | The counter that gives each drawn row an id of its own, for its label, hint and rename field.                                       |
+
+## js/feed.js → js/feed/
+
+The activity feed: who did what, day by day, with a row per event, states, Load earlier and a freshness line. 11 files.
+
+| File            | Does                                                                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `api.js`        | The calls a page makes on a feed: attach the feeds, get a feed's handle and give a feed its model.                                                           |
+| `constants.js`  | The selector, event names, states, option attributes, fixed numbers and the types of the activity feed.                                                      |
+| `controller.js` | One activity feed: its model, the rows that are open, the clicks and arrow keys, the option watcher, the clock tick and its handle [gap-activity-feed-1019]. |
+| `days.js`       | Groups the rows by Brussels day and builds the day groups: a heading with its count and failures, and the day's rows.                                        |
+| `dom.js`        | The element builder every part of the feed uses: a tag, a class and, when given, its text.                                                                   |
+| `frame.js`      | Builds the fixed frame of a feed (head, body, foot, live line) and the skeleton rows a loading feed shows.                                                   |
+| `options.js`    | What a feed's option attributes say now, read each time so they switch at runtime, and the Brussels day key.                                                 |
+| `render.js`     | Paints a feed from its model: the host's marks, the head, the day list, the plates, the loading card, the foot, and the focus kept by key.                   |
+| `row.js`        | Builds one feed row: the state mark, the title (a plain line, a link or a disclosure button), its detail, its opening lines, who and when.                   |
+| `state.js`      | The counter that gives each feed, and each row that opens, an id of its own.                                                                                 |
+| `words.js`      | The words of a feed: a counted unit, a row's state word and the word for a day.                                                                              |
+
+## js/autosize.js → js/autosize/
+
+The growing text box: it grows with its text, counts, keeps a draft, submits with Mod+Enter and has a loading and an error state. 8 files.
+
+| File            | Does                                                                                                                             |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`        | The calls a page makes on a growing box: attach, get its handle, measure again, set its state.                                   |
+| `constants.js`  | The selector, event, states, fixed numbers and types of the growing text box.                                                    |
+| `controller.js` | One growing text box: its measure (CSS or JS engine), counter, draft, value hook, Mod+Enter, states and handle [kpadopt6-media]. |
+| `counter.js`    | The character and line counter under a box, and the polite line that announces 90 % and 100 % of `maxlength`.                    |
+| `draft.js`      | A draft kept on this device until the form is sent: the storage key, keeping, bringing back and forgetting it.                   |
+| `fit.js`        | Measures how tall a box needs to be: line height and chrome of a computed style, and the exact fit on a hidden twin.             |
+| `state.js`      | The counter that gives each box's error line an id of its own.                                                                   |
+| `status.js`     | The states of a box: `loading` lays the busy card over it inside a frame, `error` writes the sentence in the field's error line. |
+
+## js/countdown.js → js/countdown/
+
+The countdown: a named timer in digits with Start, Pause, Reset, a minute more, an until moment and the clock the visual timer runs on. 9 files.
+
+| File            | Does                                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`        | The calls a page makes on a countdown: attach the timers and get a timer's clock to drive it.                                                     |
+| `clock.js`      | The countdown clock: the time left is the end moment minus now, so nothing drifts, and a timer watches the end for a hidden tab.                  |
+| `constants.js`  | The selector, events, defaults, unit lengths, option attributes and types of the countdown.                                                       |
+| `controller.js` | One countdown: its options, its clock, its digits and controls, the visibility catch-up and the live option watcher [kpadopt4-ideas].             |
+| `digits.js`     | The digit cells: one cell per character, rebuilt only when the format changes, else only the digits that changed are written.                     |
+| `duration.js`   | Pure time text: a length read from "25m" or "1:30:00", and the digits of a time left.                                                             |
+| `parts.js`      | Builds a countdown's fixed elements (name, digits, status line, live line) and its buttons, whose words keep one width.                           |
+| `until.js`      | The `until` option: the moment it names, and the words that label it.                                                                             |
+| `zones.js`      | Time zones for the `until` option: the readers of an IANA zone, wall-clock parts, a wall-clock time as a moment, and the offset a string carries. |
+
+## js/forms.js → js/forms/
+
+Forms without a framework: field messages, the summary, the valid and invalid events, the submit button's busy state, switch words and the form grids. 10 files.
+
+| File                  | Does                                                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`              | The calls a page makes on forms: attach the forms, get a form's handle, and attach the form grids.                                          |
+| `constants.js`        | The selectors, event names, form grid blocks and types of the forms module [TH38].                                                          |
+| `errors.js`           | Showing and clearing a field's message, and naming a field: showError, clearError and nameOf.                                               |
+| `form.js`             | One attached form: validation on blur or input, the summary, the valid and invalid events, and the handle [TH38, KT6, wish-1028].           |
+| `formgrid-columns.js` | Groups side by side: `data-kp-formgrid-wide` on a grid whose groups all fit beside each other [formgrid-columns-1019].                      |
+| `formgrid-stage.js`   | Form grids that share rows: the stage writes `--kp-formgrid-rows`, the row count of its longest card [gapform-1019; HTTPSwitchboard 31].    |
+| `state.js`            | The counter that gives error holders without an id one of their own: no Math.random, so server and client agree.                            |
+| `submit.js`           | A submit button that says it is working: busy on `kp-form-valid`, back on `kp-form-done`, flash buttons keep their own faces [KT6, kyu 45]. |
+| `summary.js`          | The error summary of a form: one line per field (one per radio group), each a link that focuses its field.                                  |
+| `switches.js`         | The two words of a switch: the On and Off beside the track come from the dictionary, not from the server [gap-11, KT5].                     |
+
+## js/auto-refresh.js → js/auto-refresh/
+
+The automatic refresh chooser: an interval picker with a freshness line, back-off retries, Refresh now and the R key. 8 files.
+
+| File            | Does                                                                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `api.js`        | The calls a page makes on a refresh control: attach, get its handle, answer a refresh, set the interval and the title.                                       |
+| `bar.js`        | Builds the fixed parts of a refresh control: the chooser holder, the custom seconds form, the freshness line, the buttons, the run bar and the failure note. |
+| `chooser.js`    | The chooser: segments or a menu, whichever `data-kp-look` names, built, wired, redrawn and filled with the choices.                                          |
+| `constants.js`  | The selector, events, defaults, option attributes, fixed numbers and types of the automatic refresh chooser.                                                 |
+| `controller.js` | One automatic refresh control: the interval, the schedule with its back-off, what makes a refresh wait, and the events [kpadopt5-ops].                       |
+| `labels.js`     | The bar's title and label cells: drawn while `data-kp-refresh-title` and `data-kp-refresh-label` have words [wish-1028, formgrid-notes-1019].                |
+| `region.js`     | What stops a refresh for now, and the `region` mode: fetch the same URL and swap one element's children.                                                     |
+| `words.js`      | The words and numbers of the chooser: the seconds offered, and "Every 30 s", "Every 2 min", "Paused".                                                        |
+
+## js/json-field.js → js/json-field/
+
+The JSON text box: it checks what is typed, marks the line, formats and minifies, and holds the form back while the JSON is broken. 10 files.
+
+| File            | Does                                                                                                                                                  |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`        | The calls a page makes on a JSON field: attach and get a field's handle.                                                                              |
+| `constants.js`  | The selector, events, fixed numbers and types of the JSON text box.                                                                                   |
+| `controller.js` | One JSON text box: its frame and tools, the check (debounced while typing), the gutter, the growing height, the keys and the live options [kpadopt5]. |
+| `explain.js`    | What is wrong with a text as JSON, and where: the engines word it differently.                                                                        |
+| `frame.js`      | Builds a JSON field's frame: the tools, the gutter, the status and help lines, the wrap mirror, and the four tool buttons.                            |
+| `keys.js`       | The keyboard of the field: Esc then Tab leaves it, Tab indents, Shift+Tab takes an indent off, Mod+Shift+F formats.                                   |
+| `layout.js`     | The field's measure: line heights (wrapped lines measured in the mirror), the gutter's numbers and the height the box grows to [kpadopt5-r3].         |
+| `state.js`      | The counter that gives each field without an id its own.                                                                                              |
+| `tools.js`      | The tool buttons: Format, Minify, Wrap and Copy, and the lock that stills them while the field is disabled or read-only.                              |
+| `validation.js` | Checking the text: set the field's state (message, validity, event) and run the check with the page's `kp-json-validate` say.                         |
+
+## js/master-detail.js → js/master-detail/
+
+The master-detail layout: a list and its detail side by side, folding to one pane on a phone, with states, history and a listbox keyboard. 6 files.
+
+| File              | Does                                                                                                                                                                  |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`          | The calls a page makes on a master-detail layout: attach, get its handle, set its state, select, open and close.                                                      |
+| `constants.js`    | The selector, events, default widths, fold points and types of the master-detail layout.                                                                              |
+| `controller.js`   | One master-detail layout: the list as a listbox, the selection, opening and closing the folded detail, history, keys and states [kpadopt5-ops].                       |
+| `detail-state.js` | The detail pane's state: empty, loading, error or ready; its plates, its busy card and the watch that lets a component's own failed plate win [kyugaps-1019, KYU 54]. |
+| `folding.js`      | Folding: the layout's own width decides when the panes fold to one and the aside moves under them, and which pane a phone shows.                                      |
+| `parts.js`        | The layout's panes and the detail's fixed parts: finding a pane, the column list, and the head, Back button, body and state box.                                      |
+
+## js/dated-options.js → js/dated-options/
+
+The dated option picker: a choice where every option has a date and an age, as radio rows or a searchable combobox, with states. 10 files.
+
+| File               | Does                                                                                                                                          |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`           | The calls a page makes on a dated option picker: attach, get its handle, give it options and a state, read its value.                         |
+| `combobox-draw.js` | Draws the options as a searchable combobox: the input, the list of two-line options, the live status and the hidden value.                    |
+| `constants.js`     | The selector, events, states, fixed numbers and types of the dated option picker.                                                             |
+| `controller.js`    | One dated option picker: its options, its choice, its states, radio rows or a combobox, the type-ahead and the page's handle [kpadopt5-time]. |
+| `note.js`          | The note a state stands in for the options with: the empty plate with its reason and action, or the failure alert with Try again.             |
+| `radios.js`        | Draws the options as radio rows: one group, two lines per option and the meta values in one column.                                           |
+| `rows.js`          | What each option says: its name, its age line, the newest, and the meta column and name line that both drawings share.                        |
+| `settings.js`      | What a picker's markup says: its name, kind, order, zone, clock, label and the rows it keeps, read once at attach.                            |
+| `state.js`         | The counter that gives each picker without an id its own.                                                                                     |
+| `time.js`          | Pure helpers: how long ago a moment was, and the order a picker shows its options in.                                                         |
+
+## js/quote.js → js/quote/
+
+The quote card: your own earlier words with who wrote them and when, a Hide with Undo, folding and states, and a list that shows the first few. 8 files.
+
+| File            | Does                                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `actions.js`    | What a press does on a card: say something politely, hide it with an Undo window, copy its words.                   |
+| `api.js`        | The calls a page makes on a quote card: attach, write its words, set its state, and get its handle.                 |
+| `constants.js`  | The selectors, events, states, fixed numbers, watched attributes and types of the quote card.                       |
+| `controller.js` | One quote card: its words, the fold and hide state, its four states, the keys and the attribute watcher [kpadopt6]. |
+| `dom.js`        | Small helpers every part of the quote shares: an element builder and a card's `data-kp-quote-*` attribute.          |
+| `list.js`       | A list of quote cards: the first few shown and a button for the rest ("Show all 7", the exact number).              |
+| `render.js`     | Draws a quote card's parts from its attributes and text, and measures whether a folded quote has more to show.      |
+| `when.js`       | Pure date words of a quote: the whole days between two moments by the Brussels calendar, and the date line.         |

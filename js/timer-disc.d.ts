@@ -8,7 +8,7 @@ export declare const TIMER_DISC_LEFT = "--kp-timer-disc-left";
  */
 export declare function discShare(remainingMs: number, scaleMs: number): number;
 /** The clock of an attached visual timer, to drive it from a script. @param {Element} el */
-export declare const timerDiscOf: (el: Element) => import("./countdown.js").CountdownClock | null;
+export declare const timerDiscOf: (el: Element) => import("./countdown/constants.js").CountdownClock | null;
 /**
  * Wire every visual timer under `root`.
  * @param {ParentNode} [root]
