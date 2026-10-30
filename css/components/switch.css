@@ -103,6 +103,14 @@
         visibility: visible;
     }
 
+    /* No state word, no track [mc-1030, Medicine Cabinet gap 3]: a switch whose state element is empty (or holds only empty words), or that
+       says `data-kp-switch-state="none"`, does not keep the 2rem track, so the knob and its label stand one gap apart. */
+    .kp-switch__state:empty,
+    .kp-switch__state:has(> :is(.kp-switch__on, .kp-switch__off)):not(:has(> :is(.kp-switch__on, .kp-switch__off):not(:empty))),
+    .kp-switch[data-kp-switch-state='none'] .kp-switch__state {
+        display: none;
+    }
+
     .kp-switch:has(:disabled) {
         opacity: var(--kp-field-disabled-opacity, 0.55);
         cursor: not-allowed;

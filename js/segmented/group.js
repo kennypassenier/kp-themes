@@ -6,6 +6,7 @@ import { getSegmentedValues, isAll, isMulti, isTri, itemsOf, triOf } from './rea
 import { layout, reach } from './plate.js';
 import { paint } from './paint.js';
 import { rewriteForMode } from './mode.js';
+import { LINK_ATTRIBUTE, SegmentedLink } from './link.js';
 import { paintTri, setTriValues, writeTri } from './tri.js';
 
 /** Wires one group. Idempotent: `refresh()` brings the group in line again whenever a page touches it. */
@@ -37,6 +38,8 @@ export class SegmentedGroup extends Controller {
                 this.switchMode(was);
             }),
         );
+        // A group tied to a tag input or combobox keeps the two in step.
+        if (group.hasAttribute(LINK_ATTRIBUTE)) this.own(() => attachOne(group, SegmentedLink)?.destroy());
         this.refresh();
     }
 

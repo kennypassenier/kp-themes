@@ -77,7 +77,8 @@ test('the digests are there: a base, one per theme, one per rule and per module,
         `the shared sheets and all ${SHIPPED} registers style the button`,
     );
     assert.match(version.modules['js/datatable.js'].digest, /^[0-9a-f]{16}$/);
-    assert.equal(version.modules['js/datatable.js'].when, '[data-kp-datatable]');
+    // Since mc-1030 the module is also fetched for a table that asks for cards at its own width or has an actions column.
+    assert.equal(version.modules['js/datatable.js'].when, '[data-kp-datatable], [data-kp-cards-at], th[data-kp-col="actions"]');
     assert.match(version.components.datatable.modules, /^[0-9a-f]{16}$/);
     assert.ok(NOT_A_BLOCK_INPUT.has('js/auto.js'));
     // effects.js draws the boot screen, so the family is listed with the

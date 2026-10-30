@@ -1,0 +1,26 @@
+/* @part: page-header-updated: The page header's updated line */
+@layer kp.components {
+    /* --- The page header's updated line [mc-1030, Medicine Cabinet gap 12] ---
+     * `.kp-page-header__updated` right after the title, in the header's left cell: "updated 18:45" (or a `<time class="kp-ago">` that ticks)
+     * stands on the title's baseline, the description under both. It keeps `--kp-page-header-updated-width` (11ch) whatever it says, so
+     * the title never moves when the time does, and it goes under the title when the room runs out. */
+    .kp-page-header__inner > div:has(> .kp-page-header__updated) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-page-header__inner > div:has(> .kp-page-header__updated) > .kp-page-header__description {
+        flex: 1 0 100%;
+    }
+
+    .kp-page-header__updated {
+        min-inline-size: var(--kp-page-header-updated-width, 11ch);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}

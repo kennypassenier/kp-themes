@@ -152,6 +152,7 @@ export { filterActive, boundText, filterPillLabel, readFilterBounds, matchesFilt
 export { syncFixedColumns, watchScrolled, attachGrid } from './datatable/grid.js';
 export { dataTable } from './datatable/instance.js';
 export { attachDataTables } from './datatable/attach.js';
+export { attachCardsAt, attachTableActionColumns, thresholdPx } from './datatable/layout-hooks.js';
 
 /** @typedef {import('./datatable/events.js').Direction} Direction */
 /** @typedef {import('./datatable/events.js').Sort} Sort */

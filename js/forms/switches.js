@@ -29,7 +29,8 @@ export function attachSwitches(root = document, { strings } = {}) {
     /** @type {HTMLElement[]} */
     const filled = [];
     for (const state of root.querySelectorAll(`${SWITCH} ${SWITCH_STATE}`)) {
-        if (!(state instanceof HTMLElement) || state.childNodes.length > 0) continue;
+        // `data-kp-switch-state="none"` is a switch without a state word: nothing is written and the track is not kept.
+        if (!(state instanceof HTMLElement) || state.childNodes.length > 0 || state.closest(SWITCH)?.getAttribute('data-kp-switch-state') === 'none') continue;
         const on = document.createElement('span');
         on.className = 'kp-switch__on';
         on.textContent = s.switchOn;

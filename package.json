@@ -268,6 +268,10 @@
             "types": "./js/runs.d.ts",
             "default": "./js/runs.js"
         },
+        "./js/row-editor": {
+            "types": "./js/row-editor.d.ts",
+            "default": "./js/row-editor.js"
+        },
         "./js/weekdays": {
             "types": "./js/weekdays.d.ts",
             "default": "./js/weekdays.js"

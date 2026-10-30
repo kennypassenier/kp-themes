@@ -1,0 +1,17 @@
+/* @part: attention-more: The attention band's cap */
+@layer kp.components {
+    /* --- The attention band's cap [mc-1030, Medicine Cabinet gap 6] ---
+     * `data-kp-attention-max="3"` (js/attention.js): the worst problems show, the others fold away and one button, last on the band, unfolds
+     * them ("Show 4 more", `aria-expanded`). The fold is `data-kp-folded` on a problem, so the band keeps its order and its focus. */
+    .kp-attention__item[data-kp-folded] {
+        display: none;
+    }
+
+    .kp-attention__more {
+        justify-self: start;
+    }
+
+    .kp-attention__more[hidden] {
+        display: none;
+    }
+}

@@ -2,7 +2,7 @@
 
 import { getStrings } from '../strings.js';
 import { SEGMENTED_EVENT, TRI_STATES } from './constants.js';
-import { getSegmentedTri, getSegmentedValues, groupDisabled, isAll, isMulti, isTri, itemDisabled, labelOf, triOf, valueOf } from './read.js';
+import { getSegmentedTri, getSegmentedValues, groupDisabled, isAll, isMulti, isOptional, isTri, itemDisabled, labelOf, triOf, valueOf } from './read.js';
 import { resetSegmented } from './api.js';
 import { paint } from './paint.js';
 import { paintTri, sayTri, triWords, writeTri } from './tri.js';
@@ -25,7 +25,8 @@ export function turnTri(group, item, state) {
 /** The values on after a press on `item`: a toggle adds or drops the value, a radio takes it alone. @param {Element} group @param {HTMLElement} item @param {string[]} before */
 function nextValues(group, item, before) {
     const value = valueOf(item);
-    if (!isMulti(group)) return [value];
+    // A press on the value already chosen lets it go, in a group that may have none.
+    if (!isMulti(group)) return isOptional(group) && before.includes(value) ? [] : [value];
     if (isAll(item)) return [];
     return before.includes(value) ? before.filter((v) => v !== value) : [...before, value];
 }

@@ -365,11 +365,21 @@
 
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-time__input.kp-field__input {
             padding-inline-start: 2.5rem;
-            text-align: center;
         }
 
-        /* Every one-line field centres what it shows, so a column of fields reads as one centred column. */
-        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) :is(.kp-formgrid__control, .kp-formrow__control) > :is(input.kp-field__input, select.kp-field__input) {
+        /* What a person types, and the placeholder that stands where it will go, starts on the field's start edge [mc-1030, Medicine
+           Cabinet gap 4]: centred, a typed name or a note read as if the caret were in the wrong place, and every app overrode it.
+           A choice the person does not type (a select) keeps the centred look, so a column of choices still reads as a column.
+           `data-kp-formgrid-align="center"` on the grid brings the centred typed text back (js/forms.js, docs/USER_GUIDE.md). */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) :is(.kp-formgrid__control, .kp-formrow__control) > select.kp-field__input {
+            text-align: center;
+            text-align-last: center;
+        }
+
+        .kp-formgrid[data-kp-formgrid-align='center']:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__control, .kp-formrow__control)
+            > input.kp-field__input,
+        .kp-formgrid[data-kp-formgrid-align='center']:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-time__input.kp-field__input {
             text-align: center;
             text-align-last: center;
         }

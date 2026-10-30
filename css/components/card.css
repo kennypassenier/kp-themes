@@ -23,6 +23,12 @@
         color: var(--muted-foreground);
     }
 
+    /* A form grid under the card's title or sentence has air above its first row [mc-1030, Medicine Cabinet gap 10]; without it the first
+       label stood directly under the description. `--kp-card-form-gap` (the medium space) sets it. */
+    :is(.kp-card__header, .kp-card__title, .kp-card__body) + :is(.kp-formgrid, form:has(> .kp-formgrid:first-child)) {
+        margin-block-start: var(--kp-card-form-gap, var(--kp-space-md, 0.75rem));
+    }
+
     /* The card's header row, actions and footer [KT6]: slots that were a
  * fixed <h3> and a body div. */
     .kp-card__header {

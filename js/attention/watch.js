@@ -1,8 +1,9 @@
 // The watch on a root: it sorts the bands under it, keeps each sorted as its items change, and takes up bands that arrive later.
 
-import { Controller } from '../controller.js';
+import { Controller, attachOne, controllerOf } from '../controller.js';
 import { ATTENTION } from './values.js';
 import { sortAttention } from './set.js';
+import { AttentionMax } from './max.js';
 
 /** What a band's own watcher listens for. */
 const BAND_OPTIONS = { childList: true, subtree: true, attributes: true, attributeFilter: ['data-kp-severity'] };
@@ -31,7 +32,10 @@ export class AttentionWatch extends Controller {
             return;
         }
         this.own(() => {
-            for (const watcher of this.watchers.values()) watcher.disconnect();
+            for (const [band, watcher] of this.watchers) {
+                watcher.disconnect();
+                controllerOf(/** @type {HTMLElement} */ (band), AttentionMax)?.destroy();
+            }
             this.watchers.clear();
         });
         for (const band of this.bandsIn(this.scope)) this.watch(band);
@@ -49,6 +53,8 @@ export class AttentionWatch extends Controller {
         const view = this.view;
         if (!view || this.watchers.has(band)) return;
         sortAttention(band);
+        // The cap (`data-kp-attention-max`) is a controller of the band of its own; without the attribute it does nothing.
+        attachOne(/** @type {HTMLElement} */ (band), AttentionMax);
         const watcher = new view.MutationObserver(() => {
             watcher.disconnect();
             sortAttention(band);
@@ -75,6 +81,7 @@ export class AttentionWatch extends Controller {
             if (!band.isConnected) {
                 watcher.disconnect();
                 this.watchers.delete(band);
+                controllerOf(/** @type {HTMLElement} */ (band), AttentionMax)?.destroy();
             }
     }
 }

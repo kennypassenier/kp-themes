@@ -38,13 +38,17 @@ let dialogSeq = 0;
  * (`data-kp-confirm-label`), else the button's own words. A blocked removal
  * shows no field: there is nothing to confirm.
  *
+ * Rich content [mc-1030]: `description` may be a node or a list of nodes (several paragraphs, a list) in place of the dictionary's sentence,
+ * and `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive (take a dose anyway, add stock).
+ * `className: 'kp-dialog--wide'` gives it a wider step; the default is the narrow question width.
+ *
  * @param {HTMLElement} button the control the confirmation belongs to
- * @param {{ phrase?: string, strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string }} [options]
+ * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string }} [options]
  * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]
  */
 export function openConfirmation(
     button,
-    { phrase, strings, onAccept, onCancel, className = '', initialFocus = 'cancel', dependents, blocked, typeName, anyCase, loses, acceptLabel } = {},
+    { phrase, description: richText, acceptLook = 'destructive', strings, onAccept, onCancel, className = '', initialFocus = 'cancel', dependents, blocked, typeName, anyCase, loses, acceptLabel } = {},
 ) {
     const s = { ...getStrings(), ...strings };
     const text = phrase ?? button.getAttribute('data-kp-confirm') ?? s.confirm;
@@ -86,10 +90,12 @@ export function openConfirmation(
     title.id = `${id}-phrase`;
     title.textContent = text;
 
-    const description = document.createElement('p');
+    const rich = richText !== undefined && typeof richText !== 'string';
+    const description = document.createElement(rich ? 'div' : 'p');
     description.className = 'kp-dialog__description';
     description.id = `${id}-description`;
-    description.textContent = stop ?? s.confirmDescription;
+    if (stop === null && rich) description.append(...(Array.isArray(richText) ? richText : [richText]));
+    else description.textContent = stop ?? (typeof richText === 'string' ? richText : s.confirmDescription);
 
     const cancel = document.createElement('button');
     cancel.type = 'button';
@@ -100,9 +106,9 @@ export function openConfirmation(
 
     const accept = document.createElement('button');
     accept.type = 'button';
-    accept.className = 'kp-button kp-button--destructive';
+    accept.className = acceptLook === 'primary' ? 'kp-button kp-button--primary' : 'kp-button kp-button--destructive';
     accept.setAttribute('data-kp-confirm-accept', '');
-    accept.textContent = s.confirmAccept;
+    accept.textContent = acceptLabel ?? s.confirmAccept;
     accept.addEventListener('click', () => {
         if (!accept.disabled) dialog.close('accept');
     });

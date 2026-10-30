@@ -1,0 +1,20 @@
+/* @part: dialog-widths: Dialog width steps */
+@layer kp.components {
+    /* --- Dialog width steps [mc-1030, Medicine Cabinet gaps 9 and 19] ---
+     * A dialog is as wide as its longest line unless it takes a step: `kp-dialog--narrow` is a question's width (26rem) held whatever the
+     * content, `kp-dialog--wide` (the section dialog's 42rem) and `kp-dialog--wider` (52rem) are for a dialog that holds a table. All stop
+     * 1rem short of the window on each side, so a phone never has content on the edge. A confirmation (`.kp-confirm`) is narrow by default.
+     * Knobs [KT6]: `--kp-dialog-narrow` (26rem), `--kp-dialog-wide` (42rem), `--kp-dialog-wider` (52rem). */
+    .kp-dialog--narrow,
+    .kp-confirm:not(.kp-dialog--wide, .kp-dialog--wider) {
+        --kp-dialog-max-width: min(var(--kp-dialog-narrow, 26rem), calc(100vw - 2rem));
+        inline-size: var(--kp-dialog-max-width);
+        box-sizing: border-box;
+    }
+
+    .kp-dialog--wider {
+        --kp-dialog-max-width: min(var(--kp-dialog-wider, 52rem), calc(100vw - 2rem));
+        inline-size: var(--kp-dialog-max-width);
+        box-sizing: border-box;
+    }
+}

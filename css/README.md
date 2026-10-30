@@ -100,7 +100,7 @@ concatenates that file into `css/themes.css`.
 | `flash-button.css`              | The flash button                                                                 |
 | `focus-steps.css`               | One step at a time                                                               |
 | `form-field.css`                | Form field                                                                       |
-| `form-grid/`                    | Form grid (2 parts)                                                              |
+| `form-grid/`                    | Form grid (3 parts)                                                              |
 | `form-rows.css`                 | Form rows                                                                        |
 | `forms.css`                     | Forms                                                                            |
 | `freshness-line.css`            | Freshness line                                                                   |
@@ -160,6 +160,14 @@ concatenates that file into `css/themes.css`.
 | `segmented-toolbar/`            | Segmented control, filter chips, list toolbar, key line (2 parts)                |
 | `sentence-form.css`             | Sentence form                                                                    |
 | `sequencer.css`                 | The editable timeline                                                            |
+| `attention-more.css`            | The attention band's cap                                                         |
+| `badge-run.css`                 | A run of badges that wraps                                                       |
+| `datatable-columns.css`         | A table's actions column and card threshold                                      |
+| `dialog-widths.css`             | Dialog width steps                                                               |
+| `list-row.css`                  | A list of rows with columns that continue                                        |
+| `page-header-updated.css`       | The page header's updated line                                                   |
+| `quantity-fill.css`             | A quantity that fills its cell                                                   |
+| `row-editor.css`                | The repeating row editor                                                         |
 | `share-bar.css`                 | Share bar                                                                        |
 | `shortcut-engine.css`           | The shortcut engine's parts                                                      |
 | `showing-data.css`              | Showing data                                                                     |

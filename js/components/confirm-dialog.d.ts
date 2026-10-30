@@ -32,12 +32,18 @@
  * (`data-kp-confirm-label`), else the button's own words. A blocked removal
  * shows no field: there is nothing to confirm.
  *
+ * Rich content [mc-1030]: `description` may be a node or a list of nodes (several paragraphs, a list) in place of the dictionary's sentence,
+ * and `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive (take a dose anyway, add stock).
+ * `className: 'kp-dialog--wide'` gives it a wider step; the default is the narrow question width.
+ *
  * @param {HTMLElement} button the control the confirmation belongs to
- * @param {{ phrase?: string, strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string }} [options]
+ * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string }} [options]
  * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]
  */
-export declare function openConfirmation(button: HTMLElement, { phrase, strings, onAccept, onCancel, className, initialFocus, dependents, blocked, typeName, anyCase, loses, acceptLabel }?: {
+export declare function openConfirmation(button: HTMLElement, { phrase, description: richText, acceptLook, strings, onAccept, onCancel, className, initialFocus, dependents, blocked, typeName, anyCase, loses, acceptLabel }?: {
     phrase?: string;
+    description?: Node | readonly Node[] | string;
+    acceptLook?: 'destructive' | 'primary';
     strings?: Partial<import('../strings.js').Strings>;
     onAccept?: () => void;
     onCancel?: () => void;

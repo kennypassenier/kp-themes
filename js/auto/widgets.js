@@ -115,6 +115,7 @@ export const WIDGET_NEEDS = [
     },
     { name: 'snooze', when: '[data-kp-snooze]', load: () => import('../snooze.js'), attach: (m, root) => [m.attachSnoozes(root)] },
     { name: 'runs', when: '[data-kp-runs]', load: () => import('../runs.js'), attach: (m, root) => [m.attachRuns(root)] },
+    { name: 'row-editor', when: '[data-kp-rows]', load: () => import('../row-editor.js'), attach: (m, root) => [m.attachRowEditors(root)] },
     { name: 'weekdays', when: '[data-kp-weekdays]', load: () => import('../weekdays.js'), attach: (m, root) => [m.attachWeekdays(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('../graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {

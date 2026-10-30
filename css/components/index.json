@@ -304,6 +304,33 @@
     },
     {
       "file": "sequencer.css"
+    },
+    {
+      "file": "list-row.css"
+    },
+    {
+      "file": "quantity-fill.css"
+    },
+    {
+      "file": "badge-run.css"
+    },
+    {
+      "file": "attention-more.css"
+    },
+    {
+      "file": "dialog-widths.css"
+    },
+    {
+      "file": "datatable-columns.css"
+    },
+    {
+      "file": "page-header-updated.css"
+    },
+    {
+      "file": "row-editor.css"
+    },
+    {
+      "file": "form-grid/reserved-error-line.css"
     }
   ]
 }

@@ -1,0 +1,51 @@
+/* @part: datatable-columns: A table's actions column and card threshold */
+@layer kp.components {
+    /* --- The actions column and the card threshold [mc-1030, Medicine Cabinet gaps 17 and 18] ---
+     * `data-kp-cards-at="30rem"` on a table (js/datatable.js): it stays a table until its own width is under that, instead of the 40rem the
+     * cards answer to; it can lower the width, not raise it. While the table is wider, the script marks it `data-kp-cards-idle` and the table
+     * stops being the container the card rules ask, so they do not apply.
+     * `data-kp-col="actions"` on a header: the column is a fixed track as wide as its buttons (`white-space: nowrap`), never wrapping, and
+     * the cells under it are marked alike. In a card the label of that cell is hidden and its buttons stand in a row across the card.
+     * Put the buttons in `.kp-table__actions`: a row of equal columns, so Edit and Delete have one width in every row. */
+    .kp-datatable[data-kp-cards-idle],
+    .kp-datatable[data-kp-cards-idle] .kp-table-wrap {
+        container-name: kp-table-idle;
+    }
+
+    .kp-table :is(th, td)[data-kp-col='actions'] {
+        inline-size: var(--kp-actions-width, 1%);
+        white-space: nowrap;
+    }
+
+    .kp-table__actions {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(var(--kp-actions-button, 5rem), 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        justify-content: end;
+    }
+
+    @container kp-table (max-width: 40rem) {
+        .kp-table td[data-kp-col='actions'] {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: auto;
+            white-space: normal;
+        }
+
+        .kp-table td[data-kp-col='actions']::before {
+            display: none;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td[data-kp-col='actions'] {
+            display: flex;
+            grid-column: 1 / -1;
+        }
+
+        .kp-table td[data-kp-col='actions'] > .kp-table__actions {
+            flex: 1 1 100%;
+            grid-auto-columns: 1fr;
+            justify-content: stretch;
+        }
+    }
+}

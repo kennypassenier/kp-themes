@@ -150,6 +150,7 @@ js/flash.js                a button that shows its result for a moment, at one w
 js/focus-steps.js          one step at a time, large, with the screen kept on
 js/gallery.js              a grid of pictures that open large in the viewer shell
 js/gantt.js                a run timeline: one bar per run, running bars growing live
+js/row-editor.js       the repeating row editor: rows of the package's own controls added and removed, one head row [mc-1030]
 js/sequencer.js        an editable timeline: lanes of bars moved, resized and linked by pointer or keyboard [timeline-1029]
 js/heat.js                 the heat grid and the matrix
 js/hovercard.js            one tooltip for a whole page, filled when it opens

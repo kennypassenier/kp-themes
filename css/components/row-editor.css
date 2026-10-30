@@ -1,0 +1,108 @@
+/* @part: row-editor: The repeating row editor */
+@layer kp.components {
+    /* --- The repeating row editor [mc-1030, Medicine Cabinet gap 5] (js/row-editor.js) ---
+     * The labels stand once in a head row; every row is a subgrid of the same tracks, so the time, the days and the dose of all rows line up,
+     * and the remove button is the last track. Under 40rem the head goes and each cell carries its own label (its `data-label`), the row is
+     * a card. The empty plate (`.kp-rows__empty`) keeps the room of three rows. Knobs [KT6]: `--kp-rows-tracks` (the column tracks, remove
+     * included), `--kp-rows-empty-min` (the plate's least height, 9rem). */
+    .kp-rows {
+        container: kp-rows / inline-size;
+        display: grid;
+        grid-template-columns: var(--kp-rows-tracks, minmax(8rem, 1fr) minmax(0, 3fr) minmax(10rem, 1.2fr) auto);
+        column-gap: var(--kp-space-md, 0.75rem);
+        row-gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-rows > * {
+        grid-column: 1 / -1;
+    }
+
+    .kp-rows__head,
+    .kp-rows__list,
+    .kp-rows__row {
+        display: grid;
+        grid-template-columns: subgrid;
+    }
+
+    .kp-rows__list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-rows__row {
+        grid-column: 1 / -1;
+        align-items: start;
+    }
+
+    .kp-rows__label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-rows__cell {
+        min-inline-size: 0;
+    }
+
+    .kp-rows__remove {
+        align-self: start;
+        min-inline-size: var(--kp-control-height, 2.25rem);
+        justify-content: center;
+    }
+
+    .kp-rows [aria-disabled='true'] {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .kp-rows__foot,
+    .kp-rows > [data-kp-rows-add] {
+        justify-self: start;
+    }
+
+    .kp-rows__status {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-rows__empty {
+        min-block-size: var(--kp-rows-empty-min, 9rem);
+    }
+
+    @container kp-rows (max-width: 40rem) {
+        .kp-rows__head {
+            display: none;
+        }
+
+        .kp-rows__row {
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: var(--kp-space-sm, 0.5rem);
+            padding: var(--kp-space-sm, 0.5rem);
+            border: 1px solid var(--border);
+            border-radius: var(--radius, 0.5rem);
+        }
+
+        .kp-rows__cell {
+            grid-column: 1 / -1;
+            display: grid;
+            gap: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-rows__cell::before {
+            content: attr(data-label);
+            color: var(--muted-foreground);
+            font-size: var(--kp-text-sm, 0.8125rem);
+            font-weight: 600;
+        }
+
+        .kp-rows__remove {
+            grid-column: 2;
+            justify-self: end;
+        }
+    }
+}

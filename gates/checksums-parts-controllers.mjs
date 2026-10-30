@@ -23,6 +23,7 @@ export const CONTROLLER_PART_FILES = [
     'js/alarm/trigger.js',
     'js/alarm/values.js',
     'js/attention/item.js',
+    'js/attention/max.js',
     'js/attention/set.js',
     'js/attention/values.js',
     'js/attention/watch.js',

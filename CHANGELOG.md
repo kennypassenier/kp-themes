@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Added: a list of rows with columns that continue** [mc-1030, Medicine Cabinet 1]. `.kp-list` with `.kp-listrow` (identity, status, stepper, switch): one grid of named columns, every row a subgrid, a card under 40rem of the list's width.
+- **Added: `data-kp-quantity-fill`** [mc-1030, Medicine Cabinet 2]. The number track of a `.kp-quantity` is `1fr`; the unit never breaks inside a word.
+- **Added: a repeating row editor** [mc-1030, Medicine Cabinet 5]. `js/row-editor.js` (`data-kp-rows`, `attachRowEditors`, `addEditorRow`, `removeEditorRow`, `editorRowsOf`): add and remove rows of the package's own controls, one head row, min and max with the reason said, the empty plate.
+- **Added: `data-kp-attention-max`** [mc-1030, Medicine Cabinet 6]. The attention band shows its worst N problems and folds the rest behind "Show N more" (`aria-expanded`, event `kp-attention-toggle`); 6 words in the dictionary.
+- **Added: `.kp-badges`** [mc-1030, Medicine Cabinet 7]. Several badges in one cell wrap as a grid.
+- **Added: dialog width steps and a rich confirmation** [mc-1030, Medicine Cabinet 8, 9, 19]. `kp-dialog--narrow`, `kp-dialog--wider` (and the existing `--wide`); a `.kp-confirm` is narrow by default; `openConfirmation` takes `description` as a node or nodes, `acceptLook: 'primary'` and `acceptLabel`.
+- **Added: a table's `data-kp-cards-at` and `data-kp-col="actions"`** [mc-1030, Medicine Cabinet 17, 18]. A table can turn into cards at a width under 40rem; an actions column is a fixed track whose label is hidden in a card.
+- **Added: `data-kp-segmented="single-or-none"` and `data-kp-segmented-for`** [mc-1030, Medicine Cabinet 11, 14, 16]. A chip group in which nothing chosen is valid, and a link that keeps chips and a tag input or combobox in step.
+- **Changed (every consumer): typed text in a form grid starts at the start edge** [mc-1030, Medicine Cabinet 4]. It was centred; `data-kp-formgrid-align="center"` brings it back; a select stays centred.
+- **Fixed: a card's form grid has air under the title or sentence** [mc-1030, Medicine Cabinet 10]. `--kp-card-form-gap`.
+- **Changed (every consumer): a form grid keeps room for a field's error line** [mc-1030, Medicine Cabinet 15]. Showing the error on blur moves nothing; `data-kp-formgrid-errors="flow"` gives the old behaviour.
+- **Fixed: a switch with no state word keeps no track** [mc-1030, Medicine Cabinet 3]. An empty state word, or `data-kp-switch-state="none"`, takes no room.
+- **Added: the page header's updated line** [mc-1030, Medicine Cabinet 12]. `.kp-page-header__updated` right after the title.
+
 ## 11.3.0 — 2026-10-29
 
 Released on Kenny's go (2026-10-29 17:50, release form: "release-go: Go", "release-shots: Zonder afdrukken", "charts-speed: Meenemen", "components-page: Nu bijwerken"): the package faults the end products found on 11.2.0 (CYCLE-1026), full width for the form grid, page-header description, lede and progress bar, a cheaper data-table teardown and faster chart drawing, the 11 wishes Kenny chose (research/wishes-1028, 11 of 11 approved), the new editable multi-track timeline `.kp-sequencer` for Kitchen (research/timeline-1029, 9 of 9 approved), and the components pages brought up to date. Behaviour changes consumers notice: a valid form no longer also submits natively; the gantt keeps a minimum width and scrolls on a phone; the parts named above fill their column. Screenshot check skipped as for 11.2.0.

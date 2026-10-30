@@ -1,0 +1,13 @@
+/* @part: form-grid: The error line a form grid reserves */
+@layer kp.components {
+    /* --- The reserved error line [mc-1030, Medicine Cabinet gap 15] ---
+     * A field's error was `hidden` until the field was left empty and then grew the row by a line, so a press on whatever stood under the
+     * field landed on the moving layout instead of its target. In a form grid the error line now keeps its room while it says nothing
+     * (invisible, out of the accessibility tree), so showing it moves nothing. `data-kp-formgrid-errors="flow"` on the grid gives the earlier
+     * behaviour back: the line takes room only while it has words. */
+    .kp-formgrid:not([data-kp-formgrid-errors='flow']) .kp-field__error[hidden] {
+        display: block;
+        visibility: hidden;
+        min-block-size: 1lh;
+    }
+}

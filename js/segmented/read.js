@@ -10,6 +10,9 @@ export const isMulti = (group) => group.getAttribute('data-kp-segmented') === 'm
 /** @param {Element} group */
 export const isTri = (group) => group.getAttribute('data-kp-segmented') === 'tri';
 
+/** A single group in which the chosen value can be let go again (`data-kp-segmented="single-or-none"`): nothing chosen is a valid answer. @param {Element} group */
+export const isOptional = (group) => group.getAttribute('data-kp-segmented') === 'single-or-none';
+
 /** @param {Element} item @returns {'any' | 'include' | 'exclude'} */
 export const triOf = (item) => {
     const state = item.getAttribute(TRI_ATTRIBUTE);

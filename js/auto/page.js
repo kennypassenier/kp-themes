@@ -44,7 +44,12 @@ export const PAGE_NEEDS = [
         load: () => import('../palette.js'),
         attach: (m, root) => [m.attachPalettes(root)],
     },
-    { name: 'datatable', when: '[data-kp-datatable]', load: () => import('../datatable.js'), attach: (m, root) => [m.attachDataTables(root)] },
+    {
+        name: 'datatable',
+        when: '[data-kp-datatable], [data-kp-cards-at], th[data-kp-col="actions"]',
+        load: () => import('../datatable.js'),
+        attach: (m, root) => [m.attachDataTables(root), m.attachCardsAt(root), m.attachTableActionColumns(root)],
+    },
     { name: 'tables', when: '.kp-table-wrap', load: () => import('../tables.js'), attach: (m, root) => [m.attachTableRegions(root)] },
     {
         name: 'forms',

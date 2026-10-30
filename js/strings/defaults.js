@@ -26,6 +26,7 @@ import { QUOTE_STATUS_CALM_STRINGS } from './quote-status-calm.js';
 import { FOCUS_STRINGS } from './focus.js';
 import { USUAL_LOGVIEWER_STRINGS } from './usual-logviewer.js';
 import { FEED_SEQUENCER_STRINGS } from './feed-sequencer.js';
+import { ROWS_ATTENTION_STRINGS } from './rows-attention.js';
 /** @typedef {import('./types.js').Strings} Strings */
 
 /**
@@ -63,4 +64,5 @@ export const DEFAULT_STRINGS = Object.freeze({
     ...FOCUS_STRINGS,
     ...USUAL_LOGVIEWER_STRINGS,
     ...FEED_SEQUENCER_STRINGS,
+    ...ROWS_ATTENTION_STRINGS,
 });

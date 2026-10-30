@@ -5,6 +5,7 @@ export { filterActive, boundText, filterPillLabel, readFilterBounds, matchesFilt
 export { syncFixedColumns, watchScrolled, attachGrid } from './datatable/grid.js';
 export { dataTable } from './datatable/instance.js';
 export { attachDataTables } from './datatable/attach.js';
+export { attachCardsAt, attachTableActionColumns, thresholdPx } from './datatable/layout-hooks.js';
 export type Direction = import('./datatable/events.js').Direction;
 export type Sort = import('./datatable/events.js').Sort;
 export type SortKey = import('./datatable/events.js').SortKey;

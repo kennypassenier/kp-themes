@@ -26,6 +26,7 @@
 /** @typedef {import('./focus.js').FocusStrings} FocusStrings */
 /** @typedef {import('./usual-logviewer.js').UsualLogviewerStrings} UsualLogviewerStrings */
 /** @typedef {import('./feed-sequencer.js').FeedSequencerStrings} FeedSequencerStrings */
+/** @typedef {import('./rows-attention.js').RowsAttentionStrings} RowsAttentionStrings */
 
 /**
  * Every user-visible string the package can produce, by key.
@@ -56,7 +57,8 @@
  *     QuoteStatusCalmStrings &
  *     FocusStrings &
  *     UsualLogviewerStrings &
- *     FeedSequencerStrings} Strings
+ *     FeedSequencerStrings &
+ *     RowsAttentionStrings} Strings
  */
 
 export {};

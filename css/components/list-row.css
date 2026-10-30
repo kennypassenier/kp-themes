@@ -1,0 +1,103 @@
+/* @part: list-row: A list of rows with columns that continue */
+@layer kp.components {
+    /* --- A list of rows [mc-1030, Medicine Cabinet gap 1] ---
+     * Not a table: one row holds an identity block, a status column, a stepper and a switch, and the status can hold several badges. The
+     * list is ONE grid of named columns and every row is a subgrid of it, so the identity, the status, the stepper and the switch of all rows
+     * stand on four edges that run down the list whatever each holds. A row that has no status simply leaves its column empty. Under 40rem of
+     * the list's own width a row is a card: the identity and the status on full lines, the stepper beside the switch. Loading, empty and
+     * failed are the card's (`.kp-card[data-kp-state]`, js/card-state.js): put the list in the card's data and the states fill its footprint.
+     * Knobs [KT6]: `--kp-list-tracks` (the four column tracks), `--kp-list-stepper-min` (11rem, the room a stepper fills), `--kp-list-row-pad`
+     * (the row's block padding), `--kp-list-gap` (the room between columns). */
+    .kp-list {
+        container: kp-list / inline-size;
+        display: grid;
+        grid-template-columns: var(
+            --kp-list-tracks,
+            [identity] minmax(0, 2.2fr) [status] minmax(0, 1.4fr) [stepper] minmax(var(--kp-list-stepper-min, 11rem), 1fr) [switch] auto
+        );
+        column-gap: var(--kp-list-gap, var(--kp-space-lg, 1.5rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-listrow {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        padding: var(--kp-list-row-pad, var(--kp-space-sm, 0.5rem)) var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-listrow:first-child {
+        border-block-start: 0;
+    }
+
+    .kp-listrow__identity {
+        grid-column: identity;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-listrow__name {
+        font-weight: 600;
+        overflow-wrap: break-word;
+    }
+
+    .kp-listrow__meta {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: break-word;
+    }
+
+    .kp-listrow__status {
+        grid-column: status;
+        min-inline-size: 0;
+    }
+
+    .kp-listrow__stepper {
+        grid-column: stepper;
+        min-inline-size: 0;
+    }
+
+    .kp-listrow__switch {
+        grid-column: switch;
+        justify-self: end;
+    }
+
+    /* A row that is off (an inactive medicine) quiets what it says, not its controls. */
+    .kp-listrow--muted > :is(.kp-listrow__identity, .kp-listrow__status) {
+        opacity: 0.6;
+    }
+
+    /* The phone card: the identity and the status each on a line, the stepper filling the line beside the switch. */
+    @container kp-list (max-width: 40rem) {
+        .kp-listrow {
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        }
+
+        .kp-listrow__identity,
+        .kp-listrow__status {
+            grid-column: 1 / -1;
+        }
+
+        .kp-listrow__stepper {
+            grid-column: 1;
+        }
+
+        .kp-listrow__switch {
+            grid-column: 2;
+        }
+
+        .kp-listrow__status:empty {
+            display: none;
+        }
+    }
+}

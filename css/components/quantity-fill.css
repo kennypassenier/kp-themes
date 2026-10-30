@@ -1,0 +1,33 @@
+/* @part: quantity-fill: A quantity that fills its cell */
+@layer kp.components {
+    /* --- A quantity that fills its cell [mc-1030, Medicine Cabinet gap 2] ---
+     * `data-kp-quantity-fill` on a `.kp-quantity` makes the number track `1fr`: the minus and plus keep their size, the field takes the rest of
+     * the cell, so steppers in a column end on one edge whatever their numbers. The unit keeps the width of its longest form and never breaks
+     * inside a word (it used to wrap per letter in a narrow cell); the number gives way first, down to `--kp-quantity-min-chars` (3ch). */
+    .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        justify-self: stretch;
+        inline-size: 100%;
+        max-inline-size: none;
+    }
+
+    .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) .kp-quantity__field {
+        display: grid;
+        grid-template-columns: minmax(var(--kp-quantity-min-chars, 3ch), 1fr) auto;
+        min-inline-size: 0;
+    }
+
+    .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) .kp-quantity__input {
+        inline-size: auto;
+        min-inline-size: 0;
+    }
+
+    .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) .kp-quantity__unit {
+        min-inline-size: max-content;
+        max-inline-size: none;
+        overflow: visible;
+        overflow-wrap: normal;
+        white-space: nowrap;
+    }
+}

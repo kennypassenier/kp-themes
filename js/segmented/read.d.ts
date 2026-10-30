@@ -4,6 +4,8 @@ export type TriValues = import('./constants.js').TriValues;
 export declare const isMulti: (group: Element) => boolean;
 /** @param {Element} group */
 export declare const isTri: (group: Element) => boolean;
+/** A single group in which the chosen value can be let go again (`data-kp-segmented="single-or-none"`): nothing chosen is a valid answer. @param {Element} group */
+export declare const isOptional: (group: Element) => boolean;
 /** @param {Element} item @returns {'any' | 'include' | 'exclude'} */
 export declare const triOf: (item: Element) => 'any' | 'include' | 'exclude';
 /** @param {Element} group @returns {HTMLElement[]} */

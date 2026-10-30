@@ -12,6 +12,17 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- **mc-1030, Medicine Cabinet package (demo research/medicine-1030, formal)**; each line gets its example and option row once Kenny approves the demo:
+  - new component `.kp-list` / `.kp-listrow` (`__identity`, `__name`, `__meta`, `__status`, `__stepper`, `__switch`, `--muted`), knobs `--kp-list-tracks`... `--kp-list-stepper-min`, `--kp-list-row-pad`, `--kp-list-gap` (css/components/list-row.css).
+  - option `data-kp-quantity-fill` on `.kp-quantity`, knob `--kp-quantity-min-chars`.
+  - new component `.kp-rows` row editor (js/row-editor.js: `data-kp-rows`, `-min`, `-max`, `-unit`, `-attach`, `-list`, `-template`, `-add`, `-remove`, events `kp-rows-add`, `kp-rows-remove`, `kp-rows-change`, calls `addEditorRow`, `removeEditorRow`, `editorRowsOf`), knobs `--kp-rows-tracks`, `--kp-rows-empty-min`.
+  - option `data-kp-attention-max` on `.kp-attention` (the toggle `.kp-attention__more`, event `kp-attention-toggle`, `data-kp-folded`).
+  - new utility `.kp-badges` (knob `--kp-badges-min`).
+  - dialog width steps `kp-dialog--narrow`, `kp-dialog--wider` (knobs `--kp-dialog-narrow`, `--kp-dialog-wider`); `openConfirmation` options `description` (a node or nodes) and `acceptLook: 'primary'`, `acceptLabel` for a plain confirmation.
+  - datatable: `data-kp-cards-at`, `data-kp-col="actions"`, `.kp-table__actions`, knobs `--kp-actions-width`, `--kp-actions-button`; `attachCardsAt`, `attachTableActionColumns`.
+  - segmented: `data-kp-segmented="single-or-none"` and `data-kp-segmented-for="<combobox id>"`.
+  - fixes with options: `data-kp-formgrid-align="center"` (typed text starts at the start edge now), `data-kp-formgrid-errors="flow"` (the error line is reserved now), `--kp-card-form-gap`, `data-kp-switch-state="none"` (and an empty state word takes no track), `.kp-page-header__updated` (knob `--kp-page-header-updated-width`).
+
 (Nothing waits. The pass of 2026-10-29, on Kenny's go "components-page: Nu bijwerken", brought every line onto its page, with the new pages
 sequencer, formgrid and state-plate. Shown as text and option rows only, without a live example, because the page cannot show them or they
 are a script call or a register-level fact: the script calls `getSteps`, `columnIndex` and `watchOptions`, the `configureUnsaved` storage, the

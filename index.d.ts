@@ -23,7 +23,7 @@ export { CHOOSE_EVENT as LISTBOX_CHOOSE_EVENT, HIGHLIGHT_EVENT as LISTBOX_HIGHLI
 export { CommandPalette, PaletteTrigger, ShortcutSheet } from './components/palette.jsx';
 export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';
 export { default as DataTable } from './components/datatable.jsx';
-export { PAGE_SIZE, REORDER_EVENT as DATATABLE_REORDER_EVENT, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
+export { PAGE_SIZE, REORDER_EVENT as DATATABLE_REORDER_EVENT, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachCardsAt, attachDataTables, attachTableActionColumns } from './js/datatable.js';
 export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms, attachSwitches, attachFormgridStages } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
@@ -73,6 +73,7 @@ export { DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, attachDatedOptions
 export { SNOOZE, SNOOZE_CHOICES, SNOOZE_END_EVENT, SNOOZE_EVENT, attachSnoozes, dayAt, openSnoozePanel, registerSnoozeWords, setSnoozeBusy, setSnoozedUntil, snooze, snoozeChoices, snoozeWords, } from './js/snooze.js';
 export { RUNS, RUNS_RETRY_EVENT, RUNS_STATES, attachRuns, clockShift, runMoment, runs, runsRelative, setRuns, setRunsState, zoneOffset, } from './js/runs.js';
 export { WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, attachWeekdays, dayNames, dayNumber, joinWords, monthSummary, setWeekdays, weekdaySummary, weekdays, weekdaysOf, } from './js/weekdays.js';
+export { ROWS as ROW_EDITOR, addEditorRow, attachRowEditors, editorRowsOf, removeEditorRow } from './js/row-editor.js';
 export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
 export { FEED, FEED_EARLIER, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_RELATIVE_MS, FEED_RETRY_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_TICK_MS, FEED_TIME_ZONE, attachFeeds, feedOf, setFeed } from './js/feed.js';
 export { NOTICES, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_RETRY_EVENT, NOTICES_SOURCE_EVENT, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICE_SEVERITIES, attachNotices, noticesOf, setNotices } from './js/notices.js';

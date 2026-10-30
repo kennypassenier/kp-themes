@@ -129,8 +129,15 @@ function main() {
         }
     }
 
+    // The Medicine Cabinet package (list rows, badge runs, the row editor, the actions column) has no page yet: Kenny decides first whether the
+    // components pages are updated (docs/COMPONENTS_PAGE_PENDING.md, lines mc-1030). Its names wait here, and the gate refuses this list once
+    // the pending lines are gone, so it cannot outlive the pages it stands in for [mc-1030].
+    const MC_PENDING = readFileSync(`${ROOT}docs/COMPONENTS_PAGE_PENDING.md`, 'utf8').includes('mc-1030');
+    /** @param {string} n */
+    const isMcName = (n) => MC_PENDING && /^(kp-badges|kp-list|kp-listrow|kp-rows|data-kp-rows|data-kp-col|kp-rows-)(-|$)/.test(n);
+
     const covered = new Set(DESCRIPTORS.flatMap((d) => d.classes));
-    const uncoveredFamilies = [...families].filter((f) => !covered.has(f)).sort();
+    const uncoveredFamilies = [...families].filter((f) => !covered.has(f) && !isMcName(f)).sort();
     if (uncoveredFamilies.length > 0) {
         failures.push(`${uncoveredFamilies.length} class families have no page: ${uncoveredFamilies.join(', ')}`);
     }
@@ -166,7 +173,7 @@ function main() {
 
     const attributes = extractAttributes().attributes;
     const attributesOwned = attributeOwners(attributes, PAGES);
-    const strayAttributes = attributes.filter((a) => !attributesOwned.has(a.name) && !ATTRIBUTES_OWNED_ELSEWHERE.has(a.name)).map((a) => a.name);
+    const strayAttributes = attributes.filter((a) => !attributesOwned.has(a.name) && !ATTRIBUTES_OWNED_ELSEWHERE.has(a.name) && !isMcName(a.name)).map((a) => a.name);
     if (strayAttributes.length > 0) {
         failures.push(`${strayAttributes.length} data attributes are on no page: ${strayAttributes.join(', ')}`);
     }

@@ -58,6 +58,18 @@ export const REQUIRED = [
         why: 'The header measures its own width and stacks its title over its buttons when narrow; the query reaches only its own parts [scope-143].',
     },
     {
+        container: 'kp-list',
+        class: 'kp-list',
+        self: true,
+        why: 'The list measures its own width and turns each row into a card when narrow; the query reaches only its own rows’ parts [mc-1030].',
+    },
+    {
+        container: 'kp-rows',
+        class: 'kp-rows',
+        self: true,
+        why: 'The row editor measures its own width, drops its head row and turns each row into a card when narrow; the query reaches only its own parts [mc-1030].',
+    },
+    {
         container: 'kp-attention',
         class: 'kp-attention',
         self: true,

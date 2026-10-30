@@ -95,5 +95,9 @@
     "jobline": "a new component from the homelab wishes [wish-1120], built from the package's parts and judged in formal only first (research/wishes-1120); each register answers it once it is judged in that theme",
     "markdown": "a new component from the homelab wishes [wish-1120], built from the package's parts and judged in formal only first (research/wishes-1120); each register answers it once it is judged in that theme",
     "contents": "a new component from the homelab wishes [wish-1120], built from the package's parts and judged in formal only first (research/wishes-1120); each register answers it once it is judged in that theme",
-    "quiet": "a new component from the homelab wishes [wish-1120], built from the package's parts and judged in formal only first (research/wishes-1120); each register answers it once it is judged in that theme"
+    "quiet": "a new component from the homelab wishes [wish-1120], built from the package's parts and judged in formal only first (research/wishes-1120); each register answers it once it is judged in that theme",
+    "badges": "a new part from the Medicine Cabinet package [mc-1030], a run of badges that wraps, judged in formal only first (research/medicine-1030); each register answers it once it is judged in that theme",
+    "list": "a new part from the Medicine Cabinet package [mc-1030], a list of rows with columns that continue, judged in formal only first (research/medicine-1030); each register answers it once it is judged in that theme",
+    "listrow": "a new part from the Medicine Cabinet package [mc-1030], a row of that list, judged in formal only first (research/medicine-1030); each register answers it once it is judged in that theme",
+    "rows": "a new part from the Medicine Cabinet package [mc-1030], the repeating row editor, judged in formal only first (research/medicine-1030); each register answers it once it is judged in that theme"
 }

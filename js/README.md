@@ -31,10 +31,11 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 
 ## js/datatable.js → js/datatable/
 
-The data table: sorting, filtering, paging, cards, detail rows, reorder, editing, server mode. 33 files.
+The data table: sorting, filtering, paging, cards, detail rows, reorder, editing, server mode. 34 files.
 
 | File                     | Does                                                                                                   |
 | ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `layout-hooks.js`        | The width where a table turns into cards (`data-kp-cards-at`) and the actions column (`data-kp-col`) [mc-1030].                |
 | `attach/apply.js`        | Writes the controls from the state, reads them back, and applies sorts and filters.                    |
 | `attach/busy.js`         | The loading overlay, the busy clock and the empty state.                                               |
 | `attach/chrome.js`       | The chrome around the table: the scroll box, the top and bottom bars.                                  |
@@ -71,7 +72,7 @@ The data table: sorting, filtering, paging, cards, detail rows, reorder, editing
 
 ## js/strings.js → js/strings/
 
-The dictionary of every user-visible string, by component group. 30 files.
+The dictionary of every user-visible string, by component group. 31 files.
 
 | File                           | Does                                                                                                                           |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -83,6 +84,7 @@ The dictionary of every user-visible string, by component group. 30 files.
 | `defaults.js`                  | The default strings: the English of every component group, in one frozen object.                                               |
 | `deplist-trace-entity.js`      | The words of the dependency list, the path trace and the entity card.                                                          |
 | `diff-rating.js`               | The words of the diff and of ratings.                                                                                          |
+| `rows-attention.js`            | The words of the repeating row editor and the attention band's cap.                                                            |
 | `feed-sequencer.js`            | The words of the feed and the sequencer.                                                                                       |
 | `focus.js`                     | The words of the focus steps, their tracks and their resume question.                                                          |
 | `form-date-copy.js`            | The words of forms, the date picker, upload, the wizard, copy buttons and secrets.                                             |
@@ -196,6 +198,10 @@ One step at a time with the screen kept on (cook mode), with parallel tracks. 15
 | `track-nav.js` | Moving between tracks: switch, next, previous, go and start.                                       |
 | `tracks.js`    | Tracks: which steps run in parallel and the timers they wait for.                                  |
 | `wake.js`      | Keeps the screen awake while a step runs.                                                          |
+
+## js/row-editor.js
+
+The repeating row editor (one file, no folder): the RowEditor controller over `[data-kp-rows]`, its head row, add and remove, min and max with the reason said, the empty plate, and `addEditorRow`, `removeEditorRow` and `editorRowsOf` [mc-1030].
 
 ## js/sequencer.js → js/sequencer/
 
@@ -658,7 +664,7 @@ The date picker: a typed field with a calendar panel of days, months and years, 
 
 ## js/segmented.js → js/segmented/
 
-The segmented control and the filter chips: single, multi and three-way groups, with the plate under the chosen segment. 14 files.
+The segmented control and the filter chips: single, single-or-none, multi and three-way groups, with the plate under the chosen segment. 15 files.
 
 | File           | Does                                                                                                                           |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -668,6 +674,7 @@ The segmented control and the filter chips: single, multi and three-way groups, 
 | `group.js`     | One segmented group: the roles and states its markup left out, its size and scroll watching, and its mode watching.            |
 | `items.js`     | Replaces the items of a group when the values change under it, keeping what is on and where the focus was.                     |
 | `keys.js`      | The keyboard of a group: where an arrow, Home or End moves the focus, and the delete of a three-way chip.                      |
+| `link.js`      | A group tied to a tag input or combobox (`data-kp-segmented-for`): the chips and the field hold the same values [mc-1030].       |
 | `mode.js`      | A group whose `data-kp-segmented` changes at runtime [live-options-1019]: rewrites its roles and states for the new mode.      |
 | `paint.js`     | Writes the state of every item from a list of values, then the roving tab stop, then the plate; fires no event.                |
 | `plate.js`     | The plate under the chosen segment, and the marks for a scrolling track that has more segments out of sight.                   |
@@ -1712,11 +1719,12 @@ The pieces a theme's loading picture is made of: the names and measures, the dra
 
 ## js/attention.js → js/attention/
 
-The attention band, kept worst first: the severities, the painting of one item, the set-by-key placing, and the AttentionWatch controller that follows bands. 4 files.
+The attention band, kept worst first: the severities, the painting of one item, the set-by-key placing, the AttentionMax controller that caps a band, and the AttentionWatch controller that follows bands. 5 files.
 
 | File        | Does                                                                                                                           |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `item.js`   | One problem on the band: its element written from the item, touching only what changed.                                        |
+| `max.js`    | The cap on a band (`data-kp-attention-max`): the worst problems show, the rest fold behind one toggle [mc-1030].               |
 | `set.js`    | A band's items: sorted worst first, and set by key so an unchanged item stays the same element.                                |
 | `values.js` | The band, the severities it orders by, and what each severity wears.                                                           |
 | `watch.js`  | The watch on a root: it sorts the bands under it, keeps each sorted as its items change, and takes up bands that arrive later. |
