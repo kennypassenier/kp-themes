@@ -21438,23 +21438,10 @@ var init_facets = __esm({
   }
 });
 
-// js/idmark.js
-var idmark_exports = {};
-__export(idmark_exports, {
-  IDMARK: () => IDMARK,
-  IDMARK_GLYPHS: () => IDMARK_GLYPHS,
-  IDMARK_SLOTS: () => IDMARK_SLOTS,
-  IDMARK_STATUSES: () => IDMARK_STATUSES,
-  attachIdmarks: () => attachIdmarks,
-  idmarkColours: () => idmarkColours,
-  idmarkFor: () => idmarkFor,
-  idmarkLetters: () => idmarkLetters,
-  setIdmark: () => setIdmark,
-  setIdmarkGroup: () => setIdmarkGroup
-});
+// js/idmark/mark.js
 function hashOf(name) {
-  let hash = 2166136261;
-  for (const ch of name) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), 16777619);
+  let hash = FNV_OFFSET;
+  for (const ch of name) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), FNV_PRIME);
   return hash >>> 0;
 }
 function idmarkLetters(name, count2 = 2) {
@@ -21471,9 +21458,9 @@ function idmarkFor(name) {
     name: clean,
     empty: false,
     slot: hash % IDMARK_SLOTS + 1,
-    hue: hash % 360,
+    hue: hash % HUE_STEPS,
     letters: idmarkLetters(clean),
-    glyph: IDMARK_GLYPHS[(hash >>> 3) % IDMARK_GLYPHS.length],
+    glyph: IDMARK_GLYPHS[(hash >>> GLYPH_SHIFT) % IDMARK_GLYPHS.length],
     cells: identityCells(clean)
   };
 }
@@ -21499,10 +21486,103 @@ function idmarkColours(names) {
   }
   return out;
 }
+var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, FNV_OFFSET, FNV_PRIME, HUE_STEPS, GLYPH_SHIFT;
+var init_mark = __esm({
+  "js/idmark/mark.js"() {
+    "use strict";
+    init_facets();
+    IDMARK = "[data-kp-idmark]";
+    IDMARK_SLOTS = 5;
+    IDMARK_GLYPHS = Object.freeze(["circle", "square", "triangle", "diamond"]);
+    FNV_OFFSET = 2166136261;
+    FNV_PRIME = 16777619;
+    HUE_STEPS = 360;
+    GLYPH_SHIFT = 3;
+  }
+});
+
+// js/idmark/avatar.js
+function paintStatus(el16, status) {
+  el16.querySelector(":scope > .kp-idmark__status")?.remove();
+  if (status === "none") return;
+  const dot = el16.ownerDocument.createElement("span");
+  dot.className = "kp-idmark__status";
+  dot.setAttribute("data-kp-status", status);
+  el16.append(dot);
+}
+function paintLabel(el16, name, status, alt) {
+  const strings = getStrings();
+  const statusWord = status === "none" ? "" : (
+    /** @type {Record<string, string>} */
+    { online: strings.idmarkOnline, away: strings.idmarkAway, busy: strings.idmarkBusy }[status]
+  );
+  const speaks = name !== "" && (alt === "name" || status !== "none");
+  if (speaks) {
+    el16.setAttribute("role", "img");
+    el16.setAttribute("aria-label", statusWord ? strings.idmarkLabel(name, statusWord) : name);
+    if (statusWord) el16.title = strings.idmarkLabel(name, statusWord);
+    el16.removeAttribute("aria-hidden");
+    OWN_LABEL.add(el16);
+  } else if (OWN_LABEL.has(el16)) {
+    el16.removeAttribute("role");
+    el16.removeAttribute("aria-label");
+    el16.setAttribute("aria-hidden", "true");
+    OWN_LABEL.delete(el16);
+  }
+}
+function paintPhoto(el16, name, src) {
+  const doc = el16.ownerDocument;
+  el16.querySelector(":scope > .kp-idmark__photo")?.remove();
+  ASKED2.set(el16, src);
+  if (src === "" || name === "") {
+    el16.removeAttribute("data-kp-photo");
+    return;
+  }
+  const img = doc.createElement("img");
+  img.className = "kp-idmark__photo";
+  img.alt = "";
+  img.decoding = "async";
+  img.draggable = false;
+  img.loading = el16.getAttribute("data-kp-idmark-loading") === "eager" ? "eager" : "lazy";
+  const settle2 = (state12) => {
+    if (ASKED2.get(el16) !== src) return;
+    if (state12 === "failed") img.remove();
+    el16.setAttribute("data-kp-photo", state12);
+    el16.dispatchEvent(new CustomEvent("kp-idmark-photo", { bubbles: true, detail: { state: state12, src } }));
+  };
+  img.addEventListener("load", () => settle2("loaded"));
+  img.addEventListener("error", () => settle2("failed"));
+  el16.setAttribute("data-kp-photo", "loading");
+  img.src = src;
+  el16.prepend(img);
+  if (img.complete && img.naturalWidth > 0) settle2("loaded");
+}
+function decorateAvatar(el16, name) {
+  const src = (el16.getAttribute("data-kp-idmark-src") ?? "").trim();
+  const rawStatus = el16.getAttribute("data-kp-idmark-status") ?? "none";
+  const status = IDMARK_STATUSES.includes(rawStatus) ? rawStatus : "none";
+  const alt = el16.getAttribute("data-kp-idmark-alt") === "name" ? "name" : "decorative";
+  paintStatus(el16, status);
+  paintLabel(el16, name, status, alt);
+  paintPhoto(el16, name, src);
+}
+var AVATAR_ATTRIBUTES, IDMARK_STATUSES, OWN_LABEL, ASKED2;
+var init_avatar = __esm({
+  "js/idmark/avatar.js"() {
+    "use strict";
+    init_strings();
+    AVATAR_ATTRIBUTES = ["data-kp-idmark-hue", "data-kp-idmark-src", "data-kp-idmark-status", "data-kp-idmark-alt", "data-kp-idmark-loading"];
+    IDMARK_STATUSES = Object.freeze(["online", "away", "busy"]);
+    OWN_LABEL = /* @__PURE__ */ new WeakSet();
+    ASKED2 = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/idmark/draw.js
 function patternSvg(doc, cells) {
   const svg2 = doc.createElementNS(SVG_NS2, "svg");
   svg2.setAttribute("class", "kp-idmark__pattern");
-  svg2.setAttribute("viewBox", "0 0 7 7");
+  svg2.setAttribute("viewBox", `0 0 ${PATTERN_BOX} ${PATTERN_BOX}`);
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
   svg2.setAttribute("shape-rendering", "crispEdges");
@@ -21533,193 +21613,197 @@ function setIdmark(el16, name, { slot, hue, title = true } = {}) {
   decorateAvatar(el16, mark.name);
   DRAWN2.set(el16, { base: baseKey(el16), slot: slot ?? mark.slot });
 }
-function decorateAvatar(el16, name) {
-  const doc = el16.ownerDocument;
-  const strings = getStrings();
-  const src = (el16.getAttribute("data-kp-idmark-src") ?? "").trim();
-  const rawStatus = el16.getAttribute("data-kp-idmark-status") ?? "none";
-  const status = IDMARK_STATUSES.includes(rawStatus) ? rawStatus : "none";
-  const alt = el16.getAttribute("data-kp-idmark-alt") === "name" ? "name" : "decorative";
-  el16.querySelector(":scope > .kp-idmark__status")?.remove();
-  if (status !== "none") {
-    const dot = doc.createElement("span");
-    dot.className = "kp-idmark__status";
-    dot.setAttribute("data-kp-status", status);
-    el16.append(dot);
+var SVG_NS2, PATTERN_BOX, DRAWN2, baseKey;
+var init_draw3 = __esm({
+  "js/idmark/draw.js"() {
+    "use strict";
+    init_strings();
+    init_avatar();
+    init_mark();
+    SVG_NS2 = "http://www.w3.org/2000/svg";
+    PATTERN_BOX = 7;
+    DRAWN2 = /* @__PURE__ */ new WeakMap();
+    baseKey = (el16) => `${el16.getAttribute("data-kp-idmark") ?? ""}|${AVATAR_ATTRIBUTES.map((attr16) => el16.getAttribute(attr16) ?? "").join("|")}|${el16.className}`;
   }
-  const statusWord = status === "none" ? "" : (
-    /** @type {Record<string, string>} */
-    {
-      online: strings.idmarkOnline,
-      away: strings.idmarkAway,
-      busy: strings.idmarkBusy
-    }[status]
-  );
-  const speaks = name !== "" && (alt === "name" || status !== "none");
-  if (speaks) {
-    el16.setAttribute("role", "img");
-    el16.setAttribute("aria-label", statusWord ? strings.idmarkLabel(name, statusWord) : name);
-    if (statusWord) el16.title = strings.idmarkLabel(name, statusWord);
-    el16.removeAttribute("aria-hidden");
-    OWN_LABEL.add(el16);
-  } else if (OWN_LABEL.has(el16)) {
-    el16.removeAttribute("role");
-    el16.removeAttribute("aria-label");
-    el16.setAttribute("aria-hidden", "true");
-    OWN_LABEL.delete(el16);
+});
+
+// js/idmark/more-list.js
+var moreSeq, IdmarkMoreList;
+var init_more_list = __esm({
+  "js/idmark/more-list.js"() {
+    "use strict";
+    init_strings();
+    init_draw3();
+    moreSeq = 0;
+    IdmarkMoreList = class {
+      /**
+       * @param {Document} doc
+       * @param {readonly import('../idmark.js').IdmarkPerson[]} rest the people left out of the group
+       * @param {{ round: boolean, colours: Map<string, number> }} look
+       */
+      constructor(doc, rest, look) {
+        this.doc = doc;
+        this.rest = rest;
+        this.look = look;
+        this.strings = getStrings();
+        this.id = `kp-idmark-more-${++moreSeq}`;
+        this.more = doc.createElement("button");
+        this.panel = doc.createElement("div");
+        this.away = (event) => {
+          if (!(event.target instanceof Node) || !this.panel.contains(event.target) && !this.more.contains(event.target)) this.close();
+        };
+      }
+      /** The button and the hidden list, wired. @returns {HTMLElement[]} */
+      build() {
+        const { more, panel, rest, strings } = this;
+        more.type = "button";
+        more.className = "kp-idmark-group__more";
+        more.textContent = `+${rest.length}`;
+        more.setAttribute("aria-haspopup", "true");
+        more.setAttribute("aria-expanded", "false");
+        more.setAttribute("aria-controls", this.id);
+        more.setAttribute("aria-label", strings.idmarkMore(rest.length));
+        panel.className = "kp-idmark-group__list";
+        panel.id = this.id;
+        panel.hidden = true;
+        const heading = this.doc.createElement("p");
+        heading.className = "kp-idmark-group__list-title";
+        heading.textContent = strings.idmarkMoreTitle(rest.length);
+        panel.append(heading, this.names());
+        more.addEventListener("click", () => this.toggle());
+        panel.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            event.stopPropagation();
+            this.close();
+            more.focus();
+          }
+        });
+        more.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !panel.hidden) {
+            event.stopPropagation();
+            this.close();
+          }
+        });
+        return [more, panel];
+      }
+      /** The names left out, each with its small mark. */
+      names() {
+        const { doc, look } = this;
+        const ul = doc.createElement("ul");
+        for (const person of this.rest) {
+          const li = doc.createElement("li");
+          const row = doc.createElement("span");
+          row.className = "kp-idmark-name";
+          const mark = doc.createElement("span");
+          mark.className = `kp-idmark kp-idmark--sm${look.round ? " kp-idmark--round" : ""}`;
+          mark.setAttribute("data-kp-idmark", person.name);
+          if (person.src) mark.setAttribute("data-kp-idmark-src", person.src);
+          mark.setAttribute("aria-hidden", "true");
+          setIdmark(mark, person.name, { slot: look.colours.get(person.name.trim()), title: false });
+          const text = doc.createElement("span");
+          text.textContent = person.name;
+          row.append(mark, text);
+          li.append(row);
+          ul.append(li);
+        }
+        return ul;
+      }
+      toggle() {
+        const open4 = this.panel.hidden;
+        this.panel.hidden = !open4;
+        this.more.setAttribute("aria-expanded", String(open4));
+        if (open4) this.doc.addEventListener("pointerdown", this.away, true);
+        else this.doc.removeEventListener("pointerdown", this.away, true);
+      }
+      close() {
+        this.panel.hidden = true;
+        this.more.setAttribute("aria-expanded", "false");
+        this.doc.removeEventListener("pointerdown", this.away, true);
+      }
+    };
   }
-  el16.querySelector(":scope > .kp-idmark__photo")?.remove();
-  ASKED2.set(el16, src);
-  if (src === "" || name === "") {
-    el16.removeAttribute("data-kp-photo");
-    return;
-  }
-  const img = doc.createElement("img");
-  img.className = "kp-idmark__photo";
-  img.alt = "";
-  img.decoding = "async";
-  img.draggable = false;
-  img.loading = el16.getAttribute("data-kp-idmark-loading") === "eager" ? "eager" : "lazy";
-  const settle2 = (state12) => {
-    if (ASKED2.get(el16) !== src) return;
-    if (state12 === "failed") img.remove();
-    el16.setAttribute("data-kp-photo", state12);
-    el16.dispatchEvent(new CustomEvent("kp-idmark-photo", { bubbles: true, detail: { state: state12, src } }));
-  };
-  img.addEventListener("load", () => settle2("loaded"));
-  img.addEventListener("error", () => settle2("failed"));
-  el16.setAttribute("data-kp-photo", "loading");
-  img.src = src;
-  el16.prepend(img);
-  if (img.complete && img.naturalWidth > 0) settle2("loaded");
+});
+
+// js/idmark/group.js
+function groupMark(doc, person, { size: size2, round: round2, colours }) {
+  const mark = doc.createElement("span");
+  mark.className = ["kp-idmark", size2 === "md" ? "" : `kp-idmark--${size2}`, round2 ? "kp-idmark--round" : ""].filter(Boolean).join(" ");
+  mark.setAttribute("data-kp-idmark", person.name);
+  if (person.src) mark.setAttribute("data-kp-idmark-src", person.src);
+  if (person.status && person.status !== "none") mark.setAttribute("data-kp-idmark-status", person.status);
+  mark.setAttribute("data-kp-idmark-alt", "name");
+  setIdmark(mark, person.name, { slot: colours.get(person.name.trim()) });
+  return mark;
 }
-function setIdmarkGroup(el16, people, { max = 4, size: size2 = "md", round: round2 = true, list = true } = {}) {
+function plainMore(doc, rest) {
+  const more = doc.createElement("span");
+  more.className = "kp-idmark-group__more";
+  more.textContent = `+${rest.length}`;
+  more.title = rest.map((person) => person.name).join(", ");
+  return more;
+}
+function setIdmarkGroup(el16, people, { max = DEFAULT_MAX, size: size2 = "md", round: round2 = true, list = true } = {}) {
   const doc = el16.ownerDocument;
-  const strings = getStrings();
   el16.classList.add("kp-idmark-group");
   el16.classList.toggle("kp-idmark-group--sm", size2 === "sm" || size2 === "xs");
   el16.setAttribute("role", "group");
-  el16.setAttribute("aria-label", strings.idmarkGroup(people.length));
+  el16.setAttribute("aria-label", getStrings().idmarkGroup(people.length));
   const shown5 = people.slice(0, Math.max(0, max));
   const rest = people.slice(shown5.length);
-  const colours = idmarkColours(people.map((person) => person.name));
-  const marks = shown5.map((person) => {
-    const mark = doc.createElement("span");
-    mark.className = ["kp-idmark", size2 === "md" ? "" : `kp-idmark--${size2}`, round2 ? "kp-idmark--round" : ""].filter(Boolean).join(" ");
-    mark.setAttribute("data-kp-idmark", person.name);
-    if (person.src) mark.setAttribute("data-kp-idmark-src", person.src);
-    if (person.status && person.status !== "none") mark.setAttribute("data-kp-idmark-status", person.status);
-    mark.setAttribute("data-kp-idmark-alt", "name");
-    setIdmark(mark, person.name, { slot: colours.get(person.name.trim()) });
-    return mark;
-  });
-  const tail = [];
-  if (rest.length > 0) {
-    if (!list) {
-      const more = doc.createElement("span");
-      more.className = "kp-idmark-group__more";
-      more.textContent = `+${rest.length}`;
-      more.title = rest.map((person) => person.name).join(", ");
-      tail.push(more);
-    } else {
-      const id = `kp-idmark-more-${++moreSeq}`;
-      const more = doc.createElement("button");
-      more.type = "button";
-      more.className = "kp-idmark-group__more";
-      more.textContent = `+${rest.length}`;
-      more.setAttribute("aria-haspopup", "true");
-      more.setAttribute("aria-expanded", "false");
-      more.setAttribute("aria-controls", id);
-      more.setAttribute("aria-label", strings.idmarkMore(rest.length));
-      const panel = doc.createElement("div");
-      panel.className = "kp-idmark-group__list";
-      panel.id = id;
-      panel.hidden = true;
-      const heading = doc.createElement("p");
-      heading.className = "kp-idmark-group__list-title";
-      heading.textContent = strings.idmarkMoreTitle(rest.length);
-      const ul = doc.createElement("ul");
-      for (const person of rest) {
-        const li = doc.createElement("li");
-        const row = doc.createElement("span");
-        row.className = "kp-idmark-name";
-        const mark = doc.createElement("span");
-        mark.className = `kp-idmark kp-idmark--sm${round2 ? " kp-idmark--round" : ""}`;
-        mark.setAttribute("data-kp-idmark", person.name);
-        if (person.src) mark.setAttribute("data-kp-idmark-src", person.src);
-        mark.setAttribute("aria-hidden", "true");
-        setIdmark(mark, person.name, { slot: colours.get(person.name.trim()), title: false });
-        const text = doc.createElement("span");
-        text.textContent = person.name;
-        row.append(mark, text);
-        li.append(row);
-        ul.append(li);
-      }
-      panel.append(heading, ul);
-      const close = () => {
-        panel.hidden = true;
-        more.setAttribute("aria-expanded", "false");
-        doc.removeEventListener("pointerdown", away, true);
-      };
-      const away = (event) => {
-        if (!(event.target instanceof Node) || !panel.contains(event.target) && !more.contains(event.target)) close();
-      };
-      more.addEventListener("click", () => {
-        const open4 = panel.hidden;
-        panel.hidden = !open4;
-        more.setAttribute("aria-expanded", String(open4));
-        if (open4) doc.addEventListener("pointerdown", away, true);
-        else doc.removeEventListener("pointerdown", away, true);
-      });
-      panel.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          event.stopPropagation();
-          close();
-          more.focus();
-        }
-      });
-      more.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && !panel.hidden) {
-          event.stopPropagation();
-          close();
-        }
-      });
-      tail.push(more, panel);
-    }
-  }
+  const look = { size: size2, round: round2, colours: idmarkColours(people.map((person) => person.name)) };
+  const marks = shown5.map((person) => groupMark(doc, person, look));
+  let tail = [];
+  if (rest.length > 0) tail = list ? new IdmarkMoreList(doc, rest, look).build() : [plainMore(doc, rest)];
   el16.replaceChildren(...marks, ...tail);
 }
+var DEFAULT_MAX;
+var init_group3 = __esm({
+  "js/idmark/group.js"() {
+    "use strict";
+    init_strings();
+    init_draw3();
+    init_mark();
+    init_more_list();
+    DEFAULT_MAX = 4;
+  }
+});
+
+// js/idmark/attach.js
+function marksUnder(root) {
+  return (
+    /** @type {HTMLElement[]} */
+    [...root instanceof Element && root.matches(IDMARK) ? [root] : [], ...root.querySelectorAll(IDMARK)]
+  );
+}
+function slotsOf(all) {
+  const sets = /* @__PURE__ */ new Map();
+  for (const el16 of all) {
+    const set = el16.closest("[data-kp-idmark-set]");
+    if (set) (sets.get(set) ?? sets.set(set, []).get(set))?.push(el16);
+  }
+  const slots = /* @__PURE__ */ new Map();
+  for (const members of sets.values()) {
+    const colours = idmarkColours(members.map((el16) => el16.getAttribute("data-kp-idmark") ?? ""));
+    for (const el16 of members) {
+      const slot = colours.get((el16.getAttribute("data-kp-idmark") ?? "").trim());
+      if (slot) slots.set(el16, slot);
+    }
+  }
+  return slots;
+}
+function paintMarks(root) {
+  const all = marksUnder(root);
+  const slots = slotsOf(all);
+  for (const el16 of all) {
+    const name = el16.getAttribute("data-kp-idmark") ?? "";
+    const before = DRAWN2.get(el16);
+    const want = slots.get(el16);
+    if (before?.base === baseKey(el16) && (want === void 0 || want === before.slot) && el16.querySelector(":scope > .kp-idmark__letters")) continue;
+    setIdmark(el16, name, { slot: want });
+  }
+}
 function attachIdmarks(root = document) {
-  const paint14 = () => {
-    const sets = /* @__PURE__ */ new Map();
-    const all = (
-      /** @type {HTMLElement[]} */
-      [
-        ...root instanceof Element && root.matches(IDMARK) ? [root] : [],
-        ...root.querySelectorAll(IDMARK)
-      ]
-    );
-    for (const el16 of all) {
-      const set = el16.closest("[data-kp-idmark-set]");
-      if (set) (sets.get(set) ?? sets.set(set, []).get(set))?.push(el16);
-    }
-    const slots = /* @__PURE__ */ new Map();
-    for (const members of sets.values()) {
-      const colours = idmarkColours(members.map((el16) => el16.getAttribute("data-kp-idmark") ?? ""));
-      for (const el16 of members) {
-        const slot = colours.get((el16.getAttribute("data-kp-idmark") ?? "").trim());
-        if (slot) slots.set(el16, slot);
-      }
-    }
-    for (const el16 of all) {
-      const name = el16.getAttribute("data-kp-idmark") ?? "";
-      const before = DRAWN2.get(el16);
-      const want = slots.get(el16);
-      if (before?.base === baseKey(el16) && (want === void 0 || want === before.slot) && el16.querySelector(":scope > .kp-idmark__letters")) continue;
-      setIdmark(el16, name, { slot: want });
-    }
-  };
-  paint14();
+  paintMarks(root);
   const View = (root instanceof Document ? root : root.ownerDocument)?.defaultView;
   if (!View?.MutationObserver) return () => {
   };
@@ -21732,29 +21816,43 @@ function attachIdmarks(root = document) {
     queued = true;
     View.queueMicrotask(() => {
       queued = false;
-      paint14();
+      paintMarks(root);
     });
   });
   observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-kp-idmark", ...AVATAR_ATTRIBUTES] });
   return () => observer.disconnect();
 }
-var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, SVG_NS2, DRAWN2, baseKey, AVATAR_ATTRIBUTES, IDMARK_STATUSES, OWN_LABEL, ASKED2, moreSeq;
+var init_attach5 = __esm({
+  "js/idmark/attach.js"() {
+    "use strict";
+    init_avatar();
+    init_draw3();
+    init_mark();
+  }
+});
+
+// js/idmark.js
+var idmark_exports = {};
+__export(idmark_exports, {
+  IDMARK: () => IDMARK,
+  IDMARK_GLYPHS: () => IDMARK_GLYPHS,
+  IDMARK_SLOTS: () => IDMARK_SLOTS,
+  IDMARK_STATUSES: () => IDMARK_STATUSES,
+  attachIdmarks: () => attachIdmarks,
+  idmarkColours: () => idmarkColours,
+  idmarkFor: () => idmarkFor,
+  idmarkLetters: () => idmarkLetters,
+  setIdmark: () => setIdmark,
+  setIdmarkGroup: () => setIdmarkGroup
+});
 var init_idmark = __esm({
   "js/idmark.js"() {
     "use strict";
-    init_strings();
-    init_facets();
-    IDMARK = "[data-kp-idmark]";
-    IDMARK_SLOTS = 5;
-    IDMARK_GLYPHS = Object.freeze(["circle", "square", "triangle", "diamond"]);
-    SVG_NS2 = "http://www.w3.org/2000/svg";
-    DRAWN2 = /* @__PURE__ */ new WeakMap();
-    baseKey = (el16) => `${el16.getAttribute("data-kp-idmark") ?? ""}|${AVATAR_ATTRIBUTES.map((attr16) => el16.getAttribute(attr16) ?? "").join("|")}|${el16.className}`;
-    AVATAR_ATTRIBUTES = ["data-kp-idmark-hue", "data-kp-idmark-src", "data-kp-idmark-status", "data-kp-idmark-alt", "data-kp-idmark-loading"];
-    IDMARK_STATUSES = Object.freeze(["online", "away", "busy"]);
-    OWN_LABEL = /* @__PURE__ */ new WeakSet();
-    ASKED2 = /* @__PURE__ */ new WeakMap();
-    moreSeq = 0;
+    init_mark();
+    init_avatar();
+    init_draw3();
+    init_group3();
+    init_attach5();
   }
 });
 
@@ -25774,7 +25872,7 @@ function attachCodes(root = document) {
   return () => {
   };
 }
-var init_attach5 = __esm({
+var init_attach6 = __esm({
   "js/code/attach.js"() {
     "use strict";
     init_controller();
@@ -25798,7 +25896,7 @@ var init_code = __esm({
     "use strict";
     init_constants11();
     init_language();
-    init_attach5();
+    init_attach6();
   }
 });
 
@@ -26663,7 +26761,7 @@ function sync(bar, memory) {
     );
   }
 }
-var init_draw3 = __esm({
+var init_draw4 = __esm({
   "js/selection-bar/draw.js"() {
     "use strict";
     init_row_select();
@@ -26680,7 +26778,7 @@ var init_controller12 = __esm({
     init_controller();
     init_row_select();
     init_strings();
-    init_draw3();
+    init_draw4();
     init_model2();
     UNDO_MS2 = 6e3;
     OPTIONS = ["data-kp-selection-names", "data-kp-selection-max", "data-kp-select-matching"];
@@ -26923,7 +27021,7 @@ var init_api6 = __esm({
     init_controller();
     init_strings();
     init_controller12();
-    init_draw3();
+    init_draw4();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
   }
@@ -29058,14 +29156,14 @@ function parseTick(text, locale) {
   const value = Number(cut < 0 ? digits(whole) : `${digits(whole.slice(0, cut))}.${digits(whole.slice(cut + 1))}`);
   if (!Number.isFinite(value)) return null;
   const groupInText = whole.match(/\d([\s.,  '])\d{3}(?!\d)/)?.[1];
-  const groupMark = groupInText !== void 0 && groupInText !== decimal ? groupInText : group !== "" && whole.includes(group) ? group : "";
+  const groupMark2 = groupInText !== void 0 && groupInText !== decimal ? groupInText : group !== "" && whole.includes(group) ? group : "";
   return {
     value,
     decimals,
     render: (next2) => {
       const [int, frac] = Math.abs(next2).toFixed(decimals).split(".");
       const sign = next2 < 0 && Number(next2.toFixed(decimals)) !== 0 ? "-" : "";
-      const body = groupMark ? int.replace(/\B(?=(\d{3})+(?!\d))/g, groupMark) : int;
+      const body = groupMark2 ? int.replace(/\B(?=(\d{3})+(?!\d))/g, groupMark2) : int;
       return `${before}${sign}${body}${decimals ? decimal + frac : ""}${after}`;
     }
   };
@@ -29464,7 +29562,7 @@ function paint3(root) {
   }
 }
 var LABEL_MIN, LABEL_COMFORT, LABEL_MAX2;
-var init_draw4 = __esm({
+var init_draw5 = __esm({
   "js/wheel/draw.js"() {
     "use strict";
     init_strings();
@@ -29633,7 +29731,7 @@ var init_spin = __esm({
     init_busy_card();
     init_calm();
     init_strings();
-    init_draw4();
+    init_draw5();
     init_state10();
     reduced3 = () => !motionAllowed();
   }
@@ -29645,7 +29743,7 @@ var init_controller15 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
-    init_draw4();
+    init_draw5();
     init_spin();
     init_state10();
     WheelControl = class extends Controller {
@@ -32505,7 +32603,7 @@ function attachTimers(root = document) {
   });
   return () => undo.forEach((u) => u());
 }
-var init_attach6 = __esm({
+var init_attach7 = __esm({
   "js/timer/attach.js"() {
     "use strict";
     init_strings();
@@ -32554,7 +32652,7 @@ var init_timer = __esm({
     init_sync3();
     init_sound();
     init_run();
-    init_attach6();
+    init_attach7();
     init_countdown();
   }
 });
@@ -32991,7 +33089,7 @@ function attachFocusSteps(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var init_attach7 = __esm({
+var init_attach8 = __esm({
   "js/focus-steps/attach.js"() {
     "use strict";
     init_strings();
@@ -33041,7 +33139,7 @@ var init_focus_steps = __esm({
     "use strict";
     init_constants14();
     init_api11();
-    init_attach7();
+    init_attach8();
   }
 });
 
@@ -35857,7 +35955,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     for (const c of cleanups) c();
   };
 }
-var init_attach8 = __esm({
+var init_attach9 = __esm({
   "js/sidenav/attach.js"() {
     "use strict";
     init_constants17();
@@ -35902,7 +36000,7 @@ var init_sidenav = __esm({
     init_constants17();
     init_options3();
     init_helpers();
-    init_attach8();
+    init_attach9();
   }
 });
 
@@ -36591,7 +36689,7 @@ function attachComboboxes(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var init_attach9 = __esm({
+var init_attach10 = __esm({
   "js/combobox/attach.js"() {
     "use strict";
     init_listbox();
@@ -36845,7 +36943,7 @@ var init_combobox = __esm({
     init_constants18();
     init_matchers();
     init_handle2();
-    init_attach9();
+    init_attach10();
     init_select();
   }
 });
@@ -37732,7 +37830,7 @@ function attachPalettes(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var init_attach10 = __esm({
+var init_attach11 = __esm({
   "js/palette/attach.js"() {
     "use strict";
     init_listbox();
@@ -37766,7 +37864,7 @@ var init_palette = __esm({
     init_keys7();
     init_outside();
     init_api13();
-    init_attach10();
+    init_attach11();
   }
 });
 
@@ -39705,7 +39803,7 @@ function attachDatePickers(root = document, options = {}) {
   };
   return Object.assign(detach, { handles: made7.flatMap((controller) => controller.handle ? [controller.handle] : []) });
 }
-var init_attach11 = __esm({
+var init_attach12 = __esm({
   "js/datepicker/attach.js"() {
     "use strict";
     init_controller();
@@ -39740,7 +39838,7 @@ var init_datepicker = __esm({
     init_constants20();
     init_dates();
     init_place();
-    init_attach11();
+    init_attach12();
   }
 });
 
@@ -43292,7 +43390,7 @@ function attachDataTables(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var init_attach12 = __esm({
+var init_attach13 = __esm({
   "js/datatable/attach.js"() {
     "use strict";
     init_remember();
@@ -43372,7 +43470,7 @@ var init_datatable = __esm({
     init_filter();
     init_grid();
     init_instance();
-    init_attach12();
+    init_attach13();
   }
 });
 
@@ -46189,7 +46287,7 @@ function heatArea(el16) {
     }
   ];
 }
-var init_draw5 = __esm({
+var init_draw6 = __esm({
   "js/heat/draw.js"() {
     "use strict";
     init_strings();
@@ -46386,7 +46484,7 @@ var init_wire3 = __esm({
     "use strict";
     init_hovercard();
     init_constants22();
-    init_draw5();
+    init_draw6();
     init_grid_state();
     init_legend2();
     init_paging();
@@ -47176,7 +47274,7 @@ function leaveUsesMap(el16) {
   el16.removeAttribute("data-kp-collapsed");
   el16.removeAttribute("data-kp-lit");
 }
-var init_draw6 = __esm({
+var init_draw7 = __esm({
   "js/uses-map/draw.js"() {
     "use strict";
     init_state_plate();
@@ -47210,7 +47308,7 @@ var init_uses_map = __esm({
     init_constants23();
     init_memory2();
     init_relation();
-    init_draw6();
+    init_draw7();
   }
 });
 
@@ -47440,7 +47538,7 @@ var init_matrix = __esm({
     init_card2();
     init_constants22();
     init_dom6();
-    init_draw5();
+    init_draw6();
     init_grid_state();
   }
 });
@@ -47598,7 +47696,7 @@ var init_matrix_wire = __esm({
     "use strict";
     init_hovercard();
     init_constants22();
-    init_draw5();
+    init_draw6();
     init_grid_state();
     init_matrix();
     MATRIX_WIRED = /* @__PURE__ */ new WeakMap();
@@ -47634,7 +47732,7 @@ var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
     init_constants22();
-    init_draw5();
+    init_draw6();
     init_pick();
     init_paging();
     init_legend2();
@@ -48655,7 +48753,7 @@ function attachWeeks(root = document, options = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var init_attach13 = __esm({
+var init_attach14 = __esm({
   "js/week/attach.js"() {
     "use strict";
     init_chart();
@@ -48694,7 +48792,7 @@ var init_week = __esm({
     "use strict";
     init_constants24();
     init_pills2();
-    init_attach13();
+    init_attach14();
     init_api15();
   }
 });
@@ -50350,7 +50448,7 @@ function attachSequencers(root = document, options = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var init_attach14 = __esm({
+var init_attach15 = __esm({
   "js/sequencer/attach.js"() {
     "use strict";
     init_strings();
@@ -50470,7 +50568,7 @@ var init_sequencer = __esm({
     init_plan2();
     init_links();
     init_timeline();
-    init_attach14();
+    init_attach15();
     init_api16();
   }
 });
@@ -51839,7 +51937,7 @@ var init_api17 = __esm({
     init_selection3();
     init_scale();
     init_window();
-    init_attach15();
+    init_attach16();
     init_chrome2();
   }
 });
@@ -52185,7 +52283,7 @@ function setLive(c, live4) {
   freshWindow(c);
   announceWindow(c, "live");
 }
-var init_attach15 = __esm({
+var init_attach16 = __esm({
   "js/gantt/attach.js"() {
     "use strict";
     init_chart();
@@ -52231,7 +52329,7 @@ var init_gantt = __esm({
     "use strict";
     init_constants26();
     init_scale();
-    init_attach15();
+    init_attach16();
     init_api17();
   }
 });
@@ -52933,7 +53031,7 @@ function leaveGroupCard(el16) {
   return { last: group.loading.size === 0, card: group.card, host };
 }
 var infoMode;
-var init_group3 = __esm({
+var init_group4 = __esm({
   "js/uptime/group.js"() {
     "use strict";
     init_busy_card();
@@ -53157,7 +53255,7 @@ function draw6(el16, spec) {
     if (left?.last) GROUPS2.delete(left.host);
   }
 }
-var init_draw7 = __esm({
+var init_draw8 = __esm({
   "js/uptime/draw.js"() {
     "use strict";
     init_strings();
@@ -53167,7 +53265,7 @@ var init_draw7 = __esm({
     init_constants27();
     init_figures();
     init_fit();
-    init_group3();
+    init_group4();
     init_helpers4();
     init_state18();
   }
@@ -53430,7 +53528,7 @@ function attachUptimes(root = document) {
     for (const c of cleanups) c();
   };
 }
-var init_attach16 = __esm({
+var init_attach17 = __esm({
   "js/uptime/attach.js"() {
     "use strict";
     init_strings();
@@ -53438,10 +53536,10 @@ var init_attach16 = __esm({
     init_motion();
     init_top_layer();
     init_constants27();
-    init_draw7();
+    init_draw8();
     init_figures();
     init_fit();
-    init_group3();
+    init_group4();
     init_helpers4();
     init_state18();
   }
@@ -53467,8 +53565,8 @@ var init_uptime = __esm({
     "use strict";
     init_constants27();
     init_figures();
-    init_draw7();
-    init_attach16();
+    init_draw8();
+    init_attach17();
   }
 });
 
@@ -62881,7 +62979,7 @@ function setUsualState(element, state12) {
 function usualNotToday(element) {
   return [...models.get(element)?.notToday ?? []];
 }
-var init_attach17 = __esm({
+var init_attach18 = __esm({
   "js/usual-picker/attach.js"() {
     "use strict";
     init_constants33();
@@ -62915,7 +63013,7 @@ var init_usual_picker = __esm({
     "use strict";
     init_constants33();
     init_names();
-    init_attach17();
+    init_attach18();
   }
 });
 
@@ -62986,7 +63084,7 @@ function applyPlan(plan) {
   for (const [member, next2] of plan) member.setAttribute("aria-pressed", next2);
 }
 var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, stateOf4, toggleKey, storeKey, readStore, writeStore, made3;
-var init_group4 = __esm({
+var init_group5 = __esm({
   "js/toggle/group.js"() {
     "use strict";
     TOGGLE = "[data-kp-toggle]";
@@ -63032,7 +63130,7 @@ var init_parts5 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_group4();
+    init_group5();
     SAY_AFTER_MS = 40;
     COUNT_DIGITS = 2;
     ToggleParts = class extends Controller {
@@ -63228,7 +63326,7 @@ var ToggleAnswers;
 var init_handle4 = __esm({
   "js/toggle/handle.js"() {
     "use strict";
-    init_group4();
+    init_group5();
     init_parts5();
     ToggleAnswers = class extends ToggleParts {
       /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
@@ -63339,7 +63437,7 @@ var init_controller29 = __esm({
     "use strict";
     init_reason();
     init_shortcuts();
-    init_group4();
+    init_group5();
     init_handle4();
     ToggleControl = class extends ToggleAnswers {
       connect() {
@@ -63526,8 +63624,8 @@ var init_toggle = __esm({
     "use strict";
     init_controller();
     init_controller29();
-    init_group4();
-    init_group4();
+    init_group5();
+    init_group5();
   }
 });
 
@@ -68438,7 +68536,7 @@ function openGalleryFromHash(el16) {
   return openGalleryItem(el16, id) !== null;
 }
 var galleryOf;
-var init_attach18 = __esm({
+var init_attach19 = __esm({
   "js/gallery/attach.js"() {
     "use strict";
     init_controller();
@@ -68471,7 +68569,7 @@ var init_gallery2 = __esm({
   "js/gallery.js"() {
     "use strict";
     init_constants36();
-    init_attach18();
+    init_attach19();
   }
 });
 
@@ -71751,7 +71849,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 var SIDE_ROOM;
-var init_draw8 = __esm({
+var init_draw9 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
@@ -71838,7 +71936,7 @@ var init_api25 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
-    init_draw8();
+    init_draw9();
     init_view4();
   }
 });
@@ -72260,7 +72358,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var init_attach19 = __esm({
+var init_attach20 = __esm({
   "js/graph/attach.js"() {
     "use strict";
     init_strings();
@@ -72269,7 +72367,7 @@ var init_attach19 = __esm({
     init_api25();
     init_options5();
     init_layout3();
-    init_draw8();
+    init_draw9();
     init_view4();
   }
 });
@@ -72308,7 +72406,7 @@ var init_graph = __esm({
     init_layout3();
     init_labels3();
     init_api25();
-    init_attach19();
+    init_attach20();
   }
 });
 
@@ -73374,7 +73472,7 @@ function attachClaims(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var init_attach20 = __esm({
+var init_attach21 = __esm({
   "js/claim/attach.js"() {
     "use strict";
     init_strings();
@@ -73418,7 +73516,7 @@ var init_claim2 = __esm({
     init_model8();
     init_api26();
     init_decorate();
-    init_attach20();
+    init_attach21();
   }
 });
 
@@ -74559,7 +74657,7 @@ function attachAvailability(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var init_attach21 = __esm({
+var init_attach22 = __esm({
   "js/availability/attach.js"() {
     "use strict";
     init_strings();
@@ -74602,7 +74700,7 @@ var init_availability = __esm({
     init_dates3();
     init_facts();
     init_api27();
-    init_attach21();
+    init_attach22();
   }
 });
 
@@ -75466,7 +75564,7 @@ function drawCanvas(root, m) {
   return canvas;
 }
 var QUIET2, THEME_CONTRAST, CANVAS_SCALE, CANVAS_SCALE_MIN;
-var init_draw9 = __esm({
+var init_draw10 = __esm({
   "js/qr/draw.js"() {
     "use strict";
     init_matrix2();
@@ -75656,7 +75754,7 @@ var init_render6 = __esm({
     init_reason();
     init_state_plate();
     init_strings();
-    init_draw9();
+    init_draw10();
     init_matrix2();
     init_state27();
     TIMER_MAX_MS = 2 ** 31 - 1;
@@ -76866,7 +76964,7 @@ function attachConsoles(root = document, options = {}) {
   }
   return () => undo.forEach((u) => u());
 }
-var init_attach22 = __esm({
+var init_attach23 = __esm({
   "js/console/attach.js"() {
     "use strict";
     init_strings();
@@ -76907,7 +77005,7 @@ var init_console3 = __esm({
     "use strict";
     init_constants41();
     init_api28();
-    init_attach22();
+    init_attach23();
   }
 });
 
@@ -77822,7 +77920,7 @@ function attachLogViewers(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var init_attach23 = __esm({
+var init_attach24 = __esm({
   "js/logviewer/attach.js"() {
     "use strict";
     init_strings();
@@ -77864,7 +77962,7 @@ var init_logviewer = __esm({
     init_constants42();
     init_levels();
     init_api29();
-    init_attach23();
+    init_attach24();
   }
 });
 
@@ -78689,7 +78787,7 @@ function attachDiffs(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var init_attach24 = __esm({
+var init_attach25 = __esm({
   "js/diff/attach.js"() {
     "use strict";
     init_strings();
@@ -78728,7 +78826,7 @@ var init_diff = __esm({
     init_words4();
     init_fold2();
     init_actions7();
-    init_attach24();
+    init_attach25();
   }
 });
 
@@ -80672,7 +80770,6 @@ init_footprint();
 init_freshness();
 init_gridlayout();
 init_hovercard();
-init_idmark();
 init_intent();
 init_job_line();
 init_keys5();
@@ -80799,10 +80896,6 @@ export {
   HOVERCARD_ATTRIBUTE,
   HOVERCARD_CARD,
   HOVERCARD_EVENT,
-  IDMARK,
-  IDMARK_GLYPHS,
-  IDMARK_SLOTS,
-  IDMARK_STATUSES,
   INDETERMINATE_ATTRIBUTE,
   INTENT_MAX_SHOWN,
   JOBLINE,
@@ -80967,7 +81060,6 @@ export {
   attachFootprints,
   attachGrids,
   attachHoverCards,
-  attachIdmarks,
   attachJobLines,
   attachKeys,
   attachKpiStrips,
@@ -81122,10 +81214,7 @@ export {
   hslToRgb,
   humanDuration,
   identityCells,
-  idmarkColours,
   idmark_exports as idmarkExports,
-  idmarkFor,
-  idmarkLetters,
   inPausedRange,
   initializeTheme,
   intent_exports as intentExports,
@@ -81270,8 +81359,6 @@ export {
   setFacetCounts,
   setFacetItems,
   setFacetValues,
-  setIdmark,
-  setIdmarkGroup,
   setIndeterminate,
   setJobLine,
   setKeys,

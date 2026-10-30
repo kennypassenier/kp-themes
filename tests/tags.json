@@ -353,6 +353,7 @@
         { "path": "js/card-state.js", "tags": ["@component:data"], "why": "a card in four data states [kpadopt4-rows]" },
         { "path": "js/facets.js", "tags": ["@component:data"], "why": "the facet list with counts and only [kpadopt2-tiles]" },
         { "path": "js/idmark.js", "tags": ["@component:data"], "why": "the identity mark made from a name [kpadopt4-data]" },
+        { "path": "js/idmark/*.js", "tags": ["@component:data"], "why": "the identity mark made from a name [kpadopt4-data]" },
         { "path": "js/passkeys.js", "tags": ["@component:data"], "why": "the list of ways to sign in [kpadopt5-people]" },
         { "path": "js/passkeys/*.js", "tags": ["@component:data"] },
         { "path": "js/thread.js", "tags": ["@component:data"], "why": "the conversation in bubbles [kpadopt5-people]" },

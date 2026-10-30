@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The seventy-two largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The seventy-three largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1203,3 +1203,16 @@ The bottom tab bar and the count on a tab, as a TabbarController over small part
 | `count-watch.js` | attachTabCounts: every count under a root drawn now and when an attribute changes.                     |
 | `count.js`       | The count on an underline tab: read from attributes, drawn as a badge part, written by setTabCount.    |
 | `dialog.js`      | TabbarDialog: the More tab follows its dialog and the drawer closes on a press outside or on an entry. |
+
+## js/idmark.js → js/idmark/
+
+The identity mark made from a name. It keeps no state per element, so it is split by responsibility and has no controller class. 6 files.
+
+| File           | Does                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| `attach.js`    | attachIdmarks: every mark under a root drawn, and the ones added or renamed later.               |
+| `avatar.js`    | The avatar part of a mark: status dot, the label a screen reader hears, and the photo.           |
+| `draw.js`      | setIdmark: one mark drawn from a name, and the record of what each was drawn from.               |
+| `group.js`     | setIdmarkGroup: marks with an exact "+N" for the people left out.                                |
+| `mark.js`      | What a mark is from its name: hash, letters, slot, glyph, pattern, and slots shared over a list. |
+| `more-list.js` | IdmarkMoreList: the "+N" button and the list of the names it hides.                              |
