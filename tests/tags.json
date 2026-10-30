@@ -380,6 +380,7 @@
         { "path": "js/stackbar.js", "tags": ["@component:data"], "why": "the share bar with its legend [kpadopt4-data]" },
         { "path": "js/stackbar/*.js", "tags": ["@component:data"], "why": "the share bar with its legend [kpadopt4-data]" },
         { "path": "js/bullets.js", "tags": ["@component:data"], "why": "the bullet list, a value against a threshold [kpadopt4-data]" },
+        { "path": "js/bullets/*.js", "tags": ["@component:data"], "why": "the bullet list, a value against a threshold [kpadopt4-data]" },
         { "path": "js/code.js", "tags": ["@component:data"], "why": "the code and payload block [kpadopt4-data]" },
         { "path": "js/code/*.js", "tags": ["@component:data"] },
         { "path": "js/tick.js", "tags": ["@component:data"], "why": "a live number that ticks to its new value [kpadopt4-data]" },

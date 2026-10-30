@@ -1,0 +1,2 @@
+/** @param {Document} doc @param {string} className @param {string} [tag] */
+export declare const make: (doc: Document, className: string, tag?: string) => HTMLElement;

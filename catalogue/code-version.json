@@ -13,7 +13,7 @@
         "js/autosize.js": { "digest": "3a0cba6ee822ba7d", "when": "textarea[data-kp-autosize]" },
         "js/availability.js": { "digest": "554dafbb1e66f83c", "when": "[data-kp-availability]" },
         "js/barcell.js": { "digest": "7b955a57075fc5f9", "when": "[data-kp-bar]" },
-        "js/bullets.js": { "digest": "9444f975bf1d50a4", "when": "[data-kp-bullets]" },
+        "js/bullets.js": { "digest": "2af33c30cc6b47ba", "when": "[data-kp-bullets]" },
         "js/calendar.js": { "digest": "06f57569124aa0d0", "when": "[data-kp-calendar]" },
         "js/calm.js": { "digest": "45d5794252fc9583", "when": "[data-kp-calm-switch]" },
         "js/card-state.js": { "digest": "67e9723c0099b7b9", "when": ".kp-card[data-kp-state]" },

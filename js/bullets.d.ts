@@ -1,9 +1,5 @@
-/** A bullet list the page fills with setBullets(). */
-export declare const BULLETS = "[data-kp-bullets]";
-/** Fired on the root when a `pick` row is pressed: `{ key }`. */
-export declare const BULLETS_PICK_EVENT = "kp-bullets-pick";
-/** Fired on the root when the Retry of a failed list is pressed. */
-export declare const BULLETS_RETRY_EVENT = "kp-bullets-retry";
+export { BULLETS, BULLETS_PICK_EVENT, BULLETS_RETRY_EVENT } from './bullets/values.js';
+export { bulletTone } from './bullets/tone.js';
 export type BulletRow = {
     key: string;
     label: string;
@@ -66,12 +62,32 @@ export type BulletsSpec = {
     loadingWords?: string;
 };
 /**
- * The tone of a value: warning at or past the threshold, destructive at or
- * past `bad`.
- * @param {number | null} value @param {number} threshold @param {number} [bad]
- * @returns {'' | 'warning' | 'destructive'}
+ * @typedef {object} BulletRow
+ * @property {string} key
+ * @property {string} label
+ * @property {string} [detail]
+ * @property {number | null} value      null: nothing to measure
+ * @property {string} [figure]          the figure as written, in place of format(value)
+ * @property {string | Node} [lead]     a name (an identity mark is made) or a node
+ * @property {string} [href]            the row is a link
+ * @property {boolean} [pick]           the row is a button
  */
-export declare function bulletTone(value: number | null, threshold: number, bad?: number): '' | 'warning' | 'destructive';
+/**
+ * @typedef {object} BulletsSpec
+ * @property {BulletRow[]} [rows]
+ * @property {number} threshold
+ * @property {number} [max]             where the bar ends (default twice the threshold)
+ * @property {number} [bad]             at or past this the row is destructive (default none)
+ * @property {(value: number) => string} [format]
+ * @property {'worst' | 'none'} [sort]  default 'worst'
+ * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
+ * @property {string} [message]         the sentence of a failed list
+ * @property {boolean} [retry]          false leaves Retry out of a failed list (a read the page cannot repeat)
+ * @property {string} [emptyTitle]
+ * @property {string} [emptyText]
+ * @property {number} [loadingRows]     how many waiting rows (default: the rows shown last, else 3)
+ * @property {string} [loadingWords]    what the busy card says
+ */
 /**
  * Draw (or redraw) a bullet list.
  * @param {HTMLElement} el the root, a `.kp-bullets`
