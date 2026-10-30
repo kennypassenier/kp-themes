@@ -72844,8 +72844,41 @@ __export(print_exports, {
   attachPrint: () => attachPrint,
   preparePrint: () => preparePrint
 });
+function openFolded(sheet, undo) {
+  for (const folded2 of sheet.querySelectorAll("details:not([open])")) {
+    folded2.setAttribute("open", "");
+    undo.push(() => folded2.removeAttribute("open"));
+  }
+}
+function addTitle(doc, sheet, undo) {
+  const title = sheet.getAttribute("data-kp-print-title");
+  if (!title || title === "auto") return;
+  const heading = doc.createElement("p");
+  heading.className = "kp-print-title";
+  heading.textContent = title;
+  sheet.before(heading);
+  undo.push(() => heading.remove());
+}
+function addStateLine(doc, sheet, undo) {
+  const state12 = sheet.getAttribute("data-kp-state");
+  const hasRows = sheet.querySelector(".kp-checklist__item") !== null;
+  if (hasRows || !(state12 === "loading" || sheet.hasAttribute("aria-busy"))) return;
+  const line = doc.createElement("p");
+  line.className = "kp-print-state";
+  line.textContent = getStrings().printLoading;
+  sheet.append(line);
+  undo.push(() => line.remove());
+}
+function addStamp(doc, sheets, { now = () => Date.now(), timeZone }, undo) {
+  if (sheets.length === 0 || !sheets.some((sheet) => sheet.getAttribute("data-kp-print-date") !== "off") || doc.querySelector(".kp-print-stamp"))
+    return;
+  const stamp4 = doc.createElement("p");
+  stamp4.className = "kp-print-stamp";
+  stamp4.textContent = getStrings().printStamp(agoMoment(now(), timeZone));
+  doc.body.append(stamp4);
+  undo.push(() => stamp4.remove());
+}
 function preparePrint(doc, { now = () => Date.now(), timeZone } = {}) {
-  const strings = getStrings();
   const undo = [];
   const sheets = (
     /** @type {HTMLElement[]} */
@@ -72853,35 +72886,11 @@ function preparePrint(doc, { now = () => Date.now(), timeZone } = {}) {
   );
   doc.dispatchEvent(new CustomEvent(PRINT_EVENT, { detail: { sheets } }));
   for (const sheet of sheets) {
-    for (const folded2 of sheet.querySelectorAll("details:not([open])")) {
-      folded2.setAttribute("open", "");
-      undo.push(() => folded2.removeAttribute("open"));
-    }
-    const title = sheet.getAttribute("data-kp-print-title");
-    if (title && title !== "auto") {
-      const heading = doc.createElement("p");
-      heading.className = "kp-print-title";
-      heading.textContent = title;
-      sheet.before(heading);
-      undo.push(() => heading.remove());
-    }
-    const state12 = sheet.getAttribute("data-kp-state");
-    const hasRows = sheet.querySelector(".kp-checklist__item") !== null;
-    if (!hasRows && (state12 === "loading" || sheet.hasAttribute("aria-busy"))) {
-      const line = doc.createElement("p");
-      line.className = "kp-print-state";
-      line.textContent = strings.printLoading;
-      sheet.append(line);
-      undo.push(() => line.remove());
-    }
+    openFolded(sheet, undo);
+    addTitle(doc, sheet, undo);
+    addStateLine(doc, sheet, undo);
   }
-  if (sheets.length > 0 && sheets.some((sheet) => sheet.getAttribute("data-kp-print-date") !== "off") && !doc.querySelector(".kp-print-stamp")) {
-    const stamp4 = doc.createElement("p");
-    stamp4.className = "kp-print-stamp";
-    stamp4.textContent = strings.printStamp(agoMoment(now(), timeZone));
-    doc.body.append(stamp4);
-    undo.push(() => stamp4.remove());
-  }
+  addStamp(doc, sheets, { now, timeZone }, undo);
   return () => {
     for (const fn of undo.reverse()) fn();
   };
@@ -72891,52 +72900,80 @@ function attachPrint(root = document, options = {}) {
     /** @type {Element} */
     root.ownerDocument
   );
-  const view = doc.defaultView;
-  const cleanups = [];
-  for (const button6 of root.querySelectorAll(PRINT_ACTION)) {
-    if (!(button6 instanceof HTMLElement) || button6.dataset.kpPrintAttached !== void 0) continue;
-    button6.dataset.kpPrintAttached = "";
-    const onClick = () => view?.print();
-    button6.addEventListener("click", onClick);
-    cleanups.push(() => {
-      button6.removeEventListener("click", onClick);
-      delete button6.dataset.kpPrintAttached;
-    });
-  }
-  if (view && !HOOKED.has(doc)) {
-    HOOKED.add(doc);
-    let restore2 = null;
-    const before = () => {
-      restore2?.();
-      restore2 = preparePrint(doc, options);
-    };
-    const after = () => {
-      restore2?.();
-      restore2 = null;
-    };
-    view.addEventListener("beforeprint", before);
-    view.addEventListener("afterprint", after);
-    cleanups.push(() => {
-      view.removeEventListener("beforeprint", before);
-      view.removeEventListener("afterprint", after);
-      after();
-      HOOKED.delete(doc);
-    });
+  const made6 = [...root.querySelectorAll(PRINT_ACTION)].filter(
+    (button6) => button6 instanceof HTMLElement && !(button6.dataset.kpPrintAttached !== void 0 || controllerOf(button6, PrintButtonController))
+  ).map((button6) => attachOne(
+    /** @type {HTMLElement} */
+    button6,
+    PrintButtonController
+  )).filter((controller) => controller !== void 0);
+  if (doc.defaultView && !HOOKED.has(doc)) {
+    const hooks = new PrintHooksController(
+      /** @type {HTMLElement} */
+      /** @type {unknown} */
+      doc,
+      options
+    );
+    hooks.connect();
+    made6.push(hooks);
   }
   return () => {
-    for (const clean of cleanups) clean();
+    for (const controller of made6) controller.destroy();
   };
 }
-var PRINT_ACTION, PRINT_SHEETS, PRINT_EVENT, HOOKED;
+var PRINT_ACTION, PRINT_SHEETS, PRINT_EVENT, HOOKED, PrintButtonController, PrintHooksController;
 var init_print = __esm({
   "js/print.js"() {
     "use strict";
     init_strings();
     init_freshness();
+    init_controller();
     PRINT_ACTION = "[data-kp-print-action]";
     PRINT_SHEETS = "[data-kp-checklist], [data-kp-print-sheet]";
     PRINT_EVENT = "kp-print-prepare";
     HOOKED = /* @__PURE__ */ new WeakSet();
+    PrintButtonController = class extends Controller {
+      connect() {
+        const button6 = this.host;
+        button6.dataset.kpPrintAttached = "";
+        this.own(() => {
+          delete button6.dataset.kpPrintAttached;
+        });
+        this.listen(button6, "click", () => button6.ownerDocument.defaultView?.print());
+      }
+    };
+    PrintHooksController = class extends Controller {
+      connect() {
+        const doc = (
+          /** @type {Document} */
+          /** @type {unknown} */
+          this.host
+        );
+        const view = (
+          /** @type {Window} */
+          doc.defaultView
+        );
+        this.restore = null;
+        HOOKED.add(doc);
+        this.own(() => HOOKED.delete(doc));
+        this.own(() => this.after());
+        this.listen(view, "beforeprint", () => this.before(doc));
+        this.listen(view, "afterprint", () => this.after());
+      }
+      /** @param {Document} doc */
+      before(doc) {
+        this.restore?.();
+        this.restore = preparePrint(
+          doc,
+          /** @type {PrintOptions} */
+          this.options
+        );
+      }
+      after() {
+        this.restore?.();
+        this.restore = null;
+      }
+    };
   }
 });
 
