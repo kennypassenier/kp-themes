@@ -56613,45 +56613,12 @@ var init_job_line = __esm({
   }
 });
 
-// js/code-field.js
-var code_field_exports = {};
-__export(code_field_exports, {
-  CODE_FIELD: () => CODE_FIELD,
-  CODE_FIELD_CARET_EVENT: () => CODE_FIELD_CARET_EVENT,
-  CODE_FIELD_CHECK_EVENT: () => CODE_FIELD_CHECK_EVENT,
-  CODE_FIELD_CHECK_MS: () => CODE_FIELD_CHECK_MS,
-  CODE_FIELD_MAX_ROWS: () => CODE_FIELD_MAX_ROWS,
-  CODE_FIELD_STATE_EVENT: () => CODE_FIELD_STATE_EVENT,
-  attachCodeFields: () => attachCodeFields,
-  caretPosition: () => caretPosition,
-  codeField: () => codeField,
-  setCodeFieldError: () => setCodeFieldError
-});
-function caretPosition(text, offset) {
-  const before = text.slice(0, Math.max(0, offset));
-  const line = before.split("\n").length;
-  return { line, column: before.length - before.lastIndexOf("\n") };
-}
-function attachOne3(area) {
-  if (HANDLES3.has(area)) return () => void 0;
-  const doc = area.ownerDocument;
-  const view = doc.defaultView;
-  const strings = getStrings();
-  const language = () => (area.getAttribute("data-kp-code-field") ?? "").trim();
-  const getWhen = () => area.getAttribute("data-kp-code-check") === "blur" ? "blur" : "input";
-  const getIndent = () => {
-    const raw = area.getAttribute("data-kp-code-indent") ?? "2";
-    return raw === "tab" ? "	" : " ".repeat(raw === "4" ? 4 : 2);
-  };
-  const gutterWanted = () => area.getAttribute("data-kp-code-gutter") !== "false";
-  const blocks = () => area.getAttribute("data-kp-code-block") !== "false";
-  let wrap = area.hasAttribute("data-kp-code-wrap") && area.getAttribute("data-kp-code-wrap") !== "false";
-  const minRows = Math.max(2, Number(area.getAttribute("rows")) || 6);
-  const id = area.id || (area.id = `kp-codefield-${serial4 += 1}`);
+// js/code-field/build.js
+function buildChrome(doc, strings, id, wrap, gutterOn) {
   const root = doc.createElement("div");
   root.className = "kp-jsonfield kp-codefield";
   root.setAttribute("data-kp-json-wrap", String(wrap));
-  root.toggleAttribute("data-kp-json-gutter", gutterWanted());
+  root.toggleAttribute("data-kp-json-gutter", gutterOn);
   const tools = doc.createElement("div");
   tools.className = "kp-jsonfield__tools";
   const frame3 = doc.createElement("div");
@@ -56677,26 +56644,30 @@ function attachOne3(area) {
   const mirror = doc.createElement("div");
   mirror.className = "kp-jsonfield__mirror";
   mirror.setAttribute("aria-hidden", "true");
-  const tool2 = (label, which) => {
-    const b = (
-      /** @type {HTMLButtonElement} */
-      doc.createElement("button")
-    );
-    b.type = "button";
-    b.className = "kp-button kp-button--sm kp-button--ghost";
-    b.dataset.kpCodeTool = which;
-    b.textContent = label;
-    return b;
-  };
-  const toolWrap = tool2(strings.jsonWrap, "wrap");
+  const toolWrap = buildTool(doc, strings.jsonWrap, "wrap");
   toolWrap.setAttribute("aria-pressed", String(wrap));
-  const toolCopy = tool2("", "copy");
+  const toolCopy = buildTool(doc, "", "copy");
   const word = doc.createElement("span");
   word.className = "kp-code__word";
   word.setAttribute("data-kp-code-words", [strings.jsonCopy, strings.copied, strings.copyBlocked].join("\n"));
   word.textContent = strings.jsonCopy;
   toolCopy.append(word);
   tools.append(toolWrap, toolCopy);
+  return { root, tools, frame: frame3, gutter, numbers: numbers2, status, readout, help, mirror, word };
+}
+function buildTool(doc, label, which) {
+  const b = (
+    /** @type {HTMLButtonElement} */
+    doc.createElement("button")
+  );
+  b.type = "button";
+  b.className = "kp-button kp-button--sm kp-button--ghost";
+  b.dataset.kpCodeTool = which;
+  b.textContent = label;
+  return b;
+}
+function mountChrome(area, ui) {
+  const { root, tools, frame: frame3, gutter, mirror, readout, status, help } = ui;
   area.before(root);
   frame3.append(gutter, area, mirror);
   root.append(tools, frame3, readout, status, help);
@@ -56706,296 +56677,490 @@ function attachOne3(area) {
   area.setAttribute("autocapitalize", "off");
   area.setAttribute("autocomplete", "off");
   area.classList.add("kp-jsonfield__input");
-  let problem = null;
-  let errorLine2 = 0;
-  let debounce;
-  let copyTimer;
-  let escaped = false;
-  let lastCaret = "";
-  const field2 = area.closest(".kp-field");
-  const holder = (
-    /** @type {HTMLElement | null} */
-    field2?.querySelector("[data-kp-field-error]") ?? null
-  );
-  const lineHeight2 = () => {
-    const n = Number.parseFloat(view?.getComputedStyle(area).lineHeight ?? "");
-    return Number.isFinite(n) ? n : 20;
-  };
-  const lineHeights2 = (lines) => {
-    const lh = lineHeight2();
-    if (!wrap) return lines.map(() => lh);
-    const cs = view?.getComputedStyle(area);
-    mirror.style.width = `${area.clientWidth}px`;
-    mirror.style.font = cs?.font ?? "";
-    mirror.style.letterSpacing = cs?.letterSpacing ?? "";
-    mirror.style.tabSize = cs?.tabSize ?? "";
-    mirror.style.paddingInline = cs?.paddingInline ?? "";
-    mirror.replaceChildren(
-      ...lines.map((line) => {
-        const row = doc.createElement("div");
-        row.textContent = line === "" ? " " : line;
-        return row;
-      })
-    );
-    return [...mirror.children].map((row) => row.getBoundingClientRect().height || lh);
-  };
-  const drawGutter2 = () => {
-    if (!gutterWanted()) return;
-    const lines = area.value.split("\n");
-    const heights = lineHeights2(lines);
-    numbers2.replaceChildren(
-      ...lines.map((_, i) => {
-        const n = doc.createElement("span");
-        n.className = "kp-jsonfield__number";
-        if (i + 1 === errorLine2) n.classList.add("is-error");
-        n.style.blockSize = `${heights[i]}px`;
-        n.textContent = String(i + 1);
-        return n;
-      })
-    );
-    root.style.setProperty("--kp-json-digits", String(String(lines.length).length));
-    numbers2.style.transform = `translateY(${-area.scrollTop}px)`;
-  };
-  const grow2 = () => {
-    const cs = view?.getComputedStyle(area);
-    if (!cs) return;
-    const lh = lineHeight2();
-    const px5 = (v) => Number.parseFloat(v) || 0;
-    const chrome = px5(cs.paddingTop) + px5(cs.paddingBottom) + px5(cs.borderTopWidth) + px5(cs.borderBottomWidth);
-    const text = lineHeights2(area.value.split("\n")).reduce((sum, h2) => sum + h2, 0);
-    const bar = Math.max(0, area.offsetHeight - area.clientHeight - px5(cs.borderTopWidth) - px5(cs.borderBottomWidth));
-    const content = text + chrome + bar;
-    const least = minRows * lh + chrome;
-    const most = Math.max(CODE_FIELD_MAX_ROWS, minRows) * lh + chrome;
-    const height = Math.ceil(Math.min(most, Math.max(least, content)));
-    area.style.blockSize = `${height}px`;
-    area.style.overflowY = content > height + 1 ? "auto" : "hidden";
-  };
-  const drawReadout = () => {
-    const at = caretPosition(area.value, area.selectionStart ?? 0);
-    const name = language();
-    const text = strings.codeFieldPosition(at.line, at.column) + (name ? ` \xB7 ${name.toUpperCase()}` : "");
-    if (readout.textContent !== text) readout.textContent = text;
-    const key = `${at.line}:${at.column}`;
-    if (key !== lastCaret) {
-      lastCaret = key;
-      area.dispatchEvent(new CustomEvent(CODE_FIELD_CARET_EVENT, { bubbles: true, detail: at }));
-    }
-  };
-  const setError2 = (line, column = null, message = "") => {
-    const before = problem;
-    if (line === null && !message) problem = null;
-    else problem = { line, column: column ?? null, message };
-    errorLine2 = problem?.line ?? 0;
-    const broken = problem !== null;
-    const sentence2 = !problem ? "" : problem.line !== null && problem.column !== null ? strings.codeFieldError(problem.line, problem.column, problem.message) : problem.line !== null ? strings.codeFieldErrorLine(problem.line, problem.message) : strings.codeFieldErrorPlain(problem.message);
-    root.setAttribute("data-kp-json-state", broken ? "invalid" : "valid");
-    area.setCustomValidity(broken && blocks() ? strings.codeFieldBlocked : "");
-    if (holder) {
-      status.textContent = "";
-      if (broken) showError(area, sentence2);
-      else clearError(area);
-    } else {
-      status.textContent = sentence2;
-      if (broken) area.setAttribute("aria-invalid", "true");
-      else area.removeAttribute("aria-invalid");
-    }
-    field2?.classList.toggle("kp-field--invalid", broken);
-    drawGutter2();
-    if (before?.message !== problem?.message || before?.line !== problem?.line || before?.column !== problem?.column || before === null !== (problem === null))
-      area.dispatchEvent(
-        new CustomEvent(CODE_FIELD_STATE_EVENT, {
-          bubbles: true,
-          detail: { state: broken ? "invalid" : "ready", line: problem?.line ?? null, column: problem?.column ?? null, message: sentence2 }
-        })
-      );
-  };
-  const check = () => {
-    if (problem !== null) setError2(null);
-    area.dispatchEvent(
-      new CustomEvent(CODE_FIELD_CHECK_EVENT, {
-        bubbles: true,
-        detail: { value: area.value, language: language(), error: (line, column, message) => setError2(line, column, message) }
-      })
-    );
-  };
-  const onInput = () => {
-    grow2();
-    drawGutter2();
-    drawReadout();
-    if (getWhen() !== "input") return;
-    view?.clearTimeout(debounce);
-    debounce = view?.setTimeout(check, CODE_FIELD_CHECK_MS);
-  };
-  const onBlur = () => {
-    view?.clearTimeout(debounce);
-    check();
-  };
-  const onGutterWheel = (event) => {
-    const before = area.scrollTop;
-    area.scrollTop += event.deltaMode === 1 ? event.deltaY * lineHeight2() : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
-    if (area.scrollTop !== before) event.preventDefault();
-  };
-  const onScroll = () => {
-    numbers2.style.transform = `translateY(${-area.scrollTop}px)`;
-  };
-  const onKey5 = (event) => {
-    const mod = event.ctrlKey || event.metaKey;
-    if (event.key === "Escape") {
-      escaped = true;
-      return;
-    }
-    if (event.key === "Tab" && !mod && !event.altKey) {
-      if (escaped) {
-        escaped = false;
-        return;
-      }
-      event.preventDefault();
-      const { selectionStart: a, selectionEnd: b, value } = area;
-      if (event.shiftKey) {
-        const from = value.lastIndexOf("\n", a - 1) + 1;
-        const lineText = value.slice(from);
-        const indent = getIndent();
-        const strip = lineText.startsWith(indent) ? indent.length : lineText.startsWith("	") ? 1 : lineText.match(/^ {1,4}/)?.[0].length ?? 0;
-        if (strip > 0) {
-          area.setRangeText("", from, from + strip, "preserve");
-          area.setSelectionRange(Math.max(from, a - strip), Math.max(from, b - strip));
-          area.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-        return;
-      }
-      area.setRangeText(getIndent(), a, b, "end");
-      area.dispatchEvent(new Event("input", { bubbles: true }));
-      return;
-    }
-    escaped = false;
-  };
-  const onTool = async (event) => {
-    const button6 = event.target instanceof Element ? (
-      /** @type {HTMLButtonElement | null} */
-      event.target.closest("[data-kp-code-tool]")
-    ) : null;
-    if (!button6 || button6.disabled) return;
-    if (button6.dataset.kpCodeTool === "wrap") {
-      wrap = !wrap;
-      root.setAttribute("data-kp-json-wrap", String(wrap));
-      button6.setAttribute("aria-pressed", String(wrap));
-      drawGutter2();
-      grow2();
-    } else {
-      view?.clearTimeout(copyTimer);
-      try {
-        await navigator.clipboard.writeText(area.value);
-        word.textContent = strings.copied;
-      } catch {
-        word.textContent = strings.copyBlocked;
-      }
-      copyTimer = view?.setTimeout(() => word.textContent = strings.jsonCopy, 1500);
-    }
-  };
-  const lock = () => {
-    const off = area.disabled || area.readOnly;
-    for (const b of tools.querySelectorAll("button")) b.disabled = off && b.dataset.kpCodeTool !== "copy";
-    root.toggleAttribute("data-kp-json-off", off);
-  };
-  const attrs = view && "MutationObserver" in view ? new view.MutationObserver((records) => {
-    if (records.some((r) => r.attributeName === "disabled" || r.attributeName === "readonly")) lock();
-    if (records.some((r) => r.attributeName?.startsWith("data-kp-code"))) {
-      root.toggleAttribute("data-kp-json-gutter", gutterWanted());
-      drawReadout();
-      drawGutter2();
-      grow2();
-    }
-  }) : null;
-  attrs?.observe(area, { attributes: true, attributeFilter: ["disabled", "readonly", "data-kp-code-field", "data-kp-code-gutter", "data-kp-code-indent", "data-kp-code-check"] });
-  const resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => drawGutter2()) : null;
-  resize?.observe(area);
-  const reset = () => view?.setTimeout(() => {
-    setError2(null);
-    drawGutter2();
-    drawReadout();
-    grow2();
-  }, 0);
-  area.form?.addEventListener("reset", reset);
-  area.addEventListener("input", onInput);
-  area.addEventListener("blur", onBlur);
-  area.addEventListener("scroll", onScroll, { passive: true });
-  area.addEventListener("keyup", drawReadout);
-  area.addEventListener("click", drawReadout);
-  area.addEventListener("focus", drawReadout);
-  doc.addEventListener("selectionchange", drawReadout);
-  gutter.addEventListener("wheel", onGutterWheel, { passive: false });
-  area.addEventListener("keydown", onKey5);
-  area.addEventListener("pointerdown", () => escaped = false);
-  tools.addEventListener("click", onTool);
-  lock();
-  root.setAttribute("data-kp-json-state", "valid");
-  drawGutter2();
-  drawReadout();
-  grow2();
-  HANDLES3.set(area, {
-    position: () => caretPosition(area.value, area.selectionStart ?? 0),
-    setError: setError2,
-    check,
-    state: () => ({ state: problem ? "invalid" : "ready", line: problem?.line ?? null, column: problem?.column ?? null, message: problem?.message ?? "" })
-  });
-  queueMicrotask(check);
-  return () => {
-    view?.clearTimeout(debounce);
-    view?.clearTimeout(copyTimer);
-    area.removeEventListener("input", onInput);
-    area.removeEventListener("blur", onBlur);
-    area.removeEventListener("scroll", onScroll);
-    area.removeEventListener("keyup", drawReadout);
-    area.removeEventListener("click", drawReadout);
-    area.removeEventListener("focus", drawReadout);
-    doc.removeEventListener("selectionchange", drawReadout);
-    gutter.removeEventListener("wheel", onGutterWheel);
-    area.removeEventListener("keydown", onKey5);
-    area.form?.removeEventListener("reset", reset);
-    attrs?.disconnect();
-    resize?.disconnect();
-    area.setCustomValidity("");
-    area.removeAttribute("aria-invalid");
-    if (describedBefore) area.setAttribute("aria-describedby", describedBefore);
-    else area.removeAttribute("aria-describedby");
-    area.style.blockSize = "";
-    area.style.overflowY = "";
-    root.replaceWith(area);
-    HANDLES3.delete(area);
-  };
+  return describedBefore;
 }
-function codeField(area) {
-  return HANDLES3.get(area) ?? null;
-}
-function setCodeFieldError(area, line, column = null, message = "") {
-  HANDLES3.get(area)?.setError(line, column, message);
-}
-function attachCodeFields(root = document) {
-  const found = (
-    /** @type {HTMLTextAreaElement[]} */
-    [
-      ...root instanceof HTMLTextAreaElement && root.matches(CODE_FIELD) ? [root] : [],
-      ...root.querySelectorAll(CODE_FIELD)
-    ]
-  );
-  const undo = found.map((area) => attachOne3(area));
-  return () => undo.forEach((u) => u());
-}
-var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES3, serial4;
-var init_code_field = __esm({
-  "js/code-field.js"() {
+var init_build7 = __esm({
+  "js/code-field/build.js"() {
     "use strict";
-    init_strings();
-    init_forms();
+  }
+});
+
+// js/code-field/values.js
+function caretPosition(text, offset) {
+  const before = text.slice(0, Math.max(0, offset));
+  const line = before.split("\n").length;
+  return { line, column: before.length - before.lastIndexOf("\n") };
+}
+var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
+var init_values3 = __esm({
+  "js/code-field/values.js"() {
+    "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
     CODE_FIELD_CHECK_EVENT = "kp-code-field-check";
     CODE_FIELD_STATE_EVENT = "kp-code-field-state";
     CODE_FIELD_CARET_EVENT = "kp-code-field-caret";
     CODE_FIELD_CHECK_MS = 300;
     CODE_FIELD_MAX_ROWS = 20;
-    HANDLES3 = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/code-field/core.js
+var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
+var init_core5 = __esm({
+  "js/code-field/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_build7();
+    init_values3();
+    LEAST_ROWS = 2;
+    DEFAULT_ROWS3 = 6;
+    FALLBACK_LINE_PX = 20;
+    INDENT_SPACES = 2;
+    WIDE_INDENT_SPACES = 4;
     serial4 = 0;
+    CodeFieldCore = class extends Controller {
+      /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
+      constructor(host) {
+        super(host);
+        const area = (
+          /** @type {HTMLTextAreaElement} */
+          host
+        );
+        this.area = area;
+        this.doc = area.ownerDocument;
+        this.view = this.doc.defaultView;
+        this.strings = getStrings();
+        this.wrap = area.hasAttribute("data-kp-code-wrap") && area.getAttribute("data-kp-code-wrap") !== "false";
+        this.minRows = Math.max(LEAST_ROWS, Number(area.getAttribute("rows")) || DEFAULT_ROWS3);
+        this.id = area.id || `kp-codefield-${serial4 += 1}`;
+        this.ui = buildChrome(this.doc, this.strings, this.id, this.wrap, this.gutterWanted());
+        this.lastCaret = "";
+        this.errorLine = 0;
+      }
+      language() {
+        return (this.area.getAttribute("data-kp-code-field") ?? "").trim();
+      }
+      getWhen() {
+        return this.area.getAttribute("data-kp-code-check") === "blur" ? "blur" : "input";
+      }
+      getIndent() {
+        const raw = this.area.getAttribute("data-kp-code-indent") ?? String(INDENT_SPACES);
+        return raw === "tab" ? "	" : " ".repeat(raw === String(WIDE_INDENT_SPACES) ? WIDE_INDENT_SPACES : INDENT_SPACES);
+      }
+      gutterWanted() {
+        return this.area.getAttribute("data-kp-code-gutter") !== "false";
+      }
+      blocks() {
+        return this.area.getAttribute("data-kp-code-block") !== "false";
+      }
+      /** Wrap long lines or let them scroll; the tool, the gutter and the height follow. @param {boolean} on */
+      setWrap(on) {
+        this.wrap = on;
+      }
+      lineHeight() {
+        const n = Number.parseFloat(this.view?.getComputedStyle(this.area).lineHeight ?? "");
+        return Number.isFinite(n) ? n : FALLBACK_LINE_PX;
+      }
+      /** The height of each line: one line height, or what the mirror measures when long lines wrap. @param {string[]} lines @returns {number[]} */
+      lineHeights(lines) {
+        const { area, doc } = this;
+        const lh = this.lineHeight();
+        if (!this.wrap) return lines.map(() => lh);
+        const mirror = this.ui.mirror;
+        const cs = this.view?.getComputedStyle(area);
+        mirror.style.width = `${area.clientWidth}px`;
+        mirror.style.font = cs?.font ?? "";
+        mirror.style.letterSpacing = cs?.letterSpacing ?? "";
+        mirror.style.tabSize = cs?.tabSize ?? "";
+        mirror.style.paddingInline = cs?.paddingInline ?? "";
+        mirror.replaceChildren(
+          ...lines.map((line) => {
+            const row = doc.createElement("div");
+            row.textContent = line === "" ? " " : line;
+            return row;
+          })
+        );
+        return [...mirror.children].map((row) => row.getBoundingClientRect().height || lh);
+      }
+      drawGutter() {
+        if (!this.gutterWanted()) return;
+        const { area, doc, ui } = this;
+        const lines = area.value.split("\n");
+        const heights = this.lineHeights(lines);
+        ui.numbers.replaceChildren(
+          ...lines.map((_, i) => {
+            const n = doc.createElement("span");
+            n.className = "kp-jsonfield__number";
+            if (i + 1 === this.errorLine) n.classList.add("is-error");
+            n.style.blockSize = `${heights[i]}px`;
+            n.textContent = String(i + 1);
+            return n;
+          })
+        );
+        ui.root.style.setProperty("--kp-json-digits", String(String(lines.length).length));
+        ui.numbers.style.transform = `translateY(${-area.scrollTop}px)`;
+      }
+      /** Grow the field with its text, from `rows` lines to the most it grows to. */
+      grow() {
+        const { area } = this;
+        const cs = this.view?.getComputedStyle(area);
+        if (!cs) return;
+        const lh = this.lineHeight();
+        const px5 = (v) => Number.parseFloat(v) || 0;
+        const chrome = px5(cs.paddingTop) + px5(cs.paddingBottom) + px5(cs.borderTopWidth) + px5(cs.borderBottomWidth);
+        const text = this.lineHeights(area.value.split("\n")).reduce((sum, h2) => sum + h2, 0);
+        const bar = Math.max(0, area.offsetHeight - area.clientHeight - px5(cs.borderTopWidth) - px5(cs.borderBottomWidth));
+        const content = text + chrome + bar;
+        const least = this.minRows * lh + chrome;
+        const most = Math.max(CODE_FIELD_MAX_ROWS, this.minRows) * lh + chrome;
+        const height = Math.ceil(Math.min(most, Math.max(least, content)));
+        area.style.blockSize = `${height}px`;
+        area.style.overflowY = content > height + 1 ? "auto" : "hidden";
+      }
+      /** "Line 3, column 12 · YAML": where the caret is. */
+      drawReadout() {
+        const { area, ui } = this;
+        const at = caretPosition(area.value, area.selectionStart ?? 0);
+        const name = this.language();
+        const text = this.strings.codeFieldPosition(at.line, at.column) + (name ? ` \xB7 ${name.toUpperCase()}` : "");
+        if (ui.readout.textContent !== text) ui.readout.textContent = text;
+        const key = `${at.line}:${at.column}`;
+        if (key !== this.lastCaret) {
+          this.lastCaret = key;
+          area.dispatchEvent(new CustomEvent(CODE_FIELD_CARET_EVENT, { bubbles: true, detail: at }));
+        }
+      }
+    };
+  }
+});
+
+// js/code-field/problem.js
+var CodeFieldProblems;
+var init_problem = __esm({
+  "js/code-field/problem.js"() {
+    "use strict";
+    init_forms();
+    init_core5();
+    init_values3();
+    CodeFieldProblems = class extends CodeFieldCore {
+      /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
+      constructor(host) {
+        super(host);
+        this.problem = null;
+        const field2 = this.area.closest(".kp-field");
+        this.field = field2;
+        this.holder = /** @type {HTMLElement | null} */
+        field2?.querySelector("[data-kp-field-error]") ?? null;
+      }
+      /** The sentence that names the problem, with the line and column it has. */
+      sentence() {
+        const { problem, strings } = this;
+        if (!problem) return "";
+        if (problem.line !== null && problem.column !== null) return strings.codeFieldError(problem.line, problem.column, problem.message);
+        if (problem.line !== null) return strings.codeFieldErrorLine(problem.line, problem.message);
+        return strings.codeFieldErrorPlain(problem.message);
+      }
+      /** Whether the problem is another than `before`. @param {CodeFieldProblem | null} before */
+      changed(before) {
+        const now = this.problem;
+        return before?.message !== now?.message || before?.line !== now?.line || before?.column !== now?.column || before === null !== (now === null);
+      }
+      /** Mark the problem the page found; `null` takes it back. @param {number | null} line @param {number | null} [column] @param {string} [message] */
+      setError(line, column = null, message = "") {
+        const { area, ui } = this;
+        const before = this.problem;
+        if (line === null && !message) this.problem = null;
+        else this.problem = { line, column: column ?? null, message };
+        this.errorLine = this.problem?.line ?? 0;
+        const broken = this.problem !== null;
+        const sentence2 = this.sentence();
+        ui.root.setAttribute("data-kp-json-state", broken ? "invalid" : "valid");
+        area.setCustomValidity(broken && this.blocks() ? this.strings.codeFieldBlocked : "");
+        if (this.holder) {
+          ui.status.textContent = "";
+          if (broken) showError(area, sentence2);
+          else clearError(area);
+        } else {
+          ui.status.textContent = sentence2;
+          if (broken) area.setAttribute("aria-invalid", "true");
+          else area.removeAttribute("aria-invalid");
+        }
+        this.field?.classList.toggle("kp-field--invalid", broken);
+        this.drawGutter();
+        if (this.changed(before)) {
+          const { problem } = this;
+          area.dispatchEvent(
+            new CustomEvent(CODE_FIELD_STATE_EVENT, {
+              bubbles: true,
+              detail: { state: broken ? "invalid" : "ready", line: problem?.line ?? null, column: problem?.column ?? null, message: sentence2 }
+            })
+          );
+        }
+      }
+      /** Ask the page to check the text; it answers through `event.detail.error`. */
+      check() {
+        if (this.problem !== null) this.setError(null);
+        this.area.dispatchEvent(
+          new CustomEvent(CODE_FIELD_CHECK_EVENT, {
+            bubbles: true,
+            detail: {
+              value: this.area.value,
+              language: this.language(),
+              error: (line, column, message) => this.setError(line, column, message)
+            }
+          })
+        );
+      }
+    };
+  }
+});
+
+// js/code-field/controller.js
+var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
+var init_controller21 = __esm({
+  "js/code-field/controller.js"() {
+    "use strict";
+    init_problem();
+    init_build7();
+    init_values3();
+    COPY_ANSWER_MS = 1500;
+    MOST_STRIPPED = 4;
+    CodeFieldControl = class extends CodeFieldProblems {
+      /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
+      constructor(host) {
+        super(host);
+        this.debounce = void 0;
+        this.copyTimer = void 0;
+        this.escaped = false;
+        this.describedBefore = null;
+        this.handle = null;
+      }
+      connect() {
+        const { area, doc, view, ui } = this;
+        if (!area.id) area.id = this.id;
+        this.handle = this.makeHandle();
+        this.describedBefore = mountChrome(area, ui);
+        this.own(() => this.unmount());
+        this.watchAttributes();
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(() => this.drawGutter())).observe(area);
+        if (area.form) {
+          this.listen(area.form, "reset", () => view?.setTimeout(() => this.afterReset(), 0));
+        }
+        const readout = () => this.drawReadout();
+        this.listen(area, "input", () => this.onInput());
+        this.listen(area, "blur", () => this.onBlur());
+        this.listen(area, "scroll", () => ui.numbers.style.transform = `translateY(${-area.scrollTop}px)`, { passive: true });
+        this.listen(area, "keyup", readout);
+        this.listen(area, "click", readout);
+        this.listen(area, "focus", readout);
+        this.listen(doc, "selectionchange", readout);
+        this.listen(ui.gutter, "wheel", (event) => this.onGutterWheel(
+          /** @type {WheelEvent} */
+          event
+        ), { passive: false });
+        this.listen(area, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(area, "pointerdown", () => this.dropEscape());
+        this.listen(ui.tools, "click", (event) => void this.onTool(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.lock();
+        ui.root.setAttribute("data-kp-json-state", "valid");
+        this.drawGutter();
+        this.drawReadout();
+        this.grow();
+        queueMicrotask(() => {
+          if (!this.destroyed) this.check();
+        });
+        this.own(() => {
+          view?.clearTimeout(this.debounce);
+          view?.clearTimeout(this.copyTimer);
+        });
+      }
+      /** Makes the handle a page gets from `codeField(area)`. @returns {import('../code-field.js').CodeFieldHandle} */
+      makeHandle() {
+        const { area } = this;
+        return {
+          position: () => caretPosition(area.value, area.selectionStart ?? 0),
+          setError: (line, column, message) => this.setError(line, column, message),
+          check: () => this.check(),
+          state: () => ({
+            state: this.problem ? "invalid" : "ready",
+            line: this.problem?.line ?? null,
+            column: this.problem?.column ?? null,
+            message: this.problem?.message ?? ""
+          })
+        };
+      }
+      /** Takes the chrome and the marks the field added off the textarea again. */
+      unmount() {
+        const { area, ui } = this;
+        area.setCustomValidity("");
+        area.removeAttribute("aria-invalid");
+        if (this.describedBefore) area.setAttribute("aria-describedby", this.describedBefore);
+        else area.removeAttribute("aria-describedby");
+        area.style.blockSize = "";
+        area.style.overflowY = "";
+        ui.root.replaceWith(area);
+      }
+      /** The tools, the gutter and the readout follow the attributes the page may change later. */
+      watchAttributes() {
+        const { area, view, ui } = this;
+        if (!view || !("MutationObserver" in view)) return;
+        const attrs = new view.MutationObserver((records) => {
+          if (records.some((r) => r.attributeName === "disabled" || r.attributeName === "readonly")) this.lock();
+          if (records.some((r) => r.attributeName?.startsWith("data-kp-code"))) {
+            ui.root.toggleAttribute("data-kp-json-gutter", this.gutterWanted());
+            this.drawReadout();
+            this.drawGutter();
+            this.grow();
+          }
+        });
+        this.observe(attrs).observe(area, {
+          attributes: true,
+          attributeFilter: ["disabled", "readonly", "data-kp-code-field", "data-kp-code-gutter", "data-kp-code-indent", "data-kp-code-check"]
+        });
+      }
+      /** The form was reset: the problem goes and the field is drawn again. */
+      afterReset() {
+        this.setError(null);
+        this.drawGutter();
+        this.drawReadout();
+        this.grow();
+      }
+      /** Esc then Tab leaves the field; any other key or a press puts Tab back to indenting. */
+      dropEscape() {
+        this.escaped = false;
+      }
+      onInput() {
+        const { view } = this;
+        this.grow();
+        this.drawGutter();
+        this.drawReadout();
+        if (this.getWhen() !== "input") return;
+        view?.clearTimeout(this.debounce);
+        this.debounce = view?.setTimeout(() => this.check(), CODE_FIELD_CHECK_MS);
+      }
+      onBlur() {
+        this.view?.clearTimeout(this.debounce);
+        this.check();
+      }
+      /** The gutter's wheel scrolls the text. @param {WheelEvent} event */
+      onGutterWheel(event) {
+        const { area } = this;
+        const before = area.scrollTop;
+        area.scrollTop += event.deltaMode === 1 ? event.deltaY * this.lineHeight() : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
+        if (area.scrollTop !== before) event.preventDefault();
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const mod = event.ctrlKey || event.metaKey;
+        if (event.key === "Escape") {
+          this.escaped = true;
+          return;
+        }
+        if (event.key === "Tab" && !mod && !event.altKey) {
+          if (this.escaped) {
+            this.escaped = false;
+            return;
+          }
+          event.preventDefault();
+          if (event.shiftKey) this.outdent();
+          else this.indent();
+          return;
+        }
+        this.escaped = false;
+      }
+      /** Tab writes one indent over the selection. */
+      indent() {
+        const { area } = this;
+        area.setRangeText(this.getIndent(), area.selectionStart, area.selectionEnd, "end");
+        area.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      /** Shift+Tab takes one indent off the start of the caret's line. */
+      outdent() {
+        const { area } = this;
+        const { selectionStart: a, selectionEnd: b, value } = area;
+        const from = value.lastIndexOf("\n", a - 1) + 1;
+        const lineText = value.slice(from);
+        const indent = this.getIndent();
+        const loose = new RegExp(`^ {1,${MOST_STRIPPED}}`);
+        const strip = lineText.startsWith(indent) ? indent.length : lineText.startsWith("	") ? 1 : lineText.match(loose)?.[0].length ?? 0;
+        if (strip <= 0) return;
+        area.setRangeText("", from, from + strip, "preserve");
+        area.setSelectionRange(Math.max(from, a - strip), Math.max(from, b - strip));
+        area.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      /** The wrap tool flips the wrapping; the copy tool copies the text and says how it went. @param {MouseEvent} event */
+      async onTool(event) {
+        const button6 = event.target instanceof Element ? (
+          /** @type {HTMLButtonElement | null} */
+          event.target.closest("[data-kp-code-tool]")
+        ) : null;
+        if (!button6 || button6.disabled) return;
+        if (button6.dataset.kpCodeTool === "wrap") {
+          this.setWrap(!this.wrap);
+          this.ui.root.setAttribute("data-kp-json-wrap", String(this.wrap));
+          button6.setAttribute("aria-pressed", String(this.wrap));
+          this.drawGutter();
+          this.grow();
+          return;
+        }
+        this.view?.clearTimeout(this.copyTimer);
+        const { word } = this.ui;
+        try {
+          await navigator.clipboard.writeText(this.area.value);
+          word.textContent = this.strings.copied;
+        } catch {
+          word.textContent = this.strings.copyBlocked;
+        }
+        this.copyTimer = this.view?.setTimeout(() => word.textContent = this.strings.jsonCopy, COPY_ANSWER_MS);
+      }
+      /** A disabled or read-only field switches its tools off, except Copy. */
+      lock() {
+        const { area, ui } = this;
+        const off = area.disabled || area.readOnly;
+        for (const b of ui.tools.querySelectorAll("button")) b.disabled = off && b.dataset.kpCodeTool !== "copy";
+        ui.root.toggleAttribute("data-kp-json-off", off);
+      }
+    };
+  }
+});
+
+// js/code-field.js
+var code_field_exports = {};
+__export(code_field_exports, {
+  CODE_FIELD: () => CODE_FIELD,
+  CODE_FIELD_CARET_EVENT: () => CODE_FIELD_CARET_EVENT,
+  CODE_FIELD_CHECK_EVENT: () => CODE_FIELD_CHECK_EVENT,
+  CODE_FIELD_CHECK_MS: () => CODE_FIELD_CHECK_MS,
+  CODE_FIELD_MAX_ROWS: () => CODE_FIELD_MAX_ROWS,
+  CODE_FIELD_STATE_EVENT: () => CODE_FIELD_STATE_EVENT,
+  attachCodeFields: () => attachCodeFields,
+  caretPosition: () => caretPosition,
+  codeField: () => codeField,
+  setCodeFieldError: () => setCodeFieldError
+});
+function codeField(area) {
+  return controllerOf(area, CodeFieldControl)?.handle ?? null;
+}
+function setCodeFieldError(area, line, column = null, message = "") {
+  controllerOf(area, CodeFieldControl)?.setError(line, column, message);
+}
+function attachCodeFields(root = document) {
+  return attachAll(root, CODE_FIELD, CodeFieldControl);
+}
+var init_code_field = __esm({
+  "js/code-field.js"() {
+    "use strict";
+    init_controller();
+    init_controller21();
+    init_values3();
+    init_values3();
   }
 });
 
@@ -57023,8 +57188,8 @@ function currentSection(boxes, offset, atEnd) {
   });
   return found;
 }
-function attachOne4(nav) {
-  if (HANDLES4.has(nav)) return () => void 0;
+function attachOne3(nav) {
+  if (HANDLES3.has(nav)) return () => void 0;
   const doc = nav.ownerDocument;
   const view = (
     /** @type {Window & typeof globalThis} */
@@ -57243,7 +57408,7 @@ function attachOne4(nav) {
     attributes: true,
     attributeFilter: ["data-kp-contents-for", "data-kp-contents-headings", "data-kp-contents-min", "data-kp-contents-title", "data-kp-state", "data-kp-contents-offset"]
   });
-  HANDLES4.set(nav, {
+  HANDLES3.set(nav, {
     current: () => current2,
     refresh: draw8,
     setItems(items) {
@@ -57262,31 +57427,31 @@ function attachOne4(nav) {
     options.disconnect();
     nav.replaceChildren();
     nav.removeAttribute("data-kp-contents-sig");
-    HANDLES4.delete(nav);
+    HANDLES3.delete(nav);
   };
 }
 function contents(nav) {
-  return HANDLES4.get(nav) ?? null;
+  return HANDLES3.get(nav) ?? null;
 }
 function setContents(nav, items) {
-  HANDLES4.get(nav)?.setItems(items);
+  HANDLES3.get(nav)?.setItems(items);
 }
 function attachContents(root = document) {
   const found = (
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(CONTENTS) ? [root] : [], ...root.querySelectorAll(CONTENTS)]
   );
-  const undo = found.map((nav) => attachOne4(nav));
+  const undo = found.map((nav) => attachOne3(nav));
   return () => undo.forEach((u) => u());
 }
-var CONTENTS, CONTENTS_EVENT, HANDLES4, serial5;
+var CONTENTS, CONTENTS_EVENT, HANDLES3, serial5;
 var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_strings();
     CONTENTS = "[data-kp-contents]";
     CONTENTS_EVENT = "kp-contents-change";
-    HANDLES4 = /* @__PURE__ */ new WeakMap();
+    HANDLES3 = /* @__PURE__ */ new WeakMap();
     serial5 = 0;
   }
 });
@@ -57495,7 +57660,7 @@ function buildParts3(root) {
   return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
 }
 var el9;
-var init_build7 = __esm({
+var init_build8 = __esm({
   "js/timefield/build.js"() {
     "use strict";
     init_strings();
@@ -57519,7 +57684,7 @@ var init_list3 = __esm({
     init_calm();
     init_constants29();
     init_attributes();
-    init_build7();
+    init_build8();
     init_parse();
     TimeList = class {
       /** @param {TimeField} field */
@@ -57730,7 +57895,7 @@ var init_field = __esm({
     init_remember();
     init_constants29();
     init_attributes();
-    init_build7();
+    init_build8();
     init_state19();
     init_parse();
     init_list3();
@@ -57971,7 +58136,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -58178,7 +58343,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller21();
+    init_controller22();
     init_field();
     init_state19();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -58272,13 +58437,13 @@ function monthSummary(days) {
   return s2.weekdaysOnThe(joinWords(parts2));
 }
 function weekdays(element) {
-  return HANDLES5.get(element) ?? null;
+  return HANDLES4.get(element) ?? null;
 }
 function weekdaysOf(element) {
-  return HANDLES5.get(element)?.values() ?? [];
+  return HANDLES4.get(element)?.values() ?? [];
 }
 function setWeekdays(element, values) {
-  HANDLES5.get(element)?.set(values);
+  HANDLES4.get(element)?.set(values);
 }
 function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: weekOption } = {}) {
   const cleanups = [];
@@ -58290,7 +58455,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     ]
   );
   for (const el16 of found) {
-    if (HANDLES5.has(el16)) continue;
+    if (HANDLES4.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-weekdays-${++seq3}`;
@@ -58419,12 +58584,12 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     set(initial);
     paint15();
     const handle = { element: el16, values, set, summary: words3, valid };
-    HANDLES5.set(el16, handle);
+    HANDLES4.set(el16, handle);
     cleanups.push(() => {
       group.removeEventListener(SEGMENTED_EVENT, onChips);
       quick.removeEventListener("click", onPreset);
       detachSegmented();
-      HANDLES5.delete(el16);
+      HANDLES4.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-describedby");
       el16.removeAttribute("aria-invalid");
@@ -58435,7 +58600,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     for (const c of cleanups) c();
   };
 }
-var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES5, seq3;
+var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES4, seq3;
 var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
@@ -58452,7 +58617,7 @@ var init_weekdays = __esm({
       every: [0, 1, 2, 3, 4, 5, 6]
     };
     NAMES2 = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-    HANDLES5 = /* @__PURE__ */ new WeakMap();
+    HANDLES4 = /* @__PURE__ */ new WeakMap();
     seq3 = 0;
   }
 });
@@ -58500,8 +58665,8 @@ function severityWord2(key) {
     { critical: s2.quietCritical, warning: s2.quietWarning, info: s2.quietInfo, ok: s2.quietOk }[key] ?? key
   );
 }
-function attachOne5(root) {
-  if (HANDLES6.has(root)) return () => void 0;
+function attachOne4(root) {
+  if (HANDLES5.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
   const id = root.id || (root.id = `kp-quiet-${serial6 += 1}`);
@@ -58666,7 +58831,7 @@ function attachOne5(root) {
     paint15();
   });
   watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
-  HANDLES6.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
+  HANDLES5.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
   return () => {
     root.removeEventListener(TIME_EVENT, onTime);
     root.removeEventListener(WEEKDAYS_EVENT, onDays);
@@ -58674,24 +58839,24 @@ function attachOne5(root) {
     through.removeEventListener("change", changed2);
     watch2.disconnect();
     root.replaceChildren();
-    HANDLES6.delete(root);
+    HANDLES5.delete(root);
   };
 }
 function quietValue(el16) {
-  return HANDLES6.get(el16)?.value() ?? null;
+  return HANDLES5.get(el16)?.value() ?? null;
 }
 function setQuiet(el16, value) {
-  HANDLES6.get(el16)?.set({ ...HANDLES6.get(el16)?.value() ?? DEFAULT, ...value });
+  HANDLES5.get(el16)?.set({ ...HANDLES5.get(el16)?.value() ?? DEFAULT, ...value });
 }
 function attachQuietHours(root = document) {
   const found = (
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(QUIET) ? [root] : [], ...root.querySelectorAll(QUIET)]
   );
-  const undo = found.map((el16) => attachOne5(el16));
+  const undo = found.map((el16) => attachOne4(el16));
   return () => undo.forEach((u) => u());
 }
-var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES6;
+var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES5;
 var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
@@ -58704,7 +58869,7 @@ var init_quiet_hours = __esm({
     ["critical", "warning", "info", "ok"];
     DEFAULT = { on: false, from: "22:00", to: "07:00", days: [0, 1, 2, 3, 4, 5, 6], through: ["critical"] };
     serial6 = 0;
-    HANDLES6 = /* @__PURE__ */ new WeakMap();
+    HANDLES5 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -59521,7 +59686,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -59680,7 +59845,7 @@ var init_api20 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller22();
+    init_controller23();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -60111,7 +60276,7 @@ var init_view2 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -60252,7 +60417,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller23();
+    init_controller24();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -60391,7 +60556,7 @@ function buildRating(el16, max) {
   return { row, stars, caption, actions, clear, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field: field2 };
 }
 var make22;
-var init_build8 = __esm({
+var init_build9 = __esm({
   "js/rating/build.js"() {
     "use strict";
     init_constants31();
@@ -60714,13 +60879,13 @@ var init_keys12 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_constants31();
-    init_build8();
+    init_build9();
     init_commit();
     init_keys12();
     init_math();
@@ -60984,8 +61149,8 @@ var init_api21 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller24();
-    init_build8();
+    init_controller25();
+    init_build9();
     init_commit();
     init_math();
     init_paint8();
@@ -61272,7 +61437,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -61505,7 +61670,7 @@ var init_api22 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller25();
+    init_controller26();
     init_list4();
     init_render4();
   }
@@ -62948,7 +63113,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -63139,7 +63304,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller26();
+    init_controller27();
     init_group4();
     init_group4();
   }
@@ -63465,10 +63630,10 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
   return { rows: ordered2.map((r, i) => ({ item: r.item, number: numbers2 ? i + 1 : null })), cycles };
 }
 function deplist(el16) {
-  return HANDLES7.get(el16) ?? null;
+  return HANDLES6.get(el16) ?? null;
 }
-function attachOne6(el16) {
-  if (HANDLES7.has(el16)) return () => void 0;
+function attachOne5(el16) {
+  if (HANDLES6.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-deplist");
@@ -63672,10 +63837,10 @@ function attachOne6(el16) {
     },
     rows: () => drawn2
   };
-  HANDLES7.set(el16, handle);
+  HANDLES6.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES7.delete(el16);
+    HANDLES6.delete(el16);
   });
   const watch2 = new MutationObserver(() => draw8());
   watch2.observe(el16, {
@@ -63707,14 +63872,14 @@ function attachDeplists(root = document) {
       ...root.querySelectorAll(DEPLIST)
     ]
   );
-  const undo = found.map((el16) => attachOne6(el16));
+  const undo = found.map((el16) => attachOne5(el16));
   return () => undo.forEach((u) => u());
 }
 function setDeplist(el16, items) {
-  if (!HANDLES7.has(el16)) attachOne6(el16);
-  HANDLES7.get(el16)?.set(items);
+  if (!HANDLES6.has(el16)) attachOne5(el16);
+  HANDLES6.get(el16)?.set(items);
 }
-var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES7, made4;
+var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES6, made4;
 var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
@@ -63727,7 +63892,7 @@ var init_deplist = __esm({
     DEPLIST_RETRY_EVENT = "kp-deplist-retry";
     DEPLIST_COLLAPSE = 8;
     depText = (items) => items.map((i) => `${i.from} -> ${i.to}`).join("\n");
-    HANDLES7 = /* @__PURE__ */ new WeakMap();
+    HANDLES6 = /* @__PURE__ */ new WeakMap();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -63777,10 +63942,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el16) {
-  return HANDLES8.get(el16) ?? null;
+  return HANDLES7.get(el16) ?? null;
 }
-function attachOne7(el16) {
-  if (HANDLES8.has(el16)) return () => void 0;
+function attachOne6(el16) {
+  if (HANDLES7.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-trace");
@@ -63918,10 +64083,10 @@ function attachOne7(el16) {
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES8.set(el16, handle);
+  HANDLES7.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES8.delete(el16);
+    HANDLES7.delete(el16);
   });
   const watch2 = new MutationObserver(draw8);
   watch2.observe(el16, {
@@ -63963,14 +64128,14 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne7(el16));
+  const undo = found.map((el16) => attachOne6(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES8.has(el16)) attachOne7(el16);
-  HANDLES8.get(el16)?.set(hops);
+  if (!HANDLES7.has(el16)) attachOne6(el16);
+  HANDLES7.get(el16)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES8, made5;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES7, made5;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -63984,7 +64149,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES8 = /* @__PURE__ */ new WeakMap();
+    HANDLES7 = /* @__PURE__ */ new WeakMap();
     made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -64896,7 +65061,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -65235,7 +65400,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint9();
     init_parts6();
-    init_values3();
+    init_values4();
   }
 });
 
@@ -65245,7 +65410,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values3();
+    init_values4();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -65365,7 +65530,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values3();
+    init_values4();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -65640,7 +65805,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -65893,7 +66058,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller27();
+    init_controller28();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -66239,7 +66404,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -66544,7 +66709,7 @@ var init_api23 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller28();
+    init_controller29();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -68161,7 +68326,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -68297,10 +68462,10 @@ function buildLines(doc, id) {
   return { why, skeleton: skeleton2 };
 }
 var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
-var init_build9 = __esm({
+var init_build10 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values4();
+    init_values5();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -68314,13 +68479,13 @@ var init_build9 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core5 = __esm({
+var init_core6 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_build9();
-    init_values4();
+    init_build10();
+    init_values5();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -68435,12 +68600,12 @@ var init_core5 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/slider/controller.js"() {
     "use strict";
-    init_build9();
-    init_core5();
-    init_values4();
+    init_build10();
+    init_core6();
+    init_values5();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -68665,9 +68830,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller29();
-    init_values4();
-    init_values4();
+    init_controller30();
+    init_values5();
+    init_values5();
   }
 });
 
@@ -68833,7 +68998,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -69062,14 +69227,14 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller30();
+    init_controller31();
     init_fields();
     init_fields();
   }
 });
 
 // js/dated-options/constants.js
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS3, COMBOBOX_ROWS, TYPEAHEAD_MS, MINUTE_S2, DAY_S2, SECOND_MS3;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS, MINUTE_S2, DAY_S2, SECOND_MS3;
 var init_constants37 = __esm({
   "js/dated-options/constants.js"() {
     "use strict";
@@ -69079,7 +69244,7 @@ var init_constants37 = __esm({
     DATED_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     DEFAULT_INLINE_MAX = 7;
-    DEFAULT_ROWS3 = 4;
+    DEFAULT_ROWS4 = 4;
     COMBOBOX_ROWS = 2;
     TYPEAHEAD_MS = 700;
     MINUTE_S2 = 60;
@@ -69402,7 +69567,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -69518,12 +69683,12 @@ var init_controller31 = __esm({
         const placeholders = this.state === "loading" && this.shown.length === 0;
         this.kind = mode2 === "auto" ? this.shown.length > inlineMax ? "combobox" : "radio" : mode2;
         this.host.dataset.kpPickerKind = this.kind;
-        this.host.style.setProperty("--kp-dated-rows", String(rowsWanted || (this.kind === "combobox" ? COMBOBOX_ROWS : DEFAULT_ROWS3)));
+        this.host.style.setProperty("--kp-dated-rows", String(rowsWanted || (this.kind === "combobox" ? COMBOBOX_ROWS : DEFAULT_ROWS4)));
         if (placeholders) {
           const wait = doc.createElement("div");
           wait.className = "kp-dated__wait";
           wait.setAttribute("aria-hidden", "true");
-          for (let i = 0; i < (rowsWanted || DEFAULT_ROWS3); i++) {
+          for (let i = 0; i < (rowsWanted || DEFAULT_ROWS4); i++) {
             const bar = doc.createElement("span");
             bar.className = "kp-skeleton kp-dated__bar";
             wait.append(bar);
@@ -69653,7 +69818,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller31();
+    init_controller32();
   }
 });
 
@@ -69722,13 +69887,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES9.get(element) ?? null;
+  return HANDLES8.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES9.get(element)?.set(times, options);
+  HANDLES8.get(element)?.set(times, options);
 }
 function setRunsState(element, state12, options) {
-  HANDLES9.get(element)?.setState(state12, options);
+  HANDLES8.get(element)?.setState(state12, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -69737,7 +69902,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES9.has(el16)) continue;
+    if (HANDLES8.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq6}`;
@@ -69886,7 +70051,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state12
     };
-    HANDLES9.set(el16, handle);
+    HANDLES8.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -69907,7 +70072,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button6.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES9.delete(el16);
+      HANDLES8.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -69917,7 +70082,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES9, seq6;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES8, seq6;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -69932,7 +70097,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES9 = /* @__PURE__ */ new WeakMap();
+    HANDLES8 = /* @__PURE__ */ new WeakMap();
     seq6 = 0;
   }
 });
@@ -70132,7 +70297,7 @@ function buildPanel3(doc, s2, id) {
   panel.append(make29(doc, "p", "kp-snooze__panel-title", s2.snoozePickTitle), inputs, error, actions);
   return { panel, picker, date, time, error, cancel, apply: apply2 };
 }
-var init_build10 = __esm({
+var init_build11 = __esm({
   "js/snooze/build.js"() {
     "use strict";
   }
@@ -70149,7 +70314,7 @@ var init_panel3 = __esm({
     init_motion();
     init_range();
     init_top_layer();
-    init_build10();
+    init_build11();
     init_choices();
     seq7 = 0;
     DAY_MS4 = 864e5;
@@ -70258,7 +70423,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -70517,7 +70682,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller32();
+    init_controller33();
     init_choices();
   }
 });
@@ -75371,7 +75536,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -75475,7 +75640,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller33();
+    init_controller34();
     init_state27();
     init_state27();
     init_matrix2();
@@ -80369,12 +80534,6 @@ export {
   CARD_STATES,
   CARD_STATE_EVENT,
   CHOOSE_EVENT,
-  CODE_FIELD,
-  CODE_FIELD_CARET_EVENT,
-  CODE_FIELD_CHECK_EVENT,
-  CODE_FIELD_CHECK_MS,
-  CODE_FIELD_MAX_ROWS,
-  CODE_FIELD_STATE_EVENT,
   COLOR_EVENT,
   COLUMNS,
   COMMAND,
@@ -80671,7 +80830,6 @@ export {
   calm_tones_exports as calmTonesExports,
   calmWord,
   card_state_exports as cardStateExports,
-  caretPosition,
   chart_exports as chartExports,
   checklist_exports as checklistExports,
   claim_exports as claimExports,

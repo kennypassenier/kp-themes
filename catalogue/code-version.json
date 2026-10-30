@@ -20,7 +20,7 @@
         "js/chart.js": { "digest": "1a43cf4895012d76", "when": "[data-kp-chart]" },
         "js/checklist.js": { "digest": "7eb5cf9bd4627956", "when": "[data-kp-checklist]" },
         "js/claim.js": { "digest": "cbbd305c20d908fd", "when": "[data-kp-checklist-claim]" },
-        "js/code-field.js": { "digest": "35c17d4916cd72e7", "when": "textarea[data-kp-code-field]" },
+        "js/code-field.js": { "digest": "708b07aa0e013c36", "when": "textarea[data-kp-code-field]" },
         "js/code.js": { "digest": "edc2a6259799b797", "when": "[data-kp-code]" },
         "js/colorpicker.js": { "digest": "6792f52017de9605", "when": "[data-kp-colorpicker]" },
         "js/combobox.js": { "digest": "a9e082ef176acb02", "when": "[data-kp-combobox], select" },
