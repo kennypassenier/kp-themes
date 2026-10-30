@@ -1,11 +1,5 @@
-/** The cards this module looks after. */
-export declare const CARD_STATE = ".kp-card[data-kp-state]";
-/** The four states, in the order a read goes through them. */
-export declare const CARD_STATES: readonly ['loading', 'empty', 'error', 'ready'];
-/** Fired on the card, bubbling, when its state changed after attach: `{ card, state, previous }`. */
-export declare const CARD_STATE_EVENT = "kp-card-state";
-/** Fired on the card, bubbling, when its Try again is pressed: `{ card }`. */
-export declare const CARD_RETRY_EVENT = "kp-card-retry";
+export { CARD_STATE, CARD_STATES, CARD_STATE_EVENT, CARD_RETRY_EVENT } from './card-state/values.js';
+export { setCardState } from './card-state/sync.js';
 export type CardState = 'loading' | 'empty' | 'error' | 'ready';
 export type CardStateOptions = {
     /**
@@ -34,14 +28,15 @@ export type CardStateOptions = {
     art?: Node | string | null;
 };
 /**
- * Put a card in a state. The options are kept for the card, so a later
- * `data-kp-state` change written by a framework builds the same note.
- * @param {HTMLElement} card a `.kp-card`
- * @param {CardState} state
- * @param {CardStateOptions} [options]
- * @returns {CardState}
+ * @typedef {'loading' | 'empty' | 'error' | 'ready'} CardState
+ * @typedef {object} CardStateOptions
+ * @property {string} [words] what the loading card says under its spinner (default `cardLoading`, or the card's `data-kp-loading-words`)
+ * @property {string} [title] the empty or error note's first line, in bold: "No appointments yet", "Could not list the files"
+ * @property {string} [text] its sentence: why, or what fills it
+ * @property {Node | readonly Node[] | null} [action] a button or link under an empty note ("Add an appointment"), or several (an array, or a fragment): they lie on the plate's own action row; an error note always has Try again
+ * @property {boolean} [retry] false leaves Try again out of an error note (a read the page cannot repeat)
+ * @property {Node | string | null} [art] a picture over the note's title, empty or error: a node (an inline SVG, an icon) or a glyph; aria-hidden either way
  */
-export declare function setCardState(card: HTMLElement, state: CardState, options?: CardStateOptions): CardState;
 /**
  * Sync every card with a `data-kp-state` under `root`, follow the attribute
  * later, and turn a press on Try again into `kp-card-retry`. A card rendered
