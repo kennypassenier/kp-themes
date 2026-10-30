@@ -1,9 +1,11 @@
 // The grid of cards: its data, its states and the attach.
+import { attachOne, controllerOf } from '../controller.js';
 import { getStrings } from '../strings.js';
 import { openBusyCard } from '../busy-card.js';
 import { statePlate } from '../state-plate.js';
 import { ENTITY_GRID, ENTITY_GRID_RETRY_EVENT, ENTITY_NEW_EVENT } from './constants.js';
-import { DRAWN, made } from './helpers.js';
+import { made } from './helpers.js';
+import { EntityGridControl } from './grid-control.js';
 import { redraw, setEntity } from './set.js';
 /** @typedef {import('./types.js').EntityData} EntityData */
 /** @typedef {import('./types.js').EntityEmptyOptions} EntityEmptyOptions */
@@ -131,65 +133,8 @@ export function attachEntityCards(root = document) {
         ...(root instanceof HTMLElement && root.matches(ENTITY_GRID) ? [root] : []),
         ...root.querySelectorAll(ENTITY_GRID),
     ]);
-    /** @type {(() => void)[]} */
-    const undo = [];
-    for (const grid of grids) {
-        const apply = () => {
-            const min = grid.getAttribute('data-kp-entity-min');
-            if (min) grid.style.setProperty('--kp-entity-min', min);
-            else grid.style.removeProperty('--kp-entity-min');
-        };
-        apply();
-        let lastWidth = grid.clientWidth;
-        const refit = () => {
-            if (grid.clientWidth === lastWidth) return;
-            lastWidth = grid.clientWidth;
-            delete grid.dataset.kpEntityFit;
-            const cards = /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .kp-card--entity')]);
-            for (const card of cards) delete card.dataset.kpFlagsFit;
-            redraw(cards, ['flags', 'actions']);
-        };
-        const fold = () => grid.toggleAttribute('data-kp-entity-narrow', grid.clientWidth > 0 && grid.clientWidth < 480);
-        fold();
-        const resize =
-            typeof ResizeObserver === 'function'
-                ? new ResizeObserver(() => {
-                      fold();
-                      refit();
-                  })
-                : null;
-        resize?.observe(grid);
-        undo.push(() => resize?.disconnect());
-        const watch = new MutationObserver(() => {
-            apply();
-            delete grid.dataset.kpEntityFit;
-            for (const card of /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .kp-card--entity')])) {
-                const was = DRAWN.get(card);
-                if (!was) continue;
-                was.drawn = {};
-                setEntity(card, was.data);
-            }
-        });
-        watch.observe(grid, {
-            attributes: true,
-            attributeFilter: [
-                'data-kp-entity-meters',
-                'data-kp-entity-flags-max',
-                'data-kp-entity-inline',
-                'data-kp-entity-link',
-                'data-kp-selectable',
-                'data-kp-entity-mark',
-                'data-kp-entity-min',
-                'data-kp-entity-narrow',
-                'data-kp-entity-kind',
-                'data-kp-entity-trend',
-                'data-kp-entity-star',
-                'data-kp-entity-star-key',
-            ],
-        });
-        undo.push(() => watch.disconnect());
-        // The fold is read once more now that the cards listen for it.
-        fold();
-    }
-    return () => undo.forEach((u) => u());
+    const made = grids.filter((grid) => !controllerOf(grid, EntityGridControl)).map((grid) => attachOne(grid, EntityGridControl));
+    return () => {
+        for (const control of made) control?.destroy();
+    };
 }

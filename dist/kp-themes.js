@@ -71259,6 +71259,351 @@ var init_tile = __esm({
   }
 });
 
+// js/entity-card/drawing.js
+var MAX_METER_ROWS, DEFAULT_METER_ROWS, EntityDrawing;
+var init_drawing2 = __esm({
+  "js/entity-card/drawing.js"() {
+    "use strict";
+    init_strings();
+    init_helpers5();
+    MAX_METER_ROWS = 3;
+    DEFAULT_METER_ROWS = 2;
+    EntityDrawing = class {
+      /** @param {HTMLElement} card @param {EntityData} data */
+      constructor(card, data) {
+        this.card = card;
+        this.data = data;
+        this.doc = card.ownerDocument;
+        this.s = getStrings();
+        this.key = data.key;
+        this.kind = "stack";
+        this.drawn = {};
+        this.star = false;
+        this.status = data.status ?? "ready";
+        this.meterRows = 0;
+        this.link = /** @type {string | null} */
+        null;
+        this.selectable = false;
+        this.markKind = "idmark";
+        this.starOn = false;
+        this.starKey = "s";
+      }
+      /** The frame, the remembered draw and the attributes every status shows. */
+      begin() {
+        const { card, data } = this;
+        this.kind = frame2(card);
+        const before = DRAWN5.get(card);
+        this.drawn = before?.drawn ?? {};
+        this.star = before && before.data === data ? before.star : data.starred ?? before?.star ?? false;
+        DRAWN5.set(card, { data, drawn: this.drawn, star: this.star });
+        card.setAttribute("data-kp-row-key", data.key);
+        card.setAttribute("data-kp-entity-key", data.key);
+        card.setAttribute("data-kp-state", this.status);
+        this.meterRows = Math.max(0, Math.min(MAX_METER_ROWS, Number(opt2(card, "data-kp-entity-meters") ?? DEFAULT_METER_ROWS) || 0));
+      }
+      /** Read the options of a card that is not loading. */
+      readOptions() {
+        const { card, kind } = this;
+        this.link = opt2(card, "data-kp-entity-link");
+        this.selectable = opt2(card, "data-kp-selectable") !== null;
+        this.markKind = opt2(card, "data-kp-entity-mark") ?? "idmark";
+        this.starOn = (opt2(card, "data-kp-entity-star") ?? (kind === "tile" ? "on" : "off")) !== "off";
+        this.starKey = starKeyOf(card);
+      }
+      /**
+       * Draw a slot only when its signature changed.
+       * @param {string} name @param {unknown} signature @param {(el: HTMLElement) => void} build
+       */
+      slot(name, signature2, build8) {
+        const text = sig(signature2);
+        if (this.drawn[name] === text) return;
+        this.drawn[name] = text;
+        const el16 = slotOf(this.card, name);
+        el16.replaceChildren();
+        build8(el16);
+      }
+      /** A skeleton keeps every row: what the card will hold is not known yet. */
+      drawLoading() {
+        const { card, kind, doc } = this;
+        card.removeAttribute("data-kp-entity-actions");
+        slotOf(card, kind === "stack" ? "actions" : "lines").hidden = false;
+        for (const name of SLOTS[kind]) {
+          this.slot(name, "loading", (el16) => {
+            const bone = made5(doc, "span", "kp-skeleton kp-entity__bone");
+            bone.setAttribute("aria-hidden", "true");
+            el16.append(bone);
+          });
+        }
+        card.setAttribute("aria-busy", "true");
+      }
+    };
+  }
+});
+
+// js/entity-card/identity.js
+var DEFAULT_FLAGS_MAX, IdentityDrawing;
+var init_identity2 = __esm({
+  "js/entity-card/identity.js"() {
+    "use strict";
+    init_menu_button();
+    init_constants34();
+    init_drawing2();
+    init_helpers5();
+    init_star();
+    DEFAULT_FLAGS_MAX = 3;
+    IdentityDrawing = class extends EntityDrawing {
+      constructor(card, data) {
+        super(card, data);
+        this.flagsMax = 0;
+      }
+      /** 1. identity: tick, mark, name, vmid, state and star. */
+      identity() {
+        const { card, data, doc, s: s2, key, status, link, selectable, markKind, starOn, starKey, star } = this;
+        this.slot("id", { n: data.name, v: data.vmid, st: data.state, link, selectable, markKind, status, starOn, starKey }, (el16) => {
+          tickAndMark(card, el16, data, selectable, markKind);
+          const name = link ? made5(doc, "a", "kp-entity__name") : made5(doc, "span", "kp-entity__name");
+          if (name instanceof HTMLAnchorElement && link) name.href = link.replace("{key}", encodeURIComponent(key));
+          name.textContent = data.name;
+          el16.append(name);
+          const vmid = made5(doc, "span", "kp-entity__vmid");
+          vmid.textContent = data.vmid ?? "";
+          el16.append(vmid);
+          const st = made5(
+            doc,
+            "span",
+            `kp-badge kp-entity__state${data.state?.tone ? ` kp-badge--${status === "error" ? "destructive" : data.state.tone}` : status === "error" ? " kp-badge--destructive" : ""}`
+          );
+          st.textContent = status === "error" ? s2.entityFailed : data.state?.label ?? "";
+          el16.append(st);
+          if (starOn) appendStar(card, el16, data, star, starKey);
+        });
+        syncStar(card, star);
+      }
+      /** 2. figures: exact numbers, tabular, in one row. */
+      figures() {
+        const { data, doc, s: s2, status } = this;
+        this.slot("figures", { f: data.figures, status }, (el16) => {
+          if (status === "empty") {
+            const none = made5(doc, "span", "kp-entity__none");
+            none.textContent = s2.entityNotMeasured;
+            el16.append(none);
+            return;
+          }
+          for (const f of data.figures ?? []) {
+            const one = made5(doc, "span", "kp-entity__figure");
+            const value = made5(doc, "b", "kp-entity__value");
+            value.textContent = f.value;
+            one.append(value, ` ${f.label}`);
+            el16.append(one);
+          }
+        });
+      }
+      /** 3. flags: the first few, and an exact "+N" that opens the package's menu. */
+      flags() {
+        const { card, data } = this;
+        const flagsAsked = Math.max(0, Number(opt2(card, "data-kp-entity-flags-max") ?? DEFAULT_FLAGS_MAX));
+        const flagsMax = Math.min(flagsAsked, Number(card.dataset.kpFlagsFit ?? flagsAsked));
+        this.flagsMax = flagsMax;
+        this.slot("flags", { fl: data.flags, flagsMax }, (el16) => {
+          const all = data.flags ?? [];
+          for (const flag of all.slice(0, flagsMax)) {
+            const chip = made5(this.doc, "span", `kp-badge kp-entity__flag${flag.tone ? ` kp-badge--${flag.tone}` : ""}`);
+            chip.textContent = flag.label;
+            el16.append(chip);
+          }
+          const rest = all.slice(flagsMax);
+          if (rest.length > 0) this.flagsMenu(el16, rest);
+        });
+      }
+      /** The "+N" button and its menu of the flags that did not fit. @param {HTMLElement} el @param {{ label: string }[]} rest */
+      flagsMenu(el16, rest) {
+        const { card, doc, s: s2, key } = this;
+        const wrap = made5(doc, "div", "kp-menu-button kp-entity__more-flags");
+        wrap.setAttribute("data-kp-menu-button", "");
+        wrap.setAttribute("data-kp-key", `${key}-flags`);
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          made5(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-entity__plus")
+        );
+        button6.type = "button";
+        button6.textContent = `+${rest.length}`;
+        button6.setAttribute("aria-label", s2.entityMoreFlags(rest.length));
+        const menu = made5(doc, "div", "kp-menu kp-menu--rich");
+        menu.setAttribute("role", "menu");
+        menu.setAttribute("aria-label", s2.entityFlagsLabel);
+        wrap.append(button6, menu);
+        el16.append(wrap);
+        attachMenuButtons(el16);
+        setMenu(wrap, [{ group: "", items: rest.map((f) => ({ label: f.label, value: f.label })) }]);
+        wrap.addEventListener("kp-menu-select", (event) => {
+          card.dispatchEvent(new CustomEvent(ENTITY_FLAG_EVENT, { bubbles: true, detail: { key, flag: (
+            /** @type {CustomEvent} */
+            event.detail.value
+          ) } }));
+        });
+      }
+    };
+  }
+});
+
+// js/entity-card/rows.js
+var DEFAULT_INLINE, METER_WARN, METER_CRITICAL, RowsDrawing;
+var init_rows6 = __esm({
+  "js/entity-card/rows.js"() {
+    "use strict";
+    init_kpi();
+    init_menu_button();
+    init_constants34();
+    init_identity2();
+    init_helpers5();
+    init_tile();
+    DEFAULT_INLINE = 3;
+    METER_WARN = 0.75;
+    METER_CRITICAL = 0.9;
+    RowsDrawing = class extends IdentityDrawing {
+      /** @param {HTMLElement} card @param {EntityData} data */
+      constructor(card, data) {
+        super(card, data);
+        this.trendOn = false;
+        this.inline = 0;
+        this.fitHost = card;
+      }
+      /**
+       * Whether the meters block carries the trend row: a lone refill that brings the first trend into a grid gives the cards already
+       * there their row too (`auto`), and `auto` gives every card of the grid the row once one card has a trend.
+       * @param {(cards: readonly HTMLElement[], slots?: string[]) => void} redraw draws other cards again
+       */
+      trend(redraw3) {
+        const { card, data, kind, meterRows } = this;
+        const around = card.closest(ENTITY_GRID);
+        if (around && Array.isArray(data.trend) && !around.hasAttribute("data-kp-entity-trended")) {
+          around.setAttribute("data-kp-entity-trended", "");
+          redraw3(
+            /** @type {HTMLElement[]} */
+            [...around.querySelectorAll(":scope > .kp-card--entity")].filter((other) => other !== card),
+            ["meters"]
+          );
+        }
+        const trendMode = opt2(card, "data-kp-entity-trend") ?? "auto";
+        const trended = Array.isArray(data.trend) || (card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-trended") ?? false);
+        this.trendOn = kind === "stack" && (trendMode === "on" || trendMode !== "off" && trended);
+        card.style.setProperty("--kp-entity-meters", String(meterRows + (this.trendOn ? 1 : 0)));
+      }
+      /** 4. meters: a fixed number of rows; the number is always beside the bar. */
+      meters() {
+        const { data, doc, s: s2, status, meterRows, trendOn } = this;
+        this.slot("meters", { m: data.meters, meterRows, status, tr: trendOn ? [data.trend ?? null, data.trendLabel, data.trendText] : null }, (el16) => {
+          for (let i = 0; i < meterRows; i++) el16.append(this.meterRow(data.meters?.[i]));
+          if (trendOn) el16.append(trendRow(doc, s2, data, status));
+        });
+      }
+      /** One meter row: label, bar and number. @param {NonNullable<EntityData['meters']>[number] | undefined} m */
+      meterRow(m) {
+        const { doc, s: s2, status } = this;
+        const row2 = made5(doc, "div", "kp-entity__meter");
+        const label = made5(doc, "span", "kp-entity__meter-label");
+        label.textContent = m?.label ?? "";
+        const bar = made5(doc, "div", "kp-meter");
+        const value = made5(doc, "span", "kp-entity__meter-value");
+        if (m && status !== "empty") {
+          const tone = m.tone ?? (m.value !== null && m.value >= METER_CRITICAL ? "destructive" : m.value !== null && m.value >= METER_WARN ? "warning" : null);
+          setMeter(bar, { value: m.value, mark: m.mark ?? null, tone, label: m.label });
+          value.textContent = m.text ?? (m.value === null ? "\u2014" : `${Math.round(m.value * 100)}%`);
+        } else {
+          setMeter(bar, { value: null });
+          value.textContent = status === "empty" ? s2.entityNotMeasured : "";
+        }
+        row2.append(label, bar, value);
+        return row2;
+      }
+      /** 5. actions: at most a few inline, the rest in the package's menu; a failed card puts Retry here. */
+      actions() {
+        const { card, data, status } = this;
+        const narrow = card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-narrow") ?? false;
+        const inlineAsked = narrow ? 0 : Math.max(0, Number(opt2(card, "data-kp-entity-inline") ?? DEFAULT_INLINE));
+        const host = (
+          /** @type {HTMLElement} */
+          card.closest(ENTITY_GRID) ?? card
+        );
+        const inline2 = Math.min(inlineAsked, Number(host.dataset.kpEntityFit ?? inlineAsked));
+        this.inline = inline2;
+        this.fitHost = host;
+        const noActions = status !== "error" && (data.actions ?? []).length === 0;
+        if (noActions) card.setAttribute("data-kp-entity-actions", "none");
+        else card.removeAttribute("data-kp-entity-actions");
+        slotOf(card, "actions").hidden = noActions;
+        host.style.setProperty("--kp-entity-cols", String(columnsFor(host, inline2)));
+        this.slot("actions", { a: data.actions, inline: inline2, status }, (el16) => this.fillActions(el16));
+      }
+      /** The buttons of the actions row, and the "More" menu for those that did not fit. @param {HTMLElement} el */
+      fillActions(el16) {
+        const { card, data, doc, s: s2, key, status, inline: inline2 } = this;
+        if (status === "error") {
+          const retry = (
+            /** @type {HTMLButtonElement} */
+            made5(doc, "button", "kp-button kp-entity__action kp-entity__retry")
+          );
+          retry.type = "button";
+          retry.textContent = s2.entityRetry;
+          if (data.error) retry.title = data.error;
+          retry.addEventListener("click", () => card.dispatchEvent(new CustomEvent(ENTITY_RETRY_EVENT, { bubbles: true, detail: { key } })));
+          el16.append(retry);
+          return;
+        }
+        const all = data.actions ?? [];
+        for (const a of all.slice(0, inline2)) el16.append(this.actionButton(a));
+        const rest = all.slice(inline2);
+        if (rest.length > 0) this.moreMenu(el16, rest);
+      }
+      /** @param {NonNullable<EntityData['actions']>[number]} a */
+      actionButton(a) {
+        const { card, doc, key } = this;
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          made5(doc, "button", `kp-button kp-button--sm kp-entity__action${a.danger ? " kp-button--destructive" : ""}`)
+        );
+        button6.type = "button";
+        button6.textContent = a.label;
+        if (a.disabled) {
+          button6.setAttribute("aria-disabled", "true");
+          button6.setAttribute("data-kp-disabled-reason", a.disabled);
+        }
+        button6.addEventListener("click", () => {
+          if (a.disabled) return;
+          card.dispatchEvent(new CustomEvent(ENTITY_ACTION_EVENT, { bubbles: true, detail: { key, id: a.id } }));
+        });
+        return button6;
+      }
+      /** @param {HTMLElement} el @param {NonNullable<EntityData['actions']>} rest */
+      moreMenu(el16, rest) {
+        const { card, doc, s: s2, key } = this;
+        const wrap = made5(doc, "div", "kp-menu-button kp-entity__more");
+        wrap.setAttribute("data-kp-menu-button", "");
+        wrap.setAttribute("data-kp-key", `${key}-more`);
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          made5(doc, "button", "kp-button kp-button--sm")
+        );
+        button6.type = "button";
+        button6.textContent = s2.entityMore;
+        const menu = made5(doc, "div", "kp-menu kp-menu--rich");
+        menu.setAttribute("role", "menu");
+        menu.setAttribute("aria-label", s2.entityMoreLabel);
+        wrap.append(button6, menu);
+        el16.append(wrap);
+        attachMenuButtons(el16);
+        setMenu(wrap, [{ group: "", items: rest.map((a) => ({ label: a.label, value: a.id, danger: a.danger === true, disabled: a.disabled ?? null })) }]);
+        wrap.addEventListener("kp-menu-select", (event) => {
+          card.dispatchEvent(new CustomEvent(ENTITY_ACTION_EVENT, { bubbles: true, detail: { key, id: (
+            /** @type {CustomEvent} */
+            event.detail.value
+          ) } }));
+        });
+      }
+    };
+  }
+});
+
 // js/entity-card/set.js
 function fitFlags(card, shown5) {
   const view = card.ownerDocument.defaultView;
@@ -71308,247 +71653,132 @@ function redraw(cards, slots = ["actions"]) {
   }
 }
 function setEntity(card, data) {
-  const kind = frame2(card);
-  const doc = card.ownerDocument;
-  const s2 = getStrings();
-  const before = DRAWN5.get(card);
-  const drawn = before?.drawn ?? {};
-  const star = before && before.data === data ? before.star : data.starred ?? before?.star ?? false;
-  DRAWN5.set(card, { data, drawn, star });
-  card.setAttribute("data-kp-row-key", data.key);
-  card.setAttribute("data-kp-entity-key", data.key);
-  const status = data.status ?? "ready";
-  card.setAttribute("data-kp-state", status);
-  const meterRows = Math.max(0, Math.min(3, Number(opt2(card, "data-kp-entity-meters") ?? 2) || 0));
-  const around = card.closest(ENTITY_GRID);
-  if (around && Array.isArray(data.trend) && !around.hasAttribute("data-kp-entity-trended")) {
-    around.setAttribute("data-kp-entity-trended", "");
-    redraw(
-      /** @type {HTMLElement[]} */
-      [...around.querySelectorAll(":scope > .kp-card--entity")].filter((other) => other !== card),
-      ["meters"]
-    );
-  }
-  const trendMode = opt2(card, "data-kp-entity-trend") ?? "auto";
-  const trended = Array.isArray(data.trend) || (card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-trended") ?? false);
-  const trendOn = kind === "stack" && (trendMode === "on" || trendMode !== "off" && trended);
-  card.style.setProperty("--kp-entity-meters", String(meterRows + (trendOn ? 1 : 0)));
-  const key = data.key;
-  const slot = (slot_, signature2, build8) => {
-    const text = sig(signature2);
-    if (drawn[slot_] === text) return;
-    drawn[slot_] = text;
-    const el16 = slotOf(card, slot_);
-    el16.replaceChildren();
-    build8(el16);
-  };
-  const loading = status === "loading";
-  if (loading) {
-    card.removeAttribute("data-kp-entity-actions");
-    slotOf(card, kind === "stack" ? "actions" : "lines").hidden = false;
-    for (const name of SLOTS[kind]) {
-      slot(name, "loading", (el16) => {
-        const bone = made5(doc, "span", "kp-skeleton kp-entity__bone");
-        bone.setAttribute("aria-hidden", "true");
-        el16.append(bone);
-      });
-    }
-    card.setAttribute("aria-busy", "true");
-    return;
-  }
-  card.removeAttribute("aria-busy");
-  const link = opt2(card, "data-kp-entity-link");
-  const selectable = opt2(card, "data-kp-selectable") !== null;
-  const markKind = opt2(card, "data-kp-entity-mark") ?? "idmark";
-  const starOn = (opt2(card, "data-kp-entity-star") ?? (kind === "tile" ? "on" : "off")) !== "off";
-  const starKey = starKeyOf(card);
-  if (kind === "tile") {
-    drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable, markKind, starOn, starKey, star });
-    return;
-  }
-  slot("id", { n: data.name, v: data.vmid, st: data.state, link, selectable, markKind, status, starOn, starKey }, (el16) => {
-    tickAndMark(card, el16, data, selectable, markKind);
-    const name = link ? made5(doc, "a", "kp-entity__name") : made5(doc, "span", "kp-entity__name");
-    if (name instanceof HTMLAnchorElement && link) name.href = link.replace("{key}", encodeURIComponent(key));
-    name.textContent = data.name;
-    el16.append(name);
-    const vmid = made5(doc, "span", "kp-entity__vmid");
-    vmid.textContent = data.vmid ?? "";
-    el16.append(vmid);
-    const st = made5(
-      doc,
-      "span",
-      `kp-badge kp-entity__state${data.state?.tone ? ` kp-badge--${status === "error" ? "destructive" : data.state.tone}` : status === "error" ? " kp-badge--destructive" : ""}`
-    );
-    st.textContent = status === "error" ? s2.entityFailed : data.state?.label ?? "";
-    el16.append(st);
-    if (starOn) appendStar(card, el16, data, star, starKey);
-  });
-  syncStar(card, star);
-  slot("figures", { f: data.figures, status }, (el16) => {
-    if (status === "empty") {
-      const none = made5(doc, "span", "kp-entity__none");
-      none.textContent = s2.entityNotMeasured;
-      el16.append(none);
-      return;
-    }
-    for (const f of data.figures ?? []) {
-      const one = made5(doc, "span", "kp-entity__figure");
-      const value = made5(doc, "b", "kp-entity__value");
-      value.textContent = f.value;
-      one.append(value, ` ${f.label}`);
-      el16.append(one);
-    }
-  });
-  const flagsAsked = Math.max(0, Number(opt2(card, "data-kp-entity-flags-max") ?? 3));
-  const flagsMax = Math.min(flagsAsked, Number(card.dataset.kpFlagsFit ?? flagsAsked));
-  slot("flags", { fl: data.flags, flagsMax }, (el16) => {
-    const all = data.flags ?? [];
-    for (const flag of all.slice(0, flagsMax)) {
-      const chip = made5(doc, "span", `kp-badge kp-entity__flag${flag.tone ? ` kp-badge--${flag.tone}` : ""}`);
-      chip.textContent = flag.label;
-      el16.append(chip);
-    }
-    const rest = all.slice(flagsMax);
-    if (rest.length > 0) {
-      const wrap = made5(doc, "div", "kp-menu-button kp-entity__more-flags");
-      wrap.setAttribute("data-kp-menu-button", "");
-      wrap.setAttribute("data-kp-key", `${key}-flags`);
-      const button6 = (
-        /** @type {HTMLButtonElement} */
-        made5(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-entity__plus")
-      );
-      button6.type = "button";
-      button6.textContent = `+${rest.length}`;
-      button6.setAttribute("aria-label", s2.entityMoreFlags(rest.length));
-      const menu = made5(doc, "div", "kp-menu kp-menu--rich");
-      menu.setAttribute("role", "menu");
-      menu.setAttribute("aria-label", s2.entityFlagsLabel);
-      wrap.append(button6, menu);
-      el16.append(wrap);
-      attachMenuButtons(el16);
-      setMenu(wrap, [{ group: "", items: rest.map((f) => ({ label: f.label, value: f.label })) }]);
-      wrap.addEventListener("kp-menu-select", (event) => {
-        card.dispatchEvent(
-          new CustomEvent(ENTITY_FLAG_EVENT, { bubbles: true, detail: { key, flag: (
-            /** @type {CustomEvent} */
-            event.detail.value
-          ) } })
-        );
-      });
-    }
-  });
-  fitFlags(card, flagsMax);
-  slot("meters", { m: data.meters, meterRows, status, tr: trendOn ? [data.trend ?? null, data.trendLabel, data.trendText] : null }, (el16) => {
-    for (let i = 0; i < meterRows; i++) {
-      const m = data.meters?.[i];
-      const row2 = made5(doc, "div", "kp-entity__meter");
-      const label = made5(doc, "span", "kp-entity__meter-label");
-      label.textContent = m?.label ?? "";
-      const bar = made5(doc, "div", "kp-meter");
-      const value = made5(doc, "span", "kp-entity__meter-value");
-      if (m && status !== "empty") {
-        const tone = m.tone ?? (m.value !== null && m.value >= 0.9 ? "destructive" : m.value !== null && m.value >= 0.75 ? "warning" : null);
-        setMeter(bar, { value: m.value, mark: m.mark ?? null, tone, label: m.label });
-        value.textContent = m.text ?? (m.value === null ? "\u2014" : `${Math.round(m.value * 100)}%`);
-      } else {
-        setMeter(bar, { value: null });
-        value.textContent = status === "empty" ? s2.entityNotMeasured : "";
-      }
-      row2.append(label, bar, value);
-      el16.append(row2);
-    }
-    if (trendOn) el16.append(trendRow(doc, s2, data, status));
-  });
-  const narrow = card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-narrow") ?? false;
-  const inlineAsked = narrow ? 0 : Math.max(0, Number(opt2(card, "data-kp-entity-inline") ?? 3));
-  const fitHost = (
-    /** @type {HTMLElement} */
-    card.closest(ENTITY_GRID) ?? card
-  );
-  const inline2 = Math.min(inlineAsked, Number(fitHost.dataset.kpEntityFit ?? inlineAsked));
-  const noActions = status !== "error" && (data.actions ?? []).length === 0;
-  if (noActions) card.setAttribute("data-kp-entity-actions", "none");
-  else card.removeAttribute("data-kp-entity-actions");
-  slotOf(card, "actions").hidden = noActions;
-  const host = fitHost;
-  host.style.setProperty("--kp-entity-cols", String(columnsFor(host, inline2)));
-  slot("actions", { a: data.actions, inline: inline2, status }, (el16) => {
-    if (status === "error") {
-      const retry = (
-        /** @type {HTMLButtonElement} */
-        made5(doc, "button", "kp-button kp-entity__action kp-entity__retry")
-      );
-      retry.type = "button";
-      retry.textContent = s2.entityRetry;
-      if (data.error) retry.title = data.error;
-      retry.addEventListener("click", () => card.dispatchEvent(new CustomEvent(ENTITY_RETRY_EVENT, { bubbles: true, detail: { key } })));
-      el16.append(retry);
-      return;
-    }
-    const all = data.actions ?? [];
-    const shown5 = all.slice(0, inline2);
-    const rest = all.slice(inline2);
-    for (const a of shown5) {
-      const button6 = (
-        /** @type {HTMLButtonElement} */
-        made5(doc, "button", `kp-button kp-button--sm kp-entity__action${a.danger ? " kp-button--destructive" : ""}`)
-      );
-      button6.type = "button";
-      button6.textContent = a.label;
-      if (a.disabled) {
-        button6.setAttribute("aria-disabled", "true");
-        button6.setAttribute("data-kp-disabled-reason", a.disabled);
-      }
-      button6.addEventListener("click", () => {
-        if (a.disabled) return;
-        card.dispatchEvent(new CustomEvent(ENTITY_ACTION_EVENT, { bubbles: true, detail: { key, id: a.id } }));
-      });
-      el16.append(button6);
-    }
-    if (rest.length > 0) {
-      const wrap = made5(doc, "div", "kp-menu-button kp-entity__more");
-      wrap.setAttribute("data-kp-menu-button", "");
-      wrap.setAttribute("data-kp-key", `${key}-more`);
-      const button6 = (
-        /** @type {HTMLButtonElement} */
-        made5(doc, "button", "kp-button kp-button--sm")
-      );
-      button6.type = "button";
-      button6.textContent = s2.entityMore;
-      const menu = made5(doc, "div", "kp-menu kp-menu--rich");
-      menu.setAttribute("role", "menu");
-      menu.setAttribute("aria-label", s2.entityMoreLabel);
-      wrap.append(button6, menu);
-      el16.append(wrap);
-      attachMenuButtons(el16);
-      setMenu(wrap, [
-        { group: "", items: rest.map((a) => ({ label: a.label, value: a.id, danger: a.danger === true, disabled: a.disabled ?? null })) }
-      ]);
-      wrap.addEventListener("kp-menu-select", (event) => {
-        card.dispatchEvent(
-          new CustomEvent(ENTITY_ACTION_EVENT, { bubbles: true, detail: { key, id: (
-            /** @type {CustomEvent} */
-            event.detail.value
-          ) } })
-        );
-      });
-    }
-  });
-  fitActions(host, inline2);
+  new CardDrawing(card, data).draw();
 }
-var ACTIONS_QUEUED;
+var ACTIONS_QUEUED, CardDrawing;
 var init_set2 = __esm({
   "js/entity-card/set.js"() {
     "use strict";
-    init_kpi();
-    init_menu_button();
-    init_strings();
     init_constants34();
-    init_helpers5();
-    init_star();
     init_tile();
+    init_rows6();
+    init_helpers5();
     ACTIONS_QUEUED = /* @__PURE__ */ new WeakSet();
+    CardDrawing = class extends RowsDrawing {
+      draw() {
+        this.begin();
+        this.trend(redraw);
+        if (this.status === "loading") {
+          this.drawLoading();
+          return;
+        }
+        this.card.removeAttribute("aria-busy");
+        this.readOptions();
+        if (this.kind === "tile") {
+          const { card, data, doc, s: s2, status, key, link, selectable, markKind, starOn, starKey, star } = this;
+          drawTile({ card, data, doc, s: s2, slot: (name, signature2, build8) => this.slot(name, signature2, build8), status, key, link, selectable, markKind, starOn, starKey, star });
+          return;
+        }
+        this.identity();
+        this.figures();
+        this.flags();
+        fitFlags(this.card, this.flagsMax);
+        this.meters();
+        this.actions();
+        fitActions(this.fitHost, this.inline);
+      }
+    };
+  }
+});
+
+// js/entity-card/grid-control.js
+var NARROW_BELOW, CARDS3, LIVE_OPTIONS, EntityGridControl;
+var init_grid_control = __esm({
+  "js/entity-card/grid-control.js"() {
+    "use strict";
+    init_controller();
+    init_helpers5();
+    init_set2();
+    NARROW_BELOW = 480;
+    CARDS3 = ":scope > .kp-card--entity";
+    LIVE_OPTIONS = [
+      "data-kp-entity-meters",
+      "data-kp-entity-flags-max",
+      "data-kp-entity-inline",
+      "data-kp-entity-link",
+      "data-kp-selectable",
+      "data-kp-entity-mark",
+      "data-kp-entity-min",
+      "data-kp-entity-narrow",
+      "data-kp-entity-kind",
+      "data-kp-entity-trend",
+      "data-kp-entity-star",
+      "data-kp-entity-star-key"
+    ];
+    EntityGridControl = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.lastWidth = 0;
+      }
+      connect() {
+        const grid2 = this.host;
+        this.applyMin();
+        this.lastWidth = grid2.clientWidth;
+        this.fold();
+        if (typeof ResizeObserver === "function") {
+          this.observe(
+            new ResizeObserver(() => {
+              this.fold();
+              this.refit();
+            })
+          ).observe(grid2);
+        }
+        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS });
+        this.fold();
+      }
+      /** The least card width the grid asks for. */
+      applyMin() {
+        const grid2 = this.host;
+        const min = grid2.getAttribute("data-kp-entity-min");
+        if (min) grid2.style.setProperty("--kp-entity-min", min);
+        else grid2.style.removeProperty("--kp-entity-min");
+      }
+      /** A narrow grid puts every action in "More". */
+      fold() {
+        const grid2 = this.host;
+        grid2.toggleAttribute("data-kp-entity-narrow", grid2.clientWidth > 0 && grid2.clientWidth < NARROW_BELOW);
+      }
+      /** A new width: forget what fitted before and draw the flags and actions again. */
+      refit() {
+        const grid2 = this.host;
+        if (grid2.clientWidth === this.lastWidth) return;
+        this.lastWidth = grid2.clientWidth;
+        delete grid2.dataset.kpEntityFit;
+        const cards = (
+          /** @type {HTMLElement[]} */
+          [...grid2.querySelectorAll(CARDS3)]
+        );
+        for (const card of cards) delete card.dataset.kpFlagsFit;
+        redraw(cards, ["flags", "actions"]);
+      }
+      /** An option changed: every card is drawn again from its last data. */
+      onOption() {
+        const grid2 = this.host;
+        this.applyMin();
+        delete grid2.dataset.kpEntityFit;
+        for (
+          const card of
+          /** @type {HTMLElement[]} */
+          [...grid2.querySelectorAll(CARDS3)]
+        ) {
+          const was = DRAWN5.get(card);
+          if (!was) continue;
+          was.drawn = {};
+          setEntity(card, was.data);
+        }
+      }
+    };
   }
 });
 
@@ -71650,79 +71880,22 @@ function attachEntityCards(root = document) {
       ...root.querySelectorAll(ENTITY_GRID)
     ]
   );
-  const undo = [];
-  for (const grid2 of grids) {
-    const apply2 = () => {
-      const min = grid2.getAttribute("data-kp-entity-min");
-      if (min) grid2.style.setProperty("--kp-entity-min", min);
-      else grid2.style.removeProperty("--kp-entity-min");
-    };
-    apply2();
-    let lastWidth = grid2.clientWidth;
-    const refit = () => {
-      if (grid2.clientWidth === lastWidth) return;
-      lastWidth = grid2.clientWidth;
-      delete grid2.dataset.kpEntityFit;
-      const cards = (
-        /** @type {HTMLElement[]} */
-        [...grid2.querySelectorAll(":scope > .kp-card--entity")]
-      );
-      for (const card of cards) delete card.dataset.kpFlagsFit;
-      redraw(cards, ["flags", "actions"]);
-    };
-    const fold2 = () => grid2.toggleAttribute("data-kp-entity-narrow", grid2.clientWidth > 0 && grid2.clientWidth < 480);
-    fold2();
-    const resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
-      fold2();
-      refit();
-    }) : null;
-    resize?.observe(grid2);
-    undo.push(() => resize?.disconnect());
-    const watch2 = new MutationObserver(() => {
-      apply2();
-      delete grid2.dataset.kpEntityFit;
-      for (
-        const card of
-        /** @type {HTMLElement[]} */
-        [...grid2.querySelectorAll(":scope > .kp-card--entity")]
-      ) {
-        const was = DRAWN5.get(card);
-        if (!was) continue;
-        was.drawn = {};
-        setEntity(card, was.data);
-      }
-    });
-    watch2.observe(grid2, {
-      attributes: true,
-      attributeFilter: [
-        "data-kp-entity-meters",
-        "data-kp-entity-flags-max",
-        "data-kp-entity-inline",
-        "data-kp-entity-link",
-        "data-kp-selectable",
-        "data-kp-entity-mark",
-        "data-kp-entity-min",
-        "data-kp-entity-narrow",
-        "data-kp-entity-kind",
-        "data-kp-entity-trend",
-        "data-kp-entity-star",
-        "data-kp-entity-star-key"
-      ]
-    });
-    undo.push(() => watch2.disconnect());
-    fold2();
-  }
-  return () => undo.forEach((u) => u());
+  const made6 = grids.filter((grid2) => !controllerOf(grid2, EntityGridControl)).map((grid2) => attachOne(grid2, EntityGridControl));
+  return () => {
+    for (const control of made6) control?.destroy();
+  };
 }
 var BUSY3;
 var init_grid3 = __esm({
   "js/entity-card/grid.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_busy_card();
     init_state_plate();
     init_constants34();
     init_helpers5();
+    init_grid_control();
     init_set2();
     BUSY3 = /* @__PURE__ */ new WeakMap();
   }
@@ -76478,7 +76651,7 @@ function nameLine(c, parent, o) {
   }
 }
 var stamp2, titleOf2;
-var init_rows6 = __esm({
+var init_rows7 = __esm({
   "js/dated-options/rows.js"() {
     "use strict";
     init_range();
@@ -76561,7 +76734,7 @@ var init_combobox_draw = __esm({
   "js/dated-options/combobox-draw.js"() {
     "use strict";
     init_combobox();
-    init_rows6();
+    init_rows7();
   }
 });
 
@@ -76673,7 +76846,7 @@ function drawRadios(c) {
 var init_radios = __esm({
   "js/dated-options/radios.js"() {
     "use strict";
-    init_rows6();
+    init_rows7();
   }
 });
 
@@ -76735,7 +76908,7 @@ var init_controller63 = __esm({
     init_combobox_draw();
     init_note3();
     init_radios();
-    init_rows6();
+    init_rows7();
     init_settings2();
     init_time2();
     DatedController = class extends Controller {
@@ -77196,7 +77369,7 @@ var init_core26 = __esm({
 
 // js/runs/rows.js
 var RunsRows;
-var init_rows7 = __esm({
+var init_rows8 = __esm({
   "js/runs/rows.js"() {
     "use strict";
     init_core26();
@@ -77271,7 +77444,7 @@ var init_note4 = __esm({
   "js/runs/note.js"() {
     "use strict";
     init_state_plate();
-    init_rows7();
+    init_rows8();
     RunsNote = class extends RunsRows {
       paintNote() {
         const { note: note2 } = this.parts;
@@ -80267,7 +80440,7 @@ function fillRow(list, row2, item) {
   }
 }
 var mode, among;
-var init_rows8 = __esm({
+var init_rows9 = __esm({
   "js/claim/rows.js"() {
     "use strict";
     init_strings();
@@ -80493,7 +80666,7 @@ var init_decorate = __esm({
     init_state_plate();
     init_constants39();
     init_model8();
-    init_rows8();
+    init_rows9();
   }
 });
 
@@ -80716,7 +80889,7 @@ var init_request2 = __esm({
     init_constants39();
     init_decorate();
     init_model8();
-    init_rows8();
+    init_rows9();
   }
 });
 
@@ -80732,7 +80905,7 @@ var init_state27 = __esm({
 });
 
 // js/claim/controller.js
-var LIVE_OPTIONS, ClaimList;
+var LIVE_OPTIONS2, ClaimList;
 var init_controller66 = __esm({
   "js/claim/controller.js"() {
     "use strict";
@@ -80748,9 +80921,9 @@ var init_controller66 = __esm({
     init_decorate();
     init_model8();
     init_request2();
-    init_rows8();
+    init_rows9();
     init_state27();
-    LIVE_OPTIONS = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
+    LIVE_OPTIONS2 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
       (n) => `data-kp-claim-${n}`
     );
     ClaimList = class extends Controller {
@@ -80771,7 +80944,7 @@ var init_controller66 = __esm({
           event
         ));
         this.listen(list, CHECKLIST_RENDER_EVENT, () => decorate(list));
-        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS });
+        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS2 });
         this.listen(list, "click", (event) => this.onClick(
           /** @type {MouseEvent} */
           event
@@ -83270,7 +83443,7 @@ var init_actions7 = __esm({
 });
 
 // js/qr/controller.js
-var LIVE_OPTIONS2, QrControl;
+var LIVE_OPTIONS3, QrControl;
 var init_controller67 = __esm({
   "js/qr/controller.js"() {
     "use strict";
@@ -83280,7 +83453,7 @@ var init_controller67 = __esm({
     init_actions7();
     init_render6();
     init_state28();
-    LIVE_OPTIONS2 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
+    LIVE_OPTIONS3 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -83296,7 +83469,7 @@ var init_controller67 = __esm({
             window.cancelAnimationFrame(this.queued);
             this.queued = window.requestAnimationFrame(() => render5(root));
           })
-        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS2.map((n) => `data-kp-qr-${n}`) });
+        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS3.map((n) => `data-kp-qr-${n}`) });
         this.own(this.copyKey());
         render5(root);
       }
@@ -84839,7 +85012,7 @@ function collect(root, reset = false) {
   for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
-var init_rows9 = __esm({
+var init_rows10 = __esm({
   "js/logviewer/rows.js"() {
     "use strict";
     init_strings();
@@ -84995,7 +85168,7 @@ var init_refresh = __esm({
     init_constants42();
     init_model10();
     init_reads();
-    init_rows9();
+    init_rows10();
   }
 });
 
@@ -85142,7 +85315,7 @@ var init_api30 = __esm({
     init_parts18();
     init_reads();
     init_refresh();
-    init_rows9();
+    init_rows10();
   }
 });
 
@@ -85350,7 +85523,7 @@ var init_attach26 = __esm({
     init_model10();
     init_parts18();
     init_reads();
-    init_rows9();
+    init_rows10();
   }
 });
 

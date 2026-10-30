@@ -40,7 +40,7 @@
         "js/deplist.js": { "digest": "358dfdc6949bc335", "when": "[data-kp-deplist]" },
         "js/diff.js": { "digest": "efdcb2db5f17f9f4", "when": "[data-kp-diffview]" },
         "js/docpreview.js": { "digest": "584a262fb91b7003", "when": "[data-kp-preview], .kp-docglyph" },
-        "js/entity-card.js": { "digest": "b9ca787027783791", "when": "[data-kp-entity-grid]" },
+        "js/entity-card.js": { "digest": "05ed9faad53cecbd", "when": "[data-kp-entity-grid]" },
         "js/facets.js": { "digest": "c6794ca99b3598e2", "when": "[data-kp-facets]" },
         "js/feed.js": { "digest": "06f7d10ab05ee41e", "when": "[data-kp-feed]" },
         "js/flash.js": { "digest": "07b895bbd6a06ba8", "when": "[data-kp-flash-button], [data-kp-post]" },
