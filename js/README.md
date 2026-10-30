@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -627,3 +627,14 @@ The QR code, as a QrControl controller over a per-code state. 6 files.
 | `matrix.js`     | The matrix for a text, the WCAG contrast of two colours and the path of the dark modules. |
 | `render.js`     | The plate, the stand-ins, the caption, the actions, the density warning and the expiry.  |
 | `state.js`      | The selector, events and numbers, the per-code state registry and the shared helpers.    |
+
+## js/structure.js → js/structure/
+
+The tree, the reorder list and the split pane, one controller each. 4 files.
+
+| File         | Does                                                                                    |
+| ------------ | --------------------------------------------------------------------------------------- |
+| `reorder.js` | ReorderControl: the grab handle, keys and pointer, the move said in words.              |
+| `shared.js`  | The selectors, the events, the defaults and the walk of a tree's visible items.         |
+| `split.js`   | SplitControl: the separator by keys and pointer, vertical too, the fold on double click. |
+| `tree.js`    | TreeControl: walking, opening, typeahead, one tab stop, selection, remembered branches. |

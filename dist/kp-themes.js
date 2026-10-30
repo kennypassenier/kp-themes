@@ -20510,11 +20510,11 @@ function installGroups(c) {
   const givenIds = /* @__PURE__ */ new Set();
   c.givenIds = givenIds;
   let memberIds = 0;
-  const groupOf2 = (row) => {
+  const groupOf3 = (row) => {
     const key = row.dataset.kpGroupOf;
     return key !== void 0 && groups.has(key) ? key : null;
   };
-  c.groupOf = groupOf2;
+  c.groupOf = groupOf3;
   const prepareGroup = (heading) => {
     const cell = heading.cells[0];
     if (cell === void 0 || heading.querySelector(GROUP_TOGGLE) !== null) return;
@@ -20564,7 +20564,7 @@ function installGroups(c) {
         if (groups.get(key) !== row) continue;
         block = `group:${key}`;
       } else {
-        const key = groupOf2(row);
+        const key = groupOf3(row);
         if (key !== null) block = `group:${key}`;
         else {
           if (!inLoose) loose += 1;
@@ -20596,7 +20596,7 @@ function installGroups(c) {
   };
   c.arrange = arrange2;
   const isFolded = (row) => {
-    const key = groupOf2(row);
+    const key = groupOf3(row);
     return key !== null && folded2.has(key);
   };
   c.isFolded = isFolded;
@@ -20633,12 +20633,12 @@ function installGroups(c) {
     if (groups.size === 0) return;
     const matched = /* @__PURE__ */ new Map();
     for (const row of c.shownRows) {
-      const key = groupOf2(row);
+      const key = groupOf3(row);
       if (key !== null) matched.set(key, (matched.get(key) ?? 0) + 1);
     }
     const onPage = /* @__PURE__ */ new Map();
     for (const row of c.pageRows) {
-      const key = groupOf2(row);
+      const key = groupOf3(row);
       if (key === null) continue;
       if (row.id === "" && row.dataset.kpRowKey !== void 0) {
         memberIds += 1;
@@ -22077,7 +22077,7 @@ var init_handlers = __esm({
 
 // js/datatable/attach/expand.js
 function installExpand(c) {
-  const { body, departing, detailFor, details, expandable, expanded, folded: folded2, groupOf: groupOf2, groups, keyOf: keyOf8, render: render7, single, wrap } = c;
+  const { body, departing, detailFor, details, expandable, expanded, folded: folded2, groupOf: groupOf3, groups, keyOf: keyOf8, render: render7, single, wrap } = c;
   const setExpanded = (row, open4) => {
     const key = keyOf8(row);
     if (open4 === expanded.has(key)) return;
@@ -22102,12 +22102,12 @@ function installExpand(c) {
   c.expandKeys = expandKeys;
   const setFolded = (key, fold2) => {
     if (fold2 === folded2.has(key)) return;
-    const going = fold2 ? c.pageRows.filter((row) => groupOf2(row) === key && !row.hidden) : [];
+    const going = fold2 ? c.pageRows.filter((row) => groupOf3(row) === key && !row.hidden) : [];
     if (fold2) folded2.add(key);
     else {
       folded2.delete(key);
       for (const row of [...departing])
-        if (groupOf2(row) === key) {
+        if (groupOf3(row) === key) {
           departing.delete(row);
           row.removeAttribute("data-kp-folding");
           stopReversing(row);
@@ -22135,7 +22135,7 @@ function installExpand(c) {
           key,
           row: groups.get(key) ?? null,
           open: !fold2,
-          members: c.all.filter((row) => groupOf2(row) === key),
+          members: c.all.filter((row) => groupOf3(row) === key),
           folded: [...folded2]
         }
       })
@@ -24779,17 +24779,114 @@ var init_patterns = __esm({
   }
 });
 
-// js/structure.js
-var structure_exports = {};
-__export(structure_exports, {
-  REORDER_EVENT: () => REORDER_EVENT2,
-  SPLIT_EVENT: () => SPLIT_EVENT,
-  TREE_EXPAND_EVENT: () => TREE_EXPAND_EVENT,
-  TREE_SELECT_EVENT: () => TREE_SELECT_EVENT,
-  attachStructure: () => attachStructure,
-  structure: () => structure,
-  visibleItems: () => visibleItems
+// js/controller.js
+function hostsOf(root, selector) {
+  const self = root instanceof Element && root.matches(selector) ? [root] : [];
+  return (
+    /** @type {HTMLElement[]} */
+    [...self, ...root.querySelectorAll(selector)]
+  );
+}
+function controllerOf(host, Ctor) {
+  return (
+    /** @type {C | undefined} */
+    LIVE.get(Ctor)?.get(host)
+  );
+}
+function attachOne2(host, Ctor, options = {}) {
+  let live4 = LIVE.get(Ctor);
+  if (!live4) LIVE.set(Ctor, live4 = /* @__PURE__ */ new WeakMap());
+  const existing = (
+    /** @type {C | undefined} */
+    live4.get(host)
+  );
+  if (existing) return existing;
+  const controller = new Ctor(host, options);
+  live4.set(host, controller);
+  try {
+    controller.connect();
+    return controller;
+  } catch (error) {
+    controller.destroy();
+    report(error);
+    return void 0;
+  }
+}
+function attachAll(root, selector, Ctor, options = {}) {
+  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne2(host, Ctor, options)).filter((controller) => controller !== void 0);
+  return () => {
+    for (const controller of made6) controller.destroy();
+  };
+}
+var LIVE, report, Controller;
+var init_controller = __esm({
+  "js/controller.js"() {
+    "use strict";
+    LIVE = /* @__PURE__ */ new WeakMap();
+    report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
+    Controller = class {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options = {}) {
+        this.host = host;
+        this.options = options;
+        this.teardown = [];
+        this.destroyed = false;
+      }
+      /**
+       * Register an undo step for `destroy()`.
+       * @template {() => void} F
+       * @param {F} undo
+       * @returns {F}
+       */
+      own(undo) {
+        this.teardown.push(undo);
+        return undo;
+      }
+      /**
+       * Add an event listener that `destroy()` removes.
+       * @param {EventTarget} target
+       * @param {string} type
+       * @param {EventListenerOrEventListenerObject} handler
+       * @param {AddEventListenerOptions | boolean} [options]
+       */
+      listen(target, type, handler, options) {
+        target.addEventListener(type, handler, options);
+        this.own(() => target.removeEventListener(type, handler, options));
+      }
+      /**
+       * Start an observer that `destroy()` disconnects.
+       * @template {{ disconnect(): void }} O
+       * @param {O} observer
+       * @returns {O}
+       */
+      observe(observer) {
+        this.own(() => observer.disconnect());
+        return observer;
+      }
+      /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
+      connect() {
+      }
+      /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */
+      destroy() {
+        if (this.destroyed) return;
+        this.destroyed = true;
+        for (const undo of this.teardown.splice(0).reverse()) {
+          try {
+            undo();
+          } catch (error) {
+            report(error);
+          }
+        }
+        LIVE.get(this.constructor)?.delete(this.host);
+      }
+    };
+  }
 });
+
+// js/structure/shared.js
 function visibleItems(tree) {
   return (
     /** @type {HTMLElement[]} */
@@ -24803,430 +24900,10 @@ function visibleItems(tree) {
     })
   );
 }
-function structure(element) {
-  return handles9.get(element) ?? null;
-}
-function attachStructure(root = document, {
-  typeahead = true,
-  typeaheadMs = 500,
-  clickToggles = true,
-  selectable = false,
-  reorderPointer = true,
-  splitStep = 2,
-  splitLargeStep = 10,
-  collapseOnDoubleClick = false
-} = {}) {
-  const cleanups = [];
-  const created = [];
-  for (const element of root.querySelectorAll(TREE)) {
-    const tree = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (tree.dataset.kpTreeAttached !== void 0) continue;
-    tree.dataset.kpTreeAttached = "";
-    const memory = paintRemembered(tree, "tree");
-    const finds = tree.dataset.kpTypeahead === void 0 ? typeahead : tree.dataset.kpTypeahead !== "false";
-    const clickMode = tree.dataset.kpClick ?? (clickToggles ? "toggle" : "select");
-    const selects = tree.dataset.kpSelectable !== void 0 || selectable;
-    const all = () => (
-      /** @type {HTMLElement[]} */
-      [...tree.querySelectorAll('[role="treeitem"]')]
-    );
-    const before = all().map((item) => ({ item, tabindex: item.getAttribute("tabindex"), selected: item.getAttribute("aria-selected") }));
-    const idOf = (item) => item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim();
-    const byId = (id) => all().find((item) => idOf(item) === id) ?? null;
-    const setStop = (item) => {
-      for (const other of all()) other.setAttribute("tabindex", "-1");
-      item.setAttribute("tabindex", "0");
-      item.focus();
-    };
-    let quiet = false;
-    const groupOf2 = (item) => {
-      const inside = item.querySelector(':scope > [role="group"]');
-      if (inside instanceof HTMLElement) return inside;
-      const next2 = item.nextElementSibling;
-      return next2 instanceof HTMLElement && next2.getAttribute("role") === "group" ? next2 : null;
-    };
-    const setExpanded = (item, expanded) => {
-      if (!item.hasAttribute("aria-expanded")) return;
-      if (item.getAttribute("aria-expanded") === "true" === expanded) return;
-      const flip = () => item.setAttribute("aria-expanded", String(expanded));
-      const group = quiet || !leavesState(tree) ? null : groupOf2(item);
-      if (group !== null) glideGroup(group, expanded, flip);
-      else flip();
-      if (memory !== null) {
-        const branches = {};
-        for (const branch of tree.querySelectorAll('[role="treeitem"][aria-expanded]'))
-          branches[treeItemId(branch)] = branch.getAttribute("aria-expanded") === "true";
-        memory.write("branches", branches);
-      }
-      tree.dispatchEvent(new CustomEvent(TREE_EXPAND_EVENT, { bubbles: true, detail: { item, id: idOf(item), expanded } }));
-    };
-    const setSelected = (item) => {
-      for (const other of all()) {
-        if (other === item) other.setAttribute("aria-selected", "true");
-        else if (other.getAttribute("aria-selected") === "true") other.setAttribute("aria-selected", "false");
-      }
-      if (item !== null) tree.dispatchEvent(new CustomEvent(TREE_SELECT_EVENT, { bubbles: true, detail: { item, id: idOf(item) } }));
-    };
-    const items = visibleItems(tree);
-    if (items[0] !== void 0) {
-      for (const item of all()) item.setAttribute("tabindex", "-1");
-      items[0].setAttribute("tabindex", "0");
-    }
-    let buffer = "";
-    let bufferTimer = 0;
-    const onKey4 = (event) => {
-      const item = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest('[role="treeitem"]')
-      );
-      if (item === null) return;
-      const list = visibleItems(tree);
-      const at = list.indexOf(item);
-      const expandable = item.hasAttribute("aria-expanded");
-      const open4 = item.getAttribute("aria-expanded") === "true";
-      switch (event.key) {
-        case "ArrowDown":
-          event.preventDefault();
-          if (list[at + 1]) setStop(list[at + 1]);
-          break;
-        case "ArrowUp":
-          event.preventDefault();
-          if (list[at - 1]) setStop(list[at - 1]);
-          break;
-        case "ArrowRight":
-          event.preventDefault();
-          if (expandable && !open4) setExpanded(item, true);
-          else if (list[at + 1]) setStop(list[at + 1]);
-          break;
-        case "ArrowLeft": {
-          event.preventDefault();
-          if (expandable && open4) {
-            setExpanded(item, false);
-            break;
-          }
-          const parent = (
-            /** @type {HTMLElement | null} */
-            item.parentElement?.closest('[role="treeitem"]') ?? null
-          );
-          if (parent !== null) setStop(parent);
-          break;
-        }
-        case "Home":
-          event.preventDefault();
-          if (list[0]) setStop(list[0]);
-          break;
-        case "End":
-          event.preventDefault();
-          if (list[list.length - 1]) setStop(list[list.length - 1]);
-          break;
-        case "Enter":
-        case " ":
-          event.preventDefault();
-          if (selects) setSelected(item);
-          else if (expandable) setExpanded(item, !open4);
-          break;
-        default:
-          if (finds && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
-            clearTimeout(bufferTimer);
-            buffer += event.key.toLowerCase();
-            bufferTimer = window.setTimeout(() => buffer = "", typeaheadMs);
-            const after = buffer.length > 1 ? list : [...list.slice(at + 1), ...list.slice(0, at + 1)];
-            const found = after.find((candidate) => (candidate.textContent ?? "").trim().toLowerCase().startsWith(buffer));
-            if (found !== void 0) {
-              event.preventDefault();
-              setStop(found);
-            }
-          }
-          break;
-      }
-    };
-    const onClick = (event) => {
-      const item = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest('[role="treeitem"]')
-      );
-      if (item === null) return;
-      const onChevron = (
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-tree-toggle]") !== null
-      );
-      if (clickMode === "toggle" || onChevron) {
-        if (item.hasAttribute("aria-expanded")) setExpanded(item, item.getAttribute("aria-expanded") !== "true");
-      }
-      if (selects && (clickMode === "select" || !onChevron)) setSelected(item);
-      setStop(item);
-    };
-    tree.addEventListener("keydown", onKey4);
-    tree.addEventListener("click", onClick);
-    const handle = {
-      element: tree,
-      expand: (id, expanded = true) => {
-        const item = byId(id);
-        if (item) setExpanded(item, expanded);
-      },
-      expandAll: () => {
-        quiet = true;
-        for (const item of all()) setExpanded(item, true);
-        quiet = false;
-      },
-      collapseAll: () => {
-        quiet = true;
-        for (const item of all()) setExpanded(item, false);
-        quiet = false;
-      },
-      focusItem: (id) => {
-        const item = byId(id);
-        if (item) setStop(item);
-      },
-      select: (id) => setSelected(id === null ? null : byId(id)),
-      selected: () => {
-        const item = all().find((i) => i.getAttribute("aria-selected") === "true");
-        return item ? idOf(item) : null;
-      }
-    };
-    handles9.set(tree, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      clearTimeout(bufferTimer);
-      tree.removeEventListener("keydown", onKey4);
-      tree.removeEventListener("click", onClick);
-      for (const b of before) {
-        if (b.tabindex === null) b.item.removeAttribute("tabindex");
-        else b.item.setAttribute("tabindex", b.tabindex);
-        if (b.selected === null) b.item.removeAttribute("aria-selected");
-        else b.item.setAttribute("aria-selected", b.selected);
-      }
-      handles9.delete(tree);
-      delete tree.dataset.kpTreeAttached;
-    });
-  }
-  for (const element of root.querySelectorAll(REORDER)) {
-    const list = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (list.dataset.kpReorderAttached !== void 0) continue;
-    list.dataset.kpReorderAttached = "";
-    const pointer = list.dataset.kpPointer === void 0 ? reorderPointer : list.dataset.kpPointer !== "false";
-    const original = [...list.children];
-    let live4 = (
-      /** @type {HTMLElement | null} */
-      list.querySelector("[data-kp-reorder-status]")
-    );
-    let madeLive = false;
-    if (live4 === null) {
-      live4 = document.createElement("span");
-      live4.className = "kp-sr-only";
-      live4.setAttribute("role", "status");
-      live4.setAttribute("aria-live", "polite");
-      live4.dataset.kpReorderStatus = "";
-      list.after(live4);
-      madeLive = true;
-    }
-    const order2 = () => [...list.children].map((child) => (
-      /** @type {HTMLElement} */
-      child.dataset.kpItem ?? ""
-    ));
-    const announce4 = (item, from, to) => {
-      const s2 = getStrings();
-      const name = item.dataset.kpLabel ?? item.querySelector("[data-kp-item-label]")?.textContent?.trim() ?? item.dataset.kpItem ?? "";
-      if (live4) live4.textContent = s2.reorderMoved(name, to + 1, list.children.length);
-      list.dispatchEvent(
-        new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: order2(), id: item.dataset.kpItem ?? "", from, to } })
-      );
-    };
-    const moveTo = (item, to) => {
-      const children = [...list.children];
-      const from = children.indexOf(item);
-      const target = Math.max(0, Math.min(children.length - 1, to));
-      if (from === -1 || from === target) return;
-      const ref = children[target];
-      if (target < from) list.insertBefore(item, ref ?? null);
-      else list.insertBefore(item, ref?.nextSibling ?? null);
-      announce4(item, from, target);
-    };
-    const onKey4 = (event) => {
-      const handle2 = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-handle]")
-      );
-      if (handle2 === null) return;
-      const item = handle2.closest("[data-kp-item]");
-      if (!(item instanceof HTMLElement)) return;
-      const at = [...list.children].indexOf(item);
-      const targets = { ArrowUp: at - 1, ArrowDown: at + 1, Home: 0, End: list.children.length - 1 };
-      const to = targets[event.key];
-      if (to === void 0) return;
-      event.preventDefault();
-      moveTo(item, to);
-      handle2.focus();
-    };
-    let endDrag = null;
-    const onPointerDown = (event) => {
-      if (!pointer || event.button !== 0) return;
-      const handle2 = (
-        /** @type {HTMLElement | null} */
-        /** @type {HTMLElement} */
-        event.target.closest("[data-kp-handle]")
-      );
-      const item = handle2?.closest("[data-kp-item]");
-      if (!handle2 || !(item instanceof HTMLElement) || item.parentElement !== list) return;
-      event.preventDefault();
-      endDrag?.();
-      const pointerId = event.pointerId;
-      item.dataset.kpDragging = "";
-      const onMove2 = (move) => {
-        if (move.pointerId !== pointerId) return;
-        for (const sibling of list.children) {
-          if (sibling === item) continue;
-          const box = sibling.getBoundingClientRect();
-          if (move.clientY >= box.top && move.clientY <= box.bottom) {
-            const children = [...list.children];
-            moveTo(item, children.indexOf(sibling));
-            break;
-          }
-        }
-      };
-      const onUp2 = (up) => {
-        if (up && up.pointerId !== pointerId) return;
-        delete item.dataset.kpDragging;
-        window.removeEventListener("pointermove", onMove2);
-        window.removeEventListener("pointerup", onUp2);
-        window.removeEventListener("pointercancel", onUp2);
-        endDrag = null;
-      };
-      endDrag = onUp2;
-      window.addEventListener("pointermove", onMove2);
-      window.addEventListener("pointerup", onUp2);
-      window.addEventListener("pointercancel", onUp2);
-    };
-    list.addEventListener("keydown", onKey4);
-    list.addEventListener("pointerdown", onPointerDown);
-    const handle = {
-      element: list,
-      order: order2,
-      setOrder: (ids) => {
-        for (const id of ids) {
-          const item = (
-            /** @type {HTMLElement | null} */
-            list.querySelector(`[data-kp-item="${CSS.escape(id)}"]`)
-          );
-          if (item) list.append(item);
-        }
-        list.dispatchEvent(new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: order2(), id: "", from: -1, to: -1 } }));
-      }
-    };
-    handles9.set(list, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      list.removeEventListener("keydown", onKey4);
-      list.removeEventListener("pointerdown", onPointerDown);
-      endDrag?.();
-      list.replaceChildren(...original);
-      if (madeLive) live4?.remove();
-      handles9.delete(list);
-      delete list.dataset.kpReorderAttached;
-    });
-  }
-  for (const element of root.querySelectorAll(SPLIT)) {
-    const split = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (split.dataset.kpSplitAttached !== void 0) continue;
-    split.dataset.kpSplitAttached = "";
-    const memory = paintRemembered(split, "split");
-    const separator = (
-      /** @type {HTMLElement | null} */
-      split.querySelector('[role="separator"]')
-    );
-    if (separator === null) continue;
-    const horizontal = (split.dataset.kpOrientation ?? separator.getAttribute("aria-orientation") ?? "vertical") === "horizontal";
-    const step = Number.parseInt(split.dataset.kpStep ?? "", 10) || splitStep;
-    const largeStep = Number.parseInt(split.dataset.kpLargeStep ?? "", 10) || splitLargeStep;
-    const collapses = split.dataset.kpCollapse !== void 0 || collapseOnDoubleClick;
-    const min = Number.parseInt(separator.getAttribute("aria-valuemin") ?? "10", 10);
-    const max = Number.parseInt(separator.getAttribute("aria-valuemax") ?? "90", 10);
-    const initial = Number.parseInt(separator.getAttribute("aria-valuenow") ?? "50", 10);
-    let value = initial;
-    let lastOpen = initial;
-    const hadVar = split.style.getPropertyValue("--kp-split");
-    const setValue = (next2) => {
-      value = Math.max(min, Math.min(max, Math.round(next2)));
-      split.style.setProperty("--kp-split", `${value}%`);
-      separator.setAttribute("aria-valuenow", String(value));
-      memory?.write("value", value);
-      split.dispatchEvent(new CustomEvent(SPLIT_EVENT, { bubbles: true, detail: { value } }));
-    };
-    setValue(value);
-    const onKey4 = (event) => {
-      const delta = event.shiftKey ? largeStep : step;
-      const less = horizontal ? "ArrowUp" : "ArrowLeft";
-      const more = horizontal ? "ArrowDown" : "ArrowRight";
-      if (event.key === less) setValue(value - delta);
-      else if (event.key === more) setValue(value + delta);
-      else if (event.key === "Home") setValue(min);
-      else if (event.key === "End") setValue(max);
-      else return;
-      event.preventDefault();
-    };
-    const onPointerDown = (event) => {
-      separator.setPointerCapture(event.pointerId);
-      const move = (moved) => {
-        const box = split.getBoundingClientRect();
-        setValue(horizontal ? (moved.clientY - box.top) / box.height * 100 : (moved.clientX - box.left) / box.width * 100);
-      };
-      const up = () => {
-        separator.removeEventListener("pointermove", move);
-        separator.removeEventListener("pointerup", up);
-        separator.removeEventListener("pointercancel", up);
-      };
-      separator.addEventListener("pointermove", move);
-      separator.addEventListener("pointerup", up);
-      separator.addEventListener("pointercancel", up);
-    };
-    const onDoubleClick = () => {
-      if (!collapses) return;
-      if (value > min) {
-        lastOpen = value;
-        setValue(min);
-      } else setValue(lastOpen);
-    };
-    separator.addEventListener("keydown", onKey4);
-    separator.addEventListener("pointerdown", onPointerDown);
-    separator.addEventListener("dblclick", onDoubleClick);
-    const handle = { element: split, value: () => value, setValue };
-    handles9.set(split, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      separator.removeEventListener("keydown", onKey4);
-      separator.removeEventListener("pointerdown", onPointerDown);
-      separator.removeEventListener("dblclick", onDoubleClick);
-      separator.setAttribute("aria-valuenow", String(initial));
-      if (hadVar === "") split.style.removeProperty("--kp-split");
-      else split.style.setProperty("--kp-split", hadVar);
-      handles9.delete(split);
-      delete split.dataset.kpSplitAttached;
-    });
-  }
-  const detach = () => {
-    for (const c of cleanups) c();
-  };
-  return Object.assign(detach, { handles: created });
-}
-var TREE, REORDER, SPLIT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT2, SPLIT_EVENT, handles9;
-var init_structure = __esm({
-  "js/structure.js"() {
+var TREE, REORDER, SPLIT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT2, SPLIT_EVENT, DEFAULTS;
+var init_shared = __esm({
+  "js/structure/shared.js"() {
     "use strict";
-    init_strings();
-    init_remember();
-    init_motion();
     TREE = "[data-kp-tree]";
     REORDER = "[data-kp-reorder]";
     SPLIT = "[data-kp-split]";
@@ -25234,7 +24911,561 @@ var init_structure = __esm({
     TREE_SELECT_EVENT = "kp-tree-select";
     REORDER_EVENT2 = "kp-reorder";
     SPLIT_EVENT = "kp-split";
-    handles9 = /* @__PURE__ */ new WeakMap();
+    DEFAULTS = Object.freeze({
+      typeahead: true,
+      /** How long typed letters keep adding up before the search starts again [ms]. */
+      typeaheadMs: 500,
+      clickToggles: true,
+      selectable: false,
+      reorderPointer: true,
+      /** The split's arrow step and its Shift step [percent]. */
+      splitStep: 2,
+      splitLargeStep: 10,
+      collapseOnDoubleClick: false
+    });
+  }
+});
+
+// js/structure/reorder.js
+var handleAt, ReorderControl;
+var init_reorder2 = __esm({
+  "js/structure/reorder.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_shared();
+    handleAt = (target) => (
+      /** @type {HTMLElement | null} */
+      /** @type {HTMLElement} */
+      target.closest("[data-kp-handle]")
+    );
+    ReorderControl = class extends Controller {
+      /** Whether the element is already wired: it carries the mark connect() stamps. @param {HTMLElement} element */
+      static isAttached(element) {
+        return element.dataset.kpReorderAttached !== void 0;
+      }
+      /** @param {HTMLElement} list @param {import('./shared.js').StructureOptions} [options] */
+      constructor(list, options = DEFAULTS) {
+        super(list, options);
+        this.pointer = list.dataset.kpPointer === void 0 ? options.reorderPointer : list.dataset.kpPointer !== "false";
+        this.original = [...list.children];
+        this.live = null;
+        this.madeLive = false;
+        this.endDrag = null;
+        this.handle = { element: list, order: () => this.order(), setOrder: (ids) => this.setOrder(ids) };
+      }
+      connect() {
+        const list = this.host;
+        list.dataset.kpReorderAttached = "";
+        this.mountLive();
+        this.own(() => {
+          this.endDrag?.();
+          list.replaceChildren(...this.original);
+          if (this.madeLive) this.live?.remove();
+          delete list.dataset.kpReorderAttached;
+        });
+        this.listen(list, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(list, "pointerdown", (event) => this.onPointerDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+      }
+      mountLive() {
+        this.live = /** @type {HTMLElement | null} */
+        this.host.querySelector("[data-kp-reorder-status]");
+        if (this.live !== null) return;
+        const live4 = document.createElement("span");
+        live4.className = "kp-sr-only";
+        live4.setAttribute("role", "status");
+        live4.setAttribute("aria-live", "polite");
+        live4.dataset.kpReorderStatus = "";
+        this.host.after(live4);
+        this.live = live4;
+        this.madeLive = true;
+      }
+      order() {
+        return [...this.host.children].map((child) => (
+          /** @type {HTMLElement} */
+          child.dataset.kpItem ?? ""
+        ));
+      }
+      /** @param {readonly string[]} ids */
+      setOrder(ids) {
+        const list = this.host;
+        for (const id of ids) {
+          const item = (
+            /** @type {HTMLElement | null} */
+            list.querySelector(`[data-kp-item="${CSS.escape(id)}"]`)
+          );
+          if (item) list.append(item);
+        }
+        list.dispatchEvent(new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: this.order(), id: "", from: -1, to: -1 } }));
+      }
+      /** @param {HTMLElement} item @param {number} from @param {number} to */
+      announce(item, from, to) {
+        const name = item.dataset.kpLabel ?? item.querySelector("[data-kp-item-label]")?.textContent?.trim() ?? item.dataset.kpItem ?? "";
+        if (this.live) this.live.textContent = getStrings().reorderMoved(name, to + 1, this.host.children.length);
+        this.host.dispatchEvent(new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: this.order(), id: item.dataset.kpItem ?? "", from, to } }));
+      }
+      /** @param {HTMLElement} item @param {number} to */
+      moveTo(item, to) {
+        const children = [...this.host.children];
+        const from = children.indexOf(item);
+        const target = Math.max(0, Math.min(children.length - 1, to));
+        if (from === -1 || from === target) return;
+        const ref = children[target];
+        if (target < from) this.host.insertBefore(item, ref ?? null);
+        else this.host.insertBefore(item, ref?.nextSibling ?? null);
+        this.announce(item, from, target);
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const handle = handleAt(event.target);
+        if (handle === null) return;
+        const item = handle.closest("[data-kp-item]");
+        if (!(item instanceof HTMLElement)) return;
+        const at = [...this.host.children].indexOf(item);
+        const targets = { ArrowUp: at - 1, ArrowDown: at + 1, Home: 0, End: this.host.children.length - 1 };
+        const to = targets[event.key];
+        if (to === void 0) return;
+        event.preventDefault();
+        this.moveTo(item, to);
+        handle.focus();
+      }
+      /**
+       * The pointer route: drag by the handle, drop between siblings. The move and release are heard on the window, not on the
+       * handle: moving the row in the DOM detaches the handle for a moment, which releases its pointer capture, and the first
+       * version then stopped hearing the pointer after one row [held-60].
+       * @param {PointerEvent} event
+       */
+      onPointerDown(event) {
+        if (!this.pointer || event.button !== 0) return;
+        const handle = handleAt(event.target);
+        const item = handle?.closest("[data-kp-item]");
+        if (!handle || !(item instanceof HTMLElement) || item.parentElement !== this.host) return;
+        event.preventDefault();
+        this.endDrag?.();
+        const pointerId = event.pointerId;
+        item.dataset.kpDragging = "";
+        const onMove2 = (move) => {
+          if (move.pointerId === pointerId) this.dragOver(item, move.clientY);
+        };
+        const onUp2 = (up) => {
+          if (up && up.pointerId !== pointerId) return;
+          delete item.dataset.kpDragging;
+          window.removeEventListener("pointermove", onMove2);
+          window.removeEventListener("pointerup", onUp2);
+          window.removeEventListener("pointercancel", onUp2);
+          this.endDrag = null;
+        };
+        this.endDrag = /** @type {() => void} */
+        onUp2;
+        window.addEventListener("pointermove", onMove2);
+        window.addEventListener("pointerup", onUp2);
+        window.addEventListener("pointercancel", onUp2);
+      }
+      /** The dragged item takes the place of the sibling under the pointer. @param {HTMLElement} item @param {number} y */
+      dragOver(item, y) {
+        for (const sibling of this.host.children) {
+          if (sibling === item) continue;
+          const box = sibling.getBoundingClientRect();
+          if (y >= box.top && y <= box.bottom) {
+            this.moveTo(item, [...this.host.children].indexOf(sibling));
+            break;
+          }
+        }
+      }
+    };
+  }
+});
+
+// js/structure/split.js
+var MIN, MAX, START, PERCENT, SplitControl;
+var init_split = __esm({
+  "js/structure/split.js"() {
+    "use strict";
+    init_controller();
+    init_remember();
+    init_shared();
+    MIN = "10";
+    MAX = "90";
+    START = "50";
+    PERCENT = 100;
+    SplitControl = class extends Controller {
+      /** Whether the element is already wired: it carries the mark connect() stamps. @param {HTMLElement} element */
+      static isAttached(element) {
+        return element.dataset.kpSplitAttached !== void 0;
+      }
+      /** @param {HTMLElement} split @param {import('./shared.js').StructureOptions} [options] */
+      constructor(split, options = DEFAULTS) {
+        super(split, options);
+        this.o = options;
+        this.separator = null;
+        this.value = 0;
+        this.initial = 0;
+        this.lastOpen = 0;
+        this.memory = null;
+        this.horizontal = false;
+        this.step = options.splitStep;
+        this.largeStep = options.splitLargeStep;
+        this.collapses = false;
+        this.min = Number(MIN);
+        this.max = Number(MAX);
+        this.handle = null;
+      }
+      connect() {
+        const split = this.host;
+        split.dataset.kpSplitAttached = "";
+        this.memory = paintRemembered(split, "split");
+        const separator = (
+          /** @type {HTMLElement | null} */
+          split.querySelector('[role="separator"]')
+        );
+        if (separator === null) return;
+        this.separator = separator;
+        this.horizontal = (split.dataset.kpOrientation ?? separator.getAttribute("aria-orientation") ?? "vertical") === "horizontal";
+        this.step = Number.parseInt(split.dataset.kpStep ?? "", 10) || this.o.splitStep;
+        this.largeStep = Number.parseInt(split.dataset.kpLargeStep ?? "", 10) || this.o.splitLargeStep;
+        this.collapses = split.dataset.kpCollapse !== void 0 || this.o.collapseOnDoubleClick;
+        this.min = Number.parseInt(separator.getAttribute("aria-valuemin") ?? MIN, 10);
+        this.max = Number.parseInt(separator.getAttribute("aria-valuemax") ?? MAX, 10);
+        this.initial = Number.parseInt(separator.getAttribute("aria-valuenow") ?? START, 10);
+        this.value = this.lastOpen = this.initial;
+        const hadVar = split.style.getPropertyValue("--kp-split");
+        this.setValue(this.value);
+        this.own(() => {
+          separator.setAttribute("aria-valuenow", String(this.initial));
+          if (hadVar === "") split.style.removeProperty("--kp-split");
+          else split.style.setProperty("--kp-split", hadVar);
+          delete split.dataset.kpSplitAttached;
+        });
+        this.listen(separator, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(separator, "pointerdown", (event) => this.onPointerDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(separator, "dblclick", () => this.onDoubleClick());
+        this.handle = { element: split, value: () => this.value, setValue: (next2) => this.setValue(next2) };
+      }
+      /** @param {number} next */
+      setValue(next2) {
+        this.value = Math.max(this.min, Math.min(this.max, Math.round(next2)));
+        this.host.style.setProperty("--kp-split", `${this.value}%`);
+        this.separator?.setAttribute("aria-valuenow", String(this.value));
+        this.memory?.write("value", this.value);
+        this.host.dispatchEvent(new CustomEvent(SPLIT_EVENT, { bubbles: true, detail: { value: this.value } }));
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const delta = event.shiftKey ? this.largeStep : this.step;
+        const less = this.horizontal ? "ArrowUp" : "ArrowLeft";
+        const more = this.horizontal ? "ArrowDown" : "ArrowRight";
+        if (event.key === less) this.setValue(this.value - delta);
+        else if (event.key === more) this.setValue(this.value + delta);
+        else if (event.key === "Home") this.setValue(this.min);
+        else if (event.key === "End") this.setValue(this.max);
+        else return;
+        event.preventDefault();
+      }
+      /** @param {PointerEvent} event */
+      onPointerDown(event) {
+        const separator = (
+          /** @type {HTMLElement} */
+          this.separator
+        );
+        separator.setPointerCapture(event.pointerId);
+        const move = (moved) => {
+          const box = this.host.getBoundingClientRect();
+          this.setValue(this.horizontal ? (moved.clientY - box.top) / box.height * PERCENT : (moved.clientX - box.left) / box.width * PERCENT);
+        };
+        const up = () => {
+          separator.removeEventListener("pointermove", move);
+          separator.removeEventListener("pointerup", up);
+          separator.removeEventListener("pointercancel", up);
+        };
+        separator.addEventListener("pointermove", move);
+        separator.addEventListener("pointerup", up);
+        separator.addEventListener("pointercancel", up);
+      }
+      /** Double-click folds the first pane away and back again, when the pane says it collapses. */
+      onDoubleClick() {
+        if (!this.collapses) return;
+        if (this.value > this.min) {
+          this.lastOpen = this.value;
+          this.setValue(this.min);
+        } else this.setValue(this.lastOpen);
+      }
+    };
+  }
+});
+
+// js/structure/tree.js
+function groupOf(item) {
+  const inside = item.querySelector(':scope > [role="group"]');
+  if (inside instanceof HTMLElement) return inside;
+  const next2 = item.nextElementSibling;
+  return next2 instanceof HTMLElement && next2.getAttribute("role") === "group" ? next2 : null;
+}
+var idOf, itemAt, TreeControl;
+var init_tree = __esm({
+  "js/structure/tree.js"() {
+    "use strict";
+    init_controller();
+    init_motion();
+    init_remember();
+    init_shared();
+    idOf = (item) => item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim();
+    itemAt = (target) => (
+      /** @type {HTMLElement | null} */
+      /** @type {HTMLElement} */
+      target.closest('[role="treeitem"]')
+    );
+    TreeControl = class extends Controller {
+      /** Whether the element is already wired: it carries the mark connect() stamps. @param {HTMLElement} element */
+      static isAttached(element) {
+        return element.dataset.kpTreeAttached !== void 0;
+      }
+      /** @param {HTMLElement} tree @param {import('./shared.js').StructureOptions} [options] */
+      constructor(tree, options = DEFAULTS) {
+        super(tree, options);
+        this.o = options;
+        this.before = [];
+        this.memory = null;
+        this.quiet = false;
+        this.buffer = "";
+        this.bufferTimer = 0;
+        this.finds = true;
+        this.clickMode = "toggle";
+        this.selects = false;
+        this.handle = this.makeHandle();
+      }
+      connect() {
+        const tree = this.host;
+        tree.dataset.kpTreeAttached = "";
+        this.memory = paintRemembered(tree, "tree");
+        this.finds = tree.dataset.kpTypeahead === void 0 ? this.o.typeahead : tree.dataset.kpTypeahead !== "false";
+        this.clickMode = tree.dataset.kpClick ?? (this.o.clickToggles ? "toggle" : "select");
+        this.selects = tree.dataset.kpSelectable !== void 0 || this.o.selectable;
+        this.before = this.all().map((item) => ({ item, tabindex: item.getAttribute("tabindex"), selected: item.getAttribute("aria-selected") }));
+        const items = visibleItems(tree);
+        if (items[0] !== void 0) {
+          for (const item of this.all()) item.setAttribute("tabindex", "-1");
+          items[0].setAttribute("tabindex", "0");
+        }
+        this.own(() => this.restore());
+        this.listen(tree, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(tree, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+      }
+      /** Put back what attach stamped on every item. */
+      restore() {
+        clearTimeout(this.bufferTimer);
+        for (const b of this.before) {
+          if (b.tabindex === null) b.item.removeAttribute("tabindex");
+          else b.item.setAttribute("tabindex", b.tabindex);
+          if (b.selected === null) b.item.removeAttribute("aria-selected");
+          else b.item.setAttribute("aria-selected", b.selected);
+        }
+        delete this.host.dataset.kpTreeAttached;
+      }
+      all() {
+        return (
+          /** @type {HTMLElement[]} */
+          [...this.host.querySelectorAll('[role="treeitem"]')]
+        );
+      }
+      /** @param {string} id */
+      byId(id) {
+        return this.all().find((item) => idOf(item) === id) ?? null;
+      }
+      /** One tab stop for the whole tree, arrows inside it — the ARIA practice. @param {HTMLElement} item */
+      setStop(item) {
+        for (const other of this.all()) other.setAttribute("tabindex", "-1");
+        item.setAttribute("tabindex", "0");
+        item.focus();
+      }
+      /** @param {HTMLElement} item @param {boolean} expanded */
+      setExpanded(item, expanded) {
+        if (!item.hasAttribute("aria-expanded")) return;
+        if (item.getAttribute("aria-expanded") === "true" === expanded) return;
+        const flip = () => item.setAttribute("aria-expanded", String(expanded));
+        const group = this.quiet || !leavesState(this.host) ? null : groupOf(item);
+        if (group !== null) glideGroup(group, expanded, flip);
+        else flip();
+        this.remember();
+        this.host.dispatchEvent(new CustomEvent(TREE_EXPAND_EVENT, { bubbles: true, detail: { item, id: idOf(item), expanded } }));
+      }
+      /** Write which branches are open, when the tree asked to be remembered. */
+      remember() {
+        if (this.memory === null) return;
+        const branches = {};
+        for (const branch of this.host.querySelectorAll('[role="treeitem"][aria-expanded]')) branches[treeItemId(branch)] = branch.getAttribute("aria-expanded") === "true";
+        this.memory.write("branches", branches);
+      }
+      /** @param {HTMLElement | null} item */
+      setSelected(item) {
+        for (const other of this.all()) {
+          if (other === item) other.setAttribute("aria-selected", "true");
+          else if (other.getAttribute("aria-selected") === "true") other.setAttribute("aria-selected", "false");
+        }
+        if (item !== null) this.host.dispatchEvent(new CustomEvent(TREE_SELECT_EVENT, { bubbles: true, detail: { item, id: idOf(item) } }));
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const item = itemAt(event.target);
+        if (item === null) return;
+        const list = visibleItems(this.host);
+        const at = list.indexOf(item);
+        const expandable = item.hasAttribute("aria-expanded");
+        const open4 = item.getAttribute("aria-expanded") === "true";
+        const keys = {
+          ArrowDown: () => list[at + 1] && this.setStop(list[at + 1]),
+          ArrowUp: () => list[at - 1] && this.setStop(list[at - 1]),
+          // Right opens a closed branch and steps into an open one — two jobs for one key, which is what makes a tree
+          // navigable without a mouse.
+          ArrowRight: () => expandable && !open4 ? this.setExpanded(item, true) : list[at + 1] && this.setStop(list[at + 1]),
+          ArrowLeft: () => expandable && open4 ? this.setExpanded(item, false) : this.toParent(item),
+          Home: () => list[0] && this.setStop(list[0]),
+          End: () => list[list.length - 1] && this.setStop(list[list.length - 1]),
+          Enter: () => this.selects ? this.setSelected(item) : expandable && this.setExpanded(item, !open4)
+        };
+        keys[" "] = keys.Enter;
+        const run = keys[event.key];
+        if (run) {
+          event.preventDefault();
+          run();
+        } else this.typeahead(event, list, at);
+      }
+      /** @param {HTMLElement} item */
+      toParent(item) {
+        const parent = (
+          /** @type {HTMLElement | null} */
+          item.parentElement?.closest('[role="treeitem"]') ?? null
+        );
+        if (parent !== null) this.setStop(parent);
+      }
+      /**
+       * Typeahead: letters jump to the next item that starts with them, and keep accumulating for half a second so "do" finds
+       * Documents rather than Downloads. In a tree of forty folders this is the difference between usable and theoretical.
+       * @param {KeyboardEvent} event @param {HTMLElement[]} list @param {number} at
+       */
+      typeahead(event, list, at) {
+        if (!this.finds || event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey) return;
+        clearTimeout(this.bufferTimer);
+        this.buffer += event.key.toLowerCase();
+        this.bufferTimer = window.setTimeout(() => this.buffer = "", this.o.typeaheadMs);
+        const after = this.buffer.length > 1 ? list : [...list.slice(at + 1), ...list.slice(0, at + 1)];
+        const found = after.find((candidate) => (candidate.textContent ?? "").trim().toLowerCase().startsWith(this.buffer));
+        if (found === void 0) return;
+        event.preventDefault();
+        this.setStop(found);
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const item = itemAt(event.target);
+        if (item === null) return;
+        const onChevron = (
+          /** @type {HTMLElement} */
+          event.target.closest("[data-kp-tree-toggle]") !== null
+        );
+        if ((this.clickMode === "toggle" || onChevron) && item.hasAttribute("aria-expanded")) this.setExpanded(item, item.getAttribute("aria-expanded") !== "true");
+        if (this.selects && (this.clickMode === "select" || !onChevron)) this.setSelected(item);
+        this.setStop(item);
+      }
+      /** @param {boolean} expanded */
+      setAll(expanded) {
+        this.quiet = true;
+        for (const item of this.all()) this.setExpanded(item, expanded);
+        this.quiet = false;
+      }
+      /** @returns {TreeHandle} */
+      makeHandle() {
+        return {
+          element: this.host,
+          expand: (id, expanded = true) => {
+            const item = this.byId(id);
+            if (item) this.setExpanded(item, expanded);
+          },
+          expandAll: () => this.setAll(true),
+          collapseAll: () => this.setAll(false),
+          focusItem: (id) => {
+            const item = this.byId(id);
+            if (item) this.setStop(item);
+          },
+          select: (id) => this.setSelected(id === null ? null : this.byId(id)),
+          selected: () => {
+            const item = this.all().find((i) => i.getAttribute("aria-selected") === "true");
+            return item ? idOf(item) : null;
+          }
+        };
+      }
+    };
+  }
+});
+
+// js/structure.js
+var structure_exports = {};
+__export(structure_exports, {
+  REORDER_EVENT: () => REORDER_EVENT2,
+  SPLIT_EVENT: () => SPLIT_EVENT,
+  TREE_EXPAND_EVENT: () => TREE_EXPAND_EVENT,
+  TREE_SELECT_EVENT: () => TREE_SELECT_EVENT,
+  attachStructure: () => attachStructure,
+  structure: () => structure,
+  visibleItems: () => visibleItems
+});
+function structure(element) {
+  return (controllerOf(element, TreeControl) ?? controllerOf(element, ReorderControl) ?? controllerOf(element, SplitControl))?.handle ?? null;
+}
+function attachStructure(root = document, options = {}) {
+  const o = { ...DEFAULTS, ...options };
+  const made6 = [];
+  const created = [];
+  for (const [selector, Kind] of KINDS2) {
+    for (const element of root.querySelectorAll(selector)) {
+      if (!(element instanceof HTMLElement) || Kind.isAttached(element)) continue;
+      const control = attachOne2(
+        element,
+        /** @type {new (host: HTMLElement, options?: any) => TreeControl | ReorderControl | SplitControl} */
+        Kind,
+        o
+      );
+      if (!control) continue;
+      made6.push(control);
+      if (control.handle) created.push(control.handle);
+    }
+  }
+  const detach = () => {
+    for (const control of made6) control.destroy();
+  };
+  return Object.assign(detach, { handles: created });
+}
+var KINDS2;
+var init_structure = __esm({
+  "js/structure.js"() {
+    "use strict";
+    init_controller();
+    init_reorder2();
+    init_shared();
+    init_split();
+    init_tree();
+    init_shared();
+    KINDS2 = [
+      [TREE, TreeControl],
+      [REORDER, ReorderControl],
+      [SPLIT, SplitControl]
+    ];
   }
 });
 
@@ -25263,7 +25494,7 @@ function acceptsFile(file, accept) {
   });
 }
 function upload(element) {
-  return handles10.get(element) ?? null;
+  return handles9.get(element) ?? null;
 }
 function attachUploads(root = document, { locale: localeOption, validate, renderRow, drop = true, removeLabel, removeClassName = "kp-button kp-button--ghost" } = {}) {
   const cleanups = [];
@@ -25425,7 +25656,7 @@ function attachUploads(root = document, { locale: localeOption, validate, render
         rows.clear();
       }
     };
-    handles10.set(upload2, handle);
+    handles9.set(upload2, handle);
     created.push(handle);
     cleanups.push(() => {
       input.removeEventListener("change", onChange);
@@ -25436,7 +25667,7 @@ function attachUploads(root = document, { locale: localeOption, validate, render
       zone.removeEventListener("drop", onDrop);
       delete zone.dataset.kpDragging;
       handle.clear();
-      handles10.delete(upload2);
+      handles9.delete(upload2);
       delete upload2.dataset.kpUploadAttached;
     });
   }
@@ -25461,7 +25692,7 @@ function setError(item, message) {
   item.dataset.error = message;
   item.querySelector(".kp-upload__message")?.replaceChildren(message);
 }
-var UPLOAD, FILE_EVENT, REJECT_EVENT, REMOVE_EVENT, handles10;
+var UPLOAD, FILE_EVENT, REJECT_EVENT, REMOVE_EVENT, handles9;
 var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
@@ -25472,7 +25703,7 @@ var init_upload = __esm({
     FILE_EVENT = "kp-upload-file";
     REJECT_EVENT = "kp-upload-reject";
     REMOVE_EVENT = "kp-upload-remove";
-    handles10 = /* @__PURE__ */ new WeakMap();
+    handles9 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -25486,7 +25717,7 @@ __export(wizard_exports, {
   wizard: () => wizard
 });
 function wizard(element) {
-  return handles11.get(element) ?? null;
+  return handles10.get(element) ?? null;
 }
 function attachWizards(root = document, { validate = true, focusStep = true, navigableLabels = false, beforeStep } = {}) {
   const cleanups = [];
@@ -25631,7 +25862,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
     wizard2.addEventListener("input", onFieldInput);
     show({ announce: false });
     const handle = { element: wizard2, step: () => at, goTo, next: () => goTo(at + 1), back: () => goTo(at - 1) };
-    handles11.set(wizard2, handle);
+    handles10.set(wizard2, handle);
     created.push(handle);
     cleanups.push(() => {
       next2?.removeEventListener("click", onNext);
@@ -25659,7 +25890,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
       if (back !== null) back.disabled = before.back;
       if (next2 !== null) next2.textContent = before.next;
       if (status !== null) status.textContent = before.status;
-      handles11.delete(wizard2);
+      handles10.delete(wizard2);
       delete wizard2.dataset.kpWizardAttached;
     });
   }
@@ -25668,7 +25899,7 @@ function attachWizards(root = document, { validate = true, focusStep = true, nav
   };
   return Object.assign(detach, { handles: created });
 }
-var WIZARD, STEP_EVENT, BEFORE_STEP_EVENT, FINISH_EVENT, handles11;
+var WIZARD, STEP_EVENT, BEFORE_STEP_EVENT, FINISH_EVENT, handles10;
 var init_wizard = __esm({
   "js/wizard.js"() {
     "use strict";
@@ -25678,7 +25909,7 @@ var init_wizard = __esm({
     STEP_EVENT = "kp-wizard-step";
     BEFORE_STEP_EVENT = "kp-wizard-before-step";
     FINISH_EVENT = "kp-wizard-finish";
-    handles11 = /* @__PURE__ */ new WeakMap();
+    handles10 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -25769,7 +26000,7 @@ __export(colorpicker_exports, {
   colorPicker: () => colorPicker
 });
 function colorPicker(element) {
-  return handles12.get(element) ?? null;
+  return handles11.get(element) ?? null;
 }
 function attachColorPickers(root = document, { followTheme = true } = {}) {
   const cleanups = [];
@@ -25852,7 +26083,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       },
       measure: () => void update2(false)
     };
-    handles12.set(picker, handle);
+    handles11.set(picker, handle);
     created.push(handle);
     cleanups.push(() => {
       for (const channel of ["h", "s", "l"]) slider2(channel)?.removeEventListener("input", onInput);
@@ -25862,7 +26093,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       if (value !== null) value.textContent = before.value;
       if (report2 !== null) report2.textContent = before.report;
       delete picker.dataset.kpContrastOk;
-      handles12.delete(picker);
+      handles11.delete(picker);
       delete picker.dataset.kpColorpickerAttached;
     });
   }
@@ -25871,7 +26102,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
   };
   return Object.assign(detach, { handles: created });
 }
-var PICKER3, COLOR_EVENT, handles12;
+var PICKER3, COLOR_EVENT, handles11;
 var init_colorpicker = __esm({
   "js/colorpicker.js"() {
     "use strict";
@@ -25879,7 +26110,7 @@ var init_colorpicker = __esm({
     init_strings();
     PICKER3 = "[data-kp-colorpicker]";
     COLOR_EVENT = "kp-color-change";
-    handles12 = /* @__PURE__ */ new WeakMap();
+    handles11 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -25953,7 +26184,7 @@ function place(tile) {
   if (!tile.hasAttribute("aria-label") && tile.dataset.kpLabel !== void 0) tile.setAttribute("aria-label", tile.dataset.kpLabel);
 }
 function grid(element) {
-  return handles13.get(element) ?? null;
+  return handles12.get(element) ?? null;
 }
 function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = COMMIT_MS, pointer = true } = {}) {
   const cleanups = [];
@@ -26062,7 +26293,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       },
       refresh: placeAll
     };
-    handles13.set(grid2, handle);
+    handles12.set(grid2, handle);
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(timer2);
@@ -26084,7 +26315,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       }
       if (hadColumns === "") grid2.style.removeProperty("--kp-grid-columns");
       else grid2.style.setProperty("--kp-grid-columns", hadColumns);
-      handles13.delete(grid2);
+      handles12.delete(grid2);
       delete grid2.dataset.kpGridAttached;
     });
   }
@@ -26093,7 +26324,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
   };
   return Object.assign(detach, { handles: created });
 }
-var GRID, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, handles13;
+var GRID, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, handles12;
 var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
@@ -26104,7 +26335,7 @@ var init_gridlayout = __esm({
     LAYOUT_COMMIT_EVENT = "kp-grid-commit";
     COLUMNS = 6;
     COMMIT_MS = 400;
-    handles13 = /* @__PURE__ */ new WeakMap();
+    handles12 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -27877,7 +28108,7 @@ var init_time = __esm({
 });
 
 // js/chart/dom.js
-function groupOf(el16) {
+function groupOf2(el16) {
   if (el16.nodeType === 9) return LOOSE.get(
     /** @type {Document} */
     el16
@@ -28200,7 +28431,7 @@ function chartSelect(el16, index, on) {
   return CHARTS.get(el16)?.select(index, on) ?? false;
 }
 function chartZoom(el16, zoom) {
-  const group = groupOf(el16);
+  const group = groupOf2(el16);
   if (!group) return false;
   group.setZoom(zoom && zoom.to > zoom.from ? { from: zoom.from, to: zoom.to } : null);
   return true;
@@ -33953,113 +34184,6 @@ var init_bullets = __esm({
       const node = doc.createElement(tag);
       node.className = className;
       return node;
-    };
-  }
-});
-
-// js/controller.js
-function hostsOf(root, selector) {
-  const self = root instanceof Element && root.matches(selector) ? [root] : [];
-  return (
-    /** @type {HTMLElement[]} */
-    [...self, ...root.querySelectorAll(selector)]
-  );
-}
-function controllerOf(host, Ctor) {
-  return (
-    /** @type {C | undefined} */
-    LIVE.get(Ctor)?.get(host)
-  );
-}
-function attachOne2(host, Ctor, options = {}) {
-  let live4 = LIVE.get(Ctor);
-  if (!live4) LIVE.set(Ctor, live4 = /* @__PURE__ */ new WeakMap());
-  const existing = (
-    /** @type {C | undefined} */
-    live4.get(host)
-  );
-  if (existing) return existing;
-  const controller = new Ctor(host, options);
-  live4.set(host, controller);
-  try {
-    controller.connect();
-    return controller;
-  } catch (error) {
-    controller.destroy();
-    report(error);
-    return void 0;
-  }
-}
-function attachAll(root, selector, Ctor, options = {}) {
-  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne2(host, Ctor, options)).filter((controller) => controller !== void 0);
-  return () => {
-    for (const controller of made6) controller.destroy();
-  };
-}
-var LIVE, report, Controller;
-var init_controller = __esm({
-  "js/controller.js"() {
-    "use strict";
-    LIVE = /* @__PURE__ */ new WeakMap();
-    report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
-    Controller = class {
-      /**
-       * @param {HTMLElement} host
-       * @param {Record<string, unknown>} [options]
-       */
-      constructor(host, options = {}) {
-        this.host = host;
-        this.options = options;
-        this.teardown = [];
-        this.destroyed = false;
-      }
-      /**
-       * Register an undo step for `destroy()`.
-       * @template {() => void} F
-       * @param {F} undo
-       * @returns {F}
-       */
-      own(undo) {
-        this.teardown.push(undo);
-        return undo;
-      }
-      /**
-       * Add an event listener that `destroy()` removes.
-       * @param {EventTarget} target
-       * @param {string} type
-       * @param {EventListenerOrEventListenerObject} handler
-       * @param {AddEventListenerOptions | boolean} [options]
-       */
-      listen(target, type, handler, options) {
-        target.addEventListener(type, handler, options);
-        this.own(() => target.removeEventListener(type, handler, options));
-      }
-      /**
-       * Start an observer that `destroy()` disconnects.
-       * @template {{ disconnect(): void }} O
-       * @param {O} observer
-       * @returns {O}
-       */
-      observe(observer) {
-        this.own(() => observer.disconnect());
-        return observer;
-      }
-      /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
-      connect() {
-      }
-      /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */
-      destroy() {
-        if (this.destroyed) return;
-        this.destroyed = true;
-        for (const undo of this.teardown.splice(0).reverse()) {
-          try {
-            undo();
-          } catch (error) {
-            report(error);
-          }
-        }
-        LIVE.get(this.constructor)?.delete(this.host);
-      }
     };
   }
 });
@@ -51971,16 +52095,16 @@ __export(master_detail_exports, {
   setPaneState: () => setPaneState
 });
 function setPaneState(root, state2, options) {
-  handles14.get(root)?.setState(state2, options);
+  handles13.get(root)?.setState(state2, options);
 }
 function selectPane(root, key) {
-  handles14.get(root)?.select(key);
+  handles13.get(root)?.select(key);
 }
 function openPane(root, key) {
-  handles14.get(root)?.open(key);
+  handles13.get(root)?.open(key);
 }
 function closePane(root) {
-  handles14.get(root)?.close();
+  handles13.get(root)?.close();
 }
 function attachMasterDetails(root = document, { history: useHistory } = {}) {
   const found = (
@@ -51992,7 +52116,7 @@ function attachMasterDetails(root = document, { history: useHistory } = {}) {
   );
   const undo = [];
   for (const element of found) {
-    if (handles14.has(element)) continue;
+    if (handles13.has(element)) continue;
     const stop = wire9(element, useHistory);
     if (stop) undo.push(stop);
   }
@@ -52336,7 +52460,7 @@ function wire9(rootEl, historyOption) {
     narrow: () => narrow,
     setState: setState2
   };
-  handles14.set(rootEl, handle);
+  handles13.set(rootEl, handle);
   paint15();
   sync4();
   if (!selected && !rootEl.hasAttribute("data-kp-state")) setState2("empty");
@@ -52353,7 +52477,7 @@ function wire9(rootEl, historyOption) {
     busy?.remove();
     unwatchList();
     stopOwnWatch();
-    handles14.delete(rootEl);
+    handles13.delete(rootEl);
     rootEl.removeAttribute("data-kp-pane-shown");
     rootEl.removeAttribute("data-kp-narrow-on");
     rootEl.removeAttribute("data-kp-aside-folded");
@@ -52361,7 +52485,7 @@ function wire9(rootEl, historyOption) {
     rootEl.style.removeProperty("--kp-pane-list");
   };
 }
-var MASTER_DETAIL, PANE_SELECT_EVENT, PANE_OPEN_EVENT, PANE_CLOSE_EVENT, PANE_RETRY_EVENT, PANE_WIDTHS, PANE_ASIDE_WIDTH, PANE_FOLD_AT, PANE_ASIDE_FOLD_AT, handles14, masterDetail, paneOf, columns;
+var MASTER_DETAIL, PANE_SELECT_EVENT, PANE_OPEN_EVENT, PANE_CLOSE_EVENT, PANE_RETRY_EVENT, PANE_WIDTHS, PANE_ASIDE_WIDTH, PANE_FOLD_AT, PANE_ASIDE_FOLD_AT, handles13, masterDetail, paneOf, columns;
 var init_master_detail = __esm({
   "js/master-detail.js"() {
     "use strict";
@@ -52379,8 +52503,8 @@ var init_master_detail = __esm({
     PANE_ASIDE_WIDTH = "24rem";
     PANE_FOLD_AT = "48rem";
     PANE_ASIDE_FOLD_AT = "90rem";
-    handles14 = /* @__PURE__ */ new WeakMap();
-    masterDetail = (element) => handles14.get(element) ?? null;
+    handles13 = /* @__PURE__ */ new WeakMap();
+    masterDetail = (element) => handles13.get(element) ?? null;
     paneOf = (root, pane) => (
       /** @type {HTMLElement | null} */
       root.querySelector(`:scope > [data-kp-pane="${pane}"]`)
@@ -52401,7 +52525,7 @@ __export(connection_exports, {
   setConnection: () => setConnection
 });
 function setConnection(element, state2, detail) {
-  handles15.get(element)?.set(state2, detail);
+  handles14.get(element)?.set(state2, detail);
 }
 function attachConnection(root = document) {
   const found = (
@@ -52412,7 +52536,7 @@ function attachConnection(root = document) {
     ]
   );
   const undo = [];
-  for (const el16 of found) if (!handles15.has(el16)) undo.push(wire10(el16));
+  for (const el16 of found) if (!handles14.has(el16)) undo.push(wire10(el16));
   return () => undo.forEach((u) => u());
 }
 function wire10(el16) {
@@ -52606,7 +52730,7 @@ function wire10(el16) {
   view.addEventListener("online", onOnline);
   if (source() !== "app" && view.navigator.onLine === false) set("offline");
   const handle = { element: el16, state: () => shown4, set };
-  handles15.set(el16, handle);
+  handles14.set(el16, handle);
   return () => {
     view.clearTimeout(graceTimer);
     view.clearTimeout(backTimer);
@@ -52614,10 +52738,10 @@ function wire10(el16) {
     retry.removeEventListener("click", onRetry);
     view.removeEventListener("offline", onOffline);
     view.removeEventListener("online", onOnline);
-    handles15.delete(el16);
+    handles14.delete(el16);
   };
 }
-var CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_STATES, handles15, connectionOf;
+var CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_STATES, handles14, connectionOf;
 var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
@@ -52629,8 +52753,8 @@ var init_connection = __esm({
     CONNECTION_RETRY_EVENT = "kp-connection-retry";
     CONNECTION_STATES = /** @type {const} */
     ["online", "offline", "reconnecting", "back", "refused"];
-    handles15 = /* @__PURE__ */ new WeakMap();
-    connectionOf = (element) => handles15.get(element) ?? null;
+    handles14 = /* @__PURE__ */ new WeakMap();
+    connectionOf = (element) => handles14.get(element) ?? null;
   }
 });
 
@@ -55180,7 +55304,7 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
     view.clearInterval(timer2);
     open3.delete(card);
     paintTitle();
-    handles16.delete(card);
+    handles15.delete(card);
     await leave(card);
   }
   function choose3(value) {
@@ -55254,7 +55378,7 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
       open3.delete(card);
     }
   };
-  handles16.set(card, handle);
+  handles15.set(card, handle);
   return handle;
 }
 function attachQuestions(root = document) {
@@ -55271,10 +55395,10 @@ function attachQuestions(root = document) {
       container.setAttribute("aria-label", getStrings().questionsLabel);
   }
   return () => {
-    for (const container of found) for (const card of container.querySelectorAll(":scope > .kp-question")) handles16.get(card)?.stop();
+    for (const container of found) for (const card of container.querySelectorAll(":scope > .kp-question")) handles15.get(card)?.stop();
   };
 }
-var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, handles16, open3, baseTitle, titleOn, questionOf, toMs3;
+var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, handles15, open3, baseTitle, titleOn, questionOf, toMs3;
 var init_question_card = __esm({
   "js/question-card.js"() {
     "use strict";
@@ -55286,11 +55410,11 @@ var init_question_card = __esm({
     QUESTION_EXPIRE_EVENT = "kp-question-expire";
     QUESTION_DISMISS_EVENT = "kp-question-dismiss";
     QUESTION_URGENT_AT = 30;
-    handles16 = /* @__PURE__ */ new WeakMap();
+    handles15 = /* @__PURE__ */ new WeakMap();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
-    questionOf = (element) => handles16.get(element) ?? null;
+    questionOf = (element) => handles15.get(element) ?? null;
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -55317,7 +55441,7 @@ __export(feed_exports, {
   setFeed: () => setFeed
 });
 function setFeed(element, model) {
-  handles17.get(element)?.set(model);
+  handles16.get(element)?.set(model);
 }
 function attachFeeds(root = document, { now = () => Date.now(), timeZone = FEED_TIME_ZONE } = {}) {
   const found = (
@@ -55325,7 +55449,7 @@ function attachFeeds(root = document, { now = () => Date.now(), timeZone = FEED_
     [...root instanceof Element && root.matches(FEED) ? [root] : [], ...root.querySelectorAll(FEED)]
   );
   const undo = [];
-  for (const el16 of found) if (!handles17.has(el16)) undo.push(wire11(el16, now, timeZone));
+  for (const el16 of found) if (!handles16.has(el16)) undo.push(wire11(el16, now, timeZone));
   undo.push(attachAgo(root, { now, timeZone }));
   return () => undo.forEach((u) => u());
 }
@@ -55734,7 +55858,7 @@ function wire11(el16, now, zone) {
     render7();
   };
   const handle = { element: el16, set, openKeys: () => [...open4], setOpen, render: render7 };
-  handles17.set(el16, handle);
+  handles16.set(el16, handle);
   render7();
   return () => {
     el16.removeEventListener("click", onClick);
@@ -55742,10 +55866,10 @@ function wire11(el16, now, zone) {
     watcher.disconnect();
     if (tick6 !== void 0) view?.clearInterval(tick6);
     busy?.remove();
-    handles17.delete(el16);
+    handles16.delete(el16);
   };
 }
-var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles17, feedOf, OPTION_ATTRIBUTES2, OPTIONS2, idSeq4, dayKey3;
+var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles16, feedOf, OPTION_ATTRIBUTES2, OPTIONS2, idSeq4, dayKey3;
 var init_feed = __esm({
   "js/feed.js"() {
     "use strict";
@@ -55767,8 +55891,8 @@ var init_feed = __esm({
     FEED_TIME_ZONE = "Europe/Brussels";
     FEED_RELATIVE_MS = 24 * 60 * 60 * 1e3;
     FEED_TICK_MS = 3e4;
-    handles17 = /* @__PURE__ */ new WeakMap();
-    feedOf = (element) => handles17.get(element) ?? null;
+    handles16 = /* @__PURE__ */ new WeakMap();
+    feedOf = (element) => handles16.get(element) ?? null;
     OPTION_ATTRIBUTES2 = /** @type {const} */
     {
       group: "data-kp-feed-group",
@@ -75269,7 +75393,6 @@ export {
   REMEMBER_HOLD_ATTRIBUTE,
   REMEMBER_PREFIX,
   REMOVE_EVENT,
-  REORDER_EVENT2 as REORDER_EVENT,
   REQUESTS,
   REQUESTS_COPIED_MS,
   REQUESTS_COPY_EVENT,
@@ -75313,7 +75436,6 @@ export {
   SNOOZE_EVENT,
   SORT_VALUE_ATTRIBUTE,
   SPARK,
-  SPLIT_EVENT,
   STACKBAR,
   STACKBAR_PICK_EVENT,
   STACKBAR_RETRY_EVENT,
@@ -75385,8 +75507,6 @@ export {
   TRANSFER_DONE_EVENT,
   TRANSFER_LEAVE_EVENT,
   TRANSFER_RETRY_EVENT,
-  TREE_EXPAND_EVENT,
-  TREE_SELECT_EVENT,
   TRI_ATTRIBUTE,
   TRI_STATES,
   UNDO_MAX,
@@ -76086,7 +76206,6 @@ export {
   versionLevel,
   versionNumbers,
   viewer_exports as viewerExports,
-  visibleItems,
   watchOptions,
   week_exports as weekExports,
   weekdaySummary,

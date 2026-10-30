@@ -1,21 +1,4 @@
-/** Fired on a tree when a branch opens or closes: `{ item, id, expanded }`. */
-export declare const TREE_EXPAND_EVENT = "kp-tree-expand";
-/** Fired on a tree when an item is selected: `{ item, id }`. */
-export declare const TREE_SELECT_EVENT = "kp-tree-select";
-/** Fired on a reorder list when the order changed. A contract value [TH26]: `{ order, id, from, to }`. */
-export declare const REORDER_EVENT = "kp-reorder";
-/** Fired on a split pane when the divider moved; the detail carries the percentage. */
-export declare const SPLIT_EVENT = "kp-split";
-/**
- * The tree's visible items, in the order a reader meets them.
- *
- * Collapsed branches are excluded, because Down should go to the next
- * thing you can see — walking into a closed folder is the bug that makes
- * a tree feel broken rather than merely awkward.
- *
- * @param {HTMLElement} tree
- */
-export declare function visibleItems(tree: HTMLElement): HTMLElement[];
+export { TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT, SPLIT_EVENT, visibleItems } from './structure/shared.js';
 export type TreeHandle = {
     element: HTMLElement;
     expand: (id: string, expanded?: boolean) => void;
@@ -35,15 +18,37 @@ export type SplitHandle = {
     value: () => number;
     setValue: (value: number) => void;
 };
-/** The handle for an attached tree, reorder list or split pane. @param {Element} element */
-export declare function structure(element: Element): ReorderHandle | SplitHandle | TreeHandle | null;
+/**
+ * @typedef {object} TreeHandle
+ * @property {HTMLElement} element
+ * @property {(id: string, expanded?: boolean) => void} expand
+ * @property {() => void} expandAll
+ * @property {() => void} collapseAll
+ * @property {(id: string) => void} focusItem
+ * @property {(id: string | null) => void} select
+ * @property {() => string | null} selected
+ */
+/**
+ * @typedef {object} ReorderHandle
+ * @property {HTMLElement} element
+ * @property {() => string[]} order
+ * @property {(order: readonly string[]) => void} setOrder
+ */
+/**
+ * @typedef {object} SplitHandle
+ * @property {HTMLElement} element
+ * @property {() => number} value
+ * @property {(value: number) => void} setValue
+ */
+/** The handle for an attached tree, reorder list or split pane. @param {Element} element @returns {TreeHandle | ReorderHandle | SplitHandle | null} */
+export declare function structure(element: Element): TreeHandle | ReorderHandle | SplitHandle | null;
 /**
  * @param {ParentNode} root
  * @param {{ typeahead?: boolean, typeaheadMs?: number, clickToggles?: boolean, selectable?: boolean, reorderPointer?: boolean, splitStep?: number, splitLargeStep?: number, collapseOnDoubleClick?: boolean }} [options]
  *   Defaults; per element as data-attributes: `data-kp-typeahead="false"`, `data-kp-click="select"`, `data-kp-selectable`, `data-kp-pointer="false"`, `data-kp-step`, `data-kp-large-step`, `data-kp-orientation="horizontal"`, `data-kp-collapse`.
  * @returns {(() => void) & { handles: (TreeHandle | ReorderHandle | SplitHandle)[] }} detach
  */
-export declare function attachStructure(root?: ParentNode, { typeahead, typeaheadMs, clickToggles, selectable, reorderPointer, splitStep, splitLargeStep, collapseOnDoubleClick, }?: {
+export declare function attachStructure(root?: ParentNode, options?: {
     typeahead?: boolean;
     typeaheadMs?: number;
     clickToggles?: boolean;
