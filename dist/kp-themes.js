@@ -80205,10 +80205,51 @@ __export(theme_picker_exports, {
   themeMenuMarkup: () => themeMenuMarkup,
   themeOptionsMarkup: () => themeOptionsMarkup
 });
+init_controller();
+
+// js/theme-picker/marks.js
 init_strings();
+
+// js/theme-picker/values.js
 var PICKER = "[data-kp-theme-picker]";
 var OPTION = "[data-kp-theme]";
 var STATUS = "[data-kp-theme-status]";
+var PICK_EVENT = "kp-theme-pick";
+var PREVIEW_EVENT = "kp-theme-preview";
+var PREVIEW_LEAVE_MS = 90;
+
+// js/theme-picker/marks.js
+var saveFailedText = () => getStrings().themeSaveFailed;
+function showSaveState(root, failed) {
+  for (const el16 of root.querySelectorAll(STATUS)) {
+    el16.textContent = failed ? saveFailedText() : "";
+    el16.hidden = !failed;
+  }
+}
+function markSelection(root, theme) {
+  for (const el16 of root.querySelectorAll(OPTION)) {
+    const button6 = (
+      /** @type {HTMLElement} */
+      el16
+    );
+    const selected = button6.dataset.kpTheme === theme;
+    button6.setAttribute("aria-pressed", String(selected));
+    button6.dataset.selected = String(selected);
+    button6.classList.toggle("is-selected", selected);
+  }
+}
+function clearMarks(root) {
+  for (const el16 of root.querySelectorAll(OPTION)) {
+    el16.removeAttribute("aria-pressed");
+    el16.removeAttribute("data-selected");
+    el16.classList.remove("is-selected");
+  }
+}
+
+// js/theme-picker/preview.js
+init_controller();
+
+// js/theme-picker/register.js
 function previewRoot(picker) {
   const selector = picker.getAttribute("data-kp-theme-preview-target");
   if (!selector) return void 0;
@@ -80256,166 +80297,154 @@ async function registerFirst(doc, theme) {
     }
   });
 }
-var PICK_EVENT = "kp-theme-pick";
-var PREVIEW_EVENT = "kp-theme-preview";
-var PREVIEW_LEAVE_MS = 90;
-var saveFailedText = () => getStrings().themeSaveFailed;
-function showSaveState(root, failed) {
-  for (const el16 of root.querySelectorAll(STATUS)) {
-    el16.textContent = failed ? saveFailedText() : "";
-    el16.hidden = !failed;
+
+// js/theme-picker/preview.js
+var PickerPreview = class extends Controller {
+  /**
+   * @param {HTMLElement} host the picker
+   * @param {Record<string, unknown>} [options]
+   */
+  constructor(host, options) {
+    super(host, options);
+    this.shownOn = void 0;
+    this.showing = false;
+    this.leaveTimer = 0;
+    this.ask = 0;
   }
-}
-function markSelection(root, theme) {
-  for (const el16 of root.querySelectorAll(OPTION)) {
-    const button6 = (
+  /** Whether previews are on: the `preview` option, else the picker's `data-kp-theme-preview="hover"`. */
+  wantsPreview() {
+    return this.options.preview ?? this.host.getAttribute("data-kp-theme-preview") === "hover";
+  }
+  /** @param {string | null} theme */
+  say(theme) {
+    this.host.dispatchEvent(new CustomEvent(PREVIEW_EVENT, { bubbles: true, detail: { theme } }));
+  }
+  /** End the preview and say so. */
+  stopPreview() {
+    this.ask += 1;
+    window.clearTimeout(this.leaveTimer);
+    if (this.showing && endPreview({ root: this.shownOn })) this.say(null);
+    this.showing = false;
+    this.shownOn = void 0;
+  }
+  /** A choice ends the look: a preview on a sample element is taken off it, one on the root is made real by applyTheme itself. */
+  settlePreview() {
+    this.ask += 1;
+    window.clearTimeout(this.leaveTimer);
+    if (this.showing && this.shownOn !== void 0 && endPreview({ root: this.shownOn })) this.say(null);
+    this.showing = false;
+    this.shownOn = void 0;
+  }
+  /** Go back after a short wait, so crossing the gap between two buttons is not a leave. */
+  leaveSoon() {
+    window.clearTimeout(this.leaveTimer);
+    this.leaveTimer = window.setTimeout(() => this.stopPreview(), PREVIEW_LEAVE_MS);
+  }
+  /** Show a theme once its register is there. @param {string} theme */
+  async startPreview(theme) {
+    window.clearTimeout(this.leaveTimer);
+    const mine = ++this.ask;
+    const on = previewRoot(this.host);
+    try {
+      await registerFirst(this.host.ownerDocument, theme);
+    } catch {
+      return;
+    }
+    if (mine !== this.ask || !this.wantsPreview()) return;
+    if (this.showing && this.shownOn !== on) endPreview({ root: this.shownOn });
+    this.shownOn = on;
+    this.showing = true;
+    if (previewTheme(theme, { root: on })) this.say(theme);
+  }
+  /** The option button an event happened on, if it is one of this picker's. @param {Event} event @returns {HTMLElement | null} */
+  optionOf(event) {
+    const option = event.target instanceof Element ? event.target.closest(OPTION) : null;
+    return option && this.host.contains(option) ? (
       /** @type {HTMLElement} */
-      el16
-    );
-    const selected = button6.dataset.kpTheme === theme;
-    button6.setAttribute("aria-pressed", String(selected));
-    button6.dataset.selected = String(selected);
-    button6.classList.toggle("is-selected", selected);
+      option
+    ) : null;
   }
-}
-function clearMarks(root) {
-  for (const el16 of root.querySelectorAll(OPTION)) {
-    el16.removeAttribute("aria-pressed");
-    el16.removeAttribute("data-selected");
-    el16.classList.remove("is-selected");
-  }
-}
-function attachThemePickers(root = document, { persist = true, closePopover = true, status = null, preview = void 0 } = {}) {
-  const cleanups = [];
-  const pickers = [];
-  for (const el16 of root.querySelectorAll(PICKER)) {
-    const picker = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (picker.dataset.kpThemeAttached === "1") continue;
+};
+
+// js/theme-picker/controller.js
+var ThemePicker = class extends PickerPreview {
+  connect() {
+    const picker = this.host;
     picker.dataset.kpThemeAttached = "1";
-    pickers.push(picker);
-    const onClick = (event) => {
-      const target = (
-        /** @type {HTMLElement} */
-        event.target
-      );
-      const option = target.closest(OPTION);
-      if (!option || !picker.contains(option)) return;
-      const next2 = (
-        /** @type {HTMLElement} */
-        option.dataset.kpTheme
-      );
-      if (!next2) return;
-      settlePreview();
-      const applied = applyTheme(next2);
-      const chosen = pendingTheme() ?? applied;
-      const stored = persist ? storeTheme(chosen) : true;
-      showSaveState(status ?? picker.parentNode ?? document, !stored);
-      picker.dispatchEvent(new CustomEvent(PICK_EVENT, { bubbles: true, detail: { theme: chosen, stored } }));
-      const popover2 = closePopover ? picker.closest("[popover]") : null;
-      if (popover2 && popover2.matches(":popover-open")) popover2.hidePopover();
-    };
-    picker.addEventListener("click", onClick);
-    const wantsPreview = () => preview ?? picker.getAttribute("data-kp-theme-preview") === "hover";
-    let shownOn;
-    let showing = false;
-    let leaveTimer = 0;
-    let ask = 0;
-    const say17 = (theme) => picker.dispatchEvent(new CustomEvent(PREVIEW_EVENT, { bubbles: true, detail: { theme } }));
-    const stopPreview = () => {
-      ask += 1;
-      window.clearTimeout(leaveTimer);
-      if (showing && endPreview({ root: shownOn })) say17(null);
-      showing = false;
-      shownOn = void 0;
-    };
-    const startPreview = async (theme) => {
-      window.clearTimeout(leaveTimer);
-      const mine = ++ask;
-      const on = previewRoot(picker);
-      try {
-        await registerFirst(picker.ownerDocument, theme);
-      } catch {
-        return;
-      }
-      if (mine !== ask || !wantsPreview()) return;
-      if (showing && shownOn !== on) endPreview({ root: shownOn });
-      shownOn = on;
-      showing = true;
-      if (previewTheme(theme, { root: on })) say17(theme);
-    };
-    const settlePreview = () => {
-      ask += 1;
-      window.clearTimeout(leaveTimer);
-      if (showing && shownOn !== void 0 && endPreview({ root: shownOn })) say17(null);
-      showing = false;
-      shownOn = void 0;
-    };
-    const leaveSoon = () => {
-      window.clearTimeout(leaveTimer);
-      leaveTimer = window.setTimeout(stopPreview, PREVIEW_LEAVE_MS);
-    };
-    const optionOf = (event) => {
-      const option = event.target instanceof Element ? event.target.closest(OPTION) : null;
-      return option && picker.contains(option) ? (
-        /** @type {HTMLElement} */
-        option
-      ) : null;
-    };
-    const onEnter2 = (event) => {
-      if (!wantsPreview() || event.pointerType === "touch") return;
-      const theme = optionOf(event)?.dataset.kpTheme;
-      if (theme) void startPreview(theme);
-    };
-    const onFocusIn = (event) => {
-      if (!wantsPreview()) return;
-      const option = optionOf(event);
-      if (!option || !option.matches(":focus-visible")) return;
-      if (option.dataset.kpTheme) void startPreview(option.dataset.kpTheme);
-    };
-    picker.addEventListener("pointerover", onEnter2);
-    picker.addEventListener("pointerleave", leaveSoon);
-    picker.addEventListener("focusin", onFocusIn);
-    picker.addEventListener("focusout", leaveSoon);
+    this.own(() => {
+      delete picker.dataset.kpThemeAttached;
+      clearMarks(picker);
+    });
+    this.listen(picker, "click", (event) => this.onClick(event));
+    this.listen(picker, "pointerover", (event) => this.onEnter(
+      /** @type {PointerEvent} */
+      event
+    ));
+    this.listen(picker, "pointerleave", () => this.leaveSoon());
+    this.listen(picker, "focusin", (event) => this.onFocusIn(
+      /** @type {FocusEvent} */
+      event
+    ));
+    this.listen(picker, "focusout", () => this.leaveSoon());
     const popover = (
       /** @type {HTMLElement | null} */
       picker.closest("[popover]")
     );
-    const onToggle = (event) => {
-      if (
-        /** @type {ToggleEvent} */
-        event.newState === "closed"
-      ) stopPreview();
-    };
-    popover?.addEventListener("toggle", onToggle);
+    if (popover) this.listen(popover, "toggle", (event) => this.onToggle(event));
     markSelection(picker, initializeTheme(currentTheme()));
-    cleanups.push(() => {
-      stopPreview();
-      picker.removeEventListener("pointerover", onEnter2);
-      picker.removeEventListener("pointerleave", leaveSoon);
-      picker.removeEventListener("focusin", onFocusIn);
-      picker.removeEventListener("focusout", leaveSoon);
-      popover?.removeEventListener("toggle", onToggle);
-      picker.removeEventListener("click", onClick);
-      delete picker.dataset.kpThemeAttached;
-      clearMarks(picker);
-    });
+    this.own(() => this.stopPreview());
   }
-  const stop = onThemeChange((theme) => {
-    for (const el16 of (root === document ? document : root).querySelectorAll(PICKER)) markSelection(el16, theme);
-  });
-  cleanups.push(stop);
-  const detach = () => {
-    for (const c of cleanups) c();
-  };
-  return Object.assign(detach, {
-    refresh: () => {
-      for (const picker of pickers) markSelection(picker, currentTheme());
-    }
-  });
-}
+  /** A press on an option: end the look, apply the theme, store it, say so, and close an enclosing menu. @param {Event} event */
+  onClick(event) {
+    const picker = this.host;
+    const { persist = true, closePopover = true, status = null } = this.options;
+    const option = (
+      /** @type {HTMLElement} */
+      event.target.closest(OPTION)
+    );
+    if (!option || !picker.contains(option)) return;
+    const next2 = (
+      /** @type {HTMLElement} */
+      option.dataset.kpTheme
+    );
+    if (!next2) return;
+    this.settlePreview();
+    const applied = applyTheme(next2);
+    const chosen = pendingTheme() ?? applied;
+    const stored = persist ? storeTheme(chosen) : true;
+    showSaveState(
+      /** @type {ParentNode} */
+      status ?? picker.parentNode ?? document,
+      !stored
+    );
+    picker.dispatchEvent(new CustomEvent(PICK_EVENT, { bubbles: true, detail: { theme: chosen, stored } }));
+    const popover = closePopover ? picker.closest("[popover]") : null;
+    if (popover && popover.matches(":popover-open")) popover.hidePopover();
+  }
+  /** @param {PointerEvent} event */
+  onEnter(event) {
+    if (!this.wantsPreview() || event.pointerType === "touch") return;
+    const theme = this.optionOf(event)?.dataset.kpTheme;
+    if (theme) void this.startPreview(theme);
+  }
+  /** @param {FocusEvent} event */
+  onFocusIn(event) {
+    if (!this.wantsPreview()) return;
+    const option = this.optionOf(event);
+    if (!option || !option.matches(":focus-visible")) return;
+    if (option.dataset.kpTheme) void this.startPreview(option.dataset.kpTheme);
+  }
+  /** @param {Event} event */
+  onToggle(event) {
+    if (
+      /** @type {ToggleEvent} */
+      event.newState === "closed"
+    ) this.stopPreview();
+  }
+};
+
+// js/theme-picker/markup.js
+init_strings();
 function escapeHtml(text) {
   return text.replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch] ?? ch);
 }
@@ -80443,6 +80472,24 @@ function themeMenuMarkup({
   const safeLabel = escapeHtml(label);
   const classes = `kp-theme-menu ${escapeHtml(className)}`.trim();
   return `<span class="${classes}"><button type="button" class="kp-icon-button" popovertarget="${safeId}" aria-label="${safeLabel}" style="anchor-name: --${safeId}">` + icon + `</button><div popover="auto" id="${safeId}" class="kp-popover" style="position-anchor: --${safeId}"><ul class="kp-menu" data-kp-theme-picker aria-label="${safeLabel}">${themeOptionsMarkup({ themes, labels, grouped, groupLabels })}</ul></div></span>`;
+}
+
+// js/theme-picker.js
+function attachThemePickers(root = document, { persist = true, closePopover = true, status = null, preview = void 0 } = {}) {
+  const pickers = hostsOf(root, PICKER).filter((el16) => !(el16.dataset.kpThemeAttached === "1") && !controllerOf(el16, ThemePicker));
+  const made7 = pickers.map((el16) => attachOne(el16, ThemePicker, { persist, closePopover, status, preview })).filter((picker) => picker !== void 0);
+  const stop = onThemeChange((theme) => {
+    for (const el16 of (root === document ? document : root).querySelectorAll(PICKER)) markSelection(el16, theme);
+  });
+  const detach = () => {
+    for (const picker of made7) picker.destroy();
+    stop();
+  };
+  return Object.assign(detach, {
+    refresh: () => {
+      for (const picker of pickers) markSelection(picker, currentTheme());
+    }
+  });
 }
 
 // js/auto/draw.js
@@ -82047,12 +82094,9 @@ export {
   NO_FLASH_SNIPPET,
   OPTION_SELECTOR,
   OPT_OUT,
-  PICK_EVENT,
   PIECES_ATTRIBUTE,
   PIECES_PROPERTY,
   PIECE_CARRIERS,
-  PREVIEW_EVENT,
-  PREVIEW_LEAVE_MS,
   PRINT_ACTION,
   PRINT_EVENT,
   PRINT_SHEETS,
@@ -82094,7 +82138,6 @@ export {
   STORAGE_KEY,
   THEMES,
   THEME_ATTRIBUTE,
-  THEME_MENU_ICON,
   TICK,
   TICK_EVENT,
   TICK_KNOB,
@@ -82500,8 +82543,6 @@ export {
   tabbar_exports as tabbarExports,
   tables_exports as tablesExports,
   theme_core_exports as themeCoreExports,
-  themeMenuMarkup,
-  themeOptionsMarkup,
   theme_picker_exports as themePickerExports,
   theme_registry_exports as themeRegistryExports,
   thread_exports as threadExports,

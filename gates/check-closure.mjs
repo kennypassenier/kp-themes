@@ -156,6 +156,15 @@ export const VENDORED = [
     'js/theme-core/store.js',
     'js/theme-core/subscribe.js',
     'js/theme-core/values.js',
+    // Since the 2026-10-30 conversion js/theme-picker.js is a facade over js/theme-picker/, and its picker is a controller class on
+    // js/controller.js; chassis-rs bakes the parts and the controller base in beside it.
+    'js/controller.js',
+    'js/theme-picker/controller.js',
+    'js/theme-picker/markup.js',
+    'js/theme-picker/marks.js',
+    'js/theme-picker/preview.js',
+    'js/theme-picker/register.js',
+    'js/theme-picker/values.js',
 ];
 
 /**

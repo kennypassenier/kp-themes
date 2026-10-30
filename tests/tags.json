@@ -440,6 +440,7 @@
             "why": "the hooks of js/effects.js, each in a module of its own [scope-117]"
         },
         { "path": "js/theme-picker.js", "tags": ["@component:picker"] },
+        { "path": "js/theme-picker/*.js", "tags": ["@component:picker"] },
         { "path": "js/theme-core.js", "tags": ["@component:picker"] },
         { "path": "js/theme-core/*.js", "tags": ["@component:picker"] },
         { "path": "js/no-flash.js", "tags": ["@component:picker"] },
