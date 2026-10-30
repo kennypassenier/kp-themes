@@ -90,7 +90,7 @@ var init_toggle_palette_ack = __esm({
       intentNoMatch: "Try other words, or fewer of them.",
       intentNoSubject: (name, verb, subjects, noun) => `There is no ${noun === "" ? "match" : noun} called "${name}". ${verb} works on: ${subjects.join(", ")}.`,
       paletteNothing: "Nothing matches",
-      paletteCapped: (shown4, total) => `${shown4} of ${total} shown, type more words`,
+      paletteCapped: (shown5, total) => `${shown5} of ${total} shown, type more words`,
       paletteLoading: "Loading the commands\u2026",
       paletteFailed: "The commands could not be read",
       paletteFailedText: "The places below still work.",
@@ -384,7 +384,7 @@ var init_stackbar_bullets_code = __esm({
       codeLines: (lines) => lines === 1 ? "1 line" : `${lines} lines`,
       codeEmpty: "Nothing to show.",
       codeBinary: (size2) => `Binary data (${size2}), not shown as text.`,
-      codeTruncated: (shown4, total) => `Showing the first ${shown4} of ${total}.`,
+      codeTruncated: (shown5, total) => `Showing the first ${shown5} of ${total}.`,
       codeLoading: "Reading\u2026",
       codeError: "Could not be read.",
       codeCopiedAnnouncement: (title) => `${title} copied`,
@@ -527,7 +527,7 @@ var init_req_notices = __esm({
       reqToneError: "Server error",
       reqToneNone: "No answer",
       reqSourceTest: "test",
-      reqCount: (shown4, total) => shown4 === total ? `${total} requests` : `${shown4} of ${total} requests`,
+      reqCount: (shown5, total) => shown5 === total ? `${total} requests` : `${shown5} of ${total} requests`,
       reqNoMatch: "No request matches this filter.",
       reqSummary: (method, path, status) => `${method} ${path}, ${status}`,
       // kpadopt5-ops:notices:start
@@ -713,7 +713,7 @@ var init_table_heat = __esm({
       tableSelectRow: (key) => `Select row ${key}`,
       tableEmpty: "Nothing found.",
       tableRows: (n) => `${n} rows`,
-      tableRowsFiltered: (shown4, total) => `${shown4} of ${total} rows`,
+      tableRowsFiltered: (shown5, total) => `${shown5} of ${total} rows`,
       /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
       tablePage: (at, of) => `${at} / ${of}`,
       /**
@@ -815,7 +815,7 @@ var init_table_heat = __esm({
       tableColumnsLabel: "Visible columns",
       tableColumnLocked: (column) => `${column} (always shown)`,
       tableShowAllColumns: "Show every column",
-      tableColumnsShown: (shown4, total) => `${shown4} of ${total} columns shown`,
+      tableColumnsShown: (shown5, total) => `${shown5} of ${total} columns shown`,
       tableDetailsColumn: "Details",
       tableRowDetails: (key) => `Details for ${key}`,
       tableReorderColumn: "Move row",
@@ -1144,7 +1144,7 @@ var init_pipeline_uptime_timer = __esm({
         percent === null ? null : `${percent} up`,
         incidents === null ? null : incidents === 1 ? "1 incident" : `${incidents} incidents`
       ].filter(Boolean).join(" \xB7 "),
-      uptimeShown: (shown4, total) => `${shown4} of ${total} shown`,
+      uptimeShown: (shown5, total) => `${shown5} of ${total} shown`,
       uptimeInfoFigures: (percent, incidents) => [percent === null ? null : `${percent}% up`, incidents === null ? null : incidents === 1 ? "1 incident" : `${incidents} incidents`].filter(Boolean).join(" \xB7 "),
       uptimeOpen: (label) => `Open ${label}`,
       // The typed confirmation [kpadopt4-ideas].
@@ -2175,7 +2175,7 @@ var init_usual_logviewer = __esm({
       logviewerNotCopied: "Not copied",
       logviewerDownload: "Download",
       logviewerNothing: "There are no lines shown to copy.",
-      logviewerCount: (shown4, total) => shown4 === total ? `${total} ${total === 1 ? "line" : "lines"}` : `${shown4} of ${total} lines shown`,
+      logviewerCount: (shown5, total) => shown5 === total ? `${total} ${total === 1 ? "line" : "lines"}` : `${shown5} of ${total} lines shown`,
       logviewerDropped: (n, max) => `${n} earlier ${n === 1 ? "line" : "lines"} dropped, the newest ${max} are kept`,
       logviewerLoading: "Reading the log\u2026",
       logviewerEmptyTitle: "No log lines yet",
@@ -2205,7 +2205,7 @@ var init_feed_sequencer = __esm({
       feedUnitMany: "events",
       feedToday: "Today",
       feedYesterday: "Yesterday",
-      feedShown: (shown4, total, unit2) => `${shown4} of ${total} ${unit2}`,
+      feedShown: (shown5, total, unit2) => `${shown5} of ${total} ${unit2}`,
       feedFailed: (n) => `${n} failed`,
       feedAllOk: "all ok",
       feedStateRunning: "running",
@@ -2225,8 +2225,8 @@ var init_feed_sequencer = __esm({
       feedEarlierLoading: "Loading earlier\u2026",
       feedEarlierError: "Earlier activity could not be loaded.",
       feedEarlierRetry: "Try again",
-      feedBackTo: (shown4, total, date) => shown4 === total ? `Showing ${shown4}, back to ${date}` : `Showing ${shown4} of ${total}, back to ${date}`,
-      feedEnd: (shown4, date) => `Nothing earlier: all ${shown4} are shown, back to ${date}.`,
+      feedBackTo: (shown5, total, date) => shown5 === total ? `Showing ${shown5}, back to ${date}` : `Showing ${shown5} of ${total}, back to ${date}`,
+      feedEnd: (shown5, date) => `Nothing earlier: all ${shown5} are shown, back to ${date}.`,
       feedNew: (title) => `New: ${title}`,
       feedNewMany: (n, title) => `${n} new, the newest: ${title}`,
       // gap-activity-feed:feed:end
@@ -2361,10 +2361,10 @@ function stringProperties(strings = current) {
   const word = strings.loadingWord;
   const out = {};
   for (let tick6 = 0; tick6 <= 7; tick6++) {
-    const shown4 = Math.round(tick6 * word.length / 7);
+    const shown5 = Math.round(tick6 * word.length / 7);
     const turn2 = tick6 * 5 % CIPHER.length;
     const noise = (CIPHER.slice(turn2) + CIPHER.slice(0, turn2)).repeat(Math.ceil(word.length / CIPHER.length) + 1);
-    out[`--kp-loading-word-${tick6}`] = JSON.stringify(word.slice(0, shown4) + noise.slice(0, word.length - shown4));
+    out[`--kp-loading-word-${tick6}`] = JSON.stringify(word.slice(0, shown5) + noise.slice(0, word.length - shown5));
   }
   return out;
 }
@@ -4576,7 +4576,7 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
     const select2 = (index, { focus = true } = {}) => {
       const all = tabs();
       const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
-      let shown4 = null;
+      let shown5 = null;
       const going = [];
       all.forEach((tab, i) => {
         const selected = i === index;
@@ -4584,7 +4584,7 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
         tab.tabIndex = selected ? 0 : -1;
         const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
         if (!panel) return;
-        if (selected) shown4 = panel;
+        if (selected) shown5 = panel;
         else if (leaving.has(panel)) going.push(
           /** @type {Promise<void>} */
           leaving.get(panel)
@@ -4598,7 +4598,7 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
       const mine = ++turn2;
       const show = (
         /** @type {HTMLElement | null} */
-        shown4
+        shown5
       );
       if (show) {
         const back = leaving.get(show);
@@ -5759,12 +5759,12 @@ function attachDisabledReasons(root = document) {
     const sync3 = () => {
       mirrorRole();
       const text = control.getAttribute("data-kp-disabled-reason") ?? "";
-      const shown4 = text !== "" && isOff(control);
-      tip.textContent = shown4 ? text : "";
-      if (!shown4) tip.hidden = true;
-      anchor.toggleAttribute("data-kp-reason-off", shown4);
+      const shown5 = text !== "" && isOff(control);
+      tip.textContent = shown5 ? text : "";
+      if (!shown5) tip.hidden = true;
+      anchor.toggleAttribute("data-kp-reason-off", shown5);
       const ids = (control.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id !== "" && id !== tip.id);
-      if (shown4) ids.push(tip.id);
+      if (shown5) ids.push(tip.id);
       if (ids.length > 0) control.setAttribute("aria-describedby", ids.join(" "));
       else control.removeAttribute("aria-describedby");
     };
@@ -7919,17 +7919,17 @@ function install9(ctx) {
       else paced(step, 110);
     };
     const lines = words2.arrivalLinesByTheme?.[theme] ?? null;
-    let shown4 = 0;
+    let shown5 = 0;
     const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
     const lineStep = () => {
       if (ended || !lines) return;
-      shown4++;
-      const upto = lines.slice(0, shown4);
+      shown5++;
+      const upto = lines.slice(0, shown5);
       line.textContent = upto.map(
-        (text, index) => text.replace("{count}", String(index === shown4 - 1 ? Math.round(total * shown4 / lines.length) : total))
+        (text, index) => text.replace("{count}", String(index === shown5 - 1 ? Math.round(total * shown5 / lines.length) : total))
       ).join("\n");
-      bar?.style.setProperty(BOOT_PROGRESS, String(shown4 / lines.length));
-      if (shown4 === lines.length) paced(end, 320);
+      bar?.style.setProperty(BOOT_PROGRESS, String(shown5 / lines.length));
+      if (shown5 === lines.length) paced(end, 320);
       else paced(lineStep, 190);
     };
     skip.addEventListener("click", end);
@@ -11154,13 +11154,13 @@ function paintItem(el16, item) {
     actions.className = "kp-attention__actions";
     el16.append(actions);
   }
-  const shown4 = actions.childNodes.length === 1 ? actions.firstChild : null;
-  if (shown4 === item.action || shown4 && shown4.isEqualNode(item.action)) return;
+  const shown5 = actions.childNodes.length === 1 ? actions.firstChild : null;
+  if (shown5 === item.action || shown5 && shown5.isEqualNode(item.action)) return;
   actions.replaceChildren(item.action);
 }
 function setAttention(band, items) {
   const doc = band.ownerDocument;
-  const shown4 = /* @__PURE__ */ new Map();
+  const shown5 = /* @__PURE__ */ new Map();
   for (
     const el16 of
     /** @type {HTMLElement[]} */
@@ -11168,14 +11168,14 @@ function setAttention(band, items) {
   ) {
     if (!el16.classList.contains("kp-attention__item") || el16.hasAttribute("data-kp-leaving")) continue;
     const key = el16.getAttribute("data-kp-key");
-    if (key !== null && !shown4.has(key)) shown4.set(key, el16);
+    if (key !== null && !shown5.has(key)) shown5.set(key, el16);
   }
   const wanted = [];
   const seen = /* @__PURE__ */ new Set();
   for (const item of items) {
     if (seen.has(item.key)) continue;
     seen.add(item.key);
-    let el16 = shown4.get(item.key);
+    let el16 = shown5.get(item.key);
     if (!el16) {
       el16 = doc.createElement("div");
       el16.className = "kp-alert kp-attention__item";
@@ -11185,7 +11185,7 @@ function setAttention(band, items) {
     wanted.push(el16);
   }
   const going = /* @__PURE__ */ new Set();
-  for (const [key, el16] of shown4)
+  for (const [key, el16] of shown5)
     if (!seen.has(key)) {
       going.add(el16);
       void leave(el16);
@@ -14105,14 +14105,14 @@ function attachToTop(root = document, { strings, after } = {}) {
       }
       return null;
     };
-    let shown4 = false;
+    let shown5 = false;
     let queued2 = false;
     const decide = () => {
       queued2 = false;
       const box = scroller();
       const next2 = (box ? box.scrollTop : view.scrollY) > threshold;
-      if (next2 === shown4) return;
-      shown4 = next2;
+      if (next2 === shown5) return;
+      shown5 = next2;
       button4.toggleAttribute("data-kp-to-top-shown", next2);
       button4.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next2 } }));
     };
@@ -16556,7 +16556,7 @@ function createListbox({
   const stampedSelected = /* @__PURE__ */ new Set();
   let buffer = "";
   let bufferTimer = 0;
-  const shown4 = (option) => {
+  const shown5 = (option) => {
     for (let el16 = (
       /** @type {HTMLElement | null} */
       option
@@ -16565,7 +16565,7 @@ function createListbox({
   };
   const options = () => (
     /** @type {HTMLElement[]} */
-    [...list.querySelectorAll(optionSelector)].filter((el16) => !el16.matches(disabledSelector) && shown4(
+    [...list.querySelectorAll(optionSelector)].filter((el16) => !el16.matches(disabledSelector) && shown5(
       /** @type {HTMLElement} */
       el16
     ))
@@ -16928,9 +16928,9 @@ function attachComboboxes(root = document, {
         const text = (option.textContent ?? "").toLowerCase();
         const taken = isTags && !duplicates && chosen.includes(option.dataset.value ?? text);
         const matched = !taken && (query === "" || matcher(text, query));
-        const shown4 = hook?.shown && !taken ? hook.shown(option, query, matched) : matched;
-        option.hidden = !shown4;
-        if (shown4) visible3 += 1;
+        const shown5 = hook?.shown && !taken ? hook.shown(option, query, matched) : matched;
+        option.hidden = !shown5;
+        if (shown5) visible3 += 1;
       }
       hook?.after?.(query, visible3);
       if (hook?.after) visible3 = [...list.querySelectorAll(OPTION_SELECTOR)].filter((o) => !/** @type {HTMLElement} */
@@ -18166,9 +18166,9 @@ function attachPalettes(root = document, {
     const filter = () => {
       const query = input.value.trim();
       if (intent !== null) {
-        const shown4 = intent.run(query);
+        const shown5 = intent.run(query);
         listbox.refresh();
-        if (shown4 > 0) listbox.highlight(0);
+        if (shown5 > 0) listbox.highlight(0);
         return;
       }
       let visible3 = 0;
@@ -18178,9 +18178,9 @@ function attachPalettes(root = document, {
           element2
         );
         const text = [...option.childNodes].filter((n) => !(n instanceof HTMLElement && n.tagName === "KBD")).map((n) => n.textContent ?? "").join("");
-        const shown4 = matcher(text.trim(), query);
-        option.hidden = !shown4;
-        if (shown4) visible3 += 1;
+        const shown5 = matcher(text.trim(), query);
+        option.hidden = !shown5;
+        if (shown5) visible3 += 1;
       }
       for (const element2 of list.querySelectorAll(GROUP)) {
         const group = (
@@ -20417,8 +20417,8 @@ var init_controller3 = __esm({
       tidy() {
         const date = this.read();
         if (date === null) return;
-        const shown4 = formatDate(date, this.settings.locale, this.settings.numeric);
-        if (this.input.value !== shown4) this.input.value = shown4;
+        const shown5 = formatDate(date, this.settings.locale, this.settings.numeric);
+        if (this.input.value !== shown5) this.input.value = shown5;
       }
       onFocusOut() {
         setTimeout(() => {
@@ -24721,7 +24721,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   input.setAttribute("aria-describedby", [input.getAttribute("aria-describedby"), lineId].filter(Boolean).join(" "));
   if (!input.id) input.id = `kp-secret-input-${Math.random().toString(36).slice(2, 9)}`;
   reveal.setAttribute("aria-controls", input.id);
-  let shown4 = false;
+  let shown5 = false;
   let seconds = SECRET_TTL;
   let left = 0;
   let timer2 = 0;
@@ -24749,13 +24749,13 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     const why = disabledWhy();
     const bad = invalidWhy();
     const empty = input.value === "";
-    field.dataset.kpSecretState = why !== void 0 ? "disabled" : bad !== void 0 || pasteProblem ? "error" : shown4 ? "shown" : "hidden";
-    input.type = shown4 ? "text" : "password";
+    field.dataset.kpSecretState = why !== void 0 ? "disabled" : bad !== void 0 || pasteProblem ? "error" : shown5 ? "shown" : "hidden";
+    input.type = shown5 ? "text" : "password";
     input.disabled = why !== void 0;
     if (bad !== void 0) input.setAttribute("aria-invalid", "true");
     else input.removeAttribute("aria-invalid");
-    reveal.textContent = shown4 ? s2.secretHide : s2.secretReveal;
-    reveal.setAttribute("aria-pressed", String(shown4));
+    reveal.textContent = shown5 ? s2.secretHide : s2.secretReveal;
+    reveal.setAttribute("aria-pressed", String(shown5));
     reveal.disabled = why !== void 0 || empty;
     if (paste) {
       paste.textContent = s2.secretPaste;
@@ -24763,12 +24763,12 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     }
     if (copy3 && !copy3.hasAttribute("data-kp-copied")) copy3.textContent = s2.secretCopy;
     if (copy3) copy3.disabled = why !== void 0 || empty;
-    const text = why !== void 0 ? why : bad !== void 0 ? bad : pasteProblem || (shown4 ? seconds === 0 ? s2.secretStaysShown : s2.secretHidesIn(left) : empty ? s2.secretInputHint : s2.secretInputCount(input.value.length));
+    const text = why !== void 0 ? why : bad !== void 0 ? bad : pasteProblem || (shown5 ? seconds === 0 ? s2.secretStaysShown : s2.secretHidesIn(left) : empty ? s2.secretInputHint : s2.secretInputCount(input.value.length));
     words2.textContent = text;
   };
   const hide2 = (reason = "press") => {
-    if (!shown4) return;
-    shown4 = false;
+    if (!shown5) return;
+    shown5 = false;
     stop();
     paint15();
     say18(s2.secretHidden);
@@ -24781,8 +24781,8 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     else paint15();
   };
   const show = (reason = "press") => {
-    if (shown4 || disabledWhy() !== void 0 || input.value === "") return;
-    shown4 = true;
+    if (shown5 || disabledWhy() !== void 0 || input.value === "") return;
+    shown5 = true;
     left = seconds;
     drain.style.animation = "none";
     void drain.offsetWidth;
@@ -24793,13 +24793,13 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
   };
   const onReveal = () => {
-    if (shown4) hide2("press");
+    if (shown5) hide2("press");
     else show("press");
     input.focus();
   };
   const onInput = () => {
     pasteProblem = "";
-    if (input.value === "" && shown4) hide2("call");
+    if (input.value === "" && shown5) hide2("call");
     else paint15();
   };
   const onPaste = async () => {
@@ -24848,7 +24848,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     if (wait > 0) cancelClear = clearClipboardLater(field, text, wait, say18);
   };
   const onFocusOut = (event) => {
-    if (!shown4 || !hidesOnBlur()) return;
+    if (!shown5 || !hidesOnBlur()) return;
     const next2 = event.relatedTarget;
     if (next2 instanceof Node && field.contains(next2)) return;
     hide2("away");
@@ -24870,7 +24870,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   watch2.observe(field, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
   const stopOptions = watchOptions(field, ["data-kp-secret-ttl"], () => {
     readOptions4();
-    if (shown4) {
+    if (shown5) {
       stop();
       left = seconds;
       if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
@@ -24889,7 +24889,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     copy3?.removeEventListener("click", onCopy);
     field.removeEventListener("focusout", onFocusOut);
     doc.removeEventListener("visibilitychange", onAway);
-    shown4 = false;
+    shown5 = false;
     input.value = "";
     input.type = "password";
     for (const part7 of built) part7.remove();
@@ -25136,9 +25136,9 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
         return;
       }
       if (mine !== ticket) return;
-      const shown4 = make27("span", "kp-secret__text");
-      shown4.textContent = text;
-      value.replaceChildren(shown4);
+      const shown5 = make27("span", "kp-secret__text");
+      shown5.textContent = text;
+      value.replaceChildren(shown5);
       value.classList.remove("kp-masked");
       value.tabIndex = 0;
       field.toggleAttribute("data-kp-secret-overflow", value.scrollWidth > value.clientWidth + 1);
@@ -27890,180 +27890,7 @@ var init_hovercard = __esm({
   }
 });
 
-// js/tiles.js
-var tiles_exports = {};
-__export(tiles_exports, {
-  TILES_EXIT_EVENT: () => TILES_EXIT_EVENT,
-  TILES_KEYS: () => TILES_KEYS,
-  TILES_MOVE_EVENT: () => TILES_MOVE_EVENT,
-  TILES_SET: () => TILES_SET,
-  TILE_ROW_MIN: () => TILE_ROW_MIN,
-  attachTileKeys: () => attachTileKeys,
-  attachTileSets: () => attachTileSets,
-  evenTileSet: () => evenTileSet,
-  letterTile: () => letterTile,
-  nextTile: () => nextTile,
-  tileSets: () => tileSets,
-  tileStop: () => tileStop
-});
-function tileSets(root) {
-  const sets = /* @__PURE__ */ new Map();
-  const scope = (
-    /** @type {ParentNode} */
-    root
-  );
-  const grids = [...scope instanceof Element && scope.matches(".kp-tiles") ? [scope] : [], ...scope.querySelectorAll(".kp-tiles")];
-  for (const grid2 of grids) {
-    const mark = grid2.closest(TILES_SET);
-    if (!mark || !(grid2 instanceof HTMLElement)) continue;
-    const name = mark.getAttribute("data-kp-tiles-set");
-    const key = name ? `name:${name}` : mark;
-    const list = sets.get(key) ?? [];
-    list.push(grid2);
-    sets.set(key, list);
-  }
-  return sets;
-}
-function evenTileSet(grids) {
-  const tiles = grids.flatMap((grid2) => [...grid2.children].filter(visible));
-  let tallest = 0;
-  if (tiles.length) {
-    for (const grid2 of grids) grid2.setAttribute("data-kp-tiles-measuring", "");
-    for (const tile of tiles) tallest = Math.max(tallest, tile.getBoundingClientRect().height);
-    for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-measuring");
-  }
-  const value = tallest > 0 ? `${Math.round(tallest * 100) / 100}px` : "";
-  for (const grid2 of grids) {
-    if (grid2.style.getPropertyValue(TILE_ROW_MIN) === value) continue;
-    if (value) grid2.style.setProperty(TILE_ROW_MIN, value);
-    else grid2.style.removeProperty(TILE_ROW_MIN);
-  }
-  return tallest;
-}
-function attachTileSets(root = document) {
-  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
-  const view = doc.defaultView;
-  const evenAll = () => {
-    for (const grids of tileSets(root).values()) evenTileSet(grids);
-  };
-  if (!view || typeof view.ResizeObserver !== "function") {
-    evenAll();
-    return () => {
-    };
-  }
-  const observed = /* @__PURE__ */ new Set();
-  let queued2 = 0;
-  const drawn2 = /* @__PURE__ */ new WeakMap();
-  const moving = /* @__PURE__ */ new Map();
-  const shown4 = (grids) => grids.flatMap((grid2) => [...grid2.children].filter(visible));
-  const remember3 = (tiles) => {
-    for (const tile of tiles) drawn2.set(tile, tile.getBoundingClientRect().height);
-  };
-  const even = (key, grids, move) => {
-    const busy = moving.get(key);
-    if (busy && !move) return;
-    const from = /* @__PURE__ */ new Map();
-    if (busy) {
-      for (const tile of shown4(grids)) from.set(tile, tile.getBoundingClientRect().height);
-      moving.delete(key);
-      for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-easing");
-      for (const animation of busy) animation.cancel();
-    }
-    const floor = evenTileSet(grids);
-    const tiles = shown4(grids);
-    if (!move) return remember3(tiles);
-    for (const tile of tiles) if (!from.has(tile) && drawn2.has(tile)) from.set(
-      tile,
-      /** @type {number} */
-      drawn2.get(tile)
-    );
-    const to = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect().height]));
-    const change2 = Math.max(0, ...tiles.map((tile) => Math.abs((to.get(tile) ?? 0) - (from.get(tile) ?? to.get(tile) ?? 0))));
-    const first = grids[0];
-    const { duration: duration2, easing } = change2 >= 1 && first ? sizeMotion(first, floor - (from.get(tiles[0]) ?? floor)) : { duration: 0, easing: "" };
-    if (duration2 <= 0) return remember3(tiles);
-    for (const grid2 of grids) grid2.setAttribute("data-kp-tiles-easing", "");
-    const moves = tiles.map((tile) => {
-      const end = (
-        /** @type {number} */
-        to.get(tile)
-      );
-      const start = from.get(tile) ?? end;
-      return tile.animate([{ height: `${start}px` }, { height: `${end}px` }], { duration: duration2, easing, fill: "forwards" });
-    });
-    moving.set(key, moves);
-    void Promise.all(moves.map((m) => m.finished)).then(
-      () => {
-        if (moving.get(key) !== moves) return;
-        moving.delete(key);
-        for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-easing");
-        for (const m of moves) m.cancel();
-        remember3(tiles);
-        queue();
-      },
-      () => void 0
-    );
-  };
-  const run = (move = false) => {
-    if (queued2) view.cancelAnimationFrame(queued2);
-    queued2 = 0;
-    const sets = tileSets(root);
-    const now = /* @__PURE__ */ new Set();
-    for (const grids of sets.values())
-      for (const grid2 of grids) {
-        now.add(grid2);
-        for (const tile of grid2.children) now.add(tile);
-      }
-    for (const el16 of observed) if (!now.has(el16)) sizes.unobserve(el16);
-    for (const el16 of now) if (!observed.has(el16)) sizes.observe(el16);
-    observed.clear();
-    for (const el16 of now) observed.add(el16);
-    for (const [key, grids] of sets) even(key, grids, move);
-  };
-  const queue = () => {
-    if (!queued2) queued2 = view.requestAnimationFrame(() => run());
-  };
-  const sizes = new view.ResizeObserver(queue);
-  const changes = new view.MutationObserver((records) => {
-    const grid2 = `.kp-tiles, ${TILES_SET}`;
-    const leaves = (n) => n instanceof view.Element && (n.matches(grid2) || n.querySelector(grid2) !== null);
-    const counts = (r) => {
-      const el16 = r.target instanceof view.Element ? r.target : r.target.parentElement;
-      if (!el16) return false;
-      if (el16.closest(TILES_SET)) return true;
-      if (r.type === "childList") return [...r.addedNodes, ...r.removedNodes].some(leaves);
-      return el16.querySelector(TILES_SET) !== null;
-    };
-    if (records.some(counts)) run(true);
-  });
-  changes.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), {
-    childList: true,
-    subtree: true,
-    characterData: true,
-    attributes: true,
-    attributeFilter: ["hidden", "open", "class", "data-kp-tiles-set", "data-kp-folding"]
-  });
-  const target = (
-    /** @type {EventTarget} */
-    /** @type {unknown} */
-    root
-  );
-  target.addEventListener("toggle", queue, true);
-  doc.fonts?.addEventListener?.("loadingdone", queue);
-  run();
-  return () => {
-    changes.disconnect();
-    sizes.disconnect();
-    target.removeEventListener("toggle", queue, true);
-    doc.fonts?.removeEventListener?.("loadingdone", queue);
-    if (queued2) view.cancelAnimationFrame(queued2);
-    for (const moves of moving.values()) for (const m of moves) m.cancel();
-    moving.clear();
-  };
-}
+// js/tiles/geometry.js
 function tileStop(tile) {
   const marked = tile.querySelector("[data-kp-tile-stop]");
   if (marked instanceof HTMLElement) return marked;
@@ -28125,207 +27952,10 @@ function nextTile(boxes, from, way) {
   const inRow = beyond.filter(({ b }) => sameRow(near2.b, b));
   return inRow.reduce((best, c) => Math.abs(cx(c.b) - cx(box)) < Math.abs(cx(best.b) - cx(box)) ? c : best).i;
 }
-function attachTileKeys(root = document) {
-  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
-  const view = doc.defaultView;
-  if (!view) return () => {
-  };
-  const boards2 = [];
-  if (root instanceof HTMLElement && root.matches(TILES_KEYS)) boards2.push(root);
-  for (const el16 of root.querySelectorAll(TILES_KEYS)) boards2.push(
-    /** @type {HTMLElement} */
-    el16
-  );
-  const undo = [];
-  for (const board of boards2) {
-    if (wiredBoards.has(board)) continue;
-    wiredBoards.add(board);
-    const off = wireBoard(board, view);
-    undo.push(() => {
-      off();
-      wiredBoards.delete(board);
-    });
-  }
-  return () => undo.splice(0).forEach((off) => off());
-}
-function wireBoard(board, view) {
-  const doc = board.ownerDocument;
-  let stop = null;
-  const taken = /* @__PURE__ */ new Map();
-  let queued2 = 0;
-  const on = () => board.getAttribute("data-kp-tiles-keys") !== "off";
-  const restore2 = () => {
-    for (const [el16, was] of taken) {
-      if (was === null) el16.removeAttribute("tabindex");
-      else el16.setAttribute("tabindex", was);
-    }
-    taken.clear();
-  };
-  const sync3 = () => {
-    queued2 = 0;
-    if (!on()) return restore2();
-    const tiles = keyTiles(board);
-    if (!stop || !tiles.includes(
-      /** @type {HTMLElement} */
-      stop
-    )) stop = tiles[0] ?? null;
-    for (const tile of tiles) {
-      const el16 = tileStop(tile);
-      if (!el16) continue;
-      if (!taken.has(el16)) taken.set(el16, el16.getAttribute("tabindex"));
-      const want = tile === stop ? "0" : "-1";
-      if (el16.getAttribute("tabindex") !== want) el16.setAttribute("tabindex", want);
-    }
-    for (const [el16, was] of taken) {
-      if (!board.contains(el16)) taken.delete(el16);
-      else if (!tiles.some((tile) => tileStop(tile) === el16)) {
-        if (was === null) el16.removeAttribute("tabindex");
-        else el16.setAttribute("tabindex", was);
-        taken.delete(el16);
-      }
-    }
-  };
-  const queue = () => {
-    if (!queued2) queued2 = view.requestAnimationFrame(sync3);
-  };
-  const tileOf = (target) => {
-    if (!(target instanceof Element)) return null;
-    return keyTiles(board).find((tile) => tile.contains(target)) ?? null;
-  };
-  const onFocus = (event) => {
-    if (!on()) return;
-    const tile = tileOf(event.target);
-    if (tile && tile !== stop) {
-      stop = tile;
-      sync3();
-    }
-  };
-  let typed = "";
-  let forget = 0;
-  const onLetter = (event) => {
-    if (!on() || board.getAttribute("data-kp-tiles-keys") !== "letters" || event.defaultPrevented) return;
-    if (event.key.length !== 1 || event.key === " " || event.altKey || event.ctrlKey || event.metaKey) return;
-    const target = (
-      /** @type {Element} */
-      event.target
-    );
-    if (target.closest('input:not([type="checkbox"]):not([type="radio"]):not([type="button"]), textarea, select, [contenteditable=""], [contenteditable="true"], [role="slider"], [role="menu"], [role="listbox"], [data-kp-tiles-keys-ignore]')) return;
-    const tiles = keyTiles(board);
-    const from = tiles.findIndex((tile) => tile.contains(target));
-    if (from < 0) return;
-    typed += event.key.toLowerCase();
-    view.clearTimeout(forget);
-    forget = view.setTimeout(() => typed = "", 700);
-    const to = letterTile(tiles.map(tileName), from, typed);
-    if (to === null) return;
-    event.preventDefault();
-    const el16 = tileStop(tiles[to]);
-    if (!el16) return;
-    stop = tiles[to];
-    sync3();
-    el16.focus();
-    board.dispatchEvent(new CustomEvent(TILES_MOVE_EVENT, { bubbles: true, detail: { from: tiles[from], to: tiles[to], key: event.key } }));
-  };
-  const onKey6 = (event) => {
-    onLetter(event);
-    if (!on() || !MOVES.has(event.key) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
-    const target = (
-      /** @type {Element} */
-      event.target
-    );
-    if (target.closest(
-      'input:not([type="checkbox"]):not([type="radio"]):not([type="button"]), textarea, select, [contenteditable=""], [contenteditable="true"], [role="slider"], [role="menu"], [role="listbox"], [data-kp-tiles-keys-ignore]'
-    ))
-      return;
-    const tiles = keyTiles(board);
-    const from = tiles.findIndex((tile) => tile.contains(target));
-    if (from < 0) return;
-    const boxes = tiles.map((tile) => tile.getBoundingClientRect());
-    const rtl = view.getComputedStyle(board).direction === "rtl";
-    const ways = {
-      ArrowLeft: rtl ? "right" : "left",
-      ArrowRight: rtl ? "left" : "right",
-      ArrowUp: "up",
-      ArrowDown: "down",
-      Home: "first",
-      End: "last"
-    };
-    let way = ways[event.key];
-    let to = from;
-    let exit = false;
-    if (event.key === "PageUp" || event.key === "PageDown") {
-      const down = event.key === "PageDown";
-      const rows = Math.max(1, Math.floor(view.innerHeight / Math.max(1, boxes[from].height + 16)) - 1);
-      way = down ? "down" : "up";
-      for (let i = 0; i < rows; i += 1) {
-        const next2 = nextTile(boxes, to, way);
-        if (next2 === null) {
-          exit = !down && to === from;
-          break;
-        }
-        to = next2;
-      }
-    } else {
-      const next2 = nextTile(boxes, from, way);
-      if (next2 === null) exit = way === "up";
-      else to = next2;
-    }
-    event.preventDefault();
-    if (to === from) {
-      if (exit) leave2();
-      return;
-    }
-    const key = event.key;
-    const el16 = tileStop(tiles[to]);
-    if (!el16) return;
-    stop = tiles[to];
-    sync3();
-    el16.focus();
-    board.dispatchEvent(new CustomEvent(TILES_MOVE_EVENT, { bubbles: true, detail: { from: tiles[from], to: tiles[to], key } }));
-  };
-  const leave2 = () => {
-    board.dispatchEvent(new CustomEvent(TILES_EXIT_EVENT, { bubbles: true, detail: { direction: "up" } }));
-    const named = board.getAttribute("data-kp-tiles-keys-exit");
-    if (!named) return;
-    let aim = doc.getElementById(named);
-    if (!aim) {
-      try {
-        aim = doc.querySelector(named);
-      } catch {
-        aim = null;
-      }
-    }
-    if (aim instanceof HTMLElement) aim.focus();
-  };
-  board.addEventListener("keydown", onKey6);
-  board.addEventListener("focusin", onFocus);
-  const sizes = typeof view.ResizeObserver === "function" ? new view.ResizeObserver(queue) : null;
-  sizes?.observe(board);
-  const changes = new view.MutationObserver(queue);
-  changes.observe(board, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"]
-  });
-  board.addEventListener("toggle", queue, true);
-  sync3();
-  return () => {
-    board.removeEventListener("keydown", onKey6);
-    view.clearTimeout(forget);
-    board.removeEventListener("focusin", onFocus);
-    board.removeEventListener("toggle", queue, true);
-    changes.disconnect();
-    sizes?.disconnect();
-    if (queued2) view.cancelAnimationFrame(queued2);
-    restore2();
-  };
-}
-var TILES_SET, TILE_ROW_MIN, visible, TILES_KEYS, TILES_MOVE_EVENT, TILES_EXIT_EVENT, STOP_CANDIDATES, MOVES, wiredBoards;
-var init_tiles = __esm({
-  "js/tiles.js"() {
+var TILES_SET, TILE_ROW_MIN, visible, TILES_KEYS, TILES_MOVE_EVENT, TILES_EXIT_EVENT, STOP_CANDIDATES, MOVES, KEEPS_KEYS;
+var init_geometry2 = __esm({
+  "js/tiles/geometry.js"() {
     "use strict";
-    init_motion();
     TILES_SET = "[data-kp-tiles-set]";
     TILE_ROW_MIN = "--kp-tile-row-min";
     visible = (tile) => {
@@ -28339,7 +27969,438 @@ var init_tiles = __esm({
     TILES_EXIT_EVENT = "kp-tiles-exit";
     STOP_CANDIDATES = 'a[href], button:not(:disabled), input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), summary, [tabindex]';
     MOVES = /* @__PURE__ */ new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
-    wiredBoards = /* @__PURE__ */ new WeakSet();
+    KEEPS_KEYS = 'input:not([type="checkbox"]):not([type="radio"]):not([type="button"]), textarea, select, [contenteditable=""], [contenteditable="true"], [role="slider"], [role="menu"], [role="listbox"], [data-kp-tiles-keys-ignore]';
+  }
+});
+
+// js/tiles/keys.js
+var LETTERS_MS, ROW_GAP_PX, WATCHED, TileBoard;
+var init_keys5 = __esm({
+  "js/tiles/keys.js"() {
+    "use strict";
+    init_controller();
+    init_geometry2();
+    LETTERS_MS = 700;
+    ROW_GAP_PX = 16;
+    WATCHED = ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"];
+    TileBoard = class extends Controller {
+      /** @param {HTMLElement} board @param {{ view: Window & typeof globalThis }} options */
+      constructor(board, options) {
+        super(board, options);
+        this.view = options.view;
+        this.doc = board.ownerDocument;
+        this.stop = null;
+        this.taken = /* @__PURE__ */ new Map();
+        this.queued = 0;
+        this.typed = "";
+        this.forget = 0;
+      }
+      connect() {
+        const board = this.host;
+        this.own(() => {
+          if (this.queued) this.view.cancelAnimationFrame(this.queued);
+          this.restore();
+        });
+        this.observe(new this.view.MutationObserver(() => this.queue())).observe(board, { childList: true, subtree: true, attributes: true, attributeFilter: WATCHED });
+        if (typeof this.view.ResizeObserver === "function") this.observe(new this.view.ResizeObserver(() => this.queue())).observe(board);
+        this.listen(board, "toggle", () => this.queue(), true);
+        this.listen(board, "focusin", (event) => this.onFocus(event));
+        this.own(() => this.view.clearTimeout(this.forget));
+        this.listen(board, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.sync();
+      }
+      on() {
+        return this.host.getAttribute("data-kp-tiles-keys") !== "off";
+      }
+      /** Put back the tab stops this script changed. */
+      restore() {
+        for (const [el16, was] of this.taken) {
+          if (was === null) el16.removeAttribute("tabindex");
+          else el16.setAttribute("tabindex", was);
+        }
+        this.taken.clear();
+      }
+      /** One stop at 0, the rest at -1: the whole board is one place in the tab order. */
+      sync() {
+        this.queued = 0;
+        if (!this.on()) return this.restore();
+        const tiles = keyTiles(this.host);
+        if (!this.stop || !tiles.includes(
+          /** @type {HTMLElement} */
+          this.stop
+        )) this.stop = tiles[0] ?? null;
+        for (const tile of tiles) {
+          const el16 = tileStop(tile);
+          if (!el16) continue;
+          if (!this.taken.has(el16)) this.taken.set(el16, el16.getAttribute("tabindex"));
+          const want = tile === this.stop ? "0" : "-1";
+          if (el16.getAttribute("tabindex") !== want) el16.setAttribute("tabindex", want);
+        }
+        for (const [el16, was] of this.taken) {
+          if (!this.host.contains(el16)) this.taken.delete(el16);
+          else if (!tiles.some((tile) => tileStop(tile) === el16)) {
+            if (was === null) el16.removeAttribute("tabindex");
+            else el16.setAttribute("tabindex", was);
+            this.taken.delete(el16);
+          }
+        }
+      }
+      queue() {
+        if (!this.queued) this.queued = this.view.requestAnimationFrame(() => this.sync());
+      }
+      /** @param {Event} event */
+      onFocus(event) {
+        if (!this.on() || !(event.target instanceof Element)) return;
+        const target = event.target;
+        const tile = keyTiles(this.host).find((t) => t.contains(target)) ?? null;
+        if (tile && tile !== this.stop) {
+          this.stop = tile;
+          this.sync();
+        }
+      }
+      /** Move the stop and the focus to a tile, and say so. @param {HTMLElement[]} tiles @param {number} from @param {number} to @param {string} key */
+      go(tiles, from, to, key) {
+        const el16 = tileStop(tiles[to]);
+        if (!el16) return;
+        this.stop = tiles[to];
+        this.sync();
+        el16.focus();
+        this.host.dispatchEvent(new CustomEvent(TILES_MOVE_EVENT, { bubbles: true, detail: { from: tiles[from], to: tiles[to], key } }));
+      }
+      /** With `data-kp-tiles-keys="letters"`, a letter goes to the next tile whose name starts with what was typed. @param {KeyboardEvent} event */
+      onLetter(event) {
+        if (!this.on() || this.host.getAttribute("data-kp-tiles-keys") !== "letters" || event.defaultPrevented) return;
+        if (event.key.length !== 1 || event.key === " " || event.altKey || event.ctrlKey || event.metaKey) return;
+        const target = (
+          /** @type {Element} */
+          event.target
+        );
+        if (target.closest(KEEPS_KEYS)) return;
+        const tiles = keyTiles(this.host);
+        const from = tiles.findIndex((tile) => tile.contains(target));
+        if (from < 0) return;
+        this.typed += event.key.toLowerCase();
+        this.view.clearTimeout(this.forget);
+        this.forget = this.view.setTimeout(() => this.typed = "", LETTERS_MS);
+        const to = letterTile(tiles.map(tileName), from, this.typed);
+        if (to === null) return;
+        event.preventDefault();
+        this.go(tiles, from, to, event.key);
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        this.onLetter(event);
+        if (!this.on() || !MOVES.has(event.key) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
+        const target = (
+          /** @type {Element} */
+          event.target
+        );
+        if (target.closest(KEEPS_KEYS)) return;
+        const tiles = keyTiles(this.host);
+        const from = tiles.findIndex((tile) => tile.contains(target));
+        if (from < 0) return;
+        const boxes = tiles.map((tile) => tile.getBoundingClientRect());
+        const { to, exit } = event.key === "PageUp" || event.key === "PageDown" ? this.page(boxes, from, event.key === "PageDown") : this.step(boxes, from, event.key);
+        event.preventDefault();
+        if (to === from) {
+          if (exit) this.leave();
+          return;
+        }
+        this.go(tiles, from, to, event.key);
+      }
+      /** One arrow, Home or End. @param {DOMRect[]} boxes @param {number} from @param {string} key */
+      step(boxes, from, key) {
+        const rtl = this.view.getComputedStyle(this.host).direction === "rtl";
+        const ways = { ArrowLeft: rtl ? "right" : "left", ArrowRight: rtl ? "left" : "right", ArrowUp: "up", ArrowDown: "down", Home: "first", End: "last" };
+        const way = ways[key];
+        const next2 = nextTile(boxes, from, way);
+        return next2 === null ? { to: from, exit: way === "up" } : { to: next2, exit: false };
+      }
+      /** A screenful of rows: as many as stand in the view, at least one. @param {DOMRect[]} boxes @param {number} from @param {boolean} down */
+      page(boxes, from, down) {
+        const rows = Math.max(1, Math.floor(this.view.innerHeight / Math.max(1, boxes[from].height + ROW_GAP_PX)) - 1);
+        let to = from;
+        for (let i = 0; i < rows; i += 1) {
+          const next2 = nextTile(boxes, to, down ? "down" : "up");
+          if (next2 === null) return { to, exit: !down && to === from };
+          to = next2;
+        }
+        return { to, exit: false };
+      }
+      /** Up from the first row: say so, and hand the focus to the element the board names. */
+      leave() {
+        const board = this.host;
+        board.dispatchEvent(new CustomEvent(TILES_EXIT_EVENT, { bubbles: true, detail: { direction: "up" } }));
+        const named = board.getAttribute("data-kp-tiles-keys-exit");
+        if (!named) return;
+        let aim = this.doc.getElementById(named);
+        if (!aim) {
+          try {
+            aim = this.doc.querySelector(named);
+          } catch {
+            aim = null;
+          }
+        }
+        if (aim instanceof HTMLElement) aim.focus();
+      }
+    };
+  }
+});
+
+// js/tiles/sets.js
+function tileSets(root) {
+  const sets = /* @__PURE__ */ new Map();
+  const scope = (
+    /** @type {ParentNode} */
+    root
+  );
+  const grids = [...scope instanceof Element && scope.matches(".kp-tiles") ? [scope] : [], ...scope.querySelectorAll(".kp-tiles")];
+  for (const grid2 of grids) {
+    const mark = grid2.closest(TILES_SET);
+    if (!mark || !(grid2 instanceof HTMLElement)) continue;
+    const name = mark.getAttribute("data-kp-tiles-set");
+    const key = name ? `name:${name}` : mark;
+    const list = sets.get(key) ?? [];
+    list.push(grid2);
+    sets.set(key, list);
+  }
+  return sets;
+}
+function evenTileSet(grids) {
+  const tiles = grids.flatMap((grid2) => [...grid2.children].filter(visible));
+  let tallest = 0;
+  if (tiles.length) {
+    for (const grid2 of grids) grid2.setAttribute("data-kp-tiles-measuring", "");
+    for (const tile of tiles) tallest = Math.max(tallest, tile.getBoundingClientRect().height);
+    for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-measuring");
+  }
+  const value = tallest > 0 ? `${Math.round(tallest * 100) / 100}px` : "";
+  for (const grid2 of grids) {
+    if (grid2.style.getPropertyValue(TILE_ROW_MIN) === value) continue;
+    if (value) grid2.style.setProperty(TILE_ROW_MIN, value);
+    else grid2.style.removeProperty(TILE_ROW_MIN);
+  }
+  return tallest;
+}
+var WATCHED2, EASE_MIN_PX, shown2, TileSetWatch;
+var init_sets2 = __esm({
+  "js/tiles/sets.js"() {
+    "use strict";
+    init_controller();
+    init_motion();
+    init_geometry2();
+    WATCHED2 = ["hidden", "open", "class", "data-kp-tiles-set", "data-kp-folding"];
+    EASE_MIN_PX = 1;
+    shown2 = (grids) => grids.flatMap((grid2) => [...grid2.children].filter(visible));
+    TileSetWatch = class extends Controller {
+      /** @param {ParentNode} root @param {Window & typeof globalThis} view */
+      constructor(root, view) {
+        super(
+          /** @type {HTMLElement} */
+          /** @type {unknown} */
+          root
+        );
+        this.root = root;
+        this.view = view;
+        this.doc = root instanceof Document ? root : root.ownerDocument ?? document;
+        this.observed = /* @__PURE__ */ new Set();
+        this.queued = 0;
+        this.drawn = /* @__PURE__ */ new WeakMap();
+        this.moving = /* @__PURE__ */ new Map();
+        this.sizes = new view.ResizeObserver(() => this.queue());
+      }
+      connect() {
+        const root = this.root;
+        this.own(() => {
+          if (this.queued) this.view.cancelAnimationFrame(this.queued);
+          for (const moves of this.moving.values()) for (const m of moves) m.cancel();
+          this.moving.clear();
+        });
+        this.observe(this.sizes);
+        this.observe(new this.view.MutationObserver((records) => this.onRecords(records))).observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), {
+          childList: true,
+          subtree: true,
+          characterData: true,
+          attributes: true,
+          attributeFilter: WATCHED2
+        });
+        this.listen(
+          /** @type {EventTarget} */
+          /** @type {unknown} */
+          root,
+          "toggle",
+          () => this.queue(),
+          true
+        );
+        const fonts = (
+          /** @type {FontFaceSet | undefined} */
+          this.doc.fonts
+        );
+        if (fonts) this.listen(fonts, "loadingdone", () => this.queue());
+        this.run();
+      }
+      queue() {
+        if (!this.queued) this.queued = this.view.requestAnimationFrame(() => this.run());
+      }
+      /** @param {Element[]} tiles */
+      remember(tiles) {
+        for (const tile of tiles) this.drawn.set(tile, tile.getBoundingClientRect().height);
+      }
+      /** Observe the grids and tiles there are now, and even every set. @param {boolean} [move] */
+      run(move = false) {
+        if (this.queued) this.view.cancelAnimationFrame(this.queued);
+        this.queued = 0;
+        const sets = tileSets(this.root);
+        const now = /* @__PURE__ */ new Set();
+        for (const grids of sets.values())
+          for (const grid2 of grids) {
+            now.add(grid2);
+            for (const tile of grid2.children) now.add(tile);
+          }
+        for (const el16 of this.observed) if (!now.has(el16)) this.sizes.unobserve(el16);
+        for (const el16 of now) if (!this.observed.has(el16)) this.sizes.observe(el16);
+        this.observed = now;
+        for (const [key, grids] of sets) this.even(key, grids, move);
+      }
+      /**
+       * Even one set; with `move`, ease its tiles from where they were drawn to where they now stand.
+       * @param {unknown} key @param {HTMLElement[]} grids @param {boolean} move
+       */
+      even(key, grids, move) {
+        const busy = this.moving.get(key);
+        if (busy && !move) return;
+        const from = /* @__PURE__ */ new Map();
+        if (busy) {
+          for (const tile of shown2(grids)) from.set(tile, tile.getBoundingClientRect().height);
+          this.moving.delete(key);
+          for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-easing");
+          for (const animation of busy) animation.cancel();
+        }
+        const floor = evenTileSet(grids);
+        const tiles = shown2(grids);
+        if (!move) return this.remember(tiles);
+        for (const tile of tiles) if (!from.has(tile) && this.drawn.has(tile)) from.set(
+          tile,
+          /** @type {number} */
+          this.drawn.get(tile)
+        );
+        this.ease(key, grids, tiles, from, floor);
+      }
+      /**
+       * Rows follow the tiles while they move: each tile is held at its eased height (`[data-kp-tiles-easing]`,
+       * css/components.css), all of them on one curve, so the rows of every grid stay one height.
+       * @param {unknown} key @param {HTMLElement[]} grids @param {Element[]} tiles @param {Map<Element, number>} from @param {number} floor
+       */
+      ease(key, grids, tiles, from, floor) {
+        const to = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect().height]));
+        const change2 = Math.max(0, ...tiles.map((tile) => Math.abs((to.get(tile) ?? 0) - (from.get(tile) ?? to.get(tile) ?? 0))));
+        const first = grids[0];
+        const { duration: duration2, easing } = change2 >= EASE_MIN_PX && first ? sizeMotion(first, floor - (from.get(tiles[0]) ?? floor)) : { duration: 0, easing: "" };
+        if (duration2 <= 0) return this.remember(tiles);
+        for (const grid2 of grids) grid2.setAttribute("data-kp-tiles-easing", "");
+        const moves = tiles.map((tile) => {
+          const end = (
+            /** @type {number} */
+            to.get(tile)
+          );
+          const start = from.get(tile) ?? end;
+          return tile.animate([{ height: `${start}px` }, { height: `${end}px` }], { duration: duration2, easing, fill: "forwards" });
+        });
+        this.moving.set(key, moves);
+        void Promise.all(moves.map((m) => m.finished)).then(
+          () => {
+            if (this.moving.get(key) !== moves) return;
+            this.moving.delete(key);
+            for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-easing");
+            for (const m of moves) m.cancel();
+            this.remember(tiles);
+            this.queue();
+          },
+          () => void 0
+        );
+      }
+      /**
+       * Even again, in the same task as the change, before a frame of it is drawn: anything inside a set; above a set, only a
+       * set or grid that comes or goes, or a fold or `hidden` that shows or hides one. A probe another module draws for an
+       * instant beside the board is not a change to the board (js/motion.js reads the theme's motion that way, and a move that
+       * answered its own probe never ended).
+       * @param {MutationRecord[]} records
+       */
+      onRecords(records) {
+        const view = this.view;
+        const grid2 = `.kp-tiles, ${TILES_SET}`;
+        const leaves = (n) => n instanceof view.Element && (n.matches(grid2) || n.querySelector(grid2) !== null);
+        const counts = (r) => {
+          const el16 = r.target instanceof view.Element ? r.target : r.target.parentElement;
+          if (!el16) return false;
+          if (el16.closest(TILES_SET)) return true;
+          if (r.type === "childList") return [...r.addedNodes, ...r.removedNodes].some(leaves);
+          return el16.querySelector(TILES_SET) !== null;
+        };
+        if (records.some(counts)) this.run(true);
+      }
+    };
+  }
+});
+
+// js/tiles.js
+var tiles_exports = {};
+__export(tiles_exports, {
+  TILES_EXIT_EVENT: () => TILES_EXIT_EVENT,
+  TILES_KEYS: () => TILES_KEYS,
+  TILES_MOVE_EVENT: () => TILES_MOVE_EVENT,
+  TILES_SET: () => TILES_SET,
+  TILE_ROW_MIN: () => TILE_ROW_MIN,
+  attachTileKeys: () => attachTileKeys,
+  attachTileSets: () => attachTileSets,
+  evenTileSet: () => evenTileSet,
+  letterTile: () => letterTile,
+  nextTile: () => nextTile,
+  tileSets: () => tileSets,
+  tileStop: () => tileStop
+});
+function attachTileSets(root = document) {
+  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
+  const view = doc.defaultView;
+  if (!view || typeof view.ResizeObserver !== "function") {
+    for (const grids of tileSets(root).values()) evenTileSet(grids);
+    return () => {
+    };
+  }
+  const watch2 = new TileSetWatch(root, view);
+  watch2.connect();
+  return () => watch2.destroy();
+}
+function attachTileKeys(root = document) {
+  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
+  const view = doc.defaultView;
+  if (!view) return () => {
+  };
+  const boards2 = [...root instanceof HTMLElement && root.matches(TILES_KEYS) ? [root] : [], .../** @type {NodeListOf<HTMLElement>} */
+  root.querySelectorAll(TILES_KEYS)];
+  const made6 = [];
+  for (const board of boards2) {
+    if (controllerOf(board, TileBoard)) continue;
+    const fresh = attachOne(board, TileBoard, { view });
+    if (fresh) made6.push(fresh);
+  }
+  return () => made6.splice(0).forEach((board) => board.destroy());
+}
+var init_tiles = __esm({
+  "js/tiles.js"() {
+    "use strict";
+    init_controller();
+    init_geometry2();
+    init_keys5();
+    init_sets2();
+    init_geometry2();
+    init_sets2();
   }
 });
 
@@ -29120,10 +29181,10 @@ function trendChart(host, group, locale, ctx) {
     const width = plot.clientWidth;
     const x = i / (pts.length - 1) * width;
     const moment = time(ms, "full", {});
-    const shown4 = fmt(value, "spark");
+    const shown5 = fmt(value, "spark");
     cross.style.insetInlineStart = `${x}px`;
     cross.hidden = false;
-    const words2 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown4)];
+    const words2 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown5)];
     chip.replaceChildren(...words2());
     chip.hidden = false;
     chip.removeAttribute("data-kp-stacked");
@@ -29230,14 +29291,14 @@ function trendChart(host, group, locale, ctx) {
   const onKey6 = (event) => {
     const n = pts.length;
     if (n < 2) return;
-    const shown4 = !cross.hidden;
+    const shown5 = !cross.hidden;
     const from = index ?? n - 1;
     let to = null;
-    if (event.key === "ArrowLeft") to = shown4 ? from - (event.shiftKey ? 10 : 1) : n - 1;
-    else if (event.key === "ArrowRight") to = shown4 ? from + (event.shiftKey ? 10 : 1) : n - 1;
+    if (event.key === "ArrowLeft") to = shown5 ? from - (event.shiftKey ? 10 : 1) : n - 1;
+    else if (event.key === "ArrowRight") to = shown5 ? from + (event.shiftKey ? 10 : 1) : n - 1;
     else if (event.key === "Home") to = 0;
     else if (event.key === "End") to = n - 1;
-    else if (event.key === "Escape" && shown4) {
+    else if (event.key === "Escape" && shown5) {
       event.preventDefault();
       event.stopPropagation();
       hide2();
@@ -30817,11 +30878,11 @@ function counterOf(el16) {
   return (badge?.textContent ?? "").replace(/\s+/g, " ").trim();
 }
 function planSeparators(plan, seps) {
-  const shown4 = plan.map((folds2, i) => !folds2 && !seps[i]);
+  const shown5 = plan.map((folds2, i) => !folds2 && !seps[i]);
   if (!plan.some((folds2, i) => folds2 && !seps[i])) return plan.map((folds2, i) => seps[i] ? false : folds2);
   return plan.map((folds2, i) => {
     if (!seps[i]) return folds2;
-    return !(shown4.slice(0, i).includes(true) && shown4.slice(i + 1).includes(true));
+    return !(shown5.slice(0, i).includes(true) && shown5.slice(i + 1).includes(true));
   });
 }
 function foldNav(nav, { strings } = {}) {
@@ -30946,8 +31007,8 @@ function foldNav(nav, { strings } = {}) {
     return groups;
   };
   const publishUsed = () => {
-    const shown4 = itemsOf2().filter((li) => !li.hasAttribute("data-kp-nav-folded"));
-    const last = more.hasAttribute("data-kp-nav-idle") ? shown4[shown4.length - 1] : more;
+    const shown5 = itemsOf2().filter((li) => !li.hasAttribute("data-kp-nav-folded"));
+    const last = more.hasAttribute("data-kp-nav-idle") ? shown5[shown5.length - 1] : more;
     const box = list.getBoundingClientRect();
     const end = last ? last.getBoundingClientRect() : box;
     const rtl = view.getComputedStyle(list).direction === "rtl";
@@ -31199,8 +31260,8 @@ function drawTabCount(tab) {
     /** @type {HTMLElement | null} */
     tab.querySelector(":scope > .kp-tab__count")
   );
-  const shown4 = state6 === "loading" || state6 === "error" || state6 === "ready" && (zero || (count2 ?? 0) > 0);
-  if (!shown4) {
+  const shown5 = state6 === "loading" || state6 === "error" || state6 === "ready" && (zero || (count2 ?? 0) > 0);
+  if (!shown5) {
     part7?.remove();
     if (DRAWN.has(tab)) {
       DRAWN.delete(tab);
@@ -31318,8 +31379,8 @@ function wire2(bar) {
   if (!bar.classList.contains("kp-tabbar--static")) {
     const root = doc.documentElement;
     const publish = () => {
-      const shown4 = view.getComputedStyle(bar).display !== "none";
-      root.style.setProperty(TABBAR_HEIGHT_PROPERTY, shown4 ? `${bar.offsetHeight}px` : "0px");
+      const shown5 = view.getComputedStyle(bar).display !== "none";
+      root.style.setProperty(TABBAR_HEIGHT_PROPERTY, shown5 ? `${bar.offsetHeight}px` : "0px");
     };
     const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(publish);
     resize?.observe(bar);
@@ -32174,16 +32235,16 @@ function syncCalmActions(item_, state6, list) {
   );
   const showResume = state6 === "paused" && list?.getAttribute("data-kp-today-resume") !== "off";
   const showPause = state6 === "open" && list?.hasAttribute("data-kp-today-pause") === true && list.getAttribute("data-kp-today-pause") !== "off";
-  const place3 = (button4, shown4) => {
+  const place3 = (button4, shown5) => {
     const holder = (
       /** @type {HTMLElement} */
       button4.closest(".kp-tooltip-anchor") ?? button4
     );
-    if (!shown4 && holder.contains(document.activeElement)) {
+    if (!shown5 && holder.contains(document.activeElement)) {
       item.tabIndex = -1;
       item.focus({ preventScroll: true });
     }
-    holder.hidden = !shown4;
+    holder.hidden = !shown5;
   };
   resume.textContent = s2.statusResume;
   resume.setAttribute("aria-label", s2.statusResumeLabel(label));
@@ -32667,8 +32728,8 @@ function setFacetCounts(group, counts, { all } = {}) {
   for (const row of rowsOf(group)) {
     const value = row.getAttribute("data-value") ?? "";
     if (Object.hasOwn(counts, value)) row.querySelector(".kp-facet__count")?.replaceChildren(String(countText(counts[value])));
-    const shown4 = Number(row.querySelector(".kp-facet__count")?.textContent?.replace(/\D/g, "") || 0);
-    sum += shown4;
+    const shown5 = Number(row.querySelector(".kp-facet__count")?.textContent?.replace(/\D/g, "") || 0);
+    sum += shown5;
   }
   const total = group.querySelector(".kp-facet[data-kp-facet-all] .kp-facet__count");
   if (total) total.textContent = String(countText(all === void 0 ? sum : all));
@@ -32941,10 +33002,10 @@ function setIdmarkGroup(el16, people, { max = 4, size: size2 = "md", round: roun
   el16.classList.toggle("kp-idmark-group--sm", size2 === "sm" || size2 === "xs");
   el16.setAttribute("role", "group");
   el16.setAttribute("aria-label", strings.idmarkGroup(people.length));
-  const shown4 = people.slice(0, Math.max(0, max));
-  const rest = people.slice(shown4.length);
+  const shown5 = people.slice(0, Math.max(0, max));
+  const rest = people.slice(shown5.length);
   const colours = idmarkColours(people.map((person) => person.name));
-  const marks = shown4.map((person) => {
+  const marks = shown5.map((person) => {
     const mark = doc.createElement("span");
     mark.className = ["kp-idmark", size2 === "md" ? "" : `kp-idmark--${size2}`, round2 ? "kp-idmark--round" : ""].filter(Boolean).join(" ");
     mark.setAttribute("data-kp-idmark", person.name);
@@ -35311,9 +35372,9 @@ function drawText(ctl, text) {
   el16.setAttribute("data-kp-state", "ready");
   const json = isJson(spec.language);
   const pretty = json ? prettyJson(text) : null;
-  const shown4 = json && ctl.layout === "pretty" && pretty !== null ? pretty : text;
-  ctl.shown = shown4;
-  const lines = shown4.split("\n");
+  const shown5 = json && ctl.layout === "pretty" && pretty !== null ? pretty : text;
+  ctl.shown = shown5;
+  const lines = shown5.split("\n");
   ctl.lines = lines.length;
   const body = make6(el16.ownerDocument, "kp-code__body", "pre");
   body.id ||= `kp-code-${nextBodyNumber()}`;
@@ -35894,7 +35955,7 @@ function attachKeys(root = document) {
   return () => void 0;
 }
 var MOD_CAP, KEYS, capText;
-var init_keys5 = __esm({
+var init_keys6 = __esm({
   "js/keys.js"() {
     "use strict";
     init_strings();
@@ -35910,7 +35971,7 @@ function markCursor(row, on) {
   if (on) row.setAttribute("aria-current", "true");
   else row.removeAttribute("aria-current");
 }
-var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf, boxOf, keyOfRow, labelOfRow, shown2, tickable;
+var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf, boxOf, keyOfRow, labelOfRow, shown3, tickable;
 var init_rows = __esm({
   "js/row-select/rows.js"() {
     "use strict";
@@ -35943,7 +36004,7 @@ var init_rows = __esm({
       const named = row.dataset.kpRowLabel ?? box?.getAttribute("aria-label")?.replace(/^select\s+/i, "");
       return (named ?? row.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, LABEL_MAX);
     };
-    shown2 = (row) => !row.hidden && !row.closest("[hidden]");
+    shown3 = (row) => !row.hidden && !row.closest("[hidden]");
     tickable = (box) => !box.disabled && box.getAttribute("aria-disabled") !== "true";
   }
 });
@@ -36006,7 +36067,7 @@ var init_core = __esm({
       }
       /** The rows the walk may land on, in the order they are drawn. */
       rows() {
-        return this.allRows().filter(shown2);
+        return this.allRows().filter(shown3);
       }
       /** @param {string | null} key */
       rowByKey(key) {
@@ -36029,7 +36090,7 @@ var init_core = __esm({
       settle() {
         const every = this.allRows();
         const current2 = this.rowByKey(this.cursorKey);
-        const stop = current2 ?? every.find(shown2) ?? every[0];
+        const stop = current2 ?? every.find(shown3) ?? every[0];
         for (const row of every) {
           if (!row.hasAttribute("tabindex") || row.hasAttribute("data-kp-roving")) {
             row.setAttribute("data-kp-roving", "");
@@ -36106,7 +36167,7 @@ var TEXT_ENTRY, RowSelector;
 var init_controller5 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
-    init_keys5();
+    init_keys6();
     init_strings();
     init_core();
     init_rows();
@@ -36427,7 +36488,7 @@ function sourcesOf(bar) {
 function readSources(memory) {
   const items = /* @__PURE__ */ new Map();
   const known4 = /* @__PURE__ */ new Set();
-  let shown4 = 0;
+  let shown5 = 0;
   let shownTicked = 0;
   let index = 0;
   for (const source of memory.sources) {
@@ -36442,13 +36503,13 @@ function readSources(memory) {
       known4.add(key);
       const on = shownRow(row);
       if (on && !box.disabled) {
-        shown4 += 1;
+        shown5 += 1;
         if (box.checked) shownTicked += 1;
       }
       if (box.checked && !items.has(key)) items.set(key, { key, label: labelOf5(row) });
     }
   }
-  return { items: [...items.values()], known: known4, shown: shown4, shownTicked };
+  return { items: [...items.values()], known: known4, shown: shown5, shownTicked };
 }
 function parts(bar, memory) {
   const doc = bar.ownerDocument;
@@ -36566,8 +36627,8 @@ function draw4(bar, memory) {
     }
     p.names.replaceChildren(...nodes);
   }
-  const { shown: shown4, shownTicked } = memory.sources.length ? readSources(memory) : { shown: 0, shownTicked: 0 };
-  const offerable = memory.matchingTotal > items.length && shown4 > 0 && shownTicked === shown4 && !memory.matching;
+  const { shown: shown5, shownTicked } = memory.sources.length ? readSources(memory) : { shown: 0, shownTicked: 0 };
+  const offerable = memory.matchingTotal > items.length && shown5 > 0 && shownTicked === shown5 && !memory.matching;
   p.offer.hidden = !(offerable || memory.matching);
   if (!p.offer.hidden) {
     const button4 = (
@@ -36575,7 +36636,7 @@ function draw4(bar, memory) {
       make7(bar.ownerDocument, "kp-button kp-button--ghost kp-button--sm kp-selection__take", "button")
     );
     button4.type = "button";
-    button4.textContent = memory.matching ? strings.selectionOnlyShown(shown4) : strings.selectionMatching(memory.matchingTotal);
+    button4.textContent = memory.matching ? strings.selectionOnlyShown(shown5) : strings.selectionMatching(memory.matchingTotal);
     button4.setAttribute("data-kp-selection-take", memory.matching ? "off" : "on");
     p.offer.replaceChildren(button4);
   }
@@ -38117,12 +38178,12 @@ function attachOne6(el16, given2) {
         /** @type {HTMLElement | null} */
         secret.previousElementSibling
       );
-      const shown4 = secret.getAttribute("aria-pressed") !== "true";
-      secret.setAttribute("aria-pressed", String(shown4));
-      secret.textContent = shown4 ? strings.reqSecretHide : strings.reqSecretShow;
+      const shown5 = secret.getAttribute("aria-pressed") !== "true";
+      secret.setAttribute("aria-pressed", String(shown5));
+      secret.textContent = shown5 ? strings.reqSecretHide : strings.reqSecretShow;
       if (text) {
-        text.textContent = shown4 ? text.dataset.value ?? "" : MASK;
-        if (shown4) text.removeAttribute("aria-label");
+        text.textContent = shown5 ? text.dataset.value ?? "" : MASK;
+        if (shown5) text.removeAttribute("aria-label");
         else text.setAttribute("aria-label", strings.reqSecretMasked);
       }
       return;
@@ -39423,12 +39484,12 @@ function attachCountdowns(root = document, { now, wall } = {}) {
     let reset = null;
     let controls = null;
     let hours = seconds >= 3600;
-    let shown4 = "";
+    let shown5 = "";
     let frame3 = 0;
     const paint15 = (text) => {
-      if (text === shown4) return;
+      if (text === shown5) return;
       const kindOf4 = (ch) => ch === ":" ? "colon" : /\d/.test(ch) ? "digit" : "unit";
-      if (text.length !== shown4.length || [...text].some((ch, i) => kindOf4(ch) !== kindOf4(shown4[i]))) {
+      if (text.length !== shown5.length || [...text].some((ch, i) => kindOf4(ch) !== kindOf4(shown5[i]))) {
         digits.replaceChildren(
           ...[...text].map((ch) => {
             const cell = doc.createElement("span");
@@ -39439,10 +39500,10 @@ function attachCountdowns(root = document, { now, wall } = {}) {
         );
       } else {
         [...text].forEach((ch, i) => {
-          if (ch !== shown4[i]) digits.children[i].textContent = ch;
+          if (ch !== shown5[i]) digits.children[i].textContent = ch;
         });
       }
-      shown4 = text;
+      shown5 = text;
     };
     const speak = () => {
       spoken.textContent = s2.timerLeft(s2.timerDuration(Math.ceil(clock4.remaining() / 1e3)));
@@ -40884,9 +40945,9 @@ function paint5(timer2) {
     /** @type {HTMLElement} */
     card.querySelector(".kp-timer__time")
   );
-  const shown4 = timer2.state === "done" ? strings.timerDone(timer2.name) : clockOf(timer2, left);
-  if (time.textContent !== shown4) time.textContent = shown4;
-  time.title = timer2.state === "done" ? shown4 : "";
+  const shown5 = timer2.state === "done" ? strings.timerDone(timer2.name) : clockOf(timer2, left);
+  if (time.textContent !== shown5) time.textContent = shown5;
+  time.title = timer2.state === "done" ? shown5 : "";
   const bar = (
     /** @type {HTMLElement} */
     card.querySelector(".kp-timer__bar")
@@ -41047,10 +41108,10 @@ function sync2(list) {
   const strings = getStrings();
   const error = list.getAttribute("data-kp-timers-error");
   const loading = list.hasAttribute("aria-busy");
-  const shown4 = list.getAttribute("data-kp-state");
-  if (shown4 === null || shown4 === "ready" || shown4 === "empty") {
+  const shown5 = list.getAttribute("data-kp-state");
+  if (shown5 === null || shown5 === "ready" || shown5 === "empty") {
     if (timers.size === 0) list.setAttribute("data-kp-state", "empty");
-    else if (shown4 === "empty") list.setAttribute("data-kp-state", "ready");
+    else if (shown5 === "empty") list.setAttribute("data-kp-state", "ready");
   }
   const title = error ?? list.getAttribute("data-kp-timers-empty") ?? strings.timerEmpty;
   const plateKey = loading ? "loading" : `${error !== null ? "error" : "empty"}|${title}`;
@@ -42223,10 +42284,10 @@ function renderBar(list, items, strings) {
 function renderEmpty(list, body, total, strings) {
   const empty = part4(list, "empty");
   const error = list.getAttribute("data-kp-checklist-error");
-  const shown4 = list.getAttribute("data-kp-state");
-  if (shown4 === null || shown4 === "ready" || shown4 === "empty") {
+  const shown5 = list.getAttribute("data-kp-state");
+  if (shown5 === null || shown5 === "ready" || shown5 === "empty") {
     if (total === 0) list.setAttribute("data-kp-state", "empty");
-    else if (shown4 === "empty") list.setAttribute("data-kp-state", "ready");
+    else if (shown5 === "empty") list.setAttribute("data-kp-state", "ready");
   }
   const title = error ?? list.getAttribute("data-kp-checklist-empty") ?? strings.checklistEmpty;
   const plateKey = `${error !== null ? "error" : "empty"}|${title}`;
@@ -42647,8 +42708,8 @@ function paint6(root, value) {
   input.setAttribute("aria-valuenow", String(value));
   const unit2 = unitFor(root, value);
   input.setAttribute("aria-valuetext", unit2 ? getStrings().quantityValue(text, unit2) : text);
-  const shown4 = root.querySelector(".kp-quantity__unit");
-  if (shown4) shown4.textContent = unit2;
+  const shown5 = root.querySelector(".kp-quantity__unit");
+  if (shown5) shown5.textContent = unit2;
   const widest2 = Math.max(
     ...[rules.min, rules.max, value].filter(Number.isFinite).map((v) => formatQuantity(v, rules).length),
     rules.decimals > 0 ? rules.decimals + 2 : 1
@@ -43346,7 +43407,7 @@ function targetDay(key, shift, iso, firstDay) {
       return null;
   }
 }
-var init_keys6 = __esm({
+var init_keys7 = __esm({
   "js/calendar/keys.js"() {
     "use strict";
     init_constants15();
@@ -43473,7 +43534,7 @@ var init_paint3 = __esm({
 });
 
 // js/calendar/controller.js
-var WATCHED, CalendarController;
+var WATCHED3, CalendarController;
 var init_controller7 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
@@ -43488,9 +43549,9 @@ var init_controller7 = __esm({
     init_day();
     init_dates2();
     init_dom4();
-    init_keys6();
+    init_keys7();
     init_paint3();
-    WATCHED = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
+    WATCHED3 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
     CalendarController = class extends Controller {
       /**
        * @param {HTMLElement} host the calendar
@@ -43583,7 +43644,7 @@ var init_controller7 = __esm({
             paintCalendar(this);
           })
         );
-        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED });
+        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED3 });
       }
       /** Move by whole months and say so. @param {number} months */
       step(months) {
@@ -43981,7 +44042,7 @@ var init_legend2 = __esm({
     "use strict";
     init_strings();
     init_calm_tones();
-    init_keys5();
+    init_keys6();
     init_dom5();
     legendCount = 0;
   }
@@ -48674,8 +48735,8 @@ function labelWidth(c, bar) {
     ctx.font = style.font;
     const size2 = Number.parseFloat(style.fontSize) || 11;
     const spacing = style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing) || 0;
-    const shown4 = style.textTransform === "uppercase" ? text.toUpperCase() : style.textTransform === "lowercase" ? text.toLowerCase() : text;
-    width = ctx.measureText(shown4).width + spacing * [...shown4].length + 2 * 0.375 * 16 + (bar.dataset.kpState === "failed" ? size2 * 1.25 : 0);
+    const shown5 = style.textTransform === "uppercase" ? text.toUpperCase() : style.textTransform === "lowercase" ? text.toLowerCase() : text;
+    width = ctx.measureText(shown5).width + spacing * [...shown5].length + 2 * 0.375 * 16 + (bar.dataset.kpState === "failed" ? size2 * 1.25 : 0);
   }
   c.labels.set(bar, { key, width });
   return width;
@@ -50237,8 +50298,8 @@ function laneNode(c, lane, cards2, total) {
   } else {
     const limit = lane.closed ? 0 : limitOf(c);
     const open4 = c.open.has(lane.key);
-    const shown4 = limit > 0 && !open4 ? cards2.slice(0, limit) : cards2;
-    for (const card of shown4) list.append(cardNode(c, card, lane));
+    const shown5 = limit > 0 && !open4 ? cards2.slice(0, limit) : cards2;
+    for (const card of shown5) list.append(cardNode(c, card, lane));
     if (limit > 0 && cards2.length > limit) {
       const more = make15(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-pipeline__more");
       more.type = "button";
@@ -50273,27 +50334,27 @@ function paint10(c) {
   c.closed.replaceChildren(...closed.map((l) => laneNode(c, l, byLane.get(l.key) ?? [], total)));
   c.closed.hidden = closed.length === 0;
   const empty = c.state === "empty" || c.state === "ready" && c.cards.length === 0;
-  const shown4 = c.state === "error" ? "error" : empty && c.leaving === null ? "empty" : null;
+  const shown5 = c.state === "error" ? "error" : empty && c.leaving === null ? "empty" : null;
   c.el.dataset.kpState = c.state === "ready" && empty ? "empty" : c.state;
   c.board.toggleAttribute("aria-busy", c.state === "loading");
-  const key = shown4 === null ? "" : `${shown4}|${c.words}`;
+  const key = shown5 === null ? "" : `${shown5}|${c.words}`;
   if (c.plateKey !== key) {
     c.plateKey = key;
     c.plate.replaceChildren();
-    if (shown4 !== null)
+    if (shown5 !== null)
       c.plate.append(
         hostStatePlate(c.el, {
-          kind: shown4,
-          title: shown4 === "error" ? s2.pipelineFailed("") : c.words || s2.pipelineEmpty,
-          ...shown4 === "error" && c.words ? { text: c.words } : {},
+          kind: shown5,
+          title: shown5 === "error" ? s2.pipelineFailed("") : c.words || s2.pipelineEmpty,
+          ...shown5 === "error" && c.words ? { text: c.words } : {},
           retryEvent: PIPELINE_RETRY_EVENT,
           retryLabel: s2.pipelineRetry
         })
       );
   }
-  c.plate.hidden = shown4 === null;
-  c.board.parentElement?.toggleAttribute("inert", shown4 !== null);
-  c.closed.toggleAttribute("inert", shown4 !== null);
+  c.plate.hidden = shown5 === null;
+  c.board.parentElement?.toggleAttribute("inert", shown5 !== null);
+  c.closed.toggleAttribute("inert", shown5 !== null);
   drawBusy3(c);
   syncTabStops3(c);
 }
@@ -50606,12 +50667,12 @@ function fit(el16) {
   if (scroll && !UNPINNED.has(el16)) track.scrollLeft = track.scrollWidth;
   const from = el16.querySelector(".kp-uptime__from");
   const to = el16.querySelector(".kp-uptime__to");
-  const shown4 = el16.querySelector(".kp-uptime__shown");
+  const shown5 = el16.querySelector(".kp-uptime__shown");
   const state6 = el16.dataset.kpUptimeState;
   const real = state6 === "ready" && periods.length > 0;
   if (from) from.textContent = real ? firstShown === 0 && spec.from ? spec.from : periods[firstShown]?.label ?? "" : spec.from ?? "";
   if (to) to.textContent = spec.to ?? (real ? periods.at(-1)?.label ?? "" : "");
-  if (shown4) shown4.textContent = real && !scroll && firstShown > 0 ? s2.uptimeShown(n, cells.length) : "";
+  if (shown5) shown5.textContent = real && !scroll && firstShown > 0 ? s2.uptimeShown(n, cells.length) : "";
   if (scroll) edges(el16, track);
 }
 function edges(el16, track) {
@@ -50869,9 +50930,9 @@ function draw6(el16, spec) {
   track.append(...cells);
   const axis = make16(el16, "div", "kp-uptime__axis");
   const from = make16(el16, "span", "kp-uptime__from");
-  const shown4 = make16(el16, "span", "kp-uptime__shown");
+  const shown5 = make16(el16, "span", "kp-uptime__shown");
   const to = make16(el16, "span", "kp-uptime__to");
-  axis.append(from, shown4, to);
+  axis.append(from, shown5, to);
   const keep = CARDS2.get(el16)?.layer;
   for (const child of [...el16.childNodes]) if (child !== keep) child.remove();
   if (keep && keep.parentElement === el16) keep.before(head, track, axis);
@@ -50965,7 +51026,7 @@ function attachUptimes(root = document) {
     let panel = null;
     let anchor = null;
     let lower = null;
-    let shown4 = false;
+    let shown5 = false;
     const tips = (on) => {
       for (const c of el16.querySelectorAll(".kp-uptime__cell")) {
         const from = on ? "data-kp-uptime-tip" : HOVERCARD_ATTRIBUTE;
@@ -51044,11 +51105,11 @@ function attachUptimes(root = document) {
       anchor = cell;
       cell.setAttribute("aria-expanded", "true");
       cell.setAttribute("aria-controls", panel.id);
-      if (shown4) {
+      if (shown5) {
         place3(panel);
         return;
       }
-      shown4 = true;
+      shown5 = true;
       attachHoverCards(doc2).hide();
       tips(false);
       stopClose(panel);
@@ -51060,13 +51121,13 @@ function attachUptimes(root = document) {
       }
     };
     const closeInfo = async (refocus, now = false) => {
-      if (!shown4 || !panel) return;
-      shown4 = false;
+      if (!shown5 || !panel) return;
+      shown5 = false;
       const cell = anchor;
       cell?.setAttribute("aria-expanded", "false");
       if (!now) {
         const done = await playClose(panel);
-        if (!done || shown4) return;
+        if (!done || shown5) return;
       }
       panel.hidden = true;
       lower?.();
@@ -51082,7 +51143,7 @@ function attachUptimes(root = document) {
       panel = null;
     });
     const onKey6 = (event) => {
-      if (event.key === "Escape" && shown4) {
+      if (event.key === "Escape" && shown5) {
         event.preventDefault();
         event.stopPropagation();
         void closeInfo(true);
@@ -51114,7 +51175,7 @@ function attachUptimes(root = document) {
       for (const c of cells) c.tabIndex = -1;
       cells[next2].tabIndex = 0;
       cells[next2].focus();
-      if (shown4 && cells[next2].getAttribute("aria-haspopup")) openInfo(cells[next2]);
+      if (shown5 && cells[next2].getAttribute("aria-haspopup")) openInfo(cells[next2]);
     };
     const onClick = (event) => {
       const cell = (
@@ -51131,19 +51192,19 @@ function attachUptimes(root = document) {
         new CustomEvent(UPTIME_PICK_EVENT, { bubbles: true, detail: { key: cell.dataset.kpKey, index, period: periods[index] } })
       );
       if (cell.getAttribute("aria-haspopup") && infoMode(el16)) {
-        if (shown4 && anchor === cell) void closeInfo(false);
+        if (shown5 && anchor === cell) void closeInfo(false);
         else openInfo(cell);
       }
     };
     const onOutside = (event) => {
-      if (!shown4) return;
+      if (!shown5) return;
       const target = event.target instanceof Element ? event.target : null;
       if (target && (panel?.contains(target) || el16.contains(target) && target.closest(CELL))) return;
       void closeInfo(false);
     };
     const onFocusOut = (event) => {
       const next2 = event.relatedTarget;
-      if (shown4 && next2 instanceof Node && !el16.contains(next2)) void closeInfo(false);
+      if (shown5 && next2 instanceof Node && !el16.contains(next2)) void closeInfo(false);
     };
     el16.addEventListener("keydown", onKey6);
     el16.addEventListener("click", onClick);
@@ -52574,8 +52635,8 @@ function paintAction(host, p) {
     actions.className = "kp-alert__actions";
     host.append(actions);
   }
-  const shown4 = actions.childNodes.length === 1 ? actions.firstChild : null;
-  if (shown4 === p.action || shown4 && shown4.isEqualNode(p.action)) return;
+  const shown5 = actions.childNodes.length === 1 ? actions.firstChild : null;
+  if (shown5 === p.action || shown5 && shown5.isEqualNode(p.action)) return;
   actions.replaceChildren(p.action);
 }
 function paintAlert2(existing, p, doc, remedyLabel, container) {
@@ -52673,7 +52734,7 @@ function paint11(container, items, options) {
   const asOne = mode2 === "list" || mode2 === "fold" && list.length >= foldFrom;
   if (!asOne) {
     removeSummary(host);
-    const shown4 = /* @__PURE__ */ new Map();
+    const shown5 = /* @__PURE__ */ new Map();
     for (
       const el16 of
       /** @type {HTMLElement[]} */
@@ -52681,10 +52742,10 @@ function paint11(container, items, options) {
     ) {
       const key = el16.getAttribute("data-kp-key");
       const leaving = el16.hasAttribute("data-kp-leaving") && !el16.hasAttribute("data-kp-arriving");
-      if (el16.classList.contains("kp-problem") && key !== null && !leaving) shown4.set(key, el16);
+      if (el16.classList.contains("kp-problem") && key !== null && !leaving) shown5.set(key, el16);
     }
-    const wanted = list.map((p) => paintAlert2(shown4.get(p.key), p, doc, remedyLabel, host));
-    for (const [key, el16] of shown4) if (!list.some((p) => p.key === key)) void leave(el16).then(() => el16.remove());
+    const wanted = list.map((p) => paintAlert2(shown5.get(p.key), p, doc, remedyLabel, host));
+    for (const [key, el16] of shown5) if (!list.some((p) => p.key === key)) void leave(el16).then(() => el16.remove());
     let before = (
       /** @type {Element | null} */
       null
@@ -53214,7 +53275,7 @@ function wire8(rootEl, historyOption) {
   const widthNow = () => rootEl.getBoundingClientRect().width;
   let narrow = widthNow() > 0 && widthNow() < px5(foldAt);
   let asideNarrow = widthNow() > 0 && widthNow() < px5(asideFoldAt);
-  let shown4 = "list";
+  let shown5 = "list";
   let opener = null;
   let listScroll = 0;
   let pushed = false;
@@ -53223,7 +53284,7 @@ function wire8(rootEl, historyOption) {
   const sync3 = () => {
     rootEl.toggleAttribute("data-kp-narrow-on", narrow);
     rootEl.toggleAttribute("data-kp-aside-folded", Boolean(aside) && asideNarrow && !narrow);
-    if (narrow && mode2() !== "stack") rootEl.setAttribute("data-kp-pane-shown", shown4);
+    if (narrow && mode2() !== "stack") rootEl.setAttribute("data-kp-pane-shown", shown5);
     else rootEl.removeAttribute("data-kp-pane-shown");
     reseatBusy();
   };
@@ -53383,10 +53444,10 @@ function wire8(rootEl, historyOption) {
     if (!item) return;
     const wasSelected = selected === key;
     if (!wasSelected) select2(key);
-    if (narrow && mode2() !== "stack" && shown4 !== "detail") {
+    if (narrow && mode2() !== "stack" && shown5 !== "detail") {
       opener = item;
       listScroll = list.scrollTop;
-      shown4 = "detail";
+      shown5 = "detail";
       sync3();
       arriveShown(detail);
       if (useHistory && !pushed) {
@@ -53405,8 +53466,8 @@ function wire8(rootEl, historyOption) {
     rootEl.dispatchEvent(new CustomEvent(PANE_OPEN_EVENT, { bubbles: true, detail: { key, item } }));
   };
   const close = ({ fromHistory = false } = {}) => {
-    if (!(narrow && mode2() !== "stack" && shown4 === "detail")) return;
-    shown4 = "list";
+    if (!(narrow && mode2() !== "stack" && shown5 === "detail")) return;
+    shown5 = "list";
     sync3();
     arriveShown(list);
     list.scrollTop = listScroll;
@@ -53465,14 +53526,14 @@ function wire8(rootEl, historyOption) {
         event.preventDefault();
         aside.hidden = true;
         rootEl.dispatchEvent(new CustomEvent(PANE_CLOSE_EVENT, { bubbles: true, detail: { pane: "aside", key: selected } }));
-      } else if (detail.contains(target) && narrow && shown4 === "detail") {
+      } else if (detail.contains(target) && narrow && shown5 === "detail") {
         event.preventDefault();
         close();
       }
     }
   };
   const onPop = () => {
-    if (pushed || shown4 === "detail") close({ fromHistory: true });
+    if (pushed || shown5 === "detail") close({ fromHistory: true });
   };
   const onSize = () => {
     const width = widthNow();
@@ -53480,7 +53541,7 @@ function wire8(rootEl, historyOption) {
     const was = narrow;
     narrow = width < px5(foldAt);
     asideNarrow = width < px5(asideFoldAt);
-    if (was && !narrow) shown4 = "list";
+    if (was && !narrow) shown5 = "list";
     sync3();
   };
   rootEl.addEventListener("click", onClick);
@@ -53625,7 +53686,7 @@ function wire9(el16) {
   voice.setAttribute("role", "status");
   el16.replaceChildren(band, voice);
   if (el16.getAttribute("data-kp-placement") !== "top") el16.setAttribute("data-kp-placement", "bottom");
-  let shown4 = "online";
+  let shown5 = "online";
   let pending5 = Number(el16.getAttribute("data-kp-pending") ?? 0) || 0;
   let attempt = 0;
   let nextAt = 0;
@@ -53639,8 +53700,8 @@ function wire9(el16) {
   };
   const countdown = () => {
     const left = Math.max(0, Math.ceil((nextAt - Date.now()) / 1e3));
-    meta.textContent = pendingText() + (shown4 === "offline" && nextAt ? `${pendingText() ? " \xB7 " : ""}${s2().connNextTry(humanDuration(left, s2()))}` : "");
-    if (nextAt && Date.now() >= nextAt && shown4 === "offline") {
+    meta.textContent = pendingText() + (shown5 === "offline" && nextAt ? `${pendingText() ? " \xB7 " : ""}${s2().connNextTry(humanDuration(left, s2()))}` : "");
+    if (nextAt && Date.now() >= nextAt && shown5 === "offline") {
       nextAt = 0;
       stopTick();
       tryNow(true);
@@ -53655,8 +53716,8 @@ function wire9(el16) {
     el16.dispatchEvent(new CustomEvent(CONNECTION_RETRY_EVENT, { bubbles: true, detail: { attempt, auto } }));
   }
   function draw8(state6) {
-    const previous = shown4;
-    shown4 = state6;
+    const previous = shown5;
+    shown5 = state6;
     el16.setAttribute("data-kp-state", state6);
     band.classList.toggle("kp-alert--warning", state6 === "offline" || state6 === "reconnecting");
     band.classList.toggle("kp-alert--success", state6 === "back");
@@ -53724,7 +53785,7 @@ function wire9(el16) {
     view.clearTimeout(graceTimer);
     graceTimer = 0;
     if (state6 === "offline" || state6 === "refused" || state6 === "reconnecting") {
-      if (state6 === "offline" && shown4 === "online" && grace() > 0) {
+      if (state6 === "offline" && shown5 === "online" && grace() > 0) {
         graceTimer = view.setTimeout(() => {
           show();
           draw8("offline");
@@ -53739,16 +53800,16 @@ function wire9(el16) {
     if (state6 === "online") {
       stopTick();
       nextAt = 0;
-      const wasShown = shown4 !== "online" && !el16.hidden;
+      const wasShown = shown5 !== "online" && !el16.hidden;
       attempt = 0;
       if (!wasShown) {
-        shown4 = "online";
+        shown5 = "online";
         return;
       }
       show();
       draw8("back");
       backTimer = view.setTimeout(() => {
-        shown4 = "online";
+        shown5 = "online";
         el16.setAttribute("data-kp-state", "online");
         hide2();
         el16.dispatchEvent(new CustomEvent(CONNECTION_STATE_EVENT, { bubbles: true, detail: { state: "online", previous: "back", pending: pending5 } }));
@@ -53756,7 +53817,7 @@ function wire9(el16) {
     }
   };
   const onRetry = () => {
-    if (shown4 === "offline" || shown4 === "refused") tryNow(false);
+    if (shown5 === "offline" || shown5 === "refused") tryNow(false);
   };
   retry.addEventListener("click", onRetry);
   const onOffline = () => {
@@ -53768,7 +53829,7 @@ function wire9(el16) {
   view.addEventListener("offline", onOffline);
   view.addEventListener("online", onOnline);
   if (source() !== "app" && view.navigator.onLine === false) set("offline");
-  const handle = { element: el16, state: () => shown4, set };
+  const handle = { element: el16, state: () => shown5, set };
   handles13.set(el16, handle);
   return () => {
     view.clearTimeout(graceTimer);
@@ -55628,7 +55689,7 @@ function onKey4(field, event) {
   }
   stepValue(field, event, up);
 }
-var init_keys7 = __esm({
+var init_keys8 = __esm({
   "js/timefield/keys.js"() {
     "use strict";
     init_strings();
@@ -55639,7 +55700,7 @@ var init_keys7 = __esm({
 });
 
 // js/timefield/controller.js
-var WATCHED2, TimeController;
+var WATCHED4, TimeController;
 var init_controller8 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
@@ -55650,9 +55711,9 @@ var init_controller8 = __esm({
     init_constants21();
     init_attributes();
     init_field();
-    init_keys7();
+    init_keys8();
     init_parse();
-    WATCHED2 = [
+    WATCHED4 = [
       "disabled",
       "data-kp-disabled",
       "data-kp-disabled-reason",
@@ -55720,7 +55781,7 @@ var init_controller8 = __esm({
             if (field.list.open) field.list.draw();
           })
         );
-        observer.observe(host, { attributes: true, attributeFilter: WATCHED2 });
+        observer.observe(host, { attributes: true, attributeFilter: WATCHED4 });
       }
       /** Digits typed fast: 0230 becomes 02:30 as the fourth digit arrives; an open list follows the typed time. */
       onInput() {
@@ -57893,9 +57954,9 @@ function paintHost(m) {
   m.el.toggleAttribute("data-kp-previewing", m.preview !== null);
   m.el.style.setProperty("--kp-rating-max", String(m.max));
 }
-function paintStars(m, shown4) {
+function paintStars(m, shown5) {
   m.stars.forEach((star, i) => {
-    const lit = clamp(shown4 - i, 0, 1);
+    const lit = clamp(shown5 - i, 0, 1);
     star.style.setProperty("--kp-rating-fill", String(lit));
     star.toggleAttribute("data-kp-lit", lit > 0);
     star.toggleAttribute("data-kp-whole", lit >= 1);
@@ -57938,8 +57999,8 @@ function paintRole(m) {
   if (m.mode === "input" && disabled(m)) m.row.setAttribute("aria-disabled", "true");
   else m.row.removeAttribute("aria-disabled");
 }
-function paintCaption(m, shown4) {
-  m.caption.textContent = state4(m) === "ready" ? wordsOf4(m, shown4) : " ";
+function paintCaption(m, shown5) {
+  m.caption.textContent = state4(m) === "ready" ? wordsOf4(m, shown5) : " ";
   const why = disabled(m) ? m.el.getAttribute("data-kp-disabled-reason") ?? "" : "";
   m.reason.textContent = why;
   m.reason.hidden = why === "";
@@ -57980,11 +58041,11 @@ function paintActions(m) {
   if (m.field) m.field.value = m.value > 0 ? String(plain(m.value)) : "";
 }
 function paint14(m) {
-  const shown4 = m.preview ?? m.draft;
+  const shown5 = m.preview ?? m.draft;
   paintHost(m);
-  paintStars(m, shown4);
+  paintStars(m, shown5);
   paintRole(m);
-  paintCaption(m, shown4);
+  paintCaption(m, shown5);
   paintActions(m);
 }
 var init_paint7 = __esm({
@@ -58147,7 +58208,7 @@ function onKey5(m, event) {
   window.setTimeout(() => focusStar(m), 0);
 }
 var starNumber;
-var init_keys8 = __esm({
+var init_keys9 = __esm({
   "js/rating/keys.js"() {
     "use strict";
     init_math();
@@ -58158,7 +58219,7 @@ var init_keys8 = __esm({
 });
 
 // js/rating/controller.js
-var REDRAW, WATCHED3, RatingController;
+var REDRAW, WATCHED5, RatingController;
 var init_controller10 = __esm({
   "js/rating/controller.js"() {
     "use strict";
@@ -58167,12 +58228,12 @@ var init_controller10 = __esm({
     init_constants22();
     init_build6();
     init_commit();
-    init_keys8();
+    init_keys9();
     init_math();
     init_paint7();
     init_read2();
     REDRAW = ["data-kp-rating-max", "data-kp-rating-step", "data-kp-rating-mode"];
-    WATCHED3 = [
+    WATCHED5 = [
       ...REDRAW,
       "data-kp-rating-value",
       "data-kp-rating-labels",
@@ -58284,7 +58345,7 @@ var init_controller10 = __esm({
           event
         ));
         this.listen(parts2.retry, "click", () => el16.dispatchEvent(new CustomEvent(RATING_RETRY_EVENT, { bubbles: true })));
-        this.observe(new MutationObserver((records) => this.onAttributes(records))).observe(el16, { attributes: true, attributeFilter: WATCHED3 });
+        this.observe(new MutationObserver((records) => this.onAttributes(records))).observe(el16, { attributes: true, attributeFilter: WATCHED5 });
         this.own(() => window.clearTimeout(this.flashTimer));
       }
       /** Give the element back what it held before the rating drew into it. */
@@ -58508,8 +58569,8 @@ function measureFold(m) {
   textEl.removeAttribute("data-kp-folded");
   const whole = textEl.getBoundingClientRect().height;
   textEl.toggleAttribute("data-kp-folded", !open4);
-  const shown4 = textEl.getBoundingClientRect().height;
-  const overflows = open4 ? m.expanded : whole - shown4 > 1;
+  const shown5 = textEl.getBoundingClientRect().height;
+  const overflows = open4 ? m.expanded : whole - shown5 > 1;
   more.hidden = !(folds2 && overflows);
   more.setAttribute("aria-expanded", String(m.expanded));
   more.textContent = m.expanded ? getStrings().quoteShowLess : getStrings().quoteShowAll;
@@ -60603,7 +60664,7 @@ function draw7(el16, defaults = {}) {
   const url = el16.getAttribute("data-kp-version-href") ?? defaults.href ?? null;
   const href = url ? url.replace("{to}", encodeURIComponent(to)) : null;
   const toNode = href ? part7("kp-version__to", "a") : part7("kp-version__to");
-  toNode.append(breakable(doc, shown3(to, digest)));
+  toNode.append(breakable(doc, shown4(to, digest)));
   if (href && toNode instanceof HTMLAnchorElement) {
     toNode.href = href;
     toNode.target = "_blank";
@@ -60613,7 +60674,7 @@ function draw7(el16, defaults = {}) {
     toNode.append(note2);
   }
   const fromNode = part7("kp-version__from");
-  fromNode.append(breakable(doc, shown3(from, digest)));
+  fromNode.append(breakable(doc, shown4(from, digest)));
   const arrowNode = part7("kp-version__arrow");
   arrowNode.setAttribute("aria-hidden", "true");
   arrowNode.textContent = arrow;
@@ -60697,7 +60758,7 @@ function attachVersionDeltas(root = document, options = {}) {
   }
   return () => undo.forEach((u) => u());
 }
-var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, shown3, near, ATTRIBUTES;
+var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, shown4, near, ATTRIBUTES;
 var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
@@ -60707,7 +60768,7 @@ var init_version_delta = __esm({
     VERSION_LEVELS = /** @type {const} */
     ["same", "other", "patch", "minor", "major", "downgrade", "unknown"];
     VERSION_SORT = Object.freeze({ downgrade: 4, major: 3, minor: 2, patch: 1, other: 0, same: 0, unknown: 0 });
-    shown3 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + 12)}` : version;
+    shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + 12)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
     ATTRIBUTES = [
       "data-kp-version-from",
@@ -60817,8 +60878,8 @@ function attachOne11(el16) {
     const withStates = el16.hasAttribute("data-kp-dep-states");
     const collapse = Math.max(1, Number(attr16("data-kp-dep-collapse", String(DEPLIST_COLLAPSE))) || DEPLIST_COLLAPSE);
     const group = numbers2 ? "none" : attr16("data-kp-dep-group", "none");
-    const shown4 = items.filter((i) => self || i.from !== i.to);
-    const { rows, cycles } = orderDependencies(shown4, { numbers: numbers2 });
+    const shown5 = items.filter((i) => self || i.from !== i.to);
+    const { rows, cycles } = orderDependencies(shown5, { numbers: numbers2 });
     drawn2 = rows;
     let total = rows.length + cycles.length;
     const template = el16.getAttribute("data-kp-dep-heading");
@@ -61599,13 +61660,13 @@ var init_tile = __esm({
 });
 
 // js/entity-card/set.js
-function fitFlags(card, shown4) {
+function fitFlags(card, shown5) {
   const view = card.ownerDocument.defaultView;
   view?.requestAnimationFrame(() => {
     const row = slotOf(card, "flags");
-    if (!row || !card.isConnected || shown4 <= 0) return;
+    if (!row || !card.isConnected || shown5 <= 0) return;
     if (row.scrollWidth > row.clientWidth + 1) {
-      card.dataset.kpFlagsFit = String(shown4 - 1);
+      card.dataset.kpFlagsFit = String(shown5 - 1);
       const was = DRAWN5.get(card);
       if (was) {
         delete was.drawn.flags;
@@ -61826,9 +61887,9 @@ function setEntity(card, data) {
       return;
     }
     const all = data.actions ?? [];
-    const shown4 = all.slice(0, inline2);
+    const shown5 = all.slice(0, inline2);
     const rest = all.slice(inline2);
-    for (const a of shown4) {
+    for (const a of shown5) {
       const button4 = (
         /** @type {HTMLButtonElement} */
         made5(doc, "button", `kp-button kp-button--sm kp-entity__action${a.danger ? " kp-button--destructive" : ""}`)
@@ -63942,7 +64003,7 @@ function openViewer(options) {
       void closing2.close();
     }
     if (next2 === "error" || next2 === "unsupported") {
-      const shown4 = statePlate(doc, {
+      const shown5 = statePlate(doc, {
         kind: next2 === "error" ? "error" : "empty",
         title: detail.title ?? (next2 === "error" ? strings.viewerFailedTitle : strings.viewerUnsupportedTitle),
         text: detail.message ?? (next2 === "error" ? strings.viewerFailedText : strings.viewerUnsupportedText),
@@ -63964,9 +64025,9 @@ function openViewer(options) {
           link.textContent = action.label ?? (action.kind === "open" ? strings.viewerOpenNew : strings.viewerDownload);
           row.append(link);
         }
-        shown4.append(row);
+        shown5.append(row);
       }
-      plate.append(shown4);
+      plate.append(shown5);
     }
   };
   let unregister = null;
@@ -65827,8 +65888,8 @@ function setSentenceComputed(element, name, text) {
   for (const output of element.querySelectorAll("[data-kp-sentence-computed]")) {
     if (output.getAttribute("data-kp-sentence-computed") !== name) continue;
     output.toggleAttribute("data-kp-sentence-empty", value === "");
-    const shown4 = value === "" ? COMPUTED_NONE : value;
-    if (output.textContent !== shown4) output.textContent = shown4;
+    const shown5 = value === "" ? COMPUTED_NONE : value;
+    if (output.textContent !== shown5) output.textContent = shown5;
     output.setAttribute("aria-live", "off");
   }
 }
@@ -66288,7 +66349,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     live4.setAttribute("role", "status");
     live4.setAttribute("aria-live", "polite");
     el16.replaceChildren(stage, live4);
-    let shown4 = [];
+    let shown5 = [];
     let chosen = null;
     let pendingValue;
     let state6 = "ready";
@@ -66307,7 +66368,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       return o.label ? `${age} \xB7 ${rangeMoment(t, zone)}` : age;
     };
     const newest = () => {
-      const dated = shown4.filter((o) => !Number.isNaN(stamp3(o)));
+      const dated = shown5.filter((o) => !Number.isNaN(stamp3(o)));
       return dated.length ? dated.reduce((a, b) => stamp3(b) > stamp3(a) ? b : a) : null;
     };
     const metaOf = (o) => {
@@ -66345,7 +66406,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       legend.className = "kp-sr-only";
       legend.textContent = label;
       group.append(legend);
-      for (const [i, o] of shown4.entries()) {
+      for (const [i, o] of shown5.entries()) {
         const row = doc.createElement("label");
         row.className = "kp-field__option kp-dated__option";
         const input = doc.createElement("input");
@@ -66395,7 +66456,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       list.id = `${id}-list`;
       list.setAttribute("role", "listbox");
       list.hidden = true;
-      for (const [i, o] of shown4.entries()) {
+      for (const [i, o] of shown5.entries()) {
         const li = doc.createElement("li");
         li.className = "kp-combobox__option kp-dated__item";
         li.id = `${id}-option-${i}`;
@@ -66483,8 +66544,8 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     const draw8 = () => {
       detachCombobox?.();
       detachCombobox = null;
-      const placeholders = state6 === "loading" && shown4.length === 0;
-      kind = mode2 === "auto" ? shown4.length > inlineMax ? "combobox" : "radio" : mode2;
+      const placeholders = state6 === "loading" && shown5.length === 0;
+      kind = mode2 === "auto" ? shown5.length > inlineMax ? "combobox" : "radio" : mode2;
       el16.dataset.kpPickerKind = kind;
       el16.style.setProperty("--kp-dated-rows", String(rowsWanted || (kind === "combobox" ? 2 : 4)));
       if (placeholders) {
@@ -66526,7 +66587,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       drawn2 = true;
     };
     const choose3 = (value, fire2) => {
-      const option = shown4.find((o) => o.value === value) ?? null;
+      const option = shown5.find((o) => o.value === value) ?? null;
       if (option?.disabled) return;
       chosen = option ? option.value : null;
       if (kind === "radio") {
@@ -66552,22 +66613,22 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     const handle = {
       element: el16,
       set(options, value) {
-        shown4 = orderDated(options, order2);
+        shown5 = orderDated(options, order2);
         const wanted = value === void 0 ? chosen ?? pendingValue ?? null : value;
-        const keep = wanted !== null && shown4.some((o) => o.value === wanted && !o.disabled) ? wanted : null;
-        const first = preselect ? newest() ?? shown4.find((o) => !o.disabled) ?? null : null;
+        const keep = wanted !== null && shown5.some((o) => o.value === wanted && !o.disabled) ? wanted : null;
+        const first = preselect ? newest() ?? shown5.find((o) => !o.disabled) ?? null : null;
         chosen = keep ?? (value === null ? null : first?.value ?? null);
-        state6 = shown4.length === 0 ? "empty" : "ready";
+        state6 = shown5.length === 0 ? "empty" : "ready";
         sync3();
       },
       setState(next2, options = {}) {
         given2 = { ...given2, ...options };
-        state6 = next2 === "ready" && shown4.length === 0 ? "empty" : next2;
+        state6 = next2 === "ready" && shown5.length === 0 ? "empty" : next2;
         sync3();
       },
       value: () => chosen,
       select: (value) => choose3(value, false),
-      options: () => shown4.slice(),
+      options: () => shown5.slice(),
       state: () => state6
     };
     HANDLES12.set(el16, handle);
@@ -66596,7 +66657,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       const t = Date.now();
       typed = t - typedAt > 700 ? event.key.toLowerCase() : typed + event.key.toLowerCase();
       typedAt = t;
-      const hit = shown4.find((o) => !o.disabled && titleOf(o).toLowerCase().startsWith(typed));
+      const hit = shown5.find((o) => !o.disabled && titleOf(o).toLowerCase().startsWith(typed));
       if (!hit) return;
       const input = [...body.querySelectorAll('input[type="radio"]')].find((i) => (
         /** @type {HTMLInputElement} */
@@ -66782,9 +66843,9 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       return li;
     };
     const draw8 = () => {
-      const shown4 = expanded ? all : all.slice(0, count2);
+      const shown5 = expanded ? all : all.slice(0, count2);
       let rows;
-      if (state6 === "loading" && shown4.length === 0) {
+      if (state6 === "loading" && shown5.length === 0) {
         rows = Array.from({ length: count2 }, () => {
           const li = doc.createElement("li");
           li.className = "kp-runs__row kp-runs__row--wait";
@@ -66794,7 +66855,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
           li.append(bar);
           return li;
         });
-      } else rows = shown4.map((run, i) => row(run, i, i === 0 ? void 0 : shown4[i - 1]?.at));
+      } else rows = shown5.map((run, i) => row(run, i, i === 0 ? void 0 : shown5[i - 1]?.at));
       list.replaceChildren(...rows);
       list.toggleAttribute("inert", state6 !== "ready");
       if (state6 === "loading") list.setAttribute("aria-busy", "true");
@@ -69035,7 +69096,7 @@ function attachLoadingPieces(root = document) {
     /** @type {Node} */
     root instanceof Document ? root.documentElement : root
   );
-  watch2.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED4 });
+  watch2.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED6 });
   if (target !== document.documentElement) watch2.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   everything = true;
   schedule();
@@ -69050,7 +69111,7 @@ function attachLoadingPieces(root = document) {
     dressed.clear();
   };
 }
-var PIECES_PROPERTY, PIECES_ATTRIBUTE, PIECE_CARRIERS, ALL, WATCHED4, px4, piecesOf, cornerOf, measured, DRAW;
+var PIECES_PROPERTY, PIECES_ATTRIBUTE, PIECE_CARRIERS, ALL, WATCHED6, px4, piecesOf, cornerOf, measured, DRAW;
 var init_loading_pieces = __esm({
   "js/loading-pieces.js"() {
     "use strict";
@@ -69064,7 +69125,7 @@ var init_loading_pieces = __esm({
       spinner: ".kp-spinner"
     };
     ALL = Object.values(PIECE_CARRIERS).join(", ");
-    WATCHED4 = ["class", "aria-busy", "data-kp-indeterminate", "data-kp-loading", "data-kp-tone", "data-theme", "hidden"];
+    WATCHED6 = ["class", "aria-busy", "data-kp-indeterminate", "data-kp-loading", "data-kp-tone", "data-theme", "hidden"];
     px4 = (v) => `${Math.round(v * 100) / 100}px`;
     piecesOf = (el16) => getComputedStyle(el16).getPropertyValue(PIECES_PROPERTY).trim();
     cornerOf = (el16) => {
@@ -69353,7 +69414,7 @@ function decorate(list) {
     const item = byId.get(row.getAttribute("data-id") ?? "");
     if (item) fillRow(list, row, item);
   }
-  let shown4 = 0;
+  let shown5 = 0;
   for (
     const section of
     /** @type {NodeListOf<HTMLElement>} */
@@ -69372,7 +69433,7 @@ function decorate(list) {
       row.hidden = !keep;
       if (keep) rows += 1;
     }
-    shown4 += rows;
+    shown5 += rows;
     section.hidden = rows === 0;
     const head = section.querySelector(".kp-checklist__head");
     let own = (
@@ -69506,7 +69567,7 @@ function decorate(list) {
     body.querySelector(":scope > .kp-claim__none")
   );
   const emptyList = items.length === 0;
-  const wantNote = !loading && !emptyList && shown4 === 0 && !list.hasAttribute("data-kp-checklist-error");
+  const wantNote = !loading && !emptyList && shown5 === 0 && !list.hasAttribute("data-kp-checklist-error");
   if (wantNote) {
     const gapsFilter = st.filter === "gaps";
     const key = `${st.filter}`;
@@ -72360,12 +72421,12 @@ var init_controller14 = __esm({
         if (t.closest("[data-kp-qr-retry-action]")) root.dispatchEvent(new CustomEvent(QR_RETRY_EVENT, { bubbles: true }));
       }
       /** Show or hide a code behind its cover; the focus goes to the code, or back to the Show button. @param {boolean} shown */
-      reveal(shown4) {
+      reveal(shown5) {
         const root = this.host;
-        stateOf7(root).shown = shown4;
+        stateOf7(root).shown = shown5;
         render5(root);
-        root.dispatchEvent(new CustomEvent(QR_REVEAL_EVENT, { bubbles: true, detail: { shown: shown4 } }));
-        if (shown4) {
+        root.dispatchEvent(new CustomEvent(QR_REVEAL_EVENT, { bubbles: true, detail: { shown: shown5 } }));
+        if (shown5) {
           root.querySelector(".kp-qr__plate")?.dispatchEvent(new Event("focus"));
           root.querySelector(".kp-qr__plate[tabindex]")?.focus();
         } else root.querySelector("[data-kp-qr-show]")?.focus();
@@ -72814,18 +72875,18 @@ function blockNode(root, b, node) {
         out.className = "kp-code kp-console__output";
         out.textContent = "";
       }
-      const shown4 = b.output;
-      if (out.getAttribute("data-kp-console-drawn") !== `${shown4.length}:${b.truncated}:${maxLines}`) {
-        out.setAttribute("data-kp-console-drawn", `${shown4.length}:${b.truncated}:${maxLines}`);
+      const shown5 = b.output;
+      if (out.getAttribute("data-kp-console-drawn") !== `${shown5.length}:${b.truncated}:${maxLines}`) {
+        out.setAttribute("data-kp-console-drawn", `${shown5.length}:${b.truncated}:${maxLines}`);
         setCode(out, {
-          text: shown4,
+          text: shown5,
           title: s2.consoleOutput,
           maxLines,
           wrap: false,
           ...b.truncated ? {
             truncated: {
-              shown: `${Math.round(shown4.length / 1024)} KB`,
-              total: `${Math.round((b.total ?? shown4.length) / 1024)} KB`
+              shown: `${Math.round(shown5.length / 1024)} KB`,
+              total: `${Math.round((b.total ?? shown5.length) / 1024)} KB`
             }
           } : {}
         });
@@ -73885,7 +73946,7 @@ function refresh2(root) {
   );
   const state6 = root.getAttribute("data-kp-state") ?? "ready";
   root.toggleAttribute("aria-busy", state6 === "loading");
-  const shown4 = st.lines.filter((line) => st.nodes.get(line.id)?.hidden === false).length;
+  const shown5 = st.lines.filter((line) => st.nodes.get(line.id)?.hidden === false).length;
   const total = st.lines.length;
   root.toggleAttribute("data-kp-log-nosource", !st.lines.some((line) => line.source !== ""));
   for (const old of stage.querySelectorAll(":scope > .kp-logviewer__plate")) old.remove();
@@ -73916,7 +73977,7 @@ function refresh2(root) {
     const p = statePlate(document, { kind: "empty", title: s2.logviewerEmptyTitle, text: attr14(root, "hint", "") || s2.logviewerEmptyText });
     p.classList.add("kp-logviewer__plate");
     stage.append(p);
-  } else if (shown4 === 0) {
+  } else if (shown5 === 0) {
     plate = "nomatch";
     const p = statePlate(document, {
       kind: "empty",
@@ -73962,7 +74023,7 @@ function refresh2(root) {
     bar?.querySelector(".kp-logviewer__level")
   );
   if (level) level.value = ["info", "warning", "error"].includes(attr14(root, "level", "debug")) ? attr14(root, "level", "debug") : "debug";
-  const nothing = shown4 === 0 || state6 !== "ready";
+  const nothing = shown5 === 0 || state6 !== "ready";
   for (
     const b of
     /** @type {NodeListOf<HTMLButtonElement>} */
@@ -73972,7 +74033,7 @@ function refresh2(root) {
   if (find2) find2.disabled = total === 0 || state6 !== "ready";
   const foot = root.querySelector(".kp-logviewer__foot");
   const countLine = foot?.querySelector(".kp-logviewer__count");
-  if (countLine) countLine.textContent = s2.logviewerCount(shown4, total);
+  if (countLine) countLine.textContent = s2.logviewerCount(shown5, total);
   const dropped = foot?.querySelector(".kp-logviewer__dropped");
   if (dropped) {
     dropped.textContent = st.dropped > 0 ? s2.logviewerDropped(st.dropped, maxOf(root)) : "";
@@ -73982,7 +74043,7 @@ function refresh2(root) {
   root.dispatchEvent(
     new CustomEvent(LOGVIEWER_EVENT, {
       bubbles: true,
-      detail: { total, shown: shown4, dropped: st.dropped, matches: st.matches.length, current: st.at >= 0 ? st.at + 1 : 0 }
+      detail: { total, shown: shown5, dropped: st.dropped, matches: st.matches.length, current: st.at >= 0 ? st.at + 1 : 0 }
     })
   );
 }
@@ -75991,7 +76052,7 @@ var NEEDS = [
   // A quantity with minus and plus, the kitchen timers, the checklist, one step at a time and the wheel [kpadopt4].
   { name: "quantity", when: "[data-kp-quantity]", load: () => Promise.resolve().then(() => (init_quantity(), quantity_exports)), attach: (m, root) => [m.attachQuantities(root)] },
   { name: "toolbar", when: "[data-kp-toolbar]", load: () => Promise.resolve().then(() => (init_toolbar(), toolbar_exports)), attach: (m, root) => [m.attachToolbars(root)] },
-  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys5(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] },
+  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys6(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] },
   // The month heatmap [scope-143]: a month of days, each a plate in the
   // colour of its state; the page gives the days with setCalendarDays().
   { name: "calendar", when: "[data-kp-calendar]", load: () => Promise.resolve().then(() => (init_calendar(), calendar_exports)), attach: (m, root) => [m.attachCalendars(root)] },
@@ -76449,7 +76510,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys5();
+init_keys6();
 init_kpi();
 
 // js/lazy-register.js
@@ -77155,7 +77216,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys5();
+init_keys6();
 init_kpi();
 init_lede();
 init_listbox();
@@ -77533,11 +77594,6 @@ export {
   TICK_EVENT,
   TICK_KNOB,
   TICK_MS2 as TICK_MS,
-  TILES_EXIT_EVENT,
-  TILES_KEYS,
-  TILES_MOVE_EVENT,
-  TILES_SET,
-  TILE_ROW_MIN,
   TIMER_DISC,
   TIMER_DISC_LEFT,
   TIMINGS,
@@ -77793,7 +77849,6 @@ export {
   endPreview,
   ensureRegister,
   entity_card_exports as entityCardExports,
-  evenTileSet,
   explainJson,
   facets_exports as facetsExports,
   feed_exports as feedExports,
@@ -77857,7 +77912,6 @@ export {
   lazy_register_exports as lazyRegisterExports,
   leaveUsesMap,
   lede_exports as ledeExports,
-  letterTile,
   lineHeightOf,
   listShortcuts,
   listbox_exports as listboxExports,
@@ -77886,7 +77940,6 @@ export {
   nav_fold_exports as navFoldExports,
   newPill,
   newpill_exports as newpillExports,
-  nextTile,
   no_flash_exports as noFlashExports,
   noFlashSnippet,
   noMatchText,
@@ -78113,8 +78166,6 @@ export {
   threadOptions,
   tick_exports as tickExports,
   tickTo,
-  tileSets,
-  tileStop,
   tiles_exports as tilesExports,
   timefield_exports as timefieldExports,
   timerButton,
