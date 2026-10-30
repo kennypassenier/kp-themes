@@ -1,0 +1,148 @@
+/* research/medicine-1030: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column, a card fills it, a component fills the card. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* One frame for every component, so the sections have the same rhythm. */
+.pg-card {
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component > .kp-card {
+    max-inline-size: 100%;
+}
+
+/* The width control: the stage at a phone's 390 px, centred; the components answer their own width, not the window's. */
+.pg-component {
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+}
+
+.pg-case__title {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.pg-log {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+}
+
+.pg-stack {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+/* Cells of three widths, for the stepper and the badge run. */
+.pg-cells {
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 13rem) minmax(0, 9rem);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.pg-cell {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.pg-cell__label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+}
+
+[data-pg-width='phone'] .pg-cells {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+/* The badge run as the app drew it before: one row that cannot wrap. */
+.pg-brun[data-pg-run='old'] {
+    display: grid;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+}
+
+/* The dialogs, shown open in the page: static, one under the other, each at its own width step. */
+.pg-previews {
+    justify-items: center;
+}
+
+.pg-preview.kp-dialog {
+    position: static;
+    inset: auto;
+    margin: 0 auto;
+    inline-size: auto;
+}
+
+.pg-preview.kp-dialog--wider,
+.pg-preview.kp-dialog--wide {
+    inline-size: min(var(--kp-dialog-wider, 52rem), 100%);
+}
+
+/* A table in a column a third of the page wide. */
+.pg-column {
+    min-inline-size: 0;
+}
+
+.pg-column[data-pg-column='column'] {
+    max-inline-size: 36rem;
+}
+
+/* Fix sections: what the package did before, drawn the old way, so Before is a true Before. */
+.pg-before.kp-card :is(.kp-card__header, .kp-card__title, .kp-card__body) + :is(.kp-formgrid, form:has(> .kp-formgrid:first-child)) {
+    margin-block-start: 0;
+}
+
+.pg-before .kp-switch__state {
+    display: inline-grid;
+}
+
+.pg-switches {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-switches > .pg-case__title {
+    flex: 1 0 100%;
+}
+
+/* The Before of the page header: the date and the time share one grey line. */
+.pg-time {
+    font-variant-numeric: tabular-nums;
+}

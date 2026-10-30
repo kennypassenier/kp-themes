@@ -1,0 +1,2332 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="medicine-1030" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Medicine Cabinet: thirteen things the app needed from the package</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>Medicine Cabinet: thirteen things the app needed from the package</h1>
+                <p class="cat-intro">
+                    The Medicine Cabinet web app found thirteen places where it had to draw its own glue; you approved building them in the package on
+                    2026-10-30. Eight are new parts or options (a list of rows, a quantity that fills its cell, a repeating row editor, an attention
+                    band with a maximum, a run of badges, dialog widths and a rich confirmation, a table&rsquo;s actions column and card width, pills
+                    with nothing chosen tied to a tag input) and five are fixes (typed text at the start edge, air under a card&rsquo;s sentence, an
+                    error line that moves nothing, a switch without a state word, a freshness line after the title); each fix shows Before and After.
+                    Formal only, on the app&rsquo;s own shapes (the names, counts and times are mock). Nothing here is on by default except the five
+                    fixes and the narrow confirmation, which say so. 13 sections, 13 pairs.
+                </p>
+                <p>
+                    Every section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a
+                    phone&rsquo;s 390 px.
+                </p>
+            </header>
+
+            <section
+                id="list-row"
+                data-review-item="list-row"
+                data-review-topic="list"
+                data-review-topic-title="The Cabinet list"
+                data-review-components="list-row"
+                data-review-title="A list of rows with an identity, a status, a stepper and a switch"
+                aria-labelledby="h-list-row"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 1 · Medicine Cabinet gap 1): A list where every row holds several controls has no component: a data
+                        table is the wrong tool. <code>.kp-list</code> with <code>.kp-listrow</code> is one grid of four named columns and every row a
+                        subgrid of it, so the columns continue across rows, and a row is a card on a phone. Is this the row the Cabinet, Today and
+                        Symptoms lists should use?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-list-row">The Cabinet: six medicines</h2>
+                    <p>
+                        Each row: the medicine and what it is, its status badges, a stepper for the stock and a switch for whether it is in use. The
+                        list sits in the card&rsquo;s data area, so loading, empty and failed are the card&rsquo;s own.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Full width</b>: the names, the badges, the steppers and the switches stand on four edges that run down all six rows. A
+                            stepper is as wide as its column, so every stepper ends on one edge. The inactive medicine is quieter, its controls are
+                            not.
+                        </li>
+                        <li>
+                            <b>Phone</b>: each row is a card: the name and what it is, the badges on their own line, the stepper filling the line
+                            beside the switch. <b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the list&rsquo;s whole footprint with the
+                            card&rsquo;s plate and a normal Retry.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a paper plate: rows ruled by thin lines, nothing in a row drawn on a card of its own. Check the columns line up
+                        whatever a row holds, and that the badge column never pushes a stepper.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="list-row-component">
+                    <div role="group" aria-label="State">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-cabinet"
+                            data-value="ready"
+                            aria-pressed="true"
+                        >
+                            Ready</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-cabinet"
+                            data-value="loading"
+                            aria-pressed="false"
+                        >
+                            Loading</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-cabinet"
+                            data-value="empty"
+                            aria-pressed="false"
+                        >
+                            Empty</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-cabinet"
+                            data-value="error"
+                            aria-pressed="false"
+                        >
+                            Failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="list-row-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="list-row-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="list-row-component" class="pg-component" data-pg-width="full">
+                    <section class="kp-card" id="pg-cabinet" data-kp-state="ready" aria-labelledby="pg-cabinet-t">
+                        <div class="kp-card__header"><h3 class="kp-card__title" id="pg-cabinet-t">Cabinet</h3></div>
+                        <p class="kp-card__body">Everything in the cabinet, with what is left of it.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <ul class="kp-list" role="list" aria-label="Medicines">
+                                    <li class="kp-listrow">
+                                        <div class="kp-listrow__identity">
+                                            <strong class="kp-listrow__name">Ibuprofen 400 mg</strong
+                                            ><span class="kp-listrow__meta">Film-coated tablet · pain and fever</span>
+                                        </div>
+                                        <div class="kp-listrow__status">
+                                            <div class="kp-badges">
+                                                <span class="kp-badge kp-badge--warning">Low stock</span><span class="kp-badge">Expires 03/2027</span>
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__stepper">
+                                            <div
+                                                class="kp-quantity"
+                                                data-kp-quantity
+                                                data-kp-quantity-fill
+                                                data-kp-quantity-min="0"
+                                                data-kp-quantity-max="200"
+                                                data-kp-quantity-unit="tablets"
+                                                data-kp-quantity-unit-one="tablet"
+                                                data-kp-quantity-label="Stock of Ibuprofen 400 mg"
+                                            >
+                                                <input class="kp-quantity__input" value="14" />
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__switch">
+                                            <label class="kp-switch" data-kp-switch-state="none"
+                                                ><input
+                                                    class="kp-switch__input"
+                                                    type="checkbox"
+                                                    role="switch"
+                                                    checked
+                                                    aria-label="Active: Ibuprofen 400 mg"
+                                                /><span>Active</span></label
+                                            >
+                                        </div>
+                                    </li>
+                                    <li class="kp-listrow">
+                                        <div class="kp-listrow__identity">
+                                            <strong class="kp-listrow__name">Paracetamol 500 mg</strong
+                                            ><span class="kp-listrow__meta">Tablet · pain and fever</span>
+                                        </div>
+                                        <div class="kp-listrow__status">
+                                            <div class="kp-badges"><span class="kp-badge kp-badge--success">In stock</span></div>
+                                        </div>
+                                        <div class="kp-listrow__stepper">
+                                            <div
+                                                class="kp-quantity"
+                                                data-kp-quantity
+                                                data-kp-quantity-fill
+                                                data-kp-quantity-min="0"
+                                                data-kp-quantity-max="200"
+                                                data-kp-quantity-unit="tablets"
+                                                data-kp-quantity-unit-one="tablet"
+                                                data-kp-quantity-label="Stock of Paracetamol 500 mg"
+                                            >
+                                                <input class="kp-quantity__input" value="32" />
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__switch">
+                                            <label class="kp-switch" data-kp-switch-state="none"
+                                                ><input
+                                                    class="kp-switch__input"
+                                                    type="checkbox"
+                                                    role="switch"
+                                                    checked
+                                                    aria-label="Active: Paracetamol 500 mg"
+                                                /><span>Active</span></label
+                                            >
+                                        </div>
+                                    </li>
+                                    <li class="kp-listrow">
+                                        <div class="kp-listrow__identity">
+                                            <strong class="kp-listrow__name">Cetirizine 10 mg</strong
+                                            ><span class="kp-listrow__meta">Tablet · hay fever</span>
+                                        </div>
+                                        <div class="kp-listrow__status">
+                                            <div class="kp-badges">
+                                                <span class="kp-badge kp-badge--warning">Low stock</span><span class="kp-badge">Take as needed</span>
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__stepper">
+                                            <div
+                                                class="kp-quantity"
+                                                data-kp-quantity
+                                                data-kp-quantity-fill
+                                                data-kp-quantity-min="0"
+                                                data-kp-quantity-max="200"
+                                                data-kp-quantity-unit="tablets"
+                                                data-kp-quantity-unit-one="tablet"
+                                                data-kp-quantity-label="Stock of Cetirizine 10 mg"
+                                            >
+                                                <input class="kp-quantity__input" value="8" />
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__switch">
+                                            <label class="kp-switch" data-kp-switch-state="none"
+                                                ><input
+                                                    class="kp-switch__input"
+                                                    type="checkbox"
+                                                    role="switch"
+                                                    checked
+                                                    aria-label="Active: Cetirizine 10 mg"
+                                                /><span>Active</span></label
+                                            >
+                                        </div>
+                                    </li>
+                                    <li class="kp-listrow">
+                                        <div class="kp-listrow__identity">
+                                            <strong class="kp-listrow__name">Vitamin D3 25 µg</strong
+                                            ><span class="kp-listrow__meta">Capsule · supplement</span>
+                                        </div>
+                                        <div class="kp-listrow__status">
+                                            <div class="kp-badges">
+                                                <span class="kp-badge">On schedule</span
+                                                ><span class="kp-badge kp-badge--warning">Expires 11/2026</span
+                                                ><span class="kp-badge">Refill on 12/11</span>
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__stepper">
+                                            <div
+                                                class="kp-quantity"
+                                                data-kp-quantity
+                                                data-kp-quantity-fill
+                                                data-kp-quantity-min="0"
+                                                data-kp-quantity-max="200"
+                                                data-kp-quantity-unit="capsules"
+                                                data-kp-quantity-unit-one="capsule"
+                                                data-kp-quantity-label="Stock of Vitamin D3 25 µg"
+                                            >
+                                                <input class="kp-quantity__input" value="60" />
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__switch">
+                                            <label class="kp-switch" data-kp-switch-state="none"
+                                                ><input
+                                                    class="kp-switch__input"
+                                                    type="checkbox"
+                                                    role="switch"
+                                                    checked
+                                                    aria-label="Active: Vitamin D3 25 µg"
+                                                /><span>Active</span></label
+                                            >
+                                        </div>
+                                    </li>
+                                    <li class="kp-listrow kp-listrow--muted">
+                                        <div class="kp-listrow__identity">
+                                            <strong class="kp-listrow__name">Amoxicillin 500 mg</strong
+                                            ><span class="kp-listrow__meta">Capsule · antibiotic course</span>
+                                        </div>
+                                        <div class="kp-listrow__status">
+                                            <div class="kp-badges">
+                                                <span class="kp-badge">Course ended</span
+                                                ><span class="kp-badge kp-badge--destructive">Expired 09/2026</span>
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__stepper">
+                                            <div
+                                                class="kp-quantity"
+                                                data-kp-quantity
+                                                data-kp-quantity-fill
+                                                data-kp-quantity-min="0"
+                                                data-kp-quantity-max="200"
+                                                data-kp-quantity-unit="capsules"
+                                                data-kp-quantity-unit-one="capsule"
+                                                data-kp-quantity-label="Stock of Amoxicillin 500 mg"
+                                            >
+                                                <input class="kp-quantity__input" value="0" />
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__switch">
+                                            <label class="kp-switch" data-kp-switch-state="none"
+                                                ><input
+                                                    class="kp-switch__input"
+                                                    type="checkbox"
+                                                    role="switch"
+                                                    aria-label="Active: Amoxicillin 500 mg"
+                                                /><span>Active</span></label
+                                            >
+                                        </div>
+                                    </li>
+                                    <li class="kp-listrow">
+                                        <div class="kp-listrow__identity">
+                                            <strong class="kp-listrow__name">Saline nasal spray</strong
+                                            ><span class="kp-listrow__meta">Spray · congestion</span>
+                                        </div>
+                                        <div class="kp-listrow__status">
+                                            <div class="kp-badges"><span class="kp-badge kp-badge--warning">Opened 30 days ago</span></div>
+                                        </div>
+                                        <div class="kp-listrow__stepper">
+                                            <div
+                                                class="kp-quantity"
+                                                data-kp-quantity
+                                                data-kp-quantity-fill
+                                                data-kp-quantity-min="0"
+                                                data-kp-quantity-max="200"
+                                                data-kp-quantity-unit="bottles"
+                                                data-kp-quantity-unit-one="bottle"
+                                                data-kp-quantity-label="Stock of Saline nasal spray"
+                                            >
+                                                <input class="kp-quantity__input" value="1" />
+                                            </div>
+                                        </div>
+                                        <div class="kp-listrow__switch">
+                                            <label class="kp-switch" data-kp-switch-state="none"
+                                                ><input
+                                                    class="kp-switch__input"
+                                                    type="checkbox"
+                                                    role="switch"
+                                                    checked
+                                                    aria-label="Active: Saline nasal spray"
+                                                /><span>Active</span></label
+                                            >
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section
+                id="quantity-fill"
+                data-review-item="quantity-fill"
+                data-review-topic="list"
+                data-review-components="quantity-fill"
+                data-review-title="A quantity that fills its cell"
+                aria-labelledby="h-quantity-fill"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 2 · Medicine Cabinet gap 2): A <code>.kp-quantity</code> is as wide as its content, so steppers in
+                        a column ended at different edges and, in a narrow cell, the unit broke per letter (&ldquo;capsule/s&rdquo;).
+                        <code>data-kp-quantity-fill</code> makes the number track <code>1fr</code> and keeps the unit whole. Is that the stepper for
+                        the Cabinet rows, the add-stock dialog and the dose?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-quantity-fill">The same stepper in three cells</h2>
+                    <p>Vitamin D3 in a wide cell, a medium one and a narrow one. Fill off is the stepper as it was; fill on is the new look.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Fill on</b> (default): in every cell the minus and plus stand at the cell&rsquo;s two edges, the number between them,
+                            the unit after the number on one line. <b>Fill off</b>: the stepper is as wide as its content and starts on the
+                            cell&rsquo;s edge.
+                        </li>
+                        <li>
+                            In the <b>narrow</b> cell the number gives way, never the unit: &ldquo;capsules&rdquo; is never cut in two. Press minus
+                            and plus: the sizes do not change.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The three steppers have the same height and the same button size; only the number field takes the difference in width.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="quantity-fill-component">
+                    <div role="group" aria-label="Fill">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="qfill" data-value="on" aria-pressed="true">Fill (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="qfill" data-value="off" aria-pressed="false">
+                            Content width (before)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="quantity-fill-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="quantity-fill-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="quantity-fill-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <div class="pg-cells">
+                            <div class="pg-cell pg-cell--wide">
+                                <p class="pg-cell__label">Cabinet row</p>
+                                <div
+                                    class="kp-quantity"
+                                    id="pg-qfill-0"
+                                    data-kp-quantity
+                                    data-kp-quantity-fill
+                                    data-kp-quantity-min="0"
+                                    data-kp-quantity-max="200"
+                                    data-kp-quantity-unit="capsules"
+                                    data-kp-quantity-unit-one="capsule"
+                                    data-kp-quantity-label="Vitamin D3 stock, Cabinet row"
+                                >
+                                    <input class="kp-quantity__input" value="60" />
+                                </div>
+                            </div>
+                            <div class="pg-cell pg-cell--medium">
+                                <p class="pg-cell__label">Add-stock dialog</p>
+                                <div
+                                    class="kp-quantity"
+                                    id="pg-qfill-1"
+                                    data-kp-quantity
+                                    data-kp-quantity-fill
+                                    data-kp-quantity-min="0"
+                                    data-kp-quantity-max="200"
+                                    data-kp-quantity-unit="capsules"
+                                    data-kp-quantity-unit-one="capsule"
+                                    data-kp-quantity-label="Vitamin D3 stock, Add-stock dialog"
+                                >
+                                    <input class="kp-quantity__input" value="60" />
+                                </div>
+                            </div>
+                            <div class="pg-cell pg-cell--narrow">
+                                <p class="pg-cell__label">Narrow cell</p>
+                                <div
+                                    class="kp-quantity"
+                                    id="pg-qfill-2"
+                                    data-kp-quantity
+                                    data-kp-quantity-fill
+                                    data-kp-quantity-min="0"
+                                    data-kp-quantity-max="200"
+                                    data-kp-quantity-unit="capsules"
+                                    data-kp-quantity-unit-one="capsule"
+                                    data-kp-quantity-label="Vitamin D3 stock, Narrow cell"
+                                >
+                                    <input class="kp-quantity__input" value="60" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="badge-run"
+                data-review-item="badge-run"
+                data-review-topic="list"
+                data-review-components="badge-run"
+                data-review-title="Several badges in one cell that wrap"
+                aria-labelledby="h-badge-run"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 5 · Medicine Cabinet gap 7): Status badges in a row were a grid with
+                        <code>grid-auto-flow: column</code>, which cannot wrap. <code>.kp-badges</code> is a grid whose tracks are as wide as the
+                        widest badge, so a long run wraps into columns without a flex run. Does a run of badges read well in a narrow cell?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-badge-run">Status badges in a cell</h2>
+                    <p>The badges of Vitamin D3 in three cell widths. Add badges to see the run wrap; the old single row is there for comparison.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>New run</b>: in the wide cell the badges stand in one line; in the narrow cell they wrap into rows of equal-width
+                            columns, each label whole (it wraps at spaces, never between letters).
+                        </li>
+                        <li><b>Single row (before)</b>: the same badges cannot wrap and run past the cell&rsquo;s edge in the narrow one.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A wrapped run keeps one rhythm: the same gap across and down, the first badge of each row on one edge.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="badge-run-component">
+                    <div role="group" aria-label="Badges">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="brun-count" data-value="3" aria-pressed="true">Three</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="brun-count" data-value="6" aria-pressed="false">Six</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="brun-count" data-value="9" aria-pressed="false">Nine</button>
+                    </div>
+                    <div role="group" aria-label="Run">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="brun-mode" data-value="new" aria-pressed="true">
+                            Wrapping run (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="brun-mode" data-value="old" aria-pressed="false">
+                            Single row (before)
+                        </button>
+                    </div>
+                </div>
+                <div id="badge-run-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <div class="pg-cells">
+                            <div class="pg-cell pg-cell--wide">
+                                <p class="pg-cell__label">Wide cell</p>
+                                <div class="kp-badges pg-brun"></div>
+                            </div>
+                            <div class="pg-cell pg-cell--medium">
+                                <p class="pg-cell__label">Medium cell</p>
+                                <div class="kp-badges pg-brun"></div>
+                            </div>
+                            <div class="pg-cell pg-cell--narrow">
+                                <p class="pg-cell__label">Narrow cell</p>
+                                <div class="kp-badges pg-brun"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="attention-max"
+                data-review-item="attention-max"
+                data-review-topic="today"
+                data-review-topic-title="Today"
+                data-review-components="attention-max"
+                data-review-title="The attention band with a maximum"
+                aria-labelledby="h-attention-max"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 4 · Medicine Cabinet gap 6): Seven problems pushed the page&rsquo;s content below the fold on a
+                        phone, and Today made its own toggle. <code>data-kp-attention-max="3"</code> shows the worst three and folds the rest behind a
+                        built-in &ldquo;Show N more&rdquo; (<code>aria-expanded</code>), worst first. Is three, and this toggle, right for Today?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-attention-max">Today&rsquo;s problems, worst first</h2>
+                    <p>Seven problems about the cabinet. With a maximum of three, only the worst three show and one button unfolds the other four.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Cap 3</b>: the two critical problems and the first warning show; the button says <b>Show 4 more</b>. Press it: all
+                            seven show, the button says <b>Show fewer</b>, and the order is still worst first.
+                        </li>
+                        <li>
+                            <b>Cap off</b> shows all seven. <b>2 problems</b> shows both and no button. <b>None</b>: the band takes no room at all.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The button is the band&rsquo;s last row, a normal small button on the band&rsquo;s start edge, and the band does not jump when
+                        it folds.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="attention-max-component">
+                    <div role="group" aria-label="Cap">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="att-max" data-value="3" aria-pressed="true">Three</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="att-max" data-value="5" aria-pressed="false">Five</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="att-max" data-value="0" aria-pressed="false">No cap</button>
+                    </div>
+                    <div role="group" aria-label="Problems">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="att-count" data-value="7" aria-pressed="true">Seven</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="att-count" data-value="2" aria-pressed="false">Two</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="att-count" data-value="0" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="attention-max-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="attention-max-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="attention-max-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <div class="kp-attention" id="pg-attention" data-kp-attention-max="3" aria-label="What needs you today"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="header-updated"
+                data-review-item="header-updated"
+                data-review-topic="today"
+                data-review-components="header-updated"
+                data-review-title="A freshness line right after the page title"
+                aria-labelledby="h-header-updated"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 13 · Medicine Cabinet gap 12 · fix): The principles want &ldquo;updated HH:MM&rdquo; right after
+                        the title, but the header had only a description line, so Today wrote it into that. <code>.kp-page-header__updated</code> is
+                        the slot. Is this the place and the weight?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-header-updated">Today&rsquo;s page header</h2>
+                    <p>
+                        Before: the date and the update time share the description. After: the update time stands on the title&rsquo;s baseline and
+                        the description is the date alone.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Before</b>: &ldquo;Friday 30/10/2026 · updated 18:45&rdquo; as one grey line under the title. <b>After</b>:
+                            &ldquo;updated 18:45&rdquo; right after &ldquo;Today&rdquo; in small tabular digits, the date under both; the primary
+                            button stays on the right.
+                        </li>
+                        <li>
+                            At <b>phone</b> width the freshness line goes under the title if the room runs out; the title never moves when the time
+                            changes.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The freshness line is quieter than the title and level with its baseline; the description does not change place.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="header-updated-component">
+                    <div role="group" aria-label="Time">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="hdr-time" data-value="1845" aria-pressed="true">18:45</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="hdr-time" data-value="0905" aria-pressed="false">
+                            09:05
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="header-updated-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="header-updated-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="header-updated-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <p class="pg-case__title">Before</p>
+                        <header class="kp-page-header">
+                            <div class="kp-page-header__inner">
+                                <div>
+                                    <h4 class="kp-page-header__title">Today</h4>
+                                    <p class="kp-page-header__description">
+                                        <span class="pg-date">Friday 30/10/2026</span> · <span class="pg-time">updated 18:45</span>
+                                    </p>
+                                </div>
+                                <div class="kp-page-header__actions">
+                                    <button type="button" class="kp-button kp-button--primary">Take a dose</button>
+                                </div>
+                            </div>
+                        </header>
+                        <p class="pg-case__title">After</p>
+                        <header class="kp-page-header">
+                            <div class="kp-page-header__inner">
+                                <div>
+                                    <h4 class="kp-page-header__title">Today</h4>
+                                    <time class="kp-page-header__updated pg-time">updated 18:45</time>
+                                    <p class="kp-page-header__description">Friday 30/10/2026</p>
+                                </div>
+                                <div class="kp-page-header__actions">
+                                    <button type="button" class="kp-button kp-button--primary">Take a dose</button>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="row-editor"
+                data-review-item="row-editor"
+                data-review-topic="form"
+                data-review-topic-title="The medicine form"
+                data-review-components="row-editor"
+                data-review-title="A repeating row editor for &ldquo;When to take it&rdquo;"
+                aria-labelledby="h-row-editor"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 3 · Medicine Cabinet gap 5): A medicine has one or more slots of a time, the days and a dose. The
+                        package had the parts but no container to add and remove them. <code>data-kp-rows</code> repeats a template row, writes one
+                        head row of labels over the columns and a remove button per row. Is this the editor for &ldquo;When to take it&rdquo;?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-row-editor">When to take it</h2>
+                    <p>
+                        Two slots of the package&rsquo;s own time field, weekday picker and quantity. Add a time, remove one; the editor says why a
+                        button is off.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Add a time</b> appends a row with the time field, the days and the dose already working, and moves the focus into it.
+                            <b>Remove time 2</b> takes a row away and moves the focus to the row now in its place. The labels stand once, over the
+                            columns, and the columns run through every row.
+                        </li>
+                        <li>
+                            At the <b>fewest</b> (one) the remove buttons are off and the line says &ldquo;At least 1 time needed&rdquo;; at the
+                            <b>most</b> (six) Add is off and the line says why. <b>Empty it</b> (with the fewest at none) shows the empty plate.
+                            <b>Phone</b>: each row is a card with its labels in front of its fields. <b>Loading</b> and <b>Failed</b> are the
+                            card&rsquo;s.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The head labels sit on the fields&rsquo; left edges; the remove buttons stand in one column; nothing moves when a row comes or
+                        goes except the rows under it.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="row-editor-component">
+                    <div role="group" aria-label="Rows">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rows-fill" data-value="fill" aria-pressed="false">
+                            Fill to the most</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rows-fill" data-value="empty" aria-pressed="false">
+                            Empty it
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Fewest">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rows-min" data-value="1" aria-pressed="true">One</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rows-min" data-value="0" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-when"
+                            data-value="ready"
+                            aria-pressed="true"
+                        >
+                            Ready</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-when"
+                            data-value="loading"
+                            aria-pressed="false"
+                        >
+                            Loading</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-when"
+                            data-value="empty"
+                            aria-pressed="false"
+                        >
+                            Empty</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="state"
+                            data-target="pg-when"
+                            data-value="error"
+                            aria-pressed="false"
+                        >
+                            Failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="row-editor-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="row-editor-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="row-editor-component" class="pg-component" data-pg-width="full">
+                    <section class="kp-card" id="pg-when" data-kp-state="ready" aria-labelledby="pg-when-t">
+                        <div class="kp-card__header"><h3 class="kp-card__title" id="pg-when-t">When to take it</h3></div>
+                        <p class="kp-card__body">Each slot is a time, the days it runs on and how many to take.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <div
+                                    class="kp-rows"
+                                    id="pg-rows"
+                                    data-kp-rows
+                                    data-kp-rows-min="1"
+                                    data-kp-rows-max="6"
+                                    data-kp-rows-unit="time,times"
+                                    aria-label="When to take it"
+                                >
+                                    <ol class="kp-rows__list" data-kp-rows-list>
+                                        <li class="kp-rows__row">
+                                            <div class="kp-rows__cell" data-label="Time">
+                                                <div
+                                                    class="kp-time"
+                                                    data-kp-time
+                                                    data-kp-name="at-a"
+                                                    data-kp-value="08:00"
+                                                    data-kp-label="Time"
+                                                    data-kp-time-step="5"
+                                                ></div>
+                                            </div>
+                                            <div class="kp-rows__cell" data-label="Days">
+                                                <div
+                                                    class="kp-weekdays"
+                                                    data-kp-weekdays
+                                                    data-kp-value="1,2,3,4,5"
+                                                    data-kp-presets="false"
+                                                    data-kp-summary="false"
+                                                    aria-label="Days"
+                                                ></div>
+                                            </div>
+                                            <div class="kp-rows__cell" data-label="Dose">
+                                                <div
+                                                    class="kp-quantity"
+                                                    data-kp-quantity
+                                                    data-kp-quantity-fill
+                                                    data-kp-quantity-min="1"
+                                                    data-kp-quantity-max="10"
+                                                    data-kp-quantity-unit="tablets"
+                                                    data-kp-quantity-unit-one="tablet"
+                                                    data-kp-quantity-label="Dose"
+                                                >
+                                                    <input class="kp-quantity__input" value="1" />
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="kp-rows__row">
+                                            <div class="kp-rows__cell" data-label="Time">
+                                                <div
+                                                    class="kp-time"
+                                                    data-kp-time
+                                                    data-kp-name="at-b"
+                                                    data-kp-value="20:00"
+                                                    data-kp-label="Time"
+                                                    data-kp-time-step="5"
+                                                ></div>
+                                            </div>
+                                            <div class="kp-rows__cell" data-label="Days">
+                                                <div
+                                                    class="kp-weekdays"
+                                                    data-kp-weekdays
+                                                    data-kp-value="0,1,2,3,4,5,6"
+                                                    data-kp-presets="false"
+                                                    data-kp-summary="false"
+                                                    aria-label="Days"
+                                                ></div>
+                                            </div>
+                                            <div class="kp-rows__cell" data-label="Dose">
+                                                <div
+                                                    class="kp-quantity"
+                                                    data-kp-quantity
+                                                    data-kp-quantity-fill
+                                                    data-kp-quantity-min="1"
+                                                    data-kp-quantity-max="10"
+                                                    data-kp-quantity-unit="tablets"
+                                                    data-kp-quantity-unit-one="tablet"
+                                                    data-kp-quantity-label="Dose"
+                                                >
+                                                    <input class="kp-quantity__input" value="2" />
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ol>
+                                    <template data-kp-rows-template
+                                        ><li class="kp-rows__row">
+                                            <div class="kp-rows__cell" data-label="Time">
+                                                <div
+                                                    class="kp-time"
+                                                    data-kp-time
+                                                    data-kp-name="at-{n}"
+                                                    data-kp-value="12:00"
+                                                    data-kp-label="Time"
+                                                    data-kp-time-step="5"
+                                                ></div>
+                                            </div>
+                                            <div class="kp-rows__cell" data-label="Days">
+                                                <div
+                                                    class="kp-weekdays"
+                                                    data-kp-weekdays
+                                                    data-kp-value="1,2,3,4,5,6,0"
+                                                    data-kp-presets="false"
+                                                    data-kp-summary="false"
+                                                    aria-label="Days"
+                                                ></div>
+                                            </div>
+                                            <div class="kp-rows__cell" data-label="Dose">
+                                                <div
+                                                    class="kp-quantity"
+                                                    data-kp-quantity
+                                                    data-kp-quantity-fill
+                                                    data-kp-quantity-min="1"
+                                                    data-kp-quantity-max="10"
+                                                    data-kp-quantity-unit="tablets"
+                                                    data-kp-quantity-unit-one="tablet"
+                                                    data-kp-quantity-label="Dose"
+                                                >
+                                                    <input class="kp-quantity__input" value="1" />
+                                                </div>
+                                            </div></li
+                                    ></template>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section
+                id="pills-none"
+                data-review-item="pills-none"
+                data-review-topic="form"
+                data-review-components="pills-none"
+                data-review-title="Pills with nothing chosen, tied to a tag input"
+                aria-labelledby="h-pills-none"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 8 · Medicine Cabinet gaps 11, 14, 16): The medicine form&rsquo;s &ldquo;Form&rdquo; is one pill or
+                        none, symptom chips fill a search box, and symptom pills mirror a tag input by hand.
+                        <code>data-kp-segmented="single-or-none"</code> lets the chosen pill go again, and
+                        <code>data-kp-segmented-for="&lt;combobox id&gt;"</code> keeps pills and field in step. Is this the pill group the form needs?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-pills-none">Form, symptoms and search</h2>
+                    <p>
+                        Three rows of the form: the form as one pill or none (with its Manage action), the symptoms as pills that fill the tags above,
+                        and the search chips that fill the box.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Form</b>: pick Tablet, press it again and nothing is chosen (no pill is checked, one pill is still the tab stop).
+                            <b>Single (before)</b> forces a choice: the pressed pill cannot be let go.
+                        </li>
+                        <li>
+                            <b>Symptoms</b>: a pill adds a tag, a tag removed in the field turns its pill off, a tag typed in the field that has no
+                            pill stays. <b>Search</b>: one chip fills the box with its words, pressing it again empties it, typing something else
+                            clears the chip. The line under the form says what the page heard.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The pills fill the control track with the same height as the fields; Manage stands in the actions column of the row.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="pills-none-component">
+                    <div role="group" aria-label="Form pills">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="pill-mode" data-value="single-or-none" aria-pressed="true">
+                            Single or none (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="pill-mode" data-value="single" aria-pressed="false">
+                            Single (before)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="pills-none-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="pills-none-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="pills-none-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <div class="kp-formgrid" id="pg-pills">
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label" id="pg-form-l">Form</span>
+                                <div class="kp-formgrid__control">
+                                    <div
+                                        class="kp-segmented kp-segmented--chips"
+                                        id="pg-form-pills"
+                                        data-kp-segmented="single-or-none"
+                                        role="radiogroup"
+                                        aria-labelledby="pg-form-l"
+                                    >
+                                        <button type="button" class="kp-segmented__item" data-value="tablet" role="radio" aria-checked="true">
+                                            <span class="kp-segmented__label">Tablet</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="capsule" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Capsule</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="syrup" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Syrup</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="spray" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Spray</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="drops" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Drops</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="cream" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Cream</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="kp-formgrid__value">or none</p>
+                                <div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--sm">Manage…</button></div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-sym-input">Symptoms</label>
+                                <div class="kp-formgrid__control">
+                                    <div class="kp-combobox" id="pg-sym" data-kp-combobox data-kp-tags>
+                                        <div data-kp-tag-list></div>
+                                        <input
+                                            class="kp-field__input kp-combobox__input"
+                                            id="pg-sym-input"
+                                            role="combobox"
+                                            type="text"
+                                            aria-expanded="false"
+                                            aria-controls="pg-sym-list"
+                                            autocomplete="off"
+                                        />
+                                        <ul class="kp-combobox__list" id="pg-sym-list" role="listbox" hidden>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="fever">Fever</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="sore-throat">Sore throat</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="hay-fever">Hay fever</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="back-pain">Back pain</li>
+                                        </ul>
+                                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                                    </div>
+                                    <div
+                                        class="kp-segmented kp-segmented--chips"
+                                        id="pg-sym-pills"
+                                        data-kp-segmented="multi"
+                                        data-kp-segmented-for="pg-sym"
+                                        data-kp-segmented-collapse="false"
+                                        role="group"
+                                        aria-label="Common symptoms"
+                                    >
+                                        <button type="button" class="kp-segmented__item" data-value="headache" aria-pressed="false">
+                                            <span class="kp-segmented__label">Headache</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="fever" aria-pressed="false">
+                                            <span class="kp-segmented__label">Fever</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="sore-throat" aria-pressed="false">
+                                            <span class="kp-segmented__label">Sore throat</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="hay-fever" aria-pressed="false">
+                                            <span class="kp-segmented__label">Hay fever</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="nausea" aria-pressed="false">
+                                            <span class="kp-segmented__label">Nausea</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="back-pain" aria-pressed="false">
+                                            <span class="kp-segmented__label">Back pain</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="kp-formgrid__value">pick or type</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-find-input">What is bothering you?</label>
+                                <div class="kp-formgrid__control">
+                                    <div class="kp-combobox" id="pg-find" data-kp-combobox>
+                                        <input
+                                            class="kp-field__input kp-combobox__input"
+                                            id="pg-find-input"
+                                            role="combobox"
+                                            type="text"
+                                            aria-expanded="false"
+                                            aria-controls="pg-find-list"
+                                            autocomplete="off"
+                                            placeholder="Type or pick a symptom"
+                                        />
+                                        <ul class="kp-combobox__list" id="pg-find-list" role="listbox" hidden>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="fever">Fever</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="sore-throat">Sore throat</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="hay-fever">Hay fever</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                            <li class="kp-combobox__option" role="option" data-kp-option data-value="back-pain">Back pain</li>
+                                        </ul>
+                                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                                    </div>
+                                    <div
+                                        class="kp-segmented kp-segmented--chips"
+                                        id="pg-find-pills"
+                                        data-kp-segmented="single-or-none"
+                                        data-kp-segmented-for="pg-find"
+                                        role="radiogroup"
+                                        aria-label="Suggestions"
+                                    >
+                                        <button type="button" class="kp-segmented__item" data-value="headache" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Headache</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="fever" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Fever</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="sore-throat" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Sore throat</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="hay-fever" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Hay fever</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="nausea" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Nausea</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="back-pain" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Back pain</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="kp-formgrid__value">suggestions</p>
+                            </div>
+                        </div>
+                        <p class="pg-log" id="pg-pills-log" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="dialogs"
+                data-review-item="dialogs"
+                data-review-topic="dialogs"
+                data-review-topic-title="Dialogs and managed tables"
+                data-review-components="dialogs"
+                data-review-title="Dialog width steps and a confirmation that holds a body"
+                aria-labelledby="h-dialogs"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 6 · Medicine Cabinet gaps 8, 9, 19): A short dialog was as wide as its longest line and touched the
+                        edge of a phone; a dialog holding a table needed 50rem; <code>openConfirmation</code> took one phrase. Now
+                        <code>kp-dialog--narrow</code> (a question&rsquo;s width), <code>--wide</code> and <code>--wider</code> are steps, and
+                        <code>openConfirmation</code> takes <code>description</code> as nodes and <code>acceptLook: "primary"</code>. Are these the
+                        steps, and is the guard right for the as-needed dose?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-dialogs">Add stock, the dose guard and the forms manager</h2>
+                    <p>
+                        Each dialog is shown open here and opens for real with its button. The guard is the confirmation with a rich body and a
+                        primary &ldquo;Take it anyway&rdquo;.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Add stock</b> (narrow): 26rem wide whatever it holds, one gap from the window edge on a phone. <b>Take it anyway</b>: a
+                            title, three short paragraphs and a bold wait time, Cancel and a primary (not red) accept. <b>Forms manager</b> (wider):
+                            52rem, the table inside scrolls in the dialog&rsquo;s body.
+                        </li>
+                        <li>
+                            The width step control changes the first dialog live: Default is the width it had (its longest line), Narrow, Wide and
+                            Wider the steps.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Open each dialog for real: the title, the body and the actions keep their order; Escape and Cancel close; the primary accept
+                        is the page&rsquo;s primary look, not a destructive one.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="dialogs-component">
+                    <div role="group" aria-label="Add-stock width">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dlg-step" data-value="default" aria-pressed="false">
+                            Default</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-step" data-value="narrow" aria-pressed="true">
+                            Narrow</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-step" data-value="wide" aria-pressed="false">Wide</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-step" data-value="wider" aria-pressed="false">
+                            Wider
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Open for real">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="stock" aria-pressed="false">
+                            Add stock</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="guard" aria-pressed="false">
+                            Take it anyway</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="forms" aria-pressed="false">
+                            Forms manager
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="dialogs-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="dialogs-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="dialogs-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card pg-previews">
+                        <dialog class="kp-dialog kp-dialog--narrow pg-preview" id="pg-prev-stock" open aria-labelledby="pg-prev-stock-t">
+                            <h4 class="kp-dialog__title" id="pg-prev-stock-t">Add stock</h4>
+                            <p class="kp-dialog__description">Ibuprofen 400 mg · 14 tablets now</p>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="pg-prev-qty">How many did you buy?</label>
+                                <div
+                                    class="kp-quantity"
+                                    data-kp-quantity
+                                    data-kp-quantity-fill
+                                    data-kp-quantity-min="1"
+                                    data-kp-quantity-max="200"
+                                    data-kp-quantity-unit="tablets"
+                                    data-kp-quantity-unit-one="tablet"
+                                    data-kp-quantity-label="Tablets to add"
+                                >
+                                    <input class="kp-quantity__input" id="pg-prev-qty" value="20" />
+                                </div>
+                            </div>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button">Cancel</button
+                                ><button type="button" class="kp-button kp-button--primary">Add 20</button>
+                            </div>
+                        </dialog>
+                        <dialog class="kp-dialog kp-confirm pg-preview" id="pg-prev-guard" open aria-labelledby="pg-prev-guard-t">
+                            <h4 class="kp-dialog__title" id="pg-prev-guard-t">Too soon for another dose</h4>
+                            <div class="kp-dialog__description">
+                                <p>You took Ibuprofen 400 mg at 14:10, 2 h ago.</p>
+                                <p>The leaflet asks for at least <strong>6 h</strong> between doses: the next one is due at 20:10.</p>
+                                <p>Taking it anyway is your choice; it is written down as an extra dose.</p>
+                            </div>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button">Cancel</button
+                                ><button type="button" class="kp-button kp-button--primary">Take it anyway</button>
+                            </div>
+                        </dialog>
+                        <dialog class="kp-dialog kp-dialog--wider pg-preview" id="pg-prev-forms" open aria-labelledby="pg-prev-forms-t">
+                            <h4 class="kp-dialog__title" id="pg-prev-forms-t">Forms of medicine</h4>
+                            <p class="kp-dialog__description">Rename or remove a form; the medicines that use it are counted.</p>
+                            <div class="kp-dialog__body">
+                                <div
+                                    class="kp-datatable"
+                                    id="pg-prev-forms-table"
+                                    data-kp-datatable
+                                    data-kp-cards
+                                    data-kp-cards-at="30rem"
+                                    data-kp-busy-overlay
+                                    data-kp-page-size="25"
+                                    data-kp-page-sizes="none"
+                                >
+                                    <div class="kp-table-wrap">
+                                        <table class="kp-table">
+                                            <caption>
+                                                Forms of medicine
+                                            </caption>
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" data-kp-field="form" data-kp-sort="text">Form</th>
+                                                    <th scope="col" data-kp-field="used" data-kp-sort="number">Medicines</th>
+                                                    <th scope="col" data-kp-col="actions">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-kp-row-key="tablet">
+                                                    <td>Tablet</td>
+                                                    <td>12</td>
+                                                    <td>
+                                                        <div class="kp-table__actions">
+                                                            <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                            ><button type="button" class="kp-button kp-button--sm kp-button--destructive">
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr data-kp-row-key="capsule">
+                                                    <td>Capsule</td>
+                                                    <td>7</td>
+                                                    <td>
+                                                        <div class="kp-table__actions">
+                                                            <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                            ><button type="button" class="kp-button kp-button--sm kp-button--destructive">
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr data-kp-row-key="syrup">
+                                                    <td>Syrup</td>
+                                                    <td>3</td>
+                                                    <td>
+                                                        <div class="kp-table__actions">
+                                                            <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                            ><button type="button" class="kp-button kp-button--sm kp-button--destructive">
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr data-kp-row-key="spray">
+                                                    <td>Spray</td>
+                                                    <td>2</td>
+                                                    <td>
+                                                        <div class="kp-table__actions">
+                                                            <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                            ><button type="button" class="kp-button kp-button--sm kp-button--destructive">
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr data-kp-row-key="drops">
+                                                    <td>Drops</td>
+                                                    <td>4</td>
+                                                    <td>
+                                                        <div class="kp-table__actions">
+                                                            <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                            ><button type="button" class="kp-button kp-button--sm kp-button--destructive">
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr data-kp-row-key="cream">
+                                                    <td>Cream</td>
+                                                    <td>5</td>
+                                                    <td>
+                                                        <div class="kp-table__actions">
+                                                            <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                            ><button type="button" class="kp-button kp-button--sm kp-button--destructive">
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="kp-empty" data-kp-datatable-empty hidden>
+                                        <strong class="kp-empty__title">No forms yet</strong
+                                        ><span class="kp-stateplate__text">Add the first form of medicine to pick it in the medicine form.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kp-dialog__actions">
+                                <button type="button" class="kp-button">Close</button
+                                ><button type="button" class="kp-button kp-button--primary">Add a form</button>
+                            </div>
+                        </dialog>
+                    </div>
+                    <dialog class="kp-dialog kp-dialog--narrow" id="pg-stock" aria-labelledby="pg-stock-t">
+                        <h2 class="kp-dialog__title" id="pg-stock-t">Add stock</h2>
+                        <p class="kp-dialog__description">Ibuprofen 400 mg · 14 tablets now</p>
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="pg-stock-qty">How many did you buy?</label>
+                            <div
+                                class="kp-quantity"
+                                data-kp-quantity
+                                data-kp-quantity-fill
+                                data-kp-quantity-min="1"
+                                data-kp-quantity-max="200"
+                                data-kp-quantity-unit="tablets"
+                                data-kp-quantity-unit-one="tablet"
+                                data-kp-quantity-label="Tablets to add"
+                            >
+                                <input class="kp-quantity__input" id="pg-stock-qty" value="20" />
+                            </div>
+                        </div>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button" data-pg-close>Cancel</button
+                            ><button type="button" class="kp-button kp-button--primary" data-pg-close>Add 20</button>
+                        </div>
+                    </dialog>
+                    <dialog class="kp-dialog kp-dialog--wider" id="pg-forms" aria-labelledby="pg-forms-t">
+                        <h2 class="kp-dialog__title" id="pg-forms-t">Forms of medicine</h2>
+                        <p class="kp-dialog__description">Rename or remove a form; the medicines that use it are counted.</p>
+                        <div class="kp-dialog__body">
+                            <div
+                                class="kp-datatable"
+                                id="pg-forms-table"
+                                data-kp-datatable
+                                data-kp-cards
+                                data-kp-cards-at="30rem"
+                                data-kp-busy-overlay
+                                data-kp-page-size="25"
+                                data-kp-page-sizes="none"
+                            >
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption>
+                                            Forms of medicine
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-kp-field="form" data-kp-sort="text">Form</th>
+                                                <th scope="col" data-kp-field="used" data-kp-sort="number">Medicines</th>
+                                                <th scope="col" data-kp-col="actions">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-kp-row-key="tablet">
+                                                <td>Tablet</td>
+                                                <td>12</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="capsule">
+                                                <td>Capsule</td>
+                                                <td>7</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="syrup">
+                                                <td>Syrup</td>
+                                                <td>3</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="spray">
+                                                <td>Spray</td>
+                                                <td>2</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="drops">
+                                                <td>Drops</td>
+                                                <td>4</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="cream">
+                                                <td>Cream</td>
+                                                <td>5</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="kp-empty" data-kp-datatable-empty hidden>
+                                    <strong class="kp-empty__title">No forms yet</strong
+                                    ><span class="kp-stateplate__text">Add the first form of medicine to pick it in the medicine form.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-dialog__actions"><button type="button" class="kp-button" data-pg-close>Close</button></div>
+                    </dialog>
+                </div>
+            </section>
+
+            <section
+                id="table-columns"
+                data-review-item="table-columns"
+                data-review-topic="dialogs"
+                data-review-components="table-columns"
+                data-review-title="A table with an actions column that turns into cards only on a phone"
+                aria-labelledby="h-table-columns"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 7 · Medicine Cabinet gaps 17, 18): A small managed list (categories, forms) sat in a column of a
+                        third of the page, where a table turned into cards at 40rem of its own width, and its Edit and Delete were hand-built.
+                        <code>data-kp-cards-at="30rem"</code> sets the width where it turns into cards, and <code>data-kp-col="actions"</code> makes
+                        the column a fixed track with no label in a card. Is that right for the forms and symptoms managers?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-table-columns">Forms of medicine, managed</h2>
+                    <p>
+                        The same table in a column 36rem wide: with the usual 40rem it is a card list, with 30rem it stays a table until the screen is
+                        a phone.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Cards at 30rem (new)</b> in the 36rem column: a table with the actions column at the end, Edit and Delete of equal
+                            width in every row, the header &ldquo;Actions&rdquo;. <b>Cards at 40rem (before)</b>: the same table is a list of cards.
+                            <b>Phone</b>: cards in both; the card&rsquo;s actions stand in a row across it with no &ldquo;Actions&rdquo; label.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the rows, <b>Empty</b> the package&rsquo;s plate and <b>Failed</b> the failed plate
+                            with Try again, all at the loaded height.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The actions column is as wide as its two buttons and no wider; the buttons never wrap; a card has no stray label.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="table-columns-component">
+                    <div role="group" aria-label="Cards at">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="cards-at" data-value="30rem" aria-pressed="true">
+                            30rem (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="cards-at" data-value="40rem" aria-pressed="false">
+                            40rem (before)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Column">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="tbl-width" data-value="column" aria-pressed="true">
+                            A 36rem column</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tbl-width" data-value="full" aria-pressed="false">
+                            Full width
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="tbl-state" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tbl-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tbl-state" data-value="empty" aria-pressed="false">
+                            Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tbl-state" data-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="table-columns-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="table-columns-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="table-columns-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <div class="pg-column" id="pg-tbl-box">
+                            <div
+                                class="kp-datatable"
+                                id="pg-forms-managed"
+                                data-kp-datatable
+                                data-kp-cards
+                                data-kp-cards-at="30rem"
+                                data-kp-busy-overlay
+                                data-kp-page-size="25"
+                                data-kp-page-sizes="none"
+                            >
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption>
+                                            Forms of medicine
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-kp-field="form" data-kp-sort="text">Form</th>
+                                                <th scope="col" data-kp-field="used" data-kp-sort="number">Medicines</th>
+                                                <th scope="col" data-kp-col="actions">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-kp-row-key="tablet">
+                                                <td>Tablet</td>
+                                                <td>12</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="capsule">
+                                                <td>Capsule</td>
+                                                <td>7</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="syrup">
+                                                <td>Syrup</td>
+                                                <td>3</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="spray">
+                                                <td>Spray</td>
+                                                <td>2</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="drops">
+                                                <td>Drops</td>
+                                                <td>4</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr data-kp-row-key="cream">
+                                                <td>Cream</td>
+                                                <td>5</td>
+                                                <td>
+                                                    <div class="kp-table__actions">
+                                                        <button type="button" class="kp-button kp-button--sm">Edit</button
+                                                        ><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="kp-empty" data-kp-datatable-empty hidden>
+                                    <strong class="kp-empty__title">No forms yet</strong
+                                    ><span class="kp-stateplate__text">Add the first form of medicine to pick it in the medicine form.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="fix-text-align"
+                data-review-item="fix-text-align"
+                data-review-topic="fixes"
+                data-review-topic-title="Fixes in the package"
+                data-review-components="fix-text-align"
+                data-review-title="Fix: typed text and placeholders start at the start edge"
+                aria-labelledby="h-fix-text-align"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 9 · Medicine Cabinet gap 4 · fix): Typed text and placeholders in a form grid&rsquo;s fields were
+                        centred, which read as if the caret were in the wrong place, and every app overrode it. Now they start at the start edge; a
+                        select stays centred, and <code>data-kp-formgrid-align="center"</code> brings the old look back. Is the start edge the right
+                        default?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-fix-text-align">The medicine form&rsquo;s fields</h2>
+                    <p>The same four rows, before (centred) and after (start edge). The note row shows the placeholder.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Before</b>: &ldquo;Ibuprofen 400 mg&rdquo;, the placeholder and the time are centred in their fields. <b>After</b>:
+                            they start at the left edge, aligned with the labels&rsquo; column of text; the strength select still shows its value
+                            centred.
+                        </li>
+                        <li>Type in a field: the text grows from the start edge.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">In the after grid the first letters of the name, note and time stand on one vertical line.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="fix-text-align-component">
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="fix-text-align-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="fix-text-align-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="fix-text-align-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <p class="pg-case__title">Before</p>
+                        <div class="kp-formgrid" id="pg-ta-before" data-kp-formgrid-align="center">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-before-name">Name</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" id="pg-ta-before-name" value="Ibuprofen 400 mg" />
+                                </div>
+                                <p class="kp-formgrid__value">as on the box</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-before-note">Note</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" id="pg-ta-before-note" placeholder="Take with food, not on an empty stomach" />
+                                </div>
+                                <p class="kp-formgrid__value">optional</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-before-at">First dose</label>
+                                <div class="kp-formgrid__control">
+                                    <div
+                                        class="kp-time"
+                                        data-kp-time
+                                        data-kp-value="08:00"
+                                        data-kp-label="First dose"
+                                        data-kp-time-id="pg-ta-before-at"
+                                    ></div>
+                                </div>
+                                <p class="kp-formgrid__value">24 hours</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-before-strength">Strength</label>
+                                <div class="kp-formgrid__control">
+                                    <select class="kp-field__input" id="pg-ta-before-strength">
+                                        <option>200 mg</option>
+                                        <option selected>400 mg</option>
+                                        <option>600 mg</option>
+                                    </select>
+                                </div>
+                                <p class="kp-formgrid__value">per tablet</p>
+                            </div>
+                        </div>
+                        <p class="pg-case__title">After</p>
+                        <div class="kp-formgrid" id="pg-ta-after">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-after-name">Name</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" id="pg-ta-after-name" value="Ibuprofen 400 mg" />
+                                </div>
+                                <p class="kp-formgrid__value">as on the box</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-after-note">Note</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" id="pg-ta-after-note" placeholder="Take with food, not on an empty stomach" />
+                                </div>
+                                <p class="kp-formgrid__value">optional</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-after-at">First dose</label>
+                                <div class="kp-formgrid__control">
+                                    <div
+                                        class="kp-time"
+                                        data-kp-time
+                                        data-kp-value="08:00"
+                                        data-kp-label="First dose"
+                                        data-kp-time-id="pg-ta-after-at"
+                                    ></div>
+                                </div>
+                                <p class="kp-formgrid__value">24 hours</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-ta-after-strength">Strength</label>
+                                <div class="kp-formgrid__control">
+                                    <select class="kp-field__input" id="pg-ta-after-strength">
+                                        <option>200 mg</option>
+                                        <option selected>400 mg</option>
+                                        <option>600 mg</option>
+                                    </select>
+                                </div>
+                                <p class="kp-formgrid__value">per tablet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="fix-card-gap"
+                data-review-item="fix-card-gap"
+                data-review-topic="fixes"
+                data-review-components="fix-card-gap"
+                data-review-title="Fix: air between a card&rsquo;s sentence and its first form row"
+                aria-labelledby="h-fix-card-gap"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 10 · Medicine Cabinet gap 10 · fix): In a card, the first label of a form grid stood directly under
+                        the card&rsquo;s sentence. Now a form grid after the card&rsquo;s title or sentence has the medium space above it
+                        (<code>--kp-card-form-gap</code>). Is that the right amount of air?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-fix-card-gap">A card of the medicine form</h2>
+                    <p>The &ldquo;Basics&rdquo; card before and after.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Before</b>: the sentence and the label &ldquo;Name&rdquo; touch. <b>After</b>: one medium space between them, the same
+                            space as between the rows of the grid.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look><p data-for="formal">The gap under the sentence equals the gap between two rows below it.</p></div>
+                <div data-review-controls data-review-controls-for="fix-card-gap-component">
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="fix-card-gap-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="fix-card-gap-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="fix-card-gap-component" class="pg-component" data-pg-width="full">
+                    <div class="pg-stack">
+                        <section class="kp-card pg-before" aria-label="Before">
+                            <p class="pg-case__title">Before</p>
+                            <h4 class="kp-card__title">Basics</h4>
+                            <p class="kp-card__body">What the medicine is called and how strong it is.</p>
+                            <div class="kp-formgrid" id="pg-cg-before">
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-before-name">Name</label>
+                                    <div class="kp-formgrid__control">
+                                        <input class="kp-field__input" id="pg-cg-before-name" value="Ibuprofen 400 mg" />
+                                    </div>
+                                    <p class="kp-formgrid__value">as on the box</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-before-note">Note</label>
+                                    <div class="kp-formgrid__control">
+                                        <input class="kp-field__input" id="pg-cg-before-note" placeholder="Take with food, not on an empty stomach" />
+                                    </div>
+                                    <p class="kp-formgrid__value">optional</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-before-at">First dose</label>
+                                    <div class="kp-formgrid__control">
+                                        <div
+                                            class="kp-time"
+                                            data-kp-time
+                                            data-kp-value="08:00"
+                                            data-kp-label="First dose"
+                                            data-kp-time-id="pg-cg-before-at"
+                                        ></div>
+                                    </div>
+                                    <p class="kp-formgrid__value">24 hours</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-before-strength">Strength</label>
+                                    <div class="kp-formgrid__control">
+                                        <select class="kp-field__input" id="pg-cg-before-strength">
+                                            <option>200 mg</option>
+                                            <option selected>400 mg</option>
+                                            <option>600 mg</option>
+                                        </select>
+                                    </div>
+                                    <p class="kp-formgrid__value">per tablet</p>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="kp-card" aria-label="After">
+                            <p class="pg-case__title">After</p>
+                            <h4 class="kp-card__title">Basics</h4>
+                            <p class="kp-card__body">What the medicine is called and how strong it is.</p>
+                            <div class="kp-formgrid" id="pg-cg-after">
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-after-name">Name</label>
+                                    <div class="kp-formgrid__control">
+                                        <input class="kp-field__input" id="pg-cg-after-name" value="Ibuprofen 400 mg" />
+                                    </div>
+                                    <p class="kp-formgrid__value">as on the box</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-after-note">Note</label>
+                                    <div class="kp-formgrid__control">
+                                        <input class="kp-field__input" id="pg-cg-after-note" placeholder="Take with food, not on an empty stomach" />
+                                    </div>
+                                    <p class="kp-formgrid__value">optional</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-after-at">First dose</label>
+                                    <div class="kp-formgrid__control">
+                                        <div
+                                            class="kp-time"
+                                            data-kp-time
+                                            data-kp-value="08:00"
+                                            data-kp-label="First dose"
+                                            data-kp-time-id="pg-cg-after-at"
+                                        ></div>
+                                    </div>
+                                    <p class="kp-formgrid__value">24 hours</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="pg-cg-after-strength">Strength</label>
+                                    <div class="kp-formgrid__control">
+                                        <select class="kp-field__input" id="pg-cg-after-strength">
+                                            <option>200 mg</option>
+                                            <option selected>400 mg</option>
+                                            <option>600 mg</option>
+                                        </select>
+                                    </div>
+                                    <p class="kp-formgrid__value">per tablet</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="fix-error-line"
+                data-review-item="fix-error-line"
+                data-review-topic="fixes"
+                data-review-components="fix-error-line"
+                data-review-title="Fix: an empty required field&rsquo;s error does not move the layout"
+                aria-labelledby="h-fix-error-line"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 11 · Medicine Cabinet gap 15 · fix): The error of an empty required field appeared on blur and grew
+                        the row by a line, so a press on the pill under it landed on the moving group. Now a form grid keeps room for the line (<code
+                            >data-kp-formgrid-errors="flow"</code
+                        >
+                        gives the old behaviour). Does nothing move now?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-fix-error-line">The name is required</h2>
+                    <p>
+                        Leave the name empty and move on: the line says what is wrong. The readout under each grid is the height of the pills&rsquo;
+                        row before and after.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Leave the name empty</b>: the error shows in both grids. In <b>before</b> the pills move down by the height of one line
+                            (the readout shows the shift); in <b>after</b> they do not move at all (shift 0 px).
+                        </li>
+                        <li><b>Clear it</b> hides the error again.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Compare the readouts: after must say 0 px. The reserved line is empty, not a gap that looks like a mistake.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="fix-error-line-component">
+                    <div role="group" aria-label="Name">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="err-name" data-value="leave" aria-pressed="false">
+                            Leave it empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="err-name" data-value="clear" aria-pressed="true">
+                            Clear the error
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="fix-error-line-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="fix-error-line-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="fix-error-line-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <p class="pg-case__title">Before</p>
+                        <div class="kp-formgrid" id="pg-err-before" data-kp-formgrid-errors="flow">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-err-before-name">Name</label>
+                                <div class="kp-formgrid__control">
+                                    <div class="kp-field">
+                                        <input class="kp-field__input" id="pg-err-before-name" required /><span
+                                            class="kp-field__error"
+                                            id="pg-err-before-name-error"
+                                            hidden
+                                        ></span>
+                                    </div>
+                                </div>
+                                <p class="kp-formgrid__value">required</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label" id="pg-err-before-l">Form</span>
+                                <div class="kp-formgrid__control">
+                                    <div
+                                        class="kp-segmented kp-segmented--chips"
+                                        id="pg-err-before-pills"
+                                        data-kp-segmented="single-or-none"
+                                        role="radiogroup"
+                                        aria-labelledby="pg-err-before-l"
+                                    >
+                                        <button type="button" class="kp-segmented__item" data-value="tablet" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Tablet</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="capsule" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Capsule</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="syrup" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Syrup</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="spray" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Spray</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="drops" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Drops</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="cream" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Cream</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="pg-log" id="pg-err-before-log" role="status"></p>
+                        <p class="pg-case__title">After</p>
+                        <div class="kp-formgrid" id="pg-err-after">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="pg-err-after-name">Name</label>
+                                <div class="kp-formgrid__control">
+                                    <div class="kp-field">
+                                        <input class="kp-field__input" id="pg-err-after-name" required /><span
+                                            class="kp-field__error"
+                                            id="pg-err-after-name-error"
+                                            hidden
+                                        ></span>
+                                    </div>
+                                </div>
+                                <p class="kp-formgrid__value">required</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label" id="pg-err-after-l">Form</span>
+                                <div class="kp-formgrid__control">
+                                    <div
+                                        class="kp-segmented kp-segmented--chips"
+                                        id="pg-err-after-pills"
+                                        data-kp-segmented="single-or-none"
+                                        role="radiogroup"
+                                        aria-labelledby="pg-err-after-l"
+                                    >
+                                        <button type="button" class="kp-segmented__item" data-value="tablet" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Tablet</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="capsule" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Capsule</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="syrup" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Syrup</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="spray" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Spray</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="drops" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Drops</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="cream" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Cream</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="pg-log" id="pg-err-after-log" role="status"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="fix-switch-state"
+                data-review-item="fix-switch-state"
+                data-review-topic="fixes"
+                data-review-components="fix-switch-state"
+                data-review-title="Fix: a switch with no state word keeps no track"
+                aria-labelledby="h-fix-switch-state"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (item 12 · Medicine Cabinet gap 3 · fix): A switch reserved a 32 px track for its On/Off word even when
+                        it had none, so the gap between the knob and the label was about 60 px. Now an empty state word takes no track, and
+                        <code>data-kp-switch-state="none"</code> is the official switch without one. Is the knob now close enough to its label?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-fix-switch-state">Active, and as needed</h2>
+                    <p>Three switches before and after: no state word, the state word On/Off (unchanged) and an empty word.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Before</b>: the knob and &ldquo;Active&rdquo; are about 60 px apart with an empty word. <b>After</b>: one gap
+                            (0.625rem). The switch with On/Off words is the same before and after.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The after switches are 114 px wide at most &ldquo;Active&rdquo; included, measured from the knob to the end of the label.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="fix-switch-state-component">
+                    <div role="group" aria-label="Switches">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="sw-on" data-value="off" aria-pressed="true">All off</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="sw-on" data-value="on" aria-pressed="false">All on</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="full"
+                            data-target="fix-switch-state-component"
+                            aria-pressed="true"
+                        >
+                            Full width</button
+                        ><button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-pg="width"
+                            data-value="phone"
+                            data-target="fix-switch-state-component"
+                            aria-pressed="false"
+                        >
+                            Phone, 390 px
+                        </button>
+                    </div>
+                </div>
+                <div id="fix-switch-state-component" class="pg-component" data-pg-width="full">
+                    <div class="kp-card pg-card">
+                        <div class="pg-before pg-switches">
+                            <p class="pg-case__title">Before</p>
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
+                                ><span>Active (empty word)</span></label
+                            >
+                            <label class="kp-switch" data-kp-switch-state="none"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
+                                ><span>Take as needed (none)</span></label
+                            >
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                ><span>Reminders (On/Off)</span></label
+                            >
+                        </div>
+                        <div class="pg-switches">
+                            <p class="pg-case__title">After</p>
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
+                                ><span>Active (empty word)</span></label
+                            >
+                            <label class="kp-switch" data-kp-switch-state="none"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
+                                ><span>Take as needed (none)</span></label
+                            >
+                            <label class="kp-switch"
+                                ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
+                                    ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                ><span>Reminders (On/Off)</span></label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
