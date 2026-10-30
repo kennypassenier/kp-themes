@@ -42,7 +42,7 @@
         "js/entity-card.js": { "digest": "b9ca787027783791", "when": "[data-kp-entity-grid]" },
         "js/facets.js": { "digest": "c6794ca99b3598e2", "when": "[data-kp-facets]" },
         "js/feed.js": { "digest": "06f7d10ab05ee41e", "when": "[data-kp-feed]" },
-        "js/flash.js": { "digest": "044b7e057d3bd243", "when": "[data-kp-flash-button], [data-kp-post]" },
+        "js/flash.js": { "digest": "07b895bbd6a06ba8", "when": "[data-kp-flash-button], [data-kp-post]" },
         "js/focus-steps.js": { "digest": "042ea0647eb664e0", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
             "digest": "7f5462d0ee338abf",

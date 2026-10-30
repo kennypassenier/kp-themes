@@ -3570,7 +3570,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   let running2 = null;
   let followedAt = -Infinity;
   const fresh = firstRender(box);
-  const settle2 = () => {
+  const settle3 = () => {
     if (!box.isConnected) return;
     const effect = (
       /** @type {KeyframeEffect | null} */
@@ -3611,7 +3611,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     }).catch(() => void 0);
   };
   const sizes = new ResizeObserver((entries2) => {
-    if (entries2.some((entry) => entry.target !== box)) settle2();
+    if (entries2.some((entry) => entry.target !== box)) settle3();
     else if (!running2) last = box.offsetHeight;
   });
   const watch2 = () => {
@@ -3646,7 +3646,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
         }
     }
     watch2();
-    settle2();
+    settle3();
   });
   list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"], attributeOldValue: true });
   return () => {
@@ -4272,17 +4272,17 @@ function playEntranceBackwards(el16) {
       (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
       a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
     );
-    const settle2 = (waited) => {
+    const settle3 = (waited) => {
       if (own.__kpReversing === void 0) return;
       void Promise.all(waited.map(ended)).then(() => {
         if (own.__kpReversing === void 0) return;
         const next2 = running2();
-        if (next2.length > 0) return settle2(next2);
+        if (next2.length > 0) return settle3(next2);
         delete own.__kpReversing;
         resolve(true);
       });
     };
-    settle2(plays);
+    settle3(plays);
   });
 }
 function stopReversing(el16) {
@@ -4850,7 +4850,7 @@ function holdWhileAttended(el16, getTimer, setTimer, linger) {
   let pointer = false;
   let focus = false;
   let held2 = false;
-  const settle2 = () => {
+  const settle3 = () => {
     const attended = pointer || focus;
     if (attended === held2) return;
     held2 = attended;
@@ -4862,20 +4862,20 @@ function holdWhileAttended(el16, getTimer, setTimer, linger) {
   el16.addEventListener("pointerenter", (event) => {
     if (event.pointerType === "touch") return;
     pointer = true;
-    settle2();
+    settle3();
   });
   el16.addEventListener("pointerleave", () => {
     pointer = false;
-    settle2();
+    settle3();
   });
   el16.addEventListener("focusin", () => {
     focus = true;
-    settle2();
+    settle3();
   });
   el16.addEventListener("focusout", (event) => {
     if (event.relatedTarget instanceof Node && el16.contains(event.relatedTarget)) return;
     focus = false;
-    settle2();
+    settle3();
   });
 }
 var goingToasts;
@@ -20468,7 +20468,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     };
     const disabledWhy = () => field2.dataset.kpSecretDisabled;
     const label = () => state12 === "shown" ? s2.secretHide : state12 === "error" ? s2.secretRetry : hold ? s2.secretHold : s2.secretReveal;
-    const setState3 = (next2) => {
+    const setState2 = (next2) => {
       state12 = next2;
       field2.dataset.kpSecretState = next2;
       const why = disabledWhy();
@@ -20512,7 +20512,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       paused = false;
       field2.removeAttribute("data-kp-secret-paused");
       const was = state12;
-      setState3("hidden");
+      setState2("hidden");
       writeLine();
       if (was === "shown") {
         say17(s2.secretHidden);
@@ -20556,14 +20556,14 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     const show = async (reason = "press") => {
       if (disabledWhy() !== void 0 || state12 === "loading" || state12 === "shown") return;
       const mine = ticket += 1;
-      setState3("loading");
+      setState2("loading");
       writeLine();
       let text = "";
       try {
         text = await read("reveal");
       } catch (error) {
         if (mine !== ticket) return;
-        setState3("error");
+        setState2("error");
         words3.textContent = s2.secretFailed(reasonOf2(error));
         say17(words3.textContent);
         return;
@@ -20577,7 +20577,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       field2.toggleAttribute("data-kp-secret-overflow", value.scrollWidth > value.clientWidth + 1);
       left = seconds;
       paused = false;
-      setState3("shown");
+      setState2("shown");
       drain.style.animation = "none";
       void drain.offsetWidth;
       drain.style.removeProperty("animation");
@@ -20671,11 +20671,11 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     field2.addEventListener("focusout", onFocusOut);
     doc.addEventListener("selectionchange", onSelection);
     doc.addEventListener("visibilitychange", onAway);
-    setState3(disabledWhy() !== void 0 ? "disabled" : "hidden");
+    setState2(disabledWhy() !== void 0 ? "disabled" : "hidden");
     writeLine();
     const watch2 = new MutationObserver(() => {
       if (disabledWhy() !== void 0) hide2("call");
-      setState3(disabledWhy() !== void 0 ? "disabled" : state12 === "disabled" ? "hidden" : state12);
+      setState2(disabledWhy() !== void 0 ? "disabled" : state12 === "disabled" ? "hidden" : state12);
       writeLine();
     });
     watch2.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled"] });
@@ -20687,7 +20687,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
         if (names.includes("data-kp-secret-reveal-on") && (state12 === "shown" || state12 === "loading")) hide2("call");
         readOptions5();
         field2.style.setProperty("--kp-secret-ttl", `${seconds}s`);
-        if (hold !== wasHold) setState3(state12);
+        if (hold !== wasHold) setState2(state12);
         if (names.includes("data-kp-secret-mask") || names.includes("data-kp-secret-mask-char")) {
           if (state12 !== "shown") value.textContent = mask;
         }
@@ -22422,18 +22422,18 @@ function paintPhoto(el16, name, src) {
   img.decoding = "async";
   img.draggable = false;
   img.loading = el16.getAttribute("data-kp-idmark-loading") === "eager" ? "eager" : "lazy";
-  const settle2 = (state12) => {
+  const settle3 = (state12) => {
     if (ASKED2.get(el16) !== src) return;
     if (state12 === "failed") img.remove();
     el16.setAttribute("data-kp-photo", state12);
     el16.dispatchEvent(new CustomEvent("kp-idmark-photo", { bubbles: true, detail: { state: state12, src } }));
   };
-  img.addEventListener("load", () => settle2("loaded"));
-  img.addEventListener("error", () => settle2("failed"));
+  img.addEventListener("load", () => settle3("loaded"));
+  img.addEventListener("error", () => settle3("failed"));
   el16.setAttribute("data-kp-photo", "loading");
   img.src = src;
   el16.prepend(img);
-  if (img.complete && img.naturalWidth > 0) settle2("loaded");
+  if (img.complete && img.naturalWidth > 0) settle3("loaded");
 }
 function decorateAvatar(el16, name) {
   const src = (el16.getAttribute("data-kp-idmark-src") ?? "").trim();
@@ -23621,7 +23621,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       /** @type {HTMLElement[]} */
       [...nav.querySelectorAll("[data-kp-nav-disclosure]")]
     );
-    const wired2 = /* @__PURE__ */ new Map();
+    const wired = /* @__PURE__ */ new Map();
     for (const button6 of buttons) {
       const panel = button6.parentElement?.querySelector(":scope > .kp-nav__menu--wide") ?? null;
       const stamped = ["aria-expanded"];
@@ -23635,7 +23635,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
         stamped.push("aria-label");
       }
       button6.setAttribute("aria-expanded", "false");
-      wired2.set(button6, { panel, stamped });
+      wired.set(button6, { panel, stamped });
     }
     const openButton = () => buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
     const settleClosing = (item, panel) => {
@@ -23651,7 +23651,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
         for (const other of buttons) if (other !== button6 && other.getAttribute("aria-expanded") === "true") set(other, false);
       }
       const was = button6.getAttribute("aria-expanded") === "true";
-      const panel = wired2.get(button6)?.panel;
+      const panel = wired.get(button6)?.panel;
       const item = button6.parentElement;
       if (open4) item?.removeAttribute("data-kp-nav-closing");
       button6.setAttribute("aria-expanded", String(open4));
@@ -23752,7 +23752,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       );
       document.removeEventListener("click", onOutside, true);
       window.removeEventListener("resize", placeOpen);
-      for (const [button6, { stamped }] of wired2) {
+      for (const [button6, { stamped }] of wired) {
         button6.removeEventListener("click", onClick);
         for (const name of stamped) button6.removeAttribute(name);
       }
@@ -41260,8 +41260,8 @@ function datePicker(element) {
   return controllerOf(element, DatePickerController)?.handle ?? null;
 }
 function wireable(picker) {
-  const wired2 = picker.dataset.kpDatepickerAttached !== void 0;
-  return !wired2 && partsOf3(picker) !== null;
+  const wired = picker.dataset.kpDatepickerAttached !== void 0;
+  return !wired && partsOf3(picker) !== null;
 }
 function attachDatePickers(root = document, options = {}) {
   const made6 = hostsOf(root, PICKER2).filter(wireable).map((picker) => attachOne(picker, DatePickerController, options)).filter((controller) => controller !== void 0);
@@ -46361,7 +46361,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
     const columns2 = Number.parseInt(grid2.dataset.kpColumns ?? "", 10) || COLUMNS;
     const stride = Number.parseInt(grid2.dataset.kpStep ?? "", 10) || step;
     const maxRows = Number.parseInt(grid2.dataset.kpRows ?? "", 10) || rows;
-    const settle2 = Number.parseInt(grid2.dataset.kpCommitMs ?? "", 10) || commitMs;
+    const settle3 = Number.parseInt(grid2.dataset.kpCommitMs ?? "", 10) || commitMs;
     const drag = grid2.dataset.kpPointer === void 0 ? pointer : grid2.dataset.kpPointer !== "false";
     const hadColumns = grid2.style.getPropertyValue("--kp-grid-columns");
     grid2.style.setProperty("--kp-grid-columns", String(columns2));
@@ -46372,7 +46372,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       clearTimeout(timer);
       timer = window.setTimeout(
         () => grid2.dispatchEvent(new CustomEvent(LAYOUT_COMMIT_EVENT, { bubbles: true, detail: { layout: layoutOf(grid2) } })),
-        settle2
+        settle3
       );
     };
     const set = (tile, nx, ny, nw, nh) => {
@@ -48827,9 +48827,9 @@ function drawUsesMap(el16, spec, ctx) {
   ctx.syncCard(el16, m.loading, m.strings.usesLoading, () => [el16], "kp-uses__busy");
   ctx.markDrawn(el16);
   if (m.loading) return;
-  const wire4 = new UsesWire(m, root, svg2, list);
-  wire4.connect();
-  memory.off = () => wire4.destroy();
+  const wire3 = new UsesWire(m, root, svg2, list);
+  wire3.connect();
+  memory.off = () => wire3.destroy();
 }
 function setUsesPin(el16, key) {
   const card = key ? el16.querySelector(`.kp-uses__node[data-key="${CSS.escape(key)}"] .kp-uses__card`) : null;
@@ -56387,7 +56387,7 @@ function attachCompares(root = document) {
     let card = null;
     let held2 = false;
     let drawn2 = false;
-    const settle2 = () => {
+    const settle3 = () => {
       const waiting = held2 || images.some((img) => !img.complete);
       el16.dataset.kpCompareState = waiting ? "loading" : "ready";
       el16.setAttribute("aria-busy", String(waiting));
@@ -56425,7 +56425,7 @@ function attachCompares(root = document) {
               const src = one.getAttribute("src");
               if (src !== null) one.setAttribute("src", src);
             }
-            settle2();
+            settle3();
             el16.dispatchEvent(new CustomEvent(COMPARE_RETRY_EVENT, { bubbles: true, detail: { pane: side } }));
           });
           note2.append(said, retry);
@@ -56436,21 +56436,21 @@ function attachCompares(root = document) {
     };
     HOLD.set(el16, (busy) => {
       held2 = busy;
-      settle2();
+      settle3();
     });
     for (const img of images) {
-      img.addEventListener("load", settle2);
-      img.addEventListener("error", settle2);
+      img.addEventListener("load", settle3);
+      img.addEventListener("error", settle3);
     }
-    settle2();
+    settle3();
     cleanups.push(() => {
       el16.removeEventListener("pointerdown", onDown2);
       el16.removeEventListener("pointermove", onMove2);
       el16.removeEventListener("pointerup", onUp2);
       el16.removeEventListener("pointercancel", onUp2);
       for (const img of images) {
-        img.removeEventListener("load", settle2);
-        img.removeEventListener("error", settle2);
+        img.removeEventListener("load", settle3);
+        img.removeEventListener("error", settle3);
       }
       for (const n of [labelBefore, labelAfter, divider, wait, ...notes]) n.remove();
       card?.remove();
@@ -57152,176 +57152,263 @@ var init_problems = __esm({
   }
 });
 
-// js/flash.js
-var flash_exports = {};
-__export(flash_exports, {
-  FLASH_BUTTON: () => FLASH_BUTTON,
-  FLASH_ERROR_MS: () => FLASH_ERROR_MS,
-  FLASH_EVENT: () => FLASH_EVENT,
-  FLASH_MS: () => FLASH_MS,
-  FLASH_RELOAD_EVENT: () => FLASH_RELOAD_EVENT,
-  attachFlashButtons: () => attachFlashButtons,
-  runFlashButton: () => runFlashButton
+// js/flash/read.js
+var attr3, num2;
+var init_read4 = __esm({
+  "js/flash/read.js"() {
+    "use strict";
+    attr3 = (button6, name, fallback2) => button6.getAttribute(name) ?? fallback2;
+    num2 = (button6, name, fallback2) => {
+      const n = Number.parseInt(button6.getAttribute(name) ?? "", 10);
+      return Number.isFinite(n) && n >= 0 ? n : fallback2;
+    };
+  }
 });
-function wire(button6, options) {
-  const known4 = wired.get(button6);
-  if (known4) return known4;
-  const doc = button6.ownerDocument;
-  const s2 = getStrings();
-  const rest = doc.createElement("span");
-  rest.className = "kp-flash__face kp-flash__face--rest";
-  rest.append(...button6.childNodes);
-  const busy = doc.createElement("span");
-  busy.className = "kp-flash__face kp-flash__face--busy";
-  busy.setAttribute("aria-hidden", "true");
-  const spin = doc.createElement("span");
-  spin.className = "kp-spinner kp-button__spin";
-  busy.append(spin);
-  const label = options.busyLabel ?? button6.getAttribute("data-kp-busy-label");
-  if (label) busy.append(label);
-  const result = doc.createElement("span");
-  result.className = "kp-flash__face kp-flash__face--result";
-  result.setAttribute("aria-hidden", "true");
-  const stack = doc.createElement("span");
-  stack.className = "kp-flash__stack";
-  stack.append(rest, busy, result);
-  const words3 = (button6.getAttribute("data-kp-flash-words") ?? `${attr3(button6, "data-kp-flash-word", s2.flashDone)},${attr3(button6, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
-  for (const word of words3) {
-    const ghost = doc.createElement("span");
-    ghost.className = "kp-flash__ghost";
-    ghost.setAttribute("aria-hidden", "true");
-    ghost.textContent = `\u2713 ${word}`;
-    stack.append(ghost);
-  }
-  button6.replaceChildren(stack);
-  button6.classList.add("kp-flash");
-  button6.setAttribute("data-kp-flash-state", "rest");
-  const status = doc.createElement("span");
-  status.className = "kp-sr-only";
-  status.setAttribute("role", "status");
-  const slot = button6.getAttribute("data-kp-flash-line");
-  const own = slot ? doc.querySelector(slot) : null;
-  const ownLine = own === null;
-  const line = (
-    /** @type {HTMLElement} */
-    own ?? doc.createElement("p")
-  );
-  if (ownLine) {
-    line.className = "kp-flash__line";
-    line.hidden = true;
-  }
-  line.setAttribute("role", "status");
-  button6.after(status);
-  if (ownLine) status.after(line);
-  const handle = {
-    stack,
-    rest,
-    busy,
-    result,
-    status,
-    line,
-    ownLine,
-    timer: 0,
-    running: false,
-    off: () => {
-      window.clearTimeout(handle.timer);
-      button6.replaceChildren(...rest.childNodes);
-      button6.classList.remove("kp-flash");
-      button6.removeAttribute("data-kp-flash-state");
-      button6.removeAttribute("aria-busy");
-      button6.removeAttribute("aria-disabled");
-      status.remove();
-      if (ownLine) line.remove();
-      else {
-        line.textContent = "";
-        line.removeAttribute("data-kp-tone");
+
+// js/flash/faces.js
+var FlashFaces;
+var init_faces = __esm({
+  "js/flash/faces.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_read4();
+    FlashFaces = class extends Controller {
+      /**
+       * @param {HTMLElement} host the button
+       * @param {FlashOptions} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.flashOptions = options;
+        const doc = host.ownerDocument;
+        this.rest = this.span("kp-flash__face kp-flash__face--rest");
+        this.busy = this.span("kp-flash__face kp-flash__face--busy");
+        this.busy.setAttribute("aria-hidden", "true");
+        this.result = this.span("kp-flash__face kp-flash__face--result");
+        this.result.setAttribute("aria-hidden", "true");
+        this.stack = this.span("kp-flash__stack");
+        this.status = this.span("kp-sr-only");
+        this.status.setAttribute("role", "status");
+        const slot = host.getAttribute("data-kp-flash-line");
+        const own = slot ? doc.querySelector(slot) : null;
+        this.ownLine = own === null;
+        this.line = /** @type {HTMLElement} */
+        own ?? doc.createElement("p");
       }
-      wired.delete(button6);
-    }
-  };
-  wired.set(button6, handle);
-  return handle;
-}
-function setState2(button6, w, state12, detail = {}) {
-  button6.setAttribute("data-kp-flash-state", state12);
-  if (state12 === "busy") {
-    button6.setAttribute("aria-busy", "true");
-    button6.setAttribute("aria-disabled", "true");
-  } else {
-    button6.removeAttribute("aria-busy");
-    button6.removeAttribute("aria-disabled");
+      /** @param {string} className */
+      span(className) {
+        const node = this.host.ownerDocument.createElement("span");
+        node.className = className;
+        return node;
+      }
+      /** Every word the button may say holds its width, unseen. */
+      ghostWords() {
+        const button6 = this.host;
+        const s2 = getStrings();
+        return (button6.getAttribute("data-kp-flash-words") ?? `${attr3(button6, "data-kp-flash-word", s2.flashDone)},${attr3(button6, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
+      }
+      connect() {
+        const { host: button6, rest, busy, result, stack, status, line, ownLine } = this;
+        const doc = button6.ownerDocument;
+        rest.append(...button6.childNodes);
+        const spin = doc.createElement("span");
+        spin.className = "kp-spinner kp-button__spin";
+        busy.append(spin);
+        const label = this.flashOptions.busyLabel ?? button6.getAttribute("data-kp-busy-label");
+        if (label) busy.append(label);
+        stack.append(rest, busy, result);
+        for (const word of this.ghostWords()) {
+          const ghost = doc.createElement("span");
+          ghost.className = "kp-flash__ghost";
+          ghost.setAttribute("aria-hidden", "true");
+          ghost.textContent = `\u2713 ${word}`;
+          stack.append(ghost);
+        }
+        button6.replaceChildren(stack);
+        button6.classList.add("kp-flash");
+        button6.setAttribute("data-kp-flash-state", "rest");
+        if (ownLine) {
+          line.className = "kp-flash__line";
+          line.hidden = true;
+        }
+        line.setAttribute("role", "status");
+        button6.after(status);
+        if (ownLine) status.after(line);
+        this.own(() => this.unwire());
+      }
+      /** Give the button its own words back and take the faces, the status and the line away. */
+      unwire() {
+        const { host: button6, rest, status, line, ownLine } = this;
+        button6.replaceChildren(...rest.childNodes);
+        button6.classList.remove("kp-flash");
+        button6.removeAttribute("data-kp-flash-state");
+        button6.removeAttribute("aria-busy");
+        button6.removeAttribute("aria-disabled");
+        status.remove();
+        if (ownLine) line.remove();
+        else {
+          line.textContent = "";
+          line.removeAttribute("data-kp-tone");
+        }
+      }
+    };
   }
-  button6.dispatchEvent(new CustomEvent(FLASH_EVENT, { bubbles: true, detail: { state: state12, ...detail } }));
-}
-async function runFlashButton(button6, work, options = {}) {
-  const w = wire(button6, options);
-  if (w.running) return null;
+});
+
+// js/flash/outcome.js
+async function settle2(button6, work) {
   const s2 = getStrings();
-  w.running = true;
-  window.clearTimeout(w.timer);
-  if (w.ownLine) {
-    w.line.hidden = true;
-  }
-  w.line.textContent = "";
-  w.line.removeAttribute("data-kp-tone");
-  if (options.width) button6.setAttribute("data-kp-width", options.width);
-  if (options.refusal) button6.setAttribute("data-kp-refusal", options.refusal);
-  setState2(button6, w, "busy");
-  const label = options.busyLabel ?? button6.getAttribute("data-kp-busy-label") ?? "";
-  if (label !== "") w.status.textContent = label;
-  let ok = true;
-  let word = "";
-  let line = "";
   try {
     const answer2 = await work();
     if (answer2 && typeof answer2 === "object" && "error" in answer2) {
-      ok = false;
-      word = answer2.word ?? attr3(button6, "data-kp-refused-word", s2.flashRefused);
-      line = [answer2.error, answer2.remedy].filter(Boolean).join(" ");
-    } else if (answer2 && typeof answer2 === "object") {
-      word = answer2.word ?? attr3(button6, "data-kp-flash-word", s2.flashDone);
-      line = answer2.line ?? "";
-    } else word = typeof answer2 === "string" && answer2 !== "" ? answer2 : attr3(button6, "data-kp-flash-word", s2.flashDone);
-  } catch (error) {
-    ok = false;
-    word = attr3(button6, "data-kp-failed-word", s2.flashFailed);
-    line = error instanceof Error ? error.message : String(error);
-  }
-  const refusal = (
-    /** @type {'line' | 'button' | 'toast'} */
-    options.refusal ?? attr3(button6, "data-kp-refusal", "line")
-  );
-  const onButton = !ok && refusal === "button" ? line : "";
-  w.result.replaceChildren();
-  const glyph3 = button6.ownerDocument.createElement("span");
-  glyph3.className = "kp-flash__glyph";
-  glyph3.textContent = ok ? "\u2713" : "\u2715";
-  w.result.append(glyph3, ` ${onButton || word}`);
-  const handWidth = button6.getAttribute("data-kp-width");
-  if (onButton) button6.setAttribute("data-kp-width", "grow");
-  w.status.textContent = "";
-  window.setTimeout(() => {
-    w.status.textContent = line ? `${word}. ${line}` : word;
-  }, 30);
-  if (line && (ok || refusal === "line")) {
-    w.line.textContent = line;
-    w.line.setAttribute("data-kp-tone", ok ? "success" : "destructive");
-    w.line.hidden = false;
-  }
-  if (!ok && refusal === "toast" && line) toast(line);
-  w.running = false;
-  setState2(button6, w, ok ? "success" : "refused", { ok, word, line });
-  const ms = ok ? num2(button6, "data-kp-flash-ms", options.flashMs ?? FLASH_MS) : num2(button6, "data-kp-flash-error-ms", options.errorMs ?? FLASH_ERROR_MS);
-  w.timer = window.setTimeout(() => {
-    if (!wired.has(button6)) return;
-    if (onButton && options.width === void 0) {
-      if (handWidth === null) button6.removeAttribute("data-kp-width");
-      else button6.setAttribute("data-kp-width", handWidth);
+      return {
+        ok: false,
+        word: answer2.word ?? attr3(button6, "data-kp-refused-word", s2.flashRefused),
+        line: [answer2.error, answer2.remedy].filter(Boolean).join(" ")
+      };
     }
-    setState2(button6, w, "rest");
-  }, ms);
-  return { ok, word, line };
+    if (answer2 && typeof answer2 === "object") return { ok: true, word: answer2.word ?? attr3(button6, "data-kp-flash-word", s2.flashDone), line: answer2.line ?? "" };
+    return { ok: true, word: typeof answer2 === "string" && answer2 !== "" ? answer2 : attr3(button6, "data-kp-flash-word", s2.flashDone), line: "" };
+  } catch (error) {
+    return { ok: false, word: attr3(button6, "data-kp-failed-word", s2.flashFailed), line: error instanceof Error ? error.message : String(error) };
+  }
 }
+var init_outcome = __esm({
+  "js/flash/outcome.js"() {
+    "use strict";
+    init_strings();
+    init_read4();
+  }
+});
+
+// js/flash/values.js
+var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, SAY_DELAY_MS4, RELOAD_DELAY_MS;
+var init_values18 = __esm({
+  "js/flash/values.js"() {
+    "use strict";
+    FLASH_BUTTON = "[data-kp-flash-button], [data-kp-post]";
+    FLASH_EVENT = "kp-flash";
+    FLASH_RELOAD_EVENT = "kp-flash-reload";
+    FLASH_MS = 1500;
+    FLASH_ERROR_MS = 3e3;
+    SAY_DELAY_MS4 = 30;
+    RELOAD_DELAY_MS = 600;
+  }
+});
+
+// js/flash/run.js
+var FlashRun;
+var init_run3 = __esm({
+  "js/flash/run.js"() {
+    "use strict";
+    init_overlays();
+    init_faces();
+    init_outcome();
+    init_read4();
+    init_values18();
+    FlashRun = class extends FlashFaces {
+      /**
+       * @param {HTMLElement} host the button
+       * @param {FlashOptions} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.timer = 0;
+        this.running = false;
+      }
+      connect() {
+        super.connect();
+        this.own(() => window.clearTimeout(this.timer));
+      }
+      /**
+       * @param {'rest' | 'busy' | 'success' | 'refused'} state
+       * @param {Record<string, unknown>} [detail]
+       */
+      setState(state12, detail = {}) {
+        const button6 = this.host;
+        button6.setAttribute("data-kp-flash-state", state12);
+        if (state12 === "busy") {
+          button6.setAttribute("aria-busy", "true");
+          button6.setAttribute("aria-disabled", "true");
+        } else {
+          button6.removeAttribute("aria-busy");
+          button6.removeAttribute("aria-disabled");
+        }
+        button6.dispatchEvent(new CustomEvent(FLASH_EVENT, { bubbles: true, detail: { state: state12, ...detail } }));
+      }
+      /** The press starts: the old result goes, the options the page passed are stamped, and the button is busy. @param {FlashOptions} options */
+      begin(options) {
+        const button6 = this.host;
+        this.running = true;
+        window.clearTimeout(this.timer);
+        if (this.ownLine) this.line.hidden = true;
+        this.line.textContent = "";
+        this.line.removeAttribute("data-kp-tone");
+        if (options.width) button6.setAttribute("data-kp-width", options.width);
+        if (options.refusal) button6.setAttribute("data-kp-refusal", options.refusal);
+        this.setState("busy");
+        const label = options.busyLabel ?? button6.getAttribute("data-kp-busy-label") ?? "";
+        if (label !== "") this.status.textContent = label;
+      }
+      /**
+       * Run `work` behind the button.
+       * @param {() => Promise<import('../flash.js').FlashAnswer> | import('../flash.js').FlashAnswer} work
+       * @param {FlashOptions} [options]
+       * @returns {Promise<{ ok: boolean, word: string, line: string } | null>} null when the press was ignored (already busy)
+       */
+      async run(work, options = {}) {
+        if (this.running) return null;
+        this.begin(options);
+        const outcome = await settle2(this.host, work);
+        this.showOutcome(outcome, options);
+        return outcome;
+      }
+      /** The result on the button, the line under it, the words said, and the timer back to rest. @param {{ ok: boolean, word: string, line: string }} outcome @param {FlashOptions} options */
+      showOutcome({ ok, word, line }, options) {
+        const button6 = this.host;
+        const refusal = (
+          /** @type {'line' | 'button' | 'toast'} */
+          options.refusal ?? attr3(button6, "data-kp-refusal", "line")
+        );
+        const onButton = !ok && refusal === "button" ? line : "";
+        this.result.replaceChildren();
+        const glyph3 = button6.ownerDocument.createElement("span");
+        glyph3.className = "kp-flash__glyph";
+        glyph3.textContent = ok ? "\u2713" : "\u2715";
+        this.result.append(glyph3, ` ${onButton || word}`);
+        const handWidth = button6.getAttribute("data-kp-width");
+        if (onButton) button6.setAttribute("data-kp-width", "grow");
+        this.status.textContent = "";
+        window.setTimeout(() => {
+          this.status.textContent = line ? `${word}. ${line}` : word;
+        }, SAY_DELAY_MS4);
+        if (line && (ok || refusal === "line")) {
+          this.line.textContent = line;
+          this.line.setAttribute("data-kp-tone", ok ? "success" : "destructive");
+          this.line.hidden = false;
+        }
+        if (!ok && refusal === "toast" && line) toast(line);
+        this.running = false;
+        this.setState(ok ? "success" : "refused", { ok, word, line });
+        const ms = ok ? num2(button6, "data-kp-flash-ms", options.flashMs ?? FLASH_MS) : num2(button6, "data-kp-flash-error-ms", options.errorMs ?? FLASH_ERROR_MS);
+        this.timer = window.setTimeout(() => this.backToRest(onButton !== "", handWidth, options), ms);
+      }
+      /** Back to rest; a width the refusal grew is taken back unless the page chose one. @param {boolean} grown @param {string | null} handWidth @param {FlashOptions} options */
+      backToRest(grown, handWidth, options) {
+        const button6 = this.host;
+        if (this.destroyed) return;
+        if (grown && options.width === void 0) {
+          if (handWidth === null) button6.removeAttribute("data-kp-width");
+          else button6.setAttribute("data-kp-width", handWidth);
+        }
+        this.setState("rest");
+      }
+    };
+  }
+});
+
+// js/flash/post.js
 async function post(button6) {
   const url = button6.getAttribute("data-kp-post") ?? "";
   const method = (button6.getAttribute("data-kp-method") ?? "POST").toUpperCase();
@@ -57338,62 +57425,92 @@ async function post(button6) {
   }
   if (!response.ok) return { error: json?.error ?? (response.statusText || `HTTP ${response.status}`), remedy: json?.remedy };
   const reload = attr3(button6, "data-kp-reload", "none");
-  if (reload === "page") window.setTimeout(() => location.reload(), 600);
+  if (reload === "page") window.setTimeout(() => location.reload(), RELOAD_DELAY_MS);
   else if (reload === "region")
     button6.dispatchEvent(
       new CustomEvent(FLASH_RELOAD_EVENT, { bubbles: true, detail: { target: button6.getAttribute("data-kp-reload-target") } })
     );
   return typeof json?.message === "string" ? { line: json.message } : void 0;
 }
+var init_post = __esm({
+  "js/flash/post.js"() {
+    "use strict";
+    init_read4();
+    init_values18();
+  }
+});
+
+// js/flash/controller.js
+var FlashButton;
+var init_controller30 = __esm({
+  "js/flash/controller.js"() {
+    "use strict";
+    init_run3();
+    init_post();
+    FlashButton = class extends FlashRun {
+      /** Listen for the press of a `data-kp-post` button; a press while busy never reaches the page's own handler. */
+      listenPress() {
+        const button6 = this.host;
+        this.listen(
+          button6,
+          "click",
+          (event) => {
+            if (this.running || button6.getAttribute("aria-disabled") === "true") {
+              event.stopImmediatePropagation();
+              event.preventDefault();
+            }
+          },
+          true
+        );
+        this.listen(button6, "click", (event) => {
+          if (!button6.hasAttribute("data-kp-post")) return;
+          event.preventDefault();
+          void this.run(() => post(button6), this.flashOptions);
+        });
+      }
+    };
+  }
+});
+
+// js/flash.js
+var flash_exports = {};
+__export(flash_exports, {
+  FLASH_BUTTON: () => FLASH_BUTTON,
+  FLASH_ERROR_MS: () => FLASH_ERROR_MS,
+  FLASH_EVENT: () => FLASH_EVENT,
+  FLASH_MS: () => FLASH_MS,
+  FLASH_RELOAD_EVENT: () => FLASH_RELOAD_EVENT,
+  attachFlashButtons: () => attachFlashButtons,
+  runFlashButton: () => runFlashButton
+});
+async function runFlashButton(button6, work, options = {}) {
+  const flash = attachOne(button6, FlashButton, options);
+  return flash ? flash.run(work, options) : null;
+}
 function attachFlashButtons(root = document, options = {}) {
-  const cleanups = [];
+  const made6 = [];
   for (const found of root.querySelectorAll(FLASH_BUTTON)) {
     const button6 = (
       /** @type {HTMLElement} */
       found
     );
-    if (wired.has(button6)) continue;
-    const w = wire(button6, options);
-    const onClick = (event) => {
-      if (!button6.hasAttribute("data-kp-post")) return;
-      event.preventDefault();
-      void runFlashButton(button6, () => post(button6), options);
-    };
-    const guard = (event) => {
-      if (w.running || button6.getAttribute("aria-disabled") === "true") {
-        event.stopImmediatePropagation();
-        event.preventDefault();
-      }
-    };
-    button6.addEventListener("click", guard, true);
-    button6.addEventListener("click", onClick);
-    cleanups.push(() => {
-      button6.removeEventListener("click", guard, true);
-      button6.removeEventListener("click", onClick);
-      w.off();
-    });
+    if (controllerOf(button6, FlashButton)) continue;
+    const flash = attachOne(button6, FlashButton, options);
+    if (!flash) continue;
+    flash.listenPress();
+    made6.push(flash);
   }
   return () => {
-    for (const clean of cleanups) clean();
+    for (const flash of made6) flash.destroy();
   };
 }
-var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, wired, attr3, num2;
 var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
-    init_overlays();
-    init_strings();
-    FLASH_BUTTON = "[data-kp-flash-button], [data-kp-post]";
-    FLASH_EVENT = "kp-flash";
-    FLASH_RELOAD_EVENT = "kp-flash-reload";
-    FLASH_MS = 1500;
-    FLASH_ERROR_MS = 3e3;
-    wired = /* @__PURE__ */ new WeakMap();
-    attr3 = (button6, name, fallback2) => button6.getAttribute(name) ?? fallback2;
-    num2 = (button6, name, fallback2) => {
-      const n = Number.parseInt(button6.getAttribute(name) ?? "", 10);
-      return Number.isFinite(n) && n >= 0 ? n : fallback2;
-    };
+    init_controller();
+    init_controller30();
+    init_values18();
+    init_values18();
   }
 });
 
@@ -57717,7 +57834,7 @@ var init_parts6 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -58004,7 +58121,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller30();
+    init_controller31();
     init_parts6();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -58061,10 +58178,10 @@ function attachConnection(root = document) {
     ]
   );
   const undo = [];
-  for (const el16 of found) if (!handles9.has(el16)) undo.push(wire2(el16));
+  for (const el16 of found) if (!handles9.has(el16)) undo.push(wire(el16));
   return () => undo.forEach((u) => u());
 }
-function wire2(el16) {
+function wire(el16) {
   const doc = el16.ownerDocument;
   const view = (
     /** @type {Window} */
@@ -58285,7 +58402,7 @@ var init_connection = __esm({
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -58310,7 +58427,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values18();
+    init_values19();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -58360,7 +58477,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values18();
+    init_values19();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -58371,7 +58488,7 @@ var init_math3 = __esm({
 
 // js/transfer/read.js
 var BASE_DECIMAL, BASE_BINARY, baseOf, numberOf2, size, shows;
-var init_read4 = __esm({
+var init_read5 = __esm({
   "js/transfer/read.js"() {
     "use strict";
     init_locale();
@@ -58400,8 +58517,8 @@ var init_core13 = __esm({
     init_progressbar();
     init_strings();
     init_math3();
-    init_read4();
-    init_values18();
+    init_read5();
+    init_values19();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -58628,7 +58745,7 @@ var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts7();
-    init_values18();
+    init_values19();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -58644,9 +58761,9 @@ var init_row3 = __esm({
     init_strings();
     init_core13();
     init_parts7();
-    init_read4();
+    init_read5();
     init_ticker();
-    init_values18();
+    init_values19();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -58800,8 +58917,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row3();
-    init_values18();
-    init_values18();
+    init_values19();
+    init_values19();
     init_math3();
   }
 });
@@ -59033,7 +59150,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -59053,7 +59170,7 @@ var init_core14 = __esm({
     init_controller();
     init_strings();
     init_build10();
-    init_values19();
+    init_values20();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -59183,7 +59300,7 @@ var init_problem = __esm({
     "use strict";
     init_forms();
     init_core14();
-    init_values19();
+    init_values20();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -59259,12 +59376,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
     init_build10();
-    init_values19();
+    init_values20();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -59499,15 +59616,15 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller31();
-    init_values19();
-    init_values19();
+    init_controller32();
+    init_values20();
+    init_values20();
   }
 });
 
 // js/page-contents/values.js
 var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/page-contents/values.js"() {
     "use strict";
     CONTENTS = "[data-kp-contents]";
@@ -59556,7 +59673,7 @@ var init_core15 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
-    init_values20();
+    init_values21();
     serial5 = 0;
     ContentsCore = class extends Controller {
       /**
@@ -59666,10 +59783,10 @@ var init_core15 = __esm({
 
 // js/page-contents/read.js
 var ContentsRead;
-var init_read5 = __esm({
+var init_read6 = __esm({
   "js/page-contents/read.js"() {
     "use strict";
-    init_values20();
+    init_values21();
     init_slug();
     init_core15();
     ContentsRead = class extends ContentsCore {
@@ -59725,9 +59842,9 @@ var ContentsSpy;
 var init_spy = __esm({
   "js/page-contents/spy.js"() {
     "use strict";
-    init_values20();
+    init_values21();
     init_slug();
-    init_read5();
+    init_read6();
     ContentsSpy = class extends ContentsRead {
       /** Mark an entry as the current one and say so when it changed. @param {string | null} next */
       mark(next2) {
@@ -59840,10 +59957,10 @@ var init_draw11 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
-    init_values20();
+    init_values21();
     init_draw11();
     init_strings();
     ContentsList = class extends ContentsDraw {
@@ -59958,15 +60075,15 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller32();
-    init_values20();
-    init_values20();
+    init_controller33();
+    init_values21();
+    init_values21();
     init_slug();
   }
 });
 
 // js/timefield/constants.js
-var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, MINUTES_PER_HOUR, MINUTES_PER_DAY, DEFAULT_STEP, DEFAULT_NEAR_WIDTH, SAY_DELAY_MS4, NARROW_QUERY, POPUP_EDGE_PX, POPUP_GAP_PX, POPUP_MIN_WIDTH_PX, BARE_DIGITS;
+var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, MINUTES_PER_HOUR, MINUTES_PER_DAY, DEFAULT_STEP, DEFAULT_NEAR_WIDTH, SAY_DELAY_MS5, NARROW_QUERY, POPUP_EDGE_PX, POPUP_GAP_PX, POPUP_MIN_WIDTH_PX, BARE_DIGITS;
 var init_constants29 = __esm({
   "js/timefield/constants.js"() {
     "use strict";
@@ -59978,7 +60095,7 @@ var init_constants29 = __esm({
     MINUTES_PER_DAY = 1440;
     DEFAULT_STEP = 5;
     DEFAULT_NEAR_WIDTH = 60;
-    SAY_DELAY_MS4 = 60;
+    SAY_DELAY_MS5 = 60;
     NARROW_QUERY = "(max-width: 40rem)";
     POPUP_EDGE_PX = 8;
     POPUP_GAP_PX = 4;
@@ -60446,7 +60563,7 @@ var init_field = __esm({
         }
         const target = region;
         target.textContent = "";
-        setTimeout(() => target.textContent = message, SAY_DELAY_MS4);
+        setTimeout(() => target.textContent = message, SAY_DELAY_MS5);
       }
       /** The why line. */
       get why() {
@@ -60645,7 +60762,7 @@ var init_keys12 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -60852,7 +60969,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller33();
+    init_controller34();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -60888,7 +61005,7 @@ var init_timefield = __esm({
 
 // js/weekdays/values.js
 var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, WEEK2, MONTH_DAYS, DEFAULT_MIN;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/weekdays/values.js"() {
     "use strict";
     WEEKDAYS = "[data-kp-weekdays]";
@@ -60927,7 +61044,7 @@ var init_options5 = __esm({
   "js/weekdays/options.js"() {
     "use strict";
     init_locale();
-    init_values21();
+    init_values22();
   }
 });
 
@@ -60958,7 +61075,7 @@ var init_names = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_values21();
+    init_values22();
     DICTIONARY_ORDER = [6, 0, 1, 2, 3, 4, 5];
     SUNDAY = 7;
   }
@@ -61029,7 +61146,7 @@ var init_parts8 = __esm({
   "js/weekdays/parts.js"() {
     "use strict";
     init_names();
-    init_values21();
+    init_values22();
   }
 });
 
@@ -61062,7 +61179,7 @@ var init_summary3 = __esm({
     "use strict";
     init_strings();
     init_names();
-    init_values21();
+    init_values22();
   }
 });
 
@@ -61078,7 +61195,7 @@ var init_core16 = __esm({
     init_parts8();
     init_names();
     init_summary3();
-    init_values21();
+    init_values22();
     seq3 = 0;
     WeekdaysCore = class extends Controller {
       /**
@@ -61153,13 +61270,13 @@ var init_core16 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
     init_core16();
     init_names();
-    init_values21();
+    init_values22();
     WeekdayPicker = class extends WeekdaysCore {
       /**
        * @param {HTMLElement} host
@@ -61268,9 +61385,9 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller34();
-    init_values21();
-    init_values21();
+    init_controller35();
+    init_values22();
+    init_values22();
     init_names();
     init_summary3();
   }
@@ -61529,7 +61646,7 @@ var init_quiet_hours = __esm({
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -61620,7 +61737,7 @@ var init_build12 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values22();
+    init_values23();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -61653,7 +61770,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values22();
+    init_values23();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -61668,7 +61785,7 @@ var init_core17 = __esm({
     init_controller();
     init_freshness();
     init_strings();
-    init_values22();
+    init_values23();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -61781,11 +61898,11 @@ var init_core17 = __esm({
 
 // js/question-card/run.js
 var QuestionRun;
-var init_run3 = __esm({
+var init_run4 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values22();
+    init_values23();
     init_title();
     init_core17();
     QuestionRun = class extends QuestionCore {
@@ -61946,7 +62063,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values22();
+    init_values23();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -61995,10 +62112,10 @@ var init_question_card = __esm({
     init_controller();
     init_strings();
     init_build12();
-    init_run3();
+    init_run4();
     init_spec();
-    init_values22();
-    init_values22();
+    init_values23();
+    init_values23();
   }
 });
 
@@ -62522,7 +62639,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -62681,7 +62798,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller35();
+    init_controller36();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -63112,7 +63229,7 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -63253,14 +63370,14 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller36();
+    init_controller37();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
 });
 
 // js/rating/constants.js
-var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, MIN_STARS, MAX_STARS, DEFAULT_STARS, DEFAULT_UNDO_MS, DEFAULT_FLASH_MS, SAY_DELAY_MS5, DISPLAY_STEP;
+var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, MIN_STARS, MAX_STARS, DEFAULT_STARS, DEFAULT_UNDO_MS, DEFAULT_FLASH_MS, SAY_DELAY_MS6, DISPLAY_STEP;
 var init_constants31 = __esm({
   "js/rating/constants.js"() {
     "use strict";
@@ -63275,7 +63392,7 @@ var init_constants31 = __esm({
     DEFAULT_STARS = 5;
     DEFAULT_UNDO_MS = 6e3;
     DEFAULT_FLASH_MS = 3e3;
-    SAY_DELAY_MS5 = 30;
+    SAY_DELAY_MS6 = 30;
     DISPLAY_STEP = 0.01;
   }
 });
@@ -63421,7 +63538,7 @@ function wordsOf4(m, value) {
   return label ?? s2.ratingOutOf(plain(value), m.max);
 }
 var attr5, itemName, disabled, readonly, state8, interactive, focusable, announceLevel;
-var init_read6 = __esm({
+var init_read7 = __esm({
   "js/rating/read.js"() {
     "use strict";
     init_strings();
@@ -63547,7 +63664,7 @@ var init_paint10 = __esm({
   "js/rating/paint.js"() {
     "use strict";
     init_strings();
-    init_read6();
+    init_read7();
     init_math4();
   }
 });
@@ -63557,7 +63674,7 @@ function say8(m, text) {
   m.live.textContent = "";
   window.setTimeout(() => {
     m.live.textContent = text;
-  }, SAY_DELAY_MS5);
+  }, SAY_DELAY_MS6);
 }
 function tell(m, text) {
   window.clearTimeout(m.flashTimer);
@@ -63662,7 +63779,7 @@ var init_commit = __esm({
     init_undo_toast();
     init_constants31();
     init_paint10();
-    init_read6();
+    init_read7();
     init_math4();
   }
 });
@@ -63708,14 +63825,14 @@ var init_keys13 = __esm({
     "use strict";
     init_math4();
     init_commit();
-    init_read6();
+    init_read7();
     starNumber = (target) => target instanceof HTMLElement ? Number(target.closest(".kp-rating__star")?.getAttribute("data-kp-star")) : 0;
   }
 });
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -63726,7 +63843,7 @@ var init_controller37 = __esm({
     init_keys13();
     init_math4();
     init_paint10();
-    init_read6();
+    init_read7();
     REDRAW = ["data-kp-rating-max", "data-kp-rating-step", "data-kp-rating-mode"];
     WATCHED6 = [
       ...REDRAW,
@@ -63985,7 +64102,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller37();
+    init_controller38();
     init_build13();
     init_commit();
     init_math4();
@@ -64273,7 +64390,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -64506,7 +64623,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller38();
+    init_controller39();
     init_list4();
     init_render4();
   }
@@ -65171,7 +65288,7 @@ function prepare(box) {
   }
   box.dataset.kpUsualReady = "";
 }
-function wire3(box) {
+function wire2(box) {
   prepare(box);
   attachComboboxes(box.parentElement ?? document);
   const handle = combobox(box);
@@ -65464,7 +65581,7 @@ function attachUsualPickers(root = document) {
   );
   for (const box of boxes) {
     if (models.has(box)) continue;
-    const off = wire3(box);
+    const off = wire2(box);
     if (off) undo.push(off);
   }
   return () => undo.splice(0).forEach((off) => off());
@@ -65949,7 +66066,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -66140,7 +66257,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller39();
+    init_controller40();
     init_group6();
     init_group6();
   }
@@ -66148,7 +66265,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values23 = __esm({
+var init_values24 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -66217,7 +66334,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values23();
+    init_values24();
   }
 });
 
@@ -66236,7 +66353,7 @@ var init_core18 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values23();
+    init_values24();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -66321,7 +66438,7 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values23();
+    init_values24();
     init_core18();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
@@ -66429,10 +66546,10 @@ var init_view4 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values23();
+    init_values24();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -66536,9 +66653,9 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller40();
-    init_values23();
-    init_values23();
+    init_controller41();
+    init_values24();
+    init_values24();
     init_level();
     init_links2();
   }
@@ -66546,7 +66663,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values24 = __esm({
+var init_values25 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -66617,7 +66734,7 @@ var init_core19 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values24();
+    init_values25();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -66728,7 +66845,7 @@ var init_rows5 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values24();
+    init_values25();
     init_core19();
     DeplistRows = class extends DeplistCore {
       /**
@@ -66831,14 +66948,14 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values24();
+    init_values25();
     init_order();
     init_core19();
     init_rows5();
@@ -67015,9 +67132,9 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller41();
-    init_values24();
-    init_values24();
+    init_controller42();
+    init_values25();
+    init_values25();
     init_order();
   }
 });
@@ -67127,7 +67244,7 @@ var init_states = __esm({
 
 // js/path-trace/values.js
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, GHOST_HOPS, WATCHED_ATTRIBUTES5;
-var init_values25 = __esm({
+var init_values26 = __esm({
   "js/path-trace/values.js"() {
     "use strict";
     TRACE = "[data-kp-trace]";
@@ -67157,7 +67274,7 @@ var init_draw12 = __esm({
     init_flash();
     init_core20();
     init_states();
-    init_values25();
+    init_values26();
     TraceDraw = class extends TraceCore {
       draw() {
         const { host, stage, foot, summary: summary2 } = this;
@@ -67280,14 +67397,14 @@ var init_draw12 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
     init_strings();
     init_draw12();
     init_states();
-    init_values25();
+    init_values26();
     Trace = class extends TraceDraw {
       /**
        * @param {HTMLElement} host
@@ -67367,9 +67484,9 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller42();
-    init_values25();
-    init_values25();
+    init_controller43();
+    init_values26();
+    init_values26();
     init_states();
   }
 });
@@ -68277,7 +68394,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values26 = __esm({
+var init_values27 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -68616,7 +68733,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts11();
-    init_values26();
+    init_values27();
   }
 });
 
@@ -68626,7 +68743,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values26();
+    init_values27();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -68746,7 +68863,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values26();
+    init_values27();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -69021,7 +69138,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -69274,7 +69391,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller43();
+    init_controller44();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -69620,7 +69737,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -69925,7 +70042,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller44();
+    init_controller45();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -70063,7 +70180,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values27 = __esm({
+var init_values28 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -70136,7 +70253,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values27();
+    init_values28();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -70262,7 +70379,7 @@ function openViewer(options) {
     foot.hidden = actions.length === 0;
   };
   drawActions(options.actions ?? []);
-  const setState3 = (next2, detail = {}) => {
+  const setState2 = (next2, detail = {}) => {
     current2 = next2;
     stage.setAttribute("data-kp-state", next2);
     stage.toggleAttribute("aria-busy", next2 === "loading");
@@ -70350,7 +70467,7 @@ function openViewer(options) {
     setContent(...nodes) {
       content.replaceChildren(...nodes);
     },
-    setState: setState3,
+    setState: setState2,
     state: () => current2,
     close: () => dialog.close()
   };
@@ -70408,7 +70525,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values27();
+    init_values28();
   }
 });
 
@@ -70451,7 +70568,7 @@ var init_core21 = __esm({
     init_controller();
     init_locale();
     init_strings();
-    init_values27();
+    init_values28();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -70562,12 +70679,12 @@ var init_core21 = __esm({
 
 // js/docpreview/run.js
 var FACTS_BASE, PreviewRun;
-var init_run4 = __esm({
+var init_run5 = __esm({
   "js/docpreview/run.js"() {
     "use strict";
     init_freshness();
     init_locale();
-    init_values27();
+    init_values28();
     init_kinds();
     init_core21();
     FACTS_BASE = 1024;
@@ -70738,10 +70855,10 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values27();
+    init_values28();
     init_kinds();
     init_keys14();
-    init_run4();
+    init_run5();
   }
 });
 
@@ -70860,8 +70977,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values27();
-    init_values27();
+    init_values28();
+    init_values28();
     init_kinds();
     init_glyph();
     init_open3();
@@ -71762,7 +71879,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values28 = __esm({
+var init_values29 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -71901,7 +72018,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build14 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values28();
+    init_values29();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -71921,7 +72038,7 @@ var init_core22 = __esm({
     init_controller();
     init_strings();
     init_build14();
-    init_values28();
+    init_values29();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -72036,12 +72153,12 @@ var init_core22 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build14();
     init_core22();
-    init_values28();
+    init_values29();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -72266,9 +72383,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller45();
-    init_values28();
-    init_values28();
+    init_controller46();
+    init_values29();
+    init_values29();
   }
 });
 
@@ -72434,7 +72551,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -72663,7 +72780,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_fields();
     init_fields();
   }
@@ -73003,7 +73120,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -73254,7 +73371,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller47();
+    init_controller48();
   }
 });
 
@@ -73297,7 +73414,7 @@ var init_input = __esm({
 
 // js/runs/values.js
 var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS3;
-var init_values29 = __esm({
+var init_values30 = __esm({
   "js/runs/values.js"() {
     "use strict";
     RUNS = "[data-kp-runs]";
@@ -73331,7 +73448,7 @@ var init_options7 = __esm({
   "js/runs/options.js"() {
     "use strict";
     init_chart();
-    init_values29();
+    init_values30();
   }
 });
 
@@ -73396,7 +73513,7 @@ var init_time3 = __esm({
     init_weekdays();
     init_freshness();
     init_chart();
-    init_values29();
+    init_values30();
     two6 = (n) => String(n).padStart(2, "0");
   }
 });
@@ -73578,11 +73695,11 @@ var init_note2 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note2();
-    init_values29();
+    init_values30();
     RunsList = class extends RunsNote {
       /**
        * @param {HTMLElement} host
@@ -73689,9 +73806,9 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller48();
-    init_values29();
-    init_values29();
+    init_controller49();
+    init_values30();
+    init_values30();
     init_time3();
   }
 });
@@ -74017,7 +74134,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -74276,7 +74393,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller49();
+    init_controller50();
     init_choices();
   }
 });
@@ -79130,7 +79247,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -79234,7 +79351,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller50();
+    init_controller51();
     init_state28();
     init_state28();
     init_matrix2();
@@ -79933,7 +80050,7 @@ async function submit(root) {
   }
   input.focus();
 }
-var init_run5 = __esm({
+var init_run6 = __esm({
   "js/console/run.js"() {
     "use strict";
     init_strings();
@@ -80035,7 +80152,7 @@ var init_api29 = __esm({
     init_bar2();
     init_blocks();
     init_model9();
-    init_run5();
+    init_run6();
   }
 });
 
@@ -80252,7 +80369,7 @@ var init_attach23 = __esm({
     init_constants41();
     init_history();
     init_model9();
-    init_run5();
+    init_run6();
   }
 });
 
@@ -81499,7 +81616,7 @@ function textOf3(text, segments) {
   return node;
 }
 var kindOf4;
-var init_read7 = __esm({
+var init_read8 = __esm({
   "js/diff/read.js"() {
     "use strict";
     init_constants43();
@@ -81613,7 +81730,7 @@ var init_lines2 = __esm({
     init_constants43();
     init_fold2();
     init_model11();
-    init_read7();
+    init_read8();
     init_words4();
   }
 });
@@ -81794,7 +81911,7 @@ var init_file = __esm({
     init_strings();
     init_lines2();
     init_model11();
-    init_read7();
+    init_read8();
     init_state31();
   }
 });
@@ -81897,7 +82014,7 @@ var init_render7 = __esm({
     init_reason();
     init_file();
     init_model11();
-    init_read7();
+    init_read8();
   }
 });
 
@@ -81965,7 +82082,7 @@ var init_actions7 = __esm({
     init_file();
     init_lines2();
     init_model11();
-    init_read7();
+    init_read8();
     init_render7();
   }
 });
@@ -82070,7 +82187,7 @@ var init_attach25 = __esm({
     init_constants43();
     init_lines2();
     init_model11();
-    init_read7();
+    init_read8();
     init_render7();
   }
 });

@@ -323,6 +323,7 @@
         { "path": "js/claim.js", "tags": ["@component:data"], "why": "who brings what on a checklist [kpadopt6]" },
         { "path": "js/claim/*.js", "tags": ["@component:data"], "why": "who brings what on a checklist [kpadopt6]" },
         { "path": "js/flash.js", "tags": ["@component:feedback"], "why": "the flash button [kpadopt5]" },
+        { "path": "js/flash/*.js", "tags": ["@component:feedback"], "why": "the flash button [kpadopt5]" },
         { "path": "js/reason.js", "tags": ["@component:feedback"], "why": "the reason of a disabled control [kpadopt5]" },
         { "path": "js/notices.js", "tags": ["@component:overlays"], "why": "the notification centre [kpadopt5-ops]" },
         { "path": "js/notices/*.js", "tags": ["@component:overlays"], "why": "the notification centre [kpadopt5-ops]" },
