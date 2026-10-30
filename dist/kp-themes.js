@@ -6736,31 +6736,34 @@ function setActionSize(element, size2) {
   else if (ACTION_SIZES.includes(size2)) element.setAttribute("data-kp-action-size", size2);
   return element;
 }
+function showBusy(tile) {
+  let mark = tile.querySelector(":scope > .kp-action__mark");
+  if (!mark) {
+    mark = span("kp-action__mark");
+    mark.setAttribute("aria-hidden", "true");
+    tile.querySelector(":scope > .kp-action__title")?.after(mark) ?? tile.prepend(mark);
+  }
+  if (!mark.querySelector(".kp-spinner")) {
+    const wheel = span("kp-spinner");
+    wheel.setAttribute("aria-hidden", "true");
+    mark.replaceChildren(wheel);
+  }
+  let word = tile.querySelector(":scope > .kp-action__state");
+  if (!word) {
+    word = span("kp-action__state");
+    tile.append(word);
+  }
+  word.textContent = `, ${getStrings().busy}`;
+}
+function hideBusy(tile) {
+  const mark = tile.querySelector(":scope > .kp-action__mark");
+  if (mark?.querySelector(".kp-spinner")) mark.replaceChildren();
+  tile.querySelector(":scope > .kp-action__state")?.remove();
+}
 function syncTile(tile, { announce: announce4 = false } = {}) {
   const busy = tile.getAttribute("aria-busy") === "true";
-  let mark = tile.querySelector(":scope > .kp-action__mark");
-  const spinner2 = mark?.querySelector(".kp-spinner") ?? null;
-  if (busy) {
-    if (!mark) {
-      mark = span("kp-action__mark");
-      mark.setAttribute("aria-hidden", "true");
-      tile.querySelector(":scope > .kp-action__title")?.after(mark) ?? tile.prepend(mark);
-    }
-    if (!spinner2) {
-      const wheel = span("kp-spinner");
-      wheel.setAttribute("aria-hidden", "true");
-      mark.replaceChildren(wheel);
-    }
-    let word = tile.querySelector(":scope > .kp-action__state");
-    if (!word) {
-      word = span("kp-action__state");
-      tile.append(word);
-    }
-    word.textContent = `, ${getStrings().busy}`;
-  } else {
-    if (spinner2) mark?.replaceChildren();
-    tile.querySelector(":scope > .kp-action__state")?.remove();
-  }
+  if (busy) showBusy(tile);
+  else hideBusy(tile);
   const before = synced.get(tile);
   synced.set(tile, busy);
   if (announce4 && before !== void 0 && before !== busy) {
@@ -6774,48 +6777,20 @@ function setActionBusy(tile, busy = true) {
   return tile;
 }
 function attachActionTiles(root = document) {
-  const guard = (event) => {
-    const tile = event.target instanceof Element ? event.target.closest(ACTION_TILE) : null;
-    if (!tile || !inert(tile)) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  };
-  root.addEventListener("click", guard, true);
-  const tiles = (
-    /** @type {Element[]} */
-    [
-      ...root instanceof Element && root.matches(ACTION_TILE) ? [root] : [],
-      ...root.querySelectorAll(ACTION_TILE)
-    ]
+  const controller = new ActionTilesController(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    root
   );
-  for (const tile of tiles) syncTile(tile);
-  let watch2 = null;
-  if (typeof MutationObserver !== "undefined") {
-    watch2 = new MutationObserver((records) => {
-      for (const record of records) {
-        const target = (
-          /** @type {Element} */
-          record.target
-        );
-        if (target.matches(ACTION_TILE)) syncTile(target, { announce: true });
-      }
-    });
-    watch2.observe(root instanceof Document ? root.documentElement : root, {
-      attributes: true,
-      attributeFilter: ["aria-busy"],
-      subtree: true
-    });
-  }
-  return () => {
-    root.removeEventListener("click", guard, true);
-    watch2?.disconnect();
-  };
+  controller.connect();
+  return () => controller.destroy();
 }
-var ACTION_TILE, ACTION_BUSY_EVENT, ACTION_SIZES, synced, inert, span;
+var ACTION_TILE, ACTION_BUSY_EVENT, ACTION_SIZES, synced, inert, span, ActionTilesController;
 var init_action_tiles = __esm({
   "js/action-tiles.js"() {
     "use strict";
     init_strings();
+    init_controller();
     ACTION_TILE = ".kp-action";
     ACTION_BUSY_EVENT = "kp-action-busy";
     ACTION_SIZES = /** @type {const} */
@@ -6826,6 +6801,57 @@ var init_action_tiles = __esm({
       const el16 = document.createElement("span");
       el16.className = className;
       return el16;
+    };
+    ActionTilesController = class extends Controller {
+      connect() {
+        const root = (
+          /** @type {ParentNode} */
+          /** @type {unknown} */
+          this.host
+        );
+        this.listen(
+          /** @type {EventTarget} */
+          root,
+          "click",
+          (event) => this.guard(event),
+          true
+        );
+        const tiles = (
+          /** @type {Element[]} */
+          [
+            ...root instanceof Element && root.matches(ACTION_TILE) ? [root] : [],
+            ...root.querySelectorAll(ACTION_TILE)
+          ]
+        );
+        for (const tile of tiles) syncTile(tile);
+        if (typeof MutationObserver === "undefined") return;
+        const watch2 = this.observe(
+          new MutationObserver((records) => {
+            for (const record of records) {
+              const target = (
+                /** @type {Element} */
+                record.target
+              );
+              if (target.matches(ACTION_TILE)) syncTile(target, { announce: true });
+            }
+          })
+        );
+        watch2.observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), {
+          attributes: true,
+          attributeFilter: ["aria-busy"],
+          subtree: true
+        });
+      }
+      /** A press on a busy or disabled tile goes nowhere, so the page's own handler never runs for it. @param {Event} event */
+      guard(event) {
+        const tile = event.target instanceof Element ? event.target.closest(ACTION_TILE) : null;
+        if (!tile || !inert(tile)) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
     };
   }
 });
