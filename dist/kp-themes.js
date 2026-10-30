@@ -59986,24 +59986,7 @@ var init_usual_picker = __esm({
   }
 });
 
-// js/toggle.js
-var toggle_exports = {};
-__export(toggle_exports, {
-  TOGGLE: () => TOGGLE,
-  TOGGLE_CHANGED_EVENT: () => TOGGLE_CHANGED_EVENT,
-  TOGGLE_EVENT: () => TOGGLE_EVENT,
-  TOGGLE_LOOKS: () => TOGGLE_LOOKS,
-  TOGGLE_MODES: () => TOGGLE_MODES,
-  TOGGLE_REFUSED_MS: () => TOGGLE_REFUSED_MS,
-  attachToggles: () => attachToggles,
-  toggle: () => toggle,
-  toggleGroup: () => toggleGroup,
-  toggleKey: () => toggleKey,
-  togglePressedKeys: () => togglePressedKeys
-});
-function toggle(el16) {
-  return HANDLES8.get(el16) ?? null;
-}
+// js/toggle/group.js
 function toggleGroup(button4) {
   const holder = (
     /** @type {HTMLElement | null} */
@@ -60035,483 +60018,44 @@ function togglePressedKeys(anyMember) {
   const list = g ? g.members : [anyMember];
   return list.filter((m) => !m.hasAttribute("data-kp-toggle-all") && stateOf4(m) === "true").map(toggleKey);
 }
-function attachOne10(button4, options) {
-  if (HANDLES8.has(button4)) return () => void 0;
-  const doc = button4.ownerDocument;
-  const s2 = getStrings();
-  const undo = [];
-  const stamp3 = (name, value) => {
-    if (button4.hasAttribute(name)) return;
-    button4.setAttribute(name, value);
-    undo.push(() => button4.removeAttribute(name));
-  };
-  if (button4 instanceof HTMLButtonElement && !button4.hasAttribute("type")) stamp3("type", "button");
-  stamp3("aria-pressed", "false");
-  if (!button4.dataset.kpLook) stamp3("data-kp-look", "button");
-  const hasCount = button4.hasAttribute("data-kp-count");
-  const hasHint = button4.hasAttribute("data-kp-pressed-hint");
-  let label = null;
-  const ensureLabel = () => {
-    if (label) return;
-    label = made2(doc, "kp-toggle__label");
-    for (const node of [...button4.childNodes]) if (!(node instanceof HTMLElement && node.className.startsWith("kp-toggle__"))) label.append(node);
-    button4.append(label);
-    undo.push(() => label?.replaceWith(...label.childNodes));
-  };
-  if (hasCount || hasHint || button4.dataset.kpPressedMark === "check" || button4.hasAttribute("data-kp-toggle-async")) ensureLabel();
-  let mark = null;
-  const syncMark = () => {
-    const want = button4.dataset.kpPressedMark === "check";
-    if (want && !mark) {
-      ensureLabel();
-      mark = made2(doc, "kp-toggle__mark");
-      mark.setAttribute("aria-hidden", "true");
-      button4.prepend(mark);
-    } else if (!want && mark) {
-      mark.remove();
-      mark = null;
-    }
-  };
-  syncMark();
-  const markWatch = new MutationObserver(syncMark);
-  markWatch.observe(button4, { attributes: true, attributeFilter: ["data-kp-pressed-mark"] });
-  undo.push(() => {
-    markWatch.disconnect();
-    mark?.remove();
-  });
-  let count2 = null;
-  let hint2 = null;
-  if (hasCount) {
-    count2 = made2(doc, "kp-toggle__count");
-    button4.append(count2);
-    undo.push(() => count2?.remove());
+function planFor(member, forceClear) {
+  const g = toggleGroup(member);
+  const plan = /* @__PURE__ */ new Map();
+  const was = stateOf4(member);
+  if (!g) return plan.set(member, was === "true" ? "false" : "true");
+  const others = g.members.filter((m) => m !== member);
+  if (member.hasAttribute("data-kp-toggle-all") || forceClear) {
+    if (g.members.every((m) => m === (g.all ?? member) ? false : stateOf4(m) !== "true")) return plan;
+    for (const m of g.members) plan.set(m, m === (g.all ?? member) ? "true" : "false");
+    return plan;
   }
-  if (hasHint) {
-    hint2 = made2(doc, "kp-toggle__hint");
-    hint2.setAttribute("aria-hidden", "true");
-    button4.append(hint2);
-    undo.push(() => hint2?.remove());
-  }
-  let refusedWord = null;
-  let spinner = null;
-  const writeCount = (n) => {
-    if (!count2) return;
-    count2.replaceChildren();
-    count2.removeAttribute("data-kp-state");
-    if (n === "loading") {
-      count2.setAttribute("data-kp-state", "loading");
-      const bone = made2(doc, "kp-skeleton kp-toggle__bone");
-      bone.setAttribute("role", "img");
-      bone.setAttribute("aria-label", s2.toggleCounting);
-      count2.append(bone);
-      count2.style.setProperty("--kp-toggle-digits", "2");
-      button4.removeAttribute("data-kp-count-value");
-    } else if (n === null) {
-      count2.hidden = true;
-      button4.removeAttribute("data-kp-count-value");
-    } else {
-      count2.hidden = false;
-      count2.textContent = String(n);
-      count2.style.setProperty("--kp-toggle-digits", String(Math.max(2, String(n).length)));
-      button4.setAttribute("data-kp-count-value", String(n));
-    }
-  };
-  if (hasCount) {
-    const raw = button4.getAttribute("data-kp-count");
-    writeCount(raw === "loading" ? "loading" : raw === "" || raw === null || Number.isNaN(Number(raw)) ? null : Number(raw));
-  }
-  const writeHint = () => {
-    if (!hint2) return;
-    hint2.textContent = button4.getAttribute("data-kp-pressed-hint") ?? "";
-  };
-  writeHint();
-  const hintWatch = new MutationObserver(writeHint);
-  hintWatch.observe(button4, { attributes: true, attributeFilter: ["aria-pressed", "data-kp-pressed-hint"] });
-  undo.push(() => hintWatch.disconnect());
-  const labelText = () => (label ?? button4).textContent?.trim() ?? "";
-  const group0 = toggleGroup(button4);
-  const regionOf4 = (g) => {
-    const host = g?.container ?? button4.parentElement;
-    if (!host) return null;
-    let region = (
-      /** @type {HTMLElement | null} */
-      host.querySelector(":scope > .kp-toggle__live")
-    );
-    if (!region) {
-      region = made2(doc, "kp-sr-only kp-toggle__live");
-      region.setAttribute("role", "status");
-      region.setAttribute("aria-live", "polite");
-      host.append(region);
-    }
-    return region;
-  };
-  let sayTimer;
-  const say18 = (text) => {
-    if ((button4.closest("[data-kp-announce]")?.getAttribute("data-kp-announce") ?? "state") === "off") return;
-    const region = regionOf4(toggleGroup(button4));
-    if (!region) return;
-    window.clearTimeout(sayTimer);
-    sayTimer = window.setTimeout(() => {
-      region.textContent = text;
-    }, 40);
-  };
-  const paintClear = () => {
-    const g = toggleGroup(button4);
-    const container = g?.container;
-    if (!container || !container.hasAttribute("data-kp-toggle-clear")) return;
-    let clear = (
-      /** @type {HTMLButtonElement | null} */
-      container.querySelector(":scope > .kp-toggle__clear")
-    );
-    if (!clear) {
-      clear = /** @type {HTMLButtonElement} */
-      made2(doc, "kp-button kp-button--ghost kp-toggle__clear", "button");
-      clear.type = "button";
-      clear.addEventListener("click", () => {
-        const first = toggleGroup(button4)?.members.find((m) => stateOf4(m) === "true" && !m.hasAttribute("data-kp-toggle-all"));
-        if (first) clearGroup(first);
-      });
-      container.append(clear);
-    }
-    const n = togglePressedKeys(button4).length;
-    clear.textContent = s2.toggleClear(n);
-    clear.toggleAttribute("data-kp-idle", n === 0);
-    clear.inert = n === 0;
-    clear.setAttribute("aria-hidden", String(n === 0));
-  };
-  const apply2 = (plan) => {
-    for (const [member, next2] of plan) member.setAttribute("aria-pressed", next2);
-  };
-  const clearGroup = (from) => {
-    const g = toggleGroup(from);
-    if (!g) return;
-    const target = g.all ?? from;
-    press2(target, true);
-  };
-  const planFor = (member, forceClear) => {
-    const g = toggleGroup(member);
-    const plan = /* @__PURE__ */ new Map();
-    const was = stateOf4(member);
-    if (!g) {
-      plan.set(member, was === "true" ? "false" : "true");
-      return plan;
-    }
-    const isAll2 = member.hasAttribute("data-kp-toggle-all");
-    const others = g.members.filter((m) => m !== member);
-    if (isAll2 || forceClear) {
-      if (g.members.every((m) => m === (g.all ?? member) ? false : stateOf4(m) !== "true")) return plan;
-      for (const m of g.members) plan.set(m, m === (g.all ?? member) ? "true" : "false");
-      return plan;
-    }
-    if (g.mode === "single") {
-      if (was === "true") return plan;
+  if (g.mode === "single") {
+    if (was === "true") return plan;
+    for (const m of others) plan.set(m, "false");
+    plan.set(member, "true");
+  } else if (g.mode === "single-or-none") {
+    if (was === "true") plan.set(member, "false");
+    else {
       for (const m of others) plan.set(m, "false");
       plan.set(member, "true");
-    } else if (g.mode === "single-or-none") {
-      if (was === "true") plan.set(member, "false");
-      else {
-        for (const m of others) plan.set(m, "false");
-        plan.set(member, "true");
-      }
-    } else plan.set(member, was === "true" ? "false" : "true");
-    if (g.all) {
-      const anyOn = g.members.some((m) => m !== g.all && (plan.get(m) ?? stateOf4(m)) === "true");
-      plan.set(g.all, anyOn ? "false" : "true");
     }
-    return plan;
-  };
-  let pending5 = null;
-  let refusedTimer;
-  const remember3 = () => {
-    const g = toggleGroup(button4);
-    const holder = g?.container?.hasAttribute("data-kp-remember") ? g.container : button4.hasAttribute("data-kp-remember") ? button4 : null;
-    const name = holder?.getAttribute("data-kp-remember");
-    if (!holder || !name) return;
-    writeStore(storeKey(name, "value"), holder === button4 && !g?.container ? stateOf4(button4) === "true" : togglePressedKeys(button4));
-  };
-  function press2(member, forceClear = false) {
-    if (member !== button4) {
-      member.dispatchEvent(new CustomEvent("kp-toggle-press", { detail: { forceClear } }));
-      return;
-    }
-    if (button4.getAttribute("aria-disabled") === "true" || button4.hasAttribute("data-kp-busy") || /** @type {any} */
-    button4.disabled) return;
-    const plan = planFor(member, forceClear);
-    if (plan.size === 0) return;
-    const g = toggleGroup(member);
-    const before = new Map([...plan.keys()].map((m) => [m, stateOf4(m)]));
-    let wait = null;
-    const nextState = plan.get(member) ?? stateOf4(member);
-    const after = () => {
-      const keys = new Set(
-        g ? g.members.filter((m) => (plan.get(m) ?? stateOf4(m)) === "true" && !m.hasAttribute("data-kp-toggle-all")).map(toggleKey) : []
-      );
-      return g ? [...keys] : nextState === "true" ? [toggleKey(member)] : [];
-    };
-    const detail = {
-      button: member,
-      pressed: nextState === "true",
-      previous: stateOf4(member) === "true",
-      group: g?.name ?? null,
-      pressedKeys: after(),
-      /** The app's answer takes time: the button is busy until it settles, and goes back if it is refused. @param {Promise<unknown>} promise */
-      wait: (promise) => {
-        wait = promise;
-      }
-    };
-    const ev = new CustomEvent(TOGGLE_EVENT, { bubbles: true, cancelable: true, detail });
-    if (!member.dispatchEvent(ev)) return;
-    apply2(plan);
-    writeHint();
-    paintClear();
-    remember3();
-    const total = Number(button4.getAttribute("data-kp-count-value"));
-    const word = nextState === "true" ? s2.toggleOn(labelText(), Number.isFinite(total) && button4.hasAttribute("data-kp-count-value") ? total : null) : s2.toggleOff(labelText(), null);
-    say18(word);
-    member.dispatchEvent(
-      new CustomEvent(TOGGLE_CHANGED_EVENT, {
-        bubbles: true,
-        detail: { button: member, pressed: nextState === "true", group: g?.name ?? null, pressedKeys: after(), source: "press" }
-      })
-    );
-    pending5 = { plan, before };
-    if (wait) {
-      setBusy(true);
-      Promise.resolve(wait).then(
-        () => handle0.done(),
-        (error) => handle0.refuse(error instanceof Error ? error.message : void 0)
-      );
-    } else pending5 = null;
-  }
-  function setBusy(on) {
-    if (on) {
-      button4.setAttribute("data-kp-busy", "");
-      button4.setAttribute("aria-busy", "true");
-      button4.setAttribute("aria-disabled", "true");
-      if (!spinner) {
-        spinner = made2(doc, "kp-button__busy");
-        spinner.setAttribute("aria-hidden", "true");
-        spinner.append(made2(doc, "kp-spinner"));
-        button4.append(spinner);
-      }
-    } else {
-      button4.removeAttribute("data-kp-busy");
-      button4.removeAttribute("aria-busy");
-      button4.removeAttribute("aria-disabled");
-      spinner?.remove();
-      spinner = null;
-    }
-  }
-  const handle0 = {
-    element: button4,
-    state: () => stateOf4(button4),
-    set(next2, { silent = false } = {}) {
-      const plan = /* @__PURE__ */ new Map([[button4, next2 === "mixed" ? "mixed" : next2 ? "true" : "false"]]);
-      const g = toggleGroup(button4);
-      if (g && next2 === true && g.mode !== "multi") {
-        for (const m of g.members) if (m !== button4) plan.set(m, "false");
-      }
-      if (g?.all) {
-        const anyOn = g.members.some((m) => m !== g.all && (plan.get(m) ?? stateOf4(m)) === "true");
-        plan.set(g.all, anyOn ? "false" : "true");
-      }
-      apply2(
-        /** @type {Map<HTMLElement, PressedState>} */
-        plan
-      );
-      writeHint();
-      paintClear();
-      if (!silent) {
-        remember3();
-        button4.dispatchEvent(
-          new CustomEvent(TOGGLE_CHANGED_EVENT, {
-            bubbles: true,
-            detail: {
-              button: button4,
-              pressed: stateOf4(button4) === "true",
-              group: g?.name ?? null,
-              pressedKeys: togglePressedKeys(button4),
-              source: "script"
-            }
-          })
-        );
-      }
-    },
-    setCount(n) {
-      if (!count2) {
-        count2 = made2(doc, "kp-toggle__count");
-        ensureLabel();
-        button4.append(count2);
-        button4.setAttribute("data-kp-count", "");
-      }
-      writeCount(n);
-      const mode2 = button4.closest("[data-kp-announce]")?.getAttribute("data-kp-announce");
-      if (mode2 === "all" && typeof n === "number") say18(s2.toggleCount(labelText(), n));
-    },
-    setHint(text) {
-      button4.setAttribute("data-kp-pressed-hint", text);
-      if (!hint2) {
-        hint2 = made2(doc, "kp-toggle__hint");
-        hint2.setAttribute("aria-hidden", "true");
-        button4.append(hint2);
-      }
-      writeHint();
-    },
-    done() {
-      pending5 = null;
-      setBusy(false);
-    },
-    refuse(message) {
-      const back = pending5;
-      pending5 = null;
-      setBusy(false);
-      if (back) {
-        apply2(back.before);
-        writeHint();
-        paintClear();
-        remember3();
-      }
-      const word = button4.getAttribute("data-kp-refused-word") ?? s2.toggleRefused;
-      refusedWord?.remove();
-      refusedWord = made2(doc, "kp-toggle__refused");
-      refusedWord.textContent = word;
-      if (message) button4.title = message;
-      button4.setAttribute("data-kp-refused", "");
-      button4.append(refusedWord);
-      say18(message ? `${word}. ${message}` : word);
-      window.clearTimeout(refusedTimer);
-      refusedTimer = window.setTimeout(() => {
-        refusedWord?.remove();
-        refusedWord = null;
-        button4.removeAttribute("data-kp-refused");
-        if (message) button4.removeAttribute("title");
-      }, options.refusedMs ?? TOGGLE_REFUSED_MS);
-    }
-  };
-  HANDLES8.set(button4, handle0);
-  {
-    const g = group0;
-    const holder = g?.container?.hasAttribute("data-kp-remember") ? g.container : button4.hasAttribute("data-kp-remember") ? button4 : null;
-    const name = holder?.getAttribute("data-kp-remember");
-    if (holder && name) {
-      const kept = readStore(storeKey(name, "value"));
-      if (holder === button4 && !g?.container && typeof kept === "boolean") button4.setAttribute("aria-pressed", String(kept));
-      else if (Array.isArray(kept) && g?.container === holder)
-        button4.setAttribute(
-          "aria-pressed",
-          kept.includes(toggleKey(button4)) && !button4.hasAttribute("data-kp-toggle-all") ? "true" : stateOf4(button4)
-        );
-    }
-    if (g?.all === button4) {
-      queueMicrotask(() => {
-        const on = g.members.some((m) => m !== button4 && stateOf4(m) === "true");
-        button4.setAttribute("aria-pressed", String(!on));
-      });
-    }
-  }
-  writeHint();
-  queueMicrotask(paintClear);
-  const onClick = (event) => {
-    event.preventDefault();
-    press2(button4);
-  };
-  const onRemote = (event) => {
-    press2(button4, Boolean(
-      /** @type {CustomEvent} */
-      event.detail?.forceClear
-    ));
-  };
-  button4.addEventListener("click", onClick);
-  button4.addEventListener("kp-toggle-press", onRemote);
-  undo.push(() => button4.removeEventListener("click", onClick));
-  undo.push(() => button4.removeEventListener("kp-toggle-press", onRemote));
-  const arrows = (event) => {
-    const g = toggleGroup(button4);
-    if (!g || g.mode !== "single" || event.altKey || event.ctrlKey || event.metaKey) return;
-    const at = g.members.indexOf(button4);
-    const step = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
-    if (step === 0 && event.key !== "Home" && event.key !== "End") return;
-    const usable = g.members.filter((m) => !/** @type {any} */
-    m.disabled);
-    const next2 = event.key === "Home" ? usable[0] : event.key === "End" ? usable[usable.length - 1] : usable[(usable.indexOf(g.members[at]) + step + usable.length) % usable.length];
-    if (!next2) return;
-    event.preventDefault();
-    next2.focus();
-  };
-  button4.addEventListener("keydown", arrows);
-  undo.push(() => button4.removeEventListener("keydown", arrows));
-  if (group0?.mode === "single") {
-    const rove = () => {
-      const g = toggleGroup(button4);
-      if (!g) return;
-      const on = g.members.find((m) => stateOf4(m) === "true") ?? g.members[0];
-      for (const m of g.members) m.tabIndex = m === on ? 0 : -1;
-    };
-    const watch2 = new MutationObserver(rove);
-    watch2.observe(button4, { attributes: true, attributeFilter: ["aria-pressed"] });
-    rove();
-    undo.push(() => {
-      watch2.disconnect();
-      button4.removeAttribute("tabindex");
-    });
-  }
-  const key = button4.dataset.kpToggleKey;
-  if (key) {
-    if (/^[0-9]$/.test(key)) {
-      console.warn(`[kp-toggle] "${key}" is a bare digit: an unshifted digit on AZERTY types & \xE9 ", so the key is not registered.`);
-    } else {
-      button4.setAttribute("aria-keyshortcuts", key);
-      const off = registerShortcuts(
-        button4,
-        [
-          {
-            keys: key,
-            what: s2.toggleKeyWhat(labelText()),
-            group: s2.toggleKeyGroup,
-            run: () => {
-              button4.click();
-            },
-            when: () => !/** @type {any} */
-            button4.disabled && button4.getAttribute("aria-disabled") !== "true"
-          }
-        ],
-        { layoutGuard: "warn" }
-      );
-      undo.push(() => {
-        off();
-        button4.removeAttribute("aria-keyshortcuts");
-      });
-    }
-  }
-  const detachReason = button4.hasAttribute("data-kp-disabled-reason") && button4.parentElement ? attachDisabledReasons(button4.parentElement) : () => void 0;
-  undo.push(detachReason);
-  return () => {
-    window.clearTimeout(sayTimer);
-    window.clearTimeout(refusedTimer);
-    refusedWord?.remove();
-    spinner?.remove();
-    for (const fn of undo.reverse()) fn();
-    HANDLES8.delete(button4);
-  };
+  } else plan.set(member, was === "true" ? "false" : "true");
+  return withAll(g, plan);
 }
-function attachToggles(root = document, options = {}) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(TOGGLE) ? [root] : [],
-      ...root.querySelectorAll(TOGGLE)
-    ]
-  );
-  const undo = found.map((el16) => attachOne10(el16, options));
-  return () => undo.forEach((u) => u());
+function withAll(g, plan) {
+  if (g.all) {
+    const anyOn = g.members.some((m) => m !== g.all && (plan.get(m) ?? stateOf4(m)) === "true");
+    plan.set(g.all, anyOn ? "false" : "true");
+  }
+  return plan;
 }
-var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, HANDLES8, stateOf4, toggleKey, storeKey, readStore, writeStore, made2;
-var init_toggle = __esm({
-  "js/toggle.js"() {
+function applyPlan(plan) {
+  for (const [member, next2] of plan) member.setAttribute("aria-pressed", next2);
+}
+var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, stateOf4, toggleKey, storeKey, readStore, writeStore, made2;
+var init_group4 = __esm({
+  "js/toggle/group.js"() {
     "use strict";
-    init_shortcuts();
-    init_reason();
-    init_strings();
     TOGGLE = "[data-kp-toggle]";
     TOGGLE_EVENT = "kp-toggle";
     TOGGLE_CHANGED_EVENT = "kp-toggle-changed";
@@ -60520,7 +60064,6 @@ var init_toggle = __esm({
     TOGGLE_MODES = /** @type {const} */
     ["multi", "single", "single-or-none"];
     TOGGLE_REFUSED_MS = 3e3;
-    HANDLES8 = /* @__PURE__ */ new WeakMap();
     stateOf4 = (el16) => {
       const v = el16.getAttribute("aria-pressed");
       return v === "true" || v === "mixed" ? v : "false";
@@ -60546,6 +60089,512 @@ var init_toggle = __esm({
       el16.className = className;
       return el16;
     };
+  }
+});
+
+// js/toggle/parts.js
+var SAY_AFTER_MS, COUNT_DIGITS, ToggleParts;
+var init_parts3 = __esm({
+  "js/toggle/parts.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_group4();
+    SAY_AFTER_MS = 40;
+    COUNT_DIGITS = 2;
+    ToggleParts = class extends Controller {
+      /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
+      constructor(button4, options = {}) {
+        super(button4, options);
+        this.button = button4;
+        this.doc = button4.ownerDocument;
+        this.s = getStrings();
+        this.label = null;
+        this.mark = null;
+        this.count = null;
+        this.hint = null;
+        this.refusedWord = null;
+        this.spinner = null;
+        this.sayTimer = void 0;
+      }
+      /** Set an attribute the page left out, and take it off again on detach. @param {string} name @param {string} value */
+      stamp(name, value) {
+        if (this.button.hasAttribute(name)) return;
+        this.button.setAttribute(name, value);
+        this.own(() => this.button.removeAttribute(name));
+      }
+      /** The words are wrapped only when there is something to put beside them, so a plain toggle keeps its markup. */
+      ensureLabel() {
+        if (this.label) return;
+        const label = made2(this.doc, "kp-toggle__label");
+        for (const node of [...this.button.childNodes]) if (!(node instanceof HTMLElement && node.className.startsWith("kp-toggle__"))) label.append(node);
+        this.button.append(label);
+        this.label = label;
+        this.own(() => this.label?.replaceWith(...this.label.childNodes));
+      }
+      syncMark() {
+        const want = this.button.dataset.kpPressedMark === "check";
+        if (want && !this.mark) {
+          this.ensureLabel();
+          this.mark = made2(this.doc, "kp-toggle__mark");
+          this.mark.setAttribute("aria-hidden", "true");
+          this.button.prepend(this.mark);
+        } else if (!want && this.mark) {
+          this.mark.remove();
+          this.mark = null;
+        }
+      }
+      makeCount() {
+        this.count = made2(this.doc, "kp-toggle__count");
+        this.button.append(this.count);
+      }
+      /** A count made by the page's script (setCount) on a toggle whose markup had none. */
+      ensureCount() {
+        if (this.count) return;
+        this.count = made2(this.doc, "kp-toggle__count");
+        this.ensureLabel();
+        this.button.append(this.count);
+        this.button.setAttribute("data-kp-count", "");
+      }
+      /** The refusal's word over the button, with the app's reason as its title. @param {string} word @param {string} [message] */
+      showRefused(word, message) {
+        this.refusedWord?.remove();
+        this.refusedWord = made2(this.doc, "kp-toggle__refused");
+        this.refusedWord.textContent = word;
+        if (message) this.button.title = message;
+        this.button.setAttribute("data-kp-refused", "");
+        this.button.append(this.refusedWord);
+      }
+      /** @param {string} [message] */
+      hideRefused(message) {
+        this.refusedWord?.remove();
+        this.refusedWord = null;
+        this.button.removeAttribute("data-kp-refused");
+        if (message) this.button.removeAttribute("title");
+      }
+      makeHint() {
+        this.hint = made2(this.doc, "kp-toggle__hint");
+        this.hint.setAttribute("aria-hidden", "true");
+        this.button.append(this.hint);
+      }
+      /** The exact number beside the label, a skeleton while it is counted, or none. @param {number | 'loading' | null} n */
+      writeCount(n) {
+        const count2 = this.count;
+        if (!count2) return;
+        count2.replaceChildren();
+        count2.removeAttribute("data-kp-state");
+        if (n === "loading") {
+          count2.setAttribute("data-kp-state", "loading");
+          const bone = made2(this.doc, "kp-skeleton kp-toggle__bone");
+          bone.setAttribute("role", "img");
+          bone.setAttribute("aria-label", this.s.toggleCounting);
+          count2.append(bone);
+          count2.style.setProperty("--kp-toggle-digits", String(COUNT_DIGITS));
+          this.button.removeAttribute("data-kp-count-value");
+        } else if (n === null) {
+          count2.hidden = true;
+          this.button.removeAttribute("data-kp-count-value");
+        } else {
+          count2.hidden = false;
+          count2.textContent = String(n);
+          count2.style.setProperty("--kp-toggle-digits", String(Math.max(COUNT_DIGITS, String(n).length)));
+          this.button.setAttribute("data-kp-count-value", String(n));
+        }
+      }
+      writeHint() {
+        if (this.hint) this.hint.textContent = this.button.getAttribute("data-kp-pressed-hint") ?? "";
+      }
+      labelText() {
+        return (this.label ?? this.button).textContent?.trim() ?? "";
+      }
+      /** The group's live line (or the parent's, for a lone toggle), made once per container. @param {ReturnType<typeof toggleGroup>} g */
+      regionOf(g) {
+        const host = g?.container ?? this.button.parentElement;
+        if (!host) return null;
+        let region = (
+          /** @type {HTMLElement | null} */
+          host.querySelector(":scope > .kp-toggle__live")
+        );
+        if (!region) {
+          region = made2(this.doc, "kp-sr-only kp-toggle__live");
+          region.setAttribute("role", "status");
+          region.setAttribute("aria-live", "polite");
+          host.append(region);
+        }
+        return region;
+      }
+      /** @param {string} text */
+      say(text) {
+        if ((this.button.closest("[data-kp-announce]")?.getAttribute("data-kp-announce") ?? "state") === "off") return;
+        const region = this.regionOf(toggleGroup(this.button));
+        if (!region) return;
+        window.clearTimeout(this.sayTimer);
+        this.sayTimer = window.setTimeout(() => {
+          region.textContent = text;
+        }, SAY_AFTER_MS);
+      }
+      /** The Clear button and its count, kept in step by whichever member changed last. */
+      paintClear() {
+        const container = toggleGroup(this.button)?.container;
+        if (!container || !container.hasAttribute("data-kp-toggle-clear")) return;
+        let clear = (
+          /** @type {HTMLButtonElement | null} */
+          container.querySelector(":scope > .kp-toggle__clear")
+        );
+        if (!clear) {
+          clear = /** @type {HTMLButtonElement} */
+          made2(this.doc, "kp-button kp-button--ghost kp-toggle__clear", "button");
+          clear.type = "button";
+          clear.addEventListener("click", () => {
+            const first = toggleGroup(this.button)?.members.find((m) => stateOf4(m) === "true" && !m.hasAttribute("data-kp-toggle-all"));
+            if (first) this.clearGroup(first);
+          });
+          container.append(clear);
+        }
+        const n = togglePressedKeys(this.button).length;
+        clear.textContent = this.s.toggleClear(n);
+        clear.toggleAttribute("data-kp-idle", n === 0);
+        clear.inert = n === 0;
+        clear.setAttribute("aria-hidden", String(n === 0));
+      }
+      /** Everything off but the All member (a Clear press, or pressing All). @param {HTMLElement} from */
+      clearGroup(from) {
+        const g = toggleGroup(from);
+        if (g) this.press(g.all ?? from, true);
+      }
+      /** The press; ToggleControl gives it. @param {HTMLElement} _member @param {boolean} [_forceClear] */
+      press(_member, _forceClear = false) {
+      }
+      /** @param {boolean} on */
+      setBusy(on) {
+        const button4 = this.button;
+        if (!on) {
+          button4.removeAttribute("data-kp-busy");
+          button4.removeAttribute("aria-busy");
+          button4.removeAttribute("aria-disabled");
+          this.spinner?.remove();
+          this.spinner = null;
+          return;
+        }
+        button4.setAttribute("data-kp-busy", "");
+        button4.setAttribute("aria-busy", "true");
+        button4.setAttribute("aria-disabled", "true");
+        if (!this.spinner) {
+          this.spinner = made2(this.doc, "kp-button__busy");
+          this.spinner.setAttribute("aria-hidden", "true");
+          this.spinner.append(made2(this.doc, "kp-spinner"));
+          button4.append(this.spinner);
+        }
+      }
+    };
+  }
+});
+
+// js/toggle/handle.js
+var ToggleAnswers;
+var init_handle4 = __esm({
+  "js/toggle/handle.js"() {
+    "use strict";
+    init_group4();
+    init_parts3();
+    ToggleAnswers = class extends ToggleParts {
+      /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
+      constructor(button4, options = {}) {
+        super(button4, options);
+        this.pending = null;
+        this.refusedTimer = void 0;
+        this.handle = {
+          element: button4,
+          state: () => stateOf4(button4),
+          set: (next2, how) => this.setValue(next2, how),
+          setCount: (n) => this.setCount(n),
+          setHint: (text) => this.setHint(text),
+          done: () => this.done(),
+          refuse: (message) => this.refuse(message)
+        };
+      }
+      /** The element whose `data-kp-remember` keeps the value: the group's container, else the lone button. @param {ReturnType<typeof toggleGroup>} g */
+      rememberHolder(g) {
+        return g?.container?.hasAttribute("data-kp-remember") ? g.container : this.button.hasAttribute("data-kp-remember") ? this.button : null;
+      }
+      remember() {
+        const g = toggleGroup(this.button);
+        const holder = this.rememberHolder(g);
+        const name = holder?.getAttribute("data-kp-remember");
+        if (!holder || !name) return;
+        writeStore(storeKey(name, "value"), holder === this.button && !g?.container ? stateOf4(this.button) === "true" : togglePressedKeys(this.button));
+      }
+      /** The plan applied, and the hint, the Clear button and the memory after it. @param {Map<HTMLElement, PressedState>} plan */
+      settle(plan) {
+        applyPlan(plan);
+        this.writeHint();
+        this.paintClear();
+        this.remember();
+      }
+      /**
+       * Wait for the app's answer when it asked to (`detail.wait(promise)`): busy until it settles, back to the old states if it is refused.
+       * @param {Promise<unknown> | null} wait @param {Map<HTMLElement, PressedState>} plan @param {Map<HTMLElement, PressedState>} before
+       */
+      awaitAnswer(wait, plan, before) {
+        if (!wait) return;
+        this.pending = { plan, before };
+        this.setBusy(true);
+        Promise.resolve(wait).then(
+          () => this.done(),
+          (error) => this.refuse(error instanceof Error ? error.message : void 0)
+        );
+      }
+      /** Set the state without the press event; a group keeps its rules. @param {boolean | 'mixed'} next @param {{ silent?: boolean }} [how] */
+      setValue(next2, { silent = false } = {}) {
+        const button4 = this.button;
+        const plan = /* @__PURE__ */ new Map([[button4, next2 === "mixed" ? "mixed" : next2 ? "true" : "false"]]);
+        const g = toggleGroup(button4);
+        if (g && next2 === true && g.mode !== "multi") {
+          for (const m of g.members) if (m !== button4) plan.set(m, "false");
+        }
+        if (g) withAll(g, plan);
+        applyPlan(plan);
+        this.writeHint();
+        this.paintClear();
+        if (silent) return;
+        this.remember();
+        const detail = { button: button4, pressed: stateOf4(button4) === "true", group: g?.name ?? null, pressedKeys: togglePressedKeys(button4), source: "script" };
+        button4.dispatchEvent(new CustomEvent(TOGGLE_CHANGED_EVENT, { bubbles: true, detail }));
+      }
+      /** @param {number | 'loading' | null} n */
+      setCount(n) {
+        this.ensureCount();
+        this.writeCount(n);
+        const mode2 = this.button.closest("[data-kp-announce]")?.getAttribute("data-kp-announce");
+        if (mode2 === "all" && typeof n === "number") this.say(this.s.toggleCount(this.labelText(), n));
+      }
+      /** @param {string} text */
+      setHint(text) {
+        this.button.setAttribute("data-kp-pressed-hint", text);
+        if (!this.hint) this.makeHint();
+        this.writeHint();
+      }
+      done() {
+        this.pending = null;
+        this.setBusy(false);
+      }
+      /** The app refused: the states go back and the refusal's word shows for a moment. @param {string} [message] */
+      refuse(message) {
+        const button4 = this.button;
+        const back = this.pending;
+        this.pending = null;
+        this.setBusy(false);
+        if (back) this.settle(back.before);
+        const word = button4.getAttribute("data-kp-refused-word") ?? this.s.toggleRefused;
+        this.showRefused(word, message);
+        this.say(message ? `${word}. ${message}` : word);
+        window.clearTimeout(this.refusedTimer);
+        this.refusedTimer = window.setTimeout(
+          () => this.hideRefused(message),
+          /** @type {import('../toggle.js').ToggleOptions} */
+          this.options.refusedMs ?? TOGGLE_REFUSED_MS
+        );
+      }
+    };
+  }
+});
+
+// js/toggle/controller.js
+var ToggleControl;
+var init_controller12 = __esm({
+  "js/toggle/controller.js"() {
+    "use strict";
+    init_reason();
+    init_shortcuts();
+    init_group4();
+    init_handle4();
+    ToggleControl = class extends ToggleAnswers {
+      connect() {
+        const button4 = this.button;
+        if (button4 instanceof HTMLButtonElement && !button4.hasAttribute("type")) this.stamp("type", "button");
+        this.stamp("aria-pressed", "false");
+        if (!button4.dataset.kpLook) this.stamp("data-kp-look", "button");
+        this.buildParts();
+        const group0 = toggleGroup(button4);
+        this.readRemembered(group0);
+        this.writeHint();
+        queueMicrotask(() => this.paintClear());
+        this.listen(button4, "click", (event) => {
+          event.preventDefault();
+          this.press(button4);
+        });
+        this.listen(button4, "kp-toggle-press", (event) => this.press(button4, Boolean(
+          /** @type {CustomEvent} */
+          event.detail?.forceClear
+        )));
+        this.listen(button4, "keydown", (event) => this.arrows(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        if (group0?.mode === "single") this.rove();
+        this.registerKey();
+        this.own(button4.hasAttribute("data-kp-disabled-reason") && button4.parentElement ? attachDisabledReasons(button4.parentElement) : () => void 0);
+        this.own(() => {
+          window.clearTimeout(this.sayTimer);
+          window.clearTimeout(this.refusedTimer);
+          this.refusedWord?.remove();
+          this.spinner?.remove();
+        });
+      }
+      /** The label, the tick, the count and the hint, each only when the markup asks for it. */
+      buildParts() {
+        const button4 = this.button;
+        const hasCount = button4.hasAttribute("data-kp-count");
+        const hasHint = button4.hasAttribute("data-kp-pressed-hint");
+        if (hasCount || hasHint || button4.dataset.kpPressedMark === "check" || button4.hasAttribute("data-kp-toggle-async")) this.ensureLabel();
+        this.syncMark();
+        this.observe(new MutationObserver(() => this.syncMark())).observe(button4, { attributes: true, attributeFilter: ["data-kp-pressed-mark"] });
+        this.own(() => this.mark?.remove());
+        if (hasCount) {
+          this.makeCount();
+          this.own(() => this.count?.remove());
+        }
+        if (hasHint) {
+          this.makeHint();
+          this.own(() => this.hint?.remove());
+        }
+        if (hasCount) {
+          const raw = button4.getAttribute("data-kp-count");
+          this.writeCount(raw === "loading" ? "loading" : raw === "" || raw === null || Number.isNaN(Number(raw)) ? null : Number(raw));
+        }
+        this.writeHint();
+        this.observe(new MutationObserver(() => this.writeHint())).observe(button4, { attributes: true, attributeFilter: ["aria-pressed", "data-kp-pressed-hint"] });
+      }
+      /** Remembered state, read before the first press; the All member reads the others once they have all been attached. @param {ReturnType<typeof toggleGroup>} g */
+      readRemembered(g) {
+        const button4 = this.button;
+        const holder = this.rememberHolder(g);
+        const name = holder?.getAttribute("data-kp-remember");
+        if (holder && name) {
+          const kept = readStore(storeKey(name, "value"));
+          if (holder === button4 && !g?.container && typeof kept === "boolean") button4.setAttribute("aria-pressed", String(kept));
+          else if (Array.isArray(kept) && g?.container === holder)
+            button4.setAttribute("aria-pressed", kept.includes(toggleKey(button4)) && !button4.hasAttribute("data-kp-toggle-all") ? "true" : stateOf4(button4));
+        }
+        if (g?.all === button4)
+          queueMicrotask(() => {
+            const on = g.members.some((m) => m !== button4 && stateOf4(m) === "true");
+            button4.setAttribute("aria-pressed", String(!on));
+          });
+      }
+      /** @param {HTMLElement} member @param {boolean} [forceClear] */
+      press(member, forceClear = false) {
+        const button4 = this.button;
+        if (member !== button4) return void member.dispatchEvent(new CustomEvent("kp-toggle-press", { detail: { forceClear } }));
+        if (button4.getAttribute("aria-disabled") === "true" || button4.hasAttribute("data-kp-busy") || /** @type {any} */
+        button4.disabled) return;
+        const plan = planFor(member, forceClear);
+        if (plan.size === 0) return;
+        const g = toggleGroup(member);
+        const before = new Map([...plan.keys()].map((m) => [m, stateOf4(m)]));
+        const nextState = plan.get(member) ?? stateOf4(member);
+        const after = () => g ? [...new Set(g.members.filter((m) => (plan.get(m) ?? stateOf4(m)) === "true" && !m.hasAttribute("data-kp-toggle-all")).map(toggleKey))] : nextState === "true" ? [toggleKey(member)] : [];
+        let wait = null;
+        const detail = {
+          button: member,
+          pressed: nextState === "true",
+          previous: stateOf4(member) === "true",
+          group: g?.name ?? null,
+          pressedKeys: after(),
+          /** The app's answer takes time: the button is busy until it settles, and goes back if it is refused. @param {Promise<unknown>} promise */
+          wait: (promise) => {
+            wait = promise;
+          }
+        };
+        if (!member.dispatchEvent(new CustomEvent(TOGGLE_EVENT, { bubbles: true, cancelable: true, detail }))) return;
+        this.settle(plan);
+        this.sayState(nextState);
+        member.dispatchEvent(new CustomEvent(TOGGLE_CHANGED_EVENT, { bubbles: true, detail: { button: member, pressed: nextState === "true", group: g?.name ?? null, pressedKeys: after(), source: "press" } }));
+        this.awaitAnswer(wait, plan, before);
+      }
+      /** @param {PressedState} nextState */
+      sayState(nextState) {
+        const total = Number(this.button.getAttribute("data-kp-count-value"));
+        const known4 = Number.isFinite(total) && this.button.hasAttribute("data-kp-count-value") ? total : null;
+        this.say(nextState === "true" ? this.s.toggleOn(this.labelText(), known4) : this.s.toggleOff(this.labelText(), null));
+      }
+      /** A single group walks with the arrow keys, Home and End. @param {KeyboardEvent} event */
+      arrows(event) {
+        const g = toggleGroup(this.button);
+        if (!g || g.mode !== "single" || event.altKey || event.ctrlKey || event.metaKey) return;
+        const step = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
+        if (step === 0 && event.key !== "Home" && event.key !== "End") return;
+        const usable = g.members.filter((m) => !/** @type {any} */
+        m.disabled);
+        const at = usable.indexOf(g.members[g.members.indexOf(this.button)]);
+        const next2 = event.key === "Home" ? usable[0] : event.key === "End" ? usable[usable.length - 1] : usable[(at + step + usable.length) % usable.length];
+        if (!next2) return;
+        event.preventDefault();
+        next2.focus();
+      }
+      /** A single group is one stop in the Tab order: the member that is on, else the first. */
+      rove() {
+        const button4 = this.button;
+        const sync3 = () => {
+          const g = toggleGroup(button4);
+          if (!g) return;
+          const on = g.members.find((m) => stateOf4(m) === "true") ?? g.members[0];
+          for (const m of g.members) m.tabIndex = m === on ? 0 : -1;
+        };
+        this.observe(new MutationObserver(sync3)).observe(button4, { attributes: true, attributeFilter: ["aria-pressed"] });
+        sync3();
+        this.own(() => button4.removeAttribute("tabindex"));
+      }
+      /** `data-kp-toggle-key`: the shortcut that presses the toggle (never a bare digit, which AZERTY types as a sign). */
+      registerKey() {
+        const button4 = this.button;
+        const key = button4.dataset.kpToggleKey;
+        if (!key) return;
+        if (/^[0-9]$/.test(key)) return void console.warn(`[kp-toggle] "${key}" is a bare digit: an unshifted digit on AZERTY types & \xE9 ", so the key is not registered.`);
+        button4.setAttribute("aria-keyshortcuts", key);
+        const off = registerShortcuts(
+          button4,
+          [{ keys: key, what: this.s.toggleKeyWhat(this.labelText()), group: this.s.toggleKeyGroup, run: () => button4.click(), when: () => !/** @type {any} */
+          button4.disabled && button4.getAttribute("aria-disabled") !== "true" }],
+          { layoutGuard: "warn" }
+        );
+        this.own(() => {
+          off();
+          button4.removeAttribute("aria-keyshortcuts");
+        });
+      }
+    };
+  }
+});
+
+// js/toggle.js
+var toggle_exports = {};
+__export(toggle_exports, {
+  TOGGLE: () => TOGGLE,
+  TOGGLE_CHANGED_EVENT: () => TOGGLE_CHANGED_EVENT,
+  TOGGLE_EVENT: () => TOGGLE_EVENT,
+  TOGGLE_LOOKS: () => TOGGLE_LOOKS,
+  TOGGLE_MODES: () => TOGGLE_MODES,
+  TOGGLE_REFUSED_MS: () => TOGGLE_REFUSED_MS,
+  attachToggles: () => attachToggles,
+  toggle: () => toggle,
+  toggleGroup: () => toggleGroup,
+  toggleKey: () => toggleKey,
+  togglePressedKeys: () => togglePressedKeys
+});
+function toggle(el16) {
+  return controllerOf(el16, ToggleControl)?.handle ?? null;
+}
+function attachToggles(root = document, options = {}) {
+  return attachAll(root, TOGGLE, ToggleControl, options);
+}
+var init_toggle = __esm({
+  "js/toggle.js"() {
+    "use strict";
+    init_controller();
+    init_controller12();
+    init_group4();
+    init_group4();
   }
 });
 
@@ -60869,10 +60918,10 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
   return { rows: ordered2.map((r, i) => ({ item: r.item, number: numbers2 ? i + 1 : null })), cycles };
 }
 function deplist(el16) {
-  return HANDLES9.get(el16) ?? null;
+  return HANDLES8.get(el16) ?? null;
 }
-function attachOne11(el16) {
-  if (HANDLES9.has(el16)) return () => void 0;
+function attachOne10(el16) {
+  if (HANDLES8.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-deplist");
@@ -61076,10 +61125,10 @@ function attachOne11(el16) {
     },
     rows: () => drawn2
   };
-  HANDLES9.set(el16, handle);
+  HANDLES8.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES9.delete(el16);
+    HANDLES8.delete(el16);
   });
   const watch2 = new MutationObserver(() => draw8());
   watch2.observe(el16, {
@@ -61111,14 +61160,14 @@ function attachDeplists(root = document) {
       ...root.querySelectorAll(DEPLIST)
     ]
   );
-  const undo = found.map((el16) => attachOne11(el16));
+  const undo = found.map((el16) => attachOne10(el16));
   return () => undo.forEach((u) => u());
 }
 function setDeplist(el16, items) {
-  if (!HANDLES9.has(el16)) attachOne11(el16);
-  HANDLES9.get(el16)?.set(items);
+  if (!HANDLES8.has(el16)) attachOne10(el16);
+  HANDLES8.get(el16)?.set(items);
 }
-var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES9, made3;
+var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES8, made3;
 var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
@@ -61131,7 +61180,7 @@ var init_deplist = __esm({
     DEPLIST_RETRY_EVENT = "kp-deplist-retry";
     DEPLIST_COLLAPSE = 8;
     depText = (items) => items.map((i) => `${i.from} -> ${i.to}`).join("\n");
-    HANDLES9 = /* @__PURE__ */ new WeakMap();
+    HANDLES8 = /* @__PURE__ */ new WeakMap();
     made3 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -61181,10 +61230,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el16) {
-  return HANDLES10.get(el16) ?? null;
+  return HANDLES9.get(el16) ?? null;
 }
-function attachOne12(el16) {
-  if (HANDLES10.has(el16)) return () => void 0;
+function attachOne11(el16) {
+  if (HANDLES9.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-trace");
@@ -61322,10 +61371,10 @@ function attachOne12(el16) {
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES10.set(el16, handle);
+  HANDLES9.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES10.delete(el16);
+    HANDLES9.delete(el16);
   });
   const watch2 = new MutationObserver(draw8);
   watch2.observe(el16, {
@@ -61367,14 +61416,14 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne12(el16));
+  const undo = found.map((el16) => attachOne11(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES10.has(el16)) attachOne12(el16);
-  HANDLES10.get(el16)?.set(hops);
+  if (!HANDLES9.has(el16)) attachOne11(el16);
+  HANDLES9.get(el16)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES10, made4;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES9, made4;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -61388,7 +61437,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES10 = /* @__PURE__ */ new WeakMap();
+    HANDLES9 = /* @__PURE__ */ new WeakMap();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -62420,7 +62469,7 @@ function buildAlert(doc, s2, refused, savedCount, onDismiss) {
   alert.append(body, dismiss);
   return alert;
 }
-var init_parts3 = __esm({
+var init_parts4 = __esm({
   "js/unsaved/parts.js"() {
     "use strict";
   }
@@ -62508,7 +62557,7 @@ var init_paint8 = __esm({
     "use strict";
     init_menu_button();
     init_config();
-    init_parts3();
+    init_parts4();
   }
 });
 
@@ -62638,7 +62687,7 @@ var init_actions4 = __esm({
     init_overlays();
     init_config();
     init_paint8();
-    init_parts3();
+    init_parts4();
     init_values();
   }
 });
@@ -63044,7 +63093,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -63052,7 +63101,7 @@ var init_controller12 = __esm({
     init_controller();
     init_config();
     init_state18();
-    init_parts3();
+    init_parts4();
     init_actions4();
     init_paint8();
     init_changes();
@@ -63297,7 +63346,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller12();
+    init_controller13();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -63373,13 +63422,13 @@ function dropTwin(area) {
   TWINS.delete(area);
 }
 function autosize(element) {
-  return HANDLES11.get(element) ?? null;
+  return HANDLES10.get(element) ?? null;
 }
 function refreshAutosize(element) {
-  HANDLES11.get(element)?.refresh();
+  HANDLES10.get(element)?.refresh();
 }
 function setAutosizeState(element, state6, message) {
-  HANDLES11.get(element)?.setState(state6, message);
+  HANDLES10.get(element)?.setState(state6, message);
 }
 function cssAutosizeSupported() {
   return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
@@ -63404,7 +63453,7 @@ function attachAutosize(root = document, options = {}) {
       }
     };
     var remember3 = remember4;
-    if (HANDLES11.has(area) || area.getAttribute("data-kp-autosize") === "off") continue;
+    if (HANDLES10.has(area) || area.getAttribute("data-kp-autosize") === "off") continue;
     const doc = area.ownerDocument;
     const view = (
       /** @type {Window} */
@@ -63616,7 +63665,7 @@ function attachAutosize(root = document, options = {}) {
     let unregister = null;
     if (attr8(area, "data-kp-submit-key", "off") === "mod-enter") {
       void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
-        if (!HANDLES11.has(area)) return;
+        if (!HANDLES10.has(area)) return;
         unregister = registerShortcuts2(
           area,
           [
@@ -63718,7 +63767,7 @@ function attachAutosize(root = document, options = {}) {
         );
       }
     };
-    HANDLES11.set(area, handle);
+    HANDLES10.set(area, handle);
     area.addEventListener("input", onInput);
     area.addEventListener("paste", onPaste);
     area.addEventListener("change", onChange);
@@ -63747,14 +63796,14 @@ function attachAutosize(root = document, options = {}) {
       area.classList.remove("kp-autosize");
       area.removeAttribute("data-kp-autosize-engine-used");
       area.removeAttribute("data-kp-autosize-capped");
-      HANDLES11.delete(area);
+      HANDLES10.delete(area);
     });
   }
   return () => {
     for (const clean of cleanups) clean();
   };
 }
-var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, px3, WRAP_PROPS, TWINS, HANDLES11, seq5, attr8;
+var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, px3, WRAP_PROPS, TWINS, HANDLES10, seq5, attr8;
 var init_autosize = __esm({
   "js/autosize.js"() {
     "use strict";
@@ -63804,7 +63853,7 @@ var init_autosize = __esm({
       "borderLeftStyle"
     ];
     TWINS = /* @__PURE__ */ new WeakMap();
-    HANDLES11 = /* @__PURE__ */ new WeakMap();
+    HANDLES10 = /* @__PURE__ */ new WeakMap();
     seq5 = 0;
     attr8 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
   }
@@ -65670,7 +65719,7 @@ var init_core2 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build7();
@@ -65900,7 +65949,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller13();
+    init_controller14();
     init_values2();
     init_values2();
   }
@@ -66067,15 +66116,15 @@ var init_fields = __esm({
 });
 
 // js/sentence/controller.js
-var seq7, SAY_AFTER_MS, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller14 = __esm({
+var seq7, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
+var init_controller15 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_fields();
     seq7 = 0;
-    SAY_AFTER_MS = 500;
+    SAY_AFTER_MS2 = 500;
     STACK_BELOW_PX = 480;
     OWN_LINE_RATIO = 0.7;
     OWN_LINE_RATIO_MIN = 0.2;
@@ -66255,7 +66304,7 @@ var init_controller14 = __esm({
       onChange() {
         this.refresh();
         clearTimeout(this.timer);
-        this.timer = window.setTimeout(() => this.say(), SAY_AFTER_MS);
+        this.timer = window.setTimeout(() => this.say(), SAY_AFTER_MS2);
       }
       /** Enter in the last field submits the form the sentence is (or is in). @param {KeyboardEvent} event */
       onKey(event) {
@@ -66297,7 +66346,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller14();
+    init_controller15();
     init_fields();
     init_fields();
   }
@@ -66336,16 +66385,16 @@ function orderDated(options, order2 = "newest") {
   }).map((x) => x.o);
 }
 function datedOptions(element) {
-  return HANDLES12.get(element) ?? null;
+  return HANDLES11.get(element) ?? null;
 }
 function setDatedOptions(element, options, value) {
-  HANDLES12.get(element)?.set(options, value);
+  HANDLES11.get(element)?.set(options, value);
 }
 function setDatedState(element, state6, options) {
-  HANDLES12.get(element)?.setState(state6, options);
+  HANDLES11.get(element)?.setState(state6, options);
 }
 function datedValue(element) {
-  return HANDLES12.get(element)?.value() ?? null;
+  return HANDLES11.get(element)?.value() ?? null;
 }
 function attachDatedOptions(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -66354,7 +66403,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(DATED) ? [root] : [], ...root.querySelectorAll(DATED)]
   );
   for (const el16 of found) {
-    if (HANDLES12.has(el16)) continue;
+    if (HANDLES11.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = el16.id || `kp-dated-${++seq8}`;
@@ -66668,7 +66717,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       options: () => shown5.slice(),
       state: () => state6
     };
-    HANDLES12.set(el16, handle);
+    HANDLES11.set(el16, handle);
     const onChange = (event) => {
       const target = event.target;
       if (target instanceof HTMLInputElement && target.type === "radio" && body.contains(target)) choose3(target.value, true);
@@ -66719,7 +66768,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       el16.removeEventListener("keydown", onType);
       detachCombobox?.();
       busy?.remove();
-      HANDLES12.delete(el16);
+      HANDLES11.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-dated-rows");
       delete el16.dataset.kpDatedAttached;
@@ -66730,7 +66779,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES12, seq8;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES11, seq8;
 var init_dated_options = __esm({
   "js/dated-options.js"() {
     "use strict";
@@ -66745,7 +66794,7 @@ var init_dated_options = __esm({
     DATED_RETRY_EVENT = "kp-dated-retry";
     DATED_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
-    HANDLES12 = /* @__PURE__ */ new WeakMap();
+    HANDLES11 = /* @__PURE__ */ new WeakMap();
     seq8 = 0;
   }
 });
@@ -66791,13 +66840,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES13.get(element) ?? null;
+  return HANDLES12.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES13.get(element)?.set(times, options);
+  HANDLES12.get(element)?.set(times, options);
 }
 function setRunsState(element, state6, options) {
-  HANDLES13.get(element)?.setState(state6, options);
+  HANDLES12.get(element)?.setState(state6, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -66806,7 +66855,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES13.has(el16)) continue;
+    if (HANDLES12.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq9}`;
@@ -66955,7 +67004,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state6
     };
-    HANDLES13.set(el16, handle);
+    HANDLES12.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -66976,7 +67025,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button4.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES13.delete(el16);
+      HANDLES12.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -66986,7 +67035,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES13, seq9;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES12, seq9;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -67001,7 +67050,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES13 = /* @__PURE__ */ new WeakMap();
+    HANDLES12 = /* @__PURE__ */ new WeakMap();
     seq9 = 0;
   }
 });
@@ -67087,16 +67136,16 @@ function snoozeChoices({
   return out;
 }
 function snooze(element) {
-  return HANDLES14.get(element) ?? null;
+  return HANDLES13.get(element) ?? null;
 }
 function setSnoozedUntil(element, until) {
-  HANDLES14.get(element)?.setUntil(until);
+  HANDLES13.get(element)?.setUntil(until);
 }
 function setSnoozeBusy(element, busy) {
-  HANDLES14.get(element)?.setBusy(busy);
+  HANDLES13.get(element)?.setBusy(busy);
 }
 function openSnoozePanel(element, open4 = true) {
-  const h2 = HANDLES14.get(element);
+  const h2 = HANDLES13.get(element);
   if (open4) h2?.openPanel();
   else h2?.closePanel();
 }
@@ -67110,7 +67159,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     ]
   );
   for (const el16 of found) {
-    if (HANDLES14.has(el16)) continue;
+    if (HANDLES13.has(el16)) continue;
     const s2 = snoozeWords(el16);
     const doc = el16.ownerDocument;
     const id = `kp-snooze-${++seq10}`;
@@ -67467,7 +67516,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       openPanel,
       closePanel: () => void closePanel(false)
     };
-    HANDLES14.set(el16, handle);
+    HANDLES13.set(el16, handle);
     handle.setUntil(el16.dataset.kpSnoozedUntil ?? null);
     paintStatus();
     fill2();
@@ -67483,7 +67532,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       end.removeEventListener("click", onEnd);
       doc.removeEventListener("pointerdown", onOutside, true);
       if (tick6) clearInterval(tick6);
-      HANDLES14.delete(el16);
+      HANDLES13.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-busy");
       delete el16.dataset.kpSnoozeAttached;
@@ -67494,7 +67543,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES14, seq10;
+var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES13, seq10;
 var init_snooze = __esm({
   "js/snooze.js"() {
     "use strict";
@@ -67538,7 +67587,7 @@ var init_snooze = __esm({
       ["data-kp-snooze-apply", "snoozeApply"],
       ["data-kp-snooze-saving", "snoozeSaving"]
     ];
-    HANDLES14 = /* @__PURE__ */ new WeakMap();
+    HANDLES13 = /* @__PURE__ */ new WeakMap();
     seq10 = 0;
   }
 });
@@ -72392,7 +72441,7 @@ var init_actions5 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -72496,7 +72545,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller15();
+    init_controller16();
     init_state20();
     init_state20();
     init_matrix2();
@@ -73873,7 +73922,7 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
-var init_parts4 = __esm({
+var init_parts5 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
@@ -74260,7 +74309,7 @@ var init_api17 = __esm({
     init_newpill();
     init_levels();
     init_model8();
-    init_parts4();
+    init_parts5();
     init_reads();
     init_refresh();
     init_rows4();
@@ -74469,7 +74518,7 @@ var init_attach23 = __esm({
     init_api17();
     init_constants30();
     init_model8();
-    init_parts4();
+    init_parts5();
     init_reads();
     init_rows4();
   }
@@ -77634,12 +77683,6 @@ export {
   TIMER_DISC,
   TIMER_DISC_LEFT,
   TIMINGS,
-  TOGGLE,
-  TOGGLE_CHANGED_EVENT,
-  TOGGLE_EVENT,
-  TOGGLE_LOOKS,
-  TOGGLE_MODES,
-  TOGGLE_REFUSED_MS,
   TOOLBAR,
   TOOLBAR_CLEAR_EVENT,
   TOOLBAR_REMOVE_EVENT,
@@ -78206,9 +78249,6 @@ export {
   toJson,
   toggle,
   toggle_exports as toggleExports,
-  toggleGroup,
-  toggleKey,
-  togglePressedKeys,
   tokenColour,
   toneOf,
   toolbar_exports as toolbarExports,
