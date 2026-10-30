@@ -378,6 +378,7 @@
         { "path": "js/barcell.js", "tags": ["@component:data"], "why": "the value with a bar in a table cell [kpadopt2-grids]" },
         { "path": "js/keys.js", "tags": ["@component:data"], "why": "the inline key line and key cap [kpadopt-controls]" },
         { "path": "js/steplist.js", "tags": ["@component:feedback"], "why": "the live step list [kpadopt-feedback]" },
+        { "path": "js/steplist/*.js", "tags": ["@component:feedback"], "why": "the live step list [kpadopt-feedback]" },
         { "path": "js/action-tiles.js", "tags": ["@component:button"], "why": "action tiles with a busy state [kpadopt2-tiles]" },
         { "path": "js/statusrow.js", "tags": ["@component:feedback"], "why": "status rows with a Retry [kpadopt2-tiles]" },
         { "path": "js/statusrow/*.js", "tags": ["@component:feedback"], "why": "status rows with a Retry [kpadopt2-tiles]" },

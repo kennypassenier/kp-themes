@@ -1,11 +1,5 @@
-/** The lists this module looks after. */
-export declare const STEPLIST_SELECTOR = ".kp-steplist";
-/** The attribute that names a step, for setStep(). */
-export declare const STEP_ID_ATTRIBUTE = "data-kp-step-id";
-/** Fired on the list, bubbling, when a step changed state after attach: `{ item, id, state, previous }`. */
-export declare const STEPLIST_EVENT = "kp-steplist-step";
-/** The states a step can be in. */
-export declare const STEP_STATES: readonly ['pending', 'running', 'done', 'failed', 'skipped', 'current'];
+export { STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEPLIST_EVENT, STEP_STATES } from './steplist/values.js';
+export { buildSteplist, setStep } from './steplist/build.js';
 export type StepState = 'pending' | 'running' | 'done' | 'failed' | 'skipped' | 'current';
 export type StepRow = {
     /**
@@ -31,30 +25,15 @@ export type StepRow = {
     tone?: 1 | 2 | 3 | 4 | 5;
 };
 /**
- * Build a step list from rows. The result still needs attachSteplists() (on
- * the element or its container) for the spoken parts.
- *
- * @param {StepRow[]} rows
- * @param {{ label?: string }} [options] `label`: the list's accessible name
- * @returns {HTMLOListElement}
+ * @typedef {'pending' | 'running' | 'done' | 'failed' | 'skipped' | 'current'} StepState
+ * @typedef {object} StepRow
+ * @property {string} [id] names the step for setStep(); defaults to its index
+ * @property {string} title
+ * @property {string} [note] the one-line description under the title; give every step one, so a note arriving later moves nothing
+ * @property {StepState} [state] pending when absent
+ * @property {string} [time] how long it took, as the page prints it (in a journey: the date the step was reached)
+ * @property {1 | 2 | 3 | 4 | 5} [tone] the step's own colour, `--chart-1` … `--chart-5` (`data-kp-tone`) [kpadopt4]
  */
-export declare function buildSteplist(rows: StepRow[], { label }?: {
-    label?: string;
-}): HTMLOListElement;
-/**
- * Change one step. `key` is the step's `data-kp-step-id` or its index.
- *
- * @param {Element} list
- * @param {string | number} key
- * @param {{ state?: StepState, title?: string, note?: string, time?: string }} change
- * @returns {Element | null} the item, or null when there is no such step
- */
-export declare function setStep(list: Element, key: string | number, change: {
-    state?: StepState;
-    title?: string;
-    note?: string;
-    time?: string;
-}): Element | null;
 /**
  * Sync every `.kp-steplist` under `root`, and follow `data-state` changes
  * later, so a framework or a hand-written `setAttribute` is followed too.

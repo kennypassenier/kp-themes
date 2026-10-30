@@ -107,7 +107,7 @@
         "js/snooze.js": { "digest": "10036c96d84b271b", "when": "[data-kp-snooze]" },
         "js/stackbar.js": { "digest": "22ee6b6374f0c210", "when": "[data-kp-stackbar]" },
         "js/statusrow.js": { "digest": "0fed80955a05324a", "when": ".kp-statuslist" },
-        "js/steplist.js": { "digest": "755a25b21d821b06", "when": ".kp-steplist" },
+        "js/steplist.js": { "digest": "2bc8e0c21252bbd1", "when": ".kp-steplist" },
         "js/structure.js": { "digest": "7181ac59520127cf", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
         "js/tabbar.js": { "digest": "a60f6e029fc5dd56", "when": ".kp-tabbar" },
         "js/tables.js": { "digest": "66d205c2f610c15a", "when": ".kp-table-wrap" },
