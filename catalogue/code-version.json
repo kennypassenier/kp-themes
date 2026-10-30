@@ -12235,7 +12235,7 @@
             ]
         },
         "datatable": {
-            "modules": "bb431ce90d318641",
+            "modules": "25bb2c698977d796",
             "families": [
                 "data-kp-align",
                 "data-kp-arrive",
@@ -13522,7 +13522,7 @@
             ]
         },
         "navigation": {
-            "modules": "9a67b3bba60f60a9",
+            "modules": "805e6d3c7ec147f8",
             "families": [
                 "data-kp-activation",
                 "data-kp-against",
@@ -14356,7 +14356,7 @@
             ]
         },
         "structure": {
-            "modules": "1dd652d2404406c4",
+            "modules": "5b35cc062fa9f07f",
             "families": [
                 "data-kp-anchor",
                 "data-kp-anchor-copy",

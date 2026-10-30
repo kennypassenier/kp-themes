@@ -4843,25 +4843,114 @@ var init_toast = __esm({
   }
 });
 
-// js/remember.js
-var remember_exports = {};
-__export(remember_exports, {
-  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
-  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
-  REMEMBER_HOLD_ATTRIBUTE: () => REMEMBER_HOLD_ATTRIBUTE,
-  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
-  attachRemembered: () => attachRemembered,
-  columnId: () => columnId,
-  configureRemember: () => configureRemember,
-  forgetClaims: () => forgetClaims,
-  forgetRememberedExcept: () => forgetRememberedExcept,
-  memoryFor: () => memoryFor,
-  paintRemembered: () => paintRemembered,
-  rememberedName: () => rememberedName,
-  restoreRemembered: () => restoreRemembered,
-  sidenavGroups: () => sidenavGroups,
-  treeItemId: () => treeItemId
+// js/controller.js
+function hostsOf(root, selector) {
+  const self = root instanceof Element && root.matches(selector) ? [root] : [];
+  return (
+    /** @type {HTMLElement[]} */
+    [...self, ...root.querySelectorAll(selector)]
+  );
+}
+function controllerOf(host, Ctor) {
+  return (
+    /** @type {C | undefined} */
+    LIVE.get(Ctor)?.get(host)
+  );
+}
+function attachOne(host, Ctor, options = {}) {
+  let live4 = LIVE.get(Ctor);
+  if (!live4) LIVE.set(Ctor, live4 = /* @__PURE__ */ new WeakMap());
+  const existing = (
+    /** @type {C | undefined} */
+    live4.get(host)
+  );
+  if (existing) return existing;
+  const controller = new Ctor(host, options);
+  live4.set(host, controller);
+  try {
+    controller.connect();
+    return controller;
+  } catch (error) {
+    controller.destroy();
+    report(error);
+    return void 0;
+  }
+}
+function attachAll(root, selector, Ctor, options = {}) {
+  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne(host, Ctor, options)).filter((controller) => controller !== void 0);
+  return () => {
+    for (const controller of made6) controller.destroy();
+  };
+}
+var LIVE, report, Controller;
+var init_controller = __esm({
+  "js/controller.js"() {
+    "use strict";
+    LIVE = /* @__PURE__ */ new WeakMap();
+    report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
+    Controller = class {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options = {}) {
+        this.host = host;
+        this.options = options;
+        this.teardown = [];
+        this.destroyed = false;
+      }
+      /**
+       * Register an undo step for `destroy()`.
+       * @template {() => void} F
+       * @param {F} undo
+       * @returns {F}
+       */
+      own(undo) {
+        this.teardown.push(undo);
+        return undo;
+      }
+      /**
+       * Add an event listener that `destroy()` removes.
+       * @param {EventTarget} target
+       * @param {string} type
+       * @param {EventListenerOrEventListenerObject} handler
+       * @param {AddEventListenerOptions | boolean} [options]
+       */
+      listen(target, type, handler, options) {
+        target.addEventListener(type, handler, options);
+        this.own(() => target.removeEventListener(type, handler, options));
+      }
+      /**
+       * Start an observer that `destroy()` disconnects.
+       * @template {{ disconnect(): void }} O
+       * @param {O} observer
+       * @returns {O}
+       */
+      observe(observer) {
+        this.own(() => observer.disconnect());
+        return observer;
+      }
+      /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
+      connect() {
+      }
+      /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */
+      destroy() {
+        if (this.destroyed) return;
+        this.destroyed = true;
+        for (const undo of this.teardown.splice(0).reverse()) {
+          try {
+            undo();
+          } catch (error) {
+            report(error);
+          }
+        }
+        LIVE.get(this.constructor)?.delete(this.host);
+      }
+    };
+  }
 });
+
+// js/remember/store.js
 function configureRemember(next2) {
   if (next2.prefix !== void 0) config.prefix = next2.prefix;
   if (next2.storage !== void 0) config.storage = next2.storage;
@@ -4939,6 +5028,48 @@ function memoryFor(element, component, { storage: given2 } = {}) {
     }
   };
 }
+function forgetRememberedExcept(component, prefix, names, { storage: given2 } = {}) {
+  const store = storage(given2);
+  if (store === null) return 0;
+  const keep = new Set(names);
+  const head = `${config.prefix}:${component}:`;
+  let removed = 0;
+  try {
+    const doomed = [];
+    for (let at = 0; at < store.length; at += 1) {
+      const key = store.key(at);
+      if (key === null || !key.startsWith(head)) continue;
+      const rest = key.slice(head.length);
+      const name = rest.slice(0, rest.lastIndexOf(":"));
+      if (name.startsWith(prefix) && !keep.has(name)) doomed.push(key);
+    }
+    for (const key of doomed) {
+      store.removeItem(key);
+      removed += 1;
+    }
+  } catch {
+  }
+  return removed;
+}
+var REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, config, ALIASES, claims, reported;
+var init_store = __esm({
+  "js/remember/store.js"() {
+    "use strict";
+    init_strings();
+    REMEMBER_ATTRIBUTE = "data-kp-remember";
+    REMEMBER_CLASH_EVENT = "kp-remember-clash";
+    REMEMBER_PREFIX = "kp-remember";
+    config = { prefix: REMEMBER_PREFIX, storage: (
+      /** @type {Storage | null | undefined} */
+      void 0
+    ) };
+    ALIASES = { sidenav: "data-kp-sidenav-remember" };
+    claims = /* @__PURE__ */ new Map();
+    reported = /* @__PURE__ */ new Set();
+  }
+});
+
+// js/remember/painters.js
 function sidenavGroups(panel) {
   return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
     const toggle2 = group.querySelector(".kp-sidenav__category-toggle");
@@ -5046,122 +5177,11 @@ function restoreRemembered(root = document) {
     }
   }
 }
-function attachRemembered(root = document) {
-  const wired3 = /* @__PURE__ */ new Map();
-  const wire13 = (scope) => {
-    const found = [
-      ...scope instanceof Element && scope.matches(`details[${REMEMBER_ATTRIBUTE}]`) ? [scope] : [],
-      ...scope.querySelectorAll(`details[${REMEMBER_ATTRIBUTE}]`)
-    ];
-    for (const element of found) {
-      const details = (
-        /** @type {HTMLDetailsElement} */
-        element
-      );
-      if (wiredDisclosures.has(details)) continue;
-      const memory = held(details) ? memoryFor(details, "disclosure") : paintRemembered(details, "disclosure");
-      if (memory === null) continue;
-      wiredDisclosures.add(details);
-      details.dataset.kpRememberAttached = "";
-      const onToggle = () => {
-        if (!held(details)) memory.write("open", details.open);
-      };
-      details.addEventListener("toggle", onToggle);
-      wired3.set(details, {
-        memory,
-        cleanup: () => {
-          details.removeEventListener("toggle", onToggle);
-          wiredDisclosures.delete(details);
-          delete details.dataset.kpRememberAttached;
-        }
-      });
-    }
-  };
-  wire13(root);
-  const doc = root instanceof Document ? root : root.ownerDocument ?? (typeof document === "undefined" ? null : document);
-  const view = doc?.defaultView;
-  if (!view) return () => wired3.forEach(({ cleanup }) => cleanup());
-  let sweeping = false;
-  const sweep = () => {
-    sweeping = false;
-    for (const [details, { cleanup }] of wired3)
-      if (!details.isConnected) {
-        cleanup();
-        wired3.delete(details);
-      }
-  };
-  const later = new view.MutationObserver((records) => {
-    for (const record of records) {
-      if (record.type === "attributes") {
-        const target = (
-          /** @type {Element} */
-          record.target
-        );
-        if (target.hasAttribute(REMEMBER_HOLD_ATTRIBUTE)) continue;
-        for (const [details, { memory }] of wired3)
-          if ((details === target || target.contains(details)) && !held(details)) paintDisclosure(details, memory);
-        continue;
-      }
-      for (const node of record.addedNodes) if (node instanceof view.Element) wire13(node);
-      if (record.removedNodes.length && !sweeping) {
-        sweeping = true;
-        queueMicrotask(sweep);
-      }
-    }
-  });
-  later.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: [REMEMBER_HOLD_ATTRIBUTE]
-  });
-  return () => {
-    later.disconnect();
-    for (const { cleanup } of wired3.values()) cleanup();
-    wired3.clear();
-  };
-}
-function forgetRememberedExcept(component, prefix, names, { storage: given2 } = {}) {
-  const store = storage(given2);
-  if (store === null) return 0;
-  const keep = new Set(names);
-  const head = `${config.prefix}:${component}:`;
-  let removed = 0;
-  try {
-    const doomed = [];
-    for (let at = 0; at < store.length; at += 1) {
-      const key = store.key(at);
-      if (key === null || !key.startsWith(head)) continue;
-      const rest = key.slice(head.length);
-      const name = rest.slice(0, rest.lastIndexOf(":"));
-      if (name.startsWith(prefix) && !keep.has(name)) doomed.push(key);
-    }
-    for (const key of doomed) {
-      store.removeItem(key);
-      removed += 1;
-    }
-  } catch {
-  }
-  return removed;
-}
-var REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, config, ALIASES, claims, reported, headersOf, isFlags, PAINTERS, KINDS, REMEMBER_HOLD_ATTRIBUTE, held, wiredDisclosures;
-var init_remember = __esm({
-  "js/remember.js"() {
+var headersOf, isFlags, PAINTERS, KINDS;
+var init_painters = __esm({
+  "js/remember/painters.js"() {
     "use strict";
-    init_strings();
-    REMEMBER_ATTRIBUTE = "data-kp-remember";
-    REMEMBER_CLASH_EVENT = "kp-remember-clash";
-    REMEMBER_PREFIX = "kp-remember";
-    config = { prefix: REMEMBER_PREFIX, storage: (
-      /** @type {Storage | null | undefined} */
-      void 0
-    ) };
-    ALIASES = { sidenav: "data-kp-sidenav-remember" };
-    claims = /* @__PURE__ */ new Map();
-    reported = /* @__PURE__ */ new Set();
+    init_store();
     headersOf = (element) => [...element.querySelector("table")?.tHead?.rows[0]?.cells ?? []];
     isFlags = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
     PAINTERS = {
@@ -5203,9 +5223,155 @@ var init_remember = __esm({
       ["disclosure", "details"],
       ["alert", ".kp-alert"]
     ];
+  }
+});
+
+// js/remember/disclosure.js
+var REMEMBER_HOLD_ATTRIBUTE, held, wiredDisclosures, RememberedDisclosure, RememberWatch;
+var init_disclosure = __esm({
+  "js/remember/disclosure.js"() {
+    "use strict";
+    init_controller();
+    init_painters();
+    init_store();
     REMEMBER_HOLD_ATTRIBUTE = "data-kp-remember-hold";
     held = (element) => element.closest(`[${REMEMBER_HOLD_ATTRIBUTE}]`) !== null;
     wiredDisclosures = /* @__PURE__ */ new WeakSet();
+    RememberedDisclosure = class extends Controller {
+      /** @param {HTMLDetailsElement} details @param {Memory} memory */
+      constructor(details, memory) {
+        super(details);
+        this.details = details;
+        this.memory = memory;
+      }
+      connect() {
+        const details = this.details;
+        wiredDisclosures.add(details);
+        details.dataset.kpRememberAttached = "";
+        this.own(() => {
+          wiredDisclosures.delete(details);
+          delete details.dataset.kpRememberAttached;
+        });
+        this.listen(details, "toggle", () => {
+          if (!held(details)) this.memory.write("open", details.open);
+        });
+      }
+      /** A hold that went: paint what was stored back. */
+      repaint() {
+        if (!held(this.details)) paintDisclosure(this.details, this.memory);
+      }
+    };
+    RememberWatch = class {
+      /** @param {ParentNode} root */
+      constructor(root) {
+        this.root = root;
+        this.wired = /* @__PURE__ */ new Map();
+        this.sweeping = false;
+        this.later = null;
+      }
+      /** Wire what is there, then watch for more when the root is in a window. */
+      start() {
+        this.wire(this.root);
+        const root = this.root;
+        const doc = root instanceof Document ? root : root.ownerDocument ?? (typeof document === "undefined" ? null : document);
+        const view = doc?.defaultView;
+        if (!view) return;
+        this.later = new view.MutationObserver((records) => this.onRecords(records, view));
+        this.later.observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: [REMEMBER_HOLD_ATTRIBUTE]
+        });
+      }
+      stop() {
+        this.later?.disconnect();
+        for (const disclosure of this.wired.values()) disclosure.destroy();
+        this.wired.clear();
+      }
+      /** @param {ParentNode} scope */
+      wire(scope) {
+        const selector = `details[${REMEMBER_ATTRIBUTE}]`;
+        const found = [...scope instanceof Element && scope.matches(selector) ? [scope] : [], ...scope.querySelectorAll(selector)];
+        for (const element of found) {
+          const details = (
+            /** @type {HTMLDetailsElement} */
+            element
+          );
+          if (wiredDisclosures.has(details)) continue;
+          const memory = held(details) ? memoryFor(details, "disclosure") : paintRemembered(details, "disclosure");
+          if (memory === null) continue;
+          const disclosure = new RememberedDisclosure(details, memory);
+          disclosure.connect();
+          this.wired.set(details, disclosure);
+        }
+      }
+      /** @param {MutationRecord[]} records @param {Window & typeof globalThis} view */
+      onRecords(records, view) {
+        for (const record of records) {
+          if (record.type === "attributes") {
+            const target = (
+              /** @type {Element} */
+              record.target
+            );
+            if (target.hasAttribute(REMEMBER_HOLD_ATTRIBUTE)) continue;
+            for (const [details, disclosure] of this.wired) if (details === target || target.contains(details)) disclosure.repaint();
+            continue;
+          }
+          for (const node of record.addedNodes) if (node instanceof view.Element) this.wire(node);
+          if (record.removedNodes.length && !this.sweeping) {
+            this.sweeping = true;
+            queueMicrotask(() => this.sweep());
+          }
+        }
+      }
+      /** Let go of the disclosures that left the page. */
+      sweep() {
+        this.sweeping = false;
+        for (const [details, disclosure] of this.wired)
+          if (!details.isConnected) {
+            disclosure.destroy();
+            this.wired.delete(details);
+          }
+      }
+    };
+  }
+});
+
+// js/remember.js
+var remember_exports = {};
+__export(remember_exports, {
+  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
+  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
+  REMEMBER_HOLD_ATTRIBUTE: () => REMEMBER_HOLD_ATTRIBUTE,
+  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
+  attachRemembered: () => attachRemembered,
+  columnId: () => columnId,
+  configureRemember: () => configureRemember,
+  forgetClaims: () => forgetClaims,
+  forgetRememberedExcept: () => forgetRememberedExcept,
+  memoryFor: () => memoryFor,
+  paintRemembered: () => paintRemembered,
+  rememberedName: () => rememberedName,
+  restoreRemembered: () => restoreRemembered,
+  sidenavGroups: () => sidenavGroups,
+  treeItemId: () => treeItemId
+});
+function attachRemembered(root = document) {
+  const watch2 = new RememberWatch(root);
+  watch2.start();
+  return () => watch2.stop();
+}
+var init_remember = __esm({
+  "js/remember.js"() {
+    "use strict";
+    init_disclosure();
+    init_store();
+    init_painters();
+    init_disclosure();
   }
 });
 
@@ -5842,7 +6008,7 @@ function ackGate(el16) {
 function setAckNotes(gate, markdown) {
   HANDLES.get(gate)?.setNotes(markdown);
 }
-function attachOne(gate) {
+function attachOne2(gate) {
   if (HANDLES.has(gate)) return () => void 0;
   const doc = gate.ownerDocument;
   const s2 = getStrings();
@@ -6165,7 +6331,7 @@ function attachAckGates(root = document) {
       ...root.querySelectorAll(ACK_GATE)
     ]
   );
-  const undo = found.map((el16) => attachOne(el16));
+  const undo = found.map((el16) => attachOne2(el16));
   return () => undo.forEach((u) => u());
 }
 var ACK_GATE, ACK_EVENT, ACK_RETRY_EVENT, HANDLES, targetsOf, siblingsOf, open, counter2;
@@ -9006,113 +9172,6 @@ var init_alarm = __esm({
   }
 });
 
-// js/controller.js
-function hostsOf(root, selector) {
-  const self = root instanceof Element && root.matches(selector) ? [root] : [];
-  return (
-    /** @type {HTMLElement[]} */
-    [...self, ...root.querySelectorAll(selector)]
-  );
-}
-function controllerOf(host, Ctor) {
-  return (
-    /** @type {C | undefined} */
-    LIVE.get(Ctor)?.get(host)
-  );
-}
-function attachOne2(host, Ctor, options = {}) {
-  let live4 = LIVE.get(Ctor);
-  if (!live4) LIVE.set(Ctor, live4 = /* @__PURE__ */ new WeakMap());
-  const existing = (
-    /** @type {C | undefined} */
-    live4.get(host)
-  );
-  if (existing) return existing;
-  const controller = new Ctor(host, options);
-  live4.set(host, controller);
-  try {
-    controller.connect();
-    return controller;
-  } catch (error) {
-    controller.destroy();
-    report(error);
-    return void 0;
-  }
-}
-function attachAll(root, selector, Ctor, options = {}) {
-  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne2(host, Ctor, options)).filter((controller) => controller !== void 0);
-  return () => {
-    for (const controller of made6) controller.destroy();
-  };
-}
-var LIVE, report, Controller;
-var init_controller = __esm({
-  "js/controller.js"() {
-    "use strict";
-    LIVE = /* @__PURE__ */ new WeakMap();
-    report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
-    Controller = class {
-      /**
-       * @param {HTMLElement} host
-       * @param {Record<string, unknown>} [options]
-       */
-      constructor(host, options = {}) {
-        this.host = host;
-        this.options = options;
-        this.teardown = [];
-        this.destroyed = false;
-      }
-      /**
-       * Register an undo step for `destroy()`.
-       * @template {() => void} F
-       * @param {F} undo
-       * @returns {F}
-       */
-      own(undo) {
-        this.teardown.push(undo);
-        return undo;
-      }
-      /**
-       * Add an event listener that `destroy()` removes.
-       * @param {EventTarget} target
-       * @param {string} type
-       * @param {EventListenerOrEventListenerObject} handler
-       * @param {AddEventListenerOptions | boolean} [options]
-       */
-      listen(target, type, handler, options) {
-        target.addEventListener(type, handler, options);
-        this.own(() => target.removeEventListener(type, handler, options));
-      }
-      /**
-       * Start an observer that `destroy()` disconnects.
-       * @template {{ disconnect(): void }} O
-       * @param {O} observer
-       * @returns {O}
-       */
-      observe(observer) {
-        this.own(() => observer.disconnect());
-        return observer;
-      }
-      /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
-      connect() {
-      }
-      /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */
-      destroy() {
-        if (this.destroyed) return;
-        this.destroyed = true;
-        for (const undo of this.teardown.splice(0).reverse()) {
-          try {
-            undo();
-          } catch (error) {
-            report(error);
-          }
-        }
-        LIVE.get(this.constructor)?.delete(this.host);
-      }
-    };
-  }
-});
-
 // js/shortcuts.js
 var shortcuts_exports = {};
 __export(shortcuts_exports, {
@@ -10058,7 +10117,7 @@ function attachAnchors(root = document, options = {}) {
   for (const box of found) {
     if (box.dataset.kpAnchorsAttached !== void 0) continue;
     if ((options.anchors ?? attr(box, "data-kp-anchors", "off")) === "off") continue;
-    const anchored = attachOne2(box, AnchorBox, options);
+    const anchored = attachOne(box, AnchorBox, options);
     if (anchored) made6.push(anchored);
   }
   return () => {
@@ -12400,7 +12459,7 @@ function enhance(group) {
   );
   const existing = controllerOf(el16, SegmentedGroup);
   if (existing) existing.refresh();
-  else attachOne2(el16, SegmentedGroup);
+  else attachOne(el16, SegmentedGroup);
 }
 var SegmentedGroup;
 var init_group = __esm({
@@ -20394,7 +20453,7 @@ function wireable(picker) {
   return !wired3 && partsOf(picker) !== null;
 }
 function attachDatePickers(root = document, options = {}) {
-  const made6 = hostsOf(root, PICKER2).filter(wireable).map((picker) => attachOne2(picker, DatePickerController, options)).filter((controller) => controller !== void 0);
+  const made6 = hostsOf(root, PICKER2).filter(wireable).map((picker) => attachOne(picker, DatePickerController, options)).filter((controller) => controller !== void 0);
   const detach = () => {
     for (const controller of made6) controller.destroy();
   };
@@ -25966,7 +26025,7 @@ function attachStructure(root = document, options = {}) {
   for (const [selector, Kind] of KINDS2) {
     for (const element of root.querySelectorAll(selector)) {
       if (!(element instanceof HTMLElement) || Kind.isAttached(element)) continue;
-      const control = attachOne2(
+      const control = attachOne(
         element,
         /** @type {new (host: HTMLElement, options?: any) => TreeControl | ReorderControl | SplitControl} */
         Kind,
@@ -34768,7 +34827,7 @@ __export(footprint_exports, {
   holdFootprint: () => holdFootprint
 });
 function holdFootprint(host) {
-  const hold = attachOne2(host, FootprintHold);
+  const hold = attachOne(host, FootprintHold);
   return () => hold?.destroy();
 }
 var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, STATE_ATTRIBUTES, DEFAULT_ROWS, ROW_REM, CARDS_BELOW_REM, CARD_FRAME_REM, CARD_LINE_REM, FALLBACK_REM_PX, FootprintHold, attachFootprints;
@@ -35311,7 +35370,7 @@ function openInDialog(ctl) {
   dialog.append(close, body);
   dialog.addEventListener("close", () => dialog.remove());
   doc.body.append(dialog);
-  attachOne2(
+  attachOne(
     full,
     /** @type {typeof import('./controller.js').CodeBlock} */
     ctl.constructor
@@ -35718,7 +35777,7 @@ var init_controller4 = __esm({
 
 // js/code/attach.js
 function setCode(el16, given2) {
-  const block = controllerOf(el16, CodeBlock) ?? attachOne2(el16, CodeBlock);
+  const block = controllerOf(el16, CodeBlock) ?? attachOne(el16, CodeBlock);
   block?.update(given2);
 }
 function specFromMarkup(el16) {
@@ -36322,7 +36381,7 @@ function attachRowSelect(root = document, options = {}) {
   const made6 = [];
   for (const el16 of found) {
     if (el16.getAttribute("data-kp-select-keys") === "false" || controllerOf(el16, RowSelector)) continue;
-    const selector = attachOne2(el16, RowSelector, options);
+    const selector = attachOne(el16, RowSelector, options);
     if (selector) made6.push(selector);
   }
   return () => made6.forEach((selector) => selector.destroy());
@@ -43657,7 +43716,7 @@ function setCalendarCaption(el16, text) {
 function attachCalendars(root = document, options = {}) {
   const made6 = (
     /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(CALENDAR)].filter((el16) => !controllerOf(el16, CalendarController)).map((el16) => attachOne2(el16, CalendarController, options)).filter((controller) => controller !== void 0)
+    [...root.querySelectorAll(CALENDAR)].filter((el16) => !controllerOf(el16, CalendarController)).map((el16) => attachOne(el16, CalendarController, options)).filter((controller) => controller !== void 0)
   );
   return () => {
     for (const controller of made6) controller.destroy();
@@ -58260,7 +58319,7 @@ var init_controller10 = __esm({
         const { el: el16, options } = this;
         const value = this.num("value", this.value);
         this.destroy();
-        const next2 = attachOne2(el16, _RatingController, options);
+        const next2 = attachOne(el16, _RatingController, options);
         if (!next2) return;
         next2.value = next2.draft = snapRating(value, next2.max, next2.valueStep);
         paint14(next2);
@@ -65137,7 +65196,7 @@ var init_attach18 = __esm({
     init_constants25();
     init_dom6();
     init_gallery();
-    galleryOf = (el16) => controllerOf(el16, Gallery) ?? attachOne2(el16, Gallery);
+    galleryOf = (el16) => controllerOf(el16, Gallery) ?? attachOne(el16, Gallery);
   }
 });
 
@@ -77283,10 +77342,6 @@ export {
   REGISTER_PATTERN,
   REGISTER_PATTERN_DEFAULT,
   REJECT_EVENT,
-  REMEMBER_ATTRIBUTE,
-  REMEMBER_CLASH_EVENT,
-  REMEMBER_HOLD_ATTRIBUTE,
-  REMEMBER_PREFIX,
   REMOVE_EVENT,
   REQUESTS,
   REQUESTS_COPIED_MS,
@@ -77572,7 +77627,6 @@ export {
   code_field_exports as codeFieldExports,
   colorPicker,
   colorpicker_exports as colorpickerExports,
-  columnId,
   combobox_exports as comboboxExports,
   command_exports as commandExports,
   commandLines,
@@ -77580,7 +77634,6 @@ export {
   compareKey,
   compareVersions,
   components_exports as componentsExports,
-  configureRemember,
   configureShortcuts,
   configureTheme,
   connection_exports as connectionExports,
@@ -77641,8 +77694,6 @@ export {
   focus_steps_exports as focusStepsExports,
   foldNav,
   footprint_exports as footprintExports,
-  forgetClaims,
-  forgetRememberedExcept,
   forgetTour,
   form,
   formatCountdown,
@@ -77711,7 +77762,6 @@ export {
   master_detail_exports as masterDetailExports,
   matchIntent,
   meets,
-  memoryFor,
   menu_button_exports as menuButtonExports,
   mergeRoles,
   meterParts,
@@ -77742,7 +77792,6 @@ export {
   orderDependencies,
   overlays_exports as overlaysExports,
   page_contents_exports as pageContentsExports,
-  paintRemembered,
   palette_exports as paletteExports,
   parseDuration,
   parseHsl,
@@ -77802,14 +77851,12 @@ export {
   releaseUrl,
   remember_exports as rememberExports,
   rememberView,
-  rememberedName,
   rememberedView,
   removeRow,
   renderDiagnostics,
   renderShortcutSheet,
   request_inspector_exports as requestInspectorExports,
   resetTransfer,
-  restoreRemembered,
   rgbToHsl,
   rowRoles,
   rowSelect,
@@ -77917,7 +77964,6 @@ export {
   showAlarm,
   showError,
   sidenav_exports as sidenavExports,
-  sidenavGroups,
   slider,
   slider_exports as sliderExports,
   sliderPercent,
@@ -77991,7 +78037,6 @@ export {
   transferEta,
   transfer_exports as transferExports,
   transferRate,
-  treeItemId,
   undoToast,
   undo_toast_exports as undoToastExports,
   unknownEffects,
