@@ -464,4 +464,8 @@ export const PART_FILES = [
     'js/week/pills.js',
     'js/week/state.js',
     'js/week/upcoming.js',
+    'js/wheel/controller.js',
+    'js/wheel/draw.js',
+    'js/wheel/spin.js',
+    'js/wheel/state.js',
 ];

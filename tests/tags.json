@@ -349,6 +349,7 @@
         { "path": "js/art.js", "tags": ["@component:data"], "why": "the drawings of an empty state [kpadopt4]" },
         { "path": "js/art/*.js", "tags": ["@component:data"], "why": "the drawings of an empty state [kpadopt4]" },
         { "path": "js/wheel.js", "tags": ["@component:data"], "why": "a wheel that picks by weight [kpadopt4]" },
+        { "path": "js/wheel/*.js", "tags": ["@component:data"], "why": "a wheel that picks by weight [kpadopt4]" },
         { "path": "js/focus-steps.js", "tags": ["@component:feedback"], "why": "one step at a time with the screen kept on, cook mode [kpadopt4]" },
         { "path": "js/focus-steps/*.js", "tags": ["@component:feedback"], "why": "one step at a time with the screen kept on, cook mode [kpadopt4]" },
         { "path": "js/timer.js", "tags": ["@component:feedback"], "why": "kitchen timers, named countdowns that keep running [kpadopt4]" },
