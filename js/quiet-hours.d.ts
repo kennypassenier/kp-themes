@@ -1,9 +1,5 @@
-/** The controls this module looks after. */
-export declare const QUIET = "[data-kp-quiet]";
-/** Fired on the control when a person changes it: `{ value, summary, valid }`. */
-export declare const QUIET_EVENT = "kp-quiet-change";
-/** The severities, most serious first, when the page names none. */
-export declare const QUIET_SEVERITIES: readonly ['critical', 'warning', 'info', 'ok'];
+export { QUIET, QUIET_EVENT, QUIET_SEVERITIES } from './quiet-hours/values.js';
+export { readQuiet, quietSummary } from './quiet-hours/value.js';
 export type QuietValue = {
     /**
      * quiet hours are on
@@ -27,24 +23,13 @@ export type QuietValue = {
     through: string[];
 };
 /**
- * A value read from whatever the page wrote, with the defaults for what is missing. Pure.
- * @param {unknown} raw an object, or its JSON text
- * @returns {QuietValue}
+ * @typedef {object} QuietValue
+ * @property {boolean} on quiet hours are on
+ * @property {string} from `HH:MM`
+ * @property {string} to `HH:MM`
+ * @property {number[]} days 0 (Sunday) to 6
+ * @property {string[]} through the severities that still come through
  */
-export declare function readQuiet(raw: unknown): QuietValue;
-/**
- * The value in words: "Quiet from 22:00 to 07:00: Every weekday. Critical still comes through." Pure.
- * @param {QuietValue} value
- * @param {{ severities?: readonly { key: string, label: string }[], firstDay?: number }} [options]
- * @returns {string}
- */
-export declare function quietSummary(value: QuietValue, { severities, firstDay }?: {
-    severities?: readonly {
-        key: string;
-        label: string;
-    }[];
-    firstDay?: number;
-}): string;
 /**
  * The value a control holds.
  * @param {Element} el

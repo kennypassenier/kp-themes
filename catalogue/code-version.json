@@ -89,7 +89,7 @@
         "js/qr.js": { "digest": "68067eac28d8e8a5", "when": "[data-kp-qr]" },
         "js/quantity.js": { "digest": "dacff25b79751023", "when": "[data-kp-quantity]" },
         "js/question-card.js": { "digest": "4db574ad459e720f", "when": "[data-kp-questions]" },
-        "js/quiet-hours.js": { "digest": "a0e5be02f86e1a33", "when": "[data-kp-quiet]" },
+        "js/quiet-hours.js": { "digest": "23a9ffd2da4f1990", "when": "[data-kp-quiet]" },
         "js/quote.js": { "digest": "0e961a3a16537647", "when": "[data-kp-quote], [data-kp-quote-list]" },
         "js/range.js": { "digest": "2df1841818bb6770", "when": "[data-kp-range]" },
         "js/rating.js": { "digest": "561fbe00f3e5aa4c", "when": "[data-kp-rating]" },
