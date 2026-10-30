@@ -15889,20 +15889,20 @@ function trendAxis(points, { now, step = 6e5, timeZone = CHART_TIME_ZONE, time, 
   if (points.length < 2) return [BLANK, BLANK];
   const print = time ?? numericTime(timeZone);
   const s2 = getStrings();
-  const say18 = words3 ?? { now: s2.chartNow, today: s2.chartToday, yesterday: s2.chartYesterday };
+  const say17 = words3 ?? { now: s2.chartNow, today: s2.chartToday, yesterday: s2.chartYesterday };
   const w = wallTime(now, timeZone);
   const today = dayKeyOf(w);
   const yesterday = dayKeyOf(wallTime(Date.UTC(w.year, w.month - 1, w.day - 1, 12), "UTC"));
   const dayWord2 = (ms) => {
     const day = dayKeyOf(wallTime(ms, timeZone));
-    if (day === today) return say18.today;
-    if (day === yesterday) return say18.yesterday;
+    if (day === today) return say17.today;
+    if (day === yesterday) return say17.yesterday;
     return print(ms, "tick", { stride: DAY });
   };
   const first = points[0][0];
   const last = points[points.length - 1][0];
   const left = `${print(first, "clock", {})} ${dayWord2(first)}`;
-  const right = now - last <= 2 * step ? say18.now : dayKeyOf(wallTime(last, timeZone)) === today ? print(last, "clock", {}) : `${print(last, "clock", {})} ${dayWord2(last)}`;
+  const right = now - last <= 2 * step ? say17.now : dayKeyOf(wallTime(last, timeZone)) === today ? print(last, "clock", {}) : `${print(last, "clock", {})} ${dayWord2(last)}`;
   return [left, right];
 }
 function tickStride(span5, most) {
@@ -16807,7 +16807,7 @@ function sparkChart(host, group, locale, ctx) {
       value.textContent = `${time(pts[k][0], "clock", {})} \xB7 ${fmt(pts[k][1], "spark")}`;
     } else value.textContent = `${strings.now} \xB7 ${fmt(pts[pts.length - 1][1], "spark")}`;
   }
-  const say18 = (t) => {
+  const say17 = (t) => {
     const k = indexAt(pts, t);
     readout.textContent = `${label()}: ${time(pts[k][0], "full", {})}, ${fmt(pts[k][1], "readout")}`;
   };
@@ -16837,7 +16837,7 @@ function sparkChart(host, group, locale, ctx) {
     e.preventDefault();
     k = Math.max(0, Math.min(pts.length - 1, k));
     group.cursor(pts[k][0], state12);
-    say18(pts[k][0]);
+    say17(pts[k][0]);
   });
   plot.addEventListener("blur", () => {
     if (group.owner === state12) group.cursor(null, state12);
@@ -19325,11 +19325,11 @@ var init_constants9 = __esm({
 });
 
 // js/patterns/clipboard.js
-function clearClipboardLater(field2, secret, wait, say18) {
+function clearClipboardLater(field2, secret, wait, say17) {
   const s2 = getStrings();
   let dropFocus = null;
   const done = (cleared, reason) => {
-    if (cleared) say18(s2.secretClipboardCleared);
+    if (cleared) say17(s2.secretClipboardCleared);
     field2.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
   };
   const clear = async () => {
@@ -19506,7 +19506,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
   const hidesOnBlur = () => !["false", "off"].includes(field2.dataset.kpSecretHideOnBlur ?? "");
   const disabledWhy = () => field2.dataset.kpSecretDisabled;
   const invalidWhy = () => field2.dataset.kpSecretInvalid;
-  const say18 = (text) => {
+  const say17 = (text) => {
     spoken.textContent = "";
     window.setTimeout(() => spoken.textContent = text, 30);
   };
@@ -19540,12 +19540,12 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     shown5 = false;
     stop();
     paint13();
-    say18(s2.secretHidden);
+    say17(s2.secretHidden);
     field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
   };
   const tick6 = () => {
     left -= 1;
-    if (left === 10 && seconds > 10) say18(s2.secretHidesIn(10));
+    if (left === 10 && seconds > 10) say17(s2.secretHidesIn(10));
     if (left <= 0) hide2("timer");
     else paint13();
   };
@@ -19557,7 +19557,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     void drain.offsetWidth;
     drain.style.removeProperty("animation");
     paint13();
-    say18(s2.secretShown(seconds));
+    say17(s2.secretShown(seconds));
     field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
     if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
   };
@@ -19579,7 +19579,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     } catch {
       pasteProblem = s2.secretPasteBlocked;
       paint13();
-      say18(pasteProblem);
+      say17(pasteProblem);
       input.focus();
       return;
     }
@@ -19588,7 +19588,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     const to = input.selectionEnd ?? from;
     input.setRangeText(text, from, to, "end");
     input.dispatchEvent(new Event("input", { bubbles: true }));
-    say18(s2.secretPasted(text.length));
+    say17(s2.secretPasted(text.length));
     input.focus();
   };
   const onCopy = async () => {
@@ -19599,14 +19599,14 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     } catch (error) {
       copy3.dataset.kpCopyFailed = "";
       copy3.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text: "", error } }));
-      say18(s2.copyBlockedAnnouncement);
+      say17(s2.copyBlockedAnnouncement);
       return;
     }
     delete copy3.dataset.kpCopyFailed;
     copy3.textContent = s2.copied;
     copy3.dataset.kpCopied = "";
     copy3.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
-    say18(s2.copiedAnnouncement(name));
+    say17(s2.copiedAnnouncement(name));
     window.clearTimeout(copiedTimer);
     copiedTimer = window.setTimeout(() => {
       delete copy3.dataset.kpCopied;
@@ -19614,7 +19614,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     }, copiedMs);
     cancelClear();
     const wait = clearDelay(field2.dataset.kpSecretClear, clearAfterMs);
-    if (wait > 0) cancelClear = clearClipboardLater(field2, text, wait, say18);
+    if (wait > 0) cancelClear = clearClipboardLater(field2, text, wait, say17);
   };
   const onFocusOut = (event) => {
     if (!shown5 || !hidesOnBlur()) return;
@@ -19798,7 +19798,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     let copiedTimer = 0;
     let cancelClear = () => {
     };
-    const say18 = (text) => {
+    const say17 = (text) => {
       spoken.textContent = "";
       window.setTimeout(() => spoken.textContent = text, 30);
     };
@@ -19851,7 +19851,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       setState3("hidden");
       writeLine();
       if (was === "shown") {
-        say18(s2.secretHidden);
+        say17(s2.secretHidden);
         field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
       }
     };
@@ -19882,7 +19882,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     const tick6 = () => {
       if (paused) return;
       left -= 1;
-      if (left === 10 && seconds > 10) say18(s2.secretHidesIn(10));
+      if (left === 10 && seconds > 10) say17(s2.secretHidesIn(10));
       if (left <= 0) {
         hide2("timer");
         return;
@@ -19901,7 +19901,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
         if (mine !== ticket) return;
         setState3("error");
         words3.textContent = s2.secretFailed(reasonOf2(error));
-        say18(words3.textContent);
+        say17(words3.textContent);
         return;
       }
       if (mine !== ticket) return;
@@ -19918,7 +19918,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       void drain.offsetWidth;
       drain.style.removeProperty("animation");
       writeLine();
-      say18(s2.secretShown(seconds));
+      say17(s2.secretShown(seconds));
       field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
       if (seconds > 0 && !hold) timer2 = window.setInterval(tick6, 1e3);
     };
@@ -19957,14 +19957,14 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       } catch (error) {
         copy3.dataset.kpCopyFailed = "";
         copy3.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text: "", error } }));
-        say18(s2.copyBlockedAnnouncement);
+        say17(s2.copyBlockedAnnouncement);
         return;
       }
       delete copy3.dataset.kpCopyFailed;
       copy3.textContent = s2.copied;
       copy3.dataset.kpCopied = "";
       copy3.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
-      say18(s2.copiedAnnouncement(field2.getAttribute("aria-label") ?? s2.secretLabel));
+      say17(s2.copiedAnnouncement(field2.getAttribute("aria-label") ?? s2.secretLabel));
       window.clearTimeout(copiedTimer);
       copiedTimer = window.setTimeout(() => {
         copy3.textContent = idle;
@@ -19976,7 +19976,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       cancelClear();
       const wait = clearDelay(field2.dataset.kpSecretClear, clearAfterMs);
       if (!(wait > 0)) return;
-      cancelClear = clearClipboardLater(field2, secret, wait, say18);
+      cancelClear = clearClipboardLater(field2, secret, wait, say17);
     };
     const onFocusIn = (event) => {
       if (event.target === value) pause(true);
@@ -21154,28 +21154,17 @@ var init_statusrow = __esm({
   }
 });
 
-// js/facets.js
-var facets_exports = {};
-__export(facets_exports, {
-  FACETS: () => FACETS,
-  FACET_EVENT: () => FACET_EVENT,
-  attachFacets: () => attachFacets,
-  getFacetValues: () => getFacetValues,
-  identityCells: () => identityCells,
-  setFacetCounts: () => setFacetCounts,
-  setFacetItems: () => setFacetItems,
-  setFacetValues: () => setFacetValues
-});
+// js/facets/pattern.js
 function identityCells(seed) {
-  let hash = 2166136261;
-  for (const ch of seed) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), 16777619);
+  let hash = FNV_OFFSET;
+  for (const ch of seed) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), FNV_PRIME);
   hash >>>= 0;
   const cells = [];
-  for (let y = 0; y < 5; y += 1)
-    for (let x = 0; x < 3; x += 1)
-      if (hash >>> y * 3 + x + 4 & 1) {
+  for (let y = 0; y < GRID; y += 1)
+    for (let x = 0; x < HALF_COLUMNS; x += 1)
+      if (hash >>> y * HALF_COLUMNS + x + BIT_SKIP & 1) {
         cells.push([x, y]);
-        if (x < 2) cells.push([4 - x, y]);
+        if (x < HALF_COLUMNS - 1) cells.push([GRID - 1 - x, y]);
       }
   return cells;
 }
@@ -21191,7 +21180,7 @@ function drawPattern(swatch, seed) {
   swatch.setAttribute("data-kp-facet-drawn", seed);
   const svg2 = document.createElementNS(SVG_NS, "svg");
   svg2.setAttribute("class", "kp-facet__pattern");
-  svg2.setAttribute("viewBox", "0 0 7 7");
+  svg2.setAttribute("viewBox", `0 0 ${PATTERN_BOX} ${PATTERN_BOX}`);
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
   svg2.setAttribute("shape-rendering", "crispEdges");
@@ -21204,6 +21193,21 @@ function drawPattern(swatch, seed) {
   if (old) old.replaceWith(svg2);
   else swatch.append(svg2);
 }
+var SVG_NS, FNV_OFFSET, FNV_PRIME, GRID, HALF_COLUMNS, BIT_SKIP, PATTERN_BOX;
+var init_pattern = __esm({
+  "js/facets/pattern.js"() {
+    "use strict";
+    SVG_NS = "http://www.w3.org/2000/svg";
+    FNV_OFFSET = 2166136261;
+    FNV_PRIME = 16777619;
+    GRID = 5;
+    HALF_COLUMNS = 3;
+    BIT_SKIP = 4;
+    PATTERN_BOX = 7;
+  }
+});
+
+// js/facets/rows.js
 function listOf2(group) {
   let list = (
     /** @type {HTMLElement | null} */
@@ -21237,6 +21241,23 @@ function wireRow(row) {
     if (!only.textContent?.trim()) only.textContent = getStrings().facetOnly;
   }
 }
+function paintRow(row, item) {
+  row.querySelector(".kp-facet__name")?.replaceChildren(item.label);
+  const count2 = row.querySelector(".kp-facet__count");
+  if (count2 && item.count !== void 0) count2.textContent = String(countText(item.count));
+  const swatch = (
+    /** @type {HTMLElement | null} */
+    row.querySelector(".kp-facet__swatch")
+  );
+  if (swatch && item.swatch !== void 0) swatch.style.setProperty("--kp-facet-swatch-colour", item.swatch);
+  if (swatch && item.pattern !== void 0) drawPattern(swatch, item.pattern || null);
+  const check = checkOf(row);
+  if (check) {
+    if (item.disabled !== void 0) check.disabled = item.disabled;
+    if (item.checked !== void 0) check.checked = item.checked;
+  }
+  wireRow(row);
+}
 function buildRow(item) {
   const row = (
     /** @type {HTMLLIElement} */
@@ -21257,23 +21278,6 @@ function buildRow(item) {
   row.append(option, only);
   paintRow(row, item);
   return row;
-}
-function paintRow(row, item) {
-  row.querySelector(".kp-facet__name")?.replaceChildren(item.label);
-  const count2 = row.querySelector(".kp-facet__count");
-  if (count2 && item.count !== void 0) count2.textContent = String(countText(item.count));
-  const swatch = (
-    /** @type {HTMLElement | null} */
-    row.querySelector(".kp-facet__swatch")
-  );
-  if (swatch && item.swatch !== void 0) swatch.style.setProperty("--kp-facet-swatch-colour", item.swatch);
-  if (swatch && item.pattern !== void 0) drawPattern(swatch, item.pattern || null);
-  const check = checkOf(row);
-  if (check) {
-    if (item.disabled !== void 0) check.disabled = item.disabled;
-    if (item.checked !== void 0) check.checked = item.checked;
-  }
-  wireRow(row);
 }
 function ensureAll(group) {
   const word = group.getAttribute("data-kp-facets-all");
@@ -21308,11 +21312,31 @@ function syncGroup(group) {
   const empty = group.querySelector(".kp-facets__empty");
   if (empty instanceof HTMLElement) empty.hidden = rows.length > 0;
 }
+var serial2, el4, countText, rowsOf, checkOf, nameOf2;
+var init_rows = __esm({
+  "js/facets/rows.js"() {
+    "use strict";
+    init_strings();
+    init_pattern();
+    serial2 = 0;
+    el4 = (className, tag = "span") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    countText = (count2) => typeof count2 === "number" ? count2.toLocaleString() : count2 ?? "";
+    rowsOf = (group) => (
+      /** @type {HTMLElement[]} */
+      [...group.querySelectorAll(".kp-facet:not([data-kp-facet-all])")]
+    );
+    checkOf = (row) => row.querySelector(".kp-facet__check");
+    nameOf2 = (row) => row.querySelector(".kp-facet__name")?.textContent?.trim() ?? "";
+  }
+});
+
+// js/facets/api.js
 function getFacetValues(group) {
   return rowsOf(group).filter((row) => checkOf(row)?.checked).map((row) => row.getAttribute("data-value") ?? "");
-}
-function emit(group, source, value) {
-  group.dispatchEvent(new CustomEvent(FACET_EVENT, { bubbles: true, detail: { group, values: getFacetValues(group), source, value } }));
 }
 function setFacetValues(group, values) {
   for (const row of rowsOf(group)) {
@@ -21355,93 +21379,128 @@ function setFacetItems(group, items) {
   if (!items.some((item) => item.count !== void 0)) group.removeAttribute("aria-busy");
   syncGroup(group);
 }
-function regionOf3(group) {
-  const next2 = group.nextElementSibling;
-  if (next2 instanceof HTMLElement && next2.classList.contains("kp-facets__live")) return next2;
-  const region = el4("kp-sr-only kp-facets__live");
-  region.setAttribute("role", "status");
-  region.setAttribute("aria-live", "polite");
-  group.after(region);
-  return region;
-}
-function say4(group, message) {
-  const fresh = !(group.nextElementSibling?.classList.contains("kp-facets__live") ?? false);
-  const region = regionOf3(group);
-  region.textContent = "";
-  setTimeout(() => region.textContent = message, fresh ? 100 : 30);
-}
-function attachFacets(root = document) {
-  const groups = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(FACETS) ? [root] : [],
-      ...root.querySelectorAll(FACETS)
-    ]
-  );
-  const undo = [];
-  for (const group of groups) {
-    syncGroup(group);
-    regionOf3(group);
-    const change2 = (event) => {
-      const check = event.target instanceof HTMLInputElement ? event.target : null;
-      const row = check?.closest(".kp-facet");
-      if (!check || !row || !group.contains(row)) return;
-      if (row.hasAttribute("data-kp-facet-all")) {
-        const before = getFacetValues(group).length;
-        setFacetValues(group, null);
-        say4(group, getStrings().facetShowingAll);
-        if (before !== rowsOf(group).length) emit(group, "all");
-        return;
-      }
-      syncGroup(group);
-      emit(group, "toggle", row.getAttribute("data-value") ?? "");
-    };
-    const press2 = (event) => {
-      const only = event.target instanceof Element ? event.target.closest(".kp-facet__only") : null;
-      const row = only?.closest(".kp-facet");
-      if (!only || !row || !group.contains(row)) return;
-      const value = row.getAttribute("data-value") ?? "";
-      setFacetValues(group, [value]);
-      say4(group, getStrings().facetShowingOnly(nameOf2(row)));
-      emit(group, "only", value);
-    };
-    group.addEventListener("change", change2);
-    group.addEventListener("click", press2);
-    undo.push(() => {
-      group.removeEventListener("change", change2);
-      group.removeEventListener("click", press2);
-    });
+var init_api5 = __esm({
+  "js/facets/api.js"() {
+    "use strict";
+    init_rows();
   }
-  return () => undo.forEach((u) => u());
+});
+
+// js/facets/values.js
+var FACETS, FACET_EVENT;
+var init_values2 = __esm({
+  "js/facets/values.js"() {
+    "use strict";
+    FACETS = "[data-kp-facets]";
+    FACET_EVENT = "kp-facet-change";
+  }
+});
+
+// js/facets/controller.js
+var SAY_FIRST_MS, SAY_MS, FacetGroup;
+var init_controller8 = __esm({
+  "js/facets/controller.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_api5();
+    init_rows();
+    init_values2();
+    SAY_FIRST_MS = 100;
+    SAY_MS = 30;
+    FacetGroup = class extends Controller {
+      connect() {
+        const group = this.host;
+        syncGroup(group);
+        this.region();
+        this.listen(group, "change", (event) => this.onChange(event));
+        this.listen(group, "click", (event) => this.onPress(event));
+      }
+      /** The group's status region, made on first need (right after the group). @returns {HTMLElement} */
+      region() {
+        const group = this.host;
+        const next2 = group.nextElementSibling;
+        if (next2 instanceof HTMLElement && next2.classList.contains("kp-facets__live")) return next2;
+        const region = el4("kp-sr-only kp-facets__live");
+        region.setAttribute("role", "status");
+        region.setAttribute("aria-live", "polite");
+        group.after(region);
+        return region;
+      }
+      /** Say something through the group's region. @param {string} message */
+      say(message) {
+        const fresh = !(this.host.nextElementSibling?.classList.contains("kp-facets__live") ?? false);
+        const region = this.region();
+        region.textContent = "";
+        setTimeout(() => region.textContent = message, fresh ? SAY_FIRST_MS : SAY_MS);
+      }
+      /** @param {string} source @param {string} [value] */
+      emit(source, value) {
+        const group = this.host;
+        group.dispatchEvent(new CustomEvent(FACET_EVENT, { bubbles: true, detail: { group, values: getFacetValues(group), source, value } }));
+      }
+      /** @param {Event} event */
+      onChange(event) {
+        const group = this.host;
+        const check = event.target instanceof HTMLInputElement ? event.target : null;
+        const row = check?.closest(".kp-facet");
+        if (!check || !row || !group.contains(row)) return;
+        if (row.hasAttribute("data-kp-facet-all")) {
+          const before = getFacetValues(group).length;
+          setFacetValues(group, null);
+          this.say(getStrings().facetShowingAll);
+          if (before !== rowsOf(group).length) this.emit("all");
+          return;
+        }
+        syncGroup(group);
+        this.emit("toggle", row.getAttribute("data-value") ?? "");
+      }
+      /** @param {Event} event */
+      onPress(event) {
+        const group = this.host;
+        const only = event.target instanceof Element ? event.target.closest(".kp-facet__only") : null;
+        const row = only?.closest(".kp-facet");
+        if (!only || !row || !group.contains(row)) return;
+        const value = row.getAttribute("data-value") ?? "";
+        setFacetValues(group, [value]);
+        this.say(getStrings().facetShowingOnly(nameOf2(row)));
+        this.emit("only", value);
+      }
+    };
+  }
+});
+
+// js/facets.js
+var facets_exports = {};
+__export(facets_exports, {
+  FACETS: () => FACETS,
+  FACET_EVENT: () => FACET_EVENT,
+  attachFacets: () => attachFacets,
+  getFacetValues: () => getFacetValues,
+  identityCells: () => identityCells,
+  setFacetCounts: () => setFacetCounts,
+  setFacetItems: () => setFacetItems,
+  setFacetValues: () => setFacetValues
+});
+function attachFacets(root = document) {
+  return attachAll(root, FACETS, FacetGroup);
 }
-var FACETS, FACET_EVENT, serial2, SVG_NS, el4, countText, rowsOf, checkOf, nameOf2;
 var init_facets = __esm({
   "js/facets.js"() {
     "use strict";
-    init_strings();
-    FACETS = "[data-kp-facets]";
-    FACET_EVENT = "kp-facet-change";
-    serial2 = 0;
-    SVG_NS = "http://www.w3.org/2000/svg";
-    el4 = (className, tag = "span") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    countText = (count2) => typeof count2 === "number" ? count2.toLocaleString() : count2 ?? "";
-    rowsOf = (group) => (
-      /** @type {HTMLElement[]} */
-      [...group.querySelectorAll(".kp-facet:not([data-kp-facet-all])")]
-    );
-    checkOf = (row) => row.querySelector(".kp-facet__check");
-    nameOf2 = (row) => row.querySelector(".kp-facet__name")?.textContent?.trim() ?? "";
+    init_controller();
+    init_controller8();
+    init_values2();
+    init_values2();
+    init_pattern();
+    init_api5();
   }
 });
 
 // js/idmark/mark.js
 function hashOf(name) {
-  let hash = FNV_OFFSET;
-  for (const ch of name) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), FNV_PRIME);
+  let hash = FNV_OFFSET2;
+  for (const ch of name) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), FNV_PRIME2);
   return hash >>> 0;
 }
 function idmarkLetters(name, count2 = 2) {
@@ -21486,7 +21545,7 @@ function idmarkColours(names) {
   }
   return out;
 }
-var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, FNV_OFFSET, FNV_PRIME, HUE_STEPS, GLYPH_SHIFT;
+var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, FNV_OFFSET2, FNV_PRIME2, HUE_STEPS, GLYPH_SHIFT;
 var init_mark = __esm({
   "js/idmark/mark.js"() {
     "use strict";
@@ -21494,8 +21553,8 @@ var init_mark = __esm({
     IDMARK = "[data-kp-idmark]";
     IDMARK_SLOTS = 5;
     IDMARK_GLYPHS = Object.freeze(["circle", "square", "triangle", "diamond"]);
-    FNV_OFFSET = 2166136261;
-    FNV_PRIME = 16777619;
+    FNV_OFFSET2 = 2166136261;
+    FNV_PRIME2 = 16777619;
     HUE_STEPS = 360;
     GLYPH_SHIFT = 3;
   }
@@ -21582,7 +21641,7 @@ var init_avatar = __esm({
 function patternSvg(doc, cells) {
   const svg2 = doc.createElementNS(SVG_NS2, "svg");
   svg2.setAttribute("class", "kp-idmark__pattern");
-  svg2.setAttribute("viewBox", `0 0 ${PATTERN_BOX} ${PATTERN_BOX}`);
+  svg2.setAttribute("viewBox", `0 0 ${PATTERN_BOX2} ${PATTERN_BOX2}`);
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
   svg2.setAttribute("shape-rendering", "crispEdges");
@@ -21613,7 +21672,7 @@ function setIdmark(el16, name, { slot, hue, title = true } = {}) {
   decorateAvatar(el16, mark.name);
   DRAWN2.set(el16, { base: baseKey(el16), slot: slot ?? mark.slot });
 }
-var SVG_NS2, PATTERN_BOX, DRAWN2, baseKey;
+var SVG_NS2, PATTERN_BOX2, DRAWN2, baseKey;
 var init_draw3 = __esm({
   "js/idmark/draw.js"() {
     "use strict";
@@ -21621,7 +21680,7 @@ var init_draw3 = __esm({
     init_avatar();
     init_mark();
     SVG_NS2 = "http://www.w3.org/2000/svg";
-    PATTERN_BOX = 7;
+    PATTERN_BOX2 = 7;
     DRAWN2 = /* @__PURE__ */ new WeakMap();
     baseKey = (el16) => `${el16.getAttribute("data-kp-idmark") ?? ""}|${AVATAR_ATTRIBUTES.map((attr16) => el16.getAttribute(attr16) ?? "").join("|")}|${el16.className}`;
   }
@@ -23351,7 +23410,7 @@ var init_paint2 = __esm({
 
 // js/passkeys/controller.js
 var reasonOf, PasskeysController;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/passkeys/controller.js"() {
     "use strict";
     init_controller();
@@ -23591,12 +23650,12 @@ function attachPasskeys(root = document) {
   return () => {
   };
 }
-var init_api5 = __esm({
+var init_api6 = __esm({
   "js/passkeys/api.js"() {
     "use strict";
     init_controller();
     init_constants10();
-    init_controller8();
+    init_controller9();
   }
 });
 
@@ -23620,7 +23679,7 @@ var init_passkeys = __esm({
     "use strict";
     init_constants10();
     init_options();
-    init_api5();
+    init_api6();
   }
 });
 
@@ -24126,7 +24185,7 @@ async function copyText2(button6, text) {
   }, COPIED_MS2);
 }
 var COPIED_MS2, ThreadControl;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/thread/controller.js"() {
     "use strict";
     init_strings();
@@ -24263,7 +24322,7 @@ var init_thread = __esm({
   "js/thread.js"() {
     "use strict";
     init_controller();
-    init_controller9();
+    init_controller10();
     init_options2();
     init_options2();
   }
@@ -25735,7 +25794,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -25878,7 +25937,7 @@ var init_attach6 = __esm({
     init_controller();
     init_locale();
     init_constants11();
-    init_controller10();
+    init_controller11();
   }
 });
 
@@ -25965,7 +26024,7 @@ function markCursor(row, on) {
   else row.removeAttribute("aria-current");
 }
 var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf3, boxOf, keyOfRow, labelOfRow, shown2, tickable;
-var init_rows = __esm({
+var init_rows2 = __esm({
   "js/row-select/rows.js"() {
     "use strict";
     ROW_SELECT = "[data-kp-select-keys]";
@@ -26009,7 +26068,7 @@ var init_core3 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_rows();
+    init_rows2();
     RowSelectCore = class extends Controller {
       /** @param {HTMLElement} el @param {RowSelectOptions} [options] */
       constructor(el16, options = {}) {
@@ -26157,13 +26216,13 @@ var init_core3 = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys5();
     init_strings();
     init_core3();
-    init_rows();
+    init_rows2();
     TEXT_ENTRY = "textarea, select, [contenteditable]";
     RowSelector = class _RowSelector extends RowSelectCore {
       /** @param {HTMLElement} el @param {import('../row-select.js').RowSelectOptions} [options] */
@@ -26444,9 +26503,9 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller11();
-    init_rows();
-    init_rows();
+    init_controller12();
+    init_rows2();
+    init_rows2();
   }
 });
 
@@ -26682,7 +26741,7 @@ function draw4(bar, memory) {
   }
   p.clear.disabled = Boolean(memory.busy);
 }
-function say5(bar, memory, text) {
+function say4(bar, memory, text) {
   const live4 = (
     /** @type {HTMLElement | null} */
     bar.querySelector(":scope > .kp-selection__live")
@@ -26726,9 +26785,9 @@ function sync(bar, memory) {
     const dropped = before.filter((item) => !read.known.has(item.key)).length;
     memory.items = read.items;
     memory.known = read.known;
-    if (dropped > 0) say5(bar, memory, strings.selectionDropped(dropped));
+    if (dropped > 0) say4(bar, memory, strings.selectionDropped(dropped));
     else if (read.items.length !== before.length)
-      say5(bar, memory, read.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read.items.length));
+      say4(bar, memory, read.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read.items.length));
     if (memory.matching && (read.shown === 0 || read.shownTicked < read.shown)) {
       memory.matching = false;
       bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: false, total: memory.matchingTotal } }));
@@ -26772,7 +26831,7 @@ var init_draw4 = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -26898,7 +26957,7 @@ var init_controller12 = __esm({
         memory.matching = on;
         draw4(bar, memory);
         bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: memory.matching, total: memory.matchingTotal } }));
-        say5(bar, memory, memory.matching ? getStrings().selectionMatchingOn(memory.matchingTotal) : getStrings().selectionCount(memory.items.length));
+        say4(bar, memory, memory.matching ? getStrings().selectionMatchingOn(memory.matchingTotal) : getStrings().selectionCount(memory.items.length));
         bar.querySelector(".kp-selection__take")?.focus();
       }
       /** An action button: refused while it is off, else told to the page with what is selected. @param {MouseEvent} event @param {HTMLElement} button */
@@ -27015,12 +27074,12 @@ function setSelectionRules(bar, rules) {
   draw4(bar, memory);
 }
 var memoryOf;
-var init_api6 = __esm({
+var init_api7 = __esm({
   "js/selection-bar/api.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_controller12();
+    init_controller13();
     init_draw4();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -27052,10 +27111,10 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_model2();
     init_model2();
-    init_api6();
+    init_api7();
   }
 });
 
@@ -27172,16 +27231,16 @@ function attachOne2(el16, options) {
     if (n > 0) {
       const now = performance.now();
       const wait = NEWPILL_SAY_MS - (now - lastSaid);
-      const say18 = () => {
+      const say17 = () => {
         lastSaid = performance.now();
         const m = count2();
         if (m > 0) live4.textContent = strings.newpillAnnounce(m, m === 1 ? unitOne : unitMany);
       };
-      if (wait <= 0) say18();
+      if (wait <= 0) say17();
       else if (sayLater === void 0) {
         sayLater = view?.setTimeout(() => {
           sayLater = void 0;
-          say18();
+          say17();
         }, wait);
       }
     }
@@ -28111,7 +28170,7 @@ function attachFormgridColumns(root = document) {
   };
 }
 var freshForm, freshButton, isHtml;
-var init_api7 = __esm({
+var init_api8 = __esm({
   "js/forms/api.js"() {
     "use strict";
     init_controller();
@@ -28174,7 +28233,7 @@ var init_forms = __esm({
     "use strict";
     init_constants13();
     init_errors();
-    init_api7();
+    init_api8();
     init_switches();
   }
 });
@@ -28255,7 +28314,7 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
@@ -28492,12 +28551,12 @@ function jsonField(area) {
 function attachJsonFields(root = document, options = {}) {
   return attachAll(root, JSON_FIELD, JsonFieldController, options);
 }
-var init_api8 = __esm({
+var init_api9 = __esm({
   "js/json-field/api.js"() {
     "use strict";
     init_controller();
     init_constants12();
-    init_controller13();
+    init_controller14();
   }
 });
 
@@ -28519,7 +28578,7 @@ var init_json_field = __esm({
     "use strict";
     init_constants12();
     init_explain();
-    init_api8();
+    init_api9();
   }
 });
 
@@ -28965,7 +29024,7 @@ var init_list2 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -29084,13 +29143,13 @@ function setRequestsState(el16, state12, options = {}) {
   setCardState(el16, state12, state12 === "loading" ? { words: strings.reqLoading } : void 0);
 }
 var memoryOf2;
-var init_api9 = __esm({
+var init_api10 = __esm({
   "js/request-inspector/api.js"() {
     "use strict";
     init_card_state();
     init_controller();
     init_strings();
-    init_controller14();
+    init_controller15();
     init_format2();
     init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
@@ -29122,10 +29181,10 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller14();
+    init_controller15();
     init_format2();
     init_format2();
-    init_api9();
+    init_api10();
   }
 });
 
@@ -29739,7 +29798,7 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
@@ -29804,7 +29863,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller15();
+    init_controller16();
     init_state10();
     init_state10();
     init_spin();
@@ -30532,7 +30591,7 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
@@ -30761,12 +30820,12 @@ var init_controller16 = __esm({
 
 // js/countdown/api.js
 var countdownOf, attachCountdowns;
-var init_api10 = __esm({
+var init_api11 = __esm({
   "js/countdown/api.js"() {
     "use strict";
     init_controller();
     init_constants15();
-    init_controller16();
+    init_controller17();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -30804,7 +30863,7 @@ var init_countdown = __esm({
     init_until();
     init_clock();
     init_parts();
-    init_api10();
+    init_api11();
   }
 });
 
@@ -31304,7 +31363,7 @@ function applyProgress(root, stored) {
   }
   paint4(root, false);
   recompute(root);
-  say6(root, getStrings().focusResumed(state12.index + 1));
+  say5(root, getStrings().focusResumed(state12.index + 1));
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_RESUME_EVENT, {
       bubbles: true,
@@ -31365,7 +31424,7 @@ function takeAnswer(root, value, source, extra = {}) {
   );
   const strings = getStrings();
   const said = source === "skip" ? strings.focusSkipped : wordsOf2(answer2, value);
-  say6(root, strings.focusAnswered(said, state12.index + 1, state12.steps.length));
+  say5(root, strings.focusAnswered(said, state12.index + 1, state12.steps.length));
   return true;
 }
 function scheduleAdvance(root) {
@@ -31600,7 +31659,7 @@ function buildSummary(root, holder) {
   }
   holder.append(title, list);
 }
-function say6(root, message) {
+function say5(root, message) {
   const region = part2(root, "live");
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
@@ -31616,7 +31675,7 @@ var init_flow = __esm({
     init_resume();
     init_tracks();
     init_track_nav();
-    init_api11();
+    init_api12();
   }
 });
 
@@ -31653,7 +31712,7 @@ function raiseAlert(root, track, alert) {
   const state12 = stateOf2(root);
   state12.alerts.set(track.key, alert);
   renderBand(root);
-  say6(root, `${alert.title}. ${alert.text}`);
+  say5(root, `${alert.title}. ${alert.text}`);
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_TRACK_ATTENTION_EVENT, {
       bubbles: true,
@@ -31702,7 +31761,7 @@ function switchTrack(root, key, reason) {
   paint4(root, true);
   remember2(root);
   const strings = getStrings();
-  say6(root, strings.focusTrackSwitched(to.name, strings.focusLaneStep(to.pos + 1, to.order.length), state12.steps[state12.index]?.text ?? ""));
+  say5(root, strings.focusTrackSwitched(to.name, strings.focusLaneStep(to.pos + 1, to.order.length), state12.steps[state12.index]?.text ?? ""));
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_TRACK_EVENT, {
       bubbles: true,
@@ -31740,7 +31799,7 @@ function recompute(root) {
     if (lane.status === "waiting" || !state12.waiting.has(lane.key) || lane.status === "finished") continue;
     const cur = lane.track.order[lane.track.pos] ?? 0;
     if (lane.active) {
-      say6(root, strings.focusTrackUnlocked(stepLabel(state12, cur)));
+      say5(root, strings.focusTrackUnlocked(stepLabel(state12, cur)));
     } else if (!state12.alerts.has(lane.key)) {
       raiseAlert(root, lane.track, {
         reason: "ready",
@@ -31795,7 +31854,7 @@ function trackNext(root) {
   paint4(root, true);
   const strings = getStrings();
   const finished = track.order.every((i) => state12.done.has(i));
-  say6(
+  say5(
     root,
     finished ? strings.focusTrackFinishedTitle(track.name) : `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`
   );
@@ -31832,7 +31891,7 @@ function trackPrev(root) {
   renderBand(root);
   paint4(root, true);
   const strings = getStrings();
-  say6(root, `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`);
+  say5(root, `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`);
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_EVENT, {
       bubbles: true,
@@ -31975,7 +32034,7 @@ function part3(list, name) {
   }
   return node;
 }
-function say7(list, message, where = "live") {
+function say6(list, message, where = "live") {
   const region = part3(list, where);
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
@@ -32299,7 +32358,7 @@ function tick2(list) {
     else {
       if (!timer2.warned && left <= 6e4 && timer2.total > 9e4) {
         timer2.warned = true;
-        say7(list, getStrings().timerLastMinute(timer2.name));
+        say6(list, getStrings().timerLastMinute(timer2.name));
       }
       paint5(timer2);
     }
@@ -32312,7 +32371,7 @@ function finish(list, timer2, { quiet = false } = {}) {
   timer2.left = 0;
   paint5(timer2);
   const strings = getStrings();
-  say7(list, strings.timerDone(timer2.name), "alert");
+  say6(list, strings.timerDone(timer2.name), "alert");
   if (!quiet) {
     const sound = list.getAttribute("data-kp-timers-sound") ?? "chime";
     const speak = list.getAttribute("data-kp-timers-speak") === "on";
@@ -32395,8 +32454,8 @@ function startTimer(list, { name, seconds, id, say: message = "" }) {
   part3(list, "list").append(card);
   void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => card.isConnected && m.arriveShown(card));
   sync2(list);
-  say7(list, getStrings().timerStartedNamed(name, clockOf(timer2, timer2.total)));
-  emit2(list, timer2, TIMER_START_EVENT);
+  say6(list, getStrings().timerStartedNamed(name, clockOf(timer2, timer2.total)));
+  emit(list, timer2, TIMER_START_EVENT);
   return key;
 }
 function pauseTimer(list, id) {
@@ -32407,7 +32466,7 @@ function pauseTimer(list, id) {
   timer2.state = "paused";
   paint5(timer2);
   sync2(list);
-  emit2(list, timer2, TIMER_CHANGE_EVENT, { action: "pause" });
+  emit(list, timer2, TIMER_CHANGE_EVENT, { action: "pause" });
 }
 function resumeTimer(list, id) {
   const timer2 = find(list, id);
@@ -32417,7 +32476,7 @@ function resumeTimer(list, id) {
   timer2.state = "running";
   paint5(timer2);
   sync2(list);
-  emit2(list, timer2, TIMER_CHANGE_EVENT, { action: "resume" });
+  emit(list, timer2, TIMER_CHANGE_EVENT, { action: "resume" });
 }
 function addTimerTime(list, id, seconds = 60) {
   const timer2 = find(list, id);
@@ -32439,13 +32498,13 @@ function addTimerTime(list, id, seconds = 60) {
   }
   paint5(timer2);
   sync2(list);
-  emit2(list, timer2, TIMER_CHANGE_EVENT, { action: "add" });
+  emit(list, timer2, TIMER_CHANGE_EVENT, { action: "add" });
 }
 function stopTimerRing(list, id) {
   const timer2 = find(list, id);
   if (!timer2 || !(list instanceof HTMLElement)) return;
   stopRing(timer2);
-  emit2(list, timer2, TIMER_CHANGE_EVENT, { action: "stop-ring" });
+  emit(list, timer2, TIMER_CHANGE_EVENT, { action: "stop-ring" });
 }
 function removeCard(list, timer2, animate) {
   stopRing(timer2);
@@ -32461,7 +32520,7 @@ function stopTimer(list, id) {
   sync2(list);
   for (const starter of document.querySelectorAll(`${TIMER_START}[data-kp-timer-running="${CSS.escape(id)}"]`))
     starter.removeAttribute("data-kp-timer-running");
-  emit2(list, timer2, TIMER_STOP_EVENT);
+  emit(list, timer2, TIMER_STOP_EVENT);
 }
 function restoreTimers(list, saved) {
   if (!(list instanceof HTMLElement)) return;
@@ -32488,7 +32547,7 @@ function restoreTimers(list, saved) {
   }
   sync2(list);
 }
-var emit2, find, targetOf;
+var emit, find, targetOf;
 var init_run = __esm({
   "js/timer/run.js"() {
     "use strict";
@@ -32499,7 +32558,7 @@ var init_run = __esm({
     init_sound();
     init_state12();
     init_sync3();
-    emit2 = (list, timer2, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf3(timer2), ...extra } }));
+    emit = (list, timer2, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf3(timer2), ...extra } }));
     find = (list, id) => LISTS.get(list)?.get(id) ?? null;
     targetOf = (starter) => {
       const named = starter.getAttribute("data-kp-timer-for");
@@ -32572,7 +32631,7 @@ function attachTimers(root = document) {
     const running2 = find(list, id);
     if (running2 && running2.state !== "done") {
       running2.card.querySelector(".kp-timer__toggle")?.focus();
-      say7(list, getStrings().timerAlready(name));
+      say6(list, getStrings().timerAlready(name));
       return;
     }
     const message = starter.getAttribute("data-kp-timer-say") ?? "";
@@ -32674,7 +32733,7 @@ function goToStep(root, index) {
   const asking = answering(root);
   if (asking && hadFocus) part2(root, "step").focus({ preventScroll: true });
   const step = state12.steps[to];
-  say6(
+  say5(
     root,
     asking ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
   );
@@ -32745,7 +32804,7 @@ function setFocusStepsState(root, kind, message) {
   paint4(root, false);
 }
 var getStepIndex, getSteps, typing;
-var init_api11 = __esm({
+var init_api12 = __esm({
   "js/focus-steps/api.js"() {
     "use strict";
     init_strings();
@@ -33103,7 +33162,7 @@ var init_attach8 = __esm({
     init_flow();
     init_tracks();
     init_track_nav();
-    init_api11();
+    init_api12();
     init_band();
     init_memory();
     init_lanes();
@@ -33138,7 +33197,7 @@ var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
     init_constants14();
-    init_api11();
+    init_api12();
     init_attach8();
   }
 });
@@ -33193,7 +33252,7 @@ function part4(list, name) {
   }
   return node;
 }
-function say8(list, message) {
+function say7(list, message) {
   const region = part4(list, "live");
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
@@ -33286,7 +33345,7 @@ function rowFor(row, item) {
   return row;
 }
 var shownOrder;
-var init_rows2 = __esm({
+var init_rows3 = __esm({
   "js/checklist/rows.js"() {
     "use strict";
     init_parts2();
@@ -33460,7 +33519,7 @@ var init_render = __esm({
     init_state_plate();
     init_strings();
     init_parts2();
-    init_rows2();
+    init_rows3();
     init_state13();
     HEADING_LEVEL = 3;
     HEADING_MIN = 2;
@@ -33525,8 +33584,8 @@ function endUndo(list) {
   if (hadFocus)
     part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
 }
-var emit3;
-var init_api12 = __esm({
+var emit2;
+var init_api13 = __esm({
   "js/checklist/api.js"() {
     "use strict";
     init_busy_card();
@@ -33534,21 +33593,21 @@ var init_api12 = __esm({
     init_parts2();
     init_render();
     init_state13();
-    emit3 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
+    emit2 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
   }
 });
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_api12();
+    init_api13();
     init_parts2();
     init_render();
-    init_rows2();
+    init_rows3();
     init_state13();
     Checklist = class extends Controller {
       /** @param {HTMLElement} list */
@@ -33589,11 +33648,11 @@ var init_controller17 = __esm({
           const next2 = shownOrder(list, group)[placeBefore];
           const target = next2 && !next2.checked ? list.querySelector(`.kp-checklist__item[data-id="${CSS.escape(next2.id)}"] .kp-checklist__check`) : null;
           if (target instanceof HTMLElement) target.focus();
-          say8(list, strings.checklistDoneMoved(item.label));
+          say7(list, strings.checklistDoneMoved(item.label));
         } else {
-          say8(list, check.checked ? strings.checklistDone(item.label) : strings.checklistOpen(item.label));
+          say7(list, check.checked ? strings.checklistDone(item.label) : strings.checklistOpen(item.label));
         }
-        emit3(list, CHECKLIST_EVENT, { id, checked: check.checked });
+        emit2(list, CHECKLIST_EVENT, { id, checked: check.checked });
       }
       /** The bar's buttons. @param {Event} event */
       onClick(event) {
@@ -33618,8 +33677,8 @@ var init_controller17 = __esm({
         const opposite = on ? ".kp-checklist__none:not(:disabled)" : ".kp-checklist__all:not(:disabled)";
         if (document.activeElement === document.body || target.closest(pressed)?.matches(":disabled"))
           part4(list, "bar").querySelector(opposite)?.focus();
-        say8(list, getStrings().checklistSummary(on ? items.length : 0, items.length));
-        emit3(list, CHECKLIST_EVENT, { id: null, checked: on });
+        say7(list, getStrings().checklistSummary(on ? items.length : 0, items.length));
+        emit2(list, CHECKLIST_EVENT, { id: null, checked: on });
       }
       /** Clear checked: the ticked items leave, and Undo is on offer for a while. */
       clearChecked() {
@@ -33645,8 +33704,8 @@ var init_controller17 = __esm({
         button6.hidden = false;
         render(list);
         button6.focus();
-        say8(list, strings.checklistCleared(removed.length));
-        emit3(list, CHECKLIST_CLEAR_EVENT, { removed: removed.map((i) => ({ ...i })) });
+        say7(list, strings.checklistCleared(removed.length));
+        emit2(list, CHECKLIST_CLEAR_EVENT, { removed: removed.map((i) => ({ ...i })) });
       }
       /** Undo: the cleared items come back at the places they had. */
       undo() {
@@ -33657,8 +33716,8 @@ var init_controller17 = __esm({
         for (const item of offer.removed) restored.splice(Math.min(offer.at.get(item.id) ?? restored.length, restored.length), 0, item);
         ITEMS.set(list, restored);
         endUndo(list);
-        say8(list, getStrings().checklistRestored(offer.removed.length));
-        emit3(list, CHECKLIST_UNDO_EVENT, { restored: offer.removed.map((i) => ({ ...i })) });
+        say7(list, getStrings().checklistRestored(offer.removed.length));
+        emit2(list, CHECKLIST_UNDO_EVENT, { restored: offer.removed.map((i) => ({ ...i })) });
       }
     };
   }
@@ -33687,10 +33746,10 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller17();
+    init_controller18();
     init_state13();
     init_state13();
-    init_api12();
+    init_api13();
   }
 });
 
@@ -34721,7 +34780,7 @@ function installLaunchers(c) {
     });
   };
   c.light = light;
-  const say18 = (open4) => {
+  const say17 = (open4) => {
     const s2 = { ...getStrings(), ...strings };
     for (const toggler of togglers()) {
       if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
@@ -34732,7 +34791,7 @@ function installLaunchers(c) {
       }
     }
   };
-  c.say = say18;
+  c.say = say17;
 }
 var init_launchers = __esm({
   "js/sidenav/attach/launchers.js"() {
@@ -34800,7 +34859,7 @@ var init_backdrop = __esm({
 
 // js/sidenav/attach/open.js
 function installOpen(c) {
-  const { covering, doc, dropBackdrop, edge, light, memory, mode: mode2, offsetContent, on, panel, raiseBackdrop, read, say: say18, togglers, turnEase } = c;
+  const { covering, doc, dropBackdrop, edge, light, memory, mode: mode2, offsetContent, on, panel, raiseBackdrop, read, say: say17, togglers, turnEase } = c;
   const prevented = (kind, detail, reason, source) => {
     panel.dispatchEvent(new CustomEvent(SIDENAV_PREVENTED_EVENT, { bubbles: true, detail: { kind, ...detail, reason, source } }));
   };
@@ -34847,7 +34906,7 @@ function installOpen(c) {
     if (asked === "prevented") return;
     turnEase();
     panel.setAttribute(OPTIONS3.open, String(open5));
-    say18(open5);
+    say17(open5);
     const offset = offsetContent(open5);
     light(open5, !moveFocus && !save2);
     if (open5) raiseBackdrop();
@@ -37197,7 +37256,7 @@ function palette(element) {
   return handles4.get(element) ?? null;
 }
 var handles4;
-var init_api13 = __esm({
+var init_api14 = __esm({
   "js/palette/api.js"() {
     "use strict";
     handles4 = /* @__PURE__ */ new WeakMap();
@@ -37836,7 +37895,7 @@ var init_attach11 = __esm({
     init_listbox();
     init_strings();
     init_live_options();
-    init_api13();
+    init_api14();
     init_constants19();
     init_intent_filter();
     init_keys7();
@@ -37863,7 +37922,7 @@ var init_palette = __esm({
     init_constants19();
     init_keys7();
     init_outside();
-    init_api13();
+    init_api14();
     init_attach11();
   }
 });
@@ -39623,7 +39682,7 @@ function partsOf3(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -39808,7 +39867,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller18();
+    init_controller19();
   }
 });
 
@@ -44777,7 +44836,7 @@ function grid(element) {
 function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = COMMIT_MS, pointer = true } = {}) {
   const cleanups = [];
   const created = [];
-  for (const element of root.querySelectorAll(GRID)) {
+  for (const element of root.querySelectorAll(GRID2)) {
     const grid2 = (
       /** @type {HTMLElement} */
       element
@@ -44912,12 +44971,12 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
   };
   return Object.assign(detach, { handles: created });
 }
-var GRID, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, handles9;
+var GRID2, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, handles9;
 var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_strings();
-    GRID = "[data-kp-grid]";
+    GRID2 = "[data-kp-grid]";
     TILE = "[data-kp-tile]";
     LAYOUT_EVENT = "kp-grid-layout";
     LAYOUT_COMMIT_EVENT = "kp-grid-commit";
@@ -45442,7 +45501,7 @@ var init_paint4 = __esm({
 
 // js/calendar/controller.js
 var WATCHED4, CalendarController;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -45691,12 +45750,12 @@ function attachCalendars(root = document, options = {}) {
   };
 }
 var calendarOf;
-var init_api14 = __esm({
+var init_api15 = __esm({
   "js/calendar/api.js"() {
     "use strict";
     init_controller();
     init_constants21();
-    init_controller19();
+    init_controller20();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -45730,7 +45789,7 @@ var init_calendar = __esm({
     "use strict";
     init_constants21();
     init_dates2();
-    init_api14();
+    init_api15();
   }
 });
 
@@ -48580,7 +48639,7 @@ function setWeekLegend(el16, entries2) {
   );
   c.legend.hidden = entries2.length === 0;
 }
-var init_api15 = __esm({
+var init_api16 = __esm({
   "js/week/api.js"() {
     "use strict";
     init_build3();
@@ -48760,7 +48819,7 @@ var init_attach14 = __esm({
     init_calendar();
     init_locale();
     init_strings();
-    init_api15();
+    init_api16();
     init_build3();
     init_busy3();
     init_constants24();
@@ -48793,7 +48852,7 @@ var init_week = __esm({
     init_constants24();
     init_pills2();
     init_attach14();
-    init_api15();
+    init_api16();
   }
 });
 
@@ -49258,7 +49317,7 @@ function readOptions3(c) {
   c.hint.textContent = c.editable ? c.strings.sequencerHint : c.strings.sequencerHintReadonly;
   c.selection.hidden = !c.editable && d.kpSequencerSelection === "off";
 }
-var sequencers, make16, px2, words2, labelOf6, emit4, outItems, planOptions;
+var sequencers, make16, px2, words2, labelOf6, emit3, outItems, planOptions;
 var init_instance2 = __esm({
   "js/sequencer/instance.js"() {
     "use strict";
@@ -49273,7 +49332,7 @@ var init_instance2 = __esm({
     px2 = (n) => `${Math.round(n * 100) / 100}px`;
     words2 = (c, value) => c.strings.sequencerSpan(value, c.unit.name);
     labelOf6 = (c, id) => c.view.find((i) => i.id === id)?.label ?? id;
-    emit4 = (c, name, detail) => c.el.dispatchEvent(new CustomEvent(name, { bubbles: true, detail }));
+    emit3 = (c, name, detail) => c.el.dispatchEvent(new CustomEvent(name, { bubbles: true, detail }));
     outItems = (c, list) => list.map((i) => ({ id: i.id, lane: i.lane, start: i.start, duration: i.duration, with: i.with ?? null }));
     planOptions = (c, more = {}) => ({
       step: c.step,
@@ -49861,7 +49920,7 @@ function commit(c, list, source) {
   }
   c.items = list;
   settleDraw(c);
-  emit4(c, SEQUENCER_CHANGE_EVENT, { items: outItems(c, c.items), changed: changed2, source, total: sequencerTotalOf(c.items) });
+  emit3(c, SEQUENCER_CHANGE_EVENT, { items: outItems(c, c.items), changed: changed2, source, total: sequencerTotalOf(c.items) });
   flushPending(c);
   return true;
 }
@@ -49884,14 +49943,14 @@ function select(c, id) {
   c.selected = id;
   for (const [key, bar] of c.bars) bar.setAttribute("aria-pressed", String(key === id));
   paintSelection(c);
-  emit4(c, SEQUENCER_SELECT_EVENT, { id });
+  emit3(c, SEQUENCER_SELECT_EVENT, { id });
 }
 function refuse(c, id, plan) {
   const label = labelOf6(c, id);
   const s2 = c.strings;
   const text = plan.reason === "overlap" ? s2.sequencerRefusedOverlap(label, plan.blocker ? labelOf6(c, plan.blocker) : "") : plan.reason === "locked" ? s2.sequencerRefusedLocked(label) : plan.reason === "cycle" ? s2.sequencerRefusedLink(label) : s2.sequencerRefusedEdge(label);
   announce2(c, text);
-  emit4(c, SEQUENCER_REFUSE_EVENT, { id, reason: plan.reason, blocker: plan.blocker });
+  emit3(c, SEQUENCER_REFUSE_EVENT, { id, reason: plan.reason, blocker: plan.blocker });
 }
 function setZoom(c, zoom, anchorX) {
   const next2 = sequencerClampZoom(zoom);
@@ -50513,7 +50572,7 @@ function setSequencerSelection(el16, id) {
   c.focusId = c.selected ?? c.focusId;
   paint8(c, { fit: false });
 }
-var init_api16 = __esm({
+var init_api17 = __esm({
   "js/sequencer/api.js"() {
     "use strict";
     init_instance2();
@@ -50569,7 +50628,7 @@ var init_sequencer = __esm({
     init_links();
     init_timeline();
     init_attach15();
-    init_api16();
+    init_api17();
   }
 });
 
@@ -51929,7 +51988,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint9(c);
 }
-var init_api17 = __esm({
+var init_api18 = __esm({
   "js/gantt/api.js"() {
     "use strict";
     init_constants26();
@@ -52295,7 +52354,7 @@ var init_attach16 = __esm({
     init_paint7();
     init_selection3();
     init_axis();
-    init_api17();
+    init_api18();
     init_scale();
     init_chrome2();
   }
@@ -52330,13 +52389,13 @@ var init_gantt = __esm({
     init_constants26();
     init_scale();
     init_attach16();
-    init_api17();
+    init_api18();
   }
 });
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make18;
-var init_values2 = __esm({
+var init_values3 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -52362,7 +52421,7 @@ var init_core4 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values2();
+    init_values3();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -52448,7 +52507,7 @@ var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
     init_core4();
-    init_values2();
+    init_values3();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -52584,7 +52643,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values2();
+    init_values3();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -52696,11 +52755,11 @@ var init_view2 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values2();
+    init_values3();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -52845,9 +52904,9 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller20();
-    init_values2();
-    init_values2();
+    init_controller21();
+    init_values3();
+    init_values3();
   }
 });
 
@@ -54053,7 +54112,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -54197,7 +54256,7 @@ var init_core5 = __esm({
     init_strings();
     init_segmented();
     init_chart();
-    init_values3();
+    init_values4();
     init_build6();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -54272,7 +54331,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build6();
-    init_values3();
+    init_values4();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -54444,7 +54503,7 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -54525,9 +54584,9 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller21();
-    init_values3();
-    init_values3();
+    init_controller22();
+    init_values4();
+    init_values4();
   }
 });
 
@@ -54959,7 +55018,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -55085,7 +55144,7 @@ var init_parts3 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values4();
+    init_values5();
   }
 });
 
@@ -55126,7 +55185,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts3();
-    init_values4();
+    init_values5();
   }
 });
 
@@ -55192,7 +55251,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts3();
-    init_values4();
+    init_values5();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -55340,7 +55399,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values4();
+    init_values5();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -55449,8 +55508,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values4();
-    init_values4();
+    init_values5();
+    init_values5();
   }
 });
 
@@ -56019,7 +56078,7 @@ var init_parts4 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -56301,12 +56360,12 @@ function attachMasterDetails(root = document, { history: useHistory } = {}) {
   };
 }
 var masterDetail, wireable2;
-var init_api18 = __esm({
+var init_api19 = __esm({
   "js/master-detail/api.js"() {
     "use strict";
     init_controller();
     init_constants28();
-    init_controller22();
+    init_controller23();
     init_parts4();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -56336,7 +56395,7 @@ var init_master_detail = __esm({
   "js/master-detail.js"() {
     "use strict";
     init_constants28();
-    init_api18();
+    init_api19();
   }
 });
 
@@ -57149,7 +57208,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -57169,7 +57228,7 @@ var init_core6 = __esm({
     init_controller();
     init_strings();
     init_build7();
-    init_values5();
+    init_values6();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -57299,7 +57358,7 @@ var init_problem = __esm({
     "use strict";
     init_forms();
     init_core6();
-    init_values5();
+    init_values6();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -57375,12 +57434,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
     init_build7();
-    init_values5();
+    init_values6();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -57615,9 +57674,9 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller23();
-    init_values5();
-    init_values5();
+    init_controller24();
+    init_values6();
+    init_values6();
   }
 });
 
@@ -58593,7 +58652,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -58795,12 +58854,12 @@ function setTimePresets(root, presets) {
   if (field2.list.open) field2.list.draw();
 }
 var attachTimes;
-var init_api19 = __esm({
+var init_api20 = __esm({
   "js/timefield/api.js"() {
     "use strict";
     init_controller();
     init_constants29();
-    init_controller24();
+    init_controller25();
     init_field();
     init_state19();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -58830,7 +58889,7 @@ var init_timefield = __esm({
     "use strict";
     init_constants29();
     init_parse();
-    init_api19();
+    init_api20();
   }
 });
 
@@ -59486,7 +59545,7 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
     card.style.setProperty("--kp-question-elapsed", `-${elapsed2}ms`);
     card.toggleAttribute("data-kp-frozen", frozen);
   };
-  const say18 = (text) => {
+  const say17 = (text) => {
     outcome.textContent = text;
     outcome.hidden = !text;
   };
@@ -59496,7 +59555,7 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
     const a = fallback2;
     sentValue = "";
     setState3("expired");
-    say18(a ? a.outcome ? `${s2().questionNobody} ${a.outcome}` : s2().questionNobodyDefault(a.label) : s2().questionNobody);
+    say17(a ? a.outcome ? `${s2().questionNobody} ${a.outcome}` : s2().questionNobodyDefault(a.label) : s2().questionNobody);
     card.dispatchEvent(new CustomEvent(QUESTION_EXPIRE_EVENT, { bubbles: true, detail: { id: spec.id, defaultAnswer: a?.value ?? null } }));
     if (expiredMode === "remove") void remove();
   }
@@ -59512,7 +59571,7 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
     const picked = answers.find((a) => a.value === value);
     if (!picked) return;
     sentValue = value;
-    say18("");
+    say17("");
     setState3("sending");
     let responded = false;
     const respond = (ok, why = "") => {
@@ -59521,12 +59580,12 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
       if (ok) {
         view.clearInterval(timer2);
         setState3("answered");
-        say18(picked.outcome ?? s2().questionAnswered(picked.label));
+        say17(picked.outcome ?? s2().questionAnswered(picked.label));
         voice.textContent = outcome.textContent ?? "";
         paintTime();
       } else {
         setState3("refused");
-        say18(s2().questionRefused(why));
+        say17(s2().questionRefused(why));
         voice.textContent = outcome.textContent ?? "";
         paintTitle();
       }
@@ -60143,7 +60202,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -60296,13 +60355,13 @@ function attachFeeds(root = document, { now = () => Date.now(), timeZone = FEED_
   };
 }
 var feedOf;
-var init_api20 = __esm({
+var init_api21 = __esm({
   "js/feed/api.js"() {
     "use strict";
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller25();
+    init_controller26();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -60332,7 +60391,7 @@ var init_feed = __esm({
   "js/feed.js"() {
     "use strict";
     init_constants30();
-    init_api20();
+    init_api21();
   }
 });
 
@@ -60733,7 +60792,7 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -60874,7 +60933,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller26();
+    init_controller27();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -61174,7 +61233,7 @@ var init_paint8 = __esm({
 });
 
 // js/rating/commit.js
-function say9(m, text) {
+function say8(m, text) {
   m.live.textContent = "";
   window.setTimeout(() => {
     m.live.textContent = text;
@@ -61199,7 +61258,7 @@ function pop(m, value) {
 function afterChange(m, value, previous, source, s2, item) {
   m.busy = false;
   paint12(m);
-  if (announceLevel(m) !== "off") say9(m, value > 0 ? s2.ratingAnnounce(item, plain(value), m.max) : s2.ratingAnnounceCleared(item));
+  if (announceLevel(m) !== "off") say8(m, value > 0 ? s2.ratingAnnounce(item, plain(value), m.max) : s2.ratingAnnounceCleared(item));
   const ms = m.el.hasAttribute("data-kp-undo-ms") ? Number(m.el.getAttribute("data-kp-undo-ms")) : DEFAULT_UNDO_MS;
   if (source !== "undo" && ms > 0) {
     undoToast(value > 0 ? s2.ratingToast(item, value) : s2.ratingToastCleared(item), {
@@ -61336,7 +61395,7 @@ var init_keys12 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -61601,12 +61660,12 @@ function ratingCell(cell, value, { max = DEFAULT_STARS, count: count2, for: item
   return host;
 }
 var attachRatings;
-var init_api21 = __esm({
+var init_api22 = __esm({
   "js/rating/api.js"() {
     "use strict";
     init_controller();
     init_constants31();
-    init_controller27();
+    init_controller28();
     init_build9();
     init_commit();
     init_math();
@@ -61634,7 +61693,7 @@ var init_rating = __esm({
     "use strict";
     init_constants31();
     init_math();
-    init_api21();
+    init_api22();
   }
 });
 
@@ -61817,7 +61876,7 @@ var init_render4 = __esm({
 });
 
 // js/quote/actions.js
-function say10(c, text) {
+function say9(c, text) {
   if ((c.el.getAttribute("data-kp-announce") ?? "state") === "off") return;
   c.live.textContent = "";
   window.setTimeout(() => {
@@ -61856,7 +61915,7 @@ function hide(c) {
     }
     if (outcome === "committed" || outcome === "left") c.hiding = false;
   });
-  say10(c, s2.quoteAnnounceHidden);
+  say9(c, s2.quoteAnnounceHidden);
 }
 function flashCopy(c, button6, word) {
   if (!button6) return;
@@ -61875,9 +61934,9 @@ async function copy2(c) {
   try {
     await navigator.clipboard.writeText(c.text);
     flashCopy(c, button6, s2.quoteCopied);
-    say10(c, s2.quoteCopied);
+    say9(c, s2.quoteCopied);
   } catch {
-    say10(c, s2.quoteCopyFailed);
+    say9(c, s2.quoteCopyFailed);
     flashCopy(c, button6, s2.quoteCopyFailed);
   }
 }
@@ -61894,7 +61953,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -62119,7 +62178,7 @@ function quote2(element) {
     hide: () => hide(card)
   };
 }
-var init_api22 = __esm({
+var init_api23 = __esm({
   "js/quote/api.js"() {
     "use strict";
     init_controller();
@@ -62127,7 +62186,7 @@ var init_api22 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller28();
+    init_controller29();
     init_list4();
     init_render4();
   }
@@ -62155,7 +62214,7 @@ var init_quote = __esm({
     "use strict";
     init_constants32();
     init_when();
-    init_api22();
+    init_api23();
   }
 });
 
@@ -62250,7 +62309,7 @@ function canFold(m) {
   const mode2 = attr7(m, "all");
   return mode2 === "fold" || mode2 !== "open" && m.items.length > USUAL_FOLD_ABOVE;
 }
-function say11(m, text) {
+function say10(m, text) {
   if (m.status) m.status.textContent = text;
 }
 var models, make24, attr7, clamp2, realOptions;
@@ -62484,7 +62543,7 @@ var init_picking = __esm({
     "use strict";
     init_listbox();
     init_model7();
-    sayAfter = (m, text) => window.setTimeout(() => say11(m, text), 0);
+    sayAfter = (m, text) => window.setTimeout(() => say10(m, text), 0);
   }
 });
 
@@ -63570,7 +63629,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -63761,7 +63820,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller29();
+    init_controller30();
     init_group5();
     init_group5();
   }
@@ -65518,7 +65577,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values6 = __esm({
+var init_values7 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -65857,7 +65916,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint9();
     init_parts7();
-    init_values6();
+    init_values7();
   }
 });
 
@@ -65867,7 +65926,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values6();
+    init_values7();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -65987,7 +66046,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values6();
+    init_values7();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -66262,7 +66321,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -66515,7 +66574,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller30();
+    init_controller31();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -66861,7 +66920,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -67161,12 +67220,12 @@ function attachAutosize(root = document, options = {}) {
   };
 }
 var controllerFor;
-var init_api23 = __esm({
+var init_api24 = __esm({
   "js/autosize/api.js"() {
     "use strict";
     init_controller();
     init_constants35();
-    init_controller31();
+    init_controller32();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -67193,7 +67252,7 @@ var init_autosize = __esm({
     "use strict";
     init_constants35();
     init_fit2();
-    init_api23();
+    init_api24();
   }
 });
 
@@ -68783,7 +68842,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -68922,7 +68981,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build10 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values7();
+    init_values8();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -68942,7 +69001,7 @@ var init_core7 = __esm({
     init_controller();
     init_strings();
     init_build10();
-    init_values7();
+    init_values8();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -69057,12 +69116,12 @@ var init_core7 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build10();
     init_core7();
-    init_values7();
+    init_values8();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -69287,9 +69346,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller32();
-    init_values7();
-    init_values7();
+    init_controller33();
+    init_values8();
+    init_values8();
   }
 });
 
@@ -69455,7 +69514,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -69684,7 +69743,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller33();
+    init_controller34();
     init_fields();
     init_fields();
   }
@@ -69778,7 +69837,7 @@ function nameLine(c, parent, o) {
   }
 }
 var stamp2, titleOf2;
-var init_rows3 = __esm({
+var init_rows4 = __esm({
   "js/dated-options/rows.js"() {
     "use strict";
     init_range();
@@ -69861,7 +69920,7 @@ var init_combobox_draw = __esm({
   "js/dated-options/combobox-draw.js"() {
     "use strict";
     init_combobox();
-    init_rows3();
+    init_rows4();
   }
 });
 
@@ -69973,7 +70032,7 @@ function drawRadios(c) {
 var init_radios = __esm({
   "js/dated-options/radios.js"() {
     "use strict";
-    init_rows3();
+    init_rows4();
   }
 });
 
@@ -70024,7 +70083,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -70035,7 +70094,7 @@ var init_controller34 = __esm({
     init_combobox_draw();
     init_note();
     init_radios();
-    init_rows3();
+    init_rows4();
     init_settings2();
     init_time2();
     DatedController = class extends Controller {
@@ -70270,12 +70329,12 @@ function datedValue(element) {
 function attachDatedOptions(root = document, { now } = {}) {
   return attachAll(root, DATED, DatedController, now ? { now } : {});
 }
-var init_api24 = __esm({
+var init_api25 = __esm({
   "js/dated-options/api.js"() {
     "use strict";
     init_controller();
     init_constants37();
-    init_controller34();
+    init_controller35();
   }
 });
 
@@ -70299,7 +70358,7 @@ var init_dated_options = __esm({
     "use strict";
     init_constants37();
     init_time2();
-    init_api24();
+    init_api25();
   }
 });
 
@@ -70880,7 +70939,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -71139,7 +71198,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller35();
+    init_controller36();
     init_choices();
   }
 });
@@ -72070,7 +72129,7 @@ function dataChild(el16) {
     return null;
   }
 }
-var init_api25 = __esm({
+var init_api26 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
@@ -72502,7 +72561,7 @@ var init_attach20 = __esm({
     init_strings();
     init_constants38();
     init_instance3();
-    init_api25();
+    init_api26();
     init_options5();
     init_layout3();
     init_draw9();
@@ -72543,7 +72602,7 @@ var init_graph = __esm({
     init_options5();
     init_layout3();
     init_labels3();
-    init_api25();
+    init_api26();
     init_attach20();
   }
 });
@@ -72797,7 +72856,7 @@ function claimPeople(by) {
   if (!by) return [];
   return (Array.isArray(by) ? by : [by]).filter((p) => p && p.id !== void 0).map((p) => ({ id: String(p.id), name: String(p.name ?? p.id) }));
 }
-function say12(list, message) {
+function say11(list, message) {
   let region = (
     /** @type {HTMLElement | null} */
     list.querySelector(":scope > .kp-claim__live")
@@ -73009,7 +73068,7 @@ function fillRow(list, row, item) {
   }
 }
 var mode, among;
-var init_rows4 = __esm({
+var init_rows5 = __esm({
   "js/claim/rows.js"() {
     "use strict";
     init_strings();
@@ -73235,7 +73294,7 @@ var init_decorate = __esm({
     init_state_plate();
     init_constants39();
     init_model8();
-    init_rows4();
+    init_rows5();
   }
 });
 
@@ -73260,7 +73319,7 @@ function setClaim(list, id, claim) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
   );
 }
-var init_api26 = __esm({
+var init_api27 = __esm({
   "js/claim/api.js"() {
     "use strict";
     init_checklist();
@@ -73295,7 +73354,7 @@ async function takeAll(list) {
     try {
       if (await waiting === false) return;
     } catch {
-      say12(list, s2.claimNotSaved);
+      say11(list, s2.claimNotSaved);
       return;
     }
   }
@@ -73303,7 +73362,7 @@ async function takeAll(list) {
     list,
     before.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
   );
-  say12(list, s2.claimTookAll(open4.length));
+  say11(list, s2.claimTookAll(open4.length));
   const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
   if (ms > 0)
     undoToast(s2.claimTookAll(open4.length), {
@@ -73318,9 +73377,9 @@ async function copyGaps(list) {
   if (names.length === 0) return;
   try {
     await navigator.clipboard.writeText(s2.claimCopyLine(names.join(", ")));
-    say12(list, s2.claimCopied(names.length));
+    say11(list, s2.claimCopied(names.length));
   } catch {
-    say12(list, s2.claimCopyFailed);
+    say11(list, s2.claimCopyFailed);
   }
 }
 var init_bulk = __esm({
@@ -73405,7 +73464,7 @@ function refuse2(list, item, by, why) {
   write(list, item.id, by);
   flashRefused(list, item.id);
   decorate(list);
-  say12(list, why);
+  say11(list, why);
   const line = (
     /** @type {HTMLElement | null} */
     list.querySelector(`.kp-checklist__item[data-id="${CSS.escape(item.id)}"] .kp-claim__why`)
@@ -73423,7 +73482,7 @@ function refuse2(list, item, by, why) {
 function announce3(list, label, by, joining, person) {
   const s2 = getStrings();
   if (list.getAttribute("data-kp-announce") === "off") return;
-  say12(list, by.length ? s2.claimAnnounce(label, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label));
+  say11(list, by.length ? s2.claimAnnounce(label, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label));
   void joining;
   void person;
 }
@@ -73458,7 +73517,7 @@ var init_request2 = __esm({
     init_constants39();
     init_decorate();
     init_model8();
-    init_rows4();
+    init_rows5();
   }
 });
 
@@ -73624,7 +73683,7 @@ var init_attach21 = __esm({
     init_decorate();
     init_model8();
     init_request2();
-    init_rows4();
+    init_rows5();
     init_state26();
   }
 });
@@ -73652,7 +73711,7 @@ var init_claim2 = __esm({
     "use strict";
     init_constants39();
     init_model8();
-    init_api26();
+    init_api27();
     init_decorate();
     init_attach21();
   }
@@ -73912,7 +73971,7 @@ var init_list5 = __esm({
 });
 
 // js/availability/paint.js
-function say13(root, message) {
+function say12(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -74300,7 +74359,7 @@ function paintKeys(root, person, keys) {
   }
   paintSummary(root);
 }
-var init_api27 = __esm({
+var init_api28 = __esm({
   "js/availability/api.js"() {
     "use strict";
     init_strings();
@@ -74358,7 +74417,7 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
         if (line.textContent === why) line.textContent = "";
       }, AVAILABILITY_REFUSED_MS);
     }
-    say13(root, why);
+    say12(root, why);
   };
   if (!go) return refuse3(s2.availabilityNotSaved(label(changing)));
   if (waiting) {
@@ -74394,7 +74453,7 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
   });
   if (stroke) {
     const mine = Object.values(st.set.answers[person] ?? {});
-    say13(
+    say12(
       root,
       s2.availabilityYourAnswers(
         mine.filter((a) => a === "yes").length,
@@ -74427,9 +74486,9 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
         }
       });
     }
-  } else if (nowComplete.length) say13(root, s2.availabilityEveryone(nowComplete[0].label));
+  } else if (nowComplete.length) say12(root, s2.availabilityEveryone(nowComplete[0].label));
   else
-    say13(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label(changing), wordOf(answer2 ?? void 0)));
+    say12(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label(changing), wordOf(answer2 ?? void 0)));
   const again2 = (
     /** @type {HTMLElement | null} */
     root.querySelector(`.kp-heat__cell[data-row-key="${CSS.escape(person)}"][data-col-key="${CSS.escape(changing[0])}"]`)
@@ -74448,7 +74507,7 @@ var init_request3 = __esm({
     "use strict";
     init_strings();
     init_undo_toast();
-    init_api27();
+    init_api28();
     init_constants40();
     init_facts();
     init_paint10();
@@ -74803,7 +74862,7 @@ var init_attach22 = __esm({
     init_shortcuts();
     init_remember();
     init_reason();
-    init_api27();
+    init_api28();
     init_constants40();
     init_facts();
     init_menu2();
@@ -74837,7 +74896,7 @@ var init_availability = __esm({
     init_constants40();
     init_dates3();
     init_facts();
-    init_api27();
+    init_api28();
     init_attach22();
   }
 });
@@ -75613,7 +75672,7 @@ function stateOf7(root) {
   }
   return st;
 }
-function say14(root, message) {
+function say13(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -75799,7 +75858,7 @@ function drawCode(root, plate, caption, matrix, st, s2) {
   const value = valueOf2(root);
   if (st.said !== value) {
     st.said = value;
-    say14(root, s2.qrReady);
+    say13(root, s2.qrReady);
   }
 }
 function renderStandIn(root, plate, state12, hidden2, st, s2) {
@@ -75993,7 +76052,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -76097,7 +76156,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_state27();
     init_state27();
     init_matrix2();
@@ -76167,7 +76226,7 @@ function elapsed(ms) {
   const m = Math.floor(total / 60);
   return `${m} min ${total % 60} s`;
 }
-function say15(root, message) {
+function say14(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -76731,7 +76790,7 @@ function applyChange(root, id, change2) {
     const last = st.blocks[st.blocks.length - 1];
     if (last && last.id === id) {
       const s2 = getStrings();
-      say15(
+      say14(
         root,
         b.state === "ok" ? s2.consoleFinishedOk(b.code ?? 0) : b.state === "failed" ? s2.consoleFinishedFailed(b.code ?? 1) : b.state === "refused" ? s2.consoleFinishedRefused : b.state === "cancelled" ? s2.consoleCancelled : s2.consoleLost
       );
@@ -76778,7 +76837,7 @@ async function submit(root) {
       drawBar(root);
     }, 6e3);
     drawBar(root);
-    say15(root, getStrings().consoleConfirmSaid(command));
+    say14(root, getStrings().consoleConfirmSaid(command));
     return;
   }
   window.clearTimeout(st.pendingTimer);
@@ -76844,7 +76903,7 @@ function clearConsole(root, { undo = true } = {}) {
   const s2 = getStrings();
   st.blocks = [];
   drawBody2(root);
-  say15(root, s2.consoleCleared);
+  say14(root, s2.consoleCleared);
   if (undo)
     undoToast(s2.consoleCleared, {
       mode: "revert",
@@ -76889,7 +76948,7 @@ async function useTool(root, tool2, b, button6) {
     }
   });
 }
-var init_api28 = __esm({
+var init_api29 = __esm({
   "js/console/api.js"() {
     "use strict";
     init_strings();
@@ -76989,7 +77048,7 @@ function attachConsoles(root = document, options = {}) {
             complete.append(b);
           }
           complete.hidden = false;
-          say15(el_, getStrings().consoleMatches(found.length));
+          say14(el_, getStrings().consoleMatches(found.length));
         }
       } else if (st.pending !== null && event.key.length === 1) {
         st.pending = null;
@@ -77109,7 +77168,7 @@ var init_attach23 = __esm({
     init_shortcuts();
     init_newpill();
     init_reason();
-    init_api28();
+    init_api29();
     init_bar2();
     init_blocks();
     init_constants41();
@@ -77142,7 +77201,7 @@ var init_console3 = __esm({
   "js/console.js"() {
     "use strict";
     init_constants41();
-    init_api28();
+    init_api29();
     init_attach23();
   }
 });
@@ -77240,7 +77299,7 @@ var init_model10 = __esm({
 function toolsOf(root) {
   return attr14(root, "tools", "search,follow,wrap,time,level,copy,download").split(",").map((t) => t.trim()).filter(Boolean);
 }
-function say16(root, message) {
+function say15(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   const st = stateOf9(root);
   if (st.said === message) return;
@@ -77561,7 +77620,7 @@ function collect(root, reset = false) {
   for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
-var init_rows5 = __esm({
+var init_rows6 = __esm({
   "js/logviewer/rows.js"() {
     "use strict";
     init_strings();
@@ -77717,7 +77776,7 @@ var init_refresh = __esm({
     init_constants42();
     init_model10();
     init_reads();
-    init_rows5();
+    init_rows6();
   }
 });
 
@@ -77812,7 +77871,7 @@ function stepLogMatch(el16, delta = 1) {
   if (at.left < box.left + 120) log.scrollLeft -= box.left + 120 - at.left;
   else if (at.right > box.right - 16) log.scrollLeft += at.right - (box.right - 16);
   refresh2(root);
-  say16(root, matchWords(root));
+  say15(root, matchWords(root));
   return st.at + 1;
 }
 function setLogViewer(el16, spec) {
@@ -77855,7 +77914,7 @@ function syncOptions(root) {
   const log = logOf(root);
   if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
 }
-var init_api29 = __esm({
+var init_api30 = __esm({
   "js/logviewer/api.js"() {
     "use strict";
     init_newpill();
@@ -77864,7 +77923,7 @@ var init_api29 = __esm({
     init_parts8();
     init_reads();
     init_refresh();
-    init_rows5();
+    init_rows6();
   }
 });
 
@@ -77905,8 +77964,8 @@ function attachLogViewers(root = document) {
       if (find2.value.trim() === "") viewer.removeAttribute("data-kp-log-search");
       else viewer.setAttribute("data-kp-log-search", find2.value);
       syncOptions(viewer);
-      if (stateOf9(viewer).matches.length > 0) say16(viewer, matchWords(viewer));
-      else if (queryOf(viewer) !== "") say16(viewer, getStrings().logviewerSearchNone);
+      if (stateOf9(viewer).matches.length > 0) say15(viewer, matchWords(viewer));
+      else if (queryOf(viewer) !== "") say15(viewer, getStrings().logviewerSearchNone);
     };
     const onFindKey = (event) => {
       if (event.key === "Enter") {
@@ -78067,12 +78126,12 @@ var init_attach24 = __esm({
     init_reason();
     init_shortcuts();
     init_flash();
-    init_api29();
+    init_api30();
     init_constants42();
     init_model10();
     init_parts8();
     init_reads();
-    init_rows5();
+    init_rows6();
   }
 });
 
@@ -78099,7 +78158,7 @@ var init_logviewer = __esm({
     "use strict";
     init_constants42();
     init_levels();
-    init_api29();
+    init_api30();
     init_attach24();
   }
 });
@@ -78330,7 +78389,7 @@ function isOpen2(root, st, file, index) {
       return true;
   }
 }
-function say17(root, message) {
+function say16(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -78723,7 +78782,7 @@ function render6(root) {
     const summary2 = s2.diffReady(st.files.length, added, removed);
     if (st.said !== summary2) {
       st.said = summary2;
-      say17(root, summary2);
+      say16(root, summary2);
     }
     return;
   }
@@ -78884,7 +78943,7 @@ function attachDiffs(root = document) {
           found.section.querySelector(".kp-diffview__body")
         );
         el_.querySelector(`[data-kp-diff-fold-key="${CSS.escape(key)}"]`)?.focus();
-        say17(el_, open4 ? s2.diffUnchangedShown(lines) : s2.diffUnchangedHidden(lines));
+        say16(el_, open4 ? s2.diffUnchangedShown(lines) : s2.diffUnchangedHidden(lines));
         el_.dispatchEvent(new CustomEvent(DIFF_EXPAND_EVENT, { bubbles: true, detail: { path, lines, open: open4 } }));
         return;
       }
@@ -79417,11 +79476,11 @@ function attachThemePickers(root = document, { persist = true, closePopover = tr
     let showing = false;
     let leaveTimer = 0;
     let ask = 0;
-    const say18 = (theme) => picker.dispatchEvent(new CustomEvent(PREVIEW_EVENT, { bubbles: true, detail: { theme } }));
+    const say17 = (theme) => picker.dispatchEvent(new CustomEvent(PREVIEW_EVENT, { bubbles: true, detail: { theme } }));
     const stopPreview = () => {
       ask += 1;
       window.clearTimeout(leaveTimer);
-      if (showing && endPreview({ root: shownOn })) say18(null);
+      if (showing && endPreview({ root: shownOn })) say17(null);
       showing = false;
       shownOn = void 0;
     };
@@ -79438,12 +79497,12 @@ function attachThemePickers(root = document, { persist = true, closePopover = tr
       if (showing && shownOn !== on) endPreview({ root: shownOn });
       shownOn = on;
       showing = true;
-      if (previewTheme(theme, { root: on })) say18(theme);
+      if (previewTheme(theme, { root: on })) say17(theme);
     };
     const settlePreview = () => {
       ask += 1;
       window.clearTimeout(leaveTimer);
-      if (showing && shownOn !== void 0 && endPreview({ root: shownOn })) say18(null);
+      if (showing && shownOn !== void 0 && endPreview({ root: shownOn })) say17(null);
       showing = false;
       shownOn = void 0;
     };
@@ -81110,8 +81169,6 @@ export {
   DOC_GLYPH,
   DOC_KINDS,
   EFFECTS_ATTRIBUTE,
-  FACETS,
-  FACET_EVENT,
   FILE_EVENT,
   FINISH_EVENT,
   FLASH_BUTTON,
@@ -81429,7 +81486,6 @@ export {
   freshness_exports as freshnessExports,
   gallery_exports as galleryExports,
   gantt_exports as ganttExports,
-  getFacetValues,
   getQuantity,
   githubRepo,
   glyphCells,
@@ -81442,7 +81498,6 @@ export {
   hsl,
   hslToRgb,
   humanDuration,
-  identityCells,
   idmark_exports as idmarkExports,
   inPausedRange,
   initializeTheme,
@@ -81585,9 +81640,6 @@ export {
   setDeplist,
   setDone,
   setError,
-  setFacetCounts,
-  setFacetItems,
-  setFacetValues,
   setIndeterminate,
   setJobLine,
   setKeys,
