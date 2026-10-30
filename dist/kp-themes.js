@@ -58959,7 +58959,7 @@ function missingLedes(root = document) {
   const scope = [...root.querySelectorAll(`.kp-card__title, [data-kp-lede-required] :is(${HEADINGS})`)];
   return scope.filter((heading) => {
     let node = heading.nextElementSibling ?? heading.parentElement?.nextElementSibling ?? null;
-    for (let hops = 0; node && hops < 3; hops++) {
+    for (let hops = 0; node && hops < LEDE_SEARCH_HOPS; hops++) {
       if (node.matches(LEDE) || node.querySelector(LEDE)) return false;
       if (node.matches(HEADINGS)) return true;
       node = node.nextElementSibling;
@@ -58968,108 +58968,144 @@ function missingLedes(root = document) {
   });
 }
 function attachLedes(root = document) {
-  const cleanups = [];
-  for (const found of root.querySelectorAll(LEDE)) {
-    const lede = (
-      /** @type {HTMLElement} */
-      found
-    );
-    if (lede.dataset.kpLedeAttached !== void 0) continue;
-    lede.dataset.kpLedeAttached = "";
-    const s2 = getStrings();
-    if (!lede.id) lede.id = `kp-lede-${++counter3}`;
-    const heading = headingOf(lede);
-    const before = heading?.getAttribute("aria-describedby") ?? null;
-    if (heading) {
-      const ids2 = (before ?? "").split(/\s+/).filter(Boolean);
-      if (!ids2.includes(lede.id)) heading.setAttribute("aria-describedby", [...ids2, lede.id].join(" "));
-    }
-    let link = null;
-    let toggle2 = null;
-    let rest = null;
-    let plain3 = "";
-    const draw6 = () => {
-      plain3 = lede.childElementCount === 0 ? (lede.textContent ?? "").trim().replace(/\s+/g, " ") : "";
-      const href = lede.getAttribute("data-kp-lede-link");
-      if (href) {
-        link = lede.ownerDocument.createElement("a");
-        link.className = "kp-lede__link";
-        link.href = href;
-        link.textContent = s2.ledeLearnMore;
-        lede.append(" ", link);
-      }
-      const limit = Number.parseInt(lede.getAttribute("data-kp-lede-collapsible") ?? "", 10) || 140;
-      if (lede.hasAttribute("data-kp-lede-collapsible") && plain3.length > limit * 1.5) {
-        const sentences = plain3.split(/(?<=[.!?])\s+/);
-        let head = "";
-        let at = 0;
-        while (at < sentences.length - 1 && head.length < limit) head += (head ? " " : "") + sentences[at++];
-        if (at < sentences.length) {
-          lede.textContent = `${head} `;
-          rest = lede.ownerDocument.createElement("span");
-          rest.id = `${lede.id}-rest`;
-          rest.hidden = true;
-          rest.textContent = sentences.slice(at).join(" ");
-          lede.append(rest);
-          if (link) lede.append(" ", link);
-          toggle2 = lede.ownerDocument.createElement("button");
-          toggle2.type = "button";
-          toggle2.className = "kp-button kp-button--ghost kp-button--sm kp-lede__toggle";
-          toggle2.setAttribute("aria-expanded", "false");
-          toggle2.setAttribute("aria-controls", rest.id);
-          toggle2.textContent = s2.ledeMore;
-          lede.after(toggle2);
-          const hiddenRest = rest;
-          const button6 = toggle2;
-          button6.addEventListener("click", () => {
-            hiddenRest.hidden = !hiddenRest.hidden;
-            button6.setAttribute("aria-expanded", String(!hiddenRest.hidden));
-            button6.textContent = hiddenRest.hidden ? s2.ledeMore : s2.ledeLess;
-          });
-        }
-      }
-    };
-    const undraw = () => {
-      toggle2?.remove();
-      toggle2 = null;
-      link?.previousSibling?.remove();
-      link?.remove();
-      link = null;
-      if (rest) lede.textContent = plain3;
-      rest = null;
-    };
-    draw6();
-    const stop = watchOptions(lede, ["data-kp-lede-collapsible", "data-kp-lede-link"], () => {
-      undraw();
-      draw6();
-    });
-    cleanups.push(() => {
-      stop();
-      undraw();
-      if (heading) {
-        if (before === null) heading.removeAttribute("aria-describedby");
-        else heading.setAttribute("aria-describedby", before);
-      }
-      delete lede.dataset.kpLedeAttached;
-    });
-  }
+  const made6 = [...root.querySelectorAll(LEDE)].map((found) => (
+    /** @type {HTMLElement} */
+    found
+  )).filter((lede) => !(lede.dataset.kpLedeAttached !== void 0 || controllerOf(lede, LedeController))).map((lede) => attachOne(lede, LedeController)).filter((controller) => controller !== void 0);
   const missing = missingLedes(root);
   if (missing.length > 0 && root.querySelector?.("[data-kp-lede-required]"))
     console.warn(`[kp-lede] ${missing.length} heading(s) without a lede:`, missing);
   return () => {
-    for (const clean of cleanups) clean();
+    for (const controller of made6) controller.destroy();
   };
 }
-var LEDE, counter3, HEADINGS, HOLDERS;
+var LEDE, counter3, DEFAULT_FOLD_LIMIT, FOLD_SLACK, LEDE_SEARCH_HOPS, HEADINGS, HOLDERS, LedeController;
 var init_lede = __esm({
   "js/lede.js"() {
     "use strict";
     init_strings();
     init_live_options();
+    init_controller();
     LEDE = ".kp-lede";
     counter3 = 0;
+    DEFAULT_FOLD_LIMIT = 140;
+    FOLD_SLACK = 1.5;
+    LEDE_SEARCH_HOPS = 3;
     HEADINGS = "h1, h2, h3, h4, h5, h6, .kp-card__title, .kp-page-header__title";
     HOLDERS = "header, .kp-card__header, .kp-page-header, div, [data-kp-measured]";
+    LedeController = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.strings = getStrings();
+        this.link = null;
+        this.toggle = null;
+        this.rest = null;
+        this.plain = "";
+      }
+      connect() {
+        const lede = this.host;
+        lede.dataset.kpLedeAttached = "";
+        this.own(() => {
+          delete lede.dataset.kpLedeAttached;
+        });
+        if (!lede.id) lede.id = `kp-lede-${++counter3}`;
+        this.describeHeading();
+        this.draw();
+        this.own(() => this.undraw());
+        this.own(
+          watchOptions(lede, ["data-kp-lede-collapsible", "data-kp-lede-link"], () => {
+            this.undraw();
+            this.draw();
+          })
+        );
+      }
+      /** Add this lede to the `aria-describedby` of its heading and give the heading's old value back on destroy. */
+      describeHeading() {
+        const lede = this.host;
+        const heading = headingOf(lede);
+        if (!heading) return;
+        const before = heading.getAttribute("aria-describedby");
+        const ids2 = (before ?? "").split(/\s+/).filter(Boolean);
+        if (!ids2.includes(lede.id)) heading.setAttribute("aria-describedby", [...ids2, lede.id].join(" "));
+        this.own(() => {
+          if (before === null) heading.removeAttribute("aria-describedby");
+          else heading.setAttribute("aria-describedby", before);
+        });
+      }
+      /** The fold and the link are drawn from the two attributes, and drawn again when either changes [live-options-1019]. */
+      draw() {
+        const lede = this.host;
+        this.plain = lede.childElementCount === 0 ? (lede.textContent ?? "").trim().replace(/\s+/g, " ") : "";
+        this.drawLink();
+        this.drawFold();
+      }
+      /** The "Learn more" link at the end of the lede. */
+      drawLink() {
+        const lede = this.host;
+        const href = lede.getAttribute("data-kp-lede-link");
+        if (!href) return;
+        const link = lede.ownerDocument.createElement("a");
+        link.className = "kp-lede__link";
+        link.href = href;
+        link.textContent = this.strings.ledeLearnMore;
+        lede.append(" ", link);
+        this.link = link;
+      }
+      /**
+       * A very long lede folds after its first sentences, by splitting the text itself (a clipped line would still be
+       * laid out underneath the content that follows it): the rest is a hidden span that "More" opens.
+       */
+      drawFold() {
+        const lede = this.host;
+        const limit = Number.parseInt(lede.getAttribute("data-kp-lede-collapsible") ?? "", 10) || DEFAULT_FOLD_LIMIT;
+        if (!lede.hasAttribute("data-kp-lede-collapsible") || this.plain.length <= limit * FOLD_SLACK) return;
+        const sentences = this.plain.split(/(?<=[.!?])\s+/);
+        let head = "";
+        let at = 0;
+        while (at < sentences.length - 1 && head.length < limit) head += (head ? " " : "") + sentences[at++];
+        if (at >= sentences.length) return;
+        lede.textContent = `${head} `;
+        const rest = lede.ownerDocument.createElement("span");
+        rest.id = `${lede.id}-rest`;
+        rest.hidden = true;
+        rest.textContent = sentences.slice(at).join(" ");
+        lede.append(rest);
+        this.rest = rest;
+        if (this.link) lede.append(" ", this.link);
+        this.drawToggle(rest);
+      }
+      /** The "More" / "Less" button after the lede. @param {HTMLElement} rest */
+      drawToggle(rest) {
+        const s2 = this.strings;
+        const button6 = this.host.ownerDocument.createElement("button");
+        button6.type = "button";
+        button6.className = "kp-button kp-button--ghost kp-button--sm kp-lede__toggle";
+        button6.setAttribute("aria-expanded", "false");
+        button6.setAttribute("aria-controls", rest.id);
+        button6.textContent = s2.ledeMore;
+        this.host.after(button6);
+        this.toggle = button6;
+        button6.addEventListener("click", () => {
+          rest.hidden = !rest.hidden;
+          button6.setAttribute("aria-expanded", String(!rest.hidden));
+          button6.textContent = rest.hidden ? s2.ledeMore : s2.ledeLess;
+        });
+      }
+      /** Give the lede back its own words, without the link or the fold. */
+      undraw() {
+        this.toggle?.remove();
+        this.toggle = null;
+        this.link?.previousSibling?.remove();
+        this.link?.remove();
+        this.link = null;
+        if (this.rest) this.host.textContent = this.plain;
+        this.rest = null;
+      }
+    };
   }
 });
 

@@ -61,7 +61,7 @@
         "js/json-field.js": { "digest": "f3b2a6701aefb5c4", "when": "textarea[data-kp-json]" },
         "js/keys.js": { "digest": "2e44ce22f8dd8260", "when": ".kp-kbd[data-kp-key]" },
         "js/kpi.js": { "digest": "0cd9853cc958c091", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
-        "js/lede.js": { "digest": "a2229dfa4db44e34", "when": ".kp-lede" },
+        "js/lede.js": { "digest": "fb2b97959ae1411f", "when": ".kp-lede" },
         "js/loading-pieces.js": {
             "digest": "2430ccec0d32f0db",
             "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
