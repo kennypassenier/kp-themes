@@ -57543,277 +57543,376 @@ var init_draw10 = __esm({
   }
 });
 
-// js/uptime/attach.js
-function attachUptimes(root = document) {
-  const cleanups = [];
-  const strips = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(UPTIME) ? [root] : [],
-      ...root.querySelectorAll(UPTIME)
-    ]
-  );
-  for (const el16 of strips) {
-    if (el16.dataset.kpUptimeAttached !== void 0) continue;
-    el16.dataset.kpUptimeAttached = "";
-    if (!SPECS.has(el16)) {
-      const state12 = (
-        /** @type {UptimeSpec['state']} */
-        el16.dataset.kpUptimeState ?? "loading"
-      );
-      setUptime(el16, { state: state12 });
-    }
-    let frame3 = 0;
-    let width = -1;
-    const watcher = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
-      const now = el16.clientWidth;
-      if (now === width) return;
-      width = now;
-      cancelAnimationFrame(frame3);
-      frame3 = requestAnimationFrame(() => fit(el16));
-    }) : null;
-    watcher?.observe(el16);
-    const onScroll = (event) => {
-      const track2 = (
-        /** @type {HTMLElement} */
-        event.target
-      );
-      if (!(track2 instanceof HTMLElement) || !track2.matches(".kp-uptime__track")) return;
-      if (track2.scrollLeft >= track2.scrollWidth - track2.clientWidth - 2) UNPINNED.delete(el16);
-      else UNPINNED.add(el16);
-      edges(el16, track2);
-    };
-    el16.addEventListener("scroll", onScroll, { capture: true, passive: true });
-    const relaid = typeof ResizeObserver === "function" ? new ResizeObserver(() => fit(el16)) : null;
-    const track = el16.querySelector(".kp-uptime__track");
-    if (relaid && track && el16.dataset.kpUptimeFit === "scroll") relaid.observe(track);
-    const doc2 = el16.ownerDocument;
-    let panel = null;
-    let anchor = null;
-    let lower = null;
-    let shown5 = false;
-    const tips = (on) => {
-      for (const c of el16.querySelectorAll(".kp-uptime__cell")) {
-        const from = on ? "data-kp-uptime-tip" : HOVERCARD_ATTRIBUTE;
-        const to = on ? HOVERCARD_ATTRIBUTE : "data-kp-uptime-tip";
-        const words3 = c.getAttribute(from);
-        if (words3 === null) continue;
-        c.setAttribute(to, words3);
-        c.removeAttribute(from);
+// js/uptime/panel.js
+function figuresOf(el16, period) {
+  const percent = typeof period.uptime === "number" && Number.isFinite(period.uptime) ? uptimePercent(period.uptime) : null;
+  const incidents = typeof period.incidents === "number" && period.incidents >= 0 ? Math.floor(period.incidents) : null;
+  if (percent === null && incidents === null) return null;
+  const figures = make18(el16, "p", "kp-uptime__info-figures");
+  figures.textContent = getStrings().uptimeInfoFigures(percent, incidents);
+  return figures;
+}
+function stateOf4(el16, period) {
+  const tone = toneFor(el16, UPTIME_STATES.includes(period.state) ? period.state : "none");
+  const state12 = make18(el16, "p", "kp-uptime__info-state");
+  const swatch = make18(el16, "span", "kp-uptime__swatch");
+  swatch.dataset.kpTone = tone;
+  swatch.setAttribute("aria-hidden", "true");
+  const word = make18(el16, "span");
+  word.textContent = wordFor(el16, tone);
+  state12.append(swatch, word);
+  return state12;
+}
+function extrasOf(el16, period) {
+  const parts2 = [];
+  if (period.details?.length) {
+    const list = make18(el16, "ul", "kp-uptime__info-details");
+    for (const line of period.details) list.append(Object.assign(make18(el16, "li"), { textContent: line }));
+    parts2.push(list);
+  }
+  if (period.href) {
+    const link = (
+      /** @type {HTMLAnchorElement} */
+      make18(el16, "a", "kp-button kp-button--sm kp-uptime__info-link")
+    );
+    link.href = period.href;
+    link.textContent = getStrings().uptimeOpen(period.label);
+    parts2.push(link);
+  }
+  return parts2;
+}
+function fillPanel(el16, box, period) {
+  const title = make18(el16, "p", "kp-uptime__info-title");
+  title.id = `${box.id}-title`;
+  title.textContent = period.label;
+  const parts2 = [title, stateOf4(el16, period)];
+  const figures = figuresOf(el16, period);
+  if (figures) parts2.push(figures);
+  parts2.push(...extrasOf(el16, period));
+  box.setAttribute("aria-labelledby", title.id);
+  box.replaceChildren(...parts2);
+}
+var init_panel = __esm({
+  "js/uptime/panel.js"() {
+    "use strict";
+    init_strings();
+    init_constants27();
+    init_figures();
+    init_helpers4();
+  }
+});
+
+// js/uptime/info.js
+var PLATE_GAP, WINDOW_MARGIN, TIP_PARKED, UptimeInfo;
+var init_info = __esm({
+  "js/uptime/info.js"() {
+    "use strict";
+    init_hovercard();
+    init_motion();
+    init_top_layer();
+    init_controller();
+    init_constants27();
+    init_helpers4();
+    init_panel();
+    init_state19();
+    PLATE_GAP = 6;
+    WINDOW_MARGIN = 8;
+    TIP_PARKED = "data-kp-uptime-tip";
+    UptimeInfo = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.panel = null;
+        this.anchor = null;
+        this.lower = null;
+        this.shown = false;
       }
-    };
-    const place3 = (p) => {
-      if (!anchor) return;
-      const box = anchor.getBoundingClientRect();
-      const strip = el16.getBoundingClientRect();
-      const width2 = p.offsetWidth;
-      const start = getComputedStyle(el16).direction === "rtl" ? box.right - width2 : box.left;
-      const inStrip = Math.max(strip.left, Math.min(start, strip.right - width2));
-      const left = Math.max(8, Math.min(inStrip, doc2.documentElement.clientWidth - width2 - 8));
-      p.style.setProperty("left", `${left}px`);
-      p.style.setProperty("top", `${box.bottom + 6}px`);
-      placeBlockSide(p, box);
-    };
-    const fill2 = (box, period) => {
-      const s2 = getStrings();
-      const tone = toneFor(el16, UPTIME_STATES.includes(period.state) ? period.state : "none");
-      const title = make18(el16, "p", "kp-uptime__info-title");
-      title.id = `${box.id}-title`;
-      title.textContent = period.label;
-      const state12 = make18(el16, "p", "kp-uptime__info-state");
-      const swatch = make18(el16, "span", "kp-uptime__swatch");
-      swatch.dataset.kpTone = tone;
-      swatch.setAttribute("aria-hidden", "true");
-      const word = make18(el16, "span");
-      word.textContent = wordFor(el16, tone);
-      state12.append(swatch, word);
-      const parts2 = [title, state12];
-      const percent = typeof period.uptime === "number" && Number.isFinite(period.uptime) ? uptimePercent(period.uptime) : null;
-      const incidents = typeof period.incidents === "number" && period.incidents >= 0 ? Math.floor(period.incidents) : null;
-      if (percent !== null || incidents !== null) {
-        const figures = make18(el16, "p", "kp-uptime__info-figures");
-        figures.textContent = s2.uptimeInfoFigures(percent, incidents);
-        parts2.push(figures);
+      /** The hover cards of this strip rest while its quick info is open, and come back after. @param {boolean} on */
+      tips(on) {
+        for (const c of this.host.querySelectorAll(".kp-uptime__cell")) {
+          const from = on ? TIP_PARKED : HOVERCARD_ATTRIBUTE;
+          const to = on ? HOVERCARD_ATTRIBUTE : TIP_PARKED;
+          const words3 = c.getAttribute(from);
+          if (words3 === null) continue;
+          c.setAttribute(to, words3);
+          c.removeAttribute(from);
+        }
       }
-      if (period.details?.length) {
-        const list = make18(el16, "ul", "kp-uptime__info-details");
-        for (const line of period.details) list.append(Object.assign(make18(el16, "li"), { textContent: line }));
-        parts2.push(list);
+      /** Under its cell, its start edge on the cell's, kept inside the strip and the window. @param {HTMLElement} p */
+      place(p) {
+        if (!this.anchor) return;
+        const el16 = this.host;
+        const box = this.anchor.getBoundingClientRect();
+        const strip = el16.getBoundingClientRect();
+        const width = p.offsetWidth;
+        const start = getComputedStyle(el16).direction === "rtl" ? box.right - width : box.left;
+        const inStrip = Math.max(strip.left, Math.min(start, strip.right - width));
+        const left = Math.max(WINDOW_MARGIN, Math.min(inStrip, el16.ownerDocument.documentElement.clientWidth - width - WINDOW_MARGIN));
+        p.style.setProperty("left", `${left}px`);
+        p.style.setProperty("top", `${box.bottom + PLATE_GAP}px`);
+        placeBlockSide(p, box);
       }
-      if (period.href) {
-        const link = (
-          /** @type {HTMLAnchorElement} */
-          make18(el16, "a", "kp-button kp-button--sm kp-uptime__info-link")
-        );
-        link.href = period.href;
-        link.textContent = s2.uptimeOpen(period.label);
-        parts2.push(link);
-      }
-      box.setAttribute("aria-labelledby", title.id);
-      box.replaceChildren(...parts2);
-    };
-    const openInfo = (cell) => {
-      const periods = SPECS.get(el16)?.periods ?? [];
-      const index = periods.findIndex((p) => p.key === cell.dataset.kpKey);
-      if (index < 0) return;
-      if (!panel) {
-        panel = make18(el16, "div", "kp-popover kp-uptime__info");
+      /** The plate, made and inserted on first use. @returns {HTMLElement} */
+      ensurePanel() {
+        if (this.panel) return this.panel;
+        const panel = make18(this.host, "div", "kp-popover kp-uptime__info");
         panel.id = `kp-uptime-info-${uptimeState.infoMade += 1}`;
         panel.setAttribute("role", "dialog");
         panel.hidden = true;
-        el16.append(panel);
+        this.host.append(panel);
+        this.panel = panel;
+        return panel;
       }
-      const detail = { key: cell.dataset.kpKey, index, period: periods[index], panel };
-      if (!el16.dispatchEvent(new CustomEvent(UPTIME_OPEN_EVENT, { bubbles: true, cancelable: true, detail }))) return;
-      fill2(panel, periods[index]);
-      anchor?.setAttribute("aria-expanded", "false");
-      anchor = cell;
-      cell.setAttribute("aria-expanded", "true");
-      cell.setAttribute("aria-controls", panel.id);
-      if (shown5) {
-        place3(panel);
-        return;
+      /** Open the quick info of the period a cell stands for, or move it there. @param {HTMLElement} cell */
+      openInfo(cell) {
+        const el16 = this.host;
+        const periods = SPECS.get(el16)?.periods ?? [];
+        const index = periods.findIndex((p) => p.key === cell.dataset.kpKey);
+        if (index < 0) return;
+        const panel = this.ensurePanel();
+        const detail = { key: cell.dataset.kpKey, index, period: periods[index], panel };
+        if (!el16.dispatchEvent(new CustomEvent(UPTIME_OPEN_EVENT, { bubbles: true, cancelable: true, detail }))) return;
+        fillPanel(el16, panel, periods[index]);
+        this.anchor?.setAttribute("aria-expanded", "false");
+        this.anchor = cell;
+        cell.setAttribute("aria-expanded", "true");
+        cell.setAttribute("aria-controls", panel.id);
+        if (this.shown) {
+          this.place(panel);
+          return;
+        }
+        this.show(panel);
       }
-      shown5 = true;
-      attachHoverCards(doc2).hide();
-      tips(false);
-      stopClose(panel);
-      panel.hidden = false;
-      if (lower) place3(panel);
-      else {
-        lower = raiseOverlay(panel, place3);
-        arriveShown(panel);
+      /** First opening: the hover cards rest, the plate leaves hidden and goes up into the top layer. @param {HTMLElement} panel */
+      show(panel) {
+        this.shown = true;
+        attachHoverCards(this.host.ownerDocument).hide();
+        this.tips(false);
+        stopClose(panel);
+        panel.hidden = false;
+        if (this.lower) this.place(panel);
+        else {
+          this.lower = raiseOverlay(panel, (p) => this.place(p));
+          arriveShown(panel);
+        }
       }
-    };
-    const closeInfo = async (refocus, now = false) => {
-      if (!shown5 || !panel) return;
-      shown5 = false;
-      const cell = anchor;
-      cell?.setAttribute("aria-expanded", "false");
-      if (!now) {
-        const done = await playClose(panel);
-        if (!done || shown5) return;
+      /** @param {boolean} refocus @param {boolean} [now] shut at once, without the close (a redraw) */
+      async closeInfo(refocus, now = false) {
+        if (!this.shown || !this.panel) return;
+        this.shown = false;
+        const panel = this.panel;
+        const cell = this.anchor;
+        cell?.setAttribute("aria-expanded", "false");
+        if (!now) {
+          const done = await playClose(panel);
+          if (!done || this.shown || this.destroyed) return;
+        }
+        panel.hidden = true;
+        this.lower?.();
+        this.lower = null;
+        stopClose(panel);
+        this.tips(true);
+        this.anchor = null;
+        if (refocus && cell?.isConnected) cell.focus();
       }
-      panel.hidden = true;
-      lower?.();
-      lower = null;
-      stopClose(panel);
-      tips(true);
-      anchor = null;
-      if (refocus && cell?.isConnected) cell.focus();
-    };
-    INFO.set(el16, () => {
-      void closeInfo(false, true);
-      panel?.remove();
-      panel = null;
-    });
-    const onKey5 = (event) => {
-      if (event.key === "Escape" && shown5) {
-        event.preventDefault();
-        event.stopPropagation();
-        void closeInfo(true);
-        return;
-      }
-      const cell = (
-        /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest(CELL) : null
-      );
-      if (!cell || !el16.contains(cell) || panel?.contains(cell)) return;
-      if (event.key === " " && cell.tagName === "A") {
-        event.preventDefault();
-        cell.click();
-        return;
-      }
-      const cells = (
-        /** @type {HTMLElement[]} */
-        [...el16.querySelectorAll(`.kp-uptime__track > ${CELL}:not([hidden])`)]
-      );
-      const at = cells.indexOf(cell);
-      let next2 = -1;
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") next2 = Math.min(cells.length - 1, at + 1);
-      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next2 = Math.max(0, at - 1);
-      else if (event.key === "Home") next2 = 0;
-      else if (event.key === "End") next2 = cells.length - 1;
-      if (next2 < 0) return;
-      event.preventDefault();
-      if (next2 === at) return;
-      for (const c of cells) c.tabIndex = -1;
-      cells[next2].tabIndex = 0;
-      cells[next2].focus();
-      if (shown5 && cells[next2].getAttribute("aria-haspopup")) openInfo(cells[next2]);
-    };
-    const onClick = (event) => {
-      const cell = (
-        /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest(CELL) : null
-      );
-      if (!cell || !el16.contains(cell) || panel?.contains(cell)) return;
-      const periods = SPECS.get(el16)?.periods ?? [];
-      const index = periods.findIndex((p) => p.key === cell.dataset.kpKey);
-      if (index < 0) return;
-      for (const c of el16.querySelectorAll(`.kp-uptime__track > ${CELL}`)) c.tabIndex = -1;
-      cell.tabIndex = 0;
-      el16.dispatchEvent(
-        new CustomEvent(UPTIME_PICK_EVENT, { bubbles: true, detail: { key: cell.dataset.kpKey, index, period: periods[index] } })
-      );
-      if (cell.getAttribute("aria-haspopup") && infoMode(el16)) {
-        if (shown5 && anchor === cell) void closeInfo(false);
-        else openInfo(cell);
+      /** Shut the quick info at once and drop the plate: a redraw of the strip starts over. */
+      reset() {
+        void this.closeInfo(false, true);
+        this.panel?.remove();
+        this.panel = null;
       }
     };
-    const onOutside = (event) => {
-      if (!shown5) return;
-      const target = event.target instanceof Element ? event.target : null;
-      if (target && (panel?.contains(target) || el16.contains(target) && target.closest(CELL))) return;
-      void closeInfo(false);
-    };
-    const onFocusOut = (event) => {
-      const next2 = event.relatedTarget;
-      if (shown5 && next2 instanceof Node && !el16.contains(next2)) void closeInfo(false);
-    };
-    el16.addEventListener("keydown", onKey5);
-    el16.addEventListener("click", onClick);
-    el16.addEventListener("focusout", onFocusOut);
-    doc2.addEventListener("pointerdown", onOutside, true);
-    cleanups.push(() => {
-      watcher?.disconnect();
-      relaid?.disconnect();
-      el16.removeEventListener("scroll", onScroll, { capture: true });
-      cancelAnimationFrame(frame3);
-      el16.removeEventListener("keydown", onKey5);
-      el16.removeEventListener("click", onClick);
-      el16.removeEventListener("focusout", onFocusOut);
-      doc2.removeEventListener("pointerdown", onOutside, true);
-      INFO.get(el16)?.();
-      INFO.delete(el16);
-      const own = CARDS2.get(el16);
-      const left = leaveGroupCard(el16);
-      if (!left || left.last) own?.remove();
-      if (left?.last) GROUPS2.delete(left.host);
-      CARDS2.delete(el16);
-      delete el16.dataset.kpUptimeAttached;
-    });
   }
+});
+
+// js/uptime/controller.js
+var PIN_SLACK, TRACK, UptimeControl;
+var init_controller35 = __esm({
+  "js/uptime/controller.js"() {
+    "use strict";
+    init_constants27();
+    init_draw10();
+    init_fit2();
+    init_group4();
+    init_info();
+    init_state19();
+    PIN_SLACK = 2;
+    TRACK = ".kp-uptime__track";
+    UptimeControl = class _UptimeControl extends UptimeInfo {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.frame = 0;
+        this.width = -1;
+      }
+      connect() {
+        const el16 = this.host;
+        el16.dataset.kpUptimeAttached = "";
+        this.own(() => delete el16.dataset.kpUptimeAttached);
+        this.own(() => this.leaveCard());
+        if (!SPECS.has(el16)) setUptime(el16, { state: (
+          /** @type {UptimeSpec['state']} */
+          el16.dataset.kpUptimeState ?? "loading"
+        ) });
+        this.watchWidth();
+        this.listen(el16, "scroll", (event) => this.onScroll(event), { capture: true, passive: true });
+        this.watchTrack();
+        INFO.set(el16, () => this.reset());
+        this.own(() => {
+          this.reset();
+          INFO.delete(el16);
+        });
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(el16, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(el16, "focusout", (event) => this.onFocusOut(
+          /** @type {FocusEvent} */
+          event
+        ));
+        this.listen(el16.ownerDocument, "pointerdown", (event) => this.onOutside(
+          /** @type {PointerEvent} */
+          event
+        ), true);
+        this.own(() => cancelAnimationFrame(this.frame));
+      }
+      /** Fit again when the strip's width changes, at most once per frame. */
+      watchWidth() {
+        if (typeof ResizeObserver !== "function") return;
+        const el16 = this.host;
+        this.observe(
+          new ResizeObserver(() => {
+            const now = el16.clientWidth;
+            if (now === this.width) return;
+            this.width = now;
+            cancelAnimationFrame(this.frame);
+            this.frame = requestAnimationFrame(() => fit(el16));
+          })
+        ).observe(el16);
+      }
+      /** A strip that is laid out again (its fonts arrived, it was shown) keeps its latest period in view. */
+      watchTrack() {
+        const el16 = this.host;
+        const track = el16.querySelector(TRACK);
+        if (typeof ResizeObserver === "function" && track && el16.dataset.kpUptimeFit === "scroll") this.observe(new ResizeObserver(() => fit(el16))).observe(track);
+      }
+      /** The busy card goes with the strip; the group's card goes with its last strip. */
+      leaveCard() {
+        const el16 = this.host;
+        const own = CARDS2.get(el16);
+        const left = leaveGroupCard(el16);
+        if (!left || left.last) own?.remove();
+        if (left?.last) GROUPS2.delete(left.host);
+        CARDS2.delete(el16);
+      }
+      /** Remember whether the reader scrolled away from the latest period. @param {Event} event */
+      onScroll(event) {
+        const track = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (!(track instanceof HTMLElement) || !track.matches(TRACK)) return;
+        if (track.scrollLeft >= track.scrollWidth - track.clientWidth - PIN_SLACK) UNPINNED.delete(this.host);
+        else UNPINNED.add(this.host);
+        edges(this.host, track);
+      }
+      /** The cell an event happened in, if it is one of this strip's pressable cells outside the quick info. @param {Event} event @returns {HTMLElement | null} */
+      cellOf(event) {
+        const cell = (
+          /** @type {HTMLElement | null} */
+          event.target instanceof Element ? event.target.closest(CELL) : null
+        );
+        return cell && this.host.contains(cell) && !this.panel?.contains(cell) ? cell : null;
+      }
+      /** The index a key or arrow leads to, or -1 for a key that moves nothing. @param {string} key @param {number} at @param {number} count */
+      static target(key, at, count2) {
+        if (key === "ArrowRight" || key === "ArrowDown") return Math.min(count2 - 1, at + 1);
+        if (key === "ArrowLeft" || key === "ArrowUp") return Math.max(0, at - 1);
+        if (key === "Home") return 0;
+        return key === "End" ? count2 - 1 : -1;
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.key === "Escape" && this.shown) {
+          event.preventDefault();
+          event.stopPropagation();
+          void this.closeInfo(true);
+          return;
+        }
+        const cell = this.cellOf(event);
+        if (!cell) return;
+        if (event.key === " " && cell.tagName === "A") {
+          event.preventDefault();
+          cell.click();
+          return;
+        }
+        const cells = (
+          /** @type {HTMLElement[]} */
+          [...this.host.querySelectorAll(`${TRACK} > ${CELL}:not([hidden])`)]
+        );
+        const at = cells.indexOf(cell);
+        const next2 = _UptimeControl.target(event.key, at, cells.length);
+        if (next2 < 0) return;
+        event.preventDefault();
+        if (next2 === at) return;
+        for (const c of cells) c.tabIndex = -1;
+        cells[next2].tabIndex = 0;
+        cells[next2].focus();
+        if (this.shown && cells[next2].getAttribute("aria-haspopup")) this.openInfo(cells[next2]);
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const el16 = this.host;
+        const cell = this.cellOf(event);
+        if (!cell) return;
+        const periods = SPECS.get(el16)?.periods ?? [];
+        const index = periods.findIndex((p) => p.key === cell.dataset.kpKey);
+        if (index < 0) return;
+        for (const c of el16.querySelectorAll(`${TRACK} > ${CELL}`)) c.tabIndex = -1;
+        cell.tabIndex = 0;
+        el16.dispatchEvent(new CustomEvent(UPTIME_PICK_EVENT, { bubbles: true, detail: { key: cell.dataset.kpKey, index, period: periods[index] } }));
+        if (cell.getAttribute("aria-haspopup") && infoMode(el16)) {
+          if (this.shown && this.anchor === cell) void this.closeInfo(false);
+          else this.openInfo(cell);
+        }
+      }
+      /** A press anywhere but the quick info and the strip's cells closes it. @param {PointerEvent} event */
+      onOutside(event) {
+        if (!this.shown) return;
+        const target = event.target instanceof Element ? event.target : null;
+        if (target && (this.panel?.contains(target) || this.host.contains(target) && target.closest(CELL))) return;
+        void this.closeInfo(false);
+      }
+      /** Tabbing out of the strip and its quick info closes it. @param {FocusEvent} event */
+      onFocusOut(event) {
+        const next2 = event.relatedTarget;
+        if (this.shown && next2 instanceof Node && !this.host.contains(next2)) void this.closeInfo(false);
+      }
+    };
+  }
+});
+
+// js/uptime/attach.js
+function attachUptimes(root = document) {
+  const strips = hostsOf(root, UPTIME);
+  const made6 = strips.filter((el16) => !(el16.dataset.kpUptimeAttached !== void 0 || controllerOf(el16, UptimeControl))).map((el16) => attachOne(el16, UptimeControl)).filter((control) => control !== void 0);
   const doc = root instanceof Document ? root : root.ownerDocument ?? document;
   if (strips.length > 0) attachHoverCards(doc);
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6) control.destroy();
   };
 }
 var init_attach18 = __esm({
   "js/uptime/attach.js"() {
     "use strict";
-    init_strings();
+    init_controller();
     init_hovercard();
-    init_motion();
-    init_top_layer();
     init_constants27();
-    init_draw10();
-    init_figures();
-    init_fit2();
-    init_group4();
-    init_helpers4();
-    init_state19();
+    init_controller35();
   }
 });
 
@@ -58353,7 +58452,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -58482,7 +58581,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller35();
+    init_controller36();
     init_values29();
     init_values29();
     init_share();
@@ -58734,7 +58833,7 @@ var init_core12 = __esm({
 
 // js/range/panel.js
 var EDGE_PX, GAP_PX, RangePanel;
-var init_panel = __esm({
+var init_panel2 = __esm({
   "js/range/panel.js"() {
     "use strict";
     init_chart();
@@ -58914,12 +59013,12 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
     init_core12();
-    init_panel();
+    init_panel2();
     RangeController = class extends RangeCore {
       connect() {
         const el16 = this.host;
@@ -58995,7 +59094,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_values30();
     init_values30();
   }
@@ -59217,7 +59316,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -59346,7 +59445,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller37();
+    init_controller38();
     init_values31();
     init_values31();
     init_keys12();
@@ -60350,7 +60449,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -60416,7 +60515,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller38();
+    init_controller39();
     init_values33();
     init_values33();
   }
@@ -60742,7 +60841,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -61029,7 +61128,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller39();
+    init_controller40();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -61151,7 +61250,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -61378,7 +61477,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller40();
+    init_controller41();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -62370,7 +62469,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -62610,7 +62709,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller41();
+    init_controller42();
     init_values36();
     init_values36();
   }
@@ -62951,7 +63050,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -63069,7 +63168,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_values37();
     init_values37();
     init_slug();
@@ -63756,7 +63855,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -63963,7 +64062,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller43();
+    init_controller44();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -64264,7 +64363,7 @@ var init_core17 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -64379,7 +64478,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_values38();
     init_values38();
     init_names();
@@ -64624,7 +64723,7 @@ var init_core18 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -64729,7 +64828,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_values39();
     init_values39();
     init_value();
@@ -65731,7 +65830,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -65890,7 +65989,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller46();
+    init_controller47();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -66321,7 +66420,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -66462,7 +66561,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller47();
+    init_controller48();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -66924,7 +67023,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -67194,7 +67293,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller48();
+    init_controller49();
     init_build14();
     init_commit();
     init_math4();
@@ -67482,7 +67581,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -67715,7 +67814,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller49();
+    init_controller50();
     init_list4();
     init_render4();
   }
@@ -68773,16 +68872,16 @@ function toggleGroup(button6) {
 function togglePressedKeys(anyMember) {
   const g = toggleGroup(anyMember);
   const list = g ? g.members : [anyMember];
-  return list.filter((m) => !m.hasAttribute("data-kp-toggle-all") && stateOf4(m) === "true").map(toggleKey);
+  return list.filter((m) => !m.hasAttribute("data-kp-toggle-all") && stateOf5(m) === "true").map(toggleKey);
 }
 function planFor(member, forceClear) {
   const g = toggleGroup(member);
   const plan = /* @__PURE__ */ new Map();
-  const was = stateOf4(member);
+  const was = stateOf5(member);
   if (!g) return plan.set(member, was === "true" ? "false" : "true");
   const others = g.members.filter((m) => m !== member);
   if (member.hasAttribute("data-kp-toggle-all") || forceClear) {
-    if (g.members.every((m) => m === (g.all ?? member) ? false : stateOf4(m) !== "true")) return plan;
+    if (g.members.every((m) => m === (g.all ?? member) ? false : stateOf5(m) !== "true")) return plan;
     for (const m of g.members) plan.set(m, m === (g.all ?? member) ? "true" : "false");
     return plan;
   }
@@ -68801,7 +68900,7 @@ function planFor(member, forceClear) {
 }
 function withAll(g, plan) {
   if (g.all) {
-    const anyOn = g.members.some((m) => m !== g.all && (plan.get(m) ?? stateOf4(m)) === "true");
+    const anyOn = g.members.some((m) => m !== g.all && (plan.get(m) ?? stateOf5(m)) === "true");
     plan.set(g.all, anyOn ? "false" : "true");
   }
   return plan;
@@ -68809,7 +68908,7 @@ function withAll(g, plan) {
 function applyPlan(plan) {
   for (const [member, next2] of plan) member.setAttribute("aria-pressed", next2);
 }
-var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, stateOf4, toggleKey, storeKey, readStore, writeStore, made3;
+var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, stateOf5, toggleKey, storeKey, readStore, writeStore, made3;
 var init_group6 = __esm({
   "js/toggle/group.js"() {
     "use strict";
@@ -68821,7 +68920,7 @@ var init_group6 = __esm({
     TOGGLE_MODES = /** @type {const} */
     ["multi", "single", "single-or-none"];
     TOGGLE_REFUSED_MS = 3e3;
-    stateOf4 = (el16) => {
+    stateOf5 = (el16) => {
       const v = el16.getAttribute("aria-pressed");
       return v === "true" || v === "mixed" ? v : "false";
     };
@@ -69003,7 +69102,7 @@ var init_parts14 = __esm({
           made3(this.doc, "kp-button kp-button--ghost kp-toggle__clear", "button");
           clear.type = "button";
           clear.addEventListener("click", () => {
-            const first = toggleGroup(this.button)?.members.find((m) => stateOf4(m) === "true" && !m.hasAttribute("data-kp-toggle-all"));
+            const first = toggleGroup(this.button)?.members.find((m) => stateOf5(m) === "true" && !m.hasAttribute("data-kp-toggle-all"));
             if (first) this.clearGroup(first);
           });
           container.append(clear);
@@ -69062,7 +69161,7 @@ var init_handle4 = __esm({
         this.refusedTimer = void 0;
         this.handle = {
           element: button6,
-          state: () => stateOf4(button6),
+          state: () => stateOf5(button6),
           set: (next2, how) => this.setValue(next2, how),
           setCount: (n) => this.setCount(n),
           setHint: (text) => this.setHint(text),
@@ -69079,7 +69178,7 @@ var init_handle4 = __esm({
         const holder = this.rememberHolder(g);
         const name = holder?.getAttribute("data-kp-remember");
         if (!holder || !name) return;
-        writeStore(storeKey(name, "value"), holder === this.button && !g?.container ? stateOf4(this.button) === "true" : togglePressedKeys(this.button));
+        writeStore(storeKey(name, "value"), holder === this.button && !g?.container ? stateOf5(this.button) === "true" : togglePressedKeys(this.button));
       }
       /** The plan applied, and the hint, the Clear button and the memory after it. @param {Map<HTMLElement, PressedState>} plan */
       settle(plan) {
@@ -69115,7 +69214,7 @@ var init_handle4 = __esm({
         this.paintClear();
         if (silent) return;
         this.remember();
-        const detail = { button: button6, pressed: stateOf4(button6) === "true", group: g?.name ?? null, pressedKeys: togglePressedKeys(button6), source: "script" };
+        const detail = { button: button6, pressed: stateOf5(button6) === "true", group: g?.name ?? null, pressedKeys: togglePressedKeys(button6), source: "script" };
         button6.dispatchEvent(new CustomEvent(TOGGLE_CHANGED_EVENT, { bubbles: true, detail }));
       }
       /** @param {number | 'loading' | null} n */
@@ -69158,7 +69257,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -69231,11 +69330,11 @@ var init_controller50 = __esm({
           const kept = readStore(storeKey(name, "value"));
           if (holder === button6 && !g?.container && typeof kept === "boolean") button6.setAttribute("aria-pressed", String(kept));
           else if (Array.isArray(kept) && g?.container === holder)
-            button6.setAttribute("aria-pressed", kept.includes(toggleKey(button6)) && !button6.hasAttribute("data-kp-toggle-all") ? "true" : stateOf4(button6));
+            button6.setAttribute("aria-pressed", kept.includes(toggleKey(button6)) && !button6.hasAttribute("data-kp-toggle-all") ? "true" : stateOf5(button6));
         }
         if (g?.all === button6)
           queueMicrotask(() => {
-            const on = g.members.some((m) => m !== button6 && stateOf4(m) === "true");
+            const on = g.members.some((m) => m !== button6 && stateOf5(m) === "true");
             button6.setAttribute("aria-pressed", String(!on));
           });
       }
@@ -69248,14 +69347,14 @@ var init_controller50 = __esm({
         const plan = planFor(member, forceClear);
         if (plan.size === 0) return;
         const g = toggleGroup(member);
-        const before = new Map([...plan.keys()].map((m) => [m, stateOf4(m)]));
-        const nextState = plan.get(member) ?? stateOf4(member);
-        const after = () => g ? [...new Set(g.members.filter((m) => (plan.get(m) ?? stateOf4(m)) === "true" && !m.hasAttribute("data-kp-toggle-all")).map(toggleKey))] : nextState === "true" ? [toggleKey(member)] : [];
+        const before = new Map([...plan.keys()].map((m) => [m, stateOf5(m)]));
+        const nextState = plan.get(member) ?? stateOf5(member);
+        const after = () => g ? [...new Set(g.members.filter((m) => (plan.get(m) ?? stateOf5(m)) === "true" && !m.hasAttribute("data-kp-toggle-all")).map(toggleKey))] : nextState === "true" ? [toggleKey(member)] : [];
         let wait = null;
         const detail = {
           button: member,
           pressed: nextState === "true",
-          previous: stateOf4(member) === "true",
+          previous: stateOf5(member) === "true",
           group: g?.name ?? null,
           pressedKeys: after(),
           /** The app's answer takes time: the button is busy until it settles, and goes back if it is refused. @param {Promise<unknown>} promise */
@@ -69295,7 +69394,7 @@ var init_controller50 = __esm({
         const sync3 = () => {
           const g = toggleGroup(button6);
           if (!g) return;
-          const on = g.members.find((m) => stateOf4(m) === "true") ?? g.members[0];
+          const on = g.members.find((m) => stateOf5(m) === "true") ?? g.members[0];
           for (const m of g.members) m.tabIndex = m === on ? 0 : -1;
         };
         this.observe(new MutationObserver(sync3)).observe(button6, { attributes: true, attributeFilter: ["aria-pressed"] });
@@ -69349,7 +69448,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller50();
+    init_controller51();
     init_group6();
     init_group6();
   }
@@ -69638,7 +69737,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -69745,7 +69844,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller51();
+    init_controller52();
     init_values41();
     init_values41();
     init_level();
@@ -70040,7 +70139,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -70224,7 +70323,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller52();
+    init_controller53();
     init_values42();
     init_values42();
     init_order();
@@ -70489,7 +70588,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -70576,7 +70675,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller53();
+    init_controller54();
     init_values43();
     init_values43();
     init_states();
@@ -72048,7 +72147,7 @@ var init_keeper = __esm({
 
 // js/unsaved/panel.js
 var ChangesPanel;
-var init_panel2 = __esm({
+var init_panel3 = __esm({
   "js/unsaved/panel.js"() {
     "use strict";
     init_top_layer();
@@ -72230,7 +72329,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -72243,7 +72342,7 @@ var init_controller54 = __esm({
     init_paint11();
     init_changes();
     init_keeper();
-    init_panel2();
+    init_panel3();
     init_dock();
     init_leave2();
     UnsavedController = class extends Controller {
@@ -72483,7 +72582,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller54();
+    init_controller55();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -72829,7 +72928,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -73134,7 +73233,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller55();
+    init_controller56();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -73583,7 +73682,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -73717,7 +73816,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller56();
+    init_controller57();
     init_values46();
   }
 });
@@ -75380,7 +75479,7 @@ var init_core24 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -75610,7 +75709,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller57();
+    init_controller58();
     init_values47();
     init_values47();
   }
@@ -75778,7 +75877,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -76007,7 +76106,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller58();
+    init_controller59();
     init_fields();
     init_fields();
   }
@@ -76347,7 +76446,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -76598,7 +76697,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller59();
+    init_controller60();
   }
 });
 
@@ -76922,7 +77021,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -77033,7 +77132,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller60();
+    init_controller61();
     init_values48();
     init_values48();
     init_time3();
@@ -77243,7 +77342,7 @@ var init_build16 = __esm({
 
 // js/snooze/panel.js
 var seq6, DAY_MS4, EDGE_PX2, GAP_PX2, MAX_DEFAULT, SnoozePanel;
-var init_panel3 = __esm({
+var init_panel4 = __esm({
   "js/snooze/panel.js"() {
     "use strict";
     init_controller();
@@ -77361,14 +77460,14 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
     init_menu_button();
     init_runs();
     init_choices();
-    init_panel3();
+    init_panel4();
     TICK_MS6 = 3e4;
     SnoozePicker = class extends SnoozePanel {
       /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
@@ -77620,7 +77719,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller61();
+    init_controller62();
     init_choices();
   }
 });
@@ -79698,7 +79797,7 @@ function write(list, id, by) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...i.claim, by } } : i)
   );
 }
-var STATE2, el10, attr10, stateOf5, byOf, itemOf;
+var STATE2, el10, attr10, stateOf6, byOf, itemOf;
 var init_model8 = __esm({
   "js/claim/model.js"() {
     "use strict";
@@ -79710,7 +79809,7 @@ var init_model8 = __esm({
       return node;
     };
     attr10 = (list, name, fallback2) => list.getAttribute(`data-kp-claim-${name}`) ?? fallback2;
-    stateOf5 = (list) => {
+    stateOf6 = (list) => {
       let s2 = STATE2.get(list);
       if (!s2) {
         s2 = { viewer: null, people: [], busy: /* @__PURE__ */ new Set(), refused: /* @__PURE__ */ new Map(), filter: "all", off: [], said: "" };
@@ -79730,7 +79829,7 @@ function joinNames2(names) {
 }
 function whyOff(list, item, by) {
   const s2 = getStrings();
-  const st = stateOf5(list);
+  const st = stateOf6(list);
   if (list.hasAttribute("data-kp-claim-disabled")) return list.getAttribute("data-kp-claim-disabled-reason") ?? s2.claimDisabled;
   if (item.claim?.locked) return item.claim.locked;
   if (!st.viewer && mode(list) === "claim") return s2.claimNoViewer;
@@ -79771,7 +79870,7 @@ function buildButton(list) {
 }
 function fillRow(list, row2, item) {
   const s2 = getStrings();
-  const st = stateOf5(list);
+  const st = stateOf6(list);
   const cell = cellFor(list, row2);
   const by = byOf(item);
   const assign = mode(list) === "assign";
@@ -79905,7 +80004,7 @@ var init_rows8 = __esm({
 // js/claim/decorate.js
 function setClaimFilter(list, filter) {
   if (!(list instanceof HTMLElement) || !CLAIM_FILTERS.includes(filter)) return;
-  const s2 = stateOf5(list);
+  const s2 = stateOf6(list);
   if (s2.filter === filter) return;
   s2.filter = filter;
   memoryFor(list, "claim")?.write("filter", filter);
@@ -79914,7 +80013,7 @@ function setClaimFilter(list, filter) {
 }
 function decorate(list) {
   const s2 = getStrings();
-  const st = stateOf5(list);
+  const st = stateOf6(list);
   const items = getChecklistItems(list);
   const body = (
     /** @type {HTMLElement | null} */
@@ -80123,16 +80222,16 @@ var init_decorate = __esm({
 // js/claim/api.js
 function setClaimViewer(list, viewer) {
   if (!(list instanceof HTMLElement)) return;
-  stateOf5(list).viewer = viewer ? claimPeople(viewer)[0] : null;
+  stateOf6(list).viewer = viewer ? claimPeople(viewer)[0] : null;
   decorate(list);
 }
 function setClaimPeople(list, people) {
   if (!(list instanceof HTMLElement)) return;
-  stateOf5(list).people = claimPeople(people);
+  stateOf6(list).people = claimPeople(people);
   decorate(list);
 }
 function claimFilter(list) {
-  return stateOf5(list).filter;
+  return stateOf6(list).filter;
 }
 function setClaim(list, id, claim) {
   if (!(list instanceof HTMLElement)) return;
@@ -80153,7 +80252,7 @@ var init_api27 = __esm({
 // js/claim/bulk.js
 async function takeAll(list) {
   const s2 = getStrings();
-  const st = stateOf5(list);
+  const st = stateOf6(list);
   const viewer = st.viewer;
   if (!viewer) return;
   const before = getChecklistItems(list);
@@ -80217,7 +80316,7 @@ var init_bulk = __esm({
 
 // js/claim/request.js
 function flashRefused(list, id) {
-  const st = stateOf5(list);
+  const st = stateOf6(list);
   clearTimeout(st.refused.get(id));
   st.refused.set(
     id,
@@ -80229,7 +80328,7 @@ function flashRefused(list, id) {
 }
 async function request(list, id, action, person, { undo = true } = {}) {
   const s2 = getStrings();
-  const st = stateOf5(list);
+  const st = stateOf6(list);
   const item = itemOf(list, id);
   if (!item || st.busy.has(id)) return;
   const previousBy = byOf(item);
@@ -80312,7 +80411,7 @@ function offerUndo2(list, item, previousBy, person) {
   const s2 = getStrings();
   const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
   if (!(ms > 0)) return;
-  const mine = among(stateOf5(list).viewer, [person ?? { id: "", name: "" }]);
+  const mine = among(stateOf6(list).viewer, [person ?? { id: "", name: "" }]);
   undoToast(mine ? s2.claimReleased(item.label) : s2.claimUnassigned(person?.name ?? "", item.label), {
     mode: "revert",
     ms,
@@ -80323,7 +80422,7 @@ function offerUndo2(list, item, previousBy, person) {
   });
 }
 function press(list, row2) {
-  const st = stateOf5(list);
+  const st = stateOf6(list);
   const id = row2.getAttribute("data-id") ?? "";
   const item = itemOf(list, id);
   if (!item || !st.viewer || whyOff(list, item, byOf(item)) !== null) return;
@@ -80365,7 +80464,7 @@ function attachClaims(root = document) {
   );
   const undo = [];
   for (const list of lists) {
-    const st = stateOf5(list);
+    const st = stateOf6(list);
     if (st.off.length) continue;
     const viewerId = list.getAttribute("data-kp-claim-viewer");
     if (viewerId && !st.viewer) st.viewer = { id: viewerId, name: list.getAttribute("data-kp-claim-viewer-name") ?? viewerId };
@@ -80455,7 +80554,7 @@ function attachClaims(root = document) {
             keys: "c",
             what: getStrings().claimKeyTake,
             group: getStrings().claimKeyGroup,
-            when: () => here() && mode(list) === "claim" && stateOf5(list).viewer !== null,
+            when: () => here() && mode(list) === "claim" && stateOf6(list).viewer !== null,
             reason: getStrings().claimKeyReason,
             run: () => {
               const row2 = document.activeElement?.closest(".kp-checklist__item");
@@ -80466,7 +80565,7 @@ function attachClaims(root = document) {
             keys: "Shift C",
             what: getStrings().claimKeyGaps,
             group: getStrings().claimKeyGroup,
-            run: () => setClaimFilter(list, stateOf5(list).filter === "gaps" ? "all" : "gaps")
+            run: () => setClaimFilter(list, stateOf6(list).filter === "gaps" ? "all" : "gaps")
           }
         ],
         { layoutGuard: "off" }
@@ -80588,7 +80687,7 @@ var init_dates4 = __esm({
 
 // js/availability/facts.js
 function editable(root, person, column) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   if (root.hasAttribute("data-kp-disabled") || root.hasAttribute("data-kp-availability-disabled")) return false;
   if ((attr11(root, "locked", "") || "").split(/[\s,]+/).includes(column)) return false;
   const mode2 = editMode(root);
@@ -80597,7 +80696,7 @@ function editable(root, person, column) {
   return viewerOf(st)?.id === person;
 }
 function availabilityBest(root) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const mode2 = attr11(root, "best", "most");
   const people = st.spec.people ?? [];
   const cols = st.set.columns;
@@ -80645,7 +80744,7 @@ function availabilityBest(root) {
   return pool.filter((t) => score(t)[0] === tops[0] && score(t)[1] === tops[1]).map((t) => t.key);
 }
 function ordered(root) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const people = [...st.spec.people ?? []];
   const sort = attr11(root, "sort", "mine-first");
   const count2 = (p) => Object.keys(st.set.answers[p.id] ?? {}).length;
@@ -80654,7 +80753,7 @@ function ordered(root) {
   return people;
 }
 function columnFacts(root, key) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const people = st.spec.people ?? [];
   const names = { yes: [], maybe: [], no: [] };
   for (const p of people) {
@@ -80669,7 +80768,7 @@ function tipOf(f) {
   const part7 = (word, names) => names.length ? `${word}: ${names.join(", ")}` : "";
   return [part7(s2.availabilityYes, f.names.yes), part7(s2.availabilityMaybe, f.names.maybe), part7(s2.availabilityNo, f.names.no)].filter(Boolean).join(". ") || s2.availabilityNobodyAnswered;
 }
-var STATE3, el11, attr11, cellKey, toneOf3, glyphOf, wordOf, stateOf6, viewerOf, allowed, editMode;
+var STATE3, el11, attr11, cellKey, toneOf3, glyphOf, wordOf, stateOf7, viewerOf, allowed, editMode;
 var init_facts = __esm({
   "js/availability/facts.js"() {
     "use strict";
@@ -80688,7 +80787,7 @@ var init_facts = __esm({
       const s2 = getStrings();
       return a === "yes" ? s2.availabilityYes : a === "maybe" ? s2.availabilityMaybe : a === "no" ? s2.availabilityNo : s2.availabilityNone;
     };
-    stateOf6 = (root) => (
+    stateOf7 = (root) => (
       /** @type {AvState} */
       STATE3.get(root)
     );
@@ -80727,7 +80826,7 @@ function syncListCard(root, body, on) {
   );
 }
 function columnsList(root, people, waiting = false) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const s2 = getStrings();
   const wrap = el11("kp-availability__columns");
   if (waiting) {
@@ -80809,7 +80908,7 @@ function say12(root, message) {
   setTimeout(() => target.textContent = message, 60);
 }
 function paintCell2(root, cell) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const person = cell.getAttribute("data-row-key") ?? "";
   const column = cell.getAttribute("data-col-key") ?? "";
   const a = st.set.answers[person]?.[column];
@@ -80842,7 +80941,7 @@ function paintCell2(root, cell) {
   else face.textContent = glyphOf(a);
 }
 function paintSummary(root) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const s2 = getStrings();
   const grid2 = (
     /** @type {HTMLElement | null} */
@@ -80918,7 +81017,7 @@ function paintSummary(root) {
   }
 }
 function render4(root) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const s2 = getStrings();
   const spec = st.spec;
   const state12 = spec.state ?? "ready";
@@ -81192,7 +81291,7 @@ var init_api28 = __esm({
 
 // js/availability/request.js
 async function request2(root, person, keys, answer2, { stroke = false } = {}) {
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const s2 = getStrings();
   const row2 = st.set.answers[person] ?? {};
   const previous = {};
@@ -81350,7 +81449,7 @@ function closeMenu2(root) {
 }
 function openMenu2(root, cell) {
   closeMenu2(root);
-  const st = stateOf6(root);
+  const st = stateOf7(root);
   const s2 = getStrings();
   const person = cell.getAttribute("data-row-key") ?? "";
   const column = cell.getAttribute("data-col-key") ?? "";
@@ -81455,7 +81554,7 @@ function attachAvailability(root = document) {
         menu: null
       });
     }
-    const st = stateOf6(el_);
+    const st = stateOf7(el_);
     if (st.off.length) continue;
     const stopReasons = attachDisabledReasons(el_);
     let drag = null;
@@ -81482,7 +81581,7 @@ function attachAvailability(root = document) {
         el_.dispatchEvent(
           new CustomEvent(AVAILABILITY_RETRY_EVENT, {
             bubbles: true,
-            detail: { action: stateOf6(el_).spec.state === "empty" ? "add" : "retry" }
+            detail: { action: stateOf7(el_).spec.state === "empty" ? "add" : "retry" }
           })
         );
         return;
@@ -81490,8 +81589,8 @@ function attachAvailability(root = document) {
       const unit2 = target.closest(".kp-availability__unit [data-value]");
       if (unit2) {
         const value = unit2.getAttribute("data-value") === "day" ? "day" : "range";
-        if (value === stateOf6(el_).unit) return;
-        const s2 = stateOf6(el_);
+        if (value === stateOf7(el_).unit) return;
+        const s2 = stateOf7(el_);
         setAvailability(el_, { ...s2.spec, unit: value });
         el_.dispatchEvent(new CustomEvent(AVAILABILITY_UNIT_EVENT, { bubbles: true, detail: { unit: value } }));
         return;
@@ -81506,7 +81605,7 @@ function attachAvailability(root = document) {
           /** @type {AvailabilityAnswer} */
           pick2.getAttribute("data-answer")
         );
-        const was = stateOf6(el_).set.answers[pick2.getAttribute("data-person") ?? ""]?.[pick2.getAttribute("data-column") ?? ""];
+        const was = stateOf7(el_).set.answers[pick2.getAttribute("data-person") ?? ""]?.[pick2.getAttribute("data-column") ?? ""];
         void request2(el_, pick2.getAttribute("data-person") ?? "", [pick2.getAttribute("data-column") ?? ""], was === answer2 ? null : answer2);
         return;
       }
@@ -81527,7 +81626,7 @@ function attachAvailability(root = document) {
       const column = cell.getAttribute("data-col-key") ?? "";
       if (!editable(el_, person, column)) return;
       if (attr11(el_, "press", "menu") === "menu") return openMenu2(el_, cell);
-      void request2(el_, person, [column], next(el_, stateOf6(el_).set.answers[person]?.[column]));
+      void request2(el_, person, [column], next(el_, stateOf7(el_).set.answers[person]?.[column]));
     };
     const onDown2 = (event) => {
       if (event.button !== 0 || event.pointerType === "touch" || attr11(el_, "paint", "on") === "false" || attr11(el_, "press", "menu") === "menu")
@@ -81540,7 +81639,7 @@ function attachAvailability(root = document) {
       drag = {
         person,
         first: cell,
-        answer: next(el_, stateOf6(el_).set.answers[person]?.[column]),
+        answer: next(el_, stateOf7(el_).set.answers[person]?.[column]),
         keys: /* @__PURE__ */ new Set([column]),
         pointer: event.pointerId
       };
@@ -82486,7 +82585,7 @@ var init_matrix2 = __esm({
 });
 
 // js/qr/state.js
-function stateOf7(root) {
+function stateOf8(root) {
   let st = STATE4.get(root);
   if (!st) {
     st = { open: false, spec: {}, mode: attr12(root, "reveal", "shown"), timer: 0, shown: attr12(root, "reveal", "shown") !== "click", said: "", card: null, expired: false };
@@ -82528,7 +82627,7 @@ var init_state28 = __esm({
       return node;
     };
     attr12 = (root, name, fallback2) => root.getAttribute(`data-kp-qr-${name}`) ?? fallback2;
-    valueOf2 = (root) => stateOf7(root).spec.value ?? root.getAttribute("data-kp-qr-value") ?? "";
+    valueOf2 = (root) => stateOf8(root).spec.value ?? root.getAttribute("data-kp-qr-value") ?? "";
   }
 });
 
@@ -82621,7 +82720,7 @@ function timeExpiry(root, st) {
 }
 function render5(root) {
   ensureParts2(root);
-  const st = stateOf7(root);
+  const st = stateOf8(root);
   const s2 = getStrings();
   const plate2 = (
     /** @type {HTMLElement} */
@@ -82788,7 +82887,7 @@ var init_render6 = __esm({
 // js/qr/actions.js
 function setQr(root, spec) {
   if (!(root instanceof HTMLElement)) return;
-  const st = stateOf7(root);
+  const st = stateOf8(root);
   st.spec = { ...st.spec, ...spec };
   if (spec.value !== void 0) root.setAttribute("data-kp-qr-value", spec.value);
   if (spec.state === void 0 && spec.value !== void 0) delete st.spec.state;
@@ -82874,7 +82973,7 @@ var init_actions7 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -82892,7 +82991,7 @@ var init_controller62 = __esm({
       }
       connect() {
         const root = this.host;
-        this.own(() => window.clearTimeout(stateOf7(root).timer));
+        this.own(() => window.clearTimeout(stateOf8(root).timer));
         this.listen(root, "click", (event) => this.onClick(event));
         this.observe(
           new MutationObserver(() => {
@@ -82929,7 +83028,7 @@ var init_controller62 = __esm({
         if (!t) return;
         if (t.closest(".kp-qr__copy")) return void copyLink(root);
         if (t.closest(".kp-qr__more")) {
-          const st = stateOf7(root);
+          const st = stateOf8(root);
           st.open = !st.open;
           return render5(root);
         }
@@ -82942,7 +83041,7 @@ var init_controller62 = __esm({
       /** Show or hide a code behind its cover; the focus goes to the code, or back to the Show button. @param {boolean} shown */
       reveal(shown5) {
         const root = this.host;
-        stateOf7(root).shown = shown5;
+        stateOf8(root).shown = shown5;
         render5(root);
         root.dispatchEvent(new CustomEvent(QR_REVEAL_EVENT, { bubbles: true, detail: { shown: shown5 } }));
         if (shown5) {
@@ -82978,7 +83077,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller62();
+    init_controller63();
     init_state28();
     init_state28();
     init_matrix2();
@@ -83002,7 +83101,7 @@ var init_constants41 = __esm({
 });
 
 // js/console/model.js
-function stateOf8(root) {
+function stateOf9(root) {
   let st = STATE5.get(root);
   if (!st) {
     st = {
@@ -83152,7 +83251,7 @@ function ensureParts3(root) {
   input.setAttribute("aria-describedby", hint.id);
 }
 function drawBar(root) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   const s2 = getStrings();
   const input = (
     /** @type {HTMLInputElement} */
@@ -83266,7 +83365,7 @@ var init_bar2 = __esm({
 // js/console/blocks.js
 function blockNode(root, b, node) {
   const s2 = getStrings();
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   const isNew = !node;
   if (!node) {
     node = el13("kp-console__block", "section");
@@ -83419,7 +83518,7 @@ function blockNode(root, b, node) {
   return node;
 }
 function drawBody2(root) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   const s2 = getStrings();
   const body = (
     /** @type {HTMLElement | null} */
@@ -83550,7 +83649,7 @@ function saveHistory(root) {
   const store = storeOf(root);
   if (!key || !store) return;
   try {
-    store.setItem(key, JSON.stringify(stateOf8(root).history));
+    store.setItem(key, JSON.stringify(stateOf9(root).history));
   } catch {
   }
 }
@@ -83564,7 +83663,7 @@ var init_history = __esm({
 
 // js/console/run.js
 function startTicker(root) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   window.clearInterval(st.tick);
   st.tick = window.setInterval(() => {
     if (!root.isConnected) return window.clearInterval(st.tick);
@@ -83586,7 +83685,7 @@ function follow2(root, force = false) {
   if (force || !handle || handle.following()) body.scrollTop = head ? 0 : body.scrollHeight;
 }
 function applyChange(root, id, change2) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   const b = st.blocks.find((x) => x.id === id);
   if (!b) return;
   const max = Number(attr13(root, "max-bytes", String(CONSOLE_MAX_BYTES))) || CONSOLE_MAX_BYTES;
@@ -83620,7 +83719,7 @@ function applyChange(root, id, change2) {
   }
 }
 async function runCommand(root, command, { again: again2 = false } = {}) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   const s2 = getStrings();
   const context2 = attr13(root, "context", "none") === "select" ? st.context.value : "";
   const go = root.dispatchEvent(new CustomEvent(CONSOLE_RUN_EVENT, { bubbles: true, cancelable: true, detail: { command, context: context2 } }));
@@ -83644,7 +83743,7 @@ async function runCommand(root, command, { again: again2 = false } = {}) {
   return true;
 }
 async function submit(root) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   const input = (
     /** @type {HTMLInputElement} */
     root.querySelector(".kp-console__input")
@@ -83693,21 +83792,21 @@ var init_run6 = __esm({
 // js/console/api.js
 function setConsoleRun(root, run) {
   ensureParts3(root);
-  stateOf8(root).run = run;
+  stateOf9(root).run = run;
 }
 function setConsoleComplete(root, complete) {
-  stateOf8(root).complete = complete;
+  stateOf9(root).complete = complete;
 }
 function setConsoleContext(root, context2) {
   ensureParts3(root);
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   st.context = { ...st.context, ...context2, options: context2.options ?? st.context.options };
   if (!st.context.value && st.context.options[0]) st.context.value = st.context.options[0].value;
   drawBar(root);
 }
 function setConsole(root, spec) {
   ensureParts3(root);
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   st.spec = { ...st.spec, ...spec };
   if (spec.hint !== void 0) root.setAttribute("data-kp-console-hint", spec.hint);
   drawAll(root);
@@ -83719,7 +83818,7 @@ function runConsoleCommand(root, command) {
   return runCommand(root, command);
 }
 function clearConsole(root, { undo = true } = {}) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   if (st.blocks.length === 0) return;
   const gone = st.blocks;
   const s2 = getStrings();
@@ -83738,7 +83837,7 @@ function clearConsole(root, { undo = true } = {}) {
     });
 }
 async function useTool(root, tool2, b, button6) {
-  const st = stateOf8(root);
+  const st = stateOf9(root);
   const s2 = getStrings();
   if (tool2 === "collapse") {
     b.collapsed = !b.collapsed;
@@ -83794,7 +83893,7 @@ function attachConsoles(root = document, options = {}) {
   );
   const undo = [];
   for (const el_ of roots) {
-    const st = stateOf8(el_);
+    const st = stateOf9(el_);
     if (st.off.length) continue;
     if (options.run) st.run = options.run;
     if (options.complete) st.complete = options.complete;
@@ -84081,7 +84180,7 @@ var init_levels = __esm({
 });
 
 // js/logviewer/model.js
-function stateOf9(root) {
+function stateOf10(root) {
   let st = STATE6.get(root);
   if (!st) {
     st = {
@@ -84123,7 +84222,7 @@ function toolsOf(root) {
 }
 function say15(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   if (st.said === message) return;
   st.said = message;
   let region = (
@@ -84425,13 +84524,13 @@ function dress3(root, row2, line) {
 }
 function matchWords(root) {
   const s2 = getStrings();
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   if (queryOf(root) === "") return s2.logviewerSearchIdle;
   if (st.matches.length === 0) return s2.logviewerSearchNone;
   return st.at >= 0 ? s2.logviewerMatchAt(st.at + 1, st.matches.length) : s2.logviewerMatches(st.matches.length);
 }
 function collect(root, reset = false) {
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   const log = logOf(root);
   const before = reset ? null : st.matches[st.at] ?? null;
   st.matches = queryOf(root) === "" ? [] : (
@@ -84456,7 +84555,7 @@ var init_rows9 = __esm({
 
 // js/logviewer/refresh.js
 function refresh2(root) {
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   const s2 = getStrings();
   const log = logOf(root);
   const stage = (
@@ -84567,7 +84666,7 @@ function refresh2(root) {
   );
 }
 function redraw2(root) {
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   trim(root);
   for (const line of st.lines) {
     const row2 = st.nodes.get(line.id);
@@ -84577,7 +84676,7 @@ function redraw2(root) {
   refresh2(root);
 }
 function trim(root) {
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   const max = maxOf(root);
   while (st.lines.length > max) {
     const gone = (
@@ -84609,7 +84708,7 @@ function appendLogLines(el16, lines) {
     el16
   );
   ensureParts4(root);
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   const log = logOf(root);
   const fragment = document.createDocumentFragment();
   let added = 0;
@@ -84633,7 +84732,7 @@ function appendLogLines(el16, lines) {
   return added;
 }
 function logViewerLines(el16) {
-  return stateOf9(
+  return stateOf10(
     /** @type {HTMLElement} */
     el16
   ).lines.map((line) => ({ ...line }));
@@ -84643,7 +84742,7 @@ function logViewerText(el16, options = {}) {
     /** @type {HTMLElement} */
     el16
   );
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   return st.lines.filter((line) => options.all || st.nodes.get(line.id)?.hidden === false).map(textOf2).join("\n");
 }
 function clearLogViewer(el16) {
@@ -84652,7 +84751,7 @@ function clearLogViewer(el16) {
     el16
   );
   ensureParts4(root);
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   logOf(root).replaceChildren();
   st.lines = [];
   st.nodes.clear();
@@ -84669,14 +84768,14 @@ function searchLogViewer(el16, text) {
   if (text) root.setAttribute("data-kp-log-search", text);
   else root.removeAttribute("data-kp-log-search");
   syncOptions(root);
-  return stateOf9(root).matches.length;
+  return stateOf10(root).matches.length;
 }
 function stepLogMatch(el16, delta = 1) {
   const root = (
     /** @type {HTMLElement} */
     el16
   );
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   collect(root);
   if (st.matches.length === 0) {
     refresh2(root);
@@ -84727,7 +84826,7 @@ function setLogViewer(el16, spec) {
   syncOptions(root);
 }
 function syncOptions(root) {
-  const st = stateOf9(root);
+  const st = stateOf10(root);
   const now = signature(root);
   if (now === st.sig) return;
   st.sig = now;
@@ -84760,8 +84859,8 @@ function attachLogViewers(root = document) {
     ]
   );
   for (const viewer of found) {
-    if (stateOf9(viewer).off.length) continue;
-    const st = stateOf9(viewer);
+    if (stateOf10(viewer).off.length) continue;
+    const st = stateOf10(viewer);
     ensureParts4(viewer);
     const log = logOf(viewer);
     const stage = (
@@ -84786,7 +84885,7 @@ function attachLogViewers(root = document) {
       if (find2.value.trim() === "") viewer.removeAttribute("data-kp-log-search");
       else viewer.setAttribute("data-kp-log-search", find2.value);
       syncOptions(viewer);
-      if (stateOf9(viewer).matches.length > 0) say15(viewer, matchWords(viewer));
+      if (stateOf10(viewer).matches.length > 0) say15(viewer, matchWords(viewer));
       else if (queryOf(viewer) !== "") say15(viewer, getStrings().logviewerSearchNone);
     };
     const onFindKey = (event) => {
@@ -85122,7 +85221,7 @@ function count(root, name, fallback2) {
   const n = Number(raw);
   return Number.isFinite(n) && n >= 0 ? Math.floor(n) : fallback2;
 }
-function stateOf10(root) {
+function stateOf11(root) {
   let st = STATE7.get(root);
   if (!st) {
     const first = root.getAttribute("data-kp-diff-state");
@@ -85571,7 +85670,7 @@ function skeleton() {
   return wait;
 }
 function render6(root) {
-  const st = stateOf10(root);
+  const st = stateOf11(root);
   const s2 = getStrings();
   if (!root.classList.contains("kp-diffview")) root.classList.add("kp-diffview");
   const label = root.getAttribute("data-kp-diff-label");
@@ -85648,7 +85747,7 @@ var init_render7 = __esm({
 // js/diff/actions.js
 function setDiff(root, spec) {
   if (!(root instanceof HTMLElement)) return;
-  const st = stateOf10(root);
+  const st = stateOf11(root);
   const next2 = Array.isArray(spec) ? { files: spec } : spec;
   st.spec = { ...st.spec, ...next2 };
   if (next2.files !== void 0) {
@@ -85658,7 +85757,7 @@ function setDiff(root, spec) {
   render6(root);
 }
 function fileOf(root, path) {
-  const st = stateOf10(root);
+  const st = stateOf11(root);
   const file = st.files.find((candidate) => candidate.path === path);
   const section = [...root.querySelectorAll(".kp-diffview__file")].find((node) => node.getAttribute("data-kp-diff-path") === path);
   return file && section instanceof HTMLElement ? { file, section } : null;
@@ -85666,7 +85765,7 @@ function fileOf(root, path) {
 function toggleFile(root, path, open4, announce4 = true) {
   const found = fileOf(root, path);
   if (!found) return;
-  const st = stateOf10(root);
+  const st = stateOf11(root);
   const { file, section } = found;
   st.opened.set(path, open4);
   section.setAttribute("data-kp-diff-file-open", String(open4));
@@ -85725,7 +85824,7 @@ function attachDiffs(root = document) {
   );
   const undo = [];
   for (const el_ of roots) {
-    const st = stateOf10(el_);
+    const st = stateOf11(el_);
     if (st.off.length) continue;
     const onClick = (event) => {
       const t = event.target instanceof Element ? event.target : null;
@@ -86519,7 +86618,7 @@ var REGISTER_ERROR_EVENT = "kp-register-error";
 // js/lazy-register/links.js
 var loadsByDocument = /* @__PURE__ */ new WeakMap();
 var loadedByDocument = /* @__PURE__ */ new WeakMap();
-function stateOf11(doc) {
+function stateOf12(doc) {
   let loads = loadsByDocument.get(doc);
   let loaded = loadedByDocument.get(doc);
   if (!loads) loadsByDocument.set(doc, loads = /* @__PURE__ */ new Map());
@@ -86553,7 +86652,7 @@ function hasLoaded(link) {
   }
 }
 function registerLoaded(theme, { pattern = REGISTER_PATTERN, doc = document } = {}) {
-  if (stateOf11(doc).loaded.has(registerHref(theme, { pattern, doc }))) return true;
+  if (stateOf12(doc).loaded.has(registerHref(theme, { pattern, doc }))) return true;
   const link = registerLink(theme, { pattern, doc });
   return link !== null && hasLoaded(link);
 }
@@ -86573,7 +86672,7 @@ var RegisterLoad = class {
     this.doc = doc;
     this.existing = existing;
     this.link = existing ?? doc.createElement("link");
-    this.state = stateOf11(doc);
+    this.state = stateOf12(doc);
   }
   /** The promise that settles when the link has loaded or failed; the listeners are on the link before it returns. @returns {Promise<HTMLLinkElement>} */
   start() {
@@ -86616,7 +86715,7 @@ var RegisterLoad = class {
   }
 };
 function ensureRegister(theme, { pattern = REGISTER_PATTERN, doc = document } = {}) {
-  const { loads } = stateOf11(doc);
+  const { loads } = stateOf12(doc);
   const href = registerHref(theme, { pattern, doc });
   const known4 = loads.get(href);
   if (known4) return known4;
@@ -86692,8 +86791,8 @@ var LazyRegisters = class extends Controller {
     if (!link) return;
     link.remove();
     const href = registerHref(previous, this.loadOptions);
-    stateOf11(this.doc).loads.delete(href);
-    stateOf11(this.doc).loaded.delete(href);
+    stateOf12(this.doc).loads.delete(href);
+    stateOf12(this.doc).loaded.delete(href);
   }
   /** A held change is dropped rather than left to land after detach. */
   dropHeld() {
