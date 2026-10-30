@@ -175,6 +175,7 @@
         { "path": "js/combobox.js", "tags": ["@component:combobox", "@component:field", "@component:datatable"] },
         { "path": "js/combobox/*.js", "tags": ["@component:combobox", "@component:field", "@component:datatable"] },
         { "path": "js/listbox.js", "tags": ["@component:combobox", "@component:field", "@component:page"] },
+        { "path": "js/listbox/*.js", "tags": ["@component:combobox", "@component:field", "@component:page"] },
         { "path": "js/top-layer.js", "tags": ["@component:combobox", "@component:datepicker", "@component:field"] },
         { "path": "js/palette.js", "tags": ["@component:page"] },
         { "path": "js/palette/*.js", "tags": ["@component:page"] },
