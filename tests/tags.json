@@ -252,6 +252,7 @@
         { "path": "js/anchors/*.js", "tags": ["@component:structure"], "why": "the link anchors on headings and rows [kpadopt6-media]" },
         { "path": "js/print.js", "tags": ["@component:page"], "why": "the words a printed sheet gets [kpadopt6-media]" },
         { "path": "js/viewer.js", "tags": ["@component:media"], "why": "the viewer shell [kpadopt6-media]" },
+        { "path": "js/viewer/*.js", "tags": ["@component:media"], "why": "the viewer shell [kpadopt6-media]" },
         { "path": "js/docpreview.js", "tags": ["@component:media"], "why": "the document preview and the document glyph [kpadopt6-media]" },
         { "path": "js/docpreview/*.js", "tags": ["@component:media"], "why": "the document preview and the document glyph [kpadopt6-media]" },
         { "path": "js/gallery.js", "tags": ["@component:media"], "why": "the picture gallery with its lightbox [kpadopt6-media]" },

@@ -1,9 +1,4 @@
-/** The shell. */
-export declare const VIEWER = ".kp-viewer";
-/** Fired on the document, bubbling, when a viewer closed: `{ dialog }`. */
-export declare const VIEWER_CLOSE_EVENT = "kp-viewer-close";
-/** The states a stage can be in. */
-export declare const VIEWER_STATES: readonly ['ready', 'loading', 'error', 'unsupported'];
+export { VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES } from './viewer/values.js';
 export type ViewerAction = {
     kind: 'open' | 'download' | 'print' | 'copy-link' | string;
     /**
@@ -91,6 +86,44 @@ export type ViewerHandle = {
     state: () => string;
     close: () => void;
 };
+/**
+ * @typedef {object} ViewerAction
+ * @property {'open' | 'download' | 'print' | 'copy-link' | string} kind
+ * @property {string} [href] the file's address (open, download, copy-link)
+ * @property {string} [name] the file name a download is saved as
+ * @property {() => void} [run] what a print or a custom action does
+ * @property {string} [label] the button's words (default: the dictionary's for the kind)
+ * @property {'destructive' | 'default'} [tone] a custom action's look
+ */
+/**
+ * @typedef {object} ViewerOptions
+ * @property {string} title
+ * @property {string} [desc] one line under the title: how it is shown
+ * @property {string} [facts] kind, size and date in one line
+ * @property {'wide' | 'full'} [size] about 70 % of the window and 90 % high, or all of it (default wide)
+ * @property {readonly ViewerAction[]} [actions]
+ * @property {string} [className] more classes on the dialog
+ * @property {Element | null} [opener] where the focus goes back to when the native return finds nothing
+ * @property {() => void} [onClose]
+ * @property {readonly import('./shortcuts.js').Shortcut[]} [keys] shortcuts that live while the viewer is open
+ * @property {Document} [doc]
+ */
+/**
+ * @typedef {object} ViewerHandle
+ * @property {HTMLDialogElement} dialog
+ * @property {HTMLElement} stage the box the content stands in
+ * @property {HTMLElement} content the content slot inside the stage
+ * @property {HTMLElement} foot the foot with the actions
+ * @property {(text: string) => void} setTitle
+ * @property {(text: string) => void} setDesc
+ * @property {(text: string) => void} setFacts
+ * @property {(position: { index: number, total: number } | null) => void} setPosition "4 of 37", exact, announced politely
+ * @property {(actions: readonly ViewerAction[]) => void} setActions
+ * @property {(...nodes: Node[]) => void} setContent
+ * @property {(state: 'ready' | 'loading' | 'error' | 'unsupported', detail?: { message?: string, retry?: () => void, title?: string }) => void} setState
+ * @property {() => string} state
+ * @property {() => void} close
+ */
 /**
  * Open a viewer.
  * @param {ViewerOptions} options

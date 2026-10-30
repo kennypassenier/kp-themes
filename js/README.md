@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The one hundred and four largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The one hundred and five largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1626,3 +1626,16 @@ The compare slider: two versions stacked with a divider between them, as a Compa
 | `load.js`       | The loading of the images: the box waits under the busy card until every image has arrived or failed, and a failed image says so in its pane with a Retry.                 |
 | `parts.js`      | The parts a compare slider adds to its two panes, built but not yet placed: the side labels, the divider with its handle, and the loading plate.                           |
 | `values.js`     | The selector, the events and the fixed numbers of the compare slider.                                                                                                      |
+
+## js/viewer.js → js/viewer/
+
+The viewer shell: one thing opened large in a modal dialog, as a Viewer controller per open viewer. 6 files.
+
+| File            | Does                                                                                                              |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `actions.js`    | The foot's actions: open in a new tab and download as links, print, copy link and the page's own as buttons.      |
+| `controller.js` | One open viewer: its dialog and the way it closes, its texts, its actions, its stage and the states of the stage. |
+| `make.js`       | A small helper: an element with a class.                                                                          |
+| `parts.js`      | The elements of one viewer, built but not yet in the page: the dialog with its head, its stage and its foot.      |
+| `plate.js`      | The plate a stage shows when its content failed or cannot be shown here.                                          |
+| `values.js`     | The selector, the event and the states of the viewer shell.                                                       |

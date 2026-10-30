@@ -39018,10 +39018,10 @@ function createIntentFilter(dialog, list, status) {
       [...list.querySelectorAll("[data-kp-group]")]
     );
     const named = (dialog.dataset.kpGroupOrder ?? "").split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
-    const labelOf7 = (g) => (g.querySelector(".kp-palette__group-label")?.textContent ?? g.getAttribute("aria-label") ?? "").trim().toLowerCase();
+    const labelOf8 = (g) => (g.querySelector(".kp-palette__group-label")?.textContent ?? g.getAttribute("aria-label") ?? "").trim().toLowerCase();
     if (groups.length > 1) {
       const rank2 = (g) => {
-        const i = named.indexOf(labelOf7(g));
+        const i = named.indexOf(labelOf8(g));
         return i < 0 ? named.length + (groupOrigin.get(g) ?? 0) : i;
       };
       place3(groups.slice().sort((a, b) => rank2(a) - rank2(b)));
@@ -40247,8 +40247,8 @@ function installColumns(c) {
   const labels = headers.map((h2) => (h2.textContent ?? "").trim());
   const columnIds = headers.map((h2) => columnId(h2));
   c.columnIds = columnIds;
-  const labelOf7 = (at) => labels[at] ?? "";
-  c.labelOf = labelOf7;
+  const labelOf8 = (at) => labels[at] ?? "";
+  c.labelOf = labelOf8;
   const orders = headers.map((h2) => h2.dataset.kpSortOrder === void 0 ? null : splitList2(h2.dataset.kpSortOrder));
   c.orders = orders;
   const filterKinds = headers.map((h2) => {
@@ -40473,7 +40473,7 @@ var init_busy2 = __esm({
 
 // js/datatable/attach/chrome.js
 function installChrome(c) {
-  const { add, controlColumn, densitySelect, headers, labelOf: labelOf7, make: make34, s0, scopeSelect, selectAll, status, table, undo, wrap } = c;
+  const { add, controlColumn, densitySelect, headers, labelOf: labelOf8, make: make34, s0, scopeSelect, selectAll, status, table, undo, wrap } = c;
   const themeBox = (box) => {
     if (box === null || box.classList.contains(CHECK_CLASS)) return;
     box.classList.add(CHECK_CLASS);
@@ -40526,13 +40526,13 @@ function installChrome(c) {
       every.textContent = s0.tableSearchAllColumns;
       scopeSelect.append(add(every));
       headers.forEach((header, at) => {
-        if (header.dataset.kpSearch === "false" || controlColumn(at) || labelOf7(at) === "") return;
+        if (header.dataset.kpSearch === "false" || controlColumn(at) || labelOf8(at) === "") return;
         const option = (
           /** @type {HTMLOptionElement} */
           make34("option")
         );
         option.value = String(at);
-        option.textContent = labelOf7(at);
+        option.textContent = labelOf8(at);
         scopeSelect.append(add(option));
       });
     }
@@ -41425,7 +41425,7 @@ var init_datepicker = __esm({
 
 // js/datatable/attach/filter-ui.js
 function installFilterUi(c) {
-  const { add, choiceText, decoratePart, ensureTopBar, filterKinds, filterMode, headers, id, labelOf: labelOf7, locale, make: make34, orders, s0, undo, wrap } = c;
+  const { add, choiceText, decoratePart, ensureTopBar, filterKinds, filterMode, headers, id, labelOf: labelOf8, locale, make: make34, orders, s0, undo, wrap } = c;
   c.choiceValues = choiceValues;
   c.fillChoices = fillChoices;
   c.datePickerFor = datePickerFor;
@@ -41516,7 +41516,7 @@ function installFilterUi(c) {
         /** @type {FilterKind} */
         filterKinds[at]
       );
-      const label = labelOf7(at);
+      const label = labelOf8(at);
       const set = add(make34("fieldset", "kp-fieldset kp-datatable__filter"));
       set.dataset.kpFilterColumn = String(at);
       const legend = make34("legend", "kp-field__label");
@@ -41640,7 +41640,7 @@ var init_filter_ui = __esm({
 
 // js/datatable/attach/sort-setup.js
 function installSortSetup(c) {
-  const { add, controlColumn, editKinds, ensureTopBar, headers, id, keyColumn, labelOf: labelOf7, make: make34, multi, putUnder, s0, wrap } = c;
+  const { add, controlColumn, editKinds, ensureTopBar, headers, id, keyColumn, labelOf: labelOf8, make: make34, multi, putUnder, s0, wrap } = c;
   const sortable = headers.flatMap((header, at) => header.dataset.kpSort === void 0 ? [] : [at]);
   c.sortBy = null;
   c.sortDirection = null;
@@ -41666,7 +41666,7 @@ function installSortSetup(c) {
         make34("option")
       );
       option.value = String(at);
-      option.textContent = labelOf7(at);
+      option.textContent = labelOf8(at);
       c.sortBy.append(option);
     }
     label.append(c.sortBy);
@@ -41919,7 +41919,7 @@ function installReorder(c) {
     insertReorderCell,
     keyColumn,
     keyOf: keyOf8,
-    labelOf: labelOf7,
+    labelOf: labelOf8,
     make: make34,
     pager,
     rendered,
@@ -41989,7 +41989,7 @@ function installReorder(c) {
         /** @type {HTMLTableCellElement} */
         button6.closest("td, th")
       );
-      button6.setAttribute("aria-label", s2.tableEdit(labelOf7(cell.cellIndex), key, cellText(row, cell.cellIndex)));
+      button6.setAttribute("aria-label", s2.tableEdit(labelOf8(cell.cellIndex), key, cellText(row, cell.cellIndex)));
     }
     const grip = row.querySelector(REORDER_HANDLE);
     if (grip !== null) {
@@ -42320,7 +42320,7 @@ function installSync(c) {
     id,
     keyColumn,
     keyOf: keyOf8,
-    labelOf: labelOf7,
+    labelOf: labelOf8,
     loadingSlot,
     locked,
     make: make34,
@@ -42486,7 +42486,7 @@ function installSync(c) {
       c.sortSummary.textContent = c.sorts.length === 0 ? s2.tableNotSorted : s2.tableSortedBy(
         c.sorts.map(
           (key) => s2.tableSortKey(
-            labelOf7(key.column),
+            labelOf8(key.column),
             key.direction,
             orders[key.column] ? "order" : headers[key.column]?.dataset.kpSort ?? "text"
           )
@@ -42532,7 +42532,7 @@ function installSync(c) {
         box.dataset.kpDatatableColumn = "";
         box.checked = !c.hiddenColumns.has(at);
         box.disabled = locked[at] ?? false;
-        label.append(box, ` ${locked[at] ? s2.tableColumnLocked(labelOf7(at)) : labelOf7(at)}`);
+        label.append(box, ` ${locked[at] ? s2.tableColumnLocked(labelOf8(at)) : labelOf8(at)}`);
         item.append(label);
         c.columnList.append(item);
       }
@@ -42573,7 +42573,7 @@ function installSync(c) {
       if (row.matches(DETAIL) || row.matches(GROUP_ROW) || row.matches(SKELETON_ROW)) continue;
       for (const cell of row.cells) {
         if (cell.hasAttribute("data-label")) continue;
-        const words3 = labelOf7(cell.cellIndex);
+        const words3 = labelOf8(cell.cellIndex);
         if (words3 === "") continue;
         cell.setAttribute("data-label", words3);
         derivedLabels.add(cell);
@@ -42765,7 +42765,7 @@ function installPills(c) {
     filterKinds,
     filters,
     id,
-    labelOf: labelOf7,
+    labelOf: labelOf8,
     locale,
     make: make34,
     pillsList,
@@ -42788,7 +42788,7 @@ function installPills(c) {
         /** @type {FilterKind} */
         filterKinds[at]
       );
-      for (const pill of filterPills(kind, labelOf7(at), filters.get(at), s2, locale)) {
+      for (const pill of filterPills(kind, labelOf8(at), filters.get(at), s2, locale)) {
         count2 += 1;
         const item = make34("li", "kp-tag");
         const remove = (
@@ -42824,7 +42824,7 @@ function installPills(c) {
     for (const [at, value] of filters) {
       const kind = filterKinds[at];
       if (!kind) continue;
-      const label = filterPillLabel(kind, labelOf7(at), value, s2, locale);
+      const label = filterPillLabel(kind, labelOf8(at), value, s2, locale);
       if (label === null) continue;
       count2 += 1;
       const item = make34("li", "kp-tag");
@@ -42872,8 +42872,8 @@ function installPills(c) {
       );
       button6.type = "button";
       button6.dataset.kpFilterColumn = String(at);
-      button6.setAttribute("aria-label", on ? s2.tableAddFilterItemActive(labelOf7(at)) : s2.tableAddFilterItem(labelOf7(at)));
-      button6.append(labelOf7(at));
+      button6.setAttribute("aria-label", on ? s2.tableAddFilterItemActive(labelOf8(at)) : s2.tableAddFilterItem(labelOf8(at)));
+      button6.append(labelOf8(at));
       if (on) {
         button6.dataset.kpFilterMarked = "";
         const mark = make34("span", "kp-badge");
@@ -42892,7 +42892,7 @@ function installPills(c) {
     closeFilterEditor(false);
     const s2 = getStrings();
     const form2 = c.filterEditor;
-    const label = labelOf7(at);
+    const label = labelOf8(at);
     const current2 = filters.get(at);
     const range = (
       /** @type {{ from?: string, to?: string } | undefined} */
@@ -43043,7 +43043,7 @@ function installPills(c) {
         return {
           text: input.value,
           iso: input.dataset.kpDateValue,
-          label: bound === "from" ? s2.tableFilterFrom(labelOf7(at)) : s2.tableFilterTo(labelOf7(at))
+          label: bound === "from" ? s2.tableFilterFrom(labelOf8(at)) : s2.tableFilterTo(labelOf8(at))
         };
       };
       const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s2, locale);
@@ -43340,7 +43340,7 @@ function installServer(c) {
     headers,
     keyColumn,
     keyOf: keyOf8,
-    labelOf: labelOf7,
+    labelOf: labelOf8,
     loadFn,
     make: make34,
     prepareRow,
@@ -43376,9 +43376,9 @@ function installServer(c) {
         cell.dataset.label = "";
         cell.append(box);
       } else {
-        cell.dataset.label = labelOf7(at);
+        cell.dataset.label = labelOf8(at);
         if (header.dataset.kpCellClass) cell.className = header.dataset.kpCellClass;
-        const value = item[header.dataset.kpField ?? labelOf7(at)];
+        const value = item[header.dataset.kpField ?? labelOf8(at)];
         cell.textContent = value === void 0 || value === null ? "" : String(value);
       }
       row.append(cell);
@@ -43918,7 +43918,7 @@ function installEdit(c) {
     headers,
     id,
     keyOf: keyOf8,
-    labelOf: labelOf7,
+    labelOf: labelOf8,
     labelRow,
     make: make34,
     onClear,
@@ -44025,7 +44025,7 @@ function installEdit(c) {
       } else holder.append(input);
     }
     control.dataset.kpDatatableEditor = "";
-    control.setAttribute("aria-label", s2.tableEditField(labelOf7(column), key));
+    control.setAttribute("aria-label", s2.tableEditField(labelOf8(column), key));
     control.setAttribute("aria-describedby", errorId);
     if (header?.dataset.kpEditRequired !== void 0) control.setAttribute("aria-required", "true");
     holder.append(error);
@@ -44045,7 +44045,7 @@ function installEdit(c) {
     c.editing = { row, column, kind, button: button6, holder, control, error, previous, detach: detachControl, busy: false };
     control.focus();
     if (control instanceof HTMLInputElement && kind !== "date") control.select();
-    logEdit(s2.tableEditing(labelOf7(column), key));
+    logEdit(s2.tableEditing(labelOf8(column), key));
   };
   c.openEditor = openEditor;
   const refuse3 = (message) => {
@@ -44067,7 +44067,7 @@ function installEdit(c) {
         row.cells[column]
       ),
       column,
-      label: labelOf7(column),
+      label: labelOf8(column),
       value,
       previous,
       undo: isUndo,
@@ -44137,7 +44137,7 @@ function installEdit(c) {
     closeEditor();
     lastEdit = { row, column, before: previous, after: value };
     labelRow(row);
-    logEdit(s2.tableEdited(key, labelOf7(column), previous, value), { undo: true });
+    logEdit(s2.tableEdited(key, labelOf8(column), previous, value), { undo: true });
     button6.focus();
     return true;
   };
@@ -44158,7 +44158,7 @@ function installEdit(c) {
       last.before
     );
     labelRow(last.row);
-    logEdit(s2.tableEditUndone(keyOf8(last.row), labelOf7(last.column), last.before));
+    logEdit(s2.tableEditUndone(keyOf8(last.row), labelOf8(last.column), last.before));
     (last.row.cells[last.column]?.querySelector(EDIT_CELL) ?? null)?.focus();
   };
   const onEditorKeyCapture = (event) => {
@@ -44297,7 +44297,7 @@ function installWire2(c) {
     gridMode,
     gridPageRows,
     headers,
-    labelOf: labelOf7,
+    labelOf: labelOf8,
     multi,
     onAddMenuClick,
     onAddMenuKey,
@@ -44399,13 +44399,13 @@ function installWire2(c) {
       onMove: ({ row, rows, column, cell }) => {
         if (c.gridReadout === null) return;
         const at = cell.cellIndex;
-        const text = cell.parentElement?.parentElement?.tagName === "THEAD" ? labelOf7(at) : cellText(
+        const text = cell.parentElement?.parentElement?.tagName === "THEAD" ? labelOf8(at) : cellText(
           /** @type {HTMLTableRowElement} */
           cell.parentElement,
           at
         );
         void column;
-        c.gridReadout.textContent = getStrings().tableGridPosition(row, rows, labelOf7(at), text);
+        c.gridReadout.textContent = getStrings().tableGridPosition(row, rows, labelOf8(at), text);
       }
     });
   }
@@ -70657,18 +70657,123 @@ var init_glyph = __esm({
   }
 });
 
-// js/viewer.js
-var viewer_exports = {};
-__export(viewer_exports, {
-  VIEWER: () => VIEWER,
-  VIEWER_CLOSE_EVENT: () => VIEWER_CLOSE_EVENT,
-  VIEWER_STATES: () => VIEWER_STATES,
-  openViewer: () => openViewer
+// js/viewer/make.js
+var make28;
+var init_make2 = __esm({
+  "js/viewer/make.js"() {
+    "use strict";
+    make28 = (doc, tag, cls) => {
+      const node = doc.createElement(tag);
+      node.className = cls;
+      return node;
+    };
+  }
 });
-function openViewer(options) {
-  const doc = options.doc ?? document;
-  const strings = getStrings();
-  const id = `kp-viewer-${++serial7}`;
+
+// js/viewer/actions.js
+function labelOf7(action, strings) {
+  return action.label ?? {
+    open: strings.viewerOpenNew,
+    download: strings.viewerDownload,
+    print: strings.viewerPrint,
+    "copy-link": strings.viewerCopyLink
+  }[
+    /** @type {'open'} */
+    action.kind
+  ] ?? action.kind;
+}
+function fileLink(doc, action, cls) {
+  const link = (
+    /** @type {HTMLAnchorElement} */
+    make28(doc, "a", cls)
+  );
+  link.href = action.href ?? "#";
+  if (action.kind === "open") {
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+  } else link.setAttribute("download", action.name ?? "");
+  return link;
+}
+function openOrDownload(doc, action, label, strings) {
+  const link = fileLink(doc, action, `kp-button kp-viewer__action kp-viewer__action--${action.kind}`);
+  link.setAttribute("data-kp-viewer-action", action.kind);
+  link.textContent = label;
+  if (!action.href) {
+    link.setAttribute("aria-disabled", "true");
+    link.setAttribute("data-kp-disabled-reason", strings.viewerNoFile);
+    link.removeAttribute("href");
+  }
+  return link;
+}
+function actionButton2(doc, action, label, strings) {
+  const button6 = (
+    /** @type {HTMLButtonElement} */
+    make28(doc, "button", `kp-button${action.tone === "destructive" ? " kp-button--destructive" : ""} kp-viewer__action kp-viewer__action--${action.kind}`)
+  );
+  button6.type = "button";
+  button6.setAttribute("data-kp-viewer-action", action.kind);
+  button6.textContent = label;
+  if (action.kind === "copy-link") {
+    button6.setAttribute("data-kp-flash-words", strings.copied);
+    button6.addEventListener(
+      "click",
+      () => runFlashButton(button6, async () => {
+        const text = new URL(action.href ?? "", doc.baseURI).href;
+        await navigator.clipboard.writeText(text);
+        action.run?.();
+        return strings.copied;
+      })
+    );
+  } else if (action.run) button6.addEventListener("click", () => action.run?.());
+  return button6;
+}
+function drawActions(doc, foot, actions, strings) {
+  foot.replaceChildren();
+  for (const action of actions) {
+    const label = labelOf7(action, strings);
+    foot.append(action.kind === "open" || action.kind === "download" ? openOrDownload(doc, action, label, strings) : actionButton2(doc, action, label, strings));
+  }
+  foot.hidden = actions.length === 0;
+}
+var init_actions6 = __esm({
+  "js/viewer/actions.js"() {
+    "use strict";
+    init_flash();
+    init_make2();
+  }
+});
+
+// js/viewer/plate.js
+function buildPlate(doc, state12, detail, actions, strings) {
+  const shown5 = statePlate(doc, {
+    kind: state12 === "error" ? "error" : "empty",
+    title: detail.title ?? (state12 === "error" ? strings.viewerFailedTitle : strings.viewerUnsupportedTitle),
+    text: detail.message ?? (state12 === "error" ? strings.viewerFailedText : strings.viewerUnsupportedText),
+    ...state12 === "error" && detail.retry ? { actionLabel: strings.viewerRetry, onAction: detail.retry } : {}
+  });
+  if (state12 === "unsupported") {
+    const row = make28(doc, "div", "kp-viewer__plate-actions");
+    for (const action of actions) {
+      if (action.kind !== "open" && action.kind !== "download") continue;
+      const link = fileLink(doc, action, "kp-button kp-stateplate__action");
+      link.textContent = action.label ?? (action.kind === "open" ? strings.viewerOpenNew : strings.viewerDownload);
+      row.append(link);
+    }
+    shown5.append(row);
+  }
+  return shown5;
+}
+var init_plate3 = __esm({
+  "js/viewer/plate.js"() {
+    "use strict";
+    init_state_plate();
+    init_actions6();
+    init_make2();
+  }
+});
+
+// js/viewer/parts.js
+function buildViewerParts(doc, id, options, strings) {
   const dialog = (
     /** @type {HTMLDialogElement} */
     make28(doc, "dialog", `kp-dialog kp-viewer${options.className ? ` ${options.className}` : ""}`)
@@ -70702,185 +70807,175 @@ function openViewer(options) {
   stage.append(content, plate);
   const foot = make28(doc, "footer", "kp-viewer__foot");
   dialog.append(head, stage, foot);
-  doc.body.append(dialog);
-  let card = null;
-  let current2 = "ready";
-  const setText3 = (node, text) => {
-    node.textContent = text;
-    node.hidden = text === "";
-  };
-  setText3(title, options.title);
-  setText3(desc, options.desc ?? "");
-  setText3(facts, options.facts ?? "");
-  const drawActions = (actions) => {
-    foot.replaceChildren();
-    for (const action of actions) {
-      const label = action.label ?? {
-        open: strings.viewerOpenNew,
-        download: strings.viewerDownload,
-        print: strings.viewerPrint,
-        "copy-link": strings.viewerCopyLink
-      }[
-        /** @type {'open'} */
-        action.kind
-      ] ?? action.kind;
-      if (action.kind === "open" || action.kind === "download") {
-        const link = (
-          /** @type {HTMLAnchorElement} */
-          make28(doc, "a", `kp-button kp-viewer__action kp-viewer__action--${action.kind}`)
-        );
-        link.href = action.href ?? "#";
-        if (action.kind === "open") {
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-        } else link.setAttribute("download", action.name ?? "");
-        link.setAttribute("data-kp-viewer-action", action.kind);
-        link.textContent = label;
-        if (!action.href) {
-          link.setAttribute("aria-disabled", "true");
-          link.setAttribute("data-kp-disabled-reason", strings.viewerNoFile);
-          link.removeAttribute("href");
-        }
-        foot.append(link);
-      } else {
-        const button6 = (
-          /** @type {HTMLButtonElement} */
-          make28(doc, "button", `kp-button${action.tone === "destructive" ? " kp-button--destructive" : ""} kp-viewer__action kp-viewer__action--${action.kind}`)
-        );
-        button6.type = "button";
-        button6.setAttribute("data-kp-viewer-action", action.kind);
-        button6.textContent = label;
-        if (action.kind === "copy-link") {
-          button6.setAttribute("data-kp-flash-words", strings.copied);
-          button6.addEventListener(
-            "click",
-            () => runFlashButton(button6, async () => {
-              const text = new URL(action.href ?? "", doc.baseURI).href;
-              await navigator.clipboard.writeText(text);
-              action.run?.();
-              return strings.copied;
-            })
-          );
-        } else if (action.run) button6.addEventListener("click", () => action.run?.());
-        foot.append(button6);
-      }
-    }
-    foot.hidden = actions.length === 0;
-  };
-  drawActions(options.actions ?? []);
-  const setState2 = (next2, detail = {}) => {
-    current2 = next2;
-    stage.setAttribute("data-kp-state", next2);
-    stage.toggleAttribute("aria-busy", next2 === "loading");
-    plate.replaceChildren();
-    plate.hidden = next2 !== "error" && next2 !== "unsupported";
-    if (next2 === "loading") {
-      if (!card) card = openBusyCard(stage, { words: strings.viewerLoading, area: () => [stage], className: "kp-viewer__busy", arrive: false });
-    } else if (card) {
-      const closing2 = card;
-      card = null;
-      void closing2.close();
-    }
-    if (next2 === "error" || next2 === "unsupported") {
-      const shown5 = statePlate(doc, {
-        kind: next2 === "error" ? "error" : "empty",
-        title: detail.title ?? (next2 === "error" ? strings.viewerFailedTitle : strings.viewerUnsupportedTitle),
-        text: detail.message ?? (next2 === "error" ? strings.viewerFailedText : strings.viewerUnsupportedText),
-        ...next2 === "error" && detail.retry ? { actionLabel: strings.viewerRetry, onAction: detail.retry } : {}
-      });
-      if (next2 === "unsupported") {
-        const row = make28(doc, "div", "kp-viewer__plate-actions");
-        for (const action of options.actions ?? []) {
-          if (action.kind !== "open" && action.kind !== "download") continue;
-          const link = (
-            /** @type {HTMLAnchorElement} */
-            make28(doc, "a", "kp-button kp-stateplate__action")
-          );
-          link.href = action.href ?? "#";
-          if (action.kind === "open") {
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-          } else link.setAttribute("download", action.name ?? "");
-          link.textContent = action.label ?? (action.kind === "open" ? strings.viewerOpenNew : strings.viewerDownload);
-          row.append(link);
-        }
-        shown5.append(row);
-      }
-      plate.append(shown5);
-    }
-  };
-  let unregister = null;
-  if (options.keys && options.keys.length > 0) unregister = registerShortcuts(dialog, options.keys, { dev: false });
-  const detachReasons = attachDisabledReasons(dialog);
-  let closed = false;
-  const finish2 = () => {
-    if (closed) return;
-    closed = true;
-    unregister?.();
-    detachReasons();
-    card?.remove();
-    card = null;
-    dialog.remove();
-    options.onClose?.();
-    doc.dispatchEvent(new CustomEvent(VIEWER_CLOSE_EVENT, { bubbles: true, detail: { dialog } }));
-    const opener = options.opener;
-    if (opener instanceof HTMLElement && opener.isConnected && doc.activeElement !== opener && (doc.activeElement === doc.body || doc.activeElement === null)) {
-      opener.focus({ preventScroll: true });
-    }
-  };
-  dialog.addEventListener("close", finish2);
-  close.addEventListener("click", () => dialog.close());
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) dialog.close();
-  });
-  dialog.showModal();
-  stage.scrollTop = 0;
-  return {
-    dialog,
-    stage,
-    content,
-    foot,
-    setTitle: (text) => setText3(title, text),
-    setDesc: (text) => setText3(desc, text),
-    setFacts: (text) => setText3(facts, text),
-    setPosition(at) {
-      if (!at) {
-        position.hidden = true;
-        position.textContent = "";
-        return;
-      }
-      position.hidden = false;
-      position.textContent = strings.viewerPosition(at.index, at.total);
-    },
-    setActions: drawActions,
-    setContent(...nodes) {
-      content.replaceChildren(...nodes);
-    },
-    setState: setState2,
-    state: () => current2,
-    close: () => dialog.close()
-  };
+  return { dialog, title, desc, facts, position, close, stage, content, plate, foot };
 }
-var VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES, serial7, make28;
-var init_viewer = __esm({
-  "js/viewer.js"() {
+var init_parts15 = __esm({
+  "js/viewer/parts.js"() {
     "use strict";
-    init_strings();
-    init_state_plate();
-    init_busy_card();
-    init_shortcuts();
-    init_reason();
-    init_flash();
+    init_make2();
+  }
+});
+
+// js/viewer/values.js
+var VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES;
+var init_values33 = __esm({
+  "js/viewer/values.js"() {
+    "use strict";
     VIEWER = ".kp-viewer";
     VIEWER_CLOSE_EVENT = "kp-viewer-close";
     VIEWER_STATES = /** @type {const} */
     ["ready", "loading", "error", "unsupported"];
+  }
+});
+
+// js/viewer/controller.js
+function launchViewer(options) {
+  const doc = options.doc ?? document;
+  const strings = getStrings();
+  const parts2 = buildViewerParts(doc, `kp-viewer-${++serial7}`, options, strings);
+  const viewer = new Viewer(parts2.dialog, { options, doc, strings, parts: parts2 });
+  try {
+    viewer.connect();
+  } catch (error) {
+    viewer.destroy();
+    throw error;
+  }
+  return viewer.handle;
+}
+var serial7, Viewer;
+var init_controller50 = __esm({
+  "js/viewer/controller.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_busy_card();
+    init_shortcuts();
+    init_reason();
+    init_actions6();
+    init_plate3();
+    init_parts15();
+    init_values33();
     serial7 = 0;
-    make28 = (doc, tag, cls) => {
-      const node = doc.createElement(tag);
-      node.className = cls;
-      return node;
+    Viewer = class extends Controller {
+      /**
+       * @param {HTMLDialogElement} host the dialog
+       * @param {ViewerGiven} given
+       */
+      constructor(host, given2) {
+        super(host, given2);
+        this.doc = given2.doc;
+        this.strings = given2.strings;
+        this.parts = given2.parts;
+        this.dialog = host;
+        this.viewerOptions = given2.options;
+        this.card = null;
+        this.current = "ready";
+        this.handle = this.buildHandle();
+      }
+      /** @returns {import('../viewer.js').ViewerHandle} */
+      buildHandle() {
+        const { dialog, stage, content, foot, title, desc, facts } = this.parts;
+        return {
+          dialog,
+          stage,
+          content,
+          foot,
+          setTitle: (text) => this.setText(title, text),
+          setDesc: (text) => this.setText(desc, text),
+          setFacts: (text) => this.setText(facts, text),
+          setPosition: (at) => this.setPosition(at),
+          setActions: (actions) => drawActions(this.doc, foot, actions, this.strings),
+          setContent: (...nodes) => content.replaceChildren(...nodes),
+          setState: (next2, detail) => this.setState(next2, detail),
+          state: () => this.current,
+          close: () => dialog.close()
+        };
+      }
+      connect() {
+        const { dialog, stage, foot, title, desc, facts, close } = this.parts;
+        const options = this.viewerOptions;
+        this.doc.body.append(dialog);
+        this.setText(title, options.title);
+        this.setText(desc, options.desc ?? "");
+        this.setText(facts, options.facts ?? "");
+        drawActions(this.doc, foot, options.actions ?? [], this.strings);
+        this.own(() => this.card?.remove());
+        this.own(attachDisabledReasons(dialog));
+        if (options.keys && options.keys.length > 0) this.own(registerShortcuts(dialog, options.keys, { dev: false }));
+        this.listen(dialog, "close", () => this.finish());
+        this.listen(close, "click", () => dialog.close());
+        this.listen(dialog, "click", (event) => {
+          if (event.target === dialog) dialog.close();
+        });
+        dialog.showModal();
+        stage.scrollTop = 0;
+      }
+      /** @param {HTMLElement} node @param {string} text */
+      setText(node, text) {
+        node.textContent = text;
+        node.hidden = text === "";
+      }
+      /** "4 of 37", exact, announced politely. @param {{ index: number, total: number } | null} at */
+      setPosition(at) {
+        const { position } = this.parts;
+        if (!at) {
+          position.hidden = true;
+          position.textContent = "";
+          return;
+        }
+        position.hidden = false;
+        position.textContent = this.strings.viewerPosition(at.index, at.total);
+      }
+      /** @type {import('../viewer.js').ViewerHandle['setState']} */
+      setState(next2, detail = {}) {
+        const { stage, plate } = this.parts;
+        this.current = next2;
+        stage.setAttribute("data-kp-state", next2);
+        stage.toggleAttribute("aria-busy", next2 === "loading");
+        plate.replaceChildren();
+        plate.hidden = next2 !== "error" && next2 !== "unsupported";
+        if (next2 === "loading") {
+          if (!this.card) this.card = openBusyCard(stage, { words: this.strings.viewerLoading, area: () => [stage], className: "kp-viewer__busy", arrive: false });
+        } else if (this.card) {
+          const closing2 = this.card;
+          this.card = null;
+          void closing2.close();
+        }
+        if (next2 === "error" || next2 === "unsupported") plate.append(buildPlate(this.doc, next2, detail, this.viewerOptions.actions ?? [], this.strings));
+      }
+      /** The dialog closed: everything it held goes, then the page hears and the focus goes back. */
+      finish() {
+        if (this.destroyed) return;
+        this.destroy();
+        this.dialog.remove();
+        this.viewerOptions.onClose?.();
+        this.doc.dispatchEvent(new CustomEvent(VIEWER_CLOSE_EVENT, { bubbles: true, detail: { dialog: this.dialog } }));
+        const opener = this.viewerOptions.opener;
+        const doc = this.doc;
+        if (opener instanceof HTMLElement && opener.isConnected && doc.activeElement !== opener && (doc.activeElement === doc.body || doc.activeElement === null)) {
+          opener.focus({ preventScroll: true });
+        }
+      }
     };
+  }
+});
+
+// js/viewer.js
+var viewer_exports = {};
+__export(viewer_exports, {
+  VIEWER: () => VIEWER,
+  VIEWER_CLOSE_EVENT: () => VIEWER_CLOSE_EVENT,
+  VIEWER_STATES: () => VIEWER_STATES,
+  openViewer: () => openViewer
+});
+function openViewer(options) {
+  return launchViewer(options);
+}
+var init_viewer = __esm({
+  "js/viewer.js"() {
+    "use strict";
+    init_controller50();
+    init_values33();
   }
 });
 
@@ -72268,7 +72363,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE2, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values33 = __esm({
+var init_values34 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -72407,7 +72502,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build14 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values33();
+    init_values34();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -72427,7 +72522,7 @@ var init_core24 = __esm({
     init_controller();
     init_strings();
     init_build14();
-    init_values33();
+    init_values34();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -72542,12 +72637,12 @@ var init_core24 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build14();
     init_core24();
-    init_values33();
+    init_values34();
     BIG_STEP2 = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -72772,9 +72867,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller50();
-    init_values33();
-    init_values33();
+    init_controller51();
+    init_values34();
+    init_values34();
   }
 });
 
@@ -72940,7 +73035,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -73169,7 +73264,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller51();
+    init_controller52();
     init_fields();
     init_fields();
   }
@@ -73509,7 +73604,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -73760,7 +73855,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller52();
+    init_controller53();
   }
 });
 
@@ -73803,7 +73898,7 @@ var init_input = __esm({
 
 // js/runs/values.js
 var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS3;
-var init_values34 = __esm({
+var init_values35 = __esm({
   "js/runs/values.js"() {
     "use strict";
     RUNS = "[data-kp-runs]";
@@ -73837,7 +73932,7 @@ var init_options8 = __esm({
   "js/runs/options.js"() {
     "use strict";
     init_chart();
-    init_values34();
+    init_values35();
   }
 });
 
@@ -73868,7 +73963,7 @@ function buildRunsParts(el16, id, titleText) {
   live4.setAttribute("aria-live", "polite");
   return { title, stage, list, note: note2, button: button6, live: live4 };
 }
-var init_parts15 = __esm({
+var init_parts16 = __esm({
   "js/runs/parts.js"() {
     "use strict";
   }
@@ -73902,7 +73997,7 @@ var init_time3 = __esm({
     init_weekdays();
     init_freshness();
     init_chart();
-    init_values34();
+    init_values35();
     two6 = (n) => String(n).padStart(2, "0");
   }
 });
@@ -73917,7 +74012,7 @@ var init_core25 = __esm({
     init_strings();
     init_input();
     init_options8();
-    init_parts15();
+    init_parts16();
     init_time3();
     seq6 = 0;
     RunsCore = class extends Controller {
@@ -74084,11 +74179,11 @@ var init_note3 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note3();
-    init_values34();
+    init_values35();
     RunsList = class extends RunsNote {
       /**
        * @param {HTMLElement} host
@@ -74195,9 +74290,9 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller53();
-    init_values34();
-    init_values34();
+    init_controller54();
+    init_values35();
+    init_values35();
     init_time3();
   }
 });
@@ -74523,7 +74618,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -74782,7 +74877,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller54();
+    init_controller55();
     init_choices();
   }
 });
@@ -79622,7 +79717,7 @@ async function download(root, kind) {
   canvas.toBlob((b) => b && save(b, "qr-code.png"));
 }
 var REVOKE_AFTER_MS, PNG_SCALE;
-var init_actions6 = __esm({
+var init_actions7 = __esm({
   "js/qr/actions.js"() {
     "use strict";
     init_flash();
@@ -79636,13 +79731,13 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
     init_shortcuts();
     init_strings();
-    init_actions6();
+    init_actions7();
     init_render6();
     init_state28();
     LIVE_OPTIONS = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
@@ -79740,11 +79835,11 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller55();
+    init_controller56();
     init_state28();
     init_state28();
     init_matrix2();
-    init_actions6();
+    init_actions7();
   }
 });
 
@@ -81117,7 +81212,7 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
-var init_parts16 = __esm({
+var init_parts17 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
@@ -81504,7 +81599,7 @@ var init_api30 = __esm({
     init_newpill();
     init_levels();
     init_model10();
-    init_parts16();
+    init_parts17();
     init_reads();
     init_refresh();
     init_rows9();
@@ -81713,7 +81808,7 @@ var init_attach24 = __esm({
     init_api30();
     init_constants42();
     init_model10();
-    init_parts16();
+    init_parts17();
     init_reads();
     init_rows9();
   }
@@ -82462,7 +82557,7 @@ async function copyPath(root, button6) {
     return s2.diffCopied;
   });
 }
-var init_actions7 = __esm({
+var init_actions8 = __esm({
   "js/diff/actions.js"() {
     "use strict";
     init_strings();
@@ -82572,7 +82667,7 @@ var init_attach25 = __esm({
   "js/diff/attach.js"() {
     "use strict";
     init_strings();
-    init_actions7();
+    init_actions8();
     init_constants43();
     init_lines2();
     init_model11();
@@ -82606,7 +82701,7 @@ var init_diff = __esm({
     init_constants43();
     init_words4();
     init_fold2();
-    init_actions7();
+    init_actions8();
     init_attach25();
   }
 });
