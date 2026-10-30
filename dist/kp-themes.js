@@ -61554,12 +61554,11 @@ __export(job_line_exports, {
 function sharedSize(done, total, base) {
   const all = formatBytes(total, void 0, { base });
   const unit2 = all.slice(all.lastIndexOf(" ") + 1);
-  const units = ["B", "kB", "MB", "GB", "TB"];
-  const power = Math.max(0, units.indexOf(unit2));
-  const scaled = new Intl.NumberFormat(void 0, { maximumFractionDigits: power === 0 ? 0 : 1 }).format(done / base ** power);
+  const power = Math.max(0, BYTE_UNITS3.indexOf(unit2));
+  const scaled = new Intl.NumberFormat(void 0, { maximumFractionDigits: power === 0 ? 0 : SIZE_DECIMALS }).format(done / base ** power);
   return getStrings().jobLineBytes(scaled, all);
 }
-function jobLineText(report3, { base = 1e3 } = {}) {
+function jobLineText(report3, { base = DECIMAL_BASE } = {}) {
   const s2 = getStrings();
   const parts2 = [];
   const { step, steps: steps2, done, total } = report3;
@@ -61618,7 +61617,7 @@ function stepPosition(list) {
 function paint10(line, report3) {
   const base = (
     /** @type {1000 | 1024} */
-    line.getAttribute("data-kp-bytes-base") === "1024" ? 1024 : 1e3
+    line.getAttribute("data-kp-bytes-base") === String(BINARY_BASE) ? BINARY_BASE : DECIMAL_BASE
   );
   const text = jobLineText(report3, { base });
   if (line.textContent !== text) {
@@ -61651,26 +61650,15 @@ function buildJobLine({ label, steplist } = {}) {
   return line;
 }
 function attachJobLines(root = document) {
-  const lines = (
-    /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(JOBLINE)]
-  );
-  for (const line of lines) {
-    line.setAttribute("role", "status");
-    line.setAttribute("aria-live", "off");
-    line.setAttribute("aria-atomic", "true");
-    const list = listOf4(line);
-    paint10(line, list ? { ...reports.get(line) ?? {}, ...stepPosition(list) } : reports.get(line) ?? {});
-  }
-  const onStep = (event) => {
-    const list = event.target instanceof Element ? event.target.closest(STEPLIST_SELECTOR) : null;
-    if (!list) return;
-    for (const line of lines) if (listOf4(line) === list) setJobLine(line, {});
+  const made6 = [...root.querySelectorAll(JOBLINE)].map((found) => (
+    /** @type {HTMLElement} */
+    found
+  )).filter((line) => !controllerOf(line, JobLineController)).map((line) => attachOne(line, JobLineController)).filter((controller) => controller !== void 0);
+  return () => {
+    for (const controller of made6) controller.destroy();
   };
-  document.addEventListener(STEPLIST_EVENT, onStep);
-  return () => document.removeEventListener(STEPLIST_EVENT, onStep);
 }
-var JOBLINE, JOBLINE_EVENT, reports;
+var JOBLINE, JOBLINE_EVENT, BYTE_UNITS3, SIZE_DECIMALS, DECIMAL_BASE, BINARY_BASE, reports, JobLineController;
 var init_job_line = __esm({
   "js/job-line.js"() {
     "use strict";
@@ -61678,9 +61666,30 @@ var init_job_line = __esm({
     init_locale();
     init_strings();
     init_transfer();
+    init_controller();
     JOBLINE = "[data-kp-jobline]";
     JOBLINE_EVENT = "kp-jobline";
+    BYTE_UNITS3 = ["B", "kB", "MB", "GB", "TB"];
+    SIZE_DECIMALS = 1;
+    DECIMAL_BASE = 1e3;
+    BINARY_BASE = 1024;
     reports = /* @__PURE__ */ new WeakMap();
+    JobLineController = class extends Controller {
+      connect() {
+        const line = this.host;
+        line.setAttribute("role", "status");
+        line.setAttribute("aria-live", "off");
+        line.setAttribute("aria-atomic", "true");
+        const list = listOf4(line);
+        paint10(line, list ? { ...reports.get(line) ?? {}, ...stepPosition(list) } : reports.get(line) ?? {});
+        this.listen(document, STEPLIST_EVENT, (event) => this.onStep(event));
+      }
+      /** @param {Event} event */
+      onStep(event) {
+        const list = event.target instanceof Element ? event.target.closest(STEPLIST_SELECTOR) : null;
+        if (list && listOf4(this.host) === list) setJobLine(this.host, {});
+      }
+    };
   }
 });
 
