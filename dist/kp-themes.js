@@ -48304,114 +48304,162 @@ function colorPicker(element) {
   return handles6.get(element) ?? null;
 }
 function attachColorPickers(root = document, { followTheme = true } = {}) {
-  const cleanups = [];
-  const created = [];
-  for (const element of root.querySelectorAll(PICKER3)) {
-    const picker = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (picker.dataset.kpColorpickerAttached !== void 0) continue;
-    picker.dataset.kpColorpickerAttached = "";
-    const swatch = (
-      /** @type {HTMLElement | null} */
-      picker.querySelector("[data-kp-swatch]")
-    );
-    const value = (
-      /** @type {HTMLElement | null} */
-      picker.querySelector("[data-kp-colorpicker-value]")
-    );
-    const report3 = (
-      /** @type {HTMLElement | null} */
-      picker.querySelector("[data-kp-colorpicker-contrast]")
-    );
-    const follow3 = picker.dataset.kpFollowTheme === void 0 ? followTheme : picker.dataset.kpFollowTheme !== "false";
-    const target = () => picker.dataset.kpAgainst ?? "--background";
-    const level = () => (
-      /** @type {'text' | 'large' | 'non-text'} */
-      picker.dataset.kpAgainstKind ?? "text"
-    );
-    const slider2 = (channel) => (
-      /** @type {HTMLInputElement | null} */
-      picker.querySelector(`[data-kp-channel="${channel}"]`)
-    );
-    const before = { swatch: swatch?.style.background ?? "", value: value?.textContent ?? "", report: report3?.textContent ?? "" };
-    const read = () => ({ h: Number(slider2("h")?.value ?? 0), s: Number(slider2("s")?.value ?? 0), l: Number(slider2("l")?.value ?? 0) });
-    const update2 = (announce4) => {
-      const colour = read();
-      const text = formatHsl(colour);
-      picker.style.setProperty("--kp-color", text);
-      if (swatch !== null) swatch.style.background = text;
-      if (value !== null) value.textContent = text;
-      const against = target();
-      const kind = level();
-      const ground = tokenColour(against);
-      let ratio = null;
-      let ok = null;
-      const s2 = getStrings();
-      if (ground === null) {
-        if (report3 !== null) report3.textContent = s2.contrastMissing(against);
-        delete picker.dataset.kpContrastOk;
-      } else {
-        ratio = contrast(hslToRgb(colour), ground);
-        ok = meets(ratio, kind);
-        if (report3 !== null) report3.textContent = s2.contrastReport(ratio.toFixed(2), against, ok ? s2.contrastPasses : s2.contrastFails);
-        if (ok) picker.dataset.kpContrastOk = "";
-        else delete picker.dataset.kpContrastOk;
-      }
-      const detail = { value: text, ...colour, ratio, ok, against };
-      if (announce4) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
-      return detail;
-    };
-    const onInput = () => update2(true);
-    for (const channel of ["h", "s", "l"]) slider2(channel)?.addEventListener("input", onInput);
-    const onTheme = () => update2(false);
-    if (follow3) document.addEventListener("kp-theme-change", onTheme);
-    update2(false);
-    const handle = {
-      element: picker,
-      get: () => update2(false),
-      set: (colour) => {
-        const hsl2 = typeof colour === "string" ? parseHsl(colour) : colour;
-        if (hsl2 === null) return;
-        const h2 = slider2("h");
-        const s2 = slider2("s");
-        const l = slider2("l");
-        if (h2) h2.value = String(hsl2.h);
-        if (s2) s2.value = String(hsl2.s);
-        if (l) l.value = String(hsl2.l);
-        update2(true);
-      },
-      measure: () => void update2(false)
-    };
-    handles6.set(picker, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      for (const channel of ["h", "s", "l"]) slider2(channel)?.removeEventListener("input", onInput);
-      document.removeEventListener("kp-theme-change", onTheme);
-      picker.style.removeProperty("--kp-color");
-      if (swatch !== null) swatch.style.background = before.swatch;
-      if (value !== null) value.textContent = before.value;
-      if (report3 !== null) report3.textContent = before.report;
-      delete picker.dataset.kpContrastOk;
-      handles6.delete(picker);
-      delete picker.dataset.kpColorpickerAttached;
-    });
-  }
+  const made6 = [...root.querySelectorAll(PICKER3)].map((found) => (
+    /** @type {HTMLElement} */
+    found
+  )).filter((picker) => !(picker.dataset.kpColorpickerAttached !== void 0 || controllerOf(picker, ColorPickerController))).map((picker) => attachOne(picker, ColorPickerController, { followTheme })).filter((controller) => controller !== void 0);
   const detach = () => {
-    for (const c of cleanups) c();
+    for (const controller of made6) controller.destroy();
   };
-  return Object.assign(detach, { handles: created });
+  return Object.assign(detach, { handles: made6.map((controller) => controller.handle) });
 }
-var PICKER3, COLOR_EVENT, handles6;
+var PICKER3, CHANNELS, RATIO_DECIMALS, COLOR_EVENT, handles6, ColorPickerController;
 var init_colorpicker = __esm({
   "js/colorpicker.js"() {
     "use strict";
     init_contrast();
     init_strings();
+    init_controller();
     PICKER3 = "[data-kp-colorpicker]";
+    CHANNELS = ["h", "s", "l"];
+    RATIO_DECIMALS = 2;
     COLOR_EVENT = "kp-color-change";
     handles6 = /* @__PURE__ */ new WeakMap();
+    ColorPickerController = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.swatch = /** @type {HTMLElement | null} */
+        host.querySelector("[data-kp-swatch]");
+        this.value = /** @type {HTMLElement | null} */
+        host.querySelector("[data-kp-colorpicker-value]");
+        this.report = /** @type {HTMLElement | null} */
+        host.querySelector("[data-kp-colorpicker-contrast]");
+        const followTheme = this.options.followTheme !== false;
+        this.follow = host.dataset.kpFollowTheme === void 0 ? followTheme : host.dataset.kpFollowTheme !== "false";
+        this.before = {
+          swatch: this.swatch?.style.background ?? "",
+          value: this.value?.textContent ?? "",
+          report: this.report?.textContent ?? ""
+        };
+        this.handle = {
+          element: host,
+          get: () => this.update(false),
+          set: (colour) => this.setColour(colour),
+          measure: () => void this.update(false)
+        };
+      }
+      connect() {
+        const picker = this.host;
+        picker.dataset.kpColorpickerAttached = "";
+        this.own(() => {
+          delete picker.dataset.kpColorpickerAttached;
+        });
+        this.own(() => handles6.delete(picker));
+        this.own(() => this.restore());
+        const onInput = () => this.update(true);
+        for (const channel of CHANNELS) {
+          const input = this.slider(channel);
+          if (input) this.listen(input, "input", onInput);
+        }
+        if (this.follow) this.listen(document, "kp-theme-change", () => this.update(false));
+        this.update(false);
+        handles6.set(picker, this.handle);
+      }
+      /** Give the picker's parts back what they held before. */
+      restore() {
+        this.host.style.removeProperty("--kp-color");
+        if (this.swatch !== null) this.swatch.style.background = this.before.swatch;
+        if (this.value !== null) this.value.textContent = this.before.value;
+        if (this.report !== null) this.report.textContent = this.before.report;
+        delete this.host.dataset.kpContrastOk;
+      }
+      /**
+       * Read on every update rather than captured at attach: a consumer may point the measurement at another token (the card instead of
+       * the page) without detaching and reattaching the picker.
+       */
+      target() {
+        return this.host.dataset.kpAgainst ?? "--background";
+      }
+      level() {
+        return (
+          /** @type {'text' | 'large' | 'non-text'} */
+          this.host.dataset.kpAgainstKind ?? "text"
+        );
+      }
+      /** @param {string} channel */
+      slider(channel) {
+        return (
+          /** @type {HTMLInputElement | null} */
+          this.host.querySelector(`[data-kp-channel="${channel}"]`)
+        );
+      }
+      /** @returns {Hsl} */
+      read() {
+        return {
+          h: Number(this.slider("h")?.value ?? 0),
+          s: Number(this.slider("s")?.value ?? 0),
+          l: Number(this.slider("l")?.value ?? 0)
+        };
+      }
+      /** @param {Hsl | string} colour an object, or an hsl() string */
+      setColour(colour) {
+        const hsl2 = typeof colour === "string" ? parseHsl(colour) : colour;
+        if (hsl2 === null) return;
+        const h2 = this.slider("h");
+        const s2 = this.slider("s");
+        const l = this.slider("l");
+        if (h2) h2.value = String(hsl2.h);
+        if (s2) s2.value = String(hsl2.s);
+        if (l) l.value = String(hsl2.l);
+        this.update(true);
+      }
+      /**
+       * Paint the colour, measure it, and say the result.
+       * @param {boolean} announce
+       * @returns {ColourDetail}
+       */
+      update(announce4) {
+        const picker = this.host;
+        const colour = this.read();
+        const text = formatHsl(colour);
+        picker.style.setProperty("--kp-color", text);
+        if (this.swatch !== null) this.swatch.style.background = text;
+        if (this.value !== null) this.value.textContent = text;
+        const against = this.target();
+        const { ratio, ok } = this.measure(colour, against);
+        const detail = { value: text, ...colour, ratio, ok, against };
+        if (announce4) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
+        return detail;
+      }
+      /**
+       * Measure the colour against the token and write the report and the ok mark.
+       * @param {Hsl} colour
+       * @param {string} against
+       * @returns {{ ratio: number | null, ok: boolean | null }}
+       */
+      measure(colour, against) {
+        const picker = this.host;
+        const s2 = getStrings();
+        const ground = tokenColour(against);
+        if (ground === null) {
+          if (this.report !== null) this.report.textContent = s2.contrastMissing(against);
+          delete picker.dataset.kpContrastOk;
+          return { ratio: null, ok: null };
+        }
+        const ratio = contrast(hslToRgb(colour), ground);
+        const ok = meets(ratio, this.level());
+        if (this.report !== null) {
+          this.report.textContent = s2.contrastReport(ratio.toFixed(RATIO_DECIMALS), against, ok ? s2.contrastPasses : s2.contrastFails);
+        }
+        if (ok) picker.dataset.kpContrastOk = "";
+        else delete picker.dataset.kpContrastOk;
+        return { ratio, ok };
+      }
+    };
   }
 });
 

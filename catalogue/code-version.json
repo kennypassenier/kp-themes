@@ -22,7 +22,7 @@
         "js/claim.js": { "digest": "cbbd305c20d908fd", "when": "[data-kp-checklist-claim]" },
         "js/code-field.js": { "digest": "c1f1edf05fd0ca04", "when": "textarea[data-kp-code-field]" },
         "js/code.js": { "digest": "edc2a6259799b797", "when": "[data-kp-code]" },
-        "js/colorpicker.js": { "digest": "6792f52017de9605", "when": "[data-kp-colorpicker]" },
+        "js/colorpicker.js": { "digest": "7e36522e16a3e75c", "when": "[data-kp-colorpicker]" },
         "js/combobox.js": { "digest": "a9e082ef176acb02", "when": "[data-kp-combobox], select" },
         "js/command.js": { "digest": "5a8aae28e5329061", "when": "[data-kp-command]" },
         "js/compare.js": { "digest": "593b56b2dc26d88c", "when": "[data-kp-compare]" },
