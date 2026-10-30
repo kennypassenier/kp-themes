@@ -1,7 +1,5 @@
-/** The lists this module looks after. */
-export declare const CONTENTS = "[data-kp-contents]";
-/** Fired on the list, bubbling, when the current entry changes: `{ id, label, previous }`. */
-export declare const CONTENTS_EVENT = "kp-contents-change";
+export { CONTENTS, CONTENTS_EVENT } from './page-contents/values.js';
+export { contentsSlug, currentSection } from './page-contents/slug.js';
 export type ContentsItem = {
     /**
      * the section's `id`
@@ -34,20 +32,19 @@ export type ContentsHandle = {
      */
     setItems: (items: readonly ContentsItem[] | null) => void;
 };
-/** The id a heading's words make: lower case, letters and digits joined by hyphens. @param {string} text */
-export declare function contentsSlug(text: string): string;
 /**
- * Which entry is current: the first section (in page order) whose top has passed the offset line and whose bottom has not; with none,
- * the last one passed; and the last entry at the foot of the page. Pure.
- * @param {readonly { top: number, bottom: number }[]} boxes the sections' boxes, in page order, relative to the window
- * @param {number} offset the line, px from the top of the window
- * @param {boolean} atEnd the page is scrolled to its foot
- * @returns {number} the index, -1 for none
+ * @typedef {object} ContentsItem
+ * @property {string} id the section's `id`
+ * @property {string} label the entry's words
+ * @property {number} [level] 0 (default) for a section, 1 under it, and so on
+ * @property {string | number} [count] a small number or word after the label
  */
-export declare function currentSection(boxes: readonly {
-    top: number;
-    bottom: number;
-}[], offset: number, atEnd: boolean): number;
+/**
+ * @typedef {object} ContentsHandle
+ * @property {() => string | null} current the id of the current entry
+ * @property {() => void} refresh read the headings again now
+ * @property {(items: readonly ContentsItem[] | null) => void} setItems entries the page gives; null goes back to the headings
+ */
 /**
  * The handle of an attached list.
  * @param {Element} nav

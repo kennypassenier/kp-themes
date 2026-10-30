@@ -58687,17 +58687,32 @@ var init_code_field = __esm({
   }
 });
 
-// js/page-contents.js
-var page_contents_exports = {};
-__export(page_contents_exports, {
-  CONTENTS: () => CONTENTS,
-  CONTENTS_EVENT: () => CONTENTS_EVENT,
-  attachContents: () => attachContents,
-  contents: () => contents,
-  contentsSlug: () => contentsSlug,
-  currentSection: () => currentSection,
-  setContents: () => setContents
+// js/page-contents/values.js
+var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
+var init_values14 = __esm({
+  "js/page-contents/values.js"() {
+    "use strict";
+    CONTENTS = "[data-kp-contents]";
+    CONTENTS_EVENT = "kp-contents-change";
+    DEFAULT_OFFSET_PX = 80;
+    DEFAULT_MIN_ENTRIES = 2;
+    DEFAULT_HEADINGS = "h2";
+    WAIT_BARS = 3;
+    END_SLACK_PX = 2;
+    PANE_OFFSET_FRACTION = 4;
+    OPTION_ATTRIBUTES2 = [
+      "data-kp-contents-for",
+      "data-kp-contents-headings",
+      "data-kp-contents-min",
+      "data-kp-contents-title",
+      "data-kp-state",
+      "data-kp-contents-offset"
+    ];
+    PAGE_ATTRIBUTES = ["hidden", "id"];
+  }
 });
+
+// js/page-contents/slug.js
 function contentsSlug(text) {
   const slug = text.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   return slug || "section";
@@ -58711,271 +58726,424 @@ function currentSection(boxes, offset, atEnd) {
   });
   return found;
 }
-function attachOne3(nav) {
-  if (HANDLES3.has(nav)) return () => void 0;
-  const doc = nav.ownerDocument;
-  const view = (
-    /** @type {Window & typeof globalThis} */
-    doc.defaultView
-  );
-  const s2 = getStrings();
-  const id = nav.id || (nav.id = `kp-contents-${serial5 += 1}`);
-  nav.classList.add("kp-contents");
-  if (!nav.hasAttribute("aria-label") && !nav.hasAttribute("aria-labelledby")) nav.setAttribute("aria-label", s2.contentsLabel);
-  const title = doc.createElement("p");
-  title.className = "kp-contents__title";
-  title.id = `${id}-title`;
-  const list = doc.createElement("ol");
-  list.className = "kp-contents__list";
-  const wait = doc.createElement("div");
-  wait.className = "kp-contents__wait";
-  wait.setAttribute("aria-hidden", "true");
-  for (let i = 0; i < 3; i += 1) {
-    const bone = doc.createElement("span");
-    bone.className = "kp-skeleton kp-contents__bone";
-    wait.append(bone);
+var init_slug = __esm({
+  "js/page-contents/slug.js"() {
+    "use strict";
   }
-  nav.replaceChildren(title, list, wait);
-  let given2 = null;
-  let entries2 = [];
-  let current2 = null;
-  let raf = 0;
-  const lookup = (selector) => {
-    if (!selector) return null;
-    try {
-      for (let up = nav.parentElement; up; up = up.parentElement) {
-        const hit = up.querySelector(selector);
-        if (hit) return hit;
+});
+
+// js/page-contents/core.js
+var serial5, ContentsCore;
+var init_core11 = __esm({
+  "js/page-contents/core.js"() {
+    "use strict";
+    init_controller();
+    init_values14();
+    serial5 = 0;
+    ContentsCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host the nav
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.doc = host.ownerDocument;
+        this.view = /** @type {Window & typeof globalThis} */
+        this.doc.defaultView;
+        this.title = this.doc.createElement("p");
+        this.list = this.doc.createElement("ol");
+        this.wait = this.doc.createElement("div");
+        this.given = null;
+        this.entries = [];
+        this.current = null;
+        this.raf = 0;
+        this.pane = null;
+        this.onScroll = () => this.queueSpy();
       }
-      return doc.querySelector(selector);
-    } catch {
-      return null;
-    }
-  };
-  const scope = () => {
-    const found = lookup(nav.getAttribute("data-kp-contents-for"));
-    return found ?? nav.closest("body")?.querySelector("main") ?? doc.body;
-  };
-  const offset = () => {
-    const n = Number(nav.getAttribute("data-kp-contents-offset"));
-    return nav.hasAttribute("data-kp-contents-offset") && Number.isFinite(n) ? n : 80;
-  };
-  const least = () => {
-    const n = Number(nav.getAttribute("data-kp-contents-min"));
-    return nav.hasAttribute("data-kp-contents-min") && Number.isFinite(n) ? n : 2;
-  };
-  const scrollParent = (el16) => {
-    for (let up = el16.parentElement; up && up !== doc.body && up !== doc.documentElement; up = up.parentElement) {
-      const overflow = view.getComputedStyle(up).overflowY;
-      if ((overflow === "auto" || overflow === "scroll" || overflow === "overlay") && up.scrollHeight > up.clientHeight + 1) return up;
-    }
-    return null;
-  };
-  const scroller = () => {
-    const found = lookup(nav.getAttribute("data-kp-contents-scroller"));
-    if (found instanceof HTMLElement) return found;
-    const first = entries2[0]?.target;
-    return first ? scrollParent(first) : null;
-  };
-  const motion = () => view.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-  const read = () => {
-    if (given2) {
-      return given2.flatMap((item) => {
-        const target = (
-          /** @type {HTMLElement | null} */
-          lookup(`#${view.CSS.escape(item.id)}`)
-        );
-        return target ? [{ item, target }] : [];
-      });
-    }
-    const selector = nav.getAttribute("data-kp-contents-headings") || "h2";
-    let headings;
-    try {
-      headings = /** @type {HTMLElement[]} */
-      [...scope().querySelectorAll(selector)];
-    } catch {
-      headings = [];
-    }
-    headings = headings.filter((h2) => !nav.contains(h2) && !h2.hidden && (h2.textContent ?? "").trim() !== "");
-    const levels = headings.map((h2) => /^H[1-6]$/.test(h2.tagName) ? Number(h2.tagName[1]) : 2);
-    const top = Math.min(...levels);
-    const used = new Set([...doc.querySelectorAll("[id]")].map((e) => e.id));
-    return headings.map((target, i) => {
-      if (!target.id) {
+      /** The nav's id, made when it has none. */
+      ensureId() {
+        const nav = this.host;
+        return nav.id || (nav.id = `kp-contents-${serial5 += 1}`);
+      }
+      /** @param {ContentsEntry[]} entries @param {string | null} current */
+      setEntries(entries2, current2) {
+        this.entries = entries2;
+        this.current = current2;
+      }
+      /** @param {ContentsItem[] | null} items */
+      setGiven(items) {
+        this.given = items;
+      }
+      /** @param {string | null} id */
+      setCurrent(id) {
+        this.current = id;
+      }
+      /** @param {number} frame */
+      setFrame(frame3) {
+        this.raf = frame3;
+      }
+      /** @param {HTMLElement | null} pane */
+      setPane(pane) {
+        this.pane = pane;
+      }
+      /** Ask for a spy on the next frame. The spy overrides it. */
+      queueSpy() {
+      }
+      /**
+       * The element a selector names, looked for from the list outwards: the nearest ancestor that holds a match wins, so a page that shows
+       * the same markup twice (a copy in a dialog, a preview beside the page) is read from its own copy, not from the first one in the document.
+       * @param {string | null} selector
+       * @returns {Element | null}
+       */
+      lookup(selector) {
+        if (!selector) return null;
+        try {
+          for (let up = this.host.parentElement; up; up = up.parentElement) {
+            const hit = up.querySelector(selector);
+            if (hit) return hit;
+          }
+          return this.doc.querySelector(selector);
+        } catch {
+          return null;
+        }
+      }
+      /** Where the headings are. */
+      scope() {
+        const found = this.lookup(this.host.getAttribute("data-kp-contents-for"));
+        return found ?? this.host.closest("body")?.querySelector("main") ?? this.doc.body;
+      }
+      /** Px from the top of the window where a section counts as reached. */
+      offset() {
+        const n = Number(this.host.getAttribute("data-kp-contents-offset"));
+        return this.host.hasAttribute("data-kp-contents-offset") && Number.isFinite(n) ? n : DEFAULT_OFFSET_PX;
+      }
+      /** The fewest entries that earn a list. */
+      least() {
+        const n = Number(this.host.getAttribute("data-kp-contents-min"));
+        return this.host.hasAttribute("data-kp-contents-min") && Number.isFinite(n) ? n : DEFAULT_MIN_ENTRIES;
+      }
+      /** The nearest ancestor of `el` that scrolls vertically (below the page itself), or null. @param {Element} el @returns {HTMLElement | null} */
+      scrollParent(el16) {
+        const { doc, view } = this;
+        for (let up = el16.parentElement; up && up !== doc.body && up !== doc.documentElement; up = up.parentElement) {
+          const overflow = view.getComputedStyle(up).overflowY;
+          if ((overflow === "auto" || overflow === "scroll" || overflow === "overlay") && up.scrollHeight > up.clientHeight + 1) return up;
+        }
+        return null;
+      }
+      /** The box that scrolls the sections when they live in a pane of their own: the one the page names, else the one the first section sits in. @returns {HTMLElement | null} */
+      scroller() {
+        const found = this.lookup(this.host.getAttribute("data-kp-contents-scroller"));
+        if (found instanceof HTMLElement) return found;
+        const first = this.entries[0]?.target;
+        return first ? this.scrollParent(first) : null;
+      }
+      /** How a press scrolls: smoothly, unless the reader asked for less motion. */
+      motion() {
+        return this.view.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+      }
+    };
+  }
+});
+
+// js/page-contents/read.js
+var ContentsRead;
+var init_read5 = __esm({
+  "js/page-contents/read.js"() {
+    "use strict";
+    init_values14();
+    init_slug();
+    init_core11();
+    ContentsRead = class extends ContentsCore {
+      /** The entries the page gave, each with the section it names. @param {ContentsItem[]} given @returns {{ item: ContentsItem, target: HTMLElement }[]} */
+      readGiven(given2) {
+        return given2.flatMap((item) => {
+          const target = (
+            /** @type {HTMLElement | null} */
+            this.lookup(`#${this.view.CSS.escape(item.id)}`)
+          );
+          return target ? [{ item, target }] : [];
+        });
+      }
+      /** The headings that count: in the scope, not in the list, shown, with words. @returns {HTMLElement[]} */
+      headings() {
+        const selector = this.host.getAttribute("data-kp-contents-headings") || DEFAULT_HEADINGS;
+        let found;
+        try {
+          found = /** @type {HTMLElement[]} */
+          [...this.scope().querySelectorAll(selector)];
+        } catch {
+          found = [];
+        }
+        return found.filter((h2) => !this.host.contains(h2) && !h2.hidden && (h2.textContent ?? "").trim() !== "");
+      }
+      /** Give a heading an id from its words, one that no element has yet. @param {HTMLElement} target @param {Set<string>} used */
+      ensureHeadingId(target, used) {
+        if (target.id) return;
         const base = contentsSlug(target.textContent ?? "");
         let candidate = base;
         for (let n = 2; used.has(candidate); n += 1) candidate = `${base}-${n}`;
         target.id = candidate;
         used.add(candidate);
       }
-      return { item: { id: target.id, label: (target.textContent ?? "").trim(), level: Math.max(0, levels[i] - top) }, target };
-    });
-  };
-  const mark = (next2) => {
-    const previous = current2;
-    current2 = next2;
-    for (const { item, link } of entries2) {
-      const on = item.id === next2;
-      link.toggleAttribute("data-kp-current", on);
-      if (on) link.setAttribute("aria-current", "location");
-      else link.removeAttribute("aria-current");
-    }
-    if (previous !== next2 && next2 !== null) {
-      const hit = entries2.find((e) => e.item.id === next2);
-      nav.dispatchEvent(new CustomEvent(CONTENTS_EVENT, { bubbles: true, detail: { id: next2, label: hit?.item.label ?? "", previous } }));
-    }
-  };
-  const spy = () => {
-    raf = 0;
-    if (!entries2.length) return;
-    bindPane();
-    const own = scroller();
-    const root = own ?? doc.scrollingElement ?? doc.documentElement;
-    const atEnd = own ? own.scrollTop + own.clientHeight >= own.scrollHeight - 2 && own.scrollTop > 0 : root.scrollTop + view.innerHeight >= root.scrollHeight - 2 && root.scrollTop > 0;
-    const edge = own ? own.getBoundingClientRect().top : 0;
-    const at = currentSection(
-      entries2.map((e) => {
-        const box = e.target.getBoundingClientRect();
-        return { top: box.top - edge, bottom: box.bottom - edge };
-      }),
-      offset(),
-      atEnd
-    );
-    mark(at < 0 ? entries2[0]?.item.id ?? null : entries2[at].item.id);
-  };
-  const queueSpy = () => {
-    if (!raf) raf = view.requestAnimationFrame(spy);
-  };
-  const draw7 = () => {
-    const next2 = read();
-    const state12 = nav.getAttribute("data-kp-state");
-    title.hidden = nav.getAttribute("data-kp-contents-title") === "none";
-    title.textContent = s2.contentsTitle;
-    const signature2 = JSON.stringify(next2.map((e) => [e.item.id, e.item.label, e.item.level ?? 0, e.item.count ?? ""]));
-    wait.hidden = state12 !== "loading";
-    nav.toggleAttribute("aria-busy", state12 === "loading");
-    nav.hidden = state12 !== "loading" && next2.length < least();
-    if (nav.getAttribute("data-kp-contents-sig") === signature2) {
-      bindPane();
-      return queueSpy();
-    }
-    nav.setAttribute("data-kp-contents-sig", signature2);
-    entries2 = next2.map(({ item, target }) => {
-      const li = doc.createElement("li");
-      li.className = "kp-contents__item";
-      li.dataset.kpLevel = String(item.level ?? 0);
-      const link = doc.createElement("a");
-      link.className = "kp-contents__link";
-      link.href = `#${item.id}`;
-      const label = doc.createElement("span");
-      label.className = "kp-contents__label";
-      label.textContent = item.label;
-      link.append(label);
-      if (item.count !== void 0 && item.count !== "") {
-        const count2 = doc.createElement("span");
-        count2.className = "kp-contents__count";
-        count2.textContent = String(item.count);
-        link.append(count2);
+      /** The entries now: the items the page gave, else the headings, nested by their level. @returns {{ item: ContentsItem, target: HTMLElement }[]} */
+      read() {
+        if (this.given) return this.readGiven(this.given);
+        const headings = this.headings();
+        const levels = headings.map((h2) => /^H[1-6]$/.test(h2.tagName) ? Number(h2.tagName[1]) : 2);
+        const top = Math.min(...levels);
+        const used = new Set([...this.doc.querySelectorAll("[id]")].map((e) => e.id));
+        return headings.map((target, i) => {
+          this.ensureHeadingId(target, used);
+          return { item: { id: target.id, label: (target.textContent ?? "").trim(), level: Math.max(0, levels[i] - top) }, target };
+        });
       }
-      li.append(link);
-      return { item, target, link, li };
-    });
-    list.replaceChildren(.../** @type {any[]} */
-    entries2.map((e) => e.li));
-    current2 = null;
-    bindPane();
-    queueSpy();
-  };
-  const onClick = (raw) => {
-    const event = (
-      /** @type {MouseEvent} */
-      raw
-    );
-    const link = event.target instanceof Element ? event.target.closest(".kp-contents__link") : null;
-    if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const hit = entries2.find((e) => e.link === link);
-    if (!hit) return;
-    event.preventDefault();
-    const own = scroller();
-    if (own) {
-      const gap = hit.target.getBoundingClientRect().top - own.getBoundingClientRect().top - Math.min(offset(), own.clientHeight / 4);
-      own.scrollTo({ top: Math.max(0, own.scrollTop + gap), behavior: motion() });
-    } else hit.target.scrollIntoView({ behavior: motion(), block: "start" });
-    if (!hit.target.hasAttribute("tabindex") && !hit.target.matches("a[href], button, input, select, textarea, summary")) hit.target.tabIndex = -1;
-    hit.target.focus({ preventScroll: true });
-    if (nav.getAttribute("data-kp-contents-hash") !== "off") {
-      try {
-        view.history.replaceState(view.history.state, "", `#${hit.item.id}`);
-      } catch {
+    };
+  }
+});
+
+// js/page-contents/spy.js
+var ContentsSpy;
+var init_spy = __esm({
+  "js/page-contents/spy.js"() {
+    "use strict";
+    init_values14();
+    init_slug();
+    init_read5();
+    ContentsSpy = class extends ContentsRead {
+      /** Mark an entry as the current one and say so when it changed. @param {string | null} next */
+      mark(next2) {
+        const previous = this.current;
+        this.setCurrent(next2);
+        for (const { item, link } of this.entries) {
+          const on = item.id === next2;
+          link.toggleAttribute("data-kp-current", on);
+          if (on) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        }
+        if (previous !== next2 && next2 !== null) {
+          const hit = this.entries.find((e) => e.item.id === next2);
+          this.host.dispatchEvent(new CustomEvent(CONTENTS_EVENT, { bubbles: true, detail: { id: next2, label: hit?.item.label ?? "", previous } }));
+        }
       }
-    }
-    mark(hit.item.id);
-  };
-  nav.addEventListener("click", onClick);
-  view.addEventListener("scroll", queueSpy, { passive: true });
-  view.addEventListener("resize", queueSpy);
-  let pane = null;
-  const bindPane = () => {
-    const next2 = scroller();
-    if (next2 === pane) return;
-    pane?.removeEventListener("scroll", queueSpy);
-    pane = next2;
-    pane?.addEventListener("scroll", queueSpy, { passive: true });
-  };
-  const changes = new view.MutationObserver((records) => {
-    if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw7);
-  });
-  changes.observe(scope(), { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ["hidden", "id"] });
-  const options = new view.MutationObserver(draw7);
-  options.observe(nav, {
-    attributes: true,
-    attributeFilter: ["data-kp-contents-for", "data-kp-contents-headings", "data-kp-contents-min", "data-kp-contents-title", "data-kp-state", "data-kp-contents-offset"]
-  });
-  HANDLES3.set(nav, {
-    current: () => current2,
-    refresh: draw7,
-    setItems(items) {
-      given2 = items ? [...items] : null;
-      draw7();
-    }
-  });
-  draw7();
-  return () => {
-    view.cancelAnimationFrame(raf);
-    nav.removeEventListener("click", onClick);
-    view.removeEventListener("scroll", queueSpy);
-    view.removeEventListener("resize", queueSpy);
-    pane?.removeEventListener("scroll", queueSpy);
-    changes.disconnect();
-    options.disconnect();
-    nav.replaceChildren();
-    nav.removeAttribute("data-kp-contents-sig");
-    HANDLES3.delete(nav);
-  };
-}
+      /** Whether the page, or the pane the sections scroll in, is scrolled to its foot. @param {HTMLElement | null} own */
+      atEnd(own) {
+        const root = own ?? this.doc.scrollingElement ?? this.doc.documentElement;
+        return own ? own.scrollTop + own.clientHeight >= own.scrollHeight - END_SLACK_PX && own.scrollTop > 0 : root.scrollTop + this.view.innerHeight >= root.scrollHeight - END_SLACK_PX && root.scrollTop > 0;
+      }
+      /** Find the current section from the boxes of the sections and mark it. */
+      spy() {
+        this.setFrame(0);
+        if (!this.entries.length) return;
+        this.bindPane();
+        const own = this.scroller();
+        const edge = own ? own.getBoundingClientRect().top : 0;
+        const at = currentSection(
+          this.entries.map((e) => {
+            const box = e.target.getBoundingClientRect();
+            return { top: box.top - edge, bottom: box.bottom - edge };
+          }),
+          this.offset(),
+          this.atEnd(own)
+        );
+        this.mark(at < 0 ? this.entries[0]?.item.id ?? null : this.entries[at].item.id);
+      }
+      /** Ask for a spy on the next frame. */
+      queueSpy() {
+        if (!this.raf) this.setFrame(this.view.requestAnimationFrame(() => this.spy()));
+      }
+      /** A pane with its own scroll: its scroll does not bubble to the window, so it is listened to itself (and again when the sections move to another pane). */
+      bindPane() {
+        const next2 = this.scroller();
+        if (next2 === this.pane) return;
+        this.pane?.removeEventListener("scroll", this.onScroll);
+        this.setPane(next2);
+        this.pane?.addEventListener("scroll", this.onScroll, { passive: true });
+      }
+    };
+  }
+});
+
+// js/page-contents/draw.js
+var ContentsDraw;
+var init_draw9 = __esm({
+  "js/page-contents/draw.js"() {
+    "use strict";
+    init_spy();
+    init_strings();
+    ContentsDraw = class extends ContentsSpy {
+      /** One list item for an entry. @param {import('../page-contents.js').ContentsItem} item @param {HTMLElement} target @returns {ContentsEntry} */
+      entryFor(item, target) {
+        const doc = this.doc;
+        const li = doc.createElement("li");
+        li.className = "kp-contents__item";
+        li.dataset.kpLevel = String(item.level ?? 0);
+        const link = doc.createElement("a");
+        link.className = "kp-contents__link";
+        link.href = `#${item.id}`;
+        const label = doc.createElement("span");
+        label.className = "kp-contents__label";
+        label.textContent = item.label;
+        link.append(label);
+        if (item.count !== void 0 && item.count !== "") {
+          const count2 = doc.createElement("span");
+          count2.className = "kp-contents__count";
+          count2.textContent = String(item.count);
+          link.append(count2);
+        }
+        li.append(link);
+        return { item, target, link, li };
+      }
+      /** Read the entries again and draw them; unchanged entries only get a spy. */
+      draw() {
+        const nav = this.host;
+        const next2 = this.read();
+        const state12 = nav.getAttribute("data-kp-state");
+        this.title.hidden = nav.getAttribute("data-kp-contents-title") === "none";
+        this.title.textContent = getStrings().contentsTitle;
+        const signature2 = JSON.stringify(next2.map((e) => [e.item.id, e.item.label, e.item.level ?? 0, e.item.count ?? ""]));
+        this.wait.hidden = state12 !== "loading";
+        nav.toggleAttribute("aria-busy", state12 === "loading");
+        nav.hidden = state12 !== "loading" && next2.length < this.least();
+        if (nav.getAttribute("data-kp-contents-sig") === signature2) {
+          this.bindPane();
+          return this.queueSpy();
+        }
+        nav.setAttribute("data-kp-contents-sig", signature2);
+        const entries2 = next2.map(({ item, target }) => this.entryFor(item, target));
+        this.setEntries(entries2, null);
+        this.list.replaceChildren(...entries2.map((e) => e.li));
+        this.bindPane();
+        this.queueSpy();
+      }
+    };
+  }
+});
+
+// js/page-contents/controller.js
+var ContentsList;
+var init_controller28 = __esm({
+  "js/page-contents/controller.js"() {
+    "use strict";
+    init_values14();
+    init_draw9();
+    init_strings();
+    ContentsList = class extends ContentsDraw {
+      /**
+       * @param {HTMLElement} host the nav
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.handle = {
+          current: () => this.current,
+          refresh: () => this.draw(),
+          setItems: (items) => {
+            this.setGiven(items ? [...items] : null);
+            this.draw();
+          }
+        };
+      }
+      connect() {
+        const { host, view } = this;
+        const id = this.ensureId();
+        host.classList.add("kp-contents");
+        if (!host.hasAttribute("aria-label") && !host.hasAttribute("aria-labelledby")) host.setAttribute("aria-label", getStrings().contentsLabel);
+        this.build(id);
+        this.own(() => {
+          host.replaceChildren();
+          host.removeAttribute("data-kp-contents-sig");
+        });
+        this.listen(host, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(view, "scroll", this.onScroll, { passive: true });
+        this.listen(view, "resize", this.onScroll);
+        this.observe(
+          new view.MutationObserver((records) => {
+            if (records.some((r) => !host.contains(r.target))) queueMicrotask(() => this.draw());
+          })
+        ).observe(this.scope(), { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: PAGE_ATTRIBUTES });
+        this.observe(new view.MutationObserver(() => this.draw())).observe(host, { attributes: true, attributeFilter: OPTION_ATTRIBUTES2 });
+        this.own(() => this.pane?.removeEventListener("scroll", this.onScroll));
+        this.draw();
+        this.own(() => view.cancelAnimationFrame(this.raf));
+      }
+      /** The title, the list and the loading bars. @param {string} id */
+      build(id) {
+        const { title, list, wait } = this;
+        title.className = "kp-contents__title";
+        title.id = `${id}-title`;
+        list.className = "kp-contents__list";
+        wait.className = "kp-contents__wait";
+        wait.setAttribute("aria-hidden", "true");
+        for (let i = 0; i < WAIT_BARS; i += 1) {
+          const bone = this.doc.createElement("span");
+          bone.className = "kp-skeleton kp-contents__bone";
+          wait.append(bone);
+        }
+        this.host.replaceChildren(title, list, wait);
+      }
+      /** Scroll to a section: in its pane when it has one (the page does not move), else the page. @param {import('./core.js').ContentsEntry} hit */
+      scrollTo(hit) {
+        const own = this.scroller();
+        if (own) {
+          const gap = hit.target.getBoundingClientRect().top - own.getBoundingClientRect().top - Math.min(this.offset(), own.clientHeight / PANE_OFFSET_FRACTION);
+          own.scrollTo({ top: Math.max(0, own.scrollTop + gap), behavior: this.motion() });
+        } else hit.target.scrollIntoView({ behavior: this.motion(), block: "start" });
+      }
+      /** A press on an entry: scroll there, focus the heading, write the address, mark it. @param {MouseEvent} event */
+      onClick(event) {
+        const link = event.target instanceof Element ? event.target.closest(".kp-contents__link") : null;
+        if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const hit = this.entries.find((e) => e.link === link);
+        if (!hit) return;
+        event.preventDefault();
+        this.scrollTo(hit);
+        if (!hit.target.hasAttribute("tabindex") && !hit.target.matches("a[href], button, input, select, textarea, summary"))
+          hit.target.tabIndex = -1;
+        hit.target.focus({ preventScroll: true });
+        if (this.host.getAttribute("data-kp-contents-hash") !== "off") {
+          try {
+            this.view.history.replaceState(this.view.history.state, "", `#${hit.item.id}`);
+          } catch {
+          }
+        }
+        this.mark(hit.item.id);
+      }
+    };
+  }
+});
+
+// js/page-contents.js
+var page_contents_exports = {};
+__export(page_contents_exports, {
+  CONTENTS: () => CONTENTS,
+  CONTENTS_EVENT: () => CONTENTS_EVENT,
+  attachContents: () => attachContents,
+  contents: () => contents,
+  contentsSlug: () => contentsSlug,
+  currentSection: () => currentSection,
+  setContents: () => setContents
+});
 function contents(nav) {
-  return HANDLES3.get(nav) ?? null;
+  return controllerOf(nav, ContentsList)?.handle ?? null;
 }
 function setContents(nav, items) {
-  HANDLES3.get(nav)?.setItems(items);
+  contents(nav)?.setItems(items);
 }
 function attachContents(root = document) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof HTMLElement && root.matches(CONTENTS) ? [root] : [], ...root.querySelectorAll(CONTENTS)]
-  );
-  const undo = found.map((nav) => attachOne3(nav));
-  return () => undo.forEach((u) => u());
+  return attachAll(root, CONTENTS, ContentsList);
 }
-var CONTENTS, CONTENTS_EVENT, HANDLES3, serial5;
 var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
-    init_strings();
-    CONTENTS = "[data-kp-contents]";
-    CONTENTS_EVENT = "kp-contents-change";
-    HANDLES3 = /* @__PURE__ */ new WeakMap();
-    serial5 = 0;
+    init_controller();
+    init_controller28();
+    init_values14();
+    init_values14();
+    init_slug();
   }
 });
 
@@ -59659,7 +59827,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -59866,7 +60034,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller28();
+    init_controller29();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -59960,13 +60128,13 @@ function monthSummary(days) {
   return s2.weekdaysOnThe(joinWords(parts2));
 }
 function weekdays(element) {
-  return HANDLES4.get(element) ?? null;
+  return HANDLES3.get(element) ?? null;
 }
 function weekdaysOf(element) {
-  return HANDLES4.get(element)?.values() ?? [];
+  return HANDLES3.get(element)?.values() ?? [];
 }
 function setWeekdays(element, values) {
-  HANDLES4.get(element)?.set(values);
+  HANDLES3.get(element)?.set(values);
 }
 function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: weekOption } = {}) {
   const cleanups = [];
@@ -59978,7 +60146,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     ]
   );
   for (const el16 of found) {
-    if (HANDLES4.has(el16)) continue;
+    if (HANDLES3.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-weekdays-${++seq3}`;
@@ -60107,12 +60275,12 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     set(initial);
     paint12();
     const handle = { element: el16, values, set, summary: words3, valid };
-    HANDLES4.set(el16, handle);
+    HANDLES3.set(el16, handle);
     cleanups.push(() => {
       group.removeEventListener(SEGMENTED_EVENT, onChips);
       quick.removeEventListener("click", onPreset);
       detachSegmented();
-      HANDLES4.delete(el16);
+      HANDLES3.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-describedby");
       el16.removeAttribute("aria-invalid");
@@ -60123,7 +60291,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     for (const c of cleanups) c();
   };
 }
-var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES4, seq3;
+var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES3, seq3;
 var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
@@ -60140,7 +60308,7 @@ var init_weekdays = __esm({
       every: [0, 1, 2, 3, 4, 5, 6]
     };
     NAMES2 = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-    HANDLES4 = /* @__PURE__ */ new WeakMap();
+    HANDLES3 = /* @__PURE__ */ new WeakMap();
     seq3 = 0;
   }
 });
@@ -60188,8 +60356,8 @@ function severityWord2(key) {
     { critical: s2.quietCritical, warning: s2.quietWarning, info: s2.quietInfo, ok: s2.quietOk }[key] ?? key
   );
 }
-function attachOne4(root) {
-  if (HANDLES5.has(root)) return () => void 0;
+function attachOne3(root) {
+  if (HANDLES4.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
   const id = root.id || (root.id = `kp-quiet-${serial6 += 1}`);
@@ -60354,7 +60522,7 @@ function attachOne4(root) {
     paint12();
   });
   watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
-  HANDLES5.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
+  HANDLES4.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
   return () => {
     root.removeEventListener(TIME_EVENT, onTime);
     root.removeEventListener(WEEKDAYS_EVENT, onDays);
@@ -60362,24 +60530,24 @@ function attachOne4(root) {
     through.removeEventListener("change", changed2);
     watch2.disconnect();
     root.replaceChildren();
-    HANDLES5.delete(root);
+    HANDLES4.delete(root);
   };
 }
 function quietValue(el16) {
-  return HANDLES5.get(el16)?.value() ?? null;
+  return HANDLES4.get(el16)?.value() ?? null;
 }
 function setQuiet(el16, value) {
-  HANDLES5.get(el16)?.set({ ...HANDLES5.get(el16)?.value() ?? DEFAULT, ...value });
+  HANDLES4.get(el16)?.set({ ...HANDLES4.get(el16)?.value() ?? DEFAULT, ...value });
 }
 function attachQuietHours(root = document) {
   const found = (
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(QUIET) ? [root] : [], ...root.querySelectorAll(QUIET)]
   );
-  const undo = found.map((el16) => attachOne4(el16));
+  const undo = found.map((el16) => attachOne3(el16));
   return () => undo.forEach((u) => u());
 }
-var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES5;
+var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES4;
 var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
@@ -60392,13 +60560,13 @@ var init_quiet_hours = __esm({
     ["critical", "warning", "info", "ok"];
     DEFAULT = { on: false, from: "22:00", to: "07:00", days: [0, 1, 2, 3, 4, 5, 6], through: ["critical"] };
     serial6 = 0;
-    HANDLES5 = /* @__PURE__ */ new WeakMap();
+    HANDLES4 = /* @__PURE__ */ new WeakMap();
   }
 });
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -60489,7 +60657,7 @@ var init_build11 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values14();
+    init_values15();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -60522,7 +60690,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values14();
+    init_values15();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -60531,13 +60699,13 @@ var init_title = __esm({
 
 // js/question-card/core.js
 var QuestionCore;
-var init_core11 = __esm({
+var init_core12 = __esm({
   "js/question-card/core.js"() {
     "use strict";
     init_controller();
     init_freshness();
     init_strings();
-    init_values14();
+    init_values15();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -60654,9 +60822,9 @@ var init_run3 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values14();
+    init_values15();
     init_title();
-    init_core11();
+    init_core12();
     QuestionRun = class extends QuestionCore {
       /**
        * @param {HTMLElement} host the card
@@ -60815,7 +60983,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values14();
+    init_values15();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -60866,13 +61034,13 @@ var init_question_card = __esm({
     init_build11();
     init_run3();
     init_spec();
-    init_values14();
-    init_values14();
+    init_values15();
+    init_values15();
   }
 });
 
 // js/feed/constants.js
-var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, ANNOUNCE_GAP_MS, HOUR_MS2, YESTERDAY_PROBES_H, DEFAULT_DAY_LEVEL, MIN_DAY_LEVEL, MAX_DAY_LEVEL, SKELETON_DAYS, SKELETON_ROWS, MOMENT_CLOCK_AT, MOMENT_DATE_LENGTH, OPTION_ATTRIBUTES2, OPTIONS4;
+var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, ANNOUNCE_GAP_MS, HOUR_MS2, YESTERDAY_PROBES_H, DEFAULT_DAY_LEVEL, MIN_DAY_LEVEL, MAX_DAY_LEVEL, SKELETON_DAYS, SKELETON_ROWS, MOMENT_CLOCK_AT, MOMENT_DATE_LENGTH, OPTION_ATTRIBUTES3, OPTIONS4;
 var init_constants30 = __esm({
   "js/feed/constants.js"() {
     "use strict";
@@ -60899,7 +61067,7 @@ var init_constants30 = __esm({
     SKELETON_ROWS = 4;
     MOMENT_CLOCK_AT = 11;
     MOMENT_DATE_LENGTH = 10;
-    OPTION_ATTRIBUTES2 = /** @type {const} */
+    OPTION_ATTRIBUTES3 = /** @type {const} */
     {
       group: "data-kp-feed-group",
       summary: "data-kp-feed-summary",
@@ -60912,7 +61080,7 @@ var init_constants30 = __esm({
       max: "data-kp-feed-max",
       level: "data-kp-feed-level"
     };
-    OPTIONS4 = Object.values(OPTION_ATTRIBUTES2);
+    OPTIONS4 = Object.values(OPTION_ATTRIBUTES3);
   }
 });
 
@@ -61010,7 +61178,7 @@ var init_options4 = __esm({
     init_strings();
     init_freshness();
     init_constants30();
-    optionAttr = (el16, name) => el16.getAttribute(OPTION_ATTRIBUTES2[name]) ?? "";
+    optionAttr = (el16, name) => el16.getAttribute(OPTION_ATTRIBUTES3[name]) ?? "";
     dayKey3 = (ms, zone) => agoMoment(ms, zone).slice(0, MOMENT_DATE_LENGTH).split("/").reverse().join("-");
   }
 });
@@ -61391,7 +61559,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -61550,7 +61718,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller29();
+    init_controller30();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -61981,7 +62149,7 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -62122,7 +62290,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller30();
+    init_controller31();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -62290,7 +62458,7 @@ function wordsOf4(m, value) {
   return label ?? s2.ratingOutOf(plain(value), m.max);
 }
 var attr5, itemName, disabled, readonly, state8, interactive, focusable, announceLevel;
-var init_read5 = __esm({
+var init_read6 = __esm({
   "js/rating/read.js"() {
     "use strict";
     init_strings();
@@ -62416,7 +62584,7 @@ var init_paint10 = __esm({
   "js/rating/paint.js"() {
     "use strict";
     init_strings();
-    init_read5();
+    init_read6();
     init_math4();
   }
 });
@@ -62531,7 +62699,7 @@ var init_commit = __esm({
     init_undo_toast();
     init_constants31();
     init_paint10();
-    init_read5();
+    init_read6();
     init_math4();
   }
 });
@@ -62577,14 +62745,14 @@ var init_keys12 = __esm({
     "use strict";
     init_math4();
     init_commit();
-    init_read5();
+    init_read6();
     starNumber = (target) => target instanceof HTMLElement ? Number(target.closest(".kp-rating__star")?.getAttribute("data-kp-star")) : 0;
   }
 });
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -62595,7 +62763,7 @@ var init_controller31 = __esm({
     init_keys12();
     init_math4();
     init_paint10();
-    init_read5();
+    init_read6();
     REDRAW = ["data-kp-rating-max", "data-kp-rating-step", "data-kp-rating-mode"];
     WATCHED6 = [
       ...REDRAW,
@@ -62854,7 +63022,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller31();
+    init_controller32();
     init_build12();
     init_commit();
     init_math4();
@@ -63142,7 +63310,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -63375,7 +63543,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller32();
+    init_controller33();
     init_list4();
     init_render4();
   }
@@ -64818,7 +64986,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -65009,7 +65177,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller33();
+    init_controller34();
     init_group6();
     init_group6();
   }
@@ -65017,7 +65185,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -65086,7 +65254,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values15();
+    init_values16();
   }
 });
 
@@ -65100,12 +65268,12 @@ function toneMap(text) {
   return map;
 }
 var shown4, near, ChipCore;
-var init_core12 = __esm({
+var init_core13 = __esm({
   "js/version-delta/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values15();
+    init_values16();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -65190,8 +65358,8 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values15();
-    init_core12();
+    init_values16();
+    init_core13();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
       markChip(v) {
@@ -65298,10 +65466,10 @@ var init_view4 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values15();
+    init_values16();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -65405,9 +65573,9 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller34();
-    init_values15();
-    init_values15();
+    init_controller35();
+    init_values16();
+    init_values16();
     init_level();
     init_links2();
   }
@@ -65415,7 +65583,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -65482,11 +65650,11 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core13 = __esm({
+var init_core14 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values16();
+    init_values17();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -65597,8 +65765,8 @@ var init_rows4 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values16();
-    init_core13();
+    init_values17();
+    init_core14();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -65700,16 +65868,16 @@ var init_rows4 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values16();
+    init_values17();
     init_order();
-    init_core13();
+    init_core14();
     init_rows4();
     DependencyList = class extends DeplistRows {
       connect() {
@@ -65884,9 +66052,9 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller35();
-    init_values16();
-    init_values16();
+    init_controller36();
+    init_values17();
+    init_values17();
     init_order();
   }
 });
@@ -65932,10 +66100,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el16) {
-  return HANDLES6.get(el16) ?? null;
+  return HANDLES5.get(el16) ?? null;
 }
-function attachOne5(el16) {
-  if (HANDLES6.has(el16)) return () => void 0;
+function attachOne4(el16) {
+  if (HANDLES5.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-trace");
@@ -66073,10 +66241,10 @@ function attachOne5(el16) {
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES6.set(el16, handle);
+  HANDLES5.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES6.delete(el16);
+    HANDLES5.delete(el16);
   });
   const watch2 = new MutationObserver(draw7);
   watch2.observe(el16, {
@@ -66118,14 +66286,14 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne5(el16));
+  const undo = found.map((el16) => attachOne4(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES6.has(el16)) attachOne5(el16);
-  HANDLES6.get(el16)?.set(hops);
+  if (!HANDLES5.has(el16)) attachOne4(el16);
+  HANDLES5.get(el16)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES6, made5;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES5, made5;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -66139,7 +66307,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES6 = /* @__PURE__ */ new WeakMap();
+    HANDLES5 = /* @__PURE__ */ new WeakMap();
     made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -67051,7 +67219,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -67390,7 +67558,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts9();
-    init_values17();
+    init_values18();
   }
 });
 
@@ -67400,7 +67568,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values17();
+    init_values18();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -67520,7 +67688,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values17();
+    init_values18();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -67795,7 +67963,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -68048,7 +68216,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller36();
+    init_controller37();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -68394,7 +68562,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -68699,7 +68867,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller37();
+    init_controller38();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -68837,7 +69005,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -68910,7 +69078,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values18();
+    init_values19();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -69182,7 +69350,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values18();
+    init_values19();
   }
 });
 
@@ -69219,13 +69387,13 @@ var init_keys13 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core14 = __esm({
+var init_core15 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values18();
+    init_values19();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -69341,9 +69509,9 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values18();
+    init_values19();
     init_kinds();
-    init_core14();
+    init_core15();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -69512,7 +69680,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values18();
+    init_values19();
     init_kinds();
     init_keys13();
     init_run4();
@@ -69634,8 +69802,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values18();
-    init_values18();
+    init_values19();
+    init_values19();
     init_kinds();
     init_glyph();
     init_open3();
@@ -70536,7 +70704,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -70675,7 +70843,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build13 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values19();
+    init_values20();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -70689,13 +70857,13 @@ var init_build13 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core15 = __esm({
+var init_core16 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build13();
-    init_values19();
+    init_values20();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -70810,12 +70978,12 @@ var init_core15 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build13();
-    init_core15();
-    init_values19();
+    init_core16();
+    init_values20();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -71040,9 +71208,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller38();
-    init_values19();
-    init_values19();
+    init_controller39();
+    init_values20();
+    init_values20();
   }
 });
 
@@ -71208,7 +71376,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -71437,7 +71605,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller39();
+    init_controller40();
     init_fields();
     init_fields();
   }
@@ -71777,7 +71945,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -72028,7 +72196,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller40();
+    init_controller41();
   }
 });
 
@@ -72097,13 +72265,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES7.get(element) ?? null;
+  return HANDLES6.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES7.get(element)?.set(times, options);
+  HANDLES6.get(element)?.set(times, options);
 }
 function setRunsState(element, state12, options) {
-  HANDLES7.get(element)?.setState(state12, options);
+  HANDLES6.get(element)?.setState(state12, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -72112,7 +72280,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES7.has(el16)) continue;
+    if (HANDLES6.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq6}`;
@@ -72261,7 +72429,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state12
     };
-    HANDLES7.set(el16, handle);
+    HANDLES6.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -72282,7 +72450,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button6.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES7.delete(el16);
+      HANDLES6.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -72292,7 +72460,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES7, seq6;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES6, seq6;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -72307,7 +72475,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES7 = /* @__PURE__ */ new WeakMap();
+    HANDLES6 = /* @__PURE__ */ new WeakMap();
     seq6 = 0;
   }
 });
@@ -72633,7 +72801,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -72892,7 +73060,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller41();
+    init_controller42();
     init_choices();
   }
 });
@@ -73740,7 +73908,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 var SIDE_ROOM;
-var init_draw9 = __esm({
+var init_draw10 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
@@ -73827,7 +73995,7 @@ var init_api26 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
-    init_draw9();
+    init_draw10();
     init_view5();
   }
 });
@@ -74258,7 +74426,7 @@ var init_attach20 = __esm({
     init_api26();
     init_options5();
     init_layout3();
-    init_draw9();
+    init_draw10();
     init_view5();
   }
 });
@@ -77455,7 +77623,7 @@ function drawCanvas(root, m) {
   return canvas;
 }
 var QUIET2, THEME_CONTRAST, CANVAS_SCALE, CANVAS_SCALE_MIN;
-var init_draw10 = __esm({
+var init_draw11 = __esm({
   "js/qr/draw.js"() {
     "use strict";
     init_matrix2();
@@ -77645,7 +77813,7 @@ var init_render6 = __esm({
     init_reason();
     init_state_plate();
     init_strings();
-    init_draw10();
+    init_draw11();
     init_matrix2();
     init_state28();
     TIMER_MAX_MS = 2 ** 31 - 1;
@@ -77746,7 +77914,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -77850,7 +78018,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_state28();
     init_state28();
     init_matrix2();
@@ -80115,7 +80283,7 @@ function textOf3(text, segments) {
   return node;
 }
 var kindOf4;
-var init_read6 = __esm({
+var init_read7 = __esm({
   "js/diff/read.js"() {
     "use strict";
     init_constants43();
@@ -80229,7 +80397,7 @@ var init_lines2 = __esm({
     init_constants43();
     init_fold2();
     init_model11();
-    init_read6();
+    init_read7();
     init_words4();
   }
 });
@@ -80410,7 +80578,7 @@ var init_file = __esm({
     init_strings();
     init_lines2();
     init_model11();
-    init_read6();
+    init_read7();
     init_state31();
   }
 });
@@ -80513,7 +80681,7 @@ var init_render7 = __esm({
     init_reason();
     init_file();
     init_model11();
-    init_read6();
+    init_read7();
   }
 });
 
@@ -80581,7 +80749,7 @@ var init_actions7 = __esm({
     init_file();
     init_lines2();
     init_model11();
-    init_read6();
+    init_read7();
     init_render7();
   }
 });
@@ -80686,7 +80854,7 @@ var init_attach25 = __esm({
     init_constants43();
     init_lines2();
     init_model11();
-    init_read6();
+    init_read7();
     init_render7();
   }
 });
@@ -82912,8 +83080,6 @@ export {
   CONNECTION_RETRY_EVENT,
   CONNECTION_STATES,
   CONNECTION_STATE_EVENT,
-  CONTENTS,
-  CONTENTS_EVENT,
   DEFAULT_THEME,
   DISABLED_REASON,
   EFFECTS_ATTRIBUTE,
@@ -83142,12 +83308,10 @@ export {
   connectionOf,
   console_exports as consoleExports,
   contents,
-  contentsSlug,
   contrast,
   contrast_exports as contrastExports,
   countdown_exports as countdownExports,
   createListbox,
-  currentSection,
   datatable_exports as datatableExports,
   dated_options_exports as datedOptionsExports,
   datepicker_exports as datepickerExports,

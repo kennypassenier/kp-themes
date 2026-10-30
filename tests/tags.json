@@ -329,6 +329,7 @@
             "why": "quiet hours composed of the time field and the weekday picker [wish-1120]"
         },
         { "path": "js/page-contents.js", "tags": ["@component:navigation"], "why": "an on-this-page list with scroll-spy [wish-1120]" },
+        { "path": "js/page-contents/*.js", "tags": ["@component:navigation"], "why": "an on-this-page list with scroll-spy [wish-1120]" },
         { "path": "js/code-field.js", "tags": ["@component:field"], "why": "a config-file text box with line, column and an error line [wish-1120]" },
         { "path": "js/code-field/*.js", "tags": ["@component:field"], "why": "a config-file text box with line, column and an error line [wish-1120]" },
         { "path": "js/markdown.js", "tags": ["@component:feedback"], "why": "a safe markdown reader for release notes [wish-1120]" },
