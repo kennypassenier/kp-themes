@@ -160,6 +160,8 @@ concatenates that file into `css/themes.css`.
 | `segmented-toolbar/`            | Segmented control, filter chips, list toolbar, key line (2 parts)                |
 | `sentence-form.css`             | Sentence form                                                                    |
 | `sequencer.css`                 | The editable timeline                                                            |
+| `accept-follows.css`            | The line that says why a quantity-following button is off                        |
+| `segmented-link.css`            | Chips tied to a field                                                            |
 | `attention-more.css`            | The attention band's cap                                                         |
 | `badge-run.css`                 | A run of badges that wraps                                                       |
 | `datatable-columns.css`         | A table's actions column and card threshold                                      |

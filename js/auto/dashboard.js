@@ -85,6 +85,8 @@ export const DASHBOARD_NEEDS = [
     { name: 'checklist', when: '[data-kp-checklist]', load: () => import('../checklist.js'), attach: (m, root) => [m.attachChecklists(root)] },
     // A quantity with minus and plus, the kitchen timers, the checklist, one step at a time and the wheel [kpadopt4].
     { name: 'quantity', when: '[data-kp-quantity]', load: () => import('../quantity.js'), attach: (m, root) => [m.attachQuantities(root)] },
+    // A button whose words follow a quantity in its dialog: "Add 3 boxes" [mc-r2].
+    { name: 'accept-follows', when: '[data-kp-accept-follows]', load: () => import('../accept-follows.js'), attach: (m, root) => [m.attachAcceptFollows(root)] },
     { name: 'toolbar', when: '[data-kp-toolbar]', load: () => import('../toolbar.js'), attach: (m, root) => [m.attachToolbars(root)] },
     { name: 'keys', when: '.kp-kbd[data-kp-key]', load: () => import('../keys.js'), attach: (m, root) => [m.attachKeys(root)] },
 ];

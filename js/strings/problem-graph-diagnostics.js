@@ -61,6 +61,7 @@
  * @property {string} triHint  The line under a three-way group while nothing is chosen [kpadopt4]
  * @property {(include: string[], exclude: string[]) => string} triSummary  The same line once something is chosen [kpadopt4]
  * @property {string} triCleared  What a three-way group says after Clear all [kpadopt4]
+ * @property {(n: number) => string} segmentedSearchAll  The placeholder of a field whose chips are only its most used choices: "Search all 9" (js/segmented/link.js) [mc-r2]
  */
 
 /** @type {ProblemGraphDiagnosticsStrings} */
@@ -149,4 +150,5 @@ export const PROBLEM_GRAPH_DIAGNOSTICS_STRINGS = {
         return line.charAt(0).toUpperCase() + line.slice(1);
     },
     triCleared: 'Every filter is let go.',
+    segmentedSearchAll: (n) => `Search all ${n}`,
 };

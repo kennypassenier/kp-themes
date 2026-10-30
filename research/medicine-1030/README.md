@@ -1,18 +1,14 @@
 # research/medicine-1030: the Medicine Cabinet package
 
 Kenny approved all thirteen items of `~/Projects/kp-gaps/medicine-cabinet-workpackage.md` on 2026-10-30 20:05 (item 13 of the app's list, the chassis-rs wiring of
-`attachSegmented`, is not here). One bundled review page, formal only (DEMO_RULES ch. 6: a new demo starts in formal), one section per item, the five fixes with a
-Before and an After. Branch `theme/mc-1030`. Round `medicine-1030-<uuid>` is written by the builder.
+`attachSegmented`, is not here). Round 1 (page round `medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5`) was judged 2026-10-31 00:01: eleven approved, two not
+(`VERDICTS.json`). **Round 2** shows only those two, formal only (DEMO_RULES ch. 6), and keeps round 1 in `_previous/`:
 
-| Topic | Sections (work package item) |
-| --- | --- |
-| The Cabinet list | list-row (1), quantity-fill (2), badge-run (5) |
-| Today | attention-max (4), header-updated (13, fix) |
-| The medicine form | row-editor (3), pills-none (8) |
-| Dialogs and managed tables | dialogs (6), table-columns (7) |
-| Fixes in the package | fix-text-align (9), fix-card-gap (10), fix-error-line (11), fix-switch-state (12) |
+| Section | Kenny's note | What changed |
+| --- | --- | --- |
+| pills-none (item 8) | the pill and the field must follow each other both ways; if every symptom is a pill, why a field? | the link never connected (fixed); pills are the most used choices (`data-kp-segmented-top`), the field only exists when there are more choices than pills |
+| dialogs (item 6) | the button's text should follow the amount | `data-kp-accept-follows`: "Add 20 tablets", off with its reason at 0 |
 
-The data is the app's own shape (medicines, doses, symptoms, forms of medicine), with mock names, counts and times. The width control of every section sets the stage to
-a phone's 390 px; the components answer the width of their own container.
+The data is the app's own shape (symptoms, forms of medicine), with mock names and counts. The width control of each section sets the stage to a phone's 390 px.
 
-**Generated** by `node research/medicine-1030/build.mjs` (edit the builder, never the page).
+**Generated** by `node research/medicine-1030/build.mjs` (edit the builder, never the page). The builder holds only the two open sections; round 1 is in git history.

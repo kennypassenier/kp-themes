@@ -156,6 +156,10 @@ export type ProblemGraphDiagnosticsStrings = {
      * What a three-way group says after Clear all [kpadopt4]
      */
     triCleared: string;
+    /**
+     * The placeholder of a field whose chips are only its most used choices: "Search all 9" (js/segmented/link.js) [mc-r2]
+     */
+    segmentedSearchAll: (n: number) => string;
 };
 /**
  * @typedef {object} ProblemGraphDiagnosticsStrings
@@ -218,6 +222,7 @@ export type ProblemGraphDiagnosticsStrings = {
  * @property {string} triHint  The line under a three-way group while nothing is chosen [kpadopt4]
  * @property {(include: string[], exclude: string[]) => string} triSummary  The same line once something is chosen [kpadopt4]
  * @property {string} triCleared  What a three-way group says after Clear all [kpadopt4]
+ * @property {(n: number) => string} segmentedSearchAll  The placeholder of a field whose chips are only its most used choices: "Search all 9" (js/segmented/link.js) [mc-r2]
  */
 /** @type {ProblemGraphDiagnosticsStrings} */
 export declare const PROBLEM_GRAPH_DIAGNOSTICS_STRINGS: ProblemGraphDiagnosticsStrings;

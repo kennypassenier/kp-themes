@@ -1,4 +1,22 @@
 {
     "demo": "medicine-1030",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5",
+            "allJudged": true,
+            "notApproved": [
+                {
+                    "item": "pills-none",
+                    "theme": "formal",
+                    "note": "I think when selecting an option from for example symptoms from the text box, the button needs to be selected as well, same the other way around, but if all symptoms are listed as buttons, I don't see why the inputbox would still be relevant?"
+                },
+                {
+                    "item": "dialogs",
+                    "theme": "formal",
+                    "note": "When increasing/decreasing the amount with the controls, the text on the button should reflect that change right? or it could just say \"add amount\" or something similar"
+                }
+            ]
+        }
+    ]
 }

@@ -20,7 +20,8 @@ each line its example and its option row, and empties the list.
   - new utility `.kp-badges` (knob `--kp-badges-min`).
   - dialog width steps `kp-dialog--narrow`, `kp-dialog--wider` (knobs `--kp-dialog-narrow`, `--kp-dialog-wider`); `openConfirmation` options `description` (a node or nodes) and `acceptLook: 'primary'`, `acceptLabel` for a plain confirmation.
   - datatable: `data-kp-cards-at`, `data-kp-col="actions"`, `.kp-table__actions`, knobs `--kp-actions-width`, `--kp-actions-button`; `attachCardsAt`, `attachTableActionColumns`.
-  - segmented: `data-kp-segmented="single-or-none"` and `data-kp-segmented-for="<combobox id>"`.
+  - segmented: `data-kp-segmented="single-or-none"` and `data-kp-segmented-for="<combobox id>"`; round 2: `data-kp-segmented-top` (`<n>` or `all`, chips from the field's most used options, `data-kp-uses`), `data-kp-segmented-field="always"`, the field left out while every choice is a chip.
+  - accept-follows: `data-kp-accept-follows="<quantity id>"`, `data-kp-accept-verb`, `data-kp-accept-min`, `attachAcceptFollows`, `openConfirmation` options `acceptFollows` / `acceptVerb`, knobs `--kp-accept-reason-size`, `--kp-accept-disabled-opacity`.
   - fixes with options: `data-kp-formgrid-align="center"` (typed text starts at the start edge now), `data-kp-formgrid-errors="flow"` (the error line is reserved now), `--kp-card-form-gap`, `data-kp-switch-state="none"` (and an empty state word takes no track), `.kp-page-header__updated` (knob `--kp-page-header-updated-width`).
 
 (Nothing waits. The pass of 2026-10-29, on Kenny's go "components-page: Nu bijwerken", brought every line onto its page, with the new pages

@@ -34687,6 +34687,35 @@
     }
 }
 @layer kp.components {
+    /* --- A button that follows a quantity [mc-r2] ---
+     * The reason a button is off ("Choose how many boxes first.") stands under the quantity it follows, in the field's help style but in the
+     * running ink, since it is what the person must read. The line is always one line high, empty while the button is on, so showing it moves
+     * nothing. The button itself reads as off at a glance: the primary button's disabled colour is close to its live one in some registers, so
+     * this button also dims (`--kp-accept-disabled-opacity`, 0.55). Knobs [KT6]: `--kp-accept-reason-size` (the help size). */
+    .kp-accept-reason {
+        min-block-size: 1lh;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--foreground);
+        font-size: var(--kp-accept-reason-size, var(--kp-field-help-size, 0.8rem));
+    }
+
+    .kp-button[data-kp-accept-follows]:disabled {
+        opacity: var(--kp-accept-disabled-opacity, 0.55);
+    }
+}
+@layer kp.components {
+    /* --- Chips tied to a field [mc-r2] ---
+     * A combobox is `display: flow-root`, which beats the browser's `[hidden]`. The field is left out while every choice is a chip
+     * (js/segmented/link.js), so a hidden combobox must really go. The chips keep one rhythm under the field when both are shown. */
+    .kp-combobox[hidden] {
+        display: none;
+    }
+
+    .kp-combobox:not([hidden]) + .kp-segmented--chips[data-kp-segmented-for] {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+}
+@layer kp.components {
     /* --- The actions column and the card threshold [mc-1030, Medicine Cabinet gaps 17 and 18] ---
      * `data-kp-cards-at="30rem"` on a table (js/datatable.js): it stays a table until its own width is under that, instead of the 40rem the
      * cards answer to; it can lower the width, not raise it. While the table is wider, the script marks it `data-kp-cards-idle` and the table

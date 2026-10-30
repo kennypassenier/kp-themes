@@ -35,12 +35,16 @@
  * Rich content [mc-1030]: `description` may be a node or a list of nodes (several paragraphs, a list) in place of the dictionary's sentence,
  * and `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive (take a dose anyway, add stock).
  * `className: 'kp-dialog--wide'` gives it a wider step; the default is the narrow question width.
+ * A dialog whose body holds a quantity [mc-r2]: `acceptFollows` (the quantity's id, or the quantity itself) makes Confirm say what will happen with the
+ * amount chosen ("Add 3 boxes") and go off, with its reason, while the amount makes no sense; `acceptVerb` is the verb ("Add"). The two are written as
+ * `data-kp-accept-follows` / `data-kp-accept-verb` on Confirm, and the page wires them with `attachAcceptFollows(dialog)` (js/accept-follows.js) next
+ * to `attachQuantities(dialog)`: this module imports neither, so chassis's closure of six modules stays six.
  *
  * @param {HTMLElement} button the control the confirmation belongs to
- * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string }} [options]
+ * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string, acceptFollows?: string | HTMLElement, acceptVerb?: string }} [options]
  * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]
  */
-export declare function openConfirmation(button: HTMLElement, { phrase, description: richText, acceptLook, strings, onAccept, onCancel, className, initialFocus, dependents, blocked, typeName, anyCase, loses, acceptLabel }?: {
+export declare function openConfirmation(button: HTMLElement, { phrase, description: richText, acceptLook, strings, onAccept, onCancel, className, initialFocus, dependents, blocked, typeName, anyCase, loses, acceptLabel, acceptFollows, acceptVerb }?: {
     phrase?: string;
     description?: Node | readonly Node[] | string;
     acceptLook?: 'destructive' | 'primary';
@@ -55,6 +59,8 @@ export declare function openConfirmation(button: HTMLElement, { phrase, descript
     anyCase?: boolean;
     loses?: Node | readonly string[] | null;
     acceptLabel?: string;
+    acceptFollows?: string | HTMLElement;
+    acceptVerb?: string;
 }): HTMLDialogElement;
 /**
  * Wire every typed confirmation block a page put in its own dialog or form

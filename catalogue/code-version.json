@@ -1,7 +1,8 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "d42f32ca3d60e025",
+    "base": "d2162ddfa0a58619",
     "modules": {
+        "js/accept-follows.js": { "digest": "0fdf861ed688c68e", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "9979a93508a6cb63", "when": ".kp-action" },
         "js/actions.js": { "digest": "752ed11f9eed59e6", "when": ".kp-row-actions" },
@@ -27,7 +28,7 @@
         "js/command.js": { "digest": "5a8aae28e5329061", "when": "[data-kp-command]" },
         "js/compare.js": { "digest": "593b56b2dc26d88c", "when": "[data-kp-compare]" },
         "js/components.js": {
-            "digest": "1794284ac2bb34c0",
+            "digest": "38eb36aed7a6d742",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
         "js/connection.js": { "digest": "2175ad931a99f8f9", "when": "[data-kp-connection]" },
@@ -98,7 +99,7 @@
         "js/row-editor.js": { "digest": "1cd9a0c0219eef6e", "when": "[data-kp-rows]" },
         "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
         "js/runs.js": { "digest": "f8a2d79d94a9ea6e", "when": "[data-kp-runs]" },
-        "js/segmented.js": { "digest": "0d305c3a38707fba", "when": "[data-kp-segmented]" },
+        "js/segmented.js": { "digest": "553ecd43197c119f", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "a31499eaaf2be336", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "0c9a0472084b1b72", "when": "[data-kp-sentence]" },
         "js/sequencer.js": { "digest": "fcbfcdd9356781f7", "when": "[data-kp-sequencer]" },
@@ -7972,6 +7973,7 @@
         "||||-visible)": "cdfbaab940e6779e",
         "||||.gradient-text": "f06026d7ac99a1db",
         "||||.is-cursor": "5a9b295a4d87612f",
+        "||||.kp-accept-reason": "9d9b3850171dbc3d",
         "||||.kp-accordion__body": "badd73ac3fa8a35b",
         "||||.kp-accordion__item": "c3534b15e214c38e",
         "||||.kp-accordion__item--bare": "4001fd6d8b862f22",
@@ -8186,6 +8188,7 @@
         "||||.kp-button.kp-entity__star[data-kp-toggle][aria-pressed='true']": "bcb25d78eb5e62cc",
         "||||.kp-button:not()": "d3bf21e399f98913",
         "||||.kp-button[aria-disabled='true']": "77607470be614291",
+        "||||.kp-button[data-kp-accept-follows]": "ab514cf82f8be369",
         "||||.kp-button[data-kp-toggle]": "f96244ea9b127f9c",
         "||||.kp-button[data-kp-toggle][aria-busy='true']": "0c3bb6f70154e055",
         "||||.kp-button[data-kp-toggle][aria-pressed='mixed']": "d8a23de1a079e700",
@@ -8461,6 +8464,7 @@
         "||||.kp-colorpicker__swatch": "207cfe948bf5f639",
         "||||.kp-colorpicker__value": "9443b64ad010cc6f",
         "||||.kp-combobox": "8666065d9ebf7e44",
+        "||||.kp-combobox[hidden]": "8239a9e05a269803",
         "||||.kp-combobox__clear": "6c98a8e8cc34deba",
         "||||.kp-combobox__clear)": "947cd80457d00caf",
         "||||.kp-combobox__empty": "e75913407ecf892b",
@@ -10133,6 +10137,7 @@
         "||||.kp-segmented": "0bc985c1186568fa",
         "||||.kp-segmented--block": "16cad3f006ca83e4",
         "||||.kp-segmented--chips": "989ff2fcc40e20fb",
+        "||||.kp-segmented--chips[data-kp-segmented-for]": "132d2af800284eaf",
         "||||.kp-segmented.kp-week__steps": "f7405c3925ba583a",
         "||||.kp-segmented[aria-disabled='true']": "e7bc9108bc0e671a",
         "||||.kp-segmented[data-kp-segmented-overflow]": "2aec39d95e57619e",
@@ -11274,6 +11279,8 @@
         "button": {
             "modules": "00865923595a2f59",
             "families": [
+                "data-kp-accept-follows",
+                "data-kp-accept-verb",
                 "data-kp-action-size",
                 "data-kp-announce",
                 "data-kp-armed",
@@ -11910,6 +11917,7 @@
                 "data-kp-runs-title",
                 "data-kp-runs-values",
                 "data-kp-runs-warn",
+                "data-kp-search-placeholder",
                 "data-kp-secret",
                 "data-kp-secret-autocomplete",
                 "data-kp-secret-clear",
@@ -11939,12 +11947,14 @@
                 "data-kp-segmented",
                 "data-kp-segmented-all",
                 "data-kp-segmented-collapse",
+                "data-kp-segmented-field",
                 "data-kp-segmented-for",
                 "data-kp-segmented-glide",
                 "data-kp-segmented-more",
                 "data-kp-segmented-overflow",
                 "data-kp-segmented-summary",
                 "data-kp-segmented-thumb",
+                "data-kp-segmented-top",
                 "data-kp-segmented-tri",
                 "data-kp-segmented-words",
                 "data-kp-selectable",
@@ -12055,6 +12065,7 @@
                 "data-kp-uptime-label",
                 "data-kp-uptime-open",
                 "data-kp-uptime-tip",
+                "data-kp-uses",
                 "data-kp-uses-unplaced",
                 "data-kp-view",
                 "data-kp-week",
@@ -12496,6 +12507,8 @@
         "feedback": {
             "modules": "e6b6ef11494817a6",
             "families": [
+                "data-kp-accept-follows",
+                "data-kp-accept-verb",
                 "data-kp-ack",
                 "data-kp-ack-focus",
                 "data-kp-ack-for",
@@ -12901,8 +12914,11 @@
             ]
         },
         "field": {
-            "modules": "56e28b785b9f5f7e",
+            "modules": "c235d4bd16aa0f51",
             "families": [
+                "data-kp-accept-follows",
+                "data-kp-accept-min",
+                "data-kp-accept-verb",
                 "data-kp-active",
                 "data-kp-announce",
                 "data-kp-arrive",
@@ -13090,6 +13106,7 @@
                 "data-kp-weekdays",
                 "data-kp-whole",
                 "data-kp-words",
+                "kp-accept-reason",
                 "kp-autosize",
                 "kp-autosize-resize",
                 "kp-codefield",
@@ -13613,6 +13630,8 @@
         "navigation": {
             "modules": "805e6d3c7ec147f8",
             "families": [
+                "data-kp-accept-follows",
+                "data-kp-accept-verb",
                 "data-kp-activation",
                 "data-kp-against",
                 "data-kp-armed",
@@ -13823,6 +13842,8 @@
         "overlays": {
             "modules": "7224ffe88ee06f65",
             "families": [
+                "data-kp-accept-follows",
+                "data-kp-accept-verb",
                 "data-kp-activation",
                 "data-kp-ago",
                 "data-kp-ago-verb",
@@ -13948,6 +13969,8 @@
             "modules": "3320df05201f7f98",
             "families": [
                 "data-kp-above",
+                "data-kp-accept-follows",
+                "data-kp-accept-verb",
                 "data-kp-armed",
                 "data-kp-checklist",
                 "data-kp-clear-on-close",
@@ -14880,6 +14903,7 @@
         "kp-jsonfield": ["@component:field"],
         "kp-inspector": ["@component:data"],
         "kp-quantity": ["@component:field"],
+        "kp-accept-reason": ["@component:field"],
         "kp-progress": ["@component:feedback"],
         "kp-progressbar": ["@component:feedback"],
         "kp-spinner": ["@component:feedback"],

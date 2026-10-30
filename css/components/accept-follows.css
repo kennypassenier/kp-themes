@@ -1,0 +1,18 @@
+/* @part: accept-follows: The line that says why a quantity-following button is off */
+@layer kp.components {
+    /* --- A button that follows a quantity [mc-r2] ---
+     * The reason a button is off ("Choose how many boxes first.") stands under the quantity it follows, in the field's help style but in the
+     * running ink, since it is what the person must read. The line is always one line high, empty while the button is on, so showing it moves
+     * nothing. The button itself reads as off at a glance: the primary button's disabled colour is close to its live one in some registers, so
+     * this button also dims (`--kp-accept-disabled-opacity`, 0.55). Knobs [KT6]: `--kp-accept-reason-size` (the help size). */
+    .kp-accept-reason {
+        min-block-size: 1lh;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--foreground);
+        font-size: var(--kp-accept-reason-size, var(--kp-field-help-size, 0.8rem));
+    }
+
+    .kp-button[data-kp-accept-follows]:disabled {
+        opacity: var(--kp-accept-disabled-opacity, 0.55);
+    }
+}

@@ -12,6 +12,22 @@ export type QuantityChecklistFocusStrings = {
      */
     quantityValue: (value: string, unit: string) => string;
     /**
+     * The verb of a button that follows a quantity, when the button names none: "Add" (js/accept-follows.js) [mc-r2]
+     */
+    acceptVerb: string;
+    /**
+     * The button's words for an amount: "Add 3 boxes" [mc-r2]
+     */
+    acceptFollowsLabel: (verb: string, amount: string, unit: string) => string;
+    /**
+     * The button's words while the amount makes no sense: "Add boxes" [mc-r2]
+     */
+    acceptFollowsNone: (verb: string, unit: string) => string;
+    /**
+     * Why that button is off: "Choose how many boxes first." [mc-r2]
+     */
+    acceptFollowsReason: (unit: string) => string;
+    /**
      * A checklist group's count beside its heading, "4 of 9" (js/checklist.js) [kpadopt4]
      */
     checklistCount: (done: number, total: number) => string;
@@ -229,6 +245,10 @@ export type QuantityChecklistFocusStrings = {
  * @property {(label: string) => string} quantityLess  The minus button's name, "Portions, less" (js/quantity.js) [kpadopt4]
  * @property {(label: string) => string} quantityMore  The plus button's name, "Portions, more" [kpadopt4]
  * @property {(value: string, unit: string) => string} quantityValue  The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
+ * @property {string} acceptVerb  The verb of a button that follows a quantity, when the button names none: "Add" (js/accept-follows.js) [mc-r2]
+ * @property {(verb: string, amount: string, unit: string) => string} acceptFollowsLabel  The button's words for an amount: "Add 3 boxes" [mc-r2]
+ * @property {(verb: string, unit: string) => string} acceptFollowsNone  The button's words while the amount makes no sense: "Add boxes" [mc-r2]
+ * @property {(unit: string) => string} acceptFollowsReason  Why that button is off: "Choose how many boxes first." [mc-r2]
  * @property {(done: number, total: number) => string} checklistCount  A checklist group's count beside its heading, "4 of 9" (js/checklist.js) [kpadopt4]
  * @property {(done: number, total: number) => string} checklistSummary  The whole list's count in its bar, "4 of 9 done" [kpadopt4]
  * @property {string} checklistCheckAll  The bar's button that ticks every item [kpadopt4]

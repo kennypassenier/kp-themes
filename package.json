@@ -472,6 +472,10 @@
             "types": "./js/request-inspector.d.ts",
             "default": "./js/request-inspector.js"
         },
+        "./js/accept-follows": {
+            "types": "./js/accept-follows.d.ts",
+            "default": "./js/accept-follows.js"
+        },
         "./js/quantity": {
             "types": "./js/quantity.d.ts",
             "default": "./js/quantity.js"

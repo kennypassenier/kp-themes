@@ -150,6 +150,8 @@ js/flash.js                a button that shows its result for a moment, at one w
 js/focus-steps.js          one step at a time, large, with the screen kept on
 js/gallery.js              a grid of pictures that open large in the viewer shell
 js/gantt.js                a run timeline: one bar per run, running bars growing live
+js/accept-follows.js   a button whose words follow a quantity in its dialog: "Add 3 boxes", off with its reason at 0 [mc-r2]
+js/accept-follows-words.js  the words and state of that button, pure [mc-r2]
 js/row-editor.js       the repeating row editor: rows of the package's own controls added and removed, one head row [mc-1030]
 js/sequencer.js        an editable timeline: lanes of bars moved, resized and linked by pointer or keyboard [timeline-1029]
 js/heat.js                 the heat grid and the matrix

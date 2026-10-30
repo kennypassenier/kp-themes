@@ -110,6 +110,7 @@
         "kp-badges",
         "kp-list",
         "kp-listrow",
-        "kp-rows"
+        "kp-rows",
+        "kp-accept-reason"
     ]
 }

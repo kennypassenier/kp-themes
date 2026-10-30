@@ -326,6 +326,7 @@ export const PART_FILES = [
     'js/segmented/items.js',
     'js/segmented/keys.js',
     'js/segmented/link.js',
+    'js/segmented/link-choices.js',
     'js/segmented/mode.js',
     'js/segmented/paint.js',
     'js/segmented/plate.js',

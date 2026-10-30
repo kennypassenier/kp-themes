@@ -321,6 +321,12 @@
       "file": "dialog-widths.css"
     },
     {
+      "file": "accept-follows.css"
+    },
+    {
+      "file": "segmented-link.css"
+    },
+    {
       "file": "datatable-columns.css"
     },
     {

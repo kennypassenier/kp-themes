@@ -41,14 +41,18 @@ let dialogSeq = 0;
  * Rich content [mc-1030]: `description` may be a node or a list of nodes (several paragraphs, a list) in place of the dictionary's sentence,
  * and `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive (take a dose anyway, add stock).
  * `className: 'kp-dialog--wide'` gives it a wider step; the default is the narrow question width.
+ * A dialog whose body holds a quantity [mc-r2]: `acceptFollows` (the quantity's id, or the quantity itself) makes Confirm say what will happen with the
+ * amount chosen ("Add 3 boxes") and go off, with its reason, while the amount makes no sense; `acceptVerb` is the verb ("Add"). The two are written as
+ * `data-kp-accept-follows` / `data-kp-accept-verb` on Confirm, and the page wires them with `attachAcceptFollows(dialog)` (js/accept-follows.js) next
+ * to `attachQuantities(dialog)`: this module imports neither, so chassis's closure of six modules stays six.
  *
  * @param {HTMLElement} button the control the confirmation belongs to
- * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string }} [options]
+ * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string, acceptFollows?: string | HTMLElement, acceptVerb?: string }} [options]
  * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]
  */
 export function openConfirmation(
     button,
-    { phrase, description: richText, acceptLook = 'destructive', strings, onAccept, onCancel, className = '', initialFocus = 'cancel', dependents, blocked, typeName, anyCase, loses, acceptLabel } = {},
+    { phrase, description: richText, acceptLook = 'destructive', strings, onAccept, onCancel, className = '', initialFocus = 'cancel', dependents, blocked, typeName, anyCase, loses, acceptLabel, acceptFollows, acceptVerb } = {},
 ) {
     const s = { ...getStrings(), ...strings };
     const text = phrase ?? button.getAttribute('data-kp-confirm') ?? s.confirm;
@@ -109,6 +113,10 @@ export function openConfirmation(
     accept.className = acceptLook === 'primary' ? 'kp-button kp-button--primary' : 'kp-button kp-button--destructive';
     accept.setAttribute('data-kp-confirm-accept', '');
     accept.textContent = acceptLabel ?? s.confirmAccept;
+    if (acceptFollows !== undefined) {
+        accept.setAttribute('data-kp-accept-follows', typeof acceptFollows === 'string' ? acceptFollows : acceptFollows.id);
+        if (acceptVerb !== undefined) accept.setAttribute('data-kp-accept-verb', acceptVerb);
+    }
     accept.addEventListener('click', () => {
         if (!accept.disabled) dialog.close('accept');
     });

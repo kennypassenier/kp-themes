@@ -232,6 +232,8 @@ export const FILES = [
     'js/json-field.js',
     'js/request-inspector.js',
     'js/quantity.js',
+    'js/accept-follows.js',
+    'js/accept-follows-words.js',
     'js/toolbar.js',
     'js/keys.js',
     'js/heat.js',

@@ -5,7 +5,8 @@ export const quantityDescriptor = {
         id: 'quantity',
         title: 'Quantity',
         group: 'Forms',
-        classes: ['kp-quantity'],
+        classes: ['kp-quantity', 'kp-accept-reason'],
+        aliases: ['accept'],
         exports: [],
         intro: 'A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point.',
         whenToUse: 'For a small whole or stepped amount a person nudges up and down: portions, pieces, grams in steps. For a free number use a field; for a share of a range use a slider.',
@@ -52,8 +53,30 @@ import { attachQuantities } from '@kp-soft/themes/js/quantity';
 attachQuantities(document.getElementById('doc-quantity-lg').parentElement);
 `,
             },
+            {
+                title: 'A button that says what it will do with the amount',
+                why: 'The accept button of a dialog that holds a quantity follows it: `data-kp-accept-follows` names the quantity, and the button reads “Add 3 boxes”, “Add 1 box”, and “Add boxes” at 0, where it is off and a line under the quantity says why. The unit and its plural come from the quantity; the words are in the dictionary (`acceptFollowsLabel`, `acceptFollowsNone`, `acceptFollowsReason`). `openConfirmation` takes `acceptFollows` and `acceptVerb` for the same in a confirmation.',
+                markup: `
+<div class="kp-field">
+<div class="kp-quantity" id="doc-accept-quantity" data-kp-quantity data-kp-quantity-min="0" data-kp-quantity-max="50" data-kp-quantity-unit="boxes" data-kp-quantity-unit-one="box" data-kp-quantity-label="Boxes to add">
+<input class="kp-quantity__input" value="3" />
+</div>
+</div>
+<button type="button" class="kp-button kp-button--primary" data-kp-accept-follows="doc-accept-quantity" data-kp-accept-verb="Add">Add 3 boxes</button>
+`,
+                script: `
+import { attachQuantities } from '@kp-soft/themes/js/quantity';
+import { attachAcceptFollows } from '@kp-soft/themes/js/accept-follows';
+
+const field = document.getElementById('doc-accept-quantity').parentElement.parentElement;
+attachQuantities(field);
+attachAcceptFollows(field);
+`,
+            },
         ],
         variants: [
+            { name: 'data-kp-accept-verb', what: 'What the button does, “Add” (default: the dictionary’s `acceptVerb`).' },
+            { name: 'data-kp-accept-min', what: 'The least amount that makes sense (default: anything above zero); under it the button is off with its reason.' },
             { name: 'data-kp-quantity-step', what: 'The step a press moves by; its decimals are the number’s decimals (0.5 shows one).' },
             { name: 'data-kp-quantity-disabled', what: 'The whole control dimmed and out of reach.' },
             { name: '.kp-quantity--lg', what: 'Larger buttons and number, for a screen at arm’s length.' },

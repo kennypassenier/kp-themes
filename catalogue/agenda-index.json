@@ -466,26 +466,15 @@
                 "id": "medicine-1030",
                 "themes": "formal",
                 "ask": null,
-                "askText": "The Medicine Cabinet web app found thirteen places where it had to draw its own glue; you approved building them in the package on 2026-10-30. Eight are new parts or options (a list of rows, a quantity that fills its cell, a repeating row editor, an attention band with a maximum, a run of badges, dialog widths and a rich confirmation, a table’s actions column and card width, pills with nothing chosen tied to a tag input) and five are fixes (typed text at the start edge, air under a card’s sentence, an error line that moves nothing, a switch without a state word, a freshness line after the title); each fix shows Before and After. Formal only, on the app’s own shapes (the names, counts and times are mock). Nothing here is on by default except the five fixes and the narrow confirmation, which say so. 13 sections, 13 pairs.",
+                "askText": "Round 1 of the Medicine Cabinet package (2026-10-31): eleven of the thirteen items are approved and have left this page; two come back. The pills and their field now stay in step in both directions and the field is only there when the choices are more than the pills; the accept button of the add-stock dialog says what will happen with the amount and follows the stepper. Formal only, on the app’s own shapes (the names, counts and times are mock). 2 sections, 2 pairs.",
                 "sections": [
-                    { "item": "list-row", "themes": null, "topic": "list", "mode": null },
-                    { "item": "quantity-fill", "themes": null, "topic": "list", "mode": null },
-                    { "item": "badge-run", "themes": null, "topic": "list", "mode": null },
-                    { "item": "attention-max", "themes": null, "topic": "today", "mode": null },
-                    { "item": "header-updated", "themes": null, "topic": "today", "mode": null },
-                    { "item": "row-editor", "themes": null, "topic": "form", "mode": null },
                     { "item": "pills-none", "themes": null, "topic": "form", "mode": null },
-                    { "item": "dialogs", "themes": null, "topic": "dialogs", "mode": null },
-                    { "item": "table-columns", "themes": null, "topic": "dialogs", "mode": null },
-                    { "item": "fix-text-align", "themes": null, "topic": "fixes", "mode": null },
-                    { "item": "fix-card-gap", "themes": null, "topic": "fixes", "mode": null },
-                    { "item": "fix-error-line", "themes": null, "topic": "fixes", "mode": null },
-                    { "item": "fix-switch-state", "themes": null, "topic": "fixes", "mode": null }
+                    { "item": "dialogs", "themes": null, "topic": "dialogs", "mode": null }
                 ],
                 "extra": null,
-                "round": "\n            { \"round\": \"medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5\", \"received\": [] }\n        "
+                "round": "\n            { \"round\": \"medicine-1030-759a7e85-a5d3-4774-91f6-ca1c26ad6b77\", \"received\": [\"medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5\"] }\n        "
             },
-            "fingerprint": "f742958a46f961f2",
+            "fingerprint": "66b288815cc02de1",
             "update": null
         }
     },

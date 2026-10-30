@@ -12,7 +12,7 @@ import { paintTri } from './tri.js';
  * @param {import('./constants.js').SegmentedItem} spec
  * @param {{ multi: boolean, tri: boolean, kept: Map<string, 'any' | 'include' | 'exclude'> }} look
  */
-function buildItem(spec, { multi, tri, kept }) {
+export function buildItem(spec, { multi, tri, kept }) {
     const item = document.createElement('button');
     item.type = 'button';
     item.className = 'kp-segmented__item';

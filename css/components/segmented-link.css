@@ -1,0 +1,13 @@
+/* @part: segmented-link: Chips tied to a field */
+@layer kp.components {
+    /* --- Chips tied to a field [mc-r2] ---
+     * A combobox is `display: flow-root`, which beats the browser's `[hidden]`. The field is left out while every choice is a chip
+     * (js/segmented/link.js), so a hidden combobox must really go. The chips keep one rhythm under the field when both are shown. */
+    .kp-combobox[hidden] {
+        display: none;
+    }
+
+    .kp-combobox:not([hidden]) + .kp-segmented--chips[data-kp-segmented-for] {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+}

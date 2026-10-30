@@ -38,8 +38,12 @@ export class SegmentedGroup extends Controller {
                 this.switchMode(was);
             }),
         );
-        // A group tied to a tag input or combobox keeps the two in step.
-        if (group.hasAttribute(LINK_ATTRIBUTE)) this.own(() => attachOne(group, SegmentedLink)?.destroy());
+        // A group tied to a tag input or combobox keeps the two in step. (Until mc-r2 this registered the attach as an undo step, so the link was
+        // never made: the chips and the field did not follow each other, which is what Kenny found.)
+        if (group.hasAttribute(LINK_ATTRIBUTE)) {
+            const link = attachOne(group, SegmentedLink);
+            if (link) this.own(() => link.destroy());
+        }
         this.refresh();
     }
 
