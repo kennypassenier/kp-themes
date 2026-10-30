@@ -254,6 +254,7 @@
         { "path": "js/toggle/*.js", "tags": ["@component:button"], "why": "the toggle button [kpadopt6-ops]" },
         { "path": "js/intent.js", "tags": ["@component:page"], "why": "the words-in-any-order matcher of the command palette [kpadopt6-ops]" },
         { "path": "js/version-delta.js", "tags": ["@component:feedback"], "why": "the version jump chip [kpadopt6-ops]" },
+        { "path": "js/version-delta/*.js", "tags": ["@component:feedback"], "why": "the version jump chip [kpadopt6-ops]" },
         { "path": "js/ack-gate.js", "tags": ["@component:feedback"], "why": "the acknowledge gate [kpadopt6-ops]" },
         { "path": "js/ack-gate/*.js", "tags": ["@component:feedback"], "why": "the acknowledge gate [kpadopt6-ops]" },
         { "path": "js/deplist.js", "tags": ["@component:data"], "why": "the dependency list [kpadopt6-ops]" },

@@ -7574,16 +7574,16 @@ function install3(ctx) {
   const { state: state12, view, reduced: reduced4, cfg, finishers, done, announce: announce4, routineOf, seen } = ctx;
   const rule = (el16) => {
     const routine = routineOf(el16, "rule");
-    const draw8 = (skipped) => {
+    const draw7 = (skipped) => {
       el16.classList.add(STATE.in);
       announce4(el16, "rule", routine, skipped);
     };
     if (routine === "" || reduced4() || seen(el16, "rule") || !view || typeof view.IntersectionObserver !== "function") {
-      draw8(true);
+      draw7(true);
       return;
     }
     state12.pending++;
-    finishers.push(() => draw8(false));
+    finishers.push(() => draw7(false));
     state12.io ??= new view.IntersectionObserver(
       (entries2) => {
         for (const entry of entries2) {
@@ -16887,7 +16887,7 @@ function trendChart(host, group, locale, ctx) {
     );
     host.append(plate);
   }
-  function draw8() {
+  function draw7() {
     const series = data?.series[0];
     const k = kind();
     host.setAttribute("data-kp-state", k);
@@ -16978,7 +16978,7 @@ function trendChart(host, group, locale, ctx) {
     host,
     spark: true,
     group,
-    draw: draw8,
+    draw: draw7,
     setData: (next2) => {
       data = next2;
       if (data.key != null) host.setAttribute("data-kp-key", data.key);
@@ -16988,11 +16988,11 @@ function trendChart(host, group, locale, ctx) {
         leaving = true;
         void card.close().then(() => {
           leaving = false;
-          draw8();
+          draw7();
         });
         return;
       }
-      if (!leaving) draw8();
+      if (!leaving) draw7();
     },
     select: () => false,
     // The trend reads on its own crosshair, not the group's.
@@ -17054,7 +17054,7 @@ function sparkChart(host, group, locale, ctx) {
   host.append(...parts2);
   if (data.key != null) host.setAttribute("data-kp-key", data.key);
   decorateWith(decorate2, plot, { kind: "plot", host, key: data.key ?? host.getAttribute("data-kp-key") ?? void 0 });
-  function draw8() {
+  function draw7() {
     const series = data.series[0];
     name.textContent = label();
     if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, ctx);
@@ -17123,19 +17123,19 @@ function sparkChart(host, group, locale, ctx) {
     data = next2;
     if (data.key != null) host.setAttribute("data-kp-key", data.key);
     pts = data.series[0] ? pointsOf(data.series[0]) : [];
-    draw8();
+    draw7();
   };
   pts = data.series[0] ? pointsOf(data.series[0]) : [];
   const state12 = {
     host,
     spark: true,
     group,
-    draw: draw8,
+    draw: draw7,
     setData,
     select: () => false,
     cursorAt: (t) => {
       cursor = t;
-      draw8();
+      draw7();
     },
     lastTime: () => pts[pts.length - 1]?.[0] ?? null,
     destroy: () => {
@@ -17539,7 +17539,7 @@ function installDraw(c) {
     toneOf: toneOf4,
     visible: visible3
   } = c;
-  c.draw = draw8;
+  c.draw = draw7;
   function drawState(kind, H) {
     c.geo = null;
     host.setAttribute("data-kp-state", kind);
@@ -17575,7 +17575,7 @@ function installDraw(c) {
       if (kind !== "loading") readout.textContent = `${label()}: ${words3}`;
     }
   }
-  function draw8() {
+  function draw7() {
     const H = chartHeight(host, c.data);
     c.drawnWindow = "";
     c.drawnFor = drawnKey();
@@ -18093,7 +18093,7 @@ var init_tip = __esm({
 
 // js/chart/plot/pointer.js
 function installPointer(c) {
-  const { announce: announce4, draw: draw8, group, plot, range, setSel, tip, visible: visible3 } = c;
+  const { announce: announce4, draw: draw7, group, plot, range, setSel, tip, visible: visible3 } = c;
   const timeAt = (e) => {
     if (!c.geo) return null;
     return c.geo.inv(e.clientX - c.geo.svg.getBoundingClientRect().left);
@@ -18118,7 +18118,7 @@ function installPointer(c) {
     if (!c.geo) return;
     if (c.brush) {
       c.brush.x1 = Math.max(c.geo.P.l, Math.min(c.geo.W - c.geo.P.r, e.clientX - c.geo.svg.getBoundingClientRect().left));
-      draw8();
+      draw7();
       return;
     }
     const mark = (
@@ -18142,13 +18142,13 @@ function installPointer(c) {
       const t = timeAt(e);
       if (t == null) return;
       c.pinned = c.pinned != null && Math.abs(c.geo.x(c.pinned) - c.geo.x(t)) < 4 ? null : t;
-      draw8();
+      draw7();
       announce4();
     }
   });
   plot.addEventListener("pointercancel", () => {
     c.brush = null;
-    draw8();
+    draw7();
   });
   plot.addEventListener("pointerleave", () => {
     if (!c.brush && group.owner === c.state) group.cursor(null, c.state);
@@ -18176,7 +18176,7 @@ function installPointer(c) {
       if (c.pinned != null) c.pinned = null;
       else if (c.sel.size) setSel(/* @__PURE__ */ new Set());
       else if (group.zoom) group.setZoom(null);
-      draw8();
+      draw7();
       return;
     } else return;
     e.preventDefault();
@@ -18213,10 +18213,10 @@ var init_pointer2 = __esm({
 
 // js/chart/plot/api.js
 function installApi(c) {
-  const { buildLegend, decorateOwn, doc, draw: draw8, drawnKey, group, host, key, label, legend, parts: parts2, plot, range, setSel, strings } = c;
+  const { buildLegend, decorateOwn, doc, draw: draw7, drawnKey, group, host, key, label, legend, parts: parts2, plot, range, setSel, strings } = c;
   const watch2 = new (doc.defaultView ?? globalThis).MutationObserver(() => {
     const asked = `${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
-    if (!c.drawnFor.endsWith(asked)) draw8();
+    if (!c.drawnFor.endsWith(asked)) draw7();
   });
   watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-chart-loading", "data-kp-chart-sources"] });
   const setData = (next2) => {
@@ -18236,7 +18236,7 @@ function installApi(c) {
       plot.setAttribute("aria-label", strings.plot(label()));
     }
     if (key() !== keyBefore) decorateOwn();
-    draw8();
+    draw7();
     for (const c2 of group.charts) if (c2 !== state12 && (!c2.stale || c2.stale())) c2.draw();
   };
   if (c.data.key != null) host.setAttribute("data-kp-key", c.data.key);
@@ -18247,13 +18247,13 @@ function installApi(c) {
     host,
     spark: false,
     group,
-    draw: draw8,
+    draw: draw7,
     view: (inView) => {
       c.held = !inView;
-      if (inView && c.behind) draw8();
+      if (inView && c.behind) draw7();
     },
     resize: () => {
-      if (drawnKey() !== c.drawnFor) draw8();
+      if (drawnKey() !== c.drawnFor) draw7();
     },
     stale: () => {
       if (!c.drawnWindow) return false;
@@ -18265,13 +18265,13 @@ function installApi(c) {
       const next2 = nextSelection(c.sel, i, c.data.series.length, on);
       if (!next2) return false;
       setSel(next2);
-      draw8();
+      draw7();
       return true;
     },
     cursorAt: (t, own) => {
       c.cursor = t;
       if (!own && t == null) c.hot = null;
-      draw8();
+      draw7();
     },
     lastTime: () => {
       const last = c.points.map((p) => p[p.length - 1]?.[0] ?? -Infinity);
@@ -27797,7 +27797,7 @@ function attachOne2(el16, options) {
     pill.addEventListener("animationend", finish2, { once: true });
     view?.setTimeout(finish2, 700);
   };
-  const draw8 = () => {
+  const draw7 = () => {
     const n = count2();
     show(n > 0);
     if (n > 0) {
@@ -27833,13 +27833,13 @@ function attachOne2(el16, options) {
     following = true;
     unseen.clear();
     toEnd();
-    draw8();
+    draw7();
     el16.dispatchEvent(new CustomEvent(NEWPILL_JUMP_EVENT, { bubbles: true, detail: { unseen: 0 } }));
   };
   const pause = () => {
     paused = true;
     following = false;
-    draw8();
+    draw7();
   };
   let hiddenAt = 0;
   let firstAway = null;
@@ -27861,7 +27861,7 @@ function attachOne2(el16, options) {
     }
     if (!added) return;
     if (following && !paused) toEnd();
-    draw8();
+    draw7();
   }) : null;
   observer?.observe(el16, inTbody ? { childList: true, subtree: true } : { childList: true });
   const onScroll = () => {
@@ -27871,11 +27871,11 @@ function attachOne2(el16, options) {
         paused = false;
         following = true;
         unseen.clear();
-        draw8();
+        draw7();
       }
     } else if (following) {
       following = false;
-      draw8();
+      draw7();
     }
   };
   const onKey5 = (event) => {
@@ -27930,7 +27930,7 @@ function attachOne2(el16, options) {
   doc.addEventListener("click", onToggle);
   doc.addEventListener("visibilitychange", onVisibility2);
   view?.requestAnimationFrame(() => view.requestAnimationFrame(() => following && !paused && el16.scrollHeight > el16.clientHeight && toEnd()));
-  draw8();
+  draw7();
   HANDLES2.set(el16, { pause, resume: jump, jump, unseen: count2, following: () => following && !paused });
   return () => {
     stopOptions();
@@ -46503,7 +46503,7 @@ var init_constants22 = __esm({
 });
 
 // js/heat/card.js
-function waitForCard(el16, spec, loading, draw8) {
+function waitForCard(el16, spec, loading, draw7) {
   const waiting = WAITING.get(el16);
   if (loading) {
     if (waiting) {
@@ -46524,7 +46524,7 @@ function waitForCard(el16, spec, loading, draw8) {
   void card.close().then(() => {
     if (WAITING.get(el16) !== entry) return;
     WAITING.delete(el16);
-    draw8(el16, entry.spec);
+    draw7(el16, entry.spec);
   });
   return true;
 }
@@ -54570,7 +54570,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
     let frame3 = 0;
     let filling = null;
     const scaleMs = () => scaleSeconds > 0 ? scaleSeconds * 1e3 : clock4.total();
-    const draw8 = (force = false) => {
+    const draw7 = (force = false) => {
       const ms = clock4.remaining();
       let share = discShare(ms, scaleMs());
       if (still() && clock4.state() === "running") {
@@ -54607,7 +54607,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
     const loop = () => {
       cancelAnimationFrame(frame3);
       if (clock4.state() !== "running") return;
-      draw8();
+      draw7();
       const m = Math.ceil(clock4.remaining() / 6e4);
       if (m !== minute) {
         minute = m;
@@ -54620,7 +54620,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
       now,
       onChange: (state12) => {
         if (state12 === "ended") return;
-        draw8(true);
+        draw7(true);
         show();
         if (state12 === "running") loop();
         el16.dispatchEvent(
@@ -54628,7 +54628,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
         );
       },
       onEnd: () => {
-        draw8(true);
+        draw7(true);
         show();
         said.textContent = name ? s2.timerEndedNamed(name) : s2.timerEnded;
         el16.dispatchEvent(new CustomEvent(COUNTDOWN_END_EVENT, { bubbles: true, detail: { total: clock4.total() } }));
@@ -54650,7 +54650,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
       const from = drawn2;
       clock4.reset(seconds);
       said.textContent = "";
-      draw8(true);
+      draw7(true);
       if (!still() && typeof el16.animate === "function" && registered && from < drawn2) {
         const style = view.getComputedStyle(el16);
         const raw = style.getPropertyValue("--fx-duration").trim();
@@ -54690,7 +54690,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
     const startUntil = () => {
       if (until !== null && seconds > 0) clock4.start();
     };
-    draw8(true);
+    draw7(true);
     show();
     startUntil();
     const onVisible = () => {
@@ -54721,7 +54721,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
           clock4.reset(seconds);
           startUntil();
         } else {
-          draw8(true);
+          draw7(true);
           show();
         }
       }
@@ -55585,7 +55585,7 @@ function attachLedes(root = document) {
     let toggle2 = null;
     let rest = null;
     let plain2 = "";
-    const draw8 = () => {
+    const draw7 = () => {
       plain2 = lede.childElementCount === 0 ? (lede.textContent ?? "").trim().replace(/\s+/g, " ") : "";
       const href = lede.getAttribute("data-kp-lede-link");
       if (href) {
@@ -55635,10 +55635,10 @@ function attachLedes(root = document) {
       if (rest) lede.textContent = plain2;
       rest = null;
     };
-    draw8();
+    draw7();
     const stop = watchOptions(lede, ["data-kp-lede-collapsible", "data-kp-lede-link"], () => {
       undraw();
-      draw8();
+      draw7();
     });
     cleanups.push(() => {
       stop();
@@ -57190,10 +57190,10 @@ function wire2(el16) {
     attempt += 1;
     stopTick();
     nextAt = 0;
-    draw8("reconnecting");
+    draw7("reconnecting");
     el16.dispatchEvent(new CustomEvent(CONNECTION_RETRY_EVENT, { bubbles: true, detail: { attempt, auto } }));
   }
-  function draw8(state12) {
+  function draw7(state12) {
     const previous = shown5;
     shown5 = state12;
     el16.setAttribute("data-kp-state", state12);
@@ -57266,13 +57266,13 @@ function wire2(el16) {
       if (state12 === "offline" && shown5 === "online" && grace() > 0) {
         graceTimer = view.setTimeout(() => {
           show();
-          draw8("offline");
+          draw7("offline");
         }, grace());
         return;
       }
       if (state12 === "refused") attempt = 0;
       show();
-      draw8(state12);
+      draw7(state12);
       return;
     }
     if (state12 === "online") {
@@ -57285,7 +57285,7 @@ function wire2(el16) {
         return;
       }
       show();
-      draw8("back");
+      draw7("back");
       backTimer = view.setTimeout(() => {
         shown5 = "online";
         el16.setAttribute("data-kp-state", "online");
@@ -58717,7 +58717,7 @@ function attachOne3(nav) {
   const queueSpy = () => {
     if (!raf) raf = view.requestAnimationFrame(spy);
   };
-  const draw8 = () => {
+  const draw7 = () => {
     const next2 = read();
     const state12 = nav.getAttribute("data-kp-state");
     title.hidden = nav.getAttribute("data-kp-contents-title") === "none";
@@ -58794,23 +58794,23 @@ function attachOne3(nav) {
     pane?.addEventListener("scroll", queueSpy, { passive: true });
   };
   const changes = new view.MutationObserver((records) => {
-    if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw8);
+    if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw7);
   });
   changes.observe(scope(), { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ["hidden", "id"] });
-  const options = new view.MutationObserver(draw8);
+  const options = new view.MutationObserver(draw7);
   options.observe(nav, {
     attributes: true,
     attributeFilter: ["data-kp-contents-for", "data-kp-contents-headings", "data-kp-contents-min", "data-kp-contents-title", "data-kp-state", "data-kp-contents-offset"]
   });
   HANDLES3.set(nav, {
     current: () => current2,
-    refresh: draw8,
+    refresh: draw7,
     setItems(items) {
       given2 = items ? [...items] : null;
-      draw8();
+      draw7();
     }
   });
-  draw8();
+  draw7();
   return () => {
     view.cancelAnimationFrame(raf);
     nav.removeEventListener("click", onClick);
@@ -64704,34 +64704,39 @@ var init_toggle = __esm({
   }
 });
 
-// js/version-delta.js
-var version_delta_exports = {};
-__export(version_delta_exports, {
-  VERSION_COPY_EVENT: () => VERSION_COPY_EVENT,
-  VERSION_DELTA: () => VERSION_DELTA,
-  VERSION_LEVELS: () => VERSION_LEVELS,
-  VERSION_SORT: () => VERSION_SORT,
-  attachVersionDeltas: () => attachVersionDeltas,
-  githubRepo: () => githubRepo,
-  releaseUrl: () => releaseUrl,
-  setVersionDelta: () => setVersionDelta,
-  summarizeDeltas: () => summarizeDeltas,
-  versionLevel: () => versionLevel,
-  versionNumbers: () => versionNumbers
+// js/version-delta/values.js
+var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
+var init_values13 = __esm({
+  "js/version-delta/values.js"() {
+    "use strict";
+    VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
+    VERSION_COPY_EVENT = "kp-version-copy";
+    VERSION_LEVELS = /** @type {const} */
+    ["same", "other", "patch", "minor", "major", "downgrade", "unknown"];
+    VERSION_SORT = Object.freeze({ downgrade: 4, major: 3, minor: 2, patch: 1, other: 0, same: 0, unknown: 0 });
+    SEMVER_NUMBERS = 3;
+    DIGEST_SHORT_CHARS = 12;
+    VERSION_OBSERVED = [
+      "data-kp-version-from",
+      "data-kp-version-to",
+      "data-kp-version-app",
+      "data-kp-version-href",
+      "data-kp-version-scheme",
+      "data-kp-version-level",
+      "data-kp-version-tones",
+      "data-kp-version-show",
+      "data-kp-version-arrow",
+      "data-kp-version-digest",
+      "data-kp-version-big-at",
+      "data-kp-version-error",
+      "data-kp-state"
+    ];
+  }
 });
+
+// js/version-delta/level.js
 function versionNumbers(version) {
   return (String(version ?? "").match(/\d+/g) ?? []).map(Number);
-}
-function githubRepo(upstream) {
-  const m = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/.exec(String(upstream ?? "").trim());
-  if (!m || m[1] === "." || m[1] === ".." || m[2] === "." || m[2] === "..") return null;
-  return { owner: m[1], repo: m[2] };
-}
-function releaseUrl(upstream, latest) {
-  const r = githubRepo(upstream);
-  const tag = String(latest ?? "").trim();
-  if (!r || !tag) return null;
-  return `https://github.com/${r.owner}/${r.repo}/releases/tag/${encodeURIComponent(tag)}`;
 }
 function versionLevel(from, to, { scheme = "numbers", bigAt = "first", app = "", bigMinorApps = [], level = "auto" } = {}) {
   if (level !== "auto" && VERSION_LEVELS.includes(level)) return level;
@@ -64740,7 +64745,7 @@ function versionLevel(from, to, { scheme = "numbers", bigAt = "first", app = "",
   if (!a || !b) return "unknown";
   if (a === b) return "same";
   if (scheme === "none" || /^sha\d+:/i.test(a) || /^sha\d+:/i.test(b)) return "other";
-  const cut = scheme === "semver" ? 3 : Infinity;
+  const cut = scheme === "semver" ? SEMVER_NUMBERS : Infinity;
   const x = versionNumbers(a).slice(0, cut);
   const y = versionNumbers(b).slice(0, cut);
   if (x.length === 0 || y.length === 0) return "other";
@@ -64766,15 +64771,15 @@ function summarizeDeltas(list, options = {}) {
   );
   return { total: list.length, counts, text: parts2.length > 0 ? parts2.join(", ") : s2.versionNoUpdates };
 }
-function breakable(doc, text) {
-  const frag = doc.createDocumentFragment();
-  const parts2 = text.split(/(?<=[._:-])/);
-  parts2.forEach((part7, i) => {
-    if (i > 0) frag.append(doc.createElement("wbr"));
-    frag.append(part7);
-  });
-  return frag;
-}
+var init_level = __esm({
+  "js/version-delta/level.js"() {
+    "use strict";
+    init_strings();
+    init_values13();
+  }
+});
+
+// js/version-delta/core.js
 function toneMap(text) {
   const map = {};
   for (const pair of (text ?? "").split(",")) {
@@ -64783,121 +64788,292 @@ function toneMap(text) {
   }
   return map;
 }
-function draw7(el16, defaults = {}) {
-  const doc = el16.ownerDocument;
-  const s2 = getStrings();
-  const from = (el16.getAttribute("data-kp-version-from") ?? "").trim();
-  const to = (el16.getAttribute("data-kp-version-to") ?? "").trim();
-  const state12 = el16.getAttribute("data-kp-state");
-  const digest = el16.getAttribute("data-kp-version-digest") === "full" ? "full" : "short";
-  const show = ["both", "to", "level"].includes(el16.getAttribute("data-kp-version-show") ?? "") ? el16.getAttribute("data-kp-version-show") : "both";
-  const arrow = el16.getAttribute("data-kp-version-arrow") ?? "\u2192";
-  const scheme = (
-    /** @type {'numbers' | 'semver' | 'calver' | 'none'} */
-    el16.getAttribute("data-kp-version-scheme") ?? "numbers"
-  );
-  const listed = (near(el16, "data-kp-version-big-minor") ?? "").split(/[\s,]+/).filter(Boolean);
-  const level = state12 ? "unknown" : versionLevel(from, to, {
-    scheme,
-    bigAt: el16.getAttribute("data-kp-version-big-at") === "second" ? "second" : "first",
-    app: el16.getAttribute("data-kp-version-app") ?? "",
-    bigMinorApps: [...listed, ...defaults.bigMinorApps ?? []],
-    level: (
-      /** @type {VersionLevel | 'auto'} */
-      el16.getAttribute("data-kp-version-level") ?? "auto"
-    )
-  });
-  el16.classList.add("kp-badge", "kp-badge--version");
-  for (const name of ["kp-badge--warning", "kp-badge--destructive", "kp-badge--info", "kp-badge--success"]) el16.classList.remove(name);
-  const tones = { major: "warning", downgrade: "destructive", ...toneMap(el16.getAttribute("data-kp-version-tones") ?? void 0) };
-  const tone = tones[level];
-  if (tone && tone !== "none") el16.classList.add(`kp-badge--${tone}`);
-  el16.setAttribute("data-kp-level", state12 ? "none" : level);
-  el16.setAttribute("data-kp-sort-value", String(VERSION_SORT[level]));
-  el16.removeAttribute("aria-busy");
-  el16.removeAttribute("title");
-  const part7 = (className, tag = "span") => {
-    const node = doc.createElement(tag);
-    node.className = className;
-    return node;
-  };
-  const levelWord = {
-    major: s2.versionMajor,
-    minor: s2.versionMinor,
-    patch: s2.versionPatch,
-    other: s2.versionOther,
-    downgrade: s2.versionDowngrade,
-    same: s2.versionSame,
-    unknown: s2.versionUnknown
-  }[level];
-  if (state12 === "loading") {
-    el16.setAttribute("aria-busy", "true");
-    const bone = part7("kp-skeleton kp-version__bone");
-    bone.setAttribute("role", "img");
-    bone.setAttribute("aria-label", s2.versionLoading);
-    el16.replaceChildren(bone);
-    return;
+var shown4, near, ChipCore;
+var init_core11 = __esm({
+  "js/version-delta/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_values13();
+    init_level();
+    shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
+    near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
+    ChipCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ bigMinorApps?: readonly string[], href?: string | null }} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.defaults = options;
+        this.doc = host.ownerDocument;
+        this.before = host.className;
+      }
+      /** A span (or another tag) with a class. @param {string} className @param {string} [tag] */
+      part(className, tag = "span") {
+        const node = this.doc.createElement(tag);
+        node.className = className;
+        return node;
+      }
+      /** One version as text parts a long value may break between (after a dot, a hyphen or an underscore). @param {string} text */
+      breakable(text) {
+        const frag = this.doc.createDocumentFragment();
+        const parts2 = text.split(/(?<=[._:-])/);
+        parts2.forEach((part7, i) => {
+          if (i > 0) frag.append(this.doc.createElement("wbr"));
+          frag.append(part7);
+        });
+        return frag;
+      }
+      /** The word for a level. @param {VersionLevel} level */
+      levelWord(level) {
+        const s2 = getStrings();
+        return {
+          major: s2.versionMajor,
+          minor: s2.versionMinor,
+          patch: s2.versionPatch,
+          other: s2.versionOther,
+          downgrade: s2.versionDowngrade,
+          same: s2.versionSame,
+          unknown: s2.versionUnknown
+        }[level];
+      }
+      /** Read the chip's attributes. @returns {ChipSettings} */
+      settings() {
+        const el16 = this.host;
+        const from = (el16.getAttribute("data-kp-version-from") ?? "").trim();
+        const to = (el16.getAttribute("data-kp-version-to") ?? "").trim();
+        const state12 = el16.getAttribute("data-kp-state");
+        const scheme = (
+          /** @type {'numbers' | 'semver' | 'calver' | 'none'} */
+          el16.getAttribute("data-kp-version-scheme") ?? "numbers"
+        );
+        const listed = (near(el16, "data-kp-version-big-minor") ?? "").split(/[\s,]+/).filter(Boolean);
+        const level = state12 ? "unknown" : versionLevel(from, to, {
+          scheme,
+          bigAt: el16.getAttribute("data-kp-version-big-at") === "second" ? "second" : "first",
+          app: el16.getAttribute("data-kp-version-app") ?? "",
+          bigMinorApps: [...listed, ...this.defaults.bigMinorApps ?? []],
+          level: (
+            /** @type {VersionLevel | 'auto'} */
+            el16.getAttribute("data-kp-version-level") ?? "auto"
+          )
+        });
+        return {
+          from,
+          to,
+          state: state12,
+          digest: el16.getAttribute("data-kp-version-digest") === "full" ? "full" : "short",
+          show: ["both", "to", "level"].includes(el16.getAttribute("data-kp-version-show") ?? "") ? el16.getAttribute("data-kp-version-show") : "both",
+          arrow: el16.getAttribute("data-kp-version-arrow") ?? "\u2192",
+          level
+        };
+      }
+    };
   }
-  if (state12 === "error") {
-    const why = el16.getAttribute("data-kp-version-error");
-    if (why) el16.title = why;
-    el16.setAttribute("data-kp-level", "none");
-    el16.replaceChildren(part7("kp-version__word", "span"));
-    el16.firstElementChild.textContent = s2.versionFailed;
-    return;
+});
+
+// js/version-delta/view.js
+var ChipView;
+var init_view4 = __esm({
+  "js/version-delta/view.js"() {
+    "use strict";
+    init_strings();
+    init_values13();
+    init_core11();
+    ChipView = class extends ChipCore {
+      /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
+      markChip(v) {
+        const el16 = this.host;
+        el16.classList.add("kp-badge", "kp-badge--version");
+        for (const name of ["kp-badge--warning", "kp-badge--destructive", "kp-badge--info", "kp-badge--success"]) el16.classList.remove(name);
+        const tones = { major: "warning", downgrade: "destructive", ...toneMap(el16.getAttribute("data-kp-version-tones") ?? void 0) };
+        const tone = tones[v.level];
+        if (tone && tone !== "none") el16.classList.add(`kp-badge--${tone}`);
+        el16.setAttribute("data-kp-level", v.state ? "none" : v.level);
+        el16.setAttribute("data-kp-sort-value", String(VERSION_SORT[v.level]));
+        el16.removeAttribute("aria-busy");
+        el16.removeAttribute("title");
+      }
+      /**
+       * Loading, failed and empty replace the versions.
+       * @param {ChipSettings} v
+       * @returns {boolean} whether one was drawn
+       */
+      drawState(v) {
+        const el16 = this.host;
+        const s2 = getStrings();
+        if (v.state === "loading") {
+          el16.setAttribute("aria-busy", "true");
+          const bone = this.part("kp-skeleton kp-version__bone");
+          bone.setAttribute("role", "img");
+          bone.setAttribute("aria-label", s2.versionLoading);
+          el16.replaceChildren(bone);
+          return true;
+        }
+        if (v.state === "error") {
+          const why = el16.getAttribute("data-kp-version-error");
+          if (why) el16.title = why;
+          el16.setAttribute("data-kp-level", "none");
+          el16.replaceChildren(this.part("kp-version__word", "span"));
+          el16.firstElementChild.textContent = s2.versionFailed;
+          return true;
+        }
+        if (v.state === "empty" || !v.from && !v.to) {
+          el16.setAttribute("data-kp-level", "none");
+          const word = this.part("kp-version__word");
+          word.textContent = s2.versionNone;
+          el16.replaceChildren(word);
+          return true;
+        }
+        return false;
+      }
+      /** The new version, a link when it has notes. @param {ChipSettings} v */
+      toNode(v) {
+        const s2 = getStrings();
+        const url = this.host.getAttribute("data-kp-version-href") ?? this.defaults.href ?? null;
+        const href = url ? url.replace("{to}", encodeURIComponent(v.to)) : null;
+        const node = href ? this.part("kp-version__to", "a") : this.part("kp-version__to");
+        node.append(this.breakable(shown4(v.to, v.digest)));
+        if (href && node instanceof HTMLAnchorElement) {
+          node.href = href;
+          node.target = "_blank";
+          node.rel = "noopener noreferrer";
+          const note2 = this.part("kp-sr-only");
+          note2.textContent = ` (${s2.versionNotes})`;
+          node.append(note2);
+        }
+        return node;
+      }
+      /** The level word, with a bang for a major jump. @param {ChipSettings} v */
+      levelNode(v) {
+        const word = this.part("kp-version__level");
+        word.textContent = this.levelWord(v.level);
+        if (v.level === "major") word.prepend(Object.assign(this.part("kp-version__bang"), { textContent: "!" }));
+        return word;
+      }
+      /** What stands in the chip: the versions, the arrow, the level. @param {ChipSettings} v @param {HTMLElement} toNode @returns {Node[]} */
+      children(v, toNode) {
+        const s2 = getStrings();
+        const { from, level, show } = v;
+        if (level === "same" && from) {
+          const word = this.part("kp-version__word");
+          word.textContent = s2.versionSame;
+          return [toNode, word];
+        }
+        if (show === "level" && !["unknown", "other"].includes(level)) return [this.levelNode(v)];
+        if (show === "to" || !from) return [toNode];
+        const fromNode = this.part("kp-version__from");
+        fromNode.append(this.breakable(shown4(from, v.digest)));
+        const arrowNode = this.part("kp-version__arrow");
+        arrowNode.setAttribute("aria-hidden", "true");
+        arrowNode.textContent = v.arrow;
+        const children = [fromNode, arrowNode, toNode];
+        if (["major", "downgrade"].includes(level)) children.push(this.levelNode(v));
+        else if (level === "unknown" || level === "other") fromNode.setAttribute("data-kp-raw", "");
+        return children;
+      }
+      /** What a screen reader hears, in words and not in glyphs. @param {ChipSettings} v */
+      spoken(v) {
+        const s2 = getStrings();
+        const { from, to, level } = v;
+        const node = this.part("kp-sr-only");
+        node.textContent = level === "same" ? `, ${s2.versionSpokenSame(to)}` : !from ? `, ${s2.versionSpokenTo(to)}` : level === "downgrade" ? `, ${s2.versionSpokenDown(from, to)}` : level === "other" || level === "unknown" ? `, ${s2.versionSpokenChanged(from, to)}` : `, ${s2.versionSpoken(from, to, this.levelWord(level))}`;
+        return node;
+      }
+    };
   }
-  if (state12 === "empty" || !from && !to) {
-    el16.setAttribute("data-kp-level", "none");
-    const word = part7("kp-version__word");
-    word.textContent = s2.versionNone;
-    el16.replaceChildren(word);
-    return;
+});
+
+// js/version-delta/controller.js
+var VersionChip;
+var init_controller34 = __esm({
+  "js/version-delta/controller.js"() {
+    "use strict";
+    init_values13();
+    init_view4();
+    VersionChip = class extends ChipView {
+      connect() {
+        if (this.host.dataset.kpVersionAttached === void 0) this.wire();
+      }
+      /** Mark the chip, draw it, and keep it in step with its attributes and its clicks. */
+      wire() {
+        const el16 = this.host;
+        el16.dataset.kpVersionAttached = "";
+        this.own(() => {
+          el16.replaceChildren();
+          el16.className = this.before;
+          for (const name of ["data-kp-level", "data-kp-sort-value", "data-kp-version-attached"]) el16.removeAttribute(name);
+        });
+        this.draw();
+        this.listen(el16, "click", (event) => void this.copy(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.observe(new MutationObserver(() => this.draw())).observe(el16, { attributes: true, attributeFilter: [...VERSION_OBSERVED] });
+      }
+      /** Draw the chip from its attributes. */
+      draw() {
+        const v = this.settings();
+        this.markChip(v);
+        if (this.drawState(v)) return;
+        const toNode = this.toNode(v);
+        const children = this.children(v, toNode);
+        this.host.replaceChildren(...children, this.spoken(v));
+        if (v.show === "level" || !v.from) this.host.title = v.from ? [v.from, v.arrow, v.to].join(" ") : v.to;
+      }
+      /** Shift+click copies "10.11 → 12.1". @param {MouseEvent} event */
+      async copy(event) {
+        const el16 = this.host;
+        if (!event.shiftKey || event.target instanceof Element && event.target.closest("a")) return;
+        const from = el16.getAttribute("data-kp-version-from") ?? "";
+        const to = el16.getAttribute("data-kp-version-to") ?? "";
+        const text = from ? `${from} ${el16.getAttribute("data-kp-version-arrow") ?? "\u2192"} ${to}` : to;
+        event.preventDefault();
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          return;
+        }
+        el16.dispatchEvent(new CustomEvent(VERSION_COPY_EVENT, { bubbles: true, detail: { text } }));
+      }
+    };
   }
-  const url = el16.getAttribute("data-kp-version-href") ?? defaults.href ?? null;
-  const href = url ? url.replace("{to}", encodeURIComponent(to)) : null;
-  const toNode = href ? part7("kp-version__to", "a") : part7("kp-version__to");
-  toNode.append(breakable(doc, shown4(to, digest)));
-  if (href && toNode instanceof HTMLAnchorElement) {
-    toNode.href = href;
-    toNode.target = "_blank";
-    toNode.rel = "noopener noreferrer";
-    const note2 = part7("kp-sr-only");
-    note2.textContent = ` (${s2.versionNotes})`;
-    toNode.append(note2);
-  }
-  const fromNode = part7("kp-version__from");
-  fromNode.append(breakable(doc, shown4(from, digest)));
-  const arrowNode = part7("kp-version__arrow");
-  arrowNode.setAttribute("aria-hidden", "true");
-  arrowNode.textContent = arrow;
-  const children = [];
-  if (level === "same" && from) {
-    const word = part7("kp-version__word");
-    word.textContent = s2.versionSame;
-    children.push(toNode, word);
-  } else if (show === "level" && !["unknown", "other"].includes(level)) {
-    const word = part7("kp-version__level");
-    word.textContent = levelWord;
-    if (level === "major") word.prepend(Object.assign(part7("kp-version__bang"), { textContent: "!" }));
-    children.push(word);
-  } else if (show === "to" || !from) {
-    children.push(toNode);
-  } else {
-    children.push(fromNode, arrowNode, toNode);
-    if (["major", "downgrade"].includes(level)) {
-      const word = part7("kp-version__level");
-      word.textContent = levelWord;
-      if (level === "major") word.prepend(Object.assign(part7("kp-version__bang"), { textContent: "!" }));
-      children.push(word);
-    } else if (level === "unknown" || level === "other") {
-      fromNode.setAttribute("data-kp-raw", "");
-    }
-  }
-  const spoken = part7("kp-sr-only");
-  spoken.textContent = level === "same" ? `, ${s2.versionSpokenSame(to)}` : !from ? `, ${s2.versionSpokenTo(to)}` : level === "downgrade" ? `, ${s2.versionSpokenDown(from, to)}` : level === "other" || level === "unknown" ? `, ${s2.versionSpokenChanged(from, to)}` : `, ${s2.versionSpoken(from, to, levelWord)}`;
-  el16.replaceChildren(...children, spoken);
-  if (show === "level" || !from) el16.title = from ? [from, arrow, to].join(" ") : to;
+});
+
+// js/version-delta/links.js
+function githubRepo(upstream) {
+  const m = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/.exec(String(upstream ?? "").trim());
+  if (!m || m[1] === "." || m[1] === ".." || m[2] === "." || m[2] === "..") return null;
+  return { owner: m[1], repo: m[2] };
 }
+function releaseUrl(upstream, latest) {
+  const r = githubRepo(upstream);
+  const tag = String(latest ?? "").trim();
+  if (!r || !tag) return null;
+  return `https://github.com/${r.owner}/${r.repo}/releases/tag/${encodeURIComponent(tag)}`;
+}
+var init_links2 = __esm({
+  "js/version-delta/links.js"() {
+    "use strict";
+  }
+});
+
+// js/version-delta.js
+var version_delta_exports = {};
+__export(version_delta_exports, {
+  VERSION_COPY_EVENT: () => VERSION_COPY_EVENT,
+  VERSION_DELTA: () => VERSION_DELTA,
+  VERSION_LEVELS: () => VERSION_LEVELS,
+  VERSION_SORT: () => VERSION_SORT,
+  attachVersionDeltas: () => attachVersionDeltas,
+  githubRepo: () => githubRepo,
+  releaseUrl: () => releaseUrl,
+  setVersionDelta: () => setVersionDelta,
+  summarizeDeltas: () => summarizeDeltas,
+  versionLevel: () => versionLevel,
+  versionNumbers: () => versionNumbers
+});
 function setVersionDelta(el16, { from, to, app, href, state: state12, error } = {}) {
   const write2 = (name, value) => {
     if (value === void 0) return;
@@ -64912,77 +65088,23 @@ function setVersionDelta(el16, { from, to, app, href, state: state12, error } = 
   if (state12 !== void 0) write2("data-kp-state", state12 === "ready" ? null : state12);
 }
 function attachVersionDeltas(root = document, options = {}) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(VERSION_DELTA) ? [root] : [],
-      ...root.querySelectorAll(VERSION_DELTA)
-    ].filter((el16) => el16.dataset.kpVersionAttached === void 0)
-  );
-  const undo = [];
-  for (const el16 of found) {
-    el16.dataset.kpVersionAttached = "";
-    const before = el16.className;
-    draw7(el16, options);
-    const watch2 = new MutationObserver(() => draw7(el16, options));
-    watch2.observe(el16, { attributes: true, attributeFilter: [...ATTRIBUTES] });
-    const onClick = async (event) => {
-      if (!event.shiftKey || event.target instanceof Element && event.target.closest("a")) return;
-      const from = el16.getAttribute("data-kp-version-from") ?? "";
-      const to = el16.getAttribute("data-kp-version-to") ?? "";
-      const text = from ? `${from} ${el16.getAttribute("data-kp-version-arrow") ?? "\u2192"} ${to}` : to;
-      event.preventDefault();
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch {
-        return;
-      }
-      el16.dispatchEvent(new CustomEvent(VERSION_COPY_EVENT, { bubbles: true, detail: { text } }));
-    };
-    el16.addEventListener("click", onClick);
-    undo.push(() => {
-      watch2.disconnect();
-      el16.removeEventListener("click", onClick);
-      el16.replaceChildren();
-      el16.className = before;
-      for (const name of ["data-kp-level", "data-kp-sort-value", "data-kp-version-attached"]) el16.removeAttribute(name);
-    });
-  }
-  return () => undo.forEach((u) => u());
+  return attachAll(root, VERSION_DELTA, VersionChip, options);
 }
-var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, shown4, near, ATTRIBUTES;
 var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
-    init_strings();
-    VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
-    VERSION_COPY_EVENT = "kp-version-copy";
-    VERSION_LEVELS = /** @type {const} */
-    ["same", "other", "patch", "minor", "major", "downgrade", "unknown"];
-    VERSION_SORT = Object.freeze({ downgrade: 4, major: 3, minor: 2, patch: 1, other: 0, same: 0, unknown: 0 });
-    shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + 12)}` : version;
-    near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
-    ATTRIBUTES = [
-      "data-kp-version-from",
-      "data-kp-version-to",
-      "data-kp-version-app",
-      "data-kp-version-href",
-      "data-kp-version-scheme",
-      "data-kp-version-level",
-      "data-kp-version-tones",
-      "data-kp-version-show",
-      "data-kp-version-arrow",
-      "data-kp-version-digest",
-      "data-kp-version-big-at",
-      "data-kp-version-error",
-      "data-kp-state"
-    ];
+    init_controller();
+    init_controller34();
+    init_values13();
+    init_values13();
+    init_level();
+    init_links2();
   }
 });
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values13 = __esm({
+var init_values14 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -65049,11 +65171,11 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core11 = __esm({
+var init_core12 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values13();
+    init_values14();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -65164,8 +65286,8 @@ var init_rows4 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values13();
-    init_core11();
+    init_values14();
+    init_core12();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -65267,16 +65389,16 @@ var init_rows4 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values13();
+    init_values14();
     init_order();
-    init_core11();
+    init_core12();
     init_rows4();
     DependencyList = class extends DeplistRows {
       connect() {
@@ -65451,9 +65573,9 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller34();
-    init_values13();
-    init_values13();
+    init_controller35();
+    init_values14();
+    init_values14();
     init_order();
   }
 });
@@ -65519,7 +65641,7 @@ function attachOne5(el16) {
   let busy = null;
   let kept = 0;
   const attr16 = (name, fallback2) => el16.getAttribute(name) ?? fallback2;
-  const draw8 = () => {
+  const draw7 = () => {
     const s2 = getStrings();
     const stop = attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal";
     const ruleMode = attr16("data-kp-trace-rule", "chip");
@@ -65629,14 +65751,14 @@ function attachOne5(el16) {
       hops = next2;
       state12 = "ready";
       kept = 0;
-      draw8();
+      draw7();
       kept = stage.offsetHeight;
     },
     setState(next2, options = {}) {
       if (state12 === "ready" && stage.offsetHeight > 0) kept = stage.offsetHeight;
       state12 = next2;
       message = options.message ?? "";
-      draw8();
+      draw7();
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
@@ -65645,7 +65767,7 @@ function attachOne5(el16) {
     busy?.remove();
     HANDLES6.delete(el16);
   });
-  const watch2 = new MutationObserver(draw8);
+  const watch2 = new MutationObserver(draw7);
   watch2.observe(el16, {
     attributes: true,
     attributeFilter: [
@@ -65674,7 +65796,7 @@ function attachOne5(el16) {
     );
     undo.push(off);
   }
-  draw8();
+  draw7();
   return () => undo.reverse().forEach((u) => u());
 }
 function attachTraces(root = document) {
@@ -66618,7 +66740,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -66957,7 +67079,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts9();
-    init_values14();
+    init_values15();
   }
 });
 
@@ -66967,7 +67089,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values14();
+    init_values15();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -67087,7 +67209,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values14();
+    init_values15();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -67362,7 +67484,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -67615,7 +67737,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller35();
+    init_controller36();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -67961,7 +68083,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -68266,7 +68388,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller36();
+    init_controller37();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -68404,7 +68526,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -68477,7 +68599,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values15();
+    init_values16();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -68749,7 +68871,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values15();
+    init_values16();
   }
 });
 
@@ -68786,13 +68908,13 @@ var init_keys13 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core12 = __esm({
+var init_core13 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values15();
+    init_values16();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -68908,9 +69030,9 @@ var init_run3 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values15();
+    init_values16();
     init_kinds();
-    init_core12();
+    init_core13();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -69079,7 +69201,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values15();
+    init_values16();
     init_kinds();
     init_keys13();
     init_run3();
@@ -69201,8 +69323,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values15();
-    init_values15();
+    init_values16();
+    init_values16();
     init_kinds();
     init_glyph();
     init_open3();
@@ -70103,7 +70225,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -70242,7 +70364,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build12 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values16();
+    init_values17();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -70256,13 +70378,13 @@ var init_build12 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core13 = __esm({
+var init_core14 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build12();
-    init_values16();
+    init_values17();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -70377,12 +70499,12 @@ var init_core13 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build12();
-    init_core13();
-    init_values16();
+    init_core14();
+    init_values17();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -70607,9 +70729,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller37();
-    init_values16();
-    init_values16();
+    init_controller38();
+    init_values17();
+    init_values17();
   }
 });
 
@@ -70775,7 +70897,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -71004,7 +71126,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller38();
+    init_controller39();
     init_fields();
     init_fields();
   }
@@ -71344,7 +71466,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -71595,7 +71717,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller39();
+    init_controller40();
   }
 });
 
@@ -71752,7 +71874,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       if (index === 0) li.dataset.kpRunsNext = "";
       return li;
     };
-    const draw8 = () => {
+    const draw7 = () => {
       const shown5 = expanded ? all : all.slice(0, count2);
       let rows;
       if (state12 === "loading" && shown5.length === 0) {
@@ -71794,7 +71916,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       }
     };
     const sync3 = () => {
-      draw8();
+      draw7();
       paintNote2();
       el16.dataset.kpState = state12;
       if (state12 === "loading" && !busy) {
@@ -71836,11 +71958,11 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     };
     const onMore = () => {
       expanded = !expanded;
-      draw8();
+      draw7();
     };
     el16.addEventListener("click", onClick);
     button6.addEventListener("click", onMore);
-    const tick6 = Number.isFinite(fixed) || nowOption ? 0 : window.setInterval(() => state12 === "ready" && draw8(), 6e4);
+    const tick6 = Number.isFinite(fixed) || nowOption ? 0 : window.setInterval(() => state12 === "ready" && draw7(), 6e4);
     const initial = (el16.dataset.kpRunsValues ?? "").split(",").map((v) => v.trim()).filter(Boolean);
     if (el16.dataset.kpState === "loading") handle.setState("loading");
     else handle.set(initial);
@@ -72200,7 +72322,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -72459,7 +72581,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller40();
+    init_controller41();
     init_choices();
   }
 });
@@ -72997,7 +73119,7 @@ function renderDetail(g) {
   if (!body.childNodes.length) body.append(make29(doc, "p", "kp-graph__detail-text", node.description));
 }
 var detailCount, insetOf;
-var init_view4 = __esm({
+var init_view5 = __esm({
   "js/graph/view.js"() {
     "use strict";
     init_constants38();
@@ -73312,7 +73434,7 @@ var init_draw9 = __esm({
     "use strict";
     init_state_plate();
     init_options5();
-    init_view4();
+    init_view5();
     init_instance3();
     init_layout3();
     init_constants38();
@@ -73395,7 +73517,7 @@ var init_api26 = __esm({
     "use strict";
     init_instance3();
     init_draw9();
-    init_view4();
+    init_view5();
   }
 });
 
@@ -73826,7 +73948,7 @@ var init_attach20 = __esm({
     init_options5();
     init_layout3();
     init_draw9();
-    init_view4();
+    init_view5();
   }
 });
 
@@ -73943,15 +74065,15 @@ function undress(el16) {
 function dress(el16) {
   const kind = kindOf3(el16);
   const name = kind ? piecesOf(el16) : "";
-  const draw8 = DRAW[name];
-  if (!kind || !draw8 || el16.getClientRects().length === 0) {
+  const draw7 = DRAW[name];
+  if (!kind || !draw7 || el16.getClientRects().length === 0) {
     if (el16.hasAttribute(PIECES_ATTRIBUTE)) undress(el16);
     return false;
   }
   const size2 = `${name} ${kind} ${el16.clientWidth}x${el16.clientHeight}`;
   if (measured.get(el16) === size2 && el16.querySelector(":scope > .kp-pieces")) return true;
   for (const old of el16.querySelectorAll(":scope > .kp-pieces")) old.remove();
-  const { html, q } = draw8(el16, kind);
+  const { html, q } = draw7(el16, kind);
   const box = document.createElement("span");
   box.className = `kp-pieces kp-pieces--${kind}`;
   box.setAttribute("aria-hidden", "true");
@@ -77313,7 +77435,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -77417,7 +77539,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller41();
+    init_controller42();
     init_state28();
     init_state28();
     init_matrix2();
@@ -79737,7 +79859,7 @@ function fillBody(root, st, file, body) {
   const surface = el15("kp-diff");
   let drawn2 = 0;
   let left = 0;
-  const draw8 = (line, pairs) => {
+  const draw7 = (line, pairs) => {
     if (cap > 0 && drawn2 >= cap) {
       left += 1;
       return;
@@ -79763,7 +79885,7 @@ function fillBody(root, st, file, body) {
     const pairs = words3 ? wordPairs(hunk.lines) : /* @__PURE__ */ new Map();
     for (const part7 of foldContext(hunk.lines, keep)) {
       if (part7.kind === "lines") {
-        for (const line of part7.lines) draw8(line, pairs);
+        for (const line of part7.lines) draw7(line, pairs);
         continue;
       }
       if (cap > 0 && drawn2 >= cap) {
@@ -79778,7 +79900,7 @@ function fillBody(root, st, file, body) {
       fold2.setAttribute("data-kp-diff-fold-lines", String(part7.lines.length));
       if (!open4) fold2.setAttribute("aria-label", s2.diffUnchangedName(part7.lines.length));
       surface.append(fold2);
-      if (open4) for (const line of part7.lines) draw8(line, pairs);
+      if (open4) for (const line of part7.lines) draw7(line, pairs);
     }
   });
   if (left > 0) {
@@ -82576,11 +82698,7 @@ export {
   UPDATING_ATTRIBUTE,
   VALUE_PROPERTY,
   VERSION,
-  VERSION_COPY_EVENT,
-  VERSION_DELTA,
-  VERSION_LEVELS,
   VERSION_PROPERTY,
-  VERSION_SORT,
   VIEWER,
   VIEWER_CLOSE_EVENT,
   VIEWER_STATES,
@@ -82760,7 +82878,6 @@ export {
   freshness_exports as freshnessExports,
   gallery_exports as galleryExports,
   gantt_exports as ganttExports,
-  githubRepo,
   glyphCells,
   graph_exports as graphExports,
   grid,
@@ -82856,7 +82973,6 @@ export {
   registerLoaded,
   registerShortcuts,
   registersPresent,
-  releaseUrl,
   remember_exports as rememberExports,
   removeRow,
   renderDiagnostics,
@@ -82950,7 +83066,6 @@ export {
   structure_exports as structureExports,
   stylesheetSide,
   subsequence,
-  summarizeDeltas,
   syncProgressbar,
   systemReduced,
   tabbar_exports as tabbarExports,
@@ -82995,8 +83110,6 @@ export {
   uses_map_exports as usesMapExports,
   usual_picker_exports as usualPickerExports,
   version_delta_exports as versionDeltaExports,
-  versionLevel,
-  versionNumbers,
   viewer_exports as viewerExports,
   watchOptions,
   week_exports as weekExports,

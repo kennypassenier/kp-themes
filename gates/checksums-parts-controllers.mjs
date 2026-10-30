@@ -249,4 +249,10 @@ export const CONTROLLER_PART_FILES = [
     'js/uses-map/nodes.js',
     'js/uses-map/relation.js',
     'js/uses-map/wire.js',
+    'js/version-delta/controller.js',
+    'js/version-delta/core.js',
+    'js/version-delta/level.js',
+    'js/version-delta/links.js',
+    'js/version-delta/values.js',
+    'js/version-delta/view.js',
 ];
