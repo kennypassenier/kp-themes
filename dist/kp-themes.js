@@ -11319,13 +11319,13 @@ function coveredEdges(view, wrapper, skip) {
     }
     return null;
   };
-  const stacked = (size2, at, reach2) => {
+  const stacked = (size2, at, reach3) => {
     let inset = 0;
     let first = null;
     for (const start of [0.5, 8.5, 16.5, 32.5]) if (first = at(start)) break;
     for (let bar = first, n = 0; bar && n < 4; n += 1) {
-      if (reach2(bar) <= inset + 0.5) break;
-      inset = reach2(bar);
+      if (reach3(bar) <= inset + 0.5) break;
+      inset = reach3(bar);
       bar = inset < size2 ? at(inset + 0.5) : null;
     }
     return inset;
@@ -29458,9 +29458,9 @@ function installTip2(c) {
   }).sort((a, b) => b.v - a.v);
   const eventsNear = (t) => {
     if (!c.geo) return [];
-    const reach2 = (c.geo.to - c.geo.from) / 30;
+    const reach3 = (c.geo.to - c.geo.from) / 30;
     return shownEvents().filter(
-      (ev) => ev.until != null && ev.until > ev.at ? t >= ev.at - reach2 && t <= ev.until + reach2 : Math.abs(ev.at - t) < reach2
+      (ev) => ev.until != null && ev.until > ev.at ? t >= ev.at - reach3 && t <= ev.until + reach3 : Math.abs(ev.at - t) < reach3
     );
   };
   const change2 = (d) => d === 0 ? "\xB10" : `${d > 0 ? "\u25B2" : "\u25BC"} ${fmt(Math.abs(d), "delta")}`;
@@ -45429,11 +45429,11 @@ function sequencerUnit(word) {
   const name = names[String(word ?? "").trim().toLowerCase()];
   return name ? { name, seconds: SEQUENCER_UNITS[name] } : null;
 }
-function sequencerSnap(value, step, candidates = [], reach2 = 0) {
+function sequencerSnap(value, step, candidates = [], reach3 = 0) {
   let best = null;
   for (const c of candidates) {
     const d = Math.abs(c - value);
-    if (d <= reach2 + EPS && (best === null || d < best.d)) best = { c, d };
+    if (d <= reach3 + EPS && (best === null || d < best.d)) best = { c, d };
   }
   if (best) return round(best.c);
   return step > 0 ? round(Math.round(value / step + EPS) * step) : round(value);
@@ -48011,9 +48011,9 @@ function reachableLanes(c) {
 }
 function syncTabStops2(c) {
   const all = [...c.bars.values(), ...c.pointEls.values()];
-  const reach2 = reachableLanes(c).flat();
+  const reach3 = reachableLanes(c).flat();
   let target = c.active ? c.bars.get(c.active) ?? c.pointEls.get(c.active) : void 0;
-  if (!target || !reach2.includes(target)) target = reach2[0];
+  if (!target || !reach3.includes(target)) target = reach3[0];
   for (const el16 of all) el16.tabIndex = el16 === target ? 0 : -1;
 }
 function focusBar(c, to) {
@@ -48244,7 +48244,7 @@ function paint9(c) {
   const sample = c.bars.values().next().value;
   const minBar = sample && Number.parseFloat(getComputedStyle(sample).minWidth) || 8;
   const pad2 = Math.max(c.span * 6e-3, RUN_GAP_PX * perPx);
-  const reach2 = minBar * perPx;
+  const reach3 = minBar * perPx;
   const markPx = (() => {
     const el16 = c.pointEls.values().next().value;
     const w = el16 ? Number.parseFloat(getComputedStyle(el16, "::before").width) : Number.NaN;
@@ -48266,7 +48266,7 @@ function paint9(c) {
   for (const [id, lane] of laneById) {
     const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
     const packed = packRows(
-      bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach2) })),
+      bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach3) })),
       before,
       pad2,
       marksOf.get(id) ?? []
@@ -63497,19 +63497,7 @@ var init_slider = __esm({
   }
 });
 
-// js/sentence.js
-var sentence_exports = {};
-__export(sentence_exports, {
-  SENTENCE: () => SENTENCE,
-  SENTENCE_EVENT: () => SENTENCE_EVENT,
-  attachSentences: () => attachSentences,
-  sentence: () => sentence,
-  sentenceSummary: () => sentenceSummary,
-  setSentenceComputed: () => setSentenceComputed,
-  setSentenceFieldState: () => setSentenceFieldState,
-  setSentenceInvalid: () => setSentenceInvalid,
-  setSentenceWhy: () => setSentenceWhy
-});
+// js/sentence/fields.js
 function nameOf5(control) {
   const label = control.getAttribute("aria-label");
   if (label) return label;
@@ -63564,7 +63552,7 @@ function setSentenceInvalid(element, name, why) {
   const control = [...element.querySelectorAll("[name]")].find((c) => c.getAttribute("name") === name);
   if (!control) return;
   const field = control.closest(".kp-sentence__field");
-  const line = HANDLES14.get(element)?.line;
+  const line = LINES.get(element);
   if (why === null) {
     control.removeAttribute("aria-invalid");
     control.removeAttribute("aria-describedby");
@@ -63580,7 +63568,7 @@ function setSentenceInvalid(element, name, why) {
   }
 }
 function setSentenceWhy(element, text) {
-  const line = HANDLES14.get(element)?.line;
+  const line = LINES.get(element);
   if (!line) return;
   line.textContent = text ?? "";
   line.hidden = !text;
@@ -63618,9 +63606,6 @@ function setSentenceFieldState(field, state2) {
     }
   }
 }
-function sentence(element) {
-  return HANDLES14.get(element) ?? null;
-}
 function valueOfControl(root, name) {
   const controls = [...root.querySelectorAll("[name]")].filter((c2) => c2.getAttribute("name") === name);
   const radios = controls.filter((c2) => c2 instanceof HTMLInputElement && c2.type === "radio");
@@ -63637,212 +63622,275 @@ function valueOfControl(root, name) {
   if (c instanceof HTMLInputElement || c instanceof HTMLSelectElement || c instanceof HTMLTextAreaElement) return c.value;
   return null;
 }
-function attachSentences(root = document, { computed = {} } = {}) {
-  const cleanups = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(SENTENCE) ? [root] : [],
-      ...root.querySelectorAll(SENTENCE)
-    ]
-  );
-  for (const el16 of found) {
-    if (HANDLES14.has(el16)) continue;
-    const doc = el16.ownerDocument;
-    const id = `kp-sentence-${++seq8}`;
-    el16.classList.add("kp-sentence");
-    const drawn2 = [...el16.querySelectorAll(".kp-sentence__field > select:not([multiple]):not([data-kp-select])")];
-    for (const select2 of drawn2) select2.setAttribute("data-kp-select", "");
-    if (drawn2.length) void Promise.resolve().then(() => (init_combobox(), combobox_exports)).then((m) => m.attachSelects(el16));
-    const narrow = el16.dataset.kpNarrow === "stack" || el16.dataset.kpNarrow === "flow" ? el16.dataset.kpNarrow : "wrap";
-    const ratio = Math.min(1, Math.max(0.2, Number(el16.dataset.kpOwnLineRatio) || 0.7));
-    let line = (
-      /** @type {HTMLElement | null} */
-      el16.querySelector(":scope > .kp-sentence__why")
-    );
-    if (!line) {
-      line = doc.createElement("p");
-      line.className = "kp-field__error kp-sentence__why";
-      el16.append(line);
-    }
-    line.id ||= `${id}-why`;
-    line.hidden = !line.textContent?.trim();
-    line.setAttribute("role", "alert");
-    const reason = el16.dataset.kpDisabledReason;
-    let reasonLine = null;
-    if (reason && el16.hasAttribute("disabled")) {
-      reasonLine = doc.createElement("p");
-      reasonLine.className = "kp-sentence__reason";
-      reasonLine.textContent = reason;
-      el16.append(reasonLine);
-    }
-    const live4 = doc.createElement("p");
-    live4.className = "kp-sr-only kp-sentence__live";
-    live4.setAttribute("role", "status");
-    live4.setAttribute("aria-live", "polite");
-    el16.append(live4);
-    const text = el16.querySelector(".kp-sentence__text") ?? el16;
-    for (const field of el16.querySelectorAll(".kp-sentence__field")) {
-      for (const control of field.querySelectorAll('input:not([type="hidden"]), select, textarea, [role="combobox"]')) {
-        if (nameOf5(control) || control.id && doc.querySelector(`label[for="${CSS.escape(control.id)}"]`)) continue;
-        const before = [];
-        for (let n = field.previousSibling; n && before.length < 3; n = n.previousSibling) {
-          if (n.nodeType === Node.TEXT_NODE)
-            before.unshift(
-              ...(n.textContent ?? "").trim().split(/\s+/).filter(Boolean).reverse().slice(0, 3 - before.length).reverse()
-            );
-          else break;
-        }
-        control.setAttribute("aria-label", before.join(" ") || getStrings().sentenceField);
-      }
-    }
-    const phrases = () => {
-      for (const phrase of el16.querySelectorAll("[data-kp-show-when]")) {
-        if (!(phrase instanceof HTMLElement)) continue;
-        const [name, wanted = ""] = (phrase.dataset.kpShowWhen ?? "").split("=");
-        const held2 = valueOfControl(el16, name.trim());
-        const show = held2 !== null && wanted.split(",").map((v) => v.trim()).includes(held2);
-        if (phrase.hidden === !show) continue;
-        phrase.hidden = !show;
-        phrase.toggleAttribute("inert", !show);
-        for (const c of phrase.querySelectorAll(CONTROLS2)) {
-          if (!(c instanceof HTMLElement)) continue;
-          if (!show && !c.hasAttribute("disabled")) {
-            c.setAttribute("disabled", "");
-            c.setAttribute("data-kp-hidden-off", "");
-          } else if (show && c.hasAttribute("data-kp-hidden-off")) {
-            c.removeAttribute("disabled");
-            c.removeAttribute("data-kp-hidden-off");
-          }
-        }
-      }
-    };
-    const place3 = () => {
-      const room = (text instanceof HTMLElement ? text : el16).clientWidth;
-      for (const field of el16.querySelectorAll(".kp-sentence__field")) {
-        if (!(field instanceof HTMLElement) || field.closest("[hidden]")) continue;
-        let own = false;
-        if (field.hasAttribute("data-kp-block")) own = true;
-        else if (narrow === "stack") own = room < 480;
-        else if (narrow === "wrap" && room > 0) {
-          field.removeAttribute("data-kp-own-line");
-          const was = field.style.inlineSize;
-          field.style.inlineSize = "max-content";
-          own = field.getBoundingClientRect().width > room * ratio;
-          field.style.inlineSize = was;
-        }
-        field.toggleAttribute("data-kp-own-line", own);
-      }
-    };
-    const fns = new Map(Object.entries(computed));
-    let warnedComputed = false;
-    const compute = () => {
-      if (fns.size === 0) return;
-      const values = {};
-      for (const control of el16.querySelectorAll("[name]")) {
-        const name = control.getAttribute("name") ?? "";
-        if (name && !(name in values)) values[name] = valueOfControl(el16, name);
-      }
-      for (const [name, fn] of fns) {
-        let text2 = null;
-        try {
-          text2 = fn(values, el16);
-        } catch (error) {
-          if (!warnedComputed) {
-            warnedComputed = true;
-            console.warn(`kp-sentence: the computed field "${name}" threw`, error);
-          }
-        }
-        setSentenceComputed(el16, name, text2);
-      }
-    };
-    const refresh3 = () => {
-      phrases();
-      compute();
-      place3();
-    };
-    let timer2 = 0;
-    const say19 = () => {
-      const summary2 = sentenceSummary(el16);
-      live4.textContent = summary2;
-      el16.dispatchEvent(new CustomEvent(SENTENCE_EVENT, { bubbles: true, detail: { summary: summary2 } }));
-    };
-    const onChange = () => {
-      refresh3();
-      clearTimeout(timer2);
-      timer2 = window.setTimeout(say19, 500);
-    };
-    const onKey4 = (event) => {
-      if (event.key !== "Enter" || event.defaultPrevented || event.isComposing) return;
-      const target = event.target;
-      if (!(target instanceof HTMLInputElement) || target.type === "button" || target.type === "submit" || target.closest('[aria-expanded="true"]'))
-        return;
-      if (!(el16 instanceof HTMLFormElement) && !el16.closest("form")) return;
-      const controls = [
-        ...el16.querySelectorAll('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])')
-      ].filter((c) => !c.closest("[hidden]") && !(c instanceof HTMLInputElement && (c.type === "button" || c.type === "submit")));
-      if (controls.at(-1) !== target) return;
-      event.preventDefault();
-      (el16 instanceof HTMLFormElement ? el16 : (
-        /** @type {HTMLFormElement} */
-        el16.closest("form")
-      )).requestSubmit();
-    };
-    el16.addEventListener("input", onChange);
-    el16.addEventListener("change", onChange);
-    el16.addEventListener("kp-weekdays-change", onChange);
-    el16.addEventListener("kp-combobox-change", onChange);
-    el16.addEventListener("keydown", onKey4);
-    const watch2 = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => place3());
-    watch2?.observe(el16);
-    void doc.fonts?.ready.then(place3);
-    const handle = {
-      element: el16,
-      line,
-      summary: () => sentenceSummary(el16),
-      refresh: refresh3,
-      compute: (name, fn) => {
-        if (fn) fns.set(name, fn);
-        else fns.delete(name);
-        refresh3();
-        live4.textContent = sentenceSummary(el16);
-      }
-    };
-    HANDLES14.set(el16, handle);
-    for (const output of el16.querySelectorAll("[data-kp-sentence-computed]"))
-      setSentenceComputed(el16, output.getAttribute("data-kp-sentence-computed") ?? "", output.textContent);
-    refresh3();
-    live4.textContent = sentenceSummary(el16);
-    cleanups.push(() => {
-      clearTimeout(timer2);
-      el16.removeEventListener("input", onChange);
-      el16.removeEventListener("change", onChange);
-      el16.removeEventListener("kp-weekdays-change", onChange);
-      el16.removeEventListener("kp-combobox-change", onChange);
-      el16.removeEventListener("keydown", onKey4);
-      watch2?.disconnect();
-      live4.remove();
-      reasonLine?.remove();
-      HANDLES14.delete(el16);
-    });
+function reach2(c, show) {
+  if (!show && !c.hasAttribute("disabled")) {
+    c.setAttribute("disabled", "");
+    c.setAttribute("data-kp-hidden-off", "");
+  } else if (show && c.hasAttribute("data-kp-hidden-off")) {
+    c.removeAttribute("disabled");
+    c.removeAttribute("data-kp-hidden-off");
   }
-  return () => {
-    for (const c of cleanups) c();
-  };
 }
-var SENTENCE, SENTENCE_EVENT, CONTROLS2, tidy, COMPUTED_NONE, HANDLES14, seq8;
-var init_sentence = __esm({
-  "js/sentence.js"() {
+function wordsBefore(field) {
+  const before = [];
+  for (let n = field.previousSibling; n && before.length < NAME_WORDS; n = n.previousSibling) {
+    if (n.nodeType !== Node.TEXT_NODE) break;
+    const words2 = (n.textContent ?? "").trim().split(/\s+/).filter(Boolean);
+    before.unshift(...words2.reverse().slice(0, NAME_WORDS - before.length).reverse());
+  }
+  return before;
+}
+var SENTENCE, SENTENCE_EVENT, LINES, CONTROLS2, tidy, COMPUTED_NONE, NAME_WORDS, isButton;
+var init_fields = __esm({
+  "js/sentence/fields.js"() {
     "use strict";
     init_strings();
     init_weekdays();
     SENTENCE = "[data-kp-sentence]";
     SENTENCE_EVENT = "kp-sentence-change";
+    LINES = /* @__PURE__ */ new WeakMap();
     CONTROLS2 = 'input, select, textarea, button, [role="combobox"]';
     tidy = (text) => text.replace(/\s+/g, " ").replace(/\s+([.,;:!?])/g, "$1").trim();
     COMPUTED_NONE = "\u2014";
-    HANDLES14 = /* @__PURE__ */ new WeakMap();
+    NAME_WORDS = 3;
+    isButton = (c) => c instanceof HTMLInputElement && (c.type === "button" || c.type === "submit");
+  }
+});
+
+// js/sentence/controller.js
+var seq8, SAY_AFTER_MS, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
+var init_controller4 = __esm({
+  "js/sentence/controller.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_fields();
     seq8 = 0;
+    SAY_AFTER_MS = 500;
+    STACK_BELOW_PX = 480;
+    OWN_LINE_RATIO = 0.7;
+    OWN_LINE_RATIO_MIN = 0.2;
+    NAMEABLE = 'input:not([type="hidden"]), select, textarea, [role="combobox"]';
+    ENTERABLE = 'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])';
+    CHANGE_EVENTS = ["input", "change", "kp-weekdays-change", "kp-combobox-change"];
+    Sentence = class extends Controller {
+      /** @param {HTMLElement} el @param {{ computed?: Record<string, ComputedFn> }} [options] */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.doc = el16.ownerDocument;
+        this.id = `kp-sentence-${++seq8}`;
+        const narrow = el16.dataset.kpNarrow;
+        this.narrow = narrow === "stack" || narrow === "flow" ? narrow : "wrap";
+        this.ratio = Math.min(1, Math.max(OWN_LINE_RATIO_MIN, Number(el16.dataset.kpOwnLineRatio) || OWN_LINE_RATIO));
+        this.fns = new Map(Object.entries(options.computed ?? {}));
+        this.warnedComputed = false;
+        this.timer = 0;
+        this.live = this.doc.createElement("p");
+        this.reasonLine = null;
+        this.line = /** @type {HTMLElement} */
+        /** @type {unknown} */
+        null;
+        this.handle = {
+          element: el16,
+          line: this.line,
+          summary: () => sentenceSummary(el16),
+          refresh: () => this.refresh(),
+          compute: (name, fn) => this.setCompute(name, fn)
+        };
+      }
+      connect() {
+        const el16 = this.host;
+        el16.classList.add("kp-sentence");
+        this.drawSelects();
+        this.mountLines();
+        this.nameControls();
+        this.own(() => {
+          clearTimeout(this.timer);
+          this.live.remove();
+          this.reasonLine?.remove();
+          LINES.delete(this.host);
+        });
+        for (const type of CHANGE_EVENTS) this.listen(el16, type, () => this.onChange());
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        if (typeof ResizeObserver !== "undefined") this.observe(new ResizeObserver(() => this.place())).observe(el16);
+        void this.doc.fonts?.ready.then(() => this.place());
+        for (const output of el16.querySelectorAll("[data-kp-sentence-computed]"))
+          setSentenceComputed(el16, output.getAttribute("data-kp-sentence-computed") ?? "", output.textContent);
+        this.refresh();
+        this.live.textContent = sentenceSummary(el16);
+      }
+      /**
+       * A select in a sentence opens the package's drawn list (the combobox's own plate, js/combobox.js), not the browser's,
+       * which Firefox paints from the transparent field: almost black in formal [Kenny, 2026-10-17 22:09].
+       * `data-kp-select="native"` on a select keeps the browser's.
+       */
+      drawSelects() {
+        const el16 = this.host;
+        const drawn2 = [...el16.querySelectorAll(".kp-sentence__field > select:not([multiple]):not([data-kp-select])")];
+        for (const select2 of drawn2) select2.setAttribute("data-kp-select", "");
+        if (drawn2.length) void Promise.resolve().then(() => (init_combobox(), combobox_exports)).then((m) => m.attachSelects(el16));
+      }
+      /** The line under the sentence, the reason a disabled one is off, and the summary a screen reader hears. */
+      mountLines() {
+        const el16 = this.host;
+        let line = (
+          /** @type {HTMLElement | null} */
+          el16.querySelector(":scope > .kp-sentence__why")
+        );
+        if (!line) {
+          line = this.doc.createElement("p");
+          line.className = "kp-field__error kp-sentence__why";
+          el16.append(line);
+        }
+        line.id ||= `${this.id}-why`;
+        line.hidden = !line.textContent?.trim();
+        line.setAttribute("role", "alert");
+        this.line = line;
+        this.handle.line = line;
+        LINES.set(el16, line);
+        const reason = el16.dataset.kpDisabledReason;
+        if (reason && el16.hasAttribute("disabled")) {
+          this.reasonLine = this.doc.createElement("p");
+          this.reasonLine.className = "kp-sentence__reason";
+          this.reasonLine.textContent = reason;
+          el16.append(this.reasonLine);
+        }
+        this.live.className = "kp-sr-only kp-sentence__live";
+        this.live.setAttribute("role", "status");
+        this.live.setAttribute("aria-live", "polite");
+        el16.append(this.live);
+      }
+      /** Every control has a name of its own: the words before it when the page gave none. */
+      nameControls() {
+        for (const field of this.host.querySelectorAll(".kp-sentence__field")) {
+          for (const control of field.querySelectorAll(NAMEABLE)) {
+            if (nameOf5(control) || control.id && this.doc.querySelector(`label[for="${CSS.escape(control.id)}"]`)) continue;
+            control.setAttribute("aria-label", wordsBefore(field).join(" ") || getStrings().sentenceField);
+          }
+        }
+      }
+      /** Show the phrases whose condition holds, hide the others and take their controls out of reach. */
+      phrases() {
+        for (const phrase of this.host.querySelectorAll("[data-kp-show-when]")) {
+          if (!(phrase instanceof HTMLElement)) continue;
+          const [name, wanted = ""] = (phrase.dataset.kpShowWhen ?? "").split("=");
+          const held2 = valueOfControl(this.host, name.trim());
+          const show = held2 !== null && wanted.split(",").map((v) => v.trim()).includes(held2);
+          if (phrase.hidden === !show) continue;
+          phrase.hidden = !show;
+          phrase.toggleAttribute("inert", !show);
+          for (const c of phrase.querySelectorAll(CONTROLS2)) if (c instanceof HTMLElement) reach2(c, show);
+        }
+      }
+      /** A field that is more of the line than it may be takes a line of its own. */
+      place() {
+        const text = this.host.querySelector(".kp-sentence__text") ?? this.host;
+        const room = (text instanceof HTMLElement ? text : this.host).clientWidth;
+        for (const field of this.host.querySelectorAll(".kp-sentence__field")) {
+          if (!(field instanceof HTMLElement) || field.closest("[hidden]")) continue;
+          let own = false;
+          if (field.hasAttribute("data-kp-block")) own = true;
+          else if (this.narrow === "stack") own = room < STACK_BELOW_PX;
+          else if (this.narrow === "wrap" && room > 0) {
+            field.removeAttribute("data-kp-own-line");
+            const was = field.style.inlineSize;
+            field.style.inlineSize = "max-content";
+            own = field.getBoundingClientRect().width > room * this.ratio;
+            field.style.inlineSize = was;
+          }
+          field.toggleAttribute("data-kp-own-line", own);
+        }
+      }
+      /** Work every computed field out from the controls as they stand. */
+      compute() {
+        if (this.fns.size === 0) return;
+        const values = {};
+        for (const control of this.host.querySelectorAll("[name]")) {
+          const name = control.getAttribute("name") ?? "";
+          if (name && !(name in values)) values[name] = valueOfControl(this.host, name);
+        }
+        for (const [name, fn] of this.fns) setSentenceComputed(this.host, name, this.run(name, fn, values));
+      }
+      /** One computed function; one that throws is reported once and its field shows the dash. @param {string} name @param {ComputedFn} fn @param {Record<string, string | null>} values */
+      run(name, fn, values) {
+        try {
+          return fn(values, this.host);
+        } catch (error) {
+          if (!this.warnedComputed) {
+            this.warnedComputed = true;
+            console.warn(`kp-sentence: the computed field "${name}" threw`, error);
+          }
+          return null;
+        }
+      }
+      refresh() {
+        this.phrases();
+        this.compute();
+        this.place();
+      }
+      /** @param {string} name @param {ComputedFn | null} fn */
+      setCompute(name, fn) {
+        if (fn) this.fns.set(name, fn);
+        else this.fns.delete(name);
+        this.refresh();
+        this.live.textContent = sentenceSummary(this.host);
+      }
+      say() {
+        const summary2 = sentenceSummary(this.host);
+        this.live.textContent = summary2;
+        this.host.dispatchEvent(new CustomEvent(SENTENCE_EVENT, { bubbles: true, detail: { summary: summary2 } }));
+      }
+      onChange() {
+        this.refresh();
+        clearTimeout(this.timer);
+        this.timer = window.setTimeout(() => this.say(), SAY_AFTER_MS);
+      }
+      /** Enter in the last field submits the form the sentence is (or is in). @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.key !== "Enter" || event.defaultPrevented || event.isComposing) return;
+        const target = event.target;
+        if (!(target instanceof HTMLInputElement) || isButton(target) || target.closest('[aria-expanded="true"]')) return;
+        const el16 = this.host;
+        const form2 = el16 instanceof HTMLFormElement ? el16 : el16.closest("form");
+        if (!form2) return;
+        const controls = [...el16.querySelectorAll(ENTERABLE)].filter((c) => !c.closest("[hidden]") && !isButton(c));
+        if (controls.at(-1) !== target) return;
+        event.preventDefault();
+        form2.requestSubmit();
+      }
+    };
+  }
+});
+
+// js/sentence.js
+var sentence_exports = {};
+__export(sentence_exports, {
+  SENTENCE: () => SENTENCE,
+  SENTENCE_EVENT: () => SENTENCE_EVENT,
+  attachSentences: () => attachSentences,
+  sentence: () => sentence,
+  sentenceSummary: () => sentenceSummary,
+  setSentenceComputed: () => setSentenceComputed,
+  setSentenceFieldState: () => setSentenceFieldState,
+  setSentenceInvalid: () => setSentenceInvalid,
+  setSentenceWhy: () => setSentenceWhy
+});
+function sentence(element) {
+  return controllerOf(element, Sentence)?.handle ?? null;
+}
+function attachSentences(root = document, { computed = {} } = {}) {
+  return attachAll(root, SENTENCE, Sentence, { computed });
+}
+var init_sentence = __esm({
+  "js/sentence.js"() {
+    "use strict";
+    init_controller();
+    init_controller4();
+    init_fields();
+    init_fields();
   }
 });
 
@@ -63879,16 +63927,16 @@ function orderDated(options, order2 = "newest") {
   }).map((x) => x.o);
 }
 function datedOptions(element) {
-  return HANDLES15.get(element) ?? null;
+  return HANDLES14.get(element) ?? null;
 }
 function setDatedOptions(element, options, value) {
-  HANDLES15.get(element)?.set(options, value);
+  HANDLES14.get(element)?.set(options, value);
 }
 function setDatedState(element, state2, options) {
-  HANDLES15.get(element)?.setState(state2, options);
+  HANDLES14.get(element)?.setState(state2, options);
 }
 function datedValue(element) {
-  return HANDLES15.get(element)?.value() ?? null;
+  return HANDLES14.get(element)?.value() ?? null;
 }
 function attachDatedOptions(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -63897,7 +63945,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(DATED) ? [root] : [], ...root.querySelectorAll(DATED)]
   );
   for (const el16 of found) {
-    if (HANDLES15.has(el16)) continue;
+    if (HANDLES14.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = el16.id || `kp-dated-${++seq9}`;
@@ -64211,7 +64259,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       options: () => shown4.slice(),
       state: () => state2
     };
-    HANDLES15.set(el16, handle);
+    HANDLES14.set(el16, handle);
     const onChange = (event) => {
       const target = event.target;
       if (target instanceof HTMLInputElement && target.type === "radio" && body.contains(target)) choose3(target.value, true);
@@ -64262,7 +64310,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       el16.removeEventListener("keydown", onType);
       detachCombobox?.();
       busy?.remove();
-      HANDLES15.delete(el16);
+      HANDLES14.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-dated-rows");
       delete el16.dataset.kpDatedAttached;
@@ -64273,7 +64321,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES15, seq9;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES14, seq9;
 var init_dated_options = __esm({
   "js/dated-options.js"() {
     "use strict";
@@ -64288,7 +64336,7 @@ var init_dated_options = __esm({
     DATED_RETRY_EVENT = "kp-dated-retry";
     DATED_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
-    HANDLES15 = /* @__PURE__ */ new WeakMap();
+    HANDLES14 = /* @__PURE__ */ new WeakMap();
     seq9 = 0;
   }
 });
@@ -64334,13 +64382,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES16.get(element) ?? null;
+  return HANDLES15.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES16.get(element)?.set(times, options);
+  HANDLES15.get(element)?.set(times, options);
 }
 function setRunsState(element, state2, options) {
-  HANDLES16.get(element)?.setState(state2, options);
+  HANDLES15.get(element)?.setState(state2, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -64349,7 +64397,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES16.has(el16)) continue;
+    if (HANDLES15.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq10}`;
@@ -64498,7 +64546,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state2
     };
-    HANDLES16.set(el16, handle);
+    HANDLES15.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -64519,7 +64567,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button2.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES16.delete(el16);
+      HANDLES15.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -64529,7 +64577,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES16, seq10;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES15, seq10;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -64544,7 +64592,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES16 = /* @__PURE__ */ new WeakMap();
+    HANDLES15 = /* @__PURE__ */ new WeakMap();
     seq10 = 0;
   }
 });
@@ -64630,16 +64678,16 @@ function snoozeChoices({
   return out;
 }
 function snooze(element) {
-  return HANDLES17.get(element) ?? null;
+  return HANDLES16.get(element) ?? null;
 }
 function setSnoozedUntil(element, until) {
-  HANDLES17.get(element)?.setUntil(until);
+  HANDLES16.get(element)?.setUntil(until);
 }
 function setSnoozeBusy(element, busy) {
-  HANDLES17.get(element)?.setBusy(busy);
+  HANDLES16.get(element)?.setBusy(busy);
 }
 function openSnoozePanel(element, open4 = true) {
-  const h2 = HANDLES17.get(element);
+  const h2 = HANDLES16.get(element);
   if (open4) h2?.openPanel();
   else h2?.closePanel();
 }
@@ -64653,7 +64701,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     ]
   );
   for (const el16 of found) {
-    if (HANDLES17.has(el16)) continue;
+    if (HANDLES16.has(el16)) continue;
     const s2 = snoozeWords(el16);
     const doc = el16.ownerDocument;
     const id = `kp-snooze-${++seq11}`;
@@ -65010,7 +65058,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       openPanel,
       closePanel: () => void closePanel(false)
     };
-    HANDLES17.set(el16, handle);
+    HANDLES16.set(el16, handle);
     handle.setUntil(el16.dataset.kpSnoozedUntil ?? null);
     paintStatus();
     fill2();
@@ -65026,7 +65074,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       end.removeEventListener("click", onEnd);
       doc.removeEventListener("pointerdown", onOutside, true);
       if (tick6) clearInterval(tick6);
-      HANDLES17.delete(el16);
+      HANDLES16.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-busy");
       delete el16.dataset.kpSnoozeAttached;
@@ -65037,7 +65085,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES17, seq11;
+var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES16, seq11;
 var init_snooze = __esm({
   "js/snooze.js"() {
     "use strict";
@@ -65081,7 +65129,7 @@ var init_snooze = __esm({
       ["data-kp-snooze-apply", "snoozeApply"],
       ["data-kp-snooze-saving", "snoozeSaving"]
     ];
-    HANDLES17 = /* @__PURE__ */ new WeakMap();
+    HANDLES16 = /* @__PURE__ */ new WeakMap();
     seq11 = 0;
   }
 });
@@ -66545,11 +66593,11 @@ function caterpillar(el16, kind) {
     return { html: html2, q };
   }
   const r = cornerOf(el16);
-  const reach2 = W - 2 * r;
-  const n = Math.max(3, Math.floor(reach2 / (q * 3.4)));
+  const reach3 = W - 2 * r;
+  const n = Math.max(3, Math.floor(reach3 / (q * 3.4)));
   let html = "";
   for (let k = 0; k < n; k++)
-    html += `<i class="kp-pieces__leg" style="left: ${px4(at(r + (k + 0.5) * reach2 / n))}; top: ${px4(foot)}; --k: ${k}"></i>`;
+    html += `<i class="kp-pieces__leg" style="left: ${px4(at(r + (k + 0.5) * reach3 / n))}; top: ${px4(foot)}; --k: ${k}"></i>`;
   html += `<i class="kp-pieces__head kp-pieces__head--lead" style="left: ${px4(rtl ? r * 0.29 : W - r * 0.29)}; top: ${px4(r * 0.29)}"></i>`;
   return { html, q };
 }
@@ -75113,8 +75161,6 @@ export {
   SELECTION_MATCHING_EVENT,
   SELECTION_NAMES,
   SELECTION_SAY_MS,
-  SENTENCE,
-  SENTENCE_EVENT,
   SEVERITIES,
   SHORTCUTS_LIVE_SHEET,
   SHORTCUT_EVENT,
@@ -75689,7 +75735,6 @@ export {
   selection_bar_exports as selectionBarExports,
   sentence,
   sentence_exports as sentenceExports,
-  sentenceSummary,
   sequencer_exports as sequencerExports,
   setAckNotes,
   setActionBusy,
@@ -75763,10 +75808,6 @@ export {
   setSelectionProgress,
   setSelectionResult,
   setSelectionRules,
-  setSentenceComputed,
-  setSentenceFieldState,
-  setSentenceInvalid,
-  setSentenceWhy,
   setSliderState,
   setSliderValues,
   setSnoozeBusy,

@@ -137,6 +137,8 @@ export const FILES = [
     'js/snooze.js',
     'js/dated-options.js',
     'js/sentence.js',
+    'js/sentence/controller.js',
+    'js/sentence/fields.js',
     'js/slider.js',
     'js/autosize.js',
     'js/anchors.js',
