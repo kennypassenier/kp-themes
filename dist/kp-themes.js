@@ -18543,23 +18543,38 @@ var init_locale = __esm({
 });
 
 // js/state-plate.js
+function dress(plate2, kind, existing) {
+  const classes = kind === "error" ? "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error" : "kp-empty kp-stateplate kp-stateplate--empty";
+  if (!existing) {
+    plate2.className = classes;
+    return;
+  }
+  plate2.classList.remove("kp-alert", "kp-alert--destructive", "kp-empty", "kp-stateplate--error", "kp-stateplate--empty");
+  plate2.replaceChildren();
+  plate2.classList.add(...classes.split(" "));
+}
+function artOf(doc, art) {
+  const picture = doc.createElement("span");
+  picture.className = "kp-stateplate__art";
+  picture.setAttribute("aria-hidden", "true");
+  if (typeof art === "string") picture.textContent = art;
+  else picture.append(art);
+  return picture;
+}
+function actionOf(doc, label, onAction, attribute) {
+  const button6 = doc.createElement("button");
+  button6.type = "button";
+  button6.className = "kp-button kp-stateplate__action";
+  button6.textContent = label;
+  if (attribute) button6.setAttribute(attribute, "");
+  if (onAction) button6.addEventListener("click", onAction);
+  return button6;
+}
 function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute, art, into }) {
   const plate2 = into ?? doc.createElement("div");
-  const classes = kind === "error" ? "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error" : "kp-empty kp-stateplate kp-stateplate--empty";
-  if (into) {
-    into.classList.remove("kp-alert", "kp-alert--destructive", "kp-empty", "kp-stateplate--error", "kp-stateplate--empty");
-    into.replaceChildren();
-    into.classList.add(...classes.split(" "));
-  } else plate2.className = classes;
+  dress(plate2, kind, Boolean(into));
   plate2.setAttribute("role", kind === "error" ? "alert" : "status");
-  if (art) {
-    const picture = doc.createElement("span");
-    picture.className = "kp-stateplate__art";
-    picture.setAttribute("aria-hidden", "true");
-    if (typeof art === "string") picture.textContent = art;
-    else picture.append(art);
-    plate2.append(picture);
-  }
+  if (art) plate2.append(artOf(doc, art));
   const head = doc.createElement("strong");
   head.className = "kp-stateplate__title";
   head.textContent = title;
@@ -18570,15 +18585,7 @@ function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttri
     line.textContent = text;
     plate2.append(line);
   }
-  if (actionLabel) {
-    const button6 = doc.createElement("button");
-    button6.type = "button";
-    button6.className = "kp-button kp-stateplate__action";
-    button6.textContent = actionLabel;
-    if (actionAttribute) button6.setAttribute(actionAttribute, "");
-    if (onAction) button6.addEventListener("click", onAction);
-    plate2.append(button6);
-  }
+  if (actionLabel) plate2.append(actionOf(doc, actionLabel, onAction, actionAttribute));
   return plate2;
 }
 function hostStatePlate(host, { kind, title, text, art, retryEvent, retryLabel, into }) {
@@ -25398,7 +25405,7 @@ function glyph(doc, kind) {
   svg2.append(path);
   return svg2;
 }
-var make4, actionButton, rowOf2, actionOf;
+var make4, actionButton, rowOf2, actionOf2;
 var init_dom3 = __esm({
   "js/passkeys/dom.js"() {
     "use strict";
@@ -25416,7 +25423,7 @@ var init_dom3 = __esm({
       return button6;
     };
     rowOf2 = (el16, key) => [...el16.querySelectorAll("[data-kp-passkey]")].find((li) => li.getAttribute("data-kp-passkey") === key);
-    actionOf = (el16, key, act) => (
+    actionOf2 = (el16, key, act) => (
       /** @type {HTMLElement | null | undefined} */
       rowOf2(el16, key)?.querySelector(`[data-kp-passkeys-act="${act}"]`)
     );
@@ -25919,7 +25926,7 @@ var init_controller13 = __esm({
           this.busy.delete(row2.key);
           this.refused.set(row2.key, strings.passkeysRefused(reasonOf(error, strings.passkeysRefusedFallback)));
           draw2(this);
-          actionOf(this.host, row2.key, "remove")?.focus();
+          actionOf2(this.host, row2.key, "remove")?.focus();
         }
       }
       /** @param {import('./constants.js').PasskeyRow} row */
@@ -25939,7 +25946,7 @@ var init_controller13 = __esm({
       stopRename(key, focus) {
         this.renaming = null;
         draw2(this);
-        if (focus) actionOf(this.host, key, "rename")?.focus();
+        if (focus) actionOf2(this.host, key, "rename")?.focus();
       }
       /** The rename field, when one is drawn. */
       renameInput() {
@@ -79163,7 +79170,7 @@ function staggerDay(el16) {
   const index = cell && cell.parentElement ? [...cell.parentElement.children].indexOf(cell) : 0;
   el16.style.setProperty("--kp-pieces-d", `${Math.max(0, index) * SHAPE.dayStagger}ms`);
 }
-function dress(el16) {
+function dress2(el16) {
   const kind = kindOf3(el16);
   const name = kind ? piecesOf(el16) : "";
   const draw6 = DRAW[name];
@@ -79280,7 +79287,7 @@ var init_watch4 = __esm({
           this.release(el16);
           return;
         }
-        if (dress(el16)) {
+        if (dress2(el16)) {
           if (!this.dressed.has(el16)) {
             this.dressed.add(el16);
             this.sizes?.observe(el16);
@@ -84087,7 +84094,7 @@ function rowFor2(line) {
   row2.append(time, source, level, message);
   return row2;
 }
-function dress2(root, row2, line) {
+function dress3(root, row2, line) {
   const mode2 = attr14(root, "time", "time");
   const timeCell = (
     /** @type {HTMLElement} */
@@ -84272,7 +84279,7 @@ function redraw2(root) {
   trim(root);
   for (const line of st.lines) {
     const row2 = st.nodes.get(line.id);
-    if (row2) dress2(root, row2, line);
+    if (row2) dress3(root, row2, line);
   }
   collect(root, true);
   refresh2(root);
@@ -84320,7 +84327,7 @@ function appendLogLines(el16, lines) {
     if (st.nodes.has(id)) continue;
     const line = { id, ts: stamp3(raw.ts), source: raw.source ?? "", level: logLevel(raw.level), message: String(raw.message ?? "") };
     const row2 = rowFor2(line);
-    dress2(root, row2, line);
+    dress3(root, row2, line);
     st.lines.push(line);
     st.nodes.set(id, row2);
     fragment.append(row2);
