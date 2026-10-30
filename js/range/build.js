@@ -56,18 +56,10 @@ export function buildCustomButton(doc, s, id, disabled) {
 }
 
 /**
- * One bound of the window: a legend, a date picker and a time.
- * @param {Document} doc @param {Strings} s @param {'from' | 'to'} which
- * @returns {RangeBound}
+ * The date picker of a bound: the input, the button that opens the calendar and the calendar's own panel.
+ * @param {Document} doc @param {Strings} s @param {string} legendText
  */
-function buildBound(doc, s, which) {
-    const set = doc.createElement('fieldset');
-    set.className = 'kp-range__bound';
-    const legend = doc.createElement('legend');
-    legend.className = 'kp-field__label';
-    legend.textContent = which === 'from' ? s.rangeFrom : s.rangeTo;
-    const row = doc.createElement('div');
-    row.className = 'kp-range__inputs';
+function buildDatePicker(doc, s, legendText) {
     const picker = doc.createElement('div');
     picker.className = 'kp-datepicker kp-range__date';
     picker.dataset.kpDatepicker = '';
@@ -77,7 +69,7 @@ function buildBound(doc, s, which) {
     date.inputMode = 'numeric';
     date.autocomplete = 'off';
     date.dataset.kpDateInput = '';
-    date.setAttribute('aria-label', s.rangeDateLabel(legend.textContent ?? ''));
+    date.setAttribute('aria-label', s.rangeDateLabel(legendText));
     const open = doc.createElement('button');
     open.type = 'button';
     open.className = 'kp-button';
@@ -93,6 +85,23 @@ function buildBound(doc, s, which) {
     datePanel.dataset.kpDatePanel = '';
     datePanel.hidden = true;
     picker.append(date, open, datePanel);
+    return { picker, date };
+}
+
+/**
+ * One bound of the window: a legend, a date picker and a time.
+ * @param {Document} doc @param {Strings} s @param {'from' | 'to'} which
+ * @returns {RangeBound}
+ */
+function buildBound(doc, s, which) {
+    const set = doc.createElement('fieldset');
+    set.className = 'kp-range__bound';
+    const legend = doc.createElement('legend');
+    legend.className = 'kp-field__label';
+    legend.textContent = which === 'from' ? s.rangeFrom : s.rangeTo;
+    const row = doc.createElement('div');
+    row.className = 'kp-range__inputs';
+    const { picker, date } = buildDatePicker(doc, s, legend.textContent ?? '');
     const time = doc.createElement('input');
     time.className = 'kp-field__input kp-range__time';
     time.type = 'text';

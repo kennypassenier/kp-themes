@@ -35,6 +35,12 @@ export function buildChrome(doc, strings, id, wrap, gutterOn) {
     const mirror = doc.createElement('div');
     mirror.className = 'kp-jsonfield__mirror';
     mirror.setAttribute('aria-hidden', 'true');
+    const word = fillTools(doc, strings, tools, wrap);
+    return { root, tools, frame, gutter, numbers, status, readout, help, mirror, word };
+}
+
+/** The wrap and copy tools in the tools bar; returns the word of the copy tool, which says how the copy went. @param {Document} doc @param {Strings} strings @param {HTMLElement} tools @param {boolean} wrap */
+function fillTools(doc, strings, tools, wrap) {
     const toolWrap = buildTool(doc, strings.jsonWrap, 'wrap');
     toolWrap.setAttribute('aria-pressed', String(wrap));
     const toolCopy = buildTool(doc, '', 'copy');
@@ -44,7 +50,7 @@ export function buildChrome(doc, strings, id, wrap, gutterOn) {
     word.textContent = strings.jsonCopy;
     toolCopy.append(word);
     tools.append(toolWrap, toolCopy);
-    return { root, tools, frame, gutter, numbers, status, readout, help, mirror, word };
+    return word;
 }
 
 /** @param {Document} doc @param {string} label @param {string} which */

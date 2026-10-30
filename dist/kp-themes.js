@@ -54322,14 +54322,7 @@ function buildCustomButton(doc, s2, id, disabled2) {
   button6.append(text);
   return button6;
 }
-function buildBound(doc, s2, which) {
-  const set = doc.createElement("fieldset");
-  set.className = "kp-range__bound";
-  const legend = doc.createElement("legend");
-  legend.className = "kp-field__label";
-  legend.textContent = which === "from" ? s2.rangeFrom : s2.rangeTo;
-  const row = doc.createElement("div");
-  row.className = "kp-range__inputs";
+function buildDatePicker(doc, s2, legendText) {
   const picker = doc.createElement("div");
   picker.className = "kp-datepicker kp-range__date";
   picker.dataset.kpDatepicker = "";
@@ -54339,7 +54332,7 @@ function buildBound(doc, s2, which) {
   date.inputMode = "numeric";
   date.autocomplete = "off";
   date.dataset.kpDateInput = "";
-  date.setAttribute("aria-label", s2.rangeDateLabel(legend.textContent ?? ""));
+  date.setAttribute("aria-label", s2.rangeDateLabel(legendText));
   const open4 = doc.createElement("button");
   open4.type = "button";
   open4.className = "kp-button";
@@ -54355,6 +54348,17 @@ function buildBound(doc, s2, which) {
   datePanel.dataset.kpDatePanel = "";
   datePanel.hidden = true;
   picker.append(date, open4, datePanel);
+  return { picker, date };
+}
+function buildBound(doc, s2, which) {
+  const set = doc.createElement("fieldset");
+  set.className = "kp-range__bound";
+  const legend = doc.createElement("legend");
+  legend.className = "kp-field__label";
+  legend.textContent = which === "from" ? s2.rangeFrom : s2.rangeTo;
+  const row = doc.createElement("div");
+  row.className = "kp-range__inputs";
+  const { picker, date } = buildDatePicker(doc, s2, legend.textContent ?? "");
   const time = doc.createElement("input");
   time.className = "kp-field__input kp-range__time";
   time.type = "text";
@@ -57497,6 +57501,10 @@ function buildChrome(doc, strings, id, wrap, gutterOn) {
   const mirror = doc.createElement("div");
   mirror.className = "kp-jsonfield__mirror";
   mirror.setAttribute("aria-hidden", "true");
+  const word = fillTools(doc, strings, tools, wrap);
+  return { root, tools, frame: frame3, gutter, numbers: numbers2, status, readout, help, mirror, word };
+}
+function fillTools(doc, strings, tools, wrap) {
   const toolWrap = buildTool(doc, strings.jsonWrap, "wrap");
   toolWrap.setAttribute("aria-pressed", String(wrap));
   const toolCopy = buildTool(doc, "", "copy");
@@ -57506,7 +57514,7 @@ function buildChrome(doc, strings, id, wrap, gutterOn) {
   word.textContent = strings.jsonCopy;
   toolCopy.append(word);
   tools.append(toolWrap, toolCopy);
-  return { root, tools, frame: frame3, gutter, numbers: numbers2, status, readout, help, mirror, word };
+  return word;
 }
 function buildTool(doc, label, which) {
   const b = (
