@@ -12,7 +12,7 @@
         "js/auto-refresh.js": { "digest": "eb67311c1d2d3d41", "when": "[data-kp-refresh]" },
         "js/autosize.js": { "digest": "3a0cba6ee822ba7d", "when": "textarea[data-kp-autosize]" },
         "js/availability.js": { "digest": "554dafbb1e66f83c", "when": "[data-kp-availability]" },
-        "js/barcell.js": { "digest": "7b955a57075fc5f9", "when": "[data-kp-bar]" },
+        "js/barcell.js": { "digest": "af9763b3c1d40147", "when": "[data-kp-bar]" },
         "js/bullets.js": { "digest": "2af33c30cc6b47ba", "when": "[data-kp-bullets]" },
         "js/calendar.js": { "digest": "06f57569124aa0d0", "when": "[data-kp-calendar]" },
         "js/calm.js": { "digest": "9e8fe8bae7b50f69", "when": "[data-kp-calm-switch]" },

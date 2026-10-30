@@ -51680,51 +51680,41 @@ __export(barcell_exports, {
   attachBarCells: () => attachBarCells,
   setBarCell: () => setBarCell
 });
-function setBarCell(el16, { value = null, text, tone, warnAt = 0.75, badAt = 0.9, sortValue, mark = null, label, markLabel, loading = false }) {
+function partOf(el16, className, place3) {
+  const found = (
+    /** @type {HTMLElement | null} */
+    el16.querySelector(`:scope > .${className}`)
+  );
+  if (found) return found;
+  const part7 = el16.ownerDocument.createElement("span");
+  part7.className = className;
+  el16[place3](part7);
+  return part7;
+}
+function autoTone(value, warnAt, badAt) {
+  if (value === null) return null;
+  if (value >= badAt) return "destructive";
+  return value >= warnAt ? "warning" : null;
+}
+function sortText(sortValue, measured2) {
+  if (sortValue === void 0) return measured2 === null ? "" : String(Math.round(measured2 * SORT_SCALE) / SORT_TENTHS);
+  return sortValue === null ? "" : String(sortValue);
+}
+function setBarCell(el16, { value = null, text, tone, warnAt = WARN_AT, badAt = BAD_AT, sortValue, mark = null, label, markLabel, loading = false }) {
   el16.classList.add("kp-bar-cell");
-  let meter = (
-    /** @type {HTMLElement | null} */
-    el16.querySelector(":scope > .kp-meter")
-  );
-  if (!meter) {
-    meter = el16.ownerDocument.createElement("span");
-    meter.className = "kp-meter";
-    el16.prepend(meter);
-  }
-  let number = (
-    /** @type {HTMLElement | null} */
-    el16.querySelector(":scope > .kp-bar-cell__value")
-  );
-  if (!number) {
-    number = el16.ownerDocument.createElement("span");
-    number.className = "kp-bar-cell__value";
-    el16.append(number);
-  }
-  const measured2 = value != null && Number.isFinite(value) && !loading;
-  const auto = !measured2 ? null : (
-    /** @type {number} */
-    value >= badAt ? "destructive" : (
-      /** @type {number} */
-      value >= warnAt ? "warning" : null
-    )
-  );
-  setMeter(meter, { value: measured2 ? value : null, mark, tone: tone === void 0 ? auto : tone, label, markLabel, loading });
+  const meter = partOf(el16, "kp-meter", "prepend");
+  const number = partOf(el16, "kp-bar-cell__value", "append");
+  const measured2 = value != null && Number.isFinite(value) && !loading ? value : null;
+  setMeter(meter, { value: measured2, mark, tone: tone === void 0 ? autoTone(measured2, warnAt, badAt) : tone, label, markLabel, loading });
   if (loading) {
     const ghost = el16.ownerDocument.createElement("span");
     ghost.className = "kp-skeleton kp-bar-cell__ghost";
     ghost.setAttribute("aria-hidden", "true");
     number.replaceChildren(ghost);
-  } else number.textContent = text ?? (measured2 ? `${Math.round(
-    /** @type {number} */
-    value * 100
-  )}%` : "");
+  } else number.textContent = text ?? (measured2 === null ? "" : `${Math.round(measured2 * PERCENT3)}%`);
   el16.toggleAttribute("data-kp-loading", loading);
-  const sort = sortValue === void 0 ? measured2 ? String(Math.round(
-    /** @type {number} */
-    value * 1e3
-  ) / 10) : "" : sortValue === null ? "" : String(sortValue);
   const holder = el16.closest("td, th");
-  if (holder) holder.setAttribute(SORT_VALUE_ATTRIBUTE, sort);
+  if (holder) holder.setAttribute(SORT_VALUE_ATTRIBUTE, sortText(sortValue, measured2));
 }
 function fill(el16) {
   const tone = el16.getAttribute("data-kp-bar-tone");
@@ -51740,45 +51730,67 @@ function fill(el16) {
   });
 }
 function attachBarCells(root = document) {
-  for (
-    const el16 of
-    /** @type {NodeListOf<HTMLElement>} */
-    root.querySelectorAll(BAR_CELL)
-  ) fill(el16);
-  const doc = root instanceof Document ? root : (
-    /** @type {Element} */
-    root.ownerDocument
-  );
-  const view = doc.defaultView;
-  if (!view) return () => {
-  };
-  const watch2 = new view.MutationObserver((records) => {
-    for (const record of records) {
-      const el16 = (
-        /** @type {HTMLElement} */
-        record.target
-      );
-      if (el16.matches?.(BAR_CELL)) fill(el16);
-    }
-  });
-  watch2.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
+  const controller = new BarCellsController(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
     root
-  ), {
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["data-kp-bar", "data-kp-bar-text", "data-kp-bar-tone", "data-kp-bar-mark", "data-kp-bar-loading"]
-  });
-  return () => watch2.disconnect();
+  );
+  controller.connect();
+  return () => controller.destroy();
 }
-var BAR_CELL, SORT_VALUE_ATTRIBUTE, numberOf;
+var BAR_CELL, SORT_VALUE_ATTRIBUTE, WARN_AT, BAD_AT, PERCENT3, SORT_SCALE, SORT_TENTHS, numberOf, BarCellsController;
 var init_barcell = __esm({
   "js/barcell.js"() {
     "use strict";
     init_kpi();
+    init_controller();
     BAR_CELL = "[data-kp-bar]";
     SORT_VALUE_ATTRIBUTE = "data-kp-sort-value";
+    WARN_AT = 0.75;
+    BAD_AT = 0.9;
+    PERCENT3 = 100;
+    SORT_SCALE = 1e3;
+    SORT_TENTHS = 10;
     numberOf = (text) => text == null || text.trim() === "" || !Number.isFinite(Number(text)) ? null : Number(text);
+    BarCellsController = class extends Controller {
+      connect() {
+        const root = (
+          /** @type {ParentNode} */
+          /** @type {unknown} */
+          this.host
+        );
+        for (
+          const el16 of
+          /** @type {NodeListOf<HTMLElement>} */
+          root.querySelectorAll(BAR_CELL)
+        ) fill(el16);
+        const doc = root instanceof Document ? root : (
+          /** @type {Element} */
+          root.ownerDocument
+        );
+        const view = doc.defaultView;
+        if (!view) return;
+        const watch2 = this.observe(
+          new view.MutationObserver((records) => {
+            for (const record of records) {
+              const el16 = (
+                /** @type {HTMLElement} */
+                record.target
+              );
+              if (el16.matches?.(BAR_CELL)) fill(el16);
+            }
+          })
+        );
+        watch2.observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), {
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["data-kp-bar", "data-kp-bar-text", "data-kp-bar-tone", "data-kp-bar-mark", "data-kp-bar-loading"]
+        });
+      }
+    };
   }
 });
 
@@ -56265,7 +56277,7 @@ var init_gantt = __esm({
 });
 
 // js/pipeline/values.js
-var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT3, make17;
+var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT4, make17;
 var init_values27 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
@@ -56275,7 +56287,7 @@ var init_values27 = __esm({
     PIPELINE_MORE_EVENT = "kp-pipeline-more";
     GHOST_CARDS = 2;
     GHOST_CARDS_CLOSED = 3;
-    PERCENT3 = 100;
+    PERCENT4 = 100;
     make17 = (doc, tag, className, text) => {
       const el16 = doc.createElement(tag);
       if (className) el16.className = className;
@@ -56490,7 +56502,7 @@ var init_lanes3 = __esm({
         node.append(this.laneHead(lane, cards.length, id));
         if (this.host.dataset.kpPipelineShare !== "false" && !lane.closed) {
           const share = make17(doc, "p", "kp-pipeline__share");
-          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards.length / total * PERCENT3));
+          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards.length / total * PERCENT4));
           node.append(share);
         }
         const list = make17(doc, "div", "kp-pipeline__cards");

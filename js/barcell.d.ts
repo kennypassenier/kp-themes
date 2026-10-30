@@ -42,19 +42,6 @@ export type BarCell = {
     loading?: boolean;
 };
 /**
- * @typedef {object} BarCell
- * @property {number | null} [value]  the share, 0 up (1 is full); null is not measured
- * @property {string} [text]          the number beside the bar ("62%", "2.1 GB"); default the rounded percentage, or empty
- * @property {'warning' | 'destructive' | null} [tone]  the fill's colour; omit to let `warnAt` and `badAt` decide, null for none
- * @property {number} [warnAt]        from this share the fill is the warning colour (default 0.75)
- * @property {number} [badAt]         from this share the fill is the destructive colour (default 0.9)
- * @property {number | string | null} [sortValue]  what a data table sorts and filters this cell by; default the share as a percentage, '' when not measured
- * @property {number | null} [mark]   a tick on the bar (a limit, a target)
- * @property {string} [label]         what the share is, for a screen reader ("full")
- * @property {string} [markLabel]     what the mark is
- * @property {boolean} [loading]
- */
-/**
  * Write a bar cell: the meter, the number, and the sort value on the cell
  * around it.
  *
