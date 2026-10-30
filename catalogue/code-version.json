@@ -5,7 +5,7 @@
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "8b991575d50cd0aa", "when": ".kp-action" },
         "js/actions.js": { "digest": "752ed11f9eed59e6", "when": ".kp-row-actions" },
-        "js/alarm.js": { "digest": "647bf77baf844ec6", "when": "[data-kp-alarm]" },
+        "js/alarm.js": { "digest": "f1234069084dbbb7", "when": "[data-kp-alarm]" },
         "js/anchors.js": { "digest": "1cf5841c25e107ad", "when": "[data-kp-anchors]" },
         "js/art.js": { "digest": "22eeb301a2b92523", "when": "[data-kp-art]" },
         "js/attention.js": { "digest": "76a2e4da0f8bdd07", "when": ".kp-attention" },
@@ -11207,6 +11207,7 @@
             "families": [
                 "data-kp-alarm",
                 "data-kp-alarm-action",
+                "data-kp-alarm-attached",
                 "data-kp-alarm-code",
                 "data-kp-alarm-detail",
                 "data-kp-alarm-escape",

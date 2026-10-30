@@ -435,6 +435,7 @@
             "why": "the one memory: the side navigation's groups and rail, the tree, the split, the accordion and the data table's view"
         },
         { "path": "js/alarm.js", "tags": ["@component:alarm"] },
+        { "path": "js/alarm/*.js", "tags": ["@component:alarm"] },
         { "path": "js/overlays.js", "tags": ["@component:overlays", "@component:feedback", "@component:navigation", "@component:data"] },
         { "path": "js/overlays/*.js", "tags": ["@component:overlays", "@component:feedback", "@component:navigation", "@component:data"] },
         {

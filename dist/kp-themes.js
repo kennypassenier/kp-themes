@@ -9367,25 +9367,7 @@ var init_effects = __esm({
   }
 });
 
-// js/alarm.js
-var alarm_exports = {};
-__export(alarm_exports, {
-  ALARM_CLOSE_EVENT: () => ALARM_CLOSE_EVENT,
-  ALARM_OPEN_EVENT: () => ALARM_OPEN_EVENT,
-  ALARM_SECONDS: () => ALARM_SECONDS,
-  attachAlarms: () => attachAlarms,
-  buildAlarm: () => buildAlarm,
-  glyphCells: () => glyphCells,
-  noiseGlyph: () => noiseGlyph,
-  showAlarm: () => showAlarm,
-  writeCountdown: () => writeCountdown
-});
-function el(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== void 0) node.textContent = text;
-  return node;
-}
+// js/alarm/glyphs.js
 function glyphCells(text) {
   const parts2 = [];
   let i = 0;
@@ -9400,12 +9382,36 @@ function glyphCells(text) {
   }
   return parts2;
 }
-function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", seconds = ALARM_SECONDS, escape: escape2 = false, action, strings, id } = { title: "" }) {
-  const s2 = { ...getStrings(), ...strings };
-  const auto = mode2 === "auto";
-  const secs = Math.max(1, Math.round(Number(seconds)) || ALARM_SECONDS);
-  const label = action || s2.alarmAction;
-  const base = id ?? `kp-alarm-${++serial}`;
+var noiseGlyph;
+var init_glyphs = __esm({
+  "js/alarm/glyphs.js"() {
+    "use strict";
+    init_effects();
+    noiseGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+  }
+});
+
+// js/alarm/values.js
+var ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS, TICK_MS, SECOND_MS;
+var init_values3 = __esm({
+  "js/alarm/values.js"() {
+    "use strict";
+    ALARM_CLOSE_EVENT = "kp-alarm-close";
+    ALARM_OPEN_EVENT = "kp-alarm-open";
+    ALARM_SECONDS = 8;
+    TICK_MS = 100;
+    SECOND_MS = 1e3;
+  }
+});
+
+// js/alarm/build.js
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== void 0) node.textContent = text;
+  return node;
+}
+function buildDialog(base, auto, escape2, hasDetail) {
   const dialog = (
     /** @type {HTMLDialogElement} */
     el("dialog", "kp-alarm")
@@ -9415,16 +9421,12 @@ function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", second
   dialog.setAttribute("role", "alertdialog");
   dialog.setAttribute("aria-modal", "true");
   dialog.setAttribute("aria-labelledby", `${base}-title`);
-  dialog.setAttribute("aria-describedby", `${detail ? `${base}-detail ` : ""}${base}-when`);
+  dialog.setAttribute("aria-describedby", `${hasDetail ? `${base}-detail ` : ""}${base}-when`);
   dialog.dataset.kpAlarmMode = auto ? "auto" : "ack";
   dialog.setAttribute("closedby", auto || escape2 ? "closerequest" : "none");
-  const scan = el("div", "kp-alarm__scan");
-  const bars = el("div", "kp-alarm__bars");
-  scan.setAttribute("aria-hidden", "true");
-  bars.setAttribute("aria-hidden", "true");
-  const panel = el("div", "kp-alarm__panel");
-  dialog.append(scan, bars, panel);
-  if (code) panel.append(el("p", "kp-alarm__code", code));
+  return dialog;
+}
+function buildHeadline(title, base) {
   const heading = el("div", "kp-alarm__title");
   heading.setAttribute("role", "heading");
   heading.setAttribute("aria-level", "2");
@@ -9449,16 +9451,9 @@ function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", second
     glyphs.append(word);
   }
   heading.append(name, glyphs);
-  panel.append(heading);
-  if (detail) {
-    const line = el("p", "kp-alarm__detail", detail);
-    line.id = `${base}-detail`;
-    panel.append(line);
-  }
-  const when = el("p", "kp-sr-only", auto ? s2.alarmClosesBy(secs) : s2.alarmPressTo(label));
-  when.id = `${base}-when`;
-  when.setAttribute("aria-live", "assertive");
-  panel.append(when);
+  return heading;
+}
+function buildActions(s2, label) {
   const actions = el("div", "kp-alarm__actions");
   const ack = (
     /** @type {HTMLButtonElement} */
@@ -9468,7 +9463,9 @@ function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", second
   const hint = el("span", "kp-alarm__hint", s2.alarmHint);
   hint.setAttribute("aria-hidden", "true");
   actions.append(ack, hint);
-  panel.append(actions);
+  return { actions, ack };
+}
+function buildCountdown(s2, secs) {
   const countdown = el("div", "kp-alarm__countdown");
   const track = el("span", "kp-alarm__track");
   track.setAttribute("aria-hidden", "true");
@@ -9481,115 +9478,250 @@ function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", second
   );
   keep.type = "button";
   countdown.append(track, left, keep);
+  return { countdown, left, keep };
+}
+function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", seconds = ALARM_SECONDS, escape: escape2 = false, action, strings, id } = { title: "" }) {
+  const s2 = { ...getStrings(), ...strings };
+  const auto = mode2 === "auto";
+  const secs = Math.max(1, Math.round(Number(seconds)) || ALARM_SECONDS);
+  const label = action || s2.alarmAction;
+  const base = id ?? `kp-alarm-${++serial}`;
+  const dialog = buildDialog(base, auto, escape2, Boolean(detail));
+  const scan = el("div", "kp-alarm__scan");
+  const bars = el("div", "kp-alarm__bars");
+  scan.setAttribute("aria-hidden", "true");
+  bars.setAttribute("aria-hidden", "true");
+  const panel = el("div", "kp-alarm__panel");
+  dialog.append(scan, bars, panel);
+  if (code) panel.append(el("p", "kp-alarm__code", code));
+  panel.append(buildHeadline(title, base));
+  if (detail) {
+    const line = el("p", "kp-alarm__detail", detail);
+    line.id = `${base}-detail`;
+    panel.append(line);
+  }
+  const when = el("p", "kp-sr-only", auto ? s2.alarmClosesBy(secs) : s2.alarmPressTo(label));
+  when.id = `${base}-when`;
+  when.setAttribute("aria-live", "assertive");
+  panel.append(when);
+  const { actions, ack } = buildActions(s2, label);
+  panel.append(actions);
+  const { countdown, left, keep } = buildCountdown(s2, secs);
   panel.append(countdown);
   return { dialog, ack, keep, when, left, strings: s2, action: label, seconds: secs };
 }
-function showAlarm(options) {
-  const { mode: mode2 = "ack", escape: escape2 = false } = options;
-  const trigger = options.trigger !== void 0 ? options.trigger : document.activeElement instanceof HTMLElement ? document.activeElement : null;
-  const { dialog, ack, keep, when, left, strings: s2, action, seconds } = buildAlarm(options);
-  const id = dialog.id;
-  return new Promise((resolve) => {
-    let reason = "escape";
-    let timer = 0;
-    const close = (why) => {
-      reason = why;
-      if (dialog.open) dialog.close(why);
-    };
-    const escapeAllowed = () => dialog.dataset.kpAlarmMode === "auto" || escape2;
-    ack.addEventListener("click", () => close("ack"));
-    keep.addEventListener("click", () => {
-      window.clearInterval(timer);
-      dialog.dataset.kpAlarmMode = "ack";
-      dialog.setAttribute("closedby", escape2 ? "closerequest" : "none");
-      when.textContent = s2.alarmKeptOpen(action);
-      ack.focus();
-    });
-    dialog.addEventListener("cancel", (event) => {
-      if (!escapeAllowed()) event.preventDefault();
-      else reason = "escape";
-    });
-    dialog.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && !escapeAllowed()) event.preventDefault();
-    });
-    dialog.addEventListener("close", () => {
-      window.clearInterval(timer);
-      dialog.remove();
-      if (trigger?.isConnected) trigger.focus();
-      (trigger?.isConnected ? trigger : document).dispatchEvent(new CustomEvent(ALARM_CLOSE_EVENT, { bubbles: true, detail: { reason, id } }));
-      resolve(reason);
-    });
-    document.body.append(dialog);
-    dialog.showModal();
-    dialog.scrollTop = 0;
-    if (mode2 === "auto") dialog.focus({ preventScroll: true });
-    else ack.focus({ preventScroll: true });
-    dialog.scrollTop = 0;
-    dialog.dispatchEvent(new CustomEvent(ALARM_OPEN_EVENT, { bubbles: true, detail: { id, mode: dialog.dataset.kpAlarmMode } }));
-    if (mode2 === "auto") {
-      const total = seconds * 1e3;
-      const began = performance.now();
-      const tick6 = () => {
-        const remaining = Math.max(0, total - (performance.now() - began));
-        const whole = Math.ceil(remaining / 1e3);
-        writeCountdown(dialog, left, remaining / total, whole / seconds, s2.alarmCountdown(whole));
-        if (remaining <= 0) close("timeout");
-      };
-      timer = window.setInterval(tick6, TICK_MS);
-      tick6();
-    }
-  });
-}
+var serial;
+var init_build2 = __esm({
+  "js/alarm/build.js"() {
+    "use strict";
+    init_strings();
+    init_glyphs();
+    init_values3();
+    serial = 0;
+  }
+});
+
+// js/alarm/countdown.js
 function writeCountdown(dialog, left, share, stepped, words3) {
   dialog.style.setProperty("--kp-alarm-left", String(share));
   dialog.style.setProperty("--kp-alarm-left-step", String(stepped));
   if (left && left.textContent !== words3) left.textContent = words3;
 }
-function attachAlarms(root = document, { strings } = {}) {
-  const cleanups = [];
-  for (const node of root.querySelectorAll("[data-kp-alarm]")) {
-    const trigger = (
-      /** @type {HTMLElement} */
-      node
-    );
-    if (trigger.dataset.kpAlarmAttached !== void 0) continue;
-    trigger.dataset.kpAlarmAttached = "";
-    const raise = () => {
-      const d = trigger.dataset;
-      void showAlarm({
-        title: d.kpAlarm ?? "",
-        detail: d.kpAlarmDetail,
-        code: d.kpAlarmCode,
-        mode: d.kpAlarmMode === "auto" ? "auto" : "ack",
-        seconds: d.kpAlarmSeconds === void 0 ? void 0 : Number(d.kpAlarmSeconds),
-        escape: d.kpAlarmEscape !== void 0,
-        action: d.kpAlarmAction,
-        strings,
-        trigger
-      });
-    };
-    trigger.addEventListener("click", raise);
-    cleanups.push(() => {
-      trigger.removeEventListener("click", raise);
-      delete trigger.dataset.kpAlarmAttached;
-    });
+var init_countdown = __esm({
+  "js/alarm/countdown.js"() {
+    "use strict";
   }
+});
+
+// js/alarm/session.js
+var AlarmSession;
+var init_session = __esm({
+  "js/alarm/session.js"() {
+    "use strict";
+    init_controller();
+    init_countdown();
+    init_values3();
+    AlarmSession = class extends Controller {
+      /**
+       * @param {HTMLDialogElement} host the dialog
+       * @param {SessionOptions} options
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.dialog = host;
+        this.o = options;
+        this.reason = "escape";
+        this.timer = 0;
+      }
+      connect() {
+        const { dialog, o } = this;
+        this.listen(o.ack, "click", () => this.close("ack"));
+        this.listen(o.keep, "click", () => this.onKeep());
+        this.listen(dialog, "cancel", (event) => this.onCancel(event));
+        this.listen(dialog, "keydown", (event) => {
+          if (
+            /** @type {KeyboardEvent} */
+            event.key === "Escape" && !this.escapeAllowed()
+          ) event.preventDefault();
+        });
+        this.listen(dialog, "close", () => this.onClosed());
+        this.own(() => window.clearInterval(this.timer));
+      }
+      /** @param {AlarmReason} why */
+      close(why) {
+        this.reason = why;
+        if (this.dialog.open) this.dialog.close(why);
+      }
+      escapeAllowed() {
+        return this.dialog.dataset.kpAlarmMode === "auto" || this.o.escape;
+      }
+      /** Keep open stops the countdown and turns the alarm into an acknowledged one. */
+      onKeep() {
+        const { dialog, o } = this;
+        window.clearInterval(this.timer);
+        dialog.dataset.kpAlarmMode = "ack";
+        dialog.setAttribute("closedby", o.escape ? "closerequest" : "none");
+        o.when.textContent = o.strings.alarmKeptOpen(o.action);
+        o.ack.focus();
+      }
+      /** @param {Event} event */
+      onCancel(event) {
+        if (!this.escapeAllowed()) event.preventDefault();
+        else this.reason = "escape";
+      }
+      /** The alarm closed: the focus goes back, the page hears why, the promise settles, and the session is over. */
+      onClosed() {
+        const { dialog, o, reason } = this;
+        window.clearInterval(this.timer);
+        dialog.remove();
+        const trigger = o.trigger;
+        if (trigger?.isConnected) trigger.focus();
+        (trigger?.isConnected ? trigger : document).dispatchEvent(new CustomEvent(ALARM_CLOSE_EVENT, { bubbles: true, detail: { reason, id: dialog.id } }));
+        o.resolve(reason);
+        this.destroy();
+      }
+      /** Put the alarm on the screen and take the focus. */
+      open() {
+        const { dialog, o } = this;
+        document.body.append(dialog);
+        dialog.showModal();
+        dialog.scrollTop = 0;
+        if (o.mode === "auto") dialog.focus({ preventScroll: true });
+        else o.ack.focus({ preventScroll: true });
+        dialog.scrollTop = 0;
+        dialog.dispatchEvent(new CustomEvent(ALARM_OPEN_EVENT, { bubbles: true, detail: { id: dialog.id, mode: dialog.dataset.kpAlarmMode } }));
+        if (o.mode === "auto") this.startCountdown();
+      }
+      startCountdown() {
+        const total = this.o.seconds * SECOND_MS;
+        const began = performance.now();
+        const tick6 = () => {
+          const { dialog, o } = this;
+          const remaining = Math.max(0, total - (performance.now() - began));
+          const whole = Math.ceil(remaining / SECOND_MS);
+          writeCountdown(dialog, o.left, remaining / total, whole / o.seconds, o.strings.alarmCountdown(whole));
+          if (remaining <= 0) this.close("timeout");
+        };
+        this.timer = window.setInterval(tick6, TICK_MS);
+        tick6();
+      }
+    };
+  }
+});
+
+// js/alarm/trigger.js
+function attachTriggers(root, options) {
+  const made6 = [...root.querySelectorAll(TRIGGER)].filter((node) => !node.hasAttribute("data-kp-alarm-attached")).map((node) => attachOne(
+    /** @type {HTMLElement} */
+    node,
+    AlarmTrigger,
+    options
+  )).filter((controller) => controller !== void 0);
   return () => {
-    for (const c of cleanups) c();
+    for (const controller of made6) controller.destroy();
   };
 }
-var ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS, TICK_MS, serial, noiseGlyph;
+var TRIGGER, AlarmTrigger;
+var init_trigger = __esm({
+  "js/alarm/trigger.js"() {
+    "use strict";
+    init_controller();
+    TRIGGER = "[data-kp-alarm]";
+    AlarmTrigger = class extends Controller {
+      /**
+       * @param {HTMLElement} host the trigger
+       * @param {TriggerOptions} options
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.settings = options;
+      }
+      connect() {
+        const trigger = this.host;
+        trigger.dataset.kpAlarmAttached = "";
+        this.listen(trigger, "click", () => this.raise());
+        this.own(() => delete trigger.dataset.kpAlarmAttached);
+      }
+      raise() {
+        const trigger = this.host;
+        const d = trigger.dataset;
+        void this.settings.show({
+          title: d.kpAlarm ?? "",
+          detail: d.kpAlarmDetail,
+          code: d.kpAlarmCode,
+          mode: d.kpAlarmMode === "auto" ? "auto" : "ack",
+          seconds: d.kpAlarmSeconds === void 0 ? void 0 : Number(d.kpAlarmSeconds),
+          escape: d.kpAlarmEscape !== void 0,
+          action: d.kpAlarmAction,
+          strings: this.settings.strings,
+          trigger
+        });
+      }
+    };
+  }
+});
+
+// js/alarm.js
+var alarm_exports = {};
+__export(alarm_exports, {
+  ALARM_CLOSE_EVENT: () => ALARM_CLOSE_EVENT,
+  ALARM_OPEN_EVENT: () => ALARM_OPEN_EVENT,
+  ALARM_SECONDS: () => ALARM_SECONDS,
+  attachAlarms: () => attachAlarms,
+  buildAlarm: () => buildAlarm,
+  glyphCells: () => glyphCells,
+  noiseGlyph: () => noiseGlyph,
+  showAlarm: () => showAlarm,
+  writeCountdown: () => writeCountdown
+});
+function showAlarm(options) {
+  const { mode: mode2 = "ack", escape: escape2 = false } = options;
+  const trigger = options.trigger !== void 0 ? options.trigger : document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const { dialog, ack, keep, when, left, strings, action, seconds } = buildAlarm(options);
+  return new Promise((resolve) => {
+    const session = new AlarmSession(dialog, { ack, keep, when, left, strings, action, seconds, mode: mode2, escape: escape2, trigger, resolve });
+    try {
+      session.connect();
+      session.open();
+    } catch (error) {
+      session.destroy();
+      throw error;
+    }
+  });
+}
+function attachAlarms(root = document, { strings } = {}) {
+  return attachTriggers(root, { strings, show: showAlarm });
+}
 var init_alarm = __esm({
   "js/alarm.js"() {
     "use strict";
-    init_effects();
-    init_strings();
-    ALARM_CLOSE_EVENT = "kp-alarm-close";
-    ALARM_OPEN_EVENT = "kp-alarm-open";
-    ALARM_SECONDS = 8;
-    TICK_MS = 100;
-    serial = 0;
-    noiseGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+    init_build2();
+    init_session();
+    init_trigger();
+    init_values3();
+    init_glyphs();
+    init_build2();
+    init_countdown();
   }
 });
 
@@ -11870,7 +12002,7 @@ var init_attention = __esm({
 });
 
 // js/auto-refresh/constants.js
-var REFRESH, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, REFRESH_DEFAULT, REFRESH_CHOICES, MIN_STALE_S, STALE_INTERVALS, BLOCKED_RETRY_MS, MAX_BACKOFF_POWER, SECOND_MS, ID_RADIX, ID_START, ID_END, WATCHED_ATTRIBUTES, TYPING_SELECTOR;
+var REFRESH, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, REFRESH_DEFAULT, REFRESH_CHOICES, MIN_STALE_S, STALE_INTERVALS, BLOCKED_RETRY_MS, MAX_BACKOFF_POWER, SECOND_MS2, ID_RADIX, ID_START, ID_END, WATCHED_ATTRIBUTES, TYPING_SELECTOR;
 var init_constants5 = __esm({
   "js/auto-refresh/constants.js"() {
     "use strict";
@@ -11883,7 +12015,7 @@ var init_constants5 = __esm({
     STALE_INTERVALS = 3;
     BLOCKED_RETRY_MS = 1e3;
     MAX_BACKOFF_POWER = 2;
-    SECOND_MS = 1e3;
+    SECOND_MS2 = 1e3;
     ID_RADIX = 36;
     ID_START = 2;
     ID_END = 8;
@@ -11902,7 +12034,7 @@ var init_constants5 = __esm({
 
 // js/freshness/values.js
 var AGO, FRESHNESS_TIME_ZONE, MS_PER_SECOND, TICK_MS2, SECONDS, WIDEST_DAYS, WIDEST_HOURS, AGO_OBSERVED;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/freshness/values.js"() {
     "use strict";
     AGO = "[data-kp-ago]";
@@ -11988,7 +12120,7 @@ var init_text2 = __esm({
   "js/freshness/text.js"() {
     "use strict";
     init_strings();
-    init_values3();
+    init_values4();
     unitsOf = (el16) => el16.getAttribute("data-kp-ago-units") === "days" ? "days" : void 0;
     FORMATS = /* @__PURE__ */ new Map();
   }
@@ -12089,7 +12221,7 @@ var init_paint = __esm({
   "js/freshness/paint.js"() {
     "use strict";
     init_strings();
-    init_values3();
+    init_values4();
     init_state2();
     init_text2();
   }
@@ -12132,7 +12264,7 @@ var init_engine2 = __esm({
   "js/freshness/engine.js"() {
     "use strict";
     init_strings();
-    init_values3();
+    init_values4();
     init_state2();
     init_paint();
     defaultContext = () => ({ timeZone: FRESHNESS_TIME_ZONE, now: () => Date.now(), overrides: void 0, owner: {} });
@@ -12149,7 +12281,7 @@ var init_watch = __esm({
   "js/freshness/watch.js"() {
     "use strict";
     init_controller();
-    init_values3();
+    init_values4();
     init_state2();
     init_engine2();
     init_paint();
@@ -12286,8 +12418,8 @@ var init_freshness = __esm({
   "js/freshness.js"() {
     "use strict";
     init_watch();
-    init_values3();
-    init_values3();
+    init_values4();
+    init_values4();
     init_text2();
     init_engine2();
   }
@@ -14314,7 +14446,7 @@ var init_controller4 = __esm({
       // --- Schedule. ---
       /** The wait before the next try: the interval, then twice, four times, then that. */
       delayNow() {
-        return (this.failures > 0 ? this.interval * 2 ** Math.min(this.failures - 1, MAX_BACKOFF_POWER) : this.interval) * SECOND_MS;
+        return (this.failures > 0 ? this.interval * 2 ** Math.min(this.failures - 1, MAX_BACKOFF_POWER) : this.interval) * SECOND_MS2;
       }
       /** Arm the timer for the next refresh. @param {number} [ms] */
       schedule(ms = this.delayNow()) {
@@ -14343,7 +14475,7 @@ var init_controller4 = __esm({
           retry.hidden = true;
         } else {
           this.failures += 1;
-          note2.textContent = this.interval <= 0 ? s2.refreshFailedPaused : s2.refreshFailed(humanDuration(Math.round(this.delayNow() / SECOND_MS), s2));
+          note2.textContent = this.interval <= 0 ? s2.refreshFailedPaused : s2.refreshFailed(humanDuration(Math.round(this.delayNow() / SECOND_MS2), s2));
           failure.hidden = false;
           retry.hidden = false;
         }
@@ -14771,7 +14903,7 @@ var init_scope = __esm({
 
 // js/kpi/values.js
 var SPARK, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, KPI_STRIP, TILE_LABEL, SPARK_BOX, SVG_NS, STRIP_DEFAULTS, FALLBACK_FONT_PX, LABEL_SLACK_PX, FULL_PERCENT;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/kpi/values.js"() {
     "use strict";
     SPARK = "svg[data-kp-spark]";
@@ -14819,7 +14951,7 @@ var init_spark = __esm({
   "js/kpi/spark.js"() {
     "use strict";
     init_scope();
-    init_values4();
+    init_values5();
     numbersIn = (text) => (text ?? "").split(/[\s,]+/).filter(Boolean).map(Number);
     SparklineWatch = class extends ScopeWatch {
       connect() {
@@ -14863,7 +14995,7 @@ var FLIPPED, KpiToggles;
 var init_toggle = __esm({
   "js/kpi/toggle.js"() {
     "use strict";
-    init_values4();
+    init_values5();
     init_scope();
     FLIPPED = /* @__PURE__ */ new WeakSet();
     KpiToggles = class extends ScopeWatch {
@@ -14959,7 +15091,7 @@ function fitKpiStrip(strip, width) {
 var init_columns2 = __esm({
   "js/kpi/columns.js"() {
     "use strict";
-    init_values4();
+    init_values5();
   }
 });
 
@@ -14968,7 +15100,7 @@ var KpiStrips;
 var init_strips = __esm({
   "js/kpi/strips.js"() {
     "use strict";
-    init_values4();
+    init_values5();
     init_columns2();
     init_scope();
     KpiStrips = class extends ScopeWatch {
@@ -15106,7 +15238,7 @@ var init_meter = __esm({
   "js/kpi/meter.js"() {
     "use strict";
     init_strings();
-    init_values4();
+    init_values5();
   }
 });
 
@@ -15145,7 +15277,7 @@ var init_kpi = __esm({
     init_spark();
     init_toggle();
     init_strips();
-    init_values4();
+    init_values5();
     init_spark();
     init_meter();
     init_columns2();
@@ -15154,7 +15286,7 @@ var init_kpi = __esm({
 
 // js/hovercard/values.js
 var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, OPEN_DELAY_MS, CLOSE_DELAY_MS, TAP_ANSWERED_MS, CONTROL_SELECTOR, ID_RADIX2, ID_RANDOM_START, ID_RANDOM_END;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/hovercard/values.js"() {
     "use strict";
     HOVERCARD_ATTRIBUTE = "data-kp-hovercard";
@@ -15178,7 +15310,7 @@ var init_core2 = __esm({
     "use strict";
     init_top_layer();
     init_controller();
-    init_values5();
+    init_values6();
     made = 0;
     stripped = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== void 0));
     HoverCardCore = class extends Controller {
@@ -15418,7 +15550,7 @@ var HoverCardTouch;
 var init_touch = __esm({
   "js/hovercard/touch.js"() {
     "use strict";
-    init_values5();
+    init_values6();
     init_show();
     HoverCardTouch = class extends HoverCardShow {
       /** Whether a tap on this anchor is the anchor's own (a link, a button, a field). @param {HTMLElement} anchor */
@@ -15465,7 +15597,7 @@ var init_controller5 = __esm({
   "js/hovercard/controller.js"() {
     "use strict";
     init_motion();
-    init_values5();
+    init_values6();
     init_touch();
     HoverCard = class extends HoverCardTouch {
       /**
@@ -15621,7 +15753,7 @@ var init_hovercard = __esm({
     "use strict";
     init_controller();
     init_controller5();
-    init_values5();
+    init_values6();
   }
 });
 
@@ -20779,7 +20911,7 @@ var init_patterns = __esm({
 
 // js/undo-toast/values.js
 var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, MS_PER_SECOND2, CLOCK_TICK_MS;
-var init_values6 = __esm({
+var init_values7 = __esm({
   "js/undo-toast/values.js"() {
     "use strict";
     UNDO_TOAST = "kp-toast--undo";
@@ -20861,12 +20993,12 @@ function buildBody(doc, text, { ms, clock: clock4, seconds }) {
   }
   return { body, ring, secs, words: words3, said };
 }
-var init_build2 = __esm({
+var init_build3 = __esm({
   "js/undo-toast/build.js"() {
     "use strict";
     init_patterns();
     init_strings();
-    init_values6();
+    init_values7();
   }
 });
 
@@ -20877,7 +21009,7 @@ var init_core4 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values6();
+    init_values7();
     UndoCore = class extends Controller {
       /**
        * @param {HTMLElement} host the toast (it carries `dismiss`)
@@ -21022,7 +21154,7 @@ var init_run = __esm({
     "use strict";
     init_core4();
     init_stack();
-    init_values6();
+    init_values7();
     UndoRun = class extends UndoCore {
       /**
        * @param {HTMLElement} host the toast
@@ -21252,10 +21384,10 @@ var init_undo_toast = __esm({
     init_controller();
     init_overlays();
     init_strings();
-    init_build2();
+    init_build3();
     init_run();
-    init_values6();
-    init_values6();
+    init_values7();
+    init_values7();
   }
 });
 
@@ -22075,7 +22207,7 @@ var init_api5 = __esm({
 
 // js/facets/values.js
 var FACETS, FACET_EVENT;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/facets/values.js"() {
     "use strict";
     FACETS = "[data-kp-facets]";
@@ -22092,7 +22224,7 @@ var init_controller9 = __esm({
     init_strings();
     init_api5();
     init_rows();
-    init_values7();
+    init_values8();
     SAY_FIRST_MS = 100;
     SAY_MS = 30;
     FacetGroup = class extends Controller {
@@ -22177,8 +22309,8 @@ var init_facets = __esm({
     "use strict";
     init_controller();
     init_controller9();
-    init_values7();
-    init_values7();
+    init_values8();
+    init_values8();
     init_pattern();
     init_api5();
   }
@@ -25017,7 +25149,7 @@ var init_thread = __esm({
 
 // js/stackbar/values.js
 var STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT, DEFAULT_LEGEND_ROWS, PALETTE_SIZE, OTHER_KEY, DECIMAL_BELOW_PERCENT;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/stackbar/values.js"() {
     "use strict";
     STACKBAR = "[data-kp-stackbar]";
@@ -25067,7 +25199,7 @@ var init_math = __esm({
   "js/stackbar/math.js"() {
     "use strict";
     init_strings();
-    init_values8();
+    init_values9();
     langOf = (el16) => (
       /** @type {HTMLElement | null} */
       el16.closest("[lang]")?.lang || void 0
@@ -25083,7 +25215,7 @@ var init_core5 = __esm({
     init_controller();
     init_strings();
     init_kpi();
-    init_values8();
+    init_values9();
     init_math();
     StackbarCore = class extends Controller {
       /**
@@ -25231,7 +25363,7 @@ var StackbarParts;
 var init_parts = __esm({
   "js/stackbar/parts.js"() {
     "use strict";
-    init_values8();
+    init_values9();
     init_math();
     init_core5();
     StackbarParts = class extends StackbarCore {
@@ -25346,7 +25478,7 @@ var init_controller12 = __esm({
   "js/stackbar/controller.js"() {
     "use strict";
     init_hovercard();
-    init_values8();
+    init_values9();
     init_parts();
     Stackbar = class extends StackbarParts {
       connect() {
@@ -25481,8 +25613,8 @@ var init_stackbar = __esm({
     "use strict";
     init_controller();
     init_controller12();
-    init_values8();
-    init_values8();
+    init_values9();
+    init_values9();
     init_math();
   }
 });
@@ -27985,7 +28117,7 @@ var init_parts2 = __esm({
 
 // js/newpill/values.js
 var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, LEAVE_FALLBACK_MS, DIVIDER_COLSPAN;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/newpill/values.js"() {
     "use strict";
     FOLLOW = "[data-kp-follow]";
@@ -28025,7 +28157,7 @@ var init_options3 = __esm({
   "js/newpill/options.js"() {
     "use strict";
     init_strings();
-    init_values9();
+    init_values10();
   }
 });
 
@@ -28110,7 +28242,7 @@ var init_draw5 = __esm({
   "js/newpill/draw.js"() {
     "use strict";
     init_core7();
-    init_values9();
+    init_values10();
     NewPillDraw = class extends NewPillCore {
       /** The pill is ruled in, and taken out the way it came [prefers-reduced-motion: at once]. @param {boolean} on */
       show(on) {
@@ -28189,7 +28321,7 @@ var init_away = __esm({
     "use strict";
     init_draw5();
     init_options3();
-    init_values9();
+    init_values10();
     NewPillAway = class extends NewPillDraw {
       /**
        * @param {HTMLElement} host the scroller
@@ -28267,7 +28399,7 @@ var init_controller16 = __esm({
     init_live_options();
     init_away();
     init_rows3();
-    init_values9();
+    init_values10();
     NewPill = class extends NewPillAway {
       /**
        * @param {HTMLElement} host the scroller
@@ -28426,8 +28558,8 @@ var init_newpill = __esm({
     "use strict";
     init_controller();
     init_controller16();
-    init_values9();
-    init_values9();
+    init_values10();
+    init_values10();
   }
 });
 
@@ -31291,7 +31423,7 @@ var init_tracks = __esm({
 });
 
 // js/countdown/constants.js
-var COUNTDOWN, COUNTDOWN_EVENT, COUNTDOWN_END_EVENT, COUNTDOWN_STEP, SECOND_MS2, MINUTE_MS, MINUTE_S, HOUR_S, DAY_S, HOUR_MS, DAY_HOURS, EPOCH_MS_DIGITS, END_SLACK_MS, ROUND_EPSILON, WATCHED_ATTRIBUTES3;
+var COUNTDOWN, COUNTDOWN_EVENT, COUNTDOWN_END_EVENT, COUNTDOWN_STEP, SECOND_MS3, MINUTE_MS, MINUTE_S, HOUR_S, DAY_S, HOUR_MS, DAY_HOURS, EPOCH_MS_DIGITS, END_SLACK_MS, ROUND_EPSILON, WATCHED_ATTRIBUTES3;
 var init_constants15 = __esm({
   "js/countdown/constants.js"() {
     "use strict";
@@ -31299,7 +31431,7 @@ var init_constants15 = __esm({
     COUNTDOWN_EVENT = "kp-countdown-change";
     COUNTDOWN_END_EVENT = "kp-countdown-end";
     COUNTDOWN_STEP = 60;
-    SECOND_MS2 = 1e3;
+    SECOND_MS3 = 1e3;
     MINUTE_MS = 6e4;
     MINUTE_S = 60;
     HOUR_S = 3600;
@@ -31340,7 +31472,7 @@ function parseDuration(value) {
   return matched ? Math.round(total) : 0;
 }
 function formatCountdown(ms, hours, days = false) {
-  const total = Math.max(0, Math.ceil(ms / SECOND_MS2 - ROUND_EPSILON));
+  const total = Math.max(0, Math.ceil(ms / SECOND_MS3 - ROUND_EPSILON));
   if (days && total >= DAY_S) {
     const hoursUp = Math.ceil(total / HOUR_S);
     return getStrings().countdownDays(Math.floor(hoursUp / DAY_HOURS), hoursUp % DAY_HOURS);
@@ -31405,7 +31537,7 @@ function zonedMoment(year, month, day, hour, minute, second, zone) {
   if (typeof zone === "number") return wall - zone * MINUTE_MS;
   const offsetAt2 = (t) => {
     const w = wallParts(t, zone);
-    return Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute, w.second) - Math.floor(t / SECOND_MS2) * SECOND_MS2;
+    return Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute, w.second) - Math.floor(t / SECOND_MS3) * SECOND_MS3;
   };
   const first = wall - offsetAt2(wall);
   return wall - offsetAt2(first);
@@ -31474,7 +31606,7 @@ var init_until = __esm({
 
 // js/countdown/clock.js
 function countdownClock({ seconds, now = () => performance.now(), onEnd, onChange }) {
-  let total = Math.max(0, seconds) * SECOND_MS2;
+  let total = Math.max(0, seconds) * SECOND_MS3;
   let left = total;
   let state12 = total > 0 ? "idle" : "ended";
   let endsAt = 0;
@@ -31519,13 +31651,13 @@ function countdownClock({ seconds, now = () => performance.now(), onEnd, onChang
     },
     reset(next2) {
       clearTimeout(timer);
-      if (typeof next2 === "number") total = Math.max(0, next2) * SECOND_MS2;
+      if (typeof next2 === "number") total = Math.max(0, next2) * SECOND_MS3;
       left = total;
       state12 = total > 0 ? "idle" : "ended";
       onChange?.(state12);
     },
     add(more) {
-      const ms = Math.max(0, more) * SECOND_MS2;
+      const ms = Math.max(0, more) * SECOND_MS3;
       total += ms;
       if (state12 === "running") {
         endsAt += ms;
@@ -31681,7 +31813,7 @@ var init_controller20 = __esm({
         const el16 = this.host;
         const at = this.wallNow();
         this.until = parseUntil(el16.dataset.kpCountdownUntil, at, timerZone(el16, "data-kp-countdown-timezone"));
-        this.seconds = this.until !== null ? Math.max(0, Math.ceil((this.until - at) / SECOND_MS2)) : parseDuration(el16.dataset.kpCountdown);
+        this.seconds = this.until !== null ? Math.max(0, Math.ceil((this.until - at) / SECOND_MS3)) : parseDuration(el16.dataset.kpCountdown);
         this.step = parseDuration(el16.dataset.kpCountdownStep) || COUNTDOWN_STEP;
         this.name = el16.dataset.kpCountdownName ?? "";
         this.disabled = el16.hasAttribute("data-kp-countdown-disabled");
@@ -31728,7 +31860,7 @@ var init_controller20 = __esm({
       /** Say how much time is left, for a screen reader. */
       speak() {
         const s2 = this.strings;
-        this.parts.spoken.textContent = s2.timerLeft(s2.timerDuration(Math.ceil(this.timer.remaining() / SECOND_MS2)));
+        this.parts.spoken.textContent = s2.timerLeft(s2.timerDuration(Math.ceil(this.timer.remaining() / SECOND_MS3)));
       }
       /** Bring the digits, the name, the buttons and the status line in step with the clock. */
       show() {
@@ -31746,7 +31878,7 @@ var init_controller20 = __esm({
           this.go.button.disabled = this.disabled || state12 === "ended";
         }
         if (this.more) this.more.button.disabled = this.disabled;
-        if (this.reset) this.reset.button.disabled = this.disabled || state12 === "idle" && clock4.total() === this.seconds * SECOND_MS2;
+        if (this.reset) this.reset.button.disabled = this.disabled || state12 === "idle" && clock4.total() === this.seconds * SECOND_MS3;
         line.textContent = state12 === "paused" ? s2.timerPaused : state12 === "ended" ? s2.timerEnded : "";
       }
       /** Write the digits on every frame while the clock runs. */
@@ -31890,7 +32022,7 @@ __export(countdown_exports, {
   untilOffset: () => untilOffset,
   untilZone: () => untilZone
 });
-var init_countdown = __esm({
+var init_countdown2 = __esm({
   "js/countdown.js"() {
     "use strict";
     init_constants15();
@@ -31953,7 +32085,7 @@ var refsOf, blockerNames, clockOfTimer;
 var init_blockers = __esm({
   "js/focus-steps/blockers.js"() {
     "use strict";
-    init_countdown();
+    init_countdown2();
     init_strings();
     init_tracks();
     init_dom4();
@@ -33079,7 +33211,7 @@ var clockOf, leftOf, stateOf3, el7, listOf3;
 var init_model3 = __esm({
   "js/timer/model.js"() {
     "use strict";
-    init_countdown();
+    init_countdown2();
     init_state13();
     clockOf = (timer, ms) => formatCountdown(ms, timer.total >= 36e5);
     leftOf = (timer) => timer.state === "running" && timer.endsAt !== null ? Math.max(0, timer.endsAt - Date.now()) : timer.left;
@@ -33702,7 +33834,7 @@ var init_attach7 = __esm({
   "js/timer/attach.js"() {
     "use strict";
     init_strings();
-    init_countdown();
+    init_countdown2();
     init_constants16();
     init_model3();
     init_run2();
@@ -33748,7 +33880,7 @@ var init_timer = __esm({
     init_sound();
     init_run2();
     init_attach7();
-    init_countdown();
+    init_countdown2();
   }
 });
 
@@ -34791,7 +34923,7 @@ var init_checklist = __esm({
 
 // js/quantity/values.js
 var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, HOLD_SLOW_REPEATS, PAGE_STEPS;
-var init_values10 = __esm({
+var init_values11 = __esm({
   "js/quantity/values.js"() {
     "use strict";
     QUANTITY = "[data-kp-quantity]";
@@ -34969,7 +35101,7 @@ function build3(root) {
   nameThem(root, input, label);
   return input;
 }
-var init_build3 = __esm({
+var init_build4 = __esm({
   "js/quantity/build.js"() {
     "use strict";
     init_strings();
@@ -35037,8 +35169,8 @@ var init_paint5 = __esm({
   "js/quantity/paint.js"() {
     "use strict";
     init_strings();
-    init_values10();
-    init_build3();
+    init_values11();
+    init_build4();
     init_math2();
     init_read3();
   }
@@ -35050,7 +35182,7 @@ var init_controller22 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
-    init_values10();
+    init_values11();
     init_math2();
     init_paint5();
     init_read3();
@@ -35208,11 +35340,11 @@ var init_quantity = __esm({
   "js/quantity.js"() {
     "use strict";
     init_controller();
-    init_values10();
+    init_values11();
     init_controller22();
     init_math2();
     init_paint5();
-    init_values10();
+    init_values11();
     init_math2();
     init_read3();
   }
@@ -37273,7 +37405,7 @@ function resolveListbox(given2) {
   };
 }
 var OPTION_SELECTOR, HIGHLIGHT_EVENT, CHOOSE_EVENT, DISABLED_SELECTOR, TYPEAHEAD_MS, FALLBACK_PREFIX;
-var init_values11 = __esm({
+var init_values12 = __esm({
   "js/listbox/values.js"() {
     "use strict";
     OPTION_SELECTOR = "[data-kp-option]";
@@ -37292,7 +37424,7 @@ var init_core8 = __esm({
     "use strict";
     init_controller();
     init_scroll();
-    init_values11();
+    init_values12();
     ListboxCore = class extends Controller {
       /**
        * @param {HTMLElement} list the element with role="listbox"
@@ -37611,7 +37743,7 @@ var init_listbox = __esm({
     "use strict";
     init_controller23();
     init_scroll();
-    init_values11();
+    init_values12();
     init_match();
   }
 });
@@ -46570,7 +46702,7 @@ function buildCalendar(el16, s2, locale, firstDay) {
   if (!el16.hasAttribute("aria-labelledby") && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-labelledby", title.id);
   return { prev, next: next2, todayButton, title, stateLine, grid: grid2, body, cells, legend, busyText };
 }
-var init_build4 = __esm({
+var init_build5 = __esm({
   "js/calendar/build.js"() {
     "use strict";
     init_constants21();
@@ -46787,7 +46919,7 @@ var init_controller25 = __esm({
     init_chart();
     init_constants21();
     init_busy3();
-    init_build4();
+    init_build5();
     init_day();
     init_dates2();
     init_dom5();
@@ -49411,7 +49543,7 @@ function buildDays(c) {
     c.today.setAttribute("aria-disabled", String(c.start === today));
   }
 }
-var init_build5 = __esm({
+var init_build6 = __esm({
   "js/week/build.js"() {
     "use strict";
     init_calendar();
@@ -49918,7 +50050,7 @@ function setWeekLegend(el16, entries2) {
 var init_api16 = __esm({
   "js/week/api.js"() {
     "use strict";
-    init_build5();
+    init_build6();
     init_helpers3();
     init_paint7();
     init_state18();
@@ -50096,7 +50228,7 @@ var init_attach14 = __esm({
     init_locale();
     init_strings();
     init_api16();
-    init_build5();
+    init_build6();
     init_busy4();
     init_constants24();
     init_menu();
@@ -50780,7 +50912,7 @@ function build5(el16, strings) {
   };
 }
 var idSeq;
-var init_build6 = __esm({
+var init_build7 = __esm({
   "js/sequencer/build.js"() {
     "use strict";
     init_instance2();
@@ -51790,7 +51922,7 @@ var init_attach15 = __esm({
     init_live_options();
     init_constants25();
     init_instance2();
-    init_build6();
+    init_build7();
     init_timeline();
     init_paint8();
     init_edit2();
@@ -52184,7 +52316,7 @@ function frame(c) {
   return w;
 }
 var idSeq2;
-var init_build7 = __esm({
+var init_build8 = __esm({
   "js/gantt/build.js"() {
     "use strict";
     init_scale();
@@ -52848,7 +52980,7 @@ var init_selection3 = __esm({
     init_window();
     init_points();
     init_labels2();
-    init_build7();
+    init_build8();
     init_axis();
     init_scale();
     init_constants26();
@@ -53625,7 +53757,7 @@ var init_attach16 = __esm({
     init_strings();
     init_live_options();
     init_constants26();
-    init_build7();
+    init_build8();
     init_window();
     init_paint9();
     init_selection3();
@@ -53671,7 +53803,7 @@ var init_gantt = __esm({
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make17;
-var init_values12 = __esm({
+var init_values13 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -53697,7 +53829,7 @@ var init_core9 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values12();
+    init_values13();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -53783,7 +53915,7 @@ var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
     init_core9();
-    init_values12();
+    init_values13();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -53919,7 +54051,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values12();
+    init_values13();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -54035,7 +54167,7 @@ var init_controller26 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values12();
+    init_values13();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -54181,8 +54313,8 @@ var init_pipeline = __esm({
     "use strict";
     init_controller();
     init_controller26();
-    init_values12();
-    init_values12();
+    init_values13();
+    init_values13();
   }
 });
 
@@ -55338,7 +55470,7 @@ var init_timer_disc = __esm({
     init_strings();
     init_calm();
     init_components();
-    init_countdown();
+    init_countdown2();
     init_live_options();
     TIMER_DISC = "[data-kp-timer-disc], [data-kp-timer-disc-until]";
     TIMER_DISC_LEFT = "--kp-timer-disc-left";
@@ -55388,7 +55520,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values13 = __esm({
+var init_values14 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -55521,7 +55653,7 @@ function buildPanel(doc, s2, id) {
   panel.append(title, from.set, to.set, error, actions);
   return { panel, from, to, error, cancel, apply: apply2 };
 }
-var init_build8 = __esm({
+var init_build9 = __esm({
   "js/range/build.js"() {
     "use strict";
   }
@@ -55536,8 +55668,8 @@ var init_core10 = __esm({
     init_strings();
     init_segmented();
     init_chart();
-    init_values13();
-    init_build8();
+    init_values14();
+    init_build9();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
     RangeCore = class extends Controller {
@@ -55610,8 +55742,8 @@ var init_panel = __esm({
     init_datepicker();
     init_top_layer();
     init_motion();
-    init_build8();
-    init_values13();
+    init_build9();
+    init_values14();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -55865,8 +55997,8 @@ var init_range = __esm({
     "use strict";
     init_controller();
     init_controller27();
-    init_values13();
-    init_values13();
+    init_values14();
+    init_values14();
   }
 });
 
@@ -56298,7 +56430,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -56424,7 +56556,7 @@ var init_parts5 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values14();
+    init_values15();
   }
 });
 
@@ -56465,7 +56597,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts5();
-    init_values14();
+    init_values15();
   }
 });
 
@@ -56531,7 +56663,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts5();
-    init_values14();
+    init_values15();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -56679,7 +56811,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values14();
+    init_values15();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -56788,8 +56920,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values14();
-    init_values14();
+    init_values15();
+    init_values15();
   }
 });
 
@@ -57926,7 +58058,7 @@ var init_connection = __esm({
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -57951,7 +58083,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values15();
+    init_values16();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -58001,7 +58133,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values15();
+    init_values16();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -58042,7 +58174,7 @@ var init_core11 = __esm({
     init_strings();
     init_math3();
     init_read4();
-    init_values15();
+    init_values16();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -58269,7 +58401,7 @@ var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts7();
-    init_values15();
+    init_values16();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -58287,7 +58419,7 @@ var init_row2 = __esm({
     init_parts7();
     init_read4();
     init_ticker();
-    init_values15();
+    init_values16();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -58441,8 +58573,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row2();
-    init_values15();
-    init_values15();
+    init_values16();
+    init_values16();
     init_math3();
   }
 });
@@ -58661,7 +58793,7 @@ function mountChrome(area, ui) {
   area.classList.add("kp-jsonfield__input");
   return describedBefore;
 }
-var init_build9 = __esm({
+var init_build10 = __esm({
   "js/code-field/build.js"() {
     "use strict";
   }
@@ -58674,7 +58806,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -58693,8 +58825,8 @@ var init_core12 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_build9();
-    init_values16();
+    init_build10();
+    init_values17();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -58824,7 +58956,7 @@ var init_problem = __esm({
     "use strict";
     init_forms();
     init_core12();
-    init_values16();
+    init_values17();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -58904,8 +59036,8 @@ var init_controller29 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
-    init_build9();
-    init_values16();
+    init_build10();
+    init_values17();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -59141,14 +59273,14 @@ var init_code_field = __esm({
     "use strict";
     init_controller();
     init_controller29();
-    init_values16();
-    init_values16();
+    init_values17();
+    init_values17();
   }
 });
 
 // js/page-contents/values.js
 var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/page-contents/values.js"() {
     "use strict";
     CONTENTS = "[data-kp-contents]";
@@ -59197,7 +59329,7 @@ var init_core13 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
-    init_values17();
+    init_values18();
     serial5 = 0;
     ContentsCore = class extends Controller {
       /**
@@ -59310,7 +59442,7 @@ var ContentsRead;
 var init_read5 = __esm({
   "js/page-contents/read.js"() {
     "use strict";
-    init_values17();
+    init_values18();
     init_slug();
     init_core13();
     ContentsRead = class extends ContentsCore {
@@ -59366,7 +59498,7 @@ var ContentsSpy;
 var init_spy = __esm({
   "js/page-contents/spy.js"() {
     "use strict";
-    init_values17();
+    init_values18();
     init_slug();
     init_read5();
     ContentsSpy = class extends ContentsRead {
@@ -59484,7 +59616,7 @@ var ContentsList;
 var init_controller30 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
-    init_values17();
+    init_values18();
     init_draw10();
     init_strings();
     ContentsList = class extends ContentsDraw {
@@ -59600,8 +59732,8 @@ var init_page_contents = __esm({
     "use strict";
     init_controller();
     init_controller30();
-    init_values17();
-    init_values17();
+    init_values18();
+    init_values18();
     init_slug();
   }
 });
@@ -59810,7 +59942,7 @@ function buildParts3(root) {
   return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
 }
 var el9;
-var init_build10 = __esm({
+var init_build11 = __esm({
   "js/timefield/build.js"() {
     "use strict";
     init_strings();
@@ -59834,7 +59966,7 @@ var init_list3 = __esm({
     init_calm();
     init_constants29();
     init_attributes();
-    init_build10();
+    init_build11();
     init_parse();
     TimeList = class {
       /** @param {TimeField} field */
@@ -60045,7 +60177,7 @@ var init_field = __esm({
     init_remember();
     init_constants29();
     init_attributes();
-    init_build10();
+    init_build11();
     init_state20();
     init_parse();
     init_list3();
@@ -60529,7 +60661,7 @@ var init_timefield = __esm({
 
 // js/weekdays/values.js
 var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, WEEK2, MONTH_DAYS, DEFAULT_MIN;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/weekdays/values.js"() {
     "use strict";
     WEEKDAYS = "[data-kp-weekdays]";
@@ -60568,7 +60700,7 @@ var init_options5 = __esm({
   "js/weekdays/options.js"() {
     "use strict";
     init_locale();
-    init_values18();
+    init_values19();
   }
 });
 
@@ -60599,7 +60731,7 @@ var init_names = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_values18();
+    init_values19();
     DICTIONARY_ORDER = [6, 0, 1, 2, 3, 4, 5];
     SUNDAY = 7;
   }
@@ -60670,7 +60802,7 @@ var init_parts8 = __esm({
   "js/weekdays/parts.js"() {
     "use strict";
     init_names();
-    init_values18();
+    init_values19();
   }
 });
 
@@ -60703,7 +60835,7 @@ var init_summary3 = __esm({
     "use strict";
     init_strings();
     init_names();
-    init_values18();
+    init_values19();
   }
 });
 
@@ -60719,7 +60851,7 @@ var init_core14 = __esm({
     init_parts8();
     init_names();
     init_summary3();
-    init_values18();
+    init_values19();
     seq3 = 0;
     WeekdaysCore = class extends Controller {
       /**
@@ -60800,7 +60932,7 @@ var init_controller32 = __esm({
     init_segmented();
     init_core14();
     init_names();
-    init_values18();
+    init_values19();
     WeekdayPicker = class extends WeekdaysCore {
       /**
        * @param {HTMLElement} host
@@ -60910,8 +61042,8 @@ var init_weekdays = __esm({
     "use strict";
     init_controller();
     init_controller32();
-    init_values18();
-    init_values18();
+    init_values19();
+    init_values19();
     init_names();
     init_summary3();
   }
@@ -61170,7 +61302,7 @@ var init_quiet_hours = __esm({
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -61257,11 +61389,11 @@ function buildCard2(doc, spec, q) {
   return { card, left, buttons, outcome, dismiss, voice };
 }
 var make19;
-var init_build11 = __esm({
+var init_build12 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values19();
+    init_values20();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -61294,7 +61426,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values19();
+    init_values20();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -61309,7 +61441,7 @@ var init_core15 = __esm({
     init_controller();
     init_freshness();
     init_strings();
-    init_values19();
+    init_values20();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -61426,7 +61558,7 @@ var init_run3 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values19();
+    init_values20();
     init_title();
     init_core15();
     QuestionRun = class extends QuestionCore {
@@ -61587,7 +61719,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values19();
+    init_values20();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -61635,11 +61767,11 @@ var init_question_card = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_build11();
+    init_build12();
     init_run3();
     init_spec();
-    init_values19();
-    init_values19();
+    init_values20();
+    init_values20();
   }
 });
 
@@ -62986,7 +63118,7 @@ function buildRow2(max) {
   row.append(...stars);
   return { row, stars };
 }
-function buildActions() {
+function buildActions2() {
   const actions = make22("span", "kp-rating__actions");
   const clear = make22("button", "kp-button kp-button--sm kp-rating__clear");
   clear.type = "button";
@@ -63012,7 +63144,7 @@ function buildRating(el16, max) {
   const { row, stars } = buildRow2(max);
   const caption = make22("span", "kp-rating__caption");
   caption.id = `kp-rating-${serial9}-caption`;
-  const { actions, clear, save: save2, drop } = buildActions();
+  const { actions, clear, save: save2, drop } = buildActions2();
   const reason = make22("span", "kp-rating__reason");
   reason.id = `kp-rating-${serial9}-reason`;
   reason.hidden = true;
@@ -63033,7 +63165,7 @@ function buildRating(el16, max) {
   return { row, stars, caption, actions, clear, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field: field2 };
 }
 var make22;
-var init_build12 = __esm({
+var init_build13 = __esm({
   "js/rating/build.js"() {
     "use strict";
     init_constants31();
@@ -63362,7 +63494,7 @@ var init_controller35 = __esm({
     init_controller();
     init_strings();
     init_constants31();
-    init_build12();
+    init_build13();
     init_commit();
     init_keys13();
     init_math4();
@@ -63627,7 +63759,7 @@ var init_api22 = __esm({
     init_controller();
     init_constants31();
     init_controller35();
-    init_build12();
+    init_build13();
     init_commit();
     init_math4();
     init_paint10();
@@ -65789,7 +65921,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -65858,7 +65990,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values20();
+    init_values21();
   }
 });
 
@@ -65877,7 +66009,7 @@ var init_core16 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values20();
+    init_values21();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -65962,7 +66094,7 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values20();
+    init_values21();
     init_core16();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
@@ -66073,7 +66205,7 @@ var VersionChip;
 var init_controller38 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values20();
+    init_values21();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -66178,8 +66310,8 @@ var init_version_delta = __esm({
     "use strict";
     init_controller();
     init_controller38();
-    init_values20();
-    init_values20();
+    init_values21();
+    init_values21();
     init_level();
     init_links2();
   }
@@ -66187,7 +66319,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -66258,7 +66390,7 @@ var init_core17 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values21();
+    init_values22();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -66369,7 +66501,7 @@ var init_rows5 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values21();
+    init_values22();
     init_core17();
     DeplistRows = class extends DeplistCore {
       /**
@@ -66479,7 +66611,7 @@ var init_controller39 = __esm({
     init_flash();
     init_state_plate();
     init_strings();
-    init_values21();
+    init_values22();
     init_order();
     init_core17();
     init_rows5();
@@ -66657,8 +66789,8 @@ var init_deplist = __esm({
     "use strict";
     init_controller();
     init_controller39();
-    init_values21();
-    init_values21();
+    init_values22();
+    init_values22();
     init_order();
   }
 });
@@ -66768,7 +66900,7 @@ var init_states = __esm({
 
 // js/path-trace/values.js
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, GHOST_HOPS, WATCHED_ATTRIBUTES5;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/path-trace/values.js"() {
     "use strict";
     TRACE = "[data-kp-trace]";
@@ -66798,7 +66930,7 @@ var init_draw11 = __esm({
     init_flash();
     init_core18();
     init_states();
-    init_values22();
+    init_values23();
     TraceDraw = class extends TraceCore {
       draw() {
         const { host, stage, foot, summary: summary2 } = this;
@@ -66928,7 +67060,7 @@ var init_controller40 = __esm({
     init_strings();
     init_draw11();
     init_states();
-    init_values22();
+    init_values23();
     Trace = class extends TraceDraw {
       /**
        * @param {HTMLElement} host
@@ -67009,8 +67141,8 @@ var init_path_trace = __esm({
     "use strict";
     init_controller();
     init_controller40();
-    init_values22();
-    init_values22();
+    init_values23();
+    init_values23();
     init_states();
   }
 });
@@ -67918,7 +68050,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values23 = __esm({
+var init_values24 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -68257,7 +68389,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts11();
-    init_values23();
+    init_values24();
   }
 });
 
@@ -68267,7 +68399,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values23();
+    init_values24();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -68387,7 +68519,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values23();
+    init_values24();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -69704,7 +69836,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values24 = __esm({
+var init_values25 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -69777,7 +69909,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values24();
+    init_values25();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -70049,7 +70181,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values24();
+    init_values25();
   }
 });
 
@@ -70092,7 +70224,7 @@ var init_core19 = __esm({
     init_controller();
     init_locale();
     init_strings();
-    init_values24();
+    init_values25();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -70208,7 +70340,7 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values24();
+    init_values25();
     init_kinds();
     init_core19();
     FACTS_BASE = 1024;
@@ -70379,7 +70511,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values24();
+    init_values25();
     init_kinds();
     init_keys14();
     init_run4();
@@ -70501,8 +70633,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values24();
-    init_values24();
+    init_values25();
+    init_values25();
     init_kinds();
     init_glyph();
     init_open3();
@@ -71403,7 +71535,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values25 = __esm({
+var init_values26 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -71539,10 +71671,10 @@ function buildLines2(doc, id) {
   return { why, skeleton: skeleton2 };
 }
 var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
-var init_build13 = __esm({
+var init_build14 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values25();
+    init_values26();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -71561,8 +71693,8 @@ var init_core20 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_build13();
-    init_values25();
+    init_build14();
+    init_values26();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -71680,9 +71812,9 @@ var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
 var init_controller43 = __esm({
   "js/slider/controller.js"() {
     "use strict";
-    init_build13();
+    init_build14();
     init_core20();
-    init_values25();
+    init_values26();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -71908,8 +72040,8 @@ var init_slider = __esm({
     "use strict";
     init_controller();
     init_controller43();
-    init_values25();
-    init_values25();
+    init_values26();
+    init_values26();
   }
 });
 
@@ -72311,7 +72443,7 @@ var init_sentence = __esm({
 });
 
 // js/dated-options/constants.js
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS2, MINUTE_S3, DAY_S2, SECOND_MS3;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS4, COMBOBOX_ROWS, TYPEAHEAD_MS2, MINUTE_S3, DAY_S2, SECOND_MS4;
 var init_constants37 = __esm({
   "js/dated-options/constants.js"() {
     "use strict";
@@ -72326,13 +72458,13 @@ var init_constants37 = __esm({
     TYPEAHEAD_MS2 = 700;
     MINUTE_S3 = 60;
     DAY_S2 = 86400;
-    SECOND_MS3 = 1e3;
+    SECOND_MS4 = 1e3;
   }
 });
 
 // js/dated-options/time.js
 function datedAge(ms, now, strings = getStrings()) {
-  const seconds = Math.floor((now - ms) / SECOND_MS3);
+  const seconds = Math.floor((now - ms) / SECOND_MS4);
   if (seconds < MINUTE_S3) return strings.datedJustNow;
   if (seconds >= DAY_S2) return strings.datedAgo(strings.agoDays(Math.floor(seconds / DAY_S2)));
   return strings.datedAgo(humanDuration(seconds, strings));
@@ -72938,7 +73070,7 @@ var init_input = __esm({
 
 // js/runs/values.js
 var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS2;
-var init_values26 = __esm({
+var init_values27 = __esm({
   "js/runs/values.js"() {
     "use strict";
     RUNS = "[data-kp-runs]";
@@ -72972,7 +73104,7 @@ var init_options7 = __esm({
   "js/runs/options.js"() {
     "use strict";
     init_chart();
-    init_values26();
+    init_values27();
   }
 });
 
@@ -73037,7 +73169,7 @@ var init_time3 = __esm({
     init_weekdays();
     init_freshness();
     init_chart();
-    init_values26();
+    init_values27();
     two6 = (n) => String(n).padStart(2, "0");
   }
 });
@@ -73223,7 +73355,7 @@ var init_controller46 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note2();
-    init_values26();
+    init_values27();
     RunsList = class extends RunsNote {
       /**
        * @param {HTMLElement} host
@@ -73331,8 +73463,8 @@ var init_runs = __esm({
     "use strict";
     init_controller();
     init_controller46();
-    init_values26();
-    init_values26();
+    init_values27();
+    init_values27();
     init_time3();
   }
 });
@@ -73532,7 +73664,7 @@ function buildPanel3(doc, s2, id) {
   panel.append(make29(doc, "p", "kp-snooze__panel-title", s2.snoozePickTitle), inputs, error, actions);
   return { panel, picker, date, time, error, cancel, apply: apply2 };
 }
-var init_build14 = __esm({
+var init_build15 = __esm({
   "js/snooze/build.js"() {
     "use strict";
   }
@@ -73549,7 +73681,7 @@ var init_panel3 = __esm({
     init_motion();
     init_range();
     init_top_layer();
-    init_build14();
+    init_build15();
     init_choices();
     seq7 = 0;
     DAY_MS4 = 864e5;
@@ -82578,7 +82710,7 @@ var WIDGET_NEEDS = [
   // The command block [kpadopt4-ideas]: one command with its terminal, its admin or sudo badge and a copy that confirms.
   { name: "command", when: "[data-kp-command]", load: () => Promise.resolve().then(() => (init_command(), command_exports)), attach: (m, root) => [m.attachCommands(root)] },
   // The two timers [kpadopt4-ideas]: a countdown in digits, and the time left as a shrinking disc.
-  { name: "countdown", when: "[data-kp-countdown], [data-kp-countdown-until]", load: () => Promise.resolve().then(() => (init_countdown(), countdown_exports)), attach: (m, root) => [m.attachCountdowns(root)] },
+  { name: "countdown", when: "[data-kp-countdown], [data-kp-countdown-until]", load: () => Promise.resolve().then(() => (init_countdown2(), countdown_exports)), attach: (m, root) => [m.attachCountdowns(root)] },
   { name: "timer-disc", when: "[data-kp-timer-disc], [data-kp-timer-disc-until]", load: () => Promise.resolve().then(() => (init_timer_disc(), timer_disc_exports)), attach: (m, root) => [m.attachTimerDiscs(root)] },
   // The range picker [kpadopt4-ideas]: presets as the segmented control, and a custom from–to with the date picker.
   { name: "range", when: "[data-kp-range]", load: () => Promise.resolve().then(() => (init_range(), range_exports)), attach: (m, root) => [m.attachRanges(root)] },
@@ -82880,7 +83012,7 @@ init_components();
 init_connection();
 init_console3();
 init_contrast();
-init_countdown();
+init_countdown2();
 init_datatable();
 init_dated_options();
 init_datepicker();
@@ -83847,7 +83979,7 @@ init_components();
 init_connection();
 init_console3();
 init_contrast();
-init_countdown();
+init_countdown2();
 init_datatable();
 init_dated_options();
 init_datepicker();

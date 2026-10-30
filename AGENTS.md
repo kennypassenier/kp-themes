@@ -87,7 +87,7 @@ hand. The source is one folder of part files per component (`css/components/<com
 run `npm run generate:css`; `node gates/generate-css.mjs --check` (inside `npm run gates`) fails on drift, which is
 how a hand edit of a generated file is refused. No hand-written `css/`, `js/` or `gates/` file may pass 500 lines
 (`npm run check:file-size`; the dated to-split list in `gates/file-size.json` may only shrink). Index and lookup
-rules: [css/README.md](css/README.md). The biggest JavaScript modules (ninety-six so far) are a facade over a folder of single-purpose files; their index is [js/README.md](js/README.md).
+rules: [css/README.md](css/README.md). The biggest JavaScript modules (ninety-seven so far) are a facade over a folder of single-purpose files; their index is [js/README.md](js/README.md).
 
 ## Project documents
 

@@ -1,9 +1,7 @@
-/** Dispatched when an alarm closes, bubbling, on its trigger (or the document): `{ reason, id }`. */
-export declare const ALARM_CLOSE_EVENT = "kp-alarm-close";
-/** Dispatched on the alarm, bubbling, once it is open: `{ id, mode }`. */
-export declare const ALARM_OPEN_EVENT = "kp-alarm-open";
-/** How long an auto alarm stays when the caller names no `seconds`. An operational knob. */
-export declare const ALARM_SECONDS = 8;
+export { ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS } from './alarm/values.js';
+export { noiseGlyph, glyphCells } from './alarm/glyphs.js';
+export { buildAlarm } from './alarm/build.js';
+export { writeCountdown } from './alarm/countdown.js';
 export type AlarmOptions = {
     /**
      * The huge word(s). Also the alarm's accessible name.
@@ -43,46 +41,19 @@ export type AlarmOptions = {
     trigger?: HTMLElement | null;
 };
 export type AlarmReason = 'ack' | 'timeout' | 'escape';
-/** Two noise glyphs for one letter cell, from the decipher set js/effects.js uses. */
-export declare const noiseGlyph: () => string;
 /**
- * The headline as letter cells for the stylesheet's decode. Each cell carries
- * its place (`--i`) and two noise glyphs drawn in its pseudo-elements, so the
- * letter itself never moves and the layout never changes; a cell changes
- * three times, ever. Words stay whole (`.kp-alarm__word`), so a line breaks
- * between words and never inside one. Spaces count as a place, so the decode
- * keeps its rhythm across them.
- *
- * @param {string} text
- * @returns {{ word: string, chars: { ch: string, i: number }[] }[]} the words, and each run of spaces as `word: ' '` with no cells
+ * @typedef {object} AlarmOptions
+ * @property {string} title  The huge word(s). Also the alarm's accessible name.
+ * @property {string} [detail]  The line under the headline: what happened and what follows.
+ * @property {string} [code]  The small line above the headline ("Security protocol 7 · lockout").
+ * @property {'ack' | 'auto'} [mode]  'ack' (default): only its button closes it. 'auto': closes after `seconds`.
+ * @property {number} [seconds]  Auto only. Default 8, at least 1.
+ * @property {boolean} [escape]  Ack only: Escape closes it as well. An auto alarm always accepts Escape.
+ * @property {string} [action]  The button's label. Default: the dictionary's `alarmAction`.
+ * @property {Partial<import('./strings.js').Strings>} [strings]  Per-alarm words, over the dictionary.
+ * @property {HTMLElement | null} [trigger]  Where focus returns and the close event is dispatched. Default: what had focus.
  */
-export declare function glyphCells(text: string): {
-    word: string;
-    chars: {
-        ch: string;
-        i: number;
-    }[];
-}[];
-/**
- * Build an alarm's markup, closed and not yet in the document. Both
- * channels write this tree (components/alarm.jsx renders the same), so a
- * consumer's register rule and a test reach the same elements in each.
- *
- * @param {AlarmOptions & { id?: string }} options
- * @returns {{ dialog: HTMLDialogElement, ack: HTMLButtonElement, keep: HTMLButtonElement, when: HTMLElement, left: HTMLElement, strings: import('./strings.js').Strings, action: string, seconds: number }}
- */
-export declare function buildAlarm({ title, detail, code, mode, seconds, escape, action, strings, id }?: AlarmOptions & {
-    id?: string;
-}): {
-    dialog: HTMLDialogElement;
-    ack: HTMLButtonElement;
-    keep: HTMLButtonElement;
-    when: HTMLElement;
-    left: HTMLElement;
-    strings: import('./strings.js').Strings;
-    action: string;
-    seconds: number;
-};
+/** @typedef {'ack' | 'timeout' | 'escape'} AlarmReason */
 /**
  * Raise a full-screen alarm and wait for it to close.
  *
@@ -92,17 +63,6 @@ export declare function buildAlarm({ title, detail, code, mode, seconds, escape,
  * @returns {Promise<AlarmReason>}
  */
 export declare function showAlarm(options: AlarmOptions): Promise<AlarmReason>;
-/**
- * Write the countdown's two shares and its words. Shared with the React
- * channel, so both bars read the same two custom properties.
- *
- * @param {HTMLElement} dialog
- * @param {HTMLElement | null} left the words under the bar
- * @param {number} share the continuous share of the time left, 1 to 0
- * @param {number} stepped the share in whole seconds, for reduced motion
- * @param {string} words
- */
-export declare function writeCountdown(dialog: HTMLElement, left: HTMLElement | null, share: number, stepped: number, words: string): void;
 /**
  * Wire `[data-kp-alarm]` triggers: a press raises the alarm the trigger
  * describes, and the close event is dispatched on the trigger with the
