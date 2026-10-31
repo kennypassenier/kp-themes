@@ -4,153 +4,136 @@ import { getStrings } from '../../strings.js';
 import { REQUEST_EVENT } from '../events.js';
 /** @typedef {import('../events.js').DataAnswer} DataAnswer */
 /** @typedef {import('../events.js').DataRequest} DataRequest */
-/** @typedef {import('./context.js').TableContext} TableContext */
+/** @typedef {import('./controller.js').DataTableControl} DataTableControl */
 
-/**
- * What the server mode: sending a request and applying the answer part adds to the table's context.
- *
- * @typedef {{
- *     controller: AbortController | null;
- *     pending: number;
- *     request: () => void;
- * }} ServerFields
- */
+export class TableServer {
+    /** @param {DataTableControl} t */
+    constructor(t) {
+        /** The table this part belongs to. */
+        this.t = t;
+        // ── Rows from a server (#async) ────────────────────────────────
+        this.sent = 0;
+        this.latest = 0;
+        /** @type {AbortController | null} */
+        this.controller = null;
+        this.pending = 0;
+    }
 
-/**
- * Server mode: sending a request and applying the answer.
- *
- * @param {TableContext} c
- */
-export function installServer(c) {
-    const {
-        body,
-        byField,
-        details,
-        filters,
-        headers,
-        keyColumn,
-        keyOf,
-        labelOf,
-        loadFn,
-        make,
-        prepareRow,
-        render,
-        rowKeyFn,
-        serverMode,
-        serverSelection,
-        syncColumns,
-        wrap,
-    } = c;
-
-    // ── Rows from a server (#async) ────────────────────────────────
-    let sent = 0;
-    let latest = 0;
-    /** @type {AbortController | null} */
-    c.controller = null;
     /** @param {HTMLTableRowElement | Record<string, unknown>} item */
-    const rowFrom = (item) => {
+    rowFrom(item) {
         if (item instanceof HTMLTableRowElement) return item;
-        const row = /** @type {HTMLTableRowElement} */ (make('tr'));
+        const row = /** @type {HTMLTableRowElement} */ (this.t.identity.make('tr'));
         // The key: the consumer's function, else the field the table names, else
         // the key column's field, else `key` or `id`.
-        const field = wrap.dataset.kpRowKeyField ?? headers[keyColumn]?.dataset.kpField;
-        row.dataset.kpRowKey = rowKeyFn ? rowKeyFn(item) : String((field === undefined ? undefined : item[field]) ?? item.key ?? item.id ?? '');
-        headers.forEach((header, at) => {
+        const field = this.t.wrap.dataset.kpRowKeyField ?? this.t.columns.headers[this.t.columns.keyColumn]?.dataset.kpField;
+        row.dataset.kpRowKey = this.t.settings.rowKeyFn ? this.t.settings.rowKeyFn(item) : String((field === undefined ? undefined : item[field]) ?? item.key ?? item.id ?? '');
+        this.t.columns.headers.forEach((header, at) => {
             if (header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN)) return;
-            const cell = make('td');
+            const cell = this.t.identity.make('td');
             if (header.querySelector(SELECT_ALL) !== null) {
-                const box = /** @type {HTMLInputElement} */ (make('input', CHECK_CLASS));
+                const box = /** @type {HTMLInputElement} */ (this.t.identity.make('input', CHECK_CLASS));
                 box.type = 'checkbox';
                 box.dataset.kpSelectRow = '';
                 box.setAttribute('aria-label', getStrings().tableSelectRow(row.dataset.kpRowKey ?? ''));
                 cell.dataset.label = '';
                 cell.append(box);
             } else {
-                cell.dataset.label = labelOf(at);
+                cell.dataset.label = this.t.columns.labelOf(at);
                 // A number column's alignment, a code column's face: the classes
                 // the header asks its cells to wear, since an object has none.
                 if (header.dataset.kpCellClass) cell.className = header.dataset.kpCellClass;
-                const value = item[header.dataset.kpField ?? labelOf(at)];
+                const value = item[header.dataset.kpField ?? this.t.columns.labelOf(at)];
                 cell.textContent = value === undefined || value === null ? '' : String(value);
             }
             row.append(cell);
         });
         return row;
-    };
+    }
+
     /** @param {DataAnswer} answer */
-    const applyAnswer = (answer) => {
-        for (const row of c.all) {
+    applyAnswer(answer) {
+        for (const row of this.t.model.all) {
             const box = /** @type {HTMLInputElement | null} */ (row.querySelector(SELECT_ROW));
             if (box !== null) {
-                if (box.checked) serverSelection.add(keyOf(row));
-                else serverSelection.delete(keyOf(row));
+                if (box.checked) this.t.sync.serverSelection.add(this.t.columns.keyOf(row));
+                else this.t.sync.serverSelection.delete(this.t.columns.keyOf(row));
             }
         }
-        if (c.editing !== null) c.closeEditor();
-        const next = answer.rows.map(rowFrom);
-        for (const row of [...body.rows]) if (!next.includes(row)) row.remove();
-        details.clear();
+        if (this.t.edit.editing !== null) this.t.edit.closeEditor();
+        const next = answer.rows.map(this.t.bound(this, this.rowFrom));
+        for (const row of [...this.t.body.rows]) if (!next.includes(row)) row.remove();
+        this.t.details.details.clear();
         for (const row of next) {
             row.hidden = false;
-            body.append(row);
-            prepareRow(row);
+            this.t.body.append(row);
+            this.t.reorder.prepareRow(row);
             const box = /** @type {HTMLInputElement | null} */ (row.querySelector(SELECT_ROW));
-            if (box !== null) box.checked = serverSelection.has(keyOf(row));
+            if (box !== null) box.checked = this.t.sync.serverSelection.has(this.t.columns.keyOf(row));
         }
-        c.all = next;
-        c.shownRows = [...next];
-        c.total = Number(answer.total) || 0;
-        c.state = 'ready';
-        syncColumns();
-        render();
-    };
-    const request = () => {
-        if (!serverMode) return;
-        sent += 1;
-        const requestId = sent;
-        latest = requestId;
-        c.controller?.abort();
-        c.controller = new AbortController();
-        /** @type {DataRequest} */
-        const params = {
-            id: requestId,
-            query: c.query,
-            scope: c.scope,
-            sort: c.sorts[0] ? { ...c.sorts[0] } : null,
-            sorts: c.sorts.map((key) => ({ ...key })),
-            filters: Object.fromEntries(filters),
-            filtersByField: byField(),
-            page: c.page,
-            pageSize: c.size,
-            signal: c.controller.signal,
+        this.t.model.all = next;
+        this.t.model.shownRows = [...next];
+        this.t.busy.total = Number(answer.total) || 0;
+        this.t.model.state = 'ready';
+        this.t.sync.syncColumns();
+        this.t.render.render();
+    }
+
+    /**
+     * What the table asks the server for: its view now.
+     * @param {number} id @param {AbortSignal} signal
+     * @returns {DataRequest}
+     */
+    requestFor(id, signal) {
+        const { model } = this.t;
+        return {
+            id,
+            query: model.query,
+            scope: model.scope,
+            sort: model.sorts[0] ? { ...model.sorts[0] } : null,
+            sorts: model.sorts.map((key) => ({ ...key })),
+            filters: Object.fromEntries(model.filters),
+            filtersByField: this.t.sync.byField(),
+            page: model.page,
+            pageSize: this.t.controls.size,
+            signal,
         };
-        c.state = 'loading';
-        render();
+    }
+
+    /** Ask the server for the view: by `kp-datatable-request` and the `load` option; only the newest answer counts. */
+    request() {
+        if (!this.t.controls.serverMode) return;
+        this.sent += 1;
+        const requestId = this.sent;
+        this.latest = requestId;
+        this.controller?.abort();
+        this.controller = new AbortController();
+        const params = this.requestFor(requestId, this.controller.signal);
+        this.t.model.state = 'loading';
+        this.t.render.render();
         let settled = false;
         /** @param {DataAnswer} answer */
         const respond = (answer) => {
             if (settled) return;
             settled = true;
             // An answer to a request that is no longer the newest is thrown away.
-            if (requestId !== latest) return;
-            applyAnswer(answer);
+            if (requestId !== this.latest) return;
+            this.applyAnswer(answer);
         };
         /** @param {unknown} error */
         const fail = (error) => {
             if (settled) return;
             settled = true;
-            if (requestId !== latest) return;
+            if (requestId !== this.latest) return;
             void error;
-            c.state = 'failed';
-            render();
+            this.t.model.state = 'failed';
+            this.t.render.render();
         };
-        wrap.dispatchEvent(new CustomEvent(REQUEST_EVENT, { bubbles: true, detail: { ...params, respond, fail } }));
+        this.t.wrap.dispatchEvent(new CustomEvent(REQUEST_EVENT, { bubbles: true, detail: { ...params, respond, fail } }));
+        const loadFn = this.t.settings.loadFn;
         if (loadFn !== undefined) {
             Promise.resolve()
                 .then(() => loadFn(params))
                 .then(respond, fail);
         }
-    };
-    c.request = request;
-    c.pending = 0;
+    }
 }

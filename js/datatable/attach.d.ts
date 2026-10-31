@@ -1,4 +1,5 @@
-export type TableContext = import('./attach/context.js').TableContext;
+export type DataTableSettings = import('./attach/types.js').DataTableSettings;
+export type DataTableCall = import('./attach/types.js').DataTableCall;
 export type Compare = import('./sort.js').Compare;
 export type DataAnswer = import('./events.js').DataAnswer;
 export type DataRequest = import('./events.js').DataRequest;
@@ -80,7 +81,8 @@ export type DataTableDecorateInfo = {
     label?: string;
     value?: string;
 };
-/** @typedef {import('./attach/context.js').TableContext} TableContext */
+/** @typedef {import('./attach/types.js').DataTableSettings} DataTableSettings */
+/** @typedef {import('./attach/types.js').DataTableCall} DataTableCall */
 /** @typedef {import('./sort.js').Compare} Compare */
 /** @typedef {import('./events.js').DataAnswer} DataAnswer */
 /** @typedef {import('./events.js').DataRequest} DataRequest */

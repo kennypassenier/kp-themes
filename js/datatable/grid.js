@@ -1,7 +1,8 @@
-// The grid mode: fixed columns, the scrolled marker and the grid attachment.
+// The grid mode: fixed columns, the scrolled marker and the grid attachment (their controllers are in grid-control.js).
 import { shown } from './filter.js';
-import { DETAIL, EDITOR_WRAP, GROUP_ROW, SKELETON_ROW } from './selectors.js';
+import { DETAIL } from './selectors.js';
 import { GRID_PAGE_ROWS } from './events.js';
+import { GridControl, ScrollMark } from './grid-control.js';
 
 /**
  * Keep the leading columns of a table in place while its box scrolls
@@ -86,22 +87,9 @@ export function syncFixedColumns(table, count, endCount = 0) {
  * @returns {() => void} detach, which removes the attribute
  */
 export function watchScrolled(element, box) {
-    const view = box.ownerDocument.defaultView;
-    let frame = 0;
-    const decide = () => {
-        frame = 0;
-        element.toggleAttribute('data-kp-scrolled', box.scrollTop > 0);
-    };
-    const onScroll = () => {
-        if (frame === 0 && view !== null) frame = view.requestAnimationFrame(decide);
-    };
-    decide();
-    box.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-        box.removeEventListener('scroll', onScroll);
-        if (frame !== 0) view?.cancelAnimationFrame(frame);
-        element.removeAttribute('data-kp-scrolled');
-    };
+    const mark = new ScrollMark(element, { box });
+    mark.connect();
+    return () => mark.destroy();
 }
 /**
  * @typedef {object} GridHandle
@@ -127,123 +115,16 @@ export function watchScrolled(element, box) {
  * @returns {GridHandle}
  */
 export function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove } = {}) {
-    const roleWas = table.getAttribute('role');
-    table.setAttribute('role', 'grid');
-    let at = { row: -1, column: 0 };
-    /** Elements given a tabindex here, with the value they had. @type {Map<HTMLElement, string | null>} */
-    const touched = new Map();
-
-    const rows = () => [...table.rows].filter((row) => shown(row) && !row.matches(SKELETON_ROW) && row.cells.length > 0);
-    /** @param {HTMLTableRowElement} row */
-    const cellsOf = (row) => [...row.cells].filter(shown);
-    /** The one control a cell hands its focus to, or the cell. @param {HTMLTableCellElement} cell */
-    const targetOf = (cell) => {
-        const controls = [...cell.querySelectorAll('button, a[href], input, select, textarea, [tabindex]')].filter(
-            (control) => control.closest(EDITOR_WRAP) === null && shown(control),
-        );
-        return /** @type {HTMLElement} */ (controls.length === 1 ? controls[0] : cell);
-    };
-    /** @param {HTMLElement} element @param {number} value */
-    const setTab = (element, value) => {
-        if (!touched.has(element)) touched.set(element, element.getAttribute('tabindex'));
-        if (element.tabIndex !== value || !element.hasAttribute('tabindex')) element.tabIndex = value;
-    };
-
-    /** @returns {[HTMLTableRowElement[], number, number]} */
-    const clamp = () => {
-        const list = rows();
-        const header = list.findIndex((row) => row.parentElement?.tagName !== 'THEAD');
-        const row = at.row < 0 ? Math.max(header, 0) : Math.max(0, Math.min(list.length - 1, at.row));
-        const cells = list[row] === undefined ? [] : cellsOf(list[row]);
-        return [list, row, Math.max(0, Math.min(cells.length - 1, at.column))];
-    };
-
-    const sync = () => {
-        const [list, row, column] = clamp();
-        for (const tr of table.rows) {
-            for (const cell of tr.cells) {
-                setTab(cell, -1);
-                for (const control of cell.querySelectorAll('button, a[href], input, select, textarea')) {
-                    if (control.closest(EDITOR_WRAP) === null) setTab(/** @type {HTMLElement} */ (control), -1);
-                }
-            }
-        }
-        const current = list[row] === undefined ? undefined : cellsOf(list[row])[column];
-        if (current !== undefined) setTab(targetOf(current), 0);
-    };
-
-    /** @param {number} row @param {number} column @param {boolean} [take] */
-    const move = (row, column, take = true) => {
-        const list = rows();
-        if (list.length === 0) return;
-        const r = Math.max(0, Math.min(list.length - 1, row));
-        const cells = cellsOf(/** @type {HTMLTableRowElement} */ (list[r]));
-        const c = Math.max(0, Math.min(cells.length - 1, column));
-        at = { row: r, column: c };
-        sync();
-        const cell = cells[c];
-        if (cell === undefined) return;
-        if (take) targetOf(cell).focus();
-        const header = list.filter((tr) => tr.parentElement?.tagName === 'THEAD').length;
-        // A detail row and a group's heading row are not rows of data.
-        const bodyRows = list.filter((tr) => tr.parentElement?.tagName !== 'THEAD' && !tr.matches(DETAIL) && !tr.matches(GROUP_ROW)).length;
-        const bodyIndex = r < header ? 0 : list.slice(header, r + 1).filter((tr) => !tr.matches(DETAIL) && !tr.matches(GROUP_ROW)).length;
-        onMove?.({ row: bodyIndex, rows: bodyRows, column: c, cell });
-    };
-
-    /** @param {KeyboardEvent} event */
-    const onKey = (event) => {
-        const target = /** @type {HTMLElement} */ (event.target);
-        if (target.closest(EDITOR_WRAP) !== null || event.altKey || event.metaKey) return;
-        const [, row, column] = clamp();
-        const ctrl = event.ctrlKey;
-        /** @type {Record<string, [number, number]>} */
-        const moves = {
-            ArrowUp: [row - 1, column],
-            ArrowDown: [row + 1, column],
-            ArrowLeft: [row, column - 1],
-            ArrowRight: [row, column + 1],
-            Home: ctrl ? [0, 0] : [row, 0],
-            End: ctrl ? [rows().length - 1, Number.MAX_SAFE_INTEGER] : [row, Number.MAX_SAFE_INTEGER],
-            PageUp: [row - pageRows, column],
-            PageDown: [row + pageRows, column],
-        };
-        const next = moves[event.key];
-        if (next === undefined) return;
-        // A text field keeps its own left, right, Home and End.
-        if (target.matches('input:not([type="checkbox"]):not([type="radio"]), textarea, select') && !event.key.startsWith('Page')) return;
-        event.preventDefault();
-        move(next[0], next[1]);
-    };
-    /** @param {FocusEvent} event */
-    const onFocusIn = (event) => {
-        const target = /** @type {HTMLElement} */ (event.target);
-        if (target.closest(EDITOR_WRAP) !== null) return;
-        const cell = /** @type {HTMLTableCellElement | null} */ (target.closest('td, th'));
-        const tr = /** @type {HTMLTableRowElement | null} */ (cell?.parentElement ?? null);
-        if (cell === null || tr === null || cell.closest('table') !== table) return;
-        const list = rows();
-        const r = list.indexOf(tr);
-        const c = cellsOf(tr).indexOf(cell);
-        if (r === -1 || c === -1) return;
-        move(r, c, false);
-    };
-
-    table.addEventListener('keydown', onKey);
-    table.addEventListener('focusin', onFocusIn);
-    sync();
+    const grid = new GridControl(table, { pageRows, onMove });
+    try {
+        grid.connect();
+    } catch (error) {
+        grid.destroy();
+        throw error;
+    }
     return {
-        sync,
-        focus: (row, column) => move(row, column),
-        detach: () => {
-            table.removeEventListener('keydown', onKey);
-            table.removeEventListener('focusin', onFocusIn);
-            for (const [element, was] of touched) {
-                if (was === null) element.removeAttribute('tabindex');
-                else element.setAttribute('tabindex', was);
-            }
-            if (roleWas === null) table.removeAttribute('role');
-            else table.setAttribute('role', roleWas);
-        },
+        sync: () => grid.sync(),
+        focus: (row, column) => grid.move(row, column),
+        detach: () => grid.destroy(),
     };
 }

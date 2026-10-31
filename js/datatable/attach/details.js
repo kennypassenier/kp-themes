@@ -1,141 +1,117 @@
 // The detail rows, the expand cell and the reorder cell.
 import { DETAIL, EXPAND_COLUMN, GROUP_ROW, HELD_ROW, REORDER_COLUMN, SKELETON_ROW } from '../selectors.js';
 /** @typedef {import('../attach.js').DataTableDecorateInfo} DataTableDecorateInfo */
-/** @typedef {import('./context.js').TableContext} TableContext */
+/** @typedef {import('./controller.js').DataTableControl} DataTableControl */
 
-/**
- * What the the detail rows, the expand cell and the reorder cell part adds to the table's context.
- *
- * @typedef {{
- *     builtDetails: Set<HTMLTableRowElement>;
- *     collectDetails: () => void;
- *     decoratePart: (part: HTMLElement, info: Omit<DataTableDecorateInfo, 'host' | 'key'>) => void;
- *     details: Map<HTMLTableRowElement, HTMLTableRowElement>;
- *     detailsWereHidden: Map<HTMLTableRowElement, boolean>;
- *     expandable: boolean;
- *     expanded: Set<string>;
- *     headRow: HTMLTableRowElement | undefined;
- *     insertExpandCell: (row: HTMLTableRowElement) => void;
- *     insertReorderCell: (row: HTMLTableRowElement) => void;
- *     reorderable: boolean;
- *     single: boolean;
- * }} DetailsFields
- */
+export class TableDetails {
+    /** @param {DataTableControl} t */
+    constructor(t) {
+        /** The table this part belongs to. */
+        this.t = t;
+        // ── Rows that open (#expansion) ────────────────────────────────
+        // Before anything reads the headers: the toggle column is a column.
+        this.headRow = this.t.table.tHead?.rows[0];
+        /** Each row's detail row. @type {Map<HTMLTableRowElement, HTMLTableRowElement>} */
+        this.details = new Map();
+        /** Detail rows as the markup had them, for detach. @type {Map<HTMLTableRowElement, boolean>} */
+        this.detailsWereHidden = new Map();
+        /** @type {Set<HTMLTableRowElement>} */
+        this.builtDetails = new Set();
+        this.collectDetails();
+        this.expandable = this.t.wrap.dataset.kpExpandable !== undefined && this.headRow !== undefined;
+        /** One row open at a time [J2]: opening one closes the one that was open. */
+        this.single = this.t.wrap.dataset.kpExpandSingle === undefined ? this.t.settings.expandSingle : this.t.wrap.dataset.kpExpandSingle !== 'false';
+        // The search box the page placed is a control the consumer may mark too [wish-1120, homelab 66, 114].
+        if (this.t.controls.search !== null) this.decoratePart(this.t.controls.search, { kind: 'search' });
+        /** Rows open for their details, by key. @type {Set<string>} */
+        this.expanded = new Set();
+        if (this.expandable && this.headRow !== undefined && this.headRow.querySelector(EXPAND_COLUMN) === null) {
+            const th = this.t.identity.add(this.t.identity.make('th'));
+            th.setAttribute('scope', 'col');
+            th.dataset.kpExpandColumn = '';
+            const label = this.t.identity.make('span', 'kp-sr-only');
+            label.textContent = this.t.identity.s0.tableDetailsColumn;
+            th.append(label);
+            this.headRow.prepend(th);
+        }
+        // Row reorder [wish-1120, homelab 93]: `data-kp-rows-reorder` adds a column of drag handles, first in the row.
+        this.reorderable = this.t.wrap.dataset.kpRowsReorder !== undefined && this.headRow !== undefined;
+        if (this.reorderable && this.headRow !== undefined && this.headRow.querySelector(REORDER_COLUMN) === null) {
+            const th = this.t.identity.add(this.t.identity.make('th'));
+            th.setAttribute('scope', 'col');
+            th.dataset.kpReorderColumn = '';
+            const label = this.t.identity.make('span', 'kp-sr-only');
+            label.textContent = this.t.identity.s0.tableReorderColumn;
+            th.append(label);
+            this.headRow.prepend(th);
+        }
+        for (const row of this.t.body.rows) {
+            this.insertExpandCell(row);
+            this.insertReorderCell(row);
+        }
+    }
 
-/**
- * The detail rows, the expand cell and the reorder cell.
- *
- * @param {TableContext} c
- */
-export function installDetails(c) {
-    const { add, body, decorate, detailFn, expandSingle, make, s0, search, table, wrap } = c;
-
-    // ── Rows that open (#expansion) ────────────────────────────────
-    // Before anything reads the headers: the toggle column is a column.
-    const headRow = table.tHead?.rows[0];
-    c.headRow = headRow;
-    /** Each row's detail row. @type {Map<HTMLTableRowElement, HTMLTableRowElement>} */
-    const details = new Map();
-    c.details = details;
-    /** Detail rows as the markup had them, for detach. @type {Map<HTMLTableRowElement, boolean>} */
-    const detailsWereHidden = new Map();
-    c.detailsWereHidden = detailsWereHidden;
-    /** @type {Set<HTMLTableRowElement>} */
-    const builtDetails = new Set();
-    c.builtDetails = builtDetails;
-    const collectDetails = () => {
+    collectDetails() {
         /** @type {HTMLTableRowElement | null} */
         let owner = null;
-        for (const row of body.rows) {
+        for (const row of this.t.body.rows) {
             if (row.matches(DETAIL)) {
-                if (owner !== null && !details.has(owner)) {
-                    details.set(owner, row);
-                    if (!detailsWereHidden.has(row)) detailsWereHidden.set(row, row.hidden === true);
+                if (owner !== null && !this.details.has(owner)) {
+                    this.details.set(owner, row);
+                    if (!this.detailsWereHidden.has(row)) this.detailsWereHidden.set(row, row.hidden === true);
                 }
             } else if (row.matches(GROUP_ROW)) owner = null;
             else if (row.matches(HELD_ROW)) owner = null;
             else if (!row.matches(SKELETON_ROW)) owner = row;
         }
-    };
-    c.collectDetails = collectDetails;
-    collectDetails();
-    const expandable = wrap.dataset.kpExpandable !== undefined && headRow !== undefined;
-    c.expandable = expandable;
-    /** One row open at a time [J2]: opening one closes the one that was open. */
-    const single = wrap.dataset.kpExpandSingle === undefined ? expandSingle : wrap.dataset.kpExpandSingle !== 'false';
-    c.single = single;
+    }
+
     /** The consumer's mark on a control this table built [J2, R-DRIVE]. @param {HTMLElement} part @param {Omit<DataTableDecorateInfo, 'host' | 'key'>} info */
-    const decoratePart = (part, info) => {
-        if (decorate === undefined) return;
+    decoratePart(part, info) {
+        if (this.t.settings.decorate === undefined) return;
         /** @type {DataTableDecorateInfo} */
-        const full = { ...info, host: wrap };
-        if (wrap.dataset.kpKey !== undefined) full.key = wrap.dataset.kpKey;
-        decorate(part, full);
-    };
-    c.decoratePart = decoratePart;
-    // The search box the page placed is a control the consumer may mark too [wish-1120, homelab 66, 114].
-    if (search !== null) decoratePart(search, { kind: 'search' });
-    /** Rows open for their details, by key. @type {Set<string>} */
-    const expanded = new Set();
-    c.expanded = expanded;
-    if (expandable && headRow !== undefined && headRow.querySelector(EXPAND_COLUMN) === null) {
-        const th = add(make('th'));
-        th.setAttribute('scope', 'col');
-        th.dataset.kpExpandColumn = '';
-        const label = make('span', 'kp-sr-only');
-        label.textContent = s0.tableDetailsColumn;
-        th.append(label);
-        headRow.prepend(th);
+        const full = { ...info, host: this.t.wrap };
+        if (this.t.wrap.dataset.kpKey !== undefined) full.key = this.t.wrap.dataset.kpKey;
+        this.t.settings.decorate(part, full);
     }
-    // Row reorder [wish-1120, homelab 93]: `data-kp-rows-reorder` adds a column of drag handles, first in the row.
-    const reorderable = wrap.dataset.kpRowsReorder !== undefined && headRow !== undefined;
-    c.reorderable = reorderable;
-    if (reorderable && headRow !== undefined && headRow.querySelector(REORDER_COLUMN) === null) {
-        const th = add(make('th'));
-        th.setAttribute('scope', 'col');
-        th.dataset.kpReorderColumn = '';
-        const label = make('span', 'kp-sr-only');
-        label.textContent = s0.tableReorderColumn;
-        th.append(label);
-        headRow.prepend(th);
-    }
+
     /** The handle's cell, first in the row (before the expand toggle). @param {HTMLTableRowElement} row */
-    const insertReorderCell = (row) => {
+    insertReorderCell(row) {
         if (
-            !reorderable ||
+            !this.reorderable ||
             row.matches(DETAIL) ||
             row.matches(SKELETON_ROW) ||
             row.matches(GROUP_ROW) ||
             row.querySelector('[data-kp-reorder-cell]') !== null
         )
             return;
-        const cell = /** @type {HTMLTableCellElement} */ (make('td'));
+        const cell = /** @type {HTMLTableCellElement} */ (this.t.identity.make('td'));
         cell.dataset.kpReorderCell = '';
         cell.dataset.label = '';
-        const button = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--ghost kp-button--sm kp-datatable__handle'));
+        const button = /** @type {HTMLButtonElement} */ (this.t.identity.make('button', 'kp-button kp-button--ghost kp-button--sm kp-datatable__handle'));
         button.type = 'button';
         button.dataset.kpReorderHandle = '';
         button.setAttribute('aria-keyshortcuts', 'Alt+ArrowUp Alt+ArrowDown');
-        const grip = make('span', 'kp-datatable__grip');
+        const grip = this.t.identity.make('span', 'kp-datatable__grip');
         grip.setAttribute('aria-hidden', 'true');
         button.append(grip);
         cell.append(button);
         row.prepend(cell);
         const rowKey = row.dataset.kpRowKey ?? row.id ?? '';
-        decoratePart(button, { kind: 'reorder-handle', value: rowKey, label: rowKey });
-    };
-    c.insertReorderCell = insertReorderCell;
+        this.decoratePart(button, { kind: 'reorder-handle', value: rowKey, label: rowKey });
+    }
+
     /** The toggle's cell, first in the row, so the row's cells line up with the headers. @param {HTMLTableRowElement} row */
-    const insertExpandCell = (row) => {
+    insertExpandCell(row) {
         if (
-            !expandable ||
+            !this.expandable ||
             row.matches(DETAIL) ||
             row.matches(SKELETON_ROW) ||
             row.matches(GROUP_ROW) ||
             row.querySelector('[data-kp-expand-cell]') !== null
         )
             return;
-        const cell = /** @type {HTMLTableCellElement} */ (make('td'));
+        const cell = /** @type {HTMLTableCellElement} */ (this.t.identity.make('td'));
         cell.dataset.kpExpandCell = '';
         cell.dataset.label = '';
         // Where the markup wrote detail rows, only a row that has one gets a
@@ -143,8 +119,8 @@ export function installDetails(c) {
         // does, and the app fills the detail when the row first opens.
         /** @type {HTMLButtonElement | null} */
         let button = null;
-        if (details.has(row) || detailFn !== undefined || details.size === 0) {
-            button = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--ghost kp-button--sm kp-datatable__expand'));
+        if (this.details.has(row) || this.t.settings.detailFn !== undefined || this.details.size === 0) {
+            button = /** @type {HTMLButtonElement} */ (this.t.identity.make('button', 'kp-button kp-button--ghost kp-button--sm kp-datatable__expand'));
             button.type = 'button';
             button.dataset.kpRowToggle = '';
             cell.append(button);
@@ -152,12 +128,7 @@ export function installDetails(c) {
         row.prepend(cell);
         if (button !== null) {
             const rowKey = row.dataset.kpRowKey ?? row.id ?? '';
-            decoratePart(button, { kind: 'row-toggle', value: rowKey, label: s0.tableRowDetails(rowKey) });
+            this.decoratePart(button, { kind: 'row-toggle', value: rowKey, label: this.t.identity.s0.tableRowDetails(rowKey) });
         }
-    };
-    c.insertExpandCell = insertExpandCell;
-    for (const row of body.rows) {
-        insertExpandCell(row);
-        insertReorderCell(row);
     }
 }

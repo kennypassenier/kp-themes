@@ -1,36 +1,36 @@
-export type TableContext = import('./context.js').TableContext;
-export type SortSetupFields = {
-    choosable: number[];
-    columnCount: HTMLElement | null;
-    columnList: HTMLElement | null;
-    editLog: HTMLElement | null;
-    hiddenColumns: Set<number>;
-    locked: boolean[];
-    openingSort: string | null;
+export type DataTableControl = import('./controller.js').DataTableControl;
+/** @typedef {import('./controller.js').DataTableControl} DataTableControl */
+export declare class TableSortSetup {
+    /** The table this part belongs to. */
+    t: import("./controller.js").DataTableControl;
+    sortable: number[];
+    /** @type {HTMLSelectElement | null} */
     sortBy: HTMLSelectElement | null;
+    /** @type {HTMLButtonElement | null} */
     sortDirection: HTMLButtonElement | null;
+    /** @type {HTMLElement | null} */
     sortSummary: HTMLElement | null;
-};
-/** @typedef {import('./context.js').TableContext} TableContext */
-/**
- * What the the sort and column controls and the remembered columns part adds to the table's context.
- *
- * @typedef {{
- *     choosable: number[];
- *     columnCount: HTMLElement | null;
- *     columnList: HTMLElement | null;
- *     editLog: HTMLElement | null;
- *     hiddenColumns: Set<number>;
- *     locked: boolean[];
- *     openingSort: string | null;
- *     sortBy: HTMLSelectElement | null;
- *     sortDirection: HTMLButtonElement | null;
- *     sortSummary: HTMLElement | null;
- * }} SortSetupFields
- */
-/**
- * The sort and column controls and the remembered columns.
- *
- * @param {TableContext} c
- */
-export declare function installSortSetup(c: TableContext): void;
+    /** The opening sort, as a key, once it is known; the way back to it is shown only when the sort differs [fix-83]. @type {string | null} */
+    openingSort: string | null;
+    locked: boolean[];
+    /** @type {Set<number>} */
+    hiddenColumns: Set<number>;
+    choosable: number[];
+    /** @type {HTMLElement | null} */
+    columnList: HTMLElement | null;
+    /** @type {HTMLElement | null} */
+    columnCount: HTMLElement | null;
+    editable: boolean;
+    /** @type {HTMLElement | null} */
+    editLog: HTMLElement | null;
+    /** @param {DataTableControl} t */
+    constructor(t: DataTableControl);
+    /** The card layout's sort control: a column choice and a direction button. */
+    makeCardSort(): void;
+    /** The multi-sort summary (#multi-sort): the page's, or a line of its own with the way back to the opening sort. */
+    findSortSummary(): void;
+    /** The column menu (#columns): a button in the top bar, its menu of columns and the count of those shown. */
+    makeColumnMenu(): void;
+    /** The edit log (#inline-edit): what was edited, under the table. */
+    makeEditLog(): void;
+}

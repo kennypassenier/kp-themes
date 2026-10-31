@@ -34,7 +34,7 @@
         "js/connection.js": { "digest": "2175ad931a99f8f9", "when": "[data-kp-connection]" },
         "js/console.js": { "digest": "a007778c7d52a785", "when": "[data-kp-console]" },
         "js/countdown.js": { "digest": "905c710addaafda6", "when": "[data-kp-countdown], [data-kp-countdown-until]" },
-        "js/datatable.js": { "digest": "4b500e71cfa674fe", "when": "[data-kp-datatable], [data-kp-cards-at], th[data-kp-col=\"actions\"]" },
+        "js/datatable.js": { "digest": "e58f575d2c687a6c", "when": "[data-kp-datatable], [data-kp-cards-at], th[data-kp-col=\"actions\"]" },
         "js/dated-options.js": { "digest": "afb0ac71fb0d5b32", "when": "[data-kp-dated]" },
         "js/datepicker.js": { "digest": "6f75f91c571f28f2", "when": "[data-kp-datepicker]" },
         "js/deplist.js": { "digest": "358dfdc6949bc335", "when": "[data-kp-deplist]" },

@@ -5,87 +5,50 @@ import { syncFixedColumns } from '../grid.js';
 /** @typedef {import('../events.js').FilterValue} FilterValue */
 /** @typedef {import('../grid.js').GridHandle} GridHandle */
 /** @typedef {import('../events.js').View} View */
-/** @typedef {import('./context.js').TableContext} TableContext */
+/** @typedef {import('./controller.js').DataTableControl} DataTableControl */
 
-/**
- * What the syncs the table's parts with its state: selection, sort marks, columns, fixed columns and card labels part adds to the table's context.
- *
- * @typedef {{
- *     byField: () => Record<string, FilterValue>;
- *     columnAt: (column: string | number) => number;
- *     detailFor: (row: HTMLTableRowElement) => HTMLTableRowElement | undefined;
- *     fixedCount: number;
- *     fixedEndCount: number;
- *     grid: GridHandle | null;
- *     labelCells: () => void;
- *     selectedRows: () => HTMLTableRowElement[];
- *     serverSelection: Set<string>;
- *     syncActions: () => void;
- *     syncCardSort: () => void;
- *     syncColumns: () => void;
- *     syncFixed: () => void;
- *     syncSelectAll: () => void;
- *     syncSortMarks: () => void;
- *     syncStateParts: () => void;
- *     view: () => View;
- * }} SyncFields
- */
-
-/**
- * Syncs the table's parts with its state: selection, sort marks, columns, fixed columns and card labels.
- *
- * @param {TableContext} c
- */
-export function installSync(c) {
-    const {
-        actions,
-        body,
-        builtDetails,
-        busyWas,
-        choosable,
-        columnIds,
-        controlColumn,
-        detailFn,
-        details,
-        detailsWereHidden,
-        expandable,
-        expanded,
-        filters,
-        folded,
-        headers,
-        headersWereHidden,
-        id,
-        keyColumn,
-        keyOf,
-        labelOf,
-        loadingSlot,
-        locked,
-        make,
-        orders,
-        selectAll,
-        serverMode,
-        syncCover,
-        table,
-        undo,
-        visibleColumns,
-        wrap,
-    } = c;
+export class TableSync {
+    /** @param {DataTableControl} t */
+    constructor(t) {
+        /** The table this part belongs to. */
+        this.t = t;
+        /** Keys ticked in a server-backed table, which outlive the rows of one page. @type {Set<string>} */
+        this.serverSelection = new Set();
+        this.fixedAttribute = this.t.wrap.dataset.kpFixedColumns;
+        this.fixedCount = this.fixedAttribute === undefined ? 0 : Number.parseInt(this.fixedAttribute, 10) || this.t.columns.keyColumn + 1;
+        this.fixedEndCount = Math.max(0, Number.parseInt(this.t.wrap.dataset.kpFixedEnd ?? '', 10) || (this.t.wrap.dataset.kpFixedEnd === undefined ? 0 : 1));
+        /**
+         * A table that becomes cards says in each cell which column it is [datatable-r5-1019, B2]: a cell the markup
+         * gave no `data-label` takes its header's words, so a server that renders plain rows still gets cards. A label
+         * the markup wrote stays; a cell under a header with no words (the selection box, the actions) gets none and
+         * spans the card. Read again on every render, for rows that came later; detach takes the derived ones away.
+         * @type {Set<HTMLTableCellElement>}
+         */
+        this.derivedLabels = new Set();
+        this.cardsWanted = this.t.wrap.hasAttribute('data-kp-cards') || this.t.table.hasAttribute('data-kp-cards');
+        this.t.identity.undo.push(() => {
+            for (const cell of this.derivedLabels) cell.removeAttribute('data-label');
+            this.derivedLabels.clear();
+        });
+        /** @type {GridHandle | null} */
+        this.grid = null;
+    }
 
     /** A detail row, made ready to show: its class, its id and its span. @param {HTMLTableRowElement} row */
-    const detailFor = (row) => {
-        let detail = details.get(row);
-        if (detail === undefined && expandable) {
-            const hasMarkup = [...detailsWereHidden.keys()].length > 0;
-            if (detailFn === undefined && hasMarkup) return undefined;
-            detail = /** @type {HTMLTableRowElement} */ (make('tr'));
+    detailFor(row) {
+        let detail = this.t.details.details.get(row);
+        if (detail === undefined && this.t.details.expandable) {
+            const hasMarkup = [...this.t.details.detailsWereHidden.keys()].length > 0;
+            if (this.t.settings.detailFn === undefined && hasMarkup) return undefined;
+            detail = /** @type {HTMLTableRowElement} */ (this.t.identity.make('tr'));
             detail.dataset.kpRowDetail = '';
             detail.hidden = true;
-            const cell = make('td');
+            const cell = this.t.identity.make('td');
             detail.append(cell);
-            details.set(row, detail);
-            builtDetails.add(detail);
-            if (detailFn !== undefined) {
-                const content = detailFn(row);
+            this.t.details.details.set(row, detail);
+            this.t.details.builtDetails.add(detail);
+            if (this.t.settings.detailFn !== undefined) {
+                const content = this.t.settings.detailFn(row);
                 if (typeof content === 'string') cell.textContent = content;
                 else if (content !== null && content !== undefined) cell.append(content);
             }
@@ -94,249 +57,236 @@ export function installSync(c) {
         if (!detail.classList.contains('kp-datatable__detail')) {
             detail.classList.add('kp-datatable__detail');
             const node = detail;
-            if (!builtDetails.has(detail)) undo.push(() => node.classList.remove('kp-datatable__detail'));
+            if (!this.t.details.builtDetails.has(detail)) this.t.identity.undo.push(() => node.classList.remove('kp-datatable__detail'));
         }
         if (detail.id === '') {
-            detail.id = `${id}-detail-${keyOf(row) || row.rowIndex}`;
+            detail.id = `${this.t.identity.id}-detail-${this.t.columns.keyOf(row) || row.rowIndex}`;
             const node = detail;
-            if (!builtDetails.has(detail)) undo.push(() => node.removeAttribute('id'));
+            if (!this.t.details.builtDetails.has(detail)) this.t.identity.undo.push(() => node.removeAttribute('id'));
         }
         const cell = detail.cells[0];
-        if (cell !== undefined) cell.colSpan = visibleColumns();
+        if (cell !== undefined) cell.colSpan = this.t.groups.visibleColumns();
         return detail;
-    };
-    c.detailFor = detailFor;
+    }
+
     /** The filters under the column ids instead of the numbers [wish-1028]. @returns {Record<string, FilterValue>} */
-    const byField = () => Object.fromEntries([...filters].map(([at, value]) => [columnIds[at], value]));
-    c.byField = byField;
+    byField() {
+        return Object.fromEntries([...this.t.model.filters].map(([at, value]) => [this.t.columns.columnIds[at], value]));
+    }
+
     /**
      * A column asked for by number, or by its id (`data-kp-field`, else its text); -1 when the id names none [wish-1028].
      * @param {number | string} column
      */
-    const columnAt = (column) => (typeof column === 'string' ? columnIds.indexOf(column) : column);
-    c.columnAt = columnAt;
+    columnAt(column) {
+        return (typeof column === 'string' ? this.t.columns.columnIds.indexOf(column) : column);
+    }
+
     /** @returns {View} */
-    const view = () => ({
-        shown: serverMode ? c.total || 0 : c.shownRows.length,
-        total: serverMode ? c.total || 0 : c.all.length,
-        page: c.page,
-        pageNumber: c.page + 1,
-        pages: Math.max(1, Math.ceil((serverMode ? c.total || 0 : c.shownRows.length) / c.size)),
-        pageSize: c.size,
-        query: c.query,
-        scope: c.scope,
-        filters: Object.fromEntries(filters),
-        filtersByField: byField(),
-        sort: c.sorts[0] ?? null,
-        sorts: c.sorts.map((key) => ({ ...key })),
-        hidden: [...c.hiddenColumns].sort((a, b) => a - b),
-        expanded: [...expanded],
-        density: wrap.getAttribute('data-density') === 'compact' ? 'compact' : 'comfortable',
-        state: c.state,
-        keys: c.shownRows.map(keyOf),
-        pageKeys: c.pageRows.map(keyOf),
-        folded: [...folded],
+    view() {
+        return ({
+        shown: this.t.controls.serverMode ? this.t.busy.total || 0 : this.t.model.shownRows.length,
+        total: this.t.controls.serverMode ? this.t.busy.total || 0 : this.t.model.all.length,
+        page: this.t.model.page,
+        pageNumber: this.t.model.page + 1,
+        pages: Math.max(1, Math.ceil((this.t.controls.serverMode ? this.t.busy.total || 0 : this.t.model.shownRows.length) / this.t.controls.size)),
+        pageSize: this.t.controls.size,
+        query: this.t.model.query,
+        scope: this.t.model.scope,
+        filters: Object.fromEntries(this.t.model.filters),
+        filtersByField: this.byField(),
+        sort: this.t.model.sorts[0] ?? null,
+        sorts: this.t.model.sorts.map((key) => ({ ...key })),
+        hidden: [...this.t.sortSetup.hiddenColumns].sort((a, b) => a - b),
+        expanded: [...this.t.details.expanded],
+        density: this.t.wrap.getAttribute('data-density') === 'compact' ? 'compact' : 'comfortable',
+        state: this.t.model.state,
+        keys: this.t.model.shownRows.map(this.t.bound(this.t.columns, this.t.columns.keyOf)),
+        pageKeys: this.t.model.pageRows.map(this.t.bound(this.t.columns, this.t.columns.keyOf)),
+        folded: [...this.t.groups.folded],
     });
-    c.view = view;
-    /** Keys ticked in a server-backed table, which outlive the rows of one page. @type {Set<string>} */
-    const serverSelection = new Set();
-    c.serverSelection = serverSelection;
-    const selectedRows = () =>
-        c.all.filter((row) => {
+    }
+
+    selectedRows() {
+        return this.t.model.all.filter((row) => {
             const box = /** @type {HTMLInputElement | null} */ (row.querySelector(SELECT_ROW));
             return box !== null && box.checked;
         });
-    c.selectedRows = selectedRows;
+    }
+
     /** The header box reads the rows on this page, which are the rows it acts on [gap-13]. */
-    const syncSelectAll = () => {
-        if (selectAll === null) return;
-        const boxes = c.pageRows.map((row) => /** @type {HTMLInputElement | null} */ (row.querySelector(SELECT_ROW))).filter((b) => b !== null);
+    syncSelectAll() {
+        if (this.t.controls.selectAll === null) return;
+        const boxes = this.t.model.pageRows.map((row) => /** @type {HTMLInputElement | null} */ (row.querySelector(SELECT_ROW))).filter((b) => b !== null);
         const checked = boxes.filter((b) => b.checked).length;
-        selectAll.checked = boxes.length > 0 && checked === boxes.length;
+        this.t.controls.selectAll.checked = boxes.length > 0 && checked === boxes.length;
         // Indeterminate is the honest third state: a header box that
         // reads "checked" while three of ten rows are selected lies.
-        selectAll.indeterminate = checked > 0 && checked < boxes.length;
-    };
-    c.syncSelectAll = syncSelectAll;
-    const syncActions = () => {
-        if (actions === null) return;
-        const count = serverMode ? serverSelection.size : selectedRows().length;
-        actions.hidden = count === 0;
-        const counter = actions.querySelector(SELECTED_COUNT);
+        this.t.controls.selectAll.indeterminate = checked > 0 && checked < boxes.length;
+    }
+
+    syncActions() {
+        if (this.t.controls.actions === null) return;
+        const count = this.t.controls.serverMode ? this.serverSelection.size : this.selectedRows().length;
+        this.t.controls.actions.hidden = count === 0;
+        const counter = this.t.controls.actions.querySelector(SELECTED_COUNT);
         if (counter !== null) counter.textContent = getStrings().tableSelected(count);
-    };
-    c.syncActions = syncActions;
+    }
+
     /** Skeleton rows for a first load with no loading slot of the consumer's, as #states shows it. */
-    const syncSkeleton = () => {
-        const want = c.state === 'loading' && c.all.length === 0 && loadingSlot === null;
-        const have = [...body.querySelectorAll(`:scope > ${SKELETON_ROW}`)];
+    syncSkeleton() {
+        const want = this.t.model.state === 'loading' && this.t.model.all.length === 0 && this.t.controls.loadingSlot === null;
+        const have = [...this.t.body.querySelectorAll(`:scope > ${SKELETON_ROW}`)];
         if (!want) {
             for (const row of have) row.remove();
             return;
         }
         if (have.length > 0) return;
         for (let i = 0; i < 3; i += 1) {
-            const row = make('tr');
+            const row = this.t.identity.make('tr');
             row.dataset.kpSkeletonRow = '';
             row.setAttribute('aria-hidden', 'true');
-            headers.forEach((_, at) => {
-                const cell = make('td');
-                if (c.hiddenColumns.has(at)) cell.hidden = true;
-                if (!controlColumn(at)) cell.append(make('span', 'kp-skeleton'));
+            this.t.columns.headers.forEach((_, at) => {
+                const cell = this.t.identity.make('td');
+                if (this.t.sortSetup.hiddenColumns.has(at)) cell.hidden = true;
+                if (!this.t.columns.controlColumn(at)) cell.append(this.t.identity.make('span', 'kp-skeleton'));
                 row.append(cell);
             });
-            body.append(row);
+            this.t.body.append(row);
         }
-    };
-    const syncStateParts = () => {
-        if (c.state === 'loading') wrap.setAttribute('aria-busy', 'true');
-        else if (busyWas === null) wrap.removeAttribute('aria-busy');
-        else wrap.setAttribute('aria-busy', busyWas);
-        wrap.dataset.kpState = c.state;
+    }
+
+    syncStateParts() {
+        if (this.t.model.state === 'loading') this.t.wrap.setAttribute('aria-busy', 'true');
+        else if (this.t.busy.busyWas === null) this.t.wrap.removeAttribute('aria-busy');
+        else this.t.wrap.setAttribute('aria-busy', this.t.busy.busyWas);
+        this.t.wrap.dataset.kpState = this.t.model.state;
         // A skeleton on a first load, the old rows dimmed on a refresh:
         // the stylesheet dims, this only decides whether there is
         // anything to dim.
-        if (loadingSlot !== null) loadingSlot.hidden = !(c.state === 'loading' && c.all.length === 0);
-        if (c.failedSlot !== null) c.failedSlot.hidden = c.state !== 'failed';
-        syncCover();
-        syncSkeleton();
-    };
-    c.syncStateParts = syncStateParts;
-    const syncCardSort = () => {
-        if (c.sortBy === null || c.sortDirection === null) return;
+        if (this.t.controls.loadingSlot !== null) this.t.controls.loadingSlot.hidden = !(this.t.model.state === 'loading' && this.t.model.all.length === 0);
+        if (this.t.controls.failedSlot !== null) this.t.controls.failedSlot.hidden = this.t.model.state !== 'failed';
+        this.t.layoutSetup.syncCover();
+        this.syncSkeleton();
+    }
+
+    syncCardSort() {
+        if (this.t.sortSetup.sortBy === null || this.t.sortSetup.sortDirection === null) return;
         const s = getStrings();
-        const first = c.sorts[0];
-        c.sortBy.value = first === undefined ? '' : String(first.column);
-        c.sortDirection.textContent = first?.direction === 'descending' ? s.tableSortDescending : s.tableSortAscending;
-        c.sortDirection.disabled = c.sortBy.value === '';
-    };
-    c.syncCardSort = syncCardSort;
+        const first = this.t.model.sorts[0];
+        this.t.sortSetup.sortBy.value = first === undefined ? '' : String(first.column);
+        this.t.sortSetup.sortDirection.textContent = first?.direction === 'descending' ? s.tableSortDescending : s.tableSortAscending;
+        this.t.sortSetup.sortDirection.disabled = this.t.sortSetup.sortBy.value === '';
+    }
+
     // aria-sort on each sorted column and 'none' on every other sortable
     // header: a stale "ascending" on a column that is no longer a key is
     // worse than saying nothing. With more than one key each sorted header
     // carries its place, the number the mock drew [#multi-sort].
-    const syncSortMarks = () => {
+    syncSortMarks() {
         const s = getStrings();
-        headers.forEach((header, at) => {
+        this.t.columns.headers.forEach((header, at) => {
             header.querySelector(':scope .kp-datatable__sort-order')?.remove();
             if (header.dataset.kpSort === undefined) return;
-            const index = c.sorts.findIndex((key) => key.column === at);
-            const key = c.sorts[index];
+            const index = this.t.model.sorts.findIndex((key) => key.column === at);
+            const key = this.t.model.sorts[index];
             header.setAttribute('aria-sort', key === undefined ? 'none' : key.direction);
-            if (key === undefined || c.sorts.length < 2) return;
-            const mark = make('span', 'kp-datatable__sort-order');
+            if (key === undefined || this.t.model.sorts.length < 2) return;
+            const mark = this.t.identity.make('span', 'kp-datatable__sort-order');
             mark.setAttribute('aria-hidden', 'true');
             mark.textContent = String(index + 1);
             (header.querySelector('button') ?? header).append(mark);
         });
-        if (c.openingSort !== null) {
-            const atOpening = JSON.stringify(c.sorts) === c.openingSort;
-            for (const back of wrap.querySelectorAll(SORT_RESET)) back.toggleAttribute('data-kp-datatable-at-opening', atOpening);
+        if (this.t.sortSetup.openingSort !== null) {
+            const atOpening = JSON.stringify(this.t.model.sorts) === this.t.sortSetup.openingSort;
+            for (const back of this.t.wrap.querySelectorAll(SORT_RESET)) back.toggleAttribute('data-kp-datatable-at-opening', atOpening);
         }
-        if (c.sortSummary !== null) {
-            c.sortSummary.textContent =
-                c.sorts.length === 0
+        if (this.t.sortSetup.sortSummary !== null) {
+            this.t.sortSetup.sortSummary.textContent =
+                this.t.model.sorts.length === 0
                     ? s.tableNotSorted
                     : s.tableSortedBy(
-                          c.sorts.map((key) =>
+                          this.t.model.sorts.map((key) =>
                               s.tableSortKey(
-                                  labelOf(key.column),
+                                  this.t.columns.labelOf(key.column),
                                   key.direction,
-                                  orders[key.column] ? 'order' : (headers[key.column]?.dataset.kpSort ?? 'text'),
+                                  this.t.columns.orders[key.column] ? 'order' : (this.t.columns.headers[key.column]?.dataset.kpSort ?? 'text'),
                               ),
                           ),
                       );
             // One line: the whole of it on hover when it is cut [fix-83].
-            c.sortSummary.title = c.sortSummary.textContent ?? '';
+            this.t.sortSetup.sortSummary.title = this.t.sortSetup.sortSummary.textContent ?? '';
         }
-    };
-    c.syncSortMarks = syncSortMarks;
-    const syncColumns = () => {
-        headers.forEach((header, at) => {
-            header.hidden = c.hiddenColumns.has(at) || (headersWereHidden[at] ?? false);
+    }
+
+    syncColumns() {
+        this.t.columns.headers.forEach((header, at) => {
+            header.hidden = this.t.sortSetup.hiddenColumns.has(at) || (this.t.columns.headersWereHidden[at] ?? false);
         });
-        for (const row of body.rows) {
+        for (const row of this.t.body.rows) {
             if (row.matches(DETAIL) || row.matches(GROUP_ROW)) continue;
-            headers.forEach((_, at) => {
+            this.t.columns.headers.forEach((_, at) => {
                 const cell = row.cells[at];
-                if (cell !== undefined) cell.hidden = c.hiddenColumns.has(at);
+                if (cell !== undefined) cell.hidden = this.t.sortSetup.hiddenColumns.has(at);
             });
         }
-        if (c.columnList !== null && c.columnList.childElementCount > 0) {
+        if (this.t.sortSetup.columnList !== null && this.t.sortSetup.columnList.childElementCount > 0) {
             // Built once and then only ticked, so a box keeps its focus and
             // its identity while the reader goes down the list.
-            for (const box of c.columnList.querySelectorAll('[data-kp-datatable-column]')) {
+            for (const box of this.t.sortSetup.columnList.querySelectorAll('[data-kp-datatable-column]')) {
                 const input = /** @type {HTMLInputElement} */ (box);
-                input.checked = !c.hiddenColumns.has(Number(input.value));
+                input.checked = !this.t.sortSetup.hiddenColumns.has(Number(input.value));
             }
-        } else if (c.columnList !== null) {
-            const s = getStrings();
-            for (const at of choosable) {
-                const item = make('li');
-                const label = /** @type {HTMLLabelElement} */ (make('label', 'kp-menu__item kp-datatable__column-option'));
-                const box = /** @type {HTMLInputElement} */ (make('input', CHECK_CLASS));
-                box.type = 'checkbox';
-                box.value = String(at);
-                box.dataset.kpDatatableColumn = '';
-                box.checked = !c.hiddenColumns.has(at);
-                box.disabled = locked[at] ?? false;
-                label.append(box, ` ${locked[at] ? s.tableColumnLocked(labelOf(at)) : labelOf(at)}`);
-                item.append(label);
-                c.columnList.append(item);
-            }
-            const separator = make('li', 'kp-menu__separator');
-            separator.setAttribute('role', 'separator');
-            const resetItem = make('li');
-            const reset = /** @type {HTMLButtonElement} */ (make('button', 'kp-menu__item'));
-            reset.type = 'button';
-            reset.dataset.kpDatatableColumnsReset = '';
-            reset.textContent = s.tableShowAllColumns;
-            resetItem.append(reset);
-            c.columnList.append(separator, resetItem);
-        }
-        if (c.columnCount !== null)
-            c.columnCount.textContent = getStrings().tableColumnsShown(
-                choosable.length - [...c.hiddenColumns].filter((at) => choosable.includes(at)).length,
-                choosable.length,
+        } else if (this.t.sortSetup.columnList !== null) this.buildColumnList(this.t.sortSetup.columnList);
+        if (this.t.sortSetup.columnCount !== null)
+            this.t.sortSetup.columnCount.textContent = getStrings().tableColumnsShown(
+                this.t.sortSetup.choosable.length - [...this.t.sortSetup.hiddenColumns].filter((at) => this.t.sortSetup.choosable.includes(at)).length,
+                this.t.sortSetup.choosable.length,
             );
-    };
-    c.syncColumns = syncColumns;
-    const fixedAttribute = wrap.dataset.kpFixedColumns;
-    const fixedCount = fixedAttribute === undefined ? 0 : Number.parseInt(fixedAttribute, 10) || keyColumn + 1;
-    c.fixedCount = fixedCount;
-    const fixedEndCount = Math.max(0, Number.parseInt(wrap.dataset.kpFixedEnd ?? '', 10) || (wrap.dataset.kpFixedEnd === undefined ? 0 : 1));
-    c.fixedEndCount = fixedEndCount;
-    const syncFixed = () => {
-        if (fixedCount > 0 || fixedEndCount > 0) syncFixedColumns(table, fixedCount, fixedEndCount);
-    };
-    c.syncFixed = syncFixed;
-    /**
-     * A table that becomes cards says in each cell which column it is [datatable-r5-1019, B2]: a cell the markup
-     * gave no `data-label` takes its header's words, so a server that renders plain rows still gets cards. A label
-     * the markup wrote stays; a cell under a header with no words (the selection box, the actions) gets none and
-     * spans the card. Read again on every render, for rows that came later; detach takes the derived ones away.
-     * @type {Set<HTMLTableCellElement>}
-     */
-    const derivedLabels = new Set();
-    const cardsWanted = wrap.hasAttribute('data-kp-cards') || table.hasAttribute('data-kp-cards');
-    const labelCells = () => {
-        if (!cardsWanted) return;
-        for (const row of c.all) {
+    }
+
+    /** The column menu's list, built once: a box per column that may be hidden, then "Show all columns". @param {HTMLElement} list */
+    buildColumnList(list) {
+        const s = getStrings();
+        for (const at of this.t.sortSetup.choosable) {
+            const item = this.t.identity.make('li');
+            const label = /** @type {HTMLLabelElement} */ (this.t.identity.make('label', 'kp-menu__item kp-datatable__column-option'));
+            const box = /** @type {HTMLInputElement} */ (this.t.identity.make('input', CHECK_CLASS));
+            box.type = 'checkbox';
+            box.value = String(at);
+            box.dataset.kpDatatableColumn = '';
+            box.checked = !this.t.sortSetup.hiddenColumns.has(at);
+            box.disabled = this.t.sortSetup.locked[at] ?? false;
+            label.append(box, ` ${this.t.sortSetup.locked[at] ? s.tableColumnLocked(this.t.columns.labelOf(at)) : this.t.columns.labelOf(at)}`);
+            item.append(label);
+            list.append(item);
+        }
+        const separator = this.t.identity.make('li', 'kp-menu__separator');
+        separator.setAttribute('role', 'separator');
+        const resetItem = this.t.identity.make('li');
+        const reset = /** @type {HTMLButtonElement} */ (this.t.identity.make('button', 'kp-menu__item'));
+        reset.type = 'button';
+        reset.dataset.kpDatatableColumnsReset = '';
+        reset.textContent = s.tableShowAllColumns;
+        resetItem.append(reset);
+        list.append(separator, resetItem);
+    }
+
+    syncFixed() {
+        if (this.fixedCount > 0 || this.fixedEndCount > 0) syncFixedColumns(this.t.table, this.fixedCount, this.fixedEndCount);
+    }
+
+    labelCells() {
+        if (!this.cardsWanted) return;
+        for (const row of this.t.model.all) {
             if (row.matches(DETAIL) || row.matches(GROUP_ROW) || row.matches(SKELETON_ROW)) continue;
             for (const cell of row.cells) {
                 if (cell.hasAttribute('data-label')) continue;
-                const words = labelOf(cell.cellIndex);
+                const words = this.t.columns.labelOf(cell.cellIndex);
                 if (words === '') continue;
                 cell.setAttribute('data-label', words);
-                derivedLabels.add(cell);
+                this.derivedLabels.add(cell);
             }
         }
-    };
-    c.labelCells = labelCells;
-    undo.push(() => {
-        for (const cell of derivedLabels) cell.removeAttribute('data-label');
-        derivedLabels.clear();
-    });
-    /** @type {GridHandle | null} */
-    c.grid = null;
+    }
 }

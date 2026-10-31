@@ -43388,6 +43388,207 @@ var init_filter = __esm({
   }
 });
 
+// js/datatable/grid-control.js
+var FOCUSABLE2, CONTROLS2, GridControl, ScrollMark;
+var init_grid_control = __esm({
+  "js/datatable/grid-control.js"() {
+    "use strict";
+    init_controller();
+    init_filter();
+    init_selectors();
+    FOCUSABLE2 = "button, a[href], input, select, textarea, [tabindex]";
+    CONTROLS2 = "button, a[href], input, select, textarea";
+    GridControl = class extends Controller {
+      /** @param {HTMLElement} host the table @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        const { pageRows, onMove: onMove2 } = (
+          /** @type {GridSettings} */
+          /** @type {unknown} */
+          options
+        );
+        this.table = /** @type {HTMLTableElement} */
+        host;
+        this.pageRows = pageRows;
+        this.onMove = onMove2;
+        this.roleWas = host.getAttribute("role");
+        this.at = { row: -1, column: 0 };
+        this.touched = /* @__PURE__ */ new Map();
+      }
+      connect() {
+        const { table } = this;
+        table.setAttribute("role", "grid");
+        this.own(() => {
+          for (const [element, was] of this.touched) {
+            if (was === null) element.removeAttribute("tabindex");
+            else element.setAttribute("tabindex", was);
+          }
+          if (this.roleWas === null) table.removeAttribute("role");
+          else table.setAttribute("role", this.roleWas);
+        });
+        this.listen(table, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(table, "focusin", (event) => this.onFocusIn(
+          /** @type {FocusEvent} */
+          event
+        ));
+        this.sync();
+      }
+      /** The rows a reader can move through. */
+      rows() {
+        return [...this.table.rows].filter((row2) => shown3(row2) && !row2.matches(SKELETON_ROW) && row2.cells.length > 0);
+      }
+      /** @param {HTMLTableRowElement} row */
+      cellsOf(row2) {
+        return [...row2.cells].filter(shown3);
+      }
+      /** The one control a cell hands its focus to, or the cell. @param {HTMLTableCellElement} cell */
+      targetOf(cell) {
+        const controls = [...cell.querySelectorAll(FOCUSABLE2)].filter((control) => control.closest(EDITOR_WRAP) === null && shown3(control));
+        return (
+          /** @type {HTMLElement} */
+          controls.length === 1 ? controls[0] : cell
+        );
+      }
+      /** @param {HTMLElement} element @param {number} value */
+      setTab(element, value) {
+        if (!this.touched.has(element)) this.touched.set(element, element.getAttribute("tabindex"));
+        if (element.tabIndex !== value || !element.hasAttribute("tabindex")) element.tabIndex = value;
+      }
+      /** The rows, and the row and column of the tab stop kept inside them. @returns {[HTMLTableRowElement[], number, number]} */
+      clamp() {
+        const list = this.rows();
+        const header = list.findIndex((row3) => row3.parentElement?.tagName !== "THEAD");
+        const row2 = this.at.row < 0 ? Math.max(header, 0) : Math.max(0, Math.min(list.length - 1, this.at.row));
+        const cells = list[row2] === void 0 ? [] : this.cellsOf(list[row2]);
+        return [list, row2, Math.max(0, Math.min(cells.length - 1, this.at.column))];
+      }
+      /** Re-read the rows and cells after they changed; keeps one cell in the tab order. */
+      sync() {
+        const [list, row2, column] = this.clamp();
+        for (const tr of this.table.rows) {
+          for (const cell of tr.cells) {
+            this.setTab(cell, -1);
+            for (const control of cell.querySelectorAll(CONTROLS2)) {
+              if (control.closest(EDITOR_WRAP) === null) this.setTab(
+                /** @type {HTMLElement} */
+                control,
+                -1
+              );
+            }
+          }
+        }
+        const current2 = list[row2] === void 0 ? void 0 : this.cellsOf(list[row2])[column];
+        if (current2 !== void 0) this.setTab(this.targetOf(current2), 0);
+      }
+      /** Move the tab stop to a cell, and the focus with it unless `take` is false. @param {number} row @param {number} column @param {boolean} [take] */
+      move(row2, column, take = true) {
+        const list = this.rows();
+        if (list.length === 0) return;
+        const r = Math.max(0, Math.min(list.length - 1, row2));
+        const cells = this.cellsOf(
+          /** @type {HTMLTableRowElement} */
+          list[r]
+        );
+        const c = Math.max(0, Math.min(cells.length - 1, column));
+        this.at = { row: r, column: c };
+        this.sync();
+        const cell = cells[c];
+        if (cell === void 0) return;
+        if (take) this.targetOf(cell).focus();
+        this.onMove?.({ ...this.bodyPosition(list, r), column: c, cell });
+      }
+      /**
+       * Where row `r` stands among the body's rows of data: a detail row and a group's heading row are not rows of data.
+       * @param {HTMLTableRowElement[]} list @param {number} r
+       */
+      bodyPosition(list, r) {
+        const header = list.filter((tr) => tr.parentElement?.tagName === "THEAD").length;
+        const data = (tr) => !tr.matches(DETAIL) && !tr.matches(GROUP_ROW);
+        const rows = list.filter((tr) => tr.parentElement?.tagName !== "THEAD" && data(tr)).length;
+        const row2 = r < header ? 0 : list.slice(header, r + 1).filter(data).length;
+        return { row: row2, rows };
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (target.closest(EDITOR_WRAP) !== null || event.altKey || event.metaKey) return;
+        const [, row2, column] = this.clamp();
+        const ctrl = event.ctrlKey;
+        const last = Number.MAX_SAFE_INTEGER;
+        const moves = {
+          ArrowUp: [row2 - 1, column],
+          ArrowDown: [row2 + 1, column],
+          ArrowLeft: [row2, column - 1],
+          ArrowRight: [row2, column + 1],
+          Home: ctrl ? [0, 0] : [row2, 0],
+          End: ctrl ? [this.rows().length - 1, last] : [row2, last],
+          PageUp: [row2 - this.pageRows, column],
+          PageDown: [row2 + this.pageRows, column]
+        };
+        const next2 = moves[event.key];
+        if (next2 === void 0) return;
+        if (target.matches('input:not([type="checkbox"]):not([type="radio"]), textarea, select') && !event.key.startsWith("Page")) return;
+        event.preventDefault();
+        this.move(next2[0], next2[1]);
+      }
+      /** @param {FocusEvent} event */
+      onFocusIn(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (target.closest(EDITOR_WRAP) !== null) return;
+        const cell = (
+          /** @type {HTMLTableCellElement | null} */
+          target.closest("td, th")
+        );
+        const tr = (
+          /** @type {HTMLTableRowElement | null} */
+          cell?.parentElement ?? null
+        );
+        if (cell === null || tr === null || cell.closest("table") !== this.table) return;
+        const r = this.rows().indexOf(tr);
+        const c = this.cellsOf(tr).indexOf(cell);
+        if (r === -1 || c === -1) return;
+        this.move(r, c, false);
+      }
+    };
+    ScrollMark = class extends Controller {
+      /** @param {HTMLElement} host the `.kp-datatable` @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.box = /** @type {{ box: HTMLElement }} */
+        /** @type {unknown} */
+        options.box;
+        this.view = this.box.ownerDocument.defaultView;
+        this.frame = 0;
+      }
+      connect() {
+        this.own(() => {
+          if (this.frame !== 0) this.view?.cancelAnimationFrame(this.frame);
+          this.host.removeAttribute("data-kp-scrolled");
+        });
+        this.decide();
+        this.listen(this.box, "scroll", () => this.onScroll(), { passive: true });
+      }
+      decide() {
+        this.frame = 0;
+        this.host.toggleAttribute("data-kp-scrolled", this.box.scrollTop > 0);
+      }
+      /** One decision per frame. */
+      onScroll() {
+        if (this.frame === 0 && this.view !== null) this.frame = this.view.requestAnimationFrame(() => this.decide());
+      }
+    };
+  }
+});
+
 // js/datatable/grid.js
 function syncFixedColumns(table, count2, endCount = 0) {
   const head = table.tHead?.rows[0];
@@ -43445,147 +43646,22 @@ function syncFixedColumns(table, count2, endCount = 0) {
   }
 }
 function watchScrolled(element, box) {
-  const view = box.ownerDocument.defaultView;
-  let frame3 = 0;
-  const decide = () => {
-    frame3 = 0;
-    element.toggleAttribute("data-kp-scrolled", box.scrollTop > 0);
-  };
-  const onScroll = () => {
-    if (frame3 === 0 && view !== null) frame3 = view.requestAnimationFrame(decide);
-  };
-  decide();
-  box.addEventListener("scroll", onScroll, { passive: true });
-  return () => {
-    box.removeEventListener("scroll", onScroll);
-    if (frame3 !== 0) view?.cancelAnimationFrame(frame3);
-    element.removeAttribute("data-kp-scrolled");
-  };
+  const mark = new ScrollMark(element, { box });
+  mark.connect();
+  return () => mark.destroy();
 }
 function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove: onMove2 } = {}) {
-  const roleWas = table.getAttribute("role");
-  table.setAttribute("role", "grid");
-  let at = { row: -1, column: 0 };
-  const touched = /* @__PURE__ */ new Map();
-  const rows = () => [...table.rows].filter((row2) => shown3(row2) && !row2.matches(SKELETON_ROW) && row2.cells.length > 0);
-  const cellsOf = (row2) => [...row2.cells].filter(shown3);
-  const targetOf2 = (cell) => {
-    const controls = [...cell.querySelectorAll("button, a[href], input, select, textarea, [tabindex]")].filter(
-      (control) => control.closest(EDITOR_WRAP) === null && shown3(control)
-    );
-    return (
-      /** @type {HTMLElement} */
-      controls.length === 1 ? controls[0] : cell
-    );
-  };
-  const setTab = (element, value) => {
-    if (!touched.has(element)) touched.set(element, element.getAttribute("tabindex"));
-    if (element.tabIndex !== value || !element.hasAttribute("tabindex")) element.tabIndex = value;
-  };
-  const clamp3 = () => {
-    const list = rows();
-    const header = list.findIndex((row3) => row3.parentElement?.tagName !== "THEAD");
-    const row2 = at.row < 0 ? Math.max(header, 0) : Math.max(0, Math.min(list.length - 1, at.row));
-    const cells = list[row2] === void 0 ? [] : cellsOf(list[row2]);
-    return [list, row2, Math.max(0, Math.min(cells.length - 1, at.column))];
-  };
-  const sync3 = () => {
-    const [list, row2, column] = clamp3();
-    for (const tr of table.rows) {
-      for (const cell of tr.cells) {
-        setTab(cell, -1);
-        for (const control of cell.querySelectorAll("button, a[href], input, select, textarea")) {
-          if (control.closest(EDITOR_WRAP) === null) setTab(
-            /** @type {HTMLElement} */
-            control,
-            -1
-          );
-        }
-      }
-    }
-    const current2 = list[row2] === void 0 ? void 0 : cellsOf(list[row2])[column];
-    if (current2 !== void 0) setTab(targetOf2(current2), 0);
-  };
-  const move = (row2, column, take = true) => {
-    const list = rows();
-    if (list.length === 0) return;
-    const r = Math.max(0, Math.min(list.length - 1, row2));
-    const cells = cellsOf(
-      /** @type {HTMLTableRowElement} */
-      list[r]
-    );
-    const c = Math.max(0, Math.min(cells.length - 1, column));
-    at = { row: r, column: c };
-    sync3();
-    const cell = cells[c];
-    if (cell === void 0) return;
-    if (take) targetOf2(cell).focus();
-    const header = list.filter((tr) => tr.parentElement?.tagName === "THEAD").length;
-    const bodyRows = list.filter((tr) => tr.parentElement?.tagName !== "THEAD" && !tr.matches(DETAIL) && !tr.matches(GROUP_ROW)).length;
-    const bodyIndex = r < header ? 0 : list.slice(header, r + 1).filter((tr) => !tr.matches(DETAIL) && !tr.matches(GROUP_ROW)).length;
-    onMove2?.({ row: bodyIndex, rows: bodyRows, column: c, cell });
-  };
-  const onKey5 = (event) => {
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (target.closest(EDITOR_WRAP) !== null || event.altKey || event.metaKey) return;
-    const [, row2, column] = clamp3();
-    const ctrl = event.ctrlKey;
-    const moves = {
-      ArrowUp: [row2 - 1, column],
-      ArrowDown: [row2 + 1, column],
-      ArrowLeft: [row2, column - 1],
-      ArrowRight: [row2, column + 1],
-      Home: ctrl ? [0, 0] : [row2, 0],
-      End: ctrl ? [rows().length - 1, Number.MAX_SAFE_INTEGER] : [row2, Number.MAX_SAFE_INTEGER],
-      PageUp: [row2 - pageRows, column],
-      PageDown: [row2 + pageRows, column]
-    };
-    const next2 = moves[event.key];
-    if (next2 === void 0) return;
-    if (target.matches('input:not([type="checkbox"]):not([type="radio"]), textarea, select') && !event.key.startsWith("Page")) return;
-    event.preventDefault();
-    move(next2[0], next2[1]);
-  };
-  const onFocusIn = (event) => {
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (target.closest(EDITOR_WRAP) !== null) return;
-    const cell = (
-      /** @type {HTMLTableCellElement | null} */
-      target.closest("td, th")
-    );
-    const tr = (
-      /** @type {HTMLTableRowElement | null} */
-      cell?.parentElement ?? null
-    );
-    if (cell === null || tr === null || cell.closest("table") !== table) return;
-    const list = rows();
-    const r = list.indexOf(tr);
-    const c = cellsOf(tr).indexOf(cell);
-    if (r === -1 || c === -1) return;
-    move(r, c, false);
-  };
-  table.addEventListener("keydown", onKey5);
-  table.addEventListener("focusin", onFocusIn);
-  sync3();
+  const grid2 = new GridControl(table, { pageRows, onMove: onMove2 });
+  try {
+    grid2.connect();
+  } catch (error) {
+    grid2.destroy();
+    throw error;
+  }
   return {
-    sync: sync3,
-    focus: (row2, column) => move(row2, column),
-    detach: () => {
-      table.removeEventListener("keydown", onKey5);
-      table.removeEventListener("focusin", onFocusIn);
-      for (const [element, was] of touched) {
-        if (was === null) element.removeAttribute("tabindex");
-        else element.setAttribute("tabindex", was);
-      }
-      if (roleWas === null) table.removeAttribute("role");
-      else table.setAttribute("role", roleWas);
-    }
+    sync: () => grid2.sync(),
+    focus: (row2, column) => grid2.move(row2, column),
+    detach: () => grid2.destroy()
   };
 }
 var init_grid = __esm({
@@ -43594,6 +43670,7 @@ var init_grid = __esm({
     init_filter();
     init_selectors();
     init_events();
+    init_grid_control();
   }
 });
 
@@ -43718,119 +43795,44 @@ var init_tables = __esm({
 });
 
 // js/datatable/attach/identity.js
-function installIdentity(c) {
-  const { cleanups, regions: regions2, wrap } = c;
-  c.add = add;
-  c.make = make35;
-  const id = `kp-datatable-${datatableState.instances}`;
-  c.id = id;
-  const added = [];
-  c.added = added;
-  const undo = [];
-  c.undo = undo;
-  if (!wrap.closest("[data-kp-arrive]")) {
-    wrap.setAttribute("data-kp-arrive", "new");
-    undo.push(() => wrap.removeAttribute("data-kp-arrive"));
-  }
-  const s0 = getStrings();
-  c.s0 = s0;
-  if (regions2) cleanups.push(attachTableRegions(wrap));
-  function add(node) {
-    added.push(node);
-    return node;
-  }
-  function make35(tag, className) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    return node;
-  }
-}
+var TableIdentity;
 var init_identity = __esm({
   "js/datatable/attach/identity.js"() {
     "use strict";
     init_state16();
     init_strings();
     init_tables();
+    TableIdentity = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.id = `kp-datatable-${datatableState.instances}`;
+        this.added = [];
+        this.undo = [];
+        if (!this.t.wrap.closest("[data-kp-arrive]")) {
+          this.t.wrap.setAttribute("data-kp-arrive", "new");
+          this.undo.push(() => this.t.wrap.removeAttribute("data-kp-arrive"));
+        }
+        this.s0 = getStrings();
+        if (this.t.settings.regions) this.t.own(attachTableRegions(this.t.wrap));
+      }
+      /** @template {Element} T @param {T} node @returns {T} */
+      add(node) {
+        this.added.push(node);
+        return node;
+      }
+      /** @param {string} tag @param {string} [className] */
+      make(tag, className) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        return node;
+      }
+    };
   }
 });
 
 // js/datatable/attach/controls.js
-function installControls(c) {
-  const { collapseGlyph, debounceMs, expandGlyph, localeOption, multiSort, pageSizesOption, sortCycle, sortExternal, sortsSeveral, wrap } = c;
-  const search = (
-    /** @type {HTMLInputElement | null} */
-    wrap.querySelector(SEARCH2)
-  );
-  c.search = search;
-  const scopeSelect = (
-    /** @type {HTMLSelectElement | null} */
-    wrap.querySelector(SCOPE)
-  );
-  c.scopeSelect = scopeSelect;
-  const densitySelect = (
-    /** @type {HTMLSelectElement | null} */
-    wrap.querySelector(DENSITY)
-  );
-  c.densitySelect = densitySelect;
-  const status = (
-    /** @type {HTMLElement | null} */
-    wrap.querySelector(STATUS4)
-  );
-  c.status = status;
-  const pager = (
-    /** @type {HTMLElement | null} */
-    wrap.querySelector(PAGER)
-  );
-  c.pager = pager;
-  c.empty = /** @type {HTMLElement | null} */
-  wrap.querySelector(EMPTY2);
-  const loadingSlot = (
-    /** @type {HTMLElement | null} */
-    wrap.querySelector(LOADING)
-  );
-  c.loadingSlot = loadingSlot;
-  c.failedSlot = /** @type {HTMLElement | null} */
-  wrap.querySelector(FAILED2);
-  const actions = (
-    /** @type {HTMLElement | null} */
-    wrap.querySelector(ACTIONS)
-  );
-  c.actions = actions;
-  const selectAll = (
-    /** @type {HTMLInputElement | null} */
-    wrap.querySelector(SELECT_ALL)
-  );
-  c.selectAll = selectAll;
-  c.size = Number.parseInt(wrap.dataset.kpPageSize ?? "", 10) || PAGE_SIZE;
-  const locale = resolveLocale(wrap.dataset.kpLocale ?? localeOption, wrap);
-  c.locale = locale;
-  const serverMode = wrap.dataset.kpServer !== void 0;
-  c.serverMode = serverMode;
-  const externalSort = wrap.dataset.kpSortExternal === void 0 ? sortExternal : wrap.dataset.kpSortExternal !== "false";
-  c.externalSort = externalSort;
-  const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? "", 10) || debounceMs || (serverMode ? SERVER_DEBOUNCE_MS : 0);
-  c.debounce = debounce;
-  const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
-  const cycleName = cycle === "two" ? "two" : "three";
-  c.cycleName = cycleName;
-  const multi = sortsSeveral(wrap);
-  c.multi = multi;
-  const addOnClick = multi && (wrap.dataset.kpSortMulti === "click" || wrap.dataset.kpSortMulti === void 0 && multiSort === "click");
-  c.addOnClick = addOnClick;
-  const glyphs = {
-    expand: wrap.dataset.kpExpandGlyph ?? expandGlyph,
-    collapse: wrap.dataset.kpCollapseGlyph ?? collapseGlyph
-  };
-  c.glyphs = glyphs;
-  const sizesAttribute = wrap.dataset.kpPageSizes;
-  const sizes = sizesAttribute === "none" ? [] : [
-    .../* @__PURE__ */ new Set([
-      ...sizesAttribute ? splitList2(sizesAttribute).map(Number).filter((n) => n > 0) : pageSizesOption,
-      c.size
-    ])
-  ].sort((a, b) => a - b);
-  c.sizes = sizes;
-}
+var TableControls;
 var init_controls2 = __esm({
   "js/datatable/attach/controls.js"() {
     "use strict";
@@ -43838,469 +43840,573 @@ var init_controls2 = __esm({
     init_events();
     init_locale();
     init_filter();
+    TableControls = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.search = /** @type {HTMLInputElement | null} */
+        this.t.wrap.querySelector(SEARCH2);
+        this.scopeSelect = /** @type {HTMLSelectElement | null} */
+        this.t.wrap.querySelector(SCOPE);
+        this.densitySelect = /** @type {HTMLSelectElement | null} */
+        this.t.wrap.querySelector(DENSITY);
+        this.status = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(STATUS4);
+        this.pager = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(PAGER);
+        this.empty = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(EMPTY2);
+        this.loadingSlot = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(LOADING);
+        this.failedSlot = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(FAILED2);
+        this.actions = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(ACTIONS);
+        this.selectAll = /** @type {HTMLInputElement | null} */
+        this.t.wrap.querySelector(SELECT_ALL);
+        this.size = Number.parseInt(this.t.wrap.dataset.kpPageSize ?? "", 10) || PAGE_SIZE;
+        this.locale = resolveLocale(this.t.wrap.dataset.kpLocale ?? this.t.settings.localeOption, this.t.wrap);
+        this.serverMode = this.t.wrap.dataset.kpServer !== void 0;
+        this.externalSort = this.t.wrap.dataset.kpSortExternal === void 0 ? this.t.settings.sortExternal : this.t.wrap.dataset.kpSortExternal !== "false";
+        this.debounce = Number.parseInt(this.t.wrap.dataset.kpDebounce ?? "", 10) || this.t.settings.debounceMs || (this.serverMode ? SERVER_DEBOUNCE_MS : 0);
+        this.cycle = this.t.wrap.dataset.kpSortCycle ?? this.t.settings.sortCycle;
+        this.cycleName = this.cycle === "two" ? "two" : "three";
+        this.multi = this.t.call.sortsSeveral(this.t.wrap);
+        this.addOnClick = this.multi && (this.t.wrap.dataset.kpSortMulti === "click" || this.t.wrap.dataset.kpSortMulti === void 0 && this.t.settings.multiSort === "click");
+        this.glyphs = {
+          expand: this.t.wrap.dataset.kpExpandGlyph ?? this.t.settings.expandGlyph,
+          collapse: this.t.wrap.dataset.kpCollapseGlyph ?? this.t.settings.collapseGlyph
+        };
+        this.sizesAttribute = this.t.wrap.dataset.kpPageSizes;
+        this.sizes = this.sizesAttribute === "none" ? [] : [
+          .../* @__PURE__ */ new Set([
+            ...this.sizesAttribute ? splitList2(this.sizesAttribute).map(Number).filter((n) => n > 0) : this.t.settings.pageSizesOption,
+            this.size
+          ])
+        ].sort((a, b) => a - b);
+      }
+    };
   }
 });
 
 // js/datatable/attach/details.js
-function installDetails(c) {
-  const { add, body, decorate: decorate2, detailFn, expandSingle, make: make35, s0, search, table, wrap } = c;
-  const headRow = table.tHead?.rows[0];
-  c.headRow = headRow;
-  const details = /* @__PURE__ */ new Map();
-  c.details = details;
-  const detailsWereHidden = /* @__PURE__ */ new Map();
-  c.detailsWereHidden = detailsWereHidden;
-  const builtDetails = /* @__PURE__ */ new Set();
-  c.builtDetails = builtDetails;
-  const collectDetails = () => {
-    let owner = null;
-    for (const row2 of body.rows) {
-      if (row2.matches(DETAIL)) {
-        if (owner !== null && !details.has(owner)) {
-          details.set(owner, row2);
-          if (!detailsWereHidden.has(row2)) detailsWereHidden.set(row2, row2.hidden === true);
-        }
-      } else if (row2.matches(GROUP_ROW)) owner = null;
-      else if (row2.matches(HELD_ROW)) owner = null;
-      else if (!row2.matches(SKELETON_ROW)) owner = row2;
-    }
-  };
-  c.collectDetails = collectDetails;
-  collectDetails();
-  const expandable = wrap.dataset.kpExpandable !== void 0 && headRow !== void 0;
-  c.expandable = expandable;
-  const single = wrap.dataset.kpExpandSingle === void 0 ? expandSingle : wrap.dataset.kpExpandSingle !== "false";
-  c.single = single;
-  const decoratePart = (part7, info) => {
-    if (decorate2 === void 0) return;
-    const full = { ...info, host: wrap };
-    if (wrap.dataset.kpKey !== void 0) full.key = wrap.dataset.kpKey;
-    decorate2(part7, full);
-  };
-  c.decoratePart = decoratePart;
-  if (search !== null) decoratePart(search, { kind: "search" });
-  const expanded = /* @__PURE__ */ new Set();
-  c.expanded = expanded;
-  if (expandable && headRow !== void 0 && headRow.querySelector(EXPAND_COLUMN) === null) {
-    const th = add(make35("th"));
-    th.setAttribute("scope", "col");
-    th.dataset.kpExpandColumn = "";
-    const label2 = make35("span", "kp-sr-only");
-    label2.textContent = s0.tableDetailsColumn;
-    th.append(label2);
-    headRow.prepend(th);
-  }
-  const reorderable = wrap.dataset.kpRowsReorder !== void 0 && headRow !== void 0;
-  c.reorderable = reorderable;
-  if (reorderable && headRow !== void 0 && headRow.querySelector(REORDER_COLUMN) === null) {
-    const th = add(make35("th"));
-    th.setAttribute("scope", "col");
-    th.dataset.kpReorderColumn = "";
-    const label2 = make35("span", "kp-sr-only");
-    label2.textContent = s0.tableReorderColumn;
-    th.append(label2);
-    headRow.prepend(th);
-  }
-  const insertReorderCell = (row2) => {
-    if (!reorderable || row2.matches(DETAIL) || row2.matches(SKELETON_ROW) || row2.matches(GROUP_ROW) || row2.querySelector("[data-kp-reorder-cell]") !== null)
-      return;
-    const cell = (
-      /** @type {HTMLTableCellElement} */
-      make35("td")
-    );
-    cell.dataset.kpReorderCell = "";
-    cell.dataset.label = "";
-    const button6 = (
-      /** @type {HTMLButtonElement} */
-      make35("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__handle")
-    );
-    button6.type = "button";
-    button6.dataset.kpReorderHandle = "";
-    button6.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
-    const grip = make35("span", "kp-datatable__grip");
-    grip.setAttribute("aria-hidden", "true");
-    button6.append(grip);
-    cell.append(button6);
-    row2.prepend(cell);
-    const rowKey = row2.dataset.kpRowKey ?? row2.id ?? "";
-    decoratePart(button6, { kind: "reorder-handle", value: rowKey, label: rowKey });
-  };
-  c.insertReorderCell = insertReorderCell;
-  const insertExpandCell = (row2) => {
-    if (!expandable || row2.matches(DETAIL) || row2.matches(SKELETON_ROW) || row2.matches(GROUP_ROW) || row2.querySelector("[data-kp-expand-cell]") !== null)
-      return;
-    const cell = (
-      /** @type {HTMLTableCellElement} */
-      make35("td")
-    );
-    cell.dataset.kpExpandCell = "";
-    cell.dataset.label = "";
-    let button6 = null;
-    if (details.has(row2) || detailFn !== void 0 || details.size === 0) {
-      button6 = /** @type {HTMLButtonElement} */
-      make35("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand");
-      button6.type = "button";
-      button6.dataset.kpRowToggle = "";
-      cell.append(button6);
-    }
-    row2.prepend(cell);
-    if (button6 !== null) {
-      const rowKey = row2.dataset.kpRowKey ?? row2.id ?? "";
-      decoratePart(button6, { kind: "row-toggle", value: rowKey, label: s0.tableRowDetails(rowKey) });
-    }
-  };
-  c.insertExpandCell = insertExpandCell;
-  for (const row2 of body.rows) {
-    insertExpandCell(row2);
-    insertReorderCell(row2);
-  }
-}
+var TableDetails;
 var init_details = __esm({
   "js/datatable/attach/details.js"() {
     "use strict";
     init_selectors();
+    TableDetails = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.headRow = this.t.table.tHead?.rows[0];
+        this.details = /* @__PURE__ */ new Map();
+        this.detailsWereHidden = /* @__PURE__ */ new Map();
+        this.builtDetails = /* @__PURE__ */ new Set();
+        this.collectDetails();
+        this.expandable = this.t.wrap.dataset.kpExpandable !== void 0 && this.headRow !== void 0;
+        this.single = this.t.wrap.dataset.kpExpandSingle === void 0 ? this.t.settings.expandSingle : this.t.wrap.dataset.kpExpandSingle !== "false";
+        if (this.t.controls.search !== null) this.decoratePart(this.t.controls.search, { kind: "search" });
+        this.expanded = /* @__PURE__ */ new Set();
+        if (this.expandable && this.headRow !== void 0 && this.headRow.querySelector(EXPAND_COLUMN) === null) {
+          const th = this.t.identity.add(this.t.identity.make("th"));
+          th.setAttribute("scope", "col");
+          th.dataset.kpExpandColumn = "";
+          const label2 = this.t.identity.make("span", "kp-sr-only");
+          label2.textContent = this.t.identity.s0.tableDetailsColumn;
+          th.append(label2);
+          this.headRow.prepend(th);
+        }
+        this.reorderable = this.t.wrap.dataset.kpRowsReorder !== void 0 && this.headRow !== void 0;
+        if (this.reorderable && this.headRow !== void 0 && this.headRow.querySelector(REORDER_COLUMN) === null) {
+          const th = this.t.identity.add(this.t.identity.make("th"));
+          th.setAttribute("scope", "col");
+          th.dataset.kpReorderColumn = "";
+          const label2 = this.t.identity.make("span", "kp-sr-only");
+          label2.textContent = this.t.identity.s0.tableReorderColumn;
+          th.append(label2);
+          this.headRow.prepend(th);
+        }
+        for (const row2 of this.t.body.rows) {
+          this.insertExpandCell(row2);
+          this.insertReorderCell(row2);
+        }
+      }
+      collectDetails() {
+        let owner = null;
+        for (const row2 of this.t.body.rows) {
+          if (row2.matches(DETAIL)) {
+            if (owner !== null && !this.details.has(owner)) {
+              this.details.set(owner, row2);
+              if (!this.detailsWereHidden.has(row2)) this.detailsWereHidden.set(row2, row2.hidden === true);
+            }
+          } else if (row2.matches(GROUP_ROW)) owner = null;
+          else if (row2.matches(HELD_ROW)) owner = null;
+          else if (!row2.matches(SKELETON_ROW)) owner = row2;
+        }
+      }
+      /** The consumer's mark on a control this table built [J2, R-DRIVE]. @param {HTMLElement} part @param {Omit<DataTableDecorateInfo, 'host' | 'key'>} info */
+      decoratePart(part7, info) {
+        if (this.t.settings.decorate === void 0) return;
+        const full = { ...info, host: this.t.wrap };
+        if (this.t.wrap.dataset.kpKey !== void 0) full.key = this.t.wrap.dataset.kpKey;
+        this.t.settings.decorate(part7, full);
+      }
+      /** The handle's cell, first in the row (before the expand toggle). @param {HTMLTableRowElement} row */
+      insertReorderCell(row2) {
+        if (!this.reorderable || row2.matches(DETAIL) || row2.matches(SKELETON_ROW) || row2.matches(GROUP_ROW) || row2.querySelector("[data-kp-reorder-cell]") !== null)
+          return;
+        const cell = (
+          /** @type {HTMLTableCellElement} */
+          this.t.identity.make("td")
+        );
+        cell.dataset.kpReorderCell = "";
+        cell.dataset.label = "";
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__handle")
+        );
+        button6.type = "button";
+        button6.dataset.kpReorderHandle = "";
+        button6.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
+        const grip = this.t.identity.make("span", "kp-datatable__grip");
+        grip.setAttribute("aria-hidden", "true");
+        button6.append(grip);
+        cell.append(button6);
+        row2.prepend(cell);
+        const rowKey = row2.dataset.kpRowKey ?? row2.id ?? "";
+        this.decoratePart(button6, { kind: "reorder-handle", value: rowKey, label: rowKey });
+      }
+      /** The toggle's cell, first in the row, so the row's cells line up with the headers. @param {HTMLTableRowElement} row */
+      insertExpandCell(row2) {
+        if (!this.expandable || row2.matches(DETAIL) || row2.matches(SKELETON_ROW) || row2.matches(GROUP_ROW) || row2.querySelector("[data-kp-expand-cell]") !== null)
+          return;
+        const cell = (
+          /** @type {HTMLTableCellElement} */
+          this.t.identity.make("td")
+        );
+        cell.dataset.kpExpandCell = "";
+        cell.dataset.label = "";
+        let button6 = null;
+        if (this.details.has(row2) || this.t.settings.detailFn !== void 0 || this.details.size === 0) {
+          button6 = /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand");
+          button6.type = "button";
+          button6.dataset.kpRowToggle = "";
+          cell.append(button6);
+        }
+        row2.prepend(cell);
+        if (button6 !== null) {
+          const rowKey = row2.dataset.kpRowKey ?? row2.id ?? "";
+          this.decoratePart(button6, { kind: "row-toggle", value: rowKey, label: this.t.identity.s0.tableRowDetails(rowKey) });
+        }
+      }
+    };
   }
 });
 
 // js/datatable/attach/columns.js
-function installColumns(c) {
-  const { headRow } = c;
-  const headers = (
-    /** @type {HTMLTableCellElement[]} */
-    [...headRow?.cells ?? []]
-  );
-  c.headers = headers;
-  const headerSort = headers.map((h2) => h2.getAttribute("aria-sort"));
-  c.headerSort = headerSort;
-  const headerTab = headers.map((h2) => h2.getAttribute("tabindex"));
-  c.headerTab = headerTab;
-  const headersWereHidden = headers.map((h2) => h2.hidden);
-  c.headersWereHidden = headersWereHidden;
-  const labels = headers.map((h2) => (h2.textContent ?? "").trim());
-  const columnIds = headers.map((h2) => columnId(h2));
-  c.columnIds = columnIds;
-  const labelOf8 = (at) => labels[at] ?? "";
-  c.labelOf = labelOf8;
-  const orders = headers.map((h2) => h2.dataset.kpSortOrder === void 0 ? null : splitList2(h2.dataset.kpSortOrder));
-  c.orders = orders;
-  const filterKinds = headers.map((h2) => {
-    const kind = h2.dataset.kpFilter;
-    return kind === "choice" || kind === "range" || kind === "date" ? (
-      /** @type {FilterKind} */
-      kind
-    ) : null;
-  });
-  c.filterKinds = filterKinds;
-  const editKinds = headers.map((h2) => {
-    const kind = h2.dataset.kpEdit;
-    return kind === "text" || kind === "number" || kind === "select" || kind === "date" ? (
-      /** @type {EditKind} */
-      kind
-    ) : null;
-  });
-  c.editKinds = editKinds;
-  const controlColumn = (at) => {
-    const header = headers[at];
-    return header === void 0 || header.querySelector(SELECT_ALL) !== null || header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN);
-  };
-  c.controlColumn = controlColumn;
-  const keyColumn = headers.findIndex((_, at) => !controlColumn(at));
-  c.keyColumn = keyColumn;
-  const cellText = (row2, at) => {
-    const cell = row2.cells[at];
-    if (cell === void 0) return "";
-    return ((cell.querySelector(EDIT_VALUE) ?? cell).textContent ?? "").trim();
-  };
-  c.cellText = cellText;
-  const cellValue = (row2, at) => row2.cells[at]?.getAttribute("data-kp-sort-value") ?? cellText(row2, at);
-  c.cellValue = cellValue;
-  const choiceText = (row2, at) => row2.cells[at]?.getAttribute("data-kp-filter-value")?.trim() ?? cellText(row2, at);
-  c.choiceText = choiceText;
-  const keyOf8 = (row2) => row2.dataset.kpRowKey ?? row2.id ?? "";
-  c.keyOf = keyOf8;
-}
+var TableColumns;
 var init_columns3 = __esm({
   "js/datatable/attach/columns.js"() {
     "use strict";
     init_remember();
     init_filter();
     init_selectors();
+    TableColumns = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.headers = /** @type {HTMLTableCellElement[]} */
+        [...this.t.details.headRow?.cells ?? []];
+        this.headerSort = this.headers.map((h2) => h2.getAttribute("aria-sort"));
+        this.headerTab = this.headers.map((h2) => h2.getAttribute("tabindex"));
+        this.headersWereHidden = this.headers.map((h2) => h2.hidden);
+        this.labels = this.headers.map((h2) => (h2.textContent ?? "").trim());
+        this.columnIds = this.headers.map((h2) => columnId(h2));
+        this.orders = this.headers.map((h2) => h2.dataset.kpSortOrder === void 0 ? null : splitList2(h2.dataset.kpSortOrder));
+        this.filterKinds = this.headers.map((h2) => {
+          const kind = h2.dataset.kpFilter;
+          return kind === "choice" || kind === "range" || kind === "date" ? (
+            /** @type {FilterKind} */
+            kind
+          ) : null;
+        });
+        this.editKinds = this.headers.map((h2) => {
+          const kind = h2.dataset.kpEdit;
+          return kind === "text" || kind === "number" || kind === "select" || kind === "date" ? (
+            /** @type {EditKind} */
+            kind
+          ) : null;
+        });
+        this.keyColumn = this.headers.findIndex((_, at) => !this.controlColumn(at));
+      }
+      /** @param {number} at */
+      labelOf(at) {
+        return this.labels[at] ?? "";
+      }
+      /** A column of controls — the selection boxes, the expand buttons — rather than of values. @param {number} at */
+      controlColumn(at) {
+        const header = this.headers[at];
+        return header === void 0 || header.querySelector(SELECT_ALL) !== null || header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN);
+      }
+      /** @param {HTMLTableRowElement} row @param {number} at */
+      cellText(row2, at) {
+        const cell = row2.cells[at];
+        if (cell === void 0) return "";
+        return ((cell.querySelector(EDIT_VALUE) ?? cell).textContent ?? "").trim();
+      }
+      /**
+       * What a cell sorts and range-filters by: its `data-kp-sort-value` [kpadopt2-grids] when it has one (a
+       * bar cell shows "62%" and sorts by 62; a size shows "1.4 GB" and sorts by its bytes), else what it shows.
+       * Search and choice filters keep reading the shown text.
+       * @param {HTMLTableRowElement} row @param {number} at
+       */
+      cellValue(row2, at) {
+        return row2.cells[at]?.getAttribute("data-kp-sort-value") ?? this.cellText(row2, at);
+      }
+      /**
+       * What a choice filter reads of a cell: its `data-kp-filter-value` [kpadopt3] when it has one (a status cell shows a
+       * dot, a word and a time, and is listed and matched as "running"), else what it shows. Search keeps the shown text.
+       * On a header the same attribute is the filter the page opens with (read below, from `headers`).
+       * @param {HTMLTableRowElement} row @param {number} at
+       */
+      choiceText(row2, at) {
+        return row2.cells[at]?.getAttribute("data-kp-filter-value")?.trim() ?? this.cellText(row2, at);
+      }
+      /** @param {HTMLTableRowElement} row */
+      keyOf(row2) {
+        return row2.dataset.kpRowKey ?? row2.id ?? "";
+      }
+    };
   }
 });
 
 // js/datatable/attach/model.js
-function installModel(c) {
-  const { body, wrap } = c;
-  const isRow2 = (row2) => !row2.matches(DETAIL) && !row2.matches(SKELETON_ROW) && !row2.matches(GROUP_ROW) && !row2.matches(HELD_ROW);
-  c.isRow = isRow2;
-  const holdRows2 = () => {
-    for (const row2 of body.querySelectorAll(`:scope > ${HELD_ROW}`)) row2.hidden = true;
-  };
-  c.holdRows = holdRows2;
-  holdRows2();
-  c.all = /** @type {HTMLTableRowElement[]} */
-  [...body.rows].filter(isRow2);
-  const rendered = [...c.all];
-  c.rendered = rendered;
-  c.shownRows = [...c.all];
-  c.pageRows = [...c.all];
-  c.page = 0;
-  c.query = "";
-  c.scope = null;
-  const filters = /* @__PURE__ */ new Map();
-  c.filters = filters;
-  c.sorts = [];
-  c.state = /** @type {State} */
-  ["loading", "failed"].includes(wrap.dataset.kpState ?? "") ? wrap.dataset.kpState : "ready";
-  c.busyText = null;
-  c.failReason = null;
-  c.busySince = null;
-  c.busyTimer = null;
-  c.busyClock = null;
-  c.busyOverlay = wrap.hasAttribute("data-kp-busy-overlay");
-  c.overlayLayer = null;
-  c.overlayClock = null;
-}
+var TableModel;
 var init_model4 = __esm({
   "js/datatable/attach/model.js"() {
     "use strict";
     init_selectors();
+    TableModel = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.holdRows();
+        this.all = /** @type {HTMLTableRowElement[]} */
+        [...this.t.body.rows].filter(this.t.bound(this, this.isRow));
+        this.rendered = [...this.all];
+        this.shownRows = [...this.all];
+        this.pageRows = [...this.all];
+        this.page = 0;
+        this.query = "";
+        this.scope = null;
+        this.filters = /* @__PURE__ */ new Map();
+        this.sorts = [];
+        this.state = /** @type {State} */
+        ["loading", "failed"].includes(this.t.wrap.dataset.kpState ?? "") ? this.t.wrap.dataset.kpState : "ready";
+        this.busyText = null;
+        this.failReason = null;
+        this.busySince = null;
+        this.busyTimer = null;
+        this.busyClock = null;
+        this.busyOverlay = this.t.wrap.hasAttribute("data-kp-busy-overlay");
+        this.overlayLayer = null;
+        this.overlayClock = null;
+      }
+      /** Every row as it was rendered. Sorting reorders this array, never the DOM's idea of it. */
+      isRow(row2) {
+        return !row2.matches(DETAIL) && !row2.matches(SKELETON_ROW) && !row2.matches(GROUP_ROW) && !row2.matches(HELD_ROW);
+      }
+      /** A held row stays hidden whatever the table does; the page lifts it with the attribute [b3b4-1019]. */
+      holdRows() {
+        for (const row2 of this.t.body.querySelectorAll(`:scope > ${HELD_ROW}`)) row2.hidden = true;
+      }
+    };
   }
 });
 
 // js/datatable/attach/busy.js
-function installBusy(c) {
-  const { make: make35, table, wrap } = c;
-  const busySeconds = () => Math.max(0, Math.floor((Date.now() - /** @type {number} */
-  c.busySince) / 1e3));
-  c.busySeconds = busySeconds;
-  const stopBusyClock = () => {
-    if (c.busyTimer !== null) clearInterval(c.busyTimer);
-    c.busyTimer = null;
-    c.busyClock = null;
-    c.overlayClock = null;
-  };
-  c.stopBusyClock = stopBusyClock;
-  c.overlayUnwatch = null;
-  const drawOverlay = (s2) => {
-    c.overlayUnwatch?.();
-    c.overlayUnwatch = null;
-    if (c.overlayLayer) {
-      const toClose = c.overlayLayer;
-      c.overlayLayer = null;
-      c.overlayClock = null;
-      const panel2 = (
-        /** @type {HTMLElement | null} */
-        toClose.querySelector(".kp-datatable__busy-panel")
-      );
-      if (panel2 && toClose.isConnected && c.state !== "loading") {
-        if (leavesState(toClose)) {
-          void leave(toClose);
-        } else {
-          toClose.setAttribute("data-kp-closing", "");
-          void playClose(panel2).then(() => {
-            toClose.remove();
-          });
-        }
-      } else {
-        toClose.remove();
-      }
-    }
-    const host = wrap;
-    if (c.state !== "loading" || !c.busyOverlay) return;
-    const layer = make35("div", "kp-datatable__busy-overlay");
-    layer.setAttribute("aria-hidden", "true");
-    const panel = make35("div", "kp-datatable__busy-panel");
-    const spinner2 = make35("span", "kp-spinner");
-    const words3 = make35("span", "kp-datatable__busy-words");
-    words3.textContent = c.busyText ?? s2.busy;
-    panel.append(spinner2, words3);
-    if (c.busySince !== null) {
-      c.overlayClock = make35("span", "kp-datatable__busy-clock");
-      c.overlayClock.textContent = s2.tableBusyElapsed(busySeconds());
-      panel.append(c.overlayClock);
-    }
-    const place4 = () => {
-      const head = table.tHead;
-      const hostBox = host.getBoundingClientRect();
-      const body = (table.tBodies[0] ?? table).getBoundingClientRect();
-      const tableBox = (c.scrollBox ?? table).getBoundingClientRect();
-      const top = head === null ? body.top : head.getBoundingClientRect().bottom;
-      let from = Math.max(0, Math.round(top - hostBox.top - host.clientTop));
-      let to = Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop));
-      if (c.all.length === 0) {
-        const foot = host.querySelector("[data-kp-datatable-status]")?.closest(".kp-datatable__bar") ?? null;
-        const footTop = foot !== null && foot.getBoundingClientRect().top >= top ? foot.getBoundingClientRect().top : hostBox.bottom;
-        to = Math.max(0, Math.round(hostBox.bottom - footTop - host.clientTop));
-      }
-      const need = Math.max(panel.offsetHeight + 8, Math.min(host.clientHeight / 2, 128));
-      if (host.clientHeight - from - to < need) {
-        to = Math.max(0, host.clientHeight - from - need);
-        if (host.clientHeight - from - to < need) from = Math.max(0, host.clientHeight - to - need);
-      }
-      layer.style.setProperty("--kp-busy-overlay-top", `${from}px`);
-      layer.style.setProperty("--kp-busy-overlay-bottom", `${to}px`);
-      const innerLeft = hostBox.left + host.clientLeft;
-      const seen = seenAcross(host, innerLeft, innerLeft + host.clientWidth);
-      const spans = tableBox.width >= seen.right - seen.left - 1;
-      layer.style.setProperty(
-        "--kp-busy-overlay-left",
-        `${Math.max(0, Math.round((spans ? Math.max(tableBox.left, seen.left) : seen.left) - innerLeft))}px`
-      );
-      layer.style.setProperty(
-        "--kp-busy-overlay-right",
-        `${Math.max(0, Math.round(innerLeft + host.clientWidth - (spans ? Math.min(tableBox.right, seen.right) : seen.right)))}px`
-      );
-    };
-    layer.append(panel);
-    host.append(layer);
-    place4();
-    if (typeof ResizeObserver === "function") {
-      const watcher = new ResizeObserver(() => place4());
-      watcher.observe(host);
-      watcher.observe(table);
-      if (table.tHead !== null) watcher.observe(table.tHead);
-      const scrollers = scrollersAround(host);
-      for (const scroller of scrollers) scroller.addEventListener("scroll", place4, { passive: true });
-      c.overlayUnwatch = () => {
-        watcher.disconnect();
-        for (const scroller of scrollers) scroller.removeEventListener("scroll", place4);
-      };
-    }
-    c.overlayLayer = layer;
-  };
-  c.drawOverlay = drawOverlay;
-  c.total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
-  const emptyWasHidden = c.empty?.hidden ?? false;
-  c.emptyWasHidden = emptyWasHidden;
-  let emptyLeaving = false;
-  c.emptyHidden = emptyWasHidden;
-  const showEmpty = (hide2) => {
-    if (c.empty === null) return;
-    c.emptyHidden = hide2;
-    if (emptyLeaving) return;
-    if (hide2 && !c.empty.hidden && c.empty.isConnected && leavesState(c.empty)) {
-      emptyLeaving = true;
-      void leave(c.empty, { hide: true }).then(() => {
-        emptyLeaving = false;
-        if (c.empty !== null) c.empty.hidden = c.emptyHidden;
-      });
-      return;
-    }
-    c.empty.hidden = hide2;
-  };
-  c.showEmpty = showEmpty;
-  const densityWas = wrap.getAttribute("data-density");
-  c.densityWas = densityWas;
-  const busyWas = wrap.getAttribute("aria-busy");
-  c.busyWas = busyWas;
-}
+var OVERLAY_PANEL_ROOM, OVERLAY_MAX_LEND, MS_PER_S2, TableBusy;
 var init_busy2 = __esm({
   "js/datatable/attach/busy.js"() {
     "use strict";
     init_motion();
     init_busy_card();
+    OVERLAY_PANEL_ROOM = 8;
+    OVERLAY_MAX_LEND = 128;
+    MS_PER_S2 = 1e3;
+    TableBusy = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.overlayUnwatch = null;
+        this.total = Number.parseInt(this.t.wrap.dataset.kpTotal ?? "", 10);
+        this.emptyWasHidden = this.t.controls.empty?.hidden ?? false;
+        this.emptyLeaving = false;
+        this.emptyHidden = this.emptyWasHidden;
+        this.densityWas = this.t.wrap.getAttribute("data-density");
+        this.busyWas = this.t.wrap.getAttribute("aria-busy");
+      }
+      busySeconds() {
+        return Math.max(0, Math.floor((Date.now() - /** @type {number} */
+        this.t.model.busySince) / MS_PER_S2));
+      }
+      stopBusyClock() {
+        if (this.t.model.busyTimer !== null) clearInterval(this.t.model.busyTimer);
+        this.t.model.busyTimer = null;
+        this.t.model.busyClock = null;
+        this.t.model.overlayClock = null;
+      }
+      /**
+       * The layer over the rows while the table loads [busy overlay]: a large spinner, the status words and the count, centred on the
+       * body and hidden from assistive technology, which hears the status line. Absolutely placed in the wrapper, so nothing moves when
+       * it comes or goes; the header stays readable above it.
+       * @param {ReturnType<typeof getStrings>} s
+       */
+      drawOverlay(s2) {
+        const { model, identity } = this.t;
+        this.overlayUnwatch?.();
+        this.overlayUnwatch = null;
+        if (model.overlayLayer) this.closeOverlay(model.overlayLayer);
+        if (model.state !== "loading" || !model.busyOverlay) return;
+        const layer = identity.make("div", "kp-datatable__busy-overlay");
+        layer.setAttribute("aria-hidden", "true");
+        const panel = identity.make("div", "kp-datatable__busy-panel");
+        const words3 = identity.make("span", "kp-datatable__busy-words");
+        words3.textContent = model.busyText ?? s2.busy;
+        panel.append(identity.make("span", "kp-spinner"), words3);
+        if (model.busySince !== null) {
+          model.overlayClock = identity.make("span", "kp-datatable__busy-clock");
+          model.overlayClock.textContent = s2.tableBusyElapsed(this.busySeconds());
+          panel.append(model.overlayClock);
+        }
+        layer.append(panel);
+        this.t.wrap.append(layer);
+        this.placeOverlay(layer, panel);
+        this.watchOverlay(layer, panel);
+        model.overlayLayer = layer;
+      }
+      /**
+       * Take the layer away. A theme that leaves its states whole (forest: the layer arrived as its leave played backwards) lets the
+       * layer leave the way it came (leavesState()); the others close the panel on its own.
+       * @param {HTMLElement} toClose
+       */
+      closeOverlay(toClose) {
+        const { model } = this.t;
+        model.overlayLayer = null;
+        model.overlayClock = null;
+        const panel = (
+          /** @type {HTMLElement | null} */
+          toClose.querySelector(".kp-datatable__busy-panel")
+        );
+        if (!(panel && toClose.isConnected && model.state !== "loading")) {
+          toClose.remove();
+          return;
+        }
+        if (leavesState(toClose)) {
+          void leave(toClose);
+          return;
+        }
+        toClose.setAttribute("data-kp-closing", "");
+        void playClose(panel).then(() => {
+          toClose.remove();
+        });
+      }
+      /**
+       * Measured, and measured again whenever the table or its header changes size: a theme switched after it was drawn, or a font
+       * arriving late, moves the header, and the layer must stay under it rather than where the header first was.
+       * @param {HTMLElement} layer @param {HTMLElement} panel
+       */
+      watchOverlay(layer, panel) {
+        if (typeof ResizeObserver !== "function") return;
+        const { table, wrap: host } = this.t;
+        const place4 = () => this.placeOverlay(layer, panel);
+        const watcher = new ResizeObserver(() => place4());
+        watcher.observe(host);
+        watcher.observe(table);
+        if (table.tHead !== null) watcher.observe(table.tHead);
+        const scrollers = scrollersAround(host);
+        for (const scroller of scrollers) scroller.addEventListener("scroll", place4, { passive: true });
+        this.overlayUnwatch = () => {
+          watcher.disconnect();
+          for (const scroller of scrollers) scroller.removeEventListener("scroll", place4);
+        };
+      }
+      /** Put the layer over the rows: under the header, above the foot, across what is seen. @param {HTMLElement} layer @param {HTMLElement} panel */
+      placeOverlay(layer, panel) {
+        const { table, wrap: host } = this.t;
+        const head = table.tHead;
+        const hostBox = host.getBoundingClientRect();
+        const body = (table.tBodies[0] ?? table).getBoundingClientRect();
+        const tableBox = (this.t.chrome.scrollBox ?? table).getBoundingClientRect();
+        const top = head === null ? body.top : head.getBoundingClientRect().bottom;
+        const { from, to } = this.overlayEnds(hostBox, tableBox, top, panel);
+        layer.style.setProperty("--kp-busy-overlay-top", `${from}px`);
+        layer.style.setProperty("--kp-busy-overlay-bottom", `${to}px`);
+        const innerLeft = hostBox.left + host.clientLeft;
+        const seen = seenAcross(host, innerLeft, innerLeft + host.clientWidth);
+        const spans = tableBox.width >= seen.right - seen.left - 1;
+        const left = Math.max(0, Math.round((spans ? Math.max(tableBox.left, seen.left) : seen.left) - innerLeft));
+        const right = Math.max(0, Math.round(innerLeft + host.clientWidth - (spans ? Math.min(tableBox.right, seen.right) : seen.right)));
+        layer.style.setProperty("--kp-busy-overlay-left", `${left}px`);
+        layer.style.setProperty("--kp-busy-overlay-right", `${right}px`);
+      }
+      /**
+       * How far the layer stands from the host's top and bottom.
+       * @param {DOMRect} hostBox @param {DOMRect} tableBox @param {number} top where the rows start @param {HTMLElement} panel
+       */
+      overlayEnds(hostBox, tableBox, top, panel) {
+        const host = this.t.wrap;
+        let from = Math.max(0, Math.round(top - hostBox.top - host.clientTop));
+        let to = Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop));
+        if (this.t.model.all.length === 0) {
+          const foot = host.querySelector("[data-kp-datatable-status]")?.closest(".kp-datatable__bar") ?? null;
+          const footTop = foot !== null && foot.getBoundingClientRect().top >= top ? foot.getBoundingClientRect().top : hostBox.bottom;
+          to = Math.max(0, Math.round(hostBox.bottom - footTop - host.clientTop));
+        }
+        const need = Math.max(panel.offsetHeight + OVERLAY_PANEL_ROOM, Math.min(host.clientHeight / 2, OVERLAY_MAX_LEND));
+        if (host.clientHeight - from - to < need) {
+          to = Math.max(0, host.clientHeight - from - need);
+          if (host.clientHeight - from - to < need) from = Math.max(0, host.clientHeight - to - need);
+        }
+        return { from, to };
+      }
+      /**
+       * Show or hide the empty state. In a theme that lets a hidden part
+       * leave first it withers before it goes, and what the table wants
+       * when that is over (typing went on) is applied then.
+       * @param {boolean} hide
+       */
+      showEmpty(hide2) {
+        if (this.t.controls.empty === null) return;
+        this.emptyHidden = hide2;
+        if (this.emptyLeaving) return;
+        if (hide2 && !this.t.controls.empty.hidden && this.t.controls.empty.isConnected && leavesState(this.t.controls.empty)) {
+          this.emptyLeaving = true;
+          void leave(this.t.controls.empty, { hide: true }).then(() => {
+            this.emptyLeaving = false;
+            if (this.t.controls.empty !== null) this.t.controls.empty.hidden = this.emptyHidden;
+          });
+          return;
+        }
+        this.t.controls.empty.hidden = hide2;
+      }
+    };
   }
 });
 
 // js/datatable/attach/chrome.js
-function installChrome(c) {
-  const { add, controlColumn, densitySelect, headers, labelOf: labelOf8, make: make35, s0, scopeSelect, selectAll, status, table, undo, wrap } = c;
-  const themeBox = (box) => {
-    if (box === null || box.classList.contains(CHECK_CLASS)) return;
-    box.classList.add(CHECK_CLASS);
-    undo.push(() => box.classList.remove(CHECK_CLASS));
-  };
-  c.themeBox = themeBox;
-  themeBox(selectAll);
-  if (selectAll !== null && !selectAll.hasAttribute("aria-label") && selectAll.labels?.length === 0) {
-    selectAll.setAttribute("aria-label", s0.tableSelectAll);
-    undo.push(() => selectAll.removeAttribute("aria-label"));
-  }
-  const maxHeight = wrap.dataset.kpMaxHeight;
-  if (maxHeight !== void 0 && maxHeight !== "") {
-    wrap.style.setProperty("--kp-datatable-max-height", maxHeight);
-    undo.push(() => wrap.style.removeProperty("--kp-datatable-max-height"));
-  }
-  const scrollBox = (
-    /** @type {HTMLElement | null} */
-    wrap.querySelector(":scope > .kp-table-wrap")
-  );
-  c.scrollBox = scrollBox;
-  if (scrollBox !== null) undo.push(watchScrolled(wrap, scrollBox));
-  c.tableBlock = /** @type {Element} */
-  table;
-  while (c.tableBlock.parentElement !== null && c.tableBlock.parentElement !== wrap) c.tableBlock = c.tableBlock.parentElement;
-  c.topBar = /** @type {HTMLElement | null} */
-  [...wrap.children].find(
-    (child) => child.classList.contains("kp-datatable__bar") && child.compareDocumentPosition(c.tableBlock) & Node.DOCUMENT_POSITION_FOLLOWING
-  ) ?? null;
-  const ensureTopBar = () => {
-    if (c.topBar !== null) return c.topBar;
-    c.topBar = add(make35("div", "kp-datatable__bar"));
-    wrap.insertBefore(c.topBar, wrap.firstElementChild);
-    return c.topBar;
-  };
-  c.ensureTopBar = ensureTopBar;
-  const bottomBar = (
-    /** @type {HTMLElement | null} */
-    status?.closest(".kp-datatable__bar") ?? null
-  );
-  const putUnder = (line) => {
-    if (bottomBar !== null) bottomBar.append(line);
-    else wrap.insertBefore(line, c.tableBlock.nextSibling);
-  };
-  c.putUnder = putUnder;
-  if (scopeSelect !== null) {
-    if (scopeSelect.options.length === 0) {
-      const every = make35("option");
-      every.setAttribute("value", "");
-      every.textContent = s0.tableSearchAllColumns;
-      scopeSelect.append(add(every));
-      headers.forEach((header, at) => {
-        if (header.dataset.kpSearch === "false" || controlColumn(at) || labelOf8(at) === "") return;
-        const option = (
-          /** @type {HTMLOptionElement} */
-          make35("option")
-        );
-        option.value = String(at);
-        option.textContent = labelOf8(at);
-        scopeSelect.append(add(option));
-      });
-    }
-    if (!scopeSelect.hasAttribute("aria-label") && scopeSelect.labels?.length === 0) {
-      scopeSelect.setAttribute("aria-label", s0.tableSearchScope);
-      undo.push(() => scopeSelect.removeAttribute("aria-label"));
-    }
-    c.scope = scopeSelect.value === "" ? null : Number(scopeSelect.value);
-  }
-  if (densitySelect !== null) {
-    if (densitySelect.options.length === 0) {
-      for (const [value, text] of [
-        ["comfortable", s0.tableDensityComfortable],
-        ["compact", s0.tableDensityCompact]
-      ]) {
-        const option = (
-          /** @type {HTMLOptionElement} */
-          make35("option")
-        );
-        option.value = value ?? "";
-        option.textContent = text ?? "";
-        densitySelect.append(add(option));
-      }
-    }
-    if (!densitySelect.hasAttribute("aria-label") && densitySelect.labels?.length === 0) {
-      densitySelect.setAttribute("aria-label", s0.tableDensity);
-      undo.push(() => densitySelect.removeAttribute("aria-label"));
-    }
-    densitySelect.value = wrap.getAttribute("data-density") === "compact" ? "compact" : "comfortable";
-  }
-}
+var TableChrome;
 var init_chrome = __esm({
   "js/datatable/attach/chrome.js"() {
     "use strict";
     init_selectors();
     init_grid();
+    TableChrome = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.themeBox(t.controls.selectAll);
+        this.nameUnlabelled(t.controls.selectAll, t.identity.s0.tableSelectAll);
+        this.maxHeight = this.t.wrap.dataset.kpMaxHeight;
+        if (this.maxHeight !== void 0 && this.maxHeight !== "") {
+          this.t.wrap.style.setProperty("--kp-datatable-max-height", this.maxHeight);
+          this.t.identity.undo.push(() => this.t.wrap.style.removeProperty("--kp-datatable-max-height"));
+        }
+        this.scrollBox = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(":scope > .kp-table-wrap");
+        if (this.scrollBox !== null) this.t.identity.undo.push(watchScrolled(this.t.wrap, this.scrollBox));
+        this.tableBlock = /** @type {Element} */
+        this.t.table;
+        while (this.tableBlock.parentElement !== null && this.tableBlock.parentElement !== this.t.wrap) this.tableBlock = this.tableBlock.parentElement;
+        this.topBar = /** @type {HTMLElement | null} */
+        [...this.t.wrap.children].find(
+          (child) => child.classList.contains("kp-datatable__bar") && child.compareDocumentPosition(this.tableBlock) & Node.DOCUMENT_POSITION_FOLLOWING
+        ) ?? null;
+        this.bottomBar = /** @type {HTMLElement | null} */
+        this.t.controls.status?.closest(".kp-datatable__bar") ?? null;
+        this.fillScope();
+        this.fillDensity();
+      }
+      /**
+       * Name a control the page left without a label, for as long as the table is wired.
+       * @param {HTMLInputElement | HTMLSelectElement | null} control
+       * @param {string} name
+       */
+      nameUnlabelled(control, name) {
+        if (control === null || control.hasAttribute("aria-label") || control.labels?.length !== 0) return;
+        control.setAttribute("aria-label", name);
+        this.t.identity.undo.push(() => control.removeAttribute("aria-label"));
+      }
+      /** The "In" choice: every column, then one per searchable column, unless the markup wrote its options. */
+      fillScope() {
+        const { controls, identity, columns: columns2 } = this.t;
+        const scopeSelect = controls.scopeSelect;
+        if (scopeSelect === null) return;
+        if (scopeSelect.options.length === 0) {
+          const every = identity.make("option");
+          every.setAttribute("value", "");
+          every.textContent = identity.s0.tableSearchAllColumns;
+          scopeSelect.append(identity.add(every));
+          columns2.headers.forEach((header, at) => {
+            if (header.dataset.kpSearch === "false" || columns2.controlColumn(at) || columns2.labelOf(at) === "") return;
+            const option = (
+              /** @type {HTMLOptionElement} */
+              identity.make("option")
+            );
+            option.value = String(at);
+            option.textContent = columns2.labelOf(at);
+            scopeSelect.append(identity.add(option));
+          });
+        }
+        this.nameUnlabelled(scopeSelect, identity.s0.tableSearchScope);
+        this.t.model.scope = scopeSelect.value === "" ? null : Number(scopeSelect.value);
+      }
+      /** The density choice: comfortable and compact, unless the markup wrote its options. */
+      fillDensity() {
+        const { controls, identity } = this.t;
+        const densitySelect = controls.densitySelect;
+        if (densitySelect === null) return;
+        if (densitySelect.options.length === 0) {
+          for (const [value, text] of [
+            ["comfortable", identity.s0.tableDensityComfortable],
+            ["compact", identity.s0.tableDensityCompact]
+          ]) {
+            const option = (
+              /** @type {HTMLOptionElement} */
+              identity.make("option")
+            );
+            option.value = value ?? "";
+            option.textContent = text ?? "";
+            densitySelect.append(identity.add(option));
+          }
+        }
+        this.nameUnlabelled(densitySelect, identity.s0.tableDensity);
+        densitySelect.value = this.t.wrap.getAttribute("data-density") === "compact" ? "compact" : "comfortable";
+      }
+      // The package's own checkbox, whatever the markup wrote [gap-13,
+      // Kenny's note]: a data table's boxes were the browser's, next to
+      // themed boxes everywhere else on the page.
+      /** @param {Element | null} box */
+      themeBox(box) {
+        if (box === null || box.classList.contains(CHECK_CLASS)) return;
+        box.classList.add(CHECK_CLASS);
+        this.t.identity.undo.push(() => box.classList.remove(CHECK_CLASS));
+      }
+      /** The bar a generated control goes in: the top bar, made when the markup has none. */
+      ensureTopBar() {
+        if (this.topBar !== null) return this.topBar;
+        this.topBar = this.t.identity.add(this.t.identity.make("div", "kp-datatable__bar"));
+        this.t.wrap.insertBefore(this.topBar, this.t.wrap.firstElementChild);
+        return this.topBar;
+      }
+      /** @param {HTMLElement} line */
+      putUnder(line) {
+        if (this.bottomBar !== null) this.bottomBar.append(line);
+        else this.t.wrap.insertBefore(line, this.tableBlock.nextSibling);
+      }
+    };
   }
 });
 
@@ -45156,208 +45262,7 @@ var init_datepicker = __esm({
 });
 
 // js/datatable/attach/filter-ui.js
-function installFilterUi(c) {
-  const { add, choiceText, decoratePart, ensureTopBar, filterKinds, filterMode, headers, id, labelOf: labelOf8, locale, make: make35, orders, s0, undo, wrap } = c;
-  c.choiceValues = choiceValues;
-  c.fillChoices = fillChoices;
-  c.datePickerFor = datePickerFor;
-  const filterColumns = filterKinds.flatMap((kind, at) => kind === null ? [] : [at]);
-  c.filterColumns = filterColumns;
-  c.panel = null;
-  c.toggle = null;
-  c.pills = null;
-  const addMode = (wrap.dataset.kpFilterMode ?? filterMode) === "add";
-  c.addMode = addMode;
-  const bareFilters = wrap.dataset.kpFilterUi === "none";
-  c.addButton = null;
-  c.addPop = null;
-  c.addMenu = null;
-  c.filterEditor = null;
-  if (filterColumns.length > 0 && addMode && !bareFilters) {
-    const s2 = s0;
-    const popId = `${id}-add-filter`;
-    c.addButton = /** @type {HTMLButtonElement | null} */
-    wrap.querySelector(ADD_FILTER);
-    if (c.addButton === null) {
-      c.addButton = /** @type {HTMLButtonElement} */
-      add(make35("button", "kp-button kp-datatable__add-filter"));
-      c.addButton.type = "button";
-      c.addButton.dataset.kpDatatableAddFilter = "";
-      ensureTopBar().append(c.addButton);
-    } else {
-      const node = c.addButton;
-      const was = ["aria-haspopup", "aria-expanded", "aria-controls", "popovertarget"].map((name) => [name, node.getAttribute(name)]);
-      const text = node.textContent;
-      undo.push(() => {
-        for (const [name, value] of was) {
-          if (value === null || value === void 0) node.removeAttribute(
-            /** @type {string} */
-            name
-          );
-          else node.setAttribute(
-            /** @type {string} */
-            name,
-            value
-          );
-        }
-        node.style.removeProperty("anchor-name");
-        node.textContent = text;
-      });
-    }
-    decoratePart(c.addButton, { kind: "add-filter", label: s2.tableAddFilter(0) });
-    c.addButton.setAttribute("aria-haspopup", "true");
-    c.addButton.setAttribute("aria-expanded", "false");
-    c.addButton.setAttribute("aria-controls", popId);
-    c.addButton.setAttribute("popovertarget", popId);
-    c.addButton.style.setProperty("anchor-name", `--${popId}`);
-    c.addPop = add(make35("div", "kp-popover kp-datatable__add-menu"));
-    c.addPop.id = popId;
-    c.addPop.setAttribute("popover", "auto");
-    c.addPop.dataset.kpDatatableAddMenu = "";
-    c.addPop.style.setProperty("position-anchor", `--${popId}`);
-    c.addMenu = make35("ul", "kp-menu");
-    c.addMenu.setAttribute("aria-label", s2.tableAddFilterMenu);
-    c.addPop.append(c.addMenu);
-    c.addButton.after(c.addPop);
-    c.filterEditor = /** @type {HTMLFormElement} */
-    add(make35("form", "kp-datatable__filter-editor"));
-    c.filterEditor.id = `${id}-filter-editor`;
-    c.filterEditor.dataset.kpDatatableFilterEditor = "";
-    c.filterEditor.noValidate = true;
-    c.filterEditor.hidden = true;
-    wrap.insertBefore(c.filterEditor, c.tableBlock);
-  }
-  if (filterColumns.length > 0 && !addMode && !bareFilters) {
-    c.panel = /** @type {HTMLElement | null} */
-    wrap.querySelector(FILTERS);
-    if (c.panel === null) {
-      c.panel = add(make35("div", "kp-datatable__filters"));
-      c.panel.dataset.kpDatatableFilters = "";
-      c.panel.hidden = wrap.dataset.kpFiltersOpen === void 0;
-      wrap.insertBefore(c.panel, c.tableBlock);
-    }
-    if (c.panel.id === "") {
-      c.panel.id = `${id}-filters`;
-      const node = c.panel;
-      undo.push(() => node.removeAttribute("id"));
-    }
-    c.panel.setAttribute("role", "group");
-    c.panel.setAttribute("aria-label", s0.tableFiltersLabel);
-    for (const at of filterColumns) {
-      const kind = (
-        /** @type {FilterKind} */
-        filterKinds[at]
-      );
-      const label2 = labelOf8(at);
-      const set = add(make35("fieldset", "kp-fieldset kp-datatable__filter"));
-      set.dataset.kpFilterColumn = String(at);
-      const legend = make35("legend", "kp-field__label");
-      legend.textContent = label2;
-      set.append(legend);
-      if (kind === "choice") fillChoices(set, at, []);
-      else {
-        const range = make35("div", "kp-datatable__range");
-        for (const bound of ["from", "to"]) {
-          const input = (
-            /** @type {HTMLInputElement} */
-            make35("input", "kp-field__input")
-          );
-          input.dataset.kpFilterBound = bound;
-          input.setAttribute("aria-label", bound === "from" ? s0.tableFilterFrom(label2) : s0.tableFilterTo(label2));
-          if (kind === "range") {
-            input.type = "number";
-            range.append(input);
-            continue;
-          }
-          input.id = `${id}-filter-${at}-${bound}`;
-          range.append(datePickerFor(input));
-        }
-        set.append(range);
-        if (kind === "date") {
-          const detachPickers = attachDatePickers(range);
-          undo.push(detachPickers);
-        }
-      }
-      c.panel.append(set);
-    }
-    c.toggle = /** @type {HTMLButtonElement | null} */
-    wrap.querySelector(FILTER_TOGGLE);
-    if (c.toggle === null) {
-      c.toggle = /** @type {HTMLButtonElement} */
-      add(make35("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
-      c.toggle.type = "button";
-      c.toggle.dataset.kpDatatableFilterToggle = "";
-      if (c.topBar !== null) c.topBar.append(c.toggle);
-      else wrap.insertBefore(c.toggle, c.panel);
-    }
-    c.toggle.setAttribute("aria-controls", c.panel.id);
-    c.toggle.setAttribute("aria-expanded", String(!c.panel.hidden));
-  }
-  if (filterColumns.length > 0 && !bareFilters) {
-    c.pills = /** @type {HTMLElement | null} */
-    wrap.querySelector(PILLS);
-    if (c.pills === null) {
-      c.pills = add(make35("div", "kp-datatable__pills"));
-      c.pills.dataset.kpDatatablePills = "";
-      wrap.insertBefore(c.pills, c.tableBlock);
-    }
-  }
-  function choiceValues(at) {
-    const declared2 = splitList2(headers[at]?.dataset.kpFilterOptions);
-    if (declared2.length > 0) return declared2;
-    const values = [...new Set(c.all.map((row2) => choiceText(row2, at)).filter((v) => v !== ""))];
-    const order = orders[at];
-    return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
-  }
-  function fillChoices(set, at, ticked) {
-    const values = [...choiceValues(at)];
-    for (const value of ticked) if (!values.includes(value)) values.push(value);
-    const boxes = (
-      /** @type {HTMLInputElement[]} */
-      [...set.querySelectorAll('input[type="checkbox"]')]
-    );
-    if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
-    for (const box of boxes) box.closest(".kp-field__option")?.remove();
-    for (const value of values) {
-      const option = make35("label", "kp-field__option");
-      const box = (
-        /** @type {HTMLInputElement} */
-        make35("input", CHECK_CLASS)
-      );
-      box.type = "checkbox";
-      box.value = value;
-      box.checked = ticked.includes(value);
-      option.append(box, ` ${value}`);
-      set.append(option);
-    }
-  }
-  function datePickerFor(input) {
-    const picker = make35("div", "kp-datepicker");
-    picker.dataset.kpDatepicker = "";
-    picker.dataset.kpLocale = locale;
-    input.type = "text";
-    input.inputMode = "numeric";
-    input.dataset.kpDateInput = "";
-    const s2 = getStrings();
-    const opener = (
-      /** @type {HTMLButtonElement} */
-      make35("button", "kp-button")
-    );
-    opener.type = "button";
-    opener.dataset.kpDateOpen = "";
-    opener.setAttribute("aria-label", s2.calendarOpen);
-    opener.title = s2.calendarOpen;
-    const glyph3 = make35("span");
-    glyph3.setAttribute("aria-hidden", "true");
-    glyph3.textContent = s2.calendarButton;
-    opener.append(glyph3);
-    const datePanel = make35("div", "kp-datepicker__panel");
-    datePanel.dataset.kpDatePanel = "";
-    datePanel.hidden = true;
-    picker.append(input, opener, datePanel);
-    return picker;
-  }
-}
+var TableFilterUi;
 var init_filter_ui = __esm({
   "js/datatable/attach/filter-ui.js"() {
     "use strict";
@@ -45367,1420 +45272,1827 @@ var init_filter_ui = __esm({
     init_locale();
     init_sort();
     init_strings();
+    TableFilterUi = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.filterColumns = this.t.columns.filterKinds.flatMap((kind, at) => kind === null ? [] : [at]);
+        this.panel = null;
+        this.toggle = null;
+        this.pills = null;
+        this.addMode = (this.t.wrap.dataset.kpFilterMode ?? this.t.settings.filterMode) === "add";
+        this.bareFilters = this.t.wrap.dataset.kpFilterUi === "none";
+        this.addButton = null;
+        this.addPop = null;
+        this.addMenu = null;
+        this.filterEditor = null;
+        if (this.filterColumns.length > 0 && this.addMode && !this.bareFilters) this.buildAddMode();
+        if (this.filterColumns.length > 0 && !this.addMode && !this.bareFilters) this.buildPanel();
+        if (this.filterColumns.length > 0 && !this.bareFilters) this.findPills();
+      }
+      /** The row of pills that shows the filters set: the page's, or one made here. */
+      findPills() {
+        this.pills = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(PILLS);
+        if (this.pills === null) {
+          this.pills = this.t.identity.add(this.t.identity.make("div", "kp-datatable__pills"));
+          this.pills.dataset.kpDatatablePills = "";
+          this.t.wrap.insertBefore(this.pills, this.t.chrome.tableBlock);
+        }
+      }
+      /** The panel mode: the panel of every filter, and the toggle that opens it. */
+      buildPanel() {
+        const { identity, wrap } = this.t;
+        let panel = (
+          /** @type {HTMLElement | null} */
+          wrap.querySelector(FILTERS)
+        );
+        if (panel === null) {
+          panel = identity.add(identity.make("div", "kp-datatable__filters"));
+          panel.dataset.kpDatatableFilters = "";
+          panel.hidden = wrap.dataset.kpFiltersOpen === void 0;
+          wrap.insertBefore(panel, this.t.chrome.tableBlock);
+        }
+        if (panel.id === "") {
+          panel.id = `${identity.id}-filters`;
+          const node = panel;
+          identity.undo.push(() => node.removeAttribute("id"));
+        }
+        panel.setAttribute("role", "group");
+        panel.setAttribute("aria-label", identity.s0.tableFiltersLabel);
+        this.panel = panel;
+        for (const at of this.filterColumns) panel.append(this.panelField(at));
+        const toggle2 = this.takeToggle(panel);
+        toggle2.setAttribute("aria-controls", panel.id);
+        toggle2.setAttribute("aria-expanded", String(!panel.hidden));
+      }
+      /** The panel's toggle: the page's, or one made here, in the top bar. @param {HTMLElement} panel */
+      takeToggle(panel) {
+        const { identity, wrap, chrome } = this.t;
+        let toggle2 = (
+          /** @type {HTMLButtonElement | null} */
+          wrap.querySelector(FILTER_TOGGLE)
+        );
+        if (toggle2 === null) {
+          toggle2 = /** @type {HTMLButtonElement} */
+          identity.add(identity.make("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
+          toggle2.type = "button";
+          toggle2.dataset.kpDatatableFilterToggle = "";
+          if (chrome.topBar !== null) chrome.topBar.append(toggle2);
+          else wrap.insertBefore(toggle2, panel);
+        }
+        this.toggle = toggle2;
+        return toggle2;
+      }
+      /** One filter column's fieldset in the panel: a choice list, or a range of two bounds. @param {number} at */
+      panelField(at) {
+        const { identity, columns: columns2 } = this.t;
+        const kind = (
+          /** @type {FilterKind} */
+          columns2.filterKinds[at]
+        );
+        const set = identity.add(identity.make("fieldset", "kp-fieldset kp-datatable__filter"));
+        set.dataset.kpFilterColumn = String(at);
+        const legend = identity.make("legend", "kp-field__label");
+        legend.textContent = columns2.labelOf(at);
+        set.append(legend);
+        if (kind === "choice") {
+          this.fillChoices(set, at, []);
+          return set;
+        }
+        const range = this.rangeField(at, kind);
+        set.append(range);
+        if (kind === "date") identity.undo.push(attachDatePickers(range));
+        return set;
+      }
+      /**
+       * A range filter's two bounds: numbers, or the package's own date pickers. A date bound is the package's own date picker, not a
+       * bare date input, so it wears every theme's picker (scope-58, Kenny's second nostromo pass). The picker holds ISO in
+       * data-kp-date-value whatever the field shows.
+       * @param {number} at @param {FilterKind} kind
+       */
+      rangeField(at, kind) {
+        const { identity } = this.t;
+        const label2 = this.t.columns.labelOf(at);
+        const range = identity.make("div", "kp-datatable__range");
+        for (const bound of ["from", "to"]) {
+          const input = (
+            /** @type {HTMLInputElement} */
+            identity.make("input", "kp-field__input")
+          );
+          input.dataset.kpFilterBound = bound;
+          input.setAttribute("aria-label", bound === "from" ? identity.s0.tableFilterFrom(label2) : identity.s0.tableFilterTo(label2));
+          if (kind === "range") {
+            input.type = "number";
+            range.append(input);
+            continue;
+          }
+          input.id = `${identity.id}-filter-${at}-${bound}`;
+          range.append(this.datePickerFor(input));
+        }
+        return range;
+      }
+      /** The add-filter mode [#filter-add]: its button (the page's or one made here), its menu and the filter editor. */
+      buildAddMode() {
+        const { identity } = this.t;
+        const s2 = identity.s0;
+        const popId = `${identity.id}-add-filter`;
+        const button6 = this.takeAddButton();
+        this.t.details.decoratePart(button6, { kind: "add-filter", label: s2.tableAddFilter(0) });
+        button6.setAttribute("aria-haspopup", "true");
+        button6.setAttribute("aria-expanded", "false");
+        button6.setAttribute("aria-controls", popId);
+        button6.setAttribute("popovertarget", popId);
+        button6.style.setProperty("anchor-name", `--${popId}`);
+        const pop2 = identity.add(identity.make("div", "kp-popover kp-datatable__add-menu"));
+        pop2.id = popId;
+        pop2.setAttribute("popover", "auto");
+        pop2.dataset.kpDatatableAddMenu = "";
+        pop2.style.setProperty("position-anchor", `--${popId}`);
+        this.addPop = pop2;
+        this.addMenu = identity.make("ul", "kp-menu");
+        this.addMenu.setAttribute("aria-label", s2.tableAddFilterMenu);
+        pop2.append(this.addMenu);
+        button6.after(pop2);
+        this.makeFilterEditor();
+      }
+      /**
+       * The editor's frame is the package's own, not a .kp-card or a .kp-popover: both carry a clip-path in some registers, which cut
+       * off the calendar a date bound opens (measured on the mock, 2026-09-13). The calendar itself goes to the top layer.
+       */
+      makeFilterEditor() {
+        const { identity } = this.t;
+        const editor = (
+          /** @type {HTMLFormElement} */
+          identity.add(identity.make("form", "kp-datatable__filter-editor"))
+        );
+        editor.id = `${identity.id}-filter-editor`;
+        editor.dataset.kpDatatableFilterEditor = "";
+        editor.noValidate = true;
+        editor.hidden = true;
+        this.t.wrap.insertBefore(editor, this.t.chrome.tableBlock);
+        this.filterEditor = editor;
+      }
+      /** The add-filter button: one made here, or the page's, whose attributes and words the detach gives back. */
+      takeAddButton() {
+        const { identity, wrap } = this.t;
+        const found = (
+          /** @type {HTMLButtonElement | null} */
+          wrap.querySelector(ADD_FILTER)
+        );
+        if (found === null) {
+          const made6 = (
+            /** @type {HTMLButtonElement} */
+            identity.add(identity.make("button", "kp-button kp-datatable__add-filter"))
+          );
+          made6.type = "button";
+          made6.dataset.kpDatatableAddFilter = "";
+          this.t.chrome.ensureTopBar().append(made6);
+          this.addButton = made6;
+          return made6;
+        }
+        const was = ["aria-haspopup", "aria-expanded", "aria-controls", "popovertarget"].map((name) => [name, found.getAttribute(name)]);
+        const text = found.textContent;
+        identity.undo.push(() => {
+          for (const [name, value] of was) {
+            if (value === null || value === void 0) found.removeAttribute(
+              /** @type {string} */
+              name
+            );
+            else found.setAttribute(
+              /** @type {string} */
+              name,
+              value
+            );
+          }
+          found.style.removeProperty("anchor-name");
+          found.textContent = text;
+        });
+        this.addButton = found;
+        return found;
+      }
+      /**
+       * A choice filter's values: the header's `data-kp-filter-options`, else
+       * every value the rows hold, in the column's declared order or the
+       * locale's. The add-filter editor asks when it opens and the filter
+       * panel asks again on refresh(), so rows written after the attach are
+       * in both.
+       *
+       * @param {number} at
+       */
+      choiceValues(at) {
+        const declared2 = splitList2(this.t.columns.headers[at]?.dataset.kpFilterOptions);
+        if (declared2.length > 0) return declared2;
+        const values = [...new Set(this.t.model.all.map((row2) => this.t.columns.choiceText(row2, at)).filter((v) => v !== ""))];
+        const order = this.t.columns.orders[at];
+        return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(this.t.controls.locale).compare) : collator(this.t.controls.locale).compare(a, b));
+      }
+      /**
+       * Put a panel fieldset's boxes in step with the choice values: one box
+       * per value the rows hold now, ticked where `ticked` has it, and a
+       * ticked value no row holds any more stays, so it can still be
+       * unticked. Nothing is rebuilt while the list already matches, so a
+       * focused box keeps its focus.
+       *
+       * @param {Element} set @param {number} at @param {string[]} ticked
+       */
+      fillChoices(set, at, ticked) {
+        const values = [...this.choiceValues(at)];
+        for (const value of ticked) if (!values.includes(value)) values.push(value);
+        const boxes = (
+          /** @type {HTMLInputElement[]} */
+          [...set.querySelectorAll('input[type="checkbox"]')]
+        );
+        if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
+        for (const box of boxes) box.closest(".kp-field__option")?.remove();
+        for (const value of values) {
+          const option = this.t.identity.make("label", "kp-field__option");
+          const box = (
+            /** @type {HTMLInputElement} */
+            this.t.identity.make("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.value = value;
+          box.checked = ticked.includes(value);
+          option.append(box, ` ${value}`);
+          set.append(option);
+        }
+      }
+      /**
+       * The package's date picker around a text field: the markup the
+       * standalone picker has, class for class and string for string — a
+       * plain button with the glyph, named by aria-label and title
+       * [Kenny's note of 2026-09-13 — it was a ghost button reading
+       * "Calendar"]. The caller attaches it.
+       *
+       * @param {HTMLInputElement} input
+       */
+      datePickerFor(input) {
+        const picker = this.t.identity.make("div", "kp-datepicker");
+        picker.dataset.kpDatepicker = "";
+        picker.dataset.kpLocale = this.t.controls.locale;
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.dataset.kpDateInput = "";
+        const s2 = getStrings();
+        const opener = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-button")
+        );
+        opener.type = "button";
+        opener.dataset.kpDateOpen = "";
+        opener.setAttribute("aria-label", s2.calendarOpen);
+        opener.title = s2.calendarOpen;
+        const glyph3 = this.t.identity.make("span");
+        glyph3.setAttribute("aria-hidden", "true");
+        glyph3.textContent = s2.calendarButton;
+        opener.append(glyph3);
+        const datePanel = this.t.identity.make("div", "kp-datepicker__panel");
+        datePanel.dataset.kpDatePanel = "";
+        datePanel.hidden = true;
+        picker.append(input, opener, datePanel);
+        return picker;
+      }
+    };
   }
 });
 
 // js/datatable/attach/sort-setup.js
-function installSortSetup(c) {
-  const { add, controlColumn, editKinds, ensureTopBar, headers, id, keyColumn, labelOf: labelOf8, make: make35, multi, putUnder, s0, wrap } = c;
-  const sortable = headers.flatMap((header, at) => header.dataset.kpSort === void 0 ? [] : [at]);
-  c.sortBy = null;
-  c.sortDirection = null;
-  if (wrap.dataset.kpCards !== void 0 && sortable.length > 0 && wrap.querySelector(CARD_SORT) === null) {
-    const control = add(make35("div", "kp-datatable__card-sort"));
-    control.dataset.kpDatatableCardSort = "";
-    const label2 = make35("label", "kp-datatable__label");
-    label2.append(s0.tableSortBy, " ");
-    c.sortBy = /** @type {HTMLSelectElement} */
-    make35("select", "kp-field__input kp-datatable__select");
-    c.sortBy.dataset.kpDatatableSortBy = "";
-    c.sortBy.setAttribute("aria-label", s0.tableSortBy);
-    const none = (
-      /** @type {HTMLOptionElement} */
-      make35("option")
-    );
-    none.value = "";
-    none.textContent = s0.tableSortNone;
-    c.sortBy.append(none);
-    for (const at of sortable) {
-      const option = (
-        /** @type {HTMLOptionElement} */
-        make35("option")
-      );
-      option.value = String(at);
-      option.textContent = labelOf8(at);
-      c.sortBy.append(option);
-    }
-    label2.append(c.sortBy);
-    c.sortDirection = /** @type {HTMLButtonElement} */
-    make35("button", "kp-button kp-button--ghost");
-    c.sortDirection.type = "button";
-    c.sortDirection.dataset.kpDatatableSortDirection = "";
-    control.append(label2, c.sortDirection);
-    wrap.insertBefore(control, c.tableBlock);
-  }
-  c.sortSummary = null;
-  c.openingSort = null;
-  if (multi) {
-    c.sortSummary = /** @type {HTMLElement | null} */
-    wrap.querySelector(SORT_SUMMARY);
-    if (c.sortSummary === null) {
-      const line = add(make35("div", "kp-datatable__bar kp-datatable__sort-line"));
-      c.sortSummary = make35("p", "kp-datatable__status kp-datatable__sort-summary");
-      c.sortSummary.dataset.kpDatatableSortSummary = "";
-      c.sortSummary.setAttribute("aria-live", "polite");
-      line.append(c.sortSummary);
-      if (wrap.querySelector(SORT_RESET) === null) {
-        const back = (
-          /** @type {HTMLButtonElement} */
-          make35("button", "kp-button kp-button--ghost kp-button--sm")
-        );
-        back.type = "button";
-        back.dataset.kpDatatableSortReset = "";
-        back.textContent = getStrings().tableSortReset;
-        line.append(back);
-      }
-      wrap.insertBefore(line, c.tableBlock);
-    }
-  }
-  const locked = headers.map(
-    (header, at) => !controlColumn(at) && (header.dataset.kpColumnLocked === void 0 ? at === keyColumn : header.dataset.kpColumnLocked !== "false")
-  );
-  c.locked = locked;
-  c.hiddenColumns = new Set(headers.flatMap((header, at) => header.dataset.kpColumnHidden !== void 0 && !locked[at] ? [at] : []));
-  const choosable = headers.flatMap((_, at) => controlColumn(at) ? [] : [at]);
-  c.choosable = choosable;
-  c.columnList = null;
-  c.columnCount = null;
-  if (wrap.dataset.kpColumnMenu !== void 0 && choosable.length > 0) {
-    const bar = ensureTopBar();
-    const popId = `${id}-columns`;
-    const button6 = (
-      /** @type {HTMLButtonElement} */
-      add(make35("button", "kp-button kp-button--ghost kp-datatable__columns-toggle"))
-    );
-    button6.type = "button";
-    button6.dataset.kpDatatableColumnsToggle = "";
-    button6.textContent = s0.tableColumns;
-    button6.setAttribute("aria-haspopup", "true");
-    button6.setAttribute("aria-expanded", "false");
-    button6.setAttribute("aria-controls", popId);
-    button6.setAttribute("popovertarget", popId);
-    button6.style.setProperty("anchor-name", `--${popId}`);
-    const pop2 = add(make35("div", "kp-popover kp-datatable__columns"));
-    pop2.id = popId;
-    pop2.setAttribute("popover", "auto");
-    pop2.dataset.kpDatatableColumns = "";
-    pop2.style.setProperty("position-anchor", `--${popId}`);
-    pop2.addEventListener("toggle", (event) => {
-      button6.setAttribute("aria-expanded", String(
-        /** @type {ToggleEvent} */
-        event.newState === "open"
-      ));
-    });
-    c.columnList = make35("ul", "kp-menu");
-    c.columnList.setAttribute("aria-label", s0.tableColumnsLabel);
-    pop2.append(c.columnList);
-    c.columnCount = add(make35("span", "kp-datatable__status kp-datatable__columns-count"));
-    c.columnCount.dataset.kpDatatableColumnsCount = "";
-    bar.append(button6, pop2, c.columnCount);
-  }
-  const editable2 = editKinds.some((kind) => kind !== null);
-  c.editLog = null;
-  if (editable2) {
-    c.editLog = add(make35("p", "kp-datatable__status kp-datatable__edit-log"));
-    c.editLog.dataset.kpDatatableEditLog = "";
-    c.editLog.setAttribute("role", "status");
-    c.editLog.setAttribute("aria-live", "polite");
-    putUnder(c.editLog);
-  }
-}
+var TableSortSetup;
 var init_sort_setup = __esm({
   "js/datatable/attach/sort-setup.js"() {
     "use strict";
     init_selectors();
     init_strings();
+    TableSortSetup = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.sortable = this.t.columns.headers.flatMap((header, at) => header.dataset.kpSort === void 0 ? [] : [at]);
+        this.sortBy = null;
+        this.sortDirection = null;
+        if (this.t.wrap.dataset.kpCards !== void 0 && this.sortable.length > 0 && this.t.wrap.querySelector(CARD_SORT) === null) this.makeCardSort();
+        this.sortSummary = null;
+        this.openingSort = null;
+        if (this.t.controls.multi) this.findSortSummary();
+        this.locked = this.t.columns.headers.map(
+          (header, at) => !this.t.columns.controlColumn(at) && (header.dataset.kpColumnLocked === void 0 ? at === this.t.columns.keyColumn : header.dataset.kpColumnLocked !== "false")
+        );
+        this.hiddenColumns = new Set(this.t.columns.headers.flatMap((header, at) => header.dataset.kpColumnHidden !== void 0 && !this.locked[at] ? [at] : []));
+        this.choosable = this.t.columns.headers.flatMap((_, at) => this.t.columns.controlColumn(at) ? [] : [at]);
+        this.columnList = null;
+        this.columnCount = null;
+        if (this.t.wrap.dataset.kpColumnMenu !== void 0 && this.choosable.length > 0) this.makeColumnMenu();
+        this.editable = this.t.columns.editKinds.some((kind) => kind !== null);
+        this.editLog = null;
+        if (this.editable) this.makeEditLog();
+      }
+      /** The card layout's sort control: a column choice and a direction button. */
+      makeCardSort() {
+        const control = this.t.identity.add(this.t.identity.make("div", "kp-datatable__card-sort"));
+        control.dataset.kpDatatableCardSort = "";
+        const label2 = this.t.identity.make("label", "kp-datatable__label");
+        label2.append(this.t.identity.s0.tableSortBy, " ");
+        this.sortBy = /** @type {HTMLSelectElement} */
+        this.t.identity.make("select", "kp-field__input kp-datatable__select");
+        this.sortBy.dataset.kpDatatableSortBy = "";
+        this.sortBy.setAttribute("aria-label", this.t.identity.s0.tableSortBy);
+        const none = (
+          /** @type {HTMLOptionElement} */
+          this.t.identity.make("option")
+        );
+        none.value = "";
+        none.textContent = this.t.identity.s0.tableSortNone;
+        this.sortBy.append(none);
+        for (const at of this.sortable) {
+          const option = (
+            /** @type {HTMLOptionElement} */
+            this.t.identity.make("option")
+          );
+          option.value = String(at);
+          option.textContent = this.t.columns.labelOf(at);
+          this.sortBy.append(option);
+        }
+        label2.append(this.sortBy);
+        this.sortDirection = /** @type {HTMLButtonElement} */
+        this.t.identity.make("button", "kp-button kp-button--ghost");
+        this.sortDirection.type = "button";
+        this.sortDirection.dataset.kpDatatableSortDirection = "";
+        control.append(label2, this.sortDirection);
+        this.t.wrap.insertBefore(control, this.t.chrome.tableBlock);
+      }
+      /** The multi-sort summary (#multi-sort): the page's, or a line of its own with the way back to the opening sort. */
+      findSortSummary() {
+        this.sortSummary = /** @type {HTMLElement | null} */
+        this.t.wrap.querySelector(SORT_SUMMARY);
+        if (this.sortSummary === null) {
+          const line = this.t.identity.add(this.t.identity.make("div", "kp-datatable__bar kp-datatable__sort-line"));
+          this.sortSummary = this.t.identity.make("p", "kp-datatable__status kp-datatable__sort-summary");
+          this.sortSummary.dataset.kpDatatableSortSummary = "";
+          this.sortSummary.setAttribute("aria-live", "polite");
+          line.append(this.sortSummary);
+          if (this.t.wrap.querySelector(SORT_RESET) === null) {
+            const back = (
+              /** @type {HTMLButtonElement} */
+              this.t.identity.make("button", "kp-button kp-button--ghost kp-button--sm")
+            );
+            back.type = "button";
+            back.dataset.kpDatatableSortReset = "";
+            back.textContent = getStrings().tableSortReset;
+            line.append(back);
+          }
+          this.t.wrap.insertBefore(line, this.t.chrome.tableBlock);
+        }
+      }
+      /** The column menu (#columns): a button in the top bar, its menu of columns and the count of those shown. */
+      makeColumnMenu() {
+        const bar = this.t.chrome.ensureTopBar();
+        const popId = `${this.t.identity.id}-columns`;
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.add(this.t.identity.make("button", "kp-button kp-button--ghost kp-datatable__columns-toggle"))
+        );
+        button6.type = "button";
+        button6.dataset.kpDatatableColumnsToggle = "";
+        button6.textContent = this.t.identity.s0.tableColumns;
+        button6.setAttribute("aria-haspopup", "true");
+        button6.setAttribute("aria-expanded", "false");
+        button6.setAttribute("aria-controls", popId);
+        button6.setAttribute("popovertarget", popId);
+        button6.style.setProperty("anchor-name", `--${popId}`);
+        const pop2 = this.t.identity.add(this.t.identity.make("div", "kp-popover kp-datatable__columns"));
+        pop2.id = popId;
+        pop2.setAttribute("popover", "auto");
+        pop2.dataset.kpDatatableColumns = "";
+        pop2.style.setProperty("position-anchor", `--${popId}`);
+        pop2.addEventListener("toggle", (event) => {
+          button6.setAttribute("aria-expanded", String(
+            /** @type {ToggleEvent} */
+            event.newState === "open"
+          ));
+        });
+        this.columnList = this.t.identity.make("ul", "kp-menu");
+        this.columnList.setAttribute("aria-label", this.t.identity.s0.tableColumnsLabel);
+        pop2.append(this.columnList);
+        this.columnCount = this.t.identity.add(this.t.identity.make("span", "kp-datatable__status kp-datatable__columns-count"));
+        this.columnCount.dataset.kpDatatableColumnsCount = "";
+        bar.append(button6, pop2, this.columnCount);
+      }
+      /** The edit log (#inline-edit): what was edited, under the table. */
+      makeEditLog() {
+        this.editLog = this.t.identity.add(this.t.identity.make("p", "kp-datatable__status kp-datatable__edit-log"));
+        this.editLog.dataset.kpDatatableEditLog = "";
+        this.editLog.setAttribute("role", "status");
+        this.editLog.setAttribute("aria-live", "polite");
+        this.t.chrome.putUnder(this.editLog);
+      }
+    };
   }
 });
 
 // js/datatable/attach/layout-setup.js
-function installLayoutSetup(c) {
-  const { add, make: make35, pager, putUnder, s0, sizes, undo, wrap } = c;
-  const gridMode = wrap.dataset.kpGrid !== void 0;
-  c.gridMode = gridMode;
-  c.gridReadout = null;
-  if (gridMode) {
-    c.gridReadout = add(make35("p", "kp-datatable__status kp-datatable__grid-readout"));
-    c.gridReadout.dataset.kpDatatableGridReadout = "";
-    c.gridReadout.setAttribute("aria-live", "polite");
-    c.gridReadout.textContent = s0.tableGridStart;
-    putUnder(c.gridReadout);
-  }
-  if (c.failedSlot === null) {
-    c.failedSlot = add(make35("div", "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error"));
-    c.failedSlot.dataset.kpDatatableFailed = "";
-    c.failedSlot.setAttribute("role", "alert");
-    c.failedSlot.hidden = true;
-    const text = make35("p", "kp-stateplate__title");
-    text.dataset.kpDatatableFailedReason = "";
-    text.textContent = s0.tableFailed;
-    const retry = (
-      /** @type {HTMLButtonElement} */
-      make35("button", "kp-button kp-stateplate__action")
-    );
-    retry.type = "button";
-    retry.dataset.kpDatatableRetry = "";
-    retry.textContent = s0.tableRetry;
-    c.failedSlot.append(text, retry);
-    wrap.insertBefore(c.failedSlot, c.tableBlock);
-  } else if (!c.failedSlot.classList.contains("kp-stateplate")) {
-    const authored = c.failedSlot;
-    authored.classList.add("kp-stateplate", "kp-stateplate--error");
-    undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--error"));
-  }
-  if (c.empty === null) {
-    c.empty = add(make35("div", "kp-empty kp-stateplate kp-stateplate--empty"));
-    c.empty.dataset.kpDatatableEmpty = "";
-    c.empty.setAttribute("role", "status");
-    c.empty.hidden = true;
-    c.emptyHidden = true;
-    const none = make35("strong", "kp-empty__title");
-    none.textContent = s0.tableEmpty;
-    c.empty.append(none);
-    wrap.insertBefore(c.empty, c.tableBlock);
-  } else if (!c.empty.classList.contains("kp-stateplate")) {
-    const authored = c.empty;
-    authored.classList.add("kp-stateplate", "kp-stateplate--empty");
-    undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--empty"));
-  }
-  if (c.empty !== null && c.state !== "ready") {
-    c.empty.hidden = true;
-    c.emptyHidden = true;
-  }
-  if (c.empty !== null && c.empty.querySelector(".kp-empty__title, .kp-stateplate__title") === null) {
-    const authored = c.empty;
-    const heading = make35("strong", "kp-empty__title");
-    heading.textContent = s0.tableEmpty;
-    authored.prepend(heading);
-    undo.push(() => heading.remove());
-  }
-  if (c.empty !== null) {
-    for (const node of [...c.empty.childNodes]) {
-      if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? "").trim() === "") continue;
-      const words3 = make35("span", "kp-stateplate__text");
-      node.replaceWith(words3);
-      words3.append(node);
-      undo.push(() => words3.replaceWith(node));
-    }
-  }
-  if (c.failedSlot !== null && c.failedSlot.querySelector(".kp-stateplate__title") === null) {
-    const authoredFailed = c.failedSlot;
-    const reason = authoredFailed.querySelector("[data-kp-datatable-failed-reason]");
-    if (reason !== null) {
-      reason.classList.add("kp-stateplate__title");
-      undo.push(() => reason.classList.remove("kp-stateplate__title"));
-    } else {
-      const heading = make35("strong", "kp-stateplate__title");
-      heading.dataset.kpDatatableFailedReason = "";
-      heading.textContent = s0.tableFailed;
-      authoredFailed.prepend(heading);
-      undo.push(() => heading.remove());
-    }
-  }
-  let heldHeight = 0;
-  const coverBox = (
-    /** @type {HTMLElement} */
-    c.tableBlock
-  );
-  const coverSizes = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
-    if (coverBox.hasAttribute("data-kp-state-covered")) return;
-    const height = coverBox.getBoundingClientRect().height;
-    if (height > 0 && c.state === "ready" && c.all.length > 0) heldHeight = height;
-  }) : null;
-  coverSizes?.observe(coverBox);
-  undo.push(() => {
-    coverSizes?.disconnect();
-    coverBox.removeAttribute("data-kp-state-covered");
-    wrap.removeAttribute("data-kp-state-covered");
-    for (const slot of [c.failedSlot, c.empty]) slot?.style.removeProperty("--kp-datatable-held");
-  });
-  const syncCover = () => {
-    const failedNow = c.state === "failed" && c.failedSlot !== null;
-    const emptyNow = !failedNow && c.empty !== null && !c.emptyHidden;
-    coverBox.toggleAttribute("data-kp-state-covered", failedNow || emptyNow);
-    if (failedNow || emptyNow) wrap.setAttribute("data-kp-state-covered", failedNow ? "error" : "empty");
-    else wrap.removeAttribute("data-kp-state-covered");
-    for (const slot of [c.failedSlot, c.empty]) {
-      if (slot === null) continue;
-      const mine = slot === c.failedSlot && failedNow || slot === c.empty && emptyNow;
-      if (mine && heldHeight > 0) slot.style.setProperty("--kp-datatable-held", `${Math.round(heldHeight)}px`);
-      else slot.style.removeProperty("--kp-datatable-held");
-    }
-  };
-  c.syncCover = syncCover;
-  c.sizeLabel = null;
-  c.sizeSelect = null;
-  if (pager !== null && sizes.length > 0) {
-    c.sizeLabel = /** @type {HTMLLabelElement} */
-    make35("label", "kp-datatable__label");
-    c.sizeSelect = /** @type {HTMLSelectElement} */
-    make35("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
-    c.sizeSelect.dataset.kpDatatablePageSize = "";
-    c.sizeSelect.setAttribute("aria-label", s0.tableRowsPerPage);
-    for (const n of sizes) {
-      const option = (
-        /** @type {HTMLOptionElement} */
-        make35("option")
-      );
-      option.value = String(n);
-      option.textContent = String(n);
-      c.sizeSelect.append(option);
-    }
-    c.sizeSelect.value = String(c.size);
-    c.sizeLabel.append(s0.tableRowsPerPage, " ", c.sizeSelect);
-  }
-}
+var TableLayoutSetup;
 var init_layout_setup = __esm({
   "js/datatable/attach/layout-setup.js"() {
     "use strict";
+    TableLayoutSetup = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.gridMode = this.t.wrap.dataset.kpGrid !== void 0;
+        this.gridReadout = null;
+        if (this.gridMode) this.makeGridReadout();
+        this.ensureFailedSlot();
+        this.ensureEmptySlot();
+        this.dressEmptySlot();
+        if (this.t.controls.failedSlot !== null && this.t.controls.failedSlot.querySelector(".kp-stateplate__title") === null) this.titleFailedSlot();
+        this.heldHeight = 0;
+        this.coverBox = /** @type {HTMLElement} */
+        this.t.chrome.tableBlock;
+        this.coverSizes = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
+          if (this.coverBox.hasAttribute("data-kp-state-covered")) return;
+          const height = this.coverBox.getBoundingClientRect().height;
+          if (height > 0 && this.t.model.state === "ready" && this.t.model.all.length > 0) this.heldHeight = height;
+        }) : null;
+        this.coverSizes?.observe(this.coverBox);
+        this.t.identity.undo.push(() => {
+          this.coverSizes?.disconnect();
+          this.coverBox.removeAttribute("data-kp-state-covered");
+          this.t.wrap.removeAttribute("data-kp-state-covered");
+          for (const slot of [this.t.controls.failedSlot, this.t.controls.empty]) slot?.style.removeProperty("--kp-datatable-held");
+        });
+        this.sizeLabel = null;
+        this.sizeSelect = null;
+        if (this.t.controls.pager !== null && this.t.controls.sizes.length > 0) this.makeSizeSelect();
+      }
+      /** The grid's position line (#keyboard), under the table. */
+      makeGridReadout() {
+        this.gridReadout = this.t.identity.add(this.t.identity.make("p", "kp-datatable__status kp-datatable__grid-readout"));
+        this.gridReadout.dataset.kpDatatableGridReadout = "";
+        this.gridReadout.setAttribute("aria-live", "polite");
+        this.gridReadout.textContent = this.t.identity.s0.tableGridStart;
+        this.t.chrome.putUnder(this.gridReadout);
+      }
+      /** A failed slot for any table that wrote none, else the page's slot dressed as the package's failed plate. */
+      ensureFailedSlot() {
+        if (this.t.controls.failedSlot === null) {
+          this.t.controls.failedSlot = this.t.identity.add(this.t.identity.make("div", "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error"));
+          this.t.controls.failedSlot.dataset.kpDatatableFailed = "";
+          this.t.controls.failedSlot.setAttribute("role", "alert");
+          this.t.controls.failedSlot.hidden = true;
+          const text = this.t.identity.make("p", "kp-stateplate__title");
+          text.dataset.kpDatatableFailedReason = "";
+          text.textContent = this.t.identity.s0.tableFailed;
+          const retry = (
+            /** @type {HTMLButtonElement} */
+            this.t.identity.make("button", "kp-button kp-stateplate__action")
+          );
+          retry.type = "button";
+          retry.dataset.kpDatatableRetry = "";
+          retry.textContent = this.t.identity.s0.tableRetry;
+          this.t.controls.failedSlot.append(text, retry);
+          this.t.wrap.insertBefore(this.t.controls.failedSlot, this.t.chrome.tableBlock);
+        } else if (!this.t.controls.failedSlot.classList.contains("kp-stateplate")) {
+          const authored = this.t.controls.failedSlot;
+          authored.classList.add("kp-stateplate", "kp-stateplate--error");
+          this.t.identity.undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--error"));
+        }
+      }
+      /** The empty plate: the package's for a table that wrote no slot, else the page's slot dressed as one. */
+      ensureEmptySlot() {
+        if (this.t.controls.empty === null) {
+          this.t.controls.empty = this.t.identity.add(this.t.identity.make("div", "kp-empty kp-stateplate kp-stateplate--empty"));
+          this.t.controls.empty.dataset.kpDatatableEmpty = "";
+          this.t.controls.empty.setAttribute("role", "status");
+          this.t.controls.empty.hidden = true;
+          this.t.busy.emptyHidden = true;
+          const none = this.t.identity.make("strong", "kp-empty__title");
+          none.textContent = this.t.identity.s0.tableEmpty;
+          this.t.controls.empty.append(none);
+          this.t.wrap.insertBefore(this.t.controls.empty, this.t.chrome.tableBlock);
+        } else if (!this.t.controls.empty.classList.contains("kp-stateplate")) {
+          const authored = this.t.controls.empty;
+          authored.classList.add("kp-stateplate", "kp-stateplate--empty");
+          this.t.identity.undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--empty"));
+        }
+      }
+      /** The empty slot as a plate: hidden while the table is not ready, with a heading, and the page's bare words as its body text. */
+      dressEmptySlot() {
+        if (this.t.controls.empty !== null && this.t.model.state !== "ready") {
+          this.t.controls.empty.hidden = true;
+          this.t.busy.emptyHidden = true;
+        }
+        if (this.t.controls.empty !== null && this.t.controls.empty.querySelector(".kp-empty__title, .kp-stateplate__title") === null) {
+          const authored = this.t.controls.empty;
+          const heading = this.t.identity.make("strong", "kp-empty__title");
+          heading.textContent = this.t.identity.s0.tableEmpty;
+          authored.prepend(heading);
+          this.t.identity.undo.push(() => heading.remove());
+        }
+        if (this.t.controls.empty !== null) {
+          for (const node of [...this.t.controls.empty.childNodes]) {
+            if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? "").trim() === "") continue;
+            const words3 = this.t.identity.make("span", "kp-stateplate__text");
+            node.replaceWith(words3);
+            words3.append(node);
+            this.t.identity.undo.push(() => words3.replaceWith(node));
+          }
+        }
+      }
+      /** A failed slot a page wrote gets the plate's heading: its reason element, else the dictionary's words [states-check-1019]. */
+      titleFailedSlot() {
+        const authoredFailed = (
+          /** @type {HTMLElement} */
+          this.t.controls.failedSlot
+        );
+        const reason = authoredFailed.querySelector("[data-kp-datatable-failed-reason]");
+        if (reason !== null) {
+          reason.classList.add("kp-stateplate__title");
+          this.t.identity.undo.push(() => reason.classList.remove("kp-stateplate__title"));
+        } else {
+          const heading = this.t.identity.make("strong", "kp-stateplate__title");
+          heading.dataset.kpDatatableFailedReason = "";
+          heading.textContent = this.t.identity.s0.tableFailed;
+          authoredFailed.prepend(heading);
+          this.t.identity.undo.push(() => heading.remove());
+        }
+      }
+      /** The page-size choice, beside the pager. */
+      makeSizeSelect() {
+        this.sizeLabel = /** @type {HTMLLabelElement} */
+        this.t.identity.make("label", "kp-datatable__label");
+        this.sizeSelect = /** @type {HTMLSelectElement} */
+        this.t.identity.make("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
+        this.sizeSelect.dataset.kpDatatablePageSize = "";
+        this.sizeSelect.setAttribute("aria-label", this.t.identity.s0.tableRowsPerPage);
+        for (const n of this.t.controls.sizes) {
+          const option = (
+            /** @type {HTMLOptionElement} */
+            this.t.identity.make("option")
+          );
+          option.value = String(n);
+          option.textContent = String(n);
+          this.sizeSelect.append(option);
+        }
+        this.sizeSelect.value = String(this.t.controls.size);
+        this.sizeLabel.append(this.t.identity.s0.tableRowsPerPage, " ", this.sizeSelect);
+      }
+      syncCover() {
+        const failedNow = this.t.model.state === "failed" && this.t.controls.failedSlot !== null;
+        const emptyNow = !failedNow && this.t.controls.empty !== null && !this.t.busy.emptyHidden;
+        this.coverBox.toggleAttribute("data-kp-state-covered", failedNow || emptyNow);
+        if (failedNow || emptyNow) this.t.wrap.setAttribute("data-kp-state-covered", failedNow ? "error" : "empty");
+        else this.t.wrap.removeAttribute("data-kp-state-covered");
+        for (const slot of [this.t.controls.failedSlot, this.t.controls.empty]) {
+          if (slot === null) continue;
+          const mine = slot === this.t.controls.failedSlot && failedNow || slot === this.t.controls.empty && emptyNow;
+          if (mine && this.heldHeight > 0) slot.style.setProperty("--kp-datatable-held", `${Math.round(this.heldHeight)}px`);
+          else slot.style.removeProperty("--kp-datatable-held");
+        }
+      }
+    };
   }
 });
 
 // js/datatable/attach/reorder.js
-function installReorder(c) {
-  const {
-    body,
-    cellText,
-    details,
-    editKinds,
-    expanded,
-    externalSort,
-    filters,
-    glyphs,
-    insertExpandCell,
-    insertReorderCell,
-    keyColumn,
-    keyOf: keyOf8,
-    labelOf: labelOf8,
-    make: make35,
-    pager,
-    rendered,
-    reorderable,
-    serverMode,
-    single,
-    themeBox,
-    undo,
-    wrap
-  } = c;
-  const prepared = /* @__PURE__ */ new Set();
-  c.prepared = prepared;
-  const prepareRow = (row2) => {
-    themeBox(row2.querySelector(SELECT_ROW));
-    if (prepared.has(row2)) return;
-    prepared.add(row2);
-    insertExpandCell(row2);
-    insertReorderCell(row2);
-    editKinds.forEach((kind, at) => {
-      const cell = row2.cells[at];
-      if (kind === null || cell === void 0 || cell.querySelector(EDIT_CELL) !== null) return;
-      const button6 = (
-        /** @type {HTMLButtonElement} */
-        make35("button", "kp-datatable__edit")
-      );
-      button6.type = "button";
-      button6.dataset.kpEditCell = "";
-      const value = make35("span");
-      value.dataset.kpEditValue = "";
-      value.append(...cell.childNodes);
-      button6.append(value);
-      cell.append(button6);
-    });
-    if (c.hiddenColumns.size > 0) {
-      for (const at of c.hiddenColumns) if (row2.cells[at]) row2.cells[at].hidden = true;
-    }
-  };
-  c.prepareRow = prepareRow;
-  const unprepareRow = (row2) => {
-    row2.querySelector("[data-kp-expand-cell]")?.remove();
-    row2.querySelector("[data-kp-reorder-cell]")?.remove();
-    for (const button6 of row2.querySelectorAll(EDIT_CELL)) {
-      const value = button6.querySelector(EDIT_VALUE);
-      if (value !== null) button6.replaceWith(...value.childNodes);
-    }
-    for (const cell of row2.cells) cell.hidden = false;
-  };
-  c.unprepareRow = unprepareRow;
-  const labelRow = (row2) => {
-    const s2 = getStrings();
-    const key = keyOf8(row2);
-    const toggleButton = (
-      /** @type {HTMLButtonElement | null} */
-      row2.querySelector(ROW_TOGGLE)
-    );
-    if (toggleButton !== null) {
-      const open4 = expanded.has(key);
-      toggleButton.setAttribute("aria-label", s2.tableRowDetails(key));
-      toggleButton.setAttribute("aria-expanded", String(open4));
-      toggleButton.textContent = open4 ? glyphs.collapse : glyphs.expand;
-      const detail = details.has(row2) || open4 ? c.detailFor(row2) : void 0;
-      if (detail !== void 0) toggleButton.setAttribute("aria-controls", detail.id);
-      else toggleButton.removeAttribute("aria-controls");
-    }
-    for (const button6 of row2.querySelectorAll(EDIT_CELL)) {
-      const cell = (
-        /** @type {HTMLTableCellElement} */
-        button6.closest("td, th")
-      );
-      button6.setAttribute("aria-label", s2.tableEdit(labelOf8(cell.cellIndex), key, cellText(row2, cell.cellIndex)));
-    }
-    const grip = row2.querySelector(REORDER_HANDLE);
-    if (grip !== null) {
-      const can = canReorder();
-      grip.setAttribute("aria-label", s2.tableReorderRow(reorderName(row2)));
-      if (can) {
-        grip.removeAttribute("aria-disabled");
-        grip.removeAttribute("title");
-      } else {
-        grip.setAttribute("aria-disabled", "true");
-        grip.setAttribute("title", s2.tableReorderOff);
-      }
-    }
-  };
-  c.labelRow = labelRow;
-  const canReorder = () => reorderable && !serverMode && !externalSort && c.sorts.length === 0 && filters.size === 0 && c.query.trim() === "" && c.groups.size === 0;
-  const reorderName = (row2) => (keyColumn >= 0 ? cellText(row2, keyColumn) : "") || keyOf8(row2);
-  let reorderLive = null;
-  const moveRow = (row2, to) => {
-    if (!canReorder()) return false;
-    const from = c.all.indexOf(row2);
-    const target = Math.max(0, Math.min(c.all.length - 1, to));
-    if (from < 0 || from === target) return false;
-    c.all.splice(from, 1);
-    c.all.splice(target, 0, row2);
-    rendered.splice(0, rendered.length, ...c.all, ...rendered.filter((r) => !c.all.includes(r)));
-    c.shownRows = [...c.all];
-    if (pager !== null) c.page = Math.floor(target / c.size);
-    c.render();
-    row2.querySelector(REORDER_HANDLE)?.focus({ preventScroll: true });
-    if (reorderLive === null) {
-      reorderLive = make35("span", "kp-sr-only");
-      reorderLive.setAttribute("role", "status");
-      reorderLive.setAttribute("aria-live", "polite");
-      wrap.append(reorderLive);
-      undo.push(() => reorderLive?.remove());
-    }
-    reorderLive.textContent = getStrings().reorderMoved(reorderName(row2), target + 1, c.all.length);
-    wrap.dispatchEvent(new CustomEvent(REORDER_EVENT, { bubbles: true, detail: { order: c.all.map(keyOf8), key: keyOf8(row2), from, to: target } }));
-    return true;
-  };
-  const onReorderKey = (event) => {
-    if (!reorderable || !event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-    if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (target.matches("input, textarea, select, [contenteditable]")) return;
-    const row2 = (
-      /** @type {HTMLTableRowElement | null} */
-      target.closest("tr")
-    );
-    if (row2 === null || row2.parentElement !== body || !c.all.includes(row2)) return;
-    event.preventDefault();
-    moveRow(row2, c.all.indexOf(row2) + (event.key === "ArrowUp" ? -1 : 1));
-  };
-  const onReorderPointer = (event) => {
-    if (event.button !== 0) return;
-    const handle = (
-      /** @type {HTMLElement | null} */
-      /** @type {HTMLElement} */
-      event.target.closest(REORDER_HANDLE)
-    );
-    const row2 = (
-      /** @type {HTMLTableRowElement | null} */
-      handle?.closest("tr") ?? null
-    );
-    if (handle === null || row2 === null || !canReorder()) return;
-    event.preventDefault();
-    handle.focus({ preventScroll: true });
-    row2.dataset.kpDragging = "";
-    const id = event.pointerId;
-    const onMove2 = (move) => {
-      if (move.pointerId !== id) return;
-      const over = c.pageRows.find((r) => {
-        const box = r.getBoundingClientRect();
-        return move.clientY >= box.top && move.clientY <= box.bottom;
-      });
-      if (over !== void 0 && over !== row2) moveRow(row2, c.all.indexOf(over));
-    };
-    const onUp2 = (up) => {
-      if (up.pointerId !== id) return;
-      delete row2.dataset.kpDragging;
-      window.removeEventListener("pointermove", onMove2);
-      window.removeEventListener("pointerup", onUp2);
-      window.removeEventListener("pointercancel", onUp2);
-    };
-    window.addEventListener("pointermove", onMove2);
-    window.addEventListener("pointerup", onUp2);
-    window.addEventListener("pointercancel", onUp2);
-  };
-  if (reorderable) {
-    body.addEventListener("keydown", onReorderKey);
-    body.addEventListener("pointerdown", onReorderPointer);
-    undo.push(() => {
-      body.removeEventListener("keydown", onReorderKey);
-      body.removeEventListener("pointerdown", onReorderPointer);
-    });
-  }
-  for (const row2 of c.all) {
-    if (row2.dataset.kpExpanded !== void 0) expanded.add(keyOf8(row2));
-    prepareRow(row2);
-  }
-  if (single && expanded.size > 1) {
-    const last = (
-      /** @type {string} */
-      [...expanded][expanded.size - 1]
-    );
-    expanded.clear();
-    expanded.add(last);
-  }
-}
+var TableReorder;
 var init_reorder = __esm({
   "js/datatable/attach/reorder.js"() {
     "use strict";
     init_selectors();
     init_strings();
     init_events();
+    TableReorder = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.prepared = /* @__PURE__ */ new Set();
+        this.reorderLive = null;
+        if (this.t.details.reorderable) {
+          this.t.body.addEventListener("keydown", this.t.bound(this, this.onReorderKey));
+          this.t.body.addEventListener("pointerdown", this.t.bound(this, this.onReorderPointer));
+          this.t.identity.undo.push(() => {
+            this.t.body.removeEventListener("keydown", this.t.bound(this, this.onReorderKey));
+            this.t.body.removeEventListener("pointerdown", this.t.bound(this, this.onReorderPointer));
+          });
+        }
+        for (const row2 of this.t.model.all) {
+          if (row2.dataset.kpExpanded !== void 0) this.t.details.expanded.add(this.t.columns.keyOf(row2));
+          this.prepareRow(row2);
+        }
+        if (this.t.details.single && this.t.details.expanded.size > 1) {
+          const last = (
+            /** @type {string} */
+            [...this.t.details.expanded][this.t.details.expanded.size - 1]
+          );
+          this.t.details.expanded.clear();
+          this.t.details.expanded.add(last);
+        }
+      }
+      /** @param {HTMLTableRowElement} row */
+      prepareRow(row2) {
+        this.t.chrome.themeBox(row2.querySelector(SELECT_ROW));
+        if (this.prepared.has(row2)) return;
+        this.prepared.add(row2);
+        this.t.details.insertExpandCell(row2);
+        this.t.details.insertReorderCell(row2);
+        this.t.columns.editKinds.forEach((kind, at) => {
+          const cell = row2.cells[at];
+          if (kind === null || cell === void 0 || cell.querySelector(EDIT_CELL) !== null) return;
+          const button6 = (
+            /** @type {HTMLButtonElement} */
+            this.t.identity.make("button", "kp-datatable__edit")
+          );
+          button6.type = "button";
+          button6.dataset.kpEditCell = "";
+          const value = this.t.identity.make("span");
+          value.dataset.kpEditValue = "";
+          value.append(...cell.childNodes);
+          button6.append(value);
+          cell.append(button6);
+        });
+        if (this.t.sortSetup.hiddenColumns.size > 0) {
+          for (const at of this.t.sortSetup.hiddenColumns) if (row2.cells[at]) row2.cells[at].hidden = true;
+        }
+      }
+      /** Take back what prepareRow put in a row. @param {HTMLTableRowElement} row */
+      unprepareRow(row2) {
+        row2.querySelector("[data-kp-expand-cell]")?.remove();
+        row2.querySelector("[data-kp-reorder-cell]")?.remove();
+        for (const button6 of row2.querySelectorAll(EDIT_CELL)) {
+          const value = button6.querySelector(EDIT_VALUE);
+          if (value !== null) button6.replaceWith(...value.childNodes);
+        }
+        for (const cell of row2.cells) cell.hidden = false;
+      }
+      /** Name the parts that depend on the row's current value and state. @param {HTMLTableRowElement} row */
+      labelRow(row2) {
+        const s2 = getStrings();
+        const key = this.t.columns.keyOf(row2);
+        const toggleButton = (
+          /** @type {HTMLButtonElement | null} */
+          row2.querySelector(ROW_TOGGLE)
+        );
+        if (toggleButton !== null) {
+          const open4 = this.t.details.expanded.has(key);
+          toggleButton.setAttribute("aria-label", s2.tableRowDetails(key));
+          toggleButton.setAttribute("aria-expanded", String(open4));
+          toggleButton.textContent = open4 ? this.t.controls.glyphs.collapse : this.t.controls.glyphs.expand;
+          const detail = this.t.details.details.has(row2) || open4 ? this.t.sync.detailFor(row2) : void 0;
+          if (detail !== void 0) toggleButton.setAttribute("aria-controls", detail.id);
+          else toggleButton.removeAttribute("aria-controls");
+        }
+        for (const button6 of row2.querySelectorAll(EDIT_CELL)) {
+          const cell = (
+            /** @type {HTMLTableCellElement} */
+            button6.closest("td, th")
+          );
+          button6.setAttribute("aria-label", s2.tableEdit(this.t.columns.labelOf(cell.cellIndex), key, this.t.columns.cellText(row2, cell.cellIndex)));
+        }
+        const grip = row2.querySelector(REORDER_HANDLE);
+        if (grip !== null) {
+          const can = this.canReorder();
+          grip.setAttribute("aria-label", s2.tableReorderRow(this.reorderName(row2)));
+          if (can) {
+            grip.removeAttribute("aria-disabled");
+            grip.removeAttribute("title");
+          } else {
+            grip.setAttribute("aria-disabled", "true");
+            grip.setAttribute("title", s2.tableReorderOff);
+          }
+        }
+      }
+      // ── Row reorder [wish-1120, homelab 93] ─────────────────────────
+      // The order is the table's own while no sort, filter or search is on and the rows come from the page (not a server): the
+      // handle, Alt+Up and Alt+Down move a row in the rendered order and `kp-datatable-reorder` carries the new order of the
+      // keys. With a sort or filter on, the handles are off with the reason in their title.
+      canReorder() {
+        return this.t.details.reorderable && !this.t.controls.serverMode && !this.t.controls.externalSort && this.t.model.sorts.length === 0 && this.t.model.filters.size === 0 && this.t.model.query.trim() === "" && this.t.groups.groups.size === 0;
+      }
+      /** @param {HTMLTableRowElement} row */
+      reorderName(row2) {
+        return (this.t.columns.keyColumn >= 0 ? this.t.columns.cellText(row2, this.t.columns.keyColumn) : "") || this.t.columns.keyOf(row2);
+      }
+      /**
+       * Put a row at a place in the order (0 is the first) and say so.
+       * @param {HTMLTableRowElement} row @param {number} to
+       * @returns {boolean} whether the row moved
+       */
+      moveRow(row2, to) {
+        if (!this.canReorder()) return false;
+        const from = this.t.model.all.indexOf(row2);
+        const target = Math.max(0, Math.min(this.t.model.all.length - 1, to));
+        if (from < 0 || from === target) return false;
+        this.t.model.all.splice(from, 1);
+        this.t.model.all.splice(target, 0, row2);
+        this.t.model.rendered.splice(0, this.t.model.rendered.length, ...this.t.model.all, ...this.t.model.rendered.filter((r) => !this.t.model.all.includes(r)));
+        this.t.model.shownRows = [...this.t.model.all];
+        if (this.t.controls.pager !== null) this.t.model.page = Math.floor(target / this.t.controls.size);
+        this.t.render.render();
+        row2.querySelector(REORDER_HANDLE)?.focus({ preventScroll: true });
+        if (this.reorderLive === null) {
+          this.reorderLive = this.t.identity.make("span", "kp-sr-only");
+          this.reorderLive.setAttribute("role", "status");
+          this.reorderLive.setAttribute("aria-live", "polite");
+          this.t.wrap.append(this.reorderLive);
+          this.t.identity.undo.push(() => this.reorderLive?.remove());
+        }
+        this.reorderLive.textContent = getStrings().reorderMoved(this.reorderName(row2), target + 1, this.t.model.all.length);
+        this.t.wrap.dispatchEvent(new CustomEvent(REORDER_EVENT, { bubbles: true, detail: { order: this.t.model.all.map(this.t.bound(this.t.columns, this.t.columns.keyOf)), key: this.t.columns.keyOf(row2), from, to: target } }));
+        return true;
+      }
+      /** Alt+Up and Alt+Down on a row's handle, or on the row itself. @param {KeyboardEvent} event */
+      onReorderKey(event) {
+        if (!this.t.details.reorderable || !event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (target.matches("input, textarea, select, [contenteditable]")) return;
+        const row2 = (
+          /** @type {HTMLTableRowElement | null} */
+          target.closest("tr")
+        );
+        if (row2 === null || row2.parentElement !== this.t.body || !this.t.model.all.includes(row2)) return;
+        event.preventDefault();
+        this.moveRow(row2, this.t.model.all.indexOf(row2) + (event.key === "ArrowUp" ? -1 : 1));
+      }
+      /** Drag by the handle: the row follows the pointer over its neighbours. @param {PointerEvent} event */
+      onReorderPointer(event) {
+        if (event.button !== 0) return;
+        const handle = (
+          /** @type {HTMLElement | null} */
+          /** @type {HTMLElement} */
+          event.target.closest(REORDER_HANDLE)
+        );
+        const row2 = (
+          /** @type {HTMLTableRowElement | null} */
+          handle?.closest("tr") ?? null
+        );
+        if (handle === null || row2 === null || !this.canReorder()) return;
+        event.preventDefault();
+        handle.focus({ preventScroll: true });
+        row2.dataset.kpDragging = "";
+        const id = event.pointerId;
+        const onMove2 = (move) => {
+          if (move.pointerId !== id) return;
+          const over = this.t.model.pageRows.find((r) => {
+            const box = r.getBoundingClientRect();
+            return move.clientY >= box.top && move.clientY <= box.bottom;
+          });
+          if (over !== void 0 && over !== row2) this.moveRow(row2, this.t.model.all.indexOf(over));
+        };
+        const onUp2 = (up) => {
+          if (up.pointerId !== id) return;
+          delete row2.dataset.kpDragging;
+          window.removeEventListener("pointermove", onMove2);
+          window.removeEventListener("pointerup", onUp2);
+          window.removeEventListener("pointercancel", onUp2);
+        };
+        window.addEventListener("pointermove", onMove2);
+        window.addEventListener("pointerup", onUp2);
+        window.addEventListener("pointercancel", onUp2);
+      }
+    };
   }
 });
 
 // js/datatable/attach/groups.js
-function installGroups(c) {
-  const { body, builtDetails, decoratePart, details, glyphs, headers, id, make: make35, rendered, serverMode } = c;
-  const visibleColumns = () => headers.filter((_, at) => !c.hiddenColumns.has(at)).length;
-  c.visibleColumns = visibleColumns;
-  const groups = /* @__PURE__ */ new Map();
-  c.groups = groups;
-  const folded2 = /* @__PURE__ */ new Set();
-  c.folded = folded2;
-  const departing = /* @__PURE__ */ new Set();
-  c.departing = departing;
-  const seenGroups = /* @__PURE__ */ new Set();
-  c.blockOrder = [];
-  const blockOf = /* @__PURE__ */ new Map();
-  const groupNames = /* @__PURE__ */ new Map();
-  const preparedGroups = /* @__PURE__ */ new Map();
-  c.preparedGroups = preparedGroups;
-  const givenIds = /* @__PURE__ */ new Set();
-  c.givenIds = givenIds;
-  let memberIds = 0;
-  const groupOf3 = (row2) => {
-    const key = row2.dataset.kpGroupOf;
-    return key !== void 0 && groups.has(key) ? key : null;
-  };
-  c.groupOf = groupOf3;
-  const prepareGroup = (heading) => {
-    const cell = heading.cells[0];
-    if (cell === void 0 || heading.querySelector(GROUP_TOGGLE) !== null) return;
-    const key = heading.dataset.kpRowGroup ?? "";
-    const copy3 = (
-      /** @type {HTMLElement} */
-      heading.cloneNode(true)
-    );
-    for (const slot of copy3.querySelectorAll(GROUP_COUNT)) slot.remove();
-    const name = heading.dataset.kpGroupLabel ?? (copy3.textContent ?? "").replace(/\s+/g, " ").trim();
-    groupNames.set(heading, name);
-    preparedGroups.set(heading, { span: heading.cells.length === 1 ? cell.getAttribute("colspan") : null, hidden: heading.hidden === true });
-    const button6 = (
-      /** @type {HTMLButtonElement} */
-      make35("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand kp-datatable__group-toggle")
-    );
-    button6.type = "button";
-    button6.dataset.kpGroupToggle = "";
-    cell.prepend(button6);
-    decoratePart(button6, { kind: "row-group-toggle", value: key, label: name });
-  };
-  const collectGroups2 = () => {
-    if (serverMode) return;
-    groups.clear();
-    for (const row2 of body.rows) {
-      if (!row2.matches(GROUP_ROW)) continue;
-      const key = row2.dataset.kpRowGroup ?? "";
-      if (groups.has(key)) continue;
-      groups.set(key, row2);
-      if (!seenGroups.has(key)) {
-        seenGroups.add(key);
-        if (row2.dataset.kpFolded !== void 0) folded2.add(key);
-      }
-      prepareGroup(row2);
-    }
-    c.blockOrder = [];
-    blockOf.clear();
-    if (groups.size === 0) return;
-    const placed = /* @__PURE__ */ new Set();
-    let loose = 0;
-    let inLoose = false;
-    for (const row2 of body.rows) {
-      if (row2.matches(DETAIL) || row2.matches(SKELETON_ROW)) continue;
-      let block;
-      if (row2.matches(GROUP_ROW)) {
-        const key = row2.dataset.kpRowGroup ?? "";
-        if (groups.get(key) !== row2) continue;
-        block = `group:${key}`;
-      } else {
-        const key = groupOf3(row2);
-        if (key !== null) block = `group:${key}`;
-        else {
-          if (!inLoose) loose += 1;
-          block = `rows:${loose}`;
-        }
-      }
-      inLoose = block.startsWith("rows:");
-      if (!placed.has(block)) {
-        placed.add(block);
-        c.blockOrder.push(block);
-      }
-      if (!row2.matches(GROUP_ROW)) blockOf.set(row2, block);
-    }
-  };
-  c.collectGroups = collectGroups2;
-  collectGroups2();
-  const layoutAtAttach = groups.size > 0 ? [...body.rows] : null;
-  c.layoutAtAttach = layoutAtAttach;
-  const arrange2 = (rows) => {
-    if (c.blockOrder.length === 0) return rows;
-    const byBlock = /* @__PURE__ */ new Map();
-    for (const row2 of rows) {
-      const block = blockOf.get(row2) ?? "";
-      const list = byBlock.get(block);
-      if (list === void 0) byBlock.set(block, [row2]);
-      else list.push(row2);
-    }
-    return [...c.blockOrder, ""].flatMap((block) => byBlock.get(block) ?? []);
-  };
-  c.arrange = arrange2;
-  const isFolded = (row2) => {
-    const key = groupOf3(row2);
-    return key !== null && folded2.has(key);
-  };
-  c.isFolded = isFolded;
-  const placeGroups = () => {
-    const shownSet = new Set(c.shownRows);
-    const allSet = new Set(c.all);
-    const byBlock = /* @__PURE__ */ new Map();
-    for (const row2 of [...c.shownRows, ...rendered.filter((r) => !shownSet.has(r) && allSet.has(r))]) {
-      const block = blockOf.get(row2) ?? "";
-      const list = byBlock.get(block);
-      if (list === void 0) byBlock.set(block, [row2]);
-      else list.push(row2);
-    }
-    const sequence = [];
-    for (const block of [...c.blockOrder, ""]) {
-      const heading = block.startsWith("group:") ? groups.get(block.slice("group:".length)) : void 0;
-      if (heading !== void 0) sequence.push(heading);
-      for (const row2 of byBlock.get(block) ?? []) {
-        sequence.push(row2);
-        const detail = details.get(row2);
-        if (detail !== void 0) sequence.push(detail);
-      }
-    }
-    const wanted = new Set(sequence);
-    const current2 = [...body.rows].filter((row2) => wanted.has(row2));
-    if (current2.length === sequence.length && current2.every((row2, at) => row2 === sequence[at])) return;
-    const active = document.activeElement;
-    const held2 = active instanceof HTMLElement && body.contains(active) ? active : null;
-    for (const row2 of sequence) if (row2.parentElement === body || builtDetails.has(row2) && row2.parentElement === null) body.append(row2);
-    if (held2 !== null && held2.isConnected && document.activeElement !== held2) held2.focus({ preventScroll: true });
-  };
-  c.placeGroups = placeGroups;
-  const syncGroups = (s2) => {
-    if (groups.size === 0) return;
-    const matched = /* @__PURE__ */ new Map();
-    for (const row2 of c.shownRows) {
-      const key = groupOf3(row2);
-      if (key !== null) matched.set(key, (matched.get(key) ?? 0) + 1);
-    }
-    const onPage = /* @__PURE__ */ new Map();
-    for (const row2 of c.pageRows) {
-      const key = groupOf3(row2);
-      if (key === null) continue;
-      if (row2.id === "" && row2.dataset.kpRowKey !== void 0) {
-        memberIds += 1;
-        row2.id = `${id}-row-${memberIds}`;
-        givenIds.add(row2);
-      }
-      const ids2 = onPage.get(key) ?? [];
-      if (row2.id !== "") ids2.push(row2.id);
-      onPage.set(key, ids2);
-    }
-    for (const [key, heading] of groups) {
-      const count2 = matched.get(key) ?? 0;
-      const open4 = !folded2.has(key);
-      heading.hidden = !onPage.has(key) && heading.dataset.kpGroupAlways === void 0;
-      const button6 = heading.querySelector(GROUP_TOGGLE);
-      if (button6 !== null) {
-        button6.setAttribute("aria-expanded", String(open4));
-        button6.setAttribute("aria-label", s2.tableGroupRows(groupNames.get(heading) ?? key, count2));
-        button6.textContent = open4 ? glyphs.collapse : glyphs.expand;
-        const ids2 = onPage.get(key) ?? [];
-        if (ids2.length > 0) button6.setAttribute("aria-controls", ids2.join(" "));
-        else button6.removeAttribute("aria-controls");
-      }
-      for (const slot of heading.querySelectorAll(GROUP_COUNT)) slot.textContent = String(count2);
-      const cell = heading.cells[0];
-      if (heading.cells.length === 1 && cell !== void 0) cell.colSpan = visibleColumns();
-    }
-  };
-  c.syncGroups = syncGroups;
-}
+var TableGroups;
 var init_groups2 = __esm({
   "js/datatable/attach/groups.js"() {
     "use strict";
     init_selectors();
+    TableGroups = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.groups = /* @__PURE__ */ new Map();
+        this.folded = /* @__PURE__ */ new Set();
+        this.departing = /* @__PURE__ */ new Set();
+        this.seenGroups = /* @__PURE__ */ new Set();
+        this.blockOrder = [];
+        this.blockOf = /* @__PURE__ */ new Map();
+        this.groupNames = /* @__PURE__ */ new Map();
+        this.preparedGroups = /* @__PURE__ */ new Map();
+        this.givenIds = /* @__PURE__ */ new Set();
+        this.memberIds = 0;
+        this.collectGroups();
+        this.layoutAtAttach = this.groups.size > 0 ? [...this.t.body.rows] : null;
+      }
+      /** The count of the columns a reader sees. */
+      visibleColumns() {
+        return this.t.columns.headers.filter((_, at) => !this.t.sortSetup.hiddenColumns.has(at)).length;
+      }
+      /** The group a row belongs to, when that group has a heading row. @param {HTMLTableRowElement} row */
+      groupOf(row2) {
+        const key = row2.dataset.kpGroupOf;
+        return key !== void 0 && this.groups.has(key) ? key : null;
+      }
+      /** A heading row's fold button, first in its first cell. @param {HTMLTableRowElement} heading */
+      prepareGroup(heading) {
+        const cell = heading.cells[0];
+        if (cell === void 0 || heading.querySelector(GROUP_TOGGLE) !== null) return;
+        const key = heading.dataset.kpRowGroup ?? "";
+        const copy3 = (
+          /** @type {HTMLElement} */
+          heading.cloneNode(true)
+        );
+        for (const slot of copy3.querySelectorAll(GROUP_COUNT)) slot.remove();
+        const name = heading.dataset.kpGroupLabel ?? (copy3.textContent ?? "").replace(/\s+/g, " ").trim();
+        this.groupNames.set(heading, name);
+        this.preparedGroups.set(heading, { span: heading.cells.length === 1 ? cell.getAttribute("colspan") : null, hidden: heading.hidden === true });
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand kp-datatable__group-toggle")
+        );
+        button6.type = "button";
+        button6.dataset.kpGroupToggle = "";
+        cell.prepend(button6);
+        this.t.details.decoratePart(button6, { kind: "row-group-toggle", value: key, label: name });
+      }
+      /** Read the group rows and the blocks from the body as it stands now. */
+      collectGroups() {
+        if (this.t.controls.serverMode) return;
+        this.groups.clear();
+        for (const row2 of this.t.body.rows) {
+          if (!row2.matches(GROUP_ROW)) continue;
+          const key = row2.dataset.kpRowGroup ?? "";
+          if (this.groups.has(key)) continue;
+          this.groups.set(key, row2);
+          if (!this.seenGroups.has(key)) {
+            this.seenGroups.add(key);
+            if (row2.dataset.kpFolded !== void 0) this.folded.add(key);
+          }
+          this.prepareGroup(row2);
+        }
+        this.blockOrder = [];
+        this.blockOf.clear();
+        if (this.groups.size === 0) return;
+        const placed = /* @__PURE__ */ new Set();
+        let loose = 0;
+        let inLoose = false;
+        for (const row2 of this.t.body.rows) {
+          if (row2.matches(DETAIL) || row2.matches(SKELETON_ROW)) continue;
+          let block;
+          if (row2.matches(GROUP_ROW)) {
+            const key = row2.dataset.kpRowGroup ?? "";
+            if (this.groups.get(key) !== row2) continue;
+            block = `group:${key}`;
+          } else {
+            const key = this.groupOf(row2);
+            if (key !== null) block = `group:${key}`;
+            else {
+              if (!inLoose) loose += 1;
+              block = `rows:${loose}`;
+            }
+          }
+          inLoose = block.startsWith("rows:");
+          if (!placed.has(block)) {
+            placed.add(block);
+            this.blockOrder.push(block);
+          }
+          if (!row2.matches(GROUP_ROW)) this.blockOf.set(row2, block);
+        }
+      }
+      /** Rows in the order of their blocks, each block's rows in the order given. @param {HTMLTableRowElement[]} rows */
+      arrange(rows) {
+        if (this.blockOrder.length === 0) return rows;
+        const byBlock = /* @__PURE__ */ new Map();
+        for (const row2 of rows) {
+          const block = this.blockOf.get(row2) ?? "";
+          const list = byBlock.get(block);
+          if (list === void 0) byBlock.set(block, [row2]);
+          else list.push(row2);
+        }
+        return [...this.blockOrder, ""].flatMap((block) => byBlock.get(block) ?? []);
+      }
+      /** Is the row in a folded group? @param {HTMLTableRowElement} row */
+      isFolded(row2) {
+        const key = this.groupOf(row2);
+        return key !== null && this.folded.has(key);
+      }
+      /**
+       * Put the body in the order of its blocks: each heading, then its
+       * rows, each with its detail. Nothing moves when the order already
+       * stands, and a control that held the focus gets it back when it
+       * moved, so a refresh leaves the reader where they were [R-LIVE].
+       */
+      placeGroups() {
+        const shownSet = new Set(this.t.model.shownRows);
+        const allSet = new Set(this.t.model.all);
+        const byBlock = /* @__PURE__ */ new Map();
+        for (const row2 of [...this.t.model.shownRows, ...this.t.model.rendered.filter((r) => !shownSet.has(r) && allSet.has(r))]) {
+          const block = this.blockOf.get(row2) ?? "";
+          const list = byBlock.get(block);
+          if (list === void 0) byBlock.set(block, [row2]);
+          else list.push(row2);
+        }
+        const sequence = [];
+        for (const block of [...this.blockOrder, ""]) {
+          const heading = block.startsWith("group:") ? this.groups.get(block.slice("group:".length)) : void 0;
+          if (heading !== void 0) sequence.push(heading);
+          for (const row2 of byBlock.get(block) ?? []) {
+            sequence.push(row2);
+            const detail = this.t.details.details.get(row2);
+            if (detail !== void 0) sequence.push(detail);
+          }
+        }
+        const wanted = new Set(sequence);
+        const current2 = [...this.t.body.rows].filter((row2) => wanted.has(row2));
+        if (current2.length === sequence.length && current2.every((row2, at) => row2 === sequence[at])) return;
+        const active = document.activeElement;
+        const held2 = active instanceof HTMLElement && this.t.body.contains(active) ? active : null;
+        for (const row2 of sequence) if (row2.parentElement === this.t.body || this.t.details.builtDetails.has(row2) && row2.parentElement === null) this.t.body.append(row2);
+        if (held2 !== null && held2.isConnected && document.activeElement !== held2) held2.focus({ preventScroll: true });
+      }
+      /** Name each heading's toggle, count its rows and show it where its rows are. @param {ReturnType<typeof getStrings>} s */
+      syncGroups(s2) {
+        if (this.groups.size === 0) return;
+        const matched = /* @__PURE__ */ new Map();
+        for (const row2 of this.t.model.shownRows) {
+          const key = this.groupOf(row2);
+          if (key !== null) matched.set(key, (matched.get(key) ?? 0) + 1);
+        }
+        const onPage = /* @__PURE__ */ new Map();
+        for (const row2 of this.t.model.pageRows) {
+          const key = this.groupOf(row2);
+          if (key === null) continue;
+          if (row2.id === "" && row2.dataset.kpRowKey !== void 0) {
+            this.memberIds += 1;
+            row2.id = `${this.t.identity.id}-row-${this.memberIds}`;
+            this.givenIds.add(row2);
+          }
+          const ids2 = onPage.get(key) ?? [];
+          if (row2.id !== "") ids2.push(row2.id);
+          onPage.set(key, ids2);
+        }
+        for (const [key, heading] of this.groups) {
+          const count2 = matched.get(key) ?? 0;
+          const open4 = !this.folded.has(key);
+          heading.hidden = !onPage.has(key) && heading.dataset.kpGroupAlways === void 0;
+          const button6 = heading.querySelector(GROUP_TOGGLE);
+          if (button6 !== null) {
+            button6.setAttribute("aria-expanded", String(open4));
+            button6.setAttribute("aria-label", s2.tableGroupRows(this.groupNames.get(heading) ?? key, count2));
+            button6.textContent = open4 ? this.t.controls.glyphs.collapse : this.t.controls.glyphs.expand;
+            const ids2 = onPage.get(key) ?? [];
+            if (ids2.length > 0) button6.setAttribute("aria-controls", ids2.join(" "));
+            else button6.removeAttribute("aria-controls");
+          }
+          for (const slot of heading.querySelectorAll(GROUP_COUNT)) slot.textContent = String(count2);
+          const cell = heading.cells[0];
+          if (heading.cells.length === 1 && cell !== void 0) cell.colSpan = this.visibleColumns();
+        }
+      }
+    };
   }
 });
 
 // js/datatable/attach/sync.js
-function installSync(c) {
-  const {
-    actions,
-    body,
-    builtDetails,
-    busyWas,
-    choosable,
-    columnIds,
-    controlColumn,
-    detailFn,
-    details,
-    detailsWereHidden,
-    expandable,
-    expanded,
-    filters,
-    folded: folded2,
-    headers,
-    headersWereHidden,
-    id,
-    keyColumn,
-    keyOf: keyOf8,
-    labelOf: labelOf8,
-    loadingSlot,
-    locked,
-    make: make35,
-    orders,
-    selectAll,
-    serverMode,
-    syncCover,
-    table,
-    undo,
-    visibleColumns,
-    wrap
-  } = c;
-  const detailFor = (row2) => {
-    let detail = details.get(row2);
-    if (detail === void 0 && expandable) {
-      const hasMarkup = [...detailsWereHidden.keys()].length > 0;
-      if (detailFn === void 0 && hasMarkup) return void 0;
-      detail = /** @type {HTMLTableRowElement} */
-      make35("tr");
-      detail.dataset.kpRowDetail = "";
-      detail.hidden = true;
-      const cell2 = make35("td");
-      detail.append(cell2);
-      details.set(row2, detail);
-      builtDetails.add(detail);
-      if (detailFn !== void 0) {
-        const content = detailFn(row2);
-        if (typeof content === "string") cell2.textContent = content;
-        else if (content !== null && content !== void 0) cell2.append(content);
-      }
-    }
-    if (detail === void 0) return void 0;
-    if (!detail.classList.contains("kp-datatable__detail")) {
-      detail.classList.add("kp-datatable__detail");
-      const node = detail;
-      if (!builtDetails.has(detail)) undo.push(() => node.classList.remove("kp-datatable__detail"));
-    }
-    if (detail.id === "") {
-      detail.id = `${id}-detail-${keyOf8(row2) || row2.rowIndex}`;
-      const node = detail;
-      if (!builtDetails.has(detail)) undo.push(() => node.removeAttribute("id"));
-    }
-    const cell = detail.cells[0];
-    if (cell !== void 0) cell.colSpan = visibleColumns();
-    return detail;
-  };
-  c.detailFor = detailFor;
-  const byField = () => Object.fromEntries([...filters].map(([at, value]) => [columnIds[at], value]));
-  c.byField = byField;
-  const columnAt = (column) => typeof column === "string" ? columnIds.indexOf(column) : column;
-  c.columnAt = columnAt;
-  const view = () => ({
-    shown: serverMode ? c.total || 0 : c.shownRows.length,
-    total: serverMode ? c.total || 0 : c.all.length,
-    page: c.page,
-    pageNumber: c.page + 1,
-    pages: Math.max(1, Math.ceil((serverMode ? c.total || 0 : c.shownRows.length) / c.size)),
-    pageSize: c.size,
-    query: c.query,
-    scope: c.scope,
-    filters: Object.fromEntries(filters),
-    filtersByField: byField(),
-    sort: c.sorts[0] ?? null,
-    sorts: c.sorts.map((key) => ({ ...key })),
-    hidden: [...c.hiddenColumns].sort((a, b) => a - b),
-    expanded: [...expanded],
-    density: wrap.getAttribute("data-density") === "compact" ? "compact" : "comfortable",
-    state: c.state,
-    keys: c.shownRows.map(keyOf8),
-    pageKeys: c.pageRows.map(keyOf8),
-    folded: [...folded2]
-  });
-  c.view = view;
-  const serverSelection = /* @__PURE__ */ new Set();
-  c.serverSelection = serverSelection;
-  const selectedRows = () => c.all.filter((row2) => {
-    const box = (
-      /** @type {HTMLInputElement | null} */
-      row2.querySelector(SELECT_ROW)
-    );
-    return box !== null && box.checked;
-  });
-  c.selectedRows = selectedRows;
-  const syncSelectAll = () => {
-    if (selectAll === null) return;
-    const boxes = c.pageRows.map((row2) => (
-      /** @type {HTMLInputElement | null} */
-      row2.querySelector(SELECT_ROW)
-    )).filter((b) => b !== null);
-    const checked = boxes.filter((b) => b.checked).length;
-    selectAll.checked = boxes.length > 0 && checked === boxes.length;
-    selectAll.indeterminate = checked > 0 && checked < boxes.length;
-  };
-  c.syncSelectAll = syncSelectAll;
-  const syncActions = () => {
-    if (actions === null) return;
-    const count2 = serverMode ? serverSelection.size : selectedRows().length;
-    actions.hidden = count2 === 0;
-    const counter5 = actions.querySelector(SELECTED_COUNT);
-    if (counter5 !== null) counter5.textContent = getStrings().tableSelected(count2);
-  };
-  c.syncActions = syncActions;
-  const syncSkeleton = () => {
-    const want = c.state === "loading" && c.all.length === 0 && loadingSlot === null;
-    const have = [...body.querySelectorAll(`:scope > ${SKELETON_ROW}`)];
-    if (!want) {
-      for (const row2 of have) row2.remove();
-      return;
-    }
-    if (have.length > 0) return;
-    for (let i = 0; i < 3; i += 1) {
-      const row2 = make35("tr");
-      row2.dataset.kpSkeletonRow = "";
-      row2.setAttribute("aria-hidden", "true");
-      headers.forEach((_, at) => {
-        const cell = make35("td");
-        if (c.hiddenColumns.has(at)) cell.hidden = true;
-        if (!controlColumn(at)) cell.append(make35("span", "kp-skeleton"));
-        row2.append(cell);
-      });
-      body.append(row2);
-    }
-  };
-  const syncStateParts = () => {
-    if (c.state === "loading") wrap.setAttribute("aria-busy", "true");
-    else if (busyWas === null) wrap.removeAttribute("aria-busy");
-    else wrap.setAttribute("aria-busy", busyWas);
-    wrap.dataset.kpState = c.state;
-    if (loadingSlot !== null) loadingSlot.hidden = !(c.state === "loading" && c.all.length === 0);
-    if (c.failedSlot !== null) c.failedSlot.hidden = c.state !== "failed";
-    syncCover();
-    syncSkeleton();
-  };
-  c.syncStateParts = syncStateParts;
-  const syncCardSort = () => {
-    if (c.sortBy === null || c.sortDirection === null) return;
-    const s2 = getStrings();
-    const first = c.sorts[0];
-    c.sortBy.value = first === void 0 ? "" : String(first.column);
-    c.sortDirection.textContent = first?.direction === "descending" ? s2.tableSortDescending : s2.tableSortAscending;
-    c.sortDirection.disabled = c.sortBy.value === "";
-  };
-  c.syncCardSort = syncCardSort;
-  const syncSortMarks = () => {
-    const s2 = getStrings();
-    headers.forEach((header, at) => {
-      header.querySelector(":scope .kp-datatable__sort-order")?.remove();
-      if (header.dataset.kpSort === void 0) return;
-      const index = c.sorts.findIndex((key2) => key2.column === at);
-      const key = c.sorts[index];
-      header.setAttribute("aria-sort", key === void 0 ? "none" : key.direction);
-      if (key === void 0 || c.sorts.length < 2) return;
-      const mark = make35("span", "kp-datatable__sort-order");
-      mark.setAttribute("aria-hidden", "true");
-      mark.textContent = String(index + 1);
-      (header.querySelector("button") ?? header).append(mark);
-    });
-    if (c.openingSort !== null) {
-      const atOpening = JSON.stringify(c.sorts) === c.openingSort;
-      for (const back of wrap.querySelectorAll(SORT_RESET)) back.toggleAttribute("data-kp-datatable-at-opening", atOpening);
-    }
-    if (c.sortSummary !== null) {
-      c.sortSummary.textContent = c.sorts.length === 0 ? s2.tableNotSorted : s2.tableSortedBy(
-        c.sorts.map(
-          (key) => s2.tableSortKey(
-            labelOf8(key.column),
-            key.direction,
-            orders[key.column] ? "order" : headers[key.column]?.dataset.kpSort ?? "text"
-          )
-        )
-      );
-      c.sortSummary.title = c.sortSummary.textContent ?? "";
-    }
-  };
-  c.syncSortMarks = syncSortMarks;
-  const syncColumns = () => {
-    headers.forEach((header, at) => {
-      header.hidden = c.hiddenColumns.has(at) || (headersWereHidden[at] ?? false);
-    });
-    for (const row2 of body.rows) {
-      if (row2.matches(DETAIL) || row2.matches(GROUP_ROW)) continue;
-      headers.forEach((_, at) => {
-        const cell = row2.cells[at];
-        if (cell !== void 0) cell.hidden = c.hiddenColumns.has(at);
-      });
-    }
-    if (c.columnList !== null && c.columnList.childElementCount > 0) {
-      for (const box of c.columnList.querySelectorAll("[data-kp-datatable-column]")) {
-        const input = (
-          /** @type {HTMLInputElement} */
-          box
-        );
-        input.checked = !c.hiddenColumns.has(Number(input.value));
-      }
-    } else if (c.columnList !== null) {
-      const s2 = getStrings();
-      for (const at of choosable) {
-        const item = make35("li");
-        const label2 = (
-          /** @type {HTMLLabelElement} */
-          make35("label", "kp-menu__item kp-datatable__column-option")
-        );
-        const box = (
-          /** @type {HTMLInputElement} */
-          make35("input", CHECK_CLASS)
-        );
-        box.type = "checkbox";
-        box.value = String(at);
-        box.dataset.kpDatatableColumn = "";
-        box.checked = !c.hiddenColumns.has(at);
-        box.disabled = locked[at] ?? false;
-        label2.append(box, ` ${locked[at] ? s2.tableColumnLocked(labelOf8(at)) : labelOf8(at)}`);
-        item.append(label2);
-        c.columnList.append(item);
-      }
-      const separator = make35("li", "kp-menu__separator");
-      separator.setAttribute("role", "separator");
-      const resetItem = make35("li");
-      const reset = (
-        /** @type {HTMLButtonElement} */
-        make35("button", "kp-menu__item")
-      );
-      reset.type = "button";
-      reset.dataset.kpDatatableColumnsReset = "";
-      reset.textContent = s2.tableShowAllColumns;
-      resetItem.append(reset);
-      c.columnList.append(separator, resetItem);
-    }
-    if (c.columnCount !== null)
-      c.columnCount.textContent = getStrings().tableColumnsShown(
-        choosable.length - [...c.hiddenColumns].filter((at) => choosable.includes(at)).length,
-        choosable.length
-      );
-  };
-  c.syncColumns = syncColumns;
-  const fixedAttribute = wrap.dataset.kpFixedColumns;
-  const fixedCount = fixedAttribute === void 0 ? 0 : Number.parseInt(fixedAttribute, 10) || keyColumn + 1;
-  c.fixedCount = fixedCount;
-  const fixedEndCount = Math.max(0, Number.parseInt(wrap.dataset.kpFixedEnd ?? "", 10) || (wrap.dataset.kpFixedEnd === void 0 ? 0 : 1));
-  c.fixedEndCount = fixedEndCount;
-  const syncFixed = () => {
-    if (fixedCount > 0 || fixedEndCount > 0) syncFixedColumns(table, fixedCount, fixedEndCount);
-  };
-  c.syncFixed = syncFixed;
-  const derivedLabels = /* @__PURE__ */ new Set();
-  const cardsWanted = wrap.hasAttribute("data-kp-cards") || table.hasAttribute("data-kp-cards");
-  const labelCells = () => {
-    if (!cardsWanted) return;
-    for (const row2 of c.all) {
-      if (row2.matches(DETAIL) || row2.matches(GROUP_ROW) || row2.matches(SKELETON_ROW)) continue;
-      for (const cell of row2.cells) {
-        if (cell.hasAttribute("data-label")) continue;
-        const words3 = labelOf8(cell.cellIndex);
-        if (words3 === "") continue;
-        cell.setAttribute("data-label", words3);
-        derivedLabels.add(cell);
-      }
-    }
-  };
-  c.labelCells = labelCells;
-  undo.push(() => {
-    for (const cell of derivedLabels) cell.removeAttribute("data-label");
-    derivedLabels.clear();
-  });
-  c.grid = null;
-}
+var TableSync;
 var init_sync5 = __esm({
   "js/datatable/attach/sync.js"() {
     "use strict";
     init_selectors();
     init_strings();
     init_grid();
+    TableSync = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.serverSelection = /* @__PURE__ */ new Set();
+        this.fixedAttribute = this.t.wrap.dataset.kpFixedColumns;
+        this.fixedCount = this.fixedAttribute === void 0 ? 0 : Number.parseInt(this.fixedAttribute, 10) || this.t.columns.keyColumn + 1;
+        this.fixedEndCount = Math.max(0, Number.parseInt(this.t.wrap.dataset.kpFixedEnd ?? "", 10) || (this.t.wrap.dataset.kpFixedEnd === void 0 ? 0 : 1));
+        this.derivedLabels = /* @__PURE__ */ new Set();
+        this.cardsWanted = this.t.wrap.hasAttribute("data-kp-cards") || this.t.table.hasAttribute("data-kp-cards");
+        this.t.identity.undo.push(() => {
+          for (const cell of this.derivedLabels) cell.removeAttribute("data-label");
+          this.derivedLabels.clear();
+        });
+        this.grid = null;
+      }
+      /** A detail row, made ready to show: its class, its id and its span. @param {HTMLTableRowElement} row */
+      detailFor(row2) {
+        let detail = this.t.details.details.get(row2);
+        if (detail === void 0 && this.t.details.expandable) {
+          const hasMarkup = [...this.t.details.detailsWereHidden.keys()].length > 0;
+          if (this.t.settings.detailFn === void 0 && hasMarkup) return void 0;
+          detail = /** @type {HTMLTableRowElement} */
+          this.t.identity.make("tr");
+          detail.dataset.kpRowDetail = "";
+          detail.hidden = true;
+          const cell2 = this.t.identity.make("td");
+          detail.append(cell2);
+          this.t.details.details.set(row2, detail);
+          this.t.details.builtDetails.add(detail);
+          if (this.t.settings.detailFn !== void 0) {
+            const content = this.t.settings.detailFn(row2);
+            if (typeof content === "string") cell2.textContent = content;
+            else if (content !== null && content !== void 0) cell2.append(content);
+          }
+        }
+        if (detail === void 0) return void 0;
+        if (!detail.classList.contains("kp-datatable__detail")) {
+          detail.classList.add("kp-datatable__detail");
+          const node = detail;
+          if (!this.t.details.builtDetails.has(detail)) this.t.identity.undo.push(() => node.classList.remove("kp-datatable__detail"));
+        }
+        if (detail.id === "") {
+          detail.id = `${this.t.identity.id}-detail-${this.t.columns.keyOf(row2) || row2.rowIndex}`;
+          const node = detail;
+          if (!this.t.details.builtDetails.has(detail)) this.t.identity.undo.push(() => node.removeAttribute("id"));
+        }
+        const cell = detail.cells[0];
+        if (cell !== void 0) cell.colSpan = this.t.groups.visibleColumns();
+        return detail;
+      }
+      /** The filters under the column ids instead of the numbers [wish-1028]. @returns {Record<string, FilterValue>} */
+      byField() {
+        return Object.fromEntries([...this.t.model.filters].map(([at, value]) => [this.t.columns.columnIds[at], value]));
+      }
+      /**
+       * A column asked for by number, or by its id (`data-kp-field`, else its text); -1 when the id names none [wish-1028].
+       * @param {number | string} column
+       */
+      columnAt(column) {
+        return typeof column === "string" ? this.t.columns.columnIds.indexOf(column) : column;
+      }
+      /** @returns {View} */
+      view() {
+        return {
+          shown: this.t.controls.serverMode ? this.t.busy.total || 0 : this.t.model.shownRows.length,
+          total: this.t.controls.serverMode ? this.t.busy.total || 0 : this.t.model.all.length,
+          page: this.t.model.page,
+          pageNumber: this.t.model.page + 1,
+          pages: Math.max(1, Math.ceil((this.t.controls.serverMode ? this.t.busy.total || 0 : this.t.model.shownRows.length) / this.t.controls.size)),
+          pageSize: this.t.controls.size,
+          query: this.t.model.query,
+          scope: this.t.model.scope,
+          filters: Object.fromEntries(this.t.model.filters),
+          filtersByField: this.byField(),
+          sort: this.t.model.sorts[0] ?? null,
+          sorts: this.t.model.sorts.map((key) => ({ ...key })),
+          hidden: [...this.t.sortSetup.hiddenColumns].sort((a, b) => a - b),
+          expanded: [...this.t.details.expanded],
+          density: this.t.wrap.getAttribute("data-density") === "compact" ? "compact" : "comfortable",
+          state: this.t.model.state,
+          keys: this.t.model.shownRows.map(this.t.bound(this.t.columns, this.t.columns.keyOf)),
+          pageKeys: this.t.model.pageRows.map(this.t.bound(this.t.columns, this.t.columns.keyOf)),
+          folded: [...this.t.groups.folded]
+        };
+      }
+      selectedRows() {
+        return this.t.model.all.filter((row2) => {
+          const box = (
+            /** @type {HTMLInputElement | null} */
+            row2.querySelector(SELECT_ROW)
+          );
+          return box !== null && box.checked;
+        });
+      }
+      /** The header box reads the rows on this page, which are the rows it acts on [gap-13]. */
+      syncSelectAll() {
+        if (this.t.controls.selectAll === null) return;
+        const boxes = this.t.model.pageRows.map((row2) => (
+          /** @type {HTMLInputElement | null} */
+          row2.querySelector(SELECT_ROW)
+        )).filter((b) => b !== null);
+        const checked = boxes.filter((b) => b.checked).length;
+        this.t.controls.selectAll.checked = boxes.length > 0 && checked === boxes.length;
+        this.t.controls.selectAll.indeterminate = checked > 0 && checked < boxes.length;
+      }
+      syncActions() {
+        if (this.t.controls.actions === null) return;
+        const count2 = this.t.controls.serverMode ? this.serverSelection.size : this.selectedRows().length;
+        this.t.controls.actions.hidden = count2 === 0;
+        const counter5 = this.t.controls.actions.querySelector(SELECTED_COUNT);
+        if (counter5 !== null) counter5.textContent = getStrings().tableSelected(count2);
+      }
+      /** Skeleton rows for a first load with no loading slot of the consumer's, as #states shows it. */
+      syncSkeleton() {
+        const want = this.t.model.state === "loading" && this.t.model.all.length === 0 && this.t.controls.loadingSlot === null;
+        const have = [...this.t.body.querySelectorAll(`:scope > ${SKELETON_ROW}`)];
+        if (!want) {
+          for (const row2 of have) row2.remove();
+          return;
+        }
+        if (have.length > 0) return;
+        for (let i = 0; i < 3; i += 1) {
+          const row2 = this.t.identity.make("tr");
+          row2.dataset.kpSkeletonRow = "";
+          row2.setAttribute("aria-hidden", "true");
+          this.t.columns.headers.forEach((_, at) => {
+            const cell = this.t.identity.make("td");
+            if (this.t.sortSetup.hiddenColumns.has(at)) cell.hidden = true;
+            if (!this.t.columns.controlColumn(at)) cell.append(this.t.identity.make("span", "kp-skeleton"));
+            row2.append(cell);
+          });
+          this.t.body.append(row2);
+        }
+      }
+      syncStateParts() {
+        if (this.t.model.state === "loading") this.t.wrap.setAttribute("aria-busy", "true");
+        else if (this.t.busy.busyWas === null) this.t.wrap.removeAttribute("aria-busy");
+        else this.t.wrap.setAttribute("aria-busy", this.t.busy.busyWas);
+        this.t.wrap.dataset.kpState = this.t.model.state;
+        if (this.t.controls.loadingSlot !== null) this.t.controls.loadingSlot.hidden = !(this.t.model.state === "loading" && this.t.model.all.length === 0);
+        if (this.t.controls.failedSlot !== null) this.t.controls.failedSlot.hidden = this.t.model.state !== "failed";
+        this.t.layoutSetup.syncCover();
+        this.syncSkeleton();
+      }
+      syncCardSort() {
+        if (this.t.sortSetup.sortBy === null || this.t.sortSetup.sortDirection === null) return;
+        const s2 = getStrings();
+        const first = this.t.model.sorts[0];
+        this.t.sortSetup.sortBy.value = first === void 0 ? "" : String(first.column);
+        this.t.sortSetup.sortDirection.textContent = first?.direction === "descending" ? s2.tableSortDescending : s2.tableSortAscending;
+        this.t.sortSetup.sortDirection.disabled = this.t.sortSetup.sortBy.value === "";
+      }
+      // aria-sort on each sorted column and 'none' on every other sortable
+      // header: a stale "ascending" on a column that is no longer a key is
+      // worse than saying nothing. With more than one key each sorted header
+      // carries its place, the number the mock drew [#multi-sort].
+      syncSortMarks() {
+        const s2 = getStrings();
+        this.t.columns.headers.forEach((header, at) => {
+          header.querySelector(":scope .kp-datatable__sort-order")?.remove();
+          if (header.dataset.kpSort === void 0) return;
+          const index = this.t.model.sorts.findIndex((key2) => key2.column === at);
+          const key = this.t.model.sorts[index];
+          header.setAttribute("aria-sort", key === void 0 ? "none" : key.direction);
+          if (key === void 0 || this.t.model.sorts.length < 2) return;
+          const mark = this.t.identity.make("span", "kp-datatable__sort-order");
+          mark.setAttribute("aria-hidden", "true");
+          mark.textContent = String(index + 1);
+          (header.querySelector("button") ?? header).append(mark);
+        });
+        if (this.t.sortSetup.openingSort !== null) {
+          const atOpening = JSON.stringify(this.t.model.sorts) === this.t.sortSetup.openingSort;
+          for (const back of this.t.wrap.querySelectorAll(SORT_RESET)) back.toggleAttribute("data-kp-datatable-at-opening", atOpening);
+        }
+        if (this.t.sortSetup.sortSummary !== null) {
+          this.t.sortSetup.sortSummary.textContent = this.t.model.sorts.length === 0 ? s2.tableNotSorted : s2.tableSortedBy(
+            this.t.model.sorts.map(
+              (key) => s2.tableSortKey(
+                this.t.columns.labelOf(key.column),
+                key.direction,
+                this.t.columns.orders[key.column] ? "order" : this.t.columns.headers[key.column]?.dataset.kpSort ?? "text"
+              )
+            )
+          );
+          this.t.sortSetup.sortSummary.title = this.t.sortSetup.sortSummary.textContent ?? "";
+        }
+      }
+      syncColumns() {
+        this.t.columns.headers.forEach((header, at) => {
+          header.hidden = this.t.sortSetup.hiddenColumns.has(at) || (this.t.columns.headersWereHidden[at] ?? false);
+        });
+        for (const row2 of this.t.body.rows) {
+          if (row2.matches(DETAIL) || row2.matches(GROUP_ROW)) continue;
+          this.t.columns.headers.forEach((_, at) => {
+            const cell = row2.cells[at];
+            if (cell !== void 0) cell.hidden = this.t.sortSetup.hiddenColumns.has(at);
+          });
+        }
+        if (this.t.sortSetup.columnList !== null && this.t.sortSetup.columnList.childElementCount > 0) {
+          for (const box of this.t.sortSetup.columnList.querySelectorAll("[data-kp-datatable-column]")) {
+            const input = (
+              /** @type {HTMLInputElement} */
+              box
+            );
+            input.checked = !this.t.sortSetup.hiddenColumns.has(Number(input.value));
+          }
+        } else if (this.t.sortSetup.columnList !== null) this.buildColumnList(this.t.sortSetup.columnList);
+        if (this.t.sortSetup.columnCount !== null)
+          this.t.sortSetup.columnCount.textContent = getStrings().tableColumnsShown(
+            this.t.sortSetup.choosable.length - [...this.t.sortSetup.hiddenColumns].filter((at) => this.t.sortSetup.choosable.includes(at)).length,
+            this.t.sortSetup.choosable.length
+          );
+      }
+      /** The column menu's list, built once: a box per column that may be hidden, then "Show all columns". @param {HTMLElement} list */
+      buildColumnList(list) {
+        const s2 = getStrings();
+        for (const at of this.t.sortSetup.choosable) {
+          const item = this.t.identity.make("li");
+          const label2 = (
+            /** @type {HTMLLabelElement} */
+            this.t.identity.make("label", "kp-menu__item kp-datatable__column-option")
+          );
+          const box = (
+            /** @type {HTMLInputElement} */
+            this.t.identity.make("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.value = String(at);
+          box.dataset.kpDatatableColumn = "";
+          box.checked = !this.t.sortSetup.hiddenColumns.has(at);
+          box.disabled = this.t.sortSetup.locked[at] ?? false;
+          label2.append(box, ` ${this.t.sortSetup.locked[at] ? s2.tableColumnLocked(this.t.columns.labelOf(at)) : this.t.columns.labelOf(at)}`);
+          item.append(label2);
+          list.append(item);
+        }
+        const separator = this.t.identity.make("li", "kp-menu__separator");
+        separator.setAttribute("role", "separator");
+        const resetItem = this.t.identity.make("li");
+        const reset = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-menu__item")
+        );
+        reset.type = "button";
+        reset.dataset.kpDatatableColumnsReset = "";
+        reset.textContent = s2.tableShowAllColumns;
+        resetItem.append(reset);
+        list.append(separator, resetItem);
+      }
+      syncFixed() {
+        if (this.fixedCount > 0 || this.fixedEndCount > 0) syncFixedColumns(this.t.table, this.fixedCount, this.fixedEndCount);
+      }
+      labelCells() {
+        if (!this.cardsWanted) return;
+        for (const row2 of this.t.model.all) {
+          if (row2.matches(DETAIL) || row2.matches(GROUP_ROW) || row2.matches(SKELETON_ROW)) continue;
+          for (const cell of row2.cells) {
+            if (cell.hasAttribute("data-label")) continue;
+            const words3 = this.t.columns.labelOf(cell.cellIndex);
+            if (words3 === "") continue;
+            cell.setAttribute("data-label", words3);
+            this.derivedLabels.add(cell);
+          }
+        }
+      }
+    };
   }
 });
 
 // js/datatable/attach/render.js
-function installRender(c) {
-  const {
-    add,
-    addMode,
-    body,
-    busySeconds,
-    decoratePart,
-    departing,
-    detailFor,
-    details,
-    drawOverlay,
-    expanded,
-    filters,
-    groups,
-    isFolded,
-    keyOf: keyOf8,
-    labelCells,
-    labelRow,
-    make: make35,
-    pageLabel,
-    pager,
-    pagerClassName,
-    placeGroups,
-    serverMode,
-    showEmpty,
-    status,
-    stopBusyClock,
-    syncActions,
-    syncCardSort,
-    syncFixed,
-    syncGroups,
-    syncSelectAll,
-    syncSortMarks,
-    syncStateParts,
-    view,
-    wrap
-  } = c;
-  const render7 = () => {
-    labelCells();
-    const count2 = serverMode ? c.total || 0 : c.shownRows.length;
-    const pages = Math.max(1, Math.ceil(count2 / c.size));
-    c.page = Math.min(c.page, pages - 1);
-    const from = c.page * c.size;
-    c.pageRows = serverMode || pager === null ? c.shownRows : c.shownRows.slice(from, from + c.size);
-    for (const row2 of c.all) row2.hidden = true;
-    for (const row2 of c.pageRows) row2.hidden = groups.size > 0 && isFolded(row2) && !departing.has(row2);
-    if (c.blockOrder.length > 0) placeGroups();
-    else
-      for (const row2 of c.shownRows) {
-        if (row2.parentElement !== body) continue;
-        body.append(row2);
-        const detail = details.get(row2);
-        if (detail !== void 0) body.append(detail);
-      }
-    for (const [row2, detail] of details) {
-      const open4 = expanded.has(keyOf8(row2)) && !row2.hidden && c.all.includes(row2);
-      if (open4) detailFor(row2);
-      detail.hidden = !open4;
-    }
-    for (const row2 of c.all) labelRow(row2);
-    const s2 = getStrings();
-    syncGroups(s2);
-    if (status !== null) {
-      status.textContent = "";
-      if (c.state === "loading") {
-        const spinner2 = make35("span", "kp-spinner");
-        spinner2.setAttribute("aria-hidden", "true");
-        status.append(spinner2, " ");
-      }
-      status.append(
-        c.state === "loading" ? c.busyText ?? s2.busy : s2.tableShowing(c.pageRows.length === 0 ? 0 : from + 1, from + c.pageRows.length, count2, serverMode ? count2 : c.all.length)
-      );
-      stopBusyClock();
-      if (c.state === "loading" && c.busySince !== null) {
-        c.busyClock = make35("span", "kp-datatable__busy-clock");
-        c.busyClock.dataset.kpBusyClock = "";
-        c.busyClock.setAttribute("aria-hidden", "true");
-        c.busyClock.textContent = s2.tableBusyElapsed(busySeconds());
-        status.append(" ", c.busyClock);
-        c.busyTimer = setInterval(() => {
-          const words3 = getStrings().tableBusyElapsed(busySeconds());
-          if (c.busyClock !== null) c.busyClock.textContent = words3;
-          if (c.overlayClock !== null) c.overlayClock.textContent = words3;
-        }, 1e3);
-      }
-    }
-    drawOverlay(s2);
-    if (pager !== null) {
-      pager.textContent = "";
-      if (c.sizeLabel !== null) pager.append(c.sizeLabel);
-      pager.append(pagerButton(s2.previous, c.page > 0, () => c.page -= 1, "back"));
-      const label2 = document.createElement("span");
-      label2.className = "kp-datatable__page";
-      label2.textContent = (pageLabel ?? s2.tablePage)(c.page + 1, pages);
-      pager.append(label2);
-      pager.append(pagerButton(s2.next, c.page < pages - 1, () => c.page += 1));
-    }
-    if (c.empty !== null) {
-      showEmpty(count2 > 0 || c.state !== "ready");
-      const narrowing = c.query.trim() !== "" || filters.size > 0;
-      for (const part7 of c.empty.querySelectorAll("[data-kp-datatable-empty-none]")) part7.hidden = narrowing;
-      for (const part7 of c.empty.querySelectorAll("[data-kp-datatable-empty-nomatch]")) part7.hidden = !narrowing;
-    }
-    if (c.failedSlot !== null) {
-      const reason = c.failedSlot.querySelector("[data-kp-datatable-failed-reason]");
-      if (reason !== null) reason.textContent = c.failReason ?? s2.tableFailed;
-    }
-    syncSelectAll();
-    syncActions();
-    syncStateParts();
-    syncCardSort();
-    syncSortMarks();
-    syncFixed();
-    c.grid?.sync();
-    wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: { ...view(), rows: [...c.shownRows], pageRows: [...c.pageRows] } }));
-  };
-  c.render = render7;
-  const pagerButton = (text, enabled, go, direction) => {
-    const button6 = document.createElement("button");
-    button6.type = "button";
-    button6.className = pagerClassName;
-    if (direction !== void 0) button6.dataset.kpDirection = direction;
-    button6.textContent = text;
-    button6.disabled = !enabled;
-    button6.addEventListener("click", () => {
-      go();
-      if (serverMode) c.request();
-      else render7();
-    });
-    return button6;
-  };
-  const pillsList = add(make35("ul", "kp-tag-list"));
-  c.pillsList = pillsList;
-  const clearButton = (
-    /** @type {HTMLButtonElement} */
-    add(make35("button", `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? " kp-button--sm" : ""}`))
-  );
-  c.clearButton = clearButton;
-  clearButton.type = "button";
-  decoratePart(clearButton, { kind: "clear-filters" });
-  clearButton.addEventListener("click", () => {
-    c.clearFilters();
-    (c.toggle ?? c.addButton)?.focus();
-  });
-  if (c.pills !== null) {
-    c.pills.textContent = "";
-    c.pills.append(pillsList, clearButton);
-  }
-}
+var BUSY_TICK_MS, TableRender;
 var init_render2 = __esm({
   "js/datatable/attach/render.js"() {
     "use strict";
     init_strings();
     init_events();
+    BUSY_TICK_MS = 1e3;
+    TableRender = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.pillsList = this.t.identity.add(this.t.identity.make("ul", "kp-tag-list"));
+        this.clearButton = /** @type {HTMLButtonElement} */
+        this.t.identity.add(this.t.identity.make("button", `kp-button kp-button--ghost kp-datatable__clear-filters${this.t.filterUi.addMode ? " kp-button--sm" : ""}`));
+        this.clearButton.type = "button";
+        this.t.details.decoratePart(this.clearButton, { kind: "clear-filters" });
+        this.clearButton.addEventListener("click", () => {
+          this.t.handlers.clearFilters();
+          (this.t.filterUi.toggle ?? this.t.filterUi.addButton)?.focus();
+        });
+        if (this.t.filterUi.pills !== null) {
+          this.t.filterUi.pills.textContent = "";
+          this.t.filterUi.pills.append(this.pillsList, this.clearButton);
+        }
+      }
+      render() {
+        const { controls, model } = this.t;
+        this.t.sync.labelCells();
+        const count2 = controls.serverMode ? this.t.busy.total || 0 : model.shownRows.length;
+        const pages = Math.max(1, Math.ceil(count2 / controls.size));
+        model.page = Math.min(model.page, pages - 1);
+        const from = model.page * controls.size;
+        model.pageRows = controls.serverMode || controls.pager === null ? model.shownRows : model.shownRows.slice(from, from + controls.size);
+        this.placeRows();
+        const s2 = getStrings();
+        this.t.groups.syncGroups(s2);
+        if (controls.status !== null) this.writeStatus(controls.status, s2, from, count2);
+        this.t.busy.drawOverlay(s2);
+        if (controls.pager !== null) this.writePager(controls.pager, s2, pages);
+        if (controls.empty !== null) this.syncEmpty(controls.empty, count2);
+        if (controls.failedSlot !== null) {
+          const reason = controls.failedSlot.querySelector("[data-kp-datatable-failed-reason]");
+          if (reason !== null) reason.textContent = model.failReason ?? s2.tableFailed;
+        }
+        this.syncParts();
+        this.t.wrap.dispatchEvent(new CustomEvent(VIEW_EVENT, { bubbles: true, detail: { ...this.t.sync.view(), rows: [...model.shownRows], pageRows: [...model.pageRows] } }));
+      }
+      /**
+       * Show this page's rows and hide the rest. Reordering by appending: the rows are the same elements, so anything a consumer
+       * attached to them survives a sort. A row's detail travels directly under it.
+       */
+      placeRows() {
+        const { model, groups, details, body } = this.t;
+        for (const row2 of model.all) row2.hidden = true;
+        for (const row2 of model.pageRows) row2.hidden = groups.groups.size > 0 && groups.isFolded(row2) && !groups.departing.has(row2);
+        if (groups.blockOrder.length > 0) groups.placeGroups();
+        else
+          for (const row2 of model.shownRows) {
+            if (row2.parentElement !== body) continue;
+            body.append(row2);
+            const detail = details.details.get(row2);
+            if (detail !== void 0) body.append(detail);
+          }
+        for (const [row2, detail] of details.details) {
+          const open4 = details.expanded.has(this.t.columns.keyOf(row2)) && !row2.hidden && model.all.includes(row2);
+          if (open4) this.t.sync.detailFor(row2);
+          detail.hidden = !open4;
+        }
+        for (const row2 of model.all) this.t.reorder.labelRow(row2);
+      }
+      /**
+       * The status line: what is shown, or the busy words with a spinner while loading. Loading, first or again: a spinner says it is
+       * working [#states]. It used to come only on a refresh, so a first load that took minutes showed no sign of life [fix-80].
+       * @param {HTMLElement} status @param {ReturnType<typeof getStrings>} s @param {number} from @param {number} count
+       */
+      writeStatus(status, s2, from, count2) {
+        const { model, controls } = this.t;
+        status.textContent = "";
+        if (model.state === "loading") {
+          const spinner2 = this.t.identity.make("span", "kp-spinner");
+          spinner2.setAttribute("aria-hidden", "true");
+          status.append(spinner2, " ");
+        }
+        status.append(
+          model.state === "loading" ? model.busyText ?? s2.busy : s2.tableShowing(model.pageRows.length === 0 ? 0 : from + 1, from + model.pageRows.length, count2, controls.serverMode ? count2 : model.all.length)
+        );
+        this.t.busy.stopBusyClock();
+        if (model.state === "loading" && model.busySince !== null) this.startBusyClock(status, s2);
+      }
+      /**
+       * A count the table keeps itself, in a part the live region does not announce: a screen reader hears the words when they change,
+       * not a number every second, and the tick rewrites this one element rather than rendering the table [fix-84].
+       * @param {HTMLElement} status @param {ReturnType<typeof getStrings>} s
+       */
+      startBusyClock(status, s2) {
+        const { model, busy } = this.t;
+        const clock4 = this.t.identity.make("span", "kp-datatable__busy-clock");
+        clock4.dataset.kpBusyClock = "";
+        clock4.setAttribute("aria-hidden", "true");
+        clock4.textContent = s2.tableBusyElapsed(busy.busySeconds());
+        model.busyClock = clock4;
+        status.append(" ", clock4);
+        model.busyTimer = setInterval(() => {
+          const words3 = getStrings().tableBusyElapsed(busy.busySeconds());
+          if (model.busyClock !== null) model.busyClock.textContent = words3;
+          if (model.overlayClock !== null) model.overlayClock.textContent = words3;
+        }, BUSY_TICK_MS);
+      }
+      /** The pager: the page-size choice, Back, the page and Next. @param {HTMLElement} pager @param {ReturnType<typeof getStrings>} s @param {number} pages */
+      writePager(pager, s2, pages) {
+        const { model } = this.t;
+        pager.textContent = "";
+        if (this.t.layoutSetup.sizeLabel !== null) pager.append(this.t.layoutSetup.sizeLabel);
+        pager.append(this.pagerButton(s2.previous, model.page > 0, () => model.page -= 1, "back"));
+        const label2 = document.createElement("span");
+        label2.className = "kp-datatable__page";
+        label2.textContent = (this.t.settings.pageLabel ?? s2.tablePage)(model.page + 1, pages);
+        pager.append(label2);
+        pager.append(this.pagerButton(s2.next, model.page < pages - 1, () => model.page += 1));
+      }
+      /**
+       * The empty slot. Nothing yet, or nothing matching: each of the slot's two optional parts says its own thing and offers its own
+       * way out [fix-85].
+       * @param {HTMLElement} empty @param {number} count
+       */
+      syncEmpty(empty, count2) {
+        const { model } = this.t;
+        this.t.busy.showEmpty(count2 > 0 || model.state !== "ready");
+        const narrowing = model.query.trim() !== "" || model.filters.size > 0;
+        for (const part7 of empty.querySelectorAll("[data-kp-datatable-empty-none]")) part7.hidden = narrowing;
+        for (const part7 of empty.querySelectorAll("[data-kp-datatable-empty-nomatch]")) part7.hidden = !narrowing;
+      }
+      /** The parts that follow the rows. After a search or a filter the ticked row may be gone from the page, and the header box must say so [gap-13]. */
+      syncParts() {
+        const { sync: sync3 } = this.t;
+        sync3.syncSelectAll();
+        sync3.syncActions();
+        sync3.syncStateParts();
+        sync3.syncCardSort();
+        sync3.syncSortMarks();
+        sync3.syncFixed();
+        sync3.grid?.sync();
+      }
+      /** @param {string} text @param {boolean} enabled @param {() => void} go @param {'back'} [direction] */
+      pagerButton(text, enabled, go, direction) {
+        const button6 = document.createElement("button");
+        button6.type = "button";
+        button6.className = this.t.settings.pagerClassName;
+        if (direction !== void 0) button6.dataset.kpDirection = direction;
+        button6.textContent = text;
+        button6.disabled = !enabled;
+        button6.addEventListener("click", () => {
+          go();
+          if (this.t.controls.serverMode) this.t.server.request();
+          else this.render();
+        });
+        return button6;
+      }
+    };
   }
 });
 
 // js/datatable/attach/pills.js
-function installPills(c) {
-  const {
-    addMode,
-    choiceValues,
-    clearButton,
-    datePickerFor,
-    filterColumns,
-    filterKinds,
-    filters,
-    id,
-    labelOf: labelOf8,
-    locale,
-    make: make35,
-    pillsList,
-    removeGlyph
-  } = c;
-  const renderPills = () => {
-    if (c.pills === null) return;
-    const s2 = getStrings();
-    const list = pillsList;
-    list.textContent = "";
-    list.setAttribute("aria-label", s2.tableActiveFilters);
-    if (addMode) {
-      renderAddPills(s2);
-      return;
-    }
-    clearButton.textContent = s2.tableClearFilters;
-    let count2 = 0;
-    for (const at of filterColumns) {
-      const kind = (
-        /** @type {FilterKind} */
-        filterKinds[at]
-      );
-      for (const pill of filterPills(kind, labelOf8(at), filters.get(at), s2, locale)) {
-        count2 += 1;
-        const item = make35("li", "kp-tag");
-        const remove = (
-          /** @type {HTMLButtonElement} */
-          make35("button", "kp-tag__remove")
-        );
-        remove.type = "button";
-        remove.setAttribute("aria-label", s2.tableRemoveFilter(pill.label));
-        remove.textContent = removeGlyph;
-        remove.addEventListener("click", () => {
-          c.setFilter(at, pill.without ?? null);
-          const next2 = (
-            /** @type {HTMLElement | null} */
-            c.pills?.querySelector(".kp-tag__remove") ?? null
+var TablePills;
+var init_pills = __esm({
+  "js/datatable/attach/pills.js"() {
+    "use strict";
+    init_strings();
+    init_filter();
+    TablePills = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+      }
+      renderPills() {
+        if (this.t.filterUi.pills === null) return;
+        const s2 = getStrings();
+        const list = this.t.render.pillsList;
+        list.textContent = "";
+        list.setAttribute("aria-label", s2.tableActiveFilters);
+        if (this.t.filterUi.addMode) {
+          this.renderAddPills(s2);
+          return;
+        }
+        this.t.render.clearButton.textContent = s2.tableClearFilters;
+        let count2 = 0;
+        for (const at of this.t.filterUi.filterColumns) {
+          const kind = (
+            /** @type {FilterKind} */
+            this.t.columns.filterKinds[at]
           );
-          (next2 ?? c.toggle)?.focus();
-        });
-        item.append(pill.label, remove);
-        list.append(item);
+          for (const pill of filterPills(kind, this.t.columns.labelOf(at), this.t.model.filters.get(at), s2, this.t.controls.locale)) {
+            count2 += 1;
+            const item = this.t.identity.make("li", "kp-tag");
+            const remove = (
+              /** @type {HTMLButtonElement} */
+              this.t.identity.make("button", "kp-tag__remove")
+            );
+            remove.type = "button";
+            remove.setAttribute("aria-label", s2.tableRemoveFilter(pill.label));
+            remove.textContent = this.t.settings.removeGlyph;
+            remove.addEventListener("click", () => {
+              this.t.handlers.setFilter(at, pill.without ?? null);
+              const next2 = (
+                /** @type {HTMLElement | null} */
+                this.t.filterUi.pills?.querySelector(".kp-tag__remove") ?? null
+              );
+              (next2 ?? this.t.filterUi.toggle)?.focus();
+            });
+            item.append(pill.label, remove);
+            list.append(item);
+          }
+        }
+        this.t.filterUi.pills.hidden = count2 === 0;
+        if (this.t.filterUi.toggle !== null) this.t.filterUi.toggle.textContent = s2.tableFilters(count2);
       }
-    }
-    c.pills.hidden = count2 === 0;
-    if (c.toggle !== null) c.toggle.textContent = s2.tableFilters(count2);
-  };
-  c.renderPills = renderPills;
-  let editingFilter = null;
-  let editorReturn = null;
-  let detachEditorPickers = () => {
-  };
-  const renderAddPills = (s2) => {
-    if (c.pills === null) return;
-    let count2 = 0;
-    for (const [at, value] of filters) {
-      const kind = filterKinds[at];
-      if (!kind) continue;
-      const label2 = filterPillLabel(kind, labelOf8(at), value, s2, locale);
-      if (label2 === null) continue;
-      count2 += 1;
-      const item = make35("li", "kp-tag");
-      const edit = (
-        /** @type {HTMLButtonElement} */
-        make35("button", "kp-datatable__pill-edit")
-      );
-      edit.type = "button";
-      edit.dataset.kpFilterPill = String(at);
-      edit.setAttribute("aria-label", s2.tableEditFilter(label2));
-      edit.setAttribute("aria-expanded", String(editingFilter === at));
-      if (c.filterEditor !== null) edit.setAttribute("aria-controls", c.filterEditor.id);
-      edit.textContent = label2;
-      const remove = (
-        /** @type {HTMLButtonElement} */
-        make35("button", "kp-tag__remove")
-      );
-      remove.type = "button";
-      remove.dataset.kpFilterUnpill = String(at);
-      remove.setAttribute("aria-label", s2.tableRemoveFilter(label2));
-      remove.textContent = removeGlyph;
-      item.append(edit, remove);
-      pillsList.append(item);
-    }
-    c.pills.hidden = count2 === 0;
-    clearButton.textContent = s2.tableFilterClearAll;
-    clearButton.hidden = count2 < 2;
-    if (c.addButton !== null) c.addButton.textContent = s2.tableAddFilter(count2);
-    renderAddMenu(s2);
-  };
-  const renderAddMenu = (s2) => {
-    if (c.addMenu === null) return;
-    const focused2 = (
-      /** @type {HTMLElement | null} */
-      c.addMenu.querySelector(":focus")?.dataset.kpFilterColumn
-    );
-    c.addMenu.setAttribute("aria-label", s2.tableAddFilterMenu);
-    c.addMenu.textContent = "";
-    for (const at of filterColumns) {
-      const on = filters.has(at);
-      const item = make35("li");
-      const button6 = (
-        /** @type {HTMLButtonElement} */
-        make35("button", "kp-menu__item kp-datatable__add-item")
-      );
-      button6.type = "button";
-      button6.dataset.kpFilterColumn = String(at);
-      button6.setAttribute("aria-label", on ? s2.tableAddFilterItemActive(labelOf8(at)) : s2.tableAddFilterItem(labelOf8(at)));
-      button6.append(labelOf8(at));
-      if (on) {
-        button6.dataset.kpFilterMarked = "";
-        const mark = make35("span", "kp-badge");
-        mark.setAttribute("aria-hidden", "true");
-        mark.textContent = s2.tableFilterMarked;
-        button6.append(" ", mark);
+      /** One pill per filter, in the order the filters were added. @param {import('../../strings.js').Strings} s */
+      renderAddPills(s2) {
+        if (this.t.filterUi.pills === null) return;
+        let count2 = 0;
+        for (const [at, value] of this.t.model.filters) {
+          const kind = this.t.columns.filterKinds[at];
+          if (!kind) continue;
+          const label2 = filterPillLabel(kind, this.t.columns.labelOf(at), value, s2, this.t.controls.locale);
+          if (label2 === null) continue;
+          count2 += 1;
+          const item = this.t.identity.make("li", "kp-tag");
+          const edit = (
+            /** @type {HTMLButtonElement} */
+            this.t.identity.make("button", "kp-datatable__pill-edit")
+          );
+          edit.type = "button";
+          edit.dataset.kpFilterPill = String(at);
+          edit.setAttribute("aria-label", s2.tableEditFilter(label2));
+          edit.setAttribute("aria-expanded", String(this.t.filterEditing.editingFilter === at));
+          if (this.t.filterUi.filterEditor !== null) edit.setAttribute("aria-controls", this.t.filterUi.filterEditor.id);
+          edit.textContent = label2;
+          const remove = (
+            /** @type {HTMLButtonElement} */
+            this.t.identity.make("button", "kp-tag__remove")
+          );
+          remove.type = "button";
+          remove.dataset.kpFilterUnpill = String(at);
+          remove.setAttribute("aria-label", s2.tableRemoveFilter(label2));
+          remove.textContent = this.t.settings.removeGlyph;
+          item.append(edit, remove);
+          this.t.render.pillsList.append(item);
+        }
+        this.t.filterUi.pills.hidden = count2 === 0;
+        this.t.render.clearButton.textContent = s2.tableFilterClearAll;
+        this.t.render.clearButton.hidden = count2 < 2;
+        if (this.t.filterUi.addButton !== null) this.t.filterUi.addButton.textContent = s2.tableAddFilter(count2);
+        this.renderAddMenu(s2);
       }
-      item.append(button6);
-      c.addMenu.append(item);
-      if (focused2 === String(at)) button6.focus();
-    }
-  };
-  const openFilterEditor = (at, returnTo) => {
-    const kind = filterKinds[at];
-    if (c.filterEditor === null || !kind) return;
-    closeFilterEditor(false);
-    const s2 = getStrings();
-    const form2 = c.filterEditor;
-    const label2 = labelOf8(at);
-    const current2 = filters.get(at);
-    const range = (
-      /** @type {{ from?: string, to?: string } | undefined} */
-      Array.isArray(current2) ? void 0 : current2
-    );
-    editingFilter = at;
-    editorReturn = returnTo;
-    form2.setAttribute("aria-label", s2.tableFilterEditor(label2));
-    form2.dataset.kpFilterColumn = String(at);
-    const title = make35("p", "kp-datatable__filter-editor-title");
-    title.textContent = label2;
-    form2.append(title);
-    if (kind === "choice") {
-      const set = make35("fieldset", "kp-fieldset");
-      const legend = make35("legend", "kp-sr-only");
-      legend.textContent = s2.tableFilterChoicesLegend(label2);
-      const choices = make35("div", "kp-datatable__filter-editor-choices");
-      for (const value of choiceValues(at)) {
-        const option = make35("label", "kp-field__option");
-        const box = (
-          /** @type {HTMLInputElement} */
-          make35("input", CHECK_CLASS)
+      /** The menu of filterable columns; a filtered one is marked, and choosing it edits its filter. @param {import('../../strings.js').Strings} s */
+      renderAddMenu(s2) {
+        if (this.t.filterUi.addMenu === null) return;
+        const focused2 = (
+          /** @type {HTMLElement | null} */
+          this.t.filterUi.addMenu.querySelector(":focus")?.dataset.kpFilterColumn
         );
-        box.type = "checkbox";
-        box.name = "values";
-        box.value = value;
-        box.checked = Array.isArray(current2) && current2.includes(value);
-        option.append(box, ` ${value}`);
-        choices.append(option);
-      }
-      set.append(legend, choices);
-      form2.append(set);
-    } else {
-      const pair = make35("div", "kp-datatable__filter-editor-pair");
-      for (
-        const bound of
-        /** @type {const} */
-        ["from", "to"]
-      ) {
-        const input = (
-          /** @type {HTMLInputElement} */
-          make35("input", "kp-field__input")
-        );
-        input.id = `${id}-filter-editor-${bound}`;
-        input.dataset.kpFilterBound = bound;
-        input.autocomplete = "off";
-        input.setAttribute("aria-describedby", `${id}-filter-editor-error`);
-        const text = (
-          /** @type {HTMLLabelElement} */
-          make35("label", "kp-field__label")
-        );
-        text.htmlFor = input.id;
-        text.textContent = s2.tableFilterBound(kind, bound, label2);
-        if (kind === "range") {
-          input.type = "text";
-          input.inputMode = "decimal";
-          input.value = range?.[bound] ?? "";
-          const field2 = make35("div", "kp-field");
-          field2.append(text, input);
-          pair.append(field2);
-        } else {
-          const picker = datePickerFor(input);
-          picker.prepend(text);
-          pair.append(picker);
+        this.t.filterUi.addMenu.setAttribute("aria-label", s2.tableAddFilterMenu);
+        this.t.filterUi.addMenu.textContent = "";
+        for (const at of this.t.filterUi.filterColumns) {
+          const on = this.t.model.filters.has(at);
+          const item = this.t.identity.make("li");
+          const button6 = (
+            /** @type {HTMLButtonElement} */
+            this.t.identity.make("button", "kp-menu__item kp-datatable__add-item")
+          );
+          button6.type = "button";
+          button6.dataset.kpFilterColumn = String(at);
+          button6.setAttribute("aria-label", on ? s2.tableAddFilterItemActive(this.t.columns.labelOf(at)) : s2.tableAddFilterItem(this.t.columns.labelOf(at)));
+          button6.append(this.t.columns.labelOf(at));
+          if (on) {
+            button6.dataset.kpFilterMarked = "";
+            const mark = this.t.identity.make("span", "kp-badge");
+            mark.setAttribute("aria-hidden", "true");
+            mark.textContent = s2.tableFilterMarked;
+            button6.append(" ", mark);
+          }
+          item.append(button6);
+          this.t.filterUi.addMenu.append(item);
+          if (focused2 === String(at)) button6.focus();
         }
       }
-      form2.append(pair);
-    }
-    const error = make35("p", "kp-field__error");
-    error.id = `${id}-filter-editor-error`;
-    error.dataset.kpFilterError = "";
-    error.setAttribute("role", "alert");
-    error.hidden = true;
-    const actions = make35("div", "kp-datatable__filter-editor-actions");
-    const apply2 = (
-      /** @type {HTMLButtonElement} */
-      make35("button", "kp-button kp-button--primary kp-button--sm")
-    );
-    apply2.type = "submit";
-    apply2.textContent = s2.tableFilterApply;
-    const cancel = (
-      /** @type {HTMLButtonElement} */
-      make35("button", "kp-button kp-button--ghost kp-button--sm")
-    );
-    cancel.type = "button";
-    cancel.dataset.kpFilterCancel = "";
-    cancel.textContent = s2.tableFilterCancel;
-    actions.append(apply2, cancel);
-    form2.append(error, actions);
-    form2.hidden = false;
-    if (kind === "date") {
-      detachEditorPickers = attachDatePickers(form2);
-      for (
-        const bound of
-        /** @type {const} */
-        ["from", "to"]
-      ) {
-        const wanted = range?.[bound] ?? "";
-        const picker = form2.querySelector(`[data-kp-filter-bound="${bound}"]`)?.closest("[data-kp-datepicker]");
-        if (wanted !== "" && picker) datePicker(picker)?.set(wanted);
-      }
-    }
-    renderPills();
-    form2.querySelector("input")?.focus();
-  };
-  c.openFilterEditor = openFilterEditor;
-  const closeFilterEditor = (focus = true) => {
-    if (editingFilter === null || c.filterEditor === null) return;
-    detachEditorPickers();
-    detachEditorPickers = () => {
-    };
-    const back = editorReturn;
-    editingFilter = null;
-    editorReturn = null;
-    c.filterEditor.hidden = true;
-    c.filterEditor.textContent = "";
-    delete c.filterEditor.dataset.kpFilterColumn;
-    c.filterEditor.removeAttribute("aria-label");
-    renderPills();
-    if (!focus) return;
-    const pill = back === null ? null : (
-      /** @type {HTMLElement | null} */
-      c.pills?.querySelector(`[data-kp-filter-pill="${back}"]`) ?? null
-    );
-    (pill ?? c.addButton)?.focus();
-  };
-  c.closeFilterEditor = closeFilterEditor;
-  const onEditorSubmit = (event) => {
-    event.preventDefault();
-    const at = editingFilter;
-    const form2 = c.filterEditor;
-    if (at === null || form2 === null) return;
-    const kind = filterKinds[at];
-    const s2 = getStrings();
-    let next2 = null;
-    if (kind === "choice") {
-      const values = [...form2.querySelectorAll('input[name="values"]:checked')].map((box) => (
-        /** @type {HTMLInputElement} */
-        box.value
-      ));
-      next2 = values.length > 0 ? values : null;
-    } else if (kind === "range" || kind === "date") {
-      const read = (bound) => {
-        const input = (
-          /** @type {HTMLInputElement} */
-          form2.querySelector(`[data-kp-filter-bound="${bound}"]`)
+      /** @param {MouseEvent} event */
+      onAddMenuClick(event) {
+        const button6 = (
+          /** @type {HTMLElement | null} */
+          /** @type {HTMLElement} */
+          event.target.closest("[data-kp-filter-column]")
         );
-        return {
-          text: input.value,
-          iso: input.dataset.kpDateValue,
-          label: bound === "from" ? s2.tableFilterFrom(labelOf8(at)) : s2.tableFilterTo(labelOf8(at))
+        if (button6 === null) return;
+        const at = Number(button6.dataset.kpFilterColumn);
+        if (this.t.filterUi.addPop?.matches(":popover-open")) this.t.filterUi.addPop.hidePopover();
+        this.t.filterEditing.openFilterEditor(at, this.t.model.filters.has(at) ? at : null);
+      }
+      /** @param {KeyboardEvent} event */
+      onAddMenuKey(event) {
+        if (this.t.filterUi.addMenu === null) return;
+        const items = (
+          /** @type {HTMLElement[]} */
+          [...this.t.filterUi.addMenu.querySelectorAll(".kp-menu__item")]
+        );
+        const at = items.indexOf(
+          /** @type {HTMLElement} */
+          document.activeElement
+        );
+        const moves = { ArrowDown: at + 1, ArrowUp: at - 1, Home: 0, End: items.length - 1 };
+        const to = moves[event.key];
+        if (to === void 0 || items.length === 0) return;
+        event.preventDefault();
+        items[(to + items.length) % items.length]?.focus();
+      }
+      /** @param {Event} event */
+      onAddToggle(event) {
+        const open4 = (
+          /** @type {ToggleEvent} */
+          event.newState === "open"
+        );
+        this.t.filterUi.addButton?.setAttribute("aria-expanded", String(open4));
+        if (!open4) return;
+        this.renderAddMenu(getStrings());
+        (this.t.filterUi.addMenu?.querySelector(".kp-menu__item") ?? null)?.focus();
+      }
+      /** @param {MouseEvent} event */
+      onPillsClick(event) {
+        if (!this.t.filterUi.addMode) return;
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        const edit = (
+          /** @type {HTMLElement | null} */
+          target.closest("[data-kp-filter-pill]")
+        );
+        if (edit !== null) {
+          const at2 = Number(edit.dataset.kpFilterPill);
+          if (this.t.filterEditing.editingFilter === at2) this.t.filterEditing.closeFilterEditor(true);
+          else this.t.filterEditing.openFilterEditor(at2, at2);
+          return;
+        }
+        const remove = (
+          /** @type {HTMLElement | null} */
+          target.closest("[data-kp-filter-unpill]")
+        );
+        if (remove === null) return;
+        const at = Number(remove.dataset.kpFilterUnpill);
+        if (this.t.filterEditing.editingFilter === at) this.t.filterEditing.closeFilterEditor(false);
+        this.t.handlers.setFilter(at, null);
+        (this.t.filterUi.pills?.querySelector(".kp-tag__remove") ?? this.t.filterUi.addButton)?.focus();
+      }
+    };
+  }
+});
+
+// js/datatable/attach/filter-editor.js
+var BOUNDS, TableFilterEditor;
+var init_filter_editor = __esm({
+  "js/datatable/attach/filter-editor.js"() {
+    "use strict";
+    init_strings();
+    init_filter();
+    init_selectors();
+    init_datepicker();
+    BOUNDS = /** @type {const} */
+    ["from", "to"];
+    TableFilterEditor = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.editingFilter = null;
+        this.editorReturn = null;
+        this.detachEditorPickers = () => {
         };
-      };
-      const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s2, locale);
-      for (const input of form2.querySelectorAll("[data-kp-filter-bound]")) input.removeAttribute("aria-invalid");
-      if (result.error !== void 0) {
+      }
+      /** Open column `at`'s editor, with the filter it has. @param {number} at @param {number | null} returnTo the pill the focus goes back to */
+      openFilterEditor(at, returnTo) {
+        const kind = this.t.columns.filterKinds[at];
+        const form2 = this.t.filterUi.filterEditor;
+        if (form2 === null || !kind) return;
+        this.closeFilterEditor(false);
+        const s2 = getStrings();
+        const label2 = this.t.columns.labelOf(at);
+        const current2 = this.t.model.filters.get(at);
+        const range = (
+          /** @type {Bounds} */
+          Array.isArray(current2) ? void 0 : current2
+        );
+        this.editingFilter = at;
+        this.editorReturn = returnTo;
+        form2.setAttribute("aria-label", s2.tableFilterEditor(label2));
+        form2.dataset.kpFilterColumn = String(at);
+        const title = this.t.identity.make("p", "kp-datatable__filter-editor-title");
+        title.textContent = label2;
+        form2.append(title);
+        form2.append(kind === "choice" ? this.choicesField(at, current2, s2, label2) : this.boundsField(kind, range, s2, label2));
+        form2.append(...this.editorFoot(s2));
+        form2.hidden = false;
+        if (kind === "date") this.startPickers(form2, range);
+        this.t.pills.renderPills();
+        form2.querySelector("input")?.focus();
+      }
+      /**
+       * A choice filter's boxes, one per value, ticked as the filter is.
+       * @param {number} at @param {FilterValue | undefined} current @param {Strings} s @param {string} label
+       */
+      choicesField(at, current2, s2, label2) {
+        const { identity } = this.t;
+        const set = identity.make("fieldset", "kp-fieldset");
+        const legend = identity.make("legend", "kp-sr-only");
+        legend.textContent = s2.tableFilterChoicesLegend(label2);
+        const choices = identity.make("div", "kp-datatable__filter-editor-choices");
+        for (const value of this.t.filterUi.choiceValues(at)) {
+          const option = identity.make("label", "kp-field__option");
+          const box = (
+            /** @type {HTMLInputElement} */
+            identity.make("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.name = "values";
+          box.value = value;
+          box.checked = Array.isArray(current2) && current2.includes(value);
+          option.append(box, ` ${value}`);
+          choices.append(option);
+        }
+        set.append(legend, choices);
+        return set;
+      }
+      /**
+       * A range or date filter's two bounds: number fields, or the package's date pickers with the label on the row above the field.
+       * @param {'range' | 'date'} kind @param {Bounds} range @param {Strings} s @param {string} label
+       */
+      boundsField(kind, range, s2, label2) {
+        const { identity } = this.t;
+        const pair = identity.make("div", "kp-datatable__filter-editor-pair");
+        for (const bound of BOUNDS) {
+          const input = (
+            /** @type {HTMLInputElement} */
+            identity.make("input", "kp-field__input")
+          );
+          input.id = `${identity.id}-filter-editor-${bound}`;
+          input.dataset.kpFilterBound = bound;
+          input.autocomplete = "off";
+          input.setAttribute("aria-describedby", `${identity.id}-filter-editor-error`);
+          const text = (
+            /** @type {HTMLLabelElement} */
+            identity.make("label", "kp-field__label")
+          );
+          text.htmlFor = input.id;
+          text.textContent = s2.tableFilterBound(kind, bound, label2);
+          if (kind === "range") {
+            input.type = "text";
+            input.inputMode = "decimal";
+            input.value = range?.[bound] ?? "";
+            const field2 = identity.make("div", "kp-field");
+            field2.append(text, input);
+            pair.append(field2);
+          } else {
+            const picker = this.t.filterUi.datePickerFor(input);
+            picker.prepend(text);
+            pair.append(picker);
+          }
+        }
+        return pair;
+      }
+      /** The editor's error line and its Apply and Cancel. @param {Strings} s */
+      editorFoot(s2) {
+        const { identity } = this.t;
+        const error = identity.make("p", "kp-field__error");
+        error.id = `${identity.id}-filter-editor-error`;
+        error.dataset.kpFilterError = "";
+        error.setAttribute("role", "alert");
+        error.hidden = true;
+        const actions = identity.make("div", "kp-datatable__filter-editor-actions");
+        const apply2 = (
+          /** @type {HTMLButtonElement} */
+          identity.make("button", "kp-button kp-button--primary kp-button--sm")
+        );
+        apply2.type = "submit";
+        apply2.textContent = s2.tableFilterApply;
+        const cancel = (
+          /** @type {HTMLButtonElement} */
+          identity.make("button", "kp-button kp-button--ghost kp-button--sm")
+        );
+        cancel.type = "button";
+        cancel.dataset.kpFilterCancel = "";
+        cancel.textContent = s2.tableFilterCancel;
+        actions.append(apply2, cancel);
+        return [error, actions];
+      }
+      /** Wire the editor's date pickers and give them the filter's dates. @param {HTMLFormElement} form @param {Bounds} range */
+      startPickers(form2, range) {
+        this.detachEditorPickers = attachDatePickers(form2);
+        for (const bound of BOUNDS) {
+          const wanted = range?.[bound] ?? "";
+          const picker = form2.querySelector(`[data-kp-filter-bound="${bound}"]`)?.closest("[data-kp-datepicker]");
+          if (wanted !== "" && picker) datePicker(picker)?.set(wanted);
+        }
+      }
+      /** @param {boolean} [focus] hand the focus back to the pill, or to the add button */
+      closeFilterEditor(focus = true) {
+        const { filterUi } = this.t;
+        const form2 = filterUi.filterEditor;
+        if (this.editingFilter === null || form2 === null) return;
+        this.detachEditorPickers();
+        this.detachEditorPickers = () => {
+        };
+        const back = this.editorReturn;
+        this.editingFilter = null;
+        this.editorReturn = null;
+        form2.hidden = true;
+        form2.textContent = "";
+        delete form2.dataset.kpFilterColumn;
+        form2.removeAttribute("aria-label");
+        this.t.pills.renderPills();
+        if (!focus) return;
+        const pill = back === null ? null : (
+          /** @type {HTMLElement | null} */
+          filterUi.pills?.querySelector(`[data-kp-filter-pill="${back}"]`) ?? null
+        );
+        (pill ?? filterUi.addButton)?.focus();
+      }
+      /** @param {SubmitEvent} event */
+      onEditorSubmit(event) {
+        event.preventDefault();
+        const at = this.editingFilter;
+        const form2 = this.t.filterUi.filterEditor;
+        if (at === null || form2 === null) return;
+        const kind = this.t.columns.filterKinds[at];
+        let next2 = null;
+        if (kind === "choice") {
+          const values = [...form2.querySelectorAll('input[name="values"]:checked')].map((box) => (
+            /** @type {HTMLInputElement} */
+            box.value
+          ));
+          next2 = values.length > 0 ? values : null;
+        } else if (kind === "range" || kind === "date") {
+          const read = this.readBounds(form2, at, kind);
+          if (read.refused) return;
+          next2 = read.value;
+        }
+        if (next2 !== null) this.editorReturn = at;
+        this.t.handlers.setFilter(at, next2);
+        this.closeFilterEditor(true);
+      }
+      /**
+       * Read the editor's two bounds; a bound that does not read is marked, said and focused.
+       * @param {HTMLFormElement} form @param {number} at @param {'range' | 'date'} kind
+       * @returns {{ refused: true } | { refused: false, value: FilterValue | null }}
+       */
+      readBounds(form2, at, kind) {
+        const s2 = getStrings();
+        const read = (bound) => {
+          const input = (
+            /** @type {HTMLInputElement} */
+            form2.querySelector(`[data-kp-filter-bound="${bound}"]`)
+          );
+          const label2 = bound === "from" ? s2.tableFilterFrom(this.t.columns.labelOf(at)) : s2.tableFilterTo(this.t.columns.labelOf(at));
+          return { text: input.value, iso: input.dataset.kpDateValue, label: label2 };
+        };
+        const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s2, this.t.controls.locale);
+        for (const input of form2.querySelectorAll("[data-kp-filter-bound]")) input.removeAttribute("aria-invalid");
+        if (result.error === void 0) return { refused: false, value: result.value };
         const error = (
           /** @type {HTMLElement} */
           form2.querySelector("[data-kp-filter-error]")
@@ -46793,1214 +47105,747 @@ function installPills(c) {
         );
         field2.setAttribute("aria-invalid", "true");
         field2.focus();
-        return;
+        return { refused: true };
       }
-      next2 = result.value;
-    }
-    if (next2 !== null) editorReturn = at;
-    c.setFilter(at, next2);
-    closeFilterEditor(true);
-  };
-  c.onEditorSubmit = onEditorSubmit;
-  const onEditorClick = (event) => {
-    if (
-      /** @type {HTMLElement} */
-      event.target.closest("[data-kp-filter-cancel]") !== null
-    ) closeFilterEditor(true);
-  };
-  c.onEditorClick = onEditorClick;
-  const onEditorKeydown = (event) => {
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (event.key !== "Escape" || event.defaultPrevented || target.closest("[data-kp-date-panel]") !== null) return;
-    if (target.getAttribute("aria-expanded") === "true") return;
-    event.preventDefault();
-    closeFilterEditor(true);
-  };
-  c.onEditorKeydown = onEditorKeydown;
-  const onAddMenuClick = (event) => {
-    const button6 = (
-      /** @type {HTMLElement | null} */
-      /** @type {HTMLElement} */
-      event.target.closest("[data-kp-filter-column]")
-    );
-    if (button6 === null) return;
-    const at = Number(button6.dataset.kpFilterColumn);
-    if (c.addPop?.matches(":popover-open")) c.addPop.hidePopover();
-    openFilterEditor(at, filters.has(at) ? at : null);
-  };
-  c.onAddMenuClick = onAddMenuClick;
-  const onAddMenuKey = (event) => {
-    if (c.addMenu === null) return;
-    const items = (
-      /** @type {HTMLElement[]} */
-      [...c.addMenu.querySelectorAll(".kp-menu__item")]
-    );
-    const at = items.indexOf(
-      /** @type {HTMLElement} */
-      document.activeElement
-    );
-    const moves = { ArrowDown: at + 1, ArrowUp: at - 1, Home: 0, End: items.length - 1 };
-    const to = moves[event.key];
-    if (to === void 0 || items.length === 0) return;
-    event.preventDefault();
-    items[(to + items.length) % items.length]?.focus();
-  };
-  c.onAddMenuKey = onAddMenuKey;
-  const onAddToggle = (event) => {
-    const open4 = (
-      /** @type {ToggleEvent} */
-      event.newState === "open"
-    );
-    c.addButton?.setAttribute("aria-expanded", String(open4));
-    if (!open4) return;
-    renderAddMenu(getStrings());
-    (c.addMenu?.querySelector(".kp-menu__item") ?? null)?.focus();
-  };
-  c.onAddToggle = onAddToggle;
-  const onPillsClick = (event) => {
-    if (!addMode) return;
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    const edit = (
-      /** @type {HTMLElement | null} */
-      target.closest("[data-kp-filter-pill]")
-    );
-    if (edit !== null) {
-      const at2 = Number(edit.dataset.kpFilterPill);
-      if (editingFilter === at2) closeFilterEditor(true);
-      else openFilterEditor(at2, at2);
-      return;
-    }
-    const remove = (
-      /** @type {HTMLElement | null} */
-      target.closest("[data-kp-filter-unpill]")
-    );
-    if (remove === null) return;
-    const at = Number(remove.dataset.kpFilterUnpill);
-    if (editingFilter === at) closeFilterEditor(false);
-    c.setFilter(at, null);
-    (c.pills?.querySelector(".kp-tag__remove") ?? c.addButton)?.focus();
-  };
-  c.onPillsClick = onPillsClick;
-}
-var init_pills = __esm({
-  "js/datatable/attach/pills.js"() {
-    "use strict";
-    init_strings();
-    init_filter();
-    init_selectors();
-    init_datepicker();
+      /** @param {MouseEvent} event */
+      onEditorClick(event) {
+        if (
+          /** @type {HTMLElement} */
+          event.target.closest("[data-kp-filter-cancel]") !== null
+        ) this.closeFilterEditor(true);
+      }
+      /** @param {KeyboardEvent} event */
+      onEditorKeydown(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (event.key !== "Escape" || event.defaultPrevented || target.closest("[data-kp-date-panel]") !== null) return;
+        if (target.getAttribute("aria-expanded") === "true") return;
+        event.preventDefault();
+        this.closeFilterEditor(true);
+      }
+    };
   }
 });
 
 // js/datatable/attach/apply.js
-function installApply(c) {
-  const {
-    arrange: arrange2,
-    cellText,
-    cellValue,
-    choiceText,
-    compareFn,
-    externalSort,
-    fillChoices,
-    filterFn,
-    filterKinds,
-    filters,
-    headers,
-    locale,
-    orders,
-    render: render7,
-    rendered,
-    serverMode
-  } = c;
-  c.writing = false;
-  const writeControls = () => {
-    if (c.panel === null) return;
-    for (const set of c.panel.querySelectorAll("[data-kp-filter-column]")) {
-      const at = Number(
-        /** @type {HTMLElement} */
-        set.dataset.kpFilterColumn
-      );
-      const value = filters.get(at);
-      for (const box of set.querySelectorAll('input[type="checkbox"]')) {
-        const input = (
-          /** @type {HTMLInputElement} */
-          box
-        );
-        input.checked = Array.isArray(value) && value.includes(input.value);
-      }
-      for (const bound of set.querySelectorAll("[data-kp-filter-bound]")) {
-        const input = (
-          /** @type {HTMLInputElement} */
-          bound
-        );
-        const range = (
-          /** @type {{ from?: string, to?: string } | undefined} */
-          Array.isArray(value) ? void 0 : value
-        );
-        const wanted = (input.dataset.kpFilterBound === "from" ? range?.from : range?.to) ?? "";
-        const picker = input.closest("[data-kp-datepicker]");
-        const handle = picker === null ? null : datePicker(picker);
-        if (handle === null) {
-          input.value = wanted;
-          continue;
-        }
-        if ((input.dataset.kpDateValue ?? "") === wanted) continue;
-        c.writing = true;
-        try {
-          handle.set(wanted === "" ? null : wanted);
-        } finally {
-          c.writing = false;
-        }
-      }
-    }
-  };
-  c.writeControls = writeControls;
-  const refreshChoices = () => {
-    if (c.panel === null) return;
-    for (const set of c.panel.querySelectorAll("[data-kp-filter-column]")) {
-      const at = Number(
-        /** @type {HTMLElement} */
-        set.dataset.kpFilterColumn
-      );
-      if (filterKinds[at] !== "choice") continue;
-      const value = filters.get(at);
-      fillChoices(set, at, Array.isArray(value) ? value : []);
-    }
-  };
-  c.refreshChoices = refreshChoices;
-  const readControls = () => {
-    if (c.panel === null) return;
-    filters.clear();
-    for (const set of c.panel.querySelectorAll("[data-kp-filter-column]")) {
-      const at = Number(
-        /** @type {HTMLElement} */
-        set.dataset.kpFilterColumn
-      );
-      const kind = filterKinds[at];
-      let value;
-      if (kind === "choice")
-        value = [...set.querySelectorAll('input[type="checkbox"]:checked')].map((b) => (
-          /** @type {HTMLInputElement} */
-          b.value
-        ));
-      else {
-        const read = (bound) => {
-          const input = (
-            /** @type {HTMLInputElement | null} */
-            set.querySelector(`[data-kp-filter-bound="${bound}"]`)
-          );
-          if (input === null) return "";
-          return input.dataset.kpDateInput === void 0 ? input.value : input.dataset.kpDateValue ?? "";
-        };
-        value = { from: read("from"), to: read("to") };
-      }
-      if (kind !== null && kind !== void 0 && filterActive(kind, value)) filters.set(at, value);
-    }
-  };
-  c.readControls = readControls;
-  const compareRows = (a, b) => {
-    for (const key of c.sorts) {
-      const kind = headers[key.column]?.dataset.kpSort ?? "text";
-      const order = orders[key.column];
-      const by = (x, y) => compareFn(x, y, kind, locale);
-      const left = cellValue(a, key.column);
-      const right = cellValue(b, key.column);
-      const c2 = order ? compareByOrder(order, left, right, by) : by(left, right);
-      if (c2 !== 0) return key.direction === "ascending" ? c2 : -c2;
-    }
-    return 0;
-  };
-  const applySorts = () => {
-    if (externalSort) {
-      const keep = new Set(c.shownRows);
-      c.shownRows = arrange2(c.all.filter((row2) => keep.has(row2)));
-      return;
-    }
-    if (c.sorts.length === 0) {
-      const keep = new Set(c.shownRows);
-      c.shownRows = rendered.filter((row2) => keep.has(row2));
-    } else c.shownRows = [...c.shownRows].sort(compareRows);
-    c.shownRows = arrange2(c.shownRows);
-  };
-  c.applySorts = applySorts;
-  const applyFilter = ({ keepPage = false } = {}) => {
-    if (serverMode) {
-      if (!keepPage) c.page = 0;
-      c.request();
-      return;
-    }
-    const needle = c.query.trim().toLowerCase();
-    c.shownRows = c.all.filter((row2) => {
-      if (needle !== "") {
-        const hit = c.scope === null ? filterFn(row2, needle) : cellText(row2, c.scope).toLowerCase().includes(needle);
-        if (!hit) return false;
-      }
-      for (const [at, value] of filters) {
-        const kind = filterKinds[at];
-        if (kind && !matchesFilter(kind, value, kind === "choice" ? choiceText(row2, at) : cellValue(row2, at), locale)) return false;
-      }
-      return true;
-    });
-    applySorts();
-    if (!keepPage) c.page = 0;
-    render7();
-  };
-  c.applyFilter = applyFilter;
-}
+var TableApply;
 var init_apply2 = __esm({
   "js/datatable/attach/apply.js"() {
     "use strict";
     init_datepicker();
     init_filter();
     init_sort();
+    TableApply = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.writing = false;
+      }
+      /** Write the filter state into the panel's controls, so a pill or the handle and the panel agree. */
+      writeControls() {
+        if (this.t.filterUi.panel === null) return;
+        for (const set of this.t.filterUi.panel.querySelectorAll("[data-kp-filter-column]")) {
+          const at = Number(
+            /** @type {HTMLElement} */
+            set.dataset.kpFilterColumn
+          );
+          const value = this.t.model.filters.get(at);
+          for (const box of set.querySelectorAll('input[type="checkbox"]')) {
+            const input = (
+              /** @type {HTMLInputElement} */
+              box
+            );
+            input.checked = Array.isArray(value) && value.includes(input.value);
+          }
+          for (const bound of set.querySelectorAll("[data-kp-filter-bound]")) {
+            const input = (
+              /** @type {HTMLInputElement} */
+              bound
+            );
+            const range = (
+              /** @type {{ from?: string, to?: string } | undefined} */
+              Array.isArray(value) ? void 0 : value
+            );
+            const wanted = (input.dataset.kpFilterBound === "from" ? range?.from : range?.to) ?? "";
+            const picker = input.closest("[data-kp-datepicker]");
+            const handle = picker === null ? null : datePicker(picker);
+            if (handle === null) {
+              input.value = wanted;
+              continue;
+            }
+            if ((input.dataset.kpDateValue ?? "") === wanted) continue;
+            this.writing = true;
+            try {
+              handle.set(wanted === "" ? null : wanted);
+            } finally {
+              this.writing = false;
+            }
+          }
+        }
+      }
+      /**
+       * The panel's choice lists, read again from the rows. At attach they
+       * hold the rows the markup had; a page that writes its rows afterwards
+       * (and calls refresh) would otherwise keep an empty list for good.
+       */
+      refreshChoices() {
+        if (this.t.filterUi.panel === null) return;
+        for (const set of this.t.filterUi.panel.querySelectorAll("[data-kp-filter-column]")) {
+          const at = Number(
+            /** @type {HTMLElement} */
+            set.dataset.kpFilterColumn
+          );
+          if (this.t.columns.filterKinds[at] !== "choice") continue;
+          const value = this.t.model.filters.get(at);
+          this.t.filterUi.fillChoices(set, at, Array.isArray(value) ? value : []);
+        }
+      }
+      /** Read the panel's controls into the filter state. */
+      readControls() {
+        if (this.t.filterUi.panel === null) return;
+        this.t.model.filters.clear();
+        for (const set of this.t.filterUi.panel.querySelectorAll("[data-kp-filter-column]")) {
+          const at = Number(
+            /** @type {HTMLElement} */
+            set.dataset.kpFilterColumn
+          );
+          const kind = this.t.columns.filterKinds[at];
+          let value;
+          if (kind === "choice")
+            value = [...set.querySelectorAll('input[type="checkbox"]:checked')].map((b) => (
+              /** @type {HTMLInputElement} */
+              b.value
+            ));
+          else {
+            const read = (bound) => {
+              const input = (
+                /** @type {HTMLInputElement | null} */
+                set.querySelector(`[data-kp-filter-bound="${bound}"]`)
+              );
+              if (input === null) return "";
+              return input.dataset.kpDateInput === void 0 ? input.value : input.dataset.kpDateValue ?? "";
+            };
+            value = { from: read("from"), to: read("to") };
+          }
+          if (kind !== null && kind !== void 0 && filterActive(kind, value)) this.t.model.filters.set(at, value);
+        }
+      }
+      /** @param {HTMLTableRowElement} a @param {HTMLTableRowElement} b */
+      compareRows(a, b) {
+        for (const key of this.t.model.sorts) {
+          const kind = this.t.columns.headers[key.column]?.dataset.kpSort ?? "text";
+          const order = this.t.columns.orders[key.column];
+          const by = (x, y) => this.t.settings.compareFn(x, y, kind, this.t.controls.locale);
+          const left = this.t.columns.cellValue(a, key.column);
+          const right = this.t.columns.cellValue(b, key.column);
+          const c = order ? compareByOrder(order, left, right, by) : by(left, right);
+          if (c !== 0) return key.direction === "ascending" ? c : -c;
+        }
+        return 0;
+      }
+      applySorts() {
+        if (this.t.controls.externalSort) {
+          const keep = new Set(this.t.model.shownRows);
+          this.t.model.shownRows = this.t.groups.arrange(this.t.model.all.filter((row2) => keep.has(row2)));
+          return;
+        }
+        if (this.t.model.sorts.length === 0) {
+          const keep = new Set(this.t.model.shownRows);
+          this.t.model.shownRows = this.t.model.rendered.filter((row2) => keep.has(row2));
+        } else this.t.model.shownRows = [...this.t.model.shownRows].sort(this.t.bound(this, this.compareRows));
+        this.t.model.shownRows = this.t.groups.arrange(this.t.model.shownRows);
+      }
+      /** @param {{ keepPage?: boolean }} [options] */
+      applyFilter({ keepPage = false } = {}) {
+        if (this.t.controls.serverMode) {
+          if (!keepPage) this.t.model.page = 0;
+          this.t.server.request();
+          return;
+        }
+        const needle = this.t.model.query.trim().toLowerCase();
+        this.t.model.shownRows = this.t.model.all.filter((row2) => {
+          if (needle !== "") {
+            const hit = this.t.model.scope === null ? this.t.settings.filterFn(row2, needle) : this.t.columns.cellText(row2, this.t.model.scope).toLowerCase().includes(needle);
+            if (!hit) return false;
+          }
+          for (const [at, value] of this.t.model.filters) {
+            const kind = this.t.columns.filterKinds[at];
+            if (kind && !matchesFilter(kind, value, kind === "choice" ? this.t.columns.choiceText(row2, at) : this.t.columns.cellValue(row2, at), this.t.controls.locale)) return false;
+          }
+          return true;
+        });
+        this.applySorts();
+        if (!keepPage) this.t.model.page = 0;
+        this.t.render.render();
+      }
+    };
   }
 });
 
 // js/datatable/attach/server.js
-function installServer(c) {
-  const {
-    body,
-    byField,
-    details,
-    filters,
-    headers,
-    keyColumn,
-    keyOf: keyOf8,
-    labelOf: labelOf8,
-    loadFn,
-    make: make35,
-    prepareRow,
-    render: render7,
-    rowKeyFn,
-    serverMode,
-    serverSelection,
-    syncColumns,
-    wrap
-  } = c;
-  let sent = 0;
-  let latest = 0;
-  c.controller = null;
-  const rowFrom = (item) => {
-    if (item instanceof HTMLTableRowElement) return item;
-    const row2 = (
-      /** @type {HTMLTableRowElement} */
-      make35("tr")
-    );
-    const field2 = wrap.dataset.kpRowKeyField ?? headers[keyColumn]?.dataset.kpField;
-    row2.dataset.kpRowKey = rowKeyFn ? rowKeyFn(item) : String((field2 === void 0 ? void 0 : item[field2]) ?? item.key ?? item.id ?? "");
-    headers.forEach((header, at) => {
-      if (header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN)) return;
-      const cell = make35("td");
-      if (header.querySelector(SELECT_ALL) !== null) {
-        const box = (
-          /** @type {HTMLInputElement} */
-          make35("input", CHECK_CLASS)
-        );
-        box.type = "checkbox";
-        box.dataset.kpSelectRow = "";
-        box.setAttribute("aria-label", getStrings().tableSelectRow(row2.dataset.kpRowKey ?? ""));
-        cell.dataset.label = "";
-        cell.append(box);
-      } else {
-        cell.dataset.label = labelOf8(at);
-        if (header.dataset.kpCellClass) cell.className = header.dataset.kpCellClass;
-        const value = item[header.dataset.kpField ?? labelOf8(at)];
-        cell.textContent = value === void 0 || value === null ? "" : String(value);
-      }
-      row2.append(cell);
-    });
-    return row2;
-  };
-  const applyAnswer = (answer2) => {
-    for (const row2 of c.all) {
-      const box = (
-        /** @type {HTMLInputElement | null} */
-        row2.querySelector(SELECT_ROW)
-      );
-      if (box !== null) {
-        if (box.checked) serverSelection.add(keyOf8(row2));
-        else serverSelection.delete(keyOf8(row2));
-      }
-    }
-    if (c.editing !== null) c.closeEditor();
-    const next2 = answer2.rows.map(rowFrom);
-    for (const row2 of [...body.rows]) if (!next2.includes(row2)) row2.remove();
-    details.clear();
-    for (const row2 of next2) {
-      row2.hidden = false;
-      body.append(row2);
-      prepareRow(row2);
-      const box = (
-        /** @type {HTMLInputElement | null} */
-        row2.querySelector(SELECT_ROW)
-      );
-      if (box !== null) box.checked = serverSelection.has(keyOf8(row2));
-    }
-    c.all = next2;
-    c.shownRows = [...next2];
-    c.total = Number(answer2.total) || 0;
-    c.state = "ready";
-    syncColumns();
-    render7();
-  };
-  const request3 = () => {
-    if (!serverMode) return;
-    sent += 1;
-    const requestId = sent;
-    latest = requestId;
-    c.controller?.abort();
-    c.controller = new AbortController();
-    const params = {
-      id: requestId,
-      query: c.query,
-      scope: c.scope,
-      sort: c.sorts[0] ? { ...c.sorts[0] } : null,
-      sorts: c.sorts.map((key) => ({ ...key })),
-      filters: Object.fromEntries(filters),
-      filtersByField: byField(),
-      page: c.page,
-      pageSize: c.size,
-      signal: c.controller.signal
-    };
-    c.state = "loading";
-    render7();
-    let settled = false;
-    const respond = (answer2) => {
-      if (settled) return;
-      settled = true;
-      if (requestId !== latest) return;
-      applyAnswer(answer2);
-    };
-    const fail = (error) => {
-      if (settled) return;
-      settled = true;
-      if (requestId !== latest) return;
-      void error;
-      c.state = "failed";
-      render7();
-    };
-    wrap.dispatchEvent(new CustomEvent(REQUEST_EVENT, { bubbles: true, detail: { ...params, respond, fail } }));
-    if (loadFn !== void 0) {
-      Promise.resolve().then(() => loadFn(params)).then(respond, fail);
-    }
-  };
-  c.request = request3;
-  c.pending = 0;
-}
+var TableServer;
 var init_server = __esm({
   "js/datatable/attach/server.js"() {
     "use strict";
     init_selectors();
     init_strings();
     init_events();
+    TableServer = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.sent = 0;
+        this.latest = 0;
+        this.controller = null;
+        this.pending = 0;
+      }
+      /** @param {HTMLTableRowElement | Record<string, unknown>} item */
+      rowFrom(item) {
+        if (item instanceof HTMLTableRowElement) return item;
+        const row2 = (
+          /** @type {HTMLTableRowElement} */
+          this.t.identity.make("tr")
+        );
+        const field2 = this.t.wrap.dataset.kpRowKeyField ?? this.t.columns.headers[this.t.columns.keyColumn]?.dataset.kpField;
+        row2.dataset.kpRowKey = this.t.settings.rowKeyFn ? this.t.settings.rowKeyFn(item) : String((field2 === void 0 ? void 0 : item[field2]) ?? item.key ?? item.id ?? "");
+        this.t.columns.headers.forEach((header, at) => {
+          if (header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN)) return;
+          const cell = this.t.identity.make("td");
+          if (header.querySelector(SELECT_ALL) !== null) {
+            const box = (
+              /** @type {HTMLInputElement} */
+              this.t.identity.make("input", CHECK_CLASS)
+            );
+            box.type = "checkbox";
+            box.dataset.kpSelectRow = "";
+            box.setAttribute("aria-label", getStrings().tableSelectRow(row2.dataset.kpRowKey ?? ""));
+            cell.dataset.label = "";
+            cell.append(box);
+          } else {
+            cell.dataset.label = this.t.columns.labelOf(at);
+            if (header.dataset.kpCellClass) cell.className = header.dataset.kpCellClass;
+            const value = item[header.dataset.kpField ?? this.t.columns.labelOf(at)];
+            cell.textContent = value === void 0 || value === null ? "" : String(value);
+          }
+          row2.append(cell);
+        });
+        return row2;
+      }
+      /** @param {DataAnswer} answer */
+      applyAnswer(answer2) {
+        for (const row2 of this.t.model.all) {
+          const box = (
+            /** @type {HTMLInputElement | null} */
+            row2.querySelector(SELECT_ROW)
+          );
+          if (box !== null) {
+            if (box.checked) this.t.sync.serverSelection.add(this.t.columns.keyOf(row2));
+            else this.t.sync.serverSelection.delete(this.t.columns.keyOf(row2));
+          }
+        }
+        if (this.t.edit.editing !== null) this.t.edit.closeEditor();
+        const next2 = answer2.rows.map(this.t.bound(this, this.rowFrom));
+        for (const row2 of [...this.t.body.rows]) if (!next2.includes(row2)) row2.remove();
+        this.t.details.details.clear();
+        for (const row2 of next2) {
+          row2.hidden = false;
+          this.t.body.append(row2);
+          this.t.reorder.prepareRow(row2);
+          const box = (
+            /** @type {HTMLInputElement | null} */
+            row2.querySelector(SELECT_ROW)
+          );
+          if (box !== null) box.checked = this.t.sync.serverSelection.has(this.t.columns.keyOf(row2));
+        }
+        this.t.model.all = next2;
+        this.t.model.shownRows = [...next2];
+        this.t.busy.total = Number(answer2.total) || 0;
+        this.t.model.state = "ready";
+        this.t.sync.syncColumns();
+        this.t.render.render();
+      }
+      /**
+       * What the table asks the server for: its view now.
+       * @param {number} id @param {AbortSignal} signal
+       * @returns {DataRequest}
+       */
+      requestFor(id, signal) {
+        const { model } = this.t;
+        return {
+          id,
+          query: model.query,
+          scope: model.scope,
+          sort: model.sorts[0] ? { ...model.sorts[0] } : null,
+          sorts: model.sorts.map((key) => ({ ...key })),
+          filters: Object.fromEntries(model.filters),
+          filtersByField: this.t.sync.byField(),
+          page: model.page,
+          pageSize: this.t.controls.size,
+          signal
+        };
+      }
+      /** Ask the server for the view: by `kp-datatable-request` and the `load` option; only the newest answer counts. */
+      request() {
+        if (!this.t.controls.serverMode) return;
+        this.sent += 1;
+        const requestId = this.sent;
+        this.latest = requestId;
+        this.controller?.abort();
+        this.controller = new AbortController();
+        const params = this.requestFor(requestId, this.controller.signal);
+        this.t.model.state = "loading";
+        this.t.render.render();
+        let settled = false;
+        const respond = (answer2) => {
+          if (settled) return;
+          settled = true;
+          if (requestId !== this.latest) return;
+          this.applyAnswer(answer2);
+        };
+        const fail = (error) => {
+          if (settled) return;
+          settled = true;
+          if (requestId !== this.latest) return;
+          void error;
+          this.t.model.state = "failed";
+          this.t.render.render();
+        };
+        this.t.wrap.dispatchEvent(new CustomEvent(REQUEST_EVENT, { bubbles: true, detail: { ...params, respond, fail } }));
+        const loadFn = this.t.settings.loadFn;
+        if (loadFn !== void 0) {
+          Promise.resolve().then(() => loadFn(params)).then(respond, fail);
+        }
+      }
+    };
   }
 });
 
 // js/datatable/attach/handlers.js
-function installHandlers(c) {
-  const {
-    addOnClick,
-    applyFilter,
-    applySorts,
-    closeFilterEditor,
-    columnAt,
-    columnIds,
-    controlColumn,
-    cycleName,
-    debounce,
-    densitySelect,
-    filterKinds,
-    filters,
-    headers,
-    locked,
-    memory,
-    multi,
-    readControls,
-    render: render7,
-    renderPills,
-    request: request3,
-    scopeSelect,
-    search,
-    serverMode,
-    syncColumns,
-    wrap,
-    writeControls
-  } = c;
-  const onSearch = () => {
-    c.query = search?.value ?? "";
-    clearTimeout(c.pending);
-    if (debounce > 0) c.pending = window.setTimeout(() => applyFilter(), debounce);
-    else applyFilter();
-  };
-  c.onSearch = onSearch;
-  const onScope = () => {
-    c.scope = scopeSelect === null || scopeSelect.value === "" ? null : Number(scopeSelect.value);
-    applyFilter();
-  };
-  c.onScope = onScope;
-  const onDensity = () => {
-    if (densitySelect === null) return;
-    setDensity(densitySelect.value === "compact" ? "compact" : "comfortable");
-  };
-  c.onDensity = onDensity;
-  const setDensity = (next2) => {
-    if (next2 === "compact") wrap.setAttribute("data-density", "compact");
-    else wrap.removeAttribute("data-density");
-    if (densitySelect !== null) densitySelect.value = next2;
-    memory?.write("density", next2);
-    render7();
-  };
-  c.setDensity = setDensity;
-  const onPanel = () => {
-    if (c.writing) return;
-    const before = JSON.stringify([...filters]);
-    readControls();
-    if (JSON.stringify([...filters]) === before) return;
-    renderPills();
-    applyFilter();
-  };
-  c.onPanel = onPanel;
-  const onToggle = () => {
-    if (c.panel === null || c.toggle === null) return;
-    c.panel.hidden = !c.panel.hidden;
-    c.toggle.setAttribute("aria-expanded", String(!c.panel.hidden));
-  };
-  c.onToggle = onToggle;
-  const setFilter = (column, value) => {
-    const at = columnAt(column);
-    const kind = filterKinds[at];
-    if (!kind) return;
-    if (value === null || !filterActive(kind, value)) filters.delete(at);
-    else filters.set(at, value);
-    writeControls();
-    renderPills();
-    applyFilter();
-  };
-  c.setFilter = setFilter;
-  const clearFilters = () => {
-    closeFilterEditor(false);
-    filters.clear();
-    writeControls();
-    renderPills();
-    applyFilter();
-  };
-  c.clearFilters = clearFilters;
-  const onClear = () => {
-    c.query = "";
-    if (search !== null) search.value = "";
-    closeFilterEditor(false);
-    filters.clear();
-    writeControls();
-    renderPills();
-    applyFilter();
-    search?.focus();
-  };
-  c.onClear = onClear;
-  const onRetry = () => {
-    wrap.dispatchEvent(new CustomEvent(RETRY_EVENT, { bubbles: true }));
-    if (serverMode) request3();
-  };
-  c.onRetry = onRetry;
-  const commitSorts = (next2, announced) => {
-    c.sorts = next2.filter((key) => headers[key.column] !== void 0);
-    memory?.write(
-      "sort",
-      c.sorts.map((key) => ({ column: columnIds[key.column], direction: key.direction }))
-    );
-    wrap.dispatchEvent(new CustomEvent(SORT_EVENT, { bubbles: true, detail: announced === void 0 ? c.sorts[0] ?? null : announced }));
-    c.page = 0;
-    if (serverMode) {
-      request3();
-      return;
-    }
-    applySorts();
-    render7();
-  };
-  c.commitSorts = commitSorts;
-  const setSort = (next2) => {
-    if (next2 === null || next2.direction === "none") commitSorts([], next2);
-    else commitSorts([{ column: next2.column, direction: next2.direction }], next2);
-  };
-  c.setSort = setSort;
-  const toggleSort = (header, addKey) => {
-    const at = headers.indexOf(header);
-    if (at === -1) return;
-    if (header.getAttribute("aria-disabled") === "true") return;
-    const next2 = nextSorts(c.sorts, at, { add: multi && (addOnClick ? !addKey : addKey), cycle: cycleName });
-    if (next2.length === 0) commitSorts([], { column: at, direction: "none" });
-    else commitSorts(next2);
-  };
-  const onHeadClick = (event) => {
-    const header = (
-      /** @type {HTMLTableCellElement | null} */
-      /** @type {HTMLElement} */
-      event.target.closest("th[data-kp-sort]")
-    );
-    if (header !== null) toggleSort(header, event.shiftKey);
-  };
-  c.onHeadClick = onHeadClick;
-  const onHeadKey = (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const header = (
-      /** @type {HTMLTableCellElement | null} */
-      /** @type {HTMLElement} */
-      event.target.closest("th[data-kp-sort]")
-    );
-    if (header === null) return;
-    event.preventDefault();
-    toggleSort(header, event.shiftKey);
-  };
-  c.onHeadKey = onHeadKey;
-  for (const header of headers) {
-    if (header.dataset.kpSort !== void 0 && header.querySelector("button, a") === null && !header.hasAttribute("tabindex"))
-      header.tabIndex = 0;
-  }
-  const onSortBy = () => {
-    if (c.sortBy === null) return;
-    if (c.sortBy.value === "") setSort(null);
-    else setSort({ column: Number(c.sortBy.value), direction: c.sorts[0]?.direction === "descending" ? "descending" : "ascending" });
-  };
-  c.onSortBy = onSortBy;
-  const onSortDirection = () => {
-    const first = c.sorts[0];
-    if (first === void 0) return;
-    setSort({ column: first.column, direction: first.direction === "ascending" ? "descending" : "ascending" });
-  };
-  c.onSortDirection = onSortDirection;
-  const onPageSize = () => {
-    if (c.sizeSelect === null) return;
-    setPageSize(Number(c.sizeSelect.value));
-  };
-  c.onPageSize = onPageSize;
-  const setPageSize = (next2) => {
-    if (!(next2 > 0)) return;
-    const first = c.page * c.size;
-    c.size = next2;
-    if (c.sizeSelect !== null) c.sizeSelect.value = String(next2);
-    c.page = Math.floor(first / c.size);
-    if (serverMode) request3();
-    else render7();
-  };
-  c.setPageSize = setPageSize;
-  const setHidden2 = (next2) => {
-    c.hiddenColumns = new Set([...next2].filter((at) => headers[at] !== void 0 && !locked[at] && !controlColumn(at)));
-    memory?.write(
-      "columns",
-      [...c.hiddenColumns].sort((a, b) => a - b).map((at) => columnIds[at])
-    );
-    syncColumns();
-    wrap.dispatchEvent(new CustomEvent(COLUMNS_EVENT, { bubbles: true, detail: { hidden: [...c.hiddenColumns].sort((a, b) => a - b) } }));
-    render7();
-  };
-  c.setHidden = setHidden2;
-  const onColumnChange = (event) => {
-    const box = (
-      /** @type {HTMLInputElement} */
-      event.target
-    );
-    if (box.dataset.kpDatatableColumn === void 0) return;
-    const at = Number(box.value);
-    const next2 = new Set(c.hiddenColumns);
-    if (box.checked) next2.delete(at);
-    else next2.add(at);
-    setHidden2(next2);
-  };
-  c.onColumnChange = onColumnChange;
-  const onColumnClick = (event) => {
-    if (
-      /** @type {HTMLElement} */
-      event.target.closest("[data-kp-datatable-columns-reset]") !== null
-    ) setHidden2([]);
-  };
-  c.onColumnClick = onColumnClick;
-}
+var TableHandlers;
 var init_handlers = __esm({
   "js/datatable/attach/handlers.js"() {
     "use strict";
     init_filter();
     init_events();
     init_sort();
+    TableHandlers = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        for (const header of this.t.columns.headers) {
+          if (header.dataset.kpSort !== void 0 && header.querySelector("button, a") === null && !header.hasAttribute("tabindex"))
+            header.tabIndex = 0;
+        }
+      }
+      onSearch() {
+        this.t.model.query = this.t.controls.search?.value ?? "";
+        clearTimeout(this.t.server.pending);
+        if (this.t.controls.debounce > 0) this.t.server.pending = window.setTimeout(() => this.t.apply.applyFilter(), this.t.controls.debounce);
+        else this.t.apply.applyFilter();
+      }
+      onScope() {
+        this.t.model.scope = this.t.controls.scopeSelect === null || this.t.controls.scopeSelect.value === "" ? null : Number(this.t.controls.scopeSelect.value);
+        this.t.apply.applyFilter();
+      }
+      onDensity() {
+        if (this.t.controls.densitySelect === null) return;
+        this.setDensity(this.t.controls.densitySelect.value === "compact" ? "compact" : "comfortable");
+      }
+      /** @param {Density} next */
+      setDensity(next2) {
+        if (next2 === "compact") this.t.wrap.setAttribute("data-density", "compact");
+        else this.t.wrap.removeAttribute("data-density");
+        if (this.t.controls.densitySelect !== null) this.t.controls.densitySelect.value = next2;
+        this.t.memory?.write("density", next2);
+        this.t.render.render();
+      }
+      onPanel() {
+        if (this.t.apply.writing) return;
+        const before = JSON.stringify([...this.t.model.filters]);
+        this.t.apply.readControls();
+        if (JSON.stringify([...this.t.model.filters]) === before) return;
+        this.t.pills.renderPills();
+        this.t.apply.applyFilter();
+      }
+      onToggle() {
+        if (this.t.filterUi.panel === null || this.t.filterUi.toggle === null) return;
+        this.t.filterUi.panel.hidden = !this.t.filterUi.panel.hidden;
+        this.t.filterUi.toggle.setAttribute("aria-expanded", String(!this.t.filterUi.panel.hidden));
+      }
+      /** @param {number | string} column @param {FilterValue | null} value */
+      setFilter(column, value) {
+        const at = this.t.sync.columnAt(column);
+        const kind = this.t.columns.filterKinds[at];
+        if (!kind) return;
+        if (value === null || !filterActive(kind, value)) this.t.model.filters.delete(at);
+        else this.t.model.filters.set(at, value);
+        this.t.apply.writeControls();
+        this.t.pills.renderPills();
+        this.t.apply.applyFilter();
+      }
+      clearFilters() {
+        this.t.filterEditing.closeFilterEditor(false);
+        this.t.model.filters.clear();
+        this.t.apply.writeControls();
+        this.t.pills.renderPills();
+        this.t.apply.applyFilter();
+      }
+      onClear() {
+        this.t.model.query = "";
+        if (this.t.controls.search !== null) this.t.controls.search.value = "";
+        this.t.filterEditing.closeFilterEditor(false);
+        this.t.model.filters.clear();
+        this.t.apply.writeControls();
+        this.t.pills.renderPills();
+        this.t.apply.applyFilter();
+        this.t.controls.search?.focus();
+      }
+      onRetry() {
+        this.t.wrap.dispatchEvent(new CustomEvent(RETRY_EVENT, { bubbles: true }));
+        if (this.t.controls.serverMode) this.t.server.request();
+      }
+      /** @param {SortKey[]} next @param {Sort} [announced] */
+      commitSorts(next2, announced) {
+        this.t.model.sorts = next2.filter((key) => this.t.columns.headers[key.column] !== void 0);
+        this.t.memory?.write(
+          "sort",
+          this.t.model.sorts.map((key) => ({ column: this.t.columns.columnIds[key.column], direction: key.direction }))
+        );
+        this.t.wrap.dispatchEvent(new CustomEvent(SORT_EVENT, { bubbles: true, detail: announced === void 0 ? this.t.model.sorts[0] ?? null : announced }));
+        this.t.model.page = 0;
+        if (this.t.controls.serverMode) {
+          this.t.server.request();
+          return;
+        }
+        this.t.apply.applySorts();
+        this.t.render.render();
+      }
+      /** @param {Sort} next */
+      setSort(next2) {
+        if (next2 === null || next2.direction === "none") this.commitSorts([], next2);
+        else this.commitSorts([{ column: next2.column, direction: next2.direction }], next2);
+      }
+      /** @param {HTMLTableCellElement} header @param {boolean} addKey */
+      toggleSort(header, addKey) {
+        const at = this.t.columns.headers.indexOf(header);
+        if (at === -1) return;
+        if (header.getAttribute("aria-disabled") === "true") return;
+        const next2 = nextSorts(this.t.model.sorts, at, { add: this.t.controls.multi && (this.t.controls.addOnClick ? !addKey : addKey), cycle: this.t.controls.cycleName });
+        if (next2.length === 0) this.commitSorts([], { column: at, direction: "none" });
+        else this.commitSorts(next2);
+      }
+      /** @param {MouseEvent} event */
+      onHeadClick(event) {
+        const header = (
+          /** @type {HTMLTableCellElement | null} */
+          /** @type {HTMLElement} */
+          event.target.closest("th[data-kp-sort]")
+        );
+        if (header !== null) this.toggleSort(header, event.shiftKey);
+      }
+      // From the keyboard too [KT6]: a header the first version made
+      // clickable was reachable by nobody who could not click. The
+      // consumer may put a <button> inside the header; a bare header is
+      // made focusable here. Shift + Enter adds the column as a key.
+      /** @param {KeyboardEvent} event */
+      onHeadKey(event) {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const header = (
+          /** @type {HTMLTableCellElement | null} */
+          /** @type {HTMLElement} */
+          event.target.closest("th[data-kp-sort]")
+        );
+        if (header === null) return;
+        event.preventDefault();
+        this.toggleSort(header, event.shiftKey);
+      }
+      onSortBy() {
+        if (this.t.sortSetup.sortBy === null) return;
+        if (this.t.sortSetup.sortBy.value === "") this.setSort(null);
+        else this.setSort({ column: Number(this.t.sortSetup.sortBy.value), direction: this.t.model.sorts[0]?.direction === "descending" ? "descending" : "ascending" });
+      }
+      onSortDirection() {
+        const first = this.t.model.sorts[0];
+        if (first === void 0) return;
+        this.setSort({ column: first.column, direction: first.direction === "ascending" ? "descending" : "ascending" });
+      }
+      onPageSize() {
+        if (this.t.layoutSetup.sizeSelect === null) return;
+        this.setPageSize(Number(this.t.layoutSetup.sizeSelect.value));
+      }
+      /** Keep the first row the reader was looking at on the page they land on. @param {number} next */
+      setPageSize(next2) {
+        if (!(next2 > 0)) return;
+        const first = this.t.model.page * this.t.controls.size;
+        this.t.controls.size = next2;
+        if (this.t.layoutSetup.sizeSelect !== null) this.t.layoutSetup.sizeSelect.value = String(next2);
+        this.t.model.page = Math.floor(first / this.t.controls.size);
+        if (this.t.controls.serverMode) this.t.server.request();
+        else this.t.render.render();
+      }
+      // ── Columns ────────────────────────────────────────────────────
+      /** @param {Iterable<number>} next */
+      setHidden(next2) {
+        this.t.sortSetup.hiddenColumns = new Set([...next2].filter((at) => this.t.columns.headers[at] !== void 0 && !this.t.sortSetup.locked[at] && !this.t.columns.controlColumn(at)));
+        this.t.memory?.write(
+          "columns",
+          [...this.t.sortSetup.hiddenColumns].sort((a, b) => a - b).map((at) => this.t.columns.columnIds[at])
+        );
+        this.t.sync.syncColumns();
+        this.t.wrap.dispatchEvent(new CustomEvent(COLUMNS_EVENT, { bubbles: true, detail: { hidden: [...this.t.sortSetup.hiddenColumns].sort((a, b) => a - b) } }));
+        this.t.render.render();
+      }
+      /** @param {Event} event */
+      onColumnChange(event) {
+        const box = (
+          /** @type {HTMLInputElement} */
+          event.target
+        );
+        if (box.dataset.kpDatatableColumn === void 0) return;
+        const at = Number(box.value);
+        const next2 = new Set(this.t.sortSetup.hiddenColumns);
+        if (box.checked) next2.delete(at);
+        else next2.add(at);
+        this.setHidden(next2);
+      }
+      /** @param {MouseEvent} event */
+      onColumnClick(event) {
+        if (
+          /** @type {HTMLElement} */
+          event.target.closest("[data-kp-datatable-columns-reset]") !== null
+        ) this.setHidden([]);
+      }
+    };
   }
 });
 
 // js/datatable/attach/expand.js
-function installExpand(c) {
-  const { body, departing, detailFor, details, expandable, expanded, folded: folded2, groupOf: groupOf3, groups, keyOf: keyOf8, render: render7, single, wrap } = c;
-  const setExpanded = (row2, open4) => {
-    const key = keyOf8(row2);
-    if (open4 === expanded.has(key)) return;
-    const closed = open4 && single ? [...expanded] : [];
-    for (const other of closed) expanded.delete(other);
-    if (open4) expanded.add(key);
-    else expanded.delete(key);
-    const detail = open4 ? detailFor(row2) : details.get(row2);
-    render7();
-    const said = { key, row: row2, open: open4, cell: detail?.cells[0] ?? null, expanded: [...expanded] };
-    if (single) said.closed = closed;
-    wrap.dispatchEvent(new CustomEvent(EXPAND_EVENT, { bubbles: true, detail: said }));
-  };
-  c.setExpanded = setExpanded;
-  const expandKeys = (keys) => {
-    const want = new Set(single ? keys.slice(-1) : keys);
-    for (const row2 of c.all) {
-      const key = keyOf8(row2);
-      if (want.has(key) !== expanded.has(key)) setExpanded(row2, want.has(key));
-    }
-  };
-  c.expandKeys = expandKeys;
-  const setFolded = (key, fold2) => {
-    if (fold2 === folded2.has(key)) return;
-    const going = fold2 ? c.pageRows.filter((row2) => groupOf3(row2) === key && !row2.hidden) : [];
-    if (fold2) folded2.add(key);
-    else {
-      folded2.delete(key);
-      for (const row2 of [...departing])
-        if (groupOf3(row2) === key) {
-          departing.delete(row2);
-          row2.removeAttribute("data-kp-folding");
-          stopReversing(row2);
-        }
-    }
-    for (const row2 of going) {
-      departing.add(row2);
-      row2.setAttribute("data-kp-folding", FOLDING_OUT);
-    }
-    if (going.length)
-      void Promise.all(going.map((row2) => playArrivalBackwards(row2))).then(() => {
-        let held2 = false;
-        for (const row2 of going)
-          if (departing.delete(row2)) {
-            row2.removeAttribute("data-kp-folding");
-            held2 = true;
-          }
-        if (held2) render7();
-      });
-    render7();
-    wrap.dispatchEvent(
-      new CustomEvent(GROUP_EVENT, {
-        bubbles: true,
-        detail: {
-          key,
-          row: groups.get(key) ?? null,
-          open: !fold2,
-          members: c.all.filter((row2) => groupOf3(row2) === key),
-          folded: [...folded2]
-        }
-      })
-    );
-  };
-  c.setFolded = setFolded;
-  const foldKeys = (keys) => {
-    const want = new Set(keys);
-    for (const key of groups.keys()) setFolded(key, want.has(key));
-    for (const key of [...folded2]) if (!groups.has(key) && !want.has(key)) folded2.delete(key);
-    for (const key of want) if (!groups.has(key)) folded2.add(key);
-  };
-  c.foldKeys = foldKeys;
-  const onRowKey = (event) => {
-    if (event.key !== "Enter" && event.key !== " " || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (!target.matches("tr, td, th")) return;
-    const row2 = (
-      /** @type {HTMLTableRowElement | null} */
-      target.closest("tr")
-    );
-    if (row2 === null || row2.parentElement !== body || row2.matches(DETAIL)) return;
-    if (row2.matches(GROUP_ROW)) {
-      const key = row2.dataset.kpRowGroup ?? "";
-      if (groups.get(key) !== row2) return;
-      event.preventDefault();
-      setFolded(key, !folded2.has(key));
-    } else if (expandable && row2.querySelector(ROW_TOGGLE) !== null) {
-      event.preventDefault();
-      setExpanded(row2, !expanded.has(keyOf8(row2)));
-    } else return;
-    if (target.isConnected && document.activeElement !== target) target.focus({ preventScroll: true });
-  };
-  c.onRowKey = onRowKey;
-}
+var TableExpand;
 var init_expand = __esm({
   "js/datatable/attach/expand.js"() {
     "use strict";
     init_events();
     init_motion();
     init_selectors();
+    TableExpand = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+      }
+      // ── Expansion ──────────────────────────────────────────────────
+      /** @param {HTMLTableRowElement} row @param {boolean} open */
+      setExpanded(row2, open4) {
+        const key = this.t.columns.keyOf(row2);
+        if (open4 === this.t.details.expanded.has(key)) return;
+        const closed = open4 && this.t.details.single ? [...this.t.details.expanded] : [];
+        for (const other of closed) this.t.details.expanded.delete(other);
+        if (open4) this.t.details.expanded.add(key);
+        else this.t.details.expanded.delete(key);
+        const detail = open4 ? this.t.sync.detailFor(row2) : this.t.details.details.get(row2);
+        this.t.render.render();
+        const said = { key, row: row2, open: open4, cell: detail?.cells[0] ?? null, expanded: [...this.t.details.expanded] };
+        if (this.t.details.single) said.closed = closed;
+        this.t.wrap.dispatchEvent(new CustomEvent(EXPAND_EVENT, { bubbles: true, detail: said }));
+      }
+      /** @param {readonly string[]} keys */
+      expandKeys(keys) {
+        const want = new Set(this.t.details.single ? keys.slice(-1) : keys);
+        for (const row2 of this.t.model.all) {
+          const key = this.t.columns.keyOf(row2);
+          if (want.has(key) !== this.t.details.expanded.has(key)) this.setExpanded(row2, want.has(key));
+        }
+      }
+      // ── Folding a group [J2] ───────────────────────────────────────
+      /** The rows of a folding group play their arrival backwards, then are hidden by a render. @param {HTMLTableRowElement[]} going */
+      foldAway(going) {
+        void Promise.all(going.map((row2) => playArrivalBackwards(row2))).then(() => {
+          let held2 = false;
+          for (const row2 of going)
+            if (this.t.groups.departing.delete(row2)) {
+              row2.removeAttribute("data-kp-folding");
+              held2 = true;
+            }
+          if (held2) this.t.render.render();
+        });
+      }
+      /** @param {string} key @param {boolean} fold */
+      setFolded(key, fold2) {
+        if (fold2 === this.t.groups.folded.has(key)) return;
+        const going = fold2 ? this.t.model.pageRows.filter((row2) => this.t.groups.groupOf(row2) === key && !row2.hidden) : [];
+        if (fold2) this.t.groups.folded.add(key);
+        else {
+          this.t.groups.folded.delete(key);
+          for (const row2 of [...this.t.groups.departing])
+            if (this.t.groups.groupOf(row2) === key) {
+              this.t.groups.departing.delete(row2);
+              row2.removeAttribute("data-kp-folding");
+              stopReversing(row2);
+            }
+        }
+        for (const row2 of going) {
+          this.t.groups.departing.add(row2);
+          row2.setAttribute("data-kp-folding", FOLDING_OUT);
+        }
+        if (going.length) this.foldAway(going);
+        this.t.render.render();
+        this.t.wrap.dispatchEvent(
+          new CustomEvent(GROUP_EVENT, {
+            bubbles: true,
+            detail: {
+              key,
+              row: this.t.groups.groups.get(key) ?? null,
+              open: !fold2,
+              members: this.t.model.all.filter((row2) => this.t.groups.groupOf(row2) === key),
+              folded: [...this.t.groups.folded]
+            }
+          })
+        );
+      }
+      /** @param {readonly string[]} keys */
+      foldKeys(keys) {
+        const want = new Set(keys);
+        for (const key of this.t.groups.groups.keys()) this.setFolded(key, want.has(key));
+        for (const key of [...this.t.groups.folded]) if (!this.t.groups.groups.has(key) && !want.has(key)) this.t.groups.folded.delete(key);
+        for (const key of want) if (!this.t.groups.groups.has(key)) this.t.groups.folded.add(key);
+      }
+      /**
+       * Enter or Space on a row, or on a cell, that holds the focus itself
+       * (a row given a tabindex, a cell of the keyboard grid) works it as a
+       * click does: opens the row, folds the group [J2, R-KEYS]. A control
+       * in the row keeps its own keys.
+       * @param {KeyboardEvent} event
+       */
+      onRowKey(event) {
+        if (event.key !== "Enter" && event.key !== " " || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (!target.matches("tr, td, th")) return;
+        const row2 = (
+          /** @type {HTMLTableRowElement | null} */
+          target.closest("tr")
+        );
+        if (row2 === null || row2.parentElement !== this.t.body || row2.matches(DETAIL)) return;
+        if (row2.matches(GROUP_ROW)) {
+          const key = row2.dataset.kpRowGroup ?? "";
+          if (this.t.groups.groups.get(key) !== row2) return;
+          event.preventDefault();
+          this.setFolded(key, !this.t.groups.folded.has(key));
+        } else if (this.t.details.expandable && row2.querySelector(ROW_TOGGLE) !== null) {
+          event.preventDefault();
+          this.setExpanded(row2, !this.t.details.expanded.has(this.t.columns.keyOf(row2)));
+        } else return;
+        if (target.isConnected && document.activeElement !== target) target.focus({ preventScroll: true });
+      }
+    };
   }
 });
 
 // js/datatable/attach/selection.js
-function installSelection(c) {
-  const { keyOf: keyOf8, selectAll, selectedRows, serverMode, serverSelection, syncActions, syncSelectAll, wrap } = c;
-  const toggleMemo = (element) => {
-    const selector = element.matches(ROW_TOGGLE) ? ROW_TOGGLE : element.matches(GROUP_TOGGLE) ? GROUP_TOGGLE : null;
-    const row2 = (
-      /** @type {HTMLTableRowElement | null} */
-      element.closest("tr")
-    );
-    if (selector === null || row2 === null) return null;
-    const isGroup = row2.matches(GROUP_ROW);
-    return { element, selector, key: isGroup ? null : keyOf8(row2), group: isGroup ? row2.dataset.kpRowGroup ?? null : null };
-  };
-  c.toggleMemo = toggleMemo;
-  c.focusMemo = null;
-  const onBodyFocusIn = (event) => {
-    c.focusMemo = event.target instanceof HTMLElement ? toggleMemo(event.target) : null;
-  };
-  c.onBodyFocusIn = onBodyFocusIn;
-  const onBodyFocusOut = (event) => {
-    if (c.focusMemo !== null && event.target === c.focusMemo.element && c.focusMemo.element.isConnected) c.focusMemo = null;
-  };
-  c.onBodyFocusOut = onBodyFocusOut;
-  const announceSelection = () => {
-    const rows = selectedRows();
-    const keys = rows.map(keyOf8);
-    wrap.dispatchEvent(new CustomEvent(SELECT_EVENT, { bubbles: true, detail: { keys, rows } }));
-  };
-  const onBodyChange = (event) => {
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (!target.matches(SELECT_ROW)) return;
-    if (serverMode) {
-      const row2 = target.closest("tr");
-      if (row2 !== null) {
-        if (
-          /** @type {HTMLInputElement} */
-          target.checked
-        ) serverSelection.add(keyOf8(row2));
-        else serverSelection.delete(keyOf8(row2));
-      }
-    }
-    syncSelectAll();
-    syncActions();
-    announceSelection();
-  };
-  c.onBodyChange = onBodyChange;
-  const onSelectAll = () => {
-    if (selectAll === null) return;
-    for (const row2 of c.pageRows) {
-      const box = (
-        /** @type {HTMLInputElement | null} */
-        row2.querySelector(SELECT_ROW)
-      );
-      if (box !== null) box.checked = selectAll.checked;
-      if (serverMode) {
-        if (selectAll.checked) serverSelection.add(keyOf8(row2));
-        else serverSelection.delete(keyOf8(row2));
-      }
-    }
-    selectAll.indeterminate = false;
-    syncActions();
-    announceSelection();
-  };
-  c.onSelectAll = onSelectAll;
-  const select2 = (keys) => {
-    const want = new Set(keys);
-    if (serverMode) {
-      serverSelection.clear();
-      for (const key of keys) serverSelection.add(key);
-    }
-    for (const row2 of c.all) {
-      const box = (
-        /** @type {HTMLInputElement | null} */
-        row2.querySelector(SELECT_ROW)
-      );
-      if (box !== null) box.checked = want.has(keyOf8(row2));
-    }
-    syncSelectAll();
-    syncActions();
-    announceSelection();
-  };
-  c.select = select2;
-  const onClearSelection = () => select2([]);
-  c.onClearSelection = onClearSelection;
-}
+var TableSelection;
 var init_selection2 = __esm({
   "js/datatable/attach/selection.js"() {
     "use strict";
     init_selectors();
     init_events();
+    TableSelection = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.focusMemo = null;
+      }
+      /** @param {HTMLElement} element @returns {FocusMemo | null} */
+      toggleMemo(element) {
+        const selector = element.matches(ROW_TOGGLE) ? ROW_TOGGLE : element.matches(GROUP_TOGGLE) ? GROUP_TOGGLE : null;
+        const row2 = (
+          /** @type {HTMLTableRowElement | null} */
+          element.closest("tr")
+        );
+        if (selector === null || row2 === null) return null;
+        const isGroup = row2.matches(GROUP_ROW);
+        return { element, selector, key: isGroup ? null : this.t.columns.keyOf(row2), group: isGroup ? row2.dataset.kpRowGroup ?? null : null };
+      }
+      /** @param {FocusEvent} event */
+      onBodyFocusIn(event) {
+        this.focusMemo = event.target instanceof HTMLElement ? this.toggleMemo(event.target) : null;
+      }
+      /** Focus that moved on, while the toggle is still in the page, is the reader's choice: forget it. @param {FocusEvent} event */
+      onBodyFocusOut(event) {
+        if (this.focusMemo !== null && event.target === this.focusMemo.element && this.focusMemo.element.isConnected) this.focusMemo = null;
+      }
+      announceSelection() {
+        const rows = this.t.sync.selectedRows();
+        const keys = rows.map(this.t.bound(this.t.columns, this.t.columns.keyOf));
+        this.t.wrap.dispatchEvent(new CustomEvent(SELECT_EVENT, { bubbles: true, detail: { keys, rows } }));
+      }
+      /** @param {Event} event */
+      onBodyChange(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (!target.matches(SELECT_ROW)) return;
+        if (this.t.controls.serverMode) {
+          const row2 = target.closest("tr");
+          if (row2 !== null) {
+            if (
+              /** @type {HTMLInputElement} */
+              target.checked
+            ) this.t.sync.serverSelection.add(this.t.columns.keyOf(row2));
+            else this.t.sync.serverSelection.delete(this.t.columns.keyOf(row2));
+          }
+        }
+        this.t.sync.syncSelectAll();
+        this.t.sync.syncActions();
+        this.announceSelection();
+      }
+      onSelectAll() {
+        if (this.t.controls.selectAll === null) return;
+        for (const row2 of this.t.model.pageRows) {
+          const box = (
+            /** @type {HTMLInputElement | null} */
+            row2.querySelector(SELECT_ROW)
+          );
+          if (box !== null) box.checked = this.t.controls.selectAll.checked;
+          if (this.t.controls.serverMode) {
+            if (this.t.controls.selectAll.checked) this.t.sync.serverSelection.add(this.t.columns.keyOf(row2));
+            else this.t.sync.serverSelection.delete(this.t.columns.keyOf(row2));
+          }
+        }
+        this.t.controls.selectAll.indeterminate = false;
+        this.t.sync.syncActions();
+        this.announceSelection();
+      }
+      /** @param {readonly string[]} keys */
+      select(keys) {
+        const want = new Set(keys);
+        if (this.t.controls.serverMode) {
+          this.t.sync.serverSelection.clear();
+          for (const key of keys) this.t.sync.serverSelection.add(key);
+        }
+        for (const row2 of this.t.model.all) {
+          const box = (
+            /** @type {HTMLInputElement | null} */
+            row2.querySelector(SELECT_ROW)
+          );
+          if (box !== null) box.checked = want.has(this.t.columns.keyOf(row2));
+        }
+        this.t.sync.syncSelectAll();
+        this.t.sync.syncActions();
+        this.announceSelection();
+      }
+      onClearSelection() {
+        return this.select([]);
+      }
+    };
   }
 });
 
 // js/datatable/attach/edit.js
-function installEdit(c) {
-  const {
-    actions,
-    body,
-    cellText,
-    commitSorts,
-    datePickerFor,
-    editKinds,
-    expandKeys,
-    expandable,
-    expanded,
-    folded: folded2,
-    groups,
-    headers,
-    id,
-    keyOf: keyOf8,
-    labelOf: labelOf8,
-    labelRow,
-    make: make35,
-    onClear,
-    onClearSelection,
-    onEdit,
-    onRetry,
-    setExpanded,
-    setFolded,
-    wrap
-  } = c;
-  c.editing = null;
-  let lastEdit = null;
-  let listWasOpen = false;
-  const logEdit = (text, { undo: withUndo = false } = {}) => {
-    if (c.editLog === null) return;
-    c.editLog.textContent = text;
-    if (!withUndo) return;
-    const button6 = (
-      /** @type {HTMLButtonElement} */
-      make35("button", "kp-button kp-button--ghost kp-button--sm")
-    );
-    button6.type = "button";
-    button6.dataset.kpDatatableUndo = "";
-    button6.textContent = getStrings().undo;
-    c.editLog.append(" ", button6);
-  };
-  const writeCell = (cell, value) => {
-    const holder = (
-      /** @type {HTMLElement} */
-      cell.querySelector(EDIT_VALUE) ?? cell
-    );
-    const only = holder.children.length === 1 && holder.children[0]?.children.length === 0 ? holder.children[0] : null;
-    if (only !== null && (holder.textContent ?? "").trim() === (only.textContent ?? "").trim()) only.textContent = value;
-    else holder.textContent = value;
-  };
-  const closeEditor = () => {
-    if (c.editing === null) return;
-    const current2 = c.editing;
-    c.editing = null;
-    current2.detach();
-    current2.holder.remove();
-    current2.button.hidden = false;
-    c.grid?.sync();
-  };
-  c.closeEditor = closeEditor;
-  const openEditor = async (row2, column) => {
-    if (c.editing !== null && !await commitEdit(true)) return;
-    const kind = editKinds[column];
-    const cell = row2.cells[column];
-    const button6 = (
-      /** @type {HTMLButtonElement | null} */
-      cell?.querySelector(EDIT_CELL) ?? null
-    );
-    if (kind === null || kind === void 0 || cell === void 0 || button6 === null) return;
-    const s2 = getStrings();
-    const header = headers[column];
-    const key = keyOf8(row2);
-    const previous = cellText(row2, column);
-    const holder = make35("div", "kp-datatable__editor");
-    holder.dataset.kpDatatableEditorWrap = "";
-    holder.setAttribute("data-density", "compact");
-    const errorId = `${id}-edit-error`;
-    const error = make35("p", "kp-field__error");
-    error.id = errorId;
-    error.hidden = true;
-    let control;
-    let detachControl = () => {
-    };
-    if (kind === "select") {
-      const select2 = (
-        /** @type {HTMLSelectElement} */
-        make35("select", "kp-field__input")
-      );
-      const declared2 = splitList2(header?.dataset.kpEditOptions);
-      const values = declared2.length > 0 ? declared2 : [...new Set(c.all.map((r) => cellText(r, column)).filter((v) => v !== ""))];
-      if (!values.includes(previous)) values.unshift(previous);
-      for (const value of values) {
-        const option = (
-          /** @type {HTMLOptionElement} */
-          make35("option")
-        );
-        option.value = value;
-        option.textContent = value;
-        select2.append(option);
-      }
-      select2.value = previous;
-      control = select2;
-      holder.append(select2);
-    } else {
-      const input = (
-        /** @type {HTMLInputElement} */
-        make35("input", "kp-field__input")
-      );
-      input.value = kind === "date" ? "" : previous;
-      if (kind === "number") {
-        input.type = "number";
-        if (header?.dataset.kpEditMin !== void 0) input.min = header.dataset.kpEditMin;
-        if (header?.dataset.kpEditMax !== void 0) input.max = header.dataset.kpEditMax;
-      } else if (kind === "text") input.type = "text";
-      control = input;
-      if (kind === "date") {
-        input.id = `${id}-edit-date`;
-        holder.append(datePickerFor(input));
-      } else holder.append(input);
-    }
-    control.dataset.kpDatatableEditor = "";
-    control.setAttribute("aria-label", s2.tableEditField(labelOf8(column), key));
-    control.setAttribute("aria-describedby", errorId);
-    if (header?.dataset.kpEditRequired !== void 0) control.setAttribute("aria-required", "true");
-    holder.append(error);
-    button6.hidden = true;
-    cell.append(holder);
-    if (kind === "select" && drawsSelect(control)) detachControl = attachSelect(
-      /** @type {HTMLSelectElement} */
-      control
-    );
-    if (kind === "date") {
-      const detachPickers = attachDatePickers(holder);
-      const picker = holder.querySelector("[data-kp-datepicker]");
-      const handle = picker === null ? null : datePicker(picker);
-      if (previous !== "") handle?.set(previous);
-      detachControl = detachPickers;
-    }
-    c.editing = { row: row2, column, kind, button: button6, holder, control, error, previous, detach: detachControl, busy: false };
-    control.focus();
-    if (control instanceof HTMLInputElement && kind !== "date") control.select();
-    logEdit(s2.tableEditing(labelOf8(column), key));
-  };
-  c.openEditor = openEditor;
-  const refuse3 = (message) => {
-    if (c.editing === null) return;
-    c.editing.error.textContent = message;
-    c.editing.error.hidden = false;
-    c.editing.control.setAttribute("aria-invalid", "true");
-    c.editing.control.focus();
-  };
-  const askApp = async (row2, column, value, previous, isUndo) => {
-    const s2 = getStrings();
-    let refused = null;
-    const waits = [];
-    const detail = {
-      key: keyOf8(row2),
-      row: row2,
-      cell: (
-        /** @type {HTMLTableCellElement} */
-        row2.cells[column]
-      ),
-      column,
-      label: labelOf8(column),
-      value,
-      previous,
-      undo: isUndo,
-      reject: (message) => {
-        refused = message ?? s2.tableEditInvalid;
-      },
-      waitUntil: (promise) => {
-        waits.push(promise);
-      }
-    };
-    const event = new CustomEvent(EDIT_EVENT, { bubbles: true, cancelable: true, detail });
-    wrap.dispatchEvent(event);
-    if (event.defaultPrevented && refused === null) refused = s2.tableEditInvalid;
-    if (onEdit !== void 0) waits.push(Promise.resolve().then(() => onEdit(detail)));
-    if (refused === null && waits.length > 0) {
-      try {
-        for (const answer2 of await Promise.all(waits)) {
-          if (typeof answer2 === "string") refused = answer2;
-          else if (answer2 === false) refused = s2.tableEditInvalid;
-        }
-      } catch (error) {
-        refused = error instanceof Error && error.message !== "" ? error.message : s2.tableEditInvalid;
-      }
-    }
-    return refused;
-  };
-  const commitEdit = async (save2) => {
-    const current2 = c.editing;
-    if (current2 === null) return true;
-    if (current2.busy) return false;
-    const s2 = getStrings();
-    const { row: row2, column, kind, button: button6, control, previous } = current2;
-    const key = keyOf8(row2);
-    if (!save2) {
-      closeEditor();
-      logEdit(s2.tableEditCancelled);
-      button6.focus();
-      return true;
-    }
-    const value = kind === "date" ? control.dataset.kpDateValue ?? (control.value.trim() === "" ? "" : control.value.trim()) : control.value.trim();
-    if (value === "" && headers[column]?.dataset.kpEditRequired !== void 0) {
-      refuse3(s2.tableEditRequired);
-      return false;
-    }
-    if (kind === "number" && value !== "" && Number.isNaN(Number(value))) {
-      refuse3(s2.tableEditInvalid);
-      return false;
-    }
-    if (value === previous) {
-      closeEditor();
-      button6.focus();
-      return true;
-    }
-    current2.busy = true;
-    const refused = await askApp(row2, column, value, previous, false);
-    current2.busy = false;
-    if (c.editing !== current2) return true;
-    if (refused !== null) {
-      refuse3(refused);
-      return false;
-    }
-    const cell = (
-      /** @type {HTMLTableCellElement} */
-      row2.cells[column]
-    );
-    writeCell(cell, value);
-    closeEditor();
-    lastEdit = { row: row2, column, before: previous, after: value };
-    labelRow(row2);
-    logEdit(s2.tableEdited(key, labelOf8(column), previous, value), { undo: true });
-    button6.focus();
-    return true;
-  };
-  c.commitEdit = commitEdit;
-  const undoEdit = async () => {
-    const last = lastEdit;
-    if (last === null) return;
-    const s2 = getStrings();
-    const refused = await askApp(last.row, last.column, last.before, last.after, true);
-    if (refused !== null) {
-      logEdit(refused);
-      return;
-    }
-    lastEdit = null;
-    writeCell(
-      /** @type {HTMLTableCellElement} */
-      last.row.cells[last.column],
-      last.before
-    );
-    labelRow(last.row);
-    logEdit(s2.tableEditUndone(keyOf8(last.row), labelOf8(last.column), last.before));
-    (last.row.cells[last.column]?.querySelector(EDIT_CELL) ?? null)?.focus();
-  };
-  const onEditorKeyCapture = (event) => {
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (target.matches("select[data-kp-datatable-editor]")) listWasOpen = target.getAttribute("aria-expanded") === "true";
-  };
-  c.onEditorKeyCapture = onEditorKeyCapture;
-  const onEditorKey = (event) => {
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (c.editing === null || !target.matches("[data-kp-datatable-editor]")) return;
-    const isSelect = target instanceof HTMLSelectElement;
-    if (event.key === "Enter") {
-      event.preventDefault();
-      if (!isSelect || listWasOpen || !drawsSelect(target)) void commitEdit(true);
-    } else if (event.key === "Escape") {
-      const panelOpen = c.editing.holder.querySelector("[data-kp-date-panel]:not([hidden])") !== null;
-      if (isSelect && listWasOpen || panelOpen) return;
-      event.preventDefault();
-      void commitEdit(false);
-    }
-  };
-  c.onEditorKey = onEditorKey;
-  const onEditorFocusOut = (event) => {
-    if (c.editing === null || !c.editing.holder.contains(
-      /** @type {Node} */
-      event.target
-    )) return;
-    const current2 = c.editing;
-    setTimeout(() => {
-      if (c.editing !== current2 || current2.busy) return;
-      if (current2.holder.contains(document.activeElement)) return;
-      void commitEdit(true);
-    }, 0);
-  };
-  c.onEditorFocusOut = onEditorFocusOut;
-  const onWrapClick = (event) => {
-    const target = (
-      /** @type {HTMLElement} */
-      event.target
-    );
-    if (target.closest(CLEAR_SELECTION) !== null && actions?.contains(target)) onClearSelection();
-    if (target.closest(CLEAR2) !== null && c.empty?.contains(target)) onClear();
-    if (target.closest(RETRY) !== null && c.failedSlot?.contains(target)) onRetry();
-    if (target.closest(SORT_RESET) !== null) commitSorts(c.initialSorts.map((key) => ({ ...key })));
-    if (target.closest(EXPAND_ALL) !== null)
-      expandKeys([.../* @__PURE__ */ new Set([...expanded, ...c.pageRows.filter((row2) => row2.querySelector(ROW_TOGGLE) !== null).map(keyOf8)])]);
-    if (target.closest(COLLAPSE_ALL) !== null) expandKeys([]);
-    if (target.closest("[data-kp-datatable-undo]") !== null && c.editLog?.contains(target)) void undoEdit();
-    const groupRow = (
-      /** @type {HTMLTableRowElement | null} */
-      target.closest(GROUP_ROW)
-    );
-    if (groupRow !== null && groupRow.parentElement === body && groups.get(groupRow.dataset.kpRowGroup ?? "") === groupRow) {
-      const groupToggle = target.closest(GROUP_TOGGLE);
-      const interactive2 = target.closest(ROW_CONTROLS);
-      const control = interactive2 !== null && !interactive2.matches("td, th, tr") ? interactive2 : null;
-      const selecting = (window.getSelection?.()?.toString() ?? "") !== "";
-      if (groupToggle !== null || (control === null || !groupRow.contains(control)) && !selecting) {
-        const key = groupRow.dataset.kpRowGroup ?? "";
-        setFolded(key, !folded2.has(key));
-        if (groupToggle !== null) groupRow.querySelector(GROUP_TOGGLE)?.focus();
-      }
-    }
-    const rowToggle = (
-      /** @type {HTMLElement | null} */
-      target.closest(ROW_TOGGLE)
-    );
-    if (rowToggle !== null && body.contains(rowToggle)) {
-      const row2 = (
-        /** @type {HTMLTableRowElement} */
-        rowToggle.closest("tr")
-      );
-      setExpanded(row2, !expanded.has(keyOf8(row2)));
-      row2.querySelector(ROW_TOGGLE)?.focus();
-    } else if (expandable && body.contains(target)) {
-      const row2 = (
-        /** @type {HTMLTableRowElement | null} */
-        target.closest("tr")
-      );
-      const interactive2 = target.closest(ROW_CONTROLS);
-      const control = interactive2 !== null && !interactive2.matches("td, th, tr") ? interactive2 : null;
-      const selecting = (window.getSelection?.()?.toString() ?? "") !== "";
-      if (row2 !== null && row2.parentElement === body && !row2.matches(DETAIL) && !row2.matches(GROUP_ROW) && row2.querySelector(ROW_TOGGLE) !== null && (control === null || !row2.contains(control)) && !selecting) {
-        setExpanded(row2, !expanded.has(keyOf8(row2)));
-      }
-    }
-    const editButton = (
-      /** @type {HTMLElement | null} */
-      target.closest(EDIT_CELL)
-    );
-    if (editButton !== null && body.contains(editButton)) {
-      const cell = (
-        /** @type {HTMLTableCellElement} */
-        editButton.closest("td, th")
-      );
-      void openEditor(
-        /** @type {HTMLTableRowElement} */
-        cell.parentElement,
-        cell.cellIndex
-      );
-    }
-  };
-  c.onWrapClick = onWrapClick;
-}
+var TableEdit;
 var init_edit = __esm({
   "js/datatable/attach/edit.js"() {
     "use strict";
@@ -48010,154 +47855,423 @@ var init_edit = __esm({
     init_combobox();
     init_datepicker();
     init_events();
+    TableEdit = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.editing = null;
+        this.lastEdit = null;
+        this.listWasOpen = false;
+      }
+      /** @param {string} text @param {{ undo?: boolean }} [options] */
+      logEdit(text, { undo: withUndo = false } = {}) {
+        if (this.t.sortSetup.editLog === null) return;
+        this.t.sortSetup.editLog.textContent = text;
+        if (!withUndo) return;
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-button kp-button--ghost kp-button--sm")
+        );
+        button6.type = "button";
+        button6.dataset.kpDatatableUndo = "";
+        button6.textContent = getStrings().undo;
+        this.t.sortSetup.editLog.append(" ", button6);
+      }
+      /** Write a saved value into its cell, into the badge or the element that held the text. @param {HTMLTableCellElement} cell @param {string} value */
+      writeCell(cell, value) {
+        const holder = (
+          /** @type {HTMLElement} */
+          cell.querySelector(EDIT_VALUE) ?? cell
+        );
+        const only = holder.children.length === 1 && holder.children[0]?.children.length === 0 ? holder.children[0] : null;
+        if (only !== null && (holder.textContent ?? "").trim() === (only.textContent ?? "").trim()) only.textContent = value;
+        else holder.textContent = value;
+      }
+      closeEditor() {
+        if (this.editing === null) return;
+        const current2 = this.editing;
+        this.editing = null;
+        current2.detach();
+        current2.holder.remove();
+        current2.button.hidden = false;
+        this.t.sync.grid?.sync();
+      }
+      /** Open the editor of cell `column` of `row`, saving the one that is open first. @param {HTMLTableRowElement} row @param {number} column */
+      async openEditor(row2, column) {
+        if (this.editing !== null && !await this.commitEdit(true)) return;
+        const { columns: columns2, identity } = this.t;
+        const kind = columns2.editKinds[column];
+        const cell = row2.cells[column];
+        const button6 = (
+          /** @type {HTMLButtonElement | null} */
+          cell?.querySelector(EDIT_CELL) ?? null
+        );
+        if (kind === null || kind === void 0 || cell === void 0 || button6 === null) return;
+        const s2 = getStrings();
+        const key = columns2.keyOf(row2);
+        const previous = columns2.cellText(row2, column);
+        const holder = identity.make("div", "kp-datatable__editor");
+        holder.dataset.kpDatatableEditorWrap = "";
+        holder.setAttribute("data-density", "compact");
+        const errorId = `${identity.id}-edit-error`;
+        const error = identity.make("p", "kp-field__error");
+        error.id = errorId;
+        error.hidden = true;
+        const control = this.editField(kind, column, previous, holder);
+        control.dataset.kpDatatableEditor = "";
+        control.setAttribute("aria-label", s2.tableEditField(columns2.labelOf(column), key));
+        control.setAttribute("aria-describedby", errorId);
+        if (columns2.headers[column]?.dataset.kpEditRequired !== void 0) control.setAttribute("aria-required", "true");
+        holder.append(error);
+        button6.hidden = true;
+        cell.append(holder);
+        const detach = this.startField(kind, control, holder, previous);
+        this.editing = { row: row2, column, kind, button: button6, holder, control, error, previous, detach, busy: false };
+        control.focus();
+        if (control instanceof HTMLInputElement && kind !== "date") control.select();
+        this.logEdit(s2.tableEditing(columns2.labelOf(column), key));
+      }
+      /**
+       * The editor's field, put in `holder`: a select of the column's values, a number or text input, or the package's date picker.
+       * @param {EditKind} kind @param {number} column @param {string} previous @param {HTMLElement} holder
+       * @returns {HTMLInputElement | HTMLSelectElement}
+       */
+      editField(kind, column, previous, holder) {
+        const { identity, columns: columns2 } = this.t;
+        const header = columns2.headers[column];
+        if (kind === "select") {
+          const select2 = (
+            /** @type {HTMLSelectElement} */
+            identity.make("select", "kp-field__input")
+          );
+          const declared2 = splitList2(header?.dataset.kpEditOptions);
+          const values = declared2.length > 0 ? declared2 : [...new Set(this.t.model.all.map((r) => columns2.cellText(r, column)).filter((v) => v !== ""))];
+          if (!values.includes(previous)) values.unshift(previous);
+          for (const value of values) {
+            const option = (
+              /** @type {HTMLOptionElement} */
+              identity.make("option")
+            );
+            option.value = value;
+            option.textContent = value;
+            select2.append(option);
+          }
+          select2.value = previous;
+          holder.append(select2);
+          return select2;
+        }
+        const input = (
+          /** @type {HTMLInputElement} */
+          identity.make("input", "kp-field__input")
+        );
+        input.value = kind === "date" ? "" : previous;
+        if (kind === "number") {
+          input.type = "number";
+          if (header?.dataset.kpEditMin !== void 0) input.min = header.dataset.kpEditMin;
+          if (header?.dataset.kpEditMax !== void 0) input.max = header.dataset.kpEditMax;
+        } else if (kind === "text") input.type = "text";
+        if (kind === "date") {
+          input.id = `${identity.id}-edit-date`;
+          holder.append(this.t.filterUi.datePickerFor(input));
+        } else holder.append(input);
+        return input;
+      }
+      /**
+       * Wire the field once it is in the cell: the drawn list of a select, the date picker with the cell's date.
+       * @param {EditKind} kind @param {HTMLInputElement | HTMLSelectElement} control @param {HTMLElement} holder @param {string} previous
+       * @returns {() => void} what takes that wiring away
+       */
+      startField(kind, control, holder, previous) {
+        if (kind === "select" && drawsSelect(control)) return attachSelect(
+          /** @type {HTMLSelectElement} */
+          control
+        );
+        if (kind !== "date") return () => {
+        };
+        const detachPickers = attachDatePickers(holder);
+        const picker = holder.querySelector("[data-kp-datepicker]");
+        const handle = picker === null ? null : datePicker(picker);
+        if (previous !== "") handle?.set(previous);
+        return detachPickers;
+      }
+      /** @param {string} message */
+      refuse(message) {
+        if (this.editing === null) return;
+        this.editing.error.textContent = message;
+        this.editing.error.hidden = false;
+        this.editing.control.setAttribute("aria-invalid", "true");
+        this.editing.control.focus();
+      }
+      /**
+       * Tell the app about a change and wait for its answer: null when it
+       * accepts, the message when it refuses.
+       *
+       * @param {HTMLTableRowElement} row @param {number} column @param {string} value @param {string} previous @param {boolean} isUndo
+       * @returns {Promise<string | null>}
+       */
+      async askApp(row2, column, value, previous, isUndo) {
+        const s2 = getStrings();
+        let refused = null;
+        const waits = [];
+        const detail = {
+          key: this.t.columns.keyOf(row2),
+          row: row2,
+          cell: (
+            /** @type {HTMLTableCellElement} */
+            row2.cells[column]
+          ),
+          column,
+          label: this.t.columns.labelOf(column),
+          value,
+          previous,
+          undo: isUndo,
+          reject: (message) => {
+            refused = message ?? s2.tableEditInvalid;
+          },
+          waitUntil: (promise) => {
+            waits.push(promise);
+          }
+        };
+        const event = new CustomEvent(EDIT_EVENT, { bubbles: true, cancelable: true, detail });
+        this.t.wrap.dispatchEvent(event);
+        if (event.defaultPrevented && refused === null) refused = s2.tableEditInvalid;
+        const onEdit = this.t.settings.onEdit;
+        if (onEdit !== void 0) waits.push(Promise.resolve().then(() => onEdit(detail)));
+        if (refused === null && waits.length > 0) {
+          try {
+            for (const answer2 of await Promise.all(waits)) {
+              if (typeof answer2 === "string") refused = answer2;
+              else if (answer2 === false) refused = s2.tableEditInvalid;
+            }
+          } catch (error) {
+            refused = error instanceof Error && error.message !== "" ? error.message : s2.tableEditInvalid;
+          }
+        }
+        return refused;
+      }
+      /**
+       * Why a value cannot be saved: a required cell left empty, or a number that is not one; null when it can.
+       * @param {EditKind} kind @param {number} column @param {string} value @param {ReturnType<typeof getStrings>} s
+       */
+      checkValue(kind, column, value, s2) {
+        if (value === "" && this.t.columns.headers[column]?.dataset.kpEditRequired !== void 0) return s2.tableEditRequired;
+        if (kind === "number" && value !== "" && Number.isNaN(Number(value))) return s2.tableEditInvalid;
+        return null;
+      }
+      /** @param {boolean} save @returns {Promise<boolean>} whether the editor closed */
+      async commitEdit(save2) {
+        const current2 = this.editing;
+        if (current2 === null) return true;
+        if (current2.busy) return false;
+        const s2 = getStrings();
+        const { row: row2, column, kind, button: button6, control, previous } = current2;
+        const key = this.t.columns.keyOf(row2);
+        if (!save2) {
+          this.closeEditor();
+          this.logEdit(s2.tableEditCancelled);
+          button6.focus();
+          return true;
+        }
+        const value = kind === "date" ? control.dataset.kpDateValue ?? (control.value.trim() === "" ? "" : control.value.trim()) : control.value.trim();
+        const wrong = this.checkValue(kind, column, value, s2);
+        if (wrong !== null) {
+          this.refuse(wrong);
+          return false;
+        }
+        if (value === previous) {
+          this.closeEditor();
+          button6.focus();
+          return true;
+        }
+        current2.busy = true;
+        const refused = await this.askApp(row2, column, value, previous, false);
+        current2.busy = false;
+        if (this.editing !== current2) return true;
+        if (refused !== null) {
+          this.refuse(refused);
+          return false;
+        }
+        const cell = (
+          /** @type {HTMLTableCellElement} */
+          row2.cells[column]
+        );
+        this.writeCell(cell, value);
+        this.closeEditor();
+        this.lastEdit = { row: row2, column, before: previous, after: value };
+        this.t.reorder.labelRow(row2);
+        this.logEdit(s2.tableEdited(key, this.t.columns.labelOf(column), previous, value), { undo: true });
+        button6.focus();
+        return true;
+      }
+      async undoEdit() {
+        const last = this.lastEdit;
+        if (last === null) return;
+        const s2 = getStrings();
+        const refused = await this.askApp(last.row, last.column, last.before, last.after, true);
+        if (refused !== null) {
+          this.logEdit(refused);
+          return;
+        }
+        this.lastEdit = null;
+        this.writeCell(
+          /** @type {HTMLTableCellElement} */
+          last.row.cells[last.column],
+          last.before
+        );
+        this.t.reorder.labelRow(last.row);
+        this.logEdit(s2.tableEditUndone(this.t.columns.keyOf(last.row), this.t.columns.labelOf(last.column), last.before));
+        (last.row.cells[last.column]?.querySelector(EDIT_CELL) ?? null)?.focus();
+      }
+      /** @param {KeyboardEvent} event */
+      onEditorKeyCapture(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (target.matches("select[data-kp-datatable-editor]")) this.listWasOpen = target.getAttribute("aria-expanded") === "true";
+      }
+      /** @param {KeyboardEvent} event */
+      onEditorKey(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        if (this.editing === null || !target.matches("[data-kp-datatable-editor]")) return;
+        const isSelect = target instanceof HTMLSelectElement;
+        if (event.key === "Enter") {
+          event.preventDefault();
+          if (!isSelect || this.listWasOpen || !drawsSelect(target)) void this.commitEdit(true);
+        } else if (event.key === "Escape") {
+          const panelOpen = this.editing.holder.querySelector("[data-kp-date-panel]:not([hidden])") !== null;
+          if (isSelect && this.listWasOpen || panelOpen) return;
+          event.preventDefault();
+          void this.commitEdit(false);
+        }
+      }
+      /** Saving on blur, after the click that caused it has been handled. @param {FocusEvent} event */
+      onEditorFocusOut(event) {
+        if (this.editing === null || !this.editing.holder.contains(
+          /** @type {Node} */
+          event.target
+        )) return;
+        const current2 = this.editing;
+        setTimeout(() => {
+          if (this.editing !== current2 || current2.busy) return;
+          if (current2.holder.contains(document.activeElement)) return;
+          void this.commitEdit(true);
+        }, 0);
+      }
+    };
+  }
+});
+
+// js/datatable/attach/wrap-click.js
+function controlAt(target) {
+  const interactive2 = target.closest(ROW_CONTROLS);
+  return interactive2 !== null && !interactive2.matches("td, th, tr") ? interactive2 : null;
+}
+function selecting() {
+  return (window.getSelection?.()?.toString() ?? "") !== "";
+}
+var TableWrapClick;
+var init_wrap_click = __esm({
+  "js/datatable/attach/wrap-click.js"() {
+    "use strict";
+    init_selectors();
+    TableWrapClick = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+      }
+      /** @param {MouseEvent} event */
+      onWrapClick(event) {
+        const target = (
+          /** @type {HTMLElement} */
+          event.target
+        );
+        this.clickChrome(target);
+        const groupRow = (
+          /** @type {HTMLTableRowElement | null} */
+          target.closest(GROUP_ROW)
+        );
+        if (groupRow !== null && groupRow.parentElement === this.t.body && this.t.groups.groups.get(groupRow.dataset.kpRowGroup ?? "") === groupRow)
+          this.clickGroup(target, groupRow);
+        const rowToggle = (
+          /** @type {HTMLElement | null} */
+          target.closest(ROW_TOGGLE)
+        );
+        if (rowToggle !== null && this.t.body.contains(rowToggle)) {
+          const row2 = (
+            /** @type {HTMLTableRowElement} */
+            rowToggle.closest("tr")
+          );
+          this.t.expand.setExpanded(row2, !this.t.details.expanded.has(this.t.columns.keyOf(row2)));
+          row2.querySelector(ROW_TOGGLE)?.focus();
+        } else if (this.t.details.expandable && this.t.body.contains(target)) this.clickRow(target);
+        const editButton = (
+          /** @type {HTMLElement | null} */
+          target.closest(EDIT_CELL)
+        );
+        if (editButton !== null && this.t.body.contains(editButton)) {
+          const cell = (
+            /** @type {HTMLTableCellElement} */
+            editButton.closest("td, th")
+          );
+          void this.t.edit.openEditor(
+            /** @type {HTMLTableRowElement} */
+            cell.parentElement,
+            cell.cellIndex
+          );
+        }
+      }
+      /** The chrome's own buttons. @param {HTMLElement} target */
+      clickChrome(target) {
+        const { controls, handlers, expand, details, model, columns: columns2 } = this.t;
+        if (target.closest(CLEAR_SELECTION) !== null && controls.actions?.contains(target)) this.t.selection.onClearSelection();
+        if (target.closest(CLEAR2) !== null && controls.empty?.contains(target)) handlers.onClear();
+        if (target.closest(RETRY) !== null && controls.failedSlot?.contains(target)) handlers.onRetry();
+        if (target.closest(SORT_RESET) !== null) handlers.commitSorts(this.t.wire.initialSorts.map((key) => ({ ...key })));
+        if (target.closest(EXPAND_ALL) !== null) {
+          const openable = model.pageRows.filter((row2) => row2.querySelector(ROW_TOGGLE) !== null).map((row2) => columns2.keyOf(row2));
+          expand.expandKeys([.../* @__PURE__ */ new Set([...details.expanded, ...openable])]);
+        }
+        if (target.closest(COLLAPSE_ALL) !== null) expand.expandKeys([]);
+        if (target.closest("[data-kp-datatable-undo]") !== null && this.t.sortSetup.editLog?.contains(target)) void this.t.edit.undoEdit();
+      }
+      /**
+       * A group row folds from its toggle, or from a click anywhere in it that is not on a control of its own or a selection [J2].
+       * @param {HTMLElement} target @param {HTMLTableRowElement} groupRow
+       */
+      clickGroup(target, groupRow) {
+        const groupToggle = target.closest(GROUP_TOGGLE);
+        const control = controlAt(target);
+        if (groupToggle === null && (control !== null && groupRow.contains(control) || selecting())) return;
+        const key = groupRow.dataset.kpRowGroup ?? "";
+        this.t.expand.setFolded(key, !this.t.groups.folded.has(key));
+        if (groupToggle !== null) groupRow.querySelector(GROUP_TOGGLE)?.focus();
+      }
+      /**
+       * A click anywhere in an expandable row opens or closes it, as its toggle does (Kenny, 2026-10-02: "als we ergens in die rij
+       * klikken, niet enkel op dat icoon"); not one on a control in the row, which does its own thing, and not one that ends a text
+       * selection.
+       * @param {HTMLElement} target
+       */
+      clickRow(target) {
+        const row2 = (
+          /** @type {HTMLTableRowElement | null} */
+          target.closest("tr")
+        );
+        const control = controlAt(target);
+        if (row2 === null || row2.parentElement !== this.t.body || row2.matches(DETAIL) || row2.matches(GROUP_ROW)) return;
+        if (row2.querySelector(ROW_TOGGLE) === null || control !== null && row2.contains(control) || selecting()) return;
+        this.t.expand.setExpanded(row2, !this.t.details.expanded.has(this.t.columns.keyOf(row2)));
+      }
+    };
   }
 });
 
 // js/datatable/attach/wire.js
-function installWire(c) {
-  const {
-    applyFilter,
-    body,
-    cellText,
-    cleanups,
-    densitySelect,
-    filterColumns,
-    filterKinds,
-    filters,
-    fixedCount,
-    fixedEndCount,
-    gridMode,
-    gridPageRows,
-    headers,
-    labelOf: labelOf8,
-    multi,
-    onAddMenuClick,
-    onAddMenuKey,
-    onAddToggle,
-    onBodyChange,
-    onBodyFocusIn,
-    onBodyFocusOut,
-    onColumnChange,
-    onColumnClick,
-    onDensity,
-    onEditorClick,
-    onEditorFocusOut,
-    onEditorKey,
-    onEditorKeyCapture,
-    onEditorKeydown,
-    onEditorSubmit,
-    onHeadClick,
-    onHeadKey,
-    onPageSize,
-    onPanel,
-    onPillsClick,
-    onRowKey,
-    onScope,
-    onSearch,
-    onSelectAll,
-    onSortBy,
-    onSortDirection,
-    onToggle,
-    onWrapClick,
-    pillsList,
-    render: render7,
-    renderPills,
-    request: request3,
-    scopeSelect,
-    search,
-    selectAll,
-    serverMode,
-    syncColumns,
-    syncFixed,
-    table,
-    wrap,
-    writeControls
-  } = c;
-  for (const control of [scopeSelect, densitySelect, c.sortBy, c.sizeSelect]) {
-    if (control === null || control.dataset.kpSelectAttached !== void 0 || !drawsSelect(control)) continue;
-    cleanups.push(attachSelect(control));
-  }
-  search?.addEventListener("input", onSearch);
-  scopeSelect?.addEventListener("change", onScope);
-  densitySelect?.addEventListener("change", onDensity);
-  c.panel?.addEventListener("input", onPanel);
-  c.panel?.addEventListener("change", onPanel);
-  c.panel?.addEventListener(DATE_EVENT, onPanel);
-  c.toggle?.addEventListener("click", onToggle);
-  c.addPop?.addEventListener("toggle", onAddToggle);
-  c.addMenu?.addEventListener("click", onAddMenuClick);
-  c.addMenu?.addEventListener("keydown", onAddMenuKey);
-  c.filterEditor?.addEventListener("submit", onEditorSubmit);
-  c.filterEditor?.addEventListener("click", onEditorClick);
-  c.filterEditor?.addEventListener("keydown", onEditorKeydown);
-  pillsList.addEventListener("click", onPillsClick);
-  c.sortBy?.addEventListener("change", onSortBy);
-  c.sortDirection?.addEventListener("click", onSortDirection);
-  c.sizeSelect?.addEventListener("change", onPageSize);
-  c.columnList?.addEventListener("change", onColumnChange);
-  c.columnList?.addEventListener("click", onColumnClick);
-  wrap.addEventListener("click", onWrapClick);
-  wrap.addEventListener("keydown", onEditorKeyCapture, { capture: true });
-  wrap.addEventListener("keydown", onEditorKey);
-  wrap.addEventListener("focusout", onEditorFocusOut);
-  table.tHead?.addEventListener("click", onHeadClick);
-  table.tHead?.addEventListener("keydown", onHeadKey);
-  body.addEventListener("change", onBodyChange);
-  body.addEventListener("keydown", onRowKey);
-  body.addEventListener("focusin", onBodyFocusIn);
-  body.addEventListener("focusout", onBodyFocusOut);
-  selectAll?.addEventListener("change", onSelectAll);
-  c.query = search?.value ?? "";
-  const initialSorts = headers.map((header, at) => ({ header, at })).filter(({ header }) => ["ascending", "descending"].includes(header.getAttribute("aria-sort") ?? "")).sort((a, b) => (Number(a.header.dataset.kpSortPriority) || a.at + 1e3) - (Number(b.header.dataset.kpSortPriority) || b.at + 1e3)).map(({ header, at }) => ({ column: at, direction: (
-    /** @type {'ascending' | 'descending'} */
-    header.getAttribute("aria-sort")
-  ) })).slice(0, multi ? void 0 : 1);
-  c.initialSorts = initialSorts;
-  c.sorts = initialSorts.map((key) => ({ ...key }));
-  c.openingSort = JSON.stringify(initialSorts);
-  for (const at of filterColumns) {
-    const declared2 = headers[at]?.dataset.kpFilterValue;
-    if (declared2 === void 0) continue;
-    const kind = filterKinds[at];
-    if (kind === "choice") filters.set(at, splitList2(declared2));
-    else {
-      const [from = "", to = ""] = declared2.split(",").map((part7) => part7.trim());
-      filters.set(at, { from, to });
-    }
-  }
-  if (gridMode) {
-    c.grid = attachGrid(table, {
-      pageRows: gridPageRows,
-      onMove: ({ row: row2, rows, column, cell }) => {
-        if (c.gridReadout === null) return;
-        const at = cell.cellIndex;
-        const text = cell.parentElement?.parentElement?.tagName === "THEAD" ? labelOf8(at) : cellText(
-          /** @type {HTMLTableRowElement} */
-          cell.parentElement,
-          at
-        );
-        void column;
-        c.gridReadout.textContent = getStrings().tableGridPosition(row2, rows, labelOf8(at), text);
-      }
-    });
-  }
-  writeControls();
-  renderPills();
-  syncColumns();
-  if (serverMode) {
-    if (c.all.length > 0 && Number.isFinite(c.total)) {
-      c.state = "ready";
-      render7();
-    } else request3();
-  } else applyFilter();
-  c.resizeFrame = 0;
-  const resize = (fixedCount > 0 || fixedEndCount > 0) && typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => {
-    cancelAnimationFrame(c.resizeFrame);
-    c.resizeFrame = requestAnimationFrame(syncFixed);
-  }) : null;
-  c.resize = resize;
-  resize?.observe(table);
-}
+var UNRANKED2, TableWire;
 var init_wire = __esm({
   "js/datatable/attach/wire.js"() {
     "use strict";
@@ -48166,417 +48280,368 @@ var init_wire = __esm({
     init_filter();
     init_strings();
     init_grid();
+    UNRANKED2 = 1e3;
+    TableWire = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.drawSelects();
+        this.addListeners();
+        t.model.query = t.controls.search?.value ?? "";
+        this.initialSorts = this.openingSorts();
+        t.model.sorts = this.initialSorts.map((key) => ({ ...key }));
+        t.sortSetup.openingSort = JSON.stringify(this.initialSorts);
+        this.readDeclaredFilters();
+        if (t.layoutSetup.gridMode) this.wireGrid();
+        this.firstDraw();
+        this.resizeFrame = 0;
+        this.resize = this.watchResize();
+      }
+      /**
+       * The table's own selects wear the package's drawn list, as every .kp-field__input select does since Kenny's form of 2026-09-13
+       * — here as well as in auto.js, because two of them are built by this attach after auto.js has passed, and a consumer may attach
+       * only the tables.
+       */
+      drawSelects() {
+        const { controls, sortSetup, layoutSetup } = this.t;
+        for (const control of [controls.scopeSelect, controls.densitySelect, sortSetup.sortBy, layoutSetup.sizeSelect]) {
+          if (control === null || control.dataset.kpSelectAttached !== void 0 || !drawsSelect(control)) continue;
+          this.t.own(attachSelect(control));
+        }
+      }
+      /** The listeners of the table and its chrome; TableUnwire removes them again, with the same bound functions. */
+      addListeners() {
+        this.t.controls.search?.addEventListener("input", this.t.bound(this.t.handlers, this.t.handlers.onSearch));
+        this.t.controls.scopeSelect?.addEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onScope));
+        this.t.controls.densitySelect?.addEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onDensity));
+        this.t.filterUi.panel?.addEventListener("input", this.t.bound(this.t.handlers, this.t.handlers.onPanel));
+        this.t.filterUi.panel?.addEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onPanel));
+        this.t.filterUi.panel?.addEventListener(DATE_EVENT, this.t.bound(this.t.handlers, this.t.handlers.onPanel));
+        this.t.filterUi.toggle?.addEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onToggle));
+        this.t.filterUi.addPop?.addEventListener("toggle", this.t.bound(this.t.pills, this.t.pills.onAddToggle));
+        this.t.filterUi.addMenu?.addEventListener("click", this.t.bound(this.t.pills, this.t.pills.onAddMenuClick));
+        this.t.filterUi.addMenu?.addEventListener("keydown", this.t.bound(this.t.pills, this.t.pills.onAddMenuKey));
+        this.t.filterUi.filterEditor?.addEventListener("submit", this.t.bound(this.t.filterEditing, this.t.filterEditing.onEditorSubmit));
+        this.t.filterUi.filterEditor?.addEventListener("click", this.t.bound(this.t.filterEditing, this.t.filterEditing.onEditorClick));
+        this.t.filterUi.filterEditor?.addEventListener("keydown", this.t.bound(this.t.filterEditing, this.t.filterEditing.onEditorKeydown));
+        this.t.render.pillsList.addEventListener("click", this.t.bound(this.t.pills, this.t.pills.onPillsClick));
+        this.t.sortSetup.sortBy?.addEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onSortBy));
+        this.t.sortSetup.sortDirection?.addEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onSortDirection));
+        this.t.layoutSetup.sizeSelect?.addEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onPageSize));
+        this.t.sortSetup.columnList?.addEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onColumnChange));
+        this.t.sortSetup.columnList?.addEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onColumnClick));
+        this.t.wrap.addEventListener("click", this.t.bound(this.t.wrapClick, this.t.wrapClick.onWrapClick));
+        this.t.wrap.addEventListener("keydown", this.t.bound(this.t.edit, this.t.edit.onEditorKeyCapture), { capture: true });
+        this.t.wrap.addEventListener("keydown", this.t.bound(this.t.edit, this.t.edit.onEditorKey));
+        this.t.wrap.addEventListener("focusout", this.t.bound(this.t.edit, this.t.edit.onEditorFocusOut));
+        this.t.table.tHead?.addEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onHeadClick));
+        this.t.table.tHead?.addEventListener("keydown", this.t.bound(this.t.handlers, this.t.handlers.onHeadKey));
+        this.t.body.addEventListener("change", this.t.bound(this.t.selection, this.t.selection.onBodyChange));
+        this.t.body.addEventListener("keydown", this.t.bound(this.t.expand, this.t.expand.onRowKey));
+        this.t.body.addEventListener("focusin", this.t.bound(this.t.selection, this.t.selection.onBodyFocusIn));
+        this.t.body.addEventListener("focusout", this.t.bound(this.t.selection, this.t.selection.onBodyFocusOut));
+        this.t.controls.selectAll?.addEventListener("change", this.t.bound(this.t.selection, this.t.selection.onSelectAll));
+      }
+      /**
+       * Headers the server rendered already sorted keep their sort, in the order `data-kp-sort-priority` gives, else the order they
+       * stand in.
+       */
+      openingSorts() {
+        return this.t.columns.headers.map((header, at) => ({ header, at })).filter(({ header }) => ["ascending", "descending"].includes(header.getAttribute("aria-sort") ?? "")).sort((a, b) => (Number(a.header.dataset.kpSortPriority) || a.at + UNRANKED2) - (Number(b.header.dataset.kpSortPriority) || b.at + UNRANKED2)).map(({ header, at }) => ({ column: at, direction: (
+          /** @type {'ascending' | 'descending'} */
+          header.getAttribute("aria-sort")
+        ) })).slice(0, this.t.controls.multi ? void 0 : 1);
+      }
+      readDeclaredFilters() {
+        for (const at of this.t.filterUi.filterColumns) {
+          const declared2 = this.t.columns.headers[at]?.dataset.kpFilterValue;
+          if (declared2 === void 0) continue;
+          const kind = this.t.columns.filterKinds[at];
+          if (kind === "choice") this.t.model.filters.set(at, splitList2(declared2));
+          else {
+            const [from = "", to = ""] = declared2.split(",").map((part7) => part7.trim());
+            this.t.model.filters.set(at, { from, to });
+          }
+        }
+      }
+      /** The keyboard grid, with its readout of where the focus is. */
+      wireGrid() {
+        this.t.sync.grid = attachGrid(this.t.table, {
+          pageRows: this.t.settings.gridPageRows,
+          onMove: ({ row: row2, rows, column, cell }) => {
+            if (this.t.layoutSetup.gridReadout === null) return;
+            const at = cell.cellIndex;
+            const text = cell.parentElement?.parentElement?.tagName === "THEAD" ? this.t.columns.labelOf(at) : this.t.columns.cellText(
+              /** @type {HTMLTableRowElement} */
+              cell.parentElement,
+              at
+            );
+            void column;
+            this.t.layoutSetup.gridReadout.textContent = getStrings().tableGridPosition(row2, rows, this.t.columns.labelOf(at), text);
+          }
+        });
+      }
+      /** The controls, the pills and the columns as the state says, then the rows: the server's, or filtered here. */
+      firstDraw() {
+        const { t } = this;
+        t.apply.writeControls();
+        t.pills.renderPills();
+        t.sync.syncColumns();
+        if (!t.controls.serverMode) return t.apply.applyFilter();
+        if (t.model.all.length > 0 && Number.isFinite(t.busy.total)) {
+          t.model.state = "ready";
+          t.render.render();
+        } else t.server.request();
+      }
+      /** @returns {ResizeObserver | null} */
+      watchResize() {
+        const { sync: sync3 } = this.t;
+        if (!((sync3.fixedCount > 0 || sync3.fixedEndCount > 0) && typeof ResizeObserver !== "undefined")) return null;
+        const resize = new ResizeObserver(() => {
+          cancelAnimationFrame(this.resizeFrame);
+          this.resizeFrame = requestAnimationFrame(this.t.bound(sync3, sync3.syncFixed));
+        });
+        resize.observe(this.t.table);
+        return resize;
+      }
+    };
   }
 });
 
 // js/datatable/attach/handle.js
-function installHandle(c) {
-  const {
-    addMode,
-    applyFilter,
-    body,
-    builtDetails,
-    clearFilters,
-    closeFilterEditor,
-    collectDetails,
-    collectGroups: collectGroups2,
-    columnAt,
-    commitEdit,
-    commitSorts,
-    created,
-    details,
-    expandKeys,
-    filters,
-    foldKeys,
-    groups,
-    holdRows: holdRows2,
-    isRow: isRow2,
-    keyOf: keyOf8,
-    openEditor,
-    openFilterEditor,
-    prepareRow,
-    refreshChoices,
-    render: render7,
-    rendered,
-    request: request3,
-    scopeSelect,
-    search,
-    select: select2,
-    selectedRows,
-    serverMode,
-    serverSelection,
-    setDensity,
-    setFilter,
-    setHidden: setHidden2,
-    setPageSize,
-    setSort,
-    sortsSeveral,
-    syncColumns,
-    toggleMemo,
-    undo,
-    unwires,
-    view,
-    wireTable,
-    wrap
-  } = c;
-  const handle = {
-    element: wrap,
-    view,
-    sort: setSort,
-    sortBy: (keys) => commitSorts(keys.map((key) => ({ column: key.column, direction: key.direction }))),
-    page: (next2) => {
-      c.page = Math.max(0, next2);
-      if (serverMode) request3();
-      else render7();
-    },
-    pageSize: setPageSize,
-    query: (next2) => {
-      c.query = next2;
-      if (search !== null) search.value = next2;
-      applyFilter();
-    },
-    scope: (given) => {
-      const column = given === null ? null : columnAt(given);
-      c.scope = column === null || column < 0 ? null : column;
-      if (scopeSelect !== null) scopeSelect.value = c.scope === null ? "" : String(c.scope);
-      applyFilter();
-    },
-    columnIndex: (id) => columnAt(id),
-    filter: setFilter,
-    clearFilters,
-    editFilter: (given) => {
-      const column = given === null ? null : columnAt(given);
-      if (column !== null && column < 0) return;
-      if (addMode) {
-        if (column === null) closeFilterEditor(false);
-        else openFilterEditor(column, filters.has(column) ? column : null);
-      } else if (c.panel !== null && c.toggle !== null) {
-        c.panel.hidden = column === null;
-        c.toggle.setAttribute("aria-expanded", String(!c.panel.hidden));
-      }
-    },
-    hideColumns: (columns2) => setHidden2(columns2),
-    expand: expandKeys,
-    fold: (keys) => {
-      foldKeys(keys);
-      render7();
-    },
-    density: setDensity,
-    state: (next2) => {
-      c.state = next2;
-      if (next2 !== "failed") c.failReason = null;
-      render7();
-    },
-    fail: (reason) => {
-      c.failReason = reason ?? null;
-      c.state = "failed";
-      render7();
-    },
-    busy: (words3) => {
-      const given = typeof words3 === "object" && words3 !== null ? words3 : { text: words3 };
-      c.busyText = given.text ?? null;
-      c.busySince = given.since === void 0 || given.since === null ? null : Number(given.since);
-      c.busyOverlay = "overlay" in given && given.overlay !== void 0 ? Boolean(given.overlay) : wrap.hasAttribute("data-kp-busy-overlay");
-      render7();
-    },
-    reload: () => serverMode ? request3() : applyFilter({ keepPage: true }),
-    edit: (key, column) => {
-      const row2 = c.all.find((r) => keyOf8(r) === key);
-      if (row2 !== void 0) void openEditor(row2, column);
-    },
-    cancelEdit: () => void commitEdit(false),
-    rows: (which = "view") => which === "page" ? [...c.pageRows] : [...c.shownRows],
-    selected: () => serverMode ? [...serverSelection] : selectedRows().map(keyOf8),
-    select: select2,
-    refresh: (options) => {
-      const active = document.activeElement;
-      const inBody = active instanceof HTMLElement && body.contains(active) ? active : null;
-      const lost = inBody === null && c.focusMemo !== null && !c.focusMemo.element.isConnected && (active === null || active === document.body);
-      const memo = inBody !== null ? toggleMemo(inBody) : lost ? c.focusMemo : null;
-      const held2 = inBody ?? (lost && c.focusMemo !== null ? c.focusMemo.element : null);
-      const heldKey = memo?.key ?? null;
-      const heldGroup = memo?.group ?? null;
-      const heldToggle = memo?.selector ?? null;
-      collectDetails();
-      holdRows2();
-      c.all = [...body.rows].filter(isRow2);
-      for (let at = rendered.length - 1; at >= 0; at -= 1)
-        if (!c.all.includes(rendered[at]) && !rendered[at].isConnected) rendered.splice(at, 1);
-      for (const row2 of c.all) {
-        if (!rendered.includes(row2)) rendered.push(row2);
-        prepareRow(row2);
-      }
-      for (const [row2, detail] of details) {
-        if (row2.isConnected || !builtDetails.has(detail)) continue;
-        detail.remove();
-        builtDetails.delete(detail);
-        details.delete(row2);
-      }
-      collectGroups2();
-      syncColumns();
-      refreshChoices();
-      applyFilter({ keepPage: options?.keepPage === true });
-      if (held2 !== null && document.activeElement !== held2) {
-        let back = held2.isConnected ? held2 : null;
-        if (back === null && heldToggle !== null) {
-          const row2 = heldGroup !== null ? groups.get(heldGroup) ?? null : c.all.find((r) => heldKey !== null && heldKey !== "" && keyOf8(r) === heldKey) ?? null;
-          back = /** @type {HTMLElement | null} */
-          row2?.querySelector(heldToggle) ?? null;
-        }
-        if (back !== null && !back.hidden && back.closest("tr")?.hidden !== true) back.focus({ preventScroll: true });
-      }
-    }
-  };
-  handles5.set(wrap, handle);
-  created.push(handle);
-  if (!serverMode) {
-    let queued = false;
-    const resync = () => {
-      queued = false;
-      holdRows2();
-      const now = [...body.rows].filter(isRow2);
-      if (now.length === c.all.length && now.every((row2, at) => c.all.includes(row2))) return;
-      handles5.get(wrap)?.refresh({ keepPage: true });
-    };
-    const onBody = () => {
-      if (queued) return;
-      queued = true;
-      queueMicrotask(resync);
-    };
-    const rowsWatch = new MutationObserver(onBody);
-    rowsWatch.observe(body, { childList: true });
-    const holdWatch = new MutationObserver(onBody);
-    holdWatch.observe(body, { attributes: true, attributeFilter: ["data-kp-row-hidden"], subtree: true });
-    undo.push(() => {
-      rowsWatch.disconnect();
-      holdWatch.disconnect();
-    });
-  }
-  undo.push(
-    watchOptions(wrap, ["data-kp-sort-multi", "data-kp-filter-mode", "data-kp-filter-ui", "data-kp-expand-single", "data-kp-fixed-end"], () => {
-      const old = handles5.get(wrap);
-      if (old === void 0) return;
-      const was = old.view();
-      const selected = old.selected();
-      unwires.get(wrap)?.();
-      created.splice(created.indexOf(old), 1);
-      wireTable(wrap, true);
-      const fresh = handles5.get(wrap);
-      if (fresh === void 0) return;
-      Object.assign(old, fresh);
-      handles5.set(wrap, old);
-      created.splice(created.indexOf(fresh), 1, old);
-      if (was.query !== "") old.query(was.query);
-      if (was.scope !== null) old.scope(was.scope);
-      for (const [column, value] of Object.entries(was.filters)) old.filter(
-        Number(column),
-        /** @type {FilterValue} */
-        value
-      );
-      if (was.sorts.length > 0) old.sortBy(sortsSeveral(wrap) ? was.sorts : was.sorts.slice(0, 1));
-      if (was.pageSize !== old.view().pageSize) old.pageSize(was.pageSize);
-      if (was.hidden.length > 0) old.hideColumns(was.hidden);
-      if (was.density !== old.view().density) old.density(was.density);
-      if (was.folded.length > 0) old.fold(was.folded);
-      if (was.expanded.length > 0) old.expand(was.expanded);
-      if (selected.length > 0) old.select(selected);
-      if (was.page > 0) old.page(was.page);
-      if (was.state !== "ready") old.state(was.state);
-    })
+function restoreView(handle, was, selected, several) {
+  if (was.query !== "") handle.query(was.query);
+  if (was.scope !== null) handle.scope(was.scope);
+  for (const [column, value] of Object.entries(was.filters)) handle.filter(
+    Number(column),
+    /** @type {FilterValue} */
+    value
   );
+  if (was.sorts.length > 0) handle.sortBy(several ? was.sorts : was.sorts.slice(0, 1));
+  if (was.pageSize !== handle.view().pageSize) handle.pageSize(was.pageSize);
+  if (was.hidden.length > 0) handle.hideColumns(was.hidden);
+  if (was.density !== handle.view().density) handle.density(was.density);
+  if (was.folded.length > 0) handle.fold(was.folded);
+  if (was.expanded.length > 0) handle.expand(was.expanded);
+  if (selected.length > 0) handle.select(selected);
+  if (was.page > 0) handle.page(was.page);
+  if (was.state !== "ready") handle.state(was.state);
 }
+var LIVE_OPTIONS2, TableHandle;
 var init_handle2 = __esm({
   "js/datatable/attach/handle.js"() {
     "use strict";
     init_instance();
     init_live_options();
+    LIVE_OPTIONS2 = ["data-kp-sort-multi", "data-kp-filter-mode", "data-kp-filter-ui", "data-kp-expand-single", "data-kp-fixed-end"];
+    TableHandle = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.handle = this.makeHandle();
+        handles5.set(t.wrap, this.handle);
+        t.call.created.push(this.handle);
+        if (!t.controls.serverMode) this.watchRows();
+        t.identity.undo.push(watchOptions(t.wrap, LIVE_OPTIONS2, () => this.wireAgain()));
+      }
+      /** @returns {DataTableHandle} */
+      makeHandle() {
+        const { t } = this;
+        return {
+          element: t.wrap,
+          view: t.bound(t.sync, t.sync.view),
+          sort: t.bound(t.handlers, t.handlers.setSort),
+          sortBy: (keys) => t.handlers.commitSorts(keys.map((key) => ({ column: key.column, direction: key.direction }))),
+          page: (next2) => this.page(next2),
+          pageSize: t.bound(t.handlers, t.handlers.setPageSize),
+          query: (next2) => this.query(next2),
+          scope: (given) => this.scope(given),
+          columnIndex: (id) => t.sync.columnAt(id),
+          filter: t.bound(t.handlers, t.handlers.setFilter),
+          clearFilters: t.bound(t.handlers, t.handlers.clearFilters),
+          editFilter: (given) => this.editFilter(given),
+          hideColumns: (columns2) => t.handlers.setHidden(columns2),
+          expand: t.bound(t.expand, t.expand.expandKeys),
+          fold: (keys) => {
+            t.expand.foldKeys(keys);
+            t.render.render();
+          },
+          density: t.bound(t.handlers, t.handlers.setDensity),
+          state: (next2) => this.setState(next2),
+          fail: (reason) => this.fail(reason),
+          busy: (words3) => this.busy(words3),
+          reload: () => t.controls.serverMode ? t.server.request() : t.apply.applyFilter({ keepPage: true }),
+          edit: (key, column) => {
+            const row2 = t.model.all.find((r) => t.columns.keyOf(r) === key);
+            if (row2 !== void 0) void t.edit.openEditor(row2, column);
+          },
+          cancelEdit: () => void t.edit.commitEdit(false),
+          rows: (which = "view") => which === "page" ? [...t.model.pageRows] : [...t.model.shownRows],
+          selected: () => t.controls.serverMode ? [...t.sync.serverSelection] : t.sync.selectedRows().map((row2) => t.columns.keyOf(row2)),
+          select: t.bound(t.selection, t.selection.select),
+          refresh: (options) => this.refresh(options)
+        };
+      }
+      /** @param {number} next */
+      page(next2) {
+        this.t.model.page = Math.max(0, next2);
+        if (this.t.controls.serverMode) this.t.server.request();
+        else this.t.render.render();
+      }
+      /** @param {string} next */
+      query(next2) {
+        this.t.model.query = next2;
+        if (this.t.controls.search !== null) this.t.controls.search.value = next2;
+        this.t.apply.applyFilter();
+      }
+      /** @param {number | string | null} given */
+      scope(given) {
+        const { model, controls } = this.t;
+        const column = given === null ? null : this.t.sync.columnAt(given);
+        model.scope = column === null || column < 0 ? null : column;
+        if (controls.scopeSelect !== null) controls.scopeSelect.value = model.scope === null ? "" : String(model.scope);
+        this.t.apply.applyFilter();
+      }
+      /** @param {number | string | null} given */
+      editFilter(given) {
+        const { filterUi, filterEditing } = this.t;
+        const column = given === null ? null : this.t.sync.columnAt(given);
+        if (column !== null && column < 0) return;
+        if (filterUi.addMode) {
+          if (column === null) filterEditing.closeFilterEditor(false);
+          else filterEditing.openFilterEditor(column, this.t.model.filters.has(column) ? column : null);
+        } else if (filterUi.panel !== null && filterUi.toggle !== null) {
+          filterUi.panel.hidden = column === null;
+          filterUi.toggle.setAttribute("aria-expanded", String(!filterUi.panel.hidden));
+        }
+      }
+      /** @param {State} next */
+      setState(next2) {
+        this.t.model.state = next2;
+        if (next2 !== "failed") this.t.model.failReason = null;
+        this.t.render.render();
+      }
+      /** @param {string | null} [reason] */
+      fail(reason) {
+        this.t.model.failReason = reason ?? null;
+        this.t.model.state = "failed";
+        this.t.render.render();
+      }
+      /** @param {Parameters<DataTableHandle['busy']>[0]} words */
+      busy(words3) {
+        const { model, wrap } = this.t;
+        const given = typeof words3 === "object" && words3 !== null ? words3 : { text: words3 };
+        model.busyText = given.text ?? null;
+        model.busySince = given.since === void 0 || given.since === null ? null : Number(given.since);
+        model.busyOverlay = "overlay" in given && given.overlay !== void 0 ? Boolean(given.overlay) : wrap.hasAttribute("data-kp-busy-overlay");
+        this.t.render.render();
+      }
+      /**
+       * Read the rows again. The control that held the focus keeps it [R-LIVE, J2]: the same element when it stayed, else the same
+       * toggle of the row (or group) with the same key, when the consumer replaced it, even before this call, as long as nothing else
+       * took the focus.
+       * @param {{ keepPage?: boolean }} [options]
+       */
+      refresh(options) {
+        const { selection, body } = this.t;
+        const active = document.activeElement;
+        const inBody = active instanceof HTMLElement && body.contains(active) ? active : null;
+        const focusMemo = selection.focusMemo;
+        const lost = inBody === null && focusMemo !== null && !focusMemo.element.isConnected && (active === null || active === document.body);
+        const memo = inBody !== null ? selection.toggleMemo(inBody) : lost ? focusMemo : null;
+        const held2 = inBody ?? (lost && focusMemo !== null ? focusMemo.element : null);
+        this.readRows();
+        this.t.groups.collectGroups();
+        this.t.sync.syncColumns();
+        this.t.apply.refreshChoices();
+        this.t.apply.applyFilter({ keepPage: options?.keepPage === true });
+        if (held2 !== null && document.activeElement !== held2) this.focusBack(held2, memo);
+      }
+      /** The rows as the body holds them now: held rows hidden, gone rows forgotten, new rows prepared, their built details dropped. */
+      readRows() {
+        const { model, details, body } = this.t;
+        details.collectDetails();
+        model.holdRows();
+        model.all = [...body.rows].filter((row2) => model.isRow(row2));
+        for (let at = model.rendered.length - 1; at >= 0; at -= 1)
+          if (!model.all.includes(model.rendered[at]) && !model.rendered[at].isConnected) model.rendered.splice(at, 1);
+        for (const row2 of model.all) {
+          if (!model.rendered.includes(row2)) model.rendered.push(row2);
+          this.t.reorder.prepareRow(row2);
+        }
+        for (const [row2, detail] of details.details) {
+          if (row2.isConnected || !details.builtDetails.has(detail)) continue;
+          detail.remove();
+          details.builtDetails.delete(detail);
+          details.details.delete(row2);
+        }
+      }
+      /**
+       * Give the focus back to the control that held it, or to the same toggle of its row or group.
+       * @param {HTMLElement} held
+       * @param {{ key: string | null, group: string | null, selector: string | null } | null} memo
+       */
+      focusBack(held2, memo) {
+        const heldKey = memo?.key ?? null;
+        const heldGroup = memo?.group ?? null;
+        const heldToggle = memo?.selector ?? null;
+        let back = held2.isConnected ? held2 : null;
+        if (back === null && heldToggle !== null) {
+          const row2 = heldGroup !== null ? this.t.groups.groups.get(heldGroup) ?? null : this.t.model.all.find((r) => heldKey !== null && heldKey !== "" && this.t.columns.keyOf(r) === heldKey) ?? null;
+          back = /** @type {HTMLElement | null} */
+          row2?.querySelector(heldToggle) ?? null;
+        }
+        if (back !== null && !back.hidden && back.closest("tr")?.hidden !== true) back.focus({ preventScroll: true });
+      }
+      /**
+       * Rows the page added, removed or held are the table's rows at once, without a call to refresh(): the count, the pager and the
+       * pages follow the body [b3b4-1019; homelab gap 34, kyu gap 28]. The table's own sort and page moves put the same rows back in
+       * another order, which changes nothing here.
+       */
+      watchRows() {
+        const { body, model, wrap } = this.t;
+        let queued = false;
+        const resync = () => {
+          queued = false;
+          model.holdRows();
+          const now = [...body.rows].filter((row2) => model.isRow(row2));
+          if (now.length === model.all.length && now.every((row2) => model.all.includes(row2))) return;
+          handles5.get(wrap)?.refresh({ keepPage: true });
+        };
+        const onBody = () => {
+          if (queued) return;
+          queued = true;
+          queueMicrotask(resync);
+        };
+        const rowsWatch = new MutationObserver(onBody);
+        rowsWatch.observe(body, { childList: true });
+        const holdWatch = new MutationObserver(onBody);
+        holdWatch.observe(body, { attributes: true, attributeFilter: ["data-kp-row-hidden"], subtree: true });
+        this.t.identity.undo.push(() => {
+          rowsWatch.disconnect();
+          holdWatch.disconnect();
+        });
+      }
+      /** Wire the table again after an option attribute changed, and give the page's handle the view it had. */
+      wireAgain() {
+        const { wrap, call } = this.t;
+        const old = handles5.get(wrap);
+        if (old === void 0) return;
+        const was = old.view();
+        const selected = old.selected();
+        const fresh = this.t.rewire(old);
+        if (fresh === void 0) return;
+        Object.assign(old, fresh);
+        handles5.set(wrap, old);
+        call.created.splice(call.created.indexOf(fresh), 1, old);
+        restoreView(old, was, selected, call.sortsSeveral(wrap));
+      }
+    };
   }
 });
 
 // js/datatable/attach/unwire.js
-function installUnwire(c) {
-  const {
-    actions,
-    added,
-    again: again2,
-    body,
-    builtDetails,
-    busyWas,
-    cleanups,
-    closeEditor,
-    closeFilterEditor,
-    densitySelect,
-    densityWas,
-    details,
-    detailsWereHidden,
-    emptyWasHidden,
-    givenIds,
-    headerSort,
-    headerTab,
-    headers,
-    headersWereHidden,
-    layoutAtAttach,
-    loadingSlot,
-    onAddMenuClick,
-    onAddMenuKey,
-    onAddToggle,
-    onBodyChange,
-    onBodyFocusIn,
-    onBodyFocusOut,
-    onColumnChange,
-    onColumnClick,
-    onDensity,
-    onEditorClick,
-    onEditorFocusOut,
-    onEditorKey,
-    onEditorKeyCapture,
-    onEditorKeydown,
-    onEditorSubmit,
-    onHeadClick,
-    onHeadKey,
-    onPageSize,
-    onPanel,
-    onPillsClick,
-    onRowKey,
-    onScope,
-    onSearch,
-    onSelectAll,
-    onSortBy,
-    onSortDirection,
-    onToggle,
-    onWrapClick,
-    pager,
-    pillsList,
-    prepared,
-    preparedGroups,
-    rendered,
-    resize,
-    scopeSelect,
-    search,
-    selectAll,
-    stopBusyClock,
-    table,
-    undo,
-    unprepareRow,
-    unwires,
-    wrap
-  } = c;
-  const unwire = () => {
-    unwires.delete(wrap);
-    stopBusyClock();
-    clearTimeout(c.pending);
-    c.controller?.abort();
-    resize?.disconnect();
-    cancelAnimationFrame(c.resizeFrame);
-    closeEditor();
-    c.grid?.detach();
-    search?.removeEventListener("input", onSearch);
-    scopeSelect?.removeEventListener("change", onScope);
-    densitySelect?.removeEventListener("change", onDensity);
-    c.panel?.removeEventListener("input", onPanel);
-    c.panel?.removeEventListener("change", onPanel);
-    c.panel?.removeEventListener(DATE_EVENT, onPanel);
-    c.toggle?.removeEventListener("click", onToggle);
-    closeFilterEditor(false);
-    if (c.addPop?.matches(":popover-open")) c.addPop.hidePopover();
-    c.addPop?.removeEventListener("toggle", onAddToggle);
-    c.addMenu?.removeEventListener("click", onAddMenuClick);
-    c.addMenu?.removeEventListener("keydown", onAddMenuKey);
-    c.filterEditor?.removeEventListener("submit", onEditorSubmit);
-    c.filterEditor?.removeEventListener("click", onEditorClick);
-    c.filterEditor?.removeEventListener("keydown", onEditorKeydown);
-    pillsList.removeEventListener("click", onPillsClick);
-    c.sortBy?.removeEventListener("change", onSortBy);
-    c.sortDirection?.removeEventListener("click", onSortDirection);
-    c.sizeSelect?.removeEventListener("change", onPageSize);
-    c.columnList?.removeEventListener("change", onColumnChange);
-    c.columnList?.removeEventListener("click", onColumnClick);
-    wrap.removeEventListener("click", onWrapClick);
-    wrap.removeEventListener("keydown", onEditorKeyCapture, { capture: true });
-    wrap.removeEventListener("keydown", onEditorKey);
-    wrap.removeEventListener("focusout", onEditorFocusOut);
-    table.tHead?.removeEventListener("click", onHeadClick);
-    table.tHead?.removeEventListener("keydown", onHeadKey);
-    body.removeEventListener("change", onBodyChange);
-    body.removeEventListener("keydown", onRowKey);
-    body.removeEventListener("focusin", onBodyFocusIn);
-    body.removeEventListener("focusout", onBodyFocusOut);
-    selectAll?.removeEventListener("change", onSelectAll);
-    for (const row2 of body.querySelectorAll(`:scope > ${SKELETON_ROW}`)) row2.remove();
-    for (const detail of builtDetails) detail.remove();
-    for (const row2 of prepared) unprepareRow(row2);
-    for (const row2 of rendered) row2.hidden = false;
-    for (const row2 of rendered) {
-      const detail = details.get(row2);
-      if (detail !== void 0 && !builtDetails.has(detail)) detail.hidden = detailsWereHidden.get(detail) ?? detail.hidden;
-    }
-    for (const [heading, was] of preparedGroups) {
-      heading.querySelector(GROUP_TOGGLE)?.remove();
-      const cell = heading.cells[0];
-      if (was.span !== null && cell !== void 0) cell.setAttribute("colspan", was.span);
-      else if (heading.cells.length === 1) cell?.removeAttribute("colspan");
-      heading.hidden = was.hidden;
-    }
-    for (const row2 of givenIds) row2.removeAttribute("id");
-    {
-      const stand = /* @__PURE__ */ new Map();
-      let next2 = 0;
-      for (const child of body.children) stand.set(child, next2++);
-      const append = (node) => void stand.set(node, next2++);
-      for (const row2 of rendered) {
-        append(row2);
-        const detail = details.get(row2);
-        if (detail !== void 0 && !builtDetails.has(detail)) append(detail);
-      }
-      if (layoutAtAttach !== null) {
-        const placed = new Set(layoutAtAttach);
-        for (const row2 of layoutAtAttach) if (stand.has(row2)) append(row2);
-        for (const row2 of rendered) {
-          if (placed.has(row2) || !stand.has(row2)) continue;
-          append(row2);
-          const detail = details.get(row2);
-          if (detail !== void 0 && stand.has(detail)) append(detail);
-        }
-      }
-      const order = [...stand.keys()].sort((a, b) => (
-        /** @type {number} */
-        stand.get(a) - /** @type {number} */
-        stand.get(b)
-      ));
-      body.replaceChildren(...order);
-    }
-    syncFixedColumns(table, 0);
-    headers.forEach((header, i) => {
-      header.querySelector(":scope .kp-datatable__sort-order")?.remove();
-      header.hidden = headersWereHidden[i] ?? false;
-      const was = headerSort[i];
-      if (was === null || was === void 0) header.removeAttribute("aria-sort");
-      else header.setAttribute("aria-sort", was);
-      const tab = headerTab[i];
-      if (tab === null || tab === void 0) header.removeAttribute("tabindex");
-      else header.setAttribute("tabindex", tab);
-    });
-    if (pager !== null) pager.textContent = "";
-    if (c.empty !== null) c.empty.hidden = emptyWasHidden;
-    if (loadingSlot !== null) loadingSlot.hidden = true;
-    if (c.failedSlot !== null) c.failedSlot.hidden = true;
-    if (actions !== null) actions.hidden = true;
-    stopBusyClock();
-    c.overlayUnwatch?.();
-    c.overlayLayer?.remove();
-    for (const node of added) node.remove();
-    for (const step of undo) step();
-    if (densityWas === null) wrap.removeAttribute("data-density");
-    else wrap.setAttribute("data-density", densityWas);
-    if (busyWas === null) wrap.removeAttribute("aria-busy");
-    else wrap.setAttribute("aria-busy", busyWas);
-    delete wrap.dataset.kpState;
-    handles5.delete(wrap);
-    delete wrap.dataset.kpDatatableAttached;
-  };
-  unwires.set(wrap, unwire);
-  if (!again2) cleanups.push(() => unwires.get(wrap)?.());
-}
+var TableUnwire;
 var init_unwire = __esm({
   "js/datatable/attach/unwire.js"() {
     "use strict";
@@ -48584,6 +48649,323 @@ var init_unwire = __esm({
     init_selectors();
     init_grid();
     init_instance();
+    TableUnwire = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+      }
+      /** Undo everything: DataTableControl.destroy() runs this last. */
+      unwire() {
+        const { t } = this;
+        t.busy.stopBusyClock();
+        clearTimeout(t.server.pending);
+        t.server.controller?.abort();
+        t.wire.resize?.disconnect();
+        cancelAnimationFrame(t.wire.resizeFrame);
+        t.edit.closeEditor();
+        t.sync.grid?.detach();
+        this.removeListeners();
+        this.restoreRows();
+        this.restoreGroups();
+        this.restoreOrder();
+        syncFixedColumns(t.table, 0);
+        this.restoreHeaders();
+        this.restoreSlots();
+        this.restoreWrap();
+      }
+      /** The listeners TableWire added, removed with the same bound functions; the filter editor and the add menu close on the way. */
+      removeListeners() {
+        this.t.controls.search?.removeEventListener("input", this.t.bound(this.t.handlers, this.t.handlers.onSearch));
+        this.t.controls.scopeSelect?.removeEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onScope));
+        this.t.controls.densitySelect?.removeEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onDensity));
+        this.t.filterUi.panel?.removeEventListener("input", this.t.bound(this.t.handlers, this.t.handlers.onPanel));
+        this.t.filterUi.panel?.removeEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onPanel));
+        this.t.filterUi.panel?.removeEventListener(DATE_EVENT, this.t.bound(this.t.handlers, this.t.handlers.onPanel));
+        this.t.filterUi.toggle?.removeEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onToggle));
+        this.t.filterEditing.closeFilterEditor(false);
+        if (this.t.filterUi.addPop?.matches(":popover-open")) this.t.filterUi.addPop.hidePopover();
+        this.t.filterUi.addPop?.removeEventListener("toggle", this.t.bound(this.t.pills, this.t.pills.onAddToggle));
+        this.t.filterUi.addMenu?.removeEventListener("click", this.t.bound(this.t.pills, this.t.pills.onAddMenuClick));
+        this.t.filterUi.addMenu?.removeEventListener("keydown", this.t.bound(this.t.pills, this.t.pills.onAddMenuKey));
+        this.t.filterUi.filterEditor?.removeEventListener("submit", this.t.bound(this.t.filterEditing, this.t.filterEditing.onEditorSubmit));
+        this.t.filterUi.filterEditor?.removeEventListener("click", this.t.bound(this.t.filterEditing, this.t.filterEditing.onEditorClick));
+        this.t.filterUi.filterEditor?.removeEventListener("keydown", this.t.bound(this.t.filterEditing, this.t.filterEditing.onEditorKeydown));
+        this.t.render.pillsList.removeEventListener("click", this.t.bound(this.t.pills, this.t.pills.onPillsClick));
+        this.t.sortSetup.sortBy?.removeEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onSortBy));
+        this.t.sortSetup.sortDirection?.removeEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onSortDirection));
+        this.t.layoutSetup.sizeSelect?.removeEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onPageSize));
+        this.t.sortSetup.columnList?.removeEventListener("change", this.t.bound(this.t.handlers, this.t.handlers.onColumnChange));
+        this.t.sortSetup.columnList?.removeEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onColumnClick));
+        this.t.wrap.removeEventListener("click", this.t.bound(this.t.wrapClick, this.t.wrapClick.onWrapClick));
+        this.t.wrap.removeEventListener("keydown", this.t.bound(this.t.edit, this.t.edit.onEditorKeyCapture), { capture: true });
+        this.t.wrap.removeEventListener("keydown", this.t.bound(this.t.edit, this.t.edit.onEditorKey));
+        this.t.wrap.removeEventListener("focusout", this.t.bound(this.t.edit, this.t.edit.onEditorFocusOut));
+        this.t.table.tHead?.removeEventListener("click", this.t.bound(this.t.handlers, this.t.handlers.onHeadClick));
+        this.t.table.tHead?.removeEventListener("keydown", this.t.bound(this.t.handlers, this.t.handlers.onHeadKey));
+        this.t.body.removeEventListener("change", this.t.bound(this.t.selection, this.t.selection.onBodyChange));
+        this.t.body.removeEventListener("keydown", this.t.bound(this.t.expand, this.t.expand.onRowKey));
+        this.t.body.removeEventListener("focusin", this.t.bound(this.t.selection, this.t.selection.onBodyFocusIn));
+        this.t.body.removeEventListener("focusout", this.t.bound(this.t.selection, this.t.selection.onBodyFocusOut));
+        this.t.controls.selectAll?.removeEventListener("change", this.t.bound(this.t.selection, this.t.selection.onSelectAll));
+      }
+      /**
+       * Put back what the server rendered: order, visibility, the sort marks, the pager, the empty state, the focusability, and every
+       * part this attach added. First the rows and their details.
+       */
+      restoreRows() {
+        const { body, details, reorder, model } = this.t;
+        for (const row2 of body.querySelectorAll(`:scope > ${SKELETON_ROW}`)) row2.remove();
+        for (const detail of details.builtDetails) detail.remove();
+        for (const row2 of reorder.prepared) reorder.unprepareRow(row2);
+        for (const row2 of model.rendered) row2.hidden = false;
+        for (const row2 of model.rendered) {
+          const detail = details.details.get(row2);
+          if (detail !== void 0 && !details.builtDetails.has(detail)) detail.hidden = details.detailsWereHidden.get(detail) ?? detail.hidden;
+        }
+      }
+      /** Group rows [J2]: their toggles out, their span and visibility back, the ids taken back. */
+      restoreGroups() {
+        const { groups } = this.t;
+        for (const [heading, was] of groups.preparedGroups) {
+          heading.querySelector(GROUP_TOGGLE)?.remove();
+          const cell = heading.cells[0];
+          if (was.span !== null && cell !== void 0) cell.setAttribute("colspan", was.span);
+          else if (heading.cells.length === 1) cell?.removeAttribute("colspan");
+          heading.hidden = was.hidden;
+        }
+        for (const row2 of groups.givenIds) row2.removeAttribute("id");
+      }
+      /**
+       * The body goes back to the order it came in with one write [perf-1026]: the order is worked out on a list, as the appends would
+       * have left it, and the rows go in together. A table the page took out of the document gets the same order: its markup after
+       * detach is what it was before attach.
+       */
+      restoreOrder() {
+        const { body, details, model, groups } = this.t;
+        const stand = /* @__PURE__ */ new Map();
+        let next2 = 0;
+        for (const child of body.children) stand.set(child, next2++);
+        const append = (node) => void stand.set(node, next2++);
+        for (const row2 of model.rendered) {
+          append(row2);
+          const detail = details.details.get(row2);
+          if (detail !== void 0 && !details.builtDetails.has(detail)) append(detail);
+        }
+        if (groups.layoutAtAttach !== null) {
+          const placed = new Set(groups.layoutAtAttach);
+          for (const row2 of groups.layoutAtAttach) if (stand.has(row2)) append(row2);
+          for (const row2 of model.rendered) {
+            if (placed.has(row2) || !stand.has(row2)) continue;
+            append(row2);
+            const detail = details.details.get(row2);
+            if (detail !== void 0 && stand.has(detail)) append(detail);
+          }
+        }
+        const order = [...stand.keys()].sort((a, b) => (
+          /** @type {number} */
+          stand.get(a) - /** @type {number} */
+          stand.get(b)
+        ));
+        body.replaceChildren(...order);
+      }
+      /** The headers' sort marks, visibility, sort and focusability as the markup had them. */
+      restoreHeaders() {
+        const { columns: columns2 } = this.t;
+        columns2.headers.forEach((header, i) => {
+          header.querySelector(":scope .kp-datatable__sort-order")?.remove();
+          header.hidden = columns2.headersWereHidden[i] ?? false;
+          const was = columns2.headerSort[i];
+          if (was === null || was === void 0) header.removeAttribute("aria-sort");
+          else header.setAttribute("aria-sort", was);
+          const tab = columns2.headerTab[i];
+          if (tab === null || tab === void 0) header.removeAttribute("tabindex");
+          else header.setAttribute("tabindex", tab);
+        });
+      }
+      /** The pager emptied, the slots as they were, the busy count and layer gone. */
+      restoreSlots() {
+        const { controls, busy, model } = this.t;
+        if (controls.pager !== null) controls.pager.textContent = "";
+        if (controls.empty !== null) controls.empty.hidden = busy.emptyWasHidden;
+        if (controls.loadingSlot !== null) controls.loadingSlot.hidden = true;
+        if (controls.failedSlot !== null) controls.failedSlot.hidden = true;
+        if (controls.actions !== null) controls.actions.hidden = true;
+        busy.stopBusyClock();
+        busy.overlayUnwatch?.();
+        model.overlayLayer?.remove();
+      }
+      /** The parts this table added out, its undo steps run, and the wrapper's own attributes back. */
+      restoreWrap() {
+        const { identity, busy, wrap } = this.t;
+        for (const node of identity.added) node.remove();
+        for (const step of identity.undo) step();
+        if (busy.densityWas === null) wrap.removeAttribute("data-density");
+        else wrap.setAttribute("data-density", busy.densityWas);
+        if (busy.busyWas === null) wrap.removeAttribute("aria-busy");
+        else wrap.setAttribute("aria-busy", busy.busyWas);
+        delete wrap.dataset.kpState;
+        handles5.delete(wrap);
+        delete wrap.dataset.kpDatatableAttached;
+      }
+    };
+  }
+});
+
+// js/datatable/attach/controller.js
+var UNMADE, DataTableControl;
+var init_controller36 = __esm({
+  "js/datatable/attach/controller.js"() {
+    "use strict";
+    init_controller();
+    init_remember();
+    init_state16();
+    init_instance();
+    init_identity();
+    init_controls2();
+    init_details();
+    init_columns3();
+    init_model4();
+    init_busy2();
+    init_chrome();
+    init_filter_ui();
+    init_sort_setup();
+    init_layout_setup();
+    init_reorder();
+    init_groups2();
+    init_sync5();
+    init_render2();
+    init_pills();
+    init_filter_editor();
+    init_apply2();
+    init_server();
+    init_handlers();
+    init_expand();
+    init_selection2();
+    init_edit();
+    init_wrap_click();
+    init_wire();
+    init_handle2();
+    init_unwire();
+    UNMADE = /** @type {any} */
+    null;
+    DataTableControl = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        const { call } = (
+          /** @type {{ call: DataTableCall }} */
+          /** @type {unknown} */
+          options
+        );
+        this.wrap = host;
+        this.table = /** @type {HTMLTableElement} */
+        host.querySelector("table");
+        this.body = /** @type {HTMLTableSectionElement} */
+        this.table.tBodies[0];
+        this.call = call;
+        this.settings = call.settings;
+        this.memory = null;
+        this.boundFns = /* @__PURE__ */ new Map();
+        this.identity = UNMADE;
+        this.controls = UNMADE;
+        this.details = UNMADE;
+        this.columns = UNMADE;
+        this.model = UNMADE;
+        this.busy = UNMADE;
+        this.chrome = UNMADE;
+        this.filterUi = UNMADE;
+        this.sortSetup = UNMADE;
+        this.layoutSetup = UNMADE;
+        this.reorder = UNMADE;
+        this.groups = UNMADE;
+        this.sync = UNMADE;
+        this.render = UNMADE;
+        this.pills = UNMADE;
+        this.filterEditing = UNMADE;
+        this.apply = UNMADE;
+        this.server = UNMADE;
+        this.handlers = UNMADE;
+        this.expand = UNMADE;
+        this.selection = UNMADE;
+        this.edit = UNMADE;
+        this.wrapClick = UNMADE;
+        this.wire = UNMADE;
+        this.handle = UNMADE;
+        this.unwire = UNMADE;
+      }
+      connect() {
+        this.memory = paintRemembered(this.wrap, "datatable");
+        this.wrap.dataset.kpDatatableAttached = "";
+        datatableState.instances += 1;
+        this.own(() => this.unwire.unwire());
+        this.makeParts();
+      }
+      /** Make the parts, each wiring its share of the table, in the order the table is built in. */
+      makeParts() {
+        this.identity = new TableIdentity(this);
+        this.controls = new TableControls(this);
+        this.details = new TableDetails(this);
+        this.columns = new TableColumns(this);
+        this.model = new TableModel(this);
+        this.busy = new TableBusy(this);
+        this.chrome = new TableChrome(this);
+        this.filterUi = new TableFilterUi(this);
+        this.sortSetup = new TableSortSetup(this);
+        this.layoutSetup = new TableLayoutSetup(this);
+        this.reorder = new TableReorder(this);
+        this.groups = new TableGroups(this);
+        this.sync = new TableSync(this);
+        this.render = new TableRender(this);
+        this.pills = new TablePills(this);
+        this.filterEditing = new TableFilterEditor(this);
+        this.apply = new TableApply(this);
+        this.server = new TableServer(this);
+        this.handlers = new TableHandlers(this);
+        this.expand = new TableExpand(this);
+        this.selection = new TableSelection(this);
+        this.edit = new TableEdit(this);
+        this.wrapClick = new TableWrapClick(this);
+        this.wire = new TableWire(this);
+        this.handle = new TableHandle(this);
+        this.unwire = new TableUnwire(this);
+      }
+      /**
+       * The method `fn` of `part` bound to it, the same function every time for this table, so a listener added with it can be
+       * removed with it.
+       * @template {(...args: any[]) => any} F
+       * @param {object} part
+       * @param {F} fn
+       * @returns {F}
+       */
+      bound(part7, fn) {
+        let done = this.boundFns.get(fn);
+        if (done === void 0) {
+          done = fn.bind(part7);
+          this.boundFns.set(
+            fn,
+            /** @type {Function} */
+            done
+          );
+        }
+        return (
+          /** @type {F} */
+          done
+        );
+      }
+      /**
+       * Take this table away and wire it again, for a changed option [live-options-1019]: the page's handle leaves the call's list,
+       * and the new table's handle is what comes back.
+       * @param {DataTableHandle} old
+       * @returns {DataTableHandle | undefined}
+       */
+      rewire(old) {
+        const { call, wrap } = this;
+        this.destroy();
+        call.created.splice(call.created.indexOf(old), 1);
+        call.wire(wrap);
+        return handles5.get(wrap);
+      }
+    };
   }
 });
 
@@ -48615,127 +48997,70 @@ function attachDataTables(root = document, {
   expandSingle = false,
   decorate: decorate2
 } = {}) {
-  const cleanups = [];
-  const created = [];
-  const sortsSeveral = (wrap) => wrap.dataset.kpSortMulti === void 0 ? multiSort !== false : wrap.dataset.kpSortMulti !== "false";
-  const unwires = /* @__PURE__ */ new Map();
-  const wireTable = (element, again2 = false) => {
-    const wrap = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (wrap.dataset.kpDatatableAttached !== void 0) return;
-    const table = (
-      /** @type {HTMLTableElement | null} */
-      wrap.querySelector("table")
-    );
-    const body = table?.tBodies[0];
-    if (table === void 0 || table === null || body === void 0) return;
-    const memory = paintRemembered(wrap, "datatable");
-    wrap.dataset.kpDatatableAttached = "";
-    datatableState.instances += 1;
-    const c = (
-      /** @type {TableContext} */
-      /** @type {unknown} */
-      {
-        wrap,
-        regions: regions2,
-        cleanups,
-        localeOption,
-        sortExternal,
-        debounceMs,
-        sortCycle,
-        sortsSeveral,
-        multiSort,
-        expandGlyph,
-        collapseGlyph,
-        pageSizesOption,
-        table,
-        body,
-        expandSingle,
-        decorate: decorate2,
-        detailFn,
-        filterMode,
-        pageLabel,
-        pagerClassName,
-        removeGlyph,
-        compareFn,
-        filterFn,
-        rowKeyFn,
-        loadFn,
-        memory,
-        onEdit,
-        gridPageRows,
-        created,
-        unwires,
-        wireTable,
-        again: again2
-      }
-    );
-    installIdentity(c);
-    installControls(c);
-    installDetails(c);
-    installColumns(c);
-    installModel(c);
-    installBusy(c);
-    installChrome(c);
-    installFilterUi(c);
-    installSortSetup(c);
-    installLayoutSetup(c);
-    installReorder(c);
-    installGroups(c);
-    installSync(c);
-    installRender(c);
-    installPills(c);
-    installApply(c);
-    installServer(c);
-    installHandlers(c);
-    installExpand(c);
-    installSelection(c);
-    installEdit(c);
-    installWire(c);
-    installHandle(c);
-    installUnwire(c);
+  const settings = {
+    localeOption,
+    compareFn,
+    filterFn,
+    debounceMs,
+    sortCycle,
+    multiSort,
+    sortExternal,
+    filterMode,
+    pagerClassName,
+    pageLabel,
+    regions: regions2,
+    pageSizesOption,
+    removeGlyph,
+    detailFn,
+    loadFn,
+    rowKeyFn,
+    onEdit,
+    expandGlyph,
+    collapseGlyph,
+    gridPageRows,
+    expandSingle,
+    decorate: decorate2
   };
-  for (const element of root.querySelectorAll(TABLE)) wireTable(element);
+  const call = makeCall(settings);
+  for (const element of root.querySelectorAll(TABLE)) call.wire(
+    /** @type {HTMLElement} */
+    element
+  );
   const detach = () => {
-    for (const c of cleanups) c();
+    for (const control of call.controls.values()) control.destroy();
   };
-  return Object.assign(detach, { handles: created });
+  return Object.assign(detach, { handles: call.created });
+}
+function makeCall(settings) {
+  const call = {
+    settings,
+    created: [],
+    controls: /* @__PURE__ */ new Map(),
+    /** Does this table sort on several columns? `data-kp-sort-multi` wins over the `multiSort` option. */
+    sortsSeveral: (wrap) => wrap.dataset.kpSortMulti === void 0 ? settings.multiSort !== false : wrap.dataset.kpSortMulti !== "false",
+    wire: (wrap) => {
+      if ("kpDatatableAttached" in wrap.dataset || controllerOf(wrap, DataTableControl)) return void 0;
+      const table = (
+        /** @type {HTMLTableElement | null} */
+        wrap.querySelector("table")
+      );
+      if (table === null || table.tBodies[0] === void 0) return void 0;
+      const control = attachOne(wrap, DataTableControl, { call });
+      if (control !== void 0) call.controls.set(wrap, control);
+      return control;
+    }
+  };
+  return call;
 }
 var init_attach13 = __esm({
   "js/datatable/attach.js"() {
     "use strict";
-    init_remember();
-    init_state16();
+    init_controller();
     init_sort();
     init_instance();
     init_events();
     init_selectors();
-    init_identity();
-    init_controls2();
-    init_details();
-    init_columns3();
-    init_model4();
-    init_busy2();
-    init_chrome();
-    init_filter_ui();
-    init_sort_setup();
-    init_layout_setup();
-    init_reorder();
-    init_groups2();
-    init_sync5();
-    init_render2();
-    init_pills();
-    init_apply2();
-    init_server();
-    init_handlers();
-    init_expand();
-    init_selection2();
-    init_edit();
-    init_wire();
-    init_handle2();
-    init_unwire();
+    init_controller36();
   }
 });
 
@@ -49642,7 +49967,7 @@ var init_core10 = __esm({
 
 // js/upload/controller.js
 var UploadZone;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/upload/controller.js"() {
     "use strict";
     init_motion();
@@ -49785,7 +50110,7 @@ var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_values24();
     init_values24();
     init_accepts();
@@ -49994,7 +50319,7 @@ var init_view2 = __esm({
 
 // js/wizard/controller.js
 var WizardController;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/wizard/controller.js"() {
     "use strict";
     init_validate();
@@ -50094,7 +50419,7 @@ var init_attach14 = __esm({
   "js/wizard/attach.js"() {
     "use strict";
     init_controller();
-    init_controller37();
+    init_controller38();
     init_values25();
   }
 });
@@ -50486,7 +50811,7 @@ var init_layout2 = __esm({
 
 // js/gridlayout/controller.js
 var MovableGrid;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/gridlayout/controller.js"() {
     "use strict";
     init_controller();
@@ -50662,7 +50987,7 @@ var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_controller();
-    init_controller38();
+    init_controller39();
     init_values26();
     init_values26();
     init_layout2();
@@ -51270,7 +51595,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED7, CalendarController;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -51524,7 +51849,7 @@ var init_api14 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller39();
+    init_controller40();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -54492,7 +54817,7 @@ var init_model6 = __esm({
 
 // js/week/controller.js
 var MID_DAY, pillOf, WeekControl;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/week/controller.js"() {
     "use strict";
     init_controller();
@@ -54673,7 +54998,7 @@ var init_attach15 = __esm({
     init_controller();
     init_constants24();
     init_state18();
-    init_controller40();
+    init_controller41();
   }
 });
 
@@ -56216,8 +56541,8 @@ var init_pointer3 = __esm({
 });
 
 // js/sequencer/controller.js
-var ZOOM_IN, ZOOM_OUT, WHEEL_ZOOM, LIVE_OPTIONS2, SequencerControl;
-var init_controller41 = __esm({
+var ZOOM_IN, ZOOM_OUT, WHEEL_ZOOM, LIVE_OPTIONS3, SequencerControl;
+var init_controller42 = __esm({
   "js/sequencer/controller.js"() {
     "use strict";
     init_strings();
@@ -56234,7 +56559,7 @@ var init_controller41 = __esm({
     ZOOM_IN = 1.25;
     ZOOM_OUT = 0.8;
     WHEEL_ZOOM = 0.01;
-    LIVE_OPTIONS2 = [
+    LIVE_OPTIONS3 = [
       "data-kp-sequencer-unit",
       "data-kp-sequencer-snap",
       "data-kp-sequencer-snap-items",
@@ -56273,7 +56598,7 @@ var init_controller41 = __esm({
         if (el16.dataset.kpState === "loading") c.state = "loading";
         paint8(c);
         this.watchWidth();
-        this.own(watchOptions(el16, LIVE_OPTIONS2, (names) => this.onOptions(names)));
+        this.own(watchOptions(el16, LIVE_OPTIONS3, (names) => this.onOptions(names)));
         this.own(() => {
           window.clearTimeout(c.scrollTimer);
           window.cancelAnimationFrame(c.frameTimer);
@@ -56431,7 +56756,7 @@ var init_attach16 = __esm({
     init_controller();
     init_constants25();
     init_instance2();
-    init_controller41();
+    init_controller42();
   }
 });
 
@@ -58153,7 +58478,7 @@ var init_input2 = __esm({
 
 // js/gantt/controller.js
 var MIN_ZOOM_S, CHROME_OPTIONS, GanttControl;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/gantt/controller.js"() {
     "use strict";
     init_live_options();
@@ -58370,7 +58695,7 @@ var init_attach17 = __esm({
     "use strict";
     init_controller();
     init_constants26();
-    init_controller42();
+    init_controller43();
   }
 });
 
@@ -58769,7 +59094,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -58918,7 +59243,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller43();
+    init_controller44();
     init_values27();
     init_values27();
   }
@@ -59528,7 +59853,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -59713,7 +60038,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller44();
+    init_controller45();
   }
 });
 
@@ -60253,7 +60578,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -60382,7 +60707,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller45();
+    init_controller46();
     init_values29();
     init_values29();
     init_share();
@@ -60814,7 +61139,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -60895,7 +61220,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_values30();
     init_values30();
   }
@@ -61117,7 +61442,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -61246,7 +61571,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller47();
+    init_controller48();
     init_values31();
     init_values31();
     init_keys12();
@@ -62250,7 +62575,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -62316,7 +62641,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller48();
+    init_controller49();
     init_values33();
     init_values33();
   }
@@ -62642,7 +62967,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -62929,7 +63254,7 @@ var init_api18 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller49();
+    init_controller50();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -63051,7 +63376,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -63278,7 +63603,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller50();
+    init_controller51();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -64270,7 +64595,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -64510,7 +64835,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller51();
+    init_controller52();
     init_values36();
     init_values36();
   }
@@ -64851,7 +65176,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -64969,7 +65294,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller52();
+    init_controller53();
     init_values37();
     init_values37();
     init_slug();
@@ -65656,7 +65981,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -65863,7 +66188,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller53();
+    init_controller54();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -66164,7 +66489,7 @@ var init_core18 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -66279,7 +66604,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller54();
+    init_controller55();
     init_values38();
     init_values38();
     init_names();
@@ -66524,7 +66849,7 @@ var init_core19 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -66629,7 +66954,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller55();
+    init_controller56();
     init_values39();
     init_values39();
     init_value();
@@ -67631,7 +67956,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -67790,7 +68115,7 @@ var init_api20 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller56();
+    init_controller57();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -68221,7 +68546,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -68362,7 +68687,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller57();
+    init_controller58();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -68824,7 +69149,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -69094,7 +69419,7 @@ var init_api21 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller58();
+    init_controller59();
     init_build14();
     init_commit();
     init_math4();
@@ -69382,7 +69707,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -69615,7 +69940,7 @@ var init_api22 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller59();
+    init_controller60();
     init_list4();
     init_render4();
   }
@@ -70481,8 +70806,8 @@ function newModel3(box, handle, input, list) {
     silent: false
   };
 }
-var LIVE_OPTIONS3, UsualPickerControl;
-var init_controller60 = __esm({
+var LIVE_OPTIONS4, UsualPickerControl;
+var init_controller61 = __esm({
   "js/usual-picker/controller.js"() {
     "use strict";
     init_combobox();
@@ -70497,7 +70822,7 @@ var init_controller60 = __esm({
     init_state23();
     init_sync6();
     init_input3();
-    LIVE_OPTIONS3 = [
+    LIVE_OPTIONS4 = [
       "data-kp-usual",
       "data-kp-usual-source",
       "data-kp-usual-max",
@@ -70564,7 +70889,7 @@ var init_controller60 = __esm({
         this.listen(m.box, CHANGE_EVENT, (event) => this.onChange(event));
         const jump = { keys: "Alt U", what: getStrings().usualJump, group: "Picker", when: () => bandValues(m).length > 0, run: () => false };
         this.own(registerShortcuts(m.box, [jump]));
-        this.observe(new MutationObserver(() => render3(m))).observe(m.box, { attributes: true, attributeFilter: LIVE_OPTIONS3 });
+        this.observe(new MutationObserver(() => render3(m))).observe(m.box, { attributes: true, attributeFilter: LIVE_OPTIONS4 });
       }
       /** The picker's parts leave, and the box is a plain combobox again. */
       release() {
@@ -70689,7 +71014,7 @@ var init_attach20 = __esm({
     init_constants33();
     init_model9();
     init_sync6();
-    init_controller60();
+    init_controller61();
   }
 });
 
@@ -71136,7 +71461,7 @@ var init_handle3 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -71327,7 +71652,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller61();
+    init_controller62();
     init_group6();
     init_group6();
   }
@@ -71616,7 +71941,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -71723,7 +72048,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller62();
+    init_controller63();
     init_values41();
     init_values41();
     init_level();
@@ -72018,7 +72343,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -72202,7 +72527,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller63();
+    init_controller64();
     init_values42();
     init_values42();
     init_order();
@@ -72467,7 +72792,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -72554,7 +72879,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller64();
+    init_controller65();
     init_values43();
     init_values43();
     init_states();
@@ -73293,8 +73618,8 @@ var init_set2 = __esm({
 });
 
 // js/entity-card/grid-control.js
-var NARROW_BELOW, CARDS3, LIVE_OPTIONS4, EntityGridControl;
-var init_grid_control = __esm({
+var NARROW_BELOW, CARDS3, LIVE_OPTIONS5, EntityGridControl;
+var init_grid_control2 = __esm({
   "js/entity-card/grid-control.js"() {
     "use strict";
     init_controller();
@@ -73302,7 +73627,7 @@ var init_grid_control = __esm({
     init_set2();
     NARROW_BELOW = 480;
     CARDS3 = ":scope > .kp-card--entity";
-    LIVE_OPTIONS4 = [
+    LIVE_OPTIONS5 = [
       "data-kp-entity-meters",
       "data-kp-entity-flags-max",
       "data-kp-entity-inline",
@@ -73335,7 +73660,7 @@ var init_grid_control = __esm({
             })
           ).observe(grid2);
         }
-        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS4 });
+        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS5 });
         this.fold();
       }
       /** The least card width the grid asks for. */
@@ -73496,7 +73821,7 @@ var init_grid3 = __esm({
     init_state_plate();
     init_constants34();
     init_helpers5();
-    init_grid_control();
+    init_grid_control2();
     init_set2();
     BUSY3 = /* @__PURE__ */ new WeakMap();
   }
@@ -74381,7 +74706,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -74634,7 +74959,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller65();
+    init_controller66();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -74980,7 +75305,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -75285,7 +75610,7 @@ var init_api23 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller66();
+    init_controller67();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -75734,7 +76059,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller67 = __esm({
+var init_controller68 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -75868,7 +76193,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller67();
+    init_controller68();
     init_values46();
   }
 });
@@ -76643,7 +76968,7 @@ var init_lightbox_info = __esm({
 });
 
 // js/gallery/lightbox-input.js
-function installChrome2(lb) {
+function installChrome(lb) {
   const { viewer, chromeMode, el: el16 } = lb;
   const showChrome = () => {
     viewer.dialog.removeAttribute("data-kp-chrome-idle");
@@ -76811,7 +77136,7 @@ var init_lightbox = __esm({
         attachDisabledReasons(this.viewer.dialog);
         this.previous.addEventListener("click", () => this.go(-1));
         this.next.addEventListener("click", () => this.go(1));
-        installChrome2(this);
+        installChrome(this);
         installSwipe(this);
         installHash(this, id);
         this.show();
@@ -77531,7 +77856,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller68 = __esm({
+var init_controller69 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -77761,7 +78086,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller68();
+    init_controller69();
     init_values47();
     init_values47();
   }
@@ -77859,7 +78184,7 @@ function setSentenceFieldState(field2, state12) {
     bar.className = "kp-skeleton kp-skeleton--block kp-sentence__bar";
     skeleton2.append(bar);
     field2.append(skeleton2);
-    for (const c of field2.querySelectorAll(CONTROLS2)) {
+    for (const c of field2.querySelectorAll(CONTROLS3)) {
       if (c instanceof HTMLElement && !c.hasAttribute("disabled")) {
         c.setAttribute("disabled", "");
         c.setAttribute("data-kp-was-enabled", "");
@@ -77910,7 +78235,7 @@ function wordsBefore(field2) {
   }
   return before;
 }
-var SENTENCE, SENTENCE_EVENT, LINES, CONTROLS2, tidy, COMPUTED_NONE, NAME_WORDS, isButton;
+var SENTENCE, SENTENCE_EVENT, LINES, CONTROLS3, tidy, COMPUTED_NONE, NAME_WORDS, isButton;
 var init_fields = __esm({
   "js/sentence/fields.js"() {
     "use strict";
@@ -77919,7 +78244,7 @@ var init_fields = __esm({
     SENTENCE = "[data-kp-sentence]";
     SENTENCE_EVENT = "kp-sentence-change";
     LINES = /* @__PURE__ */ new WeakMap();
-    CONTROLS2 = 'input, select, textarea, button, [role="combobox"]';
+    CONTROLS3 = 'input, select, textarea, button, [role="combobox"]';
     tidy = (text) => text.replace(/\s+/g, " ").replace(/\s+([.,;:!?])/g, "$1").trim();
     COMPUTED_NONE = "\u2014";
     NAME_WORDS = 3;
@@ -77929,7 +78254,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller69 = __esm({
+var init_controller70 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -78052,7 +78377,7 @@ var init_controller69 = __esm({
           if (phrase.hidden === !show) continue;
           phrase.hidden = !show;
           phrase.toggleAttribute("inert", !show);
-          for (const c of phrase.querySelectorAll(CONTROLS2)) if (c instanceof HTMLElement) reach2(c, show);
+          for (const c of phrase.querySelectorAll(CONTROLS3)) if (c instanceof HTMLElement) reach2(c, show);
         }
       }
       /** A field that is more of the line than it may be takes a line of its own. */
@@ -78158,7 +78483,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller69();
+    init_controller70();
     init_fields();
     init_fields();
   }
@@ -78498,7 +78823,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller70 = __esm({
+var init_controller71 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -78749,7 +79074,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller70();
+    init_controller71();
   }
 });
 
@@ -79073,7 +79398,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller71 = __esm({
+var init_controller72 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -79184,7 +79509,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller71();
+    init_controller72();
     init_values48();
     init_values48();
     init_time3();
@@ -79512,7 +79837,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS7, SnoozePicker;
-var init_controller72 = __esm({
+var init_controller73 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -79771,7 +80096,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller72();
+    init_controller73();
     init_choices();
   }
 });
@@ -79810,7 +80135,7 @@ function removeEditorRow(host, row2) {
     RowEditor
   )?.remove(row2);
 }
-var ROWS2, FOCUSABLE2, whole, RowEditor;
+var ROWS2, FOCUSABLE3, whole, RowEditor;
 var init_row_editor = __esm({
   "js/row-editor.js"() {
     "use strict";
@@ -79818,7 +80143,7 @@ var init_row_editor = __esm({
     init_strings();
     init_state_plate();
     ROWS2 = "[data-kp-rows]";
-    FOCUSABLE2 = 'input:not([type="hidden"]):not(:disabled), button:not(:disabled), select:not(:disabled), [tabindex="0"]';
+    FOCUSABLE3 = 'input:not([type="hidden"]):not(:disabled), button:not(:disabled), select:not(:disabled), [tabindex="0"]';
     whole = (value, fallback2) => {
       const n = Number.parseInt(value ?? "", 10);
       return Number.isFinite(n) && n >= 0 ? n : fallback2;
@@ -79939,7 +80264,7 @@ var init_row_editor = __esm({
         const index = this.rows().length;
         this.sync();
         this.emit("kp-rows-add", row2, index);
-        row2.querySelector(FOCUSABLE2)?.focus();
+        row2.querySelector(FOCUSABLE3)?.focus();
         this.say(getStrings().rowsAdded(this.units[0], index, index));
         return row2;
       }
@@ -79955,7 +80280,7 @@ var init_row_editor = __esm({
         this.sync();
         this.emit("kp-rows-remove", row2, at + 1);
         const next2 = left[Math.min(at, left.length - 1)];
-        const focus = next2?.querySelector(FOCUSABLE2) ?? this.host.querySelector("[data-kp-rows-add]");
+        const focus = next2?.querySelector(FOCUSABLE3) ?? this.host.querySelector("[data-kp-rows-add]");
         focus?.focus();
         this.say(getStrings().rowsRemoved(this.units[0], at + 1, left.length));
       }
@@ -81276,7 +81601,7 @@ var init_pan = __esm({
 
 // js/graph/controller.js
 var nodeOf, GraphControl;
-var init_controller73 = __esm({
+var init_controller74 = __esm({
   "js/graph/controller.js"() {
     "use strict";
     init_controller();
@@ -81540,7 +81865,7 @@ var init_attach22 = __esm({
     "use strict";
     init_controller();
     init_constants38();
-    init_controller73();
+    init_controller74();
   }
 });
 
@@ -82626,8 +82951,8 @@ var init_state27 = __esm({
 });
 
 // js/claim/controller.js
-var LIVE_OPTIONS5, ClaimList;
-var init_controller74 = __esm({
+var LIVE_OPTIONS6, ClaimList;
+var init_controller75 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -82644,7 +82969,7 @@ var init_controller74 = __esm({
     init_request2();
     init_rows9();
     init_state27();
-    LIVE_OPTIONS5 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
+    LIVE_OPTIONS6 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
       (n) => `data-kp-claim-${n}`
     );
     ClaimList = class extends Controller {
@@ -82665,7 +82990,7 @@ var init_controller74 = __esm({
           event
         ));
         this.listen(list, CHECKLIST_RENDER_EVENT, () => decorate(list));
-        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS5 });
+        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS6 });
         this.listen(list, "click", (event) => this.onClick(
           /** @type {MouseEvent} */
           event
@@ -82797,7 +83122,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller74();
+    init_controller75();
   }
 });
 
@@ -83768,8 +84093,8 @@ var init_keys16 = __esm({
 });
 
 // js/availability/controller.js
-var CELL2, LIVE_OPTIONS6, cellOf2, AvailabilityControl;
-var init_controller75 = __esm({
+var CELL2, LIVE_OPTIONS7, cellOf2, AvailabilityControl;
+var init_controller76 = __esm({
   "js/availability/controller.js"() {
     "use strict";
     init_controller();
@@ -83784,7 +84109,7 @@ var init_controller75 = __esm({
     init_request3();
     init_keys16();
     CELL2 = ".kp-availability__grid .kp-heat__cell[data-col-key]";
-    LIVE_OPTIONS6 = [
+    LIVE_OPTIONS7 = [
       "data-kp-heat-edit",
       "data-kp-disabled-reason",
       ...[
@@ -83838,7 +84163,7 @@ var init_controller75 = __esm({
         this.listen(el16, "scroll", (event) => this.onScroll(event), true);
         if (el16.getAttribute("data-kp-availability-keys") !== "false") this.own(registerAvailabilityKeys(el16));
         this.own(attachHeats(el16));
-        this.observe(new MutationObserver(() => render4(el16))).observe(el16, { attributes: true, attributeFilter: LIVE_OPTIONS6 });
+        this.observe(new MutationObserver(() => render4(el16))).observe(el16, { attributes: true, attributeFilter: LIVE_OPTIONS7 });
         render4(el16);
       }
       /** @param {MouseEvent} event */
@@ -83988,7 +84313,7 @@ var init_attach24 = __esm({
     init_api27();
     init_constants40();
     init_facts();
-    init_controller75();
+    init_controller76();
   }
 });
 
@@ -85172,8 +85497,8 @@ var init_actions7 = __esm({
 });
 
 // js/qr/controller.js
-var LIVE_OPTIONS7, QrControl;
-var init_controller76 = __esm({
+var LIVE_OPTIONS8, QrControl;
+var init_controller77 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -85182,7 +85507,7 @@ var init_controller76 = __esm({
     init_actions7();
     init_render6();
     init_state28();
-    LIVE_OPTIONS7 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
+    LIVE_OPTIONS8 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -85198,7 +85523,7 @@ var init_controller76 = __esm({
             window.cancelAnimationFrame(this.queued);
             this.queued = window.requestAnimationFrame(() => render5(root));
           })
-        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS7.map((n) => `data-kp-qr-${n}`) });
+        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS8.map((n) => `data-kp-qr-${n}`) });
         this.own(this.copyKey());
         render5(root);
       }
@@ -85277,7 +85602,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller76();
+    init_controller77();
     init_state28();
     init_state28();
     init_matrix2();
@@ -86084,7 +86409,7 @@ var init_api28 = __esm({
 
 // js/console/controller.js
 var MAX_COMPLETIONS, LIVE3, ConsoleControl;
-var init_controller77 = __esm({
+var init_controller78 = __esm({
   "js/console/controller.js"() {
     "use strict";
     init_controller();
@@ -86308,7 +86633,7 @@ var init_attach25 = __esm({
     "use strict";
     init_controller();
     init_constants41();
-    init_controller77();
+    init_controller78();
   }
 });
 
@@ -87063,7 +87388,7 @@ var init_api29 = __esm({
 
 // js/logviewer/controller.js
 var DOWNLOAD_URL_MS, LIVE4, LogViewerControl;
-var init_controller78 = __esm({
+var init_controller79 = __esm({
   "js/logviewer/controller.js"() {
     "use strict";
     init_controller();
@@ -87255,7 +87580,7 @@ var init_attach26 = __esm({
     "use strict";
     init_controller();
     init_constants42();
-    init_controller78();
+    init_controller79();
   }
 });
 
@@ -88018,7 +88343,7 @@ var init_actions8 = __esm({
 
 // js/diff/controller.js
 var LIVE5, DiffControl;
-var init_controller79 = __esm({
+var init_controller80 = __esm({
   "js/diff/controller.js"() {
     "use strict";
     init_controller();
@@ -88127,7 +88452,7 @@ var init_attach27 = __esm({
     "use strict";
     init_controller();
     init_constants43();
-    init_controller79();
+    init_controller80();
   }
 });
 

@@ -1,30 +1,20 @@
 export type Strings = import('../../strings/types.js').Strings;
-export type TableContext = import('./context.js').TableContext;
-export type IdentityFields = {
-    add: <T extends Element>(node: T) => T;
-    added: Element[];
-    id: string;
-    make: (tag: string, className?: string) => HTMLElement;
-    s0: Strings;
-    undo: (() => void)[];
-};
+export type DataTableControl = import('./controller.js').DataTableControl;
 /** @typedef {import('../../strings/types.js').Strings} Strings */
-/** @typedef {import('./context.js').TableContext} TableContext */
-/**
- * What the the table's id, its undo list and the arrival mark part adds to the table's context.
- *
- * @typedef {{
- *     add: <T extends Element>(node: T) => T;
- *     added: Element[];
- *     id: string;
- *     make: (tag: string, className?: string) => HTMLElement;
- *     s0: Strings;
- *     undo: (() => void)[];
- * }} IdentityFields
- */
-/**
- * The table's id, its undo list and the arrival mark.
- *
- * @param {TableContext} c
- */
-export declare function installIdentity(c: TableContext): void;
+/** @typedef {import('./controller.js').DataTableControl} DataTableControl */
+export declare class TableIdentity {
+    /** The table this part belongs to. */
+    t: import("./controller.js").DataTableControl;
+    id: string;
+    /** Everything this attach put into the page, taken out again by detach. @type {Element[]} */
+    added: Element[];
+    /** @type {(() => void)[]} */
+    undo: (() => void)[];
+    s0: import("../../strings/types.js").Strings;
+    /** @param {DataTableControl} t */
+    constructor(t: DataTableControl);
+    /** @template {Element} T @param {T} node @returns {T} */
+    add<T extends Element>(node: T): T;
+    /** @param {string} tag @param {string} [className] */
+    make(tag: string, className?: string): HTMLElement;
+}

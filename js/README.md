@@ -11,16 +11,15 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
   where each public name lives. Every part opens with one line saying what it does.
 - Files are named by responsibility, not by position: `datatable/sort.js`, `datatable/filter.js`, `sidenav/resizer.js`.
   Pure helpers that tests import keep their export names and are re-exported by the facade.
-- A big closure (`attachDataTables`) is split into **install functions** that share one
-  context object `c`: `js/datatable/attach/` holds one file per concern, each
-  exporting `install<Name>(c)`. The host file (`attach.js`) builds `c`, calls the installs in order and returns.
-  A part reads what an earlier part published with `const { … } = c`, reads what changes (`let` values) as `c.name`, and
-  `context.js` types the whole context from the fields each part adds (`<Part>Fields`). The order of the calls is the order
-  the code ran in before the split; keep it.
+- The three biggest closures were first split into **install functions** over one shared context object `c`; they are now
+  classes too (closure-pattern B, 2026-10-31): `js/sidenav/` is a chain of classes (`SidenavBase` … `SidenavControl`),
+  `js/chart/plot/` a chain from `PlotBase` to `PlotChart` with a `PlotDrawing` per frame, and `js/datatable/attach/` one
+  `DataTableControl` per table that makes its parts (`TableIdentity` … `TableUnwire`) in the order the table is built in, each
+  part holding its share of the state and reaching the others through the controller (`this.t.<part>`).
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`, `diff.js`, `sidenav.js`, `chart.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`, `diff.js`, `sidenav.js`, `chart.js`, `datatable.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -31,44 +30,48 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 
 ## js/datatable.js → js/datatable/
 
-The data table: sorting, filtering, paging, cards, detail rows, reorder, editing, server mode. 34 files.
+The data table: sorting, filtering, paging, cards, detail rows, reorder, editing, server mode. 38 files.
 
-| File                     | Does                                                                                                   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `layout-hooks.js`        | The width where a table turns into cards (`data-kp-cards-at`) and the actions column (`data-kp-col`) [mc-1030].                |
-| `attach/apply.js`        | Writes the controls from the state, reads them back, and applies sorts and filters.                    |
-| `attach/busy.js`         | The loading overlay, the busy clock and the empty state.                                               |
-| `attach/chrome.js`       | The chrome around the table: the scroll box, the top and bottom bars.                                  |
-| `attach/columns.js`      | The columns: headers, labels, kinds and how a cell reads.                                              |
-| `attach/context.js`      | The context the parts of one wired data table share.                                                   |
-| `attach/controls.js`     | Finds the controls around the table and reads its options.                                             |
-| `attach/details.js`      | The detail rows, the expand cell and the reorder cell.                                                 |
-| `attach/edit.js`         | In-cell editing: open, commit, undo and the app's say.                                                 |
-| `attach/expand.js`       | Expanding and folding rows and the row keys.                                                           |
-| `attach/filter-ui.js`    | The filter panel: its columns, pills, add menu, editor and choice lists.                               |
-| `attach/groups.js`       | Row groups: collecting, folding, placing and syncing them.                                             |
-| `attach/handle.js`       | The handle a page gets back from the table.                                                            |
-| `attach/handlers.js`     | The handlers of the search, scope, density, sort, page size and column controls.                       |
-| `attach/identity.js`     | The table's id, its undo list and the arrival mark.                                                    |
-| `attach/layout-setup.js` | The grid mode, the held height, the cover box and the page-size select.                                |
-| `attach/model.js`        | The table's view state: rows, page, query, scope, filters, sorts and busy flags.                       |
-| `attach/pills.js`        | The filter pills, the add menu and the filter editor.                                                  |
-| `attach/render.js`       | Renders the rows, the pager and the filter pills area.                                                 |
-| `attach/reorder.js`      | Row preparation and the drag and keyboard reorder of rows.                                             |
-| `attach/selection.js`    | Row selection: focus memory, announcements and the select-all.                                         |
-| `attach/server.js`       | Server mode: sending a request and applying the answer.                                                |
-| `attach/sort-setup.js`   | The sort and column controls and the remembered columns.                                               |
-| `attach/sync.js`         | Syncs the table's parts with its state: selection, sort marks, columns, fixed columns and card labels. |
-| `attach/unwire.js`       | The detach that undoes everything the table added.                                                     |
-| `attach/wire.js`         | Registers the table's listeners and applies its initial state.                                         |
-| `attach.js`              | Attaches the data tables of a page: its closure, split into parts.                                     |
-| `events.js`              | The event names, page sizes and fixed numbers of the data table.                                       |
-| `filter.js`              | Pure filtering: filter bounds, matching and the pills that name a filter.                              |
-| `grid.js`                | The grid mode: fixed columns, the scrolled marker and the grid attachment.                             |
-| `instance.js`            | The table instances, their handles and the default filter.                                             |
-| `selectors.js`           | The selectors and class names the data table finds its parts by.                                       |
-| `sort.js`                | Pure sorting: the comparison, the order and the next sort of a column.                                 |
-| `state.js`               | The counter the data table parts share to give each table its own id.                                  |
+| File                      | Does                                                                                                      |
+| ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `attach/apply.js`         | TableApply: writes the controls from the state, reads them back, and applies sorts and filters.           |
+| `attach/busy.js`          | TableBusy: the loading overlay, the busy clock and the empty state.                                       |
+| `attach/chrome.js`        | TableChrome: the scroll box, the top and bottom bars, the "In" and density choices.                       |
+| `attach/columns.js`       | TableColumns: headers, labels, kinds and how a cell reads.                                                |
+| `attach/controller.js`    | DataTableControl: one data table; makes its parts in order, binds their listeners, wires the table again. |
+| `attach/controls.js`      | TableControls: finds the controls around the table and reads its options.                                 |
+| `attach/details.js`       | TableDetails: the detail rows, the expand cell and the reorder cell.                                      |
+| `attach/edit.js`          | TableEdit: in-cell editing: open, commit, undo and the app's say.                                         |
+| `attach/expand.js`        | TableExpand: expanding and folding rows and the row keys.                                                 |
+| `attach/filter-editor.js` | TableFilterEditor: the add-filter mode's editor, opened from a pill or the add menu.                      |
+| `attach/filter-ui.js`     | TableFilterUi: the filter panel, the add-filter button and menu, the pills row and the choice lists.      |
+| `attach/groups.js`        | TableGroups: row groups: collecting, folding, placing and syncing them.                                   |
+| `attach/handle.js`        | TableHandle: the handle a page gets back, the rows watch and the wiring again for a changed option.       |
+| `attach/handlers.js`      | TableHandlers: the search, scope, density, sort, page size and column controls.                           |
+| `attach/identity.js`      | TableIdentity: the table's id, its undo list and the arrival mark.                                        |
+| `attach/layout-setup.js`  | TableLayoutSetup: the grid readout, the failed and empty plates, the cover box and the page-size select.  |
+| `attach/model.js`         | TableModel: the view state: rows, page, query, scope, filters, sorts and busy flags.                      |
+| `attach/pills.js`         | TablePills: the filter pills and the add menu.                                                            |
+| `attach/render.js`        | TableRender: the rows, the status line, the pager and the parts that follow them.                         |
+| `attach/reorder.js`       | TableReorder: row preparation and the drag and keyboard reorder of rows.                                  |
+| `attach/selection.js`     | TableSelection: focus memory, announcements and the select-all.                                           |
+| `attach/server.js`        | TableServer: server mode: sending a request and applying the answer.                                      |
+| `attach/sort-setup.js`    | TableSortSetup: the card sort, the sort summary, the column menu and the edit log.                        |
+| `attach/sync.js`          | TableSync: syncs selection, sort marks, columns, fixed columns and card labels with the state.            |
+| `attach/types.js`         | The options one attachDataTables() call resolved, and what the call shares with its tables (types only).  |
+| `attach/unwire.js`        | TableUnwire: the detach that undoes everything the table added, in the old order.                         |
+| `attach/wire.js`          | TableWire: the listeners, the opening query, sorts and filters, the keyboard grid and the first draw.     |
+| `attach/wrap-click.js`    | TableWrapClick: clicks in the wrapper: the chrome's buttons, group rows, rows that open, edit buttons.    |
+| `attach.js`               | Attaches the data tables of a page: one DataTableControl per table.                                       |
+| `events.js`               | The event names, page sizes and fixed numbers of the data table.                                          |
+| `filter.js`               | Pure filtering: filter bounds, matching and the pills that name a filter.                                 |
+| `grid-control.js`         | GridControl, the keyboard grid over a table, and ScrollMark, the scrolled mark of its box.                |
+| `grid.js`                 | Fixed columns, and attachGrid() and watchScrolled() over their controllers.                               |
+| `instance.js`             | The table instances, their handles and the default filter.                                                |
+| `layout-hooks.js`         | CardsAt and ActionColumn: the width where a table turns into cards and the actions column.                |
+| `selectors.js`            | The selectors and class names the data table finds its parts by.                                          |
+| `sort.js`                 | Pure sorting: the comparison, the order and the next sort of a column.                                    |
+| `state.js`                | The counter the data table parts share to give each table its own id.                                     |
 
 ## js/strings.js → js/strings/
 

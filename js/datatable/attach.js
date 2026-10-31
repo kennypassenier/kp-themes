@@ -1,35 +1,12 @@
-// Attaches the data tables of a page: its closure, split into parts.
-import { paintRemembered } from '../remember.js';
-import { datatableState } from './state.js';
+// Attaches the data tables of a page: one DataTableControl per table.
+import { attachOne, controllerOf } from '../controller.js';
 import { compare } from './sort.js';
-import { defaultFilter, handles } from './instance.js';
+import { defaultFilter } from './instance.js';
 import { GRID_PAGE_ROWS, PAGE_SIZES } from './events.js';
 import { TABLE } from './selectors.js';
-import { installIdentity } from './attach/identity.js';
-import { installControls } from './attach/controls.js';
-import { installDetails } from './attach/details.js';
-import { installColumns } from './attach/columns.js';
-import { installModel } from './attach/model.js';
-import { installBusy } from './attach/busy.js';
-import { installChrome } from './attach/chrome.js';
-import { installFilterUi } from './attach/filter-ui.js';
-import { installSortSetup } from './attach/sort-setup.js';
-import { installLayoutSetup } from './attach/layout-setup.js';
-import { installReorder } from './attach/reorder.js';
-import { installGroups } from './attach/groups.js';
-import { installSync } from './attach/sync.js';
-import { installRender } from './attach/render.js';
-import { installPills } from './attach/pills.js';
-import { installApply } from './attach/apply.js';
-import { installServer } from './attach/server.js';
-import { installHandlers } from './attach/handlers.js';
-import { installExpand } from './attach/expand.js';
-import { installSelection } from './attach/selection.js';
-import { installEdit } from './attach/edit.js';
-import { installWire } from './attach/wire.js';
-import { installHandle } from './attach/handle.js';
-import { installUnwire } from './attach/unwire.js';
-/** @typedef {import('./attach/context.js').TableContext} TableContext */
+import { DataTableControl } from './attach/controller.js';
+/** @typedef {import('./attach/types.js').DataTableSettings} DataTableSettings */
+/** @typedef {import('./attach/types.js').DataTableCall} DataTableCall */
 /** @typedef {import('./sort.js').Compare} Compare */
 /** @typedef {import('./events.js').DataAnswer} DataAnswer */
 /** @typedef {import('./events.js').DataRequest} DataRequest */
@@ -113,103 +90,62 @@ export function attachDataTables(
         decorate,
     } = {},
 ) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
-    /** @type {DataTableHandle[]} */
-    const created = [];
-
-    /** Does this table sort on several columns? `data-kp-sort-multi` wins over the `multiSort` option. @param {HTMLElement} wrap */
-    const sortsSeveral = (wrap) => (wrap.dataset.kpSortMulti === undefined ? multiSort !== false : wrap.dataset.kpSortMulti !== 'false');
-    /** The detach of each table this attach wired, so one table can be wired again when an option attribute changes. @type {Map<HTMLElement, () => void>} */
-    const unwires = new Map();
-
-    /**
-     * Wire one table. Called once per table, and again for the same table when `data-kp-sort-multi` or `data-kp-filter-mode`
-     * changes [live-options-1019]: the table is put back to its markup, wired with the new option, and given back the view it
-     * had (the same handle object, so a page holding it keeps working).
-     * @param {Element} element
-     * @param {boolean} [again]  wiring a table again after an option changed: its detach is already in `cleanups`
-     */
-    const wireTable = (element, again = false) => {
-        const wrap = /** @type {HTMLElement} */ (element);
-        if (wrap.dataset.kpDatatableAttached !== undefined) return;
-        const table = /** @type {HTMLTableElement | null} */ (wrap.querySelector('table'));
-        const body = table?.tBodies[0];
-        if (table === undefined || table === null || body === undefined) return;
-        // The density, the columns and the sort this reader chose last time,
-        // when the table asked to be remembered [Kenny, 2026-09-16]. The
-        // painter writes them as the markup a server would have rendered —
-        // `data-density`, `data-kp-column-hidden`, `aria-sort` — so
-        // everything below goes on reading the markup and nothing else moves.
-        const memory = paintRemembered(wrap, 'datatable');
-        wrap.dataset.kpDatatableAttached = '';
-        datatableState.instances += 1;
-
-        const c = /** @type {TableContext} */ (
-            /** @type {unknown} */ ({
-                wrap,
-                regions,
-                cleanups,
-                localeOption,
-                sortExternal,
-                debounceMs,
-                sortCycle,
-                sortsSeveral,
-                multiSort,
-                expandGlyph,
-                collapseGlyph,
-                pageSizesOption,
-                table,
-                body,
-                expandSingle,
-                decorate,
-                detailFn,
-                filterMode,
-                pageLabel,
-                pagerClassName,
-                removeGlyph,
-                compareFn,
-                filterFn,
-                rowKeyFn,
-                loadFn,
-                memory,
-                onEdit,
-                gridPageRows,
-                created,
-                unwires,
-                wireTable,
-                again,
-            })
-        );
-        installIdentity(c);
-        installControls(c);
-        installDetails(c);
-        installColumns(c);
-        installModel(c);
-        installBusy(c);
-        installChrome(c);
-        installFilterUi(c);
-        installSortSetup(c);
-        installLayoutSetup(c);
-        installReorder(c);
-        installGroups(c);
-        installSync(c);
-        installRender(c);
-        installPills(c);
-        installApply(c);
-        installServer(c);
-        installHandlers(c);
-        installExpand(c);
-        installSelection(c);
-        installEdit(c);
-        installWire(c);
-        installHandle(c);
-        installUnwire(c);
+    const settings = {
+        localeOption,
+        compareFn,
+        filterFn,
+        debounceMs,
+        sortCycle,
+        multiSort,
+        sortExternal,
+        filterMode,
+        pagerClassName,
+        pageLabel,
+        regions,
+        pageSizesOption,
+        removeGlyph,
+        detailFn,
+        loadFn,
+        rowKeyFn,
+        onEdit,
+        expandGlyph,
+        collapseGlyph,
+        gridPageRows,
+        expandSingle,
+        decorate,
     };
-    for (const element of root.querySelectorAll(TABLE)) wireTable(element);
-
+    const call = makeCall(settings);
+    for (const element of root.querySelectorAll(TABLE)) call.wire(/** @type {HTMLElement} */ (element));
+    // Each table wired by this call, in the order it was first wired, by its controller now (a table wired again after an option
+    // changed has a new one).
     const detach = () => {
-        for (const c of cleanups) c();
+        for (const control of call.controls.values()) control.destroy();
     };
-    return Object.assign(detach, { handles: created });
+    return Object.assign(detach, { handles: call.created });
+}
+
+/**
+ * What one call shares with its tables, and how it wires one: a table not wired yet, with a table and a body, gets a
+ * DataTableControl. A table whose wiring throws is undone and reported, and the others still wire.
+ * @param {DataTableSettings} settings
+ * @returns {DataTableCall}
+ */
+function makeCall(settings) {
+    /** @type {DataTableCall} */
+    const call = {
+        settings,
+        created: [],
+        controls: new Map(),
+        /** Does this table sort on several columns? `data-kp-sort-multi` wins over the `multiSort` option. */
+        sortsSeveral: (wrap) => (wrap.dataset.kpSortMulti === undefined ? settings.multiSort !== false : wrap.dataset.kpSortMulti !== 'false'),
+        wire: (wrap) => {
+            if ('kpDatatableAttached' in wrap.dataset || controllerOf(wrap, DataTableControl)) return undefined;
+            const table = /** @type {HTMLTableElement | null} */ (wrap.querySelector('table'));
+            if (table === null || table.tBodies[0] === undefined) return undefined;
+            const control = attachOne(wrap, DataTableControl, { call });
+            if (control !== undefined) call.controls.set(wrap, control);
+            return control;
+        },
+    };
+    return call;
 }

@@ -3,54 +3,23 @@ import { datePicker } from '../../datepicker.js';
 import { filterActive, matchesFilter } from '../filter.js';
 import { compareByOrder } from '../sort.js';
 /** @typedef {import('../events.js').FilterValue} FilterValue */
-/** @typedef {import('./context.js').TableContext} TableContext */
+/** @typedef {import('./controller.js').DataTableControl} DataTableControl */
 
-/**
- * What the writes the controls from the state, reads them back, and applies sorts and filters part adds to the table's context.
- *
- * @typedef {{
- *     applyFilter: (arg0?: { keepPage?: boolean | undefined; }) => void;
- *     applySorts: () => void;
- *     readControls: () => void;
- *     refreshChoices: () => void;
- *     writeControls: () => void;
- *     writing: boolean;
- * }} ApplyFields
- */
+export class TableApply {
+    /** @param {DataTableControl} t */
+    constructor(t) {
+        /** The table this part belongs to. */
+        this.t = t;
+        /** True while writeControls sets a date picker, whose change event must not be read back. */
+        this.writing = false;
+    }
 
-/**
- * Writes the controls from the state, reads them back, and applies sorts and filters.
- *
- * @param {TableContext} c
- */
-export function installApply(c) {
-    const {
-        arrange,
-        cellText,
-        cellValue,
-        choiceText,
-        compareFn,
-        externalSort,
-        fillChoices,
-        filterFn,
-        filterKinds,
-        filters,
-        headers,
-        locale,
-        orders,
-        render,
-        rendered,
-        serverMode,
-    } = c;
-
-    /** True while writeControls sets a date picker, whose change event must not be read back. */
-    c.writing = false;
     /** Write the filter state into the panel's controls, so a pill or the handle and the panel agree. */
-    const writeControls = () => {
-        if (c.panel === null) return;
-        for (const set of c.panel.querySelectorAll('[data-kp-filter-column]')) {
+    writeControls() {
+        if (this.t.filterUi.panel === null) return;
+        for (const set of this.t.filterUi.panel.querySelectorAll('[data-kp-filter-column]')) {
             const at = Number(/** @type {HTMLElement} */ (set).dataset.kpFilterColumn);
-            const value = filters.get(at);
+            const value = this.t.model.filters.get(at);
             for (const box of set.querySelectorAll('input[type="checkbox"]')) {
                 const input = /** @type {HTMLInputElement} */ (box);
                 input.checked = Array.isArray(value) && value.includes(input.value);
@@ -69,38 +38,38 @@ export function installApply(c) {
                 // the locale; what the person is typing is left alone while it
                 // already means the same date.
                 if ((input.dataset.kpDateValue ?? '') === wanted) continue;
-                c.writing = true;
+                this.writing = true;
                 try {
                     handle.set(wanted === '' ? null : wanted);
                 } finally {
-                    c.writing = false;
+                    this.writing = false;
                 }
             }
         }
-    };
-    c.writeControls = writeControls;
+    }
+
     /**
      * The panel's choice lists, read again from the rows. At attach they
      * hold the rows the markup had; a page that writes its rows afterwards
      * (and calls refresh) would otherwise keep an empty list for good.
      */
-    const refreshChoices = () => {
-        if (c.panel === null) return;
-        for (const set of c.panel.querySelectorAll('[data-kp-filter-column]')) {
+    refreshChoices() {
+        if (this.t.filterUi.panel === null) return;
+        for (const set of this.t.filterUi.panel.querySelectorAll('[data-kp-filter-column]')) {
             const at = Number(/** @type {HTMLElement} */ (set).dataset.kpFilterColumn);
-            if (filterKinds[at] !== 'choice') continue;
-            const value = filters.get(at);
-            fillChoices(set, at, Array.isArray(value) ? value : []);
+            if (this.t.columns.filterKinds[at] !== 'choice') continue;
+            const value = this.t.model.filters.get(at);
+            this.t.filterUi.fillChoices(set, at, Array.isArray(value) ? value : []);
         }
-    };
-    c.refreshChoices = refreshChoices;
+    }
+
     /** Read the panel's controls into the filter state. */
-    const readControls = () => {
-        if (c.panel === null) return;
-        filters.clear();
-        for (const set of c.panel.querySelectorAll('[data-kp-filter-column]')) {
+    readControls() {
+        if (this.t.filterUi.panel === null) return;
+        this.t.model.filters.clear();
+        for (const set of this.t.filterUi.panel.querySelectorAll('[data-kp-filter-column]')) {
             const at = Number(/** @type {HTMLElement} */ (set).dataset.kpFilterColumn);
-            const kind = filterKinds[at];
+            const kind = this.t.columns.filterKinds[at];
             /** @type {FilterValue} */
             let value;
             if (kind === 'choice')
@@ -114,63 +83,63 @@ export function installApply(c) {
                 };
                 value = { from: read('from'), to: read('to') };
             }
-            if (kind !== null && kind !== undefined && filterActive(kind, value)) filters.set(at, value);
+            if (kind !== null && kind !== undefined && filterActive(kind, value)) this.t.model.filters.set(at, value);
         }
-    };
-    c.readControls = readControls;
+    }
+
     /** @param {HTMLTableRowElement} a @param {HTMLTableRowElement} b */
-    const compareRows = (a, b) => {
-        for (const key of c.sorts) {
-            const kind = headers[key.column]?.dataset.kpSort ?? 'text';
-            const order = orders[key.column];
+    compareRows(a, b) {
+        for (const key of this.t.model.sorts) {
+            const kind = this.t.columns.headers[key.column]?.dataset.kpSort ?? 'text';
+            const order = this.t.columns.orders[key.column];
             /** @param {string} x @param {string} y */
-            const by = (x, y) => compareFn(x, y, kind, locale);
-            const left = cellValue(a, key.column);
-            const right = cellValue(b, key.column);
+            const by = (x, y) => this.t.settings.compareFn(x, y, kind, this.t.controls.locale);
+            const left = this.t.columns.cellValue(a, key.column);
+            const right = this.t.columns.cellValue(b, key.column);
             const c = order ? compareByOrder(order, left, right, by) : by(left, right);
             if (c !== 0) return key.direction === 'ascending' ? c : -c;
         }
         return 0;
-    };
-    const applySorts = () => {
-        if (externalSort) {
+    }
+
+    applySorts() {
+        if (this.t.controls.externalSort) {
             // The order the page rendered, which it changes itself on kp-datatable-sort and then refresh().
-            const keep = new Set(c.shownRows);
-            c.shownRows = arrange(c.all.filter((row) => keep.has(row)));
+            const keep = new Set(this.t.model.shownRows);
+            this.t.model.shownRows = this.t.groups.arrange(this.t.model.all.filter((row) => keep.has(row)));
             return;
         }
-        if (c.sorts.length === 0) {
+        if (this.t.model.sorts.length === 0) {
             // Back to the rendered order, filtered.
-            const keep = new Set(c.shownRows);
-            c.shownRows = rendered.filter((row) => keep.has(row));
-        } else c.shownRows = [...c.shownRows].sort(compareRows);
+            const keep = new Set(this.t.model.shownRows);
+            this.t.model.shownRows = this.t.model.rendered.filter((row) => keep.has(row));
+        } else this.t.model.shownRows = [...this.t.model.shownRows].sort(this.t.bound(this, this.compareRows));
         // Group rows keep their rows together [J2]: the sort above is
         // stable, so this orders the rows within each group.
-        c.shownRows = arrange(c.shownRows);
-    };
-    c.applySorts = applySorts;
+        this.t.model.shownRows = this.t.groups.arrange(this.t.model.shownRows);
+    }
+
     /** @param {{ keepPage?: boolean }} [options] */
-    const applyFilter = ({ keepPage = false } = {}) => {
-        if (serverMode) {
-            if (!keepPage) c.page = 0;
-            c.request();
+    applyFilter({ keepPage = false } = {}) {
+        if (this.t.controls.serverMode) {
+            if (!keepPage) this.t.model.page = 0;
+            this.t.server.request();
             return;
         }
-        const needle = c.query.trim().toLowerCase();
-        c.shownRows = c.all.filter((row) => {
+        const needle = this.t.model.query.trim().toLowerCase();
+        this.t.model.shownRows = this.t.model.all.filter((row) => {
             if (needle !== '') {
-                const hit = c.scope === null ? filterFn(row, needle) : cellText(row, c.scope).toLowerCase().includes(needle);
+                const hit = this.t.model.scope === null ? this.t.settings.filterFn(row, needle) : this.t.columns.cellText(row, this.t.model.scope).toLowerCase().includes(needle);
                 if (!hit) return false;
             }
-            for (const [at, value] of filters) {
-                const kind = filterKinds[at];
-                if (kind && !matchesFilter(kind, value, kind === 'choice' ? choiceText(row, at) : cellValue(row, at), locale)) return false;
+            for (const [at, value] of this.t.model.filters) {
+                const kind = this.t.columns.filterKinds[at];
+                if (kind && !matchesFilter(kind, value, kind === 'choice' ? this.t.columns.choiceText(row, at) : this.t.columns.cellValue(row, at), this.t.controls.locale)) return false;
             }
             return true;
         });
-        applySorts();
-        if (!keepPage) c.page = 0;
-        render();
-    };
-    c.applyFilter = applyFilter;
+        this.applySorts();
+        if (!keepPage) this.t.model.page = 0;
+        this.t.render.render();
+    }
 }
