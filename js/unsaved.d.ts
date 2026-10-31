@@ -34,6 +34,8 @@ export declare function setUnsavedSaving(element: Element, saving: boolean): voi
  * Wire every unsaved-changes bar under `root`.
  * @param {ParentNode} [root]
  * @param {UnsavedConfig} [options] `storage`: where this call's bars keep their changes (a browser Storage, or null for nowhere)
+ *   and `show(control, value, row)`: the page's own words for a value in the list of changes, asked for "was" and "now" alike;
+ *   a string is shown, anything else keeps the bar's words (for a mirrored editor whose raw value means nothing to a person) [homelab 71]
  * @returns {() => void} detach
  */
 export declare const attachUnsaved: (root?: ParentNode, options?: UnsavedConfig) => () => void;

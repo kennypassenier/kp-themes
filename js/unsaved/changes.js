@@ -16,11 +16,13 @@ export class ChangeTracker {
      * @param {HTMLElement} el the bar
      * @param {HTMLElement} scope the form or area to watch
      * @param {import('../strings.js').Strings} s
+     * @param {import('./config.js').UnsavedShow} [words] the page's own words for a value, if it gave any
      */
-    constructor(el, scope, s) {
+    constructor(el, scope, s, words) {
         this.el = el;
         this.scope = scope;
         this.s = s;
+        this.words = words;
         /** What each tracked control held when the bar looked (the markup's value). @type {Map<HTMLElement, string>} */
         this.baseline = new Map();
     }
@@ -94,6 +96,8 @@ export class ChangeTracker {
         const s = this.s;
         if (control instanceof HTMLInputElement && control.type === 'password') return s.unsavedSecret;
         if (control.matches('[data-kp-secret]')) return s.unsavedSecret;
+        const own = this.words?.(control, value, this.rowOf(control));
+        if (typeof own === 'string') return own;
         if (isWidget(control)) value = showWidget(control, value);
         if (control instanceof HTMLInputElement && control.type === 'checkbox') return value === 'on' ? s.unsavedOn : s.unsavedOff;
         if (control instanceof HTMLSelectElement) return [...control.options].find((o) => o.value === value)?.textContent?.trim() ?? value;

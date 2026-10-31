@@ -1,7 +1,29 @@
 export type UnsavedConfig = {
+    /**
+     * where the changes are kept (null: nowhere)
+     */
     storage?: Storage | null;
+    /**
+     * the words a value reads as in the list, for an editor the bar cannot word itself [homelab 71]
+     */
+    show?: UnsavedShow;
 };
-/** @typedef {{ storage?: Storage | null }} UnsavedConfig */
+export type UnsavedShow = (control: HTMLElement, value: string, row: HTMLElement) => string | null | undefined;
+/**
+ * What one `attachUnsaved` call may hand its bars.
+ * @typedef {object} UnsavedConfig
+ * @property {Storage | null} [storage] where the changes are kept (null: nowhere)
+ * @property {UnsavedShow} [show] the words a value reads as in the list, for an editor the bar cannot word itself [homelab 71]
+ */
+/**
+ * Names a value in the list of changes: what `control` holding `value` reads as, in the page's own words. It is asked for both
+ * sides of a row ("was" and "now"); a string is shown, anything else leaves the bar's own wording. A secret is never asked.
+ * @callback UnsavedShow
+ * @param {HTMLElement} control the tracked control (a mirror input, or a composite field)
+ * @param {string} value the value to word: the saved one or the current one
+ * @param {HTMLElement} row the row that stands for the control
+ * @returns {string | null | undefined}
+ */
 /** The page-wide default for where kept changes go; `undefined`: the bar's own choice (session or local). @type {{ storage: Storage | null | undefined }} */
 export declare const config: {
     storage: Storage | null | undefined;
@@ -85,22 +107,11 @@ export type UnsavedHandle = {
     setSaving: (saving: boolean) => void;
 };
 /**
- * @typedef {object} UnsavedChange
- * @property {string} key the row's name
- * @property {string} was what it was
- * @property {string} now what it is
- * @property {HTMLElement} row the row (or the control) that carries `data-kp-changed`
+ * Where a bar stands, from its `data-kp-placement`: read at attach and again whenever the attribute changes [homelab 38].
+ * @param {HTMLElement} el the bar
+ * @returns {'header' | 'sticky-bottom' | 'header+sticky'}
  */
-/**
- * @typedef {object} UnsavedHandle
- * @property {HTMLElement} element
- * @property {() => UnsavedChange[]} changes the changes now
- * @property {() => 'clean' | 'dirty' | 'saving'} state
- * @property {() => void} discard put every value back (with Undo)
- * @property {(result?: { refused?: Record<string, string> }) => void} saved the page's answer to Save
- * @property {() => void} markClean take what the form holds now as the saved values
- * @property {(saving: boolean) => void} setSaving
- */
+export declare function readPlacement(el: HTMLElement): 'header' | 'sticky-bottom' | 'header+sticky';
 /**
  * What one bar's markup asks for, each with its default [KT6].
  * @param {HTMLElement} el the bar
@@ -108,7 +119,7 @@ export type UnsavedHandle = {
  */
 export declare function readSettings(el: HTMLElement, id: string): {
     scope: HTMLElement;
-    placement: string;
+    placement: "header" | "header+sticky" | "sticky-bottom";
     dockInContainer: boolean;
     scrollRoot: Element | null;
     auto: boolean;

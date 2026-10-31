@@ -74613,17 +74613,23 @@ var init_entity_card = __esm({
 function configureUnsaved(next2) {
   if (next2.storage !== void 0) config3.storage = next2.storage;
 }
+function readPlacement(el16) {
+  const asked = el16.getAttribute("data-kp-placement") ?? "";
+  return PLACEMENTS.includes(asked) ? (
+    /** @type {'header' | 'sticky-bottom'} */
+    asked
+  ) : "header+sticky";
+}
 function readSettings3(el16, id) {
   const doc = el16.ownerDocument;
   const win = doc.defaultView ?? window;
   const scopeSelector = el16.dataset.kpUnsavedFor;
-  const placement = el16.dataset.kpPlacement === "header" || el16.dataset.kpPlacement === "sticky-bottom" ? el16.dataset.kpPlacement : "header+sticky";
   return {
     scope: (
       /** @type {HTMLElement} */
       (scopeSelector ? doc.querySelector(scopeSelector) : null) ?? el16.closest("form") ?? doc.querySelector("main") ?? doc.body
     ),
-    placement,
+    placement: readPlacement(el16),
     dockInContainer: el16.dataset.kpDock === "container",
     scrollRoot: el16.dataset.kpScrollRoot ? doc.querySelector(el16.dataset.kpScrollRoot) : null,
     auto: el16.dataset.kpTrack !== "app",
@@ -74635,7 +74641,7 @@ function readSettings3(el16, id) {
     storeKey: `kp-unsaved:${win.location?.pathname ?? ""}:${el16.dataset.kpName ?? id}`
   };
 }
-var config3, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, UNDO_MS_DEFAULT, ANNOUNCE_DELAY_MS2, RESTORED_TOAST_MS, SAVED_TOAST_MS, PANEL_GAP_PX, PANEL_EDGE_PX, COMPACT_BELOW_PX, WARN_MODES;
+var config3, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, UNDO_MS_DEFAULT, ANNOUNCE_DELAY_MS2, RESTORED_TOAST_MS, SAVED_TOAST_MS, PANEL_GAP_PX, PANEL_EDGE_PX, COMPACT_BELOW_PX, WARN_MODES, PLACEMENTS;
 var init_config = __esm({
   "js/unsaved/config.js"() {
     "use strict";
@@ -74657,6 +74663,7 @@ var init_config = __esm({
     PANEL_EDGE_PX = 8;
     COMPACT_BELOW_PX = 30 * 16;
     WARN_MODES = ["browser", "app", "off"];
+    PLACEMENTS = ["header", "sticky-bottom"];
   }
 });
 
@@ -75151,11 +75158,13 @@ var init_changes = __esm({
        * @param {HTMLElement} el the bar
        * @param {HTMLElement} scope the form or area to watch
        * @param {import('../strings.js').Strings} s
+       * @param {import('./config.js').UnsavedShow} [words] the page's own words for a value, if it gave any
        */
-      constructor(el16, scope, s2) {
+      constructor(el16, scope, s2, words3) {
         this.el = el16;
         this.scope = scope;
         this.s = s2;
+        this.words = words3;
         this.baseline = /* @__PURE__ */ new Map();
       }
       /**
@@ -75237,6 +75246,8 @@ var init_changes = __esm({
         const s2 = this.s;
         if (control instanceof HTMLInputElement && control.type === "password") return s2.unsavedSecret;
         if (control.matches("[data-kp-secret]")) return s2.unsavedSecret;
+        const own = this.words?.(control, value, this.rowOf(control));
+        if (typeof own === "string") return own;
         if (isWidget(control)) value = showWidget(control, value);
         if (control instanceof HTMLInputElement && control.type === "checkbox") return value === "on" ? s2.unsavedOn : s2.unsavedOff;
         if (control instanceof HTMLSelectElement) return [...control.options].find((o) => o.value === value)?.textContent?.trim() ?? value;
@@ -75452,7 +75463,7 @@ var init_dock = __esm({
       /** Watch the header's visibility and the room the bar has; the observers go with the controller. */
       connect() {
         const { el: el16, settings, parts: parts2 } = this.ctl;
-        if (typeof IntersectionObserver !== "undefined" && settings.placement === "header+sticky") {
+        if (typeof IntersectionObserver !== "undefined") {
           this.ctl.observe(
             new IntersectionObserver(
               (entries2) => {
@@ -75470,6 +75481,15 @@ var init_dock = __esm({
           size2.observe(this.roomBox());
           size2.observe(parts2.bar);
         }
+      }
+      /** Take a `data-kp-placement` changed at runtime: stand where it now says [homelab 38]. */
+      place() {
+        const { el: el16, settings } = this.ctl;
+        const next2 = readPlacement(el16);
+        if (next2 === settings.placement) return;
+        settings.placement = next2;
+        this.dock();
+        this.compact();
       }
       /** The box whose width is the room the bar has when it is not docked. */
       roomBox() {
@@ -75627,7 +75647,13 @@ var init_controller66 = __esm({
         const { el: el16 } = this;
         this.id = el16.id || `kp-unsaved-${nextBarNumber()}`;
         this.settings = readSettings3(el16, this.id);
-        this.tracker = new ChangeTracker(el16, this.settings.scope, this.s);
+        this.tracker = new ChangeTracker(
+          el16,
+          this.settings.scope,
+          this.s,
+          /** @type {import('./config.js').UnsavedConfig} */
+          this.options.show
+        );
         this.keeper.connect();
         el16.classList.add("kp-unsaved");
         el16.dataset.kpUnsavedAttached = "";
@@ -75690,6 +75716,7 @@ var init_controller66 = __esm({
             })
           );
           mutation.observe(scope, { attributes: true, attributeFilter: ["data-kp-changed"], subtree: true });
+          this.observe(new MutationObserver(() => this.dock.place())).observe(this.el, { attributes: true, attributeFilter: ["data-kp-placement"] });
         }
         this.listen(scope, "input", (event) => this.onEdit(event));
         this.listen(scope, "change", (event) => this.onEdit(event));

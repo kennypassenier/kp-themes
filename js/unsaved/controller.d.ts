@@ -18,7 +18,7 @@ export declare class UnsavedController extends Controller {
     id: string;
     settings: {
         scope: HTMLElement;
-        placement: string;
+        placement: "header" | "header+sticky" | "sticky-bottom";
         dockInContainer: boolean;
         scrollRoot: Element | null;
         auto: boolean;

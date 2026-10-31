@@ -71,7 +71,7 @@ export class UnsavedController extends Controller {
         const { el } = this;
         this.id = el.id || `kp-unsaved-${nextBarNumber()}`;
         this.settings = readSettings(el, this.id);
-        this.tracker = new ChangeTracker(el, this.settings.scope, this.s);
+        this.tracker = new ChangeTracker(el, this.settings.scope, this.s, /** @type {import('./config.js').UnsavedConfig} */ (this.options).show);
         this.keeper.connect();
         el.classList.add('kp-unsaved');
         el.dataset.kpUnsavedAttached = '';
@@ -132,6 +132,7 @@ export class UnsavedController extends Controller {
                 }),
             );
             mutation.observe(scope, { attributes: true, attributeFilter: ['data-kp-changed'], subtree: true });
+            this.observe(new MutationObserver(() => this.dock.place())).observe(this.el, { attributes: true, attributeFilter: ['data-kp-placement'] });
         }
         this.listen(scope, 'input', (event) => this.onEdit(event));
         this.listen(scope, 'change', (event) => this.onEdit(event));

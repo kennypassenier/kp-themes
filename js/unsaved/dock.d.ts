@@ -7,6 +7,8 @@ export declare class BarDock {
     constructor(ctl: import('./controller.js').UnsavedController);
     /** Watch the header's visibility and the room the bar has; the observers go with the controller. */
     connect(): void;
+    /** Take a `data-kp-placement` changed at runtime: stand where it now says [homelab 38]. */
+    place(): void;
     /** The box whose width is the room the bar has when it is not docked. */
     roomBox(): Element;
     /** Dock the bar when it has changes and should be on screen; undock it otherwise. */

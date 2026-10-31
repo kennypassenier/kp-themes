@@ -5,14 +5,16 @@ export declare class ChangeTracker {
     el: HTMLElement;
     scope: HTMLElement;
     s: import("../strings/types.js").Strings;
+    words: import("./config.js").UnsavedShow | undefined;
     /** What each tracked control held when the bar looked (the markup's value). @type {Map<HTMLElement, string>} */
     baseline: Map<HTMLElement, string>;
     /**
      * @param {HTMLElement} el the bar
      * @param {HTMLElement} scope the form or area to watch
      * @param {import('../strings.js').Strings} s
+     * @param {import('./config.js').UnsavedShow} [words] the page's own words for a value, if it gave any
      */
-    constructor(el: HTMLElement, scope: HTMLElement, s: import('../strings.js').Strings);
+    constructor(el: HTMLElement, scope: HTMLElement, s: import('../strings.js').Strings, words?: import('./config.js').UnsavedShow);
     /**
      * Whether a control counts: not the bar's own, not `data-kp-untracked`, and not an input inside a composite field (the
      * field itself counts instead, unless it opted out).
