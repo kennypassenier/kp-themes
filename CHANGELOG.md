@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+Package faults Medicine Cabinet and homelab found adopting 12.0.0 [fix-1031].
+
+- **Added: `./js/log` is a published module, so the bundle exports `sourceColour`, `sourceIndex` and `SOURCE_PROPERTY`.** Like `./js/state-plate` in 12.0.0: a consumer on `dist/kp-themes.min.js` could not reach a source's colour.
+
 ## 12.0.0 — 2026-10-31
 
 Released on Kenny's go (2026-10-31 03:47: "release een nieuwe versie. Dat is een major versie"), while he was away: the Medicine Cabinet package (research/medicine-1030, 13 of 13 approved in formal), every behaviour module rebuilt as controller classes (closure-pattern B, Kenny 2026-10-30), every hand-written file under 500 lines, the effects hooks as classes, and the components pages brought up to date (2 new pages). Major because a copy of the sources changes shape: the big modules are facades over folders, and a consumer that vendors files (chassis-rs) copies the folders and `js/controller.js`. The public imports and exports are the same. Screenshot check skipped as for 11.2.0 and 11.3.0 (Kenny away, nobody to approve the photographs).

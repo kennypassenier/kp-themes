@@ -12,6 +12,8 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- fix-1031: `./js/log` is a published module (`sourceColour`, `sourceIndex`, `SOURCE_PROPERTY`, `attachLogs`), so the bundle exports it; the log page names the import.
+
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's
 `data-kp-quantity-fill`, the attention band's cap, the badge run, the dialog width steps and the rich confirmation (`description`, `acceptLook`,
