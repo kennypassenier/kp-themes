@@ -5,6 +5,30 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
+## Coming from 11.x to 12.0.0: the modules are folders and controllers (breaking for a copy)
+
+A consumer that imports `@kp-soft/themes` changes nothing: every import path, export, signature and return value is the same.
+What a consumer notices:
+
+- **A vendored copy of `js/`** (chassis-rs copies files instead of importing the package) has to copy again, folders included.
+  Each big module `js/<name>.js` is now a facade that re-exports from `js/<name>/…`, and the per-element state lives in controller
+  classes on `js/controller.js`, which every folder imports. Copy `js/controller.js`, `js/effects-core/` and every `js/<name>/`
+  folder next to its facade; `consumer.tar` holds them all. New files in the effects closure: `js/effects-core/hook.js`,
+  `js/effects/arrival-run.js`, `js/effects/pointer-light.js`, `js/effects/press-bus.js`. `attachTypeConfirms` is in
+  `js/components/type-confirm.js` now (the `js/components.js` export is unchanged). The `types.js` files in the folders hold only
+  JSDoc typedefs; nothing imports them at runtime, so a copy may leave them out.
+- **Rather than copying the tree, serve `dist/kp-themes.min.js`**: one self-contained ES module with every export, one request
+  instead of hundreds on a cold page. Never mix the bundle with modules from the tree on one page: the controller registry and the
+  dictionary would exist twice.
+- **One element that fails to wire no longer stops an `attach…` call.** The error is reported with `reportError` (it reaches
+  `window.onerror` and the console), that element is undone and the others are wired. Code that wrapped an attach call in
+  `try`/`catch` to notice a broken element listens for the `error` event on `window` instead.
+- **A second detach or `destroy()` does nothing**, and a frame, animation end or timer that fires after detach no longer writes.
+- **From 11.3.0, if you skipped it:** a valid `data-kp-form` form no longer submits natively; set `data-kp-form-native-submit` (or
+  `nativeSubmit: true`) on a form that relies on its `action`.
+- **Form grids:** typed text starts at the start edge (`data-kp-formgrid-align="center"` brings the centring back), and a form
+  grid keeps room for a field's error line so showing it moves nothing (`data-kp-formgrid-errors="flow"` gives the old behaviour).
+
 ## Coming from 10.x to 11.0.0: four more themes are gone (breaking)
 
 `terminal`, `phantom`, `light` and `grotesk` are no longer in the package
