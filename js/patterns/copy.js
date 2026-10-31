@@ -1,9 +1,10 @@
 // Attaches the copy buttons, the secret blocks and the other patterns of a page.
+import { Controller, attachOne } from '../controller.js';
 import { toast } from '../overlays.js';
 import { getStrings } from '../strings.js';
-import { CLEAR_AFTER_MS, COMMIT_EVENT, COPIED_MS, COPY, COPY_EVENT, COPY_FAILED_EVENT, UNDO, UNDO_EVENT, UNDO_MS } from './constants.js';
+import { CLEAR_AFTER_MS, COPIED_MS, COPY, COPY_EVENT, COPY_FAILED_EVENT, UNDO, UNDO_MS } from './constants.js';
 import { attachSecrets } from './secrets.js';
-/** @typedef {import('./types.js').ActionDetail} ActionDetail */
+import { UndoControl } from './undo.js';
 /** @typedef {import('./types.js').SecretLoad} SecretLoad */
 
 /**
@@ -31,146 +32,71 @@ export function attachPatterns(
         secretLoad,
     } = {},
 ) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
-    cleanups.push(attachSecrets(root, { copiedMs, clearAfterMs, ...(secretLoad ? { load: secretLoad } : {}) }));
+    const detachSecrets = attachSecrets(root, { copiedMs, clearAfterMs, ...(secretLoad ? { load: secretLoad } : {}) });
+    // A button marked attached is wired already, by this call's controller or an earlier one.
+    const copies = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(COPY)])
+        .filter((button) => !('kpCopyAttached' in button.dataset))
+        .map((button) => attachOne(button, CopyControl, { copiedMs, toastOnCopyFailure }));
+    const undos = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(UNDO)])
+        .filter((button) => !('kpUndoAttached' in button.dataset))
+        .map((button) => attachOne(button, UndoControl, { undoMs, undoClassName }));
+    return () => {
+        detachSecrets();
+        for (const control of [...copies.splice(0), ...undos.splice(0)]) control?.destroy();
+    };
+}
 
-    for (const element of root.querySelectorAll(COPY)) {
-        const button = /** @type {HTMLButtonElement} */ (element);
-        if (button.dataset.kpCopyAttached !== undefined) continue;
+/** One copy button: its own words, the words that confirm a copy, and the timer that puts its own words back. */
+class CopyControl extends Controller {
+    /** @param {HTMLElement} host @param {{ copiedMs?: number, toastOnCopyFailure?: boolean }} [options] */
+    constructor(host, options = {}) {
+        super(host, options);
+        this.idle = host.textContent ?? '';
+        this.done = host.dataset.kpCopiedText ?? getStrings().copied;
+        this.revertMs = Number.parseInt(host.dataset.kpCopiedMs ?? '', 10) || (options.copiedMs ?? COPIED_MS);
+        this.toastOnCopyFailure = options.toastOnCopyFailure ?? true;
+        this.revert = 0;
+    }
+
+    connect() {
+        const button = this.host;
         button.dataset.kpCopyAttached = '';
-        const idle = button.textContent ?? '';
-        const done = button.dataset.kpCopiedText ?? getStrings().copied;
-        const revertMs = Number.parseInt(button.dataset.kpCopiedMs ?? '', 10) || copiedMs;
-        let revert = 0;
-
-        const onClick = async () => {
-            const target = button.dataset.kpCopy ?? '';
-            // By id on the document, not on root: the value a button copies
-            // may sit outside the subtree this call attached.
-            const source = target === '' ? null : document.getElementById(target);
-            const text = source?.textContent?.trim() ?? button.dataset.kpCopyValue ?? '';
-            try {
-                await navigator.clipboard.writeText(text);
-            } catch (error) {
-                // Refused — an insecure context, or the permission denied.
-                // Saying nothing here is how a copy button becomes the
-                // control people click twice and then distrust.
-                button.dataset.kpCopyFailed = '';
-                if (toastOnCopyFailure && button.dataset.kpCopyToast !== 'false') toast(getStrings().copyBlockedAnnouncement);
-                button.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text, error } }));
-                return;
-            }
-            delete button.dataset.kpCopyFailed;
-            // Confirmed in words on the button itself, and announced: a
-            // colour change is invisible to a screen reader, and a toast
-            // alone is invisible to someone looking at the button.
-            button.textContent = done;
-            button.dataset.kpCopied = '';
-            button.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text } }));
-            clearTimeout(revert);
-            revert = window.setTimeout(() => {
-                button.textContent = idle;
-                delete button.dataset.kpCopied;
-            }, revertMs);
-        };
-
-        button.addEventListener('click', onClick);
-        cleanups.push(() => {
-            button.removeEventListener('click', onClick);
-            clearTimeout(revert);
-            button.textContent = idle;
+        this.own(() => {
+            clearTimeout(this.revert);
+            button.textContent = this.idle;
             delete button.dataset.kpCopied;
             delete button.dataset.kpCopyFailed;
             delete button.dataset.kpCopyAttached;
         });
+        this.listen(button, 'click', () => void this.copy());
     }
 
-    for (const element of root.querySelectorAll(UNDO)) {
-        const button = /** @type {HTMLButtonElement} */ (element);
-        if (button.dataset.kpUndoAttached !== undefined) continue;
-        button.dataset.kpUndoAttached = '';
-        const ms = Number.parseInt(button.dataset.kpUndoMs ?? '', 10) || undoMs;
-        /** Everything still inside its undo window, so detach can settle it. */
-        /** @type {Set<() => void>} */
-        const inFlight = new Set();
-
-        const onClick = () => {
-            // What goes: the element the consumer named by selector, the
-            // nearest marked ancestor, the row, or the parent.
-            const selector = button.dataset.kpUndoSelector;
-            const target =
-                (selector ? button.closest(selector) : null) ??
-                button.closest('[data-kp-undo-target]') ??
-                button.closest('tr') ??
-                button.parentElement;
-            if (!(target instanceof HTMLElement)) return;
-            const key = target.dataset.kpRowKey ?? target.dataset.kpKey ?? (target.id || null);
-
-            // Optimistic: the row goes now. Waiting for the server first
-            // is what makes an interface feel slow, and the undo is what
-            // makes going first safe.
-            target.hidden = true;
-            target.dataset.kpUndoPending = '';
-            let settled = false;
-
-            const restore = () => {
-                target.hidden = false;
-                delete target.dataset.kpUndoPending;
-            };
-            /** @type {ActionDetail} */
-            const detail = { target, button, key, restore };
-
-            let timer = 0;
-            const message = toast(button.dataset.kpUndoText ?? getStrings().deleted, {
-                ms: Number.parseInt(button.dataset.kpUndoToastMs ?? '', 10) || ms,
-                action: {
-                    label: button.dataset.kpUndoLabel ?? getStrings().undo,
-                    onClick: () => {
-                        if (settled) return;
-                        settled = true;
-                        inFlight.delete(cancel);
-                        clearTimeout(timer);
-                        restore();
-                        message.dismiss();
-                        target.dispatchEvent(new CustomEvent(UNDO_EVENT, { bubbles: true, detail }));
-                    },
-                },
-            });
-            for (const b of message.querySelectorAll('button')) b.className = undoClassName;
-
-            timer = window.setTimeout(() => {
-                if (settled) return;
-                settled = true;
-                inFlight.delete(cancel);
-                delete target.dataset.kpUndoPending;
-                // Only now is it real. The consumer deletes here, so a
-                // click that was taken back never reached the server —
-                // and restore() is in the detail for the delete the
-                // server refuses.
-                target.dispatchEvent(new CustomEvent(COMMIT_EVENT, { bubbles: true, detail }));
-            }, ms);
-            const cancel = () => {
-                if (settled) return;
-                settled = true;
-                clearTimeout(timer);
-                restore();
-                message.dismiss();
-            };
-            inFlight.add(cancel);
-        };
-
-        button.addEventListener('click', onClick);
-        cleanups.push(() => {
-            button.removeEventListener('click', onClick);
-            // Nothing commits after detach: a row still in its window
-            // comes back, and its toast goes.
-            for (const cancel of inFlight) cancel();
-            delete button.dataset.kpUndoAttached;
-        });
+    async copy() {
+        const button = this.host;
+        const target = button.dataset.kpCopy ?? '';
+        // By id on the document, not on root: the value a button copies may sit outside the subtree this call attached.
+        const source = target === '' ? null : document.getElementById(target);
+        const text = source?.textContent?.trim() ?? button.dataset.kpCopyValue ?? '';
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (error) {
+            // Refused — an insecure context, or the permission denied. Saying nothing here is how a copy button becomes the
+            // control people click twice and then distrust.
+            button.dataset.kpCopyFailed = '';
+            if (this.toastOnCopyFailure && button.dataset.kpCopyToast !== 'false') toast(getStrings().copyBlockedAnnouncement);
+            button.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text, error } }));
+            return;
+        }
+        delete button.dataset.kpCopyFailed;
+        // Confirmed in words on the button itself, and announced: a colour change is invisible to a screen reader, and a toast
+        // alone is invisible to someone looking at the button.
+        button.textContent = this.done;
+        button.dataset.kpCopied = '';
+        button.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text } }));
+        clearTimeout(this.revert);
+        this.revert = window.setTimeout(() => {
+            button.textContent = this.idle;
+            delete button.dataset.kpCopied;
+        }, this.revertMs);
     }
-
-    return () => {
-        for (const c of cleanups) c();
-    };
 }

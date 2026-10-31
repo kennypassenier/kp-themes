@@ -1,6 +1,4 @@
-export type ActionDetail = import('./types.js').ActionDetail;
 export type SecretLoad = import('./types.js').SecretLoad;
-/** @typedef {import('./types.js').ActionDetail} ActionDetail */
 /** @typedef {import('./types.js').SecretLoad} SecretLoad */
 /**
  * Attach the patterns under `root`.

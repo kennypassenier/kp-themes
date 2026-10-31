@@ -82,7 +82,7 @@
         "js/palette.js": { "digest": "efcd5d4e4cb28ecd", "when": "[data-kp-palette], [data-kp-shortcuts]" },
         "js/passkeys.js": { "digest": "4f9e582f3035a046", "when": "[data-kp-passkeys]" },
         "js/path-trace.js": { "digest": "a9ed28d3c55f21a5", "when": "[data-kp-trace]" },
-        "js/patterns.js": { "digest": "d50f38421433a740", "when": "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]" },
+        "js/patterns.js": { "digest": "28cb865db1b29fc2", "when": "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]" },
         "js/pipeline.js": { "digest": "605ca14ef529b4f9", "when": "[data-kp-pipeline]" },
         "js/print.js": { "digest": "8c62d261fc3a8a91", "when": "[data-kp-print-action], [data-kp-checklist], [data-kp-print-sheet]" },
         "js/problems.js": { "digest": "be69d397b102b4eb", "when": "[data-kp-problems]" },
