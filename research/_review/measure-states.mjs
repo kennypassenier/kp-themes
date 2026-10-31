@@ -788,6 +788,21 @@ export function packageBase() {
 }
 
 /**
+ * In the page: the package's single bundle when the page loaded it (dist/kp-themes.js or dist/kp-themes.min.js), else null.
+ * A page on the bundle has no module tree beside it [fix-1031]: importing js/<module>.js from it 404s, and a copy from this
+ * repository would be a second package whose handles know none of the page's attached components. The bundle's own URL is
+ * the same module the page runs, and it exports every driver's function (dataTable, setCardState, ...).
+ * @returns {string | null}
+ */
+export function packageBundle() {
+    const names = [
+        ...performance.getEntriesByType('resource').map((e) => e.name),
+        ...[...document.querySelectorAll('script[src]')].map((s) => /** @type {HTMLScriptElement} */ (s).src),
+    ];
+    return names.find((n) => /\/dist\/kp-themes(\.min)?\.js(\?|#|$)/.test(n)) ?? null;
+}
+
+/**
  * In the page: measure one instance after it was driven into a state (2).
  * @param {[number, string, string, number, number, string, string, string]} args
  *   instance, state, the component's name, the loaded height (0: not known), the max hold in px, BUSY, OWN_BUSY, PLATE
@@ -1228,9 +1243,10 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
         // the driven state. The streams are held from here on [hltools-1019, homelab 81]; --live-streams opts out.
         if (driveStreams && !liveStreams) await d.evaluate(() => (/** @type {any} */ (window).__kpHold = true));
         await d.evaluate(markSections);
-        const base = await d.evaluate(packageBase);
+        const bundle = await d.evaluate(packageBundle);
+        const base = bundle ? null : await d.evaluate(packageBase);
         let prefix = base;
-        if (!prefix) {
+        if (!prefix && !bundle) {
             // The page bundles the package: drive it through this repository's copy, served under a private path.
             prefix = new URL('/__kp-states__/', url).href;
             await d.route('**/__kp-states__/**', (route) => {
@@ -1260,7 +1276,7 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                     // itself, so the driven half runs on a real app too [csp-1019].
                     const err = await d.evaluate(`(async () => {
                         try {
-                            const m = await import(${JSON.stringify(`${prefix}js/${comp.module}`)});
+                            const m = await import(${JSON.stringify(bundle ?? `${prefix}js/${comp.module}`)});
                             const host = document.querySelector('[data-states-i="${inst.i}"]');
                             if (!host) return 'gone';
                             await (${comp.drive.toString()})(m, host, ${JSON.stringify(state)});
