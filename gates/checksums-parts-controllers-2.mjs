@@ -2,6 +2,22 @@
 // written out like CONTROLLER_PART_FILES in gates/checksums-parts-controllers.mjs, which reached its 500-line limit.
 // Each module's facade `js/<name>.js` is in FILES in gates/checksums.mjs; its folder `js/<name>/` is here.
 export const CONTROLLER_PART_FILES_2 = [
+    'js/gantt/api.js',
+    'js/gantt/attach.js',
+    'js/gantt/axis.js',
+    'js/gantt/build.js',
+    'js/gantt/busy.js',
+    'js/gantt/chrome.js',
+    'js/gantt/constants.js',
+    'js/gantt/controller.js',
+    'js/gantt/input.js',
+    'js/gantt/labels.js',
+    'js/gantt/model.js',
+    'js/gantt/paint.js',
+    'js/gantt/points.js',
+    'js/gantt/scale.js',
+    'js/gantt/selection.js',
+    'js/gantt/window.js',
     'js/motion/arrive.js',
     'js/motion/attach.js',
     'js/motion/box-size.js',

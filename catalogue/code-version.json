@@ -52,7 +52,7 @@
         "js/forms.js": { "digest": "ba62638b564a10cb", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },
         "js/freshness.js": { "digest": "9860eeec293d8074", "when": "[data-kp-ago]" },
         "js/gallery.js": { "digest": "77a6b95047fc4558", "when": "[data-kp-gallery]" },
-        "js/gantt.js": { "digest": "251aff5047c2a79c", "when": "[data-kp-gantt]" },
+        "js/gantt.js": { "digest": "29cf9f07d692111a", "when": "[data-kp-gantt]" },
         "js/graph.js": { "digest": "b464207ec3b9a9ad", "when": "[data-kp-graph]" },
         "js/gridlayout.js": { "digest": "83eb9805d31b6c94", "when": "[data-kp-grid]" },
         "js/heat.js": { "digest": "dc23737a969666f1", "when": "[data-kp-heat]" },

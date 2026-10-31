@@ -56602,6 +56602,113 @@ var init_paint9 = __esm({
   }
 });
 
+// js/gantt/model.js
+function newModel(el16, options) {
+  const now = options.now ?? (() => Date.now());
+  return {
+    el: el16,
+    zone: options.timeZone ?? el16.dataset.kpTimeZone ?? CHART_TIME_ZONE,
+    now,
+    strings: resolveStrings(options.strings),
+    ...options.decorate ? { decorate: options.decorate } : {},
+    base: Math.floor(now() / 1e3),
+    span: DEFAULT_SPAN_S,
+    live: el16.dataset.kpGanttLive !== "false",
+    to: 0,
+    runs: [],
+    lanesGiven: [],
+    lanes: [],
+    bars: /* @__PURE__ */ new Map(),
+    states: /* @__PURE__ */ new Map(),
+    state: "ready",
+    active: null,
+    selected: null,
+    body: el16,
+    scroll: el16,
+    axis: el16,
+    plot: el16,
+    lines: el16,
+    nowLine: el16,
+    brushBox: el16,
+    selectBox: el16,
+    stateLine: el16,
+    plate: el16,
+    plateKey: "",
+    plateText: "",
+    plateArt: null,
+    announcer: el16,
+    ranges: el16,
+    liveButton: (
+      /** @type {HTMLButtonElement} */
+      /** @type {unknown} */
+      el16
+    ),
+    selection: el16,
+    selectionText: el16,
+    ticks: /* @__PURE__ */ new Map(),
+    legend: el16,
+    days: el16.hasAttribute("data-kp-gantt-days"),
+    dayStop: null,
+    points: [],
+    pointEls: /* @__PURE__ */ new Map(),
+    kinds: [],
+    zones: [],
+    fit: false,
+    line: el16.classList.contains("kp-gantt--line"),
+    ghosts: [],
+    held: null,
+    busy: null,
+    leaving: null,
+    drawn: false,
+    timer: 0,
+    observer: null,
+    drag: null,
+    dragMoved: false,
+    tickKey: "",
+    labels: /* @__PURE__ */ new Map(),
+    outside: /* @__PURE__ */ new Map()
+  };
+}
+function freshWindow(c) {
+  for (const lane of c.lanes) lane.rows = 1;
+  c.held = null;
+  c.tickKey = "";
+  paint9(c);
+  tick4(c);
+  paintSelection2(c);
+}
+function setLive(c, live4) {
+  if (live4 === c.live) return;
+  c.live = live4;
+  if (live4 && c.fit) {
+    c.fit = false;
+    const first = [...c.ranges.querySelectorAll("[data-value]")].map((b) => (
+      /** @type {HTMLElement} */
+      b.dataset.value ?? ""
+    )).find((w) => w !== "all");
+    if (first) {
+      c.span = rangeSeconds(first);
+      void Promise.resolve().then(() => (init_segmented(), segmented_exports)).then((m) => m.setSegmentedValues(c.ranges, [first]));
+    }
+  }
+  if (!live4) c.to = windowOf({ ...c, live: true }).end;
+  freshWindow(c);
+  announceWindow(c, "live");
+}
+var DEFAULT_SPAN_S;
+var init_model6 = __esm({
+  "js/gantt/model.js"() {
+    "use strict";
+    init_chart();
+    init_strings();
+    init_paint9();
+    init_selection3();
+    init_scale();
+    init_window();
+    DEFAULT_SPAN_S = 21600;
+  }
+});
+
 // js/gantt/api.js
 function setGanttRuns(el16, runs2, lanes) {
   const c = gantts.get(el16);
@@ -56696,100 +56803,266 @@ var init_api18 = __esm({
     init_selection3();
     init_scale();
     init_window();
-    init_attach17();
+    init_model6();
     init_chrome2();
   }
 });
 
-// js/gantt/attach.js
-function attachGantts(root = document, options = {}) {
-  const undo = [];
-  for (
-    const el16 of
-    /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(GANTT)]
-  ) {
-    if (gantts.has(el16)) continue;
-    const now = options.now ?? (() => Date.now());
-    const c = {
-      el: el16,
-      zone: options.timeZone ?? el16.dataset.kpTimeZone ?? CHART_TIME_ZONE,
-      now,
-      strings: resolveStrings(options.strings),
-      ...options.decorate ? { decorate: options.decorate } : {},
-      base: Math.floor(now() / 1e3),
-      span: 21600,
-      live: el16.dataset.kpGanttLive !== "false",
-      to: 0,
-      runs: [],
-      lanesGiven: [],
-      lanes: [],
-      bars: /* @__PURE__ */ new Map(),
-      states: /* @__PURE__ */ new Map(),
-      state: "ready",
-      active: null,
-      selected: null,
-      body: el16,
-      scroll: el16,
-      axis: el16,
-      plot: el16,
-      lines: el16,
-      nowLine: el16,
-      brushBox: el16,
-      selectBox: el16,
-      stateLine: el16,
-      plate: el16,
-      plateKey: "",
-      plateText: "",
-      plateArt: null,
-      announcer: el16,
-      ranges: el16,
-      liveButton: (
-        /** @type {HTMLButtonElement} */
-        /** @type {unknown} */
-        el16
-      ),
-      selection: el16,
-      selectionText: el16,
-      ticks: /* @__PURE__ */ new Map(),
-      legend: el16,
-      days: el16.hasAttribute("data-kp-gantt-days"),
-      dayStop: null,
-      points: [],
-      pointEls: /* @__PURE__ */ new Map(),
-      kinds: [],
-      zones: [],
-      fit: false,
-      line: el16.classList.contains("kp-gantt--line"),
-      ghosts: [],
-      held: null,
-      busy: null,
-      leaving: null,
-      drawn: false,
-      timer: 0,
-      observer: null,
-      drag: null,
-      dragMoved: false,
-      tickKey: "",
-      labels: /* @__PURE__ */ new Map(),
-      outside: /* @__PURE__ */ new Map()
-    };
-    gantts.set(el16, c);
-    build6(c);
-    c.to = windowOf({ ...c, live: true }).end;
-    void Promise.resolve().then(() => (init_segmented(), segmented_exports)).then((m) => m.attachSegmented(c.ranges));
-    void Promise.resolve().then(() => (init_hovercard(), hovercard_exports)).then((m) => m.attachHoverCards(el16.ownerDocument));
-    paint9(c);
-    tick4(c);
-    window.requestAnimationFrame(() => c.drawn = true);
-    const barOf = (event) => event.target instanceof Element ? (
+// js/gantt/input.js
+var DRAG_PX2, barOf, GanttInput;
+var init_input = __esm({
+  "js/gantt/input.js"() {
+    "use strict";
+    init_controller();
+    init_constants26();
+    init_window();
+    init_selection3();
+    init_axis();
+    init_model6();
+    DRAG_PX2 = 6;
+    barOf = (event) => event.target instanceof Element ? (
       /** @type {HTMLButtonElement | null} */
       event.target.closest(".kp-gantt__run, .kp-gantt__point")
     ) : null;
-    const onClick = (event) => {
-      const bar = barOf(event);
-      if (bar && bar.dataset.kpId && bar.classList.contains("kp-gantt__point")) {
-        if (c.dragMoved) return;
+    GanttInput = class extends Controller {
+      /** @param {HTMLElement} host @param {GanttOptions} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.c = newModel(host, options);
+      }
+      /** Arrows, Home and End move between day stops or between bars. @param {KeyboardEvent} event */
+      onKey(event) {
+        const target = event.target;
+        const dayButton = target instanceof HTMLButtonElement && target.hasAttribute("data-kp-gantt-day") ? target : null;
+        if (dayButton && !(event.altKey || event.ctrlKey || event.metaKey)) return this.onDayKey(event, dayButton);
+        const bar = barOf(event);
+        if (!bar || event.altKey || event.ctrlKey || event.metaKey) return;
+        const to = this.barFrom(bar, event.key);
+        if (!to) return;
+        event.preventDefault();
+        focusBar(this.c, to);
+      }
+      /** @param {KeyboardEvent} event @param {HTMLButtonElement} dayButton */
+      onDayKey(event, dayButton) {
+        const c = this.c;
+        const buttons = (
+          /** @type {HTMLButtonElement[]} */
+          [...c.axis.querySelectorAll("button[data-kp-gantt-day]:not([data-kp-gantt-crowded])")]
+        );
+        const at = buttons.indexOf(dayButton);
+        const rtl = getComputedStyle(c.axis).direction === "rtl";
+        const step = event.key === "ArrowRight" ? rtl ? -1 : 1 : event.key === "ArrowLeft" ? rtl ? 1 : -1 : 0;
+        const to = event.key === "Home" ? buttons[0] : event.key === "End" ? buttons[buttons.length - 1] : step ? buttons[Math.min(buttons.length - 1, Math.max(0, at + step))] : void 0;
+        if (!to) return;
+        event.preventDefault();
+        c.dayStop = to.dataset.kpGanttDay ?? null;
+        syncDays(c);
+        to.focus();
+      }
+      /**
+       * The bar a key moves to from `bar`: along its lane, or to the nearest start in the lane above or below.
+       * @param {HTMLButtonElement} bar @param {string} key
+       * @returns {HTMLElement | undefined}
+       */
+      barFrom(bar, key) {
+        const lanes = reachableLanes(this.c);
+        const laneIndex = lanes.findIndex((l) => l.includes(bar));
+        const lane = lanes[laneIndex];
+        if (!lane) return void 0;
+        const at = lane.indexOf(bar);
+        if (key === "ArrowRight") return lane[Math.min(lane.length - 1, at + 1)];
+        if (key === "ArrowLeft") return lane[Math.max(0, at - 1)];
+        if (key === "Home") return lane[0];
+        if (key === "End") return lane[lane.length - 1];
+        if (key !== "ArrowDown" && key !== "ArrowUp") return void 0;
+        const next2 = lanes[laneIndex + (key === "ArrowDown" ? 1 : -1)];
+        if (!next2) return void 0;
+        const startOf = (b) => Number.parseFloat(b.style.getPropertyValue("--kp-g-s"));
+        const mine = startOf(bar);
+        return next2.reduce(
+          (best, b) => Math.abs(startOf(b) - mine) < Math.abs(startOf(best) - mine) ? b : best,
+          /** @type {HTMLElement} */
+          next2[0]
+        );
+      }
+      // The brush: a drag across the plot selects a range; a click without a drag is the bar's.
+      /** @param {PointerEvent} event */
+      plotX(event) {
+        return event.clientX - this.c.plot.getBoundingClientRect().left;
+      }
+      /** @param {number} x @returns {number} epoch ms */
+      timeAt(x) {
+        const c = this.c;
+        const w = windowOf(c);
+        const width = c.plot.clientWidth || 1;
+        return (w.from + Math.min(Math.max(x, 0), width) / width * c.span + c.base) * 1e3;
+      }
+      /** @param {PointerEvent} event */
+      onDown(event) {
+        const c = this.c;
+        if (event.button !== 0 || c.state === "loading" || c.line || c.el.getAttribute("data-kp-gantt-toolbar") === "off") return;
+        const x = this.plotX(event);
+        if (x < 0 || x > c.plot.clientWidth) return;
+        c.drag = { a: x, b: x };
+        c.dragMoved = false;
+      }
+      /** @param {PointerEvent} event */
+      onMove(event) {
+        const c = this.c;
+        if (!c.drag) return;
+        c.drag.b = this.plotX(event);
+        if (!c.dragMoved && Math.abs(c.drag.b - c.drag.a) > DRAG_PX2) {
+          c.dragMoved = true;
+          c.scroll.setPointerCapture(event.pointerId);
+        }
+        if (!c.dragMoved) return;
+        const lo = Math.min(c.drag.a, c.drag.b);
+        c.brushBox.hidden = false;
+        c.brushBox.style.setProperty("--kp-g-x", `${lo}px`);
+        c.brushBox.style.setProperty("--kp-g-w", `${Math.abs(c.drag.b - c.drag.a)}px`);
+      }
+      /** @param {boolean} commit whether the drag selects its range (a pointerup) or is dropped (a pointercancel) */
+      endDrag(commit3) {
+        const c = this.c;
+        const d = c.drag;
+        c.drag = null;
+        c.brushBox.hidden = true;
+        if (d && commit3 && c.dragMoved) {
+          const from = this.timeAt(Math.min(d.a, d.b));
+          const to = this.timeAt(Math.max(d.a, d.b));
+          c.selected = { from, to };
+          paintSelection2(c);
+          c.el.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail: { from, to, source: "brush" } }));
+        }
+        if (c.dragMoved) window.setTimeout(() => c.dragMoved = false, 0);
+      }
+    };
+  }
+});
+
+// js/gantt/controller.js
+var MIN_ZOOM_S, CHROME_OPTIONS, GanttControl;
+var init_controller37 = __esm({
+  "js/gantt/controller.js"() {
+    "use strict";
+    init_live_options();
+    init_constants26();
+    init_build9();
+    init_window();
+    init_paint9();
+    init_selection3();
+    init_axis();
+    init_api18();
+    init_scale();
+    init_chrome2();
+    init_model6();
+    init_input();
+    MIN_ZOOM_S = 60;
+    CHROME_OPTIONS = ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint", "data-kp-gantt-rest"];
+    GanttControl = class extends GanttInput {
+      /** @param {HTMLElement} host @param {import('./constants.js').GanttOptions} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.lastWidth = 0;
+      }
+      connect() {
+        const c = this.c;
+        const el16 = this.host;
+        gantts.set(el16, c);
+        this.own(() => gantts.delete(el16));
+        build6(c);
+        c.to = windowOf({ ...c, live: true }).end;
+        void Promise.resolve().then(() => (init_segmented(), segmented_exports)).then((m) => m.attachSegmented(c.ranges));
+        void Promise.resolve().then(() => (init_hovercard(), hovercard_exports)).then((m) => m.attachHoverCards(el16.ownerDocument));
+        paint9(c);
+        tick4(c);
+        window.requestAnimationFrame(() => c.drawn = true);
+        this.watchWidth();
+        this.watchFonts();
+        this.own(watchOptions(el16, CHROME_OPTIONS, () => this.redrawChrome()));
+        c.timer = window.setInterval(() => tick4(c), GANTT_TICK_MS);
+        this.own(() => window.clearInterval(c.timer));
+        this.listen(c.scroll, "pointercancel", () => this.endDrag(false));
+        this.listen(c.scroll, "pointerup", () => this.endDrag(true));
+        this.listen(c.scroll, "pointermove", (event) => this.onMove(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(c.scroll, "pointerdown", (event) => this.onDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(el16, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(c.ranges, "kp-segmented-change", (event) => this.onRange(event));
+      }
+      /** The toolbar, the legend and the hint changed: draw them again. */
+      redrawChrome() {
+        paint9(this.c);
+        paintChrome(this.c);
+        tick4(this.c);
+      }
+      /** A web font that arrives after the first measure changes every width: the labels are measured again. */
+      watchFonts() {
+        const fonts = this.host.ownerDocument.fonts;
+        const refit = () => {
+          this.c.labels.clear();
+          tick4(this.c);
+        };
+        fonts?.addEventListener?.("loadingdone", refit);
+        this.own(() => fonts?.removeEventListener?.("loadingdone", refit));
+        void fonts?.ready?.then(refit);
+      }
+      /** Another plot width packs the rows and measures the lanes again. */
+      watchWidth() {
+        const c = this.c;
+        if (typeof ResizeObserver === "undefined") return;
+        c.observer = this.observe(new ResizeObserver(() => this.onWidth()));
+        c.observer.observe(c.plot);
+      }
+      /** The plot changed size: pack, measure and tick again when its width moved. */
+      onWidth() {
+        const c = this.c;
+        const width = c.plot.clientWidth;
+        if (width === this.lastWidth) return;
+        this.lastWidth = width;
+        c.tickKey = "";
+        if (c.runs.length) paint9(c);
+        if (c.held !== null) {
+          c.held = null;
+          holdHeight(c);
+        }
+        tick4(c);
+      }
+      /** A press on a point, a bar or a toolbar button. @param {MouseEvent} event */
+      onClick(event) {
+        const bar = barOf(event);
+        if (bar && bar.dataset.kpId) {
+          if (!this.c.dragMoved) {
+            if (bar.classList.contains("kp-gantt__point")) this.openPoint(bar, event);
+            else this.openRun(bar, event);
+          }
+          return;
+        }
+        const button6 = event.target instanceof Element ? event.target.closest("button") : null;
+        if (button6) this.onButton(
+          /** @type {HTMLButtonElement} */
+          button6
+        );
+      }
+      /** @param {MouseEvent} event */
+      sourceOf(event) {
+        return event.detail === 0 ? "keyboard" : "pointer";
+      }
+      /** Open a point mark; a mark with a count opens with every point it stands for. @param {HTMLButtonElement} bar @param {MouseEvent} event */
+      openPoint(bar, event) {
+        const c = this.c;
         const point2 = c.points.find((p) => p.id === bar.dataset.kpId);
         if (!point2) return;
         c.active = point2.id;
@@ -56803,260 +57076,90 @@ function attachGantts(root = document, options = {}) {
             const p = c.points.find((q) => q.id === next2.dataset.kpId);
             if (p) together.push(p);
           }
-        el16.dispatchEvent(
-          new CustomEvent(GANTT_OPEN_EVENT, {
-            bubbles: true,
-            detail: { id: point2.id, point: point2, points: together, source: event.detail === 0 ? "keyboard" : "pointer" }
-          })
-        );
-        return;
+        const detail = { id: point2.id, point: point2, points: together, source: this.sourceOf(event) };
+        this.host.dispatchEvent(new CustomEvent(GANTT_OPEN_EVENT, { bubbles: true, detail }));
       }
-      if (bar && bar.dataset.kpId) {
-        if (c.dragMoved) return;
+      /** @param {HTMLButtonElement} bar @param {MouseEvent} event */
+      openRun(bar, event) {
+        const c = this.c;
         const run = c.runs.find((r) => r.id === bar.dataset.kpId);
         if (!run) return;
         c.active = run.id;
         syncTabStops2(c);
-        el16.dispatchEvent(
-          new CustomEvent(GANTT_OPEN_EVENT, {
-            bubbles: true,
-            detail: { id: run.id, run, source: event.detail === 0 ? "keyboard" : "pointer" }
-          })
-        );
-        return;
+        this.host.dispatchEvent(new CustomEvent(GANTT_OPEN_EVENT, { bubbles: true, detail: { id: run.id, run, source: this.sourceOf(event) } }));
       }
-      const button6 = event.target instanceof Element ? event.target.closest("button") : null;
-      if (!button6) return;
-      if (button6 === c.liveButton) {
-        setLive(c, !c.live);
-      } else if (button6.hasAttribute("data-kp-gantt-day")) {
+      /** Live, a day stop, Clear or Zoom. @param {HTMLButtonElement} button */
+      onButton(button6) {
+        const c = this.c;
+        const el16 = this.host;
+        if (button6 === c.liveButton) setLive(c, !c.live);
+        else if (button6.hasAttribute("data-kp-gantt-day")) this.pressDay(button6);
+        else if (button6.hasAttribute("data-kp-gantt-clear")) {
+          setGanttSelection(el16, null);
+          el16.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail: { from: null, to: null, source: "clear" } }));
+        } else if (button6.hasAttribute("data-kp-gantt-zoom") && c.selected) {
+          const { from, to } = c.selected;
+          c.span = Math.max(MIN_ZOOM_S, (to - from) / 1e3);
+          c.live = false;
+          c.to = rel(c, to);
+          c.selected = null;
+          freshWindow(c);
+          announceWindow(c, "zoom");
+        }
+      }
+      /** A day stop selects its day, or lifts the selection when it was the one pressed. @param {HTMLButtonElement} button */
+      pressDay(button6) {
+        const c = this.c;
         const day2 = button6.dataset.kpGanttDay ?? "";
         c.dayStop = day2;
         const bounds = dayBounds(c, day2);
         const lift = button6.getAttribute("aria-pressed") === "true";
-        setGanttSelection(el16, lift ? null : bounds);
-        el16.dispatchEvent(
-          new CustomEvent(GANTT_SELECT_EVENT, {
-            bubbles: true,
-            detail: lift ? { from: null, to: null, source: "clear" } : { ...bounds, source: "day", day: day2 }
-          })
-        );
-      } else if (button6.hasAttribute("data-kp-gantt-clear")) {
-        setGanttSelection(el16, null);
-        el16.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail: { from: null, to: null, source: "clear" } }));
-      } else if (button6.hasAttribute("data-kp-gantt-zoom") && c.selected) {
-        const { from, to } = c.selected;
-        c.span = Math.max(60, (to - from) / 1e3);
-        c.live = false;
-        c.to = rel(c, to);
-        c.selected = null;
-        freshWindow(c);
-        announceWindow(c, "zoom");
+        setGanttSelection(this.host, lift ? null : bounds);
+        const detail = lift ? { from: null, to: null, source: "clear" } : { ...bounds, source: "day", day: day2 };
+        this.host.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail }));
       }
-    };
-    const onRange = (event) => {
-      const value = (
-        /** @type {CustomEvent} */
-        event.detail?.value
-      );
-      if (value === "all") {
-        c.fit = true;
-        c.live = false;
+      /** The range control chose a window length, or "all" to fit everything. @param {Event} event */
+      onRange(event) {
+        const c = this.c;
+        const value = (
+          /** @type {CustomEvent} */
+          event.detail?.value
+        );
+        if (value === "all") {
+          c.fit = true;
+          c.live = false;
+          freshWindow(c);
+          announceWindow(c, "range");
+          return;
+        }
+        const seconds = typeof value === "string" ? rangeSeconds(value) : Number.NaN;
+        if (!Number.isFinite(seconds)) return;
+        c.fit = false;
+        c.span = seconds;
+        if (!c.live) c.to = Math.max(c.to, rel(c, c.now()));
         freshWindow(c);
         announceWindow(c, "range");
-        return;
       }
-      const seconds = typeof value === "string" ? rangeSeconds(value) : Number.NaN;
-      if (!Number.isFinite(seconds)) return;
-      c.fit = false;
-      c.span = seconds;
-      if (!c.live) c.to = Math.max(c.to, rel(c, c.now()));
-      freshWindow(c);
-      announceWindow(c, "range");
     };
-    const onKey5 = (event) => {
-      const dayButton = event.target instanceof HTMLButtonElement && event.target.hasAttribute("data-kp-gantt-day") ? event.target : null;
-      if (dayButton && !(event.altKey || event.ctrlKey || event.metaKey)) {
-        const buttons = (
-          /** @type {HTMLButtonElement[]} */
-          [
-            ...c.axis.querySelectorAll("button[data-kp-gantt-day]:not([data-kp-gantt-crowded])")
-          ]
-        );
-        const at2 = buttons.indexOf(dayButton);
-        const rtl = getComputedStyle(c.axis).direction === "rtl";
-        const step = event.key === "ArrowRight" ? rtl ? -1 : 1 : event.key === "ArrowLeft" ? rtl ? 1 : -1 : 0;
-        const to2 = event.key === "Home" ? buttons[0] : event.key === "End" ? buttons[buttons.length - 1] : step ? buttons[Math.min(buttons.length - 1, Math.max(0, at2 + step))] : void 0;
-        if (!to2) return;
-        event.preventDefault();
-        c.dayStop = to2.dataset.kpGanttDay ?? null;
-        syncDays(c);
-        to2.focus();
-        return;
-      }
-      const bar = barOf(event);
-      if (!bar || event.altKey || event.ctrlKey || event.metaKey) return;
-      const lanes = reachableLanes(c);
-      const laneIndex = lanes.findIndex((l) => l.includes(bar));
-      const lane = lanes[laneIndex];
-      if (!lane) return;
-      const at = lane.indexOf(bar);
-      let to;
-      if (event.key === "ArrowRight") to = lane[Math.min(lane.length - 1, at + 1)];
-      else if (event.key === "ArrowLeft") to = lane[Math.max(0, at - 1)];
-      else if (event.key === "Home") to = lane[0];
-      else if (event.key === "End") to = lane[lane.length - 1];
-      else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-        const next2 = lanes[laneIndex + (event.key === "ArrowDown" ? 1 : -1)];
-        if (next2) {
-          const startOf = (b) => Number.parseFloat(b.style.getPropertyValue("--kp-g-s"));
-          const mine = startOf(bar);
-          to = next2.reduce(
-            (best, b) => Math.abs(startOf(b) - mine) < Math.abs(startOf(best) - mine) ? b : best,
-            /** @type {HTMLElement} */
-            next2[0]
-          );
-        }
-      }
-      if (!to) return;
-      event.preventDefault();
-      focusBar(c, to);
-    };
-    const plotX = (event) => event.clientX - c.plot.getBoundingClientRect().left;
-    const timeAt = (x) => {
-      const w = windowOf(c);
-      const width = c.plot.clientWidth || 1;
-      return (w.from + Math.min(Math.max(x, 0), width) / width * c.span + c.base) * 1e3;
-    };
-    const onDown2 = (event) => {
-      if (event.button !== 0 || c.state === "loading" || c.line || c.el.getAttribute("data-kp-gantt-toolbar") === "off") return;
-      const x = plotX(event);
-      if (x < 0 || x > c.plot.clientWidth) return;
-      c.drag = { a: x, b: x };
-      c.dragMoved = false;
-    };
-    const onMove2 = (event) => {
-      if (!c.drag) return;
-      c.drag.b = plotX(event);
-      if (!c.dragMoved && Math.abs(c.drag.b - c.drag.a) > 6) {
-        c.dragMoved = true;
-        c.scroll.setPointerCapture(event.pointerId);
-      }
-      if (!c.dragMoved) return;
-      const lo = Math.min(c.drag.a, c.drag.b);
-      c.brushBox.hidden = false;
-      c.brushBox.style.setProperty("--kp-g-x", `${lo}px`);
-      c.brushBox.style.setProperty("--kp-g-w", `${Math.abs(c.drag.b - c.drag.a)}px`);
-    };
-    const endDrag = (commit3) => {
-      const d = c.drag;
-      c.drag = null;
-      c.brushBox.hidden = true;
-      if (d && commit3 && c.dragMoved) {
-        const from = timeAt(Math.min(d.a, d.b));
-        const to = timeAt(Math.max(d.a, d.b));
-        c.selected = { from, to };
-        paintSelection2(c);
-        el16.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail: { from, to, source: "brush" } }));
-      }
-      if (c.dragMoved) window.setTimeout(() => c.dragMoved = false, 0);
-    };
-    const onUp2 = () => endDrag(true);
-    const onCancel2 = () => endDrag(false);
-    c.ranges.addEventListener("kp-segmented-change", onRange);
-    el16.addEventListener("click", onClick);
-    el16.addEventListener("keydown", onKey5);
-    c.scroll.addEventListener("pointerdown", onDown2);
-    c.scroll.addEventListener("pointermove", onMove2);
-    c.scroll.addEventListener("pointerup", onUp2);
-    c.scroll.addEventListener("pointercancel", onCancel2);
-    c.timer = window.setInterval(() => tick4(c), GANTT_TICK_MS);
-    const fonts = el16.ownerDocument.fonts;
-    const refit = () => {
-      c.labels.clear();
-      tick4(c);
-    };
-    fonts?.addEventListener?.("loadingdone", refit);
-    void fonts?.ready?.then(refit);
-    const stopOptions = watchOptions(el16, ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint", "data-kp-gantt-rest"], () => {
-      paint9(c);
-      paintChrome(c);
-      tick4(c);
-    });
-    if (typeof ResizeObserver !== "undefined") {
-      let last = 0;
-      c.observer = new ResizeObserver(() => {
-        const width = c.plot.clientWidth;
-        if (width === last) return;
-        last = width;
-        c.tickKey = "";
-        if (c.runs.length) paint9(c);
-        if (c.held !== null) {
-          c.held = null;
-          holdHeight(c);
-        }
-        tick4(c);
-      });
-      c.observer.observe(c.plot);
-    }
-    undo.push(() => {
-      c.ranges.removeEventListener("kp-segmented-change", onRange);
-      el16.removeEventListener("click", onClick);
-      el16.removeEventListener("keydown", onKey5);
-      c.scroll.removeEventListener("pointerdown", onDown2);
-      c.scroll.removeEventListener("pointermove", onMove2);
-      c.scroll.removeEventListener("pointerup", onUp2);
-      c.scroll.removeEventListener("pointercancel", onCancel2);
-      window.clearInterval(c.timer);
-      stopOptions();
-      fonts?.removeEventListener?.("loadingdone", refit);
-      c.observer?.disconnect();
-      gantts.delete(el16);
-    });
   }
-  return () => undo.splice(0).forEach((off) => off());
-}
-function freshWindow(c) {
-  for (const lane of c.lanes) lane.rows = 1;
-  c.held = null;
-  c.tickKey = "";
-  paint9(c);
-  tick4(c);
-  paintSelection2(c);
-}
-function setLive(c, live4) {
-  if (live4 === c.live) return;
-  c.live = live4;
-  if (live4 && c.fit) {
-    c.fit = false;
-    const first = [...c.ranges.querySelectorAll("[data-value]")].map((b) => (
-      /** @type {HTMLElement} */
-      b.dataset.value ?? ""
-    )).find((w) => w !== "all");
-    if (first) {
-      c.span = rangeSeconds(first);
-      void Promise.resolve().then(() => (init_segmented(), segmented_exports)).then((m) => m.setSegmentedValues(c.ranges, [first]));
-    }
-  }
-  if (!live4) c.to = windowOf({ ...c, live: true }).end;
-  freshWindow(c);
-  announceWindow(c, "live");
+});
+
+// js/gantt/attach.js
+function attachGantts(root = document, options = {}) {
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(GANTT)].filter((el16) => !gantts.has(el16)).map((el16) => attachOne(el16, GanttControl, options))
+  );
+  return () => {
+    for (const control of made6.splice(0)) control?.destroy();
+  };
 }
 var init_attach17 = __esm({
   "js/gantt/attach.js"() {
     "use strict";
-    init_chart();
-    init_strings();
-    init_live_options();
+    init_controller();
     init_constants26();
-    init_build9();
-    init_window();
-    init_paint9();
-    init_selection3();
-    init_axis();
-    init_api18();
-    init_scale();
-    init_chrome2();
+    init_controller37();
   }
 });
 
@@ -57455,7 +57558,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -57604,7 +57707,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller37();
+    init_controller38();
     init_values27();
     init_values27();
   }
@@ -58214,7 +58317,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -58399,7 +58502,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller38();
+    init_controller39();
   }
 });
 
@@ -58939,7 +59042,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -59068,7 +59171,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller39();
+    init_controller40();
     init_values29();
     init_values29();
     init_share();
@@ -59500,7 +59603,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -59581,7 +59684,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller40();
+    init_controller41();
     init_values30();
     init_values30();
   }
@@ -59803,7 +59906,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -59932,7 +60035,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller41();
+    init_controller42();
     init_values31();
     init_values31();
     init_keys12();
@@ -60936,7 +61039,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -61002,7 +61105,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_values33();
     init_values33();
   }
@@ -61328,7 +61431,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -61615,7 +61718,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller43();
+    init_controller44();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -61737,7 +61840,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -61964,7 +62067,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -62956,7 +63059,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -63196,7 +63299,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_values36();
     init_values36();
   }
@@ -63537,7 +63640,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -63655,7 +63758,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_values37();
     init_values37();
     init_slug();
@@ -64342,7 +64445,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -64549,7 +64652,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller47();
+    init_controller48();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -64850,7 +64953,7 @@ var init_core18 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -64965,7 +65068,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller48();
+    init_controller49();
     init_values38();
     init_values38();
     init_names();
@@ -65210,7 +65313,7 @@ var init_core19 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -65315,7 +65418,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller49();
+    init_controller50();
     init_values39();
     init_values39();
     init_value();
@@ -66317,7 +66420,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -66476,7 +66579,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller50();
+    init_controller51();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -66614,7 +66717,7 @@ function panelSlice(ordered2, given) {
   return ordered2.filter((n) => (taken[n.severity] += 1) <= max);
 }
 var toMs4;
-var init_model6 = __esm({
+var init_model7 = __esm({
   "js/notices/model.js"() {
     "use strict";
     init_events2();
@@ -66708,7 +66811,7 @@ var init_view4 = __esm({
     init_state_plate();
     init_strings();
     init_events2();
-    init_model6();
+    init_model7();
     init_parts13();
     init_row6();
     DATE_LENGTH = 10;
@@ -66907,7 +67010,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -67048,7 +67151,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller51();
+    init_controller52();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -67510,7 +67613,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -67780,7 +67883,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller52();
+    init_controller53();
     init_build14();
     init_commit();
     init_math4();
@@ -68068,7 +68171,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -68301,7 +68404,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller53();
+    init_controller54();
     init_list4();
     init_render4();
   }
@@ -68428,7 +68531,7 @@ function say10(m, text) {
   if (m.status) m.status.textContent = text;
 }
 var models, make26, attr7, clamp2, realOptions;
-var init_model7 = __esm({
+var init_model8 = __esm({
   "js/usual-picker/model.js"() {
     "use strict";
     init_listbox();
@@ -68456,7 +68559,7 @@ var exactItem, pickedValues, nearOf2;
 var init_lookup = __esm({
   "js/usual-picker/lookup.js"() {
     "use strict";
-    init_model7();
+    init_model8();
     init_names2();
     exactItem = (m, typed) => m.items.find((i) => normaliseName(i.label) === normaliseName(typed));
     pickedValues = (m) => m.box.hasAttribute("data-kp-tags") ? m.handle.values() : [];
@@ -68608,7 +68711,7 @@ var init_layout3 = __esm({
     "use strict";
     init_strings();
     init_lookup();
-    init_model7();
+    init_model8();
     init_state23();
   }
 });
@@ -68657,7 +68760,7 @@ var init_picking = __esm({
   "js/usual-picker/picking.js"() {
     "use strict";
     init_listbox();
-    init_model7();
+    init_model8();
     sayAfter = (m, text) => window.setTimeout(() => say10(m, text), 0);
   }
 });
@@ -68884,7 +68987,7 @@ var init_sync6 = __esm({
     init_segmented();
     init_constants33();
     init_layout3();
-    init_model7();
+    init_model8();
     init_picking();
     init_state23();
   }
@@ -68940,7 +69043,7 @@ var init_add = __esm({
     init_undo_toast();
     init_constants33();
     init_layout3();
-    init_model7();
+    init_model8();
     init_picking();
     init_sync6();
   }
@@ -69239,7 +69342,7 @@ var init_wire5 = __esm({
     init_constants33();
     init_layout3();
     init_lookup();
-    init_model7();
+    init_model8();
     init_names2();
     init_picking();
     init_state23();
@@ -69295,7 +69398,7 @@ var init_attach20 = __esm({
   "js/usual-picker/attach.js"() {
     "use strict";
     init_constants33();
-    init_model7();
+    init_model8();
     init_sync6();
     init_wire5();
   }
@@ -69744,7 +69847,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -69935,7 +70038,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller54();
+    init_controller55();
     init_group6();
     init_group6();
   }
@@ -70224,7 +70327,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -70331,7 +70434,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller55();
+    init_controller56();
     init_values41();
     init_values41();
     init_level();
@@ -70626,7 +70729,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -70810,7 +70913,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller56();
+    init_controller57();
     init_values42();
     init_values42();
     init_order();
@@ -71075,7 +71178,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -71162,7 +71265,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller57();
+    init_controller58();
     init_values43();
     init_values43();
     init_states();
@@ -72989,7 +73092,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -73242,7 +73345,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller58();
+    init_controller59();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -73588,7 +73691,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -73893,7 +73996,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller59();
+    init_controller60();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -74342,7 +74445,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -74476,7 +74579,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller60();
+    init_controller61();
     init_values46();
   }
 });
@@ -76139,7 +76242,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -76369,7 +76472,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller61();
+    init_controller62();
     init_values47();
     init_values47();
   }
@@ -76537,7 +76640,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -76766,7 +76869,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller62();
+    init_controller63();
     init_fields();
     init_fields();
   }
@@ -77106,7 +77209,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -77357,7 +77460,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller63();
+    init_controller64();
   }
 });
 
@@ -77392,7 +77495,7 @@ function toRun(input) {
   if (!Number.isFinite(at)) return null;
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
-var init_input = __esm({
+var init_input2 = __esm({
   "js/runs/input.js"() {
     "use strict";
   }
@@ -77512,7 +77615,7 @@ var init_core26 = __esm({
     init_controller();
     init_busy_card();
     init_strings();
-    init_input();
+    init_input2();
     init_options8();
     init_parts17();
     init_time3();
@@ -77681,7 +77784,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -77792,7 +77895,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller64();
+    init_controller65();
     init_values48();
     init_values48();
     init_time3();
@@ -78120,7 +78223,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -78379,7 +78482,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller65();
+    init_controller66();
     init_choices();
   }
 });
@@ -80458,7 +80561,7 @@ function write(list, id, by) {
   );
 }
 var STATE2, el10, attr10, stateOf6, byOf, itemOf;
-var init_model8 = __esm({
+var init_model9 = __esm({
   "js/claim/model.js"() {
     "use strict";
     init_checklist();
@@ -80655,7 +80758,7 @@ var init_rows9 = __esm({
     init_strings();
     init_idmark();
     init_menu_button();
-    init_model8();
+    init_model9();
     mode = (list) => attr10(list, "mode", "claim") === "assign" ? "assign" : "claim";
     among = (person, by) => person !== null && by.some((p) => p.id === person.id);
   }
@@ -80874,7 +80977,7 @@ var init_decorate = __esm({
     init_remember();
     init_state_plate();
     init_constants39();
-    init_model8();
+    init_model9();
     init_rows9();
   }
 });
@@ -80905,7 +81008,7 @@ var init_api27 = __esm({
     "use strict";
     init_checklist();
     init_decorate();
-    init_model8();
+    init_model9();
   }
 });
 
@@ -80970,7 +81073,7 @@ var init_bulk = __esm({
     init_checklist();
     init_undo_toast();
     init_constants39();
-    init_model8();
+    init_model9();
   }
 });
 
@@ -81097,7 +81200,7 @@ var init_request2 = __esm({
     init_undo_toast();
     init_constants39();
     init_decorate();
-    init_model8();
+    init_model9();
     init_rows9();
   }
 });
@@ -81115,7 +81218,7 @@ var init_state27 = __esm({
 
 // js/claim/controller.js
 var LIVE_OPTIONS2, ClaimList;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -81128,7 +81231,7 @@ var init_controller66 = __esm({
     init_bulk();
     init_constants39();
     init_decorate();
-    init_model8();
+    init_model9();
     init_request2();
     init_rows9();
     init_state27();
@@ -81285,7 +81388,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller66();
+    init_controller67();
   }
 });
 
@@ -81311,7 +81414,7 @@ var init_claim2 = __esm({
   "js/claim.js"() {
     "use strict";
     init_constants39();
-    init_model8();
+    init_model9();
     init_api27();
     init_decorate();
     init_attach23();
@@ -83653,7 +83756,7 @@ var init_actions7 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS3, QrControl;
-var init_controller67 = __esm({
+var init_controller68 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83757,7 +83860,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller67();
+    init_controller68();
     init_state28();
     init_state28();
     init_matrix2();
@@ -83843,7 +83946,7 @@ function say14(root, message) {
   setTimeout(() => target.textContent = message, 60);
 }
 var STATE5, el13, attr13;
-var init_model9 = __esm({
+var init_model10 = __esm({
   "js/console/model.js"() {
     "use strict";
     STATE5 = /* @__PURE__ */ new WeakMap();
@@ -84037,7 +84140,7 @@ var init_bar2 = __esm({
   "js/console/bar.js"() {
     "use strict";
     init_strings();
-    init_model9();
+    init_model10();
     init_state29();
   }
 });
@@ -84295,7 +84398,7 @@ var init_blocks = __esm({
     init_state_plate();
     init_busy_card();
     init_bar2();
-    init_model9();
+    init_model10();
   }
 });
 
@@ -84337,7 +84440,7 @@ var init_history = __esm({
   "js/console/history.js"() {
     "use strict";
     init_constants41();
-    init_model9();
+    init_model10();
   }
 });
 
@@ -84465,7 +84568,7 @@ var init_run6 = __esm({
     init_blocks();
     init_constants41();
     init_history();
-    init_model9();
+    init_model10();
   }
 });
 
@@ -84557,7 +84660,7 @@ var init_api29 = __esm({
     init_flash();
     init_bar2();
     init_blocks();
-    init_model9();
+    init_model10();
     init_run6();
   }
 });
@@ -84774,7 +84877,7 @@ var init_attach25 = __esm({
     init_blocks();
     init_constants41();
     init_history();
-    init_model9();
+    init_model10();
     init_run6();
   }
 });
@@ -84882,7 +84985,7 @@ function stateOf10(root) {
   return st;
 }
 var STATE6, BUILT, el14, attr14;
-var init_model10 = __esm({
+var init_model11 = __esm({
   "js/logviewer/model.js"() {
     "use strict";
     STATE6 = /* @__PURE__ */ new WeakMap();
@@ -84924,7 +85027,7 @@ var init_reads = __esm({
     "use strict";
     init_constants42();
     init_levels();
-    init_model10();
+    init_model11();
     signature = (root) => ["max", "wrap", "time", "level", "search", "search-only", "tools", "error", "error-title"].map((n) => attr14(root, n, "")).join("") + `${root.getAttribute("data-kp-state") ?? ""}`;
     logOf = (root) => (
       /** @type {HTMLElement} */
@@ -85138,7 +85241,7 @@ var init_parts18 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
-    init_model10();
+    init_model11();
     init_reads();
     init_state30();
   }
@@ -85228,7 +85331,7 @@ var init_rows10 = __esm({
     init_log();
     init_constants42();
     init_levels();
-    init_model10();
+    init_model11();
     init_reads();
   }
 });
@@ -85375,7 +85478,7 @@ var init_refresh = __esm({
     init_state_plate();
     init_busy_card();
     init_constants42();
-    init_model10();
+    init_model11();
     init_reads();
     init_rows10();
   }
@@ -85520,7 +85623,7 @@ var init_api30 = __esm({
     "use strict";
     init_newpill();
     init_levels();
-    init_model10();
+    init_model11();
     init_parts18();
     init_reads();
     init_refresh();
@@ -85729,7 +85832,7 @@ var init_attach26 = __esm({
     init_flash();
     init_api30();
     init_constants42();
-    init_model10();
+    init_model11();
     init_parts18();
     init_reads();
     init_rows10();
@@ -85921,7 +86024,7 @@ function stateOf11(root) {
   return st;
 }
 var STATE7, el15, attr15;
-var init_model11 = __esm({
+var init_model12 = __esm({
   "js/diff/model.js"() {
     "use strict";
     STATE7 = /* @__PURE__ */ new WeakMap();
@@ -86026,7 +86129,7 @@ var init_read9 = __esm({
   "js/diff/read.js"() {
     "use strict";
     init_constants43();
-    init_model11();
+    init_model12();
     kindOf4 = (kind) => kind === "added" || kind === "removed" ? kind : "same";
   }
 });
@@ -86135,7 +86238,7 @@ var init_lines3 = __esm({
     init_state_plate();
     init_constants43();
     init_fold2();
-    init_model11();
+    init_model12();
     init_read9();
     init_words4();
   }
@@ -86316,7 +86419,7 @@ var init_file = __esm({
     "use strict";
     init_strings();
     init_lines3();
-    init_model11();
+    init_model12();
     init_read9();
     init_state31();
   }
@@ -86419,7 +86522,7 @@ var init_render7 = __esm({
     init_busy_card();
     init_reason();
     init_file();
-    init_model11();
+    init_model12();
     init_read9();
   }
 });
@@ -86487,7 +86590,7 @@ var init_actions8 = __esm({
     init_constants43();
     init_file();
     init_lines3();
-    init_model11();
+    init_model12();
     init_read9();
     init_render7();
   }
@@ -86592,7 +86695,7 @@ var init_attach27 = __esm({
     init_actions8();
     init_constants43();
     init_lines3();
-    init_model11();
+    init_model12();
     init_read9();
     init_render7();
   }

@@ -4,7 +4,7 @@ import { paint } from './paint.js';
 import { paintSelection, tick } from './selection.js';
 import { rangeSeconds, rel } from './scale.js';
 import { windowOf } from './window.js';
-import { freshWindow } from './attach.js';
+import { freshWindow } from './model.js';
 import { syncLegend } from './chrome.js';
 /** @typedef {import('./constants.js').GanttKind} GanttKind */
 /** @typedef {import('./constants.js').GanttLane} GanttLane */
