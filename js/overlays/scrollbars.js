@@ -1,5 +1,5 @@
-// Scroll boxes: the overflow marker and the scrollbar watcher.
-import { Controller } from '../controller.js';
+// Scroll boxes: the overflow marker, the scrollbar watcher of one box (ScrollbarControl) and of every box under a root (ScrollbarsRoot).
+import { Controller, attachOne, controllerOf, hostsOf } from '../controller.js';
 import { SCROLL_BOXES, SCROLL_OVERFLOW } from './constants.js';
 
 /**
@@ -160,8 +160,52 @@ class ScrollbarControl extends Controller {
     }
 }
 
-/** The boxes some `attachScrollbars` already watches, so a second call is a no-op. */
-const scrollbarsWatched = new WeakSet();
+/**
+ * A box an `attachScrollbars` call watches. Its own class, so the registry of js/controller.js answers "is this box watched by
+ * some attach already" without a stray `watchScrollbar` stop (a plain ScrollbarControl) ever clearing that answer.
+ */
+class AttachedScrollbar extends ScrollbarControl {}
+
+/** One `attachScrollbars` call: the boxes it watches, now and as they arrive. The "host" is the root the page passed, which may be the document. */
+class ScrollbarsRoot extends Controller {
+    /** @param {ParentNode} root */
+    constructor(root) {
+        super(/** @type {HTMLElement} */ (/** @type {unknown} */ (root)));
+        this.root = root;
+        /** The box controllers this call made, for the detach. @type {Set<AttachedScrollbar>} */
+        this.made = new Set();
+    }
+
+    connect() {
+        const { root } = this;
+        // Registered first, so it runs last: every box is let go after the watcher stopped.
+        this.own(() => this.letGoAll());
+        this.scan(root);
+        if (typeof MutationObserver === 'undefined') return;
+        const later = this.observe(
+            new MutationObserver((records) => {
+                for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) this.scan(node);
+            }),
+        );
+        const target = root instanceof Document ? root.documentElement : root;
+        if (target instanceof Node) later.observe(target, { childList: true, subtree: true });
+    }
+
+    /** Watch every box under `scope` (itself included) that no attach watches yet; a box whose wiring throws is reported and skipped. @param {ParentNode} scope */
+    scan(scope) {
+        for (const box of hostsOf(scope, SCROLL_BOXES)) {
+            if (controllerOf(box, AttachedScrollbar)) continue;
+            const control = attachOne(box, AttachedScrollbar);
+            if (control) this.made.add(control);
+        }
+    }
+
+    /** Stop every box this call watches. */
+    letGoAll() {
+        for (const control of this.made) control.destroy();
+        this.made.clear();
+    }
+}
 
 /**
  * `watchScrollbar` on every `.kp-popover`, `.kp-dialog` and
@@ -172,35 +216,8 @@ const scrollbarsWatched = new WeakSet();
  * @returns {() => void} detach
  */
 export function attachScrollbars(root = document) {
-    /** @type {Map<HTMLElement, () => void>} */
-    const watched = new Map();
-    /** @param {ParentNode | Element} scope */
-    const scan = (scope) => {
-        const found = [...scope.querySelectorAll(SCROLL_BOXES)];
-        if (scope instanceof Element && scope.matches(SCROLL_BOXES)) found.push(scope);
-        for (const el of found) {
-            const box = /** @type {HTMLElement} */ (el);
-            if (watched.has(box) || scrollbarsWatched.has(box)) continue;
-            scrollbarsWatched.add(box);
-            const stop = watchScrollbar(box);
-            watched.set(box, () => {
-                stop();
-                scrollbarsWatched.delete(box);
-            });
-        }
-    };
-    scan(root);
-    const observer =
-        typeof MutationObserver === 'undefined'
-            ? null
-            : new MutationObserver((records) => {
-                  for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) scan(node);
-              });
-    const target = root instanceof Document ? root.documentElement : root;
-    if (observer && target instanceof Node) observer.observe(target, { childList: true, subtree: true });
-    return () => {
-        observer?.disconnect();
-        for (const stop of watched.values()) stop();
-        watched.clear();
-    };
+    // Every call watches its root on its own, as before; a box is watched by the first call that finds it.
+    const control = new ScrollbarsRoot(root);
+    control.connect();
+    return () => control.destroy();
 }

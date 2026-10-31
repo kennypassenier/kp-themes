@@ -6288,37 +6288,11 @@ function watchScrollbar(box) {
   return () => control.destroy();
 }
 function attachScrollbars(root = document) {
-  const watched = /* @__PURE__ */ new Map();
-  const scan = (scope) => {
-    const found = [...scope.querySelectorAll(SCROLL_BOXES)];
-    if (scope instanceof Element && scope.matches(SCROLL_BOXES)) found.push(scope);
-    for (const el16 of found) {
-      const box = (
-        /** @type {HTMLElement} */
-        el16
-      );
-      if (watched.has(box) || scrollbarsWatched.has(box)) continue;
-      scrollbarsWatched.add(box);
-      const stop = watchScrollbar(box);
-      watched.set(box, () => {
-        stop();
-        scrollbarsWatched.delete(box);
-      });
-    }
-  };
-  scan(root);
-  const observer = typeof MutationObserver === "undefined" ? null : new MutationObserver((records) => {
-    for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) scan(node);
-  });
-  const target = root instanceof Document ? root.documentElement : root;
-  if (observer && target instanceof Node) observer.observe(target, { childList: true, subtree: true });
-  return () => {
-    observer?.disconnect();
-    for (const stop of watched.values()) stop();
-    watched.clear();
-  };
+  const control = new ScrollbarsRoot(root);
+  control.connect();
+  return () => control.destroy();
 }
-var PROPS, FALLBACK_LINE, MIN_THUMB, RATIO_DIGITS, ScrollbarControl, scrollbarsWatched;
+var PROPS, FALLBACK_LINE, MIN_THUMB, RATIO_DIGITS, ScrollbarControl, AttachedScrollbar, ScrollbarsRoot;
 var init_scrollbars = __esm({
   "js/overlays/scrollbars.js"() {
     "use strict";
@@ -6442,7 +6416,46 @@ var init_scrollbars = __esm({
         box.addEventListener("pointercancel", stop);
       }
     };
-    scrollbarsWatched = /* @__PURE__ */ new WeakSet();
+    AttachedScrollbar = class extends ScrollbarControl {
+    };
+    ScrollbarsRoot = class extends Controller {
+      /** @param {ParentNode} root */
+      constructor(root) {
+        super(
+          /** @type {HTMLElement} */
+          /** @type {unknown} */
+          root
+        );
+        this.root = root;
+        this.made = /* @__PURE__ */ new Set();
+      }
+      connect() {
+        const { root } = this;
+        this.own(() => this.letGoAll());
+        this.scan(root);
+        if (typeof MutationObserver === "undefined") return;
+        const later = this.observe(
+          new MutationObserver((records) => {
+            for (const record of records) for (const node of record.addedNodes) if (node instanceof Element) this.scan(node);
+          })
+        );
+        const target = root instanceof Document ? root.documentElement : root;
+        if (target instanceof Node) later.observe(target, { childList: true, subtree: true });
+      }
+      /** Watch every box under `scope` (itself included) that no attach watches yet; a box whose wiring throws is reported and skipped. @param {ParentNode} scope */
+      scan(scope) {
+        for (const box of hostsOf(scope, SCROLL_BOXES)) {
+          if (controllerOf(box, AttachedScrollbar)) continue;
+          const control = attachOne(box, AttachedScrollbar);
+          if (control) this.made.add(control);
+        }
+      }
+      /** Stop every box this call watches. */
+      letGoAll() {
+        for (const control of this.made) control.destroy();
+        this.made.clear();
+      }
+    };
   }
 });
 

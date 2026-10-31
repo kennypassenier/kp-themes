@@ -410,7 +410,7 @@ Dialogs, tabs, toasts, dismissible alerts, tooltips and scroll boxes. 9 files.
 | `constants.js`  | The event names, selectors and timings of dialogs, tabs, toasts, dismissals, tooltips and scroll boxes. |
 | `dialogs.js`    | Dialogs: opening at the top, the close label, and DialogTrigger and DialogCloser.                       |
 | `dismissals.js` | Dismissible alerts: dismissing, remembering and showing again.                                          |
-| `scrollbars.js` | Scroll boxes: the overflow marker and ScrollbarControl, the scrollbar watcher of one box.               |
+| `scrollbars.js` | Scroll boxes: ScrollbarControl, the watcher of one box, and ScrollbarsRoot, one attachScrollbars call.  |
 | `tab-list.js`   | TabsControl: one tab list, its selection, its keys and the panels on their way out.                     |
 | `tab-row.js`    | Tab rows: keeping the selected tab in view and marking a row that overflows.                            |
 | `tabs.js`       | Tabs: selecting from outside and the attach.                                                            |
