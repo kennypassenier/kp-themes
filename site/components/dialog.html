@@ -103,6 +103,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html">Row editor</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
@@ -152,6 +153,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
@@ -401,6 +403,143 @@ document.querySelector(<span class="kp-code__string">'[data-doc-confirm=&quot;bl
         blocked: <span class="kp-code__string">'Delete those two sources first, on the Sources page.'</span>,
         onAccept: () =&gt; { said.textContent = <span class="kp-code__string">'This is never reached: a blocked removal has no Confirm.'</span>; },
     });
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A narrow dialog that adds stock, its button following the amount</figcaption>
+                        <p class="kp-text-muted">`kp-dialog--narrow` holds a question’s width whatever the content, so the dialog does not grow and shrink with its longest line; `kp-dialog--wider` is the step above the wide one, for a dialog that holds a table. Every step stops 1rem short of the window on each side, so a phone never has content on its edge. The accept button follows the quantity (`data-kp-accept-follows`, see the quantity page): “Add 20 tablets”, and off with its reason at 0.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<dialog class="kp-dialog kp-dialog--narrow" id="doc-dialog-stock" open aria-labelledby="doc-dialog-stock-title">
+    <h2 class="kp-dialog__title" id="doc-dialog-stock-title">Add stock</h2>
+    <p class="kp-dialog__description">Ibuprofen 400 mg · 14 tablets now</p>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-dialog-stock-input">How many did you buy?</label>
+        <div class="kp-quantity" id="doc-dialog-stock-quantity" data-kp-quantity data-kp-quantity-fill data-kp-quantity-min="0" data-kp-quantity-max="200" data-kp-quantity-unit="tablets" data-kp-quantity-unit-one="tablet" data-kp-quantity-label="Tablets to add">
+            <input class="kp-quantity__input" id="doc-dialog-stock-input" value="20" />
+        </div>
+    </div>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button">Cancel</button>
+        <button type="button" class="kp-button kp-button--primary" data-kp-accept-follows="doc-dialog-stock-quantity" data-kp-accept-verb="Add">Add 20 tablets</button>
+    </div>
+</dialog>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog kp-dialog--narrow&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dialog-stock&quot;</span> <span class="kp-code__keyword">open</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-dialog-stock-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dialog-stock-title&quot;</span>&gt;Add stock&lt;/<span class="kp-code__keyword">h2</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__description&quot;</span>&gt;Ibuprofen 400 mg · 14 tablets now&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-dialog-stock-input&quot;</span>&gt;How many did you buy?&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dialog-stock-quantity&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-fill</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;200&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;tablets&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit-one</span><span class="kp-code__string">=&quot;tablet&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Tablets to add&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dialog-stock-input&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;20&quot;</span> /&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Cancel&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-kp-accept-follows</span><span class="kp-code__string">=&quot;doc-dialog-stock-quantity&quot;</span> <span class="kp-code__keyword">data-kp-accept-verb</span><span class="kp-code__string">=&quot;Add&quot;</span>&gt;Add 20 tablets&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A confirmation with a body of its own, and one that holds an amount</figcaption>
+                        <p class="kp-text-muted">`description` takes a node or a list of nodes (several paragraphs, a list) in place of the one sentence; `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive, and `acceptLabel` says what it does. `acceptFollows` names a quantity the page put in the description and `acceptVerb` its verb: Confirm then reads “Add 2 boxes” and follows the stepper; the page wires the two with `attachQuantities` and `attachAcceptFollows` on the dialog it gets back. A confirmation is narrow unless it takes a wider step.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-sm">
+    <button type="button" class="kp-button" id="doc-confirm-dose">Take Ibuprofen 400 mg…</button>
+    <button type="button" class="kp-button" id="doc-confirm-boxes">Add boxes of Cetirizine 10 mg…</button>
+</div>
+<p class="kp-text-muted" id="doc-confirm-rich-said" role="status">Nothing taken, nothing added.</p>
+                            <script type="module">
+import { openConfirmation } from '../../js/components.js';
+import { attachQuantities } from '../../js/quantity.js';
+import { attachAcceptFollows } from '../../js/accept-follows.js';
+
+const said = document.getElementById('doc-confirm-rich-said');
+const line = (text) => Object.assign(document.createElement('p'), { textContent: text });
+
+document.getElementById('doc-confirm-dose').addEventListener('click', (event) => {
+    openConfirmation(event.currentTarget, {
+        phrase: 'Too soon for another dose',
+        description: [
+            line('You took Ibuprofen 400 mg at 14:10, 2 h ago.'),
+            line('The leaflet asks for at least 6 h between doses: the next one is due at 20:10.'),
+            line('Taking it anyway is your choice; it is written down as an extra dose.'),
+        ],
+        acceptLook: 'primary',
+        acceptLabel: 'Take it anyway',
+        onAccept: () => { said.textContent = 'Written down as an extra dose at ' + new Date().toTimeString().slice(0, 5) + '.'; },
+    });
+});
+
+document.getElementById('doc-confirm-boxes').addEventListener('click', (event) => {
+    const quantity = document.createElement('div');
+    quantity.className = 'kp-quantity';
+    quantity.id = 'doc-confirm-boxes-quantity';
+    quantity.dataset.kpQuantity = '';
+    Object.assign(quantity.dataset, { kpQuantityFill: '', kpQuantityMin: '0', kpQuantityMax: '10', kpQuantityUnit: 'boxes', kpQuantityUnitOne: 'box', kpQuantityLabel: 'Boxes to add' });
+    quantity.innerHTML = '<input class="kp-quantity__input" value="2" />';
+    const field = document.createElement('div');
+    field.className = 'kp-field';
+    field.append(quantity);
+    const dialog = openConfirmation(event.currentTarget, {
+        phrase: 'Add boxes of Cetirizine 10 mg?',
+        description: [line('One box holds 30 tablets.'), field],
+        acceptLook: 'primary',
+        acceptFollows: quantity.id,
+        acceptVerb: 'Add',
+        onAccept: () => { said.textContent = 'Added. The stock follows the amount chosen.'; },
+    });
+    attachQuantities(dialog);
+    attachAcceptFollows(dialog);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-confirm-dose&quot;</span>&gt;Take Ibuprofen 400 mg…&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-confirm-boxes&quot;</span>&gt;Add boxes of Cetirizine 10 mg…&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-confirm-rich-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing taken, nothing added.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { openConfirmation } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/components'</span>;
+<span class="kp-code__keyword">import</span> { attachQuantities } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/quantity'</span>;
+<span class="kp-code__keyword">import</span> { attachAcceptFollows } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/accept-follows'</span>;
+
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-confirm-rich-said'</span>);
+<span class="kp-code__keyword">const</span> line = (text) =&gt; Object.assign(document.createElement(<span class="kp-code__string">'p'</span>), { textContent: text });
+
+document.getElementById(<span class="kp-code__string">'doc-confirm-dose'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    openConfirmation(event.currentTarget, {
+        phrase: <span class="kp-code__string">'Too soon for another dose'</span>,
+        description: [
+            line(<span class="kp-code__string">'You took Ibuprofen 400 mg at 14:10, 2 h ago.'</span>),
+            line(<span class="kp-code__string">'The leaflet asks for at least 6 h between doses: the next one is due at 20:10.'</span>),
+            line(<span class="kp-code__string">'Taking it anyway is your choice; it is written down as an extra dose.'</span>),
+        ],
+        acceptLook: <span class="kp-code__string">'primary'</span>,
+        acceptLabel: <span class="kp-code__string">'Take it anyway'</span>,
+        onAccept: () =&gt; { said.textContent = <span class="kp-code__string">'Written down as an extra dose at '</span> + <span class="kp-code__keyword">new</span> Date().toTimeString().slice(<span class="kp-code__string">0</span>, <span class="kp-code__string">5</span>) + <span class="kp-code__string">'.'</span>; },
+    });
+});
+
+document.getElementById(<span class="kp-code__string">'doc-confirm-boxes'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> quantity = document.createElement(<span class="kp-code__string">'div'</span>);
+    quantity.className = <span class="kp-code__string">'kp-quantity'</span>;
+    quantity.id = <span class="kp-code__string">'doc-confirm-boxes-quantity'</span>;
+    quantity.dataset.kpQuantity = <span class="kp-code__string">''</span>;
+    Object.assign(quantity.dataset, { kpQuantityFill: <span class="kp-code__string">''</span>, kpQuantityMin: <span class="kp-code__string">'0'</span>, kpQuantityMax: <span class="kp-code__string">'10'</span>, kpQuantityUnit: <span class="kp-code__string">'boxes'</span>, kpQuantityUnitOne: <span class="kp-code__string">'box'</span>, kpQuantityLabel: <span class="kp-code__string">'Boxes to add'</span> });
+    quantity.innerHTML = <span class="kp-code__string">'&lt;input class=&quot;kp-quantity__input&quot; value=&quot;2&quot; /&gt;'</span>;
+    <span class="kp-code__keyword">const</span> field = document.createElement(<span class="kp-code__string">'div'</span>);
+    field.className = <span class="kp-code__string">'kp-field'</span>;
+    field.append(quantity);
+    <span class="kp-code__keyword">const</span> dialog = openConfirmation(event.currentTarget, {
+        phrase: <span class="kp-code__string">'Add boxes of Cetirizine 10 mg?'</span>,
+        description: [line(<span class="kp-code__string">'One box holds 30 tablets.'</span>), field],
+        acceptLook: <span class="kp-code__string">'primary'</span>,
+        acceptFollows: quantity.id,
+        acceptVerb: <span class="kp-code__string">'Add'</span>,
+        onAccept: () =&gt; { said.textContent = <span class="kp-code__string">'Added. The stock follows the amount chosen.'</span>; },
+    });
+    attachQuantities(dialog);
+    attachAcceptFollows(dialog);
 });</code></pre>
                     </figure>
                     <figure class="sc-example">
@@ -2067,6 +2206,11 @@ Delete incident
                             <tr><td><code>.kp-dialog__close</code></td><td>The close in the corner, on top of the padding rather than in the flow.</td></tr>
                             <tr><td><code>.kp-dialog__actions</code></td><td>The buttons at the end, pushed to the trailing edge, primary last.</td></tr>
                             <tr><td><code>.kp-dialog--wide</code></td><td>A dialog that manages one thing: 42rem wide at once, so a section that fills later moves nothing sideways.</td></tr>
+                            <tr><td><code>.kp-dialog--narrow</code></td><td>A question’s width, held whatever the content; a confirmation (`.kp-confirm`) takes it by default.</td></tr>
+                            <tr><td><code>.kp-dialog--wider</code></td><td>The step above the wide one, for a dialog that holds a table. Every width step stops 1rem short of the window on each side.</td></tr>
+                            <tr><td><code>description as nodes</code></td><td>`openConfirmation(button, { description })`: a node or a list of nodes (paragraphs, a list, a field) in place of the dictionary’s sentence; the dialog is still described by it.</td></tr>
+                            <tr><td><code>acceptLook / acceptLabel</code></td><td>`acceptLook: 'primary'` draws Confirm as a primary button for a confirmation that is not destructive (take a dose anyway); `acceptLabel` is its words.</td></tr>
+                            <tr><td><code>acceptFollows / acceptVerb</code></td><td>Confirm follows a quantity in the description: “Add 2 boxes”, off with its reason at 0. Wire it with `attachQuantities(dialog)` and `attachAcceptFollows(dialog)` on the dialog `openConfirmation` returns.</td></tr>
                             <tr><td><code>.kp-dialog__head</code></td><td>The title with a state badge beside it and the description under both.</td></tr>
                             <tr><td><code>.kp-dialog__section / __heading / __note</code></td><td>One part of the body under its heading, with an optional note under it; sections are divided by a rule.</td></tr>
                             <tr><td><code>.kp-dialog__section--danger</code></td><td>The last section, for what cannot be undone: ruled along its start edge in the destructive colour.</td></tr>

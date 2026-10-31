@@ -103,6 +103,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html">Row editor</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
@@ -152,6 +153,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
@@ -294,6 +296,28 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span>&gt;Unread &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span>&gt;12&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A run of badges that wraps in columns</figcaption>
+                        <p class="kp-text-muted">`.kp-badges` holds several badges in one cell and wraps them when the cell is narrow. It is a grid, not a flex run: its tracks are as wide as the widest badge in them, so a wrapped run stands in columns and no label is ever cut; a badge’s words wrap at spaces, never between letters. Make the window narrow to see the second line line up under the first.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-sm">
+    <div class="kp-badges" role="list" aria-label="Status of Vitamin D3 25 µg">
+        <span class="kp-badge" role="listitem">On schedule</span><span class="kp-badge kp-badge--warning" role="listitem">Expires 11/2026</span><span class="kp-badge" role="listitem">Refill on 12/11</span><span class="kp-badge kp-badge--success" role="listitem">60 capsules</span><span class="kp-badge" role="listitem">Taken with breakfast</span>
+    </div>
+    <div class="kp-badges" role="list" aria-label="Status of Ibuprofen 400 mg">
+        <span class="kp-badge kp-badge--warning" role="listitem">Low stock</span><span class="kp-badge" role="listitem">Expires 03/2027</span>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badges&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;list&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Status of Vitamin D3 25 µg&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listitem&quot;</span>&gt;On schedule&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listitem&quot;</span>&gt;Expires 11/2026&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listitem&quot;</span>&gt;Refill on 12/11&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--success&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listitem&quot;</span>&gt;60 capsules&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listitem&quot;</span>&gt;Taken with breakfast&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badges&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;list&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Status of Ibuprofen 400 mg&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--warning&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listitem&quot;</span>&gt;Low stock&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listitem&quot;</span>&gt;Expires 03/2027&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -401,7 +425,10 @@
                             <tr><td><code>--kp-badge-padding-block</code></td><td><code>0.125rem</code></td></tr>
                             <tr><td><code>--kp-badge-size</code></td><td><code>var(--kp-text-sm, 0.8125rem)</code></td></tr>
                             <tr><td><code>--kp-badge-wrap</code></td><td><code>anywhere</code></td></tr>
+                            <tr><td><code>--kp-badges-min</code></td><td><code>8rem</code></td></tr>
                             <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-version-gap</code></td><td><code>0.4em</code></td></tr>
@@ -420,6 +447,7 @@
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>.kp-badge</code></td><td>The default: the quiet ground and its ink, for counts and neutral labels.</td></tr>
+                            <tr><td><code>.kp-badges</code></td><td>A run of badges in one cell, wrapping as a grid whose columns are as wide as their widest badge (at least a knob’s width), so a wrapped run stands in columns and a label is never cut. A `ul` works too: the list’s marks and room are taken away.</td></tr>
                             <tr><td><code>semantic</code></td><td>A badge carrying a status colour. It must say what it means in text; one carrying none is refused by the contract enforcer.</td></tr>
                             <tr><td><code>with a status</code></td><td>The status attribute is what a consumer paints from, using the theme’s own status pair for that name.</td></tr>
                     </tbody></table></div>

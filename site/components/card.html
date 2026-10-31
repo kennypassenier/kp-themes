@@ -103,6 +103,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html">Row editor</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
@@ -152,6 +153,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
@@ -463,6 +465,48 @@ setCardState(loading, <span class="kp-code__string">'loading'</span>, { words: <
 setCardState(empty, <span class="kp-code__string">'empty'</span>, { title: <span class="kp-code__string">'No appointments yet'</span>, text: <span class="kp-code__string">'Add the first one.'</span> });
 setCardState(failed, <span class="kp-code__string">'error'</span>, { title: <span class="kp-code__string">'Could not read the backups'</span>, text: <span class="kp-code__string">'The host did not answer.'</span> });
 failed.addEventListener(<span class="kp-code__string">'kp-card-retry'</span>, () =&gt; setCardState(failed, <span class="kp-code__string">'ready'</span>));</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A form grid under the card’s sentence</figcaption>
+                        <p class="kp-text-muted">A form grid (or a form whose first child is one) right under the card’s header, title or sentence keeps the medium space above its first row, so the first label never stands against the description.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-card" aria-labelledby="doc-card-form-title">
+    <div class="kp-card__header"><h3 class="kp-card__title" id="doc-card-form-title">Reminders</h3></div>
+    <p class="kp-card__body">When the cabinet tells you something.</p>
+    <div class="kp-formgrid" aria-label="Reminders">
+        <div class="kp-formgrid__row">
+            <label class="kp-formgrid__label" for="doc-card-form-low">Running low at</label>
+            <div class="kp-formgrid__control"><input class="kp-field__input" id="doc-card-form-low" value="7 days of stock" /></div>
+            <p class="kp-formgrid__value">per medicine</p>
+            <div class="kp-formgrid__actions"></div>
+        </div>
+        <div class="kp-formgrid__row">
+            <label class="kp-formgrid__label" for="doc-card-form-expiry">Expiry warning</label>
+            <div class="kp-formgrid__control"><input class="kp-field__input" id="doc-card-form-expiry" value="30 days before" /></div>
+            <p class="kp-formgrid__value">from the box’s date</p>
+            <div class="kp-formgrid__actions"></div>
+        </div>
+    </div>
+</section>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-card-form-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-card-form-title&quot;</span>&gt;Reminders&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;When the cabinet tells you something.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Reminders&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__row&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-card-form-low&quot;</span>&gt;Running low at&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__control&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-card-form-low&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;7 days of stock&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__value&quot;</span>&gt;per medicine&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__actions&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__row&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-card-form-expiry&quot;</span>&gt;Expiry warning&lt;/<span class="kp-code__keyword">label</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__control&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-card-form-expiry&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;30 days before&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__value&quot;</span>&gt;from the box’s date&lt;/<span class="kp-code__keyword">p</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__actions&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
@@ -1073,6 +1117,7 @@ failed.addEventListener(<span class="kp-code__string">'kp-card-retry'</span>, ()
                             <tr><td><code>.kp-card__body</code></td><td>The text, in quiet ink.</td></tr>
                             <tr><td><code>.kp-card__header</code></td><td>A row that lays the title and its actions on one baseline and pushes them apart.</td></tr>
                             <tr><td><code>.kp-card__actions</code></td><td>The controls in that row, spaced by the scale.</td></tr>
+                            <tr><td><code>a form grid in a card</code></td><td>A `.kp-formgrid` (or a form that starts with one) directly after the header, the title or the body keeps the medium space above its first row (a knob).</td></tr>
                             <tr><td><code>.kp-card__footer</code></td><td>A closing row, separated by a rule and the scale’s own distance.</td></tr>
                             <tr><td><code>pastel: the thumbtack</code></td><td>In pastel every card is fixed to the page with a thumbtack at its top centre. A card that leaves loses its tack first, then lifts off as its landing backwards, and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>`loading`, `empty`, `error` or `ready` on a card with a stage: the card keeps its header, footer and size, and only the stage changes. In `empty` and `error` the data keeps its room, hidden rather than removed, so a failed refresh of a full card does not collapse it.</td></tr>

@@ -103,6 +103,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html">Row editor</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
@@ -152,6 +153,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
@@ -354,6 +356,36 @@
         &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__actions&quot;</span>&gt;
             &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;
             &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Log a contact&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">header</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Updated, on the title’s line</figcaption>
+                        <p class="kp-text-muted">`.kp-page-header__updated` right after the title stands on the title’s baseline, the description under both: “updated 18:45”, or a `&lt;time class=&quot;kp-ago&quot;&gt;` that ticks. It keeps the same width whatever it says, so the title never moves when the time does, and it goes under the title when the room runs out.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<header class="kp-page-header">
+    <div class="kp-page-header__inner">
+        <div>
+            <h1 class="kp-page-header__title">Today</h1>
+            <time class="kp-page-header__updated" datetime="2026-10-31T18:45">updated 18:45</time>
+            <p class="kp-page-header__description">Three doses left today; Ibuprofen 400 mg runs out in 2 days.</p>
+        </div>
+        <div class="kp-page-header__actions">
+            <button type="button" class="kp-button kp-button--primary">Take a dose</button>
+        </div>
+    </div>
+</header>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">header</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__inner&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">h1</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__title&quot;</span>&gt;Today&lt;/<span class="kp-code__keyword">h1</span>&gt;
+            &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__updated&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-10-31T18:45&quot;</span>&gt;updated 18:45&lt;/<span class="kp-code__keyword">time</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__description&quot;</span>&gt;Three doses left today; Ibuprofen 400 mg runs out in 2 days.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Take a dose&lt;/<span class="kp-code__keyword">button</span>&gt;
         &lt;/<span class="kp-code__keyword">div</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">header</span>&gt;</code></pre>
@@ -575,6 +607,7 @@
                             <tr><td><code>.kp-page-header</code></td><td>The header; it measures its own width.</td></tr>
                             <tr><td><code>.kp-page-header__inner</code></td><td>Two columns: the text block, and the actions against the far edge, level with the title.</td></tr>
                             <tr><td><code>.kp-page-header__title, __description</code></td><td>The page’s heading, and one sentence under it at a readable measure in the muted ink.</td></tr>
+                            <tr><td><code>.kp-page-header__updated</code></td><td>When the page was last read, after the title on its baseline, in the muted ink and same-width digits; a fixed least width keeps the title still while it changes, and it wraps under the title when the line is full.</td></tr>
                             <tr><td><code>.kp-page-header__actions</code></td><td>The buttons, the primary among them, the overflow last; a popover in it hangs under its button towards the start.</td></tr>
                             <tr><td><code>on a phone</code></td><td>Under 40rem the title takes the width and the buttons fold under the description: the buttons form one row of equal columns, the primary first, wrapping as equal columns when they cannot fit.</td></tr>
                     </tbody></table></div>

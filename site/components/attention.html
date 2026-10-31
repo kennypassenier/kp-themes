@@ -103,6 +103,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html">Row editor</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
@@ -152,6 +153,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
@@ -310,6 +312,103 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Seven problems, the worst three shown</figcaption>
+                        <p class="kp-text-muted">`data-kp-attention-max=&quot;3&quot;` keeps the band short on a phone: the three worst problems show, the others fold away (`data-kp-folded` on each) and one button, last on the band, unfolds them: “Show 4 more”, with `aria-expanded`, then “Show fewer”. The fold follows the band’s own order, so a problem that arrives or turns worse lands in its place. Each press fires `kp-attention-toggle` with { expanded, shown, total }. With no number, or 0, nothing is folded.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-attention" id="doc-attention-max" role="region" aria-label="What needs you today" data-kp-attention-max="3">
+    <div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+        <span class="kp-attention__icon" aria-hidden="true">!</span>
+        <div class="kp-attention__text"><strong><span class="kp-sr-only">Critical: </span>Amoxicillin 500 mg has expired</strong><span>It ran out on 09/2026. Do not take it; hand it in at the pharmacy.</span></div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Remove it</button></div>
+    </div>
+    <div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+        <span class="kp-attention__icon" aria-hidden="true">!</span>
+        <div class="kp-attention__text"><strong><span class="kp-sr-only">Critical: </span>Ibuprofen 400 mg runs out in 2 days</strong><span>14 tablets, 6 a day at most.</span></div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Add stock</button></div>
+    </div>
+    <div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+        <span class="kp-attention__icon" aria-hidden="true">!</span>
+        <div class="kp-attention__text"><strong><span class="kp-sr-only">Warning: </span>The 20:00 dose of Paracetamol 500 mg is not taken yet</strong><span>It was due 25 minutes ago.</span></div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Take it now</button></div>
+    </div>
+    <div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+        <span class="kp-attention__icon" aria-hidden="true">!</span>
+        <div class="kp-attention__text"><strong><span class="kp-sr-only">Warning: </span>Cetirizine 10 mg is running low</strong><span>8 tablets left, about 8 days.</span></div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Add stock</button></div>
+    </div>
+    <div class="kp-alert kp-alert--warning kp-attention__item" role="status" data-kp-severity="warning">
+        <span class="kp-attention__icon" aria-hidden="true">!</span>
+        <div class="kp-attention__text"><strong><span class="kp-sr-only">Warning: </span>Vitamin D3 25 µg expires in 12 days</strong><span>The box says 11/2026.</span></div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">See the box</button></div>
+    </div>
+    <div class="kp-alert kp-alert--info kp-attention__item" role="status" data-kp-severity="info">
+        <span class="kp-attention__icon" aria-hidden="true">i</span>
+        <div class="kp-attention__text"><strong><span class="kp-sr-only">Information: </span>Saline nasal spray has been open for 30 days</strong><span>Sprays are best used within 28 days of opening.</span></div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Mark replaced</button></div>
+    </div>
+    <div class="kp-alert kp-alert--info kp-attention__item" role="status" data-kp-severity="info">
+        <span class="kp-attention__icon" aria-hidden="true">i</span>
+        <div class="kp-attention__text"><strong><span class="kp-sr-only">Information: </span>A refill list of 3 medicines is ready</strong><span>Ibuprofen, Cetirizine and Vitamin D3.</span></div>
+        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Open the list</button></div>
+    </div>
+</div>
+<p class="kp-text-muted" id="doc-attention-said" role="status">3 of 7 problems shown.</p>
+                            <script type="module">
+const band = document.getElementById('doc-attention-max');
+const said = document.getElementById('doc-attention-said');
+band.addEventListener('kp-attention-toggle', (event) => {
+    const { shown, total } = event.detail;
+    said.textContent = shown + ' of ' + total + ' problems shown.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-attention-max&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;region&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;What needs you today&quot;</span> <span class="kp-code__keyword">data-kp-attention-max</span><span class="kp-code__string">=&quot;3&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;alert&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;critical&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Critical: &lt;/<span class="kp-code__keyword">span</span>&gt;Amoxicillin 500 mg has expired&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;It ran out on 09/2026. Do not take it; hand it in at the pharmacy.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Remove it&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;alert&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;critical&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Critical: &lt;/<span class="kp-code__keyword">span</span>&gt;Ibuprofen 400 mg runs out in 2 days&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;14 tablets, 6 a day at most.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Add stock&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;warning&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;The 20:00 dose of Paracetamol 500 mg is not taken yet&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;It was due 25 minutes ago.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Take it now&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;warning&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Cetirizine 10 mg is running low&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;8 tablets left, about 8 days.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Add stock&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;warning&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Warning: &lt;/<span class="kp-code__keyword">span</span>&gt;Vitamin D3 25 µg expires in 12 days&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;The box says 11/2026.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;See the box&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--info kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;info&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;i&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Information: &lt;/<span class="kp-code__keyword">span</span>&gt;Saline nasal spray has been open for 30 days&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Sprays are best used within 28 days of opening.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Mark replaced&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--info kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;info&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;i&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Information: &lt;/<span class="kp-code__keyword">span</span>&gt;A refill list of 3 medicines is ready&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Ibuprofen, Cetirizine and Vitamin D3.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Open the list&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-attention-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;3 of 7 problems shown.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">const</span> band = document.getElementById(<span class="kp-code__string">'doc-attention-max'</span>);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-attention-said'</span>);
+band.addEventListener(<span class="kp-code__string">'kp-attention-toggle'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { shown, total } = event.detail;
+    said.textContent = shown + <span class="kp-code__string">' of '</span> + total + <span class="kp-code__string">' problems shown.'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -454,6 +553,7 @@
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-attention-expanded</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-attention-max</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-folded</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-severity</code></td><td>read, written</td></tr>
                     </tbody></table></div>
                 </section>
@@ -488,6 +588,7 @@
                     <ul class="kp-stack">
                         <li>Built in — the DOM order is the severity order, so reading order and visual order agree.</li>
                         <li>Built in — the severity is a word for a screen reader (the hidden prefix) and an icon, not only a colour.</li>
+                        <li>Built in — the folded problems stay in the band and in its order; the toggle says how many it holds back and whether they are shown, and keeps the focus when pressed.</li>
                         <li>Yours — `role=&quot;alert&quot;` for a critical problem that arrives while the reader is on the page, `role=&quot;status&quot;` for the rest; and the hidden prefix in your words.</li>
                     </ul>
                 </section>
@@ -497,6 +598,10 @@
                             <tr><td><code>.kp-attention</code></td><td>The band: a region of items one under the other; with no item it is not drawn.</td></tr>
                             <tr><td><code>.kp-attention__item</code></td><td>One problem, on a `.kp-alert` of its tone: a soft tint of the severity, a thick edge of it, the page’s own text colour.</td></tr>
                             <tr><td><code>data-kp-severity</code></td><td>`critical`, `warning` or `info`: the order and the tint.</td></tr>
+                            <tr><td><code>data-kp-attention-max</code></td><td>A number of problems: the worst that many show, the rest fold behind one toggle. Read again when it changes; none or 0 folds nothing.</td></tr>
+                            <tr><td><code>.kp-attention__more</code></td><td>The toggle the cap writes, last on the band: “Show 4 more” with the exact number, then “Show fewer”; `aria-expanded` and `aria-controls` the band. Hidden while nothing is over the cap.</td></tr>
+                            <tr><td><code>data-kp-folded / data-kp-attention-expanded</code></td><td>Written by the script, never by you: on a problem folded away, and on the band while the folded problems are shown.</td></tr>
+                            <tr><td><code>kp-attention-toggle</code></td><td>Fired on the band at each press of the toggle: `{ expanded, shown, total }`.</td></tr>
                             <tr><td><code>.kp-attention__icon, __text, __actions</code></td><td>A solid round icon, the problem in a strong line and a sentence, and the action that fixes it. In a band under 34rem the actions go under the words.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>

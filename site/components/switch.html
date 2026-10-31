@@ -103,6 +103,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html">Row editor</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
@@ -152,6 +153,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
@@ -322,6 +324,28 @@
     &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-switch-error&quot;</span>&gt;Lock the line out before you start the repair.&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Without a state word, where the row already says it</figcaption>
+                        <p class="kp-text-muted">`data-kp-switch-state=&quot;none&quot;` leaves the On and Off word out and gives up its track, so the knob and its label stand one gap apart: for a switch whose label is the state (“Active”) or whose row says it. A state element left empty, or holding only empty words, gives up its track the same way.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<label class="kp-switch" data-kp-switch-state="none">
+    <input class="kp-switch__input" type="checkbox" role="switch" checked aria-label="Active: Ibuprofen 400 mg" />
+    <span>Active</span>
+</label>
+<label class="kp-switch" data-kp-switch-state="none">
+    <input class="kp-switch__input" type="checkbox" role="switch" aria-label="Active: Amoxicillin 500 mg" />
+    <span>Active</span>
+</label>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span> <span class="kp-code__keyword">data-kp-switch-state</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">checked</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Active: Ibuprofen 400 mg&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Active&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;
+&lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span> <span class="kp-code__keyword">data-kp-switch-state</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Active: Amoxicillin 500 mg&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">span</span>&gt;Active&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">label</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -490,6 +514,7 @@
                             <tr><td><code>.kp-switch</code></td><td>The row: a label, so the track, the word and the text are one target.</td></tr>
                             <tr><td><code>.kp-switch__input</code></td><td>The track, with the thumb drawn on it; checked moves the thumb to the end and fills the track the theme’s way.</td></tr>
                             <tr><td><code>.kp-switch__state</code></td><td>The On or Off word beside the track, from the dictionary; aria-hidden, because the role already announces the state.</td></tr>
+                            <tr><td><code>data-kp-switch-state=&quot;none&quot;</code></td><td>No state word and no room kept for one: the knob and its label stand one gap apart. An empty state element does the same.</td></tr>
                             <tr><td><code>disabled</code></td><td>The row fades and refuses the pointer; a disabled switch that is on still reads as on.</td></tr>
                             <tr><td><code>aria-invalid</code></td><td>The outline an invalid checkbox takes, in the alarm colour; the message under it says what is wrong.</td></tr>
                     </tbody></table></div>

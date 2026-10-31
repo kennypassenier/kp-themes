@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Row editor — kp-themes</title>
+        <meta name="description" content="Rows of controls that a person adds and removes: the times a medicine is taken, each with its days and its dose. `data-kp-rows` on a `.kp-rows`; js/row-editor.js (`attachRowEditors`, and `js/auto.js` attaches it on its own) copies a `<template data-kp-rows-template>` for every new row and attaches the package’s controls inside it. The labels stand once, in a head row over the columns; every row is a subgrid of the same tracks, so the times, the days and the doses of all rows line up, and the remove button is the last cell. Under 40rem of its own width the head goes and each cell carries its own label: every row is a card." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/update.html">Information that updates in place</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calm.html">Calm mode</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Layout</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/ops-page.html">Operations page</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/segmented.html">Segmented control and filter chips</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/range.html">Range picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/weekdays.html">Weekday picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/snooze.html">Snooze picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dated-options.html">Dated option picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sentence.html">Sentence form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/slider.html">Slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toggle.html">Toggle button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/unsaved.html">Unsaved changes bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/rating.html">Star rating</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/usual-picker.html">Picker with the usual on top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html" aria-current="page">Row editor</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/code-field.html">Code field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quiet-hours.html">Quiet hours</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/autosize.html">Growing text box</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/secret.html">Secret field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/heat.html">Heat grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/matrix.html">Matrix</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/deplist.html">Dependency list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/entity-card.html">Entity card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/claim.html">Who brings it</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/availability.html">Who can come</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/stackbar.html">Share bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/bullets.html">Bullet rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kv.html">Key-value grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/code.html">Code block</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/request-inspector.html">Request inspector</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/feed.html">Activity feed</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/passkeys.html">Ways to sign in</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/selection.html">Selection bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uses-map.html">Uses map</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/type-confirm.html">Typed confirmation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer-disc.html">Visual timer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/countdown.html">Countdown</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/version-delta.html">Version jump chip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/ack-gate.html">Acknowledge gate</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/path-trace.html">Path of a connection</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/status-row.html">Status rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer.html">Kitchen timers</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/connection.html">Connection banner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/transfer.html">Transfer progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/job-line.html">Job line</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/focus-steps.html">One step at a time</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-contents.html">On this page</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/command.html">Command block</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/compare.html">Compare slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quote.html">Quote card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/qr.html">QR code</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/keys.html">Key line and key cap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/lede.html">Lede</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/thread.html">Conversation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/markdown.html">Markdown notes</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/viewer.html">Viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/document-preview.html">Document preview</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gallery.html">Gallery</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/print.html">Printing a list</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/master-detail.html">Master and detail panes</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/anchors.html">Link anchors</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Row editor</h1>
+                    <p class="kp-prose">Rows of controls that a person adds and removes: the times a medicine is taken, each with its days and its dose. `data-kp-rows` on a `.kp-rows`; js/row-editor.js (`attachRowEditors`, and `js/auto.js` attaches it on its own) copies a `&lt;template data-kp-rows-template&gt;` for every new row and attaches the package’s controls inside it. The labels stand once, in a head row over the columns; every row is a subgrid of the same tracks, so the times, the days and the doses of all rows line up, and the remove button is the last cell. Under 40rem of its own width the head goes and each cell carries its own label: every row is a card.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">For a small, ordered set of similar entries that belong to one thing and are edited together, on its form: dose slots, reminder times, phone numbers. For a list of independent things that are saved one by one, use list rows or a data table.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">When to take it: one to six times, each with its days and dose</figcaption>
+                        <p class="kp-text-muted">The markup holds the rows, the template and nothing else: the module writes the head row from the first row’s `data-label`s, a remove button in each row, the add button (“Add a time”, from `data-kp-rows-unit=&quot;time,times&quot;`) and the line under the rows. At the fewest rows (`data-kp-rows-min=&quot;1&quot;`) removing is off and the line says why; at the most (`data-kp-rows-max=&quot;6&quot;`) adding is. `{n}` in the template is a number that is never reused, so the names stay unique. `kp-rows-change` tells the page `{ count, rows }` after every add or remove; the values are read from each row’s own controls. The column tracks are a knob: this page sets the time and dose columns a little narrower than their default, so the editor fits a phone inside the page’s own margins.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<h3 class="kp-card__title" id="doc-when-title">When to take it</h3>
+<p class="kp-text-muted">Ibuprofen 400 mg. Each slot is a time, the days it runs on and how many to take.</p>
+<div class="kp-rows" id="doc-rows" data-kp-rows data-kp-rows-min="1" data-kp-rows-max="6" data-kp-rows-unit="time,times" style="--kp-rows-tracks: minmax(7rem, 1fr) minmax(0, 3fr) minmax(9rem, 1.2fr) auto" aria-labelledby="doc-when-title">
+    <ol class="kp-rows__list" data-kp-rows-list>
+        <li class="kp-rows__row">
+            <div class="kp-rows__cell" data-label="Time"><div class="kp-time" data-kp-time data-kp-name="at-a" data-kp-value="08:00" data-kp-label="Time" data-kp-time-step="5"></div></div>
+            <div class="kp-rows__cell" data-label="Days"><div class="kp-weekdays" data-kp-weekdays data-kp-value="1,2,3,4,5" data-kp-presets="false" data-kp-summary="false" aria-label="Days"></div></div>
+            <div class="kp-rows__cell" data-label="Dose"><div class="kp-quantity" data-kp-quantity data-kp-quantity-fill data-kp-quantity-min="1" data-kp-quantity-max="10" data-kp-quantity-unit="tablets" data-kp-quantity-unit-one="tablet" data-kp-quantity-label="Dose"><input class="kp-quantity__input" value="1" /></div></div>
+        </li>
+        <li class="kp-rows__row">
+            <div class="kp-rows__cell" data-label="Time"><div class="kp-time" data-kp-time data-kp-name="at-b" data-kp-value="20:00" data-kp-label="Time" data-kp-time-step="5"></div></div>
+            <div class="kp-rows__cell" data-label="Days"><div class="kp-weekdays" data-kp-weekdays data-kp-value="0,1,2,3,4,5,6" data-kp-presets="false" data-kp-summary="false" aria-label="Days"></div></div>
+            <div class="kp-rows__cell" data-label="Dose"><div class="kp-quantity" data-kp-quantity data-kp-quantity-fill data-kp-quantity-min="1" data-kp-quantity-max="10" data-kp-quantity-unit="tablets" data-kp-quantity-unit-one="tablet" data-kp-quantity-label="Dose"><input class="kp-quantity__input" value="2" /></div></div>
+        </li>
+    </ol>
+    <template data-kp-rows-template><li class="kp-rows__row">
+            <div class="kp-rows__cell" data-label="Time"><div class="kp-time" data-kp-time data-kp-name="at-{n}" data-kp-value="12:00" data-kp-label="Time" data-kp-time-step="5"></div></div>
+            <div class="kp-rows__cell" data-label="Days"><div class="kp-weekdays" data-kp-weekdays data-kp-value="0,1,2,3,4,5,6" data-kp-presets="false" data-kp-summary="false" aria-label="Days"></div></div>
+            <div class="kp-rows__cell" data-label="Dose"><div class="kp-quantity" data-kp-quantity data-kp-quantity-fill data-kp-quantity-min="1" data-kp-quantity-max="10" data-kp-quantity-unit="tablets" data-kp-quantity-unit-one="tablet" data-kp-quantity-label="Dose"><input class="kp-quantity__input" value="1" /></div></div>
+        </li></template>
+</div>
+<p class="kp-text-muted" id="doc-rows-said" role="status">2 times a day.</p>
+                            <script type="module">
+const editor = document.getElementById('doc-rows');
+const said = document.getElementById('doc-rows-said');
+editor.addEventListener('kp-rows-change', (event) => {
+    const { count } = event.detail;
+    said.textContent = count + (count === 1 ? ' time' : ' times') + ' a day.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-when-title&quot;</span>&gt;When to take it&lt;/<span class="kp-code__keyword">h3</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span>&gt;Ibuprofen 400 mg. Each slot is a time, the days it runs on and how many to take.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-rows&quot;</span> <span class="kp-code__keyword">data-kp-rows</span> <span class="kp-code__keyword">data-kp-rows-min</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">data-kp-rows-max</span><span class="kp-code__string">=&quot;6&quot;</span> <span class="kp-code__keyword">data-kp-rows-unit</span><span class="kp-code__string">=&quot;time,times&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-rows-tracks: minmax(7rem, 1fr) minmax(0, 3fr) minmax(9rem, 1.2fr) auto&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-when-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__list&quot;</span> <span class="kp-code__keyword">data-kp-rows-list</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__row&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Time&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;at-a&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;08:00&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Time&quot;</span> <span class="kp-code__keyword">data-kp-time-step</span><span class="kp-code__string">=&quot;5&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;1,2,3,4,5&quot;</span> <span class="kp-code__keyword">data-kp-presets</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-summary</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Dose&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-fill</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;tablets&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit-one</span><span class="kp-code__string">=&quot;tablet&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Dose&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity__input&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;1&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__row&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Time&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;at-b&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;20:00&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Time&quot;</span> <span class="kp-code__keyword">data-kp-time-step</span><span class="kp-code__string">=&quot;5&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;0,1,2,3,4,5,6&quot;</span> <span class="kp-code__keyword">data-kp-presets</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-summary</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Dose&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-fill</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;tablets&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit-one</span><span class="kp-code__string">=&quot;tablet&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Dose&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity__input&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;2&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ol</span>&gt;
+    &lt;<span class="kp-code__keyword">template</span> <span class="kp-code__keyword">data-kp-rows-template</span>&gt;&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__row&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Time&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;at-{n}&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;12:00&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Time&quot;</span> <span class="kp-code__keyword">data-kp-time-step</span><span class="kp-code__string">=&quot;5&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;0,1,2,3,4,5,6&quot;</span> <span class="kp-code__keyword">data-kp-presets</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-summary</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Dose&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-fill</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;tablets&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit-one</span><span class="kp-code__string">=&quot;tablet&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Dose&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity__input&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;1&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">template</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-rows-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;2 times a day.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">const</span> editor = document.getElementById(<span class="kp-code__string">'doc-rows'</span>);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-rows-said'</span>);
+editor.addEventListener(<span class="kp-code__string">'kp-rows-change'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { count } = event.detail;
+    said.textContent = count + (count === <span class="kp-code__string">1</span> ? <span class="kp-code__string">' time'</span> : <span class="kp-code__string">' times'</span>) + <span class="kp-code__string">' a day.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Starting empty, and driven from the page</figcaption>
+                        <p class="kp-text-muted">With no row held and `data-kp-rows-min` left at 0, the editor shows the package’s empty plate in the room of three rows, and the head row goes. `addEditorRow(host)` adds a row as the add button does (and returns null at the most), `removeEditorRow(host, row)` removes one (nothing happens at the fewest), and `editorRowsOf(host)` gives the rows in order. A new row takes the focus; a removed row hands it to the row now in its place, else to the add button.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-card" aria-labelledby="doc-reminder-title">
+    <div class="kp-card__header"><h3 class="kp-card__title" id="doc-reminder-title">Refill reminders</h3></div>
+    <div class="kp-rows" id="doc-reminders" data-kp-rows data-kp-rows-max="3" data-kp-rows-unit="reminder,reminders" style="--kp-rows-tracks: minmax(8rem, 1fr) minmax(0, 2fr) auto" aria-label="Refill reminders">
+        <ol class="kp-rows__list" data-kp-rows-list></ol>
+        <template data-kp-rows-template><li class="kp-rows__row">
+                <div class="kp-rows__cell" data-label="Time"><div class="kp-time" data-kp-time data-kp-name="remind-{n}" data-kp-value="18:00" data-kp-label="Time" data-kp-time-step="15"></div></div>
+                <div class="kp-rows__cell" data-label="Days"><div class="kp-weekdays" data-kp-weekdays data-kp-value="6" data-kp-presets="false" data-kp-summary="false" aria-label="Days"></div></div>
+            </li></template>
+    </div>
+    <div class="kp-row kp-gap-sm">
+        <button type="button" class="kp-button kp-button--sm" id="doc-reminders-add">Add one from the page</button>
+        <button type="button" class="kp-button kp-button--sm" id="doc-reminders-drop">Remove the last</button>
+    </div>
+    <p class="kp-text-muted" id="doc-reminders-said" role="status">No reminders.</p>
+</section>
+                            <script type="module">
+import { addEditorRow, editorRowsOf, removeEditorRow } from '../../js/row-editor.js';
+
+const host = document.getElementById('doc-reminders');
+const said = document.getElementById('doc-reminders-said');
+const tell = () => {
+    const count = editorRowsOf(host).length;
+    said.textContent = count === 0 ? 'No reminders.' : count + ' of 3 reminders.';
+};
+document.getElementById('doc-reminders-add').addEventListener('click', () => {
+    if (!addEditorRow(host)) said.textContent = 'Three is the most: remove one first.';
+});
+document.getElementById('doc-reminders-drop').addEventListener('click', () => {
+    const rows = editorRowsOf(host);
+    if (rows.length > 0) removeEditorRow(host, rows[rows.length - 1]);
+});
+host.addEventListener('kp-rows-change', tell);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-reminder-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-reminder-title&quot;</span>&gt;Refill reminders&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-reminders&quot;</span> <span class="kp-code__keyword">data-kp-rows</span> <span class="kp-code__keyword">data-kp-rows-max</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-rows-unit</span><span class="kp-code__string">=&quot;reminder,reminders&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-rows-tracks: minmax(8rem, 1fr) minmax(0, 2fr) auto&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Refill reminders&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">ol</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__list&quot;</span> <span class="kp-code__keyword">data-kp-rows-list</span>&gt;&lt;/<span class="kp-code__keyword">ol</span>&gt;
+        &lt;<span class="kp-code__keyword">template</span> <span class="kp-code__keyword">data-kp-rows-template</span>&gt;&lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__row&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Time&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;remind-{n}&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;18:00&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Time&quot;</span> <span class="kp-code__keyword">data-kp-time-step</span><span class="kp-code__string">=&quot;15&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-rows__cell&quot;</span> <span class="kp-code__keyword">data-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;6&quot;</span> <span class="kp-code__keyword">data-kp-presets</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-summary</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">template</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-reminders-add&quot;</span>&gt;Add one from the page&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-reminders-drop&quot;</span>&gt;Remove the last&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-reminders-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;No reminders.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { addEditorRow, editorRowsOf, removeEditorRow } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/row-editor'</span>;
+
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-reminders'</span>);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-reminders-said'</span>);
+<span class="kp-code__keyword">const</span> tell = () =&gt; {
+    <span class="kp-code__keyword">const</span> count = editorRowsOf(host).length;
+    said.textContent = count === <span class="kp-code__string">0</span> ? <span class="kp-code__string">'No reminders.'</span> : count + <span class="kp-code__string">' of 3 reminders.'</span>;
+};
+document.getElementById(<span class="kp-code__string">'doc-reminders-add'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    <span class="kp-code__keyword">if</span> (!addEditorRow(host)) said.textContent = <span class="kp-code__string">'Three is the most: remove one first.'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-reminders-drop'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    <span class="kp-code__keyword">const</span> rows = editorRowsOf(host);
+    <span class="kp-code__keyword">if</span> (rows.length &gt; <span class="kp-code__string">0</span>) removeEditorRow(host, rows[rows.length - <span class="kp-code__string">1</span>]);
+});
+host.addEventListener(<span class="kp-code__string">'kp-rows-change'</span>, tell);</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-rows</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-rows-add</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-rows-attach</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-rows-empty</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-rows-list</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-rows-max</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-rows-min</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-rows-remove</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-rows-template</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-rows-unit</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-rows-written</code></td><td>read, written</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-rows-select</code></td><td>Fired on the element after this module changed the ticks: `{ keys, count, source, skipped }`.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-rows-empty-min</code></td><td><code>9rem</code></td></tr>
+                            <tr><td><code>--kp-rows-tracks</code></td><td><code>minmax(8rem, 1fr) minmax(0, 3fr) minmax(10rem, 1.2fr) auto</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — every remove button is named after its unit and place (“Remove time 2”), and a hidden status line says “Added time 3. 3 in all.” or “Removed time 2. 1 left.” as it happens.</li>
+                        <li>Built in — a new row takes the focus on its first control; a removed row hands it to the row now in its place, else to the add button, so the focus never falls to the page.</li>
+                        <li>Built in — a button at a bound is `aria-disabled` with the reason in the line under the rows, so it can still be reached and its reason read.</li>
+                        <li>Yours — name the editor (`aria-label` or a heading it is labelled by), and give each control in the template a label of its own: the head row is hidden from screen readers.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-rows</code></td><td>On the host: makes it a row editor. Options, each with a default, are switchable at runtime: `data-kp-rows-min` (the fewest rows, 0), `data-kp-rows-max` (the most, none) and `data-kp-rows-unit` (the unit’s two words, “time,times”; the dictionary’s “row,rows” otherwise).</td></tr>
+                            <tr><td><code>data-kp-rows-attach=&quot;none&quot;</code></td><td>The page attaches the controls of a new row itself; by default the module attaches every package control in it, as the page’s boot did for the first rows.</td></tr>
+                            <tr><td><code>data-kp-rows-list / -template</code></td><td>The `ol.kp-rows__list` that holds the rows (written when left out) and the `template` a new row is copied from; `{n}` in it is replaced by a number that is never reused.</td></tr>
+                            <tr><td><code>data-kp-rows-add / -remove</code></td><td>The add button and a row’s remove button. Leave them out and the module writes them; a button of your own keeps its words (one left empty gets the dictionary’s, marked `data-kp-rows-written`). At a bound the button is `aria-disabled` and stays in the tab order.</td></tr>
+                            <tr><td><code>data-kp-rows-empty</code></td><td>Written on the host while it holds no row: the head goes and the empty plate (`.kp-rows__empty`, the package’s state plate) holds the room of three rows.</td></tr>
+                            <tr><td><code>.kp-rows__head / __label</code></td><td>The labels once over the columns, written from the first row’s (or the template’s) `data-label`s; hidden from a screen reader, which hears each control’s own name.</td></tr>
+                            <tr><td><code>.kp-rows__row / __cell</code></td><td>One row, a subgrid of the editor’s tracks, and one cell; `data-label` on a cell is its label in the head and, as a card, above the cell.</td></tr>
+                            <tr><td><code>.kp-rows__remove</code></td><td>The remove button, last in the row: a square “×” named after its unit and place, “Remove time 2”.</td></tr>
+                            <tr><td><code>.kp-rows__status</code></td><td>The line under the rows: why adding or removing is off at a bound, and empty otherwise.</td></tr>
+                            <tr><td><code>kp-rows-add / kp-rows-remove / kp-rows-change</code></td><td>Events on the host, bubbling: the first two with `{ row, index, count }`, then `kp-rows-change` with `{ count, rows }` after either.</td></tr>
+                            <tr><td><code>addEditorRow / removeEditorRow / editorRowsOf</code></td><td>The calls behind the buttons: add a row (the new row, or null at the most), remove a row (nothing at the fewest), and the rows in order.</td></tr>
+                            <tr><td><code>as cards</code></td><td>Under 40rem of the editor’s own width: no head row, each row a bordered card, each cell under its own label, the remove button at the end of the card.</td></tr>
+                    </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

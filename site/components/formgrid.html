@@ -103,6 +103,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formgrid.html" aria-current="page">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/row-editor.html">Row editor</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
@@ -152,6 +153,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/list.html">List rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
@@ -331,6 +333,97 @@ attachQuantities(document.querySelector('.kp-formgrid'));
 
 attachQuantities(document.querySelector(<span class="kp-code__string">'.kp-formgrid'</span>));</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">An error line that keeps its room, and typed text at the start edge</figcaption>
+                        <p class="kp-text-muted">In a form grid a field’s error line keeps its room while it says nothing (invisible and out of the accessibility tree), so the message appearing moves nothing under it and a press lands where it was aimed. `data-kp-formgrid-errors=&quot;flow&quot;` gives the old behaviour back: the line takes room only while it has words. Typed text and a placeholder start at the field’s start edge; a select keeps its centred look, and `data-kp-formgrid-align=&quot;center&quot;` on the grid centres the typed text again.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-sm">
+    <button type="button" class="kp-button kp-button--sm" id="doc-fg-check" aria-controls="doc-fg-errors">Save without a name</button>
+    <button type="button" class="kp-button kp-button--sm" id="doc-fg-flow" aria-pressed="false" aria-controls="doc-fg-errors">Let the error line flow</button>
+</div>
+<div class="kp-formgrid" id="doc-fg-errors" aria-label="A new medicine">
+    <div class="kp-formgrid__row">
+        <label class="kp-formgrid__label" for="doc-fg-name">Name</label>
+        <div class="kp-formgrid__control">
+            <input class="kp-field__input" id="doc-fg-name" placeholder="Ibuprofen 400 mg" aria-describedby="doc-fg-name-error" required />
+            <p class="kp-field__error" id="doc-fg-name-error" hidden>Give the medicine a name.</p>
+        </div>
+        <p class="kp-formgrid__value">as on the box</p>
+        <div class="kp-formgrid__actions"></div>
+    </div>
+    <div class="kp-formgrid__row">
+        <label class="kp-formgrid__label" for="doc-fg-form">Form</label>
+        <div class="kp-formgrid__control"><select class="kp-field__input" id="doc-fg-form"><option>Tablet</option><option>Capsule</option><option>Syrup</option><option>Nasal spray</option></select></div>
+        <p class="kp-formgrid__value">how it is taken</p>
+        <div class="kp-formgrid__actions"></div>
+    </div>
+    <div class="kp-formgrid__row">
+        <label class="kp-formgrid__label" for="doc-fg-note">Note</label>
+        <div class="kp-formgrid__control"><input class="kp-field__input" id="doc-fg-note" value="Take with food" /></div>
+        <p class="kp-formgrid__value"></p>
+        <div class="kp-formgrid__actions"></div>
+    </div>
+</div>
+                            <script type="module">
+const grid = document.getElementById('doc-fg-errors');
+const name = document.getElementById('doc-fg-name');
+const error = document.getElementById('doc-fg-name-error');
+document.getElementById('doc-fg-check').addEventListener('click', () => {
+    const empty = name.value.trim() === '';
+    error.hidden = !empty;
+    name.setAttribute('aria-invalid', String(empty));
+});
+document.getElementById('doc-fg-flow').addEventListener('click', (event) => {
+    const flow = event.currentTarget.getAttribute('aria-pressed') !== 'true';
+    event.currentTarget.setAttribute('aria-pressed', String(flow));
+    if (flow) grid.setAttribute('data-kp-formgrid-errors', 'flow');
+    else grid.removeAttribute('data-kp-formgrid-errors');
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fg-check&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-fg-errors&quot;</span>&gt;Save without a name&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fg-flow&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-fg-errors&quot;</span>&gt;Let the error line flow&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fg-errors&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;A new medicine&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__row&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-fg-name&quot;</span>&gt;Name&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__control&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fg-name&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Ibuprofen 400 mg&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-fg-name-error&quot;</span> <span class="kp-code__keyword">required</span> /&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fg-name-error&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;Give the medicine a name.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__value&quot;</span>&gt;as on the box&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__actions&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__row&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-fg-form&quot;</span>&gt;Form&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__control&quot;</span>&gt;&lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fg-form&quot;</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Tablet&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Capsule&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Syrup&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;Nasal spray&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;/<span class="kp-code__keyword">select</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__value&quot;</span>&gt;how it is taken&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__actions&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__row&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-fg-note&quot;</span>&gt;Note&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__control&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fg-note&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;Take with food&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__value&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-formgrid__actions&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">const</span> grid = document.getElementById(<span class="kp-code__string">'doc-fg-errors'</span>);
+<span class="kp-code__keyword">const</span> name = document.getElementById(<span class="kp-code__string">'doc-fg-name'</span>);
+<span class="kp-code__keyword">const</span> error = document.getElementById(<span class="kp-code__string">'doc-fg-name-error'</span>);
+document.getElementById(<span class="kp-code__string">'doc-fg-check'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    <span class="kp-code__keyword">const</span> empty = name.value.trim() === <span class="kp-code__string">''</span>;
+    error.hidden = !empty;
+    name.setAttribute(<span class="kp-code__string">'aria-invalid'</span>, String(empty));
+});
+document.getElementById(<span class="kp-code__string">'doc-fg-flow'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> flow = event.currentTarget.getAttribute(<span class="kp-code__string">'aria-pressed'</span>) !== <span class="kp-code__string">'true'</span>;
+    event.currentTarget.setAttribute(<span class="kp-code__string">'aria-pressed'</span>, String(flow));
+    <span class="kp-code__keyword">if</span> (flow) grid.setAttribute(<span class="kp-code__string">'data-kp-formgrid-errors'</span>, <span class="kp-code__string">'flow'</span>);
+    <span class="kp-code__keyword">else</span> grid.removeAttribute(<span class="kp-code__string">'data-kp-formgrid-errors'</span>);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -410,7 +503,8 @@ attachQuantities(document.querySelector(<span class="kp-code__string">'.kp-formg
                             <tr><td><code>subgrids</code></td><td>`.kp-formrows`, `.kp-kv`, `fieldset` and `form` inside the grid become subgrids of its tracks; a `form.kp-form` placed directly in the grid takes the grid’s gap in every theme. A `data-kp-subgrid` list (attention, problems) shares the tracks too.</td></tr>
                             <tr><td><code>rows with a JSON field</code></td><td>In a row holding a `.kp-jsonfield` the actions cell is one tool row high (the button is centred on the tools) and the value text is centred on it too.</td></tr>
                             <tr><td><code>data-kp-formgrid-label</code></td><td>`fit` (default: the label track is as wide as the longest label) or `wide`.</td></tr>
-                            <tr><td><code>data-kp-formgrid-align</code></td><td>`baseline` (default) or `center`: where the cells of a row stand.</td></tr>
+                            <tr><td><code>data-kp-formgrid-align</code></td><td>`baseline` (default) or `center`: where the cells of a row stand. Typed text and a placeholder start at the field’s start edge either way, a select stays centred; `center` also centres the typed text, the look before.</td></tr>
+                            <tr><td><code>data-kp-formgrid-errors</code></td><td>Unset (default): a field’s hidden error line keeps its room, so showing it moves nothing. `flow`: the line takes room only while it has words.</td></tr>
                             <tr><td><code>data-kp-formgrid-stack</code></td><td>`auto` (fold under 36rem of the grid), `always` or `never`.</td></tr>
                             <tr><td><code>data-kp-formgrid-lines</code></td><td>`none` (default) or `lines`: a hairline between rows.</td></tr>
                             <tr><td><code>data-kp-formgrid-span</code></td><td>On a cell: `control-value`, `wide` or `all`, the tracks it covers.</td></tr>
