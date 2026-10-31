@@ -17,6 +17,7 @@ each line its example and its option row, and empties the list.
 - fix-1031, site/components/dialog.html (the rich confirmation): a `description` that holds a field (a quantity, an input) gives that field the first focus, whatever `initialFocus` says.
 - fix-1031, site/components/segmented.html: the sentence in the chips-tied-to-a-field example and the `data-kp-segmented-for` option row now say that a linked group drawn later is linked as it arrives under an attached root (written in gates/site/descriptors; regenerate the page in the pass).
 - fix-1031: `./js/log` is a published module (`sourceColour`, `sourceIndex`, `SOURCE_PROPERTY`, `attachLogs`), so the bundle exports it; the log page names the import.
+- list-action-1031 (2026-10-31), site/components/list.html: the trailing action column `.kp-listrow__action` (`[action] auto` at the end of the tracks, only in a list that holds an action; empty cell in a row without one; its own full line in the card), the `--kp-list-tracks` knob row with its new default, and an example of mixed rows (an "I took one" button, the word "Scheduled", no action, and a row with stepper and switch) drawn from research/list-action-1031.
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's

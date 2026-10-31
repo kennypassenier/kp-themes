@@ -1,15 +1,20 @@
 /* @part: list-row: A list of rows with columns that continue */
 @layer kp.components {
-    /* --- A list of rows [mc-1030, Medicine Cabinet gap 1] ---
-     * Not a table: one row holds an identity block, a status column, a stepper and a switch, and the status can hold several badges. The
-     * list is ONE grid of named columns and every row is a subgrid of it, so the identity, the status, the stepper and the switch of all rows
-     * stand on four edges that run down the list whatever each holds. A row that has no status simply leaves its column empty. Under 40rem of
-     * the list's own width a row is a card: the identity and the status on full lines, the stepper beside the switch (the switch wraps below it when the line is too short for both). Loading, empty and
-     * failed are the card's (`.kp-card[data-kp-state]`, js/card-state.js): put the list in the card's data and the states fill its footprint.
-     * Knobs [KT6]: `--kp-list-tracks` (the four column tracks), `--kp-list-stepper-min` (14rem, the room a stepper fills), `--kp-list-row-pad`
-     * (the row's block padding), `--kp-list-gap` (the room between columns), `--kp-list-stepper-card` (13rem, the room a card keeps for its stepper). */
+    /* --- A list of rows [mc-1030, Medicine Cabinet gap 1; action column list-action-1031] ---
+     * Not a table: one row holds an identity block, a status column, a stepper, a switch and a trailing action, and the status can hold
+     * several badges. The list is ONE grid of named columns and every row is a subgrid of it, so the identity, the status, the stepper, the
+     * switch and the action of all rows stand on edges that run down the list whatever each holds. A row that has no status or no action
+     * simply leaves that column empty. Under 40rem of the list's own width a row is a card: the identity and the status on full lines, the
+     * stepper beside the switch (the switch wraps below it when the line is too short for both), the action on its own full line last.
+     * Loading, empty and failed are the card's (`.kp-card[data-kp-state]`, js/card-state.js): put the list in the card's data and the
+     * states fill its footprint.
+     * Knobs [KT6]: `--kp-list-tracks` (the column tracks: the four of identity, status, stepper and switch, plus `[action] auto` at the end
+     * when any row holds a `.kp-listrow__action`; an override that names no `[action]` line leaves actions to an implicit track),
+     * `--kp-list-stepper-min` (14rem, the room a stepper fills), `--kp-list-row-pad` (the row's block padding), `--kp-list-gap` (the room
+     * between columns), `--kp-list-stepper-card` (13rem, the room a card keeps for its stepper). */
     /* The stepper's least width holds only at the wide layout: it is clamped on the card break, which the list's own container query
-     * cannot do for its own tracks. */
+     * cannot do for its own tracks. The action track exists only in a list that has an action, so a list without one keeps its four tracks
+     * and no trailing column gap: its switch ends on the row's edge as before. */
     .kp-list {
         container: kp-list / inline-size;
         display: grid;
@@ -25,6 +30,14 @@
         border-radius: var(--radius, 0.5rem);
         background: var(--card);
         color: var(--card-foreground);
+    }
+
+    /* The same four tracks (keep them in step with the rule above) and the action, as wide as the widest action of the list. */
+    .kp-list:has(> .kp-listrow > .kp-listrow__action) {
+        grid-template-columns: var(
+            --kp-list-tracks,
+            [identity] minmax(0, 1.6fr) [status] minmax(0, 2fr) [stepper] minmax(clamp(0px, (100% - 40rem) * 999, var(--kp-list-stepper-min, 14rem)), 1fr) [switch] auto [action] auto
+        );
     }
 
     .kp-listrow {
@@ -73,12 +86,19 @@
         justify-self: end;
     }
 
+    /* The trailing action: a button (or the words that stand in for it) that fills the column, so every action of the list is as wide. */
+    .kp-listrow__action {
+        grid-column: action;
+        display: grid;
+        min-inline-size: 0;
+    }
+
     /* A row that is off (an inactive medicine) quiets what it says, not its controls. */
     .kp-listrow--muted > :is(.kp-listrow__identity, .kp-listrow__status) {
         opacity: 0.6;
     }
 
-    /* The phone card: the identity and the status each on a line, the stepper filling the line beside the switch. */
+    /* The phone card: the identity and the status each on a line, the stepper filling the line beside the switch, the action on a line of its own. */
     @container kp-list (max-width: 40rem) {
         .kp-listrow {
             display: flex;
@@ -101,7 +121,12 @@
             margin-inline-start: auto;
         }
 
-        .kp-listrow__status:empty {
+        .kp-listrow__action {
+            flex: 1 0 100%;
+        }
+
+        .kp-listrow__status:empty,
+        .kp-listrow__action:empty {
             display: none;
         }
     }
