@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="list-action-1031" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The list of rows gets a column for its action</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>The list of rows gets a column for its action</h1>
+                <p class="cat-intro">
+                    You chose to give the list of rows its own place for an action (2026-10-31). Medicine Cabinet&rsquo;s Symptoms page is the first user: its
+                    &ldquo;I took one&rdquo; button stood in the stepper&rsquo;s cell. Formal only, on the app&rsquo;s own shapes (the names, counts and times are
+                    mock). 1 section, 1 pair.
+                </p>
+                <p>The section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a phone&rsquo;s 390 px.</p>
+            </header>
+
+        <section id="list-action" data-review-item="list-action" data-review-topic="list" data-review-topic-title="The list of rows" data-review-components="list-action" data-review-title="A trailing action column in the list of rows" aria-labelledby="h-list-action">
+            <div class="pg-asked"><p><b>What is asked</b> (your choice &ldquo;list-action: Eigen vak toevoegen&rdquo;, 2026-10-31): Medicine Cabinet&rsquo;s Symptoms page put its &ldquo;I took one&rdquo; button in the stepper cell, because the list had no place for an action. <code>.kp-listrow__action</code> is a fifth named column <code>[action]</code> at the end of the list&rsquo;s grid, as wide as the widest action; every row is a subgrid, so all actions line up, and a row without one leaves the cell empty, like the status. Under the card break (40rem of the list&rsquo;s own width) the action takes its own full line below the rest. A list that holds no action keeps its four columns exactly as you approved them.</p></div>
+            <div class="pg-intro"><h2 id="h-list-action">Headache: what you have</h2><p>Six medicines as the Symptoms page lists them for a headache: what each is, its badges and what you can do now. One row is a Cabinet row with a stepper and a switch, to show that mixed rows keep one grid.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Full width</b>: the three &ldquo;I took one&rdquo; buttons are equally wide and stand in one column at the end of the rows; &ldquo;Scheduled&rdquo; starts on the same edge. The Amoxicillin row and the spray row have no action and leave the cell empty. The spray&rsquo;s stepper and switch stand in their own columns, before the action column, and the badges keep one edge down all six rows. Pressing a button writes what was noted under the list.</li><li><b>No action in any row</b>: the action column is gone and the spray&rsquo;s switch ends on the row&rsquo;s right edge, exactly as in the approved list without actions.</li><li><b>Phone, 390 px</b>: each row is a card; the button fills its own line at the bottom of the card and &ldquo;Scheduled&rdquo; stands on its own line; a row without an action has no empty line. <b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the list&rsquo;s footprint with the card&rsquo;s plate and a normal Retry.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal is a paper plate: rows ruled by thin lines, the primary button the one filled thing in a row. Check that the action column runs straight down the list whatever a row holds, and that name, badges, stepper and switch look as they did.</p></div>
+            <div data-review-controls data-review-controls-for="list-action-component"><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="ready" data-target="pg-symptoms" aria-pressed="true">Ready</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="loading" data-target="pg-symptoms" aria-pressed="false">Loading</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="empty" data-target="pg-symptoms" aria-pressed="false">Empty</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="error" data-target="pg-symptoms" aria-pressed="false">Failed</button></div><div role="group" aria-label="Actions"><button type="button" class="kp-button kp-button--sm" data-pg="actions" data-value="some" data-target="pg-symptoms-list" aria-pressed="true">As in the app</button><button type="button" class="kp-button kp-button--sm" data-pg="actions" data-value="none" data-target="pg-symptoms-list" aria-pressed="false">No action in any row</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="list-action-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="list-action-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="list-action-component" class="pg-component" data-pg-width="full">
+        <section class="kp-card" id="pg-symptoms" data-kp-state="ready" aria-labelledby="pg-symptoms-t">
+            <div class="kp-card__header"><h3 class="kp-card__title" id="pg-symptoms-t">Headache</h3></div>
+            <p class="kp-card__body">What you have that helps, with what is left of it.</p>
+            <div class="kp-card__stage"><div class="kp-card__data"><ul class="kp-list" id="pg-symptoms-list" role="list" aria-label="Medicines for a headache">
+                <li class="kp-listrow" data-pg-row="ibuprofen-400-mg">
+                    <div class="kp-listrow__identity"><strong class="kp-listrow__name">Ibuprofen 400 mg</strong><span class="kp-listrow__meta">400 mg tablet · pain and fever · 14 tablets left</span><span class="kp-listrow__meta">When needed · at least 6 h apart · max 3 a day</span></div>
+                    <div class="kp-listrow__status"><div class="kp-badges"><span class="kp-badge kp-badge--warning">Low stock</span><span class="kp-badge">Expires 03/2027</span></div></div>
+                    <div class="kp-listrow__action"><button type="button" class="kp-button kp-button--primary" data-pg-take="Ibuprofen 400 mg" aria-label="I took one Ibuprofen 400 mg">I took one</button></div>
+                </li>
+                <li class="kp-listrow" data-pg-row="paracetamol-500-mg">
+                    <div class="kp-listrow__identity"><strong class="kp-listrow__name">Paracetamol 500 mg</strong><span class="kp-listrow__meta">500 mg tablet · pain and fever · 32 tablets left</span><span class="kp-listrow__meta">When needed · at least 4 h apart · max 4 a day</span></div>
+                    <div class="kp-listrow__status"><div class="kp-badges"><span class="kp-badge kp-badge--success">In stock</span></div></div>
+                    <div class="kp-listrow__action"><button type="button" class="kp-button kp-button--primary" data-pg-take="Paracetamol 500 mg" aria-label="I took one Paracetamol 500 mg">I took one</button></div>
+                </li>
+                <li class="kp-listrow" data-pg-row="vitamin-d3-25-g">
+                    <div class="kp-listrow__identity"><strong class="kp-listrow__name">Vitamin D3 25 µg</strong><span class="kp-listrow__meta">25 µg capsule · supplement · 60 capsules left</span><span class="kp-listrow__meta">08:00 · every day</span></div>
+                    <div class="kp-listrow__status"><div class="kp-badges"><span class="kp-badge">On schedule</span><span class="kp-badge kp-badge--warning">Expires 11/2026</span></div></div>
+                    <div class="kp-listrow__action"><span class="kp-text-muted">Scheduled</span></div>
+                </li>
+                <li class="kp-listrow" data-pg-row="saline-nasal-spray">
+                    <div class="kp-listrow__identity"><strong class="kp-listrow__name">Saline nasal spray</strong><span class="kp-listrow__meta">Spray · congestion</span><span class="kp-listrow__meta">When needed</span></div>
+                    <div class="kp-listrow__status"><div class="kp-badges"><span class="kp-badge kp-badge--warning">Opened 30 days ago</span></div></div>
+                    <div class="kp-listrow__stepper"><div class="kp-quantity" data-kp-quantity data-kp-quantity-fill data-kp-quantity-min="0" data-kp-quantity-max="200" data-kp-quantity-unit="bottles" data-kp-quantity-unit-one="bottle" data-kp-quantity-label="Stock of Saline nasal spray"><input class="kp-quantity__input" value="1" /></div></div>
+                    <div class="kp-listrow__switch"><label class="kp-switch" data-kp-switch-state="none"><input class="kp-switch__input" type="checkbox" role="switch" checked aria-label="Active: Saline nasal spray" /><span>Active</span></label></div>
+                </li>
+                <li class="kp-listrow" data-pg-row="cetirizine-10-mg">
+                    <div class="kp-listrow__identity"><strong class="kp-listrow__name">Cetirizine 10 mg</strong><span class="kp-listrow__meta">10 mg tablet · hay fever · 8 tablets left</span><span class="kp-listrow__meta">When needed · max 1 a day</span></div>
+                    <div class="kp-listrow__status"><div class="kp-badges"><span class="kp-badge kp-badge--warning">Low stock</span></div></div>
+                    <div class="kp-listrow__action"><button type="button" class="kp-button kp-button--primary" data-pg-take="Cetirizine 10 mg" aria-label="I took one Cetirizine 10 mg">I took one</button></div>
+                </li>
+                <li class="kp-listrow kp-listrow--muted" data-pg-row="amoxicillin-500-mg">
+                    <div class="kp-listrow__identity"><strong class="kp-listrow__name">Amoxicillin 500 mg</strong><span class="kp-listrow__meta">500 mg capsule · antibiotic course · 0 capsules left</span><span class="kp-listrow__meta">Its course is over.</span></div>
+                    <div class="kp-listrow__status"><div class="kp-badges"><span class="kp-badge">Course over</span></div></div>
+                </li>
+            </ul></div></div>
+        </section>
+        <p class="pg-log" id="pg-symptoms-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"list-action-1031-cef93b0f-c9bf-44f8-a427-8a04be5c718e","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

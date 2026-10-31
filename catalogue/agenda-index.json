@@ -460,6 +460,19 @@
             },
             "fingerprint": "83f012d2600f0685",
             "update": null
+        },
+        "research/list-action-1031/demo.html": {
+            "facts": {
+                "id": "list-action-1031",
+                "themes": "formal",
+                "ask": null,
+                "askText": "You chose to give the list of rows its own place for an action (2026-10-31). Medicine Cabinet’s Symptoms page is the first user: its “I took one” button stood in the stepper’s cell. Formal only, on the app’s own shapes (the names, counts and times are mock). 1 section, 1 pair.",
+                "sections": [{ "item": "list-action", "themes": null, "topic": "list", "mode": null }],
+                "extra": null,
+                "round": "\n            {\"round\":\"list-action-1031-cef93b0f-c9bf-44f8-a427-8a04be5c718e\",\"received\":[]}\n        "
+            },
+            "fingerprint": "3e81d0f413832427",
+            "update": null
         }
     },
     "decided": {
