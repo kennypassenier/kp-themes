@@ -3022,9 +3022,9 @@ var init_constants = __esm({
 function openAtTop(dialog) {
   const body = dialog.querySelector(":scope > .kp-dialog__body");
   for (const box of [dialog, body]) if (box) box.scrollTop = 0;
-  const focused = document.activeElement;
-  if (focused instanceof HTMLElement && focused !== dialog && dialog.contains(focused))
-    focused.scrollIntoView({ block: "nearest", inline: "nearest" });
+  const focused2 = document.activeElement;
+  if (focused2 instanceof HTMLElement && focused2 !== dialog && dialog.contains(focused2))
+    focused2.scrollIntoView({ block: "nearest", inline: "nearest" });
 }
 function attachDialogs(root = document, { modal = true } = {}) {
   const cleanups = [];
@@ -14934,14 +14934,14 @@ function setSegmentedItems(group, items) {
   const kept = new Map(itemsOf2(group).map((item) => [valueOf(item), triOf(item)]));
   const on = getSegmentedValues(group).filter((value) => items.some((item) => item.value === value));
   const active = group.ownerDocument.activeElement;
-  const focused = active instanceof HTMLElement && group.contains(active) ? valueOf(active) : null;
+  const focused2 = active instanceof HTMLElement && group.contains(active) ? valueOf(active) : null;
   const made6 = items.map((spec) => buildItem(spec, { multi, tri, kept }));
   STOPS.delete(group);
   group.replaceChildren(...made6);
   enhance(group);
   if (tri) paintTri(group);
   else paint2(group, on);
-  if (focused !== null) made6.find((item) => valueOf(item) === focused)?.focus();
+  if (focused2 !== null) made6.find((item) => valueOf(item) === focused2)?.focus();
 }
 var init_items2 = __esm({
   "js/segmented/items.js"() {
@@ -19919,7 +19919,7 @@ function installLegend(c) {
     const signature2 = JSON.stringify([...kinds].map(([k, v]) => [k, v.tone, v.count, kindWord(k)]).concat(notes.map((n) => [n])));
     if (signature2 !== c.keyMemo) {
       c.keyMemo = signature2;
-      const focused = doc.activeElement instanceof HTMLElement && annKey.contains(doc.activeElement) ? doc.activeElement.getAttribute("data-kp-kind") : null;
+      const focused2 = doc.activeElement instanceof HTMLElement && annKey.contains(doc.activeElement) ? doc.activeElement.getAttribute("data-kp-kind") : null;
       const items = [...kinds].map(([k, v]) => {
         const dot = h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": v.tone, "aria-hidden": "true" });
         const button6 = h(
@@ -19954,7 +19954,7 @@ function installLegend(c) {
         )
       );
       annKey.replaceChildren(...items, ...extra);
-      if (focused) annKey.querySelector(`[data-kp-kind="${CSS.escape(focused)}"]`)?.focus();
+      if (focused2) annKey.querySelector(`[data-kp-kind="${CSS.escape(focused2)}"]`)?.focus();
     }
     for (const button6 of annKey.querySelectorAll("[data-kp-kind]")) {
       const off = kindsOff.has(button6.getAttribute("data-kp-kind") ?? "");
@@ -37220,13 +37220,13 @@ function placeRows(list, ul, members, rows) {
       last ? last.nextElementSibling : ul.firstElementChild
     );
     if (row2 !== expected) {
-      const focused = row2.contains(document.activeElement) ? (
+      const focused2 = row2.contains(document.activeElement) ? (
         /** @type {HTMLElement} */
         document.activeElement
       ) : null;
       if (last) last.after(row2);
       else ul.prepend(row2);
-      focused?.focus({ preventScroll: true });
+      focused2?.focus({ preventScroll: true });
     }
     last = row2;
   }
@@ -45607,7 +45607,7 @@ function installPills(c) {
   };
   const renderAddMenu = (s2) => {
     if (c.addMenu === null) return;
-    const focused = (
+    const focused2 = (
       /** @type {HTMLElement | null} */
       c.addMenu.querySelector(":focus")?.dataset.kpFilterColumn
     );
@@ -45633,7 +45633,7 @@ function installPills(c) {
       }
       item.append(button6);
       c.addMenu.append(item);
-      if (focused === String(at)) button6.focus();
+      if (focused2 === String(at)) button6.focus();
     }
   };
   const openFilterEditor = (at, returnTo) => {
@@ -67752,10 +67752,10 @@ function onKey4(m, event) {
   if (to === null) {
     if ((event.key === "Backspace" || event.key === "Delete") && attr5(m, "clear") !== "off") return clearByKey(m, event);
     if (event.key === " " || event.key === "Enter") {
-      const focused = starNumber(event.target);
-      if (!focused) return;
+      const focused2 = starNumber(event.target);
+      if (!focused2) return;
       event.preventDefault();
-      choose2(m, focused, "keyboard");
+      choose2(m, focused2, "keyboard");
     }
     return;
   }
@@ -81004,9 +81004,9 @@ function decorate(list) {
         const done = members.filter((r) => r.hasAttribute("data-kp-checklist-checked"));
         const order = [...wanted, ...done];
         if (order.some((r, i) => list_.children[i] !== r)) {
-          const focused = document.activeElement instanceof HTMLElement && list_.contains(document.activeElement) ? document.activeElement : null;
+          const focused2 = document.activeElement instanceof HTMLElement && list_.contains(document.activeElement) ? document.activeElement : null;
           list_.append(...order);
-          focused?.focus({ preventScroll: true });
+          focused2?.focus({ preventScroll: true });
         }
       }
     }
@@ -82146,7 +82146,6 @@ function setAvailability(root, spec) {
     unit: unit2,
     refused: old?.refused ?? /* @__PURE__ */ new Map(),
     saving: old?.saving ?? /* @__PURE__ */ new Set(),
-    off: old?.off ?? [],
     menu: old?.menu ?? null
   };
   if (spec.sets) st.spec.sets = structuredClone(spec.sets);
@@ -82477,6 +82476,247 @@ var init_menu2 = __esm({
   }
 });
 
+// js/availability/keys.js
+function registerAvailabilityKeys(el16) {
+  const s2 = getStrings();
+  const ownFocused = () => {
+    const c = focused();
+    return c !== null && el16.contains(c) && editable(el16, c.getAttribute("data-row-key") ?? "", c.getAttribute("data-col-key") ?? "");
+  };
+  const set = (answer2) => () => {
+    const c = focused();
+    if (c) void request2(el16, c.getAttribute("data-row-key") ?? "", [c.getAttribute("data-col-key") ?? ""], answer2);
+  };
+  const entry = (keys, what, answer2, when = ownFocused) => ({
+    keys,
+    what,
+    group: s2.availabilityKeyGroup,
+    when,
+    reason: s2.availabilityKeyReason,
+    run: set(answer2)
+  });
+  return registerShortcuts(
+    el16,
+    [
+      entry("y", s2.availabilityKeyYes, "yes"),
+      entry("m", s2.availabilityKeyMaybe, "maybe", () => ownFocused() && allowed(el16).includes("maybe")),
+      entry("n", s2.availabilityKeyNo, "no"),
+      entry("Backspace", s2.availabilityKeyClear, null)
+    ],
+    { layoutGuard: "off" }
+  );
+}
+var focused;
+var init_keys16 = __esm({
+  "js/availability/keys.js"() {
+    "use strict";
+    init_strings();
+    init_shortcuts();
+    init_facts();
+    init_request3();
+    focused = () => (
+      /** @type {HTMLElement | null} */
+      document.activeElement instanceof HTMLElement ? document.activeElement.closest(".kp-availability__grid .kp-heat__cell[data-col-key]") : null
+    );
+  }
+});
+
+// js/availability/controller.js
+var CELL2, LIVE_OPTIONS5, cellOf2, AvailabilityControl;
+var init_controller70 = __esm({
+  "js/availability/controller.js"() {
+    "use strict";
+    init_controller();
+    init_heat();
+    init_remember();
+    init_reason();
+    init_api28();
+    init_constants40();
+    init_facts();
+    init_menu2();
+    init_paint12();
+    init_request3();
+    init_keys16();
+    CELL2 = ".kp-availability__grid .kp-heat__cell[data-col-key]";
+    LIVE_OPTIONS5 = [
+      "data-kp-heat-edit",
+      "data-kp-disabled-reason",
+      ...[
+        "answers",
+        "press",
+        "best",
+        "best-rule",
+        "window",
+        "quorum",
+        "sort",
+        "summary",
+        "locked",
+        "narrow",
+        "density",
+        "disabled",
+        "choose",
+        "unit-switch"
+      ].map((n) => `data-kp-availability-${n}`)
+    ];
+    cellOf2 = (event) => {
+      const t = event.target instanceof Element ? event.target : null;
+      const c = (
+        /** @type {HTMLElement | null} */
+        t?.closest(CELL2) ?? null
+      );
+      return c && !c.closest(".kp-heat__row--summary") ? c : null;
+    };
+    AvailabilityControl = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.drag = null;
+        this.suppress = false;
+      }
+      connect() {
+        const el16 = this.host;
+        this.own(attachDisabledReasons(el16));
+        this.listen(el16, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ), true);
+        this.listen(el16, "pointerdown", (event) => this.onDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(el16, "pointermove", (event) => this.onMove(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(document, "pointerup", () => this.onUp());
+        this.listen(el16, "scroll", (event) => this.onScroll(event), true);
+        if (el16.getAttribute("data-kp-availability-keys") !== "false") this.own(registerAvailabilityKeys(el16));
+        this.own(attachHeats(el16));
+        this.observe(new MutationObserver(() => render4(el16))).observe(el16, { attributes: true, attributeFilter: LIVE_OPTIONS5 });
+        render4(el16);
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        if (this.suppress) {
+          this.suppress = false;
+          event.stopPropagation();
+          event.preventDefault();
+          return;
+        }
+        if (this.plateClick(target) || this.pickClick(target)) return;
+        const cell = cellOf2(event);
+        if (!cell) return;
+        event.stopPropagation();
+        const el16 = this.host;
+        const person = cell.getAttribute("data-row-key") ?? "";
+        const column = cell.getAttribute("data-col-key") ?? "";
+        if (!editable(el16, person, column)) return;
+        if (attr11(el16, "press", "menu") === "menu") return openMenu2(el16, cell);
+        void request2(el16, person, [column], next(el16, stateOf7(el16).set.answers[person]?.[column]));
+      }
+      /**
+       * Retry (or Add on the empty plate), the unit switch and Choose.
+       * @param {Element} target
+       * @returns {boolean} whether the press was one of them
+       */
+      plateClick(target) {
+        const el16 = this.host;
+        if (target.closest("[data-kp-availability-retry]")) {
+          const detail = { action: stateOf7(el16).spec.state === "empty" ? "add" : "retry" };
+          el16.dispatchEvent(new CustomEvent(AVAILABILITY_RETRY_EVENT, { bubbles: true, detail }));
+          return true;
+        }
+        const unit2 = target.closest(".kp-availability__unit [data-value]");
+        if (unit2) {
+          const value = unit2.getAttribute("data-value") === "day" ? "day" : "range";
+          if (value === stateOf7(el16).unit) return true;
+          setAvailability(el16, { ...stateOf7(el16).spec, unit: value });
+          el16.dispatchEvent(new CustomEvent(AVAILABILITY_UNIT_EVENT, { bubbles: true, detail: { unit: value } }));
+          return true;
+        }
+        if (!target.closest(".kp-availability__choose")) return false;
+        el16.dispatchEvent(new CustomEvent(AVAILABILITY_CHOOSE_EVENT, { bubbles: true, detail: { keys: availabilityBest(el16) } }));
+        return true;
+      }
+      /**
+       * An answer in the menu, or a column head that picks its column.
+       * @param {Element} target
+       * @returns {boolean} whether the press was one of them
+       */
+      pickClick(target) {
+        const el16 = this.host;
+        const pick2 = target.closest(".kp-availability__pick");
+        if (pick2 instanceof HTMLElement) {
+          const answer2 = (
+            /** @type {AvailabilityAnswer} */
+            pick2.getAttribute("data-answer")
+          );
+          const person = pick2.getAttribute("data-person") ?? "";
+          const column = pick2.getAttribute("data-column") ?? "";
+          const was = stateOf7(el16).set.answers[person]?.[column];
+          void request2(el16, person, [column], was === answer2 ? null : answer2);
+          return true;
+        }
+        const colHead = target.closest(".kp-availability__grid .kp-heat__col");
+        if (!colHead) return false;
+        const key = colHead.getAttribute("data-col-key");
+        const grid2 = (
+          /** @type {HTMLElement} */
+          el16.querySelector(".kp-availability__grid")
+        );
+        if (key) setHeatPick(grid2, grid2.getAttribute("data-kp-heat-picked") === key ? null : key);
+        return true;
+      }
+      /** A mouse or pen press on an editable cell may start painting its row. @param {PointerEvent} event */
+      onDown(event) {
+        const el16 = this.host;
+        if (event.button !== 0 || event.pointerType === "touch" || attr11(el16, "paint", "on") === "false" || attr11(el16, "press", "menu") === "menu") return;
+        const cell = cellOf2(event);
+        if (!cell) return;
+        const person = cell.getAttribute("data-row-key") ?? "";
+        const column = cell.getAttribute("data-col-key") ?? "";
+        if (!editable(el16, person, column)) return;
+        const answer2 = next(el16, stateOf7(el16).set.answers[person]?.[column]);
+        this.drag = { person, first: cell, answer: answer2, keys: /* @__PURE__ */ new Set([column]), pointer: event.pointerId };
+      }
+      /** The stroke takes in every editable cell of its row it passes. @param {PointerEvent} event */
+      onMove(event) {
+        const drag = this.drag;
+        if (!drag || event.buttons !== 1) return;
+        const under = document.elementFromPoint(event.clientX, event.clientY);
+        const cell = (
+          /** @type {HTMLElement | null} */
+          under?.closest(CELL2) ?? null
+        );
+        if (!cell || cell.getAttribute("data-row-key") !== drag.person) return;
+        const column = cell.getAttribute("data-col-key") ?? "";
+        if (drag.keys.has(column) || !editable(this.host, drag.person, column)) return;
+        drag.keys.add(column);
+        cell.setAttribute("data-kp-availability-painting", "");
+        drag.first.setAttribute("data-kp-availability-painting", "");
+      }
+      /** A stroke over two cells or more answers them all; the click that follows it is swallowed. */
+      onUp() {
+        const el16 = this.host;
+        const d = this.drag;
+        this.drag = null;
+        for (const c of el16.querySelectorAll("[data-kp-availability-painting]")) c.removeAttribute("data-kp-availability-painting");
+        if (!d || d.keys.size < 2) return;
+        this.suppress = true;
+        setTimeout(() => this.suppress = false, 0);
+        void request2(el16, d.person, [...d.keys], d.answer, { stroke: true });
+      }
+      /** The grid's sideways scroll is remembered. @param {Event} event */
+      onScroll(event) {
+        const t = event.target;
+        if (t instanceof HTMLElement && t.classList.contains("kp-availability__grid")) memoryFor(this.host, "availability")?.write("scroll", t.scrollLeft);
+      }
+    };
+  }
+});
+
 // js/availability/attach.js
 function attachAvailability(root = document) {
   const roots = (
@@ -82486,255 +82726,23 @@ function attachAvailability(root = document) {
       ...root.querySelectorAll(AVAILABILITY)
     ]
   );
-  const undo = [];
-  for (const el_ of roots) {
-    ensureParts(el_);
-    if (!STATE3.has(el_)) {
-      STATE3.set(el_, {
-        spec: {},
-        set: { columns: [], answers: {} },
-        unit: "range",
-        refused: /* @__PURE__ */ new Map(),
-        saving: /* @__PURE__ */ new Set(),
-        off: [],
-        menu: null
-      });
-    }
-    const st = stateOf7(el_);
-    if (st.off.length) continue;
-    const stopReasons = attachDisabledReasons(el_);
-    let drag = null;
-    let suppress = false;
-    const cellOf2 = (event) => {
-      const t = event.target instanceof Element ? event.target : null;
-      const c = (
-        /** @type {HTMLElement | null} */
-        t?.closest(".kp-availability__grid .kp-heat__cell[data-col-key]") ?? null
-      );
-      return c && !c.closest(".kp-heat__row--summary") ? c : null;
-    };
-    const onClick = (event) => {
-      const target = event.target instanceof Element ? event.target : null;
-      if (!target) return;
-      if (suppress) {
-        suppress = false;
-        event.stopPropagation();
-        event.preventDefault();
-        return;
-      }
-      const retry = target.closest("[data-kp-availability-retry]");
-      if (retry) {
-        el_.dispatchEvent(
-          new CustomEvent(AVAILABILITY_RETRY_EVENT, {
-            bubbles: true,
-            detail: { action: stateOf7(el_).spec.state === "empty" ? "add" : "retry" }
-          })
-        );
-        return;
-      }
-      const unit2 = target.closest(".kp-availability__unit [data-value]");
-      if (unit2) {
-        const value = unit2.getAttribute("data-value") === "day" ? "day" : "range";
-        if (value === stateOf7(el_).unit) return;
-        const s2 = stateOf7(el_);
-        setAvailability(el_, { ...s2.spec, unit: value });
-        el_.dispatchEvent(new CustomEvent(AVAILABILITY_UNIT_EVENT, { bubbles: true, detail: { unit: value } }));
-        return;
-      }
-      if (target.closest(".kp-availability__choose")) {
-        el_.dispatchEvent(new CustomEvent(AVAILABILITY_CHOOSE_EVENT, { bubbles: true, detail: { keys: availabilityBest(el_) } }));
-        return;
-      }
-      const pick2 = target.closest(".kp-availability__pick");
-      if (pick2 instanceof HTMLElement) {
-        const answer2 = (
-          /** @type {AvailabilityAnswer} */
-          pick2.getAttribute("data-answer")
-        );
-        const was = stateOf7(el_).set.answers[pick2.getAttribute("data-person") ?? ""]?.[pick2.getAttribute("data-column") ?? ""];
-        void request2(el_, pick2.getAttribute("data-person") ?? "", [pick2.getAttribute("data-column") ?? ""], was === answer2 ? null : answer2);
-        return;
-      }
-      const colHead = target.closest(".kp-availability__grid .kp-heat__col");
-      if (colHead) {
-        const key = colHead.getAttribute("data-col-key");
-        const grid2 = (
-          /** @type {HTMLElement} */
-          el_.querySelector(".kp-availability__grid")
-        );
-        if (key) setHeatPick(grid2, grid2.getAttribute("data-kp-heat-picked") === key ? null : key);
-        return;
-      }
-      const cell = cellOf2(event);
-      if (!cell) return;
-      event.stopPropagation();
-      const person = cell.getAttribute("data-row-key") ?? "";
-      const column = cell.getAttribute("data-col-key") ?? "";
-      if (!editable(el_, person, column)) return;
-      if (attr11(el_, "press", "menu") === "menu") return openMenu2(el_, cell);
-      void request2(el_, person, [column], next(el_, stateOf7(el_).set.answers[person]?.[column]));
-    };
-    const onDown2 = (event) => {
-      if (event.button !== 0 || event.pointerType === "touch" || attr11(el_, "paint", "on") === "false" || attr11(el_, "press", "menu") === "menu")
-        return;
-      const cell = cellOf2(event);
-      if (!cell) return;
-      const person = cell.getAttribute("data-row-key") ?? "";
-      const column = cell.getAttribute("data-col-key") ?? "";
-      if (!editable(el_, person, column)) return;
-      drag = {
-        person,
-        first: cell,
-        answer: next(el_, stateOf7(el_).set.answers[person]?.[column]),
-        keys: /* @__PURE__ */ new Set([column]),
-        pointer: event.pointerId
-      };
-    };
-    const onMove2 = (event) => {
-      if (!drag || event.buttons !== 1) return;
-      const under = document.elementFromPoint(event.clientX, event.clientY);
-      const cell = (
-        /** @type {HTMLElement | null} */
-        under?.closest(".kp-availability__grid .kp-heat__cell[data-col-key]") ?? null
-      );
-      if (!cell || cell.getAttribute("data-row-key") !== drag.person) return;
-      const column = cell.getAttribute("data-col-key") ?? "";
-      if (drag.keys.has(column) || !editable(el_, drag.person, column)) return;
-      drag.keys.add(column);
-      cell.setAttribute("data-kp-availability-painting", "");
-      drag.first.setAttribute("data-kp-availability-painting", "");
-    };
-    const onUp2 = () => {
-      const d = drag;
-      drag = null;
-      for (const c of el_.querySelectorAll("[data-kp-availability-painting]")) c.removeAttribute("data-kp-availability-painting");
-      if (!d || d.keys.size < 2) return;
-      suppress = true;
-      setTimeout(() => suppress = false, 0);
-      void request2(el_, d.person, [...d.keys], d.answer, { stroke: true });
-    };
-    const onScroll = (event) => {
-      const t = event.target;
-      if (t instanceof HTMLElement && t.classList.contains("kp-availability__grid"))
-        memoryFor(el_, "availability")?.write("scroll", t.scrollLeft);
-    };
-    el_.addEventListener("click", onClick, true);
-    el_.addEventListener("pointerdown", onDown2);
-    el_.addEventListener("pointermove", onMove2);
-    document.addEventListener("pointerup", onUp2);
-    el_.addEventListener("scroll", onScroll, true);
-    let stopKeys;
-    if (el_.getAttribute("data-kp-availability-keys") !== "false") {
-      const s2 = getStrings();
-      const focused = () => (
-        /** @type {HTMLElement | null} */
-        document.activeElement instanceof HTMLElement ? document.activeElement.closest(".kp-availability__grid .kp-heat__cell[data-col-key]") : null
-      );
-      const ownFocused = () => {
-        const c = focused();
-        return c !== null && el_.contains(c) && editable(el_, c.getAttribute("data-row-key") ?? "", c.getAttribute("data-col-key") ?? "");
-      };
-      const set = (answer2) => () => {
-        const c = focused();
-        if (c) void request2(el_, c.getAttribute("data-row-key") ?? "", [c.getAttribute("data-col-key") ?? ""], answer2);
-      };
-      stopKeys = registerShortcuts(
-        el_,
-        [
-          {
-            keys: "y",
-            what: s2.availabilityKeyYes,
-            group: s2.availabilityKeyGroup,
-            when: ownFocused,
-            reason: s2.availabilityKeyReason,
-            run: set("yes")
-          },
-          {
-            keys: "m",
-            what: s2.availabilityKeyMaybe,
-            group: s2.availabilityKeyGroup,
-            when: () => ownFocused() && allowed(el_).includes("maybe"),
-            reason: s2.availabilityKeyReason,
-            run: set("maybe")
-          },
-          {
-            keys: "n",
-            what: s2.availabilityKeyNo,
-            group: s2.availabilityKeyGroup,
-            when: ownFocused,
-            reason: s2.availabilityKeyReason,
-            run: set("no")
-          },
-          {
-            keys: "Backspace",
-            what: s2.availabilityKeyClear,
-            group: s2.availabilityKeyGroup,
-            when: ownFocused,
-            reason: s2.availabilityKeyReason,
-            run: set(null)
-          }
-        ],
-        { layoutGuard: "off" }
-      );
-    }
-    const stopHeat = attachHeats(el_);
-    const watcher = new MutationObserver(() => render4(el_));
-    watcher.observe(el_, {
-      attributes: true,
-      attributeFilter: [
-        "data-kp-heat-edit",
-        "data-kp-disabled-reason",
-        ...[
-          "answers",
-          "press",
-          "best",
-          "best-rule",
-          "window",
-          "quorum",
-          "sort",
-          "summary",
-          "locked",
-          "narrow",
-          "density",
-          "disabled",
-          "choose",
-          "unit-switch"
-        ].map((n) => `data-kp-availability-${n}`)
-      ]
-    });
-    st.off = [
-      () => el_.removeEventListener("click", onClick, true),
-      () => el_.removeEventListener("pointerdown", onDown2),
-      () => el_.removeEventListener("pointermove", onMove2),
-      () => document.removeEventListener("pointerup", onUp2),
-      () => el_.removeEventListener("scroll", onScroll, true),
-      () => stopKeys?.(),
-      stopHeat,
-      () => watcher.disconnect(),
-      stopReasons
-    ];
-    undo.push(() => {
-      for (const stop of st.off) stop();
-      st.off = [];
-    });
-    render4(el_);
+  for (const el16 of roots) {
+    ensureParts(el16);
+    if (!STATE3.has(el16)) STATE3.set(el16, { spec: {}, set: { columns: [], answers: {} }, unit: "range", refused: /* @__PURE__ */ new Map(), saving: /* @__PURE__ */ new Set(), menu: null });
   }
-  return () => undo.forEach((u) => u());
+  const made6 = roots.filter((el16) => !controllerOf(el16, AvailabilityControl)).map((el16) => attachOne(el16, AvailabilityControl));
+  return () => {
+    for (const control of made6) control?.destroy();
+  };
 }
 var init_attach24 = __esm({
   "js/availability/attach.js"() {
     "use strict";
-    init_strings();
-    init_heat();
-    init_shortcuts();
-    init_remember();
-    init_reason();
+    init_controller();
     init_api28();
     init_constants40();
     init_facts();
-    init_menu2();
-    init_paint12();
-    init_request3();
+    init_controller70();
   }
 });
 
@@ -83918,8 +83926,8 @@ var init_actions7 = __esm({
 });
 
 // js/qr/controller.js
-var LIVE_OPTIONS5, QrControl;
-var init_controller70 = __esm({
+var LIVE_OPTIONS6, QrControl;
+var init_controller71 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83928,7 +83936,7 @@ var init_controller70 = __esm({
     init_actions7();
     init_render6();
     init_state28();
-    LIVE_OPTIONS5 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
+    LIVE_OPTIONS6 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -83944,7 +83952,7 @@ var init_controller70 = __esm({
             window.cancelAnimationFrame(this.queued);
             this.queued = window.requestAnimationFrame(() => render5(root));
           })
-        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS5.map((n) => `data-kp-qr-${n}`) });
+        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS6.map((n) => `data-kp-qr-${n}`) });
         this.own(this.copyKey());
         render5(root);
       }
@@ -84023,7 +84031,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller70();
+    init_controller71();
     init_state28();
     init_state28();
     init_matrix2();

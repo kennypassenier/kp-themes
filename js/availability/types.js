@@ -19,6 +19,6 @@
  * @property {string} [emptyAction]  the empty plate's action words (fires `kp-availability-retry` with `{ action: 'add' }`)
  */
 
-/** @typedef {{ spec: AvailabilitySpec, set: AvailabilitySet, unit: 'range' | 'day', refused: Map<string, number>, saving: Set<string>, off: (() => void)[], menu: HTMLElement | null }} AvState */
+/** @typedef {{ spec: AvailabilitySpec, set: AvailabilitySet, unit: 'range' | 'day', refused: Map<string, number>, saving: Set<string>, menu: HTMLElement | null }} AvState */
 
 export {};

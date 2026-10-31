@@ -26,7 +26,6 @@ export function setAvailability(root, spec) {
         unit,
         refused: old?.refused ?? new Map(),
         saving: old?.saving ?? new Set(),
-        off: old?.off ?? [],
         menu: old?.menu ?? null,
     };
     if (spec.sets) st.spec.sets = structuredClone(spec.sets);
