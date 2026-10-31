@@ -13,7 +13,20 @@ export declare class ChangeTracker {
      * @param {import('../strings.js').Strings} s
      */
     constructor(el: HTMLElement, scope: HTMLElement, s: import('../strings.js').Strings);
-    /** The controls in the scope that count, the bar's own and the `data-kp-untracked` ones left out. */
+    /**
+     * Whether a control counts: not the bar's own, not `data-kp-untracked`, and not an input inside a composite field (the
+     * field itself counts instead, unless it opted out).
+     * @param {Element} c
+     */
+    counts(c: Element): boolean;
+    /**
+     * The control an event stands for, if it counts: the composite field it came from, else the control itself, else (a plain
+     * combobox's choice, fired on its wrapper) the control inside the element it came from.
+     * @param {EventTarget | null} target
+     * @returns {HTMLInputElement | null}
+     */
+    controlFor(target: EventTarget | null): HTMLInputElement | null;
+    /** The controls in the scope that count, in document order. */
     tracked(): HTMLInputElement[];
     /** Take the markup's values as the baseline. */
     capture(): void;

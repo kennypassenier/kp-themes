@@ -825,7 +825,7 @@ The star rating: a radio row of stars to set or a display row to read, with half
 
 ## js/unsaved.js → js/unsaved/
 
-The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Undo, lists the changes and warns before the page is left. 12 files.
+The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Undo, lists the changes and warns before the page is left. 13 files.
 
 | File            | Does                                                                                                                         |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -841,6 +841,7 @@ The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Und
 | `parts.js`      | Builds the bar's elements, the list entries and the refusal alert; no behaviour, only structure and classes.                 |
 | `state.js`      | The counter that gives each bar without an id its own.                                                                       |
 | `values.js`     | What a form control holds: reading the live value, the markup's value, and putting a value back.                             |
+| `widgets.js`    | The package's own composite fields (quantity, time field, tag input), each tracked as one value.                             |
 
 ## js/anchors.js → js/anchors/
 

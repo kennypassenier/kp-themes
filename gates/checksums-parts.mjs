@@ -187,6 +187,7 @@ export const PART_FILES = [
     'js/unsaved/parts.js',
     'js/unsaved/state.js',
     'js/unsaved/values.js',
+    'js/unsaved/widgets.js',
     'js/uptime/attach.js',
     'js/uptime/constants.js',
     'js/uptime/controller.js',

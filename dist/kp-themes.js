@@ -74670,6 +74670,64 @@ var init_state24 = __esm({
   }
 });
 
+// js/unsaved/widgets.js
+function tagValues(root) {
+  return [...root.querySelectorAll("[data-kp-tag-list] .kp-tag")].map((t) => (
+    /** @type {HTMLElement} */
+    t.dataset.value ?? (t.textContent ?? "").trim()
+  ));
+}
+function widgetOf(node) {
+  const root = (
+    /** @type {HTMLElement | null} */
+    node.closest(WIDGET)
+  );
+  if (!root || root.matches("[data-kp-untracked]") || root.querySelector("[data-kp-untracked]")) return null;
+  return root;
+}
+function readWidget(root) {
+  if (root.matches(QUANTITY)) return String(getQuantity(root));
+  if (root.matches(TIME)) return FIELDS.get(root)?.value ?? root.getAttribute("data-kp-value") ?? "";
+  return JSON.stringify(tagValues(root));
+}
+function showWidget(root, value) {
+  if (!root.matches(TAG_INPUT)) return value;
+  return (
+    /** @type {string[]} */
+    JSON.parse(value || "[]").join(", ")
+  );
+}
+function writeWidget(root, value) {
+  if (root.matches(QUANTITY)) setQuantity(root, Number(value));
+  else if (root.matches(TIME)) setTime(root, value);
+  else {
+    const handle = combobox(root);
+    if (!handle) throw new Error("kp-unsaved: a tag input must be attached (attachComboboxes) before its value can be put back");
+    handle.set(
+      /** @type {string[]} */
+      JSON.parse(value || "[]")
+    );
+  }
+}
+var TAG_INPUT, WIDGET, WIDGET_EVENTS, isWidget;
+var init_widgets = __esm({
+  "js/unsaved/widgets.js"() {
+    "use strict";
+    init_values();
+    init_read();
+    init_quantity();
+    init_constants29();
+    init_state20();
+    init_api19();
+    init_constants8();
+    init_handle();
+    TAG_INPUT = "[data-kp-combobox][data-kp-tags]";
+    WIDGET = `${QUANTITY}, ${TIME}, ${TAG_INPUT}`;
+    WIDGET_EVENTS = [QUANTITY_EVENT, TIME_EVENT, CHANGE_EVENT];
+    isWidget = (el16) => el16.matches(WIDGET);
+  }
+});
+
 // js/unsaved/values.js
 function radiosNamed(c) {
   return [...(c.form ?? c.ownerDocument).querySelectorAll(`input[type="radio"]`)].filter(
@@ -74680,6 +74738,11 @@ function radiosNamed(c) {
   );
 }
 function readValue(c) {
+  if (isWidget(c)) return readWidget(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    c
+  );
   if (c instanceof HTMLInputElement && c.type === "checkbox") return c.checked ? "on" : "off";
   if (c instanceof HTMLInputElement && c.type === "radio") {
     return (
@@ -74693,6 +74756,11 @@ function readValue(c) {
   return c.value;
 }
 function readDefault(c) {
+  if (isWidget(c)) return readWidget(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    c
+  );
   if (c instanceof HTMLInputElement && c.type === "checkbox") return c.defaultChecked ? "on" : "off";
   if (c instanceof HTMLInputElement && c.type === "radio") {
     return (
@@ -74707,7 +74775,13 @@ function readDefault(c) {
   return c.defaultValue;
 }
 function writeValue(c, value) {
-  if (c instanceof HTMLInputElement && c.type === "checkbox") c.checked = value === "on";
+  if (isWidget(c)) writeWidget(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    c,
+    value
+  );
+  else if (c instanceof HTMLInputElement && c.type === "checkbox") c.checked = value === "on";
   else if (c instanceof HTMLInputElement && c.type === "radio") {
     for (const r of radiosNamed(c)) r.checked = /** @type {HTMLInputElement} */
     r.value === value;
@@ -74721,6 +74795,7 @@ var radioGroup;
 var init_values44 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
+    init_widgets();
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
   }
 });
@@ -75062,12 +75137,15 @@ var init_actions5 = __esm({
 });
 
 // js/unsaved/changes.js
-var ChangeTracker;
+var TRACKABLE, ChangeTracker;
 var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
     init_values44();
+    init_constants8();
+    init_widgets();
+    TRACKABLE = `${CONTROL}, ${WIDGET}`;
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -75080,13 +75158,34 @@ var init_changes = __esm({
         this.s = s2;
         this.baseline = /* @__PURE__ */ new Map();
       }
-      /** The controls in the scope that count, the bar's own and the `data-kp-untracked` ones left out. */
+      /**
+       * Whether a control counts: not the bar's own, not `data-kp-untracked`, and not an input inside a composite field (the
+       * field itself counts instead, unless it opted out).
+       * @param {Element} c
+       */
+      counts(c) {
+        if (this.el.contains(c) || c.hasAttribute("data-kp-untracked")) return false;
+        return isWidget(c) ? widgetOf(c) === c : c.matches(CONTROL) && c.parentElement?.closest(WIDGET) == null;
+      }
+      /**
+       * The control an event stands for, if it counts: the composite field it came from, else the control itself, else (a plain
+       * combobox's choice, fired on its wrapper) the control inside the element it came from.
+       * @param {EventTarget | null} target
+       * @returns {HTMLInputElement | null}
+       */
+      controlFor(target) {
+        if (!(target instanceof Element)) return null;
+        const c = widgetOf(target) ?? (target.matches(TRACKABLE) ? target : target.matches(COMBOBOX) ? target.querySelector(CONTROL) : null);
+        return c && this.scope.contains(c) && this.counts(c) ? (
+          /** @type {HTMLInputElement} */
+          c
+        ) : null;
+      }
+      /** The controls in the scope that count, in document order. */
       tracked() {
         return (
           /** @type {HTMLInputElement[]} */
-          [...this.scope.querySelectorAll(CONTROL)].filter(
-            (c) => !this.el.contains(c) && !c.hasAttribute("data-kp-untracked")
-          )
+          [...this.scope.querySelectorAll(TRACKABLE)].filter((c) => this.counts(c))
         );
       }
       /** Take the markup's values as the baseline. */
@@ -75108,9 +75207,13 @@ var init_changes = __esm({
       }
       /** The controls of a row. @param {HTMLElement} row */
       controlsOf(row2) {
+        if (row2.matches(TRACKABLE)) return (
+          /** @type {HTMLInputElement[]} */
+          [row2]
+        );
         return (
           /** @type {HTMLInputElement[]} */
-          row2.matches(CONTROL) ? [row2] : [...row2.querySelectorAll(CONTROL)]
+          [...row2.querySelectorAll(TRACKABLE)].filter((c) => this.counts(c))
         );
       }
       /** The name a row goes by in the list: its `data-kp-name`, its label, else what its control is called. @param {HTMLElement} row */
@@ -75134,6 +75237,7 @@ var init_changes = __esm({
         const s2 = this.s;
         if (control instanceof HTMLInputElement && control.type === "password") return s2.unsavedSecret;
         if (control.matches("[data-kp-secret]")) return s2.unsavedSecret;
+        if (isWidget(control)) value = showWidget(control, value);
         if (control instanceof HTMLInputElement && control.type === "checkbox") return value === "on" ? s2.unsavedOn : s2.unsavedOff;
         if (control instanceof HTMLSelectElement) return [...control.options].find((o) => o.value === value)?.textContent?.trim() ?? value;
         return value === "" ? s2.unsavedEmpty : value;
@@ -75212,9 +75316,13 @@ var init_keeper = __esm({
           return null;
         }
       }
-      /** The key a control is kept under, or '' when it has none. @param {HTMLElement} c */
+      /**
+       * The key a control is kept under, or '' when it has none. A composite field goes by its posted name (`data-kp-name`,
+       * or the `name` of an input inside it), else its id.
+       * @param {HTMLElement} c
+       */
       keyOf(c) {
-        return c.getAttribute("name") ?? c.id;
+        return c.getAttribute("name") ?? c.getAttribute("data-kp-name") ?? c.querySelector("[name]")?.getAttribute("name") ?? c.id;
       }
       /** Write the changed values (all of them, or none when nothing is changed). */
       keep() {
@@ -75477,6 +75585,7 @@ var init_controller66 = __esm({
     init_keeper();
     init_panel3();
     init_dock();
+    init_widgets();
     init_leave2();
     UnsavedController = class extends Controller {
       /**
@@ -75584,6 +75693,7 @@ var init_controller66 = __esm({
         }
         this.listen(scope, "input", (event) => this.onEdit(event));
         this.listen(scope, "change", (event) => this.onEdit(event));
+        for (const name of WIDGET_EVENTS) this.listen(scope, name, (event) => this.onEdit(event));
         this.listen(this.doc, "keydown", (event) => this.onKey(
           /** @type {KeyboardEvent} */
           event
@@ -75597,12 +75707,9 @@ var init_controller66 = __esm({
       /** @param {Event} event */
       onEdit(event) {
         if (!this.settings.auto) return;
-        const c = event.target;
-        if (!(c instanceof HTMLElement) || !c.matches(CONTROL) || this.el.contains(c) || c.hasAttribute("data-kp-untracked")) return;
-        this.tracker.track(
-          /** @type {HTMLInputElement} */
-          c
-        );
+        const c = this.tracker.controlFor(event.target);
+        if (!c) return;
+        this.tracker.track(c);
         this.paint();
       }
       /** @param {KeyboardEvent} event */
@@ -89244,7 +89351,7 @@ var init_diff = __esm({
 
 // js/auto/widgets.js
 var WIDGET_NEEDS;
-var init_widgets = __esm({
+var init_widgets2 = __esm({
   "js/auto/widgets.js"() {
     "use strict";
     WIDGET_NEEDS = [
@@ -89429,7 +89536,7 @@ var init_needs = __esm({
     "use strict";
     init_dashboard();
     init_page();
-    init_widgets();
+    init_widgets2();
     NEEDS = [...PAGE_NEEDS, ...DASHBOARD_NEEDS, ...WIDGET_NEEDS];
   }
 });

@@ -9,7 +9,11 @@ export declare class ChangeKeeper {
     connect(): void;
     /** The Storage the changes are kept in, or null: the call's option, else the page's, else session (or local) storage [wish-1028]. */
     store(): Storage | null;
-    /** The key a control is kept under, or '' when it has none. @param {HTMLElement} c */
+    /**
+     * The key a control is kept under, or '' when it has none. A composite field goes by its posted name (`data-kp-name`,
+     * or the `name` of an input inside it), else its id.
+     * @param {HTMLElement} c
+     */
     keyOf(c: HTMLElement): string;
     /** Write the changed values (all of them, or none when nothing is changed). */
     keep(): void;

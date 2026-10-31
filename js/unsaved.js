@@ -15,6 +15,10 @@
 // at work (the spinner in Save); the page saves and answers with unsavedSaved(el, { refused: { key: 'why' } }): the changes that
 // went through stop counting, the ones refused stay marked and the bar says why ("1 saved, 1 refused"). Discard puts every
 // value back and offers Undo for `data-kp-undo-ms` (6000; 0 offers none). Ctrl or Cmd+S saves.
+// The package's own composite fields count as one control each [homelab 37]: a quantity (`kp-quantity-change`), a time
+// field (`kp-time-change`) and a tag input (`kp-combobox-change`) mark their row with their own value ("2 → 3", "a → a, b"),
+// and Discard and Revert put it back through the field's own setter; the inputs inside them are not tracked. A field marked
+// `data-kp-untracked` (on itself or on an input inside it) is left out, for a page that keeps its own mirror.
 //
 // Options (markup, each with a default [KT6]):
 //   data-kp-unsaved-for    a selector for the form or the area to watch                   the nearest form, else the page's main
