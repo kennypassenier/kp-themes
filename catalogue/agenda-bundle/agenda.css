@@ -19816,22 +19816,57 @@
         color: var(--muted-foreground);
     }
 
+    /* A labelled group is a grid of two tracks [fix-1031]: the label, then its chips. Chips that do not fit wrap beside the label, under
+     * the first chip, instead of the whole chip run dropping under a label left alone on its line. */
+    .kp-toolbar__group:where(:has(> .kp-toolbar__label + .kp-segmented)) {
+        display: inline-grid;
+        grid-template-columns: auto minmax(min-content, max-content);
+        /* The label stands on the line of the first chips, not in the middle of a wrapped run. */
+        align-items: baseline;
+    }
+
     @media (max-width: 48rem) {
         .kp-toolbar,
         .kp-toolbar:not(:has(> .kp-toolbar__search)) {
             grid-template-columns: minmax(0, 1fr);
         }
 
-        /* One scrolling line of filters instead of a wrapped block. */
+        /* One scrolling line per group instead of a wrapped block [fix-1031]: each group starts on its own line with its label, so no
+         * group stands past the edge where only a scroll would find it; a group's chips scroll on their line. */
         .kp-toolbar__filters {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-toolbar__group {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-toolbar__group:where(:has(> .kp-toolbar__label + .kp-segmented)) {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-toolbar__group + .kp-toolbar__group {
+            padding-inline-start: 0;
+            border-inline-start: 0;
+        }
+
+        .kp-toolbar .kp-segmented--chips {
             flex-wrap: nowrap;
             overflow-x: auto;
             scrollbar-width: none;
         }
 
-        .kp-toolbar__group,
-        .kp-toolbar .kp-segmented--chips {
-            flex-wrap: nowrap;
+        /* A chip keeps its whole label on the scrolling line, and its focus ring goes inside, as the segmented control's own
+         * scroller does: a scroller clips what paints outside it. */
+        .kp-toolbar .kp-segmented--chips > .kp-segmented__item {
+            flex-shrink: 0;
+        }
+
+        .kp-toolbar .kp-segmented--chips > .kp-segmented__item:focus-visible {
+            outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+            box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
         }
 
         .kp-toolbar__state {
@@ -19848,14 +19883,37 @@
     }
 
     .kp-toolbar--stacked > .kp-toolbar__filters {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-toolbar--stacked .kp-toolbar__group {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-toolbar--stacked .kp-toolbar__group:where(:has(> .kp-toolbar__label + .kp-segmented)) {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .kp-toolbar--stacked .kp-toolbar__group + .kp-toolbar__group {
+        padding-inline-start: 0;
+        border-inline-start: 0;
+    }
+
+    .kp-toolbar--stacked .kp-segmented--chips {
         flex-wrap: nowrap;
         overflow-x: auto;
         scrollbar-width: none;
     }
 
-    .kp-toolbar--stacked .kp-toolbar__group,
-    .kp-toolbar--stacked .kp-segmented--chips {
-        flex-wrap: nowrap;
+    .kp-toolbar--stacked .kp-segmented--chips > .kp-segmented__item {
+        flex-shrink: 0;
+    }
+
+    .kp-toolbar--stacked .kp-segmented--chips > .kp-segmented__item:focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
     }
 
     .kp-toolbar--stacked > .kp-toolbar__state {
@@ -25747,8 +25805,10 @@
         --kp-ops-span: 3;
     }
 
-    /* A wrapper's one card fills the wrapper, so the cards of a row share one height. */
+    /* A wrapper's one card fills the wrapper, so the cards of a row share one height. The card's padding and border count inside the
+       100% [fix-1031]: as a content box it stood 34 px (2 x 1rem padding + 2 x 1px border) past the wrapper's foot. */
     .kp-ops__body > :not(.kp-card) > .kp-card:only-child {
+        box-sizing: border-box;
         block-size: 100%;
     }
 
@@ -37917,11 +37977,13 @@
     /* --- A run of badges [mc-1030, Medicine Cabinet gap 7] ---
      * Several `.kp-badge` in one cell that wrap when the cell is narrow, as a grid and not a flex run: the tracks are as wide as the widest
      * badge in them (at least `--kp-badges-min`, 8rem), so the badges of a wrapped run stand in columns and a label is never cut. A badge's
-     * words wrap at spaces here, not between letters. */
+     * words wrap at spaces here, not between letters. The tracks are auto-fit, not auto-fill [fix-1031]: the tracks no badge stands in
+     * collapse, so their room goes to the badges and one or a few badges keep their natural width instead of wrapping their words beside
+     * empty tracks. */
     .kp-badges {
         --kp-badge-wrap: normal;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(var(--kp-badges-min, 8rem), 100%), max-content));
+        grid-template-columns: repeat(auto-fit, minmax(min(var(--kp-badges-min, 8rem), 100%), max-content));
         gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         justify-content: start;
         justify-items: start;

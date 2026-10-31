@@ -153,8 +153,10 @@
         --kp-ops-span: 3;
     }
 
-    /* A wrapper's one card fills the wrapper, so the cards of a row share one height. */
+    /* A wrapper's one card fills the wrapper, so the cards of a row share one height. The card's padding and border count inside the
+       100% [fix-1031]: as a content box it stood 34 px (2 x 1rem padding + 2 x 1px border) past the wrapper's foot. */
     .kp-ops__body > :not(.kp-card) > .kp-card:only-child {
+        box-sizing: border-box;
         block-size: 100%;
     }
 
