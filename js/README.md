@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`, `diff.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -538,22 +538,23 @@ The menu button with its rich menu. 12 files.
 
 ## js/diff.js → js/diff/
 
-The diff view with file headers, folded context and changed words. 12 files.
+The diff view with file headers, folded context and changed words. 13 files.
 
-| File           | Does                                                                                                          |
-| -------------- | ------------------------------------------------------------------------------------------------------------- |
-| `actions.js`   | The functions a page calls on a diff: set it, toggle a file and copy a path.                                  |
-| `attach.js`    | Attaches the diffs of a page.                                                                                 |
-| `constants.js` | The selector, event names and limits of the diff view.                                                        |
-| `file.js`      | Draws one file of the diff: its path, its change bar and its header.                                          |
-| `fold.js`      | Folding the unchanged context of a hunk.                                                                      |
-| `lines.js`     | Draws the lines and rows of a hunk and fills the body of a file.                                              |
-| `model.js`     | What a diff remembers and reads: its state, attributes and count.                                             |
-| `read.js`      | Reads a diff: the kind and head of a file, normalising it, whether it is open, the announcement and the text. |
-| `render.js`    | Renders the whole diff: the column sizes, the skeleton and the files.                                         |
-| `state.js`     | The counter the diff parts share to give each diff its own ids.                                               |
-| `types.js`     | The types of the diff view: lines, hunks, files, the spec and the state.                                      |
-| `words.js`     | Pure word diffing: tokens, segments and the pairs of words that changed.                                      |
+| File            | Does                                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------- |
+| `actions.js`    | The functions a page calls on a diff: set it, toggle a file and copy a path.                                  |
+| `attach.js`     | Attaches the diffs of a page: one DiffControl per diff.                                                       |
+| `constants.js`  | The selector, event names and limits of the diff view.                                                        |
+| `controller.js` | DiffControl: one diff view: its clicks (files, folds, the rest of a file, copy, retry) and live options.      |
+| `file.js`       | Draws one file of the diff: its path, its change bar and its header.                                          |
+| `fold.js`       | Folding the unchanged context of a hunk.                                                                      |
+| `lines.js`      | Draws the lines and rows of a hunk and fills the body of a file.                                              |
+| `model.js`      | What a diff remembers and reads: its state, attributes and count.                                             |
+| `read.js`       | Reads a diff: the kind and head of a file, normalising it, whether it is open, the announcement and the text. |
+| `render.js`     | Renders the whole diff: the column sizes, the skeleton and the files.                                         |
+| `state.js`      | The counter the diff parts share to give each diff its own ids.                                               |
+| `types.js`      | The types of the diff view: lines, hunks, files, the spec and the state.                                      |
+| `words.js`      | Pure word diffing: tokens, segments and the pairs of words that changed.                                      |
 
 ## js/claim.js → js/claim/
 

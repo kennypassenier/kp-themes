@@ -87555,101 +87555,12 @@ var init_actions8 = __esm({
   }
 });
 
-// js/diff/attach.js
-function attachDiffs(root = document) {
-  const roots = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(DIFF) ? [root] : [],
-      ...root.querySelectorAll(DIFF)
-    ]
-  );
-  const undo = [];
-  for (const el_ of roots) {
-    const st = stateOf11(el_);
-    if (st.off.length) continue;
-    const onClick = (event) => {
-      const t = event.target instanceof Element ? event.target : null;
-      if (!t) return;
-      const s2 = getStrings();
-      const toggle2 = t.closest(".kp-diffview__toggle");
-      if (toggle2) {
-        const section = toggle2.closest(".kp-diffview__file");
-        const path = section?.getAttribute("data-kp-diff-path") ?? "";
-        return toggleFile(el_, path, toggle2.getAttribute("aria-expanded") !== "true");
-      }
-      const all = t.closest("[data-kp-diff-all]");
-      if (all instanceof HTMLButtonElement) {
-        if (all.disabled) return;
-        const open4 = all.getAttribute("data-kp-diff-all") === "expand";
-        for (const section of el_.querySelectorAll(".kp-diffview__file")) {
-          const path = section.getAttribute("data-kp-diff-path") ?? "";
-          if (section.getAttribute("data-kp-diff-file-open") === "true" !== open4) toggleFile(el_, path, open4);
-        }
-        return;
-      }
-      const fold2 = t.closest(".kp-diff__fold");
-      if (fold2 instanceof HTMLElement) {
-        const key = fold2.getAttribute("data-kp-diff-fold-key") ?? "";
-        const lines = Number(fold2.getAttribute("data-kp-diff-fold-lines"));
-        const path = key.split("|")[0];
-        const open4 = !st.folds.has(key);
-        if (open4) st.folds.add(key);
-        else st.folds.delete(key);
-        const found = fileOf(el_, path);
-        if (!found) return;
-        fillBody(
-          el_,
-          st,
-          found.file,
-          /** @type {HTMLElement} */
-          found.section.querySelector(".kp-diffview__body")
-        );
-        el_.querySelector(`[data-kp-diff-fold-key="${CSS.escape(key)}"]`)?.focus();
-        say16(el_, open4 ? s2.diffUnchangedShown(lines) : s2.diffUnchangedHidden(lines));
-        el_.dispatchEvent(new CustomEvent(DIFF_EXPAND_EVENT, { bubbles: true, detail: { path, lines, open: open4 } }));
-        return;
-      }
-      const more = t.closest("[data-kp-diff-more]");
-      if (more) {
-        const path = more.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
-        const found = fileOf(el_, path);
-        if (!found) return;
-        st.all.add(path);
-        const body = (
-          /** @type {HTMLElement} */
-          found.section.querySelector(".kp-diffview__body")
-        );
-        fillBody(el_, st, found.file, body);
-        body.focus({ preventScroll: true });
-        return;
-      }
-      const copy3 = t.closest(".kp-diffview__copy");
-      if (copy3 instanceof HTMLButtonElement) return void copyPath(el_, copy3);
-      if (t.closest("[data-kp-diff-retry-action]")) el_.dispatchEvent(new CustomEvent(DIFF_RETRY_EVENT, { bubbles: true }));
-    };
-    el_.addEventListener("click", onClick);
-    let queued = 0;
-    const watcher = new MutationObserver(() => {
-      window.cancelAnimationFrame(queued);
-      queued = window.requestAnimationFrame(() => render6(el_));
-    });
-    watcher.observe(el_, {
-      attributes: true,
-      attributeFilter: ["open", "context", "words", "bar", "copy", "max-lines", "label"].map((name) => `data-kp-diff-${name}`)
-    });
-    st.off = [() => el_.removeEventListener("click", onClick), () => watcher.disconnect(), () => window.cancelAnimationFrame(queued)];
-    undo.push(() => {
-      for (const stop of st.off) stop();
-      st.off = [];
-    });
-    render6(el_);
-  }
-  return () => undo.forEach((u) => u());
-}
-var init_attach27 = __esm({
-  "js/diff/attach.js"() {
+// js/diff/controller.js
+var LIVE5, DiffControl;
+var init_controller77 = __esm({
+  "js/diff/controller.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_actions8();
     init_constants43();
@@ -87657,6 +87568,105 @@ var init_attach27 = __esm({
     init_model13();
     init_read9();
     init_render7();
+    LIVE5 = ["open", "context", "words", "bar", "copy", "max-lines", "label"].map((name) => `data-kp-diff-${name}`);
+    DiffControl = class extends Controller {
+      /** @param {HTMLElement} host */
+      constructor(host) {
+        super(host);
+        this.st = stateOf11(host);
+        this.queued = 0;
+      }
+      connect() {
+        const root = this.host;
+        this.own(() => window.cancelAnimationFrame(this.queued));
+        this.listen(root, "click", (event) => this.onClick(event));
+        this.observe(
+          new MutationObserver(() => {
+            window.cancelAnimationFrame(this.queued);
+            this.queued = window.requestAnimationFrame(() => render6(root));
+          })
+        ).observe(root, { attributes: true, attributeFilter: LIVE5 });
+        render6(root);
+      }
+      /** @param {Event} event */
+      onClick(event) {
+        const root = this.host;
+        const t = event.target instanceof Element ? event.target : null;
+        if (!t) return;
+        const toggle2 = t.closest(".kp-diffview__toggle");
+        const all = t.closest("[data-kp-diff-all]");
+        const fold2 = t.closest(".kp-diff__fold");
+        const more = t.closest("[data-kp-diff-more]");
+        const copy3 = t.closest(".kp-diffview__copy");
+        if (toggle2) {
+          const path = toggle2.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
+          toggleFile(root, path, toggle2.getAttribute("aria-expanded") !== "true");
+        } else if (all instanceof HTMLButtonElement) this.toggleAll(all);
+        else if (fold2 instanceof HTMLElement) this.toggleFold(fold2);
+        else if (more) this.showRest(more);
+        else if (copy3 instanceof HTMLButtonElement) void copyPath(root, copy3);
+        else if (t.closest("[data-kp-diff-retry-action]")) root.dispatchEvent(new CustomEvent(DIFF_RETRY_EVENT, { bubbles: true }));
+      }
+      /** Expand or collapse every file that is not that way yet. @param {HTMLButtonElement} button */
+      toggleAll(button6) {
+        if (button6.disabled) return;
+        const open4 = button6.getAttribute("data-kp-diff-all") === "expand";
+        for (const section of this.host.querySelectorAll(".kp-diffview__file")) {
+          const path = section.getAttribute("data-kp-diff-path") ?? "";
+          if (section.getAttribute("data-kp-diff-file-open") === "true" !== open4) toggleFile(this.host, path, open4);
+        }
+      }
+      /** Show or hide one run of unchanged lines, keep the focus on its fold, and say how many lines moved. @param {HTMLElement} fold */
+      toggleFold(fold2) {
+        const { host: root, st } = this;
+        const s2 = getStrings();
+        const key = fold2.getAttribute("data-kp-diff-fold-key") ?? "";
+        const lines = Number(fold2.getAttribute("data-kp-diff-fold-lines"));
+        const path = key.split("|")[0];
+        const open4 = !st.folds.has(key);
+        if (open4) st.folds.add(key);
+        else st.folds.delete(key);
+        const found = fileOf(root, path);
+        if (!found) return;
+        fillBody(
+          root,
+          st,
+          found.file,
+          /** @type {HTMLElement} */
+          found.section.querySelector(".kp-diffview__body")
+        );
+        root.querySelector(`[data-kp-diff-fold-key="${CSS.escape(key)}"]`)?.focus();
+        say16(root, open4 ? s2.diffUnchangedShown(lines) : s2.diffUnchangedHidden(lines));
+        root.dispatchEvent(new CustomEvent(DIFF_EXPAND_EVENT, { bubbles: true, detail: { path, lines, open: open4 } }));
+      }
+      /** Draw the rest of a long file, past its line cap. @param {Element} more */
+      showRest(more) {
+        const { host: root, st } = this;
+        const path = more.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
+        const found = fileOf(root, path);
+        if (!found) return;
+        st.all.add(path);
+        const body = (
+          /** @type {HTMLElement} */
+          found.section.querySelector(".kp-diffview__body")
+        );
+        fillBody(root, st, found.file, body);
+        body.focus({ preventScroll: true });
+      }
+    };
+  }
+});
+
+// js/diff/attach.js
+function attachDiffs(root = document) {
+  return attachAll(root, DIFF, DiffControl);
+}
+var init_attach27 = __esm({
+  "js/diff/attach.js"() {
+    "use strict";
+    init_controller();
+    init_constants43();
+    init_controller77();
   }
 });
 
