@@ -1,5 +1,7 @@
 # research/gaps-1031: seven options homelab and kyu asked for
 
+**Decided (2026-10-31 22:17):** Kenny approved all seven pairs (formal) in round 1. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kenny, 2026-10-31, for 12.1.0: "zie dat alles gefixt is in deze release". Seven open items of `~/Projects/kp-gaps/homelab.md`
 (22, 26, 39, 43, 70, 73) and `kyu.md` (15) that add a visible option or part, each opt-in with a default that leaves the
 approved look as it was:

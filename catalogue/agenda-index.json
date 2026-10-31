@@ -460,30 +460,10 @@
             },
             "fingerprint": "83f012d2600f0685",
             "update": null
-        },
-        "research/gaps-1031/demo.html": {
-            "facts": {
-                "id": "gaps-1031",
-                "themes": "formal",
-                "ask": null,
-                "askText": "For 12.1.0 (“zie dat alles gefixt is in deze release”): seven things the homelab dashboard and kyu had to draw themselves, now options of the package. Every one is opt-in: without it the component is exactly as you approved it. Formal only, on the apps’ own data (the names, times and the token are mock). 7 sections, 7 pairs.",
-                "sections": [
-                    { "item": "question-batch", "themes": null, "topic": "questions", "mode": null },
-                    { "item": "notices-preview", "themes": null, "topic": "notices", "mode": null },
-                    { "item": "passkeys-slot", "themes": null, "topic": "passkeys", "mode": null },
-                    { "item": "passkeys-tokens", "themes": null, "topic": "passkeys", "mode": null },
-                    { "item": "md-aside", "themes": null, "topic": "master-detail", "mode": null },
-                    { "item": "week-off", "themes": null, "topic": "week", "mode": null },
-                    { "item": "command-secret", "themes": null, "topic": "command", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\"round\":\"gaps-1031-fcf120c0-6078-4bc0-8ebe-8c1da7c86f58\",\"received\":[]}\n        "
-            },
-            "fingerprint": "29d6a7325db3a9b3",
-            "update": null
         }
     },
     "decided": {
+        "research/gaps-1031/demo.html": "2026-10-31 22:17, Kenny: all seven pairs approved in formal (research/gaps-1031/VERDICTS.json)",
         "research/list-action-1031/demo.html": "2026-10-31 21:38, Kenny: the one pair approved in formal (research/list-action-1031/VERDICTS.json)",
         "research/medicine-1030/demo.html": "2026-10-31 00:41, Kenny: every pair approved over two rounds (research/medicine-1030/VERDICTS.json)",
         "research/chassis-storage/demo.html": "",
