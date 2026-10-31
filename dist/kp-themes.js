@@ -55167,151 +55167,14 @@ var init_pointer3 = __esm({
   }
 });
 
-// js/sequencer/attach.js
-function attachSequencers(root = document, options = {}) {
-  const undo = [];
-  for (
-    const el16 of
-    /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(SEQUENCER)]
-  ) {
-    if (sequencers.has(el16)) continue;
-    const c = build5(el16, resolveStrings(options.strings));
-    sequencers.set(el16, c);
-    readOptions3(c);
-    c.zoom = sequencerClampZoom(Number(el16.dataset.kpSequencerZoom) || 1);
-    const now = Number(el16.dataset.kpSequencerNow);
-    c.nowAt = el16.dataset.kpSequencerNow !== void 0 && Number.isFinite(now) ? now : null;
-    if (el16.dataset.kpState === "loading") c.state = "loading";
-    paint8(c);
-    const onClick = (e) => {
-      const target = (
-        /** @type {HTMLElement} */
-        e.target
-      );
-      const zoomButton = target.closest?.("[data-kp-sequencer-zoom]");
-      if (zoomButton instanceof HTMLElement) {
-        if (zoomButton.getAttribute("aria-disabled") === "true") return;
-        const key = zoomButton.dataset.kpSequencerZoom;
-        if (setZoom(c, key === "fit" ? 1 : c.zoom * (key === "in" ? 1.25 : 0.8)))
-          announce2(c, `${c.strings.sequencerZoomLabel} ${c.strings.sequencerZoomValue(Math.round(c.zoom * 100))}`);
-        return;
-      }
-      const action = target.closest?.("[data-kp-sequencer-action]");
-      if (action instanceof HTMLElement && c.selected) {
-        const which = action.dataset.kpSequencerAction;
-        if (which === "link") startLink(c, c.selected);
-        else if (which === "unlink") unlink(c, c.selected);
-        else if (which === "cancel") stopLink(c);
-        return;
-      }
-      if (!target.closest?.(".kp-sequencer__item") && target.closest?.(".kp-gantt__track, .kp-gantt__lane, .kp-sequencer__items")) {
-        if (c.linking) stopLink(c);
-        else select(c, null);
-      }
-    };
-    const keydown = (e) => onKey2(c, e);
-    const down = (e) => onDown(c, e);
-    const move = (e) => onMove(c, e);
-    const up = (e) => onUp(c, e);
-    const cancel = (e) => onCancel(c, e);
-    const focusin = (e) => {
-      const bar = (
-        /** @type {HTMLElement} */
-        e.target.closest?.(".kp-sequencer__item")
-      );
-      if (bar instanceof HTMLElement && bar.dataset.kpId && !c.press) {
-        c.focusId = bar.dataset.kpId;
-        select(c, bar.dataset.kpId);
-      }
-    };
-    const focusout = (e) => {
-      const bar = (
-        /** @type {HTMLElement} */
-        e.target.closest?.(".kp-sequencer__item")
-      );
-      if (c.kb && bar instanceof HTMLElement && bar.dataset.kpId === c.kb.id && !c.el.contains(
-        /** @type {Node | null} */
-        e.relatedTarget
-      ))
-        cancelEdit(c, "blur");
-    };
-    const wheel = (e) => {
-      if (!e.ctrlKey) return;
-      e.preventDefault();
-      setZoom(c, c.zoom * Math.exp(-e.deltaY * 0.01), e.clientX);
-    };
-    el16.addEventListener("click", onClick);
-    el16.addEventListener("keydown", keydown);
-    el16.addEventListener("pointerdown", down);
-    el16.addEventListener("pointermove", move);
-    el16.addEventListener("pointerup", up);
-    el16.addEventListener("pointercancel", cancel);
-    el16.addEventListener("focusin", focusin);
-    el16.addEventListener("focusout", focusout);
-    c.scroll.addEventListener("wheel", wheel, { passive: false });
-    const stopOptions = watchOptions(
-      el16,
-      [
-        "data-kp-sequencer-unit",
-        "data-kp-sequencer-snap",
-        "data-kp-sequencer-snap-items",
-        "data-kp-sequencer-overlap",
-        "data-kp-sequencer-lanes",
-        "data-kp-sequencer-editable",
-        "data-kp-sequencer-span",
-        "data-kp-sequencer-toolbar",
-        "data-kp-sequencer-hint",
-        "data-kp-sequencer-zoom"
-      ],
-      (names) => {
-        readOptions3(c);
-        if (names.includes("data-kp-sequencer-zoom")) c.zoom = sequencerClampZoom(Number(el16.dataset.kpSequencerZoom) || 1);
-        if (!c.press && !c.kb) {
-          c.tickKey = "";
-          paint8(c);
-        }
-      }
-    );
-    if (typeof ResizeObserver !== "undefined") {
-      let last = 0;
-      c.observer = new ResizeObserver(() => {
-        const width = c.plot.clientWidth;
-        if (width === last) return;
-        last = width;
-        window.cancelAnimationFrame(c.frameTimer);
-        c.frameTimer = window.requestAnimationFrame(() => {
-          if (!c.press?.moved) afterLayout(c);
-        });
-      });
-      c.observer.observe(c.plot);
-    }
-    undo.push(() => {
-      el16.removeEventListener("click", onClick);
-      el16.removeEventListener("keydown", keydown);
-      el16.removeEventListener("pointerdown", down);
-      el16.removeEventListener("pointermove", move);
-      el16.removeEventListener("pointerup", up);
-      el16.removeEventListener("pointercancel", cancel);
-      el16.removeEventListener("focusin", focusin);
-      el16.removeEventListener("focusout", focusout);
-      c.scroll.removeEventListener("wheel", wheel);
-      window.clearTimeout(c.scrollTimer);
-      window.cancelAnimationFrame(c.frameTimer);
-      stopOptions();
-      c.observer?.disconnect();
-      c.busy?.close();
-      sequencers.delete(el16);
-    });
-  }
-  return () => undo.splice(0).forEach((off) => off());
-}
-var init_attach16 = __esm({
-  "js/sequencer/attach.js"() {
+// js/sequencer/controller.js
+var ZOOM_IN, ZOOM_OUT, WHEEL_ZOOM, LIVE_OPTIONS2, SequencerControl;
+var init_controller38 = __esm({
+  "js/sequencer/controller.js"() {
     "use strict";
     init_strings();
     init_live_options();
-    init_constants25();
+    init_controller();
     init_instance2();
     init_build8();
     init_timeline();
@@ -55320,6 +55183,207 @@ var init_attach16 = __esm({
     init_drag();
     init_keyboard();
     init_pointer3();
+    ZOOM_IN = 1.25;
+    ZOOM_OUT = 0.8;
+    WHEEL_ZOOM = 0.01;
+    LIVE_OPTIONS2 = [
+      "data-kp-sequencer-unit",
+      "data-kp-sequencer-snap",
+      "data-kp-sequencer-snap-items",
+      "data-kp-sequencer-overlap",
+      "data-kp-sequencer-lanes",
+      "data-kp-sequencer-editable",
+      "data-kp-sequencer-span",
+      "data-kp-sequencer-toolbar",
+      "data-kp-sequencer-hint",
+      "data-kp-sequencer-zoom"
+    ];
+    SequencerControl = class extends Controller {
+      /** @param {HTMLElement} host @param {SequencerAttachOptions} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.c = /** @type {SequencerModel} */
+        /** @type {unknown} */
+        null;
+        this.lastWidth = 0;
+      }
+      connect() {
+        const el16 = this.host;
+        const c = this.c = build5(el16, resolveStrings(
+          /** @type {SequencerAttachOptions} */
+          this.options.strings
+        ));
+        sequencers.set(el16, c);
+        this.own(() => {
+          c.busy?.close();
+          sequencers.delete(el16);
+        });
+        readOptions3(c);
+        c.zoom = sequencerClampZoom(Number(el16.dataset.kpSequencerZoom) || 1);
+        const now = Number(el16.dataset.kpSequencerNow);
+        c.nowAt = el16.dataset.kpSequencerNow !== void 0 && Number.isFinite(now) ? now : null;
+        if (el16.dataset.kpState === "loading") c.state = "loading";
+        paint8(c);
+        this.watchWidth();
+        this.own(watchOptions(el16, LIVE_OPTIONS2, (names) => this.onOptions(names)));
+        this.own(() => {
+          window.clearTimeout(c.scrollTimer);
+          window.cancelAnimationFrame(c.frameTimer);
+        });
+        this.wire();
+      }
+      /** The listeners, newest last: destroy() removes click first, the wheel last, as before. */
+      wire() {
+        const c = this.c;
+        const el16 = this.host;
+        this.listen(c.scroll, "wheel", (e) => this.onWheel(
+          /** @type {WheelEvent} */
+          e
+        ), { passive: false });
+        this.listen(el16, "focusout", (e) => this.onFocusOut(
+          /** @type {FocusEvent} */
+          e
+        ));
+        this.listen(el16, "focusin", (e) => this.onFocusIn(
+          /** @type {FocusEvent} */
+          e
+        ));
+        this.listen(el16, "pointercancel", (e) => onCancel(
+          c,
+          /** @type {PointerEvent} */
+          e
+        ));
+        this.listen(el16, "pointerup", (e) => onUp(
+          c,
+          /** @type {PointerEvent} */
+          e
+        ));
+        this.listen(el16, "pointermove", (e) => onMove(
+          c,
+          /** @type {PointerEvent} */
+          e
+        ));
+        this.listen(el16, "pointerdown", (e) => onDown(
+          c,
+          /** @type {PointerEvent} */
+          e
+        ));
+        this.listen(el16, "keydown", (e) => onKey2(
+          c,
+          /** @type {KeyboardEvent} */
+          e
+        ));
+        this.listen(el16, "click", (e) => this.onClick(e));
+      }
+      /** Another plot width lays the bars out again on the next frame, unless a drag is moving them. */
+      watchWidth() {
+        const c = this.c;
+        if (typeof ResizeObserver === "undefined") return;
+        c.observer = this.observe(
+          new ResizeObserver(() => {
+            const width = c.plot.clientWidth;
+            if (width === this.lastWidth) return;
+            this.lastWidth = width;
+            window.cancelAnimationFrame(c.frameTimer);
+            c.frameTimer = window.requestAnimationFrame(() => {
+              if (!c.press?.moved) afterLayout(c);
+            });
+          })
+        );
+        c.observer.observe(c.plot);
+      }
+      /** An option changed at run time: read them again and paint, unless an edit is in progress. @param {string[]} names */
+      onOptions(names) {
+        const c = this.c;
+        readOptions3(c);
+        if (names.includes("data-kp-sequencer-zoom")) c.zoom = sequencerClampZoom(Number(this.host.dataset.kpSequencerZoom) || 1);
+        if (!c.press && !c.kb) {
+          c.tickKey = "";
+          paint8(c);
+        }
+      }
+      /** A zoom button, a link action, or a press on the empty track that lets go of the selection. @param {Event} e */
+      onClick(e) {
+        const c = this.c;
+        const target = (
+          /** @type {HTMLElement} */
+          e.target
+        );
+        const zoomButton = target.closest?.("[data-kp-sequencer-zoom]");
+        if (zoomButton instanceof HTMLElement) return this.pressZoom(zoomButton);
+        const action = target.closest?.("[data-kp-sequencer-action]");
+        if (action instanceof HTMLElement && c.selected) {
+          const which = action.dataset.kpSequencerAction;
+          if (which === "link") startLink(c, c.selected);
+          else if (which === "unlink") unlink(c, c.selected);
+          else if (which === "cancel") stopLink(c);
+          return;
+        }
+        if (!target.closest?.(".kp-sequencer__item") && target.closest?.(".kp-gantt__track, .kp-gantt__lane, .kp-sequencer__items")) {
+          if (c.linking) stopLink(c);
+          else select(c, null);
+        }
+      }
+      /** @param {HTMLElement} zoomButton */
+      pressZoom(zoomButton) {
+        const c = this.c;
+        if (zoomButton.getAttribute("aria-disabled") === "true") return;
+        const key = zoomButton.dataset.kpSequencerZoom;
+        if (setZoom(c, key === "fit" ? 1 : c.zoom * (key === "in" ? ZOOM_IN : ZOOM_OUT)))
+          announce2(c, `${c.strings.sequencerZoomLabel} ${c.strings.sequencerZoomValue(Math.round(c.zoom * 100))}`);
+      }
+      /** A bar that takes the focus is the selection and the tab stop. @param {FocusEvent} e */
+      onFocusIn(e) {
+        const c = this.c;
+        const bar = (
+          /** @type {HTMLElement} */
+          e.target.closest?.(".kp-sequencer__item")
+        );
+        if (bar instanceof HTMLElement && bar.dataset.kpId && !c.press) {
+          c.focusId = bar.dataset.kpId;
+          select(c, bar.dataset.kpId);
+        }
+      }
+      /** A bar picked up with the keyboard is put back when the focus leaves the sequencer. @param {FocusEvent} e */
+      onFocusOut(e) {
+        const c = this.c;
+        const bar = (
+          /** @type {HTMLElement} */
+          e.target.closest?.(".kp-sequencer__item")
+        );
+        if (c.kb && bar instanceof HTMLElement && bar.dataset.kpId === c.kb.id && !c.el.contains(
+          /** @type {Node | null} */
+          e.relatedTarget
+        ))
+          cancelEdit(c, "blur");
+      }
+      /** ctrl+wheel zooms around the pointer. @param {WheelEvent} e */
+      onWheel(e) {
+        if (!e.ctrlKey) return;
+        e.preventDefault();
+        setZoom(this.c, this.c.zoom * Math.exp(-e.deltaY * WHEEL_ZOOM), e.clientX);
+      }
+    };
+  }
+});
+
+// js/sequencer/attach.js
+function attachSequencers(root = document, options = {}) {
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(SEQUENCER)].filter((el16) => !sequencers.has(el16)).map((el16) => attachOne(el16, SequencerControl, options))
+  );
+  return () => {
+    for (const control of made6.splice(0)) control?.destroy();
+  };
+}
+var init_attach16 = __esm({
+  "js/sequencer/attach.js"() {
+    "use strict";
+    init_controller();
+    init_constants25();
+    init_instance2();
+    init_controller38();
   }
 });
 
@@ -57041,7 +57105,7 @@ var init_input2 = __esm({
 
 // js/gantt/controller.js
 var MIN_ZOOM_S, CHROME_OPTIONS, GanttControl;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/gantt/controller.js"() {
     "use strict";
     init_live_options();
@@ -57258,7 +57322,7 @@ var init_attach17 = __esm({
     "use strict";
     init_controller();
     init_constants26();
-    init_controller38();
+    init_controller39();
   }
 });
 
@@ -57657,7 +57721,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -57806,7 +57870,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller39();
+    init_controller40();
     init_values27();
     init_values27();
   }
@@ -58416,7 +58480,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -58601,7 +58665,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller40();
+    init_controller41();
   }
 });
 
@@ -59141,7 +59205,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -59270,7 +59334,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller41();
+    init_controller42();
     init_values29();
     init_values29();
     init_share();
@@ -59702,7 +59766,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -59783,7 +59847,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_values30();
     init_values30();
   }
@@ -60005,7 +60069,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -60134,7 +60198,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller43();
+    init_controller44();
     init_values31();
     init_values31();
     init_keys12();
@@ -61138,7 +61202,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -61204,7 +61268,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_values33();
     init_values33();
   }
@@ -61530,7 +61594,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -61817,7 +61881,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller45();
+    init_controller46();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -61939,7 +62003,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -62166,7 +62230,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -63158,7 +63222,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -63398,7 +63462,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller47();
+    init_controller48();
     init_values36();
     init_values36();
   }
@@ -63739,7 +63803,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -63857,7 +63921,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller48();
+    init_controller49();
     init_values37();
     init_values37();
     init_slug();
@@ -64544,7 +64608,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -64751,7 +64815,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller49();
+    init_controller50();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -65052,7 +65116,7 @@ var init_core18 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -65167,7 +65231,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller50();
+    init_controller51();
     init_values38();
     init_values38();
     init_names();
@@ -65412,7 +65476,7 @@ var init_core19 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -65517,7 +65581,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller51();
+    init_controller52();
     init_values39();
     init_values39();
     init_value();
@@ -66519,7 +66583,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -66678,7 +66742,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller52();
+    init_controller53();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -67109,7 +67173,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -67250,7 +67314,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller53();
+    init_controller54();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -67712,7 +67776,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -67982,7 +68046,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller54();
+    init_controller55();
     init_build14();
     init_commit();
     init_math4();
@@ -68270,7 +68334,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -68503,7 +68567,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller55();
+    init_controller56();
     init_list4();
     init_render4();
   }
@@ -69946,7 +70010,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -70137,7 +70201,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller56();
+    init_controller57();
     init_group6();
     init_group6();
   }
@@ -70426,7 +70490,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -70533,7 +70597,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller57();
+    init_controller58();
     init_values41();
     init_values41();
     init_level();
@@ -70828,7 +70892,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -71012,7 +71076,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller58();
+    init_controller59();
     init_values42();
     init_values42();
     init_order();
@@ -71277,7 +71341,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -71364,7 +71428,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller59();
+    init_controller60();
     init_values43();
     init_values43();
     init_states();
@@ -72103,7 +72167,7 @@ var init_set2 = __esm({
 });
 
 // js/entity-card/grid-control.js
-var NARROW_BELOW, CARDS3, LIVE_OPTIONS2, EntityGridControl;
+var NARROW_BELOW, CARDS3, LIVE_OPTIONS3, EntityGridControl;
 var init_grid_control = __esm({
   "js/entity-card/grid-control.js"() {
     "use strict";
@@ -72112,7 +72176,7 @@ var init_grid_control = __esm({
     init_set2();
     NARROW_BELOW = 480;
     CARDS3 = ":scope > .kp-card--entity";
-    LIVE_OPTIONS2 = [
+    LIVE_OPTIONS3 = [
       "data-kp-entity-meters",
       "data-kp-entity-flags-max",
       "data-kp-entity-inline",
@@ -72145,7 +72209,7 @@ var init_grid_control = __esm({
             })
           ).observe(grid2);
         }
-        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS2 });
+        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS3 });
         this.fold();
       }
       /** The least card width the grid asks for. */
@@ -73191,7 +73255,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -73444,7 +73508,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller60();
+    init_controller61();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -73790,7 +73854,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -74095,7 +74159,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller61();
+    init_controller62();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -74544,7 +74608,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -74678,7 +74742,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller62();
+    init_controller63();
     init_values46();
   }
 });
@@ -76341,7 +76405,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -76571,7 +76635,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller63();
+    init_controller64();
     init_values47();
     init_values47();
   }
@@ -76739,7 +76803,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -76968,7 +77032,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller64();
+    init_controller65();
     init_fields();
     init_fields();
   }
@@ -77308,7 +77372,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -77559,7 +77623,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller65();
+    init_controller66();
   }
 });
 
@@ -77883,7 +77947,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -77994,7 +78058,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller66();
+    init_controller67();
     init_values48();
     init_values48();
     init_time3();
@@ -78322,7 +78386,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller67 = __esm({
+var init_controller68 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -78581,7 +78645,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller67();
+    init_controller68();
     init_choices();
   }
 });
@@ -81316,8 +81380,8 @@ var init_state27 = __esm({
 });
 
 // js/claim/controller.js
-var LIVE_OPTIONS3, ClaimList;
-var init_controller68 = __esm({
+var LIVE_OPTIONS4, ClaimList;
+var init_controller69 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -81334,7 +81398,7 @@ var init_controller68 = __esm({
     init_request2();
     init_rows9();
     init_state27();
-    LIVE_OPTIONS3 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
+    LIVE_OPTIONS4 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
       (n) => `data-kp-claim-${n}`
     );
     ClaimList = class extends Controller {
@@ -81355,7 +81419,7 @@ var init_controller68 = __esm({
           event
         ));
         this.listen(list, CHECKLIST_RENDER_EVENT, () => decorate(list));
-        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS3 });
+        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS4 });
         this.listen(list, "click", (event) => this.onClick(
           /** @type {MouseEvent} */
           event
@@ -81487,7 +81551,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller68();
+    init_controller69();
   }
 });
 
@@ -83854,8 +83918,8 @@ var init_actions7 = __esm({
 });
 
 // js/qr/controller.js
-var LIVE_OPTIONS4, QrControl;
-var init_controller69 = __esm({
+var LIVE_OPTIONS5, QrControl;
+var init_controller70 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83864,7 +83928,7 @@ var init_controller69 = __esm({
     init_actions7();
     init_render6();
     init_state28();
-    LIVE_OPTIONS4 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
+    LIVE_OPTIONS5 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -83880,7 +83944,7 @@ var init_controller69 = __esm({
             window.cancelAnimationFrame(this.queued);
             this.queued = window.requestAnimationFrame(() => render5(root));
           })
-        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS4.map((n) => `data-kp-qr-${n}`) });
+        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS5.map((n) => `data-kp-qr-${n}`) });
         this.own(this.copyKey());
         render5(root);
       }
@@ -83959,7 +84023,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller69();
+    init_controller70();
     init_state28();
     init_state28();
     init_matrix2();

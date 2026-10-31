@@ -102,7 +102,7 @@
         "js/segmented.js": { "digest": "553ecd43197c119f", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "a31499eaaf2be336", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "0c9a0472084b1b72", "when": "[data-kp-sentence]" },
-        "js/sequencer.js": { "digest": "fcbfcdd9356781f7", "when": "[data-kp-sequencer]" },
+        "js/sequencer.js": { "digest": "8d32c635ac292c71", "when": "[data-kp-sequencer]" },
         "js/shortcuts.js": { "digest": "2d000f12a9140ab7", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
         "js/sidenav.js": { "digest": "08a98d3ca22cc3f1", "when": ".kp-sidenav" },
         "js/slider.js": { "digest": "107b919ff1e5724c", "when": "[data-kp-slider]" },
