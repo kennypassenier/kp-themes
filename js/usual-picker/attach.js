@@ -1,8 +1,9 @@
 // Attaches the usual pickers of a page and the functions a page calls on one.
+import { attachOne } from '../controller.js';
 import { USUAL } from './constants.js';
 import { bandValues, models } from './model.js';
 import { render } from './sync.js';
-import { wire } from './wire.js';
+import { UsualPickerControl } from './controller.js';
 /** @typedef {import('./types.js').UsualHandle} UsualHandle */
 
 /**
@@ -12,18 +13,17 @@ import { wire } from './wire.js';
  * @returns {() => void} detach
  */
 export function attachUsualPickers(root = document) {
-    /** @type {(() => void)[]} */
-    const undo = [];
     const boxes = /** @type {HTMLElement[]} */ ([
         ...(root instanceof HTMLElement && root.matches(USUAL) ? [root] : []),
         ...root.querySelectorAll(USUAL),
     ]);
-    for (const box of boxes) {
-        if (models.has(box)) continue;
-        const off = wire(box);
-        if (off) undo.push(off);
-    }
-    return () => undo.splice(0).forEach((off) => off());
+    // A picker in the registry is wired already; one whose combobox could not be wired destroyed itself and is tried again.
+    /** @type {(UsualPickerControl | undefined)[]} */
+    const made = [];
+    for (const box of boxes) if (!models.has(box)) made.push(attachOne(box, UsualPickerControl));
+    return () => {
+        for (const control of made.splice(0)) control?.destroy();
+    };
 }
 
 /**

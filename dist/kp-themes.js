@@ -52110,9 +52110,9 @@ function drawUsesMap(el16, spec, ctx) {
   ctx.syncCard(el16, m.loading, m.strings.usesLoading, () => [el16], "kp-uses__busy");
   ctx.markDrawn(el16);
   if (m.loading) return;
-  const wire2 = new UsesWire(m, root, svg2, list);
-  wire2.connect();
-  memory.off = () => wire2.destroy();
+  const wire = new UsesWire(m, root, svg2, list);
+  wire.connect();
+  memory.off = () => wire.destroy();
 }
 function setUsesPin(el16, key) {
   const card = key ? el16.querySelector(`.kp-uses__node[data-key="${CSS.escape(key)}"] .kp-uses__card`) : null;
@@ -69212,7 +69212,171 @@ var init_add = __esm({
   }
 });
 
-// js/usual-picker/wire.js
+// js/usual-picker/input.js
+var UsualPickerInput;
+var init_input3 = __esm({
+  "js/usual-picker/input.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_add();
+    init_constants33();
+    init_layout3();
+    init_lookup();
+    init_model8();
+    init_names2();
+    init_picking();
+    init_sync6();
+    UsualPickerInput = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.m = /** @type {UsualModel} */
+        /** @type {unknown} */
+        null;
+        this.typedAtEnter = "";
+      }
+      /** Take the model connect() built. @param {UsualModel} m */
+      adopt(m) {
+        this.m = m;
+      }
+      /** The picks changed: say what a typed name selected, end the Undo, end "not today" for what is picked, tell the page. @param {Event} event */
+      onChange(event) {
+        const m = this.m;
+        const { value, action, label } = (
+          /** @type {CustomEvent} */
+          event.detail
+        );
+        if (action === "add" && this.typedAtEnter !== "" && normaliseName(this.typedAtEnter) === normaliseName(String(label ?? ""))) {
+          sayAfter(m, getStrings().usualSelectedExisting(String(label)));
+          flashTag(m, String(value));
+        }
+        this.typedAtEnter = "";
+        clearNote(m);
+        for (const v of m.handle.values()) {
+          if (!m.notToday.delete(v)) continue;
+          m.box.dispatchEvent(new CustomEvent(USUAL_NOT_TODAY_EVENT, { bubbles: true, detail: { value: v, on: false } }));
+        }
+        if (!m.silent && action !== "remove") {
+          const from = m.nextFrom ?? originOf(m, String(value));
+          m.nextFrom = null;
+          m.box.dispatchEvent(new CustomEvent(USUAL_PICK_EVENT, { bubbles: true, detail: { value, from } }));
+        }
+        syncCheck(m);
+        syncHint(m);
+      }
+      /** A name typed that is already picked: its tag lights up and the status line says so; the text stays. @param {UsualItem} item */
+      already(item) {
+        this.m.handle.open();
+        flashTag(this.m, item.value);
+        sayAfter(this.m, getStrings().usualAlreadyPicked(item.label));
+      }
+      /** Alt U jumps to the first usual choice; Enter on a typed name selects, asks, refuses or adds. @param {KeyboardEvent} event */
+      onKey(event) {
+        const m = this.m;
+        const input = m.input;
+        if (event.key === "Enter") this.typedAtEnter = input.value.trim();
+        if (event.altKey && (event.code === "KeyU" || event.key.toLowerCase() === "u") && input.value === "") {
+          event.preventDefault();
+          m.handle.open();
+          const pinned = readPinned(m).length;
+          for (let i = 0; i < pinned + 1; i += 1) input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+          return;
+        }
+        if (event.key !== "Enter" || event.defaultPrevented || event.isComposing) return;
+        const typed = input.value.trim();
+        if (typed === "") return;
+        if (!m.list.hidden && input.getAttribute("aria-activedescendant")) return;
+        if (this.enterExact(event, typed) || this.enterNear(event, typed)) return;
+        if (attr7(m, "add", "off") !== "inline") return;
+        event.preventDefault();
+        const near2 = attr7(m, "near", "ask") ?? "ask";
+        addName(m, typed, near2 === "off" ? null : nearOf2(m, typed)[0]?.label ?? null);
+      }
+      /**
+       * Identical after case, accents and spaces: never a second one, whatever the guard is set to.
+       * @param {KeyboardEvent} event @param {string} typed
+       * @returns {boolean} whether Enter was spent on an item already listed
+       */
+      enterExact(event, typed) {
+        const m = this.m;
+        const exact2 = exactItem(m, typed);
+        if (!exact2) return false;
+        event.preventDefault();
+        if (pickedValues(m).includes(exact2.value)) this.already(exact2);
+        else {
+          pick(m, exact2.value, "typed");
+          sayAfter(m, getStrings().usualSelectedExisting(exact2.label));
+        }
+        return true;
+      }
+      /**
+       * A name close to one listed: take the closest, ask first, or point at the one already picked.
+       * @param {KeyboardEvent} event @param {string} typed
+       * @returns {boolean} whether Enter was spent on the guard
+       */
+      enterNear(event, typed) {
+        const m = this.m;
+        const near2 = attr7(m, "near", "ask") ?? "ask";
+        if (near2 === "off") return false;
+        const s2 = getStrings();
+        const picked = new Set(pickedValues(m));
+        const close = nearOf2(m, typed);
+        const free = close.filter((item) => !picked.has(item.value) && !item.el.hasAttribute("aria-disabled"));
+        if (free[0]) {
+          event.preventDefault();
+          if (near2 === "select") {
+            pick(m, free[0].value, "typed");
+            sayAfter(m, s2.usualTookClosest(typed, free[0].label));
+          } else {
+            event.stopImmediatePropagation();
+            m.handle.open();
+            m.input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+            sayAfter(m, s2.usualAsk(free[0].label));
+          }
+          return true;
+        }
+        if (!close[0]) return false;
+        event.preventDefault();
+        this.already(close[0]);
+        return true;
+      }
+      /** Retry, the add button, or a row of the check pressed. @param {MouseEvent} event */
+      onClick(event) {
+        const m = this.m;
+        const target = event.target instanceof Element ? event.target : null;
+        if (target?.closest("[data-kp-usual-retry]")) m.box.dispatchEvent(new CustomEvent(USUAL_RETRY_EVENT, { bubbles: true }));
+        else if (target?.closest("[data-kp-usual-add-button]")) {
+          const typed = m.input.value.trim();
+          if (typed) addName(m, typed, null);
+          else m.input.focus();
+        } else {
+          const button6 = (
+            /** @type {HTMLButtonElement | null} */
+            target?.closest(".kp-usual__check-pair button") ?? null
+          );
+          const pair = button6?.closest(".kp-usual__check-pair");
+          if (!button6 || button6.disabled || !(pair instanceof HTMLElement)) return;
+          const kind = button6.dataset.value === "not" ? "not" : "had";
+          const value = pair.dataset.value ?? "";
+          answer(m, value, answerOf(m, value) === kind ? "none" : kind);
+        }
+      }
+      /** Typing re-orders for `while-typing="hide"` and shows or hides the rows of the guard. */
+      onInput() {
+        const m = this.m;
+        clearNote(m);
+        if (attr7(m, "usual-while-typing") === "hide") {
+          arrange(m);
+          m.handle.refresh();
+        }
+        syncHint(m);
+      }
+    };
+  }
+});
+
+// js/usual-picker/controller.js
 function prepare(box) {
   if (box.hasAttribute("data-kp-multiple") && !box.hasAttribute("data-kp-tags")) {
     box.setAttribute("data-kp-tags", "");
@@ -69232,20 +69396,7 @@ function prepare(box) {
   }
   box.dataset.kpUsualReady = "";
 }
-function wire(box) {
-  prepare(box);
-  attachComboboxes(box.parentElement ?? document);
-  const handle = combobox(box);
-  const input = (
-    /** @type {HTMLInputElement | null} */
-    box.querySelector('input[role="combobox"]')
-  );
-  const list = (
-    /** @type {HTMLElement | null} */
-    box.querySelector('[role="listbox"]')
-  );
-  if (!handle || !input || !list) return null;
-  usualState.serial += 1;
+function newModel2(box, handle, input, list) {
   const panel = make26("div", "kp-usual__state");
   panel.hidden = true;
   const hintEl = make26("p", "kp-usual__hint");
@@ -69256,11 +69407,15 @@ function wire(box) {
   noteEl.hidden = true;
   hintEl.after(noteEl);
   box.append(panel);
-  const m = {
+  const status = (
+    /** @type {HTMLElement | null} */
+    box.querySelector("[data-kp-combobox-status]")
+  );
+  return {
     box,
     input,
     list,
-    status: box.querySelector("[data-kp-combobox-status]"),
+    status,
     handle,
     items: [],
     given: null,
@@ -69277,180 +69432,24 @@ function wire(box) {
     },
     silent: false
   };
-  models.set(box, m);
-  const memory = box.hasAttribute("data-kp-remember") ? memoryFor(box, "picker") : null;
-  if (memory) m.expanded = Boolean(memory.read("expanded", false));
-  box.classList.add("kp-usual");
-  readItems(m);
-  handle.extend({
-    shown: (option, query, matched) => {
-      if (option.hasAttribute("data-kp-more")) return query === "" && canFold(m);
-      if (option.hasAttribute("data-kp-pinned")) return query === "" || matched;
-      if (option.hasAttribute("data-kp-synth")) return true;
-      if (query === "") return !(folded(m) && option.hasAttribute("data-kp-rest"));
-      return matched;
-    },
-    after: (query, visible3) => {
-      void query;
-      void visible3;
-      paintTail(m, m.input.value.trim());
-      paintHeaders(m);
-    },
-    status: (query) => {
-      if (query !== "") {
-        const same2 = exactItem(m, query);
-        return same2 && pickedValues(m).includes(same2.value) ? getStrings().usualAlreadyPicked(same2.label) : null;
-      }
-      const band = bandValues(m).length;
-      return band > 0 ? getStrings().usualStatus(band, m.items.length - band) : null;
-    },
-    choose: (option) => {
-      if (option.hasAttribute("data-kp-more")) {
-        m.expanded = !m.expanded;
-        memory?.write("expanded", m.expanded);
-        arrange(m);
-        m.handle.refresh();
-        return true;
-      }
-      if (option.classList.contains("kp-usual__add")) {
-        addName(m, m.input.value.trim(), null);
-        return true;
-      }
-      if (option.classList.contains("kp-usual__near")) {
-        const value = option.dataset.kpNearValue ?? "";
-        pick(m, value, "typed");
-        sayAfter(m, getStrings().usualSelectedExisting(m.items.find((i) => i.value === value)?.label ?? value));
-        return true;
-      }
-      if (option.hasAttribute("data-kp-pinned")) {
-        m.nextFrom = "pinned";
-      }
-      return false;
-    }
-  });
-  arrange(m);
-  handle.refresh();
-  syncPanel(m);
-  let typedAtEnter = "";
-  const onChange = (event) => {
-    const { value, action, label } = (
-      /** @type {CustomEvent} */
-      event.detail
-    );
-    if (action === "add" && typedAtEnter !== "" && normaliseName(typedAtEnter) === normaliseName(String(label ?? ""))) {
-      sayAfter(m, getStrings().usualSelectedExisting(String(label)));
-      flashTag(m, String(value));
-    }
-    typedAtEnter = "";
-    clearNote(m);
-    for (const v of handle.values()) {
-      if (!m.notToday.delete(v)) continue;
-      box.dispatchEvent(new CustomEvent(USUAL_NOT_TODAY_EVENT, { bubbles: true, detail: { value: v, on: false } }));
-    }
-    if (m.silent || action === "remove") {
-      syncCheck(m);
-      syncHint(m);
-      return;
-    }
-    const from = m.nextFrom ?? originOf(m, String(value));
-    m.nextFrom = null;
-    box.dispatchEvent(new CustomEvent(USUAL_PICK_EVENT, { bubbles: true, detail: { value, from } }));
-    syncCheck(m);
-    syncHint(m);
-  };
-  box.addEventListener(CHANGE_EVENT, onChange);
-  const already = (item) => {
-    handle.open();
-    flashTag(m, item.value);
-    sayAfter(m, getStrings().usualAlreadyPicked(item.label));
-  };
-  const onKey5 = (event) => {
-    if (event.key === "Enter") typedAtEnter = input.value.trim();
-    if (event.altKey && (event.code === "KeyU" || event.key.toLowerCase() === "u") && input.value === "") {
-      event.preventDefault();
-      handle.open();
-      const pinned = readPinned(m).length;
-      for (let i = 0; i < pinned + 1; i += 1) input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
-      return;
-    }
-    if (event.key !== "Enter" || event.defaultPrevented || event.isComposing) return;
-    const typed = input.value.trim();
-    if (typed === "") return;
-    if (!list.hidden && input.getAttribute("aria-activedescendant")) return;
-    const s2 = getStrings();
-    const picked = new Set(pickedValues(m));
-    const exact2 = exactItem(m, typed);
-    if (exact2) {
-      event.preventDefault();
-      if (picked.has(exact2.value)) return already(exact2);
-      pick(m, exact2.value, "typed");
-      sayAfter(m, s2.usualSelectedExisting(exact2.label));
-      return;
-    }
-    const near2 = attr7(m, "near", "ask") ?? "ask";
-    if (near2 !== "off") {
-      const close = nearOf2(m, typed);
-      const free = close.filter((item) => !picked.has(item.value) && !item.el.hasAttribute("aria-disabled"));
-      if (free[0]) {
-        event.preventDefault();
-        if (near2 === "select") {
-          pick(m, free[0].value, "typed");
-          sayAfter(m, s2.usualTookClosest(typed, free[0].label));
-        } else {
-          event.stopImmediatePropagation();
-          handle.open();
-          input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
-          sayAfter(m, s2.usualAsk(free[0].label));
-        }
-        return;
-      }
-      if (close[0]) {
-        event.preventDefault();
-        return already(close[0]);
-      }
-    }
-    if (attr7(m, "add", "off") !== "inline") return;
-    event.preventDefault();
-    addName(m, typed, close0(near2, typed));
-  };
-  const close0 = (near2, typed) => near2 === "off" ? null : nearOf2(m, typed)[0]?.label ?? null;
-  input.addEventListener("keydown", onKey5, { capture: true });
-  const onClick = (event) => {
-    const target = event.target instanceof Element ? event.target : null;
-    if (target?.closest("[data-kp-usual-retry]")) box.dispatchEvent(new CustomEvent(USUAL_RETRY_EVENT, { bubbles: true }));
-    else if (target?.closest("[data-kp-usual-add-button]")) {
-      const typed = input.value.trim();
-      if (typed) addName(m, typed, null);
-      else input.focus();
-    } else {
-      const button6 = (
-        /** @type {HTMLButtonElement | null} */
-        target?.closest(".kp-usual__check-pair button") ?? null
-      );
-      const pair = button6?.closest(".kp-usual__check-pair");
-      if (!button6 || button6.disabled || !(pair instanceof HTMLElement)) return;
-      const kind = button6.dataset.value === "not" ? "not" : "had";
-      const value = pair.dataset.value ?? "";
-      answer(m, value, answerOf(m, value) === kind ? "none" : kind);
-    }
-  };
-  box.addEventListener("click", onClick);
-  const onInput = () => {
-    clearNote(m);
-    if (attr7(m, "usual-while-typing") === "hide") {
-      arrange(m);
-      handle.refresh();
-    }
-    syncHint(m);
-  };
-  input.addEventListener("input", onInput);
-  const unkey = registerShortcuts(box, [
-    { keys: "Alt U", what: getStrings().usualJump, group: "Picker", when: () => bandValues(m).length > 0, run: () => false }
-  ]);
-  const watch2 = new MutationObserver(() => render3(m));
-  watch2.observe(box, {
-    attributes: true,
-    attributeFilter: [
+}
+var LIVE_OPTIONS3, UsualPickerControl;
+var init_controller57 = __esm({
+  "js/usual-picker/controller.js"() {
+    "use strict";
+    init_combobox();
+    init_strings();
+    init_shortcuts();
+    init_remember();
+    init_add();
+    init_layout3();
+    init_lookup();
+    init_model8();
+    init_picking();
+    init_state23();
+    init_sync6();
+    init_input3();
+    LIVE_OPTIONS3 = [
       "data-kp-usual",
       "data-kp-usual-source",
       "data-kp-usual-max",
@@ -69468,54 +69467,133 @@ function wire(box) {
       "data-kp-usual-undo",
       "data-kp-hint",
       "data-kp-state"
-    ]
-  });
-  if (attr7(m, "preselect") === "usual" && box.hasAttribute("data-kp-tags") && handle.values().length === 0) {
-    handle.set(bandValues(m));
-  }
-  syncHint(m);
-  syncCheck(m);
-  return () => {
-    watch2.disconnect();
-    unkey();
-    box.removeEventListener(CHANGE_EVENT, onChange);
-    box.removeEventListener("click", onClick);
-    input.removeEventListener("keydown", onKey5, { capture: true });
-    input.removeEventListener("input", onInput);
-    handle.extend(null);
-    m.busy?.remove();
-    panel.remove();
-    hintEl.remove();
-    noteEl.remove();
-    m.checkOff();
-    m.check?.remove();
-    for (const node of list.querySelectorAll("[data-kp-synth], .kp-usual__tail")) node.remove();
-    models.delete(box);
-    delete box.dataset.kpUsualReady;
-  };
-}
-var init_wire5 = __esm({
-  "js/usual-picker/wire.js"() {
-    "use strict";
-    init_combobox();
-    init_strings();
-    init_shortcuts();
-    init_remember();
-    init_add();
-    init_constants33();
-    init_layout3();
-    init_lookup();
-    init_model8();
-    init_names2();
-    init_picking();
-    init_state23();
-    init_sync6();
+    ];
+    UsualPickerControl = class extends UsualPickerInput {
+      connect() {
+        const box = this.host;
+        prepare(box);
+        attachComboboxes(box.parentElement ?? document);
+        const handle = combobox(box);
+        const input = (
+          /** @type {HTMLInputElement | null} */
+          box.querySelector('input[role="combobox"]')
+        );
+        const list = (
+          /** @type {HTMLElement | null} */
+          box.querySelector('[role="listbox"]')
+        );
+        if (!handle || !input || !list) return this.destroy();
+        usualState.serial += 1;
+        const m = newModel2(box, handle, input, list);
+        this.adopt(m);
+        models.set(box, m);
+        this.own(() => this.release());
+        const memory = box.hasAttribute("data-kp-remember") ? memoryFor(box, "picker") : null;
+        if (memory) m.expanded = Boolean(memory.read("expanded", false));
+        box.classList.add("kp-usual");
+        readItems(m);
+        this.extend(memory);
+        arrange(m);
+        handle.refresh();
+        syncPanel(m);
+        this.wire();
+        if (attr7(m, "preselect") === "usual" && box.hasAttribute("data-kp-tags") && handle.values().length === 0) handle.set(bandValues(m));
+        syncHint(m);
+        syncCheck(m);
+      }
+      /** The listeners, the Alt U entry and the option watch, set up so that destroy() removes them in the old order. */
+      wire() {
+        const m = this.m;
+        this.listen(m.input, "input", () => this.onInput());
+        this.listen(m.input, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ), { capture: true });
+        this.listen(m.box, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(m.box, CHANGE_EVENT, (event) => this.onChange(event));
+        const jump = { keys: "Alt U", what: getStrings().usualJump, group: "Picker", when: () => bandValues(m).length > 0, run: () => false };
+        this.own(registerShortcuts(m.box, [jump]));
+        this.observe(new MutationObserver(() => render3(m))).observe(m.box, { attributes: true, attributeFilter: LIVE_OPTIONS3 });
+      }
+      /** The picker's parts leave, and the box is a plain combobox again. */
+      release() {
+        const m = this.m;
+        m.handle.extend(null);
+        m.busy?.remove();
+        m.panel.remove();
+        m.hintEl.remove();
+        m.noteEl.remove();
+        m.checkOff();
+        m.check?.remove();
+        for (const node of m.list.querySelectorAll("[data-kp-synth], .kp-usual__tail")) node.remove();
+        models.delete(m.box);
+        delete m.box.dataset.kpUsualReady;
+      }
+      /** Extend the combobox: which rows show, the tail and headings, the status line and the rows the picker answers itself. @param {ReturnType<typeof memoryFor> | null} memory */
+      extend(memory) {
+        const m = this.m;
+        m.handle.extend({
+          shown: (option, query, matched) => {
+            if (option.hasAttribute("data-kp-more")) return query === "" && canFold(m);
+            if (option.hasAttribute("data-kp-pinned")) return query === "" || matched;
+            if (option.hasAttribute("data-kp-synth")) return true;
+            if (query === "") return !(folded(m) && option.hasAttribute("data-kp-rest"));
+            return matched;
+          },
+          after: () => {
+            paintTail(m, m.input.value.trim());
+            paintHeaders(m);
+          },
+          status: (query) => this.statusOf(query),
+          choose: (option) => this.choose(option, memory)
+        });
+      }
+      /** The status line: a name typed that is already picked, or how many usual and other choices there are. @param {string} query */
+      statusOf(query) {
+        const m = this.m;
+        if (query !== "") {
+          const same2 = exactItem(m, query);
+          return same2 && pickedValues(m).includes(same2.value) ? getStrings().usualAlreadyPicked(same2.label) : null;
+        }
+        const band = bandValues(m).length;
+        return band > 0 ? getStrings().usualStatus(band, m.items.length - band) : null;
+      }
+      /**
+       * A row the picker answers itself: More, Add, a near name's question; a pinned row only marks where the pick came from.
+       * @param {HTMLElement} option @param {ReturnType<typeof memoryFor> | null} memory
+       * @returns {boolean} whether the picker took the row
+       */
+      choose(option, memory) {
+        const m = this.m;
+        if (option.hasAttribute("data-kp-more")) {
+          m.expanded = !m.expanded;
+          memory?.write("expanded", m.expanded);
+          arrange(m);
+          m.handle.refresh();
+          return true;
+        }
+        if (option.classList.contains("kp-usual__add")) {
+          addName(m, m.input.value.trim(), null);
+          return true;
+        }
+        if (option.classList.contains("kp-usual__near")) {
+          const value = option.dataset.kpNearValue ?? "";
+          pick(m, value, "typed");
+          sayAfter(m, getStrings().usualSelectedExisting(m.items.find((i) => i.value === value)?.label ?? value));
+          return true;
+        }
+        if (option.hasAttribute("data-kp-pinned")) m.nextFrom = "pinned";
+        return false;
+      }
+    };
   }
 });
 
 // js/usual-picker/attach.js
 function attachUsualPickers(root = document) {
-  const undo = [];
   const boxes = (
     /** @type {HTMLElement[]} */
     [
@@ -69523,12 +69601,11 @@ function attachUsualPickers(root = document) {
       ...root.querySelectorAll(USUAL)
     ]
   );
-  for (const box of boxes) {
-    if (models.has(box)) continue;
-    const off = wire(box);
-    if (off) undo.push(off);
-  }
-  return () => undo.splice(0).forEach((off) => off());
+  const made6 = [];
+  for (const box of boxes) if (!models.has(box)) made6.push(attachOne(box, UsualPickerControl));
+  return () => {
+    for (const control of made6.splice(0)) control?.destroy();
+  };
 }
 function usualPicker(element) {
   const m = models.get(element);
@@ -69560,10 +69637,11 @@ function usualNotToday(element) {
 var init_attach20 = __esm({
   "js/usual-picker/attach.js"() {
     "use strict";
+    init_controller();
     init_constants33();
     init_model8();
     init_sync6();
-    init_wire5();
+    init_controller57();
   }
 });
 
@@ -70010,7 +70088,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -70201,7 +70279,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller57();
+    init_controller58();
     init_group6();
     init_group6();
   }
@@ -70490,7 +70568,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -70597,7 +70675,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller58();
+    init_controller59();
     init_values41();
     init_values41();
     init_level();
@@ -70892,7 +70970,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -71076,7 +71154,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller59();
+    init_controller60();
     init_values42();
     init_values42();
     init_order();
@@ -71341,7 +71419,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -71428,7 +71506,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller60();
+    init_controller61();
     init_values43();
     init_values43();
     init_states();
@@ -72167,7 +72245,7 @@ var init_set2 = __esm({
 });
 
 // js/entity-card/grid-control.js
-var NARROW_BELOW, CARDS3, LIVE_OPTIONS3, EntityGridControl;
+var NARROW_BELOW, CARDS3, LIVE_OPTIONS4, EntityGridControl;
 var init_grid_control = __esm({
   "js/entity-card/grid-control.js"() {
     "use strict";
@@ -72176,7 +72254,7 @@ var init_grid_control = __esm({
     init_set2();
     NARROW_BELOW = 480;
     CARDS3 = ":scope > .kp-card--entity";
-    LIVE_OPTIONS3 = [
+    LIVE_OPTIONS4 = [
       "data-kp-entity-meters",
       "data-kp-entity-flags-max",
       "data-kp-entity-inline",
@@ -72209,7 +72287,7 @@ var init_grid_control = __esm({
             })
           ).observe(grid2);
         }
-        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS3 });
+        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS4 });
         this.fold();
       }
       /** The least card width the grid asks for. */
@@ -73255,7 +73333,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -73508,7 +73586,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller61();
+    init_controller62();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -73854,7 +73932,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -74159,7 +74237,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller62();
+    init_controller63();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -74608,7 +74686,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -74742,7 +74820,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller63();
+    init_controller64();
     init_values46();
   }
 });
@@ -76405,7 +76483,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -76635,7 +76713,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller64();
+    init_controller65();
     init_values47();
     init_values47();
   }
@@ -76803,7 +76881,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -77032,7 +77110,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller65();
+    init_controller66();
     init_fields();
     init_fields();
   }
@@ -77372,7 +77450,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -77623,7 +77701,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller66();
+    init_controller67();
   }
 });
 
@@ -77658,7 +77736,7 @@ function toRun(input) {
   if (!Number.isFinite(at)) return null;
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
-var init_input3 = __esm({
+var init_input4 = __esm({
   "js/runs/input.js"() {
     "use strict";
   }
@@ -77778,7 +77856,7 @@ var init_core26 = __esm({
     init_controller();
     init_busy_card();
     init_strings();
-    init_input3();
+    init_input4();
     init_options8();
     init_parts17();
     init_time3();
@@ -77947,7 +78025,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller67 = __esm({
+var init_controller68 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -78058,7 +78136,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller67();
+    init_controller68();
     init_values48();
     init_values48();
     init_time3();
@@ -78386,7 +78464,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller68 = __esm({
+var init_controller69 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -78645,7 +78723,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller68();
+    init_controller69();
     init_choices();
   }
 });
@@ -81380,8 +81458,8 @@ var init_state27 = __esm({
 });
 
 // js/claim/controller.js
-var LIVE_OPTIONS4, ClaimList;
-var init_controller69 = __esm({
+var LIVE_OPTIONS5, ClaimList;
+var init_controller70 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -81398,7 +81476,7 @@ var init_controller69 = __esm({
     init_request2();
     init_rows9();
     init_state27();
-    LIVE_OPTIONS4 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
+    LIVE_OPTIONS5 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
       (n) => `data-kp-claim-${n}`
     );
     ClaimList = class extends Controller {
@@ -81419,7 +81497,7 @@ var init_controller69 = __esm({
           event
         ));
         this.listen(list, CHECKLIST_RENDER_EVENT, () => decorate(list));
-        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS4 });
+        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS5 });
         this.listen(list, "click", (event) => this.onClick(
           /** @type {MouseEvent} */
           event
@@ -81551,7 +81629,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller69();
+    init_controller70();
   }
 });
 
@@ -82522,8 +82600,8 @@ var init_keys16 = __esm({
 });
 
 // js/availability/controller.js
-var CELL2, LIVE_OPTIONS5, cellOf2, AvailabilityControl;
-var init_controller70 = __esm({
+var CELL2, LIVE_OPTIONS6, cellOf2, AvailabilityControl;
+var init_controller71 = __esm({
   "js/availability/controller.js"() {
     "use strict";
     init_controller();
@@ -82538,7 +82616,7 @@ var init_controller70 = __esm({
     init_request3();
     init_keys16();
     CELL2 = ".kp-availability__grid .kp-heat__cell[data-col-key]";
-    LIVE_OPTIONS5 = [
+    LIVE_OPTIONS6 = [
       "data-kp-heat-edit",
       "data-kp-disabled-reason",
       ...[
@@ -82592,7 +82670,7 @@ var init_controller70 = __esm({
         this.listen(el16, "scroll", (event) => this.onScroll(event), true);
         if (el16.getAttribute("data-kp-availability-keys") !== "false") this.own(registerAvailabilityKeys(el16));
         this.own(attachHeats(el16));
-        this.observe(new MutationObserver(() => render4(el16))).observe(el16, { attributes: true, attributeFilter: LIVE_OPTIONS5 });
+        this.observe(new MutationObserver(() => render4(el16))).observe(el16, { attributes: true, attributeFilter: LIVE_OPTIONS6 });
         render4(el16);
       }
       /** @param {MouseEvent} event */
@@ -82742,7 +82820,7 @@ var init_attach24 = __esm({
     init_api28();
     init_constants40();
     init_facts();
-    init_controller70();
+    init_controller71();
   }
 });
 
@@ -83926,8 +84004,8 @@ var init_actions7 = __esm({
 });
 
 // js/qr/controller.js
-var LIVE_OPTIONS6, QrControl;
-var init_controller71 = __esm({
+var LIVE_OPTIONS7, QrControl;
+var init_controller72 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83936,7 +84014,7 @@ var init_controller71 = __esm({
     init_actions7();
     init_render6();
     init_state28();
-    LIVE_OPTIONS6 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
+    LIVE_OPTIONS7 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -83952,7 +84030,7 @@ var init_controller71 = __esm({
             window.cancelAnimationFrame(this.queued);
             this.queued = window.requestAnimationFrame(() => render5(root));
           })
-        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS6.map((n) => `data-kp-qr-${n}`) });
+        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS7.map((n) => `data-kp-qr-${n}`) });
         this.own(this.copyKey());
         render5(root);
       }
@@ -84031,7 +84109,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller71();
+    init_controller72();
     init_state28();
     init_state28();
     init_matrix2();
