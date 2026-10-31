@@ -20046,7 +20046,8 @@ var init_drawing2 = __esm({
       constructor(...args) {
         super(...args);
         this.have = Math.max(0, ...this.chart.points.map((p) => p.length));
-        this.few = this.opt.minPoints > 0 && this.have < this.opt.minPoints;
+        const lone = this.have === 1 && this.chart.data.onePointNote === true;
+        this.few = this.opt.minPoints > 0 && this.have < this.opt.minPoints && !lone;
         this.medians = [];
       }
       /** Draw everything, in order. */
