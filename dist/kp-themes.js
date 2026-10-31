@@ -14717,6 +14717,16 @@ var init_covered = __esm({
 });
 
 // js/menu-button/open.js
+function placeAgain(s2, view) {
+  if (s2.placing) return;
+  s2.placing = view.requestAnimationFrame(() => {
+    s2.placing = 0;
+    if (!s2.open) return;
+    lowerMenu(s2);
+    placeMenu(s2, view, coveredEdges(view, s2.wrapper, s2.menu));
+    raiseMenu(s2, view);
+  });
+}
 function openMenu(wrapper, { focus = "first" } = {}) {
   const s2 = menus.get(wrapper);
   if (!s2 || s2.open || s2.empty) return;
@@ -14735,21 +14745,12 @@ function openMenu(wrapper, { focus = "first" } = {}) {
   if (view && covered) {
     placeMenu(s2, view, covered);
     raiseMenu(s2, view);
-    let frame3 = 0;
-    const again2 = () => {
-      if (frame3) return;
-      frame3 = view.requestAnimationFrame(() => {
-        frame3 = 0;
-        if (!s2.open) return;
-        lowerMenu(s2);
-        placeMenu(s2, view, coveredEdges(view, s2.wrapper, s2.menu));
-        raiseMenu(s2, view);
-      });
-    };
+    const again2 = () => placeAgain(s2, view);
     view.addEventListener("resize", again2);
     s2.off.push(() => {
       view.removeEventListener("resize", again2);
-      if (frame3) view.cancelAnimationFrame(frame3);
+      if (s2.placing) view.cancelAnimationFrame(s2.placing);
+      s2.placing = 0;
     });
   }
   s2.button.setAttribute("aria-expanded", "true");
@@ -14832,7 +14833,7 @@ function wireMenu(wrapper, { decorate: decorate2, strings }) {
   button6.setAttribute("aria-controls", menu.id);
   button6.setAttribute("aria-expanded", "false");
   menu.hidden = true;
-  const s2 = { wrapper, button: button6, menu, decorate: decorate2, strings, drawn: "", pending: null, open: false, empty: false, off: [] };
+  const s2 = { wrapper, button: button6, menu, decorate: decorate2, strings, drawn: "", pending: null, open: false, empty: false, off: [], placing: 0 };
   menus.set(wrapper, s2);
   decorateButton(s2);
   menuItems(s2).forEach((item, index) => {

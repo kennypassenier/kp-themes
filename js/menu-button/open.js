@@ -11,6 +11,18 @@ import { lowerMenu, placeMenu, raiseMenu, unplaceMenu } from './placement.js';
 /** @typedef {import('./types.js').MenuGroup} MenuGroup */
 /** @typedef {import('./types.js').MenuState} MenuState */
 
+/** Place an open menu again in the next frame, once however often a resize asks. @param {MenuState} s @param {Window} view */
+function placeAgain(s, view) {
+    if (s.placing) return;
+    s.placing = view.requestAnimationFrame(() => {
+        s.placing = 0;
+        if (!s.open) return;
+        lowerMenu(s);
+        placeMenu(s, view, coveredEdges(view, s.wrapper, s.menu));
+        raiseMenu(s, view);
+    });
+}
+
 /**
  * Open a menu button's menu and put the focus on its first (or last) entry;
  * `none` leaves the focus where it is (a page showing the menu on its own,
@@ -41,22 +53,13 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
         placeMenu(s, view, covered);
         raiseMenu(s, view);
         // A turned phone or a resized window: the menu is placed again,
-        // once a frame at most.
-        let frame = 0;
-        const again = () => {
-            if (frame) return;
-            frame = view.requestAnimationFrame(() => {
-                frame = 0;
-                if (!s.open) return;
-                lowerMenu(s);
-                placeMenu(s, view, coveredEdges(view, s.wrapper, s.menu));
-                raiseMenu(s, view);
-            });
-        };
+        // once a frame at most; the frame asked for sits on the menu's state.
+        const again = () => placeAgain(s, view);
         view.addEventListener('resize', again);
         s.off.push(() => {
             view.removeEventListener('resize', again);
-            if (frame) view.cancelAnimationFrame(frame);
+            if (s.placing) view.cancelAnimationFrame(s.placing);
+            s.placing = 0;
         });
     }
     s.button.setAttribute('aria-expanded', 'true');
@@ -159,7 +162,7 @@ export function wireMenu(wrapper, { decorate, strings }) {
     button.setAttribute('aria-expanded', 'false');
     menu.hidden = true;
     /** @type {MenuState} */
-    const s = { wrapper, button, menu, decorate, strings, drawn: '', pending: null, open: false, empty: false, off: [] };
+    const s = { wrapper, button, menu, decorate, strings, drawn: '', pending: null, open: false, empty: false, off: [], placing: 0 };
     menus.set(wrapper, s);
     decorateButton(s);
     menuItems(s).forEach((item, index) => {

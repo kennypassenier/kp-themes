@@ -2,10 +2,6 @@ export type MenuButtonOptions = import('./types.js').MenuButtonOptions;
 export type MenuDecorateInfo = import('./types.js').MenuDecorateInfo;
 export type MenuGroup = import('./types.js').MenuGroup;
 export type MenuState = import('./types.js').MenuState;
-/** @typedef {import('./types.js').MenuButtonOptions} MenuButtonOptions */
-/** @typedef {import('./types.js').MenuDecorateInfo} MenuDecorateInfo */
-/** @typedef {import('./types.js').MenuGroup} MenuGroup */
-/** @typedef {import('./types.js').MenuState} MenuState */
 /**
  * Open a menu button's menu and put the focus on its first (or last) entry;
  * `none` leaves the focus where it is (a page showing the menu on its own,

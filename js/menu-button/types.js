@@ -50,6 +50,7 @@
  * @property {boolean} open
  * @property {boolean} empty
  * @property {(() => void)[]} off what an open menu listens to, undone when it closes
+ * @property {number} placing the frame that places an open menu again after a resize, or 0
  */
 
 /** @typedef {{ left: number, top: number, right: number, bottom: number }} Edges */
