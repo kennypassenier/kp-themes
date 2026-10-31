@@ -44,6 +44,17 @@
         border-block-start: 1px solid var(--border);
     }
 
+    /* The detail + aside variant [homelab gap 73]: no list pane (`data-kp-pane-listless`, written by the script). The detail always
+     * shows; below `data-kp-aside-fold-at` the aside moves under it, and folded it is one column with the aside under the detail.
+     * There is nothing to go back to, so the detail has no Back button. */
+    .kp-split--panes[data-kp-pane-listless][data-kp-aside-folded] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-split--panes[data-kp-pane-listless][data-kp-master-detail] .kp-pane__head > .kp-pane__back {
+        display: none;
+    }
+
     .kp-split--panes[data-kp-narrow-on]:not([data-kp-narrow='stack']),
     .kp-split--panes[data-kp-narrow-on][data-kp-narrow='stack'] {
         grid-template-columns: minmax(0, 1fr);

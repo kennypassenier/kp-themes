@@ -1,6 +1,7 @@
 /** The fold state of one layout. */
 export declare class Folding {
     root: HTMLElement;
+    listless: boolean;
     foldAt: string;
     asideFoldAt: string;
     probe: HTMLDivElement;
@@ -8,8 +9,8 @@ export declare class Folding {
     asideNarrow: boolean;
     /** The pane a phone shows: `list` or `detail`. */
     shown: string;
-    /** @param {HTMLElement} root */
-    constructor(root: HTMLElement);
+    /** @param {HTMLElement} root @param {boolean} [listless] the detail + aside variant: the detail never gives way to a list */
+    constructor(root: HTMLElement, listless?: boolean);
     /** What `data-kp-narrow` says a phone shows: `one-pane` (default), `stack` or `sheet`. */
     mode(): string;
     /** A length as pixels, read as the page's rem. @param {string} length */

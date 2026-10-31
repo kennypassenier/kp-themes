@@ -303,4 +303,6 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/week/pills.js',
     'js/week/state.js',
     'js/week/upcoming.js',
+    'js/question-card/batch.js',
+    'js/command/secret.js',
 ];

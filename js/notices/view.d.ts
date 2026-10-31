@@ -22,6 +22,10 @@ export declare class NoticesView extends Controller {
     constructor(el: HTMLElement);
     look(): string;
     isPage(): boolean;
+    /** The embedded read-only preview [homelab gap 26]: in the page like `page`, without the heading, Mark all read, Mark read and the switches. */
+    isPreview(): boolean;
+    /** Whether the list stands in the page (no counter, no panel). */
+    inPage(): boolean;
     items(): import("../notices.js").Notice[];
     /** @param {Notice} n */
     isRead(n: Notice): boolean;
@@ -57,7 +61,7 @@ export declare class NoticesView extends Controller {
         key: string | null;
         control: string;
     }): void;
-    /** "(5) " in front of the tab title while there are unread notices, unless `data-kp-count-in-title="off"`. */
+    /** "(5) " in front of the tab title while there are unread notices, unless `data-kp-count-in-title="off"`; a preview leaves it alone. */
     paintTitle(): void;
     /** New notices are announced once, critical ones assertively; a toast for the severe ones. @param {Notice[]} fresh */
     announce(fresh: Notice[]): void;

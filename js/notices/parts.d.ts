@@ -33,7 +33,8 @@ export declare function buildParts(doc: Document, id: string, listLabel: string)
 export type NoticeParts = ReturnType<typeof buildParts>;
 /** @typedef {ReturnType<typeof buildParts>} NoticeParts */
 /**
- * Put the parts in the host: the page look as a section, the other looks as a counter that opens an anchored panel.
- * @param {HTMLElement} el @param {NoticeParts} p @param {boolean} isPage
+ * Put the parts in the host: the page look as a section, the preview as the same section without its head and switches but with
+ * the Inbox link, the other looks as a counter that opens an anchored panel.
+ * @param {HTMLElement} el @param {NoticeParts} p @param {boolean} isPage @param {boolean} [isPreview]
  */
-export declare function mountParts(el: HTMLElement, p: NoticeParts, isPage: boolean): void;
+export declare function mountParts(el: HTMLElement, p: NoticeParts, isPage: boolean, isPreview?: boolean): void;

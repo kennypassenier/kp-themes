@@ -7,7 +7,7 @@ export const passkeysDescriptor = {
         group: 'Data',
         classes: ['kp-passkeys'],
         exports: [],
-        aliases: ['passkey', 'never-used-after', 'protect-last', 'refuse-look'],
+        aliases: ['passkey', 'never-used-after', 'protect-last', 'refuse-look', 'rename', 'missing-use'],
         intro: 'The list of ways to sign in: passkeys, magic links, passwords and tokens. One row each with its icon, its name, when it was added and, in words, when it was last used; a “This device” badge on the one in use; Rename and Remove in two fixed columns. The only way in is protected from removal.',
         whenToUse: 'An account page. For a list of API keys use the secret and copyable parts; for a plain table of records, the data table.',
         examples: [

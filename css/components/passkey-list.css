@@ -143,6 +143,14 @@
         gap: var(--kp-space-xs, 0.25rem);
     }
 
+    /* The app's own slot beside the badges [homelab gap 39]: what it holds keeps to the badge column. */
+    .kp-passkeys__extra {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-inline-size: 100%;
+    }
+
     .kp-passkeys__action {
         min-inline-size: var(--kp-passkeys-action-min, 5.5rem);
         white-space: nowrap;

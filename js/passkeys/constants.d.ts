@@ -42,7 +42,13 @@ export type PasskeyRow = {
      * the way this session signed in with
      */
     current?: boolean;
+    /**
+     * a free slot beside the badges, for what the app adds
+     * (a token's scope chip): a string is drawn as a plain badge, a function returns the node to show [homelab gap 39]
+     */
+    extra?: string | ((doc: Document, row: PasskeyRow) => Node);
 };
+export type MissingUse = 'never' | 'unknown' | 'none';
 export type PasskeysSpec = {
     rows?: PasskeyRow[];
     state?: 'ready' | 'loading' | 'empty' | 'error';
@@ -80,7 +86,14 @@ export type PasskeysSpec = {
      * reject with an Error to refuse; its message is shown
      */
     remove?: (row: PasskeyRow) => Promise<unknown> | unknown;
-    rename?: (row: PasskeyRow, label: string) => Promise<unknown> | unknown;
+    /**
+     * false leaves Rename out
+     */
+    rename?: false | ((row: PasskeyRow, label: string) => Promise<unknown> | unknown);
+    /**
+     * what a row without `lastUsedAt` says: never (default) | unknown | none
+     */
+    missingUse?: MissingUse;
     /**
      * how many waiting rows (default: the rows shown last, else 3)
      */
@@ -99,6 +112,9 @@ export type PasskeysSpec = {
  * @property {number} [createdAt] ms
  * @property {number | null} [lastUsedAt] ms; null or missing: never used
  * @property {boolean} [current] the way this session signed in with
+ * @property {string | ((doc: Document, row: PasskeyRow) => Node)} [extra] a free slot beside the badges, for what the app adds
+ *     (a token's scope chip): a string is drawn as a plain badge, a function returns the node to show [homelab gap 39]
+ * @typedef {'never' | 'unknown' | 'none'} MissingUse
  * @typedef {object} PasskeysSpec
  * @property {PasskeyRow[]} [rows]
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
@@ -115,7 +131,8 @@ export type PasskeysSpec = {
  * @property {number} [neverUsedAfter] days
  * @property {() => number} [now] the clock (a test gives its own)
  * @property {(row: PasskeyRow) => Promise<unknown> | unknown} [remove] reject with an Error to refuse; its message is shown
- * @property {(row: PasskeyRow, label: string) => Promise<unknown> | unknown} [rename]
+ * @property {false | ((row: PasskeyRow, label: string) => Promise<unknown> | unknown)} [rename] false leaves Rename out
+ * @property {MissingUse} [missingUse] what a row without `lastUsedAt` says: never (default) | unknown | none
  * @property {number} [loadingRows] how many waiting rows (default: the rows shown last, else 3)
  * @property {string} [loadingWords] what the busy card says
  */

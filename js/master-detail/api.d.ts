@@ -21,7 +21,7 @@ export declare function openPane(root: Element, key: string): void;
 /** Show the list again. @param {Element} root */
 export declare function closePane(root: Element): void;
 /**
- * Wire every master-detail layout under `root`; one without a list pane and a detail pane is left alone.
+ * Wire every master-detail layout under `root`; one without a detail pane, or with neither a list pane nor an aside, is left alone.
  * @param {ParentNode} [root]
  * @param {{ history?: boolean }} [options] `history: false` leaves the browser's history alone
  * @returns {() => void} detach

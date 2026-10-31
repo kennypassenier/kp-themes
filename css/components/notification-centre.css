@@ -16,8 +16,21 @@
         min-inline-size: 0;
     }
 
-    .kp-notices[data-kp-notices-look='page'] {
+    .kp-notices:is([data-kp-notices-look='page'], [data-kp-notices-look='preview']) {
         display: block;
+    }
+
+    /* The read-only preview [homelab gap 26]: no Mark read, so the fix is the actions' only slot and a row without one has none. */
+    .kp-notices[data-kp-notices-look='preview'] .kp-notices__actions {
+        grid-template-columns: minmax(0, max-content);
+    }
+
+    .kp-notices[data-kp-notices-look='preview'] .kp-notices__actions > .kp-notices__fix {
+        grid-column: 1;
+    }
+
+    .kp-notices[data-kp-notices-look='preview'] .kp-notices__actions:empty {
+        display: none;
     }
 
     .kp-notices__trigger {
@@ -268,7 +281,7 @@
 
     /* The footprint hold (js/footprint.js) sets a min-block-size on the host while a state shows: the page look stretches over it,
      * so the failed or empty plate fills the held height instead of stopping short of the frame [t56-footprint-1018]. */
-    [data-kp-notices][data-kp-notices-look='page']:not([data-kp-state='ready']) {
+    [data-kp-notices]:is([data-kp-notices-look='page'], [data-kp-notices-look='preview']):not([data-kp-state='ready']) {
         display: grid;
         grid-template-rows: minmax(0, 1fr);
     }

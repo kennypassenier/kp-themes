@@ -96,6 +96,45 @@
         inline-size: 100%;
     }
 
+    /* A masked token in a command line [kyu gap 15]: the dots (or the token, once Show is pressed in) in the code's own face, on
+     * a muted ground so the masked part reads as one thing; Show stands just before Copy, at the head's end, and holds the
+     * width of its longer word so nothing moves when it flips. */
+    .kp-command__secret {
+        padding-inline: 0.25ch;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--muted-foreground);
+        letter-spacing: 0.05em;
+    }
+
+    .kp-command__secret[data-kp-command-secret-shown] {
+        color: var(--foreground);
+        letter-spacing: normal;
+    }
+
+    .kp-command__reveal {
+        flex: none;
+        margin-inline-start: auto;
+        white-space: nowrap;
+    }
+
+    .kp-command__reveal + .kp-command__copy-slot {
+        margin-inline-start: 0;
+    }
+
+    .kp-command__reveal-face {
+        display: inline-grid;
+    }
+
+    .kp-command__reveal-word {
+        grid-area: 1 / 1;
+    }
+
+    .kp-command__reveal[aria-pressed='true'] .kp-command__reveal-word[data-kp-when='off'],
+    .kp-command__reveal:not([aria-pressed='true']) .kp-command__reveal-word[data-kp-when='on'] {
+        visibility: hidden;
+    }
+
     .kp-command__code {
         margin: 0;
         max-block-size: var(--kp-command-code-max, none);

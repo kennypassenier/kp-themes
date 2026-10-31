@@ -4,8 +4,9 @@ export type Strings = ReturnType<typeof import('../strings.js').getStrings>;
 /**
  * One notice: its mark, what happened since when, what it affects and what to do, and its actions.
  * @param {Document} doc @param {Strings} t @param {Notice} n @param {boolean} read
+ * @param {boolean} [readOnly] the preview: no Mark read, the fix alone in the actions
  */
-export declare function noticeRow(doc: Document, t: Strings, n: Notice, read: boolean): HTMLElement;
+export declare function noticeRow(doc: Document, t: Strings, n: Notice, read: boolean, readOnly?: boolean): HTMLElement;
 /**
  * A switch that mutes one source.
  * @param {Document} doc @param {Strings} t @param {NoticeSource} src

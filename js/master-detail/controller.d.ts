@@ -2,11 +2,15 @@ import { Controller } from '../controller.js';
 import { DetailState } from './detail-state.js';
 import { Folding } from './folding.js';
 import { DetailParts } from './parts.js';
-/** The controller of one `[data-kp-master-detail]` layout that has a list pane, a detail pane and a window. */
+/**
+ * The controller of one `[data-kp-master-detail]` layout that has a detail pane and a window, and a list pane, or, without one, an
+ * aside: the detail + aside variant [homelab gap 73], where the detail always shows and only the aside folds.
+ */
 export declare class MasterDetailController extends Controller {
     doc: Document;
     view: Window;
-    list: HTMLElement;
+    /** The list pane, or null in the detail + aside variant. */
+    list: HTMLElement | null;
     detail: HTMLElement;
     aside: HTMLElement | null;
     useHistory: boolean;

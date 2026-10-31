@@ -34,6 +34,11 @@
 // the focus; the tab title carries "(1) waiting" while a question is open (`data-kp-title="off"` on the container leaves it
 // alone); on a phone the buttons are full width with their consequences under them.
 //
+// Answering in one go [homelab gap 22], opt-in on the container: `data-kp-questions-batch="on"` (or `confirm`, which asks first)
+// puts a bar over the cards, "Answer 3 with their default", once `data-kp-questions-batch-min` (default 2) open questions have a
+// default answer; one press answers each of them with its default, as if the person had pressed that button on every card
+// (js/question-card/batch.js). Absent or "off" (the default): no bar.
+//
 // Events (bubbling, on the card):
 //   kp-question-answer   { id, value, respond(ok, why?) }   the person answered; the app sends and calls respond
 //   kp-question-expire   { id, defaultAnswer }              the time ran out unanswered
@@ -47,6 +52,7 @@
 import { attachOne, controllerOf, hostsOf } from './controller.js';
 import { getStrings } from './strings.js';
 import { buildCard } from './question-card/build.js';
+import { QuestionBatch } from './question-card/batch.js';
 import { QuestionRun } from './question-card/run.js';
 import { resolveQuestion } from './question-card/spec.js';
 import { QUESTIONS } from './question-card/values.js';
@@ -114,8 +120,10 @@ export function attachQuestions(root = document) {
         if (!container.hasAttribute('role')) container.setAttribute('role', 'region');
         if (!container.hasAttribute('aria-label') && !container.hasAttribute('aria-labelledby'))
             container.setAttribute('aria-label', getStrings().questionsLabel);
+        attachOne(container, QuestionBatch);
     }
     return () => {
+        for (const container of found) controllerOf(container, QuestionBatch)?.destroy();
         for (const container of found)
             for (const card of container.querySelectorAll(':scope > .kp-question')) controllerOf(card, QuestionRun)?.stop();
     };

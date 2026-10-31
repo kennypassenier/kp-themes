@@ -18,6 +18,12 @@ each line its example and its option row, and empties the list.
 - fix-1031, site/components/segmented.html: the sentence in the chips-tied-to-a-field example and the `data-kp-segmented-for` option row now say that a linked group drawn later is linked as it arrives under an attached root (written in gates/site/descriptors; regenerate the page in the pass).
 - fix-1031: `./js/log` is a published module (`sourceColour`, `sourceIndex`, `SOURCE_PROPERTY`, `attachLogs`), so the bundle exports it; the log page names the import.
 - list-action-1031 (2026-10-31), site/components/list.html: the trailing action column `.kp-listrow__action` (`[action] auto` at the end of the tracks, only in a list that holds an action; empty cell in a row without one; its own full line in the card), the `--kp-list-tracks` knob row with its new default, and an example of mixed rows (an "I took one" button, the word "Scheduled", no action, and a row with stepper and switch) drawn from research/list-action-1031.
+- gaps-1031 (2026-10-31), site/components/question.html: the batch bar, `data-kp-questions-batch` (`off` default, `on`, `confirm`) and `data-kp-questions-batch-min` (default 2), with an example of three open questions and the bar over them.
+- gaps-1031, site/components/notices.html: the `preview` look (embedded, read-only: no heading, Mark all read, Mark read or switches; the Inbox link with `data-kp-inbox-href`; no title count and no toasts by default).
+- gaps-1031, site/components/passkeys.html: a row's `extra` slot (a string badge or a node), `rename: false` / `data-kp-rename="off"`, and `missingUse` / `data-kp-missing-use` (`never` default, `unknown`, `none`), with a machine-token example.
+- gaps-1031, site/components/master-detail.html: the detail + aside variant without a list pane (`data-kp-pane-listless` written, `1fr 24rem` columns, no Back).
+- gaps-1031, site/components/week.html: `data-kp-week-off` (`show` default, `hide`).
+- gaps-1031, site/components/command.html: a masked token `data-kp-command-secret` with `data-kp-command-secret-mask` (`dots` default, `tail`) and `data-kp-command-secret-reveal` (`on` default, `off`), Copy copying the real value.
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's

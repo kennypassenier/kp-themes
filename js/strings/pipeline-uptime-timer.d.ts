@@ -132,6 +132,22 @@ export type PipelineUptimeTimerStrings = {
      */
     commandRunsOn: (where: string) => string;
     /**
+     * The button that shows a masked token in a command (js/command/secret.js) [kyu gap 15]
+     */
+    commandSecretShow: string;
+    /**
+     * The same button while the token shows [kyu gap 15]
+     */
+    commandSecretHide: string;
+    /**
+     * Its name for a screen reader [kyu gap 15]
+     */
+    commandSecretShowLabel: string;
+    /**
+     * What a screen reader hears in place of a masked token, "kyu token, hidden" [kyu gap 15]
+     */
+    commandSecretHidden: (name: string) => string;
+    /**
      * A timer's Start button (js/countdown.js, js/timer-disc.js) [kpadopt4-ideas]
      */
     timerStart: string;
@@ -239,6 +255,10 @@ export type PipelineUptimeTimerStrings = {
  * @property {string} commandSudo  The badge of a Linux command that runs with root rights [kpadopt4-ideas]
  * @property {string} commandSudoTitle  Its tooltip [kpadopt4-ideas]
  * @property {(where: string) => string} commandRunsOn  The note under a command that says where it runs [kpadopt4-ideas]
+ * @property {string} commandSecretShow  The button that shows a masked token in a command (js/command/secret.js) [kyu gap 15]
+ * @property {string} commandSecretHide  The same button while the token shows [kyu gap 15]
+ * @property {string} commandSecretShowLabel  Its name for a screen reader [kyu gap 15]
+ * @property {(name: string) => string} commandSecretHidden  What a screen reader hears in place of a masked token, "kyu token, hidden" [kyu gap 15]
  * @property {string} timerStart  A timer's Start button (js/countdown.js, js/timer-disc.js) [kpadopt4-ideas]
  * @property {string} timerPause  The same button while it runs [kpadopt4-ideas]
  * @property {string} timerResume  The same button while it is paused [kpadopt4-ideas]

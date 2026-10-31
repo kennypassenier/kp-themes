@@ -1478,10 +1478,11 @@ The key-figure parts: sparklines, toggles, the meter and the strips; the three a
 
 ## js/question-card.js → js/question-card/
 
-The question card: the host waits for your answer, as a QuestionRun controller per card. 6 files.
+The question card: the host waits for your answer, as a QuestionRun controller per card. 7 files.
 
 | File        | Does                                                                                                                                               |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `batch.js`  | The batch bar of a question list: one press answers every open question that has a default answer with that default (opt-in).                   |
 | `build.js`  | The card's elements: the head, the time with its measure, the answer buttons with their consequences, the outcome, Dismiss and the voice.          |
 | `core.js`   | One question card's state and what it paints from it: the state and its look, the time left, the outcome line, the countdown animation, the clock. |
 | `run.js`    | One running question: its place among the others, its answer and the app's reply, its time running out, and its going.                             |
@@ -1864,7 +1865,7 @@ The list toolbar: the names, the search and the active row of removable filter t
 
 ## js/command.js → js/command/
 
-The command block: the terminals, the lines, the head and the note, and the CommandBlock controller that writes them, makes the code scrollable on request and puts everything back. 5 files.
+The command block: the terminals, the lines, the head and the note, and the CommandBlock controller that writes them, makes the code scrollable on request and puts everything back. 6 files.
 
 | File        | Does                                                                                                                         |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -1872,6 +1873,7 @@ The command block: the terminals, the lines, the head and the note, and the Comm
 | `block.js`  | One command block: its lines, head and note written, its code made scrollable on request, and everything put back on detach. |
 | `head.js`   | The head of a command block (the terminal, the admin or sudo badge, the copy button) and the note under the code.            |
 | `lines.js`  | The lines of a command, each with whether it carries on from the line before, laid out one to a line.                        |
+| `secret.js` | A masked token inside a command line: drawn masked, shown while Show is pressed in, copied with its real value.              |
 | `values.js` | The selector and the terminals of a command block.                                                                           |
 
 ## js/tick.js → js/tick/
