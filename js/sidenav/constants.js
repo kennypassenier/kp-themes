@@ -48,3 +48,16 @@ export const TIP_OPEN_MS = 300;
 /** The gap between the rail and what floats beside it, in pixels, and the margin kept from the window's edges. */
 export const FLOAT_GAP = 6;
 export const FLOAT_MARGIN = 8;
+/** The refused cue's leg when the theme names no readable duration, and the time the refused mark stays when motion is off. */
+export const REFUSE_FALLBACK_MS = 220;
+export const REFUSE_STILL_MS = 600;
+/** How far a refused panel is pulled toward its edge, when `--kp-sidenav-refuse-travel` is not set. */
+export const REFUSE_TRAVEL = '0.75rem';
+/** The pointer's rest before a rail with `data-kp-sidenav-expand-on-hover` widens, when `-hover-delay` names none. */
+export const HOVER_DELAY_MS = 150;
+/** One arrow key's move of the resize grip, in pixels, and how many of those a Shift+arrow moves. */
+export const RESIZE_STEP = 16;
+export const RESIZE_SHIFT_STEPS = 5;
+/** The narrowest and widest a resizable panel may be dragged, when `-min-width` and `-max-width` name none. */
+export const RESIZE_MIN_WIDTH = '12rem';
+export const RESIZE_MAX_WIDTH = '32rem';

@@ -11,8 +11,8 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
   where each public name lives. Every part opens with one line saying what it does.
 - Files are named by responsibility, not by position: `datatable/sort.js`, `datatable/filter.js`, `sidenav/resizer.js`.
   Pure helpers that tests import keep their export names and are re-exported by the facade.
-- A big closure (`attachDataTables`, `attachSidenavs`, `plotChart`) is split into **install functions** that share one
-  context object `c`: `js/datatable/attach/`, `js/sidenav/attach/` and `js/chart/plot/` hold one file per concern, each
+- A big closure (`attachDataTables`, `plotChart`) is split into **install functions** that share one
+  context object `c`: `js/datatable/attach/` and `js/chart/plot/` hold one file per concern, each
   exporting `install<Name>(c)`. The host file (`attach.js`, `plot.js`) builds `c`, calls the installs in order and returns.
   A part reads what an earlier part published with `const { … } = c`, reads what changes (`let` values) as `c.name`, and
   `context.js` types the whole context from the fields each part adds (`<Part>Fields`). The order of the calls is the order
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`, `diff.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`, `diff.js`, `sidenav.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -240,31 +240,24 @@ The editable multi-track timeline. 17 files.
 
 ## js/sidenav.js → js/sidenav/
 
-The side navigation: panel, rail, slim, peek, fly-outs and the resize grip. 21 files.
+The side navigation: panel, rail, slim, peek, fly-outs and the resize grip. 14 files.
 
-| File                  | Does                                                                           |
-| --------------------- | ------------------------------------------------------------------------------ |
-| `attach/backdrop.js`  | The backdrop and the focus trap of an open panel.                              |
-| `attach/basics.js`    | The panel's readers, its remembered state and the mode it starts in.           |
-| `attach/context.js`   | The context the parts of one side navigation share.                            |
-| `attach/controls.js`  | The shortcut, the category toggles and the clicks of the panel.                |
-| `attach/flyout.js`    | The fly-out of a rail item: opening, closing and its timers.                   |
-| `attach/geometry.js`  | The panel's geometry: togglers, content, margins, sizes and the peek strip.    |
-| `attach/handle.js`    | The handle a page gets back and the detach that undoes everything.             |
-| `attach/launchers.js` | The launchers, the light turn and the live-region sentence.                    |
-| `attach/narrow.js`    | Narrow screens: when the panel hides, slims or comes back.                     |
-| `attach/open.js`      | Opening, closing and refusing: the one place the open state changes.           |
-| `attach/peek.js`      | The peek: the panel shown from its edge.                                       |
-| `attach/rail.js`      | The rail glyphs, the start state and the rail keys.                            |
-| `attach/resizer.js`   | The resize grip: drag, keys and reset.                                         |
-| `attach/shift.js`     | Shifts the content aside and applies the opener.                               |
-| `attach/slim.js`      | The slim and rail modes.                                                       |
-| `attach/tip.js`       | The tip beside a rail item and the floating submenu.                           |
-| `attach/wire.js`      | Registers the panel's event listeners.                                         |
-| `attach.js`           | Attaches the side navigation to its element: its closure, split into parts.    |
-| `constants.js`        | The event names, attributes and fixed timings of the side navigation.          |
-| `helpers.js`          | Pure helpers: the chord parser, list splitting, slide timing and name lookups. |
-| `options.js`          | The table of options the side navigation reads from its element.               |
+| File            | Does                                                                                                                 |
+| --------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `attach.js`     | Attaches the side navigations of a page: one SidenavControl per panel.                                               |
+| `base.js`       | SidenavBase: the panel's readers, its remembered state and its geometry (togglers, content, sizes, the peek strip).  |
+| `constants.js`  | The event names, attributes and fixed timings of the side navigation.                                                |
+| `controller.js` | SidenavControl: runs the setup steps, the starting state, the listeners, the rail keys, the handle and the detach.   |
+| `controls.js`   | SidenavControls: the shortcut, the group toggles, the togglers' clicks and Escape.                                   |
+| `flyout.js`     | SidenavFlyout: the groups that float out of a collapsed rail, with their timers, and the peek.                       |
+| `helpers.js`    | Pure helpers: the chord parser, list splitting, slide timing and name lookups.                                       |
+| `narrow.js`     | SidenavNarrow: narrow screens: when the panel becomes an over panel or the rail collapses on its own.                |
+| `open.js`       | SidenavOpen: opening, closing and refusing, with the backdrop and the focus trap.                                    |
+| `options.js`    | The table of options the side navigation reads from its element.                                                     |
+| `resizer.js`    | SidenavResizer: the resize grip: drag, keys and reset.                                                               |
+| `shift.js`      | SidenavShift: shifting the content and the edge tab aside, the opener, the launchers' light and the togglers' names. |
+| `slim.js`       | SidenavSlim: the slim and rail modes: the slim togglers, collapsing the rail and changing the mode.                  |
+| `tip.js`        | SidenavTip: the label tip beside a collapsed rail's item, and placing what floats beside the rail.                   |
 
 ## js/graph.js → js/graph/
 

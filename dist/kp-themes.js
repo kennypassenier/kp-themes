@@ -38539,7 +38539,7 @@ var init_dashboard = __esm({
 });
 
 // js/sidenav/constants.js
-var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles3, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN;
+var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles3, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, REFUSE_FALLBACK_MS, REFUSE_STILL_MS, REFUSE_TRAVEL, HOVER_DELAY_MS, RESIZE_STEP, RESIZE_SHIFT_STEPS, RESIZE_MIN_WIDTH, RESIZE_MAX_WIDTH;
 var init_constants18 = __esm({
   "js/sidenav/constants.js"() {
     "use strict";
@@ -38568,6 +38568,14 @@ var init_constants18 = __esm({
     TIP_OPEN_MS = 300;
     FLOAT_GAP = 6;
     FLOAT_MARGIN = 8;
+    REFUSE_FALLBACK_MS = 220;
+    REFUSE_STILL_MS = 600;
+    REFUSE_TRAVEL = "0.75rem";
+    HOVER_DELAY_MS = 150;
+    RESIZE_STEP = 16;
+    RESIZE_SHIFT_STEPS = 5;
+    RESIZE_MIN_WIDTH = "12rem";
+    RESIZE_MAX_WIDTH = "32rem";
   }
 });
 
@@ -38813,399 +38821,523 @@ var init_helpers2 = __esm({
   }
 });
 
-// js/sidenav/attach/basics.js
-function installBasics(c) {
-  const { panel, store } = c;
-  const doc = panel.ownerDocument;
-  c.doc = doc;
-  const read = (attribute) => panel.getAttribute(attribute);
-  c.read = read;
-  const on = (attribute, fallback2) => {
-    const value = read(attribute);
-    return value === null ? fallback2 : value !== "false";
-  };
-  c.on = on;
-  const memory = paintRemembered(panel, "sidenav", { storage: store });
-  c.memory = memory;
-  c.backdrop = null;
-  c.restoreFocusTo = null;
-  const launchedByMarkup = panel.hasAttribute(OPTIONS3.launched);
-  c.launchedByMarkup = launchedByMarkup;
-  const mode2 = () => read(OPTIONS3.mode) ?? "side";
-  c.mode = mode2;
-  const isOpen3 = () => panel.getAttribute(OPTIONS3.open) !== "false" && (mode2() === "side" || panel.getAttribute(OPTIONS3.open) === "true");
-  c.isOpen = isOpen3;
-  const covering = () => mode2() === "over";
-  c.covering = covering;
-  const turnEase = () => {
-    const style = getComputedStyle(panel);
-    const ease = style.getPropertyValue("--kp-sidenav-ease").trim() || style.getPropertyValue("--fx-ease").trim() || "ease";
-    panel.style.setProperty("--kp-sidenav-ease-back", reversedEase(ease));
-  };
-  c.turnEase = turnEase;
-  turnEase();
-}
-var init_basics = __esm({
-  "js/sidenav/attach/basics.js"() {
+// js/sidenav/base.js
+var SidenavBase;
+var init_base2 = __esm({
+  "js/sidenav/base.js"() {
     "use strict";
+    init_controller();
     init_remember();
-    init_options4();
     init_motion();
-  }
-});
-
-// js/sidenav/attach/geometry.js
-function installGeometry(c) {
-  const { doc, mode: mode2, on, panel, read } = c;
-  const togglers = () => [...doc.querySelectorAll("[data-kp-sidenav-toggle]")].filter(
-    (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
-  );
-  c.togglers = togglers;
-  const contentEl = () => {
-    const selector = read(OPTIONS3.content);
-    return selector === null ? null : (
-      /** @type {HTMLElement | null} */
-      doc.querySelector(selector)
-    );
-  };
-  c.contentEl = contentEl;
-  const reserved = () => on(OPTIONS3.reserve, false) && mode2() !== "side" && !panel.hasAttribute(OPTIONS3.narrow);
-  c.reserved = reserved;
-  const edge = () => read(OPTIONS3.side) === "end" ? "end" : "start";
-  c.edge = edge;
-  const marginAlong = () => edge() === "end" ? "marginInlineEnd" : "marginInlineStart";
-  c.marginAlong = marginAlong;
-  const paddingAlong = () => edge() === "end" ? "paddingInlineEnd" : "paddingInlineStart";
-  c.paddingAlong = paddingAlong;
-  const panelSize = () => {
-    const style = getComputedStyle(panel);
-    const knob = style.getPropertyValue("--kp-sidenav-w").trim();
-    const width = knob !== "" ? knob : style.inlineSize;
-    const room = style.getPropertyValue("--kp-sidenav-room").trim();
-    return room !== "" ? `calc(${width} + ${room})` : width;
-  };
-  c.panelSize = panelSize;
-  const edgeSize = () => {
-    const style = getComputedStyle(panel);
-    const lead = style.getPropertyValue("--kp-sidenav-lead").trim();
-    const width = style.getPropertyValue("--kp-sidenav-w").trim() || style.inlineSize;
-    return lead !== "" ? `calc(${width} + ${lead})` : width;
-  };
-  c.edgeSize = edgeSize;
-  const tabs = () => {
-    const boxes = /* @__PURE__ */ new Set();
-    for (const toggler of togglers()) {
-      const box = toggler.closest(SIDENAV_TAB);
-      if (box instanceof HTMLElement) boxes.add(box);
-    }
-    return [...boxes];
-  };
-  c.tabs = tabs;
-  const peekSize = () => {
-    const length = getComputedStyle(panel).getPropertyValue("--kp-sidenav-peek").trim();
-    return length === "" || parseFloat(length) === 0 ? "" : length;
-  };
-  c.peekSize = peekSize;
-  c.strip = null;
-  const syncPeek = (open4) => {
-    const wanted = mode2() !== "side" && peekSize() !== "";
-    if (!wanted) {
-      c.strip?.remove();
-      c.strip = null;
-      return;
-    }
-    if (c.strip === null) {
-      c.strip = doc.createElement("div");
-      c.strip.className = "kp-sidenav__peek";
-      c.strip.setAttribute("aria-hidden", "true");
-      panel.after(c.strip);
-    }
-    c.strip.setAttribute("data-kp-sidenav-peek-edge", edge());
-    const variant = read(OPTIONS3.variant);
-    if (variant !== null) c.strip.setAttribute("data-kp-sidenav-peek-variant", variant);
-    else c.strip.removeAttribute("data-kp-sidenav-peek-variant");
-    c.strip.style.position = read(OPTIONS3.position) === "absolute" ? "absolute" : "";
-    for (const name of PEEK_KNOBS) {
-      const value = getComputedStyle(panel).getPropertyValue(name).trim();
-      if (value !== "") c.strip.style.setProperty(name, value);
-      else c.strip.style.removeProperty(name);
-    }
-    c.strip.toggleAttribute("data-kp-sidenav-peek-hushed", open4 && variant === "floating");
-  };
-  c.syncPeek = syncPeek;
-}
-var init_geometry3 = __esm({
-  "js/sidenav/attach/geometry.js"() {
-    "use strict";
     init_options4();
     init_constants18();
-  }
-});
-
-// js/sidenav/attach/shift.js
-function installShift(c) {
-  const {
-    contentEl,
-    edge,
-    edgeSize,
-    launchedByMarkup,
-    marginAlong,
-    mode: mode2,
-    paddingAlong,
-    panel,
-    panelSize,
-    peekSize,
-    read,
-    reserved,
-    syncPeek,
-    tabs
-  } = c;
-  const MOVED = (
-    /** @type {const} */
-    ["marginInlineStart", "marginInlineEnd", "paddingInlineStart", "paddingInlineEnd"]
-  );
-  const shift = (target, property, value, mark, travels) => {
-    const timing = travels ? slideTiming(panel) : { duration: "0s", ease: "linear", delay: "0s" };
-    target.style.setProperty("--kp-sidenav-shift-duration", timing.duration);
-    target.style.setProperty("--kp-sidenav-shift-ease", timing.ease);
-    target.style.setProperty("--kp-sidenav-shift-delay", timing.delay);
-    target.setAttribute("data-kp-sidenav-shift", mark);
-    for (const one of MOVED) target.style[one] = "";
-    target.style[property] = value;
-  };
-  const applyOpener = () => {
-    const asked = read(OPTIONS3.opener);
-    const wanted = asked === "launcher" || asked === "both" ? asked : "tab";
-    const chosen = wanted === "tab" && tabs().length === 0 ? "launcher" : wanted;
-    const slides = mode2() !== "side" && !panel.hasAttribute(OPTIONS3.slimCollapsed);
-    const keep = { launcher: !slides || chosen !== "tab", tab: !slides || chosen !== "launcher" };
-    for (
-      const [boxes, kept] of
-      /** @type {const} */
-      [
-        [c.launchers(), keep.launcher],
-        [tabs(), keep.tab]
-      ]
-    ) {
-      for (const box of boxes) {
-        box.toggleAttribute(OPTIONS3.openerOff, !kept);
-        box.toggleAttribute(OPTIONS3.openerOn, kept);
+    SidenavBase = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        const settings = (
+          /** @type {SidenavSettings} */
+          /** @type {unknown} */
+          options
+        );
+        this.panel = host;
+        this.doc = host.ownerDocument;
+        this.strings = settings.strings;
+        this.ownedBy = settings.ownedBy;
+        this.store = settings.store;
+        this.memory = null;
+        this.launchedByMarkup = false;
+        this.strip = null;
       }
-    }
-    if (!launchedByMarkup) panel.toggleAttribute(OPTIONS3.launched, keep.launcher && c.launchers().length > 0);
-  };
-  const offsetContent = (open4) => {
-    applyOpener();
-    syncPeek(open4);
-    for (const tab of tabs()) {
-      tab.setAttribute("data-kp-sidenav-tab-edge", edge());
-      shift(tab, marginAlong(), mode2() === "side" ? "" : open4 ? edgeSize() : peekSize(), open4 ? "open" : "closed", mode2() !== "side");
-    }
-    const target = contentEl();
-    if (!target) return { property: null, value: "" };
-    const inset = read(OPTIONS3.variant) === "inset";
-    if (inset) target.setAttribute(OPTIONS3.inset, edge());
-    else target.removeAttribute(OPTIONS3.inset);
-    for (const name of INSET_KNOBS) {
-      const value2 = inset ? getComputedStyle(panel).getPropertyValue(name).trim() : "";
-      if (value2 !== "") target.style.setProperty(name, value2);
-      else target.style.removeProperty(name);
-    }
-    const property = mode2() === "push" || reserved() ? marginAlong() : paddingAlong();
-    const value = reserved() || open4 && mode2() !== "over" ? panelSize() : mode2() === "push" ? peekSize() : "";
-    shift(target, property, value, reserved() ? "reserved" : open4 ? "open" : "closed", mode2() === "push" && !reserved());
-    return { property, value };
-  };
-  c.offsetContent = offsetContent;
-}
-var init_shift = __esm({
-  "js/sidenav/attach/shift.js"() {
-    "use strict";
-    init_helpers2();
-    init_options4();
-    init_constants18();
-  }
-});
-
-// js/sidenav/attach/launchers.js
-function installLaunchers(c) {
-  const { contentEl, isOpen: isOpen3, mode: mode2, on, ownedBy, panel, strings, togglers } = c;
-  const launchers = () => {
-    const boxes = /* @__PURE__ */ new Set();
-    for (const toggler of togglers()) {
-      const box = toggler.closest(SIDENAV_LAUNCHER);
-      if (box instanceof HTMLElement) boxes.add(box);
-    }
-    return [...boxes];
-  };
-  c.launchers = launchers;
-  c.lightTurn = 0;
-  const light = (open4, now) => {
-    c.lightTurn += 1;
-    const turn2 = c.lightTurn;
-    const boxes = launchers();
-    const shut = () => {
-      for (const box of boxes) box.removeAttribute(OPTIONS3.lit);
-      panel.inert = mode2() !== "side" && on(OPTIONS3.inert, true);
+      /** Paint the remembered state, note the markup's launch mark and turn the ease around once. */
+      setupBasics() {
+        this.memory = paintRemembered(this.panel, "sidenav", { storage: this.store });
+        this.launchedByMarkup = this.panel.hasAttribute(OPTIONS3.launched);
+        this.turnEase();
+      }
+      /** @param {string} attribute */
+      read(attribute) {
+        return this.panel.getAttribute(attribute);
+      }
+      /** A boolean option: absent is the fallback, anything but `false` is on. @param {string} attribute @param {boolean} fallback */
+      on(attribute, fallback2) {
+        const value = this.read(attribute);
+        return value === null ? fallback2 : value !== "false";
+      }
+      /** The panel's mode: `side` unless the markup says otherwise. */
+      mode() {
+        return this.read(OPTIONS3.mode) ?? "side";
+      }
+      isOpen() {
+        const open4 = this.panel.getAttribute(OPTIONS3.open);
+        return open4 !== "false" && (this.mode() === "side" || open4 === "true");
+      }
+      /** Whether the panel lies over the content. */
+      covering() {
+        return this.mode() === "over";
+      }
+      /**
+       * A rail that collapses, a panel that slides away and a group that folds play their opening backwards: the theme's curve
+       * turned around, which CSS cannot work out, so it is written here as `--kp-sidenav-ease-back` (css/components.css) before each
+       * change and before a hover that may expand the rail. Without this module they run on the opening's own curve.
+       */
+      turnEase() {
+        const style = getComputedStyle(this.panel);
+        const ease = style.getPropertyValue("--kp-sidenav-ease").trim() || style.getPropertyValue("--fx-ease").trim() || "ease";
+        this.panel.style.setProperty("--kp-sidenav-ease-back", reversedEase(ease));
+      }
+      /** This panel's togglers: the ones pointed at it, and the ones pointed at no panel. @returns {Element[]} */
+      togglers() {
+        return [...this.doc.querySelectorAll("[data-kp-sidenav-toggle]")].filter(
+          (t) => (t.getAttribute("aria-controls") ?? "") === this.panel.id || t.getAttribute("aria-controls") === null
+        );
+      }
+      /** The element a push or side mode makes room in. */
+      contentEl() {
+        const selector = this.read(OPTIONS3.content);
+        return selector === null ? null : (
+          /** @type {HTMLElement | null} */
+          this.doc.querySelector(selector)
+        );
+      }
+      /**
+       * Whether the content keeps the panel's room open or shut: the gutter. Not while `data-kp-sidenav-over-below` has made the
+       * panel an `over` panel on a narrow screen, where a gutter would take the page's room.
+       */
+      reserved() {
+        return this.on(OPTIONS3.reserve, false) && this.mode() !== "side" && !this.panel.hasAttribute(OPTIONS3.narrow);
+      }
+      /** The edge the panel comes out of: `start` (the default) or `end`. @returns {'end' | 'start'} */
+      edge() {
+        return this.read(OPTIONS3.side) === "end" ? "end" : "start";
+      }
+      /** The style property that moves something clear of the panel, on the panel's side. @returns {'marginInlineEnd' | 'marginInlineStart'} */
+      marginAlong() {
+        return this.edge() === "end" ? "marginInlineEnd" : "marginInlineStart";
+      }
+      /** @returns {'paddingInlineEnd' | 'paddingInlineStart'} */
+      paddingAlong() {
+        return this.edge() === "end" ? "paddingInlineEnd" : "paddingInlineStart";
+      }
+      /**
+       * The panel's own painted size across its axis, not the token's default. The knob is usually set on the panel, where the
+       * content element cannot see it: a panel asked for 11rem moved its content by 15rem, and the gap showed. Across the width it is
+       * the size the panel is going to (`--kp-sidenav-w`, resolved), so a rail that collapses or a reserved gutter follows at once,
+       * not the frame the width transition stands at.
+       */
+      panelSize() {
+        const style = getComputedStyle(this.panel);
+        const knob = style.getPropertyValue("--kp-sidenav-w").trim();
+        const width = knob !== "" ? knob : style.inlineSize;
+        const room = style.getPropertyValue("--kp-sidenav-room").trim();
+        return room !== "" ? `calc(${width} + ${room})` : width;
+      }
+      /**
+       * Where the panel's far edge stands: its width and what lies between the window's edge and the panel (`--kp-sidenav-lead`, the
+       * floating gap). The edge tab rides there.
+       */
+      edgeSize() {
+        const style = getComputedStyle(this.panel);
+        const lead = style.getPropertyValue("--kp-sidenav-lead").trim();
+        const width = style.getPropertyValue("--kp-sidenav-w").trim() || style.inlineSize;
+        return lead !== "" ? `calc(${width} + ${lead})` : width;
+      }
+      /** The edge tabs that hold one of this panel's togglers. */
+      tabs() {
+        const boxes = /* @__PURE__ */ new Set();
+        for (const toggler of this.togglers()) {
+          const box = toggler.closest(SIDENAV_TAB);
+          if (box instanceof HTMLElement) boxes.add(box);
+        }
+        return [...boxes];
+      }
+      /** The strip a shut panel leaves in view (`--kp-sidenav-peek`, a length), or empty when the page sets none. */
+      peekSize() {
+        const length = getComputedStyle(this.panel).getPropertyValue("--kp-sidenav-peek").trim();
+        return length === "" || parseFloat(length) === 0 ? "" : length;
+      }
+      /**
+       * Make, keep or drop the strip: it exists while the panel slides (not `side`) and the page sets `--kp-sidenav-peek`. It is the
+       * panel's next sibling, under the panel, marked with the edge and the look so the stylesheet can place it; the panel's knobs it
+       * follows are carried over. A floating panel hides it while open.
+       *
+       * @param {boolean} open
+       */
+      syncPeek(open4) {
+        if (this.mode() === "side" || this.peekSize() === "") {
+          this.dropStrip();
+          return;
+        }
+        if (this.strip === null) {
+          this.strip = this.doc.createElement("div");
+          this.strip.className = "kp-sidenav__peek";
+          this.strip.setAttribute("aria-hidden", "true");
+          this.panel.after(this.strip);
+        }
+        const strip = this.strip;
+        strip.setAttribute("data-kp-sidenav-peek-edge", this.edge());
+        const variant = this.read(OPTIONS3.variant);
+        if (variant !== null) strip.setAttribute("data-kp-sidenav-peek-variant", variant);
+        else strip.removeAttribute("data-kp-sidenav-peek-variant");
+        strip.style.position = this.read(OPTIONS3.position) === "absolute" ? "absolute" : "";
+        for (const name of PEEK_KNOBS) {
+          const value = getComputedStyle(this.panel).getPropertyValue(name).trim();
+          if (value !== "") strip.style.setProperty(name, value);
+          else strip.style.removeProperty(name);
+        }
+        strip.toggleAttribute("data-kp-sidenav-peek-hushed", open4 && variant === "floating");
+      }
+      /** Take the peek strip away, if there is one. */
+      dropStrip() {
+        this.strip?.remove();
+        this.strip = null;
+      }
     };
-    if (open4) {
-      panel.inert = false;
-      for (const box of boxes) box.setAttribute(OPTIONS3.lit, "");
-      return;
-    }
-    if (now) return shut();
-    requestAnimationFrame(() => {
-      const target = contentEl();
-      const motions = [...panel.getAnimations({ subtree: true }), ...target ? target.getAnimations() : []].map(
-        (a) => a.finished.catch(() => {
-        })
-      );
-      void Promise.all(motions).then(() => {
-        if (turn2 !== c.lightTurn || isOpen3()) return;
-        shut();
-      });
-    });
-  };
-  c.light = light;
-  const say17 = (open4) => {
-    const s2 = { ...getStrings(), ...strings };
-    for (const toggler of togglers()) {
-      if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
-      toggler.setAttribute("aria-expanded", String(open4));
-      toggler.setAttribute("aria-controls", panel.id);
-      if (wantsName(toggler)) {
-        toggler.setAttribute("aria-label", open4 ? s2.closeSidebar : s2.sidebar);
-      }
-    }
-  };
-  c.say = say17;
-}
-var init_launchers = __esm({
-  "js/sidenav/attach/launchers.js"() {
+  }
+});
+
+// js/sidenav/shift.js
+var MOVED, INSTANT, SidenavShift;
+var init_shift = __esm({
+  "js/sidenav/shift.js"() {
     "use strict";
-    init_constants18();
-    init_options4();
     init_strings();
     init_helpers2();
+    init_options4();
+    init_constants18();
+    init_base2();
+    MOVED = /** @type {const} */
+    ["marginInlineStart", "marginInlineEnd", "paddingInlineStart", "paddingInlineEnd"];
+    INSTANT = { duration: "0s", ease: "linear", delay: "0s" };
+    SidenavShift = class extends SidenavBase {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.lightTurn = 0;
+      }
+      /**
+       * Move one element clear of the panel (the content) or along with it (an edge tab), on the panel's own timing.
+       *
+       * @param {HTMLElement} target
+       * @param {(typeof MOVED)[number]} property
+       * @param {string} value
+       * @param {string} mark
+       * @param {boolean} travels
+       */
+      shift(target, property, value, mark, travels) {
+        const timing = travels ? slideTiming(this.panel) : INSTANT;
+        target.style.setProperty("--kp-sidenav-shift-duration", timing.duration);
+        target.style.setProperty("--kp-sidenav-shift-ease", timing.ease);
+        target.style.setProperty("--kp-sidenav-shift-delay", timing.delay);
+        target.setAttribute("data-kp-sidenav-shift", mark);
+        for (const one of MOVED) target.style[one] = "";
+        target.style[property] = value;
+      }
+      /**
+       * The page's choice of opener [sidenav-opener-M1]: the launcher, the edge tab or both; the default is the tab. The boxes the
+       * choice turns off are marked and not drawn; the panel's room for the launcher (its header's start padding) is there only while
+       * a launcher is. Over and push only: a side panel and the collapsed rail show what the markup holds. A panel with no tab on the
+       * page keeps its launcher whatever is asked: a panel is never left without an opener.
+       */
+      applyOpener() {
+        const asked = this.read(OPTIONS3.opener);
+        const wanted = asked === "launcher" || asked === "both" ? asked : "tab";
+        const chosen = wanted === "tab" && this.tabs().length === 0 ? "launcher" : wanted;
+        const slides = this.mode() !== "side" && !this.panel.hasAttribute(OPTIONS3.slimCollapsed);
+        const keep = { launcher: !slides || chosen !== "tab", tab: !slides || chosen !== "launcher" };
+        for (
+          const [boxes, kept] of
+          /** @type {const} */
+          [
+            [this.launchers(), keep.launcher],
+            [this.tabs(), keep.tab]
+          ]
+        ) {
+          for (const box of boxes) {
+            box.toggleAttribute(OPTIONS3.openerOff, !kept);
+            box.toggleAttribute(OPTIONS3.openerOn, kept);
+          }
+        }
+        if (!this.launchedByMarkup) this.panel.toggleAttribute(OPTIONS3.launched, keep.launcher && this.launchers().length > 0);
+      }
+      /**
+       * Put the opener, the strip, the edge tabs and the content where an open or shut panel wants them.
+       * @param {boolean} open
+       * @returns {{ property: null; value: string } | { property: string; value: string }}
+       */
+      offsetContent(open4) {
+        this.applyOpener();
+        this.syncPeek(open4);
+        const mode2 = this.mode();
+        for (const tab of this.tabs()) {
+          tab.setAttribute("data-kp-sidenav-tab-edge", this.edge());
+          const value2 = mode2 === "side" ? "" : open4 ? this.edgeSize() : this.peekSize();
+          this.shift(tab, this.marginAlong(), value2, open4 ? "open" : "closed", mode2 !== "side");
+        }
+        const target = this.contentEl();
+        if (!target) return { property: null, value: "" };
+        this.carryInset(target);
+        const reserved = this.reserved();
+        const property = mode2 === "push" || reserved ? this.marginAlong() : this.paddingAlong();
+        const value = reserved || open4 && mode2 !== "over" ? this.panelSize() : mode2 === "push" ? this.peekSize() : "";
+        this.shift(target, property, value, reserved ? "reserved" : open4 ? "open" : "closed", mode2 === "push" && !reserved);
+        return { property, value };
+      }
+      /**
+       * The inset variant makes the content a card (css/components.css), which reads its knobs from the panel's side of the page too.
+       * @param {HTMLElement} target
+       */
+      carryInset(target) {
+        const inset = this.read(OPTIONS3.variant) === "inset";
+        if (inset) target.setAttribute(OPTIONS3.inset, this.edge());
+        else target.removeAttribute(OPTIONS3.inset);
+        for (const name of INSET_KNOBS) {
+          const value = inset ? getComputedStyle(this.panel).getPropertyValue(name).trim() : "";
+          if (value !== "") target.style.setProperty(name, value);
+          else target.style.removeProperty(name);
+        }
+      }
+      /** The launcher boxes that hold one of this panel's togglers. */
+      launchers() {
+        const boxes = /* @__PURE__ */ new Set();
+        for (const toggler of this.togglers()) {
+          const box = toggler.closest(SIDENAV_LAUNCHER);
+          if (box instanceof HTMLElement) boxes.add(box);
+        }
+        return [...boxes];
+      }
+      /**
+       * Light the launcher with the opening's first frame and put it out with the closing's last: the launcher's change is part of
+       * the pair, so the close plays it last, as the open played it first (docs/THEME_LESSONS.md 11 and 45).
+       *
+       * @param {boolean} open
+       * @param {boolean} now no motion to wait for (the starting state, a mode change)
+       */
+      light(open4, now) {
+        this.lightTurn += 1;
+        const turn2 = this.lightTurn;
+        const boxes = this.launchers();
+        if (open4) {
+          this.panel.inert = false;
+          for (const box of boxes) box.setAttribute(OPTIONS3.lit, "");
+          return;
+        }
+        if (now) return this.putOut(boxes);
+        requestAnimationFrame(() => {
+          const target = this.contentEl();
+          const motions = [...this.panel.getAnimations({ subtree: true }), ...target ? target.getAnimations() : []].map(
+            (a) => a.finished.catch(() => {
+            })
+          );
+          void Promise.all(motions).then(() => {
+            if (turn2 !== this.lightTurn || this.isOpen()) return;
+            this.putOut(boxes);
+          });
+        });
+      }
+      /**
+       * Put the launchers out. A closed panel that slides away is inert from the closing's last frame, so its links leave the tab
+       * order and the accessibility tree; a side panel that is shut is not rendered at all.
+       * @param {HTMLElement[]} boxes
+       */
+      putOut(boxes) {
+        for (const box of boxes) box.removeAttribute(OPTIONS3.lit);
+        this.panel.inert = this.mode() !== "side" && this.on(OPTIONS3.inert, true);
+      }
+      /** Tell the togglers the panel's state, and name the ones without words of their own. @param {boolean} open */
+      say(open4) {
+        const s2 = { ...getStrings(), ...this.strings };
+        for (const toggler of this.togglers()) {
+          if (this.ownedBy !== "" && toggler.matches(this.ownedBy)) continue;
+          toggler.setAttribute("aria-expanded", String(open4));
+          toggler.setAttribute("aria-controls", this.panel.id);
+          if (wantsName(toggler)) {
+            toggler.setAttribute("aria-label", open4 ? s2.closeSidebar : s2.sidebar);
+          }
+        }
+      }
+    };
   }
 });
 
-// js/sidenav/attach/backdrop.js
-function installBackdrop(c) {
-  const { covering, doc, isOpen: isOpen3, on, panel, read } = c;
-  const dropBackdrop = () => {
-    if (!c.backdrop) return;
-    const target = c.backdrop;
-    c.backdrop = null;
-    void playEntranceBackwards(target).then(() => {
-      target.remove();
-      stopReversing(target);
-    });
-  };
-  c.dropBackdrop = dropBackdrop;
-  const raiseBackdrop = () => {
-    if (c.backdrop || !covering() || !on(OPTIONS3.backdrop, true)) return;
-    c.backdrop = doc.createElement("div");
-    c.backdrop.className = `kp-sidenav__backdrop ${read(OPTIONS3.backdropClass) ?? ""}`.trim();
-    if (read(OPTIONS3.position) === "absolute") c.backdrop.style.position = "absolute";
-    c.backdrop.addEventListener("click", onBackdropClick);
-    panel.after(c.backdrop);
-  };
-  c.raiseBackdrop = raiseBackdrop;
-  const onBackdropClick = () => {
-    if (read(OPTIONS3.backdrop) === "static") return c.refuse();
-    if (!on(OPTIONS3.closeOnBackdrop, true)) return;
-    c.set(false, true, true, "backdrop");
-  };
-  const onTrap = (event) => {
-    if (event.key !== "Tab" || !covering() || !isOpen3() || !on(OPTIONS3.focusTrap, true)) return;
-    const stops = [.../** @type {NodeListOf<HTMLElement>} */
-    panel.querySelectorAll(FOCUSABLE)].filter((el16) => el16.offsetParent !== null);
-    if (stops.length === 0) return;
-    const first = stops[0];
-    const last = stops[stops.length - 1];
-    const active = doc.activeElement;
-    if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    } else if (event.shiftKey && active === first) {
-      event.preventDefault();
-      last.focus();
-    }
-  };
-  c.onTrap = onTrap;
-}
-var init_backdrop = __esm({
-  "js/sidenav/attach/backdrop.js"() {
+// js/sidenav/open.js
+var MS_PER_S, SidenavOpen;
+var init_open2 = __esm({
+  "js/sidenav/open.js"() {
     "use strict";
     init_motion();
-    init_options4();
+    init_calm();
     init_helpers2();
-  }
-});
-
-// js/sidenav/attach/open.js
-function installOpen(c) {
-  const { covering, doc, dropBackdrop, edge, light, memory, mode: mode2, offsetContent, on, panel, raiseBackdrop, read, say: say17, togglers, turnEase } = c;
-  const prevented = (kind, detail, reason, source) => {
-    panel.dispatchEvent(new CustomEvent(SIDENAV_PREVENTED_EVENT, { bubbles: true, detail: { kind, ...detail, reason, source } }));
-  };
-  const ask = (name, detail, reason) => {
-    if (!ASKABLE.has(reason) || !on(OPTIONS3.cancelable, false)) return "told";
-    const event = new CustomEvent(name, { bubbles: true, cancelable: true, detail: { ...detail, reason } });
-    panel.dispatchEvent(event);
-    if (!event.defaultPrevented) return "asked";
-    prevented(name === SIDENAV_SLIM_EVENT ? "slim" : "toggle", detail, reason, "listener");
-    return "prevented";
-  };
-  c.ask = ask;
-  let refusing = 0;
-  const refuse3 = () => {
-    const marked = [panel, ...c.backdrop ? [c.backdrop] : []];
-    refusing += 1;
-    const turn2 = refusing;
-    for (const one of marked) one.setAttribute(OPTIONS3.refused, "");
-    const style = getComputedStyle(panel);
-    const token = (names) => names.map((name) => style.getPropertyValue(name).trim()).find((value) => value !== "") ?? "";
-    const time = token(["--kp-sidenav-refuse-duration", "--kp-sidenav-duration", "--fx-duration"]) || "220ms";
-    const easing = token(["--kp-sidenav-refuse-ease", "--kp-sidenav-ease", "--fx-ease"]) || "ease";
-    const travel = style.getPropertyValue("--kp-sidenav-refuse-travel").trim() || "0.75rem";
-    const property = edge() === "end" ? "marginInlineEnd" : "marginInlineStart";
-    let duration2 = 600;
-    if (motionAllowed()) {
-      const probe = doc.createElement("span");
-      probe.style.cssText = `position:absolute;visibility:hidden;transition-duration:${time}`;
-      panel.append(probe);
-      const read2 = parseFloat(getComputedStyle(probe).transitionDuration) * 1e3;
-      probe.remove();
-      duration2 = Math.max(REFUSE_MIN_MS, Number.isFinite(read2) && read2 > 0 ? read2 : 220);
-      panel.animate({ [property]: ["0px", `calc(-1 * ${travel})`] }, { duration: duration2, easing, iterations: 2, direction: "alternate" });
-      duration2 *= 2;
-    }
-    setTimeout(() => {
-      if (turn2 === refusing) for (const one of marked) one.removeAttribute(OPTIONS3.refused);
-    }, duration2);
-    prevented("toggle", { open: false }, "backdrop", "static");
-  };
-  c.refuse = refuse3;
-  const set = (open5, moveFocus = true, save2 = true, reason = "api") => {
-    const asked = ask(SIDENAV_TOGGLE_EVENT, { open: open5 }, reason);
-    if (asked === "prevented") return;
-    turnEase();
-    panel.setAttribute(OPTIONS3.open, String(open5));
-    say17(open5);
-    const offset = offsetContent(open5);
-    light(open5, !moveFocus && !save2);
-    if (open5) raiseBackdrop();
-    else dropBackdrop();
-    if (on(OPTIONS3.lockScroll, false)) doc.documentElement.style.overflow = open5 && covering() ? "hidden" : "";
-    if (moveFocus && !open5 && !covering() && panel.contains(doc.activeElement)) {
-      c.restoreFocusTo = c.restoreFocusTo ?? togglers().find((t) => t instanceof HTMLElement && !panel.contains(t) && t.offsetParent !== null) ?? null;
-    }
-    const named = read(OPTIONS3.initialFocus);
-    if (moveFocus && (covering() || named !== null && open5 || !open5 && c.restoreFocusTo !== null)) {
-      if (open5) {
-        c.restoreFocusTo = doc.activeElement;
+    init_options4();
+    init_constants18();
+    init_shift();
+    MS_PER_S = 1e3;
+    SidenavOpen = class extends SidenavShift {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.backdrop = null;
+        this.restoreFocusTo = null;
+        this.refusing = 0;
+      }
+      dropBackdrop() {
+        if (!this.backdrop) return;
+        const target = this.backdrop;
+        this.backdrop = null;
+        void playEntranceBackwards(target).then(() => {
+          target.remove();
+          stopReversing(target);
+        });
+      }
+      raiseBackdrop() {
+        if (this.backdrop || !this.covering() || !this.on(OPTIONS3.backdrop, true)) return;
+        const backdrop = this.doc.createElement("div");
+        backdrop.className = `kp-sidenav__backdrop ${this.read(OPTIONS3.backdropClass) ?? ""}`.trim();
+        if (this.read(OPTIONS3.position) === "absolute") backdrop.style.position = "absolute";
+        backdrop.addEventListener("click", () => this.onBackdropClick());
+        this.backdrop = backdrop;
+        this.panel.after(backdrop);
+      }
+      /**
+       * A click on the backdrop. `static` shows the backdrop and refuses the click with the theme's cue; `close-on-backdrop="false"`
+       * ignores it like `close-on-esc="false"` ignores Escape; otherwise it closes.
+       */
+      onBackdropClick() {
+        if (this.read(OPTIONS3.backdrop) === "static") return this.refuse();
+        if (!this.on(OPTIONS3.closeOnBackdrop, true)) return;
+        this.set(false, true, true, "backdrop");
+      }
+      /** Keep Tab inside an open covering panel. @param {KeyboardEvent} event */
+      onTrap(event) {
+        if (event.key !== "Tab" || !this.covering() || !this.isOpen() || !this.on(OPTIONS3.focusTrap, true)) return;
+        const stops = [.../** @type {NodeListOf<HTMLElement>} */
+        this.panel.querySelectorAll(FOCUSABLE)].filter((el16) => el16.offsetParent !== null);
+        if (stops.length === 0) return;
+        const first = stops[0];
+        const last = stops[stops.length - 1];
+        const active = this.doc.activeElement;
+        if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        } else if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        }
+      }
+      /**
+       * Announce that a change was asked for and refused: by a listener that called `preventDefault()` on the cancelable event, or by
+       * a static backdrop. The state has not moved.
+       *
+       * @param {'toggle' | 'slim'} kind
+       * @param {Record<string, unknown>} detail the state that was asked for
+       * @param {string} reason
+       * @param {'listener' | 'static'} source
+       */
+      prevented(kind, detail, reason, source) {
+        this.panel.dispatchEvent(new CustomEvent(SIDENAV_PREVENTED_EVENT, { bubbles: true, detail: { kind, ...detail, reason, source } }));
+      }
+      /**
+       * With `data-kp-sidenav-cancelable`, the event goes out BEFORE the change and may be refused; otherwise it goes out after, as it
+       * always did, and the caller sends it. What a layout does on its own (`breakpoint`, `mode`, `init`) is told, never asked.
+       *
+       * @param {string} name
+       * @param {Record<string, unknown>} detail
+       * @param {string} reason
+       * @returns {'prevented' | 'asked' | 'told'}
+       */
+      ask(name, detail, reason) {
+        if (!ASKABLE.has(reason) || !this.on(OPTIONS3.cancelable, false)) return "told";
+        const event = new CustomEvent(name, { bubbles: true, cancelable: true, detail: { ...detail, reason } });
+        this.panel.dispatchEvent(event);
+        if (!event.defaultPrevented) return "asked";
+        this.prevented(name === SIDENAV_SLIM_EVENT ? "slim" : "toggle", detail, reason, "listener");
+        return "prevented";
+      }
+      /**
+       * A click on a static backdrop: nothing closes. The panel is pulled toward its edge and let go (the same pull back, so the
+       * return is the exact reverse), on the theme's own duration and curve, marked `data-kp-sidenav-refused` while it lasts
+       * (css/components.css draws a ring on it), and the refusal is announced.
+       *
+       * Knobs, custom properties on the panel or above it: `--kp-sidenav-refuse-travel` (REFUSE_TRAVEL), `--kp-sidenav-refuse-duration`
+       * and `--kp-sidenav-refuse-ease` (else the panel's own `--kp-sidenav-duration` and `--kp-sidenav-ease`, else the theme's
+       * `--fx-duration` and `--fx-ease`); a leg is never shorter than REFUSE_MIN_MS.
+       *
+       * It is a Web Animation on the panel's margin: the registers own the panel's `translate` and `animation` for its opening and
+       * closing, and a CSS animation would lose to them.
+       */
+      refuse() {
+        const marked = [this.panel, ...this.backdrop ? [this.backdrop] : []];
+        this.refusing += 1;
+        const turn2 = this.refusing;
+        for (const one of marked) one.setAttribute(OPTIONS3.refused, "");
+        const duration2 = motionAllowed() ? this.pullBack() : REFUSE_STILL_MS;
+        setTimeout(() => {
+          if (turn2 === this.refusing) for (const one of marked) one.removeAttribute(OPTIONS3.refused);
+        }, duration2);
+        this.prevented("toggle", { open: false }, "backdrop", "static");
+      }
+      /** Play the refused cue: pulled and let go. @returns {number} how long both legs take, in milliseconds */
+      pullBack() {
+        const style = getComputedStyle(this.panel);
+        const token = (names) => names.map((name) => style.getPropertyValue(name).trim()).find((value) => value !== "") ?? "";
+        const time = token(["--kp-sidenav-refuse-duration", "--kp-sidenav-duration", "--fx-duration"]) || `${REFUSE_FALLBACK_MS}ms`;
+        const easing = token(["--kp-sidenav-refuse-ease", "--kp-sidenav-ease", "--fx-ease"]) || "ease";
+        const travel = style.getPropertyValue("--kp-sidenav-refuse-travel").trim() || REFUSE_TRAVEL;
+        const property = this.edge() === "end" ? "marginInlineEnd" : "marginInlineStart";
+        const probe = this.doc.createElement("span");
+        probe.style.cssText = `position:absolute;visibility:hidden;transition-duration:${time}`;
+        this.panel.append(probe);
+        const read = parseFloat(getComputedStyle(probe).transitionDuration) * MS_PER_S;
+        probe.remove();
+        const leg = Math.max(REFUSE_MIN_MS, Number.isFinite(read) && read > 0 ? read : REFUSE_FALLBACK_MS);
+        this.panel.animate({ [property]: ["0px", `calc(-1 * ${travel})`] }, { duration: leg, easing, iterations: 2, direction: "alternate" });
+        return leg * 2;
+      }
+      /**
+       * @param {boolean} open
+       * @param {boolean} [moveFocus]
+       * @param {boolean} [save] whether this is a state to remember — a person's choice is, an adaptation to the room the panel is in
+       *   is not. A window narrowed past the step closes the panel; widening it again must not find it closed because of that
+       *   [Kenny, 2026-09-16].
+       * @param {string} [reason] what asked for the change, written in `detail.reason`: `toggler`, `escape`, `backdrop`, `shortcut`,
+       *   `api` (a call on the handle), `breakpoint` (a layout adapting), `mode` (a mode change) or `init` (the starting state)
+       */
+      set(open4, moveFocus = true, save2 = true, reason = "api") {
+        const asked = this.ask(SIDENAV_TOGGLE_EVENT, { open: open4 }, reason);
+        if (asked === "prevented") return;
+        const { panel } = this;
+        this.turnEase();
+        panel.setAttribute(OPTIONS3.open, String(open4));
+        this.say(open4);
+        const offset = this.offsetContent(open4);
+        this.light(open4, !moveFocus && !save2);
+        if (open4) this.raiseBackdrop();
+        else this.dropBackdrop();
+        if (this.on(OPTIONS3.lockScroll, false)) this.doc.documentElement.style.overflow = open4 && this.covering() ? "hidden" : "";
+        if (moveFocus) this.moveFocus(open4);
+        if (save2) this.memory?.write("open", open4);
+        if (asked === "told") panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open: open4, reason } }));
+        panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: this.mode(), offset, reason } }));
+      }
+      /** Where the focus goes when a person opens or closes the panel. @param {boolean} open */
+      moveFocus(open4) {
+        const { panel, doc } = this;
+        if (!open4 && !this.covering() && panel.contains(doc.activeElement)) {
+          this.restoreFocusTo = this.restoreFocusTo ?? this.togglers().find((t) => t instanceof HTMLElement && !panel.contains(t) && t.offsetParent !== null) ?? null;
+        }
+        const named = this.read(OPTIONS3.initialFocus);
+        if (!(this.covering() || named !== null && open4 || !open4 && this.restoreFocusTo !== null)) return;
+        if (open4) {
+          this.restoreFocusTo = doc.activeElement;
+          this.focusInto(named);
+        } else if (this.restoreFocusTo instanceof HTMLElement) {
+          const back = this.restoreFocusTo;
+          this.restoreFocusTo = null;
+          this.focusBackLater(back);
+        }
+      }
+      /** Where the page asked for the focus to land, or the first stop in the panel. @param {string | null} named */
+      focusInto(named) {
         let first = (
           /** @type {HTMLElement | null} */
           null
@@ -39213,16 +39345,23 @@ function installOpen(c) {
         try {
           first = named !== null ? (
             /** @type {HTMLElement | null} */
-            panel.querySelector(named)
+            this.panel.querySelector(named)
           ) : null;
         } catch {
           first = null;
         }
         (first ?? /** @type {HTMLElement | null} */
-        panel.querySelector(FOCUSABLE))?.focus({ preventScroll: true });
-      } else if (c.restoreFocusTo instanceof HTMLElement) {
-        const back = c.restoreFocusTo;
-        c.restoreFocusTo = null;
+        this.panel.querySelector(FOCUSABLE))?.focus({ preventScroll: true });
+      }
+      /**
+       * Give the focus back once the panel is gone, the way the focus left when it came: a ring that comes back on the opener at the
+       * start of the close is not the opening played backwards (docs/THEME_LESSONS.md 11). The close's motions start in the next
+       * frame, so they are read there. Without scrolling: a panel that is fixed inside a scrolled box (a review dialog's stage, a
+       * dashboard's main) is carried off with that scroll, so the content seemed to vanish the moment the close began.
+       * @param {HTMLElement} back
+       */
+      focusBackLater(back) {
+        const { panel } = this;
         requestAnimationFrame(() => {
           const motions = panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {
           }));
@@ -39231,1096 +39370,1018 @@ function installOpen(c) {
           });
         });
       }
-    }
-    if (save2) memory?.write("open", open5);
-    if (asked === "told") panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open: open5, reason } }));
-    panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: mode2(), offset, reason } }));
-  };
-  c.set = set;
-  const close = ({ remember: remember3 = true } = {}) => set(false, true, remember3);
-  c.close = close;
-  const open4 = ({ remember: remember3 = true } = {}) => set(true, true, remember3);
-  c.open = open4;
-}
-var init_open2 = __esm({
-  "js/sidenav/attach/open.js"() {
-    "use strict";
-    init_constants18();
-    init_options4();
-    init_calm();
-    init_helpers2();
+      /** @param {{ remember?: boolean }} [options] */
+      close({ remember: remember3 = true } = {}) {
+        this.set(false, true, remember3);
+      }
+      /** @param {{ remember?: boolean }} [options] */
+      open({ remember: remember3 = true } = {}) {
+        this.set(true, true, remember3);
+      }
+    };
   }
 });
 
-// js/sidenav/attach/slim.js
-function installSlim(c) {
-  const { ask, doc, isOpen: isOpen3, memory, offsetContent, on, ownedBy, panel, read, set, strings, turnEase } = c;
-  const slimTogglers = () => [...doc.querySelectorAll(`[${OPTIONS3.slimToggle}]`)].filter(
-    (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
-  );
-  c.slimTogglers = slimTogglers;
-  const saySlim = (collapsed) => {
-    if (read(OPTIONS3.slim) === null) return;
-    const s2 = { ...getStrings(), ...strings };
-    for (const toggler of slimTogglers()) {
-      if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
-      toggler.setAttribute("aria-expanded", String(!collapsed));
-      toggler.setAttribute("aria-controls", panel.id);
-      if (wantsName(toggler)) {
-        toggler.setAttribute("aria-label", collapsed ? s2.expandRail : s2.collapseRail);
-      }
-    }
-  };
-  c.saySlim = saySlim;
-  const setSlim = (collapsed, save2 = true, reason = "api") => {
-    if (read(OPTIONS3.slim) === null) return;
-    const next2 = collapsed ?? panel.getAttribute(OPTIONS3.slimCollapsed) === null;
-    const asked = ask(SIDENAV_SLIM_EVENT, { collapsed: next2 }, reason);
-    if (asked === "prevented") return;
-    turnEase();
-    panel.toggleAttribute(OPTIONS3.slimCollapsed, next2);
-    saySlim(next2);
-    if (save2) memory?.write("rail", next2);
-    offsetContent(isOpen3());
-    c.syncRail();
-    if (asked === "told") panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next2, reason } }));
-  };
-  c.setSlim = setSlim;
-  const setMode = (next2) => {
-    panel.setAttribute(OPTIONS3.mode, next2);
-    set(isOpen3(), false, false, "mode");
-  };
-  c.setMode = setMode;
-  const isRail = () => panel.hasAttribute(OPTIONS3.slimCollapsed) && !panel.hasAttribute(OPTIONS3.peek);
-  c.isRail = isRail;
-  const flying = () => isRail() && on(OPTIONS3.flyout, true);
-  c.flying = flying;
-}
+// js/sidenav/slim.js
+var SidenavSlim;
 var init_slim = __esm({
-  "js/sidenav/attach/slim.js"() {
+  "js/sidenav/slim.js"() {
     "use strict";
-    init_options4();
     init_strings();
     init_helpers2();
+    init_options4();
     init_constants18();
+    init_open2();
+    SidenavSlim = class extends SidenavOpen {
+      /**
+       * The buttons that collapse and expand this rail without a line of script [gap-12]: `data-kp-sidenav-slim-toggle`, pointed at
+       * the panel by `aria-controls` — or at every rail, when it names none, the way `data-kp-sidenav-toggle` does.
+       * @returns {Element[]}
+       */
+      slimTogglers() {
+        return [...this.doc.querySelectorAll(`[${OPTIONS3.slimToggle}]`)].filter(
+          (t) => (t.getAttribute("aria-controls") ?? "") === this.panel.id || t.getAttribute("aria-controls") === null
+        );
+      }
+      /** @param {boolean} collapsed */
+      saySlim(collapsed) {
+        if (this.read(OPTIONS3.slim) === null) return;
+        const s2 = { ...getStrings(), ...this.strings };
+        for (const toggler of this.slimTogglers()) {
+          if (this.ownedBy !== "" && toggler.matches(this.ownedBy)) continue;
+          toggler.setAttribute("aria-expanded", String(!collapsed));
+          toggler.setAttribute("aria-controls", this.panel.id);
+          if (wantsName(toggler)) {
+            toggler.setAttribute("aria-label", collapsed ? s2.expandRail : s2.collapseRail);
+          }
+        }
+      }
+      /** @param {boolean} [collapsed] @param {boolean} [save] @param {string} [reason] see `set` */
+      setSlim(collapsed, save2 = true, reason = "api") {
+        const { panel } = this;
+        if (this.read(OPTIONS3.slim) === null) return;
+        const next2 = collapsed ?? panel.getAttribute(OPTIONS3.slimCollapsed) === null;
+        const asked = this.ask(SIDENAV_SLIM_EVENT, { collapsed: next2 }, reason);
+        if (asked === "prevented") return;
+        this.turnEase();
+        panel.toggleAttribute(OPTIONS3.slimCollapsed, next2);
+        this.saySlim(next2);
+        if (save2) this.memory?.write("rail", next2);
+        this.offsetContent(this.isOpen());
+        this.syncRail();
+        if (asked === "told") panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next2, reason } }));
+      }
+      /** Float the groups out in the collapsed rail and fold them back outside it: SidenavFlyout does it; the slim part has none. */
+      syncRail() {
+      }
+      /** @param {'over' | 'side' | 'push'} next */
+      setMode(next2) {
+        this.panel.setAttribute(OPTIONS3.mode, next2);
+        this.set(this.isOpen(), false, false, "mode");
+      }
+      /** Whether the rail stands collapsed to its icons, not expanded by the pointer or the focus. */
+      isRail() {
+        return this.panel.hasAttribute(OPTIONS3.slimCollapsed) && !this.panel.hasAttribute(OPTIONS3.peek);
+      }
+      /** Whether the rail's groups float out beside it. */
+      flying() {
+        return this.isRail() && this.on(OPTIONS3.flyout, true);
+      }
+    };
   }
 });
 
-// js/sidenav/attach/tip.js
-function installTip2(c) {
-  const { doc, edge, flying, isRail, on, panel } = c;
-  const floatBeside = (box, item, align) => {
-    const at = item.getBoundingClientRect();
-    const rail = panel.getBoundingClientRect();
-    const width = box.offsetWidth;
-    const height = box.offsetHeight;
-    const view = doc.documentElement.clientWidth;
-    const tall = doc.documentElement.clientHeight;
-    const towardEnd = edge() !== "end";
-    let x = towardEnd ? rail.right + FLOAT_GAP : rail.left - FLOAT_GAP - width;
-    if (towardEnd && x + width > view - FLOAT_MARGIN) x = rail.left - FLOAT_GAP - width;
-    if (!towardEnd && x < FLOAT_MARGIN) x = rail.right + FLOAT_GAP;
-    x = Math.max(FLOAT_MARGIN, Math.min(x, view - FLOAT_MARGIN - width));
-    let y = align === "centre" ? at.top + at.height / 2 - height / 2 : at.top;
-    if (y + height > tall - FLOAT_MARGIN) y = align === "centre" ? tall - FLOAT_MARGIN - height : at.bottom - height;
-    y = Math.max(FLOAT_MARGIN, y);
-    box.style.setProperty("--kp-sidenav-float-x", `${Math.round(x)}px`);
-    box.style.setProperty("--kp-sidenav-float-y", `${Math.round(y)}px`);
-  };
-  c.floatBeside = floatBeside;
-  const show = (box, then) => {
-    try {
-      box.showPopover();
-      then();
-    } catch {
-      setTimeout(() => {
+// js/sidenav/tip.js
+var SidenavTip;
+var init_tip2 = __esm({
+  "js/sidenav/tip.js"() {
+    "use strict";
+    init_motion();
+    init_constants18();
+    init_options4();
+    init_slim();
+    SidenavTip = class extends SidenavSlim {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.tip = null;
+        this.tipFor = null;
+        this.tipTimer = 0;
+        this.tipGoing = false;
+        this.floated = /* @__PURE__ */ new Map();
+      }
+      /**
+       * Place a box that floats beside the rail, in the top layer: beside the item, on the far side of the panel, turned to the near
+       * side when the window has no room there, and kept inside the window.
+       *
+       * @param {HTMLElement} box
+       * @param {Element} item
+       * @param {'start' | 'centre'} align
+       */
+      floatBeside(box, item, align) {
+        const at = item.getBoundingClientRect();
+        const rail = this.panel.getBoundingClientRect();
+        const width = box.offsetWidth;
+        const height = box.offsetHeight;
+        const view = this.doc.documentElement.clientWidth;
+        const tall = this.doc.documentElement.clientHeight;
+        const towardEnd = this.edge() !== "end";
+        let x = towardEnd ? rail.right + FLOAT_GAP : rail.left - FLOAT_GAP - width;
+        if (towardEnd && x + width > view - FLOAT_MARGIN) x = rail.left - FLOAT_GAP - width;
+        if (!towardEnd && x < FLOAT_MARGIN) x = rail.right + FLOAT_GAP;
+        x = Math.max(FLOAT_MARGIN, Math.min(x, view - FLOAT_MARGIN - width));
+        let y = align === "centre" ? at.top + at.height / 2 - height / 2 : at.top;
+        if (y + height > tall - FLOAT_MARGIN) y = align === "centre" ? tall - FLOAT_MARGIN - height : at.bottom - height;
+        y = Math.max(FLOAT_MARGIN, y);
+        box.style.setProperty("--kp-sidenav-float-x", `${Math.round(x)}px`);
+        box.style.setProperty("--kp-sidenav-float-y", `${Math.round(y)}px`);
+      }
+      /** Show a popover, once more a task later when Firefox refuses during another one's hide. @param {HTMLElement} box @param {() => void} then */
+      show(box, then) {
         try {
-          if (!box.matches(":popover-open")) box.showPopover();
+          box.showPopover();
           then();
         } catch {
+          setTimeout(() => {
+            try {
+              if (!box.matches(":popover-open")) box.showPopover();
+              then();
+            } catch {
+            }
+          }, 0);
         }
-      }, 0);
-    }
-  };
-  c.show = show;
-  c.tip = null;
-  let tipFor = null;
-  c.tipTimer = 0;
-  let tipGoing = false;
-  const tipItems = () => flying() ? ".kp-sidenav__link" : ".kp-sidenav__link, .kp-sidenav__category-toggle";
-  const hideTip = () => {
-    clearTimeout(c.tipTimer);
-    tipFor = null;
-    const box = c.tip;
-    if (box === null || !box.matches(":popover-open") || tipGoing) return;
-    tipGoing = true;
-    void playEntranceBackwards(box).then(() => {
-      tipGoing = false;
-      stopReversing(box);
-      if (tipFor === null && box.matches(":popover-open")) box.hidePopover();
-    });
-  };
-  c.hideTip = hideTip;
-  const showTip = (item) => {
-    clearTimeout(c.tipTimer);
-    const words3 = (item.querySelector(".kp-sidenav__label")?.textContent ?? "").trim();
-    if (!isRail() || !on(OPTIONS3.railTips, true) || words3 === "") return;
-    if (c.tip === null) {
-      c.tip = doc.createElement("span");
-      c.tip.className = "kp-popover kp-tooltip kp-sidenav__tip";
-      c.tip.setAttribute("popover", "manual");
-      c.tip.setAttribute("aria-hidden", "true");
-      panel.append(c.tip);
-    }
-    const box = c.tip;
-    tipFor = item;
-    if (tipGoing) {
-      tipGoing = false;
-      stopReversing(box);
-    }
-    box.textContent = words3;
-    const place4 = () => floatBeside(box, item, "centre");
-    if (box.matches(":popover-open")) place4();
-    else show(box, place4);
-  };
-  const onTipOver = (event) => {
-    const item = event.target instanceof Element ? event.target.closest(tipItems()) : null;
-    if (item === null || !panel.contains(item) || item === tipFor || c.tip !== null && c.tip.contains(item)) return;
-    if (item.closest(".kp-sidenav__flyout") !== null) return;
-    clearTimeout(c.tipTimer);
-    if (c.tip?.matches(":popover-open") && !tipGoing) showTip(item);
-    else c.tipTimer = window.setTimeout(() => showTip(item), TIP_OPEN_MS);
-  };
-  c.onTipOver = onTipOver;
-  const onTipOut = (event) => {
-    const to = event.relatedTarget instanceof Element ? event.relatedTarget.closest(tipItems()) : null;
-    if (to !== null && panel.contains(to) && to.closest(".kp-sidenav__flyout") === null) return;
-    hideTip();
-  };
-  c.onTipOut = onTipOut;
-  const onTipFocus = (event) => {
-    const item = event.target instanceof Element ? event.target.closest(tipItems()) : null;
-    if (item === null || item.closest(".kp-sidenav__flyout") !== null) return hideTip();
-    showTip(item);
-  };
-  c.onTipFocus = onTipFocus;
-  const floated = /* @__PURE__ */ new Map();
-  c.floated = floated;
-  const submenuOf = (category) => (
-    /** @type {HTMLElement | null} */
-    category.querySelector(":scope > .kp-sidenav__submenu")
-  );
-  c.submenuOf = submenuOf;
-  const toggleOf = (category) => (
-    /** @type {HTMLElement | null} */
-    category.querySelector(":scope > .kp-sidenav__category-toggle")
-  );
-  c.toggleOf = toggleOf;
-}
-var init_tip2 = __esm({
-  "js/sidenav/attach/tip.js"() {
-    "use strict";
-    init_constants18();
-    init_motion();
-    init_options4();
+      }
+      /** The items a tip names: links, and the group headings while the groups do not float out. */
+      tipItems() {
+        return this.flying() ? ".kp-sidenav__link" : ".kp-sidenav__link, .kp-sidenav__category-toggle";
+      }
+      hideTip() {
+        clearTimeout(this.tipTimer);
+        this.tipFor = null;
+        const box = this.tip;
+        if (box === null || !box.matches(":popover-open") || this.tipGoing) return;
+        this.tipGoing = true;
+        void playEntranceBackwards(box).then(() => {
+          this.tipGoing = false;
+          stopReversing(box);
+          if (this.tipFor === null && box.matches(":popover-open")) box.hidePopover();
+        });
+      }
+      /** @param {Element} item */
+      showTip(item) {
+        clearTimeout(this.tipTimer);
+        const words3 = (item.querySelector(".kp-sidenav__label")?.textContent ?? "").trim();
+        if (!this.isRail() || !this.on(OPTIONS3.railTips, true) || words3 === "") return;
+        if (this.tip === null) {
+          this.tip = this.doc.createElement("span");
+          this.tip.className = "kp-popover kp-tooltip kp-sidenav__tip";
+          this.tip.setAttribute("popover", "manual");
+          this.tip.setAttribute("aria-hidden", "true");
+          this.panel.append(this.tip);
+        }
+        const box = this.tip;
+        this.tipFor = item;
+        if (this.tipGoing) {
+          this.tipGoing = false;
+          stopReversing(box);
+        }
+        box.textContent = words3;
+        const place4 = () => this.floatBeside(box, item, "centre");
+        if (box.matches(":popover-open")) place4();
+        else this.show(box, place4);
+      }
+      /** @param {PointerEvent} event */
+      onTipOver(event) {
+        const item = event.target instanceof Element ? event.target.closest(this.tipItems()) : null;
+        if (item === null || !this.panel.contains(item) || item === this.tipFor || this.tip !== null && this.tip.contains(item)) return;
+        if (item.closest(".kp-sidenav__flyout") !== null) return;
+        clearTimeout(this.tipTimer);
+        if (this.tip?.matches(":popover-open") && !this.tipGoing) this.showTip(item);
+        else this.tipTimer = window.setTimeout(() => this.showTip(item), TIP_OPEN_MS);
+      }
+      /** @param {PointerEvent} event */
+      onTipOut(event) {
+        const to = event.relatedTarget instanceof Element ? event.relatedTarget.closest(this.tipItems()) : null;
+        if (to !== null && this.panel.contains(to) && to.closest(".kp-sidenav__flyout") === null) return;
+        this.hideTip();
+      }
+      /** @param {FocusEvent} event */
+      onTipFocus(event) {
+        const item = event.target instanceof Element ? event.target.closest(this.tipItems()) : null;
+        if (item === null || item.closest(".kp-sidenav__flyout") !== null) return this.hideTip();
+        this.showTip(item);
+      }
+      /** Take the tip away for good. */
+      dropTip() {
+        this.tip?.remove();
+        this.tip = null;
+      }
+      /** @param {Element} category */
+      submenuOf(category) {
+        return (
+          /** @type {HTMLElement | null} */
+          category.querySelector(":scope > .kp-sidenav__submenu")
+        );
+      }
+      /** @param {Element} category */
+      toggleOf(category) {
+        return (
+          /** @type {HTMLElement | null} */
+          category.querySelector(":scope > .kp-sidenav__category-toggle")
+        );
+      }
+    };
   }
 });
 
-// js/sidenav/attach/flyout.js
-function installFlyout(c) {
-  const { doc, floatBeside, floated, flying, hideTip, isRail, panel, show, submenuOf, toggleOf } = c;
-  const flyOut = (category, { focusFirst = false } = {}) => {
-    const submenu = submenuOf(category);
-    if (submenu === null || !floated.has(submenu)) return;
-    for (const other of panel.querySelectorAll(`.kp-sidenav__category[${OPTIONS3.flown}]`)) if (other !== category) flyIn(other);
-    hideTip();
-    category.setAttribute(OPTIONS3.flown, "");
-    toggleOf(category)?.setAttribute("aria-expanded", "true");
-    const toggle2 = toggleOf(category) ?? category;
-    show(submenu, () => {
-      floatBeside(submenu, toggle2, "start");
-      if (focusFirst) submenu.querySelector(FOCUSABLE)?.focus({ preventScroll: true });
-    });
-  };
-  c.flyOut = flyOut;
-  const flyIn = (category, { refocus = false } = {}) => {
-    const submenu = submenuOf(category);
-    category.removeAttribute(OPTIONS3.flown);
-    toggleOf(category)?.setAttribute("aria-expanded", String(category.hasAttribute(OPTIONS3.expanded) && !flying()));
-    if (submenu?.matches(":popover-open")) submenu.hidePopover();
-    if (refocus) {
-      const toggle2 = toggleOf(category);
-      requestAnimationFrame(() => {
-        const motions = category.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {
-        }));
-        void Promise.all(motions).then(() => {
-          if (!category.hasAttribute(OPTIONS3.flown) && toggle2?.isConnected) toggle2.focus({ preventScroll: true });
+// js/sidenav/flyout.js
+var CATEGORY, SidenavFlyout;
+var init_flyout = __esm({
+  "js/sidenav/flyout.js"() {
+    "use strict";
+    init_helpers2();
+    init_options4();
+    init_constants18();
+    init_tip2();
+    CATEGORY = ".kp-sidenav__category";
+    SidenavFlyout = class extends SidenavTip {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.flyTimers = /* @__PURE__ */ new Map();
+        this.peekTimer = 0;
+        this.pointerIn = false;
+        this.peekTurn = 0;
+      }
+      /** @param {Element} category @param {{ focusFirst?: boolean }} [options] */
+      flyOut(category, { focusFirst = false } = {}) {
+        const submenu = this.submenuOf(category);
+        if (submenu === null || !this.floated.has(submenu)) return;
+        for (const other of this.panel.querySelectorAll(`${CATEGORY}[${OPTIONS3.flown}]`)) if (other !== category) this.flyIn(other);
+        this.hideTip();
+        category.setAttribute(OPTIONS3.flown, "");
+        this.toggleOf(category)?.setAttribute("aria-expanded", "true");
+        const toggle2 = this.toggleOf(category) ?? category;
+        this.show(submenu, () => {
+          this.floatBeside(submenu, toggle2, "start");
+          if (focusFirst) submenu.querySelector(FOCUSABLE)?.focus({ preventScroll: true });
         });
-      });
-    }
-  };
-  c.flyIn = flyIn;
-  const syncRail = () => {
-    if (!isRail()) hideTip();
-    const fly = flying();
-    for (const category of panel.querySelectorAll(".kp-sidenav__category")) {
-      const submenu = submenuOf(category);
-      if (submenu === null) continue;
-      if (fly && !floated.has(submenu)) {
-        floated.set(submenu, { added: !submenu.hasAttribute("popover") });
+      }
+      /** @param {Element} category @param {{ refocus?: boolean }} [options] */
+      flyIn(category, { refocus = false } = {}) {
+        const submenu = this.submenuOf(category);
+        category.removeAttribute(OPTIONS3.flown);
+        this.toggleOf(category)?.setAttribute("aria-expanded", String(category.hasAttribute(OPTIONS3.expanded) && !this.flying()));
+        if (submenu?.matches(":popover-open")) submenu.hidePopover();
+        if (!refocus) return;
+        const toggle2 = this.toggleOf(category);
+        requestAnimationFrame(() => {
+          const motions = category.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {
+          }));
+          void Promise.all(motions).then(() => {
+            if (!category.hasAttribute(OPTIONS3.flown) && toggle2?.isConnected) toggle2.focus({ preventScroll: true });
+          });
+        });
+      }
+      /** Make the groups float out in the collapsed rail, and fold in place again outside it. */
+      syncRail() {
+        if (!this.isRail()) this.hideTip();
+        const fly = this.flying();
+        for (const category of this.panel.querySelectorAll(CATEGORY)) {
+          const submenu = this.submenuOf(category);
+          if (submenu === null) continue;
+          if (fly && !this.floated.has(submenu)) this.floatGroup(category, submenu);
+          else if (!fly && this.floated.has(submenu)) this.foldGroup(category, submenu);
+        }
+      }
+      /** @param {Element} category @param {HTMLElement} submenu */
+      floatGroup(category, submenu) {
+        this.floated.set(submenu, { added: !submenu.hasAttribute("popover") });
         submenu.setAttribute("popover", "manual");
         submenu.classList.add("kp-popover", "kp-sidenav__flyout");
-        toggleOf(category)?.setAttribute("aria-expanded", "false");
-      } else if (!fly && floated.has(submenu)) {
-        flyIn(category);
+        this.toggleOf(category)?.setAttribute("aria-expanded", "false");
+      }
+      /** @param {Element} category @param {HTMLElement} submenu */
+      foldGroup(category, submenu) {
+        this.flyIn(category);
         const { added } = (
           /** @type {{ added: boolean }} */
-          floated.get(submenu)
+          this.floated.get(submenu)
         );
-        floated.delete(submenu);
+        this.floated.delete(submenu);
         submenu.classList.remove("kp-popover", "kp-sidenav__flyout");
         if (added) submenu.removeAttribute("popover");
-        toggleOf(category)?.setAttribute("aria-expanded", String(category.hasAttribute(OPTIONS3.expanded)));
+        this.toggleOf(category)?.setAttribute("aria-expanded", String(category.hasAttribute(OPTIONS3.expanded)));
       }
-    }
-  };
-  c.syncRail = syncRail;
-  const flyTimers = /* @__PURE__ */ new Map();
-  c.flyTimers = flyTimers;
-  const onFlyOver = (event) => {
-    if (!flying() || event.pointerType === "touch") return;
-    const category = event.target instanceof Element ? event.target.closest(".kp-sidenav__category") : null;
-    if (category === null || !panel.contains(category)) return;
-    clearTimeout(flyTimers.get(category));
-    if (category.hasAttribute(OPTIONS3.flown)) return;
-    flyTimers.set(
-      category,
-      window.setTimeout(() => flyOut(category), FLYOUT_OPEN_MS)
-    );
-  };
-  c.onFlyOver = onFlyOver;
-  const onFlyOut = (event) => {
-    const category = event.target instanceof Element ? event.target.closest(".kp-sidenav__category") : null;
-    if (category === null || !panel.contains(category)) return;
-    if (event.relatedTarget instanceof Node && category.contains(event.relatedTarget)) return;
-    clearTimeout(flyTimers.get(category));
-    if (!category.hasAttribute(OPTIONS3.flown)) return;
-    flyTimers.set(
-      category,
-      window.setTimeout(() => {
-        if (!category.matches(":hover") && !category.contains(doc.activeElement)) flyIn(category);
-      }, FLYOUT_CLOSE_MS)
-    );
-  };
-  c.onFlyOut = onFlyOut;
-  const onFlyFocusOut = (event) => {
-    const category = event.target instanceof Element ? event.target.closest(`.kp-sidenav__category[${OPTIONS3.flown}]`) : null;
-    if (category === null) return;
-    if (event.relatedTarget instanceof Node && category.contains(event.relatedTarget)) return;
-    if (!category.matches(":hover")) flyIn(category);
-  };
-  c.onFlyFocusOut = onFlyFocusOut;
-}
-var init_flyout = __esm({
-  "js/sidenav/attach/flyout.js"() {
-    "use strict";
-    init_options4();
-    init_helpers2();
-    init_constants18();
+      /** @param {PointerEvent} event */
+      onFlyOver(event) {
+        if (!this.flying() || event.pointerType === "touch") return;
+        const category = event.target instanceof Element ? event.target.closest(CATEGORY) : null;
+        if (category === null || !this.panel.contains(category)) return;
+        clearTimeout(this.flyTimers.get(category));
+        if (category.hasAttribute(OPTIONS3.flown)) return;
+        this.flyTimers.set(
+          category,
+          window.setTimeout(() => this.flyOut(category), FLYOUT_OPEN_MS)
+        );
+      }
+      /** @param {PointerEvent} event */
+      onFlyOut(event) {
+        const category = event.target instanceof Element ? event.target.closest(CATEGORY) : null;
+        if (category === null || !this.panel.contains(category)) return;
+        if (event.relatedTarget instanceof Node && category.contains(event.relatedTarget)) return;
+        clearTimeout(this.flyTimers.get(category));
+        if (!category.hasAttribute(OPTIONS3.flown)) return;
+        this.flyTimers.set(
+          category,
+          window.setTimeout(() => {
+            if (!category.matches(":hover") && !category.contains(this.doc.activeElement)) this.flyIn(category);
+          }, FLYOUT_CLOSE_MS)
+        );
+      }
+      /** @param {FocusEvent} event */
+      onFlyFocusOut(event) {
+        const category = event.target instanceof Element ? event.target.closest(`${CATEGORY}[${OPTIONS3.flown}]`) : null;
+        if (category === null) return;
+        if (event.relatedTarget instanceof Node && category.contains(event.relatedTarget)) return;
+        if (!category.matches(":hover")) this.flyIn(category);
+      }
+      // Peek: a rail told to expand on hover waits for the pointer to rest, and expands while the focus is inside it.
+      /**
+       * Widen (`open`) or narrow the rail. Narrowing, the rail is `leaving` until its width transition is over, then the attribute
+       * goes: the words stay while the width closes, as they came at once when it opened.
+       * @param {boolean} value
+       */
+      setPeek(value) {
+        const { panel } = this;
+        clearTimeout(this.peekTimer);
+        const now = panel.getAttribute(OPTIONS3.peek);
+        if (value ? now === "open" : now !== "open") return;
+        this.turnEase();
+        this.peekTurn += 1;
+        const turn2 = this.peekTurn;
+        if (value) {
+          panel.setAttribute(OPTIONS3.peek, "open");
+          this.syncRail();
+          return;
+        }
+        panel.setAttribute(OPTIONS3.peek, "leaving");
+        requestAnimationFrame(() => {
+          const motions = panel.getAnimations().map((a) => a.finished.catch(() => {
+          }));
+          void Promise.all(motions).then(() => {
+            if (turn2 !== this.peekTurn) return;
+            panel.removeAttribute(OPTIONS3.peek);
+            this.syncRail();
+          });
+        });
+      }
+      /** Whether the rail widens on hover and focus: asked for, and collapsed. */
+      peeks() {
+        return this.read(OPTIONS3.expandOnHover) !== null && this.read(OPTIONS3.expandOnHover) !== "false" && this.panel.hasAttribute(OPTIONS3.slimCollapsed);
+      }
+      onPeekEnter() {
+        this.pointerIn = true;
+        if (!this.peeks()) return;
+        const delay = Number(this.read(OPTIONS3.hoverDelay) ?? HOVER_DELAY_MS);
+        clearTimeout(this.peekTimer);
+        this.peekTimer = window.setTimeout(() => this.setPeek(true), Number.isFinite(delay) ? delay : HOVER_DELAY_MS);
+      }
+      onPeekLeave() {
+        this.pointerIn = false;
+        clearTimeout(this.peekTimer);
+        if (!this.panel.contains(this.doc.activeElement)) this.setPeek(false);
+      }
+      onPeekFocusIn() {
+        if (this.peeks()) this.setPeek(true);
+      }
+      /** @param {FocusEvent} event */
+      onPeekFocusOut(event) {
+        if (event.relatedTarget instanceof Node && this.panel.contains(event.relatedTarget)) return;
+        if (!this.pointerIn) this.setPeek(false);
+      }
+      /** Stop the peek's, the tip's and the groups' timers. */
+      stopTimers() {
+        clearTimeout(this.peekTimer);
+        clearTimeout(this.tipTimer);
+        for (const timer of this.flyTimers.values()) clearTimeout(timer);
+      }
+    };
   }
 });
 
-// js/sidenav/attach/peek.js
-function installPeek(c) {
-  const { doc, panel, read, syncRail, turnEase } = c;
-  c.peekTimer = 0;
-  let pointerIn = false;
-  let peekTurn = 0;
-  const setPeek = (value) => {
-    clearTimeout(c.peekTimer);
-    const now = panel.getAttribute(OPTIONS3.peek);
-    if (value ? now === "open" : now !== "open") return;
-    turnEase();
-    peekTurn += 1;
-    const turn2 = peekTurn;
-    if (value) {
-      panel.setAttribute(OPTIONS3.peek, "open");
-      syncRail();
-      return;
-    }
-    panel.setAttribute(OPTIONS3.peek, "leaving");
-    requestAnimationFrame(() => {
-      const motions = panel.getAnimations().map((a) => a.finished.catch(() => {
-      }));
-      void Promise.all(motions).then(() => {
-        if (turn2 !== peekTurn) return;
-        panel.removeAttribute(OPTIONS3.peek);
-        syncRail();
-      });
-    });
-  };
-  const peeks = () => read(OPTIONS3.expandOnHover) !== null && read(OPTIONS3.expandOnHover) !== "false" && panel.hasAttribute(OPTIONS3.slimCollapsed);
-  const onPeekEnter = () => {
-    pointerIn = true;
-    if (!peeks()) return;
-    const delay = Number(read(OPTIONS3.hoverDelay) ?? 150);
-    clearTimeout(c.peekTimer);
-    c.peekTimer = window.setTimeout(() => setPeek(true), Number.isFinite(delay) ? delay : 150);
-  };
-  c.onPeekEnter = onPeekEnter;
-  const onPeekLeave = () => {
-    pointerIn = false;
-    clearTimeout(c.peekTimer);
-    if (!panel.contains(doc.activeElement)) setPeek(false);
-  };
-  c.onPeekLeave = onPeekLeave;
-  const onPeekFocusIn = () => {
-    if (peeks()) setPeek(true);
-  };
-  c.onPeekFocusIn = onPeekFocusIn;
-  const onPeekFocusOut = (event) => {
-    if (event.relatedTarget instanceof Node && panel.contains(event.relatedTarget)) return;
-    if (!pointerIn) setPeek(false);
-  };
-  c.onPeekFocusOut = onPeekFocusOut;
-}
-var init_peek = __esm({
-  "js/sidenav/attach/peek.js"() {
-    "use strict";
-    init_options4();
-  }
-});
-
-// js/sidenav/attach/controls.js
-function installControls(c) {
-  const { flyIn, flyOut, flying, isOpen: isOpen3, memory, mode: mode2, on, ownedBy, panel, read, set, setSlim, turnEase } = c;
-  const mac = /Mac|iPhone|iPad/.test(globalThis.navigator?.platform ?? "") || /Mac/.test(globalThis.navigator?.userAgent ?? "");
-  const chordText = read(OPTIONS3.shortcut);
-  const chord = chordText !== null && chordText.trim() !== "" ? parseChord(chordText, mac) : null;
-  c.chord = chord;
-  const onShortcut = (event) => {
-    if (chord === null || event.defaultPrevented || event.repeat || typing2(event.target)) return;
-    if (event.key.toLowerCase() !== chord.key) return;
-    if (event.ctrlKey !== chord.ctrl || event.metaKey !== chord.meta || event.altKey !== chord.alt || event.shiftKey !== chord.shift) return;
-    event.preventDefault();
-    set(!isOpen3(), true, true, "shortcut");
-  };
-  c.onShortcut = onShortcut;
-  const saveGroups = () => {
-    if (memory === null) return;
-    const state12 = {};
-    for (const { group, id } of sidenavGroups(panel)) state12[id] = group.hasAttribute(OPTIONS3.expanded);
-    memory.write("groups", state12);
-  };
-  const onCategory = (event) => {
-    const toggle2 = (
-      /** @type {HTMLElement | null} */
-      event.target instanceof Element ? event.target.closest(".kp-sidenav__category-toggle") : null
-    );
-    if (!toggle2 || !panel.contains(toggle2)) return;
-    const category = toggle2.closest(".kp-sidenav__category");
-    if (!category) return;
-    if (flying()) {
-      if (category.hasAttribute(OPTIONS3.flown)) flyIn(category);
-      else flyOut(category, { focusFirst: (
-        /** @type {MouseEvent} */
-        event.detail === 0
-      ) });
-      return;
-    }
-    const expanded = category.hasAttribute(OPTIONS3.expanded);
-    turnEase();
-    if (!expanded && on(OPTIONS3.accordion, false)) {
-      for (const other of panel.querySelectorAll(".kp-sidenav__category[data-kp-sidenav-expanded]")) {
-        other.removeAttribute(OPTIONS3.expanded);
-        other.querySelector(".kp-sidenav__category-toggle")?.setAttribute("aria-expanded", "false");
-      }
-    }
-    category.toggleAttribute(OPTIONS3.expanded, !expanded);
-    toggle2.setAttribute("aria-expanded", String(!expanded));
-    saveGroups();
-  };
-  c.onCategory = onCategory;
-  const onToggleClick = (event) => {
-    const toggler = (
-      /** @type {Element | null} */
-      event.target instanceof Element ? event.target.closest("[data-kp-sidenav-toggle]") : null
-    );
-    if (!toggler) return;
-    if (ownedBy !== "" && toggler.matches(ownedBy)) return;
-    const controls = toggler.getAttribute("aria-controls");
-    if (controls !== null && controls !== panel.id) return;
-    set(!isOpen3(), true, true, "toggler");
-  };
-  c.onToggleClick = onToggleClick;
-  const onSlimClick = (event) => {
-    const toggler = (
-      /** @type {Element | null} */
-      event.target instanceof Element ? event.target.closest(`[${OPTIONS3.slimToggle}]`) : null
-    );
-    if (!toggler) return;
-    if (ownedBy !== "" && toggler.matches(ownedBy)) return;
-    const controls = toggler.getAttribute("aria-controls");
-    if (controls !== null && controls !== panel.id) return;
-    setSlim(void 0, true, "toggler");
-  };
-  c.onSlimClick = onSlimClick;
-  const onEsc = (event) => {
-    if (event.key !== "Escape" || !on(OPTIONS3.closeOnEsc, true) || mode2() === "side" || !isOpen3()) return;
-    set(false, true, true, "escape");
-  };
-  c.onEsc = onEsc;
-}
+// js/sidenav/controls.js
+var SidenavControls;
 var init_controls = __esm({
-  "js/sidenav/attach/controls.js"() {
+  "js/sidenav/controls.js"() {
     "use strict";
-    init_options4();
-    init_helpers2();
     init_remember();
+    init_helpers2();
+    init_options4();
+    init_flyout();
+    SidenavControls = class extends SidenavFlyout {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.chord = null;
+      }
+      /** Read the shortcut the panel names. */
+      setupControls() {
+        const mac = /Mac|iPhone|iPad/.test(globalThis.navigator?.platform ?? "") || /Mac/.test(globalThis.navigator?.userAgent ?? "");
+        const chordText = this.read(OPTIONS3.shortcut);
+        this.chord = chordText !== null && chordText.trim() !== "" ? parseChord(chordText, mac) : null;
+      }
+      /** @param {KeyboardEvent} event */
+      onShortcut(event) {
+        const { chord } = this;
+        if (chord === null || event.defaultPrevented || event.repeat || typing2(event.target)) return;
+        if (event.key.toLowerCase() !== chord.key) return;
+        if (event.ctrlKey !== chord.ctrl || event.metaKey !== chord.meta || event.altKey !== chord.alt || event.shiftKey !== chord.shift) return;
+        event.preventDefault();
+        this.set(!this.isOpen(), true, true, "shortcut");
+      }
+      /** Remember which groups stand open. */
+      saveGroups() {
+        if (this.memory === null) return;
+        const state12 = {};
+        for (const { group, id } of sidenavGroups(this.panel)) state12[id] = group.hasAttribute(OPTIONS3.expanded);
+        this.memory.write("groups", state12);
+      }
+      /**
+       * A press on a group's heading. The accordion option is the reference's: with it on, opening one closes the others.
+       * @param {Event} event
+       */
+      onCategory(event) {
+        const toggle2 = (
+          /** @type {HTMLElement | null} */
+          event.target instanceof Element ? event.target.closest(".kp-sidenav__category-toggle") : null
+        );
+        if (!toggle2 || !this.panel.contains(toggle2)) return;
+        const category = toggle2.closest(".kp-sidenav__category");
+        if (!category) return;
+        if (this.flying()) {
+          if (category.hasAttribute(OPTIONS3.flown)) this.flyIn(category);
+          else this.flyOut(category, { focusFirst: (
+            /** @type {MouseEvent} */
+            event.detail === 0
+          ) });
+          return;
+        }
+        const expanded = category.hasAttribute(OPTIONS3.expanded);
+        this.turnEase();
+        if (!expanded && this.on(OPTIONS3.accordion, false)) {
+          for (const other of this.panel.querySelectorAll(".kp-sidenav__category[data-kp-sidenav-expanded]")) {
+            other.removeAttribute(OPTIONS3.expanded);
+            other.querySelector(".kp-sidenav__category-toggle")?.setAttribute("aria-expanded", "false");
+          }
+        }
+        category.toggleAttribute(OPTIONS3.expanded, !expanded);
+        toggle2.setAttribute("aria-expanded", String(!expanded));
+        this.saveGroups();
+      }
+      /**
+       * The toggler a click landed on, when it is this panel's and not one a consumer wires.
+       * @param {Event} event
+       * @param {string} selector
+       */
+      ownToggler(event, selector) {
+        const toggler = (
+          /** @type {Element | null} */
+          event.target instanceof Element ? event.target.closest(selector) : null
+        );
+        if (!toggler) return null;
+        if (this.ownedBy !== "" && toggler.matches(this.ownedBy)) return null;
+        const controls = toggler.getAttribute("aria-controls");
+        return controls !== null && controls !== this.panel.id ? null : toggler;
+      }
+      /** @param {Event} event */
+      onToggleClick(event) {
+        if (this.ownToggler(event, "[data-kp-sidenav-toggle]") === null) return;
+        this.set(!this.isOpen(), true, true, "toggler");
+      }
+      /** @param {Event} event */
+      onSlimClick(event) {
+        if (this.ownToggler(event, `[${OPTIONS3.slimToggle}]`) === null) return;
+        this.setSlim(void 0, true, "toggler");
+      }
+      /** @param {KeyboardEvent} event */
+      onEsc(event) {
+        if (event.key !== "Escape" || !this.on(OPTIONS3.closeOnEsc, true) || this.mode() === "side" || !this.isOpen()) return;
+        this.set(false, true, true, "escape");
+      }
+    };
   }
 });
 
-// js/sidenav/attach/narrow.js
-function installNarrow(c) {
-  const { doc, mode: mode2, ownedBy, panel, read, saySlim, set, setSlim, slimTogglers, togglers } = c;
-  const overBelow = read(OPTIONS3.overBelow);
-  c.declared = null;
-  const hiddenAtAttach = /* @__PURE__ */ new Map();
-  c.hiddenAtAttach = hiddenAtAttach;
-  const hideControl = (control, hide2) => {
-    if (!(control instanceof HTMLElement) || ownedBy !== "" && control.matches(ownedBy)) return;
-    if (!hiddenAtAttach.has(control)) hiddenAtAttach.set(control, control.hasAttribute("hidden"));
-    control.toggleAttribute("hidden", hide2);
-  };
-  const threshold = (written = overBelow) => {
-    const length = (written ?? "").trim() || NARROW_STEP;
-    const size2 = parseFloat(length);
-    if (length.endsWith("rem")) return size2 * parseFloat(getComputedStyle(doc.documentElement).fontSize);
-    if (length.endsWith("em")) return size2 * parseFloat(getComputedStyle(panel.parentElement ?? panel).fontSize);
-    return size2;
-  };
-  c.threshold = threshold;
-  const still = (change2) => {
-    const before = panel.style.transition;
-    panel.style.transition = "none";
-    change2();
-    void panel.offsetWidth;
-    panel.style.transition = before;
-  };
-  c.still = still;
-  const applyNarrow = () => {
-    const box = panel.parentElement;
-    if (overBelow === null || box === null) return;
-    const narrow = box.clientWidth <= threshold();
-    for (const control of togglers()) if (control.closest(SIDENAV_LAUNCHER) === null) hideControl(control, !narrow);
-    if (read(OPTIONS3.slim) !== null) for (const control of slimTogglers()) hideControl(control, narrow);
-    if (narrow === (c.declared !== null)) return;
-    still(() => {
-      if (narrow) {
-        c.declared = { mode: read(OPTIONS3.mode), slim: panel.hasAttribute(OPTIONS3.slimCollapsed) };
+// js/sidenav/narrow.js
+var SidenavNarrow;
+var init_narrow = __esm({
+  "js/sidenav/narrow.js"() {
+    "use strict";
+    init_options4();
+    init_constants18();
+    init_controls();
+    SidenavNarrow = class extends SidenavControls {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.overBelow = null;
+        this.slimBelow = null;
+        this.declared = null;
+        this.hiddenAtAttach = /* @__PURE__ */ new Map();
+        this.slimHeld = null;
+        this.narrowWatch = null;
+      }
+      /** Read the two steps and make the watch; it starts observing with the starting state (`SidenavControl.setupStart`). */
+      setupNarrow() {
+        this.overBelow = this.read(OPTIONS3.overBelow);
+        this.slimBelow = this.read(OPTIONS3.slimBelow);
+        const wanted = (this.overBelow !== null || this.slimBelow !== null) && this.panel.parentElement !== null;
+        this.narrowWatch = wanted && typeof ResizeObserver === "function" ? new ResizeObserver(() => {
+          this.applyNarrow();
+          this.applySlimBelow();
+        }) : null;
+      }
+      /** @param {Element} control @param {boolean} hide */
+      hideControl(control, hide2) {
+        if (!(control instanceof HTMLElement) || this.ownedBy !== "" && control.matches(this.ownedBy)) return;
+        if (!this.hiddenAtAttach.has(control)) this.hiddenAtAttach.set(control, control.hasAttribute("hidden"));
+        control.toggleAttribute("hidden", hide2);
+      }
+      /** A length the page wrote, in pixels; empty is the package's 40rem step. @param {string | null} [written] */
+      threshold(written = this.overBelow) {
+        const length = (written ?? "").trim() || NARROW_STEP;
+        const size2 = parseFloat(length);
+        if (length.endsWith("rem")) return size2 * parseFloat(getComputedStyle(this.doc.documentElement).fontSize);
+        if (length.endsWith("em")) return size2 * parseFloat(getComputedStyle(this.panel.parentElement ?? this.panel).fontSize);
+        return size2;
+      }
+      /** Change the mode without the slide: a resize is not an opening. @param {() => void} change */
+      still(change2) {
+        const before = this.panel.style.transition;
+        this.panel.style.transition = "none";
+        change2();
+        void this.panel.offsetWidth;
+        this.panel.style.transition = before;
+      }
+      applyNarrow() {
+        const box = this.panel.parentElement;
+        if (this.overBelow === null || box === null) return;
+        const narrow = box.clientWidth <= this.threshold();
+        for (const control of this.togglers()) if (control.closest(SIDENAV_LAUNCHER) === null) this.hideControl(control, !narrow);
+        if (this.read(OPTIONS3.slim) !== null) for (const control of this.slimTogglers()) this.hideControl(control, narrow);
+        if (narrow === (this.declared !== null)) return;
+        this.still(() => narrow ? this.becomeNarrow() : this.becomeWide());
+      }
+      /** Keep what the markup declared and become a shut `over` panel. */
+      becomeNarrow() {
+        const { panel } = this;
+        this.declared = { mode: this.read(OPTIONS3.mode), slim: panel.hasAttribute(OPTIONS3.slimCollapsed) };
         panel.setAttribute(OPTIONS3.narrow, "");
         panel.removeAttribute(OPTIONS3.slimCollapsed);
         panel.setAttribute(OPTIONS3.mode, "over");
-        set(false, false, false, "breakpoint");
-      } else {
+        this.set(false, false, false, "breakpoint");
+      }
+      /** Become what the markup declared again. */
+      becomeWide() {
         const was = (
-          /** @type {{ mode: string | null, slim: boolean }} */
-          c.declared
+          /** @type {Declared} */
+          this.declared
         );
-        c.declared = null;
+        this.declared = null;
+        this.putDeclared(was);
+        this.saySlim(was.slim);
+        this.set(this.mode() === "side", false, false, "breakpoint");
+      }
+      /** Write the declared mode and rail state back and drop the narrow mark. @param {Declared} was */
+      putDeclared(was) {
+        const { panel } = this;
         panel.removeAttribute(OPTIONS3.narrow);
         if (was.mode === null) panel.removeAttribute(OPTIONS3.mode);
         else panel.setAttribute(OPTIONS3.mode, was.mode);
         panel.toggleAttribute(OPTIONS3.slimCollapsed, was.slim);
-        saySlim(was.slim);
-        set(mode2() === "side", false, false, "breakpoint");
       }
-    });
-  };
-  c.applyNarrow = applyNarrow;
-  const slimBelow = read(OPTIONS3.slimBelow);
-  c.slimHeld = null;
-  const applySlimBelow = () => {
-    const box = panel.parentElement;
-    if (slimBelow === null || box === null || read(OPTIONS3.slim) === null || c.declared !== null) return;
-    const narrow = box.clientWidth <= threshold(slimBelow);
-    if (narrow === (c.slimHeld !== null)) return;
-    if (narrow) {
-      c.slimHeld = panel.hasAttribute(OPTIONS3.slimCollapsed);
-      if (!c.slimHeld) setSlim(true, false, "breakpoint");
-    } else {
-      const was = c.slimHeld;
-      c.slimHeld = null;
-      if (!was) setSlim(false, false, "breakpoint");
-    }
-  };
-  c.applySlimBelow = applySlimBelow;
-  const onResize = () => {
-    applyNarrow();
-    applySlimBelow();
-  };
-  const narrowWatch = (overBelow !== null || slimBelow !== null) && panel.parentElement !== null && typeof ResizeObserver === "function" ? new ResizeObserver(onResize) : null;
-  c.narrowWatch = narrowWatch;
-}
-var init_narrow = __esm({
-  "js/sidenav/attach/narrow.js"() {
-    "use strict";
-    init_options4();
-    init_constants18();
+      applySlimBelow() {
+        const box = this.panel.parentElement;
+        if (this.slimBelow === null || box === null || this.read(OPTIONS3.slim) === null || this.declared !== null) return;
+        const narrow = box.clientWidth <= this.threshold(this.slimBelow);
+        if (narrow === (this.slimHeld !== null)) return;
+        if (narrow) {
+          this.slimHeld = this.panel.hasAttribute(OPTIONS3.slimCollapsed);
+          if (!this.slimHeld) this.setSlim(true, false, "breakpoint");
+        } else {
+          const was = this.slimHeld;
+          this.slimHeld = null;
+          if (!was) this.setSlim(false, false, "breakpoint");
+        }
+      }
+      /** The reader's own rail state the step held, if it held one; the step lets go of it. */
+      releaseSlimHeld() {
+        const held2 = this.slimHeld;
+        this.slimHeld = null;
+        return held2;
+      }
+      /** Stop watching, give back the declared state and the controls' own `hidden`. */
+      undoNarrow() {
+        this.narrowWatch?.disconnect();
+        if (this.declared !== null) {
+          this.putDeclared(this.declared);
+          this.declared = null;
+        }
+        for (const [control, hidden2] of this.hiddenAtAttach) control.toggleAttribute("hidden", hidden2);
+      }
+    };
   }
 });
 
-// js/sidenav/attach/resizer.js
-function installResizer(c) {
-  const { doc, edge, isOpen: isOpen3, memory, offsetContent, on, panel, read, still, strings, threshold } = c;
-  c.grip = null;
-  c.wroteWidth = false;
-  const RESIZE_STEP = 16;
-  const limit = (name, fallback2) => {
-    const px5 = threshold(read(name) ?? fallback2);
-    return Number.isFinite(px5) && px5 > 0 ? px5 : threshold(fallback2);
-  };
-  const minWidth = () => limit(OPTIONS3.minWidth, "12rem");
-  const maxWidth = () => Math.max(minWidth(), limit(OPTIONS3.maxWidth, "32rem"));
-  const startsAtLeft = () => edge() === "start" !== (getComputedStyle(panel).direction === "rtl");
-  const clampWidth = (px5) => Math.round(Math.min(maxWidth(), Math.max(minWidth(), px5)));
-  const sayWidth = () => {
-    if (c.grip === null) return;
-    c.grip.setAttribute("aria-valuemin", String(Math.round(minWidth())));
-    c.grip.setAttribute("aria-valuemax", String(Math.round(maxWidth())));
-    c.grip.setAttribute("aria-valuenow", String(Math.round(panel.getBoundingClientRect().width)));
-  };
-  const setWidth = (px5, save2 = true) => {
-    const next2 = clampWidth(px5);
-    panel.style.setProperty("--kp-sidenav-width", `${next2}px`);
-    c.wroteWidth = true;
-    offsetContent(isOpen3());
-    sayWidth();
-    if (save2) memory?.write("width", next2);
-    return next2;
-  };
-  if (on(OPTIONS3.resizable, false)) {
-    const s2 = { ...getStrings(), ...strings };
-    c.grip = doc.createElement("div");
-    c.grip.className = SIDENAV_RESIZER.slice(1);
-    c.grip.setAttribute("role", "separator");
-    c.grip.setAttribute("aria-orientation", "vertical");
-    c.grip.setAttribute("aria-label", s2.resizeSidebar);
-    c.grip.setAttribute("aria-controls", panel.id);
-    c.grip.tabIndex = 0;
-    panel.append(c.grip);
-    const painted = parseFloat(panel.style.getPropertyValue("--kp-sidenav-width"));
-    if (Number.isFinite(painted)) setWidth(painted, false);
-    else sayWidth();
-  }
-  let gripOffset = 0;
-  c.heldTransition = "";
-  c.held = null;
-  const pointerWidth = (event) => {
-    const rect = panel.getBoundingClientRect();
-    return startsAtLeft() ? event.clientX - rect.left : rect.right - event.clientX;
-  };
-  const onGripDown = (event) => {
-    if (c.grip === null || event.button !== 0) return;
-    event.preventDefault();
-    try {
-      c.grip.setPointerCapture(event.pointerId);
-    } catch {
-    }
-    c.held = event.pointerId;
-    gripOffset = panel.getBoundingClientRect().width - pointerWidth(event);
-    c.heldTransition = panel.style.transition;
-    panel.style.transition = "none";
-    panel.setAttribute(OPTIONS3.resizing, "");
-  };
-  const onGripMove = (event) => {
-    if (c.grip === null || c.held !== event.pointerId) return;
-    setWidth(pointerWidth(event) + gripOffset, false);
-  };
-  const onGripUp = (event) => {
-    if (c.grip === null || c.held !== event.pointerId) return;
-    c.held = null;
-    if (c.grip.hasPointerCapture(event.pointerId)) c.grip.releasePointerCapture(event.pointerId);
-    panel.style.transition = c.heldTransition;
-    panel.removeAttribute(OPTIONS3.resizing);
-    memory?.write("width", clampWidth(panel.getBoundingClientRect().width));
-  };
-  const onGripKey = (event) => {
-    const grow2 = startsAtLeft() ? "ArrowRight" : "ArrowLeft";
-    const shrink = startsAtLeft() ? "ArrowLeft" : "ArrowRight";
-    const now = panel.getBoundingClientRect().width;
-    const step = RESIZE_STEP * (event.shiftKey ? 5 : 1);
-    let next2 = null;
-    if (event.key === grow2) next2 = now + step;
-    else if (event.key === shrink) next2 = now - step;
-    else if (event.key === "Home") next2 = minWidth();
-    else if (event.key === "End") next2 = maxWidth();
-    if (next2 === null) return;
-    event.preventDefault();
-    still(() => setWidth(next2));
-  };
-  const onGripReset = () => {
-    panel.style.removeProperty("--kp-sidenav-width");
-    c.wroteWidth = false;
-    memory?.forget("width");
-    still(() => offsetContent(isOpen3()));
-    sayWidth();
-  };
-  if (c.grip !== null) {
-    c.grip.addEventListener("pointerdown", onGripDown);
-    c.grip.addEventListener("pointermove", onGripMove);
-    c.grip.addEventListener("pointerup", onGripUp);
-    c.grip.addEventListener("pointercancel", onGripUp);
-    c.grip.addEventListener("keydown", onGripKey);
-    c.grip.addEventListener("dblclick", onGripReset);
-  }
-}
+// js/sidenav/resizer.js
+var SidenavResizer;
 var init_resizer = __esm({
-  "js/sidenav/attach/resizer.js"() {
+  "js/sidenav/resizer.js"() {
     "use strict";
-    init_options4();
     init_strings();
+    init_options4();
     init_constants18();
-  }
-});
-
-// js/sidenav/attach/rail.js
-function installRail(c) {
-  const {
-    applyNarrow,
-    applySlimBelow,
-    chord,
-    doc,
-    edge,
-    flyIn,
-    flyOut,
-    flying,
-    hideTip,
-    mode: mode2,
-    narrowWatch,
-    panel,
-    read,
-    saySlim,
-    set,
-    syncRail,
-    togglers
-  } = c;
-  const glyphs = [];
-  c.glyphs = glyphs;
-  for (const toggler of togglers()) {
-    const box = toggler.closest(`${SIDENAV_LAUNCHER}, ${SIDENAV_TAB}`);
-    if (box === null || toggler.children.length > 0 || (toggler.textContent ?? "").trim() !== "") continue;
-    const glyph3 = doc.createElement("span");
-    glyph3.className = box.matches(SIDENAV_TAB) ? "kp-sidenav__grip" : "kp-sidenav__bars";
-    glyph3.setAttribute("aria-hidden", "true");
-    toggler.append(glyph3);
-    glyphs.push(glyph3);
-  }
-  let start = mode2() === "side";
-  if (panel.hasAttribute(OPTIONS3.open)) start = panel.getAttribute(OPTIONS3.open) === "true";
-  if (read(OPTIONS3.slimCollapsed) !== null) panel.setAttribute(OPTIONS3.slimCollapsed, "");
-  set(start, false, false, "init");
-  saySlim(panel.getAttribute(OPTIONS3.slimCollapsed) !== null);
-  applyNarrow();
-  applySlimBelow();
-  if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
-  for (const toggle2 of panel.querySelectorAll(".kp-sidenav__category-toggle")) {
-    const category = toggle2.closest(".kp-sidenav__category");
-    toggle2.setAttribute("aria-expanded", String(category?.hasAttribute("data-kp-sidenav-expanded") ?? false));
-  }
-  syncRail();
-  if (chord !== null) for (const toggler of togglers()) toggler.setAttribute("aria-keyshortcuts", chord.aria);
-  const onRailKey = (event) => {
-    if (event.key === "Escape" && c.tip?.matches(":popover-open")) hideTip();
-    if (!flying() || !(event.target instanceof Element)) return;
-    const out = edge() === "end" ? "ArrowLeft" : "ArrowRight";
-    const back = edge() === "end" ? "ArrowRight" : "ArrowLeft";
-    const toggle2 = event.target.closest(".kp-sidenav__category-toggle");
-    if (toggle2 !== null && event.key === out) {
-      const category = toggle2.closest(".kp-sidenav__category");
-      if (category) {
+    init_narrow();
+    SidenavResizer = class extends SidenavNarrow {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.grip = null;
+        this.wroteWidth = false;
+        this.gripOffset = 0;
+        this.heldTransition = "";
+        this.held = null;
+      }
+      /** Make the handle on a panel that asks for one, start it at a painted width, and wire it. */
+      setupResizer() {
+        if (!this.on(OPTIONS3.resizable, false)) return;
+        const { panel } = this;
+        const s2 = { ...getStrings(), ...this.strings };
+        const grip = this.doc.createElement("div");
+        grip.className = SIDENAV_RESIZER.slice(1);
+        grip.setAttribute("role", "separator");
+        grip.setAttribute("aria-orientation", "vertical");
+        grip.setAttribute("aria-label", s2.resizeSidebar);
+        grip.setAttribute("aria-controls", panel.id);
+        grip.tabIndex = 0;
+        this.grip = grip;
+        panel.append(grip);
+        const painted = parseFloat(panel.style.getPropertyValue("--kp-sidenav-width"));
+        if (Number.isFinite(painted)) this.setWidth(painted, false);
+        else this.sayWidth();
+        const up = (event) => this.onGripUp(
+          /** @type {PointerEvent} */
+          event
+        );
+        this.listen(grip, "pointerdown", (event) => this.onGripDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(grip, "pointermove", (event) => this.onGripMove(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(grip, "pointerup", up);
+        this.listen(grip, "pointercancel", up);
+        this.listen(grip, "keydown", (event) => this.onGripKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(grip, "dblclick", () => this.onGripReset());
+      }
+      /** A limit the panel names, in pixels; a length that does not resolve is the fallback. @param {string} name @param {string} fallback */
+      limit(name, fallback2) {
+        const px5 = this.threshold(this.read(name) ?? fallback2);
+        return Number.isFinite(px5) && px5 > 0 ? px5 : this.threshold(fallback2);
+      }
+      minWidth() {
+        return this.limit(OPTIONS3.minWidth, RESIZE_MIN_WIDTH);
+      }
+      maxWidth() {
+        return Math.max(this.minWidth(), this.limit(OPTIONS3.maxWidth, RESIZE_MAX_WIDTH));
+      }
+      /** Whether the panel's growing side is to the right on screen. */
+      startsAtLeft() {
+        return this.edge() === "start" !== (getComputedStyle(this.panel).direction === "rtl");
+      }
+      /** @param {number} px */
+      clampWidth(px5) {
+        return Math.round(Math.min(this.maxWidth(), Math.max(this.minWidth(), px5)));
+      }
+      sayWidth() {
+        if (this.grip === null) return;
+        this.grip.setAttribute("aria-valuemin", String(Math.round(this.minWidth())));
+        this.grip.setAttribute("aria-valuemax", String(Math.round(this.maxWidth())));
+        this.grip.setAttribute("aria-valuenow", String(Math.round(this.panel.getBoundingClientRect().width)));
+      }
+      /** @param {number} px @param {boolean} [save] */
+      setWidth(px5, save2 = true) {
+        const next2 = this.clampWidth(px5);
+        this.panel.style.setProperty("--kp-sidenav-width", `${next2}px`);
+        this.wroteWidth = true;
+        this.offsetContent(this.isOpen());
+        this.sayWidth();
+        if (save2) this.memory?.write("width", next2);
+        return next2;
+      }
+      /** @param {PointerEvent} event */
+      pointerWidth(event) {
+        const rect = this.panel.getBoundingClientRect();
+        return this.startsAtLeft() ? event.clientX - rect.left : rect.right - event.clientX;
+      }
+      /** @param {PointerEvent} event */
+      onGripDown(event) {
+        if (this.grip === null || event.button !== 0) return;
         event.preventDefault();
-        flyOut(category, { focusFirst: true });
+        try {
+          this.grip.setPointerCapture(event.pointerId);
+        } catch {
+        }
+        this.held = event.pointerId;
+        this.gripOffset = this.panel.getBoundingClientRect().width - this.pointerWidth(event);
+        this.heldTransition = this.panel.style.transition;
+        this.panel.style.transition = "none";
+        this.panel.setAttribute(OPTIONS3.resizing, "");
       }
-      return;
-    }
-    const inside = event.target.closest(`.kp-sidenav__category[${OPTIONS3.flown}]`);
-    if (inside !== null && event.target.closest(".kp-sidenav__flyout") !== null && (event.key === "Escape" || event.key === back)) {
-      event.preventDefault();
-      event.stopPropagation();
-      flyIn(inside, { refocus: true });
-    }
-  };
-  c.onRailKey = onRailKey;
-}
-var init_rail = __esm({
-  "js/sidenav/attach/rail.js"() {
-    "use strict";
-    init_constants18();
-    init_options4();
+      /** @param {PointerEvent} event */
+      onGripMove(event) {
+        if (this.grip === null || this.held !== event.pointerId) return;
+        this.setWidth(this.pointerWidth(event) + this.gripOffset, false);
+      }
+      /** @param {PointerEvent} event */
+      onGripUp(event) {
+        if (this.grip === null || this.held !== event.pointerId) return;
+        this.held = null;
+        if (this.grip.hasPointerCapture(event.pointerId)) this.grip.releasePointerCapture(event.pointerId);
+        this.panel.style.transition = this.heldTransition;
+        this.panel.removeAttribute(OPTIONS3.resizing);
+        this.memory?.write("width", this.clampWidth(this.panel.getBoundingClientRect().width));
+      }
+      /** @param {KeyboardEvent} event */
+      onGripKey(event) {
+        const grow2 = this.startsAtLeft() ? "ArrowRight" : "ArrowLeft";
+        const shrink = this.startsAtLeft() ? "ArrowLeft" : "ArrowRight";
+        const now = this.panel.getBoundingClientRect().width;
+        const step = RESIZE_STEP * (event.shiftKey ? RESIZE_SHIFT_STEPS : 1);
+        let next2 = null;
+        if (event.key === grow2) next2 = now + step;
+        else if (event.key === shrink) next2 = now - step;
+        else if (event.key === "Home") next2 = this.minWidth();
+        else if (event.key === "End") next2 = this.maxWidth();
+        if (next2 === null) return;
+        event.preventDefault();
+        const width = next2;
+        this.still(() => this.setWidth(width));
+      }
+      /** A double press gives the width back to the stylesheet's own. */
+      onGripReset() {
+        this.panel.style.removeProperty("--kp-sidenav-width");
+        this.wroteWidth = false;
+        this.memory?.forget("width");
+        this.still(() => this.offsetContent(this.isOpen()));
+        this.sayWidth();
+      }
+      /** Take the handle away, with the width written here. */
+      undoGrip() {
+        if (this.grip === null) return;
+        this.grip.remove();
+        this.grip = null;
+        this.panel.removeAttribute(OPTIONS3.resizing);
+        if (this.wroteWidth) this.panel.style.removeProperty("--kp-sidenav-width");
+      }
+      /** Give the panel its own transition back when the handle was held at the detach. */
+      undoHeld() {
+        if (this.held !== null) this.panel.style.transition = this.heldTransition;
+      }
+    };
   }
 });
 
-// js/sidenav/attach/wire.js
-function installWire(c) {
-  const {
-    chord,
-    doc,
-    hideTip,
-    onCategory,
-    onEsc,
-    onFlyFocusOut,
-    onFlyOut,
-    onFlyOver,
-    onPeekEnter,
-    onPeekFocusIn,
-    onPeekFocusOut,
-    onPeekLeave,
-    onRailKey,
-    onShortcut,
-    onSlimClick,
-    onTipFocus,
-    onTipOut,
-    onTipOver,
-    onToggleClick,
-    onTrap,
-    panel,
-    turnEase
-  } = c;
-  doc.addEventListener("click", onToggleClick);
-  doc.addEventListener("click", onSlimClick);
-  panel.addEventListener("click", onCategory);
-  doc.addEventListener(
-    "keydown",
-    /** @type {EventListener} */
-    onEsc
-  );
-  panel.addEventListener(
-    "keydown",
-    /** @type {EventListener} */
-    onTrap
-  );
-  panel.addEventListener(
-    "keydown",
-    /** @type {EventListener} */
-    onRailKey
-  );
-  panel.addEventListener("pointerenter", turnEase);
-  panel.addEventListener("pointerenter", onPeekEnter);
-  panel.addEventListener("pointerleave", onPeekLeave);
-  panel.addEventListener("focusin", onPeekFocusIn);
-  panel.addEventListener(
-    "focusout",
-    /** @type {EventListener} */
-    onPeekFocusOut
-  );
-  panel.addEventListener(
-    "pointerover",
-    /** @type {EventListener} */
-    onTipOver
-  );
-  panel.addEventListener(
-    "pointerout",
-    /** @type {EventListener} */
-    onTipOut
-  );
-  panel.addEventListener(
-    "focusin",
-    /** @type {EventListener} */
-    onTipFocus
-  );
-  panel.addEventListener("focusout", hideTip);
-  panel.addEventListener(
-    "pointerover",
-    /** @type {EventListener} */
-    onFlyOver
-  );
-  panel.addEventListener(
-    "pointerout",
-    /** @type {EventListener} */
-    onFlyOut
-  );
-  panel.addEventListener(
-    "focusout",
-    /** @type {EventListener} */
-    onFlyFocusOut
-  );
-  if (chord !== null) doc.addEventListener(
-    "keydown",
-    /** @type {EventListener} */
-    onShortcut
-  );
-}
-var init_wire = __esm({
-  "js/sidenav/attach/wire.js"() {
+// js/sidenav/controller.js
+var SHIFT_KNOBS, ID_RADIX3, ID_FROM, ID_TO, SidenavControl;
+var init_controller31 = __esm({
+  "js/sidenav/controller.js"() {
     "use strict";
-  }
-});
-
-// js/sidenav/attach/handle.js
-function installHandle(c) {
-  const {
-    cleanups,
-    close,
-    contentEl,
-    doc,
-    dropBackdrop,
-    flyTimers,
-    glyphs,
-    hiddenAtAttach,
-    hideTip,
-    isOpen: isOpen3,
-    launchedByMarkup,
-    launchers,
-    narrowWatch,
-    offsetContent,
-    on,
-    onCategory,
-    onEsc,
-    onFlyFocusOut,
-    onFlyOut,
-    onFlyOver,
-    onPeekEnter,
-    onPeekFocusIn,
-    onPeekFocusOut,
-    onPeekLeave,
-    onRailKey,
-    onShortcut,
-    onSlimClick,
-    onTipFocus,
-    onTipOut,
-    onTipOver,
-    onToggleClick,
-    onTrap,
-    open: open4,
-    ownedBy,
-    panel,
-    read,
-    set,
-    setMode,
-    setSlim,
-    slimTogglers,
-    syncRail,
-    tabs,
-    togglers,
-    turnEase
-  } = c;
-  const handle = {
-    element: panel,
-    open: open4,
-    close,
-    toggle: ({ remember: remember3 = true } = {}) => set(!isOpen3(), true, remember3),
-    setMode,
-    setSlim: (collapsed) => setSlim(collapsed),
-    isOpen: isOpen3,
-    destroy: () => {
-    }
-  };
-  const detach = () => {
-    narrowWatch?.disconnect();
-    if (c.grip !== null) {
-      c.grip.remove();
-      c.grip = null;
-      panel.removeAttribute(OPTIONS3.resizing);
-      if (c.wroteWidth) panel.style.removeProperty("--kp-sidenav-width");
-    }
-    if (c.declared !== null) {
-      panel.removeAttribute(OPTIONS3.narrow);
-      if (c.declared.mode === null) panel.removeAttribute(OPTIONS3.mode);
-      else panel.setAttribute(OPTIONS3.mode, c.declared.mode);
-      panel.toggleAttribute(OPTIONS3.slimCollapsed, c.declared.slim);
-      c.declared = null;
-    }
-    for (const [control, hidden2] of hiddenAtAttach) control.toggleAttribute("hidden", hidden2);
-    doc.removeEventListener("click", onToggleClick);
-    doc.removeEventListener("click", onSlimClick);
-    panel.removeEventListener("click", onCategory);
-    doc.removeEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onEsc
-    );
-    panel.removeEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onTrap
-    );
-    panel.removeEventListener("pointerenter", turnEase);
-    panel.removeEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onRailKey
-    );
-    panel.removeEventListener("pointerenter", onPeekEnter);
-    panel.removeEventListener("pointerleave", onPeekLeave);
-    panel.removeEventListener("focusin", onPeekFocusIn);
-    panel.removeEventListener(
-      "focusout",
-      /** @type {EventListener} */
-      onPeekFocusOut
-    );
-    panel.removeEventListener(
-      "pointerover",
-      /** @type {EventListener} */
-      onTipOver
-    );
-    panel.removeEventListener(
-      "pointerout",
-      /** @type {EventListener} */
-      onTipOut
-    );
-    panel.removeEventListener(
-      "focusin",
-      /** @type {EventListener} */
-      onTipFocus
-    );
-    panel.removeEventListener("focusout", hideTip);
-    panel.removeEventListener(
-      "pointerover",
-      /** @type {EventListener} */
-      onFlyOver
-    );
-    panel.removeEventListener(
-      "pointerout",
-      /** @type {EventListener} */
-      onFlyOut
-    );
-    panel.removeEventListener(
-      "focusout",
-      /** @type {EventListener} */
-      onFlyFocusOut
-    );
-    doc.removeEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onShortcut
-    );
-    clearTimeout(c.peekTimer);
-    clearTimeout(c.tipTimer);
-    for (const timer of flyTimers.values()) clearTimeout(timer);
-    panel.removeAttribute(OPTIONS3.peek);
-    if (c.held !== null) panel.style.transition = c.heldTransition;
-    const wasSlim = c.slimHeld ?? panel.hasAttribute(OPTIONS3.slimCollapsed);
-    c.slimHeld = null;
-    panel.removeAttribute(OPTIONS3.slimCollapsed);
-    syncRail();
-    panel.toggleAttribute(OPTIONS3.slimCollapsed, wasSlim);
-    c.tip?.remove();
-    c.tip = null;
-    panel.inert = false;
-    for (const tab of tabs()) {
-      tab.removeAttribute("data-kp-sidenav-shift");
-      tab.removeAttribute("data-kp-sidenav-tab-edge");
-      tab.style.marginInlineStart = tab.style.marginInlineEnd = "";
-    }
-    for (const toggler of togglers()) toggler.removeAttribute("aria-keyshortcuts");
-    panel.style.removeProperty("--kp-sidenav-ease-back");
-    dropBackdrop();
-    offsetContent(false);
-    c.strip?.remove();
-    c.strip = null;
-    const target = contentEl();
-    if (target) {
-      target.removeAttribute("data-kp-sidenav-shift");
-      target.removeAttribute(OPTIONS3.inset);
-      for (const name of INSET_KNOBS) target.style.removeProperty(name);
-      for (const name of ["--kp-sidenav-shift-duration", "--kp-sidenav-shift-ease", "--kp-sidenav-shift-delay"])
-        target.style.removeProperty(name);
-      target.style.marginInlineStart = "";
-    }
-    c.lightTurn += 1;
-    for (const box of launchers()) box.removeAttribute(OPTIONS3.lit);
-    for (const glyph3 of glyphs) glyph3.remove();
-    if (!launchedByMarkup) panel.removeAttribute(OPTIONS3.launched);
-    for (const box of [...launchers(), ...tabs()]) {
-      box.removeAttribute(OPTIONS3.openerOff);
-      box.removeAttribute(OPTIONS3.openerOn);
-    }
-    if (on(OPTIONS3.lockScroll, false)) doc.documentElement.style.overflow = "";
-    panel.removeAttribute(OPTIONS3.open);
-    for (const toggler of togglers()) {
-      toggler.removeAttribute("aria-expanded");
-      toggler.removeAttribute("aria-label");
-    }
-    if (read(OPTIONS3.slim) !== null) {
-      for (const toggler of slimTogglers()) {
-        if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
-        toggler.removeAttribute("aria-expanded");
-        toggler.removeAttribute("aria-label");
-      }
-    }
-    delete panel.dataset.kpSidenavAttached;
-    handles3.delete(panel);
-  };
-  handle.destroy = detach;
-  handles3.set(panel, handle);
-  cleanups.push(detach);
-}
-var init_handle2 = __esm({
-  "js/sidenav/attach/handle.js"() {
-    "use strict";
-    init_options4();
     init_constants18();
+    init_options4();
+    init_resizer();
+    SHIFT_KNOBS = ["--kp-sidenav-shift-duration", "--kp-sidenav-shift-ease", "--kp-sidenav-shift-delay"];
+    ID_RADIX3 = 36;
+    ID_FROM = 2;
+    ID_TO = 8;
+    SidenavControl = class extends SidenavResizer {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.glyphs = [];
+        this.handle = {
+          element: host,
+          open: (options2) => this.open(options2),
+          close: (options2) => this.close(options2),
+          toggle: ({ remember: remember3 = true } = {}) => this.set(!this.isOpen(), true, remember3),
+          setMode: (mode2) => this.setMode(mode2),
+          setSlim: (collapsed) => this.setSlim(collapsed),
+          isOpen: () => this.isOpen(),
+          destroy: () => this.destroy()
+        };
+      }
+      connect() {
+        const { panel } = this;
+        panel.dataset.kpSidenavAttached = "";
+        if (!panel.id) panel.id = `kp-sidenav-${Math.random().toString(ID_RADIX3).slice(ID_FROM, ID_TO)}`;
+        this.own(() => this.unwire());
+        this.setupBasics();
+        this.setupControls();
+        this.setupNarrow();
+        this.setupResizer();
+        this.addGlyphs();
+        this.setupStart();
+        this.wire();
+        handles3.set(panel, this.handle);
+      }
+      /**
+       * A launcher: the panel makes room for it, and an empty toggler in it gets the package's three bars, the glyph the bar's own
+       * toggle draws. A page that wrote the mark itself keeps it; otherwise applyOpener() writes it while a launcher is shown.
+       */
+      addGlyphs() {
+        for (const toggler of this.togglers()) {
+          const box = toggler.closest(`${SIDENAV_LAUNCHER}, ${SIDENAV_TAB}`);
+          if (box === null || toggler.children.length > 0 || (toggler.textContent ?? "").trim() !== "") continue;
+          const glyph3 = this.doc.createElement("span");
+          glyph3.className = box.matches(SIDENAV_TAB) ? "kp-sidenav__grip" : "kp-sidenav__bars";
+          glyph3.setAttribute("aria-hidden", "true");
+          toggler.append(glyph3);
+          this.glyphs.push(glyph3);
+        }
+      }
+      /**
+       * The starting state. A side panel is there unless told otherwise; the two that cover are away until asked, which is the
+       * reference's `hidden` default written as a mode rather than as a flag.
+       */
+      setupStart() {
+        const { panel } = this;
+        let start = this.mode() === "side";
+        if (panel.hasAttribute(OPTIONS3.open)) start = panel.getAttribute(OPTIONS3.open) === "true";
+        if (this.read(OPTIONS3.slimCollapsed) !== null) panel.setAttribute(OPTIONS3.slimCollapsed, "");
+        this.set(start, false, false, "init");
+        this.saySlim(panel.getAttribute(OPTIONS3.slimCollapsed) !== null);
+        this.applyNarrow();
+        this.applySlimBelow();
+        if (this.narrowWatch !== null && panel.parentElement !== null) this.narrowWatch.observe(panel.parentElement);
+        for (const toggle2 of panel.querySelectorAll(".kp-sidenav__category-toggle")) {
+          const category = toggle2.closest(".kp-sidenav__category");
+          toggle2.setAttribute("aria-expanded", String(category?.hasAttribute("data-kp-sidenav-expanded") ?? false));
+        }
+        this.syncRail();
+        const { chord } = this;
+        if (chord !== null) for (const toggler of this.togglers()) toggler.setAttribute("aria-keyshortcuts", chord.aria);
+      }
+      /** The panel's and the page's listeners; `destroy()` removes them before anything else. */
+      wire() {
+        const { doc, panel } = this;
+        const as = (handler) => (
+          /** @type {EventListener} */
+          handler
+        );
+        this.listen(doc, "click", (event) => this.onToggleClick(event));
+        this.listen(doc, "click", (event) => this.onSlimClick(event));
+        this.listen(panel, "click", (event) => this.onCategory(event));
+        this.listen(doc, "keydown", as((event) => this.onEsc(event)));
+        this.listen(panel, "keydown", as((event) => this.onTrap(event)));
+        this.listen(panel, "keydown", as((event) => this.onRailKey(event)));
+        this.listen(panel, "pointerenter", () => this.turnEase());
+        this.listen(panel, "pointerenter", () => this.onPeekEnter());
+        this.listen(panel, "pointerleave", () => this.onPeekLeave());
+        this.listen(panel, "focusin", () => this.onPeekFocusIn());
+        this.listen(panel, "focusout", as((event) => this.onPeekFocusOut(event)));
+        this.listen(panel, "pointerover", as((event) => this.onTipOver(event)));
+        this.listen(panel, "pointerout", as((event) => this.onTipOut(event)));
+        this.listen(panel, "focusin", as((event) => this.onTipFocus(event)));
+        this.listen(panel, "focusout", () => this.hideTip());
+        this.listen(panel, "pointerover", as((event) => this.onFlyOver(event)));
+        this.listen(panel, "pointerout", as((event) => this.onFlyOut(event)));
+        this.listen(panel, "focusout", as((event) => this.onFlyFocusOut(event)));
+        if (this.chord !== null) this.listen(doc, "keydown", as((event) => this.onShortcut(event)));
+      }
+      /**
+       * The rail's keys: Right (or Left on the end edge) floats a group out and goes into it, Escape or the way back folds it and
+       * returns to its heading, and Escape takes a label tip away.
+       * @param {KeyboardEvent} event
+       */
+      onRailKey(event) {
+        if (event.key === "Escape" && this.tip?.matches(":popover-open")) this.hideTip();
+        if (!this.flying() || !(event.target instanceof Element)) return;
+        const out = this.edge() === "end" ? "ArrowLeft" : "ArrowRight";
+        const back = this.edge() === "end" ? "ArrowRight" : "ArrowLeft";
+        const toggle2 = event.target.closest(".kp-sidenav__category-toggle");
+        if (toggle2 !== null && event.key === out) {
+          const category = toggle2.closest(".kp-sidenav__category");
+          if (category) {
+            event.preventDefault();
+            this.flyOut(category, { focusFirst: true });
+          }
+          return;
+        }
+        const inside = event.target.closest(`.kp-sidenav__category[${OPTIONS3.flown}]`);
+        if (inside !== null && event.target.closest(".kp-sidenav__flyout") !== null && (event.key === "Escape" || event.key === back)) {
+          event.preventDefault();
+          event.stopPropagation();
+          this.flyIn(inside, { refocus: true });
+        }
+      }
+      /** Undo what `connect()` did, beyond the listeners, in the order the old detach did it. */
+      unwire() {
+        this.undoGrip();
+        this.undoNarrow();
+        this.undoMotion();
+        this.undoPlacement();
+        this.undoMarks();
+        this.undoNames();
+      }
+      /** Stop the timers and the peek, and fold the floating groups back into the panel as they were. */
+      undoMotion() {
+        const { panel } = this;
+        this.stopTimers();
+        panel.removeAttribute(OPTIONS3.peek);
+        this.undoHeld();
+        const wasSlim = this.releaseSlimHeld() ?? panel.hasAttribute(OPTIONS3.slimCollapsed);
+        panel.removeAttribute(OPTIONS3.slimCollapsed);
+        this.syncRail();
+        panel.toggleAttribute(OPTIONS3.slimCollapsed, wasSlim);
+        this.dropTip();
+        panel.inert = false;
+      }
+      /** Give the edge tabs, the backdrop, the strip and the content their own place back. */
+      undoPlacement() {
+        for (const tab of this.tabs()) {
+          tab.removeAttribute("data-kp-sidenav-shift");
+          tab.removeAttribute("data-kp-sidenav-tab-edge");
+          tab.style.marginInlineStart = tab.style.marginInlineEnd = "";
+        }
+        for (const toggler of this.togglers()) toggler.removeAttribute("aria-keyshortcuts");
+        this.panel.style.removeProperty("--kp-sidenav-ease-back");
+        this.dropBackdrop();
+        this.offsetContent(false);
+        this.dropStrip();
+        const target = this.contentEl();
+        if (!target) return;
+        target.removeAttribute("data-kp-sidenav-shift");
+        target.removeAttribute(OPTIONS3.inset);
+        for (const name of [...INSET_KNOBS, ...SHIFT_KNOBS]) target.style.removeProperty(name);
+        target.style.marginInlineStart = "";
+      }
+      /** Put the launchers out and take the glyphs, the launch mark and the opener marks away. */
+      undoMarks() {
+        this.lightTurn += 1;
+        for (const box of this.launchers()) box.removeAttribute(OPTIONS3.lit);
+        for (const glyph3 of this.glyphs) glyph3.remove();
+        if (!this.launchedByMarkup) this.panel.removeAttribute(OPTIONS3.launched);
+        for (const box of [...this.launchers(), ...this.tabs()]) {
+          box.removeAttribute(OPTIONS3.openerOff);
+          box.removeAttribute(OPTIONS3.openerOn);
+        }
+      }
+      /** Free the page's scroll, drop the open state and the togglers' names, and forget the panel. */
+      undoNames() {
+        const { panel, ownedBy } = this;
+        if (this.on(OPTIONS3.lockScroll, false)) this.doc.documentElement.style.overflow = "";
+        panel.removeAttribute(OPTIONS3.open);
+        for (const toggler of this.togglers()) {
+          toggler.removeAttribute("aria-expanded");
+          toggler.removeAttribute("aria-label");
+        }
+        if (this.read(OPTIONS3.slim) !== null) {
+          for (const toggler of this.slimTogglers()) {
+            if (ownedBy !== "" && toggler.matches(ownedBy)) continue;
+            toggler.removeAttribute("aria-expanded");
+            toggler.removeAttribute("aria-label");
+          }
+        }
+        delete panel.dataset.kpSidenavAttached;
+        handles3.delete(panel);
+      }
+    };
   }
 });
 
 // js/sidenav/attach.js
 function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, store } = {}) {
-  const cleanups = [];
-  for (const element of root.querySelectorAll(".kp-sidenav")) {
-    const panel = (
-      /** @type {HTMLElement} */
-      element
-    );
-    if (panel.dataset.kpSidenavAttached !== void 0) continue;
-    panel.dataset.kpSidenavAttached = "";
-    if (!panel.id) panel.id = `kp-sidenav-${Math.random().toString(36).slice(2, 8)}`;
-    const c = (
-      /** @type {SidenavContext} */
-      /** @type {unknown} */
-      { panel, store, strings, ownedBy, cleanups }
-    );
-    installBasics(c);
-    installGeometry(c);
-    installShift(c);
-    installLaunchers(c);
-    installBackdrop(c);
-    installOpen(c);
-    installSlim(c);
-    installTip2(c);
-    installFlyout(c);
-    installPeek(c);
-    installControls(c);
-    installNarrow(c);
-    installResizer(c);
-    installRail(c);
-    installWire(c);
-    installHandle(c);
-  }
+  const settings = { strings, ownedBy, store };
+  const made6 = [...root.querySelectorAll(".kp-sidenav")].map((element) => (
+    /** @type {HTMLElement} */
+    element
+  )).filter((panel) => !("kpSidenavAttached" in panel.dataset) && !controllerOf(panel, SidenavControl)).map((panel) => attachOne(panel, SidenavControl, settings)).filter((control) => control !== void 0);
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6) control.destroy();
   };
 }
 var init_attach9 = __esm({
   "js/sidenav/attach.js"() {
     "use strict";
+    init_controller();
     init_constants18();
-    init_basics();
-    init_geometry3();
-    init_shift();
-    init_launchers();
-    init_backdrop();
-    init_open2();
-    init_slim();
-    init_tip2();
-    init_flyout();
-    init_peek();
-    init_controls();
-    init_narrow();
-    init_resizer();
-    init_rail();
-    init_wire();
-    init_handle2();
+    init_controller31();
   }
 });
 
@@ -40528,7 +40589,7 @@ var init_core8 = __esm({
 
 // js/listbox/controller.js
 var ListboxController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/listbox/controller.js"() {
     "use strict";
     init_core8();
@@ -40701,7 +40762,7 @@ function createListbox(options) {
 var init_listbox = __esm({
   "js/listbox.js"() {
     "use strict";
-    init_controller31();
+    init_controller32();
     init_scroll2();
     init_values9();
     init_match();
@@ -41061,7 +41122,7 @@ var init_tags = __esm({
 
 // js/combobox/controller.js
 var ComboboxControl;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/combobox/controller.js"() {
     "use strict";
     init_listbox();
@@ -41222,7 +41283,7 @@ var init_attach10 = __esm({
     "use strict";
     init_controller();
     init_constants8();
-    init_controller32();
+    init_controller33();
   }
 });
 
@@ -43294,7 +43355,7 @@ var init_identity = __esm({
 });
 
 // js/datatable/attach/controls.js
-function installControls2(c) {
+function installControls(c) {
   const { collapseGlyph, debounceMs, expandGlyph, localeOption, multiSort, pageSizesOption, sortCycle, sortExternal, sortsSeveral, wrap } = c;
   const search = (
     /** @type {HTMLInputElement | null} */
@@ -44475,7 +44536,7 @@ function partsOf5(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -44660,7 +44721,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller33();
+    init_controller34();
   }
 });
 
@@ -47553,7 +47614,7 @@ var init_edit = __esm({
 });
 
 // js/datatable/attach/wire.js
-function installWire2(c) {
+function installWire(c) {
   const {
     applyFilter,
     body,
@@ -47697,7 +47758,7 @@ function installWire2(c) {
   c.resize = resize;
   resize?.observe(table);
 }
-var init_wire2 = __esm({
+var init_wire = __esm({
   "js/datatable/attach/wire.js"() {
     "use strict";
     init_combobox();
@@ -47709,7 +47770,7 @@ var init_wire2 = __esm({
 });
 
 // js/datatable/attach/handle.js
-function installHandle2(c) {
+function installHandle(c) {
   const {
     addMode,
     applyFilter,
@@ -47924,7 +47985,7 @@ function installHandle2(c) {
     })
   );
 }
-var init_handle3 = __esm({
+var init_handle2 = __esm({
   "js/datatable/attach/handle.js"() {
     "use strict";
     init_instance();
@@ -48212,7 +48273,7 @@ function attachDataTables(root = document, {
       }
     );
     installIdentity(c);
-    installControls2(c);
+    installControls(c);
     installDetails(c);
     installColumns(c);
     installModel(c);
@@ -48232,8 +48293,8 @@ function attachDataTables(root = document, {
     installExpand(c);
     installSelection(c);
     installEdit(c);
-    installWire2(c);
-    installHandle2(c);
+    installWire(c);
+    installHandle(c);
     installUnwire(c);
   };
   for (const element of root.querySelectorAll(TABLE)) wireTable(element);
@@ -48272,8 +48333,8 @@ var init_attach13 = __esm({
     init_expand();
     init_selection2();
     init_edit();
-    init_wire2();
-    init_handle3();
+    init_wire();
+    init_handle2();
     init_unwire();
   }
 });
@@ -49181,7 +49242,7 @@ var init_core10 = __esm({
 
 // js/upload/controller.js
 var UploadZone;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/upload/controller.js"() {
     "use strict";
     init_motion();
@@ -49324,7 +49385,7 @@ var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
     init_controller();
-    init_controller34();
+    init_controller35();
     init_values24();
     init_values24();
     init_accepts();
@@ -49533,7 +49594,7 @@ var init_view2 = __esm({
 
 // js/wizard/controller.js
 var WizardController;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/wizard/controller.js"() {
     "use strict";
     init_validate();
@@ -49633,7 +49694,7 @@ var init_attach14 = __esm({
   "js/wizard/attach.js"() {
     "use strict";
     init_controller();
-    init_controller35();
+    init_controller36();
     init_values25();
   }
 });
@@ -50025,7 +50086,7 @@ var init_layout2 = __esm({
 
 // js/gridlayout/controller.js
 var MovableGrid;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/gridlayout/controller.js"() {
     "use strict";
     init_controller();
@@ -50201,7 +50262,7 @@ var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_values26();
     init_values26();
     init_layout2();
@@ -50809,7 +50870,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED7, CalendarController;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -51063,7 +51124,7 @@ var init_api15 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller37();
+    init_controller38();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -51728,7 +51789,7 @@ function attachHeats(root = document) {
   return attachAll(root, HEAT, HeatGrid);
 }
 var HeatGrid;
-var init_wire3 = __esm({
+var init_wire2 = __esm({
   "js/heat/wire.js"() {
     "use strict";
     init_controller();
@@ -52389,7 +52450,7 @@ var init_lines = __esm({
 
 // js/uses-map/wire.js
 var UsesWire;
-var init_wire4 = __esm({
+var init_wire3 = __esm({
   "js/uses-map/wire.js"() {
     "use strict";
     init_controller();
@@ -52661,7 +52722,7 @@ var init_draw9 = __esm({
     init_memory2();
     init_model5();
     init_nodes();
-    init_wire4();
+    init_wire3();
   }
 });
 
@@ -52940,7 +53001,7 @@ var init_matrix_wire = __esm({
     init_draw8();
     init_grid_state();
     init_matrix();
-    init_wire3();
+    init_wire2();
     STEPS = { ArrowRight: [0, 1], ArrowLeft: [0, -1], ArrowDown: [1, 0], ArrowUp: [-1, 0] };
     present = (list) => list.map((x, i) => x ? i : -1).filter((i) => i >= 0);
     MatrixGrid = class extends Controller {
@@ -53103,7 +53164,7 @@ var init_heat = __esm({
     init_pick();
     init_paging();
     init_legend2();
-    init_wire3();
+    init_wire2();
     init_matrix();
     init_matrix_wire();
   }
@@ -54031,7 +54092,7 @@ var init_model6 = __esm({
 
 // js/week/controller.js
 var MID_DAY, pillOf, WeekControl;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/week/controller.js"() {
     "use strict";
     init_controller();
@@ -54212,7 +54273,7 @@ var init_attach15 = __esm({
     init_controller();
     init_constants24();
     init_state18();
-    init_controller38();
+    init_controller39();
   }
 });
 
@@ -55756,7 +55817,7 @@ var init_pointer3 = __esm({
 
 // js/sequencer/controller.js
 var ZOOM_IN, ZOOM_OUT, WHEEL_ZOOM, LIVE_OPTIONS2, SequencerControl;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/sequencer/controller.js"() {
     "use strict";
     init_strings();
@@ -55970,7 +56031,7 @@ var init_attach16 = __esm({
     init_controller();
     init_constants25();
     init_instance2();
-    init_controller39();
+    init_controller40();
   }
 });
 
@@ -57692,7 +57753,7 @@ var init_input2 = __esm({
 
 // js/gantt/controller.js
 var MIN_ZOOM_S, CHROME_OPTIONS, GanttControl;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/gantt/controller.js"() {
     "use strict";
     init_live_options();
@@ -57909,7 +57970,7 @@ var init_attach17 = __esm({
     "use strict";
     init_controller();
     init_constants26();
-    init_controller40();
+    init_controller41();
   }
 });
 
@@ -58308,7 +58369,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -58457,7 +58518,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller41();
+    init_controller42();
     init_values27();
     init_values27();
   }
@@ -59067,7 +59128,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -59252,7 +59313,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller42();
+    init_controller43();
   }
 });
 
@@ -59792,7 +59853,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -59921,7 +59982,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller43();
+    init_controller44();
     init_values29();
     init_values29();
     init_share();
@@ -60353,7 +60414,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -60434,7 +60495,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_values30();
     init_values30();
   }
@@ -60656,7 +60717,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -60785,7 +60846,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_values31();
     init_values31();
     init_keys12();
@@ -61789,7 +61850,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -61855,7 +61916,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_values33();
     init_values33();
   }
@@ -62181,7 +62242,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -62468,7 +62529,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller47();
+    init_controller48();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -62590,7 +62651,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -62817,7 +62878,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller48();
+    init_controller49();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -63809,7 +63870,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -64049,7 +64110,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller49();
+    init_controller50();
     init_values36();
     init_values36();
   }
@@ -64390,7 +64451,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -64508,7 +64569,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller50();
+    init_controller51();
     init_values37();
     init_values37();
     init_slug();
@@ -65195,7 +65256,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -65402,7 +65463,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller51();
+    init_controller52();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -65703,7 +65764,7 @@ var init_core18 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -65818,7 +65879,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller52();
+    init_controller53();
     init_values38();
     init_values38();
     init_names();
@@ -66063,7 +66124,7 @@ var init_core19 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -66168,7 +66229,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller53();
+    init_controller54();
     init_values39();
     init_values39();
     init_value();
@@ -67170,7 +67231,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -67329,7 +67390,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller54();
+    init_controller55();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -67760,7 +67821,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -67901,7 +67962,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller55();
+    init_controller56();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -68363,7 +68424,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -68633,7 +68694,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller56();
+    init_controller57();
     init_build14();
     init_commit();
     init_math4();
@@ -68921,7 +68982,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -69154,7 +69215,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller57();
+    init_controller58();
     init_list4();
     init_render4();
   }
@@ -70021,7 +70082,7 @@ function newModel3(box, handle, input, list) {
   };
 }
 var LIVE_OPTIONS3, UsualPickerControl;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/usual-picker/controller.js"() {
     "use strict";
     init_combobox();
@@ -70228,7 +70289,7 @@ var init_attach20 = __esm({
     init_constants33();
     init_model9();
     init_sync6();
-    init_controller58();
+    init_controller59();
   }
 });
 
@@ -70566,7 +70627,7 @@ var init_parts14 = __esm({
 
 // js/toggle/handle.js
 var ToggleAnswers;
-var init_handle4 = __esm({
+var init_handle3 = __esm({
   "js/toggle/handle.js"() {
     "use strict";
     init_group6();
@@ -70675,13 +70736,13 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
     init_shortcuts();
     init_group6();
-    init_handle4();
+    init_handle3();
     ToggleControl = class extends ToggleAnswers {
       connect() {
         const button6 = this.button;
@@ -70866,7 +70927,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller59();
+    init_controller60();
     init_group6();
     init_group6();
   }
@@ -71155,7 +71216,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -71262,7 +71323,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller60();
+    init_controller61();
     init_values41();
     init_values41();
     init_level();
@@ -71557,7 +71618,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -71741,7 +71802,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller61();
+    init_controller62();
     init_values42();
     init_values42();
     init_order();
@@ -72006,7 +72067,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -72093,7 +72154,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller62();
+    init_controller63();
     init_values43();
     init_values43();
     init_states();
@@ -73920,7 +73981,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -74173,7 +74234,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller63();
+    init_controller64();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -74519,7 +74580,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -74824,7 +74885,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller64();
+    init_controller65();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -75273,7 +75334,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -75407,7 +75468,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller65();
+    init_controller66();
     init_values46();
   }
 });
@@ -77070,7 +77131,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -77300,7 +77361,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller66();
+    init_controller67();
     init_values47();
     init_values47();
   }
@@ -77468,7 +77529,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller67 = __esm({
+var init_controller68 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -77697,7 +77758,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller67();
+    init_controller68();
     init_fields();
     init_fields();
   }
@@ -78037,7 +78098,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller68 = __esm({
+var init_controller69 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -78288,7 +78349,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller68();
+    init_controller69();
   }
 });
 
@@ -78612,7 +78673,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller69 = __esm({
+var init_controller70 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -78723,7 +78784,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller69();
+    init_controller70();
     init_values48();
     init_values48();
     init_time3();
@@ -79051,7 +79112,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS7, SnoozePicker;
-var init_controller70 = __esm({
+var init_controller71 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -79310,7 +79371,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller70();
+    init_controller71();
     init_choices();
   }
 });
@@ -80815,7 +80876,7 @@ var init_pan = __esm({
 
 // js/graph/controller.js
 var nodeOf, GraphControl;
-var init_controller71 = __esm({
+var init_controller72 = __esm({
   "js/graph/controller.js"() {
     "use strict";
     init_controller();
@@ -81079,7 +81140,7 @@ var init_attach22 = __esm({
     "use strict";
     init_controller();
     init_constants38();
-    init_controller71();
+    init_controller72();
   }
 });
 
@@ -82166,7 +82227,7 @@ var init_state27 = __esm({
 
 // js/claim/controller.js
 var LIVE_OPTIONS5, ClaimList;
-var init_controller72 = __esm({
+var init_controller73 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -82336,7 +82397,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller72();
+    init_controller73();
   }
 });
 
@@ -83308,7 +83369,7 @@ var init_keys16 = __esm({
 
 // js/availability/controller.js
 var CELL2, LIVE_OPTIONS6, cellOf2, AvailabilityControl;
-var init_controller73 = __esm({
+var init_controller74 = __esm({
   "js/availability/controller.js"() {
     "use strict";
     init_controller();
@@ -83527,7 +83588,7 @@ var init_attach24 = __esm({
     init_api28();
     init_constants40();
     init_facts();
-    init_controller73();
+    init_controller74();
   }
 });
 
@@ -84712,7 +84773,7 @@ var init_actions7 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS7, QrControl;
-var init_controller74 = __esm({
+var init_controller75 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -84816,7 +84877,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller74();
+    init_controller75();
     init_state28();
     init_state28();
     init_matrix2();
@@ -85623,7 +85684,7 @@ var init_api29 = __esm({
 
 // js/console/controller.js
 var MAX_COMPLETIONS, LIVE3, ConsoleControl;
-var init_controller75 = __esm({
+var init_controller76 = __esm({
   "js/console/controller.js"() {
     "use strict";
     init_controller();
@@ -85847,7 +85908,7 @@ var init_attach25 = __esm({
     "use strict";
     init_controller();
     init_constants41();
-    init_controller75();
+    init_controller76();
   }
 });
 
@@ -86602,7 +86663,7 @@ var init_api30 = __esm({
 
 // js/logviewer/controller.js
 var DOWNLOAD_URL_MS, LIVE4, LogViewerControl;
-var init_controller76 = __esm({
+var init_controller77 = __esm({
   "js/logviewer/controller.js"() {
     "use strict";
     init_controller();
@@ -86794,7 +86855,7 @@ var init_attach26 = __esm({
     "use strict";
     init_controller();
     init_constants42();
-    init_controller76();
+    init_controller77();
   }
 });
 
@@ -87557,7 +87618,7 @@ var init_actions8 = __esm({
 
 // js/diff/controller.js
 var LIVE5, DiffControl;
-var init_controller77 = __esm({
+var init_controller78 = __esm({
   "js/diff/controller.js"() {
     "use strict";
     init_controller();
@@ -87666,7 +87727,7 @@ var init_attach27 = __esm({
     "use strict";
     init_controller();
     init_constants43();
-    init_controller77();
+    init_controller78();
   }
 });
 

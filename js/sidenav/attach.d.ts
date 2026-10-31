@@ -1,5 +1,3 @@
-export type SidenavContext = import('./attach/context.js').SidenavContext;
-/** @typedef {import('./attach/context.js').SidenavContext} SidenavContext */
 /**
  * Wire every `.kp-sidenav` under `root`.
  *

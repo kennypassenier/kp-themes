@@ -453,7 +453,6 @@
         { "path": "js/contrast.js", "tags": ["@component:colorpicker"] },
         { "path": "js/sidenav.js", "tags": ["@component:navigation"] },
         { "path": "js/sidenav/*.js", "tags": ["@component:navigation"] },
-        { "path": "js/sidenav/attach/*.js", "tags": ["@component:navigation"] },
         {
             "path": "js/remember.js",
             "tags": ["@component:navigation", "@component:structure", "@component:datatable"],
