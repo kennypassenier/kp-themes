@@ -10,11 +10,19 @@
 // the catalogue shows and the section does not is reported. Archived demos are
 // decided and left alone.
 //
+// Markup a demo's own scripts render counts too (chassis-rs gap 19, see
+// gates/demo-script-classes.mjs): a modifier a script writes anywhere on the
+// page counts as shown in every section, and a component the scripts render
+// whose name carries the section's id is that section's own, as it would be
+// in static markup.
+//
 //   node gates/check-demo-variants.mjs [research/<topic>/demo.html …]
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { renderedClasses } from './demo-script-classes.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = (/** @type {string} */ path) => readFileSync(new URL(path, root), 'utf8');
+const exists = (/** @type {string} */ path) => existsSync(new URL(path, root));
 
 const shell = read('catalogue/pages.js');
 const open = (shell.split(/group:\s*'Research to look at'/)[1] ?? '').split(/group:\s*'/)[0];
@@ -41,6 +49,7 @@ const missing = [];
 for (const demo of demos) {
     const html = read(demo);
     if (!/data-review=/.test(html)) continue;
+    const rendered = renderedClasses(demo, read, exists);
     const sections = html.split(/(?=<section[^>]*data-review-item=)/).slice(1);
     for (const section of sections) {
         const id = /data-review-item="([^"]+)"/.exec(section)?.[1] ?? '?';
@@ -50,11 +59,12 @@ for (const demo of demos) {
         // button inside a tooltip demo is scenery), or every one it uses when
         // none is; `data-review-components="a b"` names them outright.
         const listed = /data-review-components="([^"]+)"/.exec(section)?.[1]?.split(/\s+/);
-        const own = [...used].filter((name) => name.includes(id));
+        const own = [...new Set([...used, ...rendered.components])].filter((name) => name.includes(id));
         const components = listed ?? (own.length ? own : [...used]);
         for (const component of components) {
             for (const variant of variants.get(component) ?? []) {
-                if (!body.includes(`kp-${component}--${variant}`)) missing.push(`${demo} [${id}]: kp-${component}--${variant}`);
+                const shown = body.includes(`kp-${component}--${variant}`) || rendered.modifiers.has(`${component}--${variant}`);
+                if (!shown) missing.push(`${demo} [${id}]: kp-${component}--${variant}`);
             }
         }
     }
