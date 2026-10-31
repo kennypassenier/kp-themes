@@ -15,6 +15,7 @@ each line its example and its option row, and empties the list.
 - fix-1031 (2026-10-31), site/components/badge.html: the badge run's tracks are auto-fit, so the tracks no badge stands in collapse and one or a few badges keep their natural width (no option of its own; the sentence under the run says so).
 - fix-1031, site/components/toolbar.html: a labelled group (`.kp-toolbar__label` then the segmented) is a two-track grid, so wrapped chips stay beside the label; under 48rem and in `.kp-toolbar--stacked` every group has its own line and its chips scroll on it (each chip whole, the focus ring inside), where the whole filter zone used to be one scrolling line that hid the groups after the first. An example with two groups at a narrow width shows it.
 - fix-1031, site/components/dialog.html (the rich confirmation): a `description` that holds a field (a quantity, an input) gives that field the first focus, whatever `initialFocus` says.
+- fix-1031, site/components/segmented.html: the sentence in the chips-tied-to-a-field example and the `data-kp-segmented-for` option row now say that a linked group drawn later is linked as it arrives under an attached root (written in gates/site/descriptors; regenerate the page in the pass).
 - fix-1031: `./js/log` is a published module (`sourceColour`, `sourceIndex`, `SOURCE_PROPERTY`, `attachLogs`), so the bundle exports it; the log page names the import.
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
