@@ -127,6 +127,7 @@ import { toolbarDescriptor } from './descriptors/toolbar.mjs';
 import { keysDescriptor } from './descriptors/keys.mjs';
 import { actionTileDescriptor } from './descriptors/action-tile.mjs';
 import { statusRowDescriptor } from './descriptors/status-row.mjs';
+import { listDescriptor } from './descriptors/list.mjs';
 import { facetsDescriptor } from './descriptors/facets.mjs';
 import { quantityDescriptor } from './descriptors/quantity.mjs';
 import { checklistDescriptor } from './descriptors/checklist.mjs';
@@ -165,6 +166,7 @@ import { bulletsDescriptor } from './descriptors/bullets.mjs';
 import { kvDescriptor } from './descriptors/kv.mjs';
 import { formgridDescriptor } from './descriptors/formgrid.mjs';
 import { formrowsDescriptor } from './descriptors/formrows.mjs';
+import { rowEditorDescriptor } from './descriptors/row-editor.mjs';
 import { codeDescriptor } from './descriptors/code.mjs';
 import { connectionDescriptor } from './descriptors/connection.mjs';
 import { refreshDescriptor } from './descriptors/refresh.mjs';
@@ -295,6 +297,7 @@ export const DESCRIPTORS = [
     keysDescriptor,
     actionTileDescriptor,
     statusRowDescriptor,
+    listDescriptor,
     facetsDescriptor,
     quantityDescriptor,
     checklistDescriptor,
@@ -333,6 +336,7 @@ export const DESCRIPTORS = [
     kvDescriptor,
     formgridDescriptor,
     formrowsDescriptor,
+    rowEditorDescriptor,
     codeDescriptor,
     connectionDescriptor,
     refreshDescriptor,

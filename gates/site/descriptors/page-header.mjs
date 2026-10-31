@@ -61,12 +61,31 @@ export const pageHeaderDescriptor = {
 </header>
 `,
             },
+            {
+                title: 'Updated, on the title’s line',
+                why: '`.kp-page-header__updated` right after the title stands on the title’s baseline, the description under both: “updated 18:45”, or a `<time class="kp-ago">` that ticks. It keeps the same width whatever it says, so the title never moves when the time does, and it goes under the title when the room runs out.',
+                markup: `
+<header class="kp-page-header">
+<div class="kp-page-header__inner">
+<div>
+<h1 class="kp-page-header__title">Today</h1>
+<time class="kp-page-header__updated" datetime="2026-10-31T18:45">updated 18:45</time>
+<p class="kp-page-header__description">Three doses left today; Ibuprofen 400 mg runs out in 2 days.</p>
+</div>
+<div class="kp-page-header__actions">
+<button type="button" class="kp-button kp-button--primary">Take a dose</button>
+</div>
+</div>
+</header>
+`,
+            },
         ],
         variants: [
             { name: '.kp-page-header__heading, __lead, __line, __meta', what: 'The opt-in heading line: a flex row of the lead (a mark, never wrapped under) and the line that holds the title, a badge and the muted `.kp-ago.kp-page-header__meta` freshness line, which does not wrap inside itself.' },
             { name: '.kp-page-header', what: 'The header; it measures its own width.' },
             { name: '.kp-page-header__inner', what: 'Two columns: the text block, and the actions against the far edge, level with the title.' },
             { name: '.kp-page-header__title, __description', what: 'The page’s heading, and one sentence under it at a readable measure in the muted ink.' },
+            { name: '.kp-page-header__updated', what: 'When the page was last read, after the title on its baseline, in the muted ink and same-width digits; a fixed least width keeps the title still while it changes, and it wraps under the title when the line is full.' },
             { name: '.kp-page-header__actions', what: 'The buttons, the primary among them, the overflow last; a popover in it hangs under its button towards the start.' },
             { name: 'on a phone', what: 'Under 40rem the title takes the width and the buttons fold under the description: the buttons form one row of equal columns, the primary first, wrapping as equal columns when they cannot fit.' },
         ],

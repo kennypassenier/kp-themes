@@ -40,11 +40,26 @@ export const switchDescriptor = {
 </div>
 `,
             },
+            {
+                title: 'Without a state word, where the row already says it',
+                why: '`data-kp-switch-state="none"` leaves the On and Off word out and gives up its track, so the knob and its label stand one gap apart: for a switch whose label is the state (“Active”) or whose row says it. A state element left empty, or holding only empty words, gives up its track the same way.',
+                markup: `
+<label class="kp-switch" data-kp-switch-state="none">
+<input class="kp-switch__input" type="checkbox" role="switch" checked aria-label="Active: Ibuprofen 400 mg" />
+<span>Active</span>
+</label>
+<label class="kp-switch" data-kp-switch-state="none">
+<input class="kp-switch__input" type="checkbox" role="switch" aria-label="Active: Amoxicillin 500 mg" />
+<span>Active</span>
+</label>
+`,
+            },
         ],
         variants: [
             { name: '.kp-switch', what: 'The row: a label, so the track, the word and the text are one target.' },
             { name: '.kp-switch__input', what: 'The track, with the thumb drawn on it; checked moves the thumb to the end and fills the track the theme’s way.' },
             { name: '.kp-switch__state', what: 'The On or Off word beside the track, from the dictionary; aria-hidden, because the role already announces the state.' },
+            { name: 'data-kp-switch-state="none"', what: 'No state word and no room kept for one: the knob and its label stand one gap apart. An empty state element does the same.' },
             { name: 'disabled', what: 'The row fades and refuses the pointer; a disabled switch that is on still reads as on.' },
             { name: 'aria-invalid', what: 'The outline an invalid checkbox takes, in the alarm colour; the message under it says what is wrong.' },
         ],

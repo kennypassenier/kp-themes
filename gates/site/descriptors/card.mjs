@@ -124,6 +124,30 @@ setCardState(failed, 'error', { title: 'Could not read the backups', text: 'The 
 failed.addEventListener('kp-card-retry', () => setCardState(failed, 'ready'));
 `,
             },
+            {
+                title: 'A form grid under the card’s sentence',
+                why: 'A form grid (or a form whose first child is one) right under the card’s header, title or sentence keeps the medium space above its first row, so the first label never stands against the description.',
+                markup: `
+<section class="kp-card" aria-labelledby="doc-card-form-title">
+<div class="kp-card__header"><h3 class="kp-card__title" id="doc-card-form-title">Reminders</h3></div>
+<p class="kp-card__body">When the cabinet tells you something.</p>
+<div class="kp-formgrid" aria-label="Reminders">
+<div class="kp-formgrid__row">
+<label class="kp-formgrid__label" for="doc-card-form-low">Running low at</label>
+<div class="kp-formgrid__control"><input class="kp-field__input" id="doc-card-form-low" value="7 days of stock" /></div>
+<p class="kp-formgrid__value">per medicine</p>
+<div class="kp-formgrid__actions"></div>
+</div>
+<div class="kp-formgrid__row">
+<label class="kp-formgrid__label" for="doc-card-form-expiry">Expiry warning</label>
+<div class="kp-formgrid__control"><input class="kp-field__input" id="doc-card-form-expiry" value="30 days before" /></div>
+<p class="kp-formgrid__value">from the box’s date</p>
+<div class="kp-formgrid__actions"></div>
+</div>
+</div>
+</section>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-state', what: '`loading`, `empty`, `error` or `ready` on a `.kp-card`, over a `.kp-card__stage` that holds the data (`.kp-card__data`) and, in the same cell, the state’s note (`.kp-card__state`), so a state never moves the header, the footer or the card beside it. Empty and failed keep the data’s room.' },
@@ -134,6 +158,7 @@ failed.addEventListener('kp-card-retry', () => setCardState(failed, 'ready'));
             { name: '.kp-card__body', what: 'The text, in quiet ink.' },
             { name: '.kp-card__header', what: 'A row that lays the title and its actions on one baseline and pushes them apart.' },
             { name: '.kp-card__actions', what: 'The controls in that row, spaced by the scale.' },
+            { name: 'a form grid in a card', what: 'A `.kp-formgrid` (or a form that starts with one) directly after the header, the title or the body keeps the medium space above its first row (a knob).' },
             { name: '.kp-card__footer', what: 'A closing row, separated by a rule and the scale’s own distance.' },
             { name: 'pastel: the thumbtack', what: 'In pastel every card is fixed to the page with a thumbtack at its top centre. A card that leaves loses its tack first, then lifts off as its landing backwards, and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.' },
             { name: 'data-kp-state', what: '`loading`, `empty`, `error` or `ready` on a card with a stage: the card keeps its header, footer and size, and only the stage changes. In `empty` and `error` the data keeps its room, hidden rather than removed, so a failed refresh of a full card does not collapse it.' },

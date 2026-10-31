@@ -169,8 +169,23 @@ export function siteCss() {
         margin-block-start: var(--kp-space-md, 1rem);
     }
 
+    /* A figure's own 40px side margins took 80px from every example: at a 390px window the live box was 270px wide and a list
+       or a row editor that fits a phone ran past it. The example takes the section's whole width [cpage-1031]. */
+    .sc-example {
+        margin-inline: 0;
+    }
+
     .sc-example__live {
         overflow: visible;
+    }
+
+    /* A dialog printed open to show its parts at rest is not modal, and the browser places a non-modal open dialog absolutely: it
+       floated over the code under its example and left an empty box behind. In an example it stands in the flow, no wider than
+       the example: its width steps are measured against the window, which is wider than the box [cpage-1031]. */
+    .sc-example__live dialog[open]:not(:modal) {
+        position: static;
+        box-sizing: border-box;
+        max-inline-size: 100%;
     }
 
     /* A framed example: a window of its own, so a launcher fixed to a

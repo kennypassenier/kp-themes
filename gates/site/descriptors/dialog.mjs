@@ -88,6 +88,81 @@ document.querySelector('[data-doc-confirm="blocked"]').addEventListener('click',
 `,
             },
             {
+                title: 'A narrow dialog that adds stock, its button following the amount',
+                why: '`kp-dialog--narrow` holds a question’s width whatever the content, so the dialog does not grow and shrink with its longest line; `kp-dialog--wider` is the step above the wide one, for a dialog that holds a table. Every step stops 1rem short of the window on each side, so a phone never has content on its edge. The accept button follows the quantity (`data-kp-accept-follows`, see the quantity page): “Add 20 tablets”, and off with its reason at 0.',
+                markup: `
+<dialog class="kp-dialog kp-dialog--narrow" id="doc-dialog-stock" open aria-labelledby="doc-dialog-stock-title">
+<h2 class="kp-dialog__title" id="doc-dialog-stock-title">Add stock</h2>
+<p class="kp-dialog__description">Ibuprofen 400 mg · 14 tablets now</p>
+<div class="kp-field">
+<label class="kp-field__label" for="doc-dialog-stock-input">How many did you buy?</label>
+<div class="kp-quantity" id="doc-dialog-stock-quantity" data-kp-quantity data-kp-quantity-fill data-kp-quantity-min="0" data-kp-quantity-max="200" data-kp-quantity-unit="tablets" data-kp-quantity-unit-one="tablet" data-kp-quantity-label="Tablets to add">
+<input class="kp-quantity__input" id="doc-dialog-stock-input" value="20" />
+</div>
+</div>
+<div class="kp-dialog__actions">
+<button type="button" class="kp-button">Cancel</button>
+<button type="button" class="kp-button kp-button--primary" data-kp-accept-follows="doc-dialog-stock-quantity" data-kp-accept-verb="Add">Add 20 tablets</button>
+</div>
+</dialog>
+`,
+            },
+            {
+                title: 'A confirmation with a body of its own, and one that holds an amount',
+                why: '`description` takes a node or a list of nodes (several paragraphs, a list) in place of the one sentence; `acceptLook: \'primary\'` draws Confirm as a primary button when what it does is not destructive, and `acceptLabel` says what it does. `acceptFollows` names a quantity the page put in the description and `acceptVerb` its verb: Confirm then reads “Add 2 boxes” and follows the stepper; the page wires the two with `attachQuantities` and `attachAcceptFollows` on the dialog it gets back. A confirmation is narrow unless it takes a wider step.',
+                markup: `
+<div class="kp-row kp-gap-sm">
+<button type="button" class="kp-button" id="doc-confirm-dose">Take Ibuprofen 400 mg…</button>
+<button type="button" class="kp-button" id="doc-confirm-boxes">Add boxes of Cetirizine 10 mg…</button>
+</div>
+<p class="kp-text-muted" id="doc-confirm-rich-said" role="status">Nothing taken, nothing added.</p>
+`,
+                script: `
+import { openConfirmation } from '@kp-soft/themes/js/components';
+import { attachQuantities } from '@kp-soft/themes/js/quantity';
+import { attachAcceptFollows } from '@kp-soft/themes/js/accept-follows';
+
+const said = document.getElementById('doc-confirm-rich-said');
+const line = (text) => Object.assign(document.createElement('p'), { textContent: text });
+
+document.getElementById('doc-confirm-dose').addEventListener('click', (event) => {
+    openConfirmation(event.currentTarget, {
+        phrase: 'Too soon for another dose',
+        description: [
+            line('You took Ibuprofen 400 mg at 14:10, 2 h ago.'),
+            line('The leaflet asks for at least 6 h between doses: the next one is due at 20:10.'),
+            line('Taking it anyway is your choice; it is written down as an extra dose.'),
+        ],
+        acceptLook: 'primary',
+        acceptLabel: 'Take it anyway',
+        onAccept: () => { said.textContent = 'Written down as an extra dose at ' + new Date().toTimeString().slice(0, 5) + '.'; },
+    });
+});
+
+document.getElementById('doc-confirm-boxes').addEventListener('click', (event) => {
+    const quantity = document.createElement('div');
+    quantity.className = 'kp-quantity';
+    quantity.id = 'doc-confirm-boxes-quantity';
+    quantity.dataset.kpQuantity = '';
+    Object.assign(quantity.dataset, { kpQuantityFill: '', kpQuantityMin: '0', kpQuantityMax: '10', kpQuantityUnit: 'boxes', kpQuantityUnitOne: 'box', kpQuantityLabel: 'Boxes to add' });
+    quantity.innerHTML = '<input class="kp-quantity__input" value="2" />';
+    const field = document.createElement('div');
+    field.className = 'kp-field';
+    field.append(quantity);
+    const dialog = openConfirmation(event.currentTarget, {
+        phrase: 'Add boxes of Cetirizine 10 mg?',
+        description: [line('One box holds 30 tablets.'), field],
+        acceptLook: 'primary',
+        acceptFollows: quantity.id,
+        acceptVerb: 'Add',
+        onAccept: () => { said.textContent = 'Added. The stock follows the amount chosen.'; },
+    });
+    attachQuantities(dialog);
+    attachAcceptFollows(dialog);
+});
+`,
+            },
+            {
                 title: 'The parts, with the dialog left open',
                 why: 'Printed open so the pieces can be seen at rest: the title, the description under it, the close in the corner and the actions at the end.',
                 markup: `
@@ -114,6 +189,11 @@ document.querySelector('[data-doc-confirm="blocked"]').addEventListener('click',
             { name: '.kp-dialog__close', what: 'The close in the corner, on top of the padding rather than in the flow.' },
             { name: '.kp-dialog__actions', what: 'The buttons at the end, pushed to the trailing edge, primary last.' },
             { name: '.kp-dialog--wide', what: 'A dialog that manages one thing: 42rem wide at once, so a section that fills later moves nothing sideways.' },
+            { name: '.kp-dialog--narrow', what: 'A question’s width, held whatever the content; a confirmation (`.kp-confirm`) takes it by default.' },
+            { name: '.kp-dialog--wider', what: 'The step above the wide one, for a dialog that holds a table. Every width step stops 1rem short of the window on each side.' },
+            { name: 'description as nodes', what: '`openConfirmation(button, { description })`: a node or a list of nodes (paragraphs, a list, a field) in place of the dictionary’s sentence; the dialog is still described by it.' },
+            { name: 'acceptLook / acceptLabel', what: '`acceptLook: \'primary\'` draws Confirm as a primary button for a confirmation that is not destructive (take a dose anyway); `acceptLabel` is its words.' },
+            { name: 'acceptFollows / acceptVerb', what: 'Confirm follows a quantity in the description: “Add 2 boxes”, off with its reason at 0. Wire it with `attachQuantities(dialog)` and `attachAcceptFollows(dialog)` on the dialog `openConfirmation` returns.' },
             { name: '.kp-dialog__head', what: 'The title with a state badge beside it and the description under both.' },
             { name: '.kp-dialog__section / __heading / __note', what: 'One part of the body under its heading, with an optional note under it; sections are divided by a rule.' },
             { name: '.kp-dialog__section--danger', what: 'The last section, for what cannot be undone: ruled along its start edge in the destructive colour.' },

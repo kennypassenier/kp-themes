@@ -12,19 +12,17 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
-- **mc-1030, Medicine Cabinet package (demo research/medicine-1030, formal)**; each line gets its example and option row once Kenny approves the demo:
-  - new component `.kp-list` / `.kp-listrow` (`__identity`, `__name`, `__meta`, `__status`, `__stepper`, `__switch`, `--muted`), knobs `--kp-list-tracks`... `--kp-list-stepper-min`, `--kp-list-row-pad`, `--kp-list-gap` (css/components/list-row.css).
-  - option `data-kp-quantity-fill` on `.kp-quantity`, knob `--kp-quantity-min-chars`.
-  - new component `.kp-rows` row editor (js/row-editor.js: `data-kp-rows`, `-min`, `-max`, `-unit`, `-attach`, `-list`, `-template`, `-add`, `-remove`, events `kp-rows-add`, `kp-rows-remove`, `kp-rows-change`, calls `addEditorRow`, `removeEditorRow`, `editorRowsOf`), knobs `--kp-rows-tracks`, `--kp-rows-empty-min`.
-  - option `data-kp-attention-max` on `.kp-attention` (the toggle `.kp-attention__more`, event `kp-attention-toggle`, `data-kp-folded`).
-  - new utility `.kp-badges` (knob `--kp-badges-min`).
-  - dialog width steps `kp-dialog--narrow`, `kp-dialog--wider` (knobs `--kp-dialog-narrow`, `--kp-dialog-wider`); `openConfirmation` options `description` (a node or nodes) and `acceptLook: 'primary'`, `acceptLabel` for a plain confirmation.
-  - datatable: `data-kp-cards-at`, `data-kp-col="actions"`, `.kp-table__actions`, knobs `--kp-actions-width`, `--kp-actions-button`; `attachCardsAt`, `attachTableActionColumns`.
-  - segmented: `data-kp-segmented="single-or-none"` and `data-kp-segmented-for="<combobox id>"`; round 2: `data-kp-segmented-top` (`<n>` or `all`, chips from the field's most used options, `data-kp-uses`), `data-kp-segmented-field="always"`, the field left out while every choice is a chip.
-  - accept-follows: `data-kp-accept-follows="<quantity id>"`, `data-kp-accept-verb`, `data-kp-accept-min`, `attachAcceptFollows`, `openConfirmation` options `acceptFollows` / `acceptVerb`, knobs `--kp-accept-reason-size`, `--kp-accept-disabled-opacity`.
-  - fixes with options: `data-kp-formgrid-align="center"` (typed text starts at the start edge now), `data-kp-formgrid-errors="flow"` (the error line is reserved now), `--kp-card-form-gap`, `data-kp-switch-state="none"` (and an empty state word takes no track), `.kp-page-header__updated` (knob `--kp-page-header-updated-width`).
+(Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
+(mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's
+`data-kp-quantity-fill`, the attention band's cap, the badge run, the dialog width steps and the rich confirmation (`description`, `acceptLook`,
+`acceptLabel`, `acceptFollows`, `acceptVerb`), the data table's actions column and `data-kp-cards-at`, the chips tied to a field
+(`single-or-none`, `data-kp-segmented-for`, `-top`), the form grid's reserved error line and start-edge text, the form grid in a card, the switch
+without a state word and the page header's updated line. Its excuse in gates/check-site.mjs is gone. Shown as text and option rows only, without
+a live example of their own: `data-kp-segmented-field="always"` (the example shows its default, the field left out), `data-kp-formgrid-align="center"`
+(the example shows the start edge it now defaults to), `data-kp-rows-attach="none"`, the calls `attachCardsAt` and `attachTableActionColumns`
+(js/auto.js makes them for every table that asks), and `kp-dialog--wider` (its table is the data table's actions example).)
 
-(Nothing waits. The pass of 2026-10-29, on Kenny's go "components-page: Nu bijwerken", brought every line onto its page, with the new pages
+(The pass of 2026-10-29, on Kenny's go "components-page: Nu bijwerken", brought every line onto its page, with the new pages
 sequencer, formgrid and state-plate. Shown as text and option rows only, without a live example, because the page cannot show them or they
 are a script call or a register-level fact: the script calls `getSteps`, `columnIndex` and `watchOptions`, the `configureUnsaved` storage, the
 focus-steps lanes and `T` keys, the wheel kiosk, the tooltip's touch card, the entity card trend row and app tile, the gantt legend, rest

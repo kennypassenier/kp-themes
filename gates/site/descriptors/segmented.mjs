@@ -1,5 +1,7 @@
 // Page descriptor for the "segmented" documentation page [AR19]; the shape is pinned in ./types.mjs.
 
+import { linkedChipsExample } from './segmented-link.mjs';
+
 /** @type {import('./types.mjs').Descriptor} */
 export const segmentedDescriptor = {
         id: 'segmented',
@@ -132,6 +134,7 @@ setTimeout(() => {
 }, 400);
 `,
             },
+            linkedChipsExample,
         ],
         variants: [
             { name: 'data-kp-segmented="tri"', what: 'The three-way chip group, used with `.kp-segmented--chips`. Each chip carries `data-kp-segmented-tri="include|exclude"`, absent for either way (`TRI_ATTRIBUTE`, `TRI_STATES`), and the parts `.kp-segmented__mark`, `__state` (the word a screen reader hears after the name, “Chicken, required”), `__summary` and `__live`.' },
@@ -148,6 +151,10 @@ setTimeout(() => {
             { name: 'setSegmentedValues / getSegmentedValues / resetSegmented', what: 'Read the values that are on (empty is All), set them without an event (the address changed), or turn every value off and fire the event if anything was on.' },
             { name: 'setSegmentedCounts / setSegmentedItems', what: 'Write the numbers beside the values (null empties one, a value not named keeps its number), or replace the items in place: the values still present stay on and the focus stays on its value.' },
             { name: 'aria-busy="true"', what: 'On the group: the counts show a placeholder while their numbers load. Pressing is not blocked.' },
+            { name: 'data-kp-segmented="single-or-none"', what: 'One value or none: a press on the chosen value lets it go, and nothing chosen is a valid answer (a form of medicine that is not known). A `radiogroup` like `single`.' },
+            { name: 'data-kp-segmented-for', what: 'The id of a combobox or tag input the chips are tied to: the two hold the same values both ways, always. The field is left out while every choice is a chip.' },
+            { name: 'data-kp-segmented-top', what: 'A whole number or `all`: the chips are made from the field’s most used options (`data-kp-uses` on an option, how often it is chosen; the list’s order breaks a tie). Left out, the chips the page wrote stay. While the field is shown and has no placeholder of its own it says “Search all 9”. Read again when it changes.' },
+            { name: 'data-kp-segmented-field="always"', what: 'Keeps the field on the page even when every choice is a chip; `auto` (the default) leaves it out then.' },
             { name: 'switchable at runtime', what: 'Switchable at runtime: changing `data-kp-segmented` redraws the control.' },
         ],
         accessibility: [

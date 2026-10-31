@@ -1,5 +1,7 @@
 // Page descriptor for the "datatable" documentation page [AR19]; the shape is pinned in ./types.mjs.
 
+import { actionsColumnExample } from './datatable-actions.mjs';
+
 /** @type {import('./types.mjs').Descriptor} */
 export const datatableDescriptor = {
         id: 'datatable',
@@ -34,7 +36,10 @@ export const datatableDescriptor = {
             'total',
             // scope-90: the state that draws the sticky header's reach.
             'scrolled',
-            'folded'],
+            'folded',
+            // mc-1030: the actions column (`data-kp-col="actions"`); and row reorder's own name, longer than the row editor's `rows`.
+            'col',
+            'rows-reorder'],
         intro: 'Sorting, searching, paging and row selection over a table the server already rendered. It works on the rows that are in the document and owns no data; a table marked `data-kp-server` asks your `load` for each page instead.',
         whenToUse:
             'For a table a reader will interrogate — hundreds of rows, a search box, a sort on one column or several, a choice of columns, rows that open, values edited in place, arrow keys between cells. Not for thousands without a server behind it: there is no virtualisation, and export is the app’s, from the rows the table hands over. Not for a handful of rows either, where a search box over six lines is furniture.',
@@ -196,6 +201,7 @@ wrap.addEventListener('kp-datatable-sort', (event) => {
 });
 `,
             },
+            actionsColumnExample,
         ],
         variants: [
             { name: 'data-kp-sort-multi="click"', what: 'A plain press on a header (Enter, Space) adds a sort key and Shift + click sorts on that column alone; without a value, Shift + click adds the key as it always did. `multiSort: \'click\'` is the same in script.' },
@@ -240,6 +246,10 @@ wrap.addEventListener('kp-datatable-sort', (event) => {
             { name: 'live options', what: 'The row for `data-kp-sort-multi`, `data-kp-filter-mode` and the other attributes above is switchable at runtime: changing the attribute redraws the table, and the table keeps its view (sort, filters, page) while it switches.' },
             { name: 'data-kp-cards="spread"', what: 'Cards derive `data-label` from the header; card lines sit on two tracks (label, value), and `spread` puts the label and the value at the opposite edges of the line.' },
             { name: 'data-kp-filter-ui="none"', what: 'Leaves out the filter controls while the filters still apply (a page that sets them itself).' },
+            { name: 'data-kp-cards-at', what: 'On the table: the width of its own under which it becomes cards, `30rem` or `480px` (a bare number is rem). It can lower the 40rem the cards answer to, never raise it. While wider, the script writes `data-kp-cards-idle` and the card rules do not apply.' },
+            { name: 'data-kp-col="actions"', what: 'On a header: its column is a fixed track as wide as its buttons and never wraps; the script marks the cells under it alike. In a card that cell has no label and its buttons fill a row across the card.' },
+            { name: '.kp-table__actions', what: 'The buttons of one row, in equal columns, so every row’s Edit and Delete have one width (a knob sets the least).' },
+            { name: 'attachCardsAt / attachTableActionColumns', what: 'The two hooks behind those attributes (js/datatable.js); js/auto.js calls them for a table that asks, so a page calls them only for a table it builds later. Each returns a detach.' },
             { name: 'data-kp-fixed-end', what: 'Pins the last column (the actions) at the end edge while the rest scrolls, on an opaque ground.' },
         ],
         accessibility: [

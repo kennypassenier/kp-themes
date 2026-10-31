@@ -44,6 +44,55 @@ import { attachQuantities } from '@kp-soft/themes/js/quantity';
 attachQuantities(document.querySelector('.kp-formgrid'));
 `,
             },
+            {
+                title: 'An error line that keeps its room, and typed text at the start edge',
+                why: 'In a form grid a field’s error line keeps its room while it says nothing (invisible and out of the accessibility tree), so the message appearing moves nothing under it and a press lands where it was aimed. `data-kp-formgrid-errors="flow"` gives the old behaviour back: the line takes room only while it has words. Typed text and a placeholder start at the field’s start edge; a select keeps its centred look, and `data-kp-formgrid-align="center"` on the grid centres the typed text again.',
+                markup: `
+<div class="kp-row kp-gap-sm">
+<button type="button" class="kp-button kp-button--sm" id="doc-fg-check" aria-controls="doc-fg-errors">Save without a name</button>
+<button type="button" class="kp-button kp-button--sm" id="doc-fg-flow" aria-pressed="false" aria-controls="doc-fg-errors">Let the error line flow</button>
+</div>
+<div class="kp-formgrid" id="doc-fg-errors" aria-label="A new medicine">
+<div class="kp-formgrid__row">
+<label class="kp-formgrid__label" for="doc-fg-name">Name</label>
+<div class="kp-formgrid__control">
+<input class="kp-field__input" id="doc-fg-name" placeholder="Ibuprofen 400 mg" aria-describedby="doc-fg-name-error" required />
+<p class="kp-field__error" id="doc-fg-name-error" hidden>Give the medicine a name.</p>
+</div>
+<p class="kp-formgrid__value">as on the box</p>
+<div class="kp-formgrid__actions"></div>
+</div>
+<div class="kp-formgrid__row">
+<label class="kp-formgrid__label" for="doc-fg-form">Form</label>
+<div class="kp-formgrid__control"><select class="kp-field__input" id="doc-fg-form"><option>Tablet</option><option>Capsule</option><option>Syrup</option><option>Nasal spray</option></select></div>
+<p class="kp-formgrid__value">how it is taken</p>
+<div class="kp-formgrid__actions"></div>
+</div>
+<div class="kp-formgrid__row">
+<label class="kp-formgrid__label" for="doc-fg-note">Note</label>
+<div class="kp-formgrid__control"><input class="kp-field__input" id="doc-fg-note" value="Take with food" /></div>
+<p class="kp-formgrid__value"></p>
+<div class="kp-formgrid__actions"></div>
+</div>
+</div>
+`,
+                script: `
+const grid = document.getElementById('doc-fg-errors');
+const name = document.getElementById('doc-fg-name');
+const error = document.getElementById('doc-fg-name-error');
+document.getElementById('doc-fg-check').addEventListener('click', () => {
+    const empty = name.value.trim() === '';
+    error.hidden = !empty;
+    name.setAttribute('aria-invalid', String(empty));
+});
+document.getElementById('doc-fg-flow').addEventListener('click', (event) => {
+    const flow = event.currentTarget.getAttribute('aria-pressed') !== 'true';
+    event.currentTarget.setAttribute('aria-pressed', String(flow));
+    if (flow) grid.setAttribute('data-kp-formgrid-errors', 'flow');
+    else grid.removeAttribute('data-kp-formgrid-errors');
+});
+`,
+            },
         ],
         variants: [
             { name: '.kp-formgrid__row / __row--buttons', what: 'One row of the four tracks; the buttons row holds a group of buttons under what they act on, on the control edge.' },
@@ -52,7 +101,8 @@ attachQuantities(document.querySelector('.kp-formgrid'));
             { name: 'subgrids', what: '`.kp-formrows`, `.kp-kv`, `fieldset` and `form` inside the grid become subgrids of its tracks; a `form.kp-form` placed directly in the grid takes the grid’s gap in every theme. A `data-kp-subgrid` list (attention, problems) shares the tracks too.' },
             { name: 'rows with a JSON field', what: 'In a row holding a `.kp-jsonfield` the actions cell is one tool row high (the button is centred on the tools) and the value text is centred on it too.' },
             { name: 'data-kp-formgrid-label', what: '`fit` (default: the label track is as wide as the longest label) or `wide`.' },
-            { name: 'data-kp-formgrid-align', what: '`baseline` (default) or `center`: where the cells of a row stand.' },
+            { name: 'data-kp-formgrid-align', what: '`baseline` (default) or `center`: where the cells of a row stand. Typed text and a placeholder start at the field’s start edge either way, a select stays centred; `center` also centres the typed text, the look before.' },
+            { name: 'data-kp-formgrid-errors', what: 'Unset (default): a field’s hidden error line keeps its room, so showing it moves nothing. `flow`: the line takes room only while it has words.' },
             { name: 'data-kp-formgrid-stack', what: '`auto` (fold under 36rem of the grid), `always` or `never`.' },
             { name: 'data-kp-formgrid-lines', what: '`none` (default) or `lines`: a hairline between rows.' },
             { name: 'data-kp-formgrid-span', what: 'On a cell: `control-value`, `wide` or `all`, the tracks it covers.' },
