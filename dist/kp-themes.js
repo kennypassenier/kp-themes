@@ -19437,6 +19437,449 @@ var init_state_plate = __esm({
   }
 });
 
+// js/chart/plot/frame.js
+var LAYOUT, PlotFrame;
+var init_frame = __esm({
+  "js/chart/plot/frame.js"() {
+    "use strict";
+    init_dom2();
+    init_format();
+    init_time();
+    LAYOUT = Object.freeze({
+      /** The narrowest a plot is drawn. */
+      minWidth: 240,
+      /** The room above the highest threshold, as a factor. */
+      headroom: 1.08,
+      /** The left padding: at least this, else the longest value tick's characters at `charWidth` plus `tickRoom`. */
+      padLeft: 30,
+      charWidth: 7,
+      tickRoom: 12,
+      padRight: 10,
+      padTop: 18,
+      padBottom: 22,
+      /** A value tick's gap from the plot, its drop below its line, and the time ticks' distance from the bottom. */
+      tickGap: 6,
+      tickDrop: 4,
+      axisLift: 6,
+      /** The least room between two time ticks. */
+      tickSpacing: 70,
+      /** How far a band and an event line reach above the plot, and how far a bracket's ends reach into it. */
+      bandRise: 4,
+      bracketDrop: 8,
+      /** The size of a hatch pattern's tile. */
+      hatch: 6
+    });
+    PlotFrame = class {
+      /**
+       * @param {PlotDraw} chart
+       * @param {ChartWindow} win
+       * @param {number} H the plot's height
+       */
+      constructor(chart, win, H) {
+        const { data, doc } = chart;
+        this.chart = chart;
+        this.doc = doc;
+        this.from = win.from;
+        this.to = win.to;
+        this.H = H;
+        this.W = Math.max(LAYOUT.minWidth, chart.ui.plot.clientWidth);
+        this.vis = chart.visible();
+        this.stacked = data.stacked ?? false;
+        const thresholds = Array.isArray(data.threshold) ? data.threshold : data.threshold != null ? [data.threshold] : [];
+        this.thresholds = thresholds.filter(Number.isFinite);
+        this.hi = this.top();
+        this.ticksY = [0, this.hi / 2, this.hi].map((v) => chart.fmt(v, "axis"));
+        const longest = Math.max(...this.ticksY.map((t) => t.length));
+        this.P = { l: Math.max(LAYOUT.padLeft, longest * LAYOUT.charWidth + LAYOUT.tickRoom), r: LAYOUT.padRight, t: LAYOUT.padTop, b: LAYOUT.padBottom };
+        this.svg = /** @type {SVGSVGElement} */
+        s(doc, "svg", { viewBox: `0 0 ${this.W} ${H}`, height: H, "aria-hidden": "true" });
+        this.defs = s(doc, "defs");
+        this.g = s(doc, "g", { "clip-path": `url(#${chart.clip})` });
+        this.opt = chart.option();
+        this.hatches = /* @__PURE__ */ new Set();
+        this.axisLabels = [];
+        this.events = [];
+        this.beforeCount = 0;
+        this.afterCount = 0;
+      }
+      /** @param {number} t */
+      x(t) {
+        const { P } = this;
+        return P.l + (t - this.from) / (this.to - this.from) * (this.W - P.l - P.r);
+      }
+      /** @param {number} v */
+      y(v) {
+        const { P, H } = this;
+        return H - P.b - v / this.hi * (H - P.t - P.b);
+      }
+      /** @param {ChartPoint} p */
+      inR(p) {
+        return p[0] >= this.from && p[0] <= this.to;
+      }
+      /** The top of the value axis: the data's `yMax`, else a round value over every reading and threshold on view. */
+      top() {
+        const { data, points } = this.chart;
+        let hi = data.yMax ?? 0;
+        if (data.yMax != null) return hi;
+        if (this.stacked) {
+          (points[0] ?? []).forEach((p, k) => {
+            if (this.inR(p)) hi = Math.max(hi, this.vis.reduce((sum, si) => sum + (points[si][k]?.[1] ?? 0), 0));
+          });
+        } else for (const si of this.vis) for (const p of points[si]) if (this.inR(p)) hi = Math.max(hi, p[1]);
+        for (const level of this.thresholds) hi = Math.max(hi, level * LAYOUT.headroom);
+        return niceMax(hi, data.unitKind);
+      }
+      /** The clip, the value grid and its ticks. */
+      grid() {
+        const { doc, svg: svg2, defs, P, W, H } = this;
+        const cp = s(doc, "clipPath", { id: this.chart.clip });
+        cp.append(s(doc, "rect", { x: P.l, y: 0, width: W - P.l - P.r, height: H }));
+        defs.append(cp);
+        svg2.append(defs);
+        [0, this.hi / 2, this.hi].forEach((v, k) => {
+          svg2.append(s(doc, "line", { class: "kp-chart__grid", x1: P.l, x2: W - P.r, y1: this.y(v), y2: this.y(v) }));
+          const tick6 = s(doc, "text", { class: "kp-chart__tick", x: P.l - LAYOUT.tickGap, y: this.y(v) + LAYOUT.tickDrop, "text-anchor": "end" });
+          tick6.textContent = this.ticksY[k];
+          svg2.append(tick6);
+        });
+      }
+      /**
+       * Time ticks on round wall-clock times in the group's zone: 15 or 30 min, one, two, three, six or twelve hours, or days (the
+       * dashboard's tiers, with 30 min and 3 h added so a zoomed span keeps more than one tick), at least `tickSpacing` apart.
+       */
+      timeAxis() {
+        const { chart, from, to, P, W, H } = this;
+        const most = Math.max(2, Math.floor((W - P.l - P.r) / LAYOUT.tickSpacing));
+        const axisKey = `${from} ${to} ${most} ${chart.ctx.timeZone}`;
+        if (axisKey !== chart.axisMemo.key) chart.axisMemo = { key: axisKey, axis: timeTicks(from, to, most, chart.ctx.timeZone) };
+        const { axis } = chart.axisMemo;
+        for (const t of axis.ticks) {
+          const tick6 = (
+            /** @type {SVGTextElement} */
+            s(this.doc, "text", { class: "kp-chart__tick", x: this.x(t), y: H - LAYOUT.axisLift, "text-anchor": "middle" })
+          );
+          tick6.textContent = chart.time(t, "tick", { stride: axis.stride });
+          this.svg.append(tick6);
+          this.axisLabels.push(tick6);
+        }
+      }
+      thresholdLines() {
+        const { P, W } = this;
+        this.thresholds.forEach(
+          (level, k) => this.g.append(
+            s(this.doc, "line", {
+              class: k === 0 ? "kp-chart__threshold" : "kp-chart__threshold kp-chart__threshold--more",
+              x1: P.l,
+              x2: W - P.r,
+              y1: this.y(level),
+              y2: this.y(level)
+            })
+          )
+        );
+      }
+      /** The events: a band (an event with `until`) is in the window while any of it is; the rest count at the edge. */
+      eventLines() {
+        const { from, to, P, H } = this;
+        const pool = this.chart.shownEvents();
+        this.events = pool.filter((ev) => ev.at <= to && (ev.until ?? ev.at) >= from);
+        this.beforeCount = pool.filter((ev) => (ev.until ?? ev.at) < from).length;
+        this.afterCount = pool.filter((ev) => ev.at > to).length;
+        for (const ev of this.events) {
+          if (ev.until != null && ev.until > ev.at) this.g.append(this.band(ev, ev.until));
+          else this.g.append(s(this.doc, "line", { class: "kp-chart__event-line", x1: this.x(ev.at), x2: this.x(ev.at), y1: P.t - LAYOUT.bandRise, y2: H - P.b }));
+        }
+      }
+      /** One band, drawn as the chart's `band` option says: a bracket along the top, a tint or a hatch. @param {ChartEvent} ev @param {number} until */
+      band(ev, until) {
+        const { doc, from, to, P, H } = this;
+        const x0 = this.x(Math.max(ev.at, from));
+        const x1 = this.x(Math.min(until, to));
+        const tone = this.chart.toneOf(ev);
+        const band = s(doc, "g", { class: "kp-chart__band", "data-kp-tone": tone, "data-kp-band": this.opt.band });
+        const top = P.t - LAYOUT.bandRise;
+        const foot = this.opt.band === "bracket" ? P.t + LAYOUT.bracketDrop : H - P.b;
+        if (this.opt.band === "bracket") band.append(s(doc, "line", { class: "kp-chart__band-bar", x1: x0, x2: x1, y1: top, y2: top }));
+        else band.append(this.bandFill(tone, x0, x1));
+        if (ev.at >= from) band.append(s(doc, "line", { class: "kp-chart__band-edge", x1: x0, x2: x0, y1: top, y2: foot }));
+        if (until <= to) band.append(s(doc, "line", { class: "kp-chart__band-edge", x1, x2: x1, y1: top, y2: foot }));
+        return band;
+      }
+      /** A band's fill: the tone's tint, or its hatch. @param {string} tone @param {number} x0 @param {number} x1 */
+      bandFill(tone, x0, x1) {
+        const { P, H } = this;
+        const rect = s(this.doc, "rect", {
+          class: "kp-chart__band-fill",
+          x: x0,
+          y: P.t - LAYOUT.bandRise,
+          width: Math.max(1, x1 - x0),
+          height: H - P.b - P.t + LAYOUT.bandRise
+        });
+        if (this.opt.band === "hatch") rect.setAttribute("fill", `url(#${this.hatchFor(tone)})`);
+        return rect;
+      }
+      /** The hatch pattern of a tone, made once per drawing. @param {string} tone */
+      hatchFor(tone) {
+        const id = `${this.chart.clip}-hatch-${tone}`;
+        if (this.hatches.has(id)) return id;
+        this.hatches.add(id);
+        const size2 = LAYOUT.hatch;
+        const pattern = s(this.doc, "pattern", { id, width: size2, height: size2, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)", "data-kp-tone": tone });
+        pattern.append(s(this.doc, "line", { class: "kp-chart__hatch", x1: 0, y1: 0, x2: 0, y2: size2 }));
+        this.defs.append(pattern);
+        return id;
+      }
+    };
+  }
+});
+
+// js/chart/plot/drawing.js
+var MARKS, PlotDrawing;
+var init_drawing2 = __esm({
+  "js/chart/plot/drawing.js"() {
+    "use strict";
+    init_dom2();
+    init_attach4();
+    init_stats();
+    init_selection();
+    init_frame();
+    MARKS = Object.freeze({
+      /** A column's share of the room its neighbours leave, its narrowest and widest, and the slots a lone column divides the plot in. */
+      columnShare: 0.76,
+      columnMin: 1.5,
+      columnMax: 48,
+      columnSlots: 12,
+      /** A lone reading's dot, a run's ring, and a snapped dot (hot and not). */
+      dot: 3.5,
+      ring: 4.25,
+      snapHot: 4.5,
+      /** The median's words: their rise above the line, their drop below it when there is no room above, the room kept under the top, their inset from the end. */
+      labelRise: 6,
+      labelDrop: 14,
+      labelRoom: 8,
+      labelInset: 4,
+      /** An event mark's rise above the plot, its hit circle and its dot. */
+      markRise: 9,
+      markHit: 10,
+      markDot: 5,
+      /** The edge counts' inset from the plot's ends and their rise above it. */
+      edgeInset: 2,
+      edgeRise: 5
+    });
+    PlotDrawing = class extends PlotFrame {
+      /** @param {ConstructorParameters<typeof PlotFrame>} args */
+      constructor(...args) {
+        super(...args);
+        this.have = Math.max(0, ...this.chart.points.map((p) => p.length));
+        this.few = this.opt.minPoints > 0 && this.have < this.opt.minPoints;
+        this.medians = [];
+      }
+      /** Draw everything, in order. */
+      build() {
+        this.grid();
+        this.timeAxis();
+        this.svg.append(this.g);
+        this.thresholdLines();
+        this.eventLines();
+        this.sources();
+        if (this.opt.median && !this.stacked && !this.few) this.medianLines();
+        this.marks();
+        this.edges();
+        this.brushRect();
+        this.crosshair();
+      }
+      /** Where this drawing put things, for the pointer and the tooltip. @returns {PlotGeometry} */
+      geometry() {
+        const { P, W, from, to, svg: svg2 } = this;
+        return { x: (t) => this.x(t), inv: (px5) => from + (px5 - P.l) / (W - P.l - P.r) * (to - from), W, P, from, to, svg: svg2 };
+      }
+      /**
+       * The sources on view. Too few readings for a trend: no line, no area and no dot is drawn, only the empty plot and the sentence
+       * (Kenny, 2026-10-18 17:45: a faint line still showed through the "3 of 7 days" plate).
+       */
+      sources() {
+        const { chart } = this;
+        const base = (chart.points[0] ?? []).map(() => 0);
+        chart.data.series.forEach((series, si) => {
+          if (!this.vis.includes(si) || this.few) return;
+          const pts = chart.points[si].map((p, k) => [this.x(p[0]), this.y(this.stacked ? (base[k] ?? 0) + p[1] : p[1])]);
+          if (pts.length === 0) return;
+          const sg = this.seriesGroup(series, si);
+          if (series.shape === "columns") this.columns(sg, pts, base);
+          else this.line(sg, pts, base, si);
+          if (this.stacked) chart.points[si].forEach((p, k) => base[k] = (base[k] ?? 0) + p[1]);
+          this.g.append(sg);
+          if (series.shape !== "columns" && pts.length === 1 && this.inR(chart.points[si][0])) this.svg.append(this.loneDot(series, si, pts[0]));
+        });
+      }
+      /** A source's group, painted and marked hot or dim. @param {ChartSeries} series @param {number} si */
+      seriesGroup(series, si) {
+        const sg = s(this.doc, "g", { class: "kp-chart__series" });
+        paintSeries(sg, series, si);
+        if (this.chart.hot != null) sg.setAttribute("data-kp-state", this.chart.hot === si ? "hot" : "dim");
+        return sg;
+      }
+      /**
+       * A histogram: one column per reading, `columnShare` of the room its neighbours leave, stood on the baseline (or on the columns
+       * below it when stacked) [wish-1120, homelab 104].
+       * @param {Element} sg @param {number[][]} pts @param {number[]} base
+       */
+      columns(sg, pts, base) {
+        const { P, W } = this;
+        const gap = pts.length > 1 ? Math.min(...pts.slice(1).map((p, k) => p[0] - pts[k][0])) : (W - P.l - P.r) / MARKS.columnSlots;
+        const width = Math.max(MARKS.columnMin, Math.min(MARKS.columnMax, gap * MARKS.columnShare));
+        pts.forEach((p, k) => {
+          const bottom = this.y(this.stacked ? base[k] ?? 0 : 0);
+          sg.append(
+            s(this.doc, "rect", {
+              class: "kp-chart__column",
+              x: (p[0] - width / 2).toFixed(1),
+              y: Math.min(p[1], bottom).toFixed(1),
+              width: width.toFixed(1),
+              height: Math.max(0, bottom - p[1]).toFixed(1)
+            })
+          );
+        });
+      }
+      /** A source's line, over its stacked or lone area. @param {Element} sg @param {number[][]} pts @param {number[]} base @param {number} si */
+      line(sg, pts, base, si) {
+        const d = pts.map((p, k) => `${k ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
+        if (this.stacked) {
+          const back = this.chart.points[si].map((p, k) => [this.x(p[0]), this.y(base[k] ?? 0)]).reverse().map((p) => `L${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
+          sg.append(s(this.doc, "path", { class: "kp-chart__area kp-chart__area--stacked", d: `${d}${back}Z` }));
+        } else if (this.vis.length <= 2) {
+          const last = pts[pts.length - 1];
+          const area = this.vis.length === 1 ? "kp-chart__area kp-chart__area--alone" : "kp-chart__area";
+          sg.append(s(this.doc, "path", { class: area, d: `${d}L${last[0]},${this.y(0)}L${pts[0][0]},${this.y(0)}Z` }));
+        }
+        sg.append(s(this.doc, "path", { class: "kp-chart__line", d }));
+      }
+      /** @param {ChartSeries} series @param {number} si @param {number[]} at */
+      loneDot(series, si, at) {
+        const dot = this.seriesGroup(series, si);
+        dot.append(s(this.doc, "circle", { class: "kp-chart__point", cx: at[0], cy: at[1], r: MARKS.dot }));
+        return dot;
+      }
+      /** The median of each shown source and, when asked, the runs of six or more on one side of it. */
+      medianLines() {
+        const { chart, P, W } = this;
+        for (const si of this.vis) {
+          const m = chartMedian(chart.points[si].filter((p) => this.inR(p)).map((p) => p[1]));
+          if (m != null) this.medians.push({ si, label: chart.data.series[si].label || chart.label(), v: m });
+        }
+        for (const m of this.medians) {
+          const sg = s(this.doc, "g", { class: "kp-chart__series kp-chart__median-series" });
+          paintSeries(sg, chart.data.series[m.si], m.si);
+          sg.append(s(this.doc, "line", { class: "kp-chart__median", x1: P.l, x2: W - P.r, y1: this.y(m.v), y2: this.y(m.v) }));
+          this.g.append(sg);
+          if (this.opt.runs) this.runs(m);
+        }
+        if (this.medians.length === 1) this.medianLabel(this.medians[0]);
+      }
+      /** One ring is built, the rest are copies of it: a typical-level chart marks hundreds. @param {PlotMedian} m */
+      runs(m) {
+        const inside = this.chart.points[m.si].filter((p) => this.inR(p));
+        const marked = chartRuns(
+          inside.map((p) => p[1]),
+          m.v
+        );
+        const proto = s(this.doc, "g", { class: "kp-chart__series kp-chart__run-series" });
+        paintSeries(proto, this.chart.data.series[m.si], m.si);
+        proto.append(s(this.doc, "circle", { class: "kp-chart__run", cx: 0, cy: 0, r: MARKS.ring }));
+        const rings = this.doc.createDocumentFragment();
+        for (const i of marked) {
+          const ring = (
+            /** @type {SVGGElement} */
+            proto.cloneNode(true)
+          );
+          const circle = (
+            /** @type {SVGCircleElement} */
+            ring.firstChild
+          );
+          circle.setAttribute("cx", String(this.x(inside[i][0])));
+          circle.setAttribute("cy", String(this.y(inside[i][1])));
+          rings.append(ring);
+        }
+        this.g.append(rings);
+      }
+      /** The one median's words at the plot's end, above its line or below it when there is no room. @param {PlotMedian} m */
+      medianLabel(m) {
+        const { P, W } = this;
+        const up = this.y(m.v) - MARKS.labelRise < P.t + MARKS.labelRoom;
+        const y = up ? this.y(m.v) + MARKS.labelDrop : this.y(m.v) - MARKS.labelRise;
+        const text = s(this.doc, "text", { class: "kp-chart__median-label", x: W - P.r - MARKS.labelInset, y, "text-anchor": "end" });
+        text.textContent = `${this.chart.medianWords(this.opt)} ${this.chart.fmt(m.v, "tip")}`;
+        this.svg.append(text);
+      }
+      /** A mark above the plot per event in the window, named in its title. */
+      marks() {
+        const { chart, doc, from, to, P } = this;
+        const { strings, time } = chart;
+        for (const ev of this.events) {
+          const at = Math.min(to, Math.max(from, ev.at));
+          const mark = s(doc, "g", { class: "kp-chart__mark", "data-kp-tone": chart.toneOf(ev), "data-at": at });
+          mark.append(s(doc, "circle", { class: "kp-chart__mark-hit", cx: this.x(at), cy: P.t - MARKS.markRise, r: MARKS.markHit }));
+          mark.append(s(doc, "circle", { class: "kp-chart__mark-dot", cx: this.x(at), cy: P.t - MARKS.markRise, r: MARKS.markDot }));
+          const title = s(doc, "title");
+          title.textContent = ev.until != null && ev.until > ev.at ? strings.markBand(ev.label, time(ev.at, "full", {}), time(ev.until, "full", {})) : strings.mark(ev.label, time(ev.at, "full", {}));
+          mark.append(title);
+          this.svg.append(mark);
+        }
+      }
+      /** Events past the window: an arrow at that edge with their count. */
+      edges() {
+        const { doc, P, W } = this;
+        const { strings } = this.chart;
+        for (
+          const [count2, side] of
+          /** @type {const} */
+          [
+            [this.beforeCount, "start"],
+            [this.afterCount, "end"]
+          ]
+        ) {
+          if (count2 === 0) continue;
+          const edge = s(doc, "g", { class: "kp-chart__edge", "data-kp-side": side });
+          const x = side === "start" ? P.l + MARKS.edgeInset : W - P.r - MARKS.edgeInset;
+          const text = s(doc, "text", { class: "kp-chart__edge-text", x, y: P.t - MARKS.edgeRise, "text-anchor": side === "start" ? "start" : "end" });
+          text.textContent = side === "start" ? `\u25C2 ${count2}` : `${count2} \u25B8`;
+          const title = s(doc, "title");
+          title.textContent = side === "start" ? strings.edgeBefore(count2) : strings.edgeAfter(count2);
+          edge.append(title, text);
+          this.svg.append(edge);
+        }
+      }
+      /** The span a drag is choosing. */
+      brushRect() {
+        const { brush } = this.chart;
+        if (!brush) return;
+        const { P, H } = this;
+        const rect = { class: "kp-chart__brush", x: Math.min(brush.x0, brush.x1), y: P.t, width: Math.abs(brush.x1 - brush.x0), height: H - P.t - P.b };
+        this.svg.append(s(this.doc, "rect", rect));
+      }
+      /** The crosshair at the pin or the cursor, with a dot where it meets each source. */
+      crosshair() {
+        const { chart, from, to, P, H } = this;
+        const t = chart.pinned ?? chart.cursor;
+        if (t == null || t < from || t > to) return;
+        const pinned = chart.pinned != null ? "kp-chart__crosshair kp-chart__crosshair--pinned" : "kp-chart__crosshair";
+        this.svg.append(s(this.doc, "line", { class: pinned, x1: this.x(t), x2: this.x(t), y1: P.t, y2: H - P.b }));
+        const acc = (chart.points[0] ?? []).map(() => 0);
+        chart.data.series.forEach((series, si) => {
+          const pts = chart.points[si];
+          if (!this.vis.includes(si) || pts.length === 0) return;
+          const k = indexAt(pts, t);
+          const v = pts[k][1] + (this.stacked ? acc[k] ?? 0 : 0);
+          if (this.stacked) pts.forEach((p, j) => acc[j] += p[1]);
+          const r = chart.hot === si ? MARKS.snapHot : MARKS.dot;
+          const dot = s(this.doc, "circle", { class: "kp-chart__snap", cx: this.x(pts[k][0]), cy: this.y(v), r });
+          paintSeries(dot, series, si);
+          this.svg.append(dot);
+        });
+      }
+    };
+  }
+});
+
 // js/chart/state.js
 var chartState;
 var init_state5 = __esm({
@@ -19448,236 +19891,944 @@ var init_state5 = __esm({
   }
 });
 
-// js/chart/trend.js
-function trendChart(host, group, locale, ctx) {
-  const doc = host.ownerDocument;
-  const { strings, time, decorate: decorate2 } = ctx;
-  let data = DATA.get(host) ?? dataInMarkup(host);
-  let pts = [];
-  const fmt = valueFormat(locale, ctx, () => data ?? { series: [] });
-  let at = null;
-  let index = null;
-  const loading = () => data == null || host.hasAttribute("data-kp-chart-loading");
-  const svg2 = (
-    /** @type {SVGSVGElement} */
-    /** @type {unknown} */
-    s(doc, "svg", { class: "kp-kpi__spark" })
-  );
-  const cross = h(doc, "span", { class: "kp-kpi__chart-cross" });
-  cross.hidden = true;
-  const chip = h(doc, "span", { class: "kp-kpi__chart-chip", "aria-hidden": "true" });
-  chip.hidden = true;
-  const plot = h(doc, "span", { class: "kp-kpi__chart-plot", role: "application" }, svg2, cross, chip);
-  const keys = h(doc, "span", { class: "kp-sr-only", id: `kp-trend-keys-${chartState.clipIds += 1}` }, strings.trendKeys);
-  plot.setAttribute("aria-describedby", keys.id);
-  const axis = trendAxisRow(host);
-  const live4 = h(doc, "span", { class: "kp-sr-only", "aria-live": "polite" });
-  const parts2 = [plot, ...axis ? [axis.row] : [], keys, live4];
-  host.append(...parts2);
-  if (data?.key != null) host.setAttribute("data-kp-key", data.key);
-  decorateWith(decorate2, plot, { kind: "plot", host, key: data?.key ?? host.getAttribute("data-kp-key") ?? void 0 });
-  const link = (
-    /** @type {HTMLElement | null} */
-    host.closest(".kp-kpi")?.querySelector(".kp-kpi__link") ?? null
-  );
-  let busy = null;
-  let plate2 = null;
-  let leaving = false;
-  let first = true;
-  const hide2 = () => {
-    at = null;
-    index = null;
-    cross.hidden = true;
-    chip.hidden = true;
-    if (axis) {
-      axis.read.hidden = true;
-      axis.from.hidden = false;
-      axis.to.hidden = false;
-    }
-  };
-  const show = (k, announce4 = false) => {
-    if (pts.length < 2) return;
-    const i = Math.max(0, Math.min(pts.length - 1, k));
-    const [ms, value] = pts[i];
-    at = ms;
-    index = i;
-    const width = plot.clientWidth;
-    const x = i / (pts.length - 1) * width;
-    const moment = time(ms, "full", {});
-    const shown5 = fmt(value, "spark");
-    cross.style.insetInlineStart = `${x}px`;
-    cross.hidden = false;
-    const words3 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown5)];
-    chip.replaceChildren(...words3());
-    chip.hidden = false;
-    chip.removeAttribute("data-kp-stacked");
-    let chipWidth = chip.offsetWidth;
-    if (chipWidth > width) {
-      chip.setAttribute("data-kp-stacked", "");
-      chipWidth = chip.offsetWidth;
-    }
-    const toAxis = chipWidth > width && axis != null;
-    if (!toAxis) chip.style.insetInlineStart = `${Math.max(0, Math.min(width - chipWidth, x - chipWidth / 2))}px`;
-    chip.hidden = toAxis;
-    if (axis) {
-      axis.read.replaceChildren(...toAxis ? words3() : []);
-      axis.read.hidden = !toAxis;
-      axis.from.hidden = toAxis;
-      axis.to.hidden = toAxis;
-    }
-    if (announce4) live4.textContent = `${moment} \xB7 ${fmt(value, "readout")}`;
-  };
-  const kind = () => loading() ? "loading" : data?.error ? "error" : (data?.series[0] ? pointsOf(data.series[0]).length : 0) === 0 ? "empty" : "ready";
-  function setPlate(k) {
-    plate2?.remove();
-    plate2 = null;
-    plot.hidden = k !== null;
-    if (axis) axis.row.hidden = k !== null;
-    if (k === null) return;
-    plate2 = hostStatePlate(host, {
-      kind: k,
-      title: k === "error" ? data?.error ?? strings.trendFailed : strings.empty,
-      ...k === "error" && data?.errorText ? { text: data.errorText } : {},
-      art: data?.art,
-      retryEvent: CHART_RETRY_EVENT,
-      retryLabel: strings.retry
-    });
-    plate2.addEventListener(
-      "click",
-      (event) => {
-        if (event.target instanceof Element && event.target.closest("button")) link?.focus({ preventScroll: true });
-      },
-      true
-    );
-    host.append(plate2);
-  }
-  function draw6() {
-    const series = data?.series[0];
-    const k = kind();
-    host.setAttribute("data-kp-state", k);
-    setPlate(k === "empty" || k === "error" ? k : null);
-    if (k === "loading") {
-      if (busy && !leaving) busy.place();
-      else if (!busy) busy = openBusyCard(host, { words: strings.loading, area: () => [plot], className: "kp-kpi__busy", arrive: !first });
-    } else if (busy && !leaving) {
-      busy.remove();
-      busy = null;
-    }
-    first = false;
-    pts = k === "ready" && series ? pointsOf(series) : [];
-    plot.setAttribute("aria-label", data?.label ?? host.getAttribute("aria-label") ?? series?.label ?? "");
-    drawSparkline(
-      svg2,
-      pts.map((p) => p[1])
-    );
-    if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, ctx);
-    const usable = pts.length >= 2;
-    if (usable) plot.tabIndex = 0;
-    else plot.removeAttribute("tabindex");
-    const tile = host.closest(".kp-kpi");
-    if (loading()) tile?.setAttribute("aria-busy", "true");
-    else tile?.removeAttribute("aria-busy");
-    if (!usable) hide2();
-    else if (at != null) show(indexAt(pts, at));
-  }
-  const indexAtX = (clientX) => {
-    const box = plot.getBoundingClientRect();
-    return Math.round((clientX - box.left) / Math.max(1, box.width) * (pts.length - 1));
-  };
-  let press2 = null;
-  const onDown2 = (event) => {
-    press2 = { x: event.clientX, moved: false, touch: event.pointerType !== "mouse" };
-    if (press2.touch) {
-      try {
-        plot.setPointerCapture(event.pointerId);
-      } catch {
-      }
-      show(indexAtX(event.clientX));
-    }
-  };
-  const onMove2 = (event) => {
-    if (press2 && Math.abs(event.clientX - press2.x) > 6) press2.moved = true;
-    if (event.pointerType === "mouse" || press2) show(indexAtX(event.clientX));
-  };
-  const onLeave = (event) => {
-    if (event.pointerType === "mouse") hide2();
-  };
-  const onCancel2 = () => {
-    press2 = null;
-    hide2();
-  };
-  const onClick = (event) => {
-    const dragged = press2?.moved ?? false;
-    press2 = null;
-    if (!dragged && link && event.button === 0) link.click();
-  };
-  const onKey5 = (event) => {
-    const n = pts.length;
-    if (n < 2) return;
-    const shown5 = !cross.hidden;
-    const from = index ?? n - 1;
-    let to = null;
-    if (event.key === "ArrowLeft") to = shown5 ? from - (event.shiftKey ? 10 : 1) : n - 1;
-    else if (event.key === "ArrowRight") to = shown5 ? from + (event.shiftKey ? 10 : 1) : n - 1;
-    else if (event.key === "Home") to = 0;
-    else if (event.key === "End") to = n - 1;
-    else if (event.key === "Escape" && shown5) {
-      event.preventDefault();
-      event.stopPropagation();
-      hide2();
-      return;
-    }
-    if (to == null) return;
-    event.preventDefault();
-    show(to, true);
-  };
-  plot.addEventListener("pointerdown", onDown2);
-  plot.addEventListener("pointermove", onMove2);
-  plot.addEventListener("pointerleave", onLeave);
-  plot.addEventListener("pointercancel", onCancel2);
-  plot.addEventListener("click", onClick);
-  plot.addEventListener("keydown", onKey5);
-  plot.addEventListener("blur", hide2);
-  const state12 = {
-    host,
-    spark: true,
-    group,
-    draw: draw6,
-    setData: (next2) => {
-      data = next2;
-      if (data.key != null) host.setAttribute("data-kp-key", data.key);
-      if (busy && !leaving && kind() !== "loading") {
-        const card = busy;
-        busy = null;
-        leaving = true;
-        void card.close().then(() => {
-          leaving = false;
-          draw6();
-        });
-        return;
-      }
-      if (!leaving) draw6();
-    },
-    select: () => false,
-    // The trend reads on its own crosshair, not the group's.
-    cursorAt: () => {
-    },
-    lastTime: () => pts[pts.length - 1]?.[0] ?? null,
-    destroy: () => {
-      for (const part7 of parts2) part7.remove();
-      plate2?.remove();
-      busy?.remove();
-      host.removeAttribute("data-kp-state");
-      host.closest(".kp-kpi")?.removeAttribute("aria-busy");
-    },
-    unobserve: () => {
-    }
-  };
-  return state12;
+// js/chart/plot/base.js
+function buildParts2(doc, strings) {
+  const plot = h(doc, "div", { class: "kp-chart__plot", tabindex: "0", role: "application" });
+  const tipTime = h(doc, "b");
+  const release2 = h(doc, "button", { type: "button", class: "kp-chart__release", "aria-label": strings.release, title: strings.release }, "\u2715");
+  const pinWord = h(doc, "span");
+  const pin = h(doc, "span", { class: "kp-chart__pin" }, pinWord, release2);
+  const tipRows = h(doc, "div", { class: "kp-chart__tip-rows" });
+  const tipFoot = h(doc, "p", { class: "kp-chart__tip-foot" }, strings.change);
+  const tipEvents = h(doc, "div", { class: "kp-chart__tip-events" });
+  const tip = h(doc, "div", { class: "kp-chart__tip" }, h(doc, "p", { class: "kp-chart__tip-head" }, tipTime, pin), tipRows, tipFoot, tipEvents);
+  tip.hidden = true;
+  const note2 = h(doc, "p", { class: "kp-chart__note" }, strings.onePoint);
+  note2.hidden = true;
+  const readout = h(doc, "p", { class: "kp-chart__readout kp-sr-only", "aria-live": "polite" });
+  const legend = h(doc, "div", { class: "kp-chart__legend", role: "group" });
+  const showAll2 = h(doc, "button", { type: "button", class: "kp-chart__show-all", title: strings.showAllTitle }, strings.showAll);
+  showAll2.hidden = true;
+  const pointer = h(doc, "span", { "data-kp-when": "pointer" }, strings.hintPointer);
+  const hint = h(doc, "p", { class: "kp-chart__hint" }, pointer, h(doc, "span", { "data-kp-when": "touch" }, strings.hintTouch));
+  const annKey = h(doc, "div", { class: "kp-chart__annkey", role: "group" });
+  annKey.hidden = true;
+  const tipMedian = h(doc, "p", { class: "kp-chart__tip-median" });
+  tipMedian.hidden = true;
+  tip.append(tipMedian);
+  const parts2 = [annKey, plot, tip, note2, readout, legend, hint];
+  return { plot, tipTime, release: release2, pinWord, pin, tipRows, tipFoot, tipEvents, tip, note: note2, readout, legend, showAll: showAll2, hint, annKey, tipMedian, parts: parts2 };
 }
-var init_trend = __esm({
-  "js/chart/trend.js"() {
+var PlotBase;
+var init_base2 = __esm({
+  "js/chart/plot/base.js"() {
     "use strict";
+    init_controller();
+    init_api3();
+    init_dom2();
+    init_attach4();
+    init_state5();
+    init_time();
+    init_constants9();
+    PlotBase = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        const { group, locale, ctx } = (
+          /** @type {PlotSettings} */
+          /** @type {unknown} */
+          options
+        );
+        this.group = group;
+        this.locale = locale;
+        this.ctx = ctx;
+        this.doc = host.ownerDocument;
+        this.strings = ctx.strings;
+        this.time = ctx.time;
+        this.decorate = ctx.decorate;
+        this.data = DATA.get(host) ?? dataInMarkup(host) ?? { series: [] };
+        this.points = [];
+        this.fmt = valueFormat(locale, ctx, () => this.data);
+        this.sel = /* @__PURE__ */ new Set();
+        this.hot = null;
+        this.pinned = null;
+        this.cursor = null;
+        this.brush = null;
+        this.clip = `kp-chart-clip-${++chartState.clipIds}`;
+        this.axisMemo = { key: "", axis: { stride: 0, ticks: (
+          /** @type {number[]} */
+          []
+        ) } };
+        this.shown = "";
+        this.drawnWindow = "";
+        this.drawnFor = "";
+        this.held = false;
+        this.behind = false;
+        this.kindsOff = /* @__PURE__ */ new Set();
+        this.keyMemo = "";
+        this.medians = [];
+        this.items = [];
+        this.skeleton = false;
+        this.geo = null;
+        this.ui = buildParts2(this.doc, this.strings);
+        this.state = /** @type {ChartState} */
+        /** @type {unknown} */
+        null;
+      }
+      label() {
+        return this.data.label ?? this.host.getAttribute("aria-label") ?? "";
+      }
+      key() {
+        return this.data.key ?? this.host.getAttribute("data-kp-key") ?? void 0;
+      }
+      /** What a drawing is for: the plot's width, its height and the host attributes that change the drawing. */
+      drawnKey() {
+        const { host } = this;
+        return `${this.ui.plot.clientWidth} ${chartHeight(host, this.data)} ${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
+      }
+      /** The indexes of the sources on view. */
+      visible() {
+        return this.points.map((_, i) => i).filter((i) => this.sel.size === 0 || this.sel.has(i));
+      }
+      /** @returns {ChartWindow | null} */
+      range() {
+        const { group, data, points } = this;
+        if (group.zoom) return group.zoom;
+        const first = Math.min(...points.map((p) => p[0]?.[0] ?? Infinity));
+        const to = data.to ?? group.end() ?? Math.max(...points.map((p) => p[p.length - 1]?.[0] ?? -Infinity));
+        let from = data.from ?? (group.span != null ? to - group.span : first);
+        if (from === to && data.from == null) from = to - HOUR;
+        return Number.isFinite(from) && Number.isFinite(to) && to > from ? { from, to } : null;
+      }
+      /** @param {Set<number>} next */
+      setSel(next2) {
+        this.sel = next2;
+        this.host.dispatchEvent(new CustomEvent(CHART_SELECT_EVENT, { bubbles: true, detail: { on: [...this.sel].sort((a, b) => a - b) } }));
+      }
+      /** Mark the chart's own controls again (its key may have changed). */
+      decorateOwn() {
+        const { decorate: decorate2, host } = this;
+        decorateWith(decorate2, this.ui.plot, { kind: "plot", host, key: this.key() });
+        decorateWith(decorate2, this.ui.showAll, { kind: "show-all", host, key: this.key() });
+        decorateWith(decorate2, this.ui.release, { kind: "release", host, key: this.key() });
+      }
+      /** The tone an event is drawn in: its own, else its kind's, else info. @param {ChartEvent} ev */
+      toneOf(ev) {
+        return ev.tone ?? (ev.kind ? this.data.kinds?.[ev.kind]?.tone : void 0) ?? "info";
+      }
+      /** The key item an event belongs to: its kind, else its tone. @param {ChartEvent} ev */
+      kindOf(ev) {
+        return ev.kind ?? this.toneOf(ev);
+      }
+      /** @param {string} kind */
+      kindWord(kind) {
+        return this.data.kinds?.[kind]?.label ?? (kind === "info" || kind === "warning" || kind === "critical" ? this.strings.kindTone(kind) : kind);
+      }
+      /** The events the key has not switched off. */
+      shownEvents() {
+        return (this.data.events ?? []).filter((ev) => !this.kindsOff.has(this.kindOf(ev)));
+      }
+      /** Reads a chart option from the data, else from the element's attribute. @returns {PlotOptions} */
+      option() {
+        const { data, host } = this;
+        const attr16 = (name) => host.getAttribute(`data-kp-chart-${name}`);
+        const medianAttr = attr16("median");
+        const median = data.median ?? (medianAttr !== null && medianAttr !== "off");
+        const min = Number(data.minPoints ?? attr16("min-points"));
+        const band = data.band ?? attr16("band");
+        return {
+          median: median !== false,
+          medianWords: typeof data.median === "string" ? data.median : attr16("median-label") ?? "",
+          runs: (data.runs ?? attr16("runs")) === "mark",
+          minPoints: Number.isFinite(min) && min > 0 ? Math.floor(min) : 0,
+          minUnit: data.minUnit ?? attr16("min-unit") ?? "",
+          key: data.annotationKey ?? attr16("annotation-key") !== "off",
+          band: band === "hatch" ? "hatch" : band === "bracket" ? "bracket" : "tint"
+        };
+      }
+      /** Whether the key's signature changed since the key was last built; remembers the new one. @param {string} signature */
+      keyChanged(signature2) {
+        if (signature2 === this.keyMemo) return false;
+        this.keyMemo = signature2;
+        return true;
+      }
+      /** Whether the plot shows something new instead of lines (said once, not on every redraw); remembers it. @param {string} shown */
+      showsNew(shown5) {
+        if (shown5 === this.shown) return false;
+        this.shown = shown5;
+        return true;
+      }
+      /** Show every source again. @returns {boolean} whether some were pressed */
+      clearSelection() {
+        const had = this.sel.size > 0;
+        this.sel = /* @__PURE__ */ new Set();
+        return had;
+      }
+      /** The words in front of a median's value. @param {PlotOptions} opt */
+      medianWords(opt3) {
+        return opt3.medianWords || this.strings.median;
+      }
+    };
+  }
+});
+
+// js/chart/plot/legend.js
+var MAX_STUBS, STUB_WIDTH, PlotLegend;
+var init_legend = __esm({
+  "js/chart/plot/legend.js"() {
+    "use strict";
+    init_dom2();
+    init_attach4();
+    init_selection();
+    init_base2();
+    MAX_STUBS = 50;
+    STUB_WIDTH = 12;
+    PlotLegend = class extends PlotBase {
+      /** The legend's own listeners: Show all, Escape in the legend, and the pin's ✕. */
+      wireLegend() {
+        const { showAll: showAll2, legend, release: release2, plot } = this.ui;
+        this.listen(showAll2, "click", () => {
+          this.setSel(/* @__PURE__ */ new Set());
+          this.draw();
+        });
+        this.listen(legend, "keydown", (event) => {
+          if (
+            /** @type {KeyboardEvent} */
+            event.key !== "Escape" || this.sel.size === 0
+          ) return;
+          event.stopPropagation();
+          this.setSel(/* @__PURE__ */ new Set());
+          this.draw();
+        });
+        this.listen(release2, "click", () => {
+          this.pinned = null;
+          this.draw();
+          plot.focus();
+        });
+      }
+      /** Draw the chart: PlotDraw does it; the legend has none of its own. */
+      draw() {
+      }
+      /** The kinds of event the data holds, with their tone and count. */
+      countKinds() {
+        const kinds = /* @__PURE__ */ new Map();
+        for (const ev of this.data.events ?? []) {
+          const k = this.kindOf(ev);
+          const was = kinds.get(k);
+          if (was) was.count += 1;
+          else kinds.set(k, { tone: this.toneOf(ev), count: 1 });
+        }
+        return kinds;
+      }
+      /** Build (or update) the key above the plot: one switch per kind, and a note for the median and the runs. @param {PlotOptions} opt */
+      paintKey(opt3) {
+        const { annKey } = this.ui;
+        const kinds = this.countKinds();
+        const notes = [opt3.median && this.medians.length === 1 ? "median" : "", opt3.median && opt3.runs ? "runs" : ""].filter(Boolean);
+        const wanted = opt3.key && (kinds.size > 0 || notes.length > 0);
+        annKey.hidden = !wanted;
+        annKey.removeAttribute("data-kp-wait");
+        if (!wanted) {
+          this.keyMemo = "";
+          annKey.replaceChildren();
+          return;
+        }
+        annKey.setAttribute("aria-label", this.strings.keyLabel);
+        const signature2 = JSON.stringify([...kinds].map(([k, v]) => [k, v.tone, v.count, this.kindWord(k)]).concat(notes.map((n) => [n])));
+        if (this.keyChanged(signature2)) this.rebuildKey(kinds, notes);
+        for (const button6 of annKey.querySelectorAll("[data-kp-kind]")) {
+          const off = this.kindsOff.has(button6.getAttribute("data-kp-kind") ?? "");
+          button6.setAttribute("aria-pressed", String(!off));
+          button6.toggleAttribute("data-kp-off", off);
+        }
+        const note2 = annKey.querySelector('[data-kp-note="median"]');
+        if (note2 && this.medians.length === 1) {
+          const words3 = note2.querySelector(".kp-chart__annkey-median");
+          if (words3) words3.textContent = `${this.medianWords(opt3)} ${this.fmt(this.medians[0].v, "tip")}`;
+        }
+      }
+      /**
+       * Put the key's switches and notes in again, keeping the focus on the switch that had it.
+       * @param {Map<string, { tone: string, count: number }>} kinds
+       * @param {string[]} notes
+       */
+      rebuildKey(kinds, notes) {
+        const { annKey } = this.ui;
+        const active = this.doc.activeElement;
+        const focused2 = active instanceof HTMLElement && annKey.contains(active) ? active.getAttribute("data-kp-kind") : null;
+        const items = [...kinds].map(([k, v]) => this.keyButton(k, v.tone, v.count));
+        annKey.replaceChildren(...items, ...notes.map((n) => this.keyNote(n)));
+        if (focused2) annKey.querySelector(`[data-kp-kind="${CSS.escape(focused2)}"]`)?.focus();
+      }
+      /** One switch of the key: its kind on or off. @param {string} k @param {string} tone @param {number} count */
+      keyButton(k, tone, count2) {
+        const { doc, strings, kindsOff } = this;
+        const dot = h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": tone, "aria-hidden": "true" });
+        const button6 = h(
+          doc,
+          "button",
+          { type: "button", class: "kp-chart__annkey-item", "data-kp-kind": k, title: strings.kindOn(this.kindWord(k)) },
+          dot,
+          h(doc, "span", {}, this.kindWord(k)),
+          h(doc, "b", { class: "kp-chart__annkey-count" }, String(count2))
+        );
+        button6.addEventListener("click", () => {
+          if (kindsOff.has(k)) kindsOff.delete(k);
+          else kindsOff.add(k);
+          this.host.dispatchEvent(new CustomEvent("kp-chart-kinds", { bubbles: true, detail: { off: [...kindsOff] } }));
+          this.draw();
+        });
+        return button6;
+      }
+      /** One note of the key: the median line or the runs' ring. @param {string} n */
+      keyNote(n) {
+        const { doc } = this;
+        if (n === "median")
+          return h(
+            doc,
+            "span",
+            { class: "kp-chart__annkey-note", "data-kp-note": "median" },
+            h(doc, "i", { class: "kp-chart__annkey-line", "aria-hidden": "true" }),
+            h(doc, "span", { class: "kp-chart__annkey-median" })
+          );
+        return h(
+          doc,
+          "span",
+          { class: "kp-chart__annkey-note", "data-kp-note": "runs" },
+          h(doc, "i", { class: "kp-chart__annkey-ring", "aria-hidden": "true" }),
+          this.strings.runsKey
+        );
+      }
+      buildLegend() {
+        const { legend, plot, showAll: showAll2 } = this.ui;
+        this.skeleton = false;
+        legend.removeAttribute("aria-hidden");
+        legend.setAttribute("aria-label", this.strings.sources(this.label()));
+        plot.setAttribute("aria-label", this.strings.plot(this.label()));
+        this.items = this.data.series.map((series, i) => this.sourceButton(series, i));
+        legend.replaceChildren(...this.items.map((it) => it.button), showAll2);
+      }
+      /**
+       * One source of the legend: a button that isolates it while pointed at or focused, and presses it on a click.
+       * @param {import('../words.js').ChartSeries} series
+       * @param {number} i
+       */
+      sourceButton(series, i) {
+        const { doc, strings } = this;
+        const swatch = h(doc, "i", { class: "kp-chart__swatch", "aria-hidden": "true" });
+        const value = h(doc, "b", { class: "kp-chart__value" });
+        const label2 = h(doc, "span", { class: "kp-chart__source-label" }, series.label);
+        const button6 = h(doc, "button", { type: "button", class: "kp-chart__source", title: strings.source(series.label) }, swatch, label2, value);
+        paintSeries(button6, series, i);
+        const isolate = (v) => () => {
+          this.hot = v;
+          this.draw();
+        };
+        button6.addEventListener("pointerenter", isolate(i));
+        button6.addEventListener("pointerleave", isolate(null));
+        button6.addEventListener("focus", isolate(i));
+        button6.addEventListener("blur", isolate(null));
+        button6.addEventListener("click", () => {
+          this.setSel(toggleSource(this.sel, i, this.data.series.length));
+          this.draw();
+        });
+        decorateWith(this.decorate, button6, { kind: "source", host: this.host, key: this.key(), index: i, label: series.label });
+        return { button: button6, value };
+      }
+      /** The legend row kept for `data-kp-chart-sources` sources while loading. */
+      skeletonLegend() {
+        const { legend } = this.ui;
+        const n = Number(this.host.getAttribute("data-kp-chart-sources"));
+        this.skeleton = true;
+        this.items = [];
+        legend.setAttribute("aria-hidden", "true");
+        legend.replaceChildren(
+          ...Array.from({ length: n > 1 ? Math.min(n, MAX_STUBS) : 0 }, () => {
+            const stub = h(this.doc, "span", { class: "kp-chart__source-stub kp-skeleton kp-skeleton--block" }, "\u2007".repeat(STUB_WIDTH));
+            stub.style.setProperty("--kp-skeleton-block", "auto");
+            return stub;
+          })
+        );
+        legend.hidden = !(n > 1);
+      }
+    };
+  }
+});
+
+// js/chart/plot/tip.js
+var NEAR_SHARE, TIP_GAP, TIP_WIDTH, PlotTip;
+var init_tip = __esm({
+  "js/chart/plot/tip.js"() {
+    "use strict";
+    init_selection();
+    init_time();
+    init_dom2();
+    init_attach4();
+    init_legend();
+    NEAR_SHARE = 30;
+    TIP_GAP = 14;
+    TIP_WIDTH = 240;
+    PlotTip = class extends PlotLegend {
+      paintLegend() {
+        const t = this.pinned ?? this.cursor;
+        this.data.series.forEach((series, si) => {
+          const it = this.items[si];
+          if (!it) return;
+          const on = this.sel.size === 0 || this.sel.has(si);
+          const pts = this.points[si];
+          const v = pts.length === 0 ? null : t != null ? pts[indexAt(pts, t)][1] : pts[pts.length - 1][1];
+          it.button.setAttribute("aria-pressed", String(this.sel.has(si)));
+          it.button.toggleAttribute("data-kp-off", !on);
+          it.value.textContent = series.total != null && t == null ? series.total.toLocaleString(this.locale) : v == null ? "" : this.fmt(v, "legend");
+        });
+        this.ui.showAll.hidden = this.sel.size === 0;
+      }
+      /**
+       * What is under the crosshair at `t`, for the tooltip and the readout; for a pin outside the window only the sources whose
+       * readings still reach it (within an hour), not a reading from another time.
+       * @param {number} t @param {boolean} [strict]
+       * @returns {TipRow[]}
+       */
+      rowsAt(t, strict = false) {
+        const { points } = this;
+        return this.visible().filter((si) => {
+          const p = points[si];
+          return p.length > 0 && (!strict || t >= p[0][0] - HOUR && t <= p[p.length - 1][0] + HOUR);
+        }).map((si) => {
+          const k = indexAt(points[si], t);
+          return { si, label: this.data.series[si].label || this.label(), v: points[si][k][1], d: hourChange(points[si], k) };
+        }).sort((a, b) => b.v - a.v);
+      }
+      /** The events within reach of `t`: a thirtieth of the window. @param {number} t */
+      eventsNear(t) {
+        if (!this.geo) return [];
+        const reach3 = (this.geo.to - this.geo.from) / NEAR_SHARE;
+        return this.shownEvents().filter(
+          (ev) => ev.until != null && ev.until > ev.at ? t >= ev.at - reach3 && t <= ev.until + reach3 : Math.abs(ev.at - t) < reach3
+        );
+      }
+      /** @param {number} d */
+      change(d) {
+        return d === 0 ? "\xB10" : `${d > 0 ? "\u25B2" : "\u25BC"} ${this.fmt(Math.abs(d), "delta")}`;
+      }
+      paintTip() {
+        const { tip } = this.ui;
+        const t = this.pinned ?? (this.group.owner === this.state ? this.cursor : null);
+        const geo = this.geo;
+        if (t == null || !geo) {
+          tip.hidden = true;
+          return;
+        }
+        const outside = t < geo.from || t > geo.to;
+        if (outside && this.pinned == null) {
+          tip.hidden = true;
+          return;
+        }
+        this.fillTip(t, outside);
+        tip.hidden = false;
+        tip.toggleAttribute("data-kp-pinned", this.pinned != null);
+        tip.toggleAttribute("data-kp-outside", outside);
+        this.placeTip(t, outside, geo);
+      }
+      /** The tooltip's words: the time, the pin, a row per source, the events near and the median. @param {number} t @param {boolean} outside */
+      fillTip(t, outside) {
+        const { tipTime, pin, pinWord, tipRows, tipFoot, tipEvents, tipMedian } = this.ui;
+        const { strings, medians } = this;
+        tipTime.textContent = this.time(Math.round(t / MINUTE) * MINUTE, "full", {});
+        pin.hidden = this.pinned == null;
+        pinWord.textContent = outside ? strings.pinnedOutside : strings.pinned;
+        const rows = this.rowsAt(t, outside).map((r) => this.tipRow(r));
+        tipRows.replaceChildren(...rows);
+        tipRows.hidden = rows.length === 0;
+        tipFoot.hidden = rows.length === 0;
+        tipEvents.replaceChildren(...this.eventsNear(t).map((ev) => this.tipEvent(ev)));
+        tipMedian.hidden = medians.length === 0;
+        if (medians.length)
+          tipMedian.textContent = medians.map((m) => `${medians.length > 1 ? `${m.label}: ` : ""}${this.medianWords(this.option())} ${this.fmt(m.v, "tip")}`).join("; ");
+      }
+      /** One source's row in the tooltip. @param {TipRow} r */
+      tipRow(r) {
+        const { doc } = this;
+        const swatch = h(doc, "i", { class: "kp-chart__swatch", "aria-hidden": "true" });
+        paintSeries(swatch, this.data.series[r.si], r.si);
+        const delta = h(
+          doc,
+          "span",
+          { class: "kp-chart__num kp-chart__delta", "data-kp-direction": r.d > 0 ? "up" : r.d < 0 ? "down" : null },
+          this.change(r.d)
+        );
+        const row2 = h(doc, "div", { class: "kp-chart__tip-row" }, swatch, h(doc, "span", {}, r.label), h(doc, "span", { class: "kp-chart__num" }, this.fmt(r.v, "tip")), delta);
+        if (this.hot === r.si) row2.setAttribute("data-kp-state", "hot");
+        return row2;
+      }
+      /** One event near the crosshair, with its link while pinned. @param {import('../words.js').ChartEvent} ev */
+      tipEvent(ev) {
+        const { doc, strings, time } = this;
+        const words3 = ev.until != null && ev.until > ev.at ? `${strings.bandWhen(time(ev.at, "clock", {}), time(ev.until, "clock", {}))} ${ev.label}` : `${time(ev.at, "clock", {})} ${ev.label}`;
+        const line = h(doc, "p", { class: "kp-chart__tip-event" }, h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": this.toneOf(ev), "aria-hidden": "true" }), words3);
+        if (this.pinned != null && ev.href) line.append(h(doc, "a", { href: ev.href }, strings.open));
+        return line;
+      }
+      /**
+       * Beside the crosshair, on whichever side has room, never past the chart's edge; docked, in the corner away from it; a pin
+       * outside the window at the edge it left by.
+       * @param {number} t @param {boolean} outside @param {PlotGeometry} geo
+       */
+      placeTip(t, outside, geo) {
+        const { tip } = this.ui;
+        const room = this.host.clientWidth || geo.W;
+        const w = Math.min(tip.offsetWidth || TIP_WIDTH, room);
+        const px5 = outside ? t < geo.from ? 0 : room : geo.x(t);
+        const left = outside ? t < geo.from ? 0 : room - w : px5 + TIP_GAP + w > room ? px5 - w - TIP_GAP : px5 + TIP_GAP;
+        tip.style.setProperty("--kp-chart-tip-x", `${Math.max(0, Math.min(room - w, left))}px`);
+        tip.setAttribute("data-kp-side", px5 > room / 2 ? "start" : "end");
+      }
+      /** Say what is under the crosshair (keys and pins only: a pointer would talk too much). */
+      announce() {
+        const { strings, time, fmt } = this;
+        const t = this.pinned ?? this.cursor;
+        if (t == null) return;
+        const outside = this.geo != null && (t < this.geo.from || t > this.geo.to);
+        const said = this.rowsAt(t, outside).map(
+          (r) => `${r.label} ${fmt(r.v, "readout")}, ${r.d > 0 ? strings.up : r.d < 0 ? strings.down : strings.same}${r.d ? ` ${fmt(Math.abs(r.d), "readout")}` : ""}`
+        );
+        const near2 = this.eventsNear(t).map((ev) => `${ev.label} ${time(ev.at, "clock", {})}`);
+        for (const m of this.medians) near2.push(`${this.medianWords(this.option())} ${fmt(m.v, "readout")}`);
+        const head = `${time(t, "full", {})}${this.pinned == null ? "" : outside ? ` ${strings.pinnedOutside}` : ` (${strings.pinned})`}`;
+        this.ui.readout.textContent = [head, ...said, ...near2].join("; ");
+      }
+    };
+  }
+});
+
+// js/chart/plot/draw.js
+var PlotDraw;
+var init_draw3 = __esm({
+  "js/chart/plot/draw.js"() {
+    "use strict";
+    init_dom2();
+    init_constants9();
+    init_state_plate();
+    init_attach4();
+    init_drawing2();
+    init_tip();
+    PlotDraw = class extends PlotTip {
+      draw() {
+        const { host, data, ui } = this;
+        const H = chartHeight(host, data);
+        this.drawnWindow = "";
+        this.drawnFor = this.drawnKey();
+        const loading = host.hasAttribute("data-kp-chart-loading");
+        ui.plot.setAttribute("aria-busy", String(loading));
+        if (loading) {
+          this.skeletonLegend();
+          return this.drawState("loading", H);
+        }
+        if (this.skeleton) this.buildLegend();
+        ui.legend.hidden = data.series.length <= 1;
+        if (data.error) return this.drawState("error", H);
+        const win = this.range();
+        if (!win || this.points.every((p) => p.length === 0)) return this.drawState("empty", H);
+        if (this.held) {
+          this.behind = true;
+          if (!this.geo && this.shown === "") this.drawState("loading", H);
+          return;
+        }
+        this.drawWindow(win, H);
+      }
+      /**
+       * The plot at its height with no lines: loading (a pulse), empty or an error (a sentence), so the card keeps its place in every
+       * state.
+       * @param {'loading' | 'empty' | 'error'} kind
+       * @param {number} H
+       */
+      drawState(kind, H) {
+        const { host, ui, doc, strings } = this;
+        this.geo = null;
+        host.setAttribute("data-kp-state", kind);
+        if (this.keyMemo) ui.annKey.setAttribute("data-kp-wait", "");
+        else ui.annKey.hidden = true;
+        ui.tip.hidden = true;
+        ui.note.hidden = true;
+        ui.hint.hidden = true;
+        const box = h(doc, "div", {
+          class: kind === "loading" ? "kp-chart__state kp-skeleton kp-skeleton--block" : "kp-chart__state",
+          "data-kp-state": kind
+        });
+        box.style.boxSizing = "border-box";
+        box.style.blockSize = `${H}px`;
+        const words3 = kind === "loading" ? strings.loading : kind === "error" ? this.data.error ?? "" : strings.empty;
+        if (kind === "loading") box.append(h(doc, "span", { class: "kp-sr-only" }, words3));
+        else if (kind === "error") box.append(this.failedPlate(words3));
+        else box.append(h(doc, "div", { class: "kp-chart__state-text" }, words3));
+        ui.plot.replaceChildren(box);
+        if (this.showsNew(`${kind} ${words3}`) && kind !== "loading") ui.readout.textContent = `${this.label()}: ${words3}`;
+      }
+      /**
+       * The failed plate is the package's own (`statePlate`: the destructive alert every other failed area uses, so each register
+       * dresses it): what failed, and a normal Retry under it (`kp-chart-retry`). The button goes with the state, so the focus moves to
+       * the plot first, as a card's Try again hands it to its stage.
+       * @param {string} words
+       */
+      failedPlate(words3) {
+        return statePlate(this.doc, {
+          kind: "error",
+          title: words3,
+          actionLabel: this.strings.retry,
+          onAction: () => {
+            this.ui.plot.focus({ preventScroll: true });
+            this.host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
+          }
+        });
+      }
+      /** Draw the window with its readings, then the key, the plot's name, and the legend and tooltip (or the too-few plate). @param {ChartWindow} win @param {number} H */
+      drawWindow(win, H) {
+        const { host, ui, data, strings } = this;
+        this.behind = false;
+        this.shown = "";
+        host.setAttribute("data-kp-state", "ready");
+        ui.hint.hidden = data.series.length <= 1;
+        this.drawnWindow = `${win.from} ${win.to}`;
+        const drawing2 = new PlotDrawing(this, win, H);
+        drawing2.build();
+        this.medians = drawing2.medians;
+        ui.plot.replaceChildren(drawing2.svg);
+        keepEndsInside(drawing2.axisLabels, drawing2.W);
+        this.geo = drawing2.geometry();
+        const { opt: opt3 } = drawing2;
+        this.paintKey(opt3);
+        const aria = [strings.plot(this.label())];
+        for (const m of this.medians) aria.push(`${this.medianWords(opt3)} ${this.medians.length > 1 ? `${m.label} ` : ""}${this.fmt(m.v, "readout")}`);
+        if (drawing2.beforeCount) aria.push(strings.edgeBefore(drawing2.beforeCount));
+        if (drawing2.afterCount) aria.push(strings.edgeAfter(drawing2.afterCount));
+        ui.plot.setAttribute("aria-label", aria.join(", "));
+        if (drawing2.few) return this.drawFew(drawing2);
+        const withPoints = drawing2.vis.filter((si) => this.points[si].length > 0);
+        ui.note.hidden = !(data.onePointNote && withPoints.length > 0 && withPoints.every((si) => this.points[si].length === 1));
+        this.paintLegend();
+        this.paintTip();
+      }
+      /**
+       * Too early for a trend: the empty plot, faint, and the sentence on an opaque plate in the middle of its whole height. The plate
+       * stands on an opaque ground of the card's colour, so a theme that draws its empty plate as a see-through texture keeps that
+       * texture and still lets nothing of the plot show through (Kenny, 2026-10-18 17:45).
+       * @param {PlotDrawing} drawing
+       */
+      drawFew(drawing2) {
+        const { ui, doc, strings } = this;
+        const words3 = strings.few(drawing2.have, drawing2.opt.minPoints, drawing2.opt.minUnit || strings.fewUnit);
+        drawing2.svg.setAttribute("data-kp-faint", "");
+        this.geo = null;
+        ui.tip.hidden = true;
+        ui.hint.hidden = true;
+        ui.note.hidden = true;
+        const plate2 = h(doc, "p", { class: "kp-empty kp-chart__few-plate", role: "status" }, words3);
+        ui.plot.append(h(doc, "div", { class: "kp-chart__few" }, h(doc, "div", { class: "kp-chart__few-ground" }, plate2)));
+        if (this.showsNew(`few ${words3}`)) ui.readout.textContent = `${this.label()}: ${words3}`;
+        this.paintLegend();
+      }
+    };
+  }
+});
+
+// js/chart/plot/pointer.js
+var BRUSH_MIN_PX, PIN_REACH_PX, KEY_BIG_STEP, PlotPointer;
+var init_pointer2 = __esm({
+  "js/chart/plot/pointer.js"() {
+    "use strict";
+    init_selection();
+    init_draw3();
+    BRUSH_MIN_PX = 6;
+    PIN_REACH_PX = 4;
+    KEY_BIG_STEP = 10;
+    PlotPointer = class extends PlotDraw {
+      /** The plot's pointer, keyboard and focus listeners. */
+      wirePointer() {
+        const { plot } = this.ui;
+        const as = (handler) => (
+          /** @type {EventListener} */
+          handler
+        );
+        const onPointer = as((e) => this.onPointer(e));
+        this.listen(plot, "pointerdown", as((e) => this.onDown(e)));
+        this.listen(plot, "pointerenter", onPointer);
+        this.listen(plot, "pointermove", onPointer);
+        this.listen(plot, "pointerup", as((e) => this.onUp(e)));
+        this.listen(plot, "pointercancel", () => {
+          this.brush = null;
+          this.draw();
+        });
+        this.listen(plot, "pointerleave", () => {
+          if (!this.brush && this.group.owner === this.state) this.group.cursor(null, this.state);
+        });
+        this.listen(plot, "dblclick", () => this.group.setZoom(null));
+        this.listen(plot, "keydown", as((e) => this.onKey(e)));
+        this.listen(plot, "focus", () => this.onFocus());
+        this.listen(plot, "blur", as((e) => this.onBlur(e)));
+      }
+      /** The time under the pointer, on the last drawing. @param {PointerEvent} e */
+      timeAt(e) {
+        if (!this.geo) return null;
+        return this.geo.inv(e.clientX - this.geo.svg.getBoundingClientRect().left);
+      }
+      /** A press on an event's mark pins it; anywhere else it starts a brush. @param {PointerEvent} e */
+      onDown(e) {
+        if (!this.geo || e.button !== 0) return;
+        const mark = (
+          /** @type {Element} */
+          e.target.closest?.(".kp-chart__mark")
+        );
+        if (mark) {
+          this.pinned = Number(mark.getAttribute("data-at"));
+          this.group.cursor(this.pinned, this.state);
+          this.announce();
+          return;
+        }
+        const left = e.clientX - this.geo.svg.getBoundingClientRect().left;
+        this.brush = { x0: left, x1: left };
+        this.ui.plot.setPointerCapture?.(e.pointerId);
+      }
+      /** @param {PointerEvent} e */
+      onPointer(e) {
+        const { geo } = this;
+        if (!geo) return;
+        if (this.brush) {
+          this.brush.x1 = Math.max(geo.P.l, Math.min(geo.W - geo.P.r, e.clientX - geo.svg.getBoundingClientRect().left));
+          this.draw();
+          return;
+        }
+        const mark = (
+          /** @type {Element} */
+          e.target.closest?.(".kp-chart__mark")
+        );
+        const t = mark ? Number(mark.getAttribute("data-at")) : this.timeAt(e);
+        if (t == null || t < geo.from || t > geo.to) return;
+        this.group.cursor(t, this.state);
+      }
+      /** A drag zooms to its span; a click pins the time under it, or takes the pin near it away. @param {PointerEvent} e */
+      onUp(e) {
+        const { geo } = this;
+        if (!this.brush || !geo) return;
+        const b = this.brush;
+        this.brush = null;
+        if (Math.abs(b.x1 - b.x0) > BRUSH_MIN_PX) {
+          this.pinned = null;
+          this.group.setZoom({ from: geo.inv(Math.min(b.x0, b.x1)), to: geo.inv(Math.max(b.x0, b.x1)) });
+          return;
+        }
+        const t = this.timeAt(e);
+        if (t == null) return;
+        this.pinned = this.pinned != null && Math.abs(geo.x(this.pinned) - geo.x(t)) < PIN_REACH_PX ? null : t;
+        this.draw();
+        this.announce();
+      }
+      /** Arrows, Home and End walk the readings; Enter pins; Escape lets go of the pin, the selection, then the zoom. @param {KeyboardEvent} e */
+      onKey(e) {
+        const si = this.visible().find((i) => this.points[i].length > 0);
+        const pts = si == null ? null : this.points[si];
+        if (!pts) return;
+        if (e.key === "Enter") return this.keyPin(e, pts);
+        if (e.key === "Escape") return this.keyLetGo(e);
+        let k = indexAt(pts, this.pinned ?? this.cursor ?? pts[pts.length - 1][0]);
+        const step = e.shiftKey ? KEY_BIG_STEP : 1;
+        if (e.key === "ArrowLeft") k -= step;
+        else if (e.key === "ArrowRight") k += step;
+        else if (e.key === "Home") k = 0;
+        else if (e.key === "End") k = pts.length - 1;
+        else return;
+        e.preventDefault();
+        this.keyMove(pts, k);
+      }
+      /** Pin or unpin; nothing under the crosshair yet pins the newest point. @param {KeyboardEvent} e @param {ChartPoint[]} pts */
+      keyPin(e, pts) {
+        e.preventDefault();
+        const k = indexAt(pts, this.pinned ?? this.cursor ?? pts[pts.length - 1][0]);
+        const at = this.cursor ?? pts[k][0];
+        this.pinned = this.pinned != null ? null : at;
+        this.group.cursor(at, this.state);
+        this.announce();
+      }
+      /** @param {KeyboardEvent} e */
+      keyLetGo(e) {
+        e.stopPropagation();
+        if (this.pinned != null) this.pinned = null;
+        else if (this.sel.size) this.setSel(/* @__PURE__ */ new Set());
+        else if (this.group.zoom) this.group.setZoom(null);
+        this.draw();
+      }
+      /** Move the crosshair to reading `k`, within the window on view (a zoom keeps the crosshair inside it). @param {ChartPoint[]} pts @param {number} k */
+      keyMove(pts, k) {
+        const win = this.range();
+        k = Math.max(0, Math.min(pts.length - 1, k));
+        if (win) {
+          while (k > 0 && pts[k][0] > win.to) k--;
+          while (k < pts.length - 1 && pts[k][0] < win.from) k++;
+        }
+        const t = pts[k][0];
+        if (this.pinned != null) this.pinned = t;
+        this.group.cursor(t, this.state);
+        this.announce();
+      }
+      onFocus() {
+        if (this.cursor != null || !this.ui.plot.matches(":focus-visible")) return;
+        const win = this.range();
+        if (win) this.group.cursor(win.to, this.state);
+        this.announce();
+      }
+      /** Into the pinned tooltip (its ✕, an event's link) the reading stays. @param {FocusEvent} e */
+      onBlur(e) {
+        if (this.pinned == null && this.group.owner === this.state && !this.ui.tip.contains(
+          /** @type {Node | null} */
+          e.relatedTarget
+        )) this.group.cursor(null, this.state);
+      }
+    };
+  }
+});
+
+// js/chart/plot/controller.js
+var PlotChart;
+var init_controller9 = __esm({
+  "js/chart/plot/controller.js"() {
+    "use strict";
+    init_selection();
+    init_pointer2();
+    PlotChart = class extends PlotPointer {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.state = this.makeState();
+      }
+      connect() {
+        const { host, group, ui } = this;
+        host.classList.add("kp-chart");
+        host.append(...ui.parts);
+        this.own(() => {
+          for (const part7 of ui.parts) part7.remove();
+          host.classList.remove("kp-chart");
+        });
+        this.wireLegend();
+        this.wirePointer();
+        this.own(() => {
+          if (group.owner === this.state) group.owner = null;
+        });
+        this.watchAttributes();
+        if (this.data.key != null) host.setAttribute("data-kp-key", this.data.key);
+        this.points = this.data.series.map(pointsOf);
+        this.buildLegend();
+        this.decorateOwn();
+      }
+      /**
+       * A page that sets or clears `data-kp-chart-loading` itself (the feed removes `data-kp-chart-loading` just before it draws,
+       * which this watch need not draw again).
+       */
+      watchAttributes() {
+        const { host } = this;
+        const watch2 = this.observe(
+          new (this.doc.defaultView ?? globalThis).MutationObserver(() => {
+            const asked = `${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
+            if (!this.drawnFor.endsWith(asked)) this.draw();
+          })
+        );
+        watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-chart-loading", "data-kp-chart-sources"] });
+      }
+      /** @param {ChartData} next */
+      setData(next2) {
+        const { host, data, ui, strings } = this;
+        const sameSources = next2.series.length === data.series.length && next2.series.every((sr, i) => sr.label === data.series[i].label);
+        const keyBefore = this.key();
+        this.data = next2;
+        if (next2.key != null) host.setAttribute("data-kp-key", next2.key);
+        this.points = next2.series.map(pointsOf);
+        if (!sameSources) {
+          const had = this.clearSelection();
+          this.hot = null;
+          this.buildLegend();
+          if (had) this.setSel(this.sel);
+        } else {
+          ui.legend.setAttribute("aria-label", strings.sources(this.label()));
+          ui.plot.setAttribute("aria-label", strings.plot(this.label()));
+        }
+        if (this.key() !== keyBefore) this.decorateOwn();
+        this.draw();
+        for (const c of this.group.charts) if (c !== this.state && (!c.stale || c.stale())) c.draw();
+      }
+      /** Whether the last drawing no longer fits the group's window (a neighbour's new data moved it). */
+      stale() {
+        if (!this.drawnWindow) return false;
+        const win = this.range();
+        return !win || `${win.from} ${win.to}` !== this.drawnWindow;
+      }
+      /** The newest reading's time over every source, or null without readings. */
+      lastTime() {
+        const last = this.points.map((p) => p[p.length - 1]?.[0] ?? -Infinity);
+        const max = Math.max(-Infinity, ...last);
+        return Number.isFinite(max) ? max : null;
+      }
+      /** What attachCharts() keeps for this chart and its group holds. @returns {ChartState} */
+      makeState() {
+        return {
+          host: this.host,
+          spark: false,
+          group: this.group,
+          draw: () => this.draw(),
+          view: (inView) => {
+            this.held = !inView;
+            if (inView && this.behind) this.draw();
+          },
+          resize: () => {
+            if (this.drawnKey() !== this.drawnFor) this.draw();
+          },
+          stale: () => this.stale(),
+          setData: (next2) => this.setData(next2),
+          select: (i, on) => {
+            const next2 = nextSelection(this.sel, i, this.data.series.length, on);
+            if (!next2) return false;
+            this.setSel(next2);
+            this.draw();
+            return true;
+          },
+          cursorAt: (t, own) => {
+            this.cursor = t;
+            if (!own && t == null) this.hot = null;
+            this.draw();
+          },
+          lastTime: () => this.lastTime(),
+          destroy: () => this.destroy(),
+          unobserve: () => {
+          }
+        };
+      }
+    };
+  }
+});
+
+// js/chart/plot.js
+function plotChart(host, group, locale, ctx) {
+  return startChart(new PlotChart(host, { group, locale, ctx }));
+}
+function startChart(chart) {
+  try {
+    chart.connect();
+  } catch (error) {
+    chart.destroy();
+    throw error;
+  }
+  return chart.state;
+}
+var init_plot = __esm({
+  "js/chart/plot.js"() {
+    "use strict";
+    init_controller9();
+  }
+});
+
+// js/chart/trend-view.js
+var TrendView;
+var init_trend_view = __esm({
+  "js/chart/trend-view.js"() {
+    "use strict";
+    init_controller();
     init_kpi();
     init_state_plate();
     init_busy_card();
@@ -19688,129 +20839,510 @@ var init_trend = __esm({
     init_spark2();
     init_selection();
     init_constants9();
+    TrendView = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        const { group, locale, ctx } = (
+          /** @type {TrendSettings} */
+          /** @type {unknown} */
+          options
+        );
+        this.group = group;
+        this.ctx = ctx;
+        this.doc = host.ownerDocument;
+        this.data = DATA.get(host) ?? dataInMarkup(host);
+        this.pts = [];
+        this.fmt = valueFormat(locale, ctx, () => this.data ?? { series: [] });
+        this.at = null;
+        this.index = null;
+        this.busy = null;
+        this.plate = null;
+        this.leaving = false;
+        this.first = true;
+        this.link = null;
+        const { doc } = this;
+        this.svg = /** @type {SVGSVGElement} */
+        /** @type {unknown} */
+        s(doc, "svg", { class: "kp-kpi__spark" });
+        this.cross = h(doc, "span", { class: "kp-kpi__chart-cross" });
+        this.cross.hidden = true;
+        this.chip = h(doc, "span", { class: "kp-kpi__chart-chip", "aria-hidden": "true" });
+        this.chip.hidden = true;
+        this.plot = h(doc, "span", { class: "kp-kpi__chart-plot", role: "application" }, this.svg, this.cross, this.chip);
+        this.keys = h(doc, "span", { class: "kp-sr-only", id: `kp-trend-keys-${chartState.clipIds += 1}` }, ctx.strings.trendKeys);
+        this.plot.setAttribute("aria-describedby", this.keys.id);
+        this.axis = trendAxisRow(host);
+        this.live = h(doc, "span", { class: "kp-sr-only", "aria-live": "polite" });
+        this.parts = [this.plot, ...this.axis ? [this.axis.row] : [], this.keys, this.live];
+      }
+      loading() {
+        return this.data == null || this.host.hasAttribute("data-kp-chart-loading");
+      }
+      /** @returns {'loading' | 'error' | 'empty' | 'ready'} */
+      kind() {
+        const { data } = this;
+        if (this.loading()) return "loading";
+        if (data?.error) return "error";
+        return (data?.series[0] ? pointsOf(data.series[0]).length : 0) === 0 ? "empty" : "ready";
+      }
+      /** Stop reading: the crosshair and the chip go, and the axis row shows its ends again. */
+      hide() {
+        const { axis } = this;
+        this.at = null;
+        this.index = null;
+        this.cross.hidden = true;
+        this.chip.hidden = true;
+        if (axis) {
+          axis.read.hidden = true;
+          axis.from.hidden = false;
+          axis.to.hidden = false;
+        }
+      }
+      /**
+       * Read point `k`: the crosshair, and the chip with its moment and value over the line, inside the trend.
+       * @param {number} k
+       * @param {boolean} [announce] say it to a screen reader (keys only)
+       */
+      show(k, announce4 = false) {
+        const { pts, plot, cross, ctx } = this;
+        if (pts.length < 2) return;
+        const i = Math.max(0, Math.min(pts.length - 1, k));
+        const [ms, value] = pts[i];
+        this.at = ms;
+        this.index = i;
+        const width = plot.clientWidth;
+        const x = i / (pts.length - 1) * width;
+        const moment = ctx.time(ms, "full", {});
+        cross.style.insetInlineStart = `${x}px`;
+        cross.hidden = false;
+        this.placeChip(moment, this.fmt(value, "spark"), x, width);
+        if (announce4) this.live.textContent = `${moment} \xB7 ${this.fmt(value, "readout")}`;
+      }
+      /**
+       * The chip over the line, kept inside the trend; the value under the moment when the two do not fit on one line, and in the
+       * axis row when even that does not fit.
+       * @param {string} moment @param {string} shown @param {number} x @param {number} width
+       */
+      placeChip(moment, shown5, x, width) {
+        const { chip, axis, doc } = this;
+        const words3 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown5)];
+        chip.replaceChildren(...words3());
+        chip.hidden = false;
+        chip.removeAttribute("data-kp-stacked");
+        let chipWidth = chip.offsetWidth;
+        if (chipWidth > width) {
+          chip.setAttribute("data-kp-stacked", "");
+          chipWidth = chip.offsetWidth;
+        }
+        const toAxis = chipWidth > width && axis != null;
+        if (!toAxis) chip.style.insetInlineStart = `${Math.max(0, Math.min(width - chipWidth, x - chipWidth / 2))}px`;
+        chip.hidden = toAxis;
+        if (axis) {
+          axis.read.replaceChildren(...toAxis ? words3() : []);
+          axis.read.hidden = !toAxis;
+          axis.from.hidden = toAxis;
+          axis.to.hidden = toAxis;
+        }
+      }
+      /** The state plate, or nothing: the plot and the axis give way to it while it stands. @param {'empty' | 'error' | null} k */
+      setPlate(k) {
+        const { data, ctx, host } = this;
+        this.plate?.remove();
+        this.plate = null;
+        this.plot.hidden = k !== null;
+        if (this.axis) this.axis.row.hidden = k !== null;
+        if (k === null) return;
+        const plate2 = hostStatePlate(host, {
+          kind: k,
+          title: k === "error" ? data?.error ?? ctx.strings.trendFailed : ctx.strings.empty,
+          ...k === "error" && data?.errorText ? { text: data.errorText } : {},
+          art: data?.art,
+          retryEvent: CHART_RETRY_EVENT,
+          retryLabel: ctx.strings.retry
+        });
+        plate2.addEventListener(
+          "click",
+          (event) => {
+            if (event.target instanceof Element && event.target.closest("button")) this.link?.focus({ preventScroll: true });
+          },
+          true
+        );
+        this.plate = plate2;
+        host.append(plate2);
+      }
+      /** The busy card while loading: placed again, opened, or taken away once the data is in. @param {string} k */
+      syncBusy(k) {
+        if (k === "loading") {
+          if (this.busy && !this.leaving) this.busy.place();
+          else if (!this.busy) this.busy = openBusyCard(this.host, { words: this.ctx.strings.loading, area: () => [this.plot], className: "kp-kpi__busy", arrive: !this.first });
+        } else if (this.busy && !this.leaving) {
+          this.busy.remove();
+          this.busy = null;
+        }
+        this.first = false;
+      }
+      draw() {
+        const { host, plot, axis } = this;
+        const series = this.data?.series[0];
+        const k = this.kind();
+        host.setAttribute("data-kp-state", k);
+        this.setPlate(k === "empty" || k === "error" ? k : null);
+        this.syncBusy(k);
+        this.pts = k === "ready" && series ? pointsOf(series) : [];
+        const { pts } = this;
+        plot.setAttribute("aria-label", this.data?.label ?? host.getAttribute("aria-label") ?? series?.label ?? "");
+        drawSparkline(
+          this.svg,
+          pts.map((p) => p[1])
+        );
+        if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, this.ctx);
+        const usable = pts.length >= 2;
+        if (usable) plot.tabIndex = 0;
+        else plot.removeAttribute("tabindex");
+        const tile = host.closest(".kp-kpi");
+        if (this.loading()) tile?.setAttribute("aria-busy", "true");
+        else tile?.removeAttribute("aria-busy");
+        if (!usable) this.hide();
+        else if (this.at != null) this.show(indexAt(pts, this.at));
+      }
+      /** @param {ChartData} next */
+      setData(next2) {
+        this.data = next2;
+        if (next2.key != null) this.host.setAttribute("data-kp-key", next2.key);
+        if (this.busy && !this.leaving && this.kind() !== "loading") {
+          const card = this.busy;
+          this.busy = null;
+          this.leaving = true;
+          void card.close().then(() => {
+            this.leaving = false;
+            if (!this.destroyed) this.draw();
+          });
+          return;
+        }
+        if (!this.leaving) this.draw();
+      }
+    };
+  }
+});
+
+// js/chart/trend-control.js
+var DRAG_PX, KEY_BIG_STEP2, TrendChart;
+var init_trend_control = __esm({
+  "js/chart/trend-control.js"() {
+    "use strict";
+    init_dom2();
+    init_trend_view();
+    DRAG_PX = 6;
+    KEY_BIG_STEP2 = 10;
+    TrendChart = class extends TrendView {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.press = null;
+        this.state = this.makeState();
+      }
+      connect() {
+        const { host, data, plot } = this;
+        host.append(...this.parts);
+        this.own(() => {
+          for (const part7 of this.parts) part7.remove();
+          this.plate?.remove();
+          this.busy?.remove();
+          host.removeAttribute("data-kp-state");
+          host.closest(".kp-kpi")?.removeAttribute("aria-busy");
+        });
+        if (data?.key != null) host.setAttribute("data-kp-key", data.key);
+        decorateWith(this.ctx.decorate, plot, { kind: "plot", host, key: data?.key ?? host.getAttribute("data-kp-key") ?? void 0 });
+        this.link = /** @type {HTMLElement | null} */
+        host.closest(".kp-kpi")?.querySelector(".kp-kpi__link") ?? null;
+        this.listen(plot, "pointerdown", (event) => this.onDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(plot, "pointermove", (event) => this.onMove(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(plot, "pointerleave", (event) => {
+          if (
+            /** @type {PointerEvent} */
+            event.pointerType === "mouse"
+          ) this.hide();
+        });
+        this.listen(plot, "pointercancel", () => {
+          this.press = null;
+          this.hide();
+        });
+        this.listen(plot, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(plot, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(plot, "blur", () => this.hide());
+      }
+      /** @param {number} clientX */
+      indexAtX(clientX) {
+        const box = this.plot.getBoundingClientRect();
+        return Math.round((clientX - box.left) / Math.max(1, box.width) * (this.pts.length - 1));
+      }
+      /** @param {PointerEvent} event */
+      onDown(event) {
+        const press2 = { x: event.clientX, moved: false, touch: event.pointerType !== "mouse" };
+        this.press = press2;
+        if (!press2.touch) return;
+        try {
+          this.plot.setPointerCapture(event.pointerId);
+        } catch {
+        }
+        this.show(this.indexAtX(event.clientX));
+      }
+      /** @param {PointerEvent} event */
+      onMove(event) {
+        const { press: press2 } = this;
+        if (press2 && Math.abs(event.clientX - press2.x) > DRAG_PX) press2.moved = true;
+        if (event.pointerType === "mouse" || press2) this.show(this.indexAtX(event.clientX));
+      }
+      /** A click without a drag follows the tile's link, as a click anywhere else on the tile does; a drag only read the trend. @param {MouseEvent} event */
+      onClick(event) {
+        const dragged = this.press?.moved ?? false;
+        this.press = null;
+        if (!dragged && this.link && event.button === 0) this.link.click();
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const n = this.pts.length;
+        if (n < 2) return;
+        const shown5 = !this.cross.hidden;
+        const from = this.index ?? n - 1;
+        const step = event.shiftKey ? KEY_BIG_STEP2 : 1;
+        let to = null;
+        if (event.key === "ArrowLeft") to = shown5 ? from - step : n - 1;
+        else if (event.key === "ArrowRight") to = shown5 ? from + step : n - 1;
+        else if (event.key === "Home") to = 0;
+        else if (event.key === "End") to = n - 1;
+        else if (event.key === "Escape" && shown5) {
+          event.preventDefault();
+          event.stopPropagation();
+          this.hide();
+          return;
+        }
+        if (to == null) return;
+        event.preventDefault();
+        this.show(to, true);
+      }
+      /** @returns {ChartState} */
+      makeState() {
+        return {
+          host: this.host,
+          spark: true,
+          group: this.group,
+          draw: () => this.draw(),
+          setData: (next2) => this.setData(next2),
+          select: () => false,
+          // The trend reads on its own crosshair, not the group's.
+          cursorAt: () => {
+          },
+          lastTime: () => this.pts[this.pts.length - 1]?.[0] ?? null,
+          destroy: () => this.destroy(),
+          unobserve: () => {
+          }
+        };
+      }
+    };
+  }
+});
+
+// js/chart/trend.js
+function trendChart(host, group, locale, ctx) {
+  return startChart(new TrendChart(host, { group, locale, ctx }));
+}
+var init_trend = __esm({
+  "js/chart/trend.js"() {
+    "use strict";
+    init_plot();
+    init_trend_control();
+  }
+});
+
+// js/chart/spark-control.js
+var SPARK_WIDTH, SPARK_HEIGHT, KEY_BIG_STEP3, SparkChart;
+var init_spark_control = __esm({
+  "js/chart/spark-control.js"() {
+    "use strict";
+    init_controller();
+    init_kpi();
+    init_api3();
+    init_dom2();
+    init_attach4();
+    init_selection();
+    init_spark2();
+    SPARK_WIDTH = 100;
+    SPARK_HEIGHT = 28;
+    KEY_BIG_STEP3 = 10;
+    SparkChart = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        const { group, locale, ctx } = (
+          /** @type {SparkSettings} */
+          /** @type {unknown} */
+          options
+        );
+        this.group = group;
+        this.ctx = ctx;
+        this.doc = host.ownerDocument;
+        this.data = DATA.get(host) ?? dataInMarkup(host) ?? { series: [] };
+        this.pts = [];
+        this.fmt = valueFormat(locale, ctx, () => this.data);
+        this.cursor = null;
+        const { doc } = this;
+        this.name = h(doc, "span", { class: "kp-chart__spark-label" });
+        this.value = h(doc, "b", { class: "kp-chart__spark-value kp-chart__num" });
+        this.svg = /** @type {SVGSVGElement} */
+        /** @type {unknown} */
+        s(doc, "svg", { class: "kp-chart__spark" });
+        this.plot = h(doc, "div", { class: "kp-chart__plot kp-chart__spark-plot", tabindex: "0", role: "application" });
+        this.plot.append(this.svg);
+        this.readout = h(doc, "p", { class: "kp-chart__readout kp-sr-only", "aria-live": "polite" });
+        this.axis = trendAxisRow(host);
+        const head = h(doc, "p", { class: "kp-chart__spark-head" }, this.name, this.value);
+        this.parts = [head, this.plot, ...this.axis ? [this.axis.row] : [], this.readout];
+        this.state = this.makeState();
+      }
+      connect() {
+        const { host, group, data, plot } = this;
+        host.classList.add("kp-chart", "kp-chart--spark");
+        host.append(...this.parts);
+        this.own(() => {
+          for (const part7 of this.parts) part7.remove();
+          host.classList.remove("kp-chart", "kp-chart--spark");
+        });
+        if (data.key != null) host.setAttribute("data-kp-key", data.key);
+        decorateWith(this.ctx.decorate, plot, { kind: "plot", host, key: data.key ?? host.getAttribute("data-kp-key") ?? void 0 });
+        const leave2 = () => {
+          if (group.owner === this.state) group.cursor(null, this.state);
+        };
+        this.listen(plot, "pointermove", (e) => this.onMove(
+          /** @type {PointerEvent} */
+          e
+        ));
+        this.listen(plot, "pointerleave", leave2);
+        this.listen(plot, "keydown", (e) => this.onKey(
+          /** @type {KeyboardEvent} */
+          e
+        ));
+        this.listen(plot, "blur", leave2);
+        this.own(() => {
+          if (group.owner === this.state) group.owner = null;
+        });
+        this.pts = data.series[0] ? pointsOf(data.series[0]) : [];
+      }
+      label() {
+        return this.data.label ?? this.data.series[0]?.label ?? this.host.getAttribute("aria-label") ?? "";
+      }
+      draw() {
+        const { pts, svg: svg2, value, axis, cursor, ctx } = this;
+        const series = this.data.series[0];
+        this.name.textContent = this.label();
+        if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, ctx);
+        this.plot.setAttribute("aria-label", ctx.strings.spark(this.label()));
+        if (!series || pts.length < 2) {
+          svg2.replaceChildren();
+          value.textContent = "";
+          return;
+        }
+        drawSparkline(
+          svg2,
+          pts.map((p) => p[1]),
+          { parts: "kp-chart__spark" }
+        );
+        paintSeries(svg2, series, 0);
+        const on = cursor != null && cursor >= pts[0][0] && cursor <= pts[pts.length - 1][0];
+        if (!on) {
+          value.textContent = `${ctx.strings.now} \xB7 ${this.fmt(pts[pts.length - 1][1], "spark")}`;
+          return;
+        }
+        const k = indexAt(
+          pts,
+          /** @type {number} */
+          cursor
+        );
+        const cx = k / (pts.length - 1) * SPARK_WIDTH;
+        svg2.append(s(this.doc, "line", { class: "kp-chart__crosshair", x1: cx, x2: cx, y1: 0, y2: SPARK_HEIGHT, "vector-effect": "non-scaling-stroke" }));
+        value.textContent = `${ctx.time(pts[k][0], "clock", {})} \xB7 ${this.fmt(pts[k][1], "spark")}`;
+      }
+      /** @param {number} t */
+      say(t) {
+        const k = indexAt(this.pts, t);
+        this.readout.textContent = `${this.label()}: ${this.ctx.time(this.pts[k][0], "full", {})}, ${this.fmt(this.pts[k][1], "readout")}`;
+      }
+      /** @param {PointerEvent} e */
+      onMove(e) {
+        const { pts } = this;
+        if (pts.length < 2) return;
+        const r = this.svg.getBoundingClientRect();
+        const k = Math.round((e.clientX - r.left) / Math.max(1, r.width) * (pts.length - 1));
+        this.group.cursor(pts[Math.max(0, Math.min(pts.length - 1, k))][0], this.state);
+      }
+      /** Arrows, Home and End walk the readings on the group's crosshair; Escape lets go of it. @param {KeyboardEvent} e */
+      onKey(e) {
+        const { pts, cursor, group } = this;
+        if (pts.length < 2) return;
+        let k = cursor == null ? pts.length - 1 : indexAt(pts, cursor);
+        const step = e.shiftKey ? KEY_BIG_STEP3 : 1;
+        if (e.key === "ArrowLeft") k -= step;
+        else if (e.key === "ArrowRight") k += step;
+        else if (e.key === "Home") k = 0;
+        else if (e.key === "End") k = pts.length - 1;
+        else if (e.key === "Escape") {
+          if (cursor == null) return;
+          e.stopPropagation();
+          group.cursor(null, this.state);
+          return;
+        } else return;
+        e.preventDefault();
+        k = Math.max(0, Math.min(pts.length - 1, k));
+        group.cursor(pts[k][0], this.state);
+        this.say(pts[k][0]);
+      }
+      /** @param {ChartData} next */
+      setData(next2) {
+        this.data = next2;
+        if (next2.key != null) this.host.setAttribute("data-kp-key", next2.key);
+        this.pts = next2.series[0] ? pointsOf(next2.series[0]) : [];
+        this.draw();
+      }
+      /** @returns {ChartState} */
+      makeState() {
+        return {
+          host: this.host,
+          spark: true,
+          group: this.group,
+          draw: () => this.draw(),
+          setData: (next2) => this.setData(next2),
+          select: () => false,
+          cursorAt: (t) => {
+            this.cursor = t;
+            this.draw();
+          },
+          lastTime: () => this.pts[this.pts.length - 1]?.[0] ?? null,
+          destroy: () => this.destroy(),
+          unobserve: () => {
+          }
+        };
+      }
+    };
   }
 });
 
 // js/chart/spark.js
 function sparkChart(host, group, locale, ctx) {
   if (host.dataset.kpSparkHead === "none") return trendChart(host, group, locale, ctx);
-  const doc = host.ownerDocument;
-  const { strings, time, decorate: decorate2 } = ctx;
-  let data = DATA.get(host) ?? dataInMarkup(host) ?? { series: [] };
-  let pts = [];
-  const fmt = valueFormat(locale, ctx, () => data);
-  let cursor = null;
-  const label2 = () => data.label ?? data.series[0]?.label ?? host.getAttribute("aria-label") ?? "";
-  host.classList.add("kp-chart", "kp-chart--spark");
-  const name = h(doc, "span", { class: "kp-chart__spark-label" });
-  const value = h(doc, "b", { class: "kp-chart__spark-value kp-chart__num" });
-  const head = h(doc, "p", { class: "kp-chart__spark-head" }, name, value);
-  const svg2 = (
-    /** @type {SVGSVGElement} */
-    /** @type {unknown} */
-    s(doc, "svg", { class: "kp-chart__spark" })
-  );
-  const plot = h(doc, "div", { class: "kp-chart__plot kp-chart__spark-plot", tabindex: "0", role: "application" });
-  plot.append(svg2);
-  const readout = h(doc, "p", { class: "kp-chart__readout kp-sr-only", "aria-live": "polite" });
-  const axis = trendAxisRow(host);
-  const parts2 = [head, plot, ...axis ? [axis.row] : [], readout];
-  host.append(...parts2);
-  if (data.key != null) host.setAttribute("data-kp-key", data.key);
-  decorateWith(decorate2, plot, { kind: "plot", host, key: data.key ?? host.getAttribute("data-kp-key") ?? void 0 });
-  function draw6() {
-    const series = data.series[0];
-    name.textContent = label2();
-    if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, ctx);
-    plot.setAttribute("aria-label", strings.spark(label2()));
-    if (!series || pts.length < 2) {
-      svg2.replaceChildren();
-      value.textContent = "";
-      return;
-    }
-    drawSparkline(
-      svg2,
-      pts.map((p) => p[1]),
-      { parts: "kp-chart__spark" }
-    );
-    paintSeries(svg2, series, 0);
-    const first = pts[0][0];
-    const last = pts[pts.length - 1][0];
-    const on = cursor != null && cursor >= first && cursor <= last;
-    if (on) {
-      const k = indexAt(
-        pts,
-        /** @type {number} */
-        cursor
-      );
-      const cx = k / (pts.length - 1) * 100;
-      svg2.append(s(doc, "line", { class: "kp-chart__crosshair", x1: cx, x2: cx, y1: 0, y2: 28, "vector-effect": "non-scaling-stroke" }));
-      value.textContent = `${time(pts[k][0], "clock", {})} \xB7 ${fmt(pts[k][1], "spark")}`;
-    } else value.textContent = `${strings.now} \xB7 ${fmt(pts[pts.length - 1][1], "spark")}`;
-  }
-  const say17 = (t) => {
-    const k = indexAt(pts, t);
-    readout.textContent = `${label2()}: ${time(pts[k][0], "full", {})}, ${fmt(pts[k][1], "readout")}`;
-  };
-  plot.addEventListener("pointermove", (e) => {
-    if (pts.length < 2) return;
-    const r = svg2.getBoundingClientRect();
-    const k = Math.round((e.clientX - r.left) / Math.max(1, r.width) * (pts.length - 1));
-    group.cursor(pts[Math.max(0, Math.min(pts.length - 1, k))][0], state12);
-  });
-  plot.addEventListener("pointerleave", () => {
-    if (group.owner === state12) group.cursor(null, state12);
-  });
-  plot.addEventListener("keydown", (e) => {
-    if (pts.length < 2) return;
-    let k = cursor == null ? pts.length - 1 : indexAt(pts, cursor);
-    const step = e.shiftKey ? 10 : 1;
-    if (e.key === "ArrowLeft") k -= step;
-    else if (e.key === "ArrowRight") k += step;
-    else if (e.key === "Home") k = 0;
-    else if (e.key === "End") k = pts.length - 1;
-    else if (e.key === "Escape") {
-      if (cursor == null) return;
-      e.stopPropagation();
-      group.cursor(null, state12);
-      return;
-    } else return;
-    e.preventDefault();
-    k = Math.max(0, Math.min(pts.length - 1, k));
-    group.cursor(pts[k][0], state12);
-    say17(pts[k][0]);
-  });
-  plot.addEventListener("blur", () => {
-    if (group.owner === state12) group.cursor(null, state12);
-  });
-  const setData = (next2) => {
-    data = next2;
-    if (data.key != null) host.setAttribute("data-kp-key", data.key);
-    pts = data.series[0] ? pointsOf(data.series[0]) : [];
-    draw6();
-  };
-  pts = data.series[0] ? pointsOf(data.series[0]) : [];
-  const state12 = {
-    host,
-    spark: true,
-    group,
-    draw: draw6,
-    setData,
-    select: () => false,
-    cursorAt: (t) => {
-      cursor = t;
-      draw6();
-    },
-    lastTime: () => pts[pts.length - 1]?.[0] ?? null,
-    destroy: () => {
-      if (group.owner === state12) group.owner = null;
-      for (const part7 of parts2) part7.remove();
-      host.classList.remove("kp-chart", "kp-chart--spark");
-    },
-    unobserve: () => {
-    }
-  };
-  return state12;
+  return startChart(new SparkChart(host, { group, locale, ctx }));
 }
 function trendAxisRow(host) {
   if (host.dataset.kpSparkAxis !== "relative") return null;
@@ -19830,1162 +21362,11 @@ function trendWords(pts, series, ctx) {
 var init_spark2 = __esm({
   "js/chart/spark.js"() {
     "use strict";
-    init_kpi();
     init_trend();
-    init_api3();
     init_dom2();
-    init_attach4();
-    init_selection();
     init_time();
-  }
-});
-
-// js/chart/plot/setup.js
-function installSetup(c) {
-  const { ctx, host, locale } = c;
-  const doc = host.ownerDocument;
-  c.doc = doc;
-  const { strings, time, decorate: decorate2 } = ctx;
-  c.strings = strings;
-  c.time = time;
-  c.decorate = decorate2;
-  c.data = DATA.get(host) ?? dataInMarkup(host) ?? { series: [] };
-  c.points = [];
-  const fmt = valueFormat(locale, ctx, () => c.data);
-  c.fmt = fmt;
-  c.sel = /* @__PURE__ */ new Set();
-  c.hot = null;
-  c.pinned = null;
-  c.cursor = null;
-  c.brush = null;
-  const clip = `kp-chart-clip-${++chartState.clipIds}`;
-  c.clip = clip;
-  const label2 = () => c.data.label ?? host.getAttribute("aria-label") ?? "";
-  c.label = label2;
-  const key = () => c.data.key ?? host.getAttribute("data-kp-key") ?? void 0;
-  c.key = key;
-  c.axisMemo = { key: "", axis: { stride: 0, ticks: (
-    /** @type {number[]} */
-    []
-  ) } };
-  c.shown = "";
-  c.drawnWindow = "";
-  c.drawnFor = "";
-  c.held = false;
-  c.behind = false;
-  const drawnKey = () => `${plot.clientWidth} ${chartHeight(host, c.data)} ${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
-  c.drawnKey = drawnKey;
-  host.classList.add("kp-chart");
-  const plot = h(doc, "div", { class: "kp-chart__plot", tabindex: "0", role: "application" });
-  c.plot = plot;
-  const tipTime = h(doc, "b");
-  c.tipTime = tipTime;
-  const release2 = h(doc, "button", { type: "button", class: "kp-chart__release", "aria-label": strings.release, title: strings.release }, "\u2715");
-  c.release = release2;
-  const pinWord = h(doc, "span");
-  c.pinWord = pinWord;
-  const pin = h(doc, "span", { class: "kp-chart__pin" }, pinWord, release2);
-  c.pin = pin;
-  const tipRows = h(doc, "div", { class: "kp-chart__tip-rows" });
-  c.tipRows = tipRows;
-  const tipFoot = h(doc, "p", { class: "kp-chart__tip-foot" }, strings.change);
-  c.tipFoot = tipFoot;
-  const tipEvents = h(doc, "div", { class: "kp-chart__tip-events" });
-  c.tipEvents = tipEvents;
-  const tip = h(doc, "div", { class: "kp-chart__tip" }, h(doc, "p", { class: "kp-chart__tip-head" }, tipTime, pin), tipRows, tipFoot, tipEvents);
-  c.tip = tip;
-  tip.hidden = true;
-  const note2 = h(doc, "p", { class: "kp-chart__note" }, strings.onePoint);
-  c.note = note2;
-  note2.hidden = true;
-  const readout = h(doc, "p", { class: "kp-chart__readout kp-sr-only", "aria-live": "polite" });
-  c.readout = readout;
-  const legend = h(doc, "div", { class: "kp-chart__legend", role: "group" });
-  c.legend = legend;
-  const showAll2 = h(doc, "button", { type: "button", class: "kp-chart__show-all", title: strings.showAllTitle }, strings.showAll);
-  c.showAll = showAll2;
-  showAll2.hidden = true;
-  const hint = h(
-    doc,
-    "p",
-    { class: "kp-chart__hint" },
-    h(doc, "span", { "data-kp-when": "pointer" }, strings.hintPointer),
-    h(doc, "span", { "data-kp-when": "touch" }, strings.hintTouch)
-  );
-  c.hint = hint;
-  const annKey = h(doc, "div", { class: "kp-chart__annkey", role: "group" });
-  c.annKey = annKey;
-  annKey.hidden = true;
-  const kindsOff = /* @__PURE__ */ new Set();
-  c.kindsOff = kindsOff;
-  c.keyMemo = "";
-  c.medians = [];
-  const tipMedian = h(doc, "p", { class: "kp-chart__tip-median" });
-  c.tipMedian = tipMedian;
-  tipMedian.hidden = true;
-  tip.append(tipMedian);
-  const parts2 = [annKey, plot, tip, note2, readout, legend, hint];
-  c.parts = parts2;
-  host.append(...parts2);
-  c.items = [];
-  c.skeleton = false;
-  c.geo = null;
-}
-var init_setup = __esm({
-  "js/chart/plot/setup.js"() {
-    "use strict";
-    init_api3();
-    init_dom2();
-    init_attach4();
-    init_state5();
-  }
-});
-
-// js/chart/plot/readers.js
-function installReaders(c) {
-  const { decorate: decorate2, group, host, key, kindsOff, plot, release: release2, showAll: showAll2, strings } = c;
-  const visible3 = () => c.points.map((_, i) => i).filter((i) => c.sel.size === 0 || c.sel.has(i));
-  c.visible = visible3;
-  const range = () => {
-    if (group.zoom) return group.zoom;
-    const first = Math.min(...c.points.map((p) => p[0]?.[0] ?? Infinity));
-    const to = c.data.to ?? group.end() ?? Math.max(...c.points.map((p) => p[p.length - 1]?.[0] ?? -Infinity));
-    let from = c.data.from ?? (group.span != null ? to - group.span : first);
-    if (from === to && c.data.from == null) from = to - HOUR;
-    return Number.isFinite(from) && Number.isFinite(to) && to > from ? { from, to } : null;
-  };
-  c.range = range;
-  const setSel = (next2) => {
-    c.sel = next2;
-    host.dispatchEvent(new CustomEvent(CHART_SELECT_EVENT, { bubbles: true, detail: { on: [...c.sel].sort((a, b) => a - b) } }));
-  };
-  c.setSel = setSel;
-  const decorateOwn = () => {
-    decorateWith(decorate2, plot, { kind: "plot", host, key: key() });
-    decorateWith(decorate2, showAll2, { kind: "show-all", host, key: key() });
-    decorateWith(decorate2, release2, { kind: "release", host, key: key() });
-  };
-  c.decorateOwn = decorateOwn;
-  const toneOf4 = (ev) => ev.tone ?? (ev.kind ? c.data.kinds?.[ev.kind]?.tone : void 0) ?? "info";
-  c.toneOf = toneOf4;
-  const kindOf5 = (ev) => ev.kind ?? toneOf4(ev);
-  c.kindOf = kindOf5;
-  const kindWord = (kind) => c.data.kinds?.[kind]?.label ?? (kind === "info" || kind === "warning" || kind === "critical" ? strings.kindTone(kind) : kind);
-  c.kindWord = kindWord;
-  const shownEvents = () => (c.data.events ?? []).filter((ev) => !kindsOff.has(kindOf5(ev)));
-  c.shownEvents = shownEvents;
-  const option = () => {
-    const attr16 = (name) => host.getAttribute(`data-kp-chart-${name}`);
-    const medianAttr = attr16("median");
-    const median = c.data.median ?? (medianAttr !== null && medianAttr !== "off");
-    const min = Number(c.data.minPoints ?? attr16("min-points"));
-    return {
-      median: median !== false,
-      medianWords: typeof c.data.median === "string" ? c.data.median : attr16("median-label") ?? "",
-      runs: (c.data.runs ?? attr16("runs")) === "mark",
-      minPoints: Number.isFinite(min) && min > 0 ? Math.floor(min) : 0,
-      minUnit: c.data.minUnit ?? attr16("min-unit") ?? "",
-      key: c.data.annotationKey ?? attr16("annotation-key") !== "off",
-      band: (
-        /** @type {'tint' | 'hatch' | 'bracket'} */
-        (c.data.band ?? attr16("band")) === "hatch" ? "hatch" : (c.data.band ?? attr16("band")) === "bracket" ? "bracket" : "tint"
-      )
-    };
-  };
-  c.option = option;
-}
-var init_readers = __esm({
-  "js/chart/plot/readers.js"() {
-    "use strict";
-    init_time();
-    init_constants9();
-    init_dom2();
-  }
-});
-
-// js/chart/plot/legend.js
-function installLegend(c) {
-  const {
-    annKey,
-    decorate: decorate2,
-    doc,
-    fmt,
-    host,
-    key,
-    kindOf: kindOf5,
-    kindWord,
-    kindsOff,
-    label: label2,
-    legend,
-    option,
-    plot,
-    release: release2,
-    setSel,
-    showAll: showAll2,
-    strings,
-    toneOf: toneOf4
-  } = c;
-  c.paintKey = paintKey;
-  c.buildLegend = buildLegend;
-  c.skeletonLegend = skeletonLegend;
-  function paintKey(opt3) {
-    const all = c.data.events ?? [];
-    const kinds = /* @__PURE__ */ new Map();
-    for (const ev of all) {
-      const k = kindOf5(ev);
-      const was = kinds.get(k);
-      if (was) was.count += 1;
-      else kinds.set(k, { tone: toneOf4(ev), count: 1 });
-    }
-    const notes = [opt3.median && c.medians.length === 1 ? "median" : "", opt3.median && opt3.runs ? "runs" : ""].filter(Boolean);
-    const wanted = opt3.key && (kinds.size > 0 || notes.length > 0);
-    annKey.hidden = !wanted;
-    annKey.removeAttribute("data-kp-wait");
-    if (!wanted) {
-      c.keyMemo = "";
-      annKey.replaceChildren();
-      return;
-    }
-    annKey.setAttribute("aria-label", strings.keyLabel);
-    const signature2 = JSON.stringify([...kinds].map(([k, v]) => [k, v.tone, v.count, kindWord(k)]).concat(notes.map((n) => [n])));
-    if (signature2 !== c.keyMemo) {
-      c.keyMemo = signature2;
-      const focused2 = doc.activeElement instanceof HTMLElement && annKey.contains(doc.activeElement) ? doc.activeElement.getAttribute("data-kp-kind") : null;
-      const items = [...kinds].map(([k, v]) => {
-        const dot = h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": v.tone, "aria-hidden": "true" });
-        const button6 = h(
-          doc,
-          "button",
-          { type: "button", class: "kp-chart__annkey-item", "data-kp-kind": k, title: strings.kindOn(kindWord(k)) },
-          dot,
-          h(doc, "span", {}, kindWord(k)),
-          h(doc, "b", { class: "kp-chart__annkey-count" }, String(v.count))
-        );
-        button6.addEventListener("click", () => {
-          if (kindsOff.has(k)) kindsOff.delete(k);
-          else kindsOff.add(k);
-          host.dispatchEvent(new CustomEvent("kp-chart-kinds", { bubbles: true, detail: { off: [...kindsOff] } }));
-          c.draw();
-        });
-        return button6;
-      });
-      const extra = notes.map(
-        (n) => n === "median" ? h(
-          doc,
-          "span",
-          { class: "kp-chart__annkey-note", "data-kp-note": "median" },
-          h(doc, "i", { class: "kp-chart__annkey-line", "aria-hidden": "true" }),
-          h(doc, "span", { class: "kp-chart__annkey-median" })
-        ) : h(
-          doc,
-          "span",
-          { class: "kp-chart__annkey-note", "data-kp-note": "runs" },
-          h(doc, "i", { class: "kp-chart__annkey-ring", "aria-hidden": "true" }),
-          strings.runsKey
-        )
-      );
-      annKey.replaceChildren(...items, ...extra);
-      if (focused2) annKey.querySelector(`[data-kp-kind="${CSS.escape(focused2)}"]`)?.focus();
-    }
-    for (const button6 of annKey.querySelectorAll("[data-kp-kind]")) {
-      const off = kindsOff.has(button6.getAttribute("data-kp-kind") ?? "");
-      button6.setAttribute("aria-pressed", String(!off));
-      button6.toggleAttribute("data-kp-off", off);
-    }
-    const note2 = annKey.querySelector('[data-kp-note="median"]');
-    if (note2 && c.medians.length === 1) {
-      const m = c.medians[0];
-      const words3 = note2.querySelector(".kp-chart__annkey-median");
-      if (words3) words3.textContent = `${medianWords(opt3)} ${fmt(m.v, "tip")}`;
-    }
-  }
-  const medianWords = (opt3) => opt3.medianWords || strings.median;
-  c.medianWords = medianWords;
-  function buildLegend() {
-    c.skeleton = false;
-    legend.removeAttribute("aria-hidden");
-    legend.setAttribute("aria-label", strings.sources(label2()));
-    plot.setAttribute("aria-label", strings.plot(label2()));
-    c.items = c.data.series.map((series, i) => {
-      const swatch = h(doc, "i", { class: "kp-chart__swatch", "aria-hidden": "true" });
-      const value = h(doc, "b", { class: "kp-chart__value" });
-      const button6 = h(
-        doc,
-        "button",
-        { type: "button", class: "kp-chart__source", title: strings.source(series.label) },
-        swatch,
-        h(doc, "span", { class: "kp-chart__source-label" }, series.label),
-        value
-      );
-      paintSeries(button6, series, i);
-      const isolate = (v) => () => {
-        c.hot = v;
-        c.draw();
-      };
-      button6.addEventListener("pointerenter", isolate(i));
-      button6.addEventListener("pointerleave", isolate(null));
-      button6.addEventListener("focus", isolate(i));
-      button6.addEventListener("blur", isolate(null));
-      button6.addEventListener("click", () => {
-        setSel(toggleSource(c.sel, i, c.data.series.length));
-        c.draw();
-      });
-      decorateWith(decorate2, button6, { kind: "source", host, key: key(), index: i, label: series.label });
-      return { button: button6, value };
-    });
-    legend.replaceChildren(...c.items.map((it) => it.button), showAll2);
-  }
-  function skeletonLegend() {
-    const n = Number(host.getAttribute("data-kp-chart-sources"));
-    c.skeleton = true;
-    c.items = [];
-    legend.setAttribute("aria-hidden", "true");
-    legend.replaceChildren(
-      ...Array.from({ length: n > 1 ? Math.min(n, 50) : 0 }, () => {
-        const stub = h(doc, "span", { class: "kp-chart__source-stub kp-skeleton kp-skeleton--block" }, "\u2007".repeat(12));
-        stub.style.setProperty("--kp-skeleton-block", "auto");
-        return stub;
-      })
-    );
-    legend.hidden = !(n > 1);
-  }
-  showAll2.addEventListener("click", () => {
-    setSel(/* @__PURE__ */ new Set());
-    c.draw();
-  });
-  legend.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape" || c.sel.size === 0) return;
-    e.stopPropagation();
-    setSel(/* @__PURE__ */ new Set());
-    c.draw();
-  });
-  release2.addEventListener("click", () => {
-    c.pinned = null;
-    c.draw();
-    plot.focus();
-  });
-}
-var init_legend = __esm({
-  "js/chart/plot/legend.js"() {
-    "use strict";
-    init_dom2();
-    init_attach4();
-    init_selection();
-  }
-});
-
-// js/chart/plot/draw.js
-function installDraw(c) {
-  const {
-    annKey,
-    buildLegend,
-    clip,
-    ctx,
-    doc,
-    drawnKey,
-    fmt,
-    hint,
-    host,
-    label: label2,
-    legend,
-    medianWords,
-    note: note2,
-    option,
-    paintKey,
-    plot,
-    range,
-    readout,
-    shownEvents,
-    skeletonLegend,
-    strings,
-    time,
-    tip,
-    toneOf: toneOf4,
-    visible: visible3
-  } = c;
-  c.draw = draw6;
-  function drawState(kind, H) {
-    c.geo = null;
-    host.setAttribute("data-kp-state", kind);
-    if (c.keyMemo) annKey.setAttribute("data-kp-wait", "");
-    else annKey.hidden = true;
-    tip.hidden = true;
-    note2.hidden = true;
-    hint.hidden = true;
-    const box = h(doc, "div", {
-      class: kind === "loading" ? "kp-chart__state kp-skeleton kp-skeleton--block" : "kp-chart__state",
-      "data-kp-state": kind
-    });
-    box.style.boxSizing = "border-box";
-    box.style.blockSize = `${H}px`;
-    const words3 = kind === "loading" ? strings.loading : kind === "error" ? c.data.error ?? "" : strings.empty;
-    if (kind === "loading") box.append(h(doc, "span", { class: "kp-sr-only" }, words3));
-    else if (kind === "error") {
-      box.append(
-        statePlate(doc, {
-          kind: "error",
-          title: words3,
-          actionLabel: strings.retry,
-          onAction: () => {
-            plot.focus({ preventScroll: true });
-            host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
-          }
-        })
-      );
-    } else box.append(h(doc, "div", { class: "kp-chart__state-text" }, words3));
-    plot.replaceChildren(box);
-    if (c.shown !== `${kind} ${words3}`) {
-      c.shown = `${kind} ${words3}`;
-      if (kind !== "loading") readout.textContent = `${label2()}: ${words3}`;
-    }
-  }
-  function draw6() {
-    const H = chartHeight(host, c.data);
-    c.drawnWindow = "";
-    c.drawnFor = drawnKey();
-    const loading = host.hasAttribute("data-kp-chart-loading");
-    plot.setAttribute("aria-busy", String(loading));
-    if (loading) {
-      skeletonLegend();
-      drawState("loading", H);
-      return;
-    }
-    if (c.skeleton) buildLegend();
-    legend.hidden = c.data.series.length <= 1;
-    if (c.data.error) {
-      drawState("error", H);
-      return;
-    }
-    const win = range();
-    if (!win || c.points.every((p) => p.length === 0)) {
-      drawState("empty", H);
-      return;
-    }
-    if (c.held) {
-      c.behind = true;
-      if (!c.geo && c.shown === "") drawState("loading", H);
-      return;
-    }
-    c.behind = false;
-    c.shown = "";
-    host.setAttribute("data-kp-state", "ready");
-    hint.hidden = c.data.series.length <= 1;
-    const { from, to } = win;
-    c.drawnWindow = `${from} ${to}`;
-    const W = Math.max(240, plot.clientWidth);
-    const vis = visible3();
-    const stacked = c.data.stacked ?? false;
-    const kind = c.data.unitKind;
-    const thresholds = (Array.isArray(c.data.threshold) ? c.data.threshold : c.data.threshold != null ? [c.data.threshold] : []).filter(
-      Number.isFinite
-    );
-    const inR = (p) => p[0] >= from && p[0] <= to;
-    let hi = c.data.yMax ?? 0;
-    if (c.data.yMax == null) {
-      if (stacked) {
-        (c.points[0] ?? []).forEach((p, k) => {
-          if (inR(p))
-            hi = Math.max(
-              hi,
-              vis.reduce((sum, si) => sum + (c.points[si][k]?.[1] ?? 0), 0)
-            );
-        });
-      } else for (const si of vis) for (const p of c.points[si]) if (inR(p)) hi = Math.max(hi, p[1]);
-      for (const level of thresholds) hi = Math.max(hi, level * 1.08);
-      hi = niceMax(hi, kind);
-    }
-    const ticksY = [0, hi / 2, hi].map((v) => fmt(v, "axis"));
-    const P = { l: Math.max(30, Math.max(...ticksY.map((t2) => t2.length)) * 7 + 12), r: 10, t: 18, b: 22 };
-    const x = (t2) => P.l + (t2 - from) / (to - from) * (W - P.l - P.r);
-    const y = (v) => H - P.b - v / hi * (H - P.t - P.b);
-    const svg2 = (
-      /** @type {SVGSVGElement} */
-      s(doc, "svg", { viewBox: `0 0 ${W} ${H}`, height: H, "aria-hidden": "true" })
-    );
-    const defs = s(doc, "defs");
-    const cp = s(doc, "clipPath", { id: clip });
-    cp.append(s(doc, "rect", { x: P.l, y: 0, width: W - P.l - P.r, height: H }));
-    defs.append(cp);
-    svg2.append(defs);
-    [0, hi / 2, hi].forEach((v, k) => {
-      svg2.append(s(doc, "line", { class: "kp-chart__grid", x1: P.l, x2: W - P.r, y1: y(v), y2: y(v) }));
-      const tick6 = s(doc, "text", { class: "kp-chart__tick", x: P.l - 6, y: y(v) + 4, "text-anchor": "end" });
-      tick6.textContent = ticksY[k];
-      svg2.append(tick6);
-    });
-    const most = Math.max(2, Math.floor((W - P.l - P.r) / 70));
-    const axisKey = `${from} ${to} ${most} ${ctx.timeZone}`;
-    if (axisKey !== c.axisMemo.key) c.axisMemo = { key: axisKey, axis: timeTicks(from, to, most, ctx.timeZone) };
-    const { axis } = c.axisMemo;
-    const axisLabels = [];
-    for (const t2 of axis.ticks) {
-      const tick6 = (
-        /** @type {SVGTextElement} */
-        s(doc, "text", { class: "kp-chart__tick", x: x(t2), y: H - 6, "text-anchor": "middle" })
-      );
-      tick6.textContent = time(t2, "tick", { stride: axis.stride });
-      svg2.append(tick6);
-      axisLabels.push(tick6);
-    }
-    const g = s(doc, "g", { "clip-path": `url(#${clip})` });
-    svg2.append(g);
-    thresholds.forEach(
-      (level, k) => g.append(
-        s(doc, "line", {
-          class: k === 0 ? "kp-chart__threshold" : "kp-chart__threshold kp-chart__threshold--more",
-          x1: P.l,
-          x2: W - P.r,
-          y1: y(level),
-          y2: y(level)
-        })
-      )
-    );
-    const opt3 = option();
-    const hatches = /* @__PURE__ */ new Set();
-    const pool = shownEvents();
-    const events = pool.filter((ev) => ev.at <= to && (ev.until ?? ev.at) >= from);
-    const beforeCount = pool.filter((ev) => (ev.until ?? ev.at) < from).length;
-    const afterCount = pool.filter((ev) => ev.at > to).length;
-    for (const ev of events) {
-      if (ev.until != null && ev.until > ev.at) {
-        const x0 = x(Math.max(ev.at, from));
-        const x1 = x(Math.min(ev.until, to));
-        const tone = toneOf4(ev);
-        const band = s(doc, "g", { class: "kp-chart__band", "data-kp-tone": tone, "data-kp-band": opt3.band });
-        if (opt3.band === "bracket") {
-          band.append(s(doc, "line", { class: "kp-chart__band-bar", x1: x0, x2: x1, y1: P.t - 4, y2: P.t - 4 }));
-          if (ev.at >= from) band.append(s(doc, "line", { class: "kp-chart__band-edge", x1: x0, x2: x0, y1: P.t - 4, y2: P.t + 8 }));
-          if (ev.until <= to) band.append(s(doc, "line", { class: "kp-chart__band-edge", x1, x2: x1, y1: P.t - 4, y2: P.t + 8 }));
-        } else {
-          let fill3 = "";
-          if (opt3.band === "hatch") {
-            const id = `${clip}-hatch-${tone}`;
-            if (!hatches.has(id)) {
-              hatches.add(id);
-              const pattern = s(doc, "pattern", {
-                id,
-                width: 6,
-                height: 6,
-                patternUnits: "userSpaceOnUse",
-                patternTransform: "rotate(45)",
-                "data-kp-tone": tone
-              });
-              pattern.append(s(doc, "line", { class: "kp-chart__hatch", x1: 0, y1: 0, x2: 0, y2: 6 }));
-              defs.append(pattern);
-            }
-            fill3 = `url(#${id})`;
-          }
-          const rect = s(doc, "rect", {
-            class: "kp-chart__band-fill",
-            x: x0,
-            y: P.t - 4,
-            width: Math.max(1, x1 - x0),
-            height: H - P.b - P.t + 4
-          });
-          if (fill3) rect.setAttribute("fill", fill3);
-          band.append(rect);
-          if (ev.at >= from) band.append(s(doc, "line", { class: "kp-chart__band-edge", x1: x0, x2: x0, y1: P.t - 4, y2: H - P.b }));
-          if (ev.until <= to) band.append(s(doc, "line", { class: "kp-chart__band-edge", x1, x2: x1, y1: P.t - 4, y2: H - P.b }));
-        }
-        g.append(band);
-      } else g.append(s(doc, "line", { class: "kp-chart__event-line", x1: x(ev.at), x2: x(ev.at), y1: P.t - 4, y2: H - P.b }));
-    }
-    const have = Math.max(0, ...c.points.map((p) => p.length));
-    const few = opt3.minPoints > 0 && have < opt3.minPoints;
-    const base = (c.points[0] ?? []).map(() => 0);
-    const fill2 = vis.length <= 2 && !stacked;
-    c.data.series.forEach((series, si) => {
-      if (!vis.includes(si) || few) return;
-      const pts = c.points[si].map((p, k) => [x(p[0]), y(stacked ? (base[k] ?? 0) + p[1] : p[1])]);
-      if (pts.length === 0) return;
-      const d = pts.map((p, k) => `${k ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
-      const sg = s(doc, "g", { class: "kp-chart__series" });
-      paintSeries(sg, series, si);
-      if (c.hot != null) sg.setAttribute("data-kp-state", c.hot === si ? "hot" : "dim");
-      if (series.shape === "columns") {
-        const gap = pts.length > 1 ? Math.min(...pts.slice(1).map((p, k) => p[0] - pts[k][0])) : (W - P.l - P.r) / 12;
-        const width = Math.max(1.5, Math.min(48, gap * 0.76));
-        pts.forEach((p, k) => {
-          const bottom = y(stacked ? base[k] ?? 0 : 0);
-          sg.append(
-            s(doc, "rect", {
-              class: "kp-chart__column",
-              x: (p[0] - width / 2).toFixed(1),
-              y: Math.min(p[1], bottom).toFixed(1),
-              width: width.toFixed(1),
-              height: Math.max(0, bottom - p[1]).toFixed(1)
-            })
-          );
-        });
-        if (stacked) c.points[si].forEach((p, k) => base[k] = (base[k] ?? 0) + p[1]);
-        g.append(sg);
-        return;
-      }
-      if (stacked) {
-        const back = c.points[si].map((p, k) => [x(p[0]), y(base[k] ?? 0)]).reverse().map((p) => `L${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
-        sg.append(s(doc, "path", { class: "kp-chart__area kp-chart__area--stacked", d: `${d}${back}Z` }));
-        c.points[si].forEach((p, k) => base[k] = (base[k] ?? 0) + p[1]);
-      } else if (fill2) {
-        const last = pts[pts.length - 1];
-        sg.append(
-          s(doc, "path", {
-            class: vis.length === 1 ? "kp-chart__area kp-chart__area--alone" : "kp-chart__area",
-            d: `${d}L${last[0]},${y(0)}L${pts[0][0]},${y(0)}Z`
-          })
-        );
-      }
-      sg.append(s(doc, "path", { class: "kp-chart__line", d }));
-      g.append(sg);
-      if (pts.length === 1 && inR(c.points[si][0])) {
-        const dot = s(doc, "g", { class: "kp-chart__series" });
-        paintSeries(dot, series, si);
-        if (c.hot != null) dot.setAttribute("data-kp-state", c.hot === si ? "hot" : "dim");
-        dot.append(s(doc, "circle", { class: "kp-chart__point", cx: pts[0][0], cy: pts[0][1], r: 3.5 }));
-        svg2.append(dot);
-      }
-    });
-    c.medians = [];
-    if (opt3.median && !stacked && !few) {
-      for (const si of vis) {
-        const inside = c.points[si].filter(inR);
-        const m = chartMedian(inside.map((p) => p[1]));
-        if (m != null) c.medians.push({ si, label: c.data.series[si].label || label2(), v: m });
-      }
-      for (const m of c.medians) {
-        const sg = s(doc, "g", { class: "kp-chart__series kp-chart__median-series" });
-        paintSeries(sg, c.data.series[m.si], m.si);
-        sg.append(s(doc, "line", { class: "kp-chart__median", x1: P.l, x2: W - P.r, y1: y(m.v), y2: y(m.v) }));
-        g.append(sg);
-        if (opt3.runs) {
-          const inside = c.points[m.si].filter(inR);
-          const marked = chartRuns(
-            inside.map((p) => p[1]),
-            m.v
-          );
-          const proto = s(doc, "g", { class: "kp-chart__series kp-chart__run-series" });
-          paintSeries(proto, c.data.series[m.si], m.si);
-          proto.append(s(doc, "circle", { class: "kp-chart__run", cx: 0, cy: 0, r: 4.25 }));
-          const rings = doc.createDocumentFragment();
-          for (const i of marked) {
-            const ring = (
-              /** @type {SVGGElement} */
-              proto.cloneNode(true)
-            );
-            const circle = (
-              /** @type {SVGCircleElement} */
-              ring.firstChild
-            );
-            circle.setAttribute("cx", String(x(inside[i][0])));
-            circle.setAttribute("cy", String(y(inside[i][1])));
-            rings.append(ring);
-          }
-          g.append(rings);
-        }
-      }
-      if (c.medians.length === 1) {
-        const m = c.medians[0];
-        const up = y(m.v) - 6 < P.t + 8;
-        const text = s(doc, "text", {
-          class: "kp-chart__median-label",
-          x: W - P.r - 4,
-          y: up ? y(m.v) + 14 : y(m.v) - 6,
-          "text-anchor": "end"
-        });
-        text.textContent = `${medianWords(opt3)} ${fmt(m.v, "tip")}`;
-        svg2.append(text);
-      }
-    }
-    for (const ev of events) {
-      const at = Math.min(to, Math.max(from, ev.at));
-      const mark = s(doc, "g", { class: "kp-chart__mark", "data-kp-tone": toneOf4(ev), "data-at": at });
-      mark.append(s(doc, "circle", { class: "kp-chart__mark-hit", cx: x(at), cy: P.t - 9, r: 10 }));
-      mark.append(s(doc, "circle", { class: "kp-chart__mark-dot", cx: x(at), cy: P.t - 9, r: 5 }));
-      const title = s(doc, "title");
-      title.textContent = ev.until != null && ev.until > ev.at ? strings.markBand(ev.label, time(ev.at, "full", {}), time(ev.until, "full", {})) : strings.mark(ev.label, time(ev.at, "full", {}));
-      mark.append(title);
-      svg2.append(mark);
-    }
-    for (
-      const [count2, side] of
-      /** @type {const} */
-      [
-        [beforeCount, "start"],
-        [afterCount, "end"]
-      ]
-    ) {
-      if (count2 === 0) continue;
-      const edge = s(doc, "g", { class: "kp-chart__edge", "data-kp-side": side });
-      const text = s(doc, "text", {
-        class: "kp-chart__edge-text",
-        x: side === "start" ? P.l + 2 : W - P.r - 2,
-        y: P.t - 5,
-        "text-anchor": side === "start" ? "start" : "end"
-      });
-      text.textContent = side === "start" ? `\u25C2 ${count2}` : `${count2} \u25B8`;
-      const title = s(doc, "title");
-      title.textContent = side === "start" ? strings.edgeBefore(count2) : strings.edgeAfter(count2);
-      edge.append(title, text);
-      svg2.append(edge);
-    }
-    if (c.brush) {
-      svg2.append(
-        s(doc, "rect", {
-          class: "kp-chart__brush",
-          x: Math.min(c.brush.x0, c.brush.x1),
-          y: P.t,
-          width: Math.abs(c.brush.x1 - c.brush.x0),
-          height: H - P.t - P.b
-        })
-      );
-    }
-    const t = c.pinned ?? c.cursor;
-    if (t != null && t >= from && t <= to) {
-      svg2.append(
-        s(doc, "line", {
-          class: c.pinned != null ? "kp-chart__crosshair kp-chart__crosshair--pinned" : "kp-chart__crosshair",
-          x1: x(t),
-          x2: x(t),
-          y1: P.t,
-          y2: H - P.b
-        })
-      );
-      const acc = (c.points[0] ?? []).map(() => 0);
-      c.data.series.forEach((series, si) => {
-        if (!vis.includes(si) || c.points[si].length === 0) return;
-        const k = indexAt(c.points[si], t);
-        const v = c.points[si][k][1] + (stacked ? acc[k] ?? 0 : 0);
-        if (stacked) c.points[si].forEach((p, j) => acc[j] += p[1]);
-        const dot = s(doc, "circle", { class: "kp-chart__snap", cx: x(c.points[si][k][0]), cy: y(v), r: c.hot === si ? 4.5 : 3.5 });
-        paintSeries(dot, series, si);
-        svg2.append(dot);
-      });
-    }
-    plot.replaceChildren(svg2);
-    keepEndsInside(axisLabels, W);
-    c.geo = { x, inv: (px5) => from + (px5 - P.l) / (W - P.l - P.r) * (to - from), W, P, from, to, svg: svg2 };
-    paintKey(opt3);
-    const aria = [strings.plot(label2())];
-    for (const m of c.medians) aria.push(`${medianWords(opt3)} ${c.medians.length > 1 ? `${m.label} ` : ""}${fmt(m.v, "readout")}`);
-    if (beforeCount) aria.push(strings.edgeBefore(beforeCount));
-    if (afterCount) aria.push(strings.edgeAfter(afterCount));
-    plot.setAttribute("aria-label", aria.join(", "));
-    if (few) {
-      const words3 = strings.few(have, opt3.minPoints, opt3.minUnit || strings.fewUnit);
-      svg2.setAttribute("data-kp-faint", "");
-      c.geo = null;
-      tip.hidden = true;
-      hint.hidden = true;
-      note2.hidden = true;
-      const plate2 = h(
-        doc,
-        "div",
-        { class: "kp-chart__few" },
-        h(doc, "div", { class: "kp-chart__few-ground" }, h(doc, "p", { class: "kp-empty kp-chart__few-plate", role: "status" }, words3))
-      );
-      plot.append(plate2);
-      if (c.shown !== `few ${words3}`) {
-        c.shown = `few ${words3}`;
-        readout.textContent = `${label2()}: ${words3}`;
-      }
-      c.paintLegend();
-      return;
-    }
-    const withPoints = vis.filter((si) => c.points[si].length > 0);
-    note2.hidden = !(c.data.onePointNote && withPoints.length > 0 && withPoints.every((si) => c.points[si].length === 1));
-    c.paintLegend();
-    c.paintTip();
-  }
-}
-var init_draw3 = __esm({
-  "js/chart/plot/draw.js"() {
-    "use strict";
-    init_dom2();
-    init_constants9();
-    init_state_plate();
-    init_attach4();
-    init_format();
-    init_time();
-    init_stats();
-    init_selection();
-  }
-});
-
-// js/chart/plot/tip.js
-function installTip(c) {
-  const {
-    doc,
-    fmt,
-    group,
-    host,
-    label: label2,
-    locale,
-    medianWords,
-    option,
-    pin,
-    pinWord,
-    readout,
-    showAll: showAll2,
-    shownEvents,
-    strings,
-    time,
-    tip,
-    tipEvents,
-    tipFoot,
-    tipMedian,
-    tipRows,
-    tipTime,
-    toneOf: toneOf4,
-    visible: visible3
-  } = c;
-  c.paintLegend = paintLegend;
-  c.paintTip = paintTip;
-  c.announce = announce4;
-  function paintLegend() {
-    const t = c.pinned ?? c.cursor;
-    c.data.series.forEach((series, si) => {
-      const it = c.items[si];
-      if (!it) return;
-      const on = c.sel.size === 0 || c.sel.has(si);
-      const pts = c.points[si];
-      const v = pts.length === 0 ? null : t != null ? pts[indexAt(pts, t)][1] : pts[pts.length - 1][1];
-      it.button.setAttribute("aria-pressed", String(c.sel.has(si)));
-      it.button.toggleAttribute("data-kp-off", !on);
-      it.value.textContent = series.total != null && t == null ? series.total.toLocaleString(locale) : v == null ? "" : fmt(v, "legend");
-    });
-    showAll2.hidden = c.sel.size === 0;
-  }
-  const rowsAt = (t, strict = false) => visible3().filter((si) => {
-    const p = c.points[si];
-    return p.length > 0 && (!strict || t >= p[0][0] - HOUR && t <= p[p.length - 1][0] + HOUR);
-  }).map((si) => {
-    const k = indexAt(c.points[si], t);
-    return { si, label: c.data.series[si].label || label2(), v: c.points[si][k][1], d: hourChange(c.points[si], k) };
-  }).sort((a, b) => b.v - a.v);
-  const eventsNear = (t) => {
-    if (!c.geo) return [];
-    const reach3 = (c.geo.to - c.geo.from) / 30;
-    return shownEvents().filter(
-      (ev) => ev.until != null && ev.until > ev.at ? t >= ev.at - reach3 && t <= ev.until + reach3 : Math.abs(ev.at - t) < reach3
-    );
-  };
-  const change2 = (d) => d === 0 ? "\xB10" : `${d > 0 ? "\u25B2" : "\u25BC"} ${fmt(Math.abs(d), "delta")}`;
-  function paintTip() {
-    const t = c.pinned ?? (group.owner === c.state ? c.cursor : null);
-    if (t == null || !c.geo) {
-      tip.hidden = true;
-      return;
-    }
-    const outside = t < c.geo.from || t > c.geo.to;
-    if (outside && c.pinned == null) {
-      tip.hidden = true;
-      return;
-    }
-    tipTime.textContent = time(Math.round(t / MINUTE) * MINUTE, "full", {});
-    pin.hidden = c.pinned == null;
-    pinWord.textContent = outside ? strings.pinnedOutside : strings.pinned;
-    const rows = rowsAt(t, outside).map((r) => {
-      const swatch = h(doc, "i", { class: "kp-chart__swatch", "aria-hidden": "true" });
-      paintSeries(swatch, c.data.series[r.si], r.si);
-      const row2 = h(
-        doc,
-        "div",
-        { class: "kp-chart__tip-row" },
-        swatch,
-        h(doc, "span", {}, r.label),
-        h(doc, "span", { class: "kp-chart__num" }, fmt(r.v, "tip")),
-        h(
-          doc,
-          "span",
-          { class: "kp-chart__num kp-chart__delta", "data-kp-direction": r.d > 0 ? "up" : r.d < 0 ? "down" : null },
-          change2(r.d)
-        )
-      );
-      if (c.hot === r.si) row2.setAttribute("data-kp-state", "hot");
-      return row2;
-    });
-    tipRows.replaceChildren(...rows);
-    tipRows.hidden = rows.length === 0;
-    tipFoot.hidden = rows.length === 0;
-    tipEvents.replaceChildren(
-      ...eventsNear(t).map((ev) => {
-        const line = h(
-          doc,
-          "p",
-          { class: "kp-chart__tip-event" },
-          h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": toneOf4(ev), "aria-hidden": "true" }),
-          ev.until != null && ev.until > ev.at ? `${strings.bandWhen(time(ev.at, "clock", {}), time(ev.until, "clock", {}))} ${ev.label}` : `${time(ev.at, "clock", {})} ${ev.label}`
-        );
-        if (c.pinned != null && ev.href) line.append(h(doc, "a", { href: ev.href }, strings.open));
-        return line;
-      })
-    );
-    tipMedian.hidden = c.medians.length === 0;
-    if (c.medians.length)
-      tipMedian.textContent = c.medians.map((m) => `${c.medians.length > 1 ? `${m.label}: ` : ""}${medianWords(option())} ${fmt(m.v, "tip")}`).join("; ");
-    tip.hidden = false;
-    tip.toggleAttribute("data-kp-pinned", c.pinned != null);
-    tip.toggleAttribute("data-kp-outside", outside);
-    const room = host.clientWidth || c.geo.W;
-    const w = Math.min(tip.offsetWidth || 240, room);
-    const px5 = outside ? t < c.geo.from ? 0 : room : c.geo.x(t);
-    const left = outside ? t < c.geo.from ? 0 : room - w : px5 + 14 + w > room ? px5 - w - 14 : px5 + 14;
-    tip.style.setProperty("--kp-chart-tip-x", `${Math.max(0, Math.min(room - w, left))}px`);
-    tip.setAttribute("data-kp-side", px5 > room / 2 ? "start" : "end");
-  }
-  function announce4() {
-    const t = c.pinned ?? c.cursor;
-    if (t == null) return;
-    const outside = c.geo != null && (t < c.geo.from || t > c.geo.to);
-    const said = rowsAt(t, outside).map(
-      (r) => `${r.label} ${fmt(r.v, "readout")}, ${r.d > 0 ? strings.up : r.d < 0 ? strings.down : strings.same}${r.d ? ` ${fmt(Math.abs(r.d), "readout")}` : ""}`
-    );
-    const near2 = eventsNear(t).map((ev) => `${ev.label} ${time(ev.at, "clock", {})}`);
-    for (const m of c.medians) near2.push(`${medianWords(option())} ${fmt(m.v, "readout")}`);
-    const head = `${time(t, "full", {})}${c.pinned == null ? "" : outside ? ` ${strings.pinnedOutside}` : ` (${strings.pinned})`}`;
-    readout.textContent = [head, ...said, ...near2].join("; ");
-  }
-}
-var init_tip = __esm({
-  "js/chart/plot/tip.js"() {
-    "use strict";
-    init_selection();
-    init_time();
-    init_dom2();
-    init_attach4();
-  }
-});
-
-// js/chart/plot/pointer.js
-function installPointer(c) {
-  const { announce: announce4, draw: draw6, group, plot, range, setSel, tip, visible: visible3 } = c;
-  const timeAt = (e) => {
-    if (!c.geo) return null;
-    return c.geo.inv(e.clientX - c.geo.svg.getBoundingClientRect().left);
-  };
-  plot.addEventListener("pointerdown", (e) => {
-    if (!c.geo || e.button !== 0) return;
-    const mark = (
-      /** @type {Element} */
-      e.target.closest?.(".kp-chart__mark")
-    );
-    if (mark) {
-      c.pinned = Number(mark.getAttribute("data-at"));
-      group.cursor(c.pinned, c.state);
-      announce4();
-      return;
-    }
-    const left = e.clientX - c.geo.svg.getBoundingClientRect().left;
-    c.brush = { x0: left, x1: left };
-    plot.setPointerCapture?.(e.pointerId);
-  });
-  const onPointer = (e) => {
-    if (!c.geo) return;
-    if (c.brush) {
-      c.brush.x1 = Math.max(c.geo.P.l, Math.min(c.geo.W - c.geo.P.r, e.clientX - c.geo.svg.getBoundingClientRect().left));
-      draw6();
-      return;
-    }
-    const mark = (
-      /** @type {Element} */
-      e.target.closest?.(".kp-chart__mark")
-    );
-    const t = mark ? Number(mark.getAttribute("data-at")) : timeAt(e);
-    if (t == null || t < c.geo.from || t > c.geo.to) return;
-    group.cursor(t, c.state);
-  };
-  plot.addEventListener("pointerenter", onPointer);
-  plot.addEventListener("pointermove", onPointer);
-  plot.addEventListener("pointerup", (e) => {
-    if (!c.brush || !c.geo) return;
-    const b = c.brush;
-    c.brush = null;
-    if (Math.abs(b.x1 - b.x0) > 6) {
-      c.pinned = null;
-      group.setZoom({ from: c.geo.inv(Math.min(b.x0, b.x1)), to: c.geo.inv(Math.max(b.x0, b.x1)) });
-    } else {
-      const t = timeAt(e);
-      if (t == null) return;
-      c.pinned = c.pinned != null && Math.abs(c.geo.x(c.pinned) - c.geo.x(t)) < 4 ? null : t;
-      draw6();
-      announce4();
-    }
-  });
-  plot.addEventListener("pointercancel", () => {
-    c.brush = null;
-    draw6();
-  });
-  plot.addEventListener("pointerleave", () => {
-    if (!c.brush && group.owner === c.state) group.cursor(null, c.state);
-  });
-  plot.addEventListener("dblclick", () => group.setZoom(null));
-  plot.addEventListener("keydown", (e) => {
-    const si = visible3().find((i) => c.points[i].length > 0);
-    const pts = si == null ? null : c.points[si];
-    if (!pts) return;
-    let k = indexAt(pts, c.pinned ?? c.cursor ?? pts[pts.length - 1][0]);
-    const step = e.shiftKey ? 10 : 1;
-    if (e.key === "ArrowLeft") k -= step;
-    else if (e.key === "ArrowRight") k += step;
-    else if (e.key === "Home") k = 0;
-    else if (e.key === "End") k = pts.length - 1;
-    else if (e.key === "Enter") {
-      e.preventDefault();
-      const at = c.cursor ?? pts[k][0];
-      c.pinned = c.pinned != null ? null : at;
-      group.cursor(at, c.state);
-      announce4();
-      return;
-    } else if (e.key === "Escape") {
-      e.stopPropagation();
-      if (c.pinned != null) c.pinned = null;
-      else if (c.sel.size) setSel(/* @__PURE__ */ new Set());
-      else if (group.zoom) group.setZoom(null);
-      draw6();
-      return;
-    } else return;
-    e.preventDefault();
-    const win = range();
-    k = Math.max(0, Math.min(pts.length - 1, k));
-    if (win) {
-      while (k > 0 && pts[k][0] > win.to) k--;
-      while (k < pts.length - 1 && pts[k][0] < win.from) k++;
-    }
-    const t = pts[k][0];
-    if (c.pinned != null) c.pinned = t;
-    group.cursor(t, c.state);
-    announce4();
-  });
-  plot.addEventListener("focus", () => {
-    if (c.cursor != null || !plot.matches(":focus-visible")) return;
-    const win = range();
-    if (win) group.cursor(win.to, c.state);
-    announce4();
-  });
-  plot.addEventListener("blur", (e) => {
-    if (c.pinned == null && group.owner === c.state && !tip.contains(
-      /** @type {Node | null} */
-      e.relatedTarget
-    )) group.cursor(null, c.state);
-  });
-}
-var init_pointer2 = __esm({
-  "js/chart/plot/pointer.js"() {
-    "use strict";
-    init_selection();
-  }
-});
-
-// js/chart/plot/api.js
-function installApi(c) {
-  const { buildLegend, decorateOwn, doc, draw: draw6, drawnKey, group, host, key, label: label2, legend, parts: parts2, plot, range, setSel, strings } = c;
-  const watch2 = new (doc.defaultView ?? globalThis).MutationObserver(() => {
-    const asked = `${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
-    if (!c.drawnFor.endsWith(asked)) draw6();
-  });
-  watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-chart-loading", "data-kp-chart-sources"] });
-  const setData = (next2) => {
-    const sameSources = next2.series.length === c.data.series.length && next2.series.every((sr, i) => sr.label === c.data.series[i].label);
-    const keyBefore = key();
-    c.data = next2;
-    if (c.data.key != null) host.setAttribute("data-kp-key", c.data.key);
-    c.points = c.data.series.map(pointsOf);
-    if (!sameSources) {
-      const had = c.sel.size > 0;
-      c.sel = /* @__PURE__ */ new Set();
-      c.hot = null;
-      buildLegend();
-      if (had) setSel(c.sel);
-    } else {
-      legend.setAttribute("aria-label", strings.sources(label2()));
-      plot.setAttribute("aria-label", strings.plot(label2()));
-    }
-    if (key() !== keyBefore) decorateOwn();
-    draw6();
-    for (const c2 of group.charts) if (c2 !== state12 && (!c2.stale || c2.stale())) c2.draw();
-  };
-  if (c.data.key != null) host.setAttribute("data-kp-key", c.data.key);
-  c.points = c.data.series.map(pointsOf);
-  buildLegend();
-  decorateOwn();
-  const state12 = {
-    host,
-    spark: false,
-    group,
-    draw: draw6,
-    view: (inView) => {
-      c.held = !inView;
-      if (inView && c.behind) draw6();
-    },
-    resize: () => {
-      if (drawnKey() !== c.drawnFor) draw6();
-    },
-    stale: () => {
-      if (!c.drawnWindow) return false;
-      const win = range();
-      return !win || `${win.from} ${win.to}` !== c.drawnWindow;
-    },
-    setData,
-    select: (i, on) => {
-      const next2 = nextSelection(c.sel, i, c.data.series.length, on);
-      if (!next2) return false;
-      setSel(next2);
-      draw6();
-      return true;
-    },
-    cursorAt: (t, own) => {
-      c.cursor = t;
-      if (!own && t == null) c.hot = null;
-      draw6();
-    },
-    lastTime: () => {
-      const last = c.points.map((p) => p[p.length - 1]?.[0] ?? -Infinity);
-      const max = Math.max(-Infinity, ...last);
-      return Number.isFinite(max) ? max : null;
-    },
-    destroy: () => {
-      watch2.disconnect();
-      if (group.owner === state12) group.owner = null;
-      for (const part7 of parts2) part7.remove();
-      host.classList.remove("kp-chart");
-    },
-    unobserve: () => {
-    }
-  };
-  c.state = state12;
-}
-var init_api4 = __esm({
-  "js/chart/plot/api.js"() {
-    "use strict";
-    init_selection();
-  }
-});
-
-// js/chart/plot.js
-function plotChart(host, group, locale, ctx) {
-  const c = (
-    /** @type {PlotContext} */
-    /** @type {unknown} */
-    { host, ctx, locale, group }
-  );
-  installSetup(c);
-  installReaders(c);
-  installLegend(c);
-  installDraw(c);
-  installTip(c);
-  installPointer(c);
-  installApi(c);
-  return c.state;
-}
-var init_plot = __esm({
-  "js/chart/plot.js"() {
-    "use strict";
-    init_setup();
-    init_readers();
-    init_legend();
-    init_draw3();
-    init_tip();
-    init_pointer2();
-    init_api4();
+    init_plot();
+    init_spark_control();
   }
 });
 
@@ -21001,39 +21382,14 @@ function attachMatching(root, options, selector) {
   const view = doc.defaultView;
   if (!view) return () => {
   };
-  const timeZone = options.timeZone ?? CHART_TIME_ZONE;
-  const ctx = {
-    strings: chartWords(options.strings),
-    time: options.time ?? numericTime(timeZone),
-    timeZone,
-    format: options.format,
-    decorate: options.decorate,
-    now: options.now ?? (() => Date.now())
-  };
+  const ctx = chartContext(options);
   const touched = /* @__PURE__ */ new Set();
   const states2 = [];
-  const lazy = options.lazy ?? 12;
   const hosts = (
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(selector)].filter((host) => !CHARTS.has(host))
   );
-  const watching = lazy !== false && typeof view.IntersectionObserver === "function" && hosts.length >= (lazy === true ? 1 : lazy);
-  const seen = watching ? new view.IntersectionObserver(
-    (entries2) => {
-      for (const entry of entries2) CHARTS.get(
-        /** @type {HTMLElement} */
-        entry.target
-      )?.view?.(entry.isIntersecting);
-    },
-    { rootMargin: "200px 0px" }
-  ) : null;
-  const resize = new view.ResizeObserver((entries2) => {
-    for (const entry of entries2) {
-      const state12 = CHARTS.get(entry.target);
-      if (state12?.resize) state12.resize();
-      else state12?.draw();
-    }
-  });
+  const { seen, resize } = watchesFor(view, hosts.length, options.lazy ?? LAZY_FROM);
   for (const host of hosts) {
     if (CHARTS.has(host)) continue;
     const groupEl = (
@@ -21042,7 +21398,8 @@ function attachMatching(root, options, selector) {
     );
     const group = (groupEl ? GROUPS.get(groupEl) : LOOSE.get(doc)) ?? new ChartGroup(groupEl, doc, ctx);
     const locale = resolveLocale(options.locale, groupEl ?? host);
-    const state12 = host.dataset.kpChart === "spark" ? sparkChart(host, group, locale, ctx) : plotChart(host, group, locale, ctx);
+    const state12 = drawOne(host, group, locale, ctx);
+    if (!state12) continue;
     const hold = seen != null && state12.view != null && host.getAttribute("data-kp-chart-lazy") !== "off";
     if (hold) state12.view?.(false);
     state12.unobserve = () => {
@@ -21066,6 +21423,46 @@ function attachMatching(root, options, selector) {
     seen?.disconnect();
   };
 }
+function chartContext(options) {
+  const timeZone = options.timeZone ?? CHART_TIME_ZONE;
+  return {
+    strings: chartWords(options.strings),
+    time: options.time ?? numericTime(timeZone),
+    timeZone,
+    format: options.format,
+    decorate: options.decorate,
+    now: options.now ?? (() => Date.now())
+  };
+}
+function watchesFor(view, count2, lazy) {
+  const watching = lazy !== false && typeof view.IntersectionObserver === "function" && count2 >= (lazy === true ? 1 : lazy);
+  const seen = watching ? new view.IntersectionObserver(
+    (entries2) => {
+      for (const entry of entries2) CHARTS.get(
+        /** @type {HTMLElement} */
+        entry.target
+      )?.view?.(entry.isIntersecting);
+    },
+    { rootMargin: LAZY_MARGIN }
+  ) : null;
+  const resize = new view.ResizeObserver((entries2) => {
+    for (const entry of entries2) {
+      const state12 = CHARTS.get(entry.target);
+      if (state12?.resize) state12.resize();
+      else state12?.draw();
+    }
+  });
+  return { seen, resize };
+}
+function drawOne(host, group, locale, ctx) {
+  try {
+    return host.dataset.kpChart === "spark" ? sparkChart(host, group, locale, ctx) : plotChart(host, group, locale, ctx);
+  } catch (error) {
+    if (typeof globalThis.reportError === "function") globalThis.reportError(error);
+    else console.error(error);
+    return null;
+  }
+}
 function paintSeries(el16, series, i) {
   el16.setAttribute("data-kp-series", String(i % 5 + 1));
   const dash = dashOf(i);
@@ -21088,6 +21485,7 @@ function chartHeight(host, data) {
   const n = Number(m[1]);
   return m[2] === "rem" ? n * (parseFloat(view.getComputedStyle(host.ownerDocument.documentElement).fontSize) || 16) : n;
 }
+var LAZY_FROM, LAZY_MARGIN;
 var init_attach4 = __esm({
   "js/chart/attach.js"() {
     "use strict";
@@ -21101,6 +21499,8 @@ var init_attach4 = __esm({
     init_plot();
     init_stats();
     init_format();
+    LAZY_FROM = 12;
+    LAZY_MARGIN = "200px 0px";
   }
 });
 
@@ -21531,7 +21931,7 @@ var init_core3 = __esm({
 
 // js/nav-fold/controller.js
 var NavFold;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/nav-fold/controller.js"() {
     "use strict";
     init_menu_button();
@@ -21641,7 +22041,7 @@ var init_nav_fold = __esm({
   "js/nav-fold.js"() {
     "use strict";
     init_controller();
-    init_controller9();
+    init_controller10();
     init_read4();
     init_read4();
     init_plan();
@@ -21897,7 +22297,7 @@ var init_dialog = __esm({
 
 // js/tabbar/controller.js
 var TabbarController;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/tabbar/controller.js"() {
     "use strict";
     init_controller();
@@ -22021,7 +22421,7 @@ var init_tabbar = __esm({
   "js/tabbar.js"() {
     "use strict";
     init_controller();
-    init_controller10();
+    init_controller11();
     init_badge();
     init_badge();
     init_count3();
@@ -22271,7 +22671,7 @@ var init_sync2 = __esm({
 
 // js/card-state/controller.js
 var CardStateController;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/card-state/controller.js"() {
     "use strict";
     init_controller();
@@ -22319,7 +22719,7 @@ var init_card_state = __esm({
   "js/card-state.js"() {
     "use strict";
     init_controller();
-    init_controller11();
+    init_controller12();
     init_values15();
     init_values15();
     init_sync2();
@@ -24350,7 +24750,7 @@ var init_list = __esm({
 
 // js/statusrow/controller.js
 var CALM_OPTIONS, ROWS, StatusList;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/statusrow/controller.js"() {
     "use strict";
     init_controller();
@@ -24482,7 +24882,7 @@ var init_statusrow = __esm({
   "js/statusrow.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_state6();
     init_state6();
     init_list();
@@ -24714,7 +25114,7 @@ function setFacetItems(group, items) {
   if (!items.some((item) => item.count !== void 0)) group.removeAttribute("aria-busy");
   syncGroup(group);
 }
-var init_api5 = __esm({
+var init_api4 = __esm({
   "js/facets/api.js"() {
     "use strict";
     init_rows();
@@ -24733,12 +25133,12 @@ var init_values17 = __esm({
 
 // js/facets/controller.js
 var SAY_FIRST_MS, SAY_MS, FacetGroup;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/facets/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_api5();
+    init_api4();
     init_rows();
     init_values17();
     SAY_FIRST_MS = 100;
@@ -24824,11 +25224,11 @@ var init_facets = __esm({
   "js/facets.js"() {
     "use strict";
     init_controller();
-    init_controller13();
+    init_controller14();
     init_values17();
     init_values17();
     init_pattern();
-    init_api5();
+    init_api4();
   }
 });
 
@@ -26822,7 +27222,7 @@ var init_paint3 = __esm({
 
 // js/passkeys/controller.js
 var reasonOf2, PasskeysController;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/passkeys/controller.js"() {
     "use strict";
     init_controller();
@@ -27062,12 +27462,12 @@ function attachPasskeys(root = document) {
   return () => {
   };
 }
-var init_api6 = __esm({
+var init_api5 = __esm({
   "js/passkeys/api.js"() {
     "use strict";
     init_controller();
     init_constants11();
-    init_controller14();
+    init_controller15();
   }
 });
 
@@ -27091,7 +27491,7 @@ var init_passkeys = __esm({
     "use strict";
     init_constants11();
     init_options();
-    init_api6();
+    init_api5();
   }
 });
 
@@ -27597,7 +27997,7 @@ async function copyText2(button6, text) {
   }, COPIED_MS2);
 }
 var COPIED_MS2, ThreadControl;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/thread/controller.js"() {
     "use strict";
     init_strings();
@@ -27734,7 +28134,7 @@ var init_thread = __esm({
   "js/thread.js"() {
     "use strict";
     init_controller();
-    init_controller15();
+    init_controller16();
     init_options2();
     init_options2();
   }
@@ -28067,7 +28467,7 @@ var init_parts2 = __esm({
 
 // js/stackbar/controller.js
 var Stackbar;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/stackbar/controller.js"() {
     "use strict";
     init_hovercard();
@@ -28205,7 +28605,7 @@ var init_stackbar = __esm({
   "js/stackbar.js"() {
     "use strict";
     init_controller();
-    init_controller16();
+    init_controller17();
     init_values18();
     init_values18();
     init_math2();
@@ -28383,7 +28783,7 @@ var init_values19 = __esm({
 
 // js/bullets/controller.js
 var BulletList;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/bullets/controller.js"() {
     "use strict";
     init_controller();
@@ -28561,7 +28961,7 @@ var init_bullets = __esm({
   "js/bullets.js"() {
     "use strict";
     init_controller();
-    init_controller17();
+    init_controller18();
     init_values19();
     init_values19();
     init_tone();
@@ -29471,7 +29871,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -29614,7 +30014,7 @@ var init_attach6 = __esm({
     init_controller();
     init_locale();
     init_constants12();
-    init_controller18();
+    init_controller19();
   }
 });
 
@@ -29893,7 +30293,7 @@ var init_core6 = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys6();
@@ -30180,7 +30580,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller19();
+    init_controller20();
     init_rows2();
     init_rows2();
   }
@@ -30508,7 +30908,7 @@ var init_draw5 = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -30751,12 +31151,12 @@ function setSelectionRules(bar, rules) {
   draw3(bar, memory);
 }
 var memoryOf;
-var init_api7 = __esm({
+var init_api6 = __esm({
   "js/selection-bar/api.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_controller20();
+    init_controller21();
     init_draw5();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -30788,10 +31188,10 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller20();
+    init_controller21();
     init_model2();
     init_model2();
-    init_api7();
+    init_api6();
   }
 });
 
@@ -31100,7 +31500,7 @@ var init_rows3 = __esm({
 
 // js/newpill/controller.js
 var NewPill;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/newpill/controller.js"() {
     "use strict";
     init_live_options();
@@ -31264,7 +31664,7 @@ var init_newpill = __esm({
   "js/newpill.js"() {
     "use strict";
     init_controller();
-    init_controller21();
+    init_controller22();
     init_values20();
     init_values20();
   }
@@ -31381,7 +31781,7 @@ function buildFrame(doc, id, strings, { wrap, gutter: gutterOn }) {
   mirror.setAttribute("aria-hidden", "true");
   return { root, frame: frame3, gutter, numbers: numbers2, status, help, mirror, ...tools };
 }
-var init_frame = __esm({
+var init_frame2 = __esm({
   "js/json-field/frame.js"() {
     "use strict";
   }
@@ -32045,7 +32445,7 @@ function attachFormgridColumns(root = document) {
   };
 }
 var freshForm, freshButton, isHtml;
-var init_api8 = __esm({
+var init_api7 = __esm({
   "js/forms/api.js"() {
     "use strict";
     init_controller();
@@ -32108,7 +32508,7 @@ var init_forms = __esm({
     "use strict";
     init_constants14();
     init_errors();
-    init_api8();
+    init_api7();
     init_switches();
   }
 });
@@ -32189,14 +32589,14 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_constants13();
     init_explain();
-    init_frame();
+    init_frame2();
     init_keys7();
     init_layout();
     init_state9();
@@ -32426,12 +32826,12 @@ function jsonField(area) {
 function attachJsonFields(root = document, options = {}) {
   return attachAll(root, JSON_FIELD, JsonFieldController, options);
 }
-var init_api9 = __esm({
+var init_api8 = __esm({
   "js/json-field/api.js"() {
     "use strict";
     init_controller();
     init_constants13();
-    init_controller22();
+    init_controller23();
   }
 });
 
@@ -32453,7 +32853,7 @@ var init_json_field = __esm({
     "use strict";
     init_constants13();
     init_explain();
-    init_api9();
+    init_api8();
   }
 });
 
@@ -32899,7 +33299,7 @@ var init_list2 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -33018,13 +33418,13 @@ function setRequestsState(el16, state12, options = {}) {
   setCardState(el16, state12, state12 === "loading" ? { words: strings.reqLoading } : void 0);
 }
 var memoryOf2;
-var init_api10 = __esm({
+var init_api9 = __esm({
   "js/request-inspector/api.js"() {
     "use strict";
     init_card_state();
     init_controller();
     init_strings();
-    init_controller23();
+    init_controller24();
     init_format2();
     init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
@@ -33056,10 +33456,10 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller23();
+    init_controller24();
     init_format2();
     init_format2();
-    init_api10();
+    init_api9();
   }
 });
 
@@ -33801,7 +34201,7 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
@@ -33866,7 +34266,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller24();
+    init_controller25();
     init_state11();
     init_state11();
     init_spin();
@@ -34537,7 +34937,7 @@ function made2(doc, tag, className) {
   node.className = className;
   return node;
 }
-function buildParts2(doc) {
+function buildParts3(doc) {
   const title = made2(doc, "p", "kp-countdown__name");
   const time = made2(doc, "p", "kp-countdown__time");
   time.setAttribute("role", "timer");
@@ -34596,7 +34996,7 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
@@ -34621,7 +35021,7 @@ var init_controller25 = __esm({
         this.strings = getStrings();
         this.doc = host.ownerDocument;
         this.wallNow = options.wall ?? (() => Date.now());
-        this.parts = buildParts2(this.doc);
+        this.parts = buildParts3(this.doc);
         this.digits = new Digits(this.parts.digits);
         this.seconds = 0;
         this.step = COUNTDOWN_STEP;
@@ -34825,12 +35225,12 @@ var init_controller25 = __esm({
 
 // js/countdown/api.js
 var countdownOf, attachCountdowns;
-var init_api11 = __esm({
+var init_api10 = __esm({
   "js/countdown/api.js"() {
     "use strict";
     init_controller();
     init_constants16();
-    init_controller25();
+    init_controller26();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -34868,7 +35268,7 @@ var init_countdown2 = __esm({
     init_until();
     init_clock();
     init_parts4();
-    init_api11();
+    init_api10();
   }
 });
 
@@ -35680,7 +36080,7 @@ var init_flow = __esm({
     init_resume();
     init_tracks();
     init_track_nav();
-    init_api12();
+    init_api11();
   }
 });
 
@@ -36574,7 +36974,7 @@ var init_run2 = __esm({
 
 // js/timer/controller.js
 var TimerList, TimerStarters;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/timer/controller.js"() {
     "use strict";
     init_controller();
@@ -36698,7 +37098,7 @@ var init_attach7 = __esm({
     "use strict";
     init_controller();
     init_constants17();
-    init_controller26();
+    init_controller27();
   }
 });
 
@@ -36830,7 +37230,7 @@ function setFocusStepsState(root, kind, message) {
   paint4(root, false);
 }
 var getStepIndex, getSteps, typing;
-var init_api12 = __esm({
+var init_api11 = __esm({
   "js/focus-steps/api.js"() {
     "use strict";
     init_strings();
@@ -36927,7 +37327,7 @@ var init_input = __esm({
     init_flow();
     init_tracks();
     init_track_nav();
-    init_api12();
+    init_api11();
     SWIPE_SLOPE = 1.5;
     FocusStepsInput = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
@@ -37067,7 +37467,7 @@ var init_input = __esm({
 
 // js/focus-steps/controller.js
 var LANE_TICK_MS, TIMER_EVENTS, LIVE_OPTIONS, FocusStepsControl;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/focus-steps/controller.js"() {
     "use strict";
     init_strings();
@@ -37290,7 +37690,7 @@ var init_attach8 = __esm({
     "use strict";
     init_controller();
     init_constants15();
-    init_controller27();
+    init_controller28();
   }
 });
 
@@ -37322,7 +37722,7 @@ var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
     init_constants15();
-    init_api12();
+    init_api11();
     init_attach8();
   }
 });
@@ -37710,7 +38110,7 @@ function endUndo(list) {
     part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
 }
 var emit2;
-var init_api13 = __esm({
+var init_api12 = __esm({
   "js/checklist/api.js"() {
     "use strict";
     init_busy_card();
@@ -37724,12 +38124,12 @@ var init_api13 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_api13();
+    init_api12();
     init_parts5();
     init_render();
     init_rows4();
@@ -37871,10 +38271,10 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller28();
+    init_controller29();
     init_state14();
     init_state14();
-    init_api13();
+    init_api12();
   }
 });
 
@@ -38035,7 +38435,7 @@ var init_paint5 = __esm({
 
 // js/quantity/controller.js
 var RELEASE_EVENTS, QuantityControl;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
@@ -38198,7 +38598,7 @@ var init_quantity = __esm({
     "use strict";
     init_controller();
     init_values();
-    init_controller29();
+    init_controller30();
     init_math();
     init_paint5();
     init_values();
@@ -38319,7 +38719,7 @@ function watchToolbars(root) {
   return () => watch2.destroy();
 }
 var HANDLED3, toolbarOf, ToolbarWatch;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/toolbar/controller.js"() {
     "use strict";
     init_controller();
@@ -38436,7 +38836,7 @@ function attachToolbars(root = document) {
 var init_toolbar = __esm({
   "js/toolbar.js"() {
     "use strict";
-    init_controller30();
+    init_controller31();
     init_values22();
     init_active();
   }
@@ -38823,7 +39223,7 @@ var init_helpers2 = __esm({
 
 // js/sidenav/base.js
 var SidenavBase;
-var init_base2 = __esm({
+var init_base3 = __esm({
   "js/sidenav/base.js"() {
     "use strict";
     init_controller();
@@ -39005,7 +39405,7 @@ var init_shift = __esm({
     init_helpers2();
     init_options4();
     init_constants18();
-    init_base2();
+    init_base3();
     MOVED = /** @type {const} */
     ["marginInlineStart", "marginInlineEnd", "paddingInlineStart", "paddingInlineEnd"];
     INSTANT = { duration: "0s", ease: "linear", delay: "0s" };
@@ -40160,7 +40560,7 @@ var init_resizer = __esm({
 
 // js/sidenav/controller.js
 var SHIFT_KNOBS, ID_RADIX3, ID_FROM, ID_TO, SidenavControl;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/sidenav/controller.js"() {
     "use strict";
     init_constants18();
@@ -40381,7 +40781,7 @@ var init_attach9 = __esm({
     "use strict";
     init_controller();
     init_constants18();
-    init_controller31();
+    init_controller32();
   }
 });
 
@@ -40589,7 +40989,7 @@ var init_core8 = __esm({
 
 // js/listbox/controller.js
 var ListboxController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/listbox/controller.js"() {
     "use strict";
     init_core8();
@@ -40762,7 +41162,7 @@ function createListbox(options) {
 var init_listbox = __esm({
   "js/listbox.js"() {
     "use strict";
-    init_controller32();
+    init_controller33();
     init_scroll2();
     init_values9();
     init_match();
@@ -41122,7 +41522,7 @@ var init_tags = __esm({
 
 // js/combobox/controller.js
 var ComboboxControl;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/combobox/controller.js"() {
     "use strict";
     init_listbox();
@@ -41283,7 +41683,7 @@ var init_attach10 = __esm({
     "use strict";
     init_controller();
     init_constants8();
-    init_controller33();
+    init_controller34();
   }
 });
 
@@ -41938,7 +42338,7 @@ function palette(element) {
   return handles4.get(element) ?? null;
 }
 var handles4;
-var init_api14 = __esm({
+var init_api13 = __esm({
   "js/palette/api.js"() {
     "use strict";
     handles4 = /* @__PURE__ */ new WeakMap();
@@ -42440,7 +42840,7 @@ var init_palette_control = __esm({
     init_listbox();
     init_strings();
     init_live_options();
-    init_api14();
+    init_api13();
     init_constants19();
     init_intent_filter();
     init_keys8();
@@ -42650,7 +43050,7 @@ var init_sheet2 = __esm({
   "js/palette/sheet.js"() {
     "use strict";
     init_controller();
-    init_api14();
+    init_api13();
     init_constants19();
     init_keys8();
     init_outside();
@@ -42760,7 +43160,7 @@ var init_palette = __esm({
     init_constants19();
     init_keys8();
     init_outside();
-    init_api14();
+    init_api13();
     init_attach11();
   }
 });
@@ -44536,7 +44936,7 @@ function partsOf5(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -44721,7 +45121,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller34();
+    init_controller35();
   }
 });
 
@@ -49242,7 +49642,7 @@ var init_core10 = __esm({
 
 // js/upload/controller.js
 var UploadZone;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/upload/controller.js"() {
     "use strict";
     init_motion();
@@ -49385,7 +49785,7 @@ var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
     init_controller();
-    init_controller35();
+    init_controller36();
     init_values24();
     init_values24();
     init_accepts();
@@ -49594,7 +49994,7 @@ var init_view2 = __esm({
 
 // js/wizard/controller.js
 var WizardController;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/wizard/controller.js"() {
     "use strict";
     init_validate();
@@ -49694,7 +50094,7 @@ var init_attach14 = __esm({
   "js/wizard/attach.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_values25();
   }
 });
@@ -50086,7 +50486,7 @@ var init_layout2 = __esm({
 
 // js/gridlayout/controller.js
 var MovableGrid;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/gridlayout/controller.js"() {
     "use strict";
     init_controller();
@@ -50262,7 +50662,7 @@ var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_controller();
-    init_controller37();
+    init_controller38();
     init_values26();
     init_values26();
     init_layout2();
@@ -50870,7 +51270,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED7, CalendarController;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -51119,12 +51519,12 @@ function attachCalendars(root = document, options = {}) {
   };
 }
 var calendarOf;
-var init_api15 = __esm({
+var init_api14 = __esm({
   "js/calendar/api.js"() {
     "use strict";
     init_controller();
     init_constants21();
-    init_controller38();
+    init_controller39();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -51158,7 +51558,7 @@ var init_calendar2 = __esm({
     "use strict";
     init_constants21();
     init_dates3();
-    init_api15();
+    init_api14();
   }
 });
 
@@ -54020,7 +54420,7 @@ function setWeekLegend(el16, entries2) {
   );
   c.legend.hidden = entries2.length === 0;
 }
-var init_api16 = __esm({
+var init_api15 = __esm({
   "js/week/api.js"() {
     "use strict";
     init_build7();
@@ -54092,12 +54492,12 @@ var init_model6 = __esm({
 
 // js/week/controller.js
 var MID_DAY, pillOf, WeekControl;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/week/controller.js"() {
     "use strict";
     init_controller();
     init_calendar2();
-    init_api16();
+    init_api15();
     init_build7();
     init_busy4();
     init_constants24();
@@ -54273,7 +54673,7 @@ var init_attach15 = __esm({
     init_controller();
     init_constants24();
     init_state18();
-    init_controller39();
+    init_controller40();
   }
 });
 
@@ -54299,12 +54699,12 @@ var init_week = __esm({
     init_constants24();
     init_pills2();
     init_attach15();
-    init_api16();
+    init_api15();
   }
 });
 
 // js/sequencer/constants.js
-var SEQUENCER, SEQUENCER_CHANGE_EVENT, SEQUENCER_SELECT_EVENT, SEQUENCER_REFUSE_EVENT, SEQUENCER_RETRY_EVENT, SEQUENCER_UNITS, SEQUENCER_OVERLAPS, SEQUENCER_ZOOM_MIN, SEQUENCER_ZOOM_MAX, TICK_STEPS, EPS, REACH_PX, DRAG_PX, HEADROOM;
+var SEQUENCER, SEQUENCER_CHANGE_EVENT, SEQUENCER_SELECT_EVENT, SEQUENCER_REFUSE_EVENT, SEQUENCER_RETRY_EVENT, SEQUENCER_UNITS, SEQUENCER_OVERLAPS, SEQUENCER_ZOOM_MIN, SEQUENCER_ZOOM_MAX, TICK_STEPS, EPS, REACH_PX, DRAG_PX2, HEADROOM;
 var init_constants25 = __esm({
   "js/sequencer/constants.js"() {
     "use strict";
@@ -54346,7 +54746,7 @@ var init_constants25 = __esm({
     ];
     EPS = 1e-9;
     REACH_PX = 8;
-    DRAG_PX = 4;
+    DRAG_PX2 = 4;
     HEADROOM = 0.2;
   }
 });
@@ -55749,7 +56149,7 @@ function onMove(c, e) {
   const p = c.press;
   if (!p || p.pointer !== e.pointerId) return;
   if (!p.moved) {
-    if (!c.editable || Math.hypot(e.clientX - p.x, e.clientY - p.y) < DRAG_PX) return;
+    if (!c.editable || Math.hypot(e.clientX - p.x, e.clientY - p.y) < DRAG_PX2) return;
     p.moved = true;
     p.lanes = c.laneEls.filter((el16) => el16.classList.contains("kp-gantt__track")).map((el16, i) => {
       const r = el16.getBoundingClientRect();
@@ -55817,7 +56217,7 @@ var init_pointer3 = __esm({
 
 // js/sequencer/controller.js
 var ZOOM_IN, ZOOM_OUT, WHEEL_ZOOM, LIVE_OPTIONS2, SequencerControl;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/sequencer/controller.js"() {
     "use strict";
     init_strings();
@@ -56031,7 +56431,7 @@ var init_attach16 = __esm({
     init_controller();
     init_constants25();
     init_instance2();
-    init_controller40();
+    init_controller41();
   }
 });
 
@@ -56083,7 +56483,7 @@ function setSequencerSelection(el16, id) {
   c.focusId = c.selected ?? c.focusId;
   paint8(c, { fit: false });
 }
-var init_api17 = __esm({
+var init_api16 = __esm({
   "js/sequencer/api.js"() {
     "use strict";
     init_instance2();
@@ -56139,7 +56539,7 @@ var init_sequencer = __esm({
     init_links();
     init_timeline();
     init_attach16();
-    init_api17();
+    init_api16();
   }
 });
 
@@ -57606,7 +58006,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint9(c);
 }
-var init_api18 = __esm({
+var init_api17 = __esm({
   "js/gantt/api.js"() {
     "use strict";
     init_constants26();
@@ -57620,7 +58020,7 @@ var init_api18 = __esm({
 });
 
 // js/gantt/input.js
-var DRAG_PX2, barOf, GanttInput;
+var DRAG_PX3, barOf, GanttInput;
 var init_input2 = __esm({
   "js/gantt/input.js"() {
     "use strict";
@@ -57630,7 +58030,7 @@ var init_input2 = __esm({
     init_selection3();
     init_axis();
     init_model7();
-    DRAG_PX2 = 6;
+    DRAG_PX3 = 6;
     barOf = (event) => event.target instanceof Element ? (
       /** @type {HTMLButtonElement | null} */
       event.target.closest(".kp-gantt__run, .kp-gantt__point")
@@ -57722,7 +58122,7 @@ var init_input2 = __esm({
         const c = this.c;
         if (!c.drag) return;
         c.drag.b = this.plotX(event);
-        if (!c.dragMoved && Math.abs(c.drag.b - c.drag.a) > DRAG_PX2) {
+        if (!c.dragMoved && Math.abs(c.drag.b - c.drag.a) > DRAG_PX3) {
           c.dragMoved = true;
           c.scroll.setPointerCapture(event.pointerId);
         }
@@ -57753,7 +58153,7 @@ var init_input2 = __esm({
 
 // js/gantt/controller.js
 var MIN_ZOOM_S, CHROME_OPTIONS, GanttControl;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/gantt/controller.js"() {
     "use strict";
     init_live_options();
@@ -57763,7 +58163,7 @@ var init_controller41 = __esm({
     init_paint9();
     init_selection3();
     init_axis();
-    init_api18();
+    init_api17();
     init_scale();
     init_chrome2();
     init_model7();
@@ -57970,7 +58370,7 @@ var init_attach17 = __esm({
     "use strict";
     init_controller();
     init_constants26();
-    init_controller41();
+    init_controller42();
   }
 });
 
@@ -58003,7 +58403,7 @@ var init_gantt = __esm({
     init_constants26();
     init_scale();
     init_attach17();
-    init_api18();
+    init_api17();
   }
 });
 
@@ -58369,7 +58769,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -58518,7 +58918,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_values27();
     init_values27();
   }
@@ -59128,7 +59528,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -59313,7 +59713,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller43();
+    init_controller44();
   }
 });
 
@@ -59853,7 +60253,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -59982,7 +60382,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller44();
+    init_controller45();
     init_values29();
     init_values29();
     init_share();
@@ -60414,7 +60814,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -60495,7 +60895,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_values30();
     init_values30();
   }
@@ -60717,7 +61117,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -60846,7 +61246,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_values31();
     init_values31();
     init_keys12();
@@ -61850,7 +62250,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -61916,7 +62316,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller47();
+    init_controller48();
     init_values33();
     init_values33();
   }
@@ -62242,7 +62642,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -62524,12 +62924,12 @@ function attachMasterDetails(root = document, { history: useHistory } = {}) {
   };
 }
 var masterDetail, wireable2;
-var init_api19 = __esm({
+var init_api18 = __esm({
   "js/master-detail/api.js"() {
     "use strict";
     init_controller();
     init_constants28();
-    init_controller48();
+    init_controller49();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -62559,7 +62959,7 @@ var init_master_detail = __esm({
   "js/master-detail.js"() {
     "use strict";
     init_constants28();
-    init_api19();
+    init_api18();
   }
 });
 
@@ -62651,7 +63051,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -62878,7 +63278,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller49();
+    init_controller50();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -63870,7 +64270,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -64110,7 +64510,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller50();
+    init_controller51();
     init_values36();
     init_values36();
   }
@@ -64451,7 +64851,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -64569,7 +64969,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller51();
+    init_controller52();
     init_values37();
     init_values37();
     init_slug();
@@ -64753,7 +65153,7 @@ function buildToggle() {
   toggle2.append(el9("kp-time__glyph", "span"));
   return toggle2;
 }
-function buildParts3(root) {
+function buildParts4(root) {
   const n = nextFieldNumber2();
   root.classList.add("kp-time");
   const control = el9("kp-time__control");
@@ -65036,7 +65436,7 @@ var init_field = __esm({
       }
       /** Build the parts into the root. Idempotent through `fieldFor`. */
       build() {
-        const parts2 = buildParts3(this.root);
+        const parts2 = buildParts4(this.root);
         this.input = parts2.input;
         this.hidden = parts2.hidden;
         this.list.popup = parts2.popup;
@@ -65256,7 +65656,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -65458,12 +65858,12 @@ function setTimePresets(root, presets) {
   if (field2.list.open) field2.list.draw();
 }
 var attachTimes;
-var init_api20 = __esm({
+var init_api19 = __esm({
   "js/timefield/api.js"() {
     "use strict";
     init_controller();
     init_constants29();
-    init_controller52();
+    init_controller53();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -65493,7 +65893,7 @@ var init_timefield = __esm({
     "use strict";
     init_constants29();
     init_parse2();
-    init_api20();
+    init_api19();
   }
 });
 
@@ -65764,7 +66164,7 @@ var init_core18 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -65879,7 +66279,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller53();
+    init_controller54();
     init_values38();
     init_values38();
     init_names();
@@ -66124,7 +66524,7 @@ var init_core19 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -66229,7 +66629,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller54();
+    init_controller55();
     init_values39();
     init_values39();
     init_value();
@@ -66816,7 +67216,7 @@ function skeletonRows(doc) {
   }
   return out;
 }
-var init_frame2 = __esm({
+var init_frame3 = __esm({
   "js/feed/frame.js"() {
     "use strict";
     init_constants30();
@@ -67223,7 +67623,7 @@ var init_render3 = __esm({
     init_constants30();
     init_days();
     init_dom9();
-    init_frame2();
+    init_frame3();
     init_options7();
     init_words3();
   }
@@ -67231,13 +67631,13 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_constants30();
-    init_frame2();
+    init_frame3();
     init_options7();
     init_render3();
     init_state21();
@@ -67384,13 +67784,13 @@ function attachFeeds(root = document, { now = () => Date.now(), timeZone = FEED_
   };
 }
 var feedOf;
-var init_api21 = __esm({
+var init_api20 = __esm({
   "js/feed/api.js"() {
     "use strict";
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller55();
+    init_controller56();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -67420,7 +67820,7 @@ var init_feed = __esm({
   "js/feed.js"() {
     "use strict";
     init_constants30();
-    init_api21();
+    init_api20();
   }
 });
 
@@ -67460,7 +67860,7 @@ function button2(doc, className, text = "") {
   node.type = "button";
   return node;
 }
-function buildParts4(doc, id, listLabel) {
+function buildParts5(doc, id, listLabel) {
   const trigger = button2(doc, "kp-button kp-notices__trigger");
   const triggerLabel = make24(doc, "span", "kp-notices__label");
   const badge = make24(doc, "span", "kp-badge kp-notices__count");
@@ -67821,7 +68221,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -67839,7 +68239,7 @@ var init_controller56 = __esm({
       connect() {
         const el16 = this.host;
         el16.classList.add("kp-notices");
-        this.p = buildParts4(this.doc, `kp-notices-${idSeq3 += 1}`, getStrings().noticesList);
+        this.p = buildParts5(this.doc, `kp-notices-${idSeq3 += 1}`, getStrings().noticesList);
         mountParts2(el16, this.p, this.isPage());
         this.own(() => {
           this.busy?.remove();
@@ -67962,7 +68362,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller56();
+    init_controller57();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -68424,7 +68824,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -68689,12 +69089,12 @@ function ratingCell(cell, value, { max = DEFAULT_STARS, count: count2, for: item
   return host;
 }
 var attachRatings;
-var init_api22 = __esm({
+var init_api21 = __esm({
   "js/rating/api.js"() {
     "use strict";
     init_controller();
     init_constants31();
-    init_controller57();
+    init_controller58();
     init_build14();
     init_commit();
     init_math4();
@@ -68722,7 +69122,7 @@ var init_rating = __esm({
     "use strict";
     init_constants31();
     init_math4();
-    init_api22();
+    init_api21();
   }
 });
 
@@ -68982,7 +69382,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -69207,7 +69607,7 @@ function quote2(element) {
     hide: () => hide(card)
   };
 }
-var init_api23 = __esm({
+var init_api22 = __esm({
   "js/quote/api.js"() {
     "use strict";
     init_controller();
@@ -69215,7 +69615,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller58();
+    init_controller59();
     init_list4();
     init_render4();
   }
@@ -69243,7 +69643,7 @@ var init_quote = __esm({
     "use strict";
     init_constants32();
     init_when();
-    init_api23();
+    init_api22();
   }
 });
 
@@ -70082,7 +70482,7 @@ function newModel3(box, handle, input, list) {
   };
 }
 var LIVE_OPTIONS3, UsualPickerControl;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/usual-picker/controller.js"() {
     "use strict";
     init_combobox();
@@ -70289,7 +70689,7 @@ var init_attach20 = __esm({
     init_constants33();
     init_model9();
     init_sync6();
-    init_controller59();
+    init_controller60();
   }
 });
 
@@ -70736,7 +71136,7 @@ var init_handle3 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -70927,7 +71327,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller60();
+    init_controller61();
     init_group6();
     init_group6();
   }
@@ -71216,7 +71616,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -71323,7 +71723,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller61();
+    init_controller62();
     init_values41();
     init_values41();
     init_level();
@@ -71618,7 +72018,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -71802,7 +72202,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller62();
+    init_controller63();
     init_values42();
     init_values42();
     init_order();
@@ -72067,7 +72467,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -72154,7 +72554,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller63();
+    init_controller64();
     init_values43();
     init_values43();
     init_states();
@@ -72462,7 +72862,7 @@ var init_tile = __esm({
 
 // js/entity-card/drawing.js
 var MAX_METER_ROWS, DEFAULT_METER_ROWS, EntityDrawing;
-var init_drawing2 = __esm({
+var init_drawing3 = __esm({
   "js/entity-card/drawing.js"() {
     "use strict";
     init_strings();
@@ -72548,7 +72948,7 @@ var init_identity2 = __esm({
     "use strict";
     init_menu_button();
     init_constants34();
-    init_drawing2();
+    init_drawing3();
     init_helpers5();
     init_star();
     DEFAULT_FLAGS_MAX = 3;
@@ -73296,7 +73696,7 @@ function buildPanel2(doc, s2, id) {
   panel.append(head, list);
   return { panel, headTitle, first, list };
 }
-function buildParts5(doc, s2, id) {
+function buildParts6(doc, s2, id) {
   const problem = make28(doc, "div", "kp-unsaved__problem");
   problem.hidden = true;
   const live4 = make28(doc, "p", "kp-sr-only");
@@ -73981,7 +74381,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -74067,7 +74467,7 @@ var init_controller64 = __esm({
       /** Build the bar into the host and give its menu button life. */
       mount() {
         const { el: el16 } = this;
-        this.parts = buildParts5(this.doc, this.s, this.id);
+        this.parts = buildParts6(this.doc, this.s, this.id);
         const { bar, problem, panel, live: live4 } = this.parts;
         el16.replaceChildren(bar, problem, panel, live4);
         this.own(attachMenuButtons(el16));
@@ -74234,7 +74634,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller64();
+    init_controller65();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -74580,7 +74980,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -74880,12 +75280,12 @@ function attachAutosize(root = document, options = {}) {
   };
 }
 var controllerFor;
-var init_api24 = __esm({
+var init_api23 = __esm({
   "js/autosize/api.js"() {
     "use strict";
     init_controller();
     init_constants35();
-    init_controller65();
+    init_controller66();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -74912,7 +75312,7 @@ var init_autosize = __esm({
     "use strict";
     init_constants35();
     init_fit3();
-    init_api24();
+    init_api23();
   }
 });
 
@@ -75334,7 +75734,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -75468,7 +75868,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller66();
+    init_controller67();
     init_values46();
   }
 });
@@ -77131,7 +77531,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller67 = __esm({
+var init_controller68 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -77361,7 +77761,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller67();
+    init_controller68();
     init_values47();
     init_values47();
   }
@@ -77529,7 +77929,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller68 = __esm({
+var init_controller69 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -77758,7 +78158,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller68();
+    init_controller69();
     init_fields();
     init_fields();
   }
@@ -78098,7 +78498,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller69 = __esm({
+var init_controller70 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -78344,12 +78744,12 @@ function datedValue(element) {
 function attachDatedOptions(root = document, { now } = {}) {
   return attachAll(root, DATED, DatedController, now ? { now } : {});
 }
-var init_api25 = __esm({
+var init_api24 = __esm({
   "js/dated-options/api.js"() {
     "use strict";
     init_controller();
     init_constants37();
-    init_controller69();
+    init_controller70();
   }
 });
 
@@ -78373,7 +78773,7 @@ var init_dated_options = __esm({
     "use strict";
     init_constants37();
     init_time2();
-    init_api25();
+    init_api24();
   }
 });
 
@@ -78673,7 +79073,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller70 = __esm({
+var init_controller71 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -78784,7 +79184,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller70();
+    init_controller71();
     init_values48();
     init_values48();
     init_time3();
@@ -79112,7 +79512,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS7, SnoozePicker;
-var init_controller71 = __esm({
+var init_controller72 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -79371,7 +79771,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller71();
+    init_controller72();
     init_choices();
   }
 });
@@ -80584,7 +80984,7 @@ function dataChild(el16) {
     return null;
   }
 }
-var init_api26 = __esm({
+var init_api25 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
@@ -80876,14 +81276,14 @@ var init_pan = __esm({
 
 // js/graph/controller.js
 var nodeOf, GraphControl;
-var init_controller72 = __esm({
+var init_controller73 = __esm({
   "js/graph/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_constants38();
     init_instance3();
-    init_api26();
+    init_api25();
     init_layout4();
     init_draw14();
     init_view6();
@@ -81140,7 +81540,7 @@ var init_attach22 = __esm({
     "use strict";
     init_controller();
     init_constants38();
-    init_controller72();
+    init_controller73();
   }
 });
 
@@ -81177,7 +81577,7 @@ var init_graph = __esm({
     init_options9();
     init_layout4();
     init_labels3();
-    init_api26();
+    init_api25();
     init_attach22();
   }
 });
@@ -82012,7 +82412,7 @@ function setClaim(list, id, claim) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
   );
 }
-var init_api27 = __esm({
+var init_api26 = __esm({
   "js/claim/api.js"() {
     "use strict";
     init_checklist();
@@ -82227,7 +82627,7 @@ var init_state27 = __esm({
 
 // js/claim/controller.js
 var LIVE_OPTIONS5, ClaimList;
-var init_controller73 = __esm({
+var init_controller74 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -82397,7 +82797,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller73();
+    init_controller74();
   }
 });
 
@@ -82424,7 +82824,7 @@ var init_claim2 = __esm({
     "use strict";
     init_constants39();
     init_model10();
-    init_api27();
+    init_api26();
     init_decorate();
     init_attach23();
   }
@@ -83071,7 +83471,7 @@ function paintKeys(root, person, keys) {
   }
   paintSummary(root);
 }
-var init_api28 = __esm({
+var init_api27 = __esm({
   "js/availability/api.js"() {
     "use strict";
     init_strings();
@@ -83219,7 +83619,7 @@ var init_request3 = __esm({
     "use strict";
     init_strings();
     init_undo_toast();
-    init_api28();
+    init_api27();
     init_constants40();
     init_facts();
     init_paint12();
@@ -83369,14 +83769,14 @@ var init_keys16 = __esm({
 
 // js/availability/controller.js
 var CELL2, LIVE_OPTIONS6, cellOf2, AvailabilityControl;
-var init_controller74 = __esm({
+var init_controller75 = __esm({
   "js/availability/controller.js"() {
     "use strict";
     init_controller();
     init_heat();
     init_remember();
     init_reason();
-    init_api28();
+    init_api27();
     init_constants40();
     init_facts();
     init_menu2();
@@ -83585,10 +83985,10 @@ var init_attach24 = __esm({
   "js/availability/attach.js"() {
     "use strict";
     init_controller();
-    init_api28();
+    init_api27();
     init_constants40();
     init_facts();
-    init_controller74();
+    init_controller75();
   }
 });
 
@@ -83617,7 +84017,7 @@ var init_availability = __esm({
     init_constants40();
     init_dates4();
     init_facts();
-    init_api28();
+    init_api27();
     init_attach24();
   }
 });
@@ -84773,7 +85173,7 @@ var init_actions7 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS7, QrControl;
-var init_controller75 = __esm({
+var init_controller76 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -84877,7 +85277,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller75();
+    init_controller76();
     init_state28();
     init_state28();
     init_matrix2();
@@ -85669,7 +86069,7 @@ async function useTool(root, tool2, b, button6) {
     }
   });
 }
-var init_api29 = __esm({
+var init_api28 = __esm({
   "js/console/api.js"() {
     "use strict";
     init_strings();
@@ -85684,7 +86084,7 @@ var init_api29 = __esm({
 
 // js/console/controller.js
 var MAX_COMPLETIONS, LIVE3, ConsoleControl;
-var init_controller76 = __esm({
+var init_controller77 = __esm({
   "js/console/controller.js"() {
     "use strict";
     init_controller();
@@ -85692,7 +86092,7 @@ var init_controller76 = __esm({
     init_shortcuts();
     init_newpill();
     init_reason();
-    init_api29();
+    init_api28();
     init_bar2();
     init_blocks();
     init_constants41();
@@ -85908,7 +86308,7 @@ var init_attach25 = __esm({
     "use strict";
     init_controller();
     init_constants41();
-    init_controller76();
+    init_controller77();
   }
 });
 
@@ -85935,7 +86335,7 @@ var init_console3 = __esm({
   "js/console.js"() {
     "use strict";
     init_constants41();
-    init_api29();
+    init_api28();
     init_attach25();
   }
 });
@@ -86648,7 +87048,7 @@ function syncOptions(root) {
   const log = logOf(root);
   if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
 }
-var init_api30 = __esm({
+var init_api29 = __esm({
   "js/logviewer/api.js"() {
     "use strict";
     init_newpill();
@@ -86663,7 +87063,7 @@ var init_api30 = __esm({
 
 // js/logviewer/controller.js
 var DOWNLOAD_URL_MS, LIVE4, LogViewerControl;
-var init_controller77 = __esm({
+var init_controller78 = __esm({
   "js/logviewer/controller.js"() {
     "use strict";
     init_controller();
@@ -86673,7 +87073,7 @@ var init_controller77 = __esm({
     init_reason();
     init_shortcuts();
     init_flash();
-    init_api30();
+    init_api29();
     init_constants42();
     init_model12();
     init_parts18();
@@ -86855,7 +87255,7 @@ var init_attach26 = __esm({
     "use strict";
     init_controller();
     init_constants42();
-    init_controller77();
+    init_controller78();
   }
 });
 
@@ -86882,7 +87282,7 @@ var init_logviewer = __esm({
     "use strict";
     init_constants42();
     init_levels();
-    init_api30();
+    init_api29();
     init_attach26();
   }
 });
@@ -87618,7 +88018,7 @@ var init_actions8 = __esm({
 
 // js/diff/controller.js
 var LIVE5, DiffControl;
-var init_controller78 = __esm({
+var init_controller79 = __esm({
   "js/diff/controller.js"() {
     "use strict";
     init_controller();
@@ -87727,7 +88127,7 @@ var init_attach27 = __esm({
     "use strict";
     init_controller();
     init_constants43();
-    init_controller78();
+    init_controller79();
   }
 });
 

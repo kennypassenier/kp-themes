@@ -4,12 +4,6 @@ export type ChartOptions = import('./words.js').ChartOptions;
 export type ChartSeries = import('./words.js').ChartSeries;
 export type ChartState = import('./api.js').ChartState;
 export type ChartValueWhere = import('./words.js').ChartValueWhere;
-/** @typedef {import('./api.js').ChartContext} ChartContext */
-/** @typedef {import('./words.js').ChartData} ChartData */
-/** @typedef {import('./words.js').ChartOptions} ChartOptions */
-/** @typedef {import('./words.js').ChartSeries} ChartSeries */
-/** @typedef {import('./api.js').ChartState} ChartState */
-/** @typedef {import('./words.js').ChartValueWhere} ChartValueWhere */
 /**
  * Draw every `[data-kp-chart]` under `root` and wire it: the charts of one
  * `[data-kp-chart-group]` (or, outside any group, all the others on the

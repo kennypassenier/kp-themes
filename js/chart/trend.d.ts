@@ -1,12 +1,9 @@
-import { ChartGroup } from './group.js';
 export type ChartContext = import('./api.js').ChartContext;
-export type ChartData = import('./words.js').ChartData;
-export type ChartPoint = import('./words.js').ChartPoint;
 export type ChartState = import('./api.js').ChartState;
+export type ChartGroup = import('./group.js').ChartGroup;
 /** @typedef {import('./api.js').ChartContext} ChartContext */
-/** @typedef {import('./words.js').ChartData} ChartData */
-/** @typedef {import('./words.js').ChartPoint} ChartPoint */
 /** @typedef {import('./api.js').ChartState} ChartState */
+/** @typedef {import('./group.js').ChartGroup} ChartGroup */
 /**
  * The spark variant as a key figure's 24-hour trend
  * (`data-kp-spark-head="none"`): no name and value line; a pointer, a finger

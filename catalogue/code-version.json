@@ -18,7 +18,7 @@
         "js/calendar.js": { "digest": "06f57569124aa0d0", "when": "[data-kp-calendar]" },
         "js/calm.js": { "digest": "9e8fe8bae7b50f69", "when": "[data-kp-calm-switch]" },
         "js/card-state.js": { "digest": "2aab2935bba3ed51", "when": ".kp-card[data-kp-state]" },
-        "js/chart.js": { "digest": "1a43cf4895012d76", "when": "[data-kp-chart]" },
+        "js/chart.js": { "digest": "87dc916b335e76ec", "when": "[data-kp-chart]" },
         "js/checklist.js": { "digest": "7eb5cf9bd4627956", "when": "[data-kp-checklist]" },
         "js/claim.js": { "digest": "17c19dcdbc35918b", "when": "[data-kp-checklist-claim]" },
         "js/code-field.js": { "digest": "c1f1edf05fd0ca04", "when": "textarea[data-kp-code-field]" },

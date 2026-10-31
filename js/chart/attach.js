@@ -16,6 +16,10 @@ import { formatChartValue } from './format.js';
 /** @typedef {import('./api.js').ChartState} ChartState */
 /** @typedef {import('./words.js').ChartValueWhere} ChartValueWhere */
 
+/** How many charts one call must attach before they are drawn only near the screen (ChartOptions.lazy), and how near. */
+const LAZY_FROM = 12;
+const LAZY_MARGIN = '200px 0px';
+
 /**
  * Draw every `[data-kp-chart]` under `root` and wire it: the charts of one
  * `[data-kp-chart-group]` (or, outside any group, all the others on the
@@ -57,50 +61,21 @@ function attachMatching(root, options, selector) {
     const doc = root instanceof Document ? root : (root.ownerDocument ?? document);
     const view = doc.defaultView;
     if (!view) return () => {};
-    // Times are numeric in one zone (rule 52), not the page's language; a
-    // chart's numbers are the locale given, else the nearest `lang` above
-    // its group (or above the chart, outside a group).
-    const timeZone = options.timeZone ?? CHART_TIME_ZONE;
-    /** @type {ChartContext} */
-    const ctx = {
-        strings: chartWords(options.strings),
-        time: options.time ?? numericTime(timeZone),
-        timeZone,
-        format: options.format,
-        decorate: options.decorate,
-        now: options.now ?? (() => Date.now()),
-    };
-
+    const ctx = chartContext(options);
     /** @type {Set<ChartGroup>} */
     const touched = new Set();
     /** @type {ChartState[]} */
     const states = [];
-    const lazy = options.lazy ?? 12;
     /** The plots this call attached; `lazy` counts them. */
     const hosts = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(selector)]).filter((host) => !CHARTS.has(host));
-    const watching = lazy !== false && typeof view.IntersectionObserver === 'function' && hosts.length >= (lazy === true ? 1 : lazy);
-    // A little before the edge, so a chart is drawn as it comes near.
-    const seen = watching
-        ? new view.IntersectionObserver(
-              (entries) => {
-                  for (const entry of entries) CHARTS.get(/** @type {HTMLElement} */ (entry.target))?.view?.(entry.isIntersecting);
-              },
-              { rootMargin: '200px 0px' },
-          )
-        : null;
-    const resize = new view.ResizeObserver((entries) => {
-        for (const entry of entries) {
-            const state = CHARTS.get(entry.target);
-            if (state?.resize) state.resize();
-            else state?.draw();
-        }
-    });
+    const { seen, resize } = watchesFor(view, hosts.length, options.lazy ?? LAZY_FROM);
     for (const host of hosts) {
         if (CHARTS.has(host)) continue;
         const groupEl = /** @type {HTMLElement | null} */ (host.closest(CHART_GROUP));
         const group = (groupEl ? GROUPS.get(groupEl) : LOOSE.get(doc)) ?? new ChartGroup(groupEl, doc, ctx);
         const locale = resolveLocale(options.locale, groupEl ?? host);
-        const state = host.dataset.kpChart === 'spark' ? sparkChart(host, group, locale, ctx) : plotChart(host, group, locale, ctx);
+        const state = drawOne(host, group, locale, ctx);
+        if (!state) continue;
         const hold = seen != null && state.view != null && host.getAttribute('data-kp-chart-lazy') !== 'off';
         if (hold) state.view?.(false);
         state.unobserve = () => {
@@ -126,6 +101,67 @@ function attachMatching(root, options, selector) {
         resize.disconnect();
         seen?.disconnect();
     };
+}
+/**
+ * What one attachCharts() call gives its charts. Times are numeric in one zone (rule 52), not the page's language; a chart's numbers
+ * are the locale given, else the nearest `lang` above its group (or above the chart, outside a group).
+ * @param {ChartOptions} options
+ * @returns {ChartContext}
+ */
+function chartContext(options) {
+    const timeZone = options.timeZone ?? CHART_TIME_ZONE;
+    return {
+        strings: chartWords(options.strings),
+        time: options.time ?? numericTime(timeZone),
+        timeZone,
+        format: options.format,
+        decorate: options.decorate,
+        now: options.now ?? (() => Date.now()),
+    };
+}
+/**
+ * The watches of one call's charts: their size, and (from `lazy` charts on) whether they are near the screen, a little before the
+ * edge, so a chart is drawn as it comes near.
+ * @param {Window & typeof globalThis} view
+ * @param {number} count
+ * @param {boolean | number} lazy
+ */
+function watchesFor(view, count, lazy) {
+    const watching = lazy !== false && typeof view.IntersectionObserver === 'function' && count >= (lazy === true ? 1 : lazy);
+    const seen = watching
+        ? new view.IntersectionObserver(
+              (entries) => {
+                  for (const entry of entries) CHARTS.get(/** @type {HTMLElement} */ (entry.target))?.view?.(entry.isIntersecting);
+              },
+              { rootMargin: LAZY_MARGIN },
+          )
+        : null;
+    const resize = new view.ResizeObserver((entries) => {
+        for (const entry of entries) {
+            const state = CHARTS.get(entry.target);
+            if (state?.resize) state.resize();
+            else state?.draw();
+        }
+    });
+    return { seen, resize };
+}
+/**
+ * One chart: a spark or a full plot. A chart whose wiring throws is reported (`reportError`, so it reaches the page's error handlers
+ * and the console) and left out; the other charts still draw.
+ * @param {HTMLElement} host
+ * @param {ChartGroup} group
+ * @param {string} locale
+ * @param {ChartContext} ctx
+ * @returns {ChartState | null}
+ */
+function drawOne(host, group, locale, ctx) {
+    try {
+        return host.dataset.kpChart === 'spark' ? sparkChart(host, group, locale, ctx) : plotChart(host, group, locale, ctx);
+    } catch (error) {
+        if (typeof globalThis.reportError === 'function') globalThis.reportError(error);
+        else console.error(error);
+        return null;
+    }
 }
 /**
  * The colour hooks of source `i` on an element: `data-kp-series` (1-5, its

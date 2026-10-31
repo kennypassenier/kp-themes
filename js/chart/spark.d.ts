@@ -1,11 +1,10 @@
-import { ChartGroup } from './group.js';
+export type ChartGroup = import('./group.js').ChartGroup;
 export type ChartContext = import('./api.js').ChartContext;
-export type ChartData = import('./words.js').ChartData;
 export type ChartPoint = import('./words.js').ChartPoint;
 export type ChartSeries = import('./words.js').ChartSeries;
 export type ChartState = import('./api.js').ChartState;
+/** @typedef {import('./group.js').ChartGroup} ChartGroup */
 /** @typedef {import('./api.js').ChartContext} ChartContext */
-/** @typedef {import('./words.js').ChartData} ChartData */
 /** @typedef {import('./words.js').ChartPoint} ChartPoint */
 /** @typedef {import('./words.js').ChartSeries} ChartSeries */
 /** @typedef {import('./api.js').ChartState} ChartState */

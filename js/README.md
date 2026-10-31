@@ -11,16 +11,16 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
   where each public name lives. Every part opens with one line saying what it does.
 - Files are named by responsibility, not by position: `datatable/sort.js`, `datatable/filter.js`, `sidenav/resizer.js`.
   Pure helpers that tests import keep their export names and are re-exported by the facade.
-- A big closure (`attachDataTables`, `plotChart`) is split into **install functions** that share one
-  context object `c`: `js/datatable/attach/` and `js/chart/plot/` hold one file per concern, each
-  exporting `install<Name>(c)`. The host file (`attach.js`, `plot.js`) builds `c`, calls the installs in order and returns.
+- A big closure (`attachDataTables`) is split into **install functions** that share one
+  context object `c`: `js/datatable/attach/` holds one file per concern, each
+  exporting `install<Name>(c)`. The host file (`attach.js`) builds `c`, calls the installs in order and returns.
   A part reads what an earlier part published with `const { … } = c`, reads what changes (`let` values) as `c.name`, and
   `context.js` types the whole context from the fields each part adds (`<Part>Fields`). The order of the calls is the order
   the code ran in before the split; keep it.
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`, `diff.js`, `sidenav.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`, `diff.js`, `sidenav.js`, `chart.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -110,32 +110,35 @@ The dictionary of every user-visible string, by component group. 31 files.
 
 ## js/chart.js → js/chart/
 
-The time chart, the spark chart and the key figure trend. 22 files.
+The time chart, the spark chart and the key figure trend. 25 files.
 
-| File              | Does                                                                           |
-| ----------------- | ------------------------------------------------------------------------------ |
-| `api.js`          | The functions a page calls to fill, select, zoom and detach a chart.           |
-| `attach.js`       | Attaches the charts and trend charts of a page.                                |
-| `constants.js`    | The attribute, event names and defaults of the chart.                          |
-| `dom.js`          | SVG and markup helpers every part of the chart uses.                           |
-| `format.js`       | Pure value formatting: nice maxima and number formats.                         |
-| `group.js`        | A group of charts that share a selection and a window.                         |
-| `plot/api.js`     | The chart's data setter and its public state object.                           |
-| `plot/context.js` | The context the parts of one full chart share.                                 |
-| `plot/draw.js`    | Draws the chart: the state plate and the plot itself.                          |
-| `plot/legend.js`  | The legend: its keys, its median words and its loading skeleton.               |
-| `plot/pointer.js` | Pointer, keyboard and focus handling of the plot.                              |
-| `plot/readers.js` | Small readers of the chart's state: visible series, window, tones and options. |
-| `plot/setup.js`   | The chart's mutable state and the elements it draws into.                      |
-| `plot/tip.js`     | The legend repaint, the tooltip and what the chart announces.                  |
-| `plot.js`         | The full chart: its plotting closure.                                          |
-| `selection.js`    | Pure selection rules: nearest point, hour change and next selection.           |
-| `spark.js`        | The spark chart: a plot without axes.                                          |
-| `state.js`        | The counter the chart parts share to give each clip path its own id.           |
-| `stats.js`        | Pure statistics over a series: spans, median and runs.                         |
-| `time.js`         | Pure time maths for the axis: wall time, zones, strides and ticks.             |
-| `trend.js`        | The trend chart of a key figure.                                               |
-| `words.js`        | The words a chart says: its labels, ranges and descriptions.                   |
+| File                 | Does                                                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `api.js`             | The functions a page calls to fill, select, zoom and detach a chart.                                               |
+| `attach.js`          | Attaches the charts and trend charts of a page; a chart whose wiring throws is reported and the others still draw. |
+| `constants.js`       | The attribute, event names and defaults of the chart.                                                              |
+| `dom.js`             | SVG and markup helpers every part of the chart uses.                                                               |
+| `format.js`          | Pure value formatting: nice maxima and number formats.                                                             |
+| `group.js`           | A group of charts that share a selection and a window.                                                             |
+| `plot/base.js`       | PlotBase: one full chart's state, the parts it draws into, and the small readers of that state.                    |
+| `plot/controller.js` | PlotChart: puts the parts in the host, wires them, watches the page's attributes, holds the chart's state object.  |
+| `plot/draw.js`       | PlotDraw: the state plate (loading, empty, failed) or a drawing of the window, then the key, legend and tooltip.   |
+| `plot/drawing.js`    | PlotDrawing: one drawing's sources, medians and runs, event marks, edge counts, brush and crosshair.               |
+| `plot/frame.js`      | PlotFrame: one drawing's scales, grid, time axis, thresholds and the events' bands.                                |
+| `plot/legend.js`     | PlotLegend: the source keys, the key of event kinds above the plot, and the loading skeleton.                      |
+| `plot/pointer.js`    | PlotPointer: the crosshair, the pin, the brush that zooms, and the keys that walk the readings.                    |
+| `plot/tip.js`        | PlotTip: the legend's values, the tooltip beside the crosshair, and what the chart announces.                      |
+| `plot.js`            | The full chart: one PlotChart per chart element, and startChart() for every chart's controller.                    |
+| `selection.js`       | Pure selection rules: nearest point, hour change and next selection.                                               |
+| `spark-control.js`   | SparkChart: a source's sparkline on the group's crosshair, with its value beside its name.                         |
+| `spark.js`           | The spark chart (one SparkChart per element), and the axis row a trend shares with it.                             |
+| `state.js`           | The counter the chart parts share to give each clip path its own id.                                               |
+| `stats.js`           | Pure statistics over a series: spans, median and runs.                                                             |
+| `time.js`            | Pure time maths for the axis: wall time, zones, strides and ticks.                                                 |
+| `trend-control.js`   | TrendChart: a key figure's trend read by pointer, finger or keys, and a click through to the tile's link.          |
+| `trend-view.js`      | TrendView: the trend's parts, the reading (crosshair and chip), its state plate and busy card, and its drawing.    |
+| `trend.js`           | The trend chart of a key figure: one TrendChart per element.                                                       |
+| `words.js`           | The words a chart says: its labels, ranges and descriptions.                                                       |
 
 ## js/motion.js → js/motion/
 
