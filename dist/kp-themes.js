@@ -25131,10 +25131,20 @@ function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = false, 
   update2();
   return { block, input, matched: () => matched };
 }
-var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeSeq;
+function attachTypeConfirms(root = document, { strings } = {}) {
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(TYPE_CONFIRM)].filter((block) => !("kpTypeConfirmAttached" in block.dataset)).map((block) => attachOne(block, TypeConfirmControl, { strings }))
+  );
+  return () => {
+    for (const control of made6.splice(0)) control?.destroy();
+  };
+}
+var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeSeq, TypeConfirmControl;
 var init_type_confirm = __esm({
   "js/components/type-confirm.js"() {
     "use strict";
+    init_controller();
     init_strings();
     VIOLATION_EVENT = "kp-contract-violation";
     CONFIRM_WINDOW_MS = 4e3;
@@ -25144,6 +25154,47 @@ var init_type_confirm = __esm({
     TYPE_CONFIRM_EVENT = "kp-type-confirm";
     TYPE_CONFIRM = "[data-kp-type-confirm]";
     typeSeq = 0;
+    TypeConfirmControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.strings = options.strings;
+        const target = host.dataset.kpTypeConfirmFor ? host.ownerDocument.getElementById(host.dataset.kpTypeConfirmFor) : null;
+        this.button = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
+        this.wasDisabled = this.button?.disabled ?? false;
+      }
+      connect() {
+        const block = this.host;
+        const doc = block.ownerDocument;
+        block.dataset.kpTypeConfirmAttached = "";
+        this.own(() => {
+          block.replaceChildren();
+          block.classList.remove("kp-type-confirm", "kp-field");
+          delete block.dataset.kpMatched;
+          delete block.dataset.kpTypeConfirmAttached;
+          if (this.button) this.button.disabled = this.wasDisabled;
+        });
+        const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
+        const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
+        if (lost instanceof Element) {
+          lost.removeAttribute("id");
+          lost.removeAttribute("hidden");
+        }
+        const typed = buildTypeConfirm(doc, {
+          name: block.dataset.kpTypeConfirm ?? "",
+          anyCase: block.dataset.kpTypeConfirmCase === "any",
+          loses: lost,
+          strings: this.strings,
+          block,
+          onChange: (matched) => this.hold(matched)
+        });
+        this.hold(typed.matched());
+      }
+      /** The button is on only while the name matches, and never when the page had disabled it. @param {boolean} matched */
+      hold(matched) {
+        if (this.button) this.button.disabled = !matched || this.wasDisabled;
+      }
+    };
   }
 });
 
@@ -25264,48 +25315,6 @@ function openConfirmation(button6, { phrase, description: richText, acceptLook =
   (field2 ?? (initialFocus === "accept" && stop === null ? accept : cancel)).focus();
   return dialog;
 }
-function attachTypeConfirms(root = document, { strings } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll(TYPE_CONFIRM)) {
-    const block = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (block.dataset.kpTypeConfirmAttached !== void 0) continue;
-    block.dataset.kpTypeConfirmAttached = "";
-    const doc = block.ownerDocument;
-    const target = block.dataset.kpTypeConfirmFor ? doc.getElementById(block.dataset.kpTypeConfirmFor) : null;
-    const button6 = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
-    const wasDisabled = button6?.disabled ?? false;
-    const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
-    const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
-    if (lost instanceof Element) {
-      lost.removeAttribute("id");
-      lost.removeAttribute("hidden");
-    }
-    const typed = buildTypeConfirm(doc, {
-      name: block.dataset.kpTypeConfirm ?? "",
-      anyCase: block.dataset.kpTypeConfirmCase === "any",
-      loses: lost,
-      strings,
-      block,
-      onChange: (matched) => {
-        if (button6) button6.disabled = !matched || wasDisabled;
-      }
-    });
-    if (button6) button6.disabled = !typed.matched() || wasDisabled;
-    cleanups.push(() => {
-      block.replaceChildren();
-      block.classList.remove("kp-type-confirm", "kp-field");
-      delete block.dataset.kpMatched;
-      delete block.dataset.kpTypeConfirmAttached;
-      if (button6) button6.disabled = wasDisabled;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
 var dialogSeq;
 var init_confirm_dialog = __esm({
   "js/components/confirm-dialog.js"() {
@@ -25368,88 +25377,96 @@ function restore(el16) {
   el16.removeAttribute("data-kp-contract-error");
 }
 function attachConfirmations(root = document, { mode: mode2 = "dialog", windowMs = CONFIRM_WINDOW_MS, disarmOnBlur = true, strings, ownedBy = CONFIRM_OWNED, dialogClassName = "" } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll("[data-kp-confirm]")) {
-    const button6 = (
-      /** @type {HTMLButtonElement} */
-      el16
-    );
-    if (ownedBy !== "" && button6.matches(ownedBy)) continue;
-    if (!button6.matches('button, a[href], input[type="button"], input[type="submit"], [role="button"]')) continue;
-    if (button6.dataset.kpConfirmAttached === "1") continue;
-    button6.dataset.kpConfirmAttached = "1";
-    const original = button6.textContent ?? "";
-    const phrase = button6.dataset.kpConfirm || getStrings().confirm;
-    const elementMode = button6.dataset.kpConfirmMode === "inline" || button6.dataset.kpConfirmMode === "dialog" ? button6.dataset.kpConfirmMode : mode2;
-    const window_ = Number(button6.dataset.kpConfirmMs) || windowMs;
-    let armed = false;
-    let timer = 0;
-    let open4 = null;
-    const disarm = () => {
-      armed = false;
-      button6.textContent = original;
-      button6.removeAttribute("data-kp-armed");
-      clearTimeout(timer);
-    };
-    const onBlur = () => {
-      if (disarmOnBlur) disarm();
-    };
-    const onDialogClick = (event) => {
-      if (unlocked === button6) {
-        unlocked = null;
-        return;
-      }
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      if (open4?.open) return;
-      open4 = openConfirmation(button6, {
-        phrase,
-        strings,
-        className: dialogClassName,
-        onAccept: () => {
-          unlocked = button6;
-          button6.click();
-        }
-      });
-    };
-    const onInlineClick = (event) => {
-      if (armed) {
-        disarm();
-        return;
-      }
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      armed = true;
-      button6.textContent = phrase;
-      button6.setAttribute("data-kp-armed", "true");
-      timer = window.setTimeout(disarm, window_);
-    };
-    const onClick = elementMode === "inline" ? onInlineClick : onDialogClick;
-    button6.addEventListener("click", onClick, { capture: true });
-    if (elementMode === "inline") button6.addEventListener("blur", onBlur);
-    cleanups.push(() => {
-      button6.removeEventListener("click", onClick, { capture: true });
-      if (elementMode === "inline") button6.removeEventListener("blur", onBlur);
-      delete button6.dataset.kpConfirmAttached;
-      if (unlocked === button6) unlocked = null;
-      open4?.close("");
-      disarm();
-    });
-  }
+  const options = { mode: mode2, windowMs, disarmOnBlur, strings, dialogClassName };
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll("[data-kp-confirm]")].filter((button6) => !(ownedBy !== "" && button6.matches(ownedBy)) && button6.matches(CONFIRMABLE) && button6.dataset.kpConfirmAttached !== "1").map((button6) => attachOne(button6, ConfirmControl, options))
+  );
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6.splice(0)) control?.destroy();
   };
 }
-var unlocked, EXEMPT, changed;
+var unlocked, EXEMPT, changed, CONFIRMABLE, ConfirmControl;
 var init_contracts = __esm({
   "js/components/contracts.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_type_confirm();
     init_confirm_dialog();
     unlocked = null;
     EXEMPT = "[data-kp-contract-ignore]";
     changed = /* @__PURE__ */ new WeakMap();
+    CONFIRMABLE = 'button, a[href], input[type="button"], input[type="submit"], [role="button"]';
+    ConfirmControl = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ mode?: 'dialog' | 'inline', windowMs?: number, disarmOnBlur?: boolean, strings?: Partial<import('../strings.js').Strings>, dialogClassName?: string }} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.settings = options;
+        this.original = host.textContent ?? "";
+        this.phrase = host.dataset.kpConfirm || getStrings().confirm;
+        this.mode = host.dataset.kpConfirmMode === "inline" || host.dataset.kpConfirmMode === "dialog" ? host.dataset.kpConfirmMode : options.mode ?? "dialog";
+        this.window = Number(host.dataset.kpConfirmMs) || (options.windowMs ?? CONFIRM_WINDOW_MS);
+        this.armed = false;
+        this.timer = 0;
+        this.open = null;
+      }
+      connect() {
+        const button6 = this.host;
+        button6.dataset.kpConfirmAttached = "1";
+        this.own(() => {
+          delete button6.dataset.kpConfirmAttached;
+          if (unlocked === button6) unlocked = null;
+          this.open?.close("");
+          this.disarm();
+        });
+        const inline2 = this.mode === "inline";
+        this.listen(button6, "click", (event) => inline2 ? this.onInlineClick(event) : this.onDialogClick(event), { capture: true });
+        if (inline2 && this.settings.disarmOnBlur !== false) this.listen(button6, "blur", () => this.disarm());
+      }
+      disarm() {
+        this.armed = false;
+        this.host.textContent = this.original;
+        this.host.removeAttribute("data-kp-armed");
+        clearTimeout(this.timer);
+      }
+      /** @param {Event} event */
+      onDialogClick(event) {
+        const button6 = this.host;
+        if (unlocked === button6) {
+          unlocked = null;
+          return;
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (this.open?.open) return;
+        this.open = openConfirmation(button6, {
+          phrase: this.phrase,
+          strings: this.settings.strings,
+          className: this.settings.dialogClassName ?? "",
+          onAccept: () => {
+            unlocked = button6;
+            button6.click();
+          }
+        });
+      }
+      /** @param {Event} event */
+      onInlineClick(event) {
+        if (this.armed) {
+          this.disarm();
+          return;
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        this.armed = true;
+        this.host.textContent = this.phrase;
+        this.host.setAttribute("data-kp-armed", "true");
+        this.timer = window.setTimeout(() => this.disarm(), this.window);
+      }
+    };
   }
 });
 
@@ -25467,218 +25484,256 @@ function skipTo(href, root = document) {
   return true;
 }
 function attachSkipLinks(root = document) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll(".kp-skip-link, [data-kp-skip]")) {
-    const link = (
-      /** @type {HTMLAnchorElement} */
-      el16
-    );
-    if (link.dataset.kpSkipAttached !== void 0) continue;
-    link.dataset.kpSkipAttached = "";
-    const onClick = (event) => {
-      if (skipTo(link.getAttribute("href") ?? "")) event.preventDefault();
-    };
-    link.addEventListener("click", onClick);
-    cleanups.push(() => {
-      link.removeEventListener("click", onClick);
-      delete link.dataset.kpSkipAttached;
-    });
-  }
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(".kp-skip-link, [data-kp-skip]")].filter((link) => !("kpSkipAttached" in link.dataset)).map((link) => attachOne(link, SkipLinkControl))
+  );
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6.splice(0)) control?.destroy();
   };
 }
+var SkipLinkControl;
 var init_skip_links = __esm({
   "js/components/skip-links.js"() {
     "use strict";
+    init_controller();
+    SkipLinkControl = class extends Controller {
+      connect() {
+        const link = (
+          /** @type {HTMLAnchorElement} */
+          this.host
+        );
+        link.dataset.kpSkipAttached = "";
+        this.own(() => delete link.dataset.kpSkipAttached);
+        this.listen(link, "click", (event) => {
+          if (skipTo(link.getAttribute("href") ?? "")) event.preventDefault();
+        });
+      }
+    };
   }
 });
 
 // js/components/to-top.js
 function attachToTop(root = document, { strings, after } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll(TO_TOP)) {
-    const button6 = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (button6.dataset.kpToTopAttached !== void 0) continue;
-    button6.dataset.kpToTopAttached = "";
-    const doc = button6.ownerDocument;
-    const view = doc.defaultView;
-    if (!view) continue;
-    const threshold = after ?? Number(button6.getAttribute("data-kp-to-top-after") ?? "400");
-    const target = button6.getAttribute("data-kp-to-top-target") ?? "";
-    const s2 = { ...getStrings(), ...strings };
-    if (button6.getAttribute("aria-label") === null && button6.textContent?.trim() === "") {
-      button6.setAttribute("aria-label", s2.backToTop);
-    }
-    let glyph3 = null;
-    if (button6.children.length === 0 && button6.textContent?.trim() === "") {
-      glyph3 = doc.createElement("span");
-      glyph3.className = "kp-to-top__glyph";
-      glyph3.setAttribute("aria-hidden", "true");
-      button6.append(glyph3);
-    }
-    const scroller = () => {
-      for (let box = button6.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
-        const overflow = view.getComputedStyle(box).overflowY;
-        if (/auto|scroll|overlay/.test(overflow) && box.scrollHeight > box.clientHeight + 1) return box;
-      }
-      return null;
-    };
-    let shown5 = false;
-    let queued = false;
-    const decide = () => {
-      queued = false;
-      const box = scroller();
-      const next2 = (box ? box.scrollTop : view.scrollY) > threshold;
-      if (next2 === shown5) return;
-      shown5 = next2;
-      button6.toggleAttribute("data-kp-to-top-shown", next2);
-      button6.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next2 } }));
-    };
-    const onScroll = () => {
-      if (queued) return;
-      queued = true;
-      view.requestAnimationFrame(decide);
-    };
-    const onClick = () => {
-      (scroller() ?? view).scrollTo({ top: 0 });
-      const to = (
-        /** @type {HTMLElement | null} */
-        (target === "" ? null : doc.querySelector(target)) ?? doc.body
-      );
-      if (!to.hasAttribute("tabindex")) to.setAttribute("tabindex", "-1");
-      to.focus({ preventScroll: true });
-    };
-    decide();
-    doc.addEventListener("scroll", onScroll, { passive: true, capture: true });
-    button6.addEventListener("click", onClick);
-    cleanups.push(() => {
-      doc.removeEventListener("scroll", onScroll, { capture: true });
-      button6.removeEventListener("click", onClick);
-      button6.removeAttribute("data-kp-to-top-shown");
-      glyph3?.remove();
-      delete button6.dataset.kpToTopAttached;
-    });
-  }
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(TO_TOP)].filter((button6) => !("kpToTopAttached" in button6.dataset) && button6.ownerDocument.defaultView).map((button6) => attachOne(button6, ToTopControl, { strings, after }))
+  );
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6.splice(0)) control?.destroy();
   };
 }
-var TO_TOP_EVENT, TO_TOP;
+var TO_TOP_EVENT, TO_TOP, DEFAULT_AFTER, ToTopControl;
 var init_to_top = __esm({
   "js/components/to-top.js"() {
     "use strict";
+    init_controller();
     init_strings();
     TO_TOP_EVENT = "kp-to-top";
     TO_TOP = "[data-kp-to-top]";
+    DEFAULT_AFTER = "400";
+    ToTopControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings>, after?: number }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.doc = host.ownerDocument;
+        this.view = /** @type {Window} */
+        this.doc.defaultView;
+        this.threshold = options.after ?? Number(host.getAttribute("data-kp-to-top-after") ?? DEFAULT_AFTER);
+        this.target = host.getAttribute("data-kp-to-top-target") ?? "";
+        this.strings = options.strings;
+        this.shown = false;
+        this.queued = false;
+        this.glyph = null;
+      }
+      connect() {
+        const button6 = this.host;
+        button6.dataset.kpToTopAttached = "";
+        this.own(() => {
+          button6.removeAttribute("data-kp-to-top-shown");
+          this.glyph?.remove();
+          delete button6.dataset.kpToTopAttached;
+        });
+        this.label();
+        this.decide();
+        this.listen(this.doc, "scroll", () => this.onScroll(), { passive: true, capture: true });
+        this.listen(button6, "click", () => this.onClick());
+      }
+      /**
+       * A control without words gets the dictionary's name, and an empty one the package's glyph [gap-12]: written the documented
+       * way it painted as an empty box. The glyph is empty and hidden from the accessibility tree; css/components.css draws the arrow.
+       */
+      label() {
+        const button6 = this.host;
+        if (button6.getAttribute("aria-label") === null && button6.textContent?.trim() === "") {
+          button6.setAttribute("aria-label", { ...getStrings(), ...this.strings }.backToTop);
+        }
+        if (button6.children.length > 0 || button6.textContent?.trim() !== "") return;
+        this.glyph = this.doc.createElement("span");
+        this.glyph.className = "kp-to-top__glyph";
+        this.glyph.setAttribute("aria-hidden", "true");
+        button6.append(this.glyph);
+      }
+      /**
+       * The box that scrolls the control's page: the window (null), or a scrolling box it sits in (a dashboard's main, a review
+       * dialog's stage; Kenny, 2026-10-13: "the back to top didn't seem to work" in such a stage). Read at every use, since a box
+       * can move the control into another scroller after it was attached.
+       * @returns {HTMLElement | null}
+       */
+      scroller() {
+        const { doc, view } = this;
+        for (let box = this.host.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
+          const overflow = view.getComputedStyle(box).overflowY;
+          if (/auto|scroll|overlay/.test(overflow) && box.scrollHeight > box.clientHeight + 1) return box;
+        }
+        return null;
+      }
+      /** Show or hide the control by how far its page is scrolled, and tell the page when that changes. */
+      decide() {
+        this.queued = false;
+        const box = this.scroller();
+        const next2 = (box ? box.scrollTop : this.view.scrollY) > this.threshold;
+        if (next2 === this.shown) return;
+        this.shown = next2;
+        this.host.toggleAttribute("data-kp-to-top-shown", next2);
+        this.host.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next2 } }));
+      }
+      /** One decision per frame: a scroll fires far more often than a page can paint, and the answer cannot change in between. */
+      onScroll() {
+        if (this.queued) return;
+        this.queued = true;
+        this.view.requestAnimationFrame(() => {
+          if (!this.destroyed) this.decide();
+        });
+      }
+      /**
+       * Scroll to the top, and move the focus WITHOUT scrolling. Focusing an element normally brings it into view, which undid the
+       * journey: on a page whose main landmark starts 2737px down, "back to top" landed back at 3476. So the target is the top of the
+       * document unless the page names another, and either way the focus moves quietly while the scroll does the travelling.
+       */
+      onClick() {
+        (this.scroller() ?? this.view).scrollTo({ top: 0 });
+        const to = (
+          /** @type {HTMLElement | null} */
+          (this.target === "" ? null : this.doc.querySelector(this.target)) ?? this.doc.body
+        );
+        if (!to.hasAttribute("tabindex")) to.setAttribute("tabindex", "-1");
+        to.focus({ preventScroll: true });
+      }
+    };
   }
 });
 
 // js/components/nav-toggle.js
 function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll("[data-kp-nav-toggle]")) {
-    const button6 = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (ownedBy !== "" && button6.matches(ownedBy)) continue;
-    if (button6.dataset.kpNavToggleAttached !== void 0) continue;
-    button6.dataset.kpNavToggleAttached = "";
-    const nav = button6.closest(".kp-nav") ?? button6.parentElement;
-    if (!nav) continue;
-    const links = nav.querySelector(".kp-nav__links");
-    if (links && !links.id) links.id = `kp-nav-links-${cleanups.length}-${Math.random().toString(36).slice(2, 8)}`;
-    if (links) button6.setAttribute("aria-controls", links.id);
-    const label = () => {
-      const s2 = { ...getStrings(), ...strings };
-      return nav.hasAttribute("data-kp-nav-open") ? s2.closeMenu : s2.menu;
-    };
-    const write2 = (open4) => {
-      nav.toggleAttribute("data-kp-nav-open", open4);
-      button6.setAttribute("aria-expanded", String(open4));
-      button6.setAttribute("aria-label", label());
-    };
-    let closing2 = false;
-    const set = (open4) => {
-      if (open4) {
-        closing2 = false;
-        nav.removeAttribute("data-kp-nav-closing");
-        write2(true);
-        if (links) nav.style.setProperty("--kp-nav-links-height", `${links.scrollHeight}px`);
-        nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: true } }));
-      } else {
-        if (closing2 || !nav.hasAttribute("data-kp-nav-open")) return;
-        closing2 = true;
-        nav.setAttribute("data-kp-nav-closing", "");
-        button6.setAttribute("aria-expanded", "false");
-        button6.setAttribute("aria-label", label());
-        const navStyle = getComputedStyle(nav);
-        const durVal = (navStyle.getPropertyValue("--kp-nav-close-time") || navStyle.getPropertyValue("--kp-sig-fo-time")).trim();
-        const dur = durVal ? durVal.endsWith("ms") ? parseFloat(durVal) : parseFloat(durVal) * 1e3 : 300;
-        setTimeout(
-          () => {
-            if (!closing2) return;
-            closing2 = false;
-            nav.removeAttribute("data-kp-nav-closing");
-            write2(false);
-            nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: false } }));
-          },
-          Number.isFinite(dur) ? dur : 300
-        );
-      }
-    };
-    write2(nav.hasAttribute("data-kp-nav-open"));
-    const onClick = () => set(!nav.hasAttribute("data-kp-nav-open") && !closing2);
-    const onKey5 = (event) => {
-      if (event.key !== "Escape" || !nav.hasAttribute("data-kp-nav-open")) return;
-      set(false);
-      button6.focus();
-    };
-    const onOutside = (event) => {
-      if (!nav.hasAttribute("data-kp-nav-open")) return;
-      if (nav.contains(
-        /** @type {Node} */
-        event.target
-      )) return;
-      set(false);
-    };
-    button6.addEventListener("click", onClick);
-    nav.addEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onKey5
-    );
-    document.addEventListener("click", onOutside, true);
-    cleanups.push(() => {
-      button6.removeEventListener("click", onClick);
-      nav.removeEventListener(
-        "keydown",
-        /** @type {EventListener} */
-        onKey5
-      );
-      document.removeEventListener("click", onOutside, true);
-      nav.removeAttribute("data-kp-nav-open");
-      button6.removeAttribute("aria-expanded");
-      button6.removeAttribute("aria-label");
-      button6.removeAttribute("aria-controls");
-      delete button6.dataset.kpNavToggleAttached;
-    });
-  }
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll("[data-kp-nav-toggle]")].filter((button6) => !(ownedBy !== "" && button6.matches(ownedBy)) && !("kpNavToggleAttached" in button6.dataset)).filter((button6) => (button6.closest(".kp-nav") ?? button6.parentElement) !== null).map((button6, index) => attachOne(button6, NavToggleControl, { strings, index }))
+  );
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6.splice(0)) control?.destroy();
   };
 }
-var NAV_TOGGLE_EVENT, NAV_OWNED;
+var NAV_TOGGLE_EVENT, NAV_OWNED, DEFAULT_CLOSE_MS, MS_PER_SECOND3, NavToggleControl;
 var init_nav_toggle = __esm({
   "js/components/nav-toggle.js"() {
     "use strict";
+    init_controller();
     init_strings();
     NAV_TOGGLE_EVENT = "kp-nav-toggle";
     NAV_OWNED = "[data-kp-nav-owner]";
+    DEFAULT_CLOSE_MS = 300;
+    MS_PER_SECOND3 = 1e3;
+    NavToggleControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings>, index?: number }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.nav = /** @type {HTMLElement} */
+        host.closest(".kp-nav") ?? host.parentElement;
+        this.links = this.nav.querySelector(".kp-nav__links");
+        this.strings = options.strings;
+        this.index = options.index ?? 0;
+        this.closing = false;
+      }
+      connect() {
+        const { host: button6, nav, links } = this;
+        button6.dataset.kpNavToggleAttached = "";
+        this.own(() => {
+          nav.removeAttribute("data-kp-nav-open");
+          for (const name of ["aria-expanded", "aria-label", "aria-controls"]) button6.removeAttribute(name);
+          delete button6.dataset.kpNavToggleAttached;
+        });
+        if (links && !links.id) links.id = `kp-nav-links-${this.index}-${Math.random().toString(36).slice(2, 8)}`;
+        if (links) button6.setAttribute("aria-controls", links.id);
+        this.write(nav.hasAttribute("data-kp-nav-open"));
+        this.listen(button6, "click", () => this.set(!nav.hasAttribute("data-kp-nav-open") && !this.closing));
+        this.listen(nav, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(document, "click", (event) => this.onOutside(event), true);
+      }
+      /** The toggle's name for the nav's state: Close menu while open, Menu while closed. */
+      label() {
+        const s2 = { ...getStrings(), ...this.strings };
+        return this.nav.hasAttribute("data-kp-nav-open") ? s2.closeMenu : s2.menu;
+      }
+      /** @param {boolean} open */
+      write(open4) {
+        this.nav.toggleAttribute("data-kp-nav-open", open4);
+        this.host.setAttribute("aria-expanded", String(open4));
+        this.host.setAttribute("aria-label", this.label());
+      }
+      /** @param {boolean} open */
+      set(open4) {
+        if (open4) this.open();
+        else this.close();
+      }
+      open() {
+        const { nav, links } = this;
+        this.closing = false;
+        nav.removeAttribute("data-kp-nav-closing");
+        this.write(true);
+        if (links) nav.style.setProperty("--kp-nav-links-height", `${links.scrollHeight}px`);
+        nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: true } }));
+      }
+      /** Close after the theme's close time (`--kp-nav-close-time`, else `--kp-sig-fo-time`), marked closing meanwhile. */
+      close() {
+        const { nav, host: button6 } = this;
+        if (this.closing || !nav.hasAttribute("data-kp-nav-open")) return;
+        this.closing = true;
+        nav.setAttribute("data-kp-nav-closing", "");
+        button6.setAttribute("aria-expanded", "false");
+        button6.setAttribute("aria-label", this.label());
+        const navStyle = getComputedStyle(nav);
+        const durVal = (navStyle.getPropertyValue("--kp-nav-close-time") || navStyle.getPropertyValue("--kp-sig-fo-time")).trim();
+        const dur = durVal ? durVal.endsWith("ms") ? parseFloat(durVal) : parseFloat(durVal) * MS_PER_SECOND3 : DEFAULT_CLOSE_MS;
+        setTimeout(() => this.closed(), Number.isFinite(dur) ? dur : DEFAULT_CLOSE_MS);
+      }
+      /** The close has played: the nav is closed, unless an open came in between. */
+      closed() {
+        if (!this.closing || this.destroyed) return;
+        this.closing = false;
+        this.nav.removeAttribute("data-kp-nav-closing");
+        this.write(false);
+        this.nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: false } }));
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.key !== "Escape" || !this.nav.hasAttribute("data-kp-nav-open")) return;
+        this.set(false);
+        this.host.focus();
+      }
+      /** @param {Event} event */
+      onOutside(event) {
+        if (!this.nav.hasAttribute("data-kp-nav-open")) return;
+        if (this.nav.contains(
+          /** @type {Node} */
+          event.target
+        )) return;
+        this.set(false);
+      }
+    };
   }
 });
 
@@ -25711,63 +25766,80 @@ function attachStickyNavs(root = document, { ownedBy = NAV_STICKY_OWNED, after }
   };
 }
 function stickyNav(wrap, after) {
-  if (wrap.dataset.kpNavStickyAttached !== void 0) return () => {
+  if (wrap.dataset.kpNavStickyAttached !== void 0 || !wrap.ownerDocument.defaultView) return () => {
   };
-  const doc = wrap.ownerDocument;
-  const view = doc.defaultView;
-  if (!view) return () => {
-  };
-  wrap.dataset.kpNavStickyAttached = "";
-  const scroller = scrollerOf(wrap);
-  const isDocument = scroller === doc.scrollingElement || scroller === doc.documentElement;
-  const target = isDocument ? view : scroller;
-  const offset = () => isDocument ? view.scrollY : scroller.scrollTop;
-  scroller.setAttribute("data-kp-nav-sticky-root", "");
-  let compact = wrap.hasAttribute("data-kp-nav-compact");
-  let restHeight = wrap.getBoundingClientRect().height;
-  let queued = false;
-  const measure = () => {
-    const height = wrap.getBoundingClientRect().height;
-    if (!compact) restHeight = height;
-    scroller.style.setProperty("--kp-nav-sticky-height", `${height}px`);
-  };
-  const decide = () => {
-    queued = false;
-    const attribute = wrap.getAttribute("data-kp-nav-sticky-after");
-    const asked = after ?? (attribute !== null && attribute !== "" ? Number(attribute) : 0);
-    const threshold = Math.max(restHeight, Number.isFinite(asked) ? asked : 0);
-    const at = offset();
-    const next2 = compact ? at > Math.max(0, threshold - restHeight) : at > threshold;
-    if (next2 === compact) return;
-    compact = next2;
-    wrap.toggleAttribute("data-kp-nav-compact", next2);
-    wrap.dispatchEvent(new CustomEvent(NAV_COMPACT_EVENT, { bubbles: true, detail: { compact: next2 } }));
-  };
-  const onScroll = () => {
-    if (queued) return;
-    queued = true;
-    view.requestAnimationFrame(decide);
-  };
-  const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
-  resize?.observe(wrap);
-  measure();
-  decide();
-  target.addEventListener("scroll", onScroll, { passive: true });
-  return () => {
-    target.removeEventListener("scroll", onScroll);
-    resize?.disconnect();
-    wrap.removeAttribute("data-kp-nav-compact");
-    scroller.removeAttribute("data-kp-nav-sticky-root");
-    scroller.style.removeProperty("--kp-nav-sticky-height");
-    delete wrap.dataset.kpNavStickyAttached;
-  };
+  const control = attachOne(wrap, StickyNavControl, { after });
+  return () => control?.destroy();
 }
-var NAV_COMPACT_EVENT, NAV_STICKY_OWNED;
+var NAV_COMPACT_EVENT, NAV_STICKY_OWNED, StickyNavControl;
 var init_sticky_nav = __esm({
   "js/components/sticky-nav.js"() {
     "use strict";
+    init_controller();
     NAV_COMPACT_EVENT = "kp-nav-compact";
     NAV_STICKY_OWNED = "[data-kp-nav-sticky-owner]";
+    StickyNavControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ after?: number }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.view = /** @type {Window} */
+        host.ownerDocument.defaultView;
+        this.after = options.after;
+        this.scroller = scrollerOf(host);
+        const doc = host.ownerDocument;
+        this.isDocument = this.scroller === doc.scrollingElement || this.scroller === doc.documentElement;
+        this.compact = host.hasAttribute("data-kp-nav-compact");
+        this.restHeight = host.getBoundingClientRect().height;
+        this.queued = false;
+      }
+      connect() {
+        const { host: wrap, scroller } = this;
+        wrap.dataset.kpNavStickyAttached = "";
+        this.own(() => {
+          wrap.removeAttribute("data-kp-nav-compact");
+          scroller.removeAttribute("data-kp-nav-sticky-root");
+          scroller.style.removeProperty("--kp-nav-sticky-height");
+          delete wrap.dataset.kpNavStickyAttached;
+        });
+        scroller.setAttribute("data-kp-nav-sticky-root", "");
+        if (typeof ResizeObserver !== "undefined") this.observe(new ResizeObserver(() => this.measure())).observe(wrap);
+        this.measure();
+        this.decide();
+        this.listen(this.isDocument ? this.view : scroller, "scroll", () => this.onScroll(), { passive: true });
+      }
+      /** How far the box has scrolled. */
+      offset() {
+        return this.isDocument ? this.view.scrollY : this.scroller.scrollTop;
+      }
+      /** Tell the scrolling box how tall the bar is; remember its height at rest. */
+      measure() {
+        const height = this.host.getBoundingClientRect().height;
+        if (!this.compact) this.restHeight = height;
+        this.scroller.style.setProperty("--kp-nav-sticky-height", `${height}px`);
+      }
+      /** Compact past the threshold, back within it less the bar's height, and tell the page when that changes. */
+      decide() {
+        const wrap = this.host;
+        this.queued = false;
+        const attribute = wrap.getAttribute("data-kp-nav-sticky-after");
+        const asked = this.after ?? (attribute !== null && attribute !== "" ? Number(attribute) : 0);
+        const threshold = Math.max(this.restHeight, Number.isFinite(asked) ? asked : 0);
+        const at = this.offset();
+        const next2 = this.compact ? at > Math.max(0, threshold - this.restHeight) : at > threshold;
+        if (next2 === this.compact) return;
+        this.compact = next2;
+        wrap.toggleAttribute("data-kp-nav-compact", next2);
+        wrap.dispatchEvent(new CustomEvent(NAV_COMPACT_EVENT, { bubbles: true, detail: { compact: next2 } }));
+      }
+      /** One decision per frame, as the back-to-top control does. */
+      onScroll() {
+        if (this.queued) return;
+        this.queued = true;
+        this.view.requestAnimationFrame(() => {
+          if (!this.destroyed) this.decide();
+        });
+      }
+    };
   }
 });
 
@@ -25847,185 +25919,184 @@ var init_nav_place = __esm({
 
 // js/components/nav-menus.js
 function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) {
-  const cleanups = [];
-  const navs = [...root instanceof Element && root.matches(".kp-nav") ? [root] : [], ...root.querySelectorAll(".kp-nav")];
-  for (const el16 of navs) {
-    const nav = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (ownedBy !== "" && nav.matches(ownedBy)) continue;
-    if (nav.dataset.kpNavMenusAttached !== void 0) continue;
-    nav.dataset.kpNavMenusAttached = "";
-    const itemOf2 = (target) => target instanceof Element ? target.closest(".kp-nav__links > li") : null;
-    const onEnter2 = (event) => {
-      const item = itemOf2(event.target);
-      if (item && nav.contains(item) && item.querySelector(DROPDOWN)) placeNavMenu(item);
-    };
-    const placeOpen = () => {
-      for (const item of nav.querySelectorAll(".kp-nav__links > li")) if (item.querySelector(DROPDOWN)) placeNavMenu(item, false);
-      for (const panel of nav.querySelectorAll(".kp-nav__links > li > .kp-nav__menu--wide")) placeNavPanel(panel);
-    };
-    const buttons = (
-      /** @type {HTMLElement[]} */
-      [...nav.querySelectorAll("[data-kp-nav-disclosure]")]
-    );
-    const wired = /* @__PURE__ */ new Map();
-    for (const button6 of buttons) {
-      const panel = button6.parentElement?.querySelector(":scope > .kp-nav__menu--wide") ?? null;
-      const stamped = ["aria-expanded"];
-      if (panel && !panel.id) panel.id = `kp-nav-panel-${Math.random().toString(36).slice(2, 10)}`;
-      if (panel && !button6.hasAttribute("aria-controls")) {
-        button6.setAttribute("aria-controls", panel.id);
-        stamped.push("aria-controls");
-      }
-      if (!(button6.textContent ?? "").trim() && !button6.hasAttribute("aria-label") && !button6.hasAttribute("aria-labelledby")) {
-        button6.setAttribute("aria-label", { ...getStrings(), ...strings }.navDisclosure);
-        stamped.push("aria-label");
-      }
-      button6.setAttribute("aria-expanded", "false");
-      wired.set(button6, { panel, stamped });
-    }
-    const openButton = () => buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
-    const settleClosing = (item, panel) => {
-      item.setAttribute("data-kp-nav-closing", "");
-      requestAnimationFrame(() => {
-        if (!item.hasAttribute("data-kp-nav-closing")) return;
-        const plays = (panel?.getAnimations() ?? []).filter((a) => typeof CSSTransition !== "undefined" && a instanceof CSSTransition);
-        void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(() => item.removeAttribute("data-kp-nav-closing"));
-      });
-    };
-    const set = (button6, open4) => {
-      if (open4) {
-        for (const other of buttons) if (other !== button6 && other.getAttribute("aria-expanded") === "true") set(other, false);
-      }
-      const was = button6.getAttribute("aria-expanded") === "true";
-      const panel = wired.get(button6)?.panel;
-      const item = button6.parentElement;
-      if (open4) item?.removeAttribute("data-kp-nav-closing");
-      button6.setAttribute("aria-expanded", String(open4));
-      if (open4 && panel) placeNavPanel(panel);
-      if (!open4 && was && item) settleClosing(item, panel);
-    };
-    const holdsClose = () => getComputedStyle(nav).getPropertyValue("--kp-nav-close-time").trim() !== "";
-    const onLeave = (event) => {
-      if (!holdsClose()) return;
-      const item = itemOf2(event.target);
-      if (!item || !nav.contains(item)) return;
-      const panel = item.querySelector(DROPDOWN);
-      if (!panel) return;
-      const to = (
-        /** @type {FocusEvent | PointerEvent} */
-        event.relatedTarget
-      );
-      if (to instanceof Node && item.contains(to)) return;
-      if (item.hasAttribute("data-kp-nav-menu-open")) return;
-      if (event.type === "pointerout" ? item.matches(":focus-within") : item.matches(":hover")) return;
-      const raw = getComputedStyle(nav).getPropertyValue("--kp-nav-close-time").trim();
-      const ms = raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1e3;
-      if (!(ms > 0)) return;
-      item.setAttribute("data-kp-nav-closing", "");
-      setTimeout(() => {
-        if (!item.matches(":hover, :focus-within, [data-kp-nav-menu-open]")) item.removeAttribute("data-kp-nav-closing");
-      }, ms || 0);
-    };
-    const onReturn = (event) => {
-      const item = itemOf2(event.target);
-      if (item?.hasAttribute("data-kp-nav-closing") && item.querySelector(DROPDOWN)) item.removeAttribute("data-kp-nav-closing");
-    };
-    const onClick = (event) => {
-      const button6 = (
-        /** @type {HTMLElement} */
-        event.currentTarget
-      );
-      set(button6, button6.getAttribute("aria-expanded") !== "true");
-    };
-    const onKey5 = (event) => {
-      const button6 = openButton();
-      if (event.key !== "Escape" || !button6) return;
-      set(button6, false);
-      button6.focus();
-    };
-    const onOutside = (event) => {
-      const button6 = openButton();
-      if (!button6) return;
-      if (button6.parentElement?.contains(
-        /** @type {Node} */
-        event.target
-      )) return;
-      set(button6, false);
-    };
-    const onFocusOut = (event) => {
-      const button6 = openButton();
-      const to = event.relatedTarget;
-      if (!button6 || !(to instanceof Node)) return;
-      if (button6.parentElement?.contains(to)) return;
-      set(button6, false);
-    };
-    nav.addEventListener("pointerover", onEnter2);
-    nav.addEventListener("focusin", onEnter2);
-    nav.addEventListener("pointerover", onReturn);
-    nav.addEventListener("focusin", onReturn);
-    nav.addEventListener("pointerout", onLeave);
-    nav.addEventListener("focusout", onLeave);
-    nav.addEventListener(
-      "keydown",
-      /** @type {EventListener} */
-      onKey5
-    );
-    nav.addEventListener(
-      "focusout",
-      /** @type {EventListener} */
-      onFocusOut
-    );
-    for (const button6 of buttons) button6.addEventListener("click", onClick);
-    document.addEventListener("click", onOutside, true);
-    window.addEventListener("resize", placeOpen);
-    placeOpen();
-    cleanups.push(() => {
-      nav.removeEventListener("pointerover", onEnter2);
-      nav.removeEventListener("focusin", onEnter2);
-      nav.removeEventListener("pointerover", onReturn);
-      nav.removeEventListener("focusin", onReturn);
-      nav.removeEventListener("pointerout", onLeave);
-      nav.removeEventListener("focusout", onLeave);
-      nav.removeEventListener(
-        "keydown",
-        /** @type {EventListener} */
-        onKey5
-      );
-      nav.removeEventListener(
-        "focusout",
-        /** @type {EventListener} */
-        onFocusOut
-      );
-      document.removeEventListener("click", onOutside, true);
-      window.removeEventListener("resize", placeOpen);
-      for (const [button6, { stamped }] of wired) {
-        button6.removeEventListener("click", onClick);
-        for (const name of stamped) button6.removeAttribute(name);
-      }
-      for (const menu of nav.querySelectorAll("[data-kp-nav-menu-end]")) menu.removeAttribute("data-kp-nav-menu-end");
-      for (const menu of nav.querySelectorAll(".kp-nav__menu")) {
-        menu.style.removeProperty("--kp-nav-menu-shift");
-      }
-      for (const panel of nav.querySelectorAll(".kp-nav__menu--wide")) {
-        panel.style.removeProperty("--kp-nav-mega-start");
-        panel.style.removeProperty("--kp-nav-mega-end");
-      }
-      delete nav.dataset.kpNavMenusAttached;
-    });
-  }
+  const navs = (
+    /** @type {HTMLElement[]} */
+    [...root instanceof Element && root.matches(".kp-nav") ? [root] : [], ...root.querySelectorAll(".kp-nav")]
+  );
+  const made6 = navs.filter((nav) => !(ownedBy !== "" && nav.matches(ownedBy)) && !("kpNavMenusAttached" in nav.dataset)).map((nav) => attachOne(nav, NavMenusControl, { strings }));
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6.splice(0)) control?.destroy();
   };
 }
+function leavesItem(item, event) {
+  const to = (
+    /** @type {FocusEvent | PointerEvent} */
+    event.relatedTarget
+  );
+  if (to instanceof Node && item.contains(to)) return false;
+  if (item.hasAttribute("data-kp-nav-menu-open")) return false;
+  return !(event.type === "pointerout" ? item.matches(":focus-within") : item.matches(":hover"));
+}
+function settleClosing(item, panel) {
+  item.setAttribute("data-kp-nav-closing", "");
+  requestAnimationFrame(() => {
+    if (!item.hasAttribute("data-kp-nav-closing")) return;
+    const plays = (panel?.getAnimations() ?? []).filter((a) => typeof CSSTransition !== "undefined" && a instanceof CSSTransition);
+    void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(() => item.removeAttribute("data-kp-nav-closing"));
+  });
+}
+var MS_PER_SECOND4, itemOf, NavMenusControl;
 var init_nav_menus = __esm({
   "js/components/nav-menus.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_nav_toggle();
     init_nav_place();
+    MS_PER_SECOND4 = 1e3;
+    itemOf = (target) => target instanceof Element ? target.closest(".kp-nav__links > li") : null;
+    NavMenusControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.strings = options.strings;
+        this.buttons = /** @type {HTMLElement[]} */
+        [...host.querySelectorAll("[data-kp-nav-disclosure]")];
+        this.wired = /* @__PURE__ */ new Map();
+      }
+      connect() {
+        const nav = this.host;
+        nav.dataset.kpNavMenusAttached = "";
+        this.own(() => this.unstamp());
+        for (const button6 of this.buttons) this.stamp(button6);
+        this.listen(nav, "pointerover", (event) => this.onEnter(event));
+        this.listen(nav, "focusin", (event) => this.onEnter(event));
+        this.listen(nav, "pointerover", (event) => this.onReturn(event));
+        this.listen(nav, "focusin", (event) => this.onReturn(event));
+        this.listen(nav, "pointerout", (event) => this.onLeave(event));
+        this.listen(nav, "focusout", (event) => this.onLeave(event));
+        this.listen(nav, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(nav, "focusout", (event) => this.onFocusOut(
+          /** @type {FocusEvent} */
+          event
+        ));
+        for (const button6 of this.buttons) this.listen(button6, "click", () => this.set(button6, button6.getAttribute("aria-expanded") !== "true"));
+        this.listen(document, "click", (event) => this.onOutside(event), true);
+        this.listen(window, "resize", () => this.placeOpen());
+        this.placeOpen();
+      }
+      /**
+       * Give a mega menu button its `aria-expanded`, an `aria-controls` naming its panel (an id is given when the panel has none),
+       * and a name from the dictionary when it has no words of its own.
+       * @param {HTMLElement} button
+       */
+      stamp(button6) {
+        const panel = button6.parentElement?.querySelector(":scope > .kp-nav__menu--wide") ?? null;
+        const stamped = ["aria-expanded"];
+        if (panel && !panel.id) panel.id = `kp-nav-panel-${Math.random().toString(36).slice(2, 10)}`;
+        if (panel && !button6.hasAttribute("aria-controls")) {
+          button6.setAttribute("aria-controls", panel.id);
+          stamped.push("aria-controls");
+        }
+        if (!(button6.textContent ?? "").trim() && !button6.hasAttribute("aria-label") && !button6.hasAttribute("aria-labelledby")) {
+          button6.setAttribute("aria-label", { ...getStrings(), ...this.strings }.navDisclosure);
+          stamped.push("aria-label");
+        }
+        button6.setAttribute("aria-expanded", "false");
+        this.wired.set(button6, { panel, stamped });
+      }
+      /** Take back what the bar was given: the stamped attributes, the placements and the attached mark. */
+      unstamp() {
+        const nav = this.host;
+        for (const [button6, { stamped }] of this.wired) for (const name of stamped) button6.removeAttribute(name);
+        for (const menu of nav.querySelectorAll("[data-kp-nav-menu-end]")) menu.removeAttribute("data-kp-nav-menu-end");
+        for (const menu of nav.querySelectorAll(".kp-nav__menu")) menu.style.removeProperty("--kp-nav-menu-shift");
+        for (const panel of nav.querySelectorAll(".kp-nav__menu--wide")) {
+          panel.style.removeProperty("--kp-nav-mega-start");
+          panel.style.removeProperty("--kp-nav-mega-end");
+        }
+        delete nav.dataset.kpNavMenusAttached;
+      }
+      /** Place every open dropdown and mega panel inside the window. */
+      placeOpen() {
+        const nav = this.host;
+        for (const item of nav.querySelectorAll(".kp-nav__links > li")) if (item.querySelector(DROPDOWN)) placeNavMenu(item, false);
+        for (const panel of nav.querySelectorAll(".kp-nav__links > li > .kp-nav__menu--wide")) placeNavPanel(panel);
+      }
+      /** The mega menu button that is open, if one is. */
+      openButton() {
+        return this.buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
+      }
+      /** Open or close one mega menu; opening one closes the others. @param {HTMLElement} button @param {boolean} open */
+      set(button6, open4) {
+        if (open4) {
+          for (const other of this.buttons) if (other !== button6 && other.getAttribute("aria-expanded") === "true") this.set(other, false);
+        }
+        const was = button6.getAttribute("aria-expanded") === "true";
+        const panel = this.wired.get(button6)?.panel;
+        const item = button6.parentElement;
+        if (open4) item?.removeAttribute("data-kp-nav-closing");
+        button6.setAttribute("aria-expanded", String(open4));
+        if (open4 && panel) placeNavPanel(panel);
+        if (!open4 && was && item) settleClosing(item, panel);
+      }
+      /** @param {Event} event */
+      onEnter(event) {
+        const item = itemOf(event.target);
+        if (item && this.host.contains(item) && item.querySelector(DROPDOWN)) placeNavMenu(item);
+      }
+      /**
+       * A dropdown that opens on hover and focus closes in CSS, the instant the pointer or the focus leaves, which no engine can hold
+       * open for a close that plays (Firefox does not hold `display`). A register that plays one (`--kp-nav-close-time`, cyberpunk)
+       * gets the same hold as the mega menu: the item is marked while the close plays.
+       * @param {Event} event
+       */
+      onLeave(event) {
+        const nav = this.host;
+        const raw = getComputedStyle(nav).getPropertyValue("--kp-nav-close-time").trim();
+        if (raw === "") return;
+        const item = itemOf(event.target);
+        if (!item || !nav.contains(item) || !item.querySelector(DROPDOWN) || !leavesItem(item, event)) return;
+        const ms = raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * MS_PER_SECOND4;
+        if (!(ms > 0)) return;
+        item.setAttribute("data-kp-nav-closing", "");
+        setTimeout(() => {
+          if (!item.matches(":hover, :focus-within, [data-kp-nav-menu-open]")) item.removeAttribute("data-kp-nav-closing");
+        }, ms || 0);
+      }
+      /** @param {Event} event */
+      onReturn(event) {
+        const item = itemOf(event.target);
+        if (item?.hasAttribute("data-kp-nav-closing") && item.querySelector(DROPDOWN)) item.removeAttribute("data-kp-nav-closing");
+      }
+      /** Escape in the bar closes the open mega menu and puts the focus back on its button. @param {KeyboardEvent} event */
+      onKey(event) {
+        const button6 = this.openButton();
+        if (event.key !== "Escape" || !button6) return;
+        this.set(button6, false);
+        button6.focus();
+      }
+      /** @param {Event} event */
+      onOutside(event) {
+        const button6 = this.openButton();
+        if (!button6 || button6.parentElement?.contains(
+          /** @type {Node} */
+          event.target
+        )) return;
+        this.set(button6, false);
+      }
+      /** @param {FocusEvent} event */
+      onFocusOut(event) {
+        const button6 = this.openButton();
+        const to = event.relatedTarget;
+        if (!button6 || !(to instanceof Node)) return;
+        if (button6.parentElement?.contains(to)) return;
+        this.set(button6, false);
+      }
+    };
   }
 });
 
@@ -65655,7 +65726,7 @@ var init_quiet_hours = __esm({
 });
 
 // js/question-card/values.js
-var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
+var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND5, RING_RADIUS, RING_BOX, RING_CENTRE;
 var init_values40 = __esm({
   "js/question-card/values.js"() {
     "use strict";
@@ -65664,7 +65735,7 @@ var init_values40 = __esm({
     QUESTION_EXPIRE_EVENT = "kp-question-expire";
     QUESTION_DISMISS_EVENT = "kp-question-dismiss";
     QUESTION_URGENT_AT = 30;
-    MS_PER_SECOND3 = 1e3;
+    MS_PER_SECOND5 = 1e3;
     RING_RADIUS = 15.9155;
     RING_BOX = 36;
     RING_CENTRE = RING_BOX / 2;
@@ -65863,7 +65934,7 @@ var init_core20 = __esm({
         const s2 = this.s();
         const { left } = this.parts;
         const remaining = this.q.deadline - this.now();
-        const text = humanDuration(Math.max(0, Math.ceil(remaining / MS_PER_SECOND3)), s2);
+        const text = humanDuration(Math.max(0, Math.ceil(remaining / MS_PER_SECOND5)), s2);
         if (this.state === "answered" || this.state === "expired") {
           left.textContent = "";
           return;
@@ -65893,7 +65964,7 @@ var init_core20 = __esm({
       }
       /** Start the clock that repaints the time every second. */
       startClock() {
-        this.timer = this.view.setInterval(() => this.paintTime(), MS_PER_SECOND3);
+        this.timer = this.view.setInterval(() => this.paintTime(), MS_PER_SECOND5);
       }
       /** Stop the clock. */
       stopClock() {
@@ -66061,7 +66132,7 @@ function resolveQuestion(spec, now) {
   return {
     deadline: toMs3(spec.deadline) ?? now(),
     asked: toMs3(spec.asked) ?? now(),
-    urgentAt: (spec.urgentAt ?? QUESTION_URGENT_AT) * MS_PER_SECOND3,
+    urgentAt: (spec.urgentAt ?? QUESTION_URGENT_AT) * MS_PER_SECOND5,
     answers,
     countdown: spec.countdown ?? "ring",
     expiredMode: spec.expired ?? "keep",
@@ -80987,7 +81058,7 @@ function write(list, id, by) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...i.claim, by } } : i)
   );
 }
-var STATE2, el10, attr10, stateOf6, byOf, itemOf;
+var STATE2, el10, attr10, stateOf6, byOf, itemOf2;
 var init_model10 = __esm({
   "js/claim/model.js"() {
     "use strict";
@@ -81008,7 +81079,7 @@ var init_model10 = __esm({
       return s2;
     };
     byOf = (item) => claimPeople(item.claim?.by);
-    itemOf = (list, id) => getChecklistItems(list).find((i) => i.id === id);
+    itemOf2 = (list, id) => getChecklistItems(list).find((i) => i.id === id);
   }
 });
 
@@ -81519,7 +81590,7 @@ function flashRefused(list, id) {
 async function request(list, id, action, person, { undo = true } = {}) {
   const s2 = getStrings();
   const st = stateOf6(list);
-  const item = itemOf(list, id);
+  const item = itemOf2(list, id);
   if (!item || st.busy.has(id)) return;
   const previousBy = byOf(item);
   const joining = action === "join" || action === "assign";
@@ -81614,7 +81685,7 @@ function offerUndo2(list, item, previousBy, person) {
 function press(list, row2) {
   const st = stateOf6(list);
   const id = row2.getAttribute("data-id") ?? "";
-  const item = itemOf(list, id);
+  const item = itemOf2(list, id);
   if (!item || !st.viewer || whyOff(list, item, byOf(item)) !== null) return;
   const mine = among(st.viewer, byOf(item));
   void request(list, id, mine ? "leave" : "join", st.viewer);
@@ -81773,9 +81844,9 @@ var init_controller72 = __esm({
         const wrapper = event.target instanceof Element ? event.target.closest(".kp-claim__assign") : null;
         const id = wrapper?.getAttribute("data-kp-key");
         if (!id || !detail?.value) return;
-        const person = [...stateOf6(list).people, ...byOf(itemOf(list, id) ?? {})].find((p) => p.id === detail.value) ?? null;
+        const person = [...stateOf6(list).people, ...byOf(itemOf2(list, id) ?? {})].find((p) => p.id === detail.value) ?? null;
         if (!person) return;
-        const item = itemOf(list, id);
+        const item = itemOf2(list, id);
         void request(list, id, among(person, byOf(item ?? {})) ? "unassign" : "assign", person);
       }
       /**

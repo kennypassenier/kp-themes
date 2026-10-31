@@ -1,6 +1,6 @@
 // The confirmation dialog and the buttons that open it.
 import { getStrings } from '../strings.js';
-import { TYPE_CONFIRM, buildTypeConfirm } from './type-confirm.js';
+import { buildTypeConfirm } from './type-confirm.js';
 
 /** Ids for the dialog's title and description, unique per page. */
 let dialogSeq = 0;
@@ -208,61 +208,4 @@ export function openConfirmation(
     // A typed confirmation starts in its field: typing is the question; a notice on its one button.
     (field ?? (initialFocus === 'accept' && stop === null ? accept : cancel)).focus();
     return dialog;
-}
-/**
- * Wire every typed confirmation block a page put in its own dialog or form
- * [kpadopt4-ideas]:
- *
- *   <div data-kp-type-confirm="media" data-kp-type-confirm-for="wipe" data-kp-type-confirm-loses="wipe-list"></div>
- *   <button type="button" class="kp-button kp-button--destructive" id="wipe">Wipe media</button>
- *
- * The block is filled (what is lost, the field, the rule, the match line),
- * and the button `data-kp-type-confirm-for` names stays disabled until the
- * name is typed; `data-kp-type-confirm-case="any"` lets capitals pass. The
- * block fires `kp-type-confirm` when the answer turns. Detach empties the
- * block and gives the button back its own disabled state.
- *
- * @param {ParentNode} [root]
- * @param {{ strings?: Partial<import('../strings.js').Strings> }} [options]
- * @returns {() => void} detach
- */
-export function attachTypeConfirms(root = document, { strings } = {}) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
-    for (const el of root.querySelectorAll(TYPE_CONFIRM)) {
-        const block = /** @type {HTMLElement} */ (el);
-        if (block.dataset.kpTypeConfirmAttached !== undefined) continue;
-        block.dataset.kpTypeConfirmAttached = '';
-        const doc = block.ownerDocument;
-        const target = block.dataset.kpTypeConfirmFor ? doc.getElementById(block.dataset.kpTypeConfirmFor) : null;
-        const button = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
-        const wasDisabled = button?.disabled ?? false;
-        const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
-        const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
-        if (lost instanceof Element) {
-            lost.removeAttribute('id');
-            lost.removeAttribute('hidden');
-        }
-        const typed = buildTypeConfirm(doc, {
-            name: block.dataset.kpTypeConfirm ?? '',
-            anyCase: block.dataset.kpTypeConfirmCase === 'any',
-            loses: lost,
-            strings,
-            block,
-            onChange: (matched) => {
-                if (button) button.disabled = !matched || wasDisabled;
-            },
-        });
-        if (button) button.disabled = !typed.matched() || wasDisabled;
-        cleanups.push(() => {
-            block.replaceChildren();
-            block.classList.remove('kp-type-confirm', 'kp-field');
-            delete block.dataset.kpMatched;
-            delete block.dataset.kpTypeConfirmAttached;
-            if (button) button.disabled = wasDisabled;
-        });
-    }
-    return () => {
-        for (const c of cleanups) c();
-    };
 }

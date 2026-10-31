@@ -1,6 +1,6 @@
-export { VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeConfirmMatches, buildTypeConfirm, } from './components/type-confirm.js';
+export { VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeConfirmMatches, buildTypeConfirm, attachTypeConfirms, } from './components/type-confirm.js';
 export { EXEMPT, findViolations, enforceContracts, attachConfirmations } from './components/contracts.js';
-export { openConfirmation, attachTypeConfirms } from './components/confirm-dialog.js';
+export { openConfirmation } from './components/confirm-dialog.js';
 export { skipTo, attachSkipLinks } from './components/skip-links.js';
 export { TO_TOP_EVENT, TO_TOP, attachToTop } from './components/to-top.js';
 export { NAV_TOGGLE_EVENT, NAV_OWNED, attachNavToggles } from './components/nav-toggle.js';

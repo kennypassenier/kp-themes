@@ -1,4 +1,5 @@
 // Skip links: jump past the navigation to the content.
+import { Controller, attachOne } from '../controller.js';
 
 /**
  * Move focus to the target of a skip link, adding `tabindex="-1"` if the
@@ -22,6 +23,19 @@ export function skipTo(href, root = document) {
     target.focus();
     return true;
 }
+/** One skip link: a click moves the focus to its target, not only the scroll position. */
+class SkipLinkControl extends Controller {
+    connect() {
+        const link = /** @type {HTMLAnchorElement} */ (this.host);
+        link.dataset.kpSkipAttached = '';
+        // Registered first, so the mark goes last.
+        this.own(() => delete link.dataset.kpSkipAttached);
+        this.listen(link, 'click', (event) => {
+            if (skipTo(link.getAttribute('href') ?? '')) event.preventDefault();
+        });
+    }
+}
+
 /**
  * Make every `.kp-skip-link` (or `[data-kp-skip]`) move focus, not only
  * the scroll position.
@@ -30,23 +44,11 @@ export function skipTo(href, root = document) {
  * @returns {() => void} detach
  */
 export function attachSkipLinks(root = document) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
-    for (const el of root.querySelectorAll('.kp-skip-link, [data-kp-skip]')) {
-        const link = /** @type {HTMLAnchorElement} */ (el);
-        if (link.dataset.kpSkipAttached !== undefined) continue;
-        link.dataset.kpSkipAttached = '';
-        /** @param {Event} event */
-        const onClick = (event) => {
-            if (skipTo(link.getAttribute('href') ?? '')) event.preventDefault();
-        };
-        link.addEventListener('click', onClick);
-        cleanups.push(() => {
-            link.removeEventListener('click', onClick);
-            delete link.dataset.kpSkipAttached;
-        });
-    }
+    // A link marked attached is wired already, by this call's controller or an earlier one.
+    const made = /** @type {HTMLElement[]} */ ([...root.querySelectorAll('.kp-skip-link, [data-kp-skip]')])
+        .filter((link) => !('kpSkipAttached' in link.dataset))
+        .map((link) => attachOne(link, SkipLinkControl));
     return () => {
-        for (const c of cleanups) c();
+        for (const control of made.splice(0)) control?.destroy();
     };
 }

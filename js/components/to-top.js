@@ -1,10 +1,13 @@
 // The back-to-top button.
+import { Controller, attachOne } from '../controller.js';
 import { getStrings } from '../strings.js';
 
 /** Fired on the control when it appears or goes away: `{ shown }`. */
 export const TO_TOP_EVENT = 'kp-to-top';
 /** The attribute that marks a back-to-top control [feat-page-1]. */
 export const TO_TOP = '[data-kp-to-top]';
+/** How far (px) the page scrolls before the control shows, when neither the call nor `data-kp-to-top-after` says. */
+const DEFAULT_AFTER = '400';
 /**
  * Wire every back-to-top control under `root` [feat-page-1].
  *
@@ -27,92 +30,111 @@ export const TO_TOP = '[data-kp-to-top]';
  * @returns {() => void} detach
  */
 export function attachToTop(root = document, { strings, after } = {}) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
+    // A control marked attached is wired already; one outside a window has nothing to scroll.
+    const made = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(TO_TOP)])
+        .filter((button) => !('kpToTopAttached' in button.dataset) && button.ownerDocument.defaultView)
+        .map((button) => attachOne(button, ToTopControl, { strings, after }));
+    return () => {
+        for (const control of made.splice(0)) control?.destroy();
+    };
+}
 
-    for (const el of root.querySelectorAll(TO_TOP)) {
-        const button = /** @type {HTMLElement} */ (el);
-        if (button.dataset.kpToTopAttached !== undefined) continue;
+/** One back-to-top control: whether it is shown, whether a decision is queued for the next frame, and the glyph it added. */
+class ToTopControl extends Controller {
+    /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings>, after?: number }} [options] */
+    constructor(host, options = {}) {
+        super(host, options);
+        this.doc = host.ownerDocument;
+        this.view = /** @type {Window} */ (this.doc.defaultView);
+        /** The distance (px) scrolled past which the control shows. */
+        this.threshold = options.after ?? Number(host.getAttribute('data-kp-to-top-after') ?? DEFAULT_AFTER);
+        /** The selector of the element the focus lands on; empty: the body. */
+        this.target = host.getAttribute('data-kp-to-top-target') ?? '';
+        this.strings = options.strings;
+        /** Whether the control is shown now. */
+        this.shown = false;
+        /** Whether a decision waits for the next frame. */
+        this.queued = false;
+        /** The glyph this controller put into an empty control. @type {HTMLElement | null} */
+        this.glyph = null;
+    }
+
+    connect() {
+        const button = this.host;
         button.dataset.kpToTopAttached = '';
-        const doc = button.ownerDocument;
-        const view = doc.defaultView;
-        if (!view) continue;
-
-        const threshold = after ?? Number(button.getAttribute('data-kp-to-top-after') ?? '400');
-        const target = button.getAttribute('data-kp-to-top-target') ?? '';
-        const s = { ...getStrings(), ...strings };
-        if (button.getAttribute('aria-label') === null && button.textContent?.trim() === '') {
-            button.setAttribute('aria-label', s.backToTop);
-        }
-        // An empty control gets the package's glyph [gap-12]: written the
-        // documented way it painted as an empty box. The element is empty
-        // and hidden from the accessibility tree — the arrow is drawn by
-        // css/components.css and the name above is what is read.
-        /** @type {HTMLElement | null} */
-        let glyph = null;
-        if (button.children.length === 0 && button.textContent?.trim() === '') {
-            glyph = doc.createElement('span');
-            glyph.className = 'kp-to-top__glyph';
-            glyph.setAttribute('aria-hidden', 'true');
-            button.append(glyph);
-        }
-
-        // The box that scrolls the control's page: the window, or a scrolling box it sits in (a dashboard's main, a review
-        // dialog's stage; Kenny, 2026-10-13: "the back to top didn't seem to work" in such a stage). Read at every use, since
-        // a box can move the control into another scroller after it was attached.
-        const scroller = () => {
-            for (let box = button.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
-                const overflow = view.getComputedStyle(box).overflowY;
-                if (/auto|scroll|overlay/.test(overflow) && box.scrollHeight > box.clientHeight + 1) return box;
-            }
-            return null;
-        };
-        let shown = false;
-        let queued = false;
-        const decide = () => {
-            queued = false;
-            const box = scroller();
-            const next = (box ? box.scrollTop : view.scrollY) > threshold;
-            if (next === shown) return;
-            shown = next;
-            button.toggleAttribute('data-kp-to-top-shown', next);
-            button.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next } }));
-        };
-        const onScroll = () => {
-            // One decision per frame: a scroll fires far more often than a
-            // page can paint, and the answer cannot change in between.
-            if (queued) return;
-            queued = true;
-            view.requestAnimationFrame(decide);
-        };
-        const onClick = () => {
-            (scroller() ?? view).scrollTo({ top: 0 });
-            // The focus goes too, and it goes WITHOUT scrolling. Focusing an
-            // element normally brings it into view, which undid the journey:
-            // on a page whose main landmark starts 2737px down, "back to
-            // top" landed back at 3476. So the target is the top of the
-            // document unless the page names another, and either way the
-            // focus moves quietly while the scroll above does the travelling.
-            const to = /** @type {HTMLElement | null} */ (target === '' ? null : doc.querySelector(target)) ?? doc.body;
-            if (!to.hasAttribute('tabindex')) to.setAttribute('tabindex', '-1');
-            to.focus({ preventScroll: true });
-        };
-
-        decide();
-        // Captured on the document: a box's scroll does not bubble, and the window's reaches the document as well.
-        doc.addEventListener('scroll', onScroll, { passive: true, capture: true });
-        button.addEventListener('click', onClick);
-
-        cleanups.push(() => {
-            doc.removeEventListener('scroll', onScroll, { capture: true });
-            button.removeEventListener('click', onClick);
+        // Registered first, so it runs last: the shown mark, the glyph and the attached mark go after the listeners.
+        this.own(() => {
             button.removeAttribute('data-kp-to-top-shown');
-            glyph?.remove();
+            this.glyph?.remove();
             delete button.dataset.kpToTopAttached;
+        });
+        this.label();
+        this.decide();
+        // Captured on the document: a box's scroll does not bubble, and the window's reaches the document as well.
+        this.listen(this.doc, 'scroll', () => this.onScroll(), { passive: true, capture: true });
+        this.listen(button, 'click', () => this.onClick());
+    }
+
+    /**
+     * A control without words gets the dictionary's name, and an empty one the package's glyph [gap-12]: written the documented
+     * way it painted as an empty box. The glyph is empty and hidden from the accessibility tree; css/components.css draws the arrow.
+     */
+    label() {
+        const button = this.host;
+        if (button.getAttribute('aria-label') === null && button.textContent?.trim() === '') {
+            button.setAttribute('aria-label', { ...getStrings(), ...this.strings }.backToTop);
+        }
+        if (button.children.length > 0 || button.textContent?.trim() !== '') return;
+        this.glyph = this.doc.createElement('span');
+        this.glyph.className = 'kp-to-top__glyph';
+        this.glyph.setAttribute('aria-hidden', 'true');
+        button.append(this.glyph);
+    }
+
+    /**
+     * The box that scrolls the control's page: the window (null), or a scrolling box it sits in (a dashboard's main, a review
+     * dialog's stage; Kenny, 2026-10-13: "the back to top didn't seem to work" in such a stage). Read at every use, since a box
+     * can move the control into another scroller after it was attached.
+     * @returns {HTMLElement | null}
+     */
+    scroller() {
+        const { doc, view } = this;
+        for (let box = this.host.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
+            const overflow = view.getComputedStyle(box).overflowY;
+            if (/auto|scroll|overlay/.test(overflow) && box.scrollHeight > box.clientHeight + 1) return box;
+        }
+        return null;
+    }
+
+    /** Show or hide the control by how far its page is scrolled, and tell the page when that changes. */
+    decide() {
+        this.queued = false;
+        const box = this.scroller();
+        const next = (box ? box.scrollTop : this.view.scrollY) > this.threshold;
+        if (next === this.shown) return;
+        this.shown = next;
+        this.host.toggleAttribute('data-kp-to-top-shown', next);
+        this.host.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next } }));
+    }
+
+    /** One decision per frame: a scroll fires far more often than a page can paint, and the answer cannot change in between. */
+    onScroll() {
+        if (this.queued) return;
+        this.queued = true;
+        this.view.requestAnimationFrame(() => {
+            if (!this.destroyed) this.decide();
         });
     }
 
-    return () => {
-        for (const c of cleanups) c();
-    };
+    /**
+     * Scroll to the top, and move the focus WITHOUT scrolling. Focusing an element normally brings it into view, which undid the
+     * journey: on a page whose main landmark starts 2737px down, "back to top" landed back at 3476. So the target is the top of the
+     * document unless the page names another, and either way the focus moves quietly while the scroll does the travelling.
+     */
+    onClick() {
+        (this.scroller() ?? this.view).scrollTo({ top: 0 });
+        const to = /** @type {HTMLElement | null} */ (this.target === '' ? null : this.doc.querySelector(this.target)) ?? this.doc.body;
+        if (!to.hasAttribute('tabindex')) to.setAttribute('tabindex', '-1');
+        to.focus({ preventScroll: true });
+    }
 }

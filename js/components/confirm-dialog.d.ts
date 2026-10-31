@@ -62,23 +62,3 @@ export declare function openConfirmation(button: HTMLElement, { phrase, descript
     acceptFollows?: string | HTMLElement;
     acceptVerb?: string;
 }): HTMLDialogElement;
-/**
- * Wire every typed confirmation block a page put in its own dialog or form
- * [kpadopt4-ideas]:
- *
- *   <div data-kp-type-confirm="media" data-kp-type-confirm-for="wipe" data-kp-type-confirm-loses="wipe-list"></div>
- *   <button type="button" class="kp-button kp-button--destructive" id="wipe">Wipe media</button>
- *
- * The block is filled (what is lost, the field, the rule, the match line),
- * and the button `data-kp-type-confirm-for` names stays disabled until the
- * name is typed; `data-kp-type-confirm-case="any"` lets capitals pass. The
- * block fires `kp-type-confirm` when the answer turns. Detach empties the
- * block and gives the button back its own disabled state.
- *
- * @param {ParentNode} [root]
- * @param {{ strings?: Partial<import('../strings.js').Strings> }} [options]
- * @returns {() => void} detach
- */
-export declare function attachTypeConfirms(root?: ParentNode, { strings }?: {
-    strings?: Partial<import('../strings.js').Strings>;
-}): () => void;

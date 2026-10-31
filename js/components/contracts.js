@@ -1,4 +1,5 @@
 // Checks the confirmation contracts of a page and attaches its confirmations.
+import { Controller, attachOne } from '../controller.js';
 import { getStrings } from '../strings.js';
 import { CONFIRM_OWNED, CONFIRM_WINDOW_MS, VIOLATION_EVENT } from './type-confirm.js';
 import { openConfirmation } from './confirm-dialog.js';
@@ -128,102 +129,105 @@ export function attachConfirmations(
     root = document,
     { mode = 'dialog', windowMs = CONFIRM_WINDOW_MS, disarmOnBlur = true, strings, ownedBy = CONFIRM_OWNED, dialogClassName = '' } = {},
 ) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
+    const options = { mode, windowMs, disarmOnBlur, strings, dialogClassName };
+    // AR29, and it is a defect shipped today rather than a risk being avoided: components/button.jsx writes `data-kp-confirm` too,
+    // and js/auto.js runs this over the whole document in kyu, Almanac and chassis alike. Measured in both browsers before the
+    // repair: the two channels re-armed each other's button forever and the action never fired at any number of clicks. A
+    // consumer who wants this module over a React button anyway passes `ownedBy: ''`. Only a control is confirmed: a component
+    // that takes `data-kp-confirm` as an option of its own (the passkey list's `dialog` or `type-name`) is not a button; armed as
+    // one, every click inside it, Rename too, asked to confirm (chassis-rs, 2026-10-19). A button marked attached is wired already.
+    const made = /** @type {HTMLElement[]} */ ([...root.querySelectorAll('[data-kp-confirm]')])
+        .filter((button) => !(ownedBy !== '' && button.matches(ownedBy)) && button.matches(CONFIRMABLE) && button.dataset.kpConfirmAttached !== '1')
+        .map((button) => attachOne(button, ConfirmControl, options));
+    return () => {
+        for (const control of made.splice(0)) control?.destroy();
+    };
+}
 
-    for (const el of root.querySelectorAll('[data-kp-confirm]')) {
-        const button = /** @type {HTMLButtonElement} */ (el);
-        // AR29, and it is a defect shipped today rather than a risk being
-        // avoided: components/button.jsx writes `data-kp-confirm` too, and
-        // js/auto.js runs this over the whole document in kyu, Almanac and
-        // chassis alike. Measured in both browsers before the repair: the
-        // two channels re-armed each other's button forever and the action
-        // never fired at any number of clicks. A consumer who wants this
-        // module over a React button anyway passes `ownedBy: ''`.
-        if (ownedBy !== '' && button.matches(ownedBy)) continue;
-        // Only a control is confirmed. A component that takes `data-kp-confirm` as an option of its own (the passkey
-        // list's `dialog` or `type-name`) is not a button: armed as one, every click inside it, Rename too, asked to
-        // confirm (chassis-rs, 2026-10-19).
-        if (!button.matches('button, a[href], input[type="button"], input[type="submit"], [role="button"]')) continue;
-        if (button.dataset.kpConfirmAttached === '1') continue;
-        button.dataset.kpConfirmAttached = '1';
+/** The controls a confirmation guards. */
+const CONFIRMABLE = 'button, a[href], input[type="button"], input[type="submit"], [role="button"]';
 
-        const original = button.textContent ?? '';
-        const phrase = button.dataset.kpConfirm || getStrings().confirm;
-        const elementMode =
-            button.dataset.kpConfirmMode === 'inline' || button.dataset.kpConfirmMode === 'dialog' ? button.dataset.kpConfirmMode : mode;
-        // Per element beats per call: one page mixes a two-second window
-        // on a list and a ten-second one on the account deletion.
-        const window_ = Number(button.dataset.kpConfirmMs) || windowMs;
-        let armed = false;
-        let timer = 0;
+/**
+ * One guarded button: its own words, its phrase, its mode and window, whether it is armed (inline), the disarm timer and the
+ * dialog it opened.
+ */
+class ConfirmControl extends Controller {
+    /**
+     * @param {HTMLElement} host
+     * @param {{ mode?: 'dialog' | 'inline', windowMs?: number, disarmOnBlur?: boolean, strings?: Partial<import('../strings.js').Strings>, dialogClassName?: string }} [options]
+     */
+    constructor(host, options = {}) {
+        super(host, options);
+        this.settings = options;
+        this.original = host.textContent ?? '';
+        this.phrase = host.dataset.kpConfirm || getStrings().confirm;
+        this.mode = host.dataset.kpConfirmMode === 'inline' || host.dataset.kpConfirmMode === 'dialog' ? host.dataset.kpConfirmMode : (options.mode ?? 'dialog');
+        // Per element beats per call: one page mixes a two-second window on a list and a ten-second one on the account deletion.
+        this.window = Number(host.dataset.kpConfirmMs) || (options.windowMs ?? CONFIRM_WINDOW_MS);
+        this.armed = false;
+        this.timer = 0;
         /** @type {HTMLDialogElement | null} */
-        let open = null;
+        this.open = null;
+    }
 
-        const disarm = () => {
-            armed = false;
-            button.textContent = original;
-            button.removeAttribute('data-kp-armed');
-            clearTimeout(timer);
-        };
-        const onBlur = () => {
-            if (disarmOnBlur) disarm();
-        };
-
-        /** @param {Event} event */
-        const onDialogClick = (event) => {
-            if (unlocked === button) {
-                // The re-fired click, let through untouched, exactly once.
-                unlocked = null;
-                return;
-            }
-            // The click is the question, not the action, so it must not
-            // reach anything else — capture and stop, rather than trust
-            // that no other listener acts.
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            if (open?.open) return;
-            open = openConfirmation(button, {
-                phrase,
-                strings,
-                className: dialogClassName,
-                onAccept: () => {
-                    unlocked = button;
-                    button.click();
-                },
-            });
-        };
-
-        /** @param {Event} event */
-        const onInlineClick = (event) => {
-            if (armed) {
-                disarm();
-                return; // the real handler runs: this click is the deliberate one
-            }
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            armed = true;
-            button.textContent = phrase;
-            button.setAttribute('data-kp-armed', 'true');
-            timer = window.setTimeout(disarm, window_);
-        };
-
-        const onClick = elementMode === 'inline' ? onInlineClick : onDialogClick;
-        button.addEventListener('click', onClick, { capture: true });
-        if (elementMode === 'inline') button.addEventListener('blur', onBlur);
-        cleanups.push(() => {
-            button.removeEventListener('click', onClick, { capture: true });
-            if (elementMode === 'inline') button.removeEventListener('blur', onBlur);
+    connect() {
+        const button = this.host;
+        button.dataset.kpConfirmAttached = '1';
+        // Nothing this module set outlives the detach [KT6]: not the armed label, not an open dialog, and not the lock. Registered
+        // first, so it runs after the listeners are gone.
+        this.own(() => {
             delete button.dataset.kpConfirmAttached;
-            // Nothing this module set outlives the detach [KT6]: not the
-            // armed label, not an open dialog, and not the lock.
             if (unlocked === button) unlocked = null;
-            open?.close('');
-            disarm();
+            this.open?.close('');
+            this.disarm();
+        });
+        const inline = this.mode === 'inline';
+        this.listen(button, 'click', (event) => (inline ? this.onInlineClick(event) : this.onDialogClick(event)), { capture: true });
+        if (inline && this.settings.disarmOnBlur !== false) this.listen(button, 'blur', () => this.disarm());
+    }
+
+    disarm() {
+        this.armed = false;
+        this.host.textContent = this.original;
+        this.host.removeAttribute('data-kp-armed');
+        clearTimeout(this.timer);
+    }
+
+    /** @param {Event} event */
+    onDialogClick(event) {
+        const button = this.host;
+        if (unlocked === button) {
+            // The re-fired click, let through untouched, exactly once.
+            unlocked = null;
+            return;
+        }
+        // The click is the question, not the action, so it must not reach anything else — capture and stop, rather than trust
+        // that no other listener acts.
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (this.open?.open) return;
+        this.open = openConfirmation(button, {
+            phrase: this.phrase,
+            strings: this.settings.strings,
+            className: this.settings.dialogClassName ?? '',
+            onAccept: () => {
+                unlocked = button;
+                button.click();
+            },
         });
     }
 
-    return () => {
-        for (const c of cleanups) c();
-    };
+    /** @param {Event} event */
+    onInlineClick(event) {
+        if (this.armed) {
+            this.disarm();
+            return; // the real handler runs: this click is the deliberate one
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        this.armed = true;
+        this.host.textContent = this.phrase;
+        this.host.setAttribute('data-kp-armed', 'true');
+        this.timer = window.setTimeout(() => this.disarm(), this.window);
+    }
 }

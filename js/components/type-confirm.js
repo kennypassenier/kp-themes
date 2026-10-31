@@ -1,4 +1,5 @@
-// The type-to-confirm field: its constants, matching and markup.
+// The type-to-confirm field: its constants, matching and markup, and the typed confirmation blocks a page puts in its own dialog.
+import { Controller, attachOne } from '../controller.js';
 import { getStrings } from '../strings.js';
 
 /** Dispatched on the offending element, bubbling, with the Violation as detail. */
@@ -144,4 +145,77 @@ export function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = 
     input.addEventListener('input', update);
     update();
     return { block, input, matched: () => matched };
+}
+/**
+ * Wire every typed confirmation block a page put in its own dialog or form
+ * [kpadopt4-ideas]:
+ *
+ *   <div data-kp-type-confirm="media" data-kp-type-confirm-for="wipe" data-kp-type-confirm-loses="wipe-list"></div>
+ *   <button type="button" class="kp-button kp-button--destructive" id="wipe">Wipe media</button>
+ *
+ * The block is filled (what is lost, the field, the rule, the match line),
+ * and the button `data-kp-type-confirm-for` names stays disabled until the
+ * name is typed; `data-kp-type-confirm-case="any"` lets capitals pass. The
+ * block fires `kp-type-confirm` when the answer turns. Detach empties the
+ * block and gives the button back its own disabled state.
+ *
+ * @param {ParentNode} [root]
+ * @param {{ strings?: Partial<import('../strings.js').Strings> }} [options]
+ * @returns {() => void} detach
+ */
+export function attachTypeConfirms(root = document, { strings } = {}) {
+    // A block marked attached is wired already, by this call's controller or an earlier one.
+    const made = /** @type {HTMLElement[]} */ ([...root.querySelectorAll(TYPE_CONFIRM)])
+        .filter((block) => !('kpTypeConfirmAttached' in block.dataset))
+        .map((block) => attachOne(block, TypeConfirmControl, { strings }));
+    return () => {
+        for (const control of made.splice(0)) control?.destroy();
+    };
+}
+
+/** One typed confirmation block a page put in its own dialog or form: the button it holds back and that button's own disabled state. */
+class TypeConfirmControl extends Controller {
+    /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
+    constructor(host, options = {}) {
+        super(host, options);
+        this.strings = options.strings;
+        const target = host.dataset.kpTypeConfirmFor ? host.ownerDocument.getElementById(host.dataset.kpTypeConfirmFor) : null;
+        /** The button `data-kp-type-confirm-for` names, kept disabled until the name is typed. */
+        this.button = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
+        /** Whether the page had disabled that button itself; detach gives it back. */
+        this.wasDisabled = this.button?.disabled ?? false;
+    }
+
+    connect() {
+        const block = this.host;
+        const doc = block.ownerDocument;
+        block.dataset.kpTypeConfirmAttached = '';
+        this.own(() => {
+            block.replaceChildren();
+            block.classList.remove('kp-type-confirm', 'kp-field');
+            delete block.dataset.kpMatched;
+            delete block.dataset.kpTypeConfirmAttached;
+            if (this.button) this.button.disabled = this.wasDisabled;
+        });
+        const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
+        const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
+        if (lost instanceof Element) {
+            lost.removeAttribute('id');
+            lost.removeAttribute('hidden');
+        }
+        const typed = buildTypeConfirm(doc, {
+            name: block.dataset.kpTypeConfirm ?? '',
+            anyCase: block.dataset.kpTypeConfirmCase === 'any',
+            loses: lost,
+            strings: this.strings,
+            block,
+            onChange: (matched) => this.hold(matched),
+        });
+        this.hold(typed.matched());
+    }
+
+    /** The button is on only while the name matches, and never when the page had disabled it. @param {boolean} matched */
+    hold(matched) {
+        if (this.button) this.button.disabled = !matched || this.wasDisabled;
+    }
 }
