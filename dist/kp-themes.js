@@ -86603,199 +86603,12 @@ var init_api30 = __esm({
   }
 });
 
-// js/logviewer/attach.js
-function attachLogViewers(root = document) {
-  const undo = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(LOGVIEWER) ? [root] : [],
-      ...root.querySelectorAll(LOGVIEWER)
-    ]
-  );
-  for (const viewer of found) {
-    if (stateOf10(viewer).off.length) continue;
-    const st = stateOf10(viewer);
-    ensureParts4(viewer);
-    const log = logOf(viewer);
-    const stage = (
-      /** @type {HTMLElement} */
-      viewer.querySelector(".kp-logviewer__stage")
-    );
-    const bar = (
-      /** @type {HTMLElement} */
-      viewer.querySelector(".kp-logviewer__bar")
-    );
-    const stopPills = attachNewPills(stage);
-    const stopSegmented = attachSegmented(viewer);
-    const stopReasons = attachDisabledReasons(bar);
-    if (attr14(viewer, "follow", "live") === "paused") newPill(log)?.pause();
-    st.sig = "";
-    syncOptions(viewer);
-    const find2 = (
-      /** @type {HTMLInputElement} */
-      bar.querySelector(".kp-logviewer__find")
-    );
-    const onInput = () => {
-      if (find2.value.trim() === "") viewer.removeAttribute("data-kp-log-search");
-      else viewer.setAttribute("data-kp-log-search", find2.value);
-      syncOptions(viewer);
-      if (stateOf10(viewer).matches.length > 0) say15(viewer, matchWords(viewer));
-      else if (queryOf(viewer) !== "") say15(viewer, getStrings().logviewerSearchNone);
-    };
-    const onFindKey = (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        stepLogMatch(viewer, event.shiftKey ? -1 : 1);
-      } else if (event.key === "Escape" && find2.value !== "") {
-        event.preventDefault();
-        find2.value = "";
-        onInput();
-      }
-    };
-    const onChange = (event) => {
-      const target = (
-        /** @type {Element} */
-        event.target
-      );
-      if (target.closest(".kp-logviewer__level")) {
-        const value = (
-          /** @type {HTMLSelectElement} */
-          target.value
-        );
-        if (value === "debug") viewer.removeAttribute("data-kp-log-level");
-        else viewer.setAttribute("data-kp-log-level", value);
-        syncOptions(viewer);
-      }
-    };
-    const onSegment = (event) => {
-      const detail = (
-        /** @type {CustomEvent} */
-        event.detail
-      );
-      const group = (
-        /** @type {Element} */
-        event.target.closest("[data-kp-logviewer-time]")
-      );
-      const value = detail?.value ?? detail?.item?.getAttribute("data-value");
-      if (group && value) {
-        viewer.setAttribute("data-kp-log-time", value);
-        syncOptions(viewer);
-      }
-    };
-    const onClick = (event) => {
-      const t = event.target instanceof Element ? event.target : null;
-      if (!t) return;
-      const step = t.closest("[data-kp-logviewer-step]");
-      if (step) return void stepLogMatch(viewer, Number(step.getAttribute("data-kp-logviewer-step")) < 0 ? -1 : 1);
-      if (t.closest("[data-kp-logviewer-only]")) {
-        viewer.setAttribute("data-kp-log-search-only", attr14(viewer, "search-only", "off") === "on" ? "off" : "on");
-        return void syncOptions(viewer);
-      }
-      if (t.closest("[data-kp-logviewer-wrap]")) {
-        viewer.setAttribute("data-kp-log-wrap", attr14(viewer, "wrap", "on") === "off" ? "on" : "off");
-        return void syncOptions(viewer);
-      }
-      if (t.closest("[data-kp-logviewer-clear]")) {
-        viewer.removeAttribute("data-kp-log-search");
-        viewer.removeAttribute("data-kp-log-level");
-        find2.value = "";
-        return void syncOptions(viewer);
-      }
-      if (t.closest("[data-kp-logviewer-retry]")) return void viewer.dispatchEvent(new CustomEvent(LOGVIEWER_RETRY_EVENT, { bubbles: true }));
-      const copy3 = (
-        /** @type {HTMLButtonElement | null} */
-        t.closest("[data-kp-logviewer-copy]")
-      );
-      if (copy3) {
-        const s3 = getStrings();
-        void runFlashButton(copy3, async () => {
-          const text = logViewerText(viewer);
-          try {
-            await navigator.clipboard.writeText(text);
-            return s3.logviewerCopied;
-          } catch {
-            return { error: s3.logviewerNotCopied, word: s3.logviewerNotCopied };
-          }
-        });
-        return;
-      }
-      if (t.closest("[data-kp-logviewer-download]")) {
-        const blob = new Blob([`${logViewerText(viewer)}
-`], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${attr14(viewer, "filename", "log")}.txt`;
-        document.body.append(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1e3);
-      }
-    };
-    find2.addEventListener("input", onInput);
-    find2.addEventListener("keydown", onFindKey);
-    viewer.addEventListener("change", onChange);
-    viewer.addEventListener("kp-segmented-change", onSegment);
-    viewer.addEventListener("click", onClick);
-    const observer = new MutationObserver(() => syncOptions(viewer));
-    observer.observe(viewer, {
-      attributes: true,
-      attributeFilter: [
-        "data-kp-state",
-        "data-kp-log-hint",
-        ...["max", "wrap", "time", "level", "search", "search-only", "tools"].map((n) => `data-kp-log-${n}`)
-      ]
-    });
-    const onFollow = () => viewer.setAttribute("data-kp-log-following", String(newPill(log)?.following() ?? true));
-    const stick = () => {
-      if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
-    };
-    const watcher = typeof ResizeObserver === "function" ? new ResizeObserver(stick) : null;
-    watcher?.observe(log);
-    void document.fonts?.ready.then(stick);
-    log.addEventListener(FOLLOW_EVENT, onFollow);
-    onFollow();
-    const s2 = getStrings();
-    const focusKey = attr14(viewer, "focus-key", "/");
-    const stopKeys = focusKey !== "false" && focusKey !== "" ? registerShortcuts(
-      viewer,
-      [
-        {
-          keys: focusKey,
-          what: s2.logviewerKeySearch,
-          group: s2.logviewerKeyGroup,
-          when: () => !find2.disabled && !find2.hidden && !bar.hidden,
-          reason: s2.logviewerNothing,
-          run: () => find2.focus()
-        }
-      ],
-      { layoutGuard: "off" }
-    ) : () => void 0;
-    st.off = [
-      () => find2.removeEventListener("input", onInput),
-      () => find2.removeEventListener("keydown", onFindKey),
-      () => viewer.removeEventListener("change", onChange),
-      () => viewer.removeEventListener("kp-segmented-change", onSegment),
-      () => viewer.removeEventListener("click", onClick),
-      () => log.removeEventListener(FOLLOW_EVENT, onFollow),
-      () => observer.disconnect(),
-      () => watcher?.disconnect(),
-      stopKeys,
-      stopPills,
-      stopSegmented,
-      stopReasons
-    ];
-    undo.push(() => {
-      for (const stop of st.off) stop();
-      st.off = [];
-    });
-  }
-  return () => undo.forEach((u) => u());
-}
-var init_attach26 = __esm({
-  "js/logviewer/attach.js"() {
+// js/logviewer/controller.js
+var DOWNLOAD_URL_MS, LIVE4, LogViewerControl;
+var init_controller76 = __esm({
+  "js/logviewer/controller.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_newpill();
     init_segmented();
@@ -86808,6 +86621,183 @@ var init_attach26 = __esm({
     init_parts18();
     init_reads();
     init_rows10();
+    DOWNLOAD_URL_MS = 1e3;
+    LIVE4 = ["data-kp-state", "data-kp-log-hint", ...["max", "wrap", "time", "level", "search", "search-only", "tools"].map((n) => `data-kp-log-${n}`)];
+    LogViewerControl = class extends Controller {
+      connect() {
+        const viewer = this.host;
+        ensureParts4(viewer);
+        const log = logOf(viewer);
+        const stage = (
+          /** @type {HTMLElement} */
+          viewer.querySelector(".kp-logviewer__stage")
+        );
+        const bar = (
+          /** @type {HTMLElement} */
+          viewer.querySelector(".kp-logviewer__bar")
+        );
+        const find2 = (
+          /** @type {HTMLInputElement} */
+          bar.querySelector(".kp-logviewer__find")
+        );
+        this.own(attachDisabledReasons(bar));
+        this.own(attachSegmented(viewer));
+        this.own(attachNewPills(stage));
+        if (attr14(viewer, "follow", "live") === "paused") newPill(log)?.pause();
+        stateOf10(viewer).sig = "";
+        syncOptions(viewer);
+        this.own(this.searchKey(find2, bar));
+        this.listen(find2, "input", () => this.onInput(find2));
+        this.listen(find2, "keydown", (event) => this.onFindKey(
+          /** @type {KeyboardEvent} */
+          event,
+          find2
+        ));
+        this.listen(viewer, "change", (event) => this.onChange(event));
+        this.listen(viewer, "kp-segmented-change", (event) => this.onSegment(event));
+        this.listen(viewer, "click", (event) => this.onClick(event, find2));
+        this.observe(new MutationObserver(() => syncOptions(viewer))).observe(viewer, { attributes: true, attributeFilter: LIVE4 });
+        this.follow(log);
+      }
+      /** The key that jumps to the search field from anywhere, through the engine; none when `data-kp-log-focus-key` is off. @param {HTMLInputElement} find @param {HTMLElement} bar */
+      searchKey(find2, bar) {
+        const s2 = getStrings();
+        const focusKey = attr14(this.host, "focus-key", "/");
+        if (focusKey === "false" || focusKey === "") return () => void 0;
+        const key = { keys: focusKey, what: s2.logviewerKeySearch, group: s2.logviewerKeyGroup, when: () => !find2.disabled && !find2.hidden && !bar.hidden, reason: s2.logviewerNothing, run: () => find2.focus() };
+        return registerShortcuts(this.host, [key], { layoutGuard: "off" });
+      }
+      /**
+       * The follow state on the root, for the page and for the stylesheet. Rows change height after they are drawn (a font that
+       * arrives late, the width of the window): a reader at the newest line stays at it.
+       * @param {HTMLElement} log
+       */
+      follow(log) {
+        const viewer = this.host;
+        const stick = () => {
+          if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
+        };
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(stick)).observe(log);
+        void document.fonts?.ready.then(() => !this.destroyed && stick());
+        const onFollow = () => viewer.setAttribute("data-kp-log-following", String(newPill(log)?.following() ?? true));
+        this.listen(log, FOLLOW_EVENT, onFollow);
+        onFollow();
+      }
+      /** @param {HTMLInputElement} find */
+      onInput(find2) {
+        const viewer = this.host;
+        if (find2.value.trim() === "") viewer.removeAttribute("data-kp-log-search");
+        else viewer.setAttribute("data-kp-log-search", find2.value);
+        syncOptions(viewer);
+        if (stateOf10(viewer).matches.length > 0) say15(viewer, matchWords(viewer));
+        else if (queryOf(viewer) !== "") say15(viewer, getStrings().logviewerSearchNone);
+      }
+      /** Enter steps to the next match (Shift: the one before); Esc empties the field. @param {KeyboardEvent} event @param {HTMLInputElement} find */
+      onFindKey(event, find2) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          stepLogMatch(this.host, event.shiftKey ? -1 : 1);
+        } else if (event.key === "Escape" && find2.value !== "") {
+          event.preventDefault();
+          find2.value = "";
+          this.onInput(find2);
+        }
+      }
+      /** @param {Event} event */
+      onChange(event) {
+        const target = (
+          /** @type {Element} */
+          event.target
+        );
+        if (!target.closest(".kp-logviewer__level")) return;
+        const value = (
+          /** @type {HTMLSelectElement} */
+          target.value
+        );
+        if (value === "debug") this.host.removeAttribute("data-kp-log-level");
+        else this.host.setAttribute("data-kp-log-level", value);
+        syncOptions(this.host);
+      }
+      /** @param {Event} event */
+      onSegment(event) {
+        const detail = (
+          /** @type {CustomEvent} */
+          event.detail
+        );
+        const group = (
+          /** @type {Element} */
+          event.target.closest("[data-kp-logviewer-time]")
+        );
+        const value = detail?.value ?? detail?.item?.getAttribute("data-value");
+        if (!group || !value) return;
+        this.host.setAttribute("data-kp-log-time", value);
+        syncOptions(this.host);
+      }
+      /** The bar's tools: step, only matches, wrap, clear, retry, copy and download. @param {Event} event @param {HTMLInputElement} find */
+      onClick(event, find2) {
+        const viewer = this.host;
+        const t = event.target instanceof Element ? event.target : null;
+        if (!t) return;
+        const step = t.closest("[data-kp-logviewer-step]");
+        const copy3 = (
+          /** @type {HTMLButtonElement | null} */
+          t.closest("[data-kp-logviewer-copy]")
+        );
+        if (step) stepLogMatch(viewer, Number(step.getAttribute("data-kp-logviewer-step")) < 0 ? -1 : 1);
+        else if (t.closest("[data-kp-logviewer-only]")) {
+          viewer.setAttribute("data-kp-log-search-only", attr14(viewer, "search-only", "off") === "on" ? "off" : "on");
+          syncOptions(viewer);
+        } else if (t.closest("[data-kp-logviewer-wrap]")) {
+          viewer.setAttribute("data-kp-log-wrap", attr14(viewer, "wrap", "on") === "off" ? "on" : "off");
+          syncOptions(viewer);
+        } else if (t.closest("[data-kp-logviewer-clear]")) {
+          viewer.removeAttribute("data-kp-log-search");
+          viewer.removeAttribute("data-kp-log-level");
+          find2.value = "";
+          syncOptions(viewer);
+        } else if (t.closest("[data-kp-logviewer-retry]")) viewer.dispatchEvent(new CustomEvent(LOGVIEWER_RETRY_EVENT, { bubbles: true }));
+        else if (copy3) this.copy(copy3);
+        else if (t.closest("[data-kp-logviewer-download]")) this.download();
+      }
+      /** Copy the shown lines; the button flashes what happened. @param {HTMLButtonElement} copy */
+      copy(copy3) {
+        const s2 = getStrings();
+        void runFlashButton(copy3, async () => {
+          try {
+            await navigator.clipboard.writeText(logViewerText(this.host));
+            return s2.logviewerCopied;
+          } catch {
+            return { error: s2.logviewerNotCopied, word: s2.logviewerNotCopied };
+          }
+        });
+      }
+      /** Save the shown lines as `<data-kp-log-filename>.txt`. */
+      download() {
+        const blob = new Blob([`${logViewerText(this.host)}
+`], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${attr14(this.host, "filename", "log")}.txt`;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), DOWNLOAD_URL_MS);
+      }
+    };
+  }
+});
+
+// js/logviewer/attach.js
+function attachLogViewers(root = document) {
+  return attachAll(root, LOGVIEWER, LogViewerControl);
+}
+var init_attach26 = __esm({
+  "js/logviewer/attach.js"() {
+    "use strict";
+    init_controller();
+    init_constants42();
+    init_controller76();
   }
 });
 

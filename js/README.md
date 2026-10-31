@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -476,21 +476,22 @@ The entity card and its grid. 11 files.
 
 ## js/logviewer.js → js/logviewer/
 
-The live log viewer. 11 files.
+The live log viewer. 12 files.
 
-| File           | Does                                                                                      |
-| -------------- | ----------------------------------------------------------------------------------------- |
-| `api.js`       | The functions a page calls to append, read, clear, search and set a log viewer.           |
-| `attach.js`    | Attaches the log viewers of a page.                                                       |
-| `constants.js` | The selector, event names, limit and level words of the log viewer.                       |
-| `levels.js`    | Level aliases and the time and level words a line prints.                                 |
-| `model.js`     | What a viewer remembers: its state, built parts, attributes and the reads of its options. |
-| `parts.js`     | Builds the parts of a viewer and applies its tools.                                       |
-| `reads.js`     | Reads a viewer: its tools, signature, limits, floor, query, announcement and text.        |
-| `refresh.js`   | Refreshes the visible rows: the filter, the redraw and the trim.                          |
-| `rows.js`      | Builds and dresses one log row, and finds the words that match.                           |
-| `state.js`     | The counter the log viewer parts share to give each viewer its own ids.                   |
-| `types.js`     | The types of the log viewer: lines, the spec and the state.                               |
+| File            | Does                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------ |
+| `api.js`        | The functions a page calls to append, read, clear, search and set a log viewer.            |
+| `attach.js`     | Attaches the log viewers of a page: one LogViewerControl per viewer.                       |
+| `constants.js`  | The selector, event names, limit and level words of the log viewer.                        |
+| `controller.js` | LogViewerControl: one viewer: search, option controls, tools, follow state and search key. |
+| `levels.js`     | Level aliases and the time and level words a line prints.                                  |
+| `model.js`      | What a viewer remembers: its state, built parts, attributes and the reads of its options.  |
+| `parts.js`      | Builds the parts of a viewer and applies its tools.                                        |
+| `reads.js`      | Reads a viewer: its tools, signature, limits, floor, query, announcement and text.         |
+| `refresh.js`    | Refreshes the visible rows: the filter, the redraw and the trim.                           |
+| `rows.js`       | Builds and dresses one log row, and finds the words that match.                            |
+| `state.js`      | The counter the log viewer parts share to give each viewer its own ids.                    |
+| `types.js`      | The types of the log viewer: lines, the spec and the state.                                |
 
 ## js/art.js → js/art/
 
