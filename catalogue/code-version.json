@@ -44,7 +44,7 @@
         "js/facets.js": { "digest": "c6794ca99b3598e2", "when": "[data-kp-facets]" },
         "js/feed.js": { "digest": "06f7d10ab05ee41e", "when": "[data-kp-feed]" },
         "js/flash.js": { "digest": "07b895bbd6a06ba8", "when": "[data-kp-flash-button], [data-kp-post]" },
-        "js/focus-steps.js": { "digest": "042ea0647eb664e0", "when": "[data-kp-focus-steps]" },
+        "js/focus-steps.js": { "digest": "e2628f9942b11330", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
             "digest": "7f5462d0ee338abf",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-sequencer], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"

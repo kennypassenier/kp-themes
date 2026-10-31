@@ -2,6 +2,23 @@
 // written out like CONTROLLER_PART_FILES in gates/checksums-parts-controllers.mjs, which reached its 500-line limit.
 // Each module's facade `js/<name>.js` is in FILES in gates/checksums.mjs; its folder `js/<name>/` is here.
 export const CONTROLLER_PART_FILES_2 = [
+    'js/focus-steps/api.js',
+    'js/focus-steps/attach.js',
+    'js/focus-steps/band.js',
+    'js/focus-steps/blockers.js',
+    'js/focus-steps/constants.js',
+    'js/focus-steps/controller.js',
+    'js/focus-steps/dom.js',
+    'js/focus-steps/flow.js',
+    'js/focus-steps/input.js',
+    'js/focus-steps/lanes.js',
+    'js/focus-steps/memory.js',
+    'js/focus-steps/paint.js',
+    'js/focus-steps/resume.js',
+    'js/focus-steps/state.js',
+    'js/focus-steps/track-nav.js',
+    'js/focus-steps/tracks.js',
+    'js/focus-steps/wake.js',
     'js/gantt/api.js',
     'js/gantt/attach.js',
     'js/gantt/axis.js',

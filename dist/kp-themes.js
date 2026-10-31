@@ -36570,76 +36570,141 @@ var init_wake = __esm({
   }
 });
 
-// js/focus-steps/attach.js
-function attachFocusSteps(scope = document) {
-  const roots = (
-    /** @type {HTMLElement[]} */
-    [
-      ...scope instanceof HTMLElement && scope.matches(FOCUS_STEPS) ? [scope] : [],
-      ...scope.querySelectorAll(FOCUS_STEPS)
-    ]
-  );
-  const undo = [];
-  for (const root of roots) {
-    if (WIRED.has(root)) continue;
-    WIRED.add(root);
-    build2(root);
-    paint4(root, false);
-    void holdScreen(root);
-    const state12 = stateOf2(root);
-    const next2 = () => {
-      const answer2 = state12.steps[state12.index]?.answer;
-      if (answering(root) && answer2 && !state12.answers[answer2.id]) {
-        if (!answerReady(root, answer2)) return;
-        const held2 = state12.draft[answer2.id];
-        if (!takeAnswer(root, typeof held2 === "string" ? held2.trim() : held2 ?? "", "tap")) return;
+// js/focus-steps/input.js
+var SWIPE_SLOPE, FocusStepsInput;
+var init_input = __esm({
+  "js/focus-steps/input.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_constants15();
+    init_dom5();
+    init_resume();
+    init_flow();
+    init_tracks();
+    init_track_nav();
+    init_api12();
+    SWIPE_SLOPE = 1.5;
+    FocusStepsInput = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.touch = null;
       }
-      goNext(root);
-    };
-    const prev = () => tracksOn(root) ? trackPrev(root) : goToStep(root, state12.index - 1);
-    const click = (event) => {
-      const button6 = event.target instanceof Element ? event.target.closest("button") : null;
-      if (!button6 || !root.contains(button6) || button6.getAttribute("aria-disabled") === "true") return;
-      if (pressAnswer(root, button6)) return;
-      const go = button6.getAttribute("data-kp-focus-go");
-      if (button6.classList.contains("kp-focus-steps__lane")) {
-        switchTrack(root, button6.getAttribute("data-kp-track-key") ?? "", "tap");
-        return;
+      /** The view's state, read fresh: build() lays it on connect. */
+      get state() {
+        return stateOf2(this.host);
       }
-      if (go !== null) {
-        const to = state12.tracks[Number(go)];
-        if (to) switchTrack(root, to.key, button6.closest(".kp-focus-steps__band") ? "attention" : "tap");
-        return;
+      /** On to the next step; a question is answered first: a multi pick or a written line is taken now. */
+      next() {
+        const root = this.host;
+        const state12 = this.state;
+        const answer2 = state12.steps[state12.index]?.answer;
+        if (answering(root) && answer2 && !state12.answers[answer2.id]) {
+          if (!answerReady(root, answer2)) return;
+          const held2 = state12.draft[answer2.id];
+          if (!takeAnswer(root, typeof held2 === "string" ? held2.trim() : held2 ?? "", "tap")) return;
+        }
+        goNext(root);
       }
-      const dismiss = button6.getAttribute("data-kp-focus-dismiss");
-      if (dismiss !== null) {
-        const gone = state12.tracks[Number(dismiss)];
-        if (gone) clearAlert(root, gone.key);
-        return;
+      /** Back one step, within the active track when there are tracks. */
+      prev() {
+        if (tracksOn(this.host)) trackPrev(this.host);
+        else goToStep(this.host, this.state.index - 1);
       }
-      if (button6.hasAttribute("data-kp-focus-retry")) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_RETRY_EVENT, { bubbles: true }));
-      else if (button6.hasAttribute("data-kp-focus-empty-action"))
-        root.dispatchEvent(new CustomEvent(FOCUS_STEPS_EMPTY_ACTION_EVENT, { bubbles: true }));
-      else if (button6.hasAttribute("data-kp-focus-save-retry")) {
-        root.dispatchEvent(new CustomEvent(FOCUS_STEPS_SAVE_RETRY_EVENT, { bubbles: true }));
-        if (state12.finished) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { ...state12.finished } }));
-      } else if (button6.classList.contains("kp-focus-steps__resume-go") && state12.pendingResume) applyProgress(root, state12.pendingResume);
-      else if (button6.classList.contains("kp-focus-steps__resume-restart")) {
-        memoryOf3(root)?.forget("progress");
-        state12.pendingResume = null;
-        paint4(root, false);
-      } else if (button6.classList.contains("kp-focus-steps__next")) next2();
-      else if (button6.classList.contains("kp-focus-steps__prev")) prev();
-      else if (button6.classList.contains("kp-focus-steps__speak")) {
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.altKey || event.ctrlKey || event.metaKey || typing(event.target)) return;
+        const onButton = event.target instanceof Element && event.target.closest('button, a, [role="button"]');
+        if (onButton instanceof HTMLElement && (this.answerKey(event, onButton) || this.laneKey(event, onButton))) return;
+        const act = this.flowAct(event.key, Boolean(onButton));
+        if (!act) return;
+        event.preventDefault();
+        act();
+      }
+      /**
+       * ArrowUp and ArrowDown walk the answers of a question.
+       * @param {KeyboardEvent} event @param {HTMLElement} onButton
+       * @returns {boolean} whether the key was the answers' own
+       */
+      answerKey(event, onButton) {
+        if (event.key !== "ArrowUp" && event.key !== "ArrowDown" || !onButton.closest(".kp-focus-steps__answer")) return false;
+        const all = (
+          /** @type {HTMLElement[]} */
+          [...this.host.querySelectorAll(".kp-focus-steps__answer button")]
+        );
+        const at = all.indexOf(onButton);
+        const to = all[Math.max(0, Math.min(all.length - 1, at + (event.key === "ArrowDown" ? 1 : -1)))];
+        if (at >= 0 && to) {
+          event.preventDefault();
+          to.focus();
+        }
+        return true;
+      }
+      /**
+       * The tabs pattern on the lanes: ArrowUp and ArrowDown (Home, End) move the focus between them.
+       * @param {KeyboardEvent} event @param {HTMLElement} onButton
+       * @returns {boolean} whether the key was the lanes' own
+       */
+      laneKey(event, onButton) {
+        if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key) || !onButton.classList.contains("kp-focus-steps__lane")) return false;
+        const all = (
+          /** @type {HTMLElement[]} */
+          [...this.host.querySelectorAll(".kp-focus-steps__lane")]
+        );
+        const at = all.indexOf(onButton);
+        const step = event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
+        const to = event.key === "Home" ? all[0] : event.key === "End" ? all[all.length - 1] : all[(at + step + all.length) % all.length];
+        if (at >= 0 && to) {
+          event.preventDefault();
+          to.focus();
+        }
+        return true;
+      }
+      /**
+       * What a key does to the flow: next, back, first or last step, or nothing.
+       * @param {string} key @param {boolean} onButton whether the focus is on a control, where Space is the control's
+       * @returns {(() => void) | null}
+       */
+      flowAct(key, onButton) {
+        const root = this.host;
+        const state12 = this.state;
+        const rtl = getComputedStyle(root).direction === "rtl";
+        if (key === "PageDown" || key === (rtl ? "ArrowLeft" : "ArrowRight")) return () => this.next();
+        if (key === "PageUp" || key === (rtl ? "ArrowRight" : "ArrowLeft")) return () => this.prev();
+        if (key === " " && !onButton) return () => this.next();
+        if (key === "Home") return () => goToStep(root, tracksOn(root) ? activeTrack(state12)?.order[0] ?? 0 : 0);
+        if (key === "End") return () => goToStep(root, tracksOn(root) ? activeTrack(state12)?.order.at(-1) ?? 0 : lastIndex(root));
+        return null;
+      }
+      /** A touch on the body may start a swipe. @param {PointerEvent} event */
+      onDown(event) {
+        if (event.pointerType === "mouse" || !(event.target instanceof Element) || !part2(this.host, "body").contains(event.target)) return;
+        this.touch = { x: event.clientX, y: event.clientY, id: event.pointerId };
+      }
+      /** A swipe far enough across goes on or back, mirrored right to left. @param {PointerEvent} event */
+      onUp(event) {
+        const touch = this.touch;
+        if (!touch || touch.id !== event.pointerId) return;
+        const dx = event.clientX - touch.x;
+        const dy = event.clientY - touch.y;
+        this.touch = null;
+        if (Math.abs(dx) < SWIPE_DISTANCE || Math.abs(dx) < Math.abs(dy) * SWIPE_SLOPE) return;
+        const rtl = getComputedStyle(this.host).direction === "rtl";
+        if (dx < 0 !== rtl) this.next();
+        else this.prev();
+      }
+      /** Read the step aloud, or stop reading. @param {HTMLButtonElement} button */
+      speak(button6) {
         const strings = getStrings();
         if (speechSynthesis.speaking) {
           speechSynthesis.cancel();
           return;
         }
-        const step = state12.steps[state12.index];
+        const step = this.state.steps[this.state.index];
         if (!step) return;
         const utterance = new SpeechSynthesisUtterance([step.text, step.note ?? ""].filter(Boolean).join(". "));
-        utterance.lang = root.closest("[lang]")?.getAttribute("lang") ?? "";
+        utterance.lang = this.host.closest("[lang]")?.getAttribute("lang") ?? "";
         const word = (
           /** @type {HTMLElement} */
           button6.querySelector(".kp-focus-steps__speak-text")
@@ -36653,185 +36718,13 @@ function attachFocusSteps(scope = document) {
         speechSynthesis.speak(utterance);
       }
     };
-    const key = (event) => {
-      if (event.altKey || event.ctrlKey || event.metaKey || typing(event.target)) return;
-      const onButton = event.target instanceof Element && event.target.closest('button, a, [role="button"]');
-      const rtl = getComputedStyle(root).direction === "rtl";
-      if ((event.key === "ArrowUp" || event.key === "ArrowDown") && onButton instanceof HTMLElement && onButton.closest(".kp-focus-steps__answer")) {
-        const all = (
-          /** @type {HTMLElement[]} */
-          [...root.querySelectorAll(".kp-focus-steps__answer button")]
-        );
-        const at = all.indexOf(onButton);
-        const to = all[Math.max(0, Math.min(all.length - 1, at + (event.key === "ArrowDown" ? 1 : -1)))];
-        if (at >= 0 && to) {
-          event.preventDefault();
-          to.focus();
-        }
-        return;
-      }
-      if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key) && onButton instanceof HTMLElement && onButton.classList.contains("kp-focus-steps__lane")) {
-        const all = (
-          /** @type {HTMLElement[]} */
-          [...root.querySelectorAll(".kp-focus-steps__lane")]
-        );
-        const at = all.indexOf(onButton);
-        const step = event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
-        const to = event.key === "Home" ? all[0] : event.key === "End" ? all[all.length - 1] : all[(at + step + all.length) % all.length];
-        if (at >= 0 && to) {
-          event.preventDefault();
-          to.focus();
-        }
-        return;
-      }
-      let act = null;
-      if (event.key === "PageDown" || event.key === (rtl ? "ArrowLeft" : "ArrowRight")) act = next2;
-      else if (event.key === "PageUp" || event.key === (rtl ? "ArrowRight" : "ArrowLeft")) act = prev;
-      else if (event.key === " " && !onButton) act = next2;
-      else if (event.key === "Home") act = () => goToStep(root, tracksOn(root) ? activeTrack(state12)?.order[0] ?? 0 : 0);
-      else if (event.key === "End") act = () => goToStep(root, tracksOn(root) ? activeTrack(state12)?.order.at(-1) ?? 0 : lastIndex(root));
-      if (!act) return;
-      event.preventDefault();
-      act();
-    };
-    let touch = null;
-    const down = (event) => {
-      if (event.pointerType === "mouse" || !(event.target instanceof Element) || !part2(root, "body").contains(event.target)) return;
-      touch = { x: event.clientX, y: event.clientY, id: event.pointerId };
-    };
-    const up = (event) => {
-      if (!touch || touch.id !== event.pointerId) return;
-      const dx = event.clientX - touch.x;
-      const dy = event.clientY - touch.y;
-      touch = null;
-      if (Math.abs(dx) < SWIPE_DISTANCE || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      const rtl = getComputedStyle(root).direction === "rtl";
-      if (dx < 0 !== rtl) next2();
-      else prev();
-    };
-    const cancel = () => touch = null;
-    const back = () => {
-      if (document.visibilityState === "visible") void holdScreen(root);
-    };
-    root.addEventListener("click", click);
-    root.addEventListener("keydown", key);
-    root.addEventListener("pointerdown", down);
-    root.addEventListener("pointerup", up);
-    root.addEventListener("pointercancel", cancel);
-    document.addEventListener("visibilitychange", back);
-    const tap = (selector) => () => {
-      const button6 = (
-        /** @type {HTMLElement | null} */
-        root.querySelector(selector)
-      );
-      if (button6 && button6.getAttribute("aria-disabled") !== "true") pressAnswer(root, button6);
-    };
-    const inView = () => answering(root) && root.contains(document.activeElement) && state12.steps[state12.index]?.answer !== void 0;
-    const unkey = registerShortcuts(root, [
-      {
-        keys: "s",
-        what: getStrings().focusSameYesterday("\u2026"),
-        group: "Question",
-        when: () => inView() && root.querySelector('[data-kp-same="yesterday"]') !== null,
-        run: tap('[data-kp-same="yesterday"]')
-      },
-      {
-        keys: "u",
-        what: getStrings().focusSameUsual("\u2026"),
-        group: "Question",
-        when: () => inView() && root.querySelector('[data-kp-same="usual"]') !== null,
-        run: tap('[data-kp-same="usual"]')
-      },
-      {
-        keys: "n",
-        what: getStrings().focusSkip,
-        group: "Question",
-        when: () => inView() && root.querySelector(".kp-focus-steps__skip") !== null,
-        run: tap(".kp-focus-steps__skip")
-      }
-    ]);
-    const tracking2 = () => tracksOn(root) && (root.contains(document.activeElement) || document.activeElement === document.body);
-    const unkeyTracks = registerShortcuts(root, [
-      { keys: "t", what: getStrings().focusTrackKeyNext, group: "Tracks", when: tracking2, run: () => stepTrack(root, 1) },
-      { keys: "Shift T", what: getStrings().focusTrackKeyPrevious, group: "Tracks", when: tracking2, run: () => stepTrack(root, -1) }
-    ]);
-    const stopWatch = watchOptions(
-      root,
-      [
-        "data-kp-progress",
-        "data-kp-back",
-        "data-kp-same",
-        "data-kp-skip",
-        "data-kp-choice-layout",
-        "data-kp-summary",
-        "data-kp-pinned-first",
-        "data-kp-speak",
-        "data-kp-focus-mode",
-        "data-kp-wake",
-        "data-kp-focus-steps-wake",
-        "data-kp-tracks",
-        "data-kp-lanes",
-        "data-kp-lane-detail",
-        "data-kp-track-follow",
-        "data-kp-track-attention",
-        "data-kp-track-shared"
-      ],
-      (names) => {
-        if (names.some((n) => n === "data-kp-wake" || n === "data-kp-focus-steps-wake")) applyWake(root);
-        if (names.includes("data-kp-track-shared")) layTracks(root);
-        paint4(root, false);
-        if (names.includes("data-kp-track-attention") || names.includes("data-kp-tracks")) renderBand(root);
-        recompute(root);
-      }
-    );
-    const timerEvent = (event) => {
-      const timer = (
-        /** @type {CustomEvent} */
-        event.detail?.timer
-      );
-      if (!timer || !tracksOn(root)) return;
-      const at = state12.steps.findIndex((_, i) => timerIdOf(state12, i) === timer.id);
-      if (at < 0) return;
-      if (event.type === "kp-timer-done") timerEnded(root, at, timer);
-      else if (event.type === "kp-timer-stop") {
-        for (const [key2, alert] of state12.alerts) if (alert.timerId === timer.id) clearAlert(root, key2);
-      }
-      recompute(root);
-    };
-    const timerEvents = ["kp-timer-start", "kp-timer-change", "kp-timer-done", "kp-timer-stop"];
-    for (const type of timerEvents) document.addEventListener(type, timerEvent);
-    state12.ticker = window.setInterval(() => {
-      if (!document.hidden) recompute(root);
-    }, 1e3);
-    const resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => tracksOn(root) && layoutLanes(root)) : null;
-    resize?.observe(root);
-    const stopOptions = watchOptions(root, ["data-kp-focus-steps-empty", "data-kp-focus-steps-empty-action"], () => paint4(root, false));
-    undo.push(() => {
-      stopOptions();
-      stopWatch();
-      unkey();
-      unkeyTracks();
-      for (const type of timerEvents) document.removeEventListener(type, timerEvent);
-      window.clearInterval(state12.ticker);
-      state12.ticker = 0;
-      resize?.disconnect();
-      window.clearTimeout(state12.timer);
-      WIRED.delete(root);
-      root.removeEventListener("click", click);
-      root.removeEventListener("keydown", key);
-      root.removeEventListener("pointerdown", down);
-      root.removeEventListener("pointerup", up);
-      root.removeEventListener("pointercancel", cancel);
-      document.removeEventListener("visibilitychange", back);
-      if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
-      letScreenGo(root);
-      paintWake(root, "off");
-    });
   }
-  return () => undo.forEach((u) => u());
-}
-var init_attach8 = __esm({
-  "js/focus-steps/attach.js"() {
+});
+
+// js/focus-steps/controller.js
+var LANE_TICK_MS, TIMER_EVENTS, LIVE_OPTIONS, FocusStepsControl;
+var init_controller27 = __esm({
+  "js/focus-steps/controller.js"() {
     "use strict";
     init_strings();
     init_shortcuts();
@@ -36844,10 +36737,216 @@ var init_attach8 = __esm({
     init_flow();
     init_tracks();
     init_track_nav();
-    init_api12();
     init_band();
     init_memory();
     init_lanes();
+    init_input();
+    LANE_TICK_MS = 1e3;
+    TIMER_EVENTS = ["kp-timer-start", "kp-timer-change", "kp-timer-done", "kp-timer-stop"];
+    LIVE_OPTIONS = [
+      "data-kp-progress",
+      "data-kp-back",
+      "data-kp-same",
+      "data-kp-skip",
+      "data-kp-choice-layout",
+      "data-kp-summary",
+      "data-kp-pinned-first",
+      "data-kp-speak",
+      "data-kp-focus-mode",
+      "data-kp-wake",
+      "data-kp-focus-steps-wake",
+      "data-kp-tracks",
+      "data-kp-lanes",
+      "data-kp-lane-detail",
+      "data-kp-track-follow",
+      "data-kp-track-attention",
+      "data-kp-track-shared"
+    ];
+    FocusStepsControl = class extends FocusStepsInput {
+      connect() {
+        const root = this.host;
+        WIRED.add(root);
+        this.own(() => this.release());
+        build2(root);
+        paint4(root, false);
+        void holdScreen(root);
+        this.listen(root, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(root, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(root, "pointerdown", (event) => this.onDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(root, "pointerup", (event) => this.onUp(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(root, "pointercancel", () => this.touch = null);
+        this.listen(document, "visibilitychange", () => {
+          if (document.visibilityState === "visible") void holdScreen(root);
+        });
+        this.registerKeys();
+        this.own(watchOptions(root, LIVE_OPTIONS, (names) => this.onOptions(names)));
+        this.watchTimers();
+        this.own(watchOptions(root, ["data-kp-focus-steps-empty", "data-kp-focus-steps-empty-action"], () => paint4(root, false)));
+      }
+      /** The view lets go of the speech, the screen and its marks. */
+      release() {
+        const root = this.host;
+        window.clearTimeout(this.state.timer);
+        WIRED.delete(root);
+        if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+        letScreenGo(root);
+        paintWake(root, "off");
+      }
+      /** s, u and n take the same as yesterday, the usual answer and Not today; T and Shift T walk the tracks. */
+      registerKeys() {
+        const root = this.host;
+        const tap = (selector) => () => {
+          const button6 = (
+            /** @type {HTMLElement | null} */
+            root.querySelector(selector)
+          );
+          if (button6 && button6.getAttribute("aria-disabled") !== "true") pressAnswer(root, button6);
+        };
+        const inView = () => answering(root) && root.contains(document.activeElement) && this.state.steps[this.state.index]?.answer !== void 0;
+        const answerKey = (keys, what, selector) => ({ keys, what, group: "Question", when: () => inView() && root.querySelector(selector) !== null, run: tap(selector) });
+        const strings = getStrings();
+        this.own(
+          registerShortcuts(root, [
+            answerKey("s", strings.focusSameYesterday("\u2026"), '[data-kp-same="yesterday"]'),
+            answerKey("u", strings.focusSameUsual("\u2026"), '[data-kp-same="usual"]'),
+            answerKey("n", strings.focusSkip, ".kp-focus-steps__skip")
+          ])
+        );
+        const tracking2 = () => tracksOn(root) && (root.contains(document.activeElement) || document.activeElement === document.body);
+        this.own(
+          registerShortcuts(root, [
+            { keys: "t", what: strings.focusTrackKeyNext, group: "Tracks", when: tracking2, run: () => stepTrack(root, 1) },
+            { keys: "Shift T", what: strings.focusTrackKeyPrevious, group: "Tracks", when: tracking2, run: () => stepTrack(root, -1) }
+          ])
+        );
+      }
+      /** An option changed at run time: draw what it touches. @param {string[]} names */
+      onOptions(names) {
+        const root = this.host;
+        if (names.some((n) => n === "data-kp-wake" || n === "data-kp-focus-steps-wake")) applyWake(root);
+        if (names.includes("data-kp-track-shared")) layTracks(root);
+        paint4(root, false);
+        if (names.includes("data-kp-track-attention") || names.includes("data-kp-tracks")) renderBand(root);
+        recompute(root);
+      }
+      /** The timers of the steps: the lanes read them by their ids, an end asks for the person, and the lanes follow the clock. */
+      watchTimers() {
+        const root = this.host;
+        const state12 = this.state;
+        for (const type of TIMER_EVENTS) this.listen(document, type, (event) => this.onTimer(event));
+        state12.ticker = window.setInterval(() => {
+          if (!document.hidden) recompute(root);
+        }, LANE_TICK_MS);
+        this.own(() => {
+          window.clearInterval(state12.ticker);
+          state12.ticker = 0;
+        });
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(() => tracksOn(root) && layoutLanes(root))).observe(root);
+      }
+      /** @param {Event} event */
+      onTimer(event) {
+        const root = this.host;
+        const state12 = this.state;
+        const timer = (
+          /** @type {CustomEvent} */
+          event.detail?.timer
+        );
+        if (!timer || !tracksOn(root)) return;
+        const at = state12.steps.findIndex((_, i) => timerIdOf(state12, i) === timer.id);
+        if (at < 0) return;
+        if (event.type === "kp-timer-done") timerEnded(root, at, timer);
+        else if (event.type === "kp-timer-stop") {
+          for (const [key, alert] of state12.alerts) if (alert.timerId === timer.id) clearAlert(root, key);
+        }
+        recompute(root);
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const root = this.host;
+        const button6 = event.target instanceof Element ? event.target.closest("button") : null;
+        if (!button6 || !root.contains(button6) || button6.getAttribute("aria-disabled") === "true") return;
+        if (pressAnswer(root, button6) || this.trackButton(button6)) return;
+        this.flowButton(button6);
+      }
+      /**
+       * Parallel tracks: a lane, the button that goes to a track, and "Got it" on the band.
+       * @param {HTMLButtonElement} button
+       * @returns {boolean} whether the press was a track's
+       */
+      trackButton(button6) {
+        const root = this.host;
+        const state12 = this.state;
+        const go = button6.getAttribute("data-kp-focus-go");
+        if (button6.classList.contains("kp-focus-steps__lane")) {
+          switchTrack(root, button6.getAttribute("data-kp-track-key") ?? "", "tap");
+          return true;
+        }
+        if (go !== null) {
+          const to = state12.tracks[Number(go)];
+          if (to) switchTrack(root, to.key, button6.closest(".kp-focus-steps__band") ? "attention" : "tap");
+          return true;
+        }
+        const dismiss = button6.getAttribute("data-kp-focus-dismiss");
+        if (dismiss === null) return false;
+        const gone = state12.tracks[Number(dismiss)];
+        if (gone) clearAlert(root, gone.key);
+        return true;
+      }
+      /** The plates' Retry and actions, the resume offer, Next, Back and Read aloud. @param {HTMLButtonElement} button */
+      flowButton(button6) {
+        const root = this.host;
+        const state12 = this.state;
+        if (button6.hasAttribute("data-kp-focus-retry")) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_RETRY_EVENT, { bubbles: true }));
+        else if (button6.hasAttribute("data-kp-focus-empty-action"))
+          root.dispatchEvent(new CustomEvent(FOCUS_STEPS_EMPTY_ACTION_EVENT, { bubbles: true }));
+        else if (button6.hasAttribute("data-kp-focus-save-retry")) {
+          root.dispatchEvent(new CustomEvent(FOCUS_STEPS_SAVE_RETRY_EVENT, { bubbles: true }));
+          if (state12.finished) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { ...state12.finished } }));
+        } else if (button6.classList.contains("kp-focus-steps__resume-go") && state12.pendingResume) applyProgress(root, state12.pendingResume);
+        else if (button6.classList.contains("kp-focus-steps__resume-restart")) {
+          memoryOf3(root)?.forget("progress");
+          state12.pendingResume = null;
+          paint4(root, false);
+        } else if (button6.classList.contains("kp-focus-steps__next")) this.next();
+        else if (button6.classList.contains("kp-focus-steps__prev")) this.prev();
+        else if (button6.classList.contains("kp-focus-steps__speak")) this.speak(button6);
+      }
+    };
+  }
+});
+
+// js/focus-steps/attach.js
+function attachFocusSteps(scope = document) {
+  const roots = (
+    /** @type {HTMLElement[]} */
+    [
+      ...scope instanceof HTMLElement && scope.matches(FOCUS_STEPS) ? [scope] : [],
+      ...scope.querySelectorAll(FOCUS_STEPS)
+    ]
+  );
+  const made6 = roots.filter((root) => !WIRED.has(root)).map((root) => attachOne(root, FocusStepsControl));
+  return () => {
+    for (const control of made6) control?.destroy();
+  };
+}
+var init_attach8 = __esm({
+  "js/focus-steps/attach.js"() {
+    "use strict";
+    init_controller();
+    init_constants15();
+    init_controller27();
   }
 });
 
@@ -37281,7 +37380,7 @@ var init_api13 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
@@ -37428,7 +37527,7 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller27();
+    init_controller28();
     init_state14();
     init_state14();
     init_api13();
@@ -37592,7 +37691,7 @@ var init_paint5 = __esm({
 
 // js/quantity/controller.js
 var RELEASE_EVENTS, QuantityControl;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
@@ -37755,7 +37854,7 @@ var init_quantity = __esm({
     "use strict";
     init_controller();
     init_values();
-    init_controller28();
+    init_controller29();
     init_math();
     init_paint5();
     init_values();
@@ -37876,7 +37975,7 @@ function watchToolbars(root) {
   return () => watch2.destroy();
 }
 var HANDLED3, toolbarOf, ToolbarWatch;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/toolbar/controller.js"() {
     "use strict";
     init_controller();
@@ -37993,7 +38092,7 @@ function attachToolbars(root = document) {
 var init_toolbar = __esm({
   "js/toolbar.js"() {
     "use strict";
-    init_controller29();
+    init_controller30();
     init_values22();
     init_active();
   }
@@ -40085,7 +40184,7 @@ var init_core8 = __esm({
 
 // js/listbox/controller.js
 var ListboxController;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/listbox/controller.js"() {
     "use strict";
     init_core8();
@@ -40258,7 +40357,7 @@ function createListbox(options) {
 var init_listbox = __esm({
   "js/listbox.js"() {
     "use strict";
-    init_controller30();
+    init_controller31();
     init_scroll2();
     init_values9();
     init_match();
@@ -40618,7 +40717,7 @@ var init_tags = __esm({
 
 // js/combobox/controller.js
 var ComboboxControl;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/combobox/controller.js"() {
     "use strict";
     init_listbox();
@@ -40779,7 +40878,7 @@ var init_attach10 = __esm({
     "use strict";
     init_controller();
     init_constants8();
-    init_controller31();
+    init_controller32();
   }
 });
 
@@ -43855,7 +43954,7 @@ function partsOf4(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -44040,7 +44139,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller32();
+    init_controller33();
   }
 });
 
@@ -48561,7 +48660,7 @@ var init_core10 = __esm({
 
 // js/upload/controller.js
 var UploadZone;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/upload/controller.js"() {
     "use strict";
     init_motion();
@@ -48704,7 +48803,7 @@ var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
     init_controller();
-    init_controller33();
+    init_controller34();
     init_values24();
     init_values24();
     init_accepts();
@@ -48913,7 +49012,7 @@ var init_view2 = __esm({
 
 // js/wizard/controller.js
 var WizardController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/wizard/controller.js"() {
     "use strict";
     init_validate();
@@ -49013,7 +49112,7 @@ var init_attach14 = __esm({
   "js/wizard/attach.js"() {
     "use strict";
     init_controller();
-    init_controller34();
+    init_controller35();
     init_values25();
   }
 });
@@ -49405,7 +49504,7 @@ var init_layout2 = __esm({
 
 // js/gridlayout/controller.js
 var MovableGrid;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/gridlayout/controller.js"() {
     "use strict";
     init_controller();
@@ -49581,7 +49680,7 @@ var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_controller();
-    init_controller35();
+    init_controller36();
     init_values26();
     init_values26();
     init_layout2();
@@ -50189,7 +50288,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED7, CalendarController;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -50443,7 +50542,7 @@ var init_api15 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller36();
+    init_controller37();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -56810,7 +56909,7 @@ var init_api18 = __esm({
 
 // js/gantt/input.js
 var DRAG_PX2, barOf, GanttInput;
-var init_input = __esm({
+var init_input2 = __esm({
   "js/gantt/input.js"() {
     "use strict";
     init_controller();
@@ -56942,7 +57041,7 @@ var init_input = __esm({
 
 // js/gantt/controller.js
 var MIN_ZOOM_S, CHROME_OPTIONS, GanttControl;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/gantt/controller.js"() {
     "use strict";
     init_live_options();
@@ -56956,7 +57055,7 @@ var init_controller37 = __esm({
     init_scale();
     init_chrome2();
     init_model6();
-    init_input();
+    init_input2();
     MIN_ZOOM_S = 60;
     CHROME_OPTIONS = ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint", "data-kp-gantt-rest"];
     GanttControl = class extends GanttInput {
@@ -57159,7 +57258,7 @@ var init_attach17 = __esm({
     "use strict";
     init_controller();
     init_constants26();
-    init_controller37();
+    init_controller38();
   }
 });
 
@@ -57558,7 +57657,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -57707,7 +57806,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller38();
+    init_controller39();
     init_values27();
     init_values27();
   }
@@ -58317,7 +58416,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -58502,7 +58601,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller39();
+    init_controller40();
   }
 });
 
@@ -59042,7 +59141,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -59171,7 +59270,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller40();
+    init_controller41();
     init_values29();
     init_values29();
     init_share();
@@ -59603,7 +59702,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -59684,7 +59783,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller41();
+    init_controller42();
     init_values30();
     init_values30();
   }
@@ -59906,7 +60005,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -60035,7 +60134,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_values31();
     init_values31();
     init_keys12();
@@ -61039,7 +61138,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -61105,7 +61204,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller43();
+    init_controller44();
     init_values33();
     init_values33();
   }
@@ -61431,7 +61530,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -61718,7 +61817,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller44();
+    init_controller45();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -61840,7 +61939,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -62067,7 +62166,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -63059,7 +63158,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -63299,7 +63398,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_values36();
     init_values36();
   }
@@ -63640,7 +63739,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -63758,7 +63857,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller47();
+    init_controller48();
     init_values37();
     init_values37();
     init_slug();
@@ -64445,7 +64544,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -64652,7 +64751,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller48();
+    init_controller49();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -64953,7 +65052,7 @@ var init_core18 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -65068,7 +65167,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller49();
+    init_controller50();
     init_values38();
     init_values38();
     init_names();
@@ -65313,7 +65412,7 @@ var init_core19 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -65418,7 +65517,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller50();
+    init_controller51();
     init_values39();
     init_values39();
     init_value();
@@ -66420,7 +66519,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -66579,7 +66678,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller51();
+    init_controller52();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -67010,7 +67109,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -67151,7 +67250,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller52();
+    init_controller53();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -67613,7 +67712,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -67883,7 +67982,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller53();
+    init_controller54();
     init_build14();
     init_commit();
     init_math4();
@@ -68171,7 +68270,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -68404,7 +68503,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller54();
+    init_controller55();
     init_list4();
     init_render4();
   }
@@ -69847,7 +69946,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -70038,7 +70137,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller55();
+    init_controller56();
     init_group6();
     init_group6();
   }
@@ -70327,7 +70426,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -70434,7 +70533,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller56();
+    init_controller57();
     init_values41();
     init_values41();
     init_level();
@@ -70729,7 +70828,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -70913,7 +71012,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller57();
+    init_controller58();
     init_values42();
     init_values42();
     init_order();
@@ -71178,7 +71277,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -71265,7 +71364,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller58();
+    init_controller59();
     init_values43();
     init_values43();
     init_states();
@@ -72004,7 +72103,7 @@ var init_set2 = __esm({
 });
 
 // js/entity-card/grid-control.js
-var NARROW_BELOW, CARDS3, LIVE_OPTIONS, EntityGridControl;
+var NARROW_BELOW, CARDS3, LIVE_OPTIONS2, EntityGridControl;
 var init_grid_control = __esm({
   "js/entity-card/grid-control.js"() {
     "use strict";
@@ -72013,7 +72112,7 @@ var init_grid_control = __esm({
     init_set2();
     NARROW_BELOW = 480;
     CARDS3 = ":scope > .kp-card--entity";
-    LIVE_OPTIONS = [
+    LIVE_OPTIONS2 = [
       "data-kp-entity-meters",
       "data-kp-entity-flags-max",
       "data-kp-entity-inline",
@@ -72046,7 +72145,7 @@ var init_grid_control = __esm({
             })
           ).observe(grid2);
         }
-        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS });
+        this.observe(new MutationObserver(() => this.onOption())).observe(grid2, { attributes: true, attributeFilter: LIVE_OPTIONS2 });
         this.fold();
       }
       /** The least card width the grid asks for. */
@@ -73092,7 +73191,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -73345,7 +73444,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller59();
+    init_controller60();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -73691,7 +73790,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -73996,7 +74095,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller60();
+    init_controller61();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -74445,7 +74544,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -74579,7 +74678,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller61();
+    init_controller62();
     init_values46();
   }
 });
@@ -76242,7 +76341,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -76472,7 +76571,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller62();
+    init_controller63();
     init_values47();
     init_values47();
   }
@@ -76640,7 +76739,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -76869,7 +76968,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller63();
+    init_controller64();
     init_fields();
     init_fields();
   }
@@ -77209,7 +77308,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -77460,7 +77559,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller64();
+    init_controller65();
   }
 });
 
@@ -77495,7 +77594,7 @@ function toRun(input) {
   if (!Number.isFinite(at)) return null;
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
-var init_input2 = __esm({
+var init_input3 = __esm({
   "js/runs/input.js"() {
     "use strict";
   }
@@ -77615,7 +77714,7 @@ var init_core26 = __esm({
     init_controller();
     init_busy_card();
     init_strings();
-    init_input2();
+    init_input3();
     init_options8();
     init_parts17();
     init_time3();
@@ -77784,7 +77883,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -77895,7 +77994,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller65();
+    init_controller66();
     init_values48();
     init_values48();
     init_time3();
@@ -78223,7 +78322,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -78482,7 +78581,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller66();
+    init_controller67();
     init_choices();
   }
 });
@@ -81217,8 +81316,8 @@ var init_state27 = __esm({
 });
 
 // js/claim/controller.js
-var LIVE_OPTIONS2, ClaimList;
-var init_controller67 = __esm({
+var LIVE_OPTIONS3, ClaimList;
+var init_controller68 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -81235,7 +81334,7 @@ var init_controller67 = __esm({
     init_request2();
     init_rows9();
     init_state27();
-    LIVE_OPTIONS2 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
+    LIVE_OPTIONS3 = ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map(
       (n) => `data-kp-claim-${n}`
     );
     ClaimList = class extends Controller {
@@ -81256,7 +81355,7 @@ var init_controller67 = __esm({
           event
         ));
         this.listen(list, CHECKLIST_RENDER_EVENT, () => decorate(list));
-        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS2 });
+        this.observe(new MutationObserver(() => this.onAttributes())).observe(list, { attributes: true, attributeFilter: LIVE_OPTIONS3 });
         this.listen(list, "click", (event) => this.onClick(
           /** @type {MouseEvent} */
           event
@@ -81388,7 +81487,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller67();
+    init_controller68();
   }
 });
 
@@ -83755,8 +83854,8 @@ var init_actions7 = __esm({
 });
 
 // js/qr/controller.js
-var LIVE_OPTIONS3, QrControl;
-var init_controller68 = __esm({
+var LIVE_OPTIONS4, QrControl;
+var init_controller69 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83765,7 +83864,7 @@ var init_controller68 = __esm({
     init_actions7();
     init_render6();
     init_state28();
-    LIVE_OPTIONS3 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
+    LIVE_OPTIONS4 = ["value", "ecc", "size", "quiet", "look", "modules", "render", "caption", "copy", "download", "reveal", "expires", "label", "max", "narrow", "retry"];
     QrControl = class extends Controller {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -83781,7 +83880,7 @@ var init_controller68 = __esm({
             window.cancelAnimationFrame(this.queued);
             this.queued = window.requestAnimationFrame(() => render5(root));
           })
-        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS3.map((n) => `data-kp-qr-${n}`) });
+        ).observe(root, { attributes: true, attributeFilter: LIVE_OPTIONS4.map((n) => `data-kp-qr-${n}`) });
         this.own(this.copyKey());
         render5(root);
       }
@@ -83860,7 +83959,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller68();
+    init_controller69();
     init_state28();
     init_state28();
     init_matrix2();
