@@ -1,6 +1,11 @@
 // Tooltips: attaches them to the elements that carry one.
+import { Controller, attachOne } from '../controller.js';
 import { playEntranceBackwards, stopReversing } from '../motion.js';
 import { TOOLTIP_EVENT, TOOLTIP_OWNED } from './constants.js';
+
+/** How long (ms) the pointer rests before a tooltip opens, and leaves before it closes, when neither the call nor the anchor says. */
+const OPEN_DELAY_MS = 300;
+const CLOSE_DELAY_MS = 100;
 
 /**
  * Framework-free tooltips on `.kp-tooltip-anchor` [gap-11].
@@ -23,110 +28,129 @@ import { TOOLTIP_EVENT, TOOLTIP_OWNED } from './constants.js';
  *   Per anchor: `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape="false"`.
  * @returns {() => void} detach
  */
-export function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
-    let count = 0;
-    for (const el of root.querySelectorAll('.kp-tooltip-anchor')) {
-        const anchor = /** @type {HTMLElement} */ (el);
-        if (ownedBy !== '' && anchor.matches(ownedBy)) continue;
-        if (anchor.dataset.kpTooltipAttached !== undefined) continue;
-        const tooltip = /** @type {HTMLElement | null} */ (anchor.querySelector('[role="tooltip"], .kp-tooltip'));
-        const trigger = /** @type {HTMLElement | null} */ ([...anchor.children].find((child) => child !== tooltip) ?? null);
-        if (tooltip === null || trigger === null) continue;
-        anchor.dataset.kpTooltipAttached = '';
-        count += 1;
+export function attachTooltips(root = document, { openDelayMs = OPEN_DELAY_MS, closeDelayMs = CLOSE_DELAY_MS, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
+    // An anchor another channel owns, one marked attached, or one without a tooltip and a trigger is left alone.
+    const made = /** @type {HTMLElement[]} */ ([...root.querySelectorAll('.kp-tooltip-anchor')])
+        .filter((anchor) => !(ownedBy !== '' && anchor.matches(ownedBy)) && !('kpTooltipAttached' in anchor.dataset))
+        .filter((anchor) => partsOf(anchor) !== null)
+        .map((anchor, index) => attachOne(anchor, TooltipControl, { openDelayMs, closeDelayMs, closeOnEscape, count: index + 1 }));
+    return () => {
+        for (const control of made.splice(0)) control?.destroy();
+    };
+}
 
-        const before = {
+/** The anchor's tooltip and the trigger beside it, or null when either is missing. @param {HTMLElement} anchor */
+function partsOf(anchor) {
+    const tooltip = /** @type {HTMLElement | null} */ (anchor.querySelector('[role="tooltip"], .kp-tooltip'));
+    const trigger = /** @type {HTMLElement | null} */ ([...anchor.children].find((child) => child !== tooltip) ?? null);
+    return tooltip === null || trigger === null ? null : { tooltip, trigger };
+}
+
+/** @param {string | undefined} value @param {number} fallback */
+const numberOr = (value, fallback) => (value === undefined || Number.isNaN(Number(value)) ? fallback : Number(value));
+
+/**
+ * One tooltip: what attach found (to put back on detach), its delays, the pending timer, and whether it is going. Going, it plays
+ * its entrance backwards before it is hidden, so it leaves as it came (Kenny, 2026-10-05: no discrepancy between opening and
+ * closing); wanted back meanwhile, it turns round.
+ */
+class TooltipControl extends Controller {
+    /** @param {HTMLElement} host @param {{ openDelayMs?: number, closeDelayMs?: number, closeOnEscape?: boolean, count?: number }} [options] */
+    constructor(host, options = {}) {
+        super(host, options);
+        const { tooltip, trigger } = /** @type {{ tooltip: HTMLElement, trigger: HTMLElement }} */ (partsOf(host));
+        this.tooltip = tooltip;
+        this.trigger = trigger;
+        /** The tooltip's place among those its attach call wired, for a generated id. */
+        this.count = options.count ?? 1;
+        this.before = {
             id: tooltip.getAttribute('id'),
             hidden: tooltip.hidden,
             describedby: trigger.getAttribute('aria-describedby'),
-            anchorName: anchor.style.getPropertyValue('anchor-name'),
+            anchorName: host.style.getPropertyValue('anchor-name'),
             positionAnchor: tooltip.style.getPropertyValue('position-anchor'),
         };
-        if (!tooltip.id) tooltip.id = `kp-tooltip-${count}-${Math.random().toString(36).slice(2, 8)}`;
+        this.openDelay = numberOr(host.dataset.kpOpenDelay, options.openDelayMs ?? OPEN_DELAY_MS);
+        this.closeDelay = numberOr(host.dataset.kpCloseDelay, options.closeDelayMs ?? CLOSE_DELAY_MS);
+        this.escapes = host.dataset.kpCloseOnEscape === undefined ? (options.closeOnEscape ?? true) : host.dataset.kpCloseOnEscape !== 'false';
+        this.timer = 0;
+        this.going = false;
+    }
+
+    connect() {
+        const { host: anchor, tooltip } = this;
+        anchor.dataset.kpTooltipAttached = '';
+        this.own(() => this.restore());
+        this.describe();
+        tooltip.hidden = true;
+        this.listen(anchor, 'pointerenter', () => this.schedule(true, this.openDelay));
+        this.listen(anchor, 'pointerleave', () => {
+            if (!anchor.contains(document.activeElement)) this.schedule(false, this.closeDelay);
+        });
+        this.listen(anchor, 'focusin', () => this.schedule(true, 0));
+        this.listen(anchor, 'focusout', () => this.schedule(false, 0));
+        this.listen(document, 'keydown', (event) => {
+            if (this.escapes && /** @type {KeyboardEvent} */ (event).key === 'Escape' && !tooltip.hidden) this.set(false);
+        });
+    }
+
+    /**
+     * The trigger is described by the tooltip: an id is given where there was none, and `aria-describedby` gains it rather than
+     * losing what it held. The anchor names itself for anchor positioning, as the React channel does.
+     */
+    describe() {
+        const { host: anchor, tooltip, trigger, before } = this;
+        if (!tooltip.id) tooltip.id = `kp-tooltip-${this.count}-${Math.random().toString(36).slice(2, 8)}`;
         const ids = (before.describedby ?? '').split(/\s+/).filter(Boolean);
         if (!ids.includes(tooltip.id)) trigger.setAttribute('aria-describedby', [...ids, tooltip.id].join(' '));
         if (before.anchorName === '') anchor.style.setProperty('anchor-name', `--${tooltip.id}`);
         if (before.positionAnchor === '') tooltip.style.setProperty('position-anchor', before.anchorName || `--${tooltip.id}`);
+    }
 
-        /** @param {string | undefined} value @param {number} fallback */
-        const number = (value, fallback) => (value === undefined || Number.isNaN(Number(value)) ? fallback : Number(value));
-        const openDelay = number(anchor.dataset.kpOpenDelay, openDelayMs);
-        const closeDelay = number(anchor.dataset.kpCloseDelay, closeDelayMs);
-        const escapes = anchor.dataset.kpCloseOnEscape === undefined ? closeOnEscape : anchor.dataset.kpCloseOnEscape !== 'false';
+    /** Put back the attributes, the styles and the hidden state attach found. */
+    restore() {
+        const { host: anchor, tooltip, trigger, before } = this;
+        clearTimeout(this.timer);
+        this.going = false;
+        stopReversing(tooltip);
+        tooltip.hidden = before.hidden;
+        if (before.id === null) tooltip.removeAttribute('id');
+        if (before.describedby === null) trigger.removeAttribute('aria-describedby');
+        else trigger.setAttribute('aria-describedby', before.describedby);
+        if (before.anchorName === '') anchor.style.removeProperty('anchor-name');
+        if (before.positionAnchor === '') tooltip.style.removeProperty('position-anchor');
+        delete anchor.dataset.kpTooltipAttached;
+    }
 
-        let timer = 0;
-        // Going, it plays its entrance backwards before it is hidden, so it
-        // leaves as it came (Kenny, 2026-10-05: no discrepancy between
-        // opening and closing); wanted back meanwhile, it turns round.
-        let going = false;
-        /** @param {boolean} open */
-        const set = (open) => {
-            clearTimeout(timer);
-            if (open && going) {
-                going = false;
-                stopReversing(tooltip);
-                anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
-                return;
-            }
-            if (going || tooltip.hidden === !open) return;
-            if (open) tooltip.hidden = false;
-            else {
-                going = true;
-                void playEntranceBackwards(tooltip).then(() => {
-                    // Wanted back meanwhile: set(true) took it over.
-                    if (!going) return;
-                    going = false;
-                    tooltip.hidden = true;
-                    stopReversing(tooltip);
-                });
-            }
-            anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
-        };
-        /** @param {boolean} open @param {number} delay */
-        const schedule = (open, delay) => {
-            clearTimeout(timer);
-            if (delay <= 0) set(open);
-            else timer = window.setTimeout(() => set(open), delay);
-        };
-        const onEnter = () => schedule(true, openDelay);
-        const onLeave = () => {
-            if (!anchor.contains(document.activeElement)) schedule(false, closeDelay);
-        };
-        const onFocusIn = () => schedule(true, 0);
-        const onFocusOut = () => schedule(false, 0);
-        /** @param {KeyboardEvent} event */
-        const onKey = (event) => {
-            if (escapes && event.key === 'Escape' && !tooltip.hidden) set(false);
-        };
-
-        tooltip.hidden = true;
-        anchor.addEventListener('pointerenter', onEnter);
-        anchor.addEventListener('pointerleave', onLeave);
-        anchor.addEventListener('focusin', onFocusIn);
-        anchor.addEventListener('focusout', onFocusOut);
-        document.addEventListener('keydown', onKey);
-
-        cleanups.push(() => {
-            clearTimeout(timer);
-            going = false;
+    /** @param {boolean} open */
+    set(open) {
+        const tooltip = this.tooltip;
+        clearTimeout(this.timer);
+        if (open && this.going) {
+            this.going = false;
             stopReversing(tooltip);
-            anchor.removeEventListener('pointerenter', onEnter);
-            anchor.removeEventListener('pointerleave', onLeave);
-            anchor.removeEventListener('focusin', onFocusIn);
-            anchor.removeEventListener('focusout', onFocusOut);
-            document.removeEventListener('keydown', onKey);
-            tooltip.hidden = before.hidden;
-            if (before.id === null) tooltip.removeAttribute('id');
-            if (before.describedby === null) trigger.removeAttribute('aria-describedby');
-            else trigger.setAttribute('aria-describedby', before.describedby);
-            if (before.anchorName === '') anchor.style.removeProperty('anchor-name');
-            if (before.positionAnchor === '') tooltip.style.removeProperty('position-anchor');
-            delete anchor.dataset.kpTooltipAttached;
+        } else if (this.going || tooltip.hidden === !open) return;
+        else if (open) tooltip.hidden = false;
+        else this.leave();
+        this.host.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
+    }
+
+    /** Play the entrance backwards, then hide; a set(true) meanwhile takes it over. */
+    leave() {
+        const tooltip = this.tooltip;
+        this.going = true;
+        void playEntranceBackwards(tooltip).then(() => {
+            if (!this.going) return;
+            this.going = false;
+            tooltip.hidden = true;
+            stopReversing(tooltip);
         });
     }
-    return () => {
-        for (const c of cleanups) c();
-    };
+
+    /** @param {boolean} open @param {number} delay */
+    schedule(open, delay) {
+        clearTimeout(this.timer);
+        if (delay <= 0) this.set(open);
+        else this.timer = window.setTimeout(() => this.set(open), delay);
+    }
 }

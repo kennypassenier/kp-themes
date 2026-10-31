@@ -1,4 +1,5 @@
 // Toasts: the region, the stack and the toast that waits while it is attended.
+import { Controller } from '../controller.js';
 import { getStrings } from '../strings.js';
 import { leave } from '../motion.js';
 import { TOAST_HIDE_EVENT, TOAST_LINGER_MS, TOAST_MS, TOAST_PAUSE_EVENT, TOAST_SHOW_EVENT } from './constants.js';
@@ -96,17 +97,8 @@ export function toast(
         closer.addEventListener('click', () => el.dismiss());
         el.append(closer);
     }
-    let timer = 0;
-    el.dismiss = () => {
-        clearTimeout(timer);
-        if (!el.isConnected || goingToasts.has(el)) return;
-        goingToasts.add(el);
-        // It leaves the theme's way (js/motion.js), the way it arrived turned
-        // around where the theme opens so: it popped out at once while it
-        // came in with the theme's motion (Kenny, 2026-10-05). The event
-        // comes once it is gone.
-        void leave(el).then(() => host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el } })));
-    };
+    const clock = new ToastClock(el, host, { lasting: sticky ? 0 : ms, pause, linger });
+    el.dismiss = () => clock.dismiss();
     host.append(el);
     if (max !== undefined) {
         // The oldest beyond `max`, not counting those already on their way out.
@@ -117,67 +109,96 @@ export function toast(
     host.dispatchEvent(
         new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el, text: typeof content === 'string' ? content : el.textContent } }),
     );
-    const lasting = sticky ? 0 : ms;
-    if (lasting > 0) {
-        timer = window.setTimeout(el.dismiss, lasting);
-        if (pause)
-            holdWhileAttended(
-                el,
-                () => timer,
-                (next) => (timer = next),
-                linger,
-            );
-    }
-    // Esc on a toast with focus in it closes it, with or without a clock.
-    el.addEventListener('keydown', (event) => {
-        if (event.key !== 'Escape' || event.defaultPrevented) return;
-        event.preventDefault();
-        el.dismiss();
-    });
+    clock.connect();
     return el;
 }
 
 /**
- * Stop a toast's clock while a pointer is on it or focus is inside it, and
- * start `linger` ms after both are gone. A touch is not "hovering": its
- * pointerenter comes with the tap and its leave with the lift, so only a mouse
- * or a pen holds a toast, and focus does for the rest.
- *
- * @param {HTMLElement & { dismiss: () => void }} el
- * @param {() => number} getTimer
- * @param {(timer: number) => void} setTimer
- * @param {number} linger
+ * One toast's clock: the timer that dismisses it, and whether a pointer or the focus holds it. Its listeners go with the toast,
+ * which leaves the page on its own, so nothing detaches it.
  */
-function holdWhileAttended(el, getTimer, setTimer, linger) {
-    let pointer = false;
-    let focus = false;
-    let held = false;
-    const settle = () => {
-        const attended = pointer || focus;
-        if (attended === held) return;
-        held = attended;
-        clearTimeout(getTimer());
-        el.toggleAttribute('data-kp-paused', held);
-        if (!held) setTimer(window.setTimeout(el.dismiss, linger));
-        el.parentElement?.dispatchEvent(new CustomEvent(TOAST_PAUSE_EVENT, { bubbles: true, detail: { toast: el, paused: held } }));
-    };
-    el.addEventListener('pointerenter', (event) => {
-        if (event.pointerType === 'touch') return;
-        pointer = true;
-        settle();
-    });
-    el.addEventListener('pointerleave', () => {
-        pointer = false;
-        settle();
-    });
-    el.addEventListener('focusin', () => {
-        focus = true;
-        settle();
-    });
-    el.addEventListener('focusout', (event) => {
-        // Focus moving to another part of the same toast is still attended.
-        if (event.relatedTarget instanceof Node && el.contains(event.relatedTarget)) return;
-        focus = false;
-        settle();
-    });
+class ToastClock extends Controller {
+    /**
+     * @param {HTMLElement} el the toast
+     * @param {HTMLElement} region the region it sits in, which hears TOAST_HIDE_EVENT
+     * @param {{ lasting: number, pause: boolean, linger: number }} options lasting 0: until dismissed
+     */
+    constructor(el, region, options) {
+        super(el, options);
+        this.region = region;
+        this.lasting = options.lasting;
+        this.pause = options.pause;
+        this.linger = options.linger;
+        this.timer = 0;
+        /** Whether a mouse or a pen is on the toast, whether the focus is inside it, and whether the clock is stopped. */
+        this.pointer = false;
+        this.focus = false;
+        this.held = false;
+    }
+
+    connect() {
+        const el = this.host;
+        if (this.lasting > 0) {
+            this.timer = window.setTimeout(() => this.dismiss(), this.lasting);
+            if (this.pause) this.holdWhileAttended();
+        }
+        // Esc on a toast with focus in it closes it, with or without a clock.
+        this.listen(el, 'keydown', (event) => {
+            if (/** @type {KeyboardEvent} */ (event).key !== 'Escape' || event.defaultPrevented) return;
+            event.preventDefault();
+            this.dismiss();
+        });
+    }
+
+    /**
+     * It leaves the theme's way (js/motion.js), the way it arrived turned around where the theme opens so: it popped out at once
+     * while it came in with the theme's motion (Kenny, 2026-10-05). The event comes once it is gone.
+     */
+    dismiss() {
+        const el = this.host;
+        clearTimeout(this.timer);
+        if (!el.isConnected || goingToasts.has(el)) return;
+        goingToasts.add(el);
+        void leave(el).then(() => this.region.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el } })));
+    }
+
+    /**
+     * Stop the clock while a pointer is on the toast or focus is inside it, and start `linger` ms after both are gone. A touch is
+     * not "hovering": its pointerenter comes with the tap and its leave with the lift, so only a mouse or a pen holds a toast, and
+     * focus does for the rest.
+     */
+    holdWhileAttended() {
+        const el = this.host;
+        this.listen(el, 'pointerenter', (event) => {
+            if (/** @type {PointerEvent} */ (event).pointerType === 'touch') return;
+            this.pointer = true;
+            this.settle();
+        });
+        this.listen(el, 'pointerleave', () => {
+            this.pointer = false;
+            this.settle();
+        });
+        this.listen(el, 'focusin', () => {
+            this.focus = true;
+            this.settle();
+        });
+        this.listen(el, 'focusout', (event) => {
+            // Focus moving to another part of the same toast is still attended.
+            const to = /** @type {FocusEvent} */ (event).relatedTarget;
+            if (to instanceof Node && el.contains(to)) return;
+            this.focus = false;
+            this.settle();
+        });
+    }
+
+    settle() {
+        const el = this.host;
+        const attended = this.pointer || this.focus;
+        if (attended === this.held) return;
+        this.held = attended;
+        clearTimeout(this.timer);
+        el.toggleAttribute('data-kp-paused', this.held);
+        if (!this.held) this.timer = window.setTimeout(() => this.dismiss(), this.linger);
+        el.parentElement?.dispatchEvent(new CustomEvent(TOAST_PAUSE_EVENT, { bubbles: true, detail: { toast: el, paused: this.held } }));
+    }
 }

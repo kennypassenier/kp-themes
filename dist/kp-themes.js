@@ -3027,54 +3027,57 @@ function openAtTop(dialog) {
     focused2.scrollIntoView({ block: "nearest", inline: "nearest" });
 }
 function attachDialogs(root = document, { modal = true } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll("[data-kp-dialog]")) {
-    const trigger = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (trigger.dataset.kpDialogAttached !== void 0) continue;
-    const dialog = document.getElementById(trigger.dataset.kpDialog ?? "");
-    if (!(dialog instanceof HTMLDialogElement)) continue;
-    trigger.dataset.kpDialogAttached = "";
-    const open4 = () => {
-      const asModal = trigger.dataset.kpDialogMode === void 0 ? modal : trigger.dataset.kpDialogMode !== "non-modal";
-      if (dialog.open) return;
-      if (asModal) dialog.showModal();
-      else dialog.show();
-      openAtTop(dialog);
-      dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
-    };
-    trigger.addEventListener("click", open4);
-    cleanups.push(() => {
-      trigger.removeEventListener("click", open4);
-      delete trigger.dataset.kpDialogAttached;
-    });
-  }
-  for (const el16 of root.querySelectorAll("[data-kp-dialog-close]")) {
-    const button6 = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (button6.dataset.kpDialogCloseAttached !== void 0) continue;
-    button6.dataset.kpDialogCloseAttached = "";
-    const close = () => button6.closest("dialog")?.close(button6.dataset.kpDialogClose || void 0);
-    button6.addEventListener("click", close);
-    cleanups.push(() => {
-      button6.removeEventListener("click", close);
-      delete button6.dataset.kpDialogCloseAttached;
-    });
-  }
+  const triggers = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll("[data-kp-dialog]")].filter((trigger) => !("kpDialogAttached" in trigger.dataset)).filter((trigger) => document.getElementById(trigger.dataset.kpDialog ?? "") instanceof HTMLDialogElement).map((trigger) => attachOne(trigger, DialogTrigger, { modal }))
+  );
+  const closers = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll("[data-kp-dialog-close]")].filter((button6) => !("kpDialogCloseAttached" in button6.dataset)).map((button6) => attachOne(button6, DialogCloser))
+  );
   return () => {
-    for (const c of cleanups) c();
+    for (const control of [...triggers.splice(0), ...closers.splice(0)]) control?.destroy();
   };
 }
-var closeLabel;
+var DialogTrigger, DialogCloser, closeLabel;
 var init_dialogs = __esm({
   "js/overlays/dialogs.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_constants();
+    DialogTrigger = class extends Controller {
+      /** @param {HTMLElement} host @param {{ modal?: boolean }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.dialog = /** @type {HTMLDialogElement} */
+        document.getElementById(host.dataset.kpDialog ?? "");
+        this.modal = options.modal ?? true;
+      }
+      connect() {
+        const trigger = this.host;
+        trigger.dataset.kpDialogAttached = "";
+        this.own(() => delete trigger.dataset.kpDialogAttached);
+        this.listen(trigger, "click", () => this.open());
+      }
+      open() {
+        const { host: trigger, dialog } = this;
+        const asModal = trigger.dataset.kpDialogMode === void 0 ? this.modal : trigger.dataset.kpDialogMode !== "non-modal";
+        if (dialog.open) return;
+        if (asModal) dialog.showModal();
+        else dialog.show();
+        openAtTop(dialog);
+        dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
+      }
+    };
+    DialogCloser = class extends Controller {
+      connect() {
+        const button6 = this.host;
+        button6.dataset.kpDialogCloseAttached = "";
+        this.own(() => delete button6.dataset.kpDialogCloseAttached);
+        this.listen(button6, "click", () => button6.closest("dialog")?.close(button6.dataset.kpDialogClose || void 0));
+      }
+    };
     closeLabel = () => getStrings().close;
   }
 });
@@ -5263,14 +5266,7 @@ var init_motion = __esm({
   }
 });
 
-// js/overlays/tabs.js
-function selectTab(list, which) {
-  const handle = handles.get(list);
-  if (handle === void 0) return;
-  const tabs = handle.tabs();
-  const index = typeof which === "number" ? which : tabs.findIndex((t) => t.id === which);
-  if (index >= 0 && index < tabs.length) handle.select(index, { focus: false });
-}
+// js/overlays/tab-row.js
 function revealTab(list, tab) {
   if (tab === void 0 || list.scrollWidth <= list.clientWidth) return;
   const row2 = list.getBoundingClientRect();
@@ -5295,162 +5291,204 @@ function watchTabOverflow(list, selected) {
     list.removeAttribute(TABS_OVERFLOW);
   };
 }
-function attachTabs(root = document, { activation = "automatic", loop = true } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll('[role="tablist"]')) {
-    const list = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (list.dataset.kpTabsAttached !== void 0) continue;
-    const tabs = () => [.../** @type {NodeListOf<HTMLElement>} */
-    list.querySelectorAll('[role="tab"]')];
-    if (tabs().length === 0) continue;
-    list.dataset.kpTabsAttached = "";
-    const manual = (list.dataset.kpActivation ?? activation) === "manual";
-    const wraps = list.dataset.kpLoop === void 0 ? loop : list.dataset.kpLoop !== "false";
-    const vertical = list.getAttribute("aria-orientation") === "vertical";
-    const before = tabs().map((tab) => ({
-      tab,
-      tabIndex: tab.getAttribute("tabindex"),
-      selected: tab.getAttribute("aria-selected"),
-      panel: document.getElementById(tab.getAttribute("aria-controls") ?? ""),
-      hidden: document.getElementById(tab.getAttribute("aria-controls") ?? "")?.hidden ?? false
-    }));
-    const leaving = /* @__PURE__ */ new Map();
-    let turn2 = 0;
-    const select2 = (index, { focus = true } = {}) => {
-      const all = tabs();
-      const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
-      let shown5 = null;
-      const going = [];
-      all.forEach((tab, i) => {
-        const selected = i === index;
-        tab.setAttribute("aria-selected", String(selected));
-        tab.tabIndex = selected ? 0 : -1;
-        const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
-        if (!panel) return;
-        if (selected) shown5 = panel;
-        else if (leaving.has(panel)) going.push(
-          /** @type {Promise<void>} */
-          leaving.get(panel)
+var init_tab_row = __esm({
+  "js/overlays/tab-row.js"() {
+    "use strict";
+    init_constants();
+  }
+});
+
+// js/overlays/tab-list.js
+var SWAP_MARK_MS, handles, panelOf, TabsControl;
+var init_tab_list = __esm({
+  "js/overlays/tab-list.js"() {
+    "use strict";
+    init_controller();
+    init_motion();
+    init_constants();
+    init_tab_row();
+    SWAP_MARK_MS = 400;
+    handles = /* @__PURE__ */ new WeakMap();
+    panelOf = (tab) => document.getElementById(tab.getAttribute("aria-controls") ?? "");
+    TabsControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ activation?: 'automatic' | 'manual', loop?: boolean }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.manual = (host.dataset.kpActivation ?? options.activation ?? "automatic") === "manual";
+        this.wraps = host.dataset.kpLoop === void 0 ? options.loop ?? true : host.dataset.kpLoop !== "false";
+        this.vertical = host.getAttribute("aria-orientation") === "vertical";
+        this.leaving = /* @__PURE__ */ new Map();
+        this.turn = 0;
+        this.before = this.tabs().map((tab) => ({
+          tab,
+          tabIndex: tab.getAttribute("tabindex"),
+          selected: tab.getAttribute("aria-selected"),
+          panel: panelOf(tab),
+          hidden: panelOf(tab)?.hidden ?? false
+        }));
+      }
+      /** The list's tabs, read again at every use. */
+      tabs() {
+        return [.../** @type {NodeListOf<HTMLElement>} */
+        this.host.querySelectorAll('[role="tab"]')];
+      }
+      connect() {
+        const list = this.host;
+        list.dataset.kpTabsAttached = "";
+        this.own(() => this.restore());
+        handles.set(list, { tabs: () => this.tabs(), select: (index, options) => this.select(index, options) });
+        const initial = Math.max(0, this.tabs().findIndex((t) => t.getAttribute("aria-selected") === "true"));
+        this.tabs().forEach((tab, i) => {
+          tab.tabIndex = i === initial ? 0 : -1;
+        });
+        this.own(watchTabOverflow(list, () => this.tabs().find((t) => t.getAttribute("aria-selected") === "true")));
+        revealTab(list, this.tabs()[initial]);
+        this.listen(list, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(list, "click", (event) => {
+          const tab = (
+            /** @type {HTMLElement} */
+            event.target.closest('[role="tab"]')
+          );
+          if (tab) this.select(this.tabs().indexOf(
+            /** @type {HTMLElement} */
+            tab
+          ));
+        });
+      }
+      /** Take the list out of the registry and put back the tab stops, the selection and the panels attach found. */
+      restore() {
+        handles.delete(this.host);
+        delete this.host.dataset.kpTabsAttached;
+        for (const b of this.before) {
+          if (b.tabIndex === null) b.tab.removeAttribute("tabindex");
+          else b.tab.setAttribute("tabindex", b.tabIndex);
+          if (b.selected === null) b.tab.removeAttribute("aria-selected");
+          else b.tab.setAttribute("aria-selected", b.selected);
+          if (b.panel) b.panel.hidden = b.hidden;
+        }
+      }
+      /** @param {number} index @param {{ focus?: boolean }} [options] */
+      select(index, { focus = true } = {}) {
+        const all = this.tabs();
+        const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
+        let shown5 = null;
+        const going = [];
+        all.forEach((tab2, i) => {
+          const selected = i === index;
+          tab2.setAttribute("aria-selected", String(selected));
+          tab2.tabIndex = selected ? 0 : -1;
+          const panel = panelOf(tab2);
+          if (!panel) return;
+          if (selected) shown5 = panel;
+          else this.send(panel, going);
+        });
+        const mine = ++this.turn;
+        const show = (
+          /** @type {HTMLElement | null} */
+          shown5
         );
+        if (show) this.arrive(show, going, mine);
+        if (focus) all[index]?.focus();
+        revealTab(this.host, all[index]);
+        if (previous === index) return;
+        const tab = all[index];
+        this.host.dispatchEvent(
+          new CustomEvent(TAB_CHANGE_EVENT, { bubbles: true, detail: { index, tab, panel: document.getElementById(tab?.getAttribute("aria-controls") ?? ""), previous } })
+        );
+      }
+      /**
+       * An outgoing panel leaves the theme's way, its space folding shut, and the new one arrives once it is gone (as a leave turned
+       * around): so a switch is one panel's exit followed by the other's entrance, never a jump.
+       * @param {HTMLElement} panel @param {Promise<void>[]} going collects the leaves the new panel waits for
+       */
+      send(panel, going) {
+        const already = this.leaving.get(panel);
+        if (already) going.push(already);
         else if (!panel.hidden) {
-          const gone = leave(panel, { hide: true }).finally(() => leaving.delete(panel));
-          leaving.set(panel, gone);
+          const gone = leave(panel, { hide: true }).finally(() => this.leaving.delete(panel));
+          this.leaving.set(panel, gone);
           going.push(gone);
         }
-      });
-      const mine = ++turn2;
-      const show = (
-        /** @type {HTMLElement | null} */
-        shown5
-      );
-      if (show) {
-        const back = leaving.get(show);
+      }
+      /**
+       * Show the new panel: at once when nothing leaves; beside the old one in a theme that lets states leave first (leavesState()),
+       * one picture in one time; else once the leaves are over, unless a later switch came.
+       * @param {HTMLElement} show @param {Promise<void>[]} going @param {number} mine this switch's turn
+       */
+      arrive(show, going, mine) {
+        const back = this.leaving.get(show);
         if (back) going.push(back);
         if (going.length === 0) show.hidden = false;
         else if (!back && leavesState(show)) {
           show.setAttribute("data-kp-tabs-swapping", "");
-          setTimeout(() => show.removeAttribute("data-kp-tabs-swapping"), 400);
+          setTimeout(() => show.removeAttribute("data-kp-tabs-swapping"), SWAP_MARK_MS);
           show.hidden = false;
         } else {
           if (!back) show.hidden = true;
           void Promise.all(going).then(() => {
-            if (turn2 === mine) show.hidden = false;
+            if (this.turn === mine) show.hidden = false;
           });
         }
       }
-      if (focus) all[index]?.focus();
-      revealTab(list, all[index]);
-      if (previous !== index) {
-        const tab = all[index];
-        list.dispatchEvent(
-          new CustomEvent(TAB_CHANGE_EVENT, {
-            bubbles: true,
-            detail: { index, tab, panel: document.getElementById(tab?.getAttribute("aria-controls") ?? ""), previous }
-          })
+      /** Manual activation moves focus without selecting. @param {number} index */
+      roam(index) {
+        const all = this.tabs();
+        all.forEach((tab, i) => {
+          tab.tabIndex = i === index ? 0 : -1;
+        });
+        all[index]?.focus();
+      }
+      /** @param {KeyboardEvent} e */
+      onKey(e) {
+        const all = this.tabs();
+        const current2 = all.indexOf(
+          /** @type {HTMLElement} */
+          document.activeElement
         );
-      }
-    };
-    const roam = (index) => {
-      const all = tabs();
-      all.forEach((tab, i) => {
-        tab.tabIndex = i === index ? 0 : -1;
-      });
-      all[index]?.focus();
-    };
-    const onKey5 = (e) => {
-      const all = tabs();
-      const current2 = all.indexOf(
-        /** @type {HTMLElement} */
-        document.activeElement
-      );
-      if (current2 === -1) return;
-      const next2 = vertical ? "ArrowDown" : "ArrowRight";
-      const prev = vertical ? "ArrowUp" : "ArrowLeft";
-      if (manual && (e.key === "Enter" || e.key === " ")) {
+        if (current2 === -1) return;
+        if (this.manual && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          this.select(current2);
+          return;
+        }
+        const next2 = this.vertical ? "ArrowDown" : "ArrowRight";
+        const prev = this.vertical ? "ArrowUp" : "ArrowLeft";
+        const move = { [next2]: 1, [prev]: -1, Home: -current2, End: all.length - 1 - current2 }[e.key];
+        if (move === void 0) return;
         e.preventDefault();
-        select2(current2);
-        return;
+        const target = this.wraps ? (current2 + move + all.length) % all.length : Math.max(0, Math.min(all.length - 1, current2 + move));
+        if (this.manual) this.roam(target);
+        else this.select(target);
       }
-      const move = { [next2]: 1, [prev]: -1, Home: -current2, End: all.length - 1 - current2 }[e.key];
-      if (move === void 0) return;
-      e.preventDefault();
-      let target = current2 + move;
-      if (wraps) target = (target + all.length) % all.length;
-      else target = Math.max(0, Math.min(all.length - 1, target));
-      if (manual) roam(target);
-      else select2(target);
     };
-    const onClick = (e) => {
-      const tab = (
-        /** @type {HTMLElement} */
-        e.target.closest('[role="tab"]')
-      );
-      if (tab) select2(tabs().indexOf(
-        /** @type {HTMLElement} */
-        tab
-      ));
-    };
-    const initial = Math.max(
-      0,
-      tabs().findIndex((t) => t.getAttribute("aria-selected") === "true")
-    );
-    tabs().forEach((tab, i) => {
-      tab.tabIndex = i === initial ? 0 : -1;
-    });
-    const stopWatching = watchTabOverflow(list, () => tabs().find((t) => t.getAttribute("aria-selected") === "true"));
-    revealTab(list, tabs()[initial]);
-    list.addEventListener("keydown", onKey5);
-    list.addEventListener("click", onClick);
-    handles.set(list, { tabs, select: select2 });
-    cleanups.push(() => {
-      list.removeEventListener("keydown", onKey5);
-      list.removeEventListener("click", onClick);
-      stopWatching();
-      handles.delete(list);
-      delete list.dataset.kpTabsAttached;
-      for (const b of before) {
-        if (b.tabIndex === null) b.tab.removeAttribute("tabindex");
-        else b.tab.setAttribute("tabindex", b.tabIndex);
-        if (b.selected === null) b.tab.removeAttribute("aria-selected");
-        else b.tab.setAttribute("aria-selected", b.selected);
-        if (b.panel) b.panel.hidden = b.hidden;
-      }
-    });
   }
+});
+
+// js/overlays/tabs.js
+function selectTab(list, which) {
+  const handle = handles.get(list);
+  if (handle === void 0) return;
+  const tabs = handle.tabs();
+  const index = typeof which === "number" ? which : tabs.findIndex((t) => t.id === which);
+  if (index >= 0 && index < tabs.length) handle.select(index, { focus: false });
+}
+function attachTabs(root = document, { activation = "automatic", loop = true } = {}) {
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll('[role="tablist"]')].filter((list) => !("kpTabsAttached" in list.dataset) && list.querySelector('[role="tab"]') !== null).map((list) => attachOne(list, TabsControl, { activation, loop }))
+  );
   return () => {
-    for (const c of cleanups) c();
+    for (const control of made6.splice(0)) control?.destroy();
   };
 }
-var handles;
 var init_tabs = __esm({
   "js/overlays/tabs.js"() {
     "use strict";
-    init_motion();
-    init_constants();
-    handles = /* @__PURE__ */ new WeakMap();
+    init_controller();
+    init_tab_list();
   }
 });
 
@@ -5512,13 +5550,8 @@ function toast(content, {
     closer.addEventListener("click", () => el16.dismiss());
     el16.append(closer);
   }
-  let timer = 0;
-  el16.dismiss = () => {
-    clearTimeout(timer);
-    if (!el16.isConnected || goingToasts.has(el16)) return;
-    goingToasts.add(el16);
-    void leave(el16).then(() => host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el16 } })));
-  };
+  const clock4 = new ToastClock(el16, host, { lasting: sticky ? 0 : ms, pause, linger });
+  el16.dismiss = () => clock4.dismiss();
   host.append(el16);
   if (max !== void 0) {
     const staying = [...host.children].filter((child) => !goingToasts.has(child));
@@ -5528,64 +5561,105 @@ function toast(content, {
   host.dispatchEvent(
     new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el16, text: typeof content === "string" ? content : el16.textContent } })
   );
-  const lasting = sticky ? 0 : ms;
-  if (lasting > 0) {
-    timer = window.setTimeout(el16.dismiss, lasting);
-    if (pause)
-      holdWhileAttended(
-        el16,
-        () => timer,
-        (next2) => timer = next2,
-        linger
-      );
-  }
-  el16.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || event.defaultPrevented) return;
-    event.preventDefault();
-    el16.dismiss();
-  });
+  clock4.connect();
   return el16;
 }
-function holdWhileAttended(el16, getTimer, setTimer, linger) {
-  let pointer = false;
-  let focus = false;
-  let held2 = false;
-  const settle3 = () => {
-    const attended = pointer || focus;
-    if (attended === held2) return;
-    held2 = attended;
-    clearTimeout(getTimer());
-    el16.toggleAttribute("data-kp-paused", held2);
-    if (!held2) setTimer(window.setTimeout(el16.dismiss, linger));
-    el16.parentElement?.dispatchEvent(new CustomEvent(TOAST_PAUSE_EVENT, { bubbles: true, detail: { toast: el16, paused: held2 } }));
-  };
-  el16.addEventListener("pointerenter", (event) => {
-    if (event.pointerType === "touch") return;
-    pointer = true;
-    settle3();
-  });
-  el16.addEventListener("pointerleave", () => {
-    pointer = false;
-    settle3();
-  });
-  el16.addEventListener("focusin", () => {
-    focus = true;
-    settle3();
-  });
-  el16.addEventListener("focusout", (event) => {
-    if (event.relatedTarget instanceof Node && el16.contains(event.relatedTarget)) return;
-    focus = false;
-    settle3();
-  });
-}
-var goingToasts;
+var goingToasts, ToastClock;
 var init_toast = __esm({
   "js/overlays/toast.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_motion();
     init_constants();
     goingToasts = /* @__PURE__ */ new WeakSet();
+    ToastClock = class extends Controller {
+      /**
+       * @param {HTMLElement} el the toast
+       * @param {HTMLElement} region the region it sits in, which hears TOAST_HIDE_EVENT
+       * @param {{ lasting: number, pause: boolean, linger: number }} options lasting 0: until dismissed
+       */
+      constructor(el16, region, options) {
+        super(el16, options);
+        this.region = region;
+        this.lasting = options.lasting;
+        this.pause = options.pause;
+        this.linger = options.linger;
+        this.timer = 0;
+        this.pointer = false;
+        this.focus = false;
+        this.held = false;
+      }
+      connect() {
+        const el16 = this.host;
+        if (this.lasting > 0) {
+          this.timer = window.setTimeout(() => this.dismiss(), this.lasting);
+          if (this.pause) this.holdWhileAttended();
+        }
+        this.listen(el16, "keydown", (event) => {
+          if (
+            /** @type {KeyboardEvent} */
+            event.key !== "Escape" || event.defaultPrevented
+          ) return;
+          event.preventDefault();
+          this.dismiss();
+        });
+      }
+      /**
+       * It leaves the theme's way (js/motion.js), the way it arrived turned around where the theme opens so: it popped out at once
+       * while it came in with the theme's motion (Kenny, 2026-10-05). The event comes once it is gone.
+       */
+      dismiss() {
+        const el16 = this.host;
+        clearTimeout(this.timer);
+        if (!el16.isConnected || goingToasts.has(el16)) return;
+        goingToasts.add(el16);
+        void leave(el16).then(() => this.region.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el16 } })));
+      }
+      /**
+       * Stop the clock while a pointer is on the toast or focus is inside it, and start `linger` ms after both are gone. A touch is
+       * not "hovering": its pointerenter comes with the tap and its leave with the lift, so only a mouse or a pen holds a toast, and
+       * focus does for the rest.
+       */
+      holdWhileAttended() {
+        const el16 = this.host;
+        this.listen(el16, "pointerenter", (event) => {
+          if (
+            /** @type {PointerEvent} */
+            event.pointerType === "touch"
+          ) return;
+          this.pointer = true;
+          this.settle();
+        });
+        this.listen(el16, "pointerleave", () => {
+          this.pointer = false;
+          this.settle();
+        });
+        this.listen(el16, "focusin", () => {
+          this.focus = true;
+          this.settle();
+        });
+        this.listen(el16, "focusout", (event) => {
+          const to = (
+            /** @type {FocusEvent} */
+            event.relatedTarget
+          );
+          if (to instanceof Node && el16.contains(to)) return;
+          this.focus = false;
+          this.settle();
+        });
+      }
+      settle() {
+        const el16 = this.host;
+        const attended = this.pointer || this.focus;
+        if (attended === this.held) return;
+        this.held = attended;
+        clearTimeout(this.timer);
+        el16.toggleAttribute("data-kp-paused", this.held);
+        if (!this.held) this.timer = window.setTimeout(() => this.dismiss(), this.linger);
+        el16.parentElement?.dispatchEvent(new CustomEvent(TOAST_PAUSE_EVENT, { bubbles: true, detail: { toast: el16, paused: this.held } }));
+      }
+    };
   }
 });
 
@@ -6077,201 +6151,141 @@ var init_dismissals = __esm({
 });
 
 // js/overlays/tooltips.js
-function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
-  const cleanups = [];
-  let count2 = 0;
-  for (const el16 of root.querySelectorAll(".kp-tooltip-anchor")) {
-    const anchor = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (ownedBy !== "" && anchor.matches(ownedBy)) continue;
-    if (anchor.dataset.kpTooltipAttached !== void 0) continue;
-    const tooltip = (
-      /** @type {HTMLElement | null} */
-      anchor.querySelector('[role="tooltip"], .kp-tooltip')
-    );
-    const trigger = (
-      /** @type {HTMLElement | null} */
-      [...anchor.children].find((child) => child !== tooltip) ?? null
-    );
-    if (tooltip === null || trigger === null) continue;
-    anchor.dataset.kpTooltipAttached = "";
-    count2 += 1;
-    const before = {
-      id: tooltip.getAttribute("id"),
-      hidden: tooltip.hidden,
-      describedby: trigger.getAttribute("aria-describedby"),
-      anchorName: anchor.style.getPropertyValue("anchor-name"),
-      positionAnchor: tooltip.style.getPropertyValue("position-anchor")
-    };
-    if (!tooltip.id) tooltip.id = `kp-tooltip-${count2}-${Math.random().toString(36).slice(2, 8)}`;
-    const ids2 = (before.describedby ?? "").split(/\s+/).filter(Boolean);
-    if (!ids2.includes(tooltip.id)) trigger.setAttribute("aria-describedby", [...ids2, tooltip.id].join(" "));
-    if (before.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
-    if (before.positionAnchor === "") tooltip.style.setProperty("position-anchor", before.anchorName || `--${tooltip.id}`);
-    const number = (value, fallback2) => value === void 0 || Number.isNaN(Number(value)) ? fallback2 : Number(value);
-    const openDelay = number(anchor.dataset.kpOpenDelay, openDelayMs);
-    const closeDelay = number(anchor.dataset.kpCloseDelay, closeDelayMs);
-    const escapes = anchor.dataset.kpCloseOnEscape === void 0 ? closeOnEscape : anchor.dataset.kpCloseOnEscape !== "false";
-    let timer = 0;
-    let going = false;
-    const set = (open4) => {
-      clearTimeout(timer);
-      if (open4 && going) {
-        going = false;
-        stopReversing(tooltip);
-        anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open: open4, tooltip } }));
-        return;
+function attachTooltips(root = document, { openDelayMs = OPEN_DELAY_MS, closeDelayMs = CLOSE_DELAY_MS, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(".kp-tooltip-anchor")].filter((anchor) => !(ownedBy !== "" && anchor.matches(ownedBy)) && !("kpTooltipAttached" in anchor.dataset)).filter((anchor) => partsOf(anchor) !== null).map((anchor, index) => attachOne(anchor, TooltipControl, { openDelayMs, closeDelayMs, closeOnEscape, count: index + 1 }))
+  );
+  return () => {
+    for (const control of made6.splice(0)) control?.destroy();
+  };
+}
+function partsOf(anchor) {
+  const tooltip = (
+    /** @type {HTMLElement | null} */
+    anchor.querySelector('[role="tooltip"], .kp-tooltip')
+  );
+  const trigger = (
+    /** @type {HTMLElement | null} */
+    [...anchor.children].find((child) => child !== tooltip) ?? null
+  );
+  return tooltip === null || trigger === null ? null : { tooltip, trigger };
+}
+var OPEN_DELAY_MS, CLOSE_DELAY_MS, numberOr, TooltipControl;
+var init_tooltips = __esm({
+  "js/overlays/tooltips.js"() {
+    "use strict";
+    init_controller();
+    init_motion();
+    init_constants();
+    OPEN_DELAY_MS = 300;
+    CLOSE_DELAY_MS = 100;
+    numberOr = (value, fallback2) => value === void 0 || Number.isNaN(Number(value)) ? fallback2 : Number(value);
+    TooltipControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ openDelayMs?: number, closeDelayMs?: number, closeOnEscape?: boolean, count?: number }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        const { tooltip, trigger } = (
+          /** @type {{ tooltip: HTMLElement, trigger: HTMLElement }} */
+          partsOf(host)
+        );
+        this.tooltip = tooltip;
+        this.trigger = trigger;
+        this.count = options.count ?? 1;
+        this.before = {
+          id: tooltip.getAttribute("id"),
+          hidden: tooltip.hidden,
+          describedby: trigger.getAttribute("aria-describedby"),
+          anchorName: host.style.getPropertyValue("anchor-name"),
+          positionAnchor: tooltip.style.getPropertyValue("position-anchor")
+        };
+        this.openDelay = numberOr(host.dataset.kpOpenDelay, options.openDelayMs ?? OPEN_DELAY_MS);
+        this.closeDelay = numberOr(host.dataset.kpCloseDelay, options.closeDelayMs ?? CLOSE_DELAY_MS);
+        this.escapes = host.dataset.kpCloseOnEscape === void 0 ? options.closeOnEscape ?? true : host.dataset.kpCloseOnEscape !== "false";
+        this.timer = 0;
+        this.going = false;
       }
-      if (going || tooltip.hidden === !open4) return;
-      if (open4) tooltip.hidden = false;
-      else {
-        going = true;
+      connect() {
+        const { host: anchor, tooltip } = this;
+        anchor.dataset.kpTooltipAttached = "";
+        this.own(() => this.restore());
+        this.describe();
+        tooltip.hidden = true;
+        this.listen(anchor, "pointerenter", () => this.schedule(true, this.openDelay));
+        this.listen(anchor, "pointerleave", () => {
+          if (!anchor.contains(document.activeElement)) this.schedule(false, this.closeDelay);
+        });
+        this.listen(anchor, "focusin", () => this.schedule(true, 0));
+        this.listen(anchor, "focusout", () => this.schedule(false, 0));
+        this.listen(document, "keydown", (event) => {
+          if (this.escapes && /** @type {KeyboardEvent} */
+          event.key === "Escape" && !tooltip.hidden) this.set(false);
+        });
+      }
+      /**
+       * The trigger is described by the tooltip: an id is given where there was none, and `aria-describedby` gains it rather than
+       * losing what it held. The anchor names itself for anchor positioning, as the React channel does.
+       */
+      describe() {
+        const { host: anchor, tooltip, trigger, before } = this;
+        if (!tooltip.id) tooltip.id = `kp-tooltip-${this.count}-${Math.random().toString(36).slice(2, 8)}`;
+        const ids2 = (before.describedby ?? "").split(/\s+/).filter(Boolean);
+        if (!ids2.includes(tooltip.id)) trigger.setAttribute("aria-describedby", [...ids2, tooltip.id].join(" "));
+        if (before.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
+        if (before.positionAnchor === "") tooltip.style.setProperty("position-anchor", before.anchorName || `--${tooltip.id}`);
+      }
+      /** Put back the attributes, the styles and the hidden state attach found. */
+      restore() {
+        const { host: anchor, tooltip, trigger, before } = this;
+        clearTimeout(this.timer);
+        this.going = false;
+        stopReversing(tooltip);
+        tooltip.hidden = before.hidden;
+        if (before.id === null) tooltip.removeAttribute("id");
+        if (before.describedby === null) trigger.removeAttribute("aria-describedby");
+        else trigger.setAttribute("aria-describedby", before.describedby);
+        if (before.anchorName === "") anchor.style.removeProperty("anchor-name");
+        if (before.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
+        delete anchor.dataset.kpTooltipAttached;
+      }
+      /** @param {boolean} open */
+      set(open4) {
+        const tooltip = this.tooltip;
+        clearTimeout(this.timer);
+        if (open4 && this.going) {
+          this.going = false;
+          stopReversing(tooltip);
+        } else if (this.going || tooltip.hidden === !open4) return;
+        else if (open4) tooltip.hidden = false;
+        else this.leave();
+        this.host.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open: open4, tooltip } }));
+      }
+      /** Play the entrance backwards, then hide; a set(true) meanwhile takes it over. */
+      leave() {
+        const tooltip = this.tooltip;
+        this.going = true;
         void playEntranceBackwards(tooltip).then(() => {
-          if (!going) return;
-          going = false;
+          if (!this.going) return;
+          this.going = false;
           tooltip.hidden = true;
           stopReversing(tooltip);
         });
       }
-      anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open: open4, tooltip } }));
+      /** @param {boolean} open @param {number} delay */
+      schedule(open4, delay) {
+        clearTimeout(this.timer);
+        if (delay <= 0) this.set(open4);
+        else this.timer = window.setTimeout(() => this.set(open4), delay);
+      }
     };
-    const schedule = (open4, delay) => {
-      clearTimeout(timer);
-      if (delay <= 0) set(open4);
-      else timer = window.setTimeout(() => set(open4), delay);
-    };
-    const onEnter2 = () => schedule(true, openDelay);
-    const onLeave = () => {
-      if (!anchor.contains(document.activeElement)) schedule(false, closeDelay);
-    };
-    const onFocusIn = () => schedule(true, 0);
-    const onFocusOut = () => schedule(false, 0);
-    const onKey5 = (event) => {
-      if (escapes && event.key === "Escape" && !tooltip.hidden) set(false);
-    };
-    tooltip.hidden = true;
-    anchor.addEventListener("pointerenter", onEnter2);
-    anchor.addEventListener("pointerleave", onLeave);
-    anchor.addEventListener("focusin", onFocusIn);
-    anchor.addEventListener("focusout", onFocusOut);
-    document.addEventListener("keydown", onKey5);
-    cleanups.push(() => {
-      clearTimeout(timer);
-      going = false;
-      stopReversing(tooltip);
-      anchor.removeEventListener("pointerenter", onEnter2);
-      anchor.removeEventListener("pointerleave", onLeave);
-      anchor.removeEventListener("focusin", onFocusIn);
-      anchor.removeEventListener("focusout", onFocusOut);
-      document.removeEventListener("keydown", onKey5);
-      tooltip.hidden = before.hidden;
-      if (before.id === null) tooltip.removeAttribute("id");
-      if (before.describedby === null) trigger.removeAttribute("aria-describedby");
-      else trigger.setAttribute("aria-describedby", before.describedby);
-      if (before.anchorName === "") anchor.style.removeProperty("anchor-name");
-      if (before.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
-      delete anchor.dataset.kpTooltipAttached;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-var init_tooltips = __esm({
-  "js/overlays/tooltips.js"() {
-    "use strict";
-    init_motion();
-    init_constants();
   }
 });
 
 // js/overlays/scrollbars.js
 function watchScrollbar(box) {
-  const PROPS = ["--kp-scroll-view", "--kp-scroll-ratio", "--kp-scroll-progress"];
-  const measure = () => {
-    const view = box.clientHeight;
-    const size2 = box.scrollHeight;
-    const over = view > 0 && size2 > view + 1;
-    box.toggleAttribute(SCROLL_OVERFLOW, over);
-    if (!over) {
-      for (const p of PROPS) box.style.removeProperty(p);
-      return;
-    }
-    box.style.setProperty("--kp-scroll-view", `${view}px`);
-    box.style.setProperty("--kp-scroll-ratio", (view / size2).toFixed(4));
-    box.style.setProperty("--kp-scroll-progress", Math.min(1, Math.max(0, box.scrollTop / (size2 - view))).toFixed(4));
-  };
-  const length = (name) => parseFloat(getComputedStyle(box).getPropertyValue(name));
-  const onPointerDown = (event) => {
-    const bar = length("--kp-scrollbar-size");
-    if (event.button !== 0 || !(bar > 0)) return;
-    const inset = length("--kp-scrollbar-inset") || 0;
-    const rect = box.getBoundingClientRect();
-    const right = rect.left + box.clientLeft + box.clientWidth - inset;
-    const top = rect.top + box.clientTop + inset;
-    const bottom = rect.top + box.clientTop + box.clientHeight - inset;
-    if (event.clientX < right - bar || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
-    event.preventDefault();
-    if (!box.hasAttribute(SCROLL_OVERFLOW)) return;
-    const button6 = Math.min(length("--kp-scrollbar-button") || bar, (bottom - top) / 2);
-    const line = parseFloat(getComputedStyle(box).lineHeight) || 20;
-    if (event.clientY < top + button6) box.scrollTop -= line;
-    else if (event.clientY > bottom - button6) box.scrollTop += line;
-    else {
-      const track = bottom - top - 2 * button6;
-      const thumb = Math.max(8, track * (box.clientHeight / box.scrollHeight));
-      const travel = track - thumb;
-      const range = box.scrollHeight - box.clientHeight;
-      const start = top + button6 + travel * (box.scrollTop / range);
-      if (event.clientY < start) box.scrollTop -= box.clientHeight;
-      else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
-      else if (travel > 0) {
-        const from = { y: event.clientY, scroll: box.scrollTop };
-        const onMove2 = (move) => {
-          box.scrollTop = from.scroll + (move.clientY - from.y) / travel * range;
-        };
-        const onUp2 = () => {
-          box.removeEventListener("pointermove", onMove2);
-          box.removeEventListener("pointerup", onUp2);
-          box.removeEventListener("pointercancel", onUp2);
-        };
-        box.setPointerCapture?.(event.pointerId);
-        box.addEventListener("pointermove", onMove2);
-        box.addEventListener("pointerup", onUp2);
-        box.addEventListener("pointercancel", onUp2);
-      }
-    }
-    measure();
-  };
-  measure();
-  box.addEventListener("scroll", measure, { passive: true });
-  box.addEventListener("pointerdown", onPointerDown);
-  let resize = null;
-  let mutation = null;
-  if (typeof ResizeObserver !== "undefined") {
-    resize = new ResizeObserver(measure);
-    const observe = () => {
-      resize?.disconnect();
-      resize?.observe(box);
-      for (const child of box.children) resize?.observe(child);
-    };
-    observe();
-    mutation = new MutationObserver(() => {
-      observe();
-      measure();
-    });
-    mutation.observe(box, { childList: true });
-  }
-  return () => {
-    resize?.disconnect();
-    mutation?.disconnect();
-    box.removeEventListener("scroll", measure);
-    box.removeEventListener("pointerdown", onPointerDown);
-    box.removeAttribute(SCROLL_OVERFLOW);
-    for (const p of PROPS) box.style.removeProperty(p);
-  };
+  const control = new ScrollbarControl(box);
+  control.connect();
+  return () => control.destroy();
 }
 function attachScrollbars(root = document) {
   const watched = /* @__PURE__ */ new Map();
@@ -6304,11 +6318,130 @@ function attachScrollbars(root = document) {
     watched.clear();
   };
 }
-var scrollbarsWatched;
+var PROPS, FALLBACK_LINE, MIN_THUMB, RATIO_DIGITS, ScrollbarControl, scrollbarsWatched;
 var init_scrollbars = __esm({
   "js/overlays/scrollbars.js"() {
     "use strict";
+    init_controller();
     init_constants();
+    PROPS = ["--kp-scroll-view", "--kp-scroll-ratio", "--kp-scroll-progress"];
+    FALLBACK_LINE = 20;
+    MIN_THUMB = 8;
+    RATIO_DIGITS = 4;
+    ScrollbarControl = class extends Controller {
+      /** @param {HTMLElement} host */
+      constructor(host) {
+        super(host);
+        this.endDrag = null;
+      }
+      connect() {
+        const box = this.host;
+        this.own(() => {
+          this.endDrag?.();
+          box.removeAttribute(SCROLL_OVERFLOW);
+          for (const p of PROPS) box.style.removeProperty(p);
+        });
+        this.measure();
+        this.listen(box, "scroll", () => this.measure(), { passive: true });
+        this.listen(box, "pointerdown", (event) => this.onPointerDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        if (typeof ResizeObserver === "undefined") return;
+        const resize = this.observe(new ResizeObserver(() => this.measure()));
+        const watch2 = () => {
+          resize.disconnect();
+          resize.observe(box);
+          for (const child of box.children) resize.observe(child);
+        };
+        watch2();
+        this.observe(
+          new MutationObserver(() => {
+            watch2();
+            this.measure();
+          })
+        ).observe(box, { childList: true });
+      }
+      /** Mark the box while its content is taller than it, and write the view, the ratio in view and the progress. */
+      measure() {
+        const box = this.host;
+        const view = box.clientHeight;
+        const size2 = box.scrollHeight;
+        const over = view > 0 && size2 > view + 1;
+        box.toggleAttribute(SCROLL_OVERFLOW, over);
+        if (!over) {
+          for (const p of PROPS) box.style.removeProperty(p);
+          return;
+        }
+        box.style.setProperty("--kp-scroll-view", `${view}px`);
+        box.style.setProperty("--kp-scroll-ratio", (view / size2).toFixed(RATIO_DIGITS));
+        box.style.setProperty("--kp-scroll-progress", Math.min(1, Math.max(0, box.scrollTop / (size2 - view))).toFixed(RATIO_DIGITS));
+      }
+      /** @param {string} name */
+      length(name) {
+        return parseFloat(getComputedStyle(this.host).getPropertyValue(name));
+      }
+      /** The drawn bar's edges in window coordinates, or null when the register draws none. */
+      bar() {
+        const box = this.host;
+        const size2 = this.length("--kp-scrollbar-size");
+        if (!(size2 > 0)) return null;
+        const inset = this.length("--kp-scrollbar-inset") || 0;
+        const rect = box.getBoundingClientRect();
+        const right = rect.left + box.clientLeft + box.clientWidth - inset;
+        const top = rect.top + box.clientTop + inset;
+        const bottom = rect.top + box.clientTop + box.clientHeight - inset;
+        return { size: size2, right, top, bottom };
+      }
+      /** A press on the drawn bar: an arrow scrolls a line, the track a page, and the thumb is dragged. @param {PointerEvent} event */
+      onPointerDown(event) {
+        const box = this.host;
+        const bar = event.button === 0 ? this.bar() : null;
+        if (!bar) return;
+        const { size: size2, right, top, bottom } = bar;
+        if (event.clientX < right - size2 || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
+        event.preventDefault();
+        if (!box.hasAttribute(SCROLL_OVERFLOW)) return;
+        const button6 = Math.min(this.length("--kp-scrollbar-button") || size2, (bottom - top) / 2);
+        const line = parseFloat(getComputedStyle(box).lineHeight) || FALLBACK_LINE;
+        if (event.clientY < top + button6) box.scrollTop -= line;
+        else if (event.clientY > bottom - button6) box.scrollTop += line;
+        else this.onTrack(event, top + button6, bottom - top - 2 * button6);
+        this.measure();
+      }
+      /** A press on the track: above or below the thumb pages, on it drags. @param {PointerEvent} event @param {number} from @param {number} track */
+      onTrack(event, from, track) {
+        const box = this.host;
+        const thumb = Math.max(MIN_THUMB, track * (box.clientHeight / box.scrollHeight));
+        const travel = track - thumb;
+        const range = box.scrollHeight - box.clientHeight;
+        const start = from + travel * (box.scrollTop / range);
+        if (event.clientY < start) box.scrollTop -= box.clientHeight;
+        else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
+        else if (travel > 0) this.drag(event, travel, range);
+      }
+      /** Drag the thumb until the pointer lets go. @param {PointerEvent} event @param {number} travel @param {number} range */
+      drag(event, travel, range) {
+        const box = this.host;
+        const from = { y: event.clientY, scroll: box.scrollTop };
+        const onMove2 = (move) => {
+          box.scrollTop = from.scroll + /** @type {PointerEvent} */
+          (move.clientY - from.y) / travel * range;
+        };
+        const stop = () => {
+          box.removeEventListener("pointermove", onMove2);
+          box.removeEventListener("pointerup", stop);
+          box.removeEventListener("pointercancel", stop);
+          this.endDrag = null;
+        };
+        this.endDrag?.();
+        this.endDrag = stop;
+        box.setPointerCapture?.(event.pointerId);
+        box.addEventListener("pointermove", onMove2);
+        box.addEventListener("pointerup", stop);
+        box.addEventListener("pointercancel", stop);
+      }
+    };
     scrollbarsWatched = /* @__PURE__ */ new WeakSet();
   }
 });
@@ -6351,6 +6484,7 @@ var init_overlays = __esm({
     init_constants();
     init_dialogs();
     init_tabs();
+    init_tab_row();
     init_toast();
     init_dismissals();
     init_tooltips();
@@ -17542,7 +17676,7 @@ var init_kpi = __esm({
 });
 
 // js/hovercard/values.js
-var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, OPEN_DELAY_MS, CLOSE_DELAY_MS, TAP_ANSWERED_MS, CONTROL_SELECTOR, ID_RADIX2, ID_RANDOM_START, ID_RANDOM_END;
+var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, OPEN_DELAY_MS2, CLOSE_DELAY_MS2, TAP_ANSWERED_MS, CONTROL_SELECTOR, ID_RADIX2, ID_RANDOM_START, ID_RANDOM_END;
 var init_values14 = __esm({
   "js/hovercard/values.js"() {
     "use strict";
@@ -17550,8 +17684,8 @@ var init_values14 = __esm({
     HOVERCARD_EVENT = "kp-hovercard";
     HOVERCARD_CARD = "data-kp-hovercard-card";
     EDGE = 8;
-    OPEN_DELAY_MS = 300;
-    CLOSE_DELAY_MS = 100;
+    OPEN_DELAY_MS2 = 300;
+    CLOSE_DELAY_MS2 = 100;
     TAP_ANSWERED_MS = 400;
     CONTROL_SELECTOR = 'a[href], button, input, select, textarea, summary, [role="button"], [role="link"]';
     ID_RADIX2 = 36;
@@ -17585,8 +17719,8 @@ var init_core2 = __esm({
         this.root = root;
         this.cfg = {
           selector: `[${HOVERCARD_ATTRIBUTE}]`,
-          openDelayMs: OPEN_DELAY_MS,
-          closeDelayMs: CLOSE_DELAY_MS,
+          openDelayMs: OPEN_DELAY_MS2,
+          closeDelayMs: CLOSE_DELAY_MS2,
           closeOnEscape: true,
           touch: true,
           ...stripped(options)
@@ -17927,7 +18061,7 @@ var init_controller8 = __esm({
           if (anchor !== null) this.stopTimer();
           return;
         }
-        this.schedule(anchor, this.number(anchor, "data-kp-open-delay", this.cfg.openDelayMs ?? OPEN_DELAY_MS));
+        this.schedule(anchor, this.number(anchor, "data-kp-open-delay", this.cfg.openDelayMs ?? OPEN_DELAY_MS2));
       }
       /** @param {PointerEvent} event */
       onOut(event) {
@@ -17942,7 +18076,7 @@ var init_controller8 = __esm({
         }
         if (anchor !== this.current) return;
         if (anchor.contains(this.doc.activeElement) && anchor.matches(":focus-visible, :has(:focus-visible)")) return;
-        this.close(this.number(anchor, "data-kp-close-delay", this.cfg.closeDelayMs ?? CLOSE_DELAY_MS));
+        this.close(this.number(anchor, "data-kp-close-delay", this.cfg.closeDelayMs ?? CLOSE_DELAY_MS2));
       }
       onCardEnter() {
         this.setOverCard(true);
@@ -17954,7 +18088,7 @@ var init_controller8 = __esm({
         this.setOverCard(false);
         const to = event.relatedTarget;
         if (this.current !== null && to instanceof Node && this.current.contains(to)) return;
-        this.close(this.cfg.closeDelayMs ?? CLOSE_DELAY_MS);
+        this.close(this.cfg.closeDelayMs ?? CLOSE_DELAY_MS2);
       }
       /** @param {FocusEvent} event */
       onFocusIn(event) {
@@ -21925,7 +22059,7 @@ function stageOf(card) {
   }
   return stage;
 }
-function partsOf(card) {
+function partsOf2(card) {
   const doc = card.ownerDocument;
   const stage = stageOf(card);
   let data = (
@@ -22068,7 +22202,7 @@ var init_sync2 = __esm({
         const { card } = this;
         const state12 = known2(card.getAttribute("data-kp-state"));
         if (card.getAttribute("data-kp-state") !== state12) card.setAttribute("data-kp-state", state12);
-        const parts2 = partsOf(card);
+        const parts2 = partsOf2(card);
         const previous = this.state;
         const opts = options ?? this.given ?? {};
         if (options) this.given = options;
@@ -32630,7 +32764,7 @@ var init_request = __esm({
 });
 
 // js/request-inspector/list.js
-function partsOf2(el16) {
+function partsOf3(el16) {
   const doc = el16.ownerDocument;
   if (!el16.classList.contains("kp-card")) el16.classList.add("kp-card");
   el16.classList.add("kp-inspector");
@@ -32695,7 +32829,7 @@ function draw4(el16, memory) {
   memory.options = { ...readOptions(el16), ...memory.given };
   const strings = getStrings();
   const doc = el16.ownerDocument;
-  const p = partsOf2(el16);
+  const p = partsOf3(el16);
   const all = [...memory.list].sort((a, b) => (msOf2(b.at) || 0) - (msOf2(a.at) || 0));
   const byClass = /* @__PURE__ */ new Map();
   for (const r of all) byClass.set(classOf(r.status), (byClass.get(classOf(r.status)) ?? 0) + 1);
@@ -32787,7 +32921,7 @@ var init_controller23 = __esm({
       }
       connect() {
         const el16 = this.host;
-        partsOf2(el16);
+        partsOf3(el16);
         el16.style.setProperty("--kp-card-stage-min", "var(--kp-inspector-min, 22rem)");
         el16.setAttribute("data-kp-state", el16.getAttribute("data-kp-state") ?? "loading");
         this.own(attachCardStates(el16));
@@ -38109,7 +38243,7 @@ function rowOf5(toolbar) {
   }
   return row2;
 }
-function partsOf3(row2) {
+function partsOf4(row2) {
   let list = row2.querySelector(LIST2);
   let button6 = (
     /** @type {HTMLElement | null} */
@@ -38152,7 +38286,7 @@ function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\x
   };
   const strings = getStrings();
   const row2 = rowOf5(toolbar);
-  const { list, button: button6 } = partsOf3(row2);
+  const { list, button: button6 } = partsOf4(row2);
   const word = row2.querySelector(".kp-toolbar__active-label");
   if (word) word.textContent = strings.toolbarShowingOnly;
   list.setAttribute("aria-label", strings.tableActiveFilters);
@@ -44151,7 +44285,7 @@ var init_views = __esm({
 });
 
 // js/datepicker/controller.js
-function partsOf4(picker) {
+function partsOf5(picker) {
   const input = (
     /** @type {HTMLInputElement | null} */
     picker.querySelector("[data-kp-date-input]")
@@ -44190,7 +44324,7 @@ var init_controller33 = __esm({
         this.picker = host;
         const parts2 = (
           /** @type {NonNullable<ReturnType<typeof partsOf>>} */
-          partsOf4(host)
+          partsOf5(host)
         );
         this.input = parts2.input;
         this.open = parts2.open;
@@ -44338,7 +44472,7 @@ function datePicker(element) {
 }
 function wireable(picker) {
   const wired = picker.dataset.kpDatepickerAttached !== void 0;
-  return !wired && partsOf4(picker) !== null;
+  return !wired && partsOf5(picker) !== null;
 }
 function attachDatePickers(root = document, options = {}) {
   const made6 = hostsOf(root, PICKER2).filter(wireable).map((picker) => attachOne(picker, DatePickerController, options)).filter((controller) => controller !== void 0);

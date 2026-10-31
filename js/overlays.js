@@ -39,7 +39,8 @@ export {
     SCROLL_BOXES,
 } from './overlays/constants.js';
 export { openAtTop, attachDialogs, closeLabel } from './overlays/dialogs.js';
-export { selectTab, revealTab, watchTabOverflow, attachTabs } from './overlays/tabs.js';
+export { selectTab, attachTabs } from './overlays/tabs.js';
+export { revealTab, watchTabOverflow } from './overlays/tab-row.js';
 export { toastRegion, toast } from './overlays/toast.js';
 export { attachDismissals, showAlertAgain } from './overlays/dismissals.js';
 export { attachTooltips } from './overlays/tooltips.js';

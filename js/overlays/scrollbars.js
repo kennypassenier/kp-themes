@@ -1,4 +1,5 @@
 // Scroll boxes: the overflow marker and the scrollbar watcher.
+import { Controller } from '../controller.js';
 import { SCROLL_BOXES, SCROLL_OVERFLOW } from './constants.js';
 
 /**
@@ -23,8 +24,59 @@ import { SCROLL_BOXES, SCROLL_OVERFLOW } from './constants.js';
  * @returns {() => void} stop, which also takes the attribute and the properties away
  */
 export function watchScrollbar(box) {
-    const PROPS = ['--kp-scroll-view', '--kp-scroll-ratio', '--kp-scroll-progress'];
-    const measure = () => {
+    // Its own controller per call, outside the registry: a box watched twice is stopped by each stop on its own, as before.
+    const control = new ScrollbarControl(box);
+    control.connect();
+    return () => control.destroy();
+}
+
+/** The custom properties a drawing register reads while a box overflows. */
+const PROPS = ['--kp-scroll-view', '--kp-scroll-ratio', '--kp-scroll-progress'];
+/** The line a press on an arrow scrolls when the box has no line height (px), and the smallest thumb (px). */
+const FALLBACK_LINE = 20;
+const MIN_THUMB = 8;
+/** The decimals the ratios are written with. */
+const RATIO_DIGITS = 4;
+
+/** One watched box: its size watches, and the drag of its drawn thumb while one runs. */
+class ScrollbarControl extends Controller {
+    /** @param {HTMLElement} host */
+    constructor(host) {
+        super(host);
+        /** Ends the thumb drag that runs, if one does. @type {(() => void) | null} */
+        this.endDrag = null;
+    }
+
+    connect() {
+        const box = this.host;
+        this.own(() => {
+            // A detach in mid-drag ends the drag too.
+            this.endDrag?.();
+            box.removeAttribute(SCROLL_OVERFLOW);
+            for (const p of PROPS) box.style.removeProperty(p);
+        });
+        this.measure();
+        this.listen(box, 'scroll', () => this.measure(), { passive: true });
+        this.listen(box, 'pointerdown', (event) => this.onPointerDown(/** @type {PointerEvent} */ (event)));
+        if (typeof ResizeObserver === 'undefined') return;
+        const resize = this.observe(new ResizeObserver(() => this.measure()));
+        const watch = () => {
+            resize.disconnect();
+            resize.observe(box);
+            for (const child of box.children) resize.observe(child);
+        };
+        watch();
+        this.observe(
+            new MutationObserver(() => {
+                watch();
+                this.measure();
+            }),
+        ).observe(box, { childList: true });
+    }
+
+    /** Mark the box while its content is taller than it, and write the view, the ratio in view and the progress. */
+    measure() {
+        const box = this.host;
         const view = box.clientHeight;
         const size = box.scrollHeight;
         const over = view > 0 && size > view + 1;
@@ -34,85 +86,78 @@ export function watchScrollbar(box) {
             return;
         }
         box.style.setProperty('--kp-scroll-view', `${view}px`);
-        box.style.setProperty('--kp-scroll-ratio', (view / size).toFixed(4));
-        box.style.setProperty('--kp-scroll-progress', Math.min(1, Math.max(0, box.scrollTop / (size - view))).toFixed(4));
-    };
+        box.style.setProperty('--kp-scroll-ratio', (view / size).toFixed(RATIO_DIGITS));
+        box.style.setProperty('--kp-scroll-progress', Math.min(1, Math.max(0, box.scrollTop / (size - view))).toFixed(RATIO_DIGITS));
+    }
 
     /** @param {string} name */
-    const length = (name) => parseFloat(getComputedStyle(box).getPropertyValue(name));
-    /** @param {PointerEvent} event */
-    const onPointerDown = (event) => {
-        const bar = length('--kp-scrollbar-size');
-        if (event.button !== 0 || !(bar > 0)) return;
-        const inset = length('--kp-scrollbar-inset') || 0;
+    length(name) {
+        return parseFloat(getComputedStyle(this.host).getPropertyValue(name));
+    }
+
+    /** The drawn bar's edges in window coordinates, or null when the register draws none. */
+    bar() {
+        const box = this.host;
+        const size = this.length('--kp-scrollbar-size');
+        if (!(size > 0)) return null;
+        const inset = this.length('--kp-scrollbar-inset') || 0;
         const rect = box.getBoundingClientRect();
         const right = rect.left + box.clientLeft + box.clientWidth - inset;
         const top = rect.top + box.clientTop + inset;
         const bottom = rect.top + box.clientTop + box.clientHeight - inset;
-        if (event.clientX < right - bar || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
+        return { size, right, top, bottom };
+    }
+
+    /** A press on the drawn bar: an arrow scrolls a line, the track a page, and the thumb is dragged. @param {PointerEvent} event */
+    onPointerDown(event) {
+        const box = this.host;
+        const bar = event.button === 0 ? this.bar() : null;
+        if (!bar) return;
+        const { size, right, top, bottom } = bar;
+        if (event.clientX < right - size || event.clientX > right || event.clientY < top || event.clientY > bottom) return;
         event.preventDefault();
         if (!box.hasAttribute(SCROLL_OVERFLOW)) return;
-        const button = Math.min(length('--kp-scrollbar-button') || bar, (bottom - top) / 2);
-        const line = parseFloat(getComputedStyle(box).lineHeight) || 20;
+        const button = Math.min(this.length('--kp-scrollbar-button') || size, (bottom - top) / 2);
+        const line = parseFloat(getComputedStyle(box).lineHeight) || FALLBACK_LINE;
         if (event.clientY < top + button) box.scrollTop -= line;
         else if (event.clientY > bottom - button) box.scrollTop += line;
-        else {
-            const track = bottom - top - 2 * button;
-            const thumb = Math.max(8, track * (box.clientHeight / box.scrollHeight));
-            const travel = track - thumb;
-            const range = box.scrollHeight - box.clientHeight;
-            const start = top + button + travel * (box.scrollTop / range);
-            if (event.clientY < start) box.scrollTop -= box.clientHeight;
-            else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
-            else if (travel > 0) {
-                const from = { y: event.clientY, scroll: box.scrollTop };
-                /** @param {PointerEvent} move */
-                const onMove = (move) => {
-                    box.scrollTop = from.scroll + ((move.clientY - from.y) / travel) * range;
-                };
-                const onUp = () => {
-                    box.removeEventListener('pointermove', onMove);
-                    box.removeEventListener('pointerup', onUp);
-                    box.removeEventListener('pointercancel', onUp);
-                };
-                box.setPointerCapture?.(event.pointerId);
-                box.addEventListener('pointermove', onMove);
-                box.addEventListener('pointerup', onUp);
-                box.addEventListener('pointercancel', onUp);
-            }
-        }
-        measure();
-    };
-
-    measure();
-    box.addEventListener('scroll', measure, { passive: true });
-    box.addEventListener('pointerdown', onPointerDown);
-    /** @type {ResizeObserver | null} */
-    let resize = null;
-    /** @type {MutationObserver | null} */
-    let mutation = null;
-    if (typeof ResizeObserver !== 'undefined') {
-        resize = new ResizeObserver(measure);
-        const observe = () => {
-            resize?.disconnect();
-            resize?.observe(box);
-            for (const child of box.children) resize?.observe(child);
-        };
-        observe();
-        mutation = new MutationObserver(() => {
-            observe();
-            measure();
-        });
-        mutation.observe(box, { childList: true });
+        else this.onTrack(event, top + button, bottom - top - 2 * button);
+        this.measure();
     }
-    return () => {
-        resize?.disconnect();
-        mutation?.disconnect();
-        box.removeEventListener('scroll', measure);
-        box.removeEventListener('pointerdown', onPointerDown);
-        box.removeAttribute(SCROLL_OVERFLOW);
-        for (const p of PROPS) box.style.removeProperty(p);
-    };
+
+    /** A press on the track: above or below the thumb pages, on it drags. @param {PointerEvent} event @param {number} from @param {number} track */
+    onTrack(event, from, track) {
+        const box = this.host;
+        const thumb = Math.max(MIN_THUMB, track * (box.clientHeight / box.scrollHeight));
+        const travel = track - thumb;
+        const range = box.scrollHeight - box.clientHeight;
+        const start = from + travel * (box.scrollTop / range);
+        if (event.clientY < start) box.scrollTop -= box.clientHeight;
+        else if (event.clientY > start + thumb) box.scrollTop += box.clientHeight;
+        else if (travel > 0) this.drag(event, travel, range);
+    }
+
+    /** Drag the thumb until the pointer lets go. @param {PointerEvent} event @param {number} travel @param {number} range */
+    drag(event, travel, range) {
+        const box = this.host;
+        const from = { y: event.clientY, scroll: box.scrollTop };
+        /** @param {Event} move */
+        const onMove = (move) => {
+            box.scrollTop = from.scroll + ((/** @type {PointerEvent} */ (move).clientY - from.y) / travel) * range;
+        };
+        const stop = () => {
+            box.removeEventListener('pointermove', onMove);
+            box.removeEventListener('pointerup', stop);
+            box.removeEventListener('pointercancel', stop);
+            this.endDrag = null;
+        };
+        this.endDrag?.();
+        this.endDrag = stop;
+        box.setPointerCapture?.(event.pointerId);
+        box.addEventListener('pointermove', onMove);
+        box.addEventListener('pointerup', stop);
+        box.addEventListener('pointercancel', stop);
+    }
 }
 
 /** The boxes some `attachScrollbars` already watches, so a second call is a no-op. */

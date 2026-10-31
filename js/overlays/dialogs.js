@@ -1,4 +1,5 @@
 // Dialogs: opening at the top, the close label and the attach.
+import { Controller, attachOne } from '../controller.js';
 import { getStrings } from '../strings.js';
 import { DIALOG_OPEN_EVENT } from './constants.js';
 
@@ -35,44 +36,55 @@ export function openAtTop(dialog) {
  * @returns {() => void} detach
  */
 export function attachDialogs(root = document, { modal = true } = {}) {
-    /** @type {(() => void)[]} */
-    const cleanups = [];
-    for (const el of root.querySelectorAll('[data-kp-dialog]')) {
-        const trigger = /** @type {HTMLElement} */ (el);
-        if (trigger.dataset.kpDialogAttached !== undefined) continue;
-        const dialog = document.getElementById(trigger.dataset.kpDialog ?? '');
-        if (!(dialog instanceof HTMLDialogElement)) continue;
-        trigger.dataset.kpDialogAttached = '';
-        const open = () => {
-            const asModal = trigger.dataset.kpDialogMode === undefined ? modal : trigger.dataset.kpDialogMode !== 'non-modal';
-            if (dialog.open) return;
-            if (asModal) dialog.showModal();
-            else dialog.show();
-            openAtTop(dialog);
-            dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
-        };
-        trigger.addEventListener('click', open);
-        cleanups.push(() => {
-            trigger.removeEventListener('click', open);
-            delete trigger.dataset.kpDialogAttached;
-        });
-    }
-    for (const el of root.querySelectorAll('[data-kp-dialog-close]')) {
-        const button = /** @type {HTMLElement} */ (el);
-        if (button.dataset.kpDialogCloseAttached !== undefined) continue;
-        button.dataset.kpDialogCloseAttached = '';
-        // The value, if any, becomes the dialog's returnValue — so a
-        // consumer's `close` listener can tell "save" from "cancel".
-        const close = () => button.closest('dialog')?.close(button.dataset.kpDialogClose || undefined);
-        button.addEventListener('click', close);
-        cleanups.push(() => {
-            button.removeEventListener('click', close);
-            delete button.dataset.kpDialogCloseAttached;
-        });
-    }
+    // A trigger or a close button marked attached is wired already; a trigger whose id names no dialog has nothing to open.
+    const triggers = /** @type {HTMLElement[]} */ ([...root.querySelectorAll('[data-kp-dialog]')])
+        .filter((trigger) => !('kpDialogAttached' in trigger.dataset))
+        .filter((trigger) => document.getElementById(trigger.dataset.kpDialog ?? '') instanceof HTMLDialogElement)
+        .map((trigger) => attachOne(trigger, DialogTrigger, { modal }));
+    const closers = /** @type {HTMLElement[]} */ ([...root.querySelectorAll('[data-kp-dialog-close]')])
+        .filter((button) => !('kpDialogCloseAttached' in button.dataset))
+        .map((button) => attachOne(button, DialogCloser));
     return () => {
-        for (const c of cleanups) c();
+        for (const control of [...triggers.splice(0), ...closers.splice(0)]) control?.destroy();
     };
+}
+
+/** One trigger: the dialog it opens and the mode the call gave when the trigger says nothing. */
+class DialogTrigger extends Controller {
+    /** @param {HTMLElement} host @param {{ modal?: boolean }} [options] */
+    constructor(host, options = {}) {
+        super(host, options);
+        this.dialog = /** @type {HTMLDialogElement} */ (document.getElementById(host.dataset.kpDialog ?? ''));
+        this.modal = options.modal ?? true;
+    }
+
+    connect() {
+        const trigger = this.host;
+        trigger.dataset.kpDialogAttached = '';
+        this.own(() => delete trigger.dataset.kpDialogAttached);
+        this.listen(trigger, 'click', () => this.open());
+    }
+
+    open() {
+        const { host: trigger, dialog } = this;
+        const asModal = trigger.dataset.kpDialogMode === undefined ? this.modal : trigger.dataset.kpDialogMode !== 'non-modal';
+        if (dialog.open) return;
+        if (asModal) dialog.showModal();
+        else dialog.show();
+        openAtTop(dialog);
+        dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
+    }
+}
+
+/** One close button: closes the dialog it sits in. */
+class DialogCloser extends Controller {
+    connect() {
+        const button = this.host;
+        button.dataset.kpDialogCloseAttached = '';
+        this.own(() => delete button.dataset.kpDialogCloseAttached);
+        // The value, if any, becomes the dialog's returnValue — so a consumer's `close` listener can tell "save" from "cancel".
+        this.listen(button, 'click', () => button.closest('dialog')?.close(button.dataset.kpDialogClose || undefined));
+    }
 }
 
 /** The close label a consumer's markup can use: `data-kp-dialog-close` with the dictionary's word. */
