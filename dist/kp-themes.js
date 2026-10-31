@@ -22724,31 +22724,49 @@ function changedTabs(records, view) {
   return todo;
 }
 function attachTabCounts(root = document) {
-  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
-  const view = doc.defaultView;
-  for (const tab of askingTabs(root)) drawTabCount(tab);
-  if (!view || typeof view.MutationObserver !== "function") return () => {
-  };
-  const watch2 = new view.MutationObserver((records) => {
-    for (const tab of changedTabs(records, view)) drawTabCount(tab);
-  });
-  watch2.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    attributeFilter: COUNT_ATTRIBUTES
-  });
-  return () => watch2.disconnect();
+  const control = new TabCountRoot(root);
+  control.connect();
+  return () => control.destroy();
 }
-var ASKED;
+var ASKED, TabCountRoot;
 var init_count_watch = __esm({
   "js/tabbar/count-watch.js"() {
     "use strict";
+    init_controller();
     init_count3();
     ASKED = `${TAB}[data-kp-tab-count], ${TAB}[data-kp-tab-count-state]`;
+    TabCountRoot = class extends Controller {
+      /** @param {ParentNode} root */
+      constructor(root) {
+        super(
+          /** @type {HTMLElement} */
+          /** @type {unknown} */
+          root
+        );
+        this.root = root;
+      }
+      connect() {
+        const { root } = this;
+        const doc = root instanceof Document ? root : root.ownerDocument ?? document;
+        const view = doc.defaultView;
+        for (const tab of askingTabs(root)) drawTabCount(tab);
+        if (!view || typeof view.MutationObserver !== "function") return;
+        const watch2 = this.observe(
+          new view.MutationObserver((records) => {
+            for (const tab of changedTabs(records, view)) drawTabCount(tab);
+          })
+        );
+        watch2.observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), {
+          subtree: true,
+          childList: true,
+          attributes: true,
+          attributeFilter: COUNT_ATTRIBUTES
+        });
+      }
+    };
   }
 });
 
