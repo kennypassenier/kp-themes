@@ -55,7 +55,7 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import process from 'node:process';
 import * as esbuild from 'esbuild';
-import { declaredNames } from './bundle-names.mjs';
+import { aliases, declaredNames } from './bundle-names.mjs';
 import { stylesheets } from './stylesheets.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -143,6 +143,8 @@ export function entrySource(declared) {
         const names = (flatByModule.get(module) ?? []).sort();
         if (names.length) lines.push(`export { ${names.join(', ')} } from '${module}';`);
     }
+    // A name more than one module declares cannot be flat under its own name; it is flat under its module's prefix.
+    for (const { module, name, alias } of aliases(declared)) lines.push(`export { ${name} as ${alias} } from '${module}';`);
     return lines.join('\n') + '\n';
 }
 
@@ -163,7 +165,7 @@ async function js() {
                 `   (${MODULES.map(namespaceFor).join(', ')}),\n` +
                 `   plus every export that exactly one module declares, flat.\n` +
                 (ambiguous.length
-                    ? `   Reachable only through a namespace, because more than one module\n   declares them: ${ambiguous.map(([n]) => n).join(', ')}. */`
+                    ? `   Declared by more than one module, so flat under the module's prefix\n   (setProgress from progressbar.js is progressbarSetProgress) and in each namespace:\n   ${ambiguous.map(([n]) => n).join(', ')}. */`
                     : `   Nothing is namespace-only: every name is declared once. */`),
         },
     });

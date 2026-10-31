@@ -105,13 +105,15 @@ test('CF2: the bundle exports every published module, and never a name two modul
     }
 
     // A name exactly one module declares is flat; a name several declare
-    // is not, because a flat one would silently be one of them.
+    // is not flat under its own name, because a flat one would silently be
+    // one of them. It is flat under each module's prefix instead
+    // (`setProgress as progressbarSetProgress`) [bundle-alias-1031].
     const single = [...declared].filter(([, m]) => m.length === 1).map(([n]) => n);
     const many = [...declared].filter(([, m]) => m.length > 1).map(([n]) => n);
     assert.ok(single.length >= 100, `expected the singly-declared exports, found ${single.length}`);
     for (const name of single) assert.match(entry, new RegExp(`\\b${name}\\b`), `${name} is declared once and is not exported flat`);
     for (const name of many) {
-        const flat = new RegExp(`export \\{[^}]*\\b${name}\\b[^}]*\\} from`);
+        const flat = new RegExp(`export \\{[^}]*\\b${name}\\b(?! as )[^}]*\\} from`);
         assert.ok(!flat.test(entry), `${name} is declared by ${declared.get(name)?.length} modules and must not be flat`);
     }
 
