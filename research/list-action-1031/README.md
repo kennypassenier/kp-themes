@@ -1,5 +1,7 @@
 # research/list-action-1031: a trailing action column in the list of rows
 
+**Decided (2026-10-31 21:38):** Kenny approved the one pair (formal) in round 1. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kenny chose on 2026-10-31 ("list-action: Eigen vak toevoegen") to give `.kp-list` its own place for a row's action instead of Medicine
 Cabinet putting its "I took one" button in the stepper cell (`medicine-cabinet/web/js/pages/symptoms-rows.js`). Built in
 `css/components/list-row.css`: `.kp-listrow__action` in a fifth named column `[action] auto` at the end of the grid, every row a subgrid so
