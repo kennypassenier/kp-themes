@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 12.1.0 — 2026-10-31
+
+Released on Kenny's go (2026-10-31 20:55: "de openstaande issues die resolved zouden moeten zijn in kp-themes naar een volgende release", 20:58: "zie dat alles gefixt is in deze release", 21:37: only kp-themes and chassis-rs for now). Every open kp-themes item in the apps' gap lists is in it: the faults Medicine Cabinet and homelab found adopting 12.0.0, the eleven names the bundle dropped (now flat under their module's prefix), the list's action column (research/list-action-1031, 1 of 1 approved), seven opt-in options homelab and kyu asked for (research/gaps-1031, 7 of 7 approved), seven behaviour fixes and two review-tool fixes. Everything new is opt-in. Behaviour changes consumers notice: the typed confirmation's name keeps its own case in nostromo, cyberpunk, brutalism, synthwave and deco; a chart with `onePointNote` draws its one reading below `minPoints`; a digit shortcut also matches its key's place on the digit row (Alt+1 on AZERTY; Shift+3 on QWERTY now fires a step written "Shift 3"); the unsaved bar counts a quantity, a time field and a tag input. Screenshot check skipped as for 12.0.0.
 
 Package faults Medicine Cabinet and homelab found adopting 12.0.0 [fix-1031].
 
