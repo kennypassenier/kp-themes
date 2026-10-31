@@ -11270,17 +11270,22 @@ function matches(step, event) {
   const letter = key.length === 1 && key.toLowerCase() !== key.toUpperCase();
   if (letter && step.mods.includes("shift") !== event.shiftKey) return false;
   if (!letter && step.mods.includes("shift") && !event.shiftKey) return false;
-  return key.toLowerCase() === step.key.toLowerCase();
+  return key.toLowerCase() === step.key.toLowerCase() || digitRowPresses(step, event);
+}
+function digitRowPresses(step, event) {
+  const digit = DIGIT_CODE.exec(event.code ?? "")?.[1];
+  return digit !== void 0 && digit === step.key && step.mods.includes("shift") === event.shiftKey;
 }
 function ignoredKey(event) {
   return event.isComposing || event.repeat || event.key === "Dead" || event.key === "Shift" || event.key === "Control" || event.key === "Alt" || event.key === "Meta";
 }
-var MODIFIERS, normal;
+var MODIFIERS, normal, DIGIT_CODE;
 var init_keys2 = __esm({
   "js/shortcuts/keys.js"() {
     "use strict";
     MODIFIERS = /* @__PURE__ */ new Set(["mod", "ctrl", "control", "alt", "shift", "meta", "cmd"]);
     normal = (steps2) => steps2.map((s2) => [...s2.mods, s2.key === " " ? "space" : s2.key.toLowerCase()].join("+")).join(" ");
+    DIGIT_CODE = /^Digit([0-9])$/;
   }
 });
 
