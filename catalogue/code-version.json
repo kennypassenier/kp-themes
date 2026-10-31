@@ -32,7 +32,7 @@
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
         "js/connection.js": { "digest": "2175ad931a99f8f9", "when": "[data-kp-connection]" },
-        "js/console.js": { "digest": "d8c1d38a200c8445", "when": "[data-kp-console]" },
+        "js/console.js": { "digest": "a007778c7d52a785", "when": "[data-kp-console]" },
         "js/countdown.js": { "digest": "905c710addaafda6", "when": "[data-kp-countdown], [data-kp-countdown-until]" },
         "js/datatable.js": { "digest": "4b500e71cfa674fe", "when": "[data-kp-datatable], [data-kp-cards-at], th[data-kp-col=\"actions\"]" },
         "js/dated-options.js": { "digest": "afb0ac71fb0d5b32", "when": "[data-kp-dated]" },

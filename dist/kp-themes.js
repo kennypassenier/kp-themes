@@ -85447,209 +85447,12 @@ var init_api29 = __esm({
   }
 });
 
-// js/console/attach.js
-function attachConsoles(root = document, options = {}) {
-  const roots = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(CONSOLE2) ? [root] : [],
-      ...root.querySelectorAll(CONSOLE2)
-    ]
-  );
-  const undo = [];
-  for (const el_ of roots) {
-    const st = stateOf9(el_);
-    if (st.off.length) continue;
-    if (options.run) st.run = options.run;
-    if (options.complete) st.complete = options.complete;
-    st.history = loadHistory(el_);
-    drawAll(el_);
-    const body = (
-      /** @type {HTMLElement} */
-      el_.querySelector(".kp-console__body")
-    );
-    const stopPill = body ? attachNewPills(body.parentElement ?? el_) : () => {
-    };
-    const stopReasons = attachDisabledReasons(el_);
-    const form2 = (
-      /** @type {HTMLFormElement} */
-      el_.querySelector(".kp-console__form")
-    );
-    const input = (
-      /** @type {HTMLInputElement} */
-      el_.querySelector(".kp-console__input")
-    );
-    const select2 = (
-      /** @type {HTMLSelectElement} */
-      el_.querySelector(".kp-console__context")
-    );
-    const complete = (
-      /** @type {HTMLElement} */
-      el_.querySelector(".kp-console__complete")
-    );
-    const onSubmit = (event) => {
-      event.preventDefault();
-      void submit(el_);
-    };
-    const onKey5 = async (event) => {
-      if (event.isComposing) return;
-      if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        if (st.history.length === 0) return;
-        event.preventDefault();
-        if (st.at === -1) st.draft = input.value;
-        if (event.key === "ArrowUp") st.at = st.at === -1 ? st.history.length - 1 : Math.max(0, st.at - 1);
-        else st.at = st.at === -1 ? -1 : st.at + 1 >= st.history.length ? -1 : st.at + 1;
-        input.value = st.at === -1 ? st.draft : st.history[st.at];
-        input.setSelectionRange(input.value.length, input.value.length);
-      } else if (event.key === "Escape") {
-        if (!complete.hidden) {
-          complete.hidden = true;
-          return;
-        }
-        if (input.value !== "") {
-          event.preventDefault();
-          input.value = "";
-          st.at = -1;
-          st.pending = null;
-          drawBar(el_);
-        }
-      } else if (event.key === "Tab" && attr13(el_, "tab", "none") === "complete" && st.complete && input.value.trim() !== "" && !event.shiftKey) {
-        event.preventDefault();
-        const found = await st.complete(input.value);
-        if (found.length === 1) {
-          input.value = found[0];
-          complete.hidden = true;
-        } else if (found.length > 1) {
-          complete.replaceChildren();
-          complete.setAttribute("role", "group");
-          complete.setAttribute("aria-label", getStrings().consoleCompletions);
-          for (const f of found.slice(0, 12)) {
-            const b = (
-              /** @type {HTMLButtonElement} */
-              el13("kp-button kp-button--ghost kp-button--sm", "button")
-            );
-            b.type = "button";
-            b.setAttribute("data-kp-console-complete", f);
-            b.textContent = f;
-            complete.append(b);
-          }
-          complete.hidden = false;
-          say14(el_, getStrings().consoleMatches(found.length));
-        }
-      } else if (st.pending !== null && event.key.length === 1) {
-        st.pending = null;
-        drawBar(el_);
-      }
-    };
-    const onClick = (event) => {
-      const t = event.target instanceof Element ? event.target : null;
-      if (!t) return;
-      const tool2 = (
-        /** @type {HTMLButtonElement | null} */
-        t.closest("[data-kp-console-tool]")
-      );
-      if (tool2) {
-        const block = t.closest(".kp-console__block");
-        const b = st.blocks.find((x) => x.id === block?.getAttribute("data-id"));
-        if (b) void useTool(el_, tool2.getAttribute("data-kp-console-tool") ?? "", b, tool2);
-        return;
-      }
-      const pickC = t.closest("[data-kp-console-complete]");
-      if (pickC) {
-        input.value = pickC.getAttribute("data-kp-console-complete") ?? "";
-        complete.hidden = true;
-        input.focus();
-        return;
-      }
-      if (t.closest("[data-kp-console-retry]")) return void el_.dispatchEvent(new CustomEvent(CONSOLE_RETRY_EVENT, { bubbles: true }));
-      if (t.closest("[data-kp-console-earlier]")) {
-        st.showAll = true;
-        drawBody2(el_);
-      }
-    };
-    const onContext = () => {
-      st.context.value = select2.value;
-    };
-    form2.addEventListener("submit", onSubmit);
-    input.addEventListener("keydown", onKey5);
-    el_.addEventListener("click", onClick);
-    select2.addEventListener("change", onContext);
-    let order = attr13(el_, "order", "newest-last");
-    let stopPillNow = stopPill;
-    const observer = new MutationObserver(() => {
-      const now = attr13(el_, "order", "newest-last");
-      if (now !== order) {
-        order = now;
-        const stage = (
-          /** @type {HTMLElement} */
-          el_.querySelector(":scope > .kp-console__stage")
-        );
-        const barEl2 = (
-          /** @type {HTMLElement} */
-          el_.querySelector(":scope > .kp-console__bar")
-        );
-        if (stage && barEl2) {
-          if (now === "newest-first") el_.prepend(barEl2);
-          else el_.append(barEl2);
-        }
-        stopPillNow();
-        body.setAttribute("data-kp-follow", now === "newest-first" ? "head" : "tail");
-        stopPillNow = attachNewPills(body.parentElement ?? el_);
-      }
-      drawBar(el_);
-      drawBody2(el_);
-      for (const b of st.blocks) {
-        const node = el_.querySelector(`.kp-console__block[data-id="${CSS.escape(b.id)}"]`);
-        if (node instanceof HTMLElement) blockNode(el_, b, node);
-      }
-    });
-    observer.observe(el_, {
-      attributes: true,
-      attributeFilter: [
-        "disabled",
-        "data-kp-disabled",
-        "data-kp-disabled-reason",
-        ...["hint", "prompt", "order", "status", "timer", "cancel", "max-lines", "max-blocks", "context", "confirm"].map(
-          (n) => `data-kp-console-${n}`
-        )
-      ]
-    });
-    const s2 = getStrings();
-    const keys = [{ keys: "Mod L", what: s2.consoleKeyClear, group: s2.consoleKeyGroup, run: () => clearConsole(el_) }];
-    const focusKey = attr13(el_, "focus-key", ":");
-    if (focusKey !== "false" && focusKey !== "") {
-      keys.push({
-        keys: focusKey,
-        what: s2.consoleKeyFocus,
-        group: s2.consoleKeyGroup,
-        when: () => !input.disabled,
-        reason: s2.consoleKeyFocusReason,
-        run: () => input.focus()
-      });
-    }
-    const stopKeys = registerShortcuts(el_, keys, { layoutGuard: "off" });
-    startTicker(el_);
-    st.off = [
-      () => form2.removeEventListener("submit", onSubmit),
-      () => input.removeEventListener("keydown", onKey5),
-      () => el_.removeEventListener("click", onClick),
-      () => select2.removeEventListener("change", onContext),
-      () => observer.disconnect(),
-      stopKeys,
-      () => stopPillNow(),
-      stopReasons,
-      () => window.clearInterval(st.tick)
-    ];
-    undo.push(() => {
-      for (const stop of st.off) stop();
-      st.off = [];
-    });
-  }
-  return () => undo.forEach((u) => u());
-}
-var init_attach25 = __esm({
-  "js/console/attach.js"() {
+// js/console/controller.js
+var MAX_COMPLETIONS, LIVE3, ConsoleControl;
+var init_controller75 = __esm({
+  "js/console/controller.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_shortcuts();
     init_newpill();
@@ -85661,6 +85464,216 @@ var init_attach25 = __esm({
     init_history();
     init_model11();
     init_run6();
+    MAX_COMPLETIONS = 12;
+    LIVE3 = [
+      "disabled",
+      "data-kp-disabled",
+      "data-kp-disabled-reason",
+      ...["hint", "prompt", "order", "status", "timer", "cancel", "max-lines", "max-blocks", "context", "confirm"].map((n) => `data-kp-console-${n}`)
+    ];
+    ConsoleControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ run?: ConsoleRun, complete?: (prefix: string) => string[] | Promise<string[]> }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.st = stateOf9(host);
+        this.run = options.run;
+        this.complete = options.complete;
+        this.order = attr13(host, "order", "newest-last");
+        this.stopPill = () => {
+        };
+        this.parts = /** @type {{ body: HTMLElement, form: HTMLFormElement, input: HTMLInputElement, select: HTMLSelectElement, complete: HTMLElement }} */
+        /** @type {unknown} */
+        null;
+      }
+      connect() {
+        const root = this.host;
+        const st = this.st;
+        if (this.run) st.run = this.run;
+        if (this.complete) st.complete = this.complete;
+        st.history = loadHistory(root);
+        drawAll(root);
+        this.parts = {
+          body: (
+            /** @type {HTMLElement} */
+            root.querySelector(".kp-console__body")
+          ),
+          form: (
+            /** @type {HTMLFormElement} */
+            root.querySelector(".kp-console__form")
+          ),
+          input: (
+            /** @type {HTMLInputElement} */
+            root.querySelector(".kp-console__input")
+          ),
+          select: (
+            /** @type {HTMLSelectElement} */
+            root.querySelector(".kp-console__context")
+          ),
+          complete: (
+            /** @type {HTMLElement} */
+            root.querySelector(".kp-console__complete")
+          )
+        };
+        const { body, form: form2, input, select: select2 } = this.parts;
+        this.own(() => window.clearInterval(st.tick));
+        this.own(attachDisabledReasons(root));
+        if (body) this.stopPill = attachNewPills(body.parentElement ?? root);
+        this.own(() => this.stopPill());
+        this.own(registerShortcuts(root, this.keys(), { layoutGuard: "off" }));
+        this.listen(form2, "submit", (event) => {
+          event.preventDefault();
+          void submit(root);
+        });
+        this.listen(input, "keydown", (event) => void this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(root, "click", (event) => this.onClick(event));
+        this.listen(select2, "change", () => st.context.value = select2.value);
+        this.observe(new MutationObserver(() => this.onOptions())).observe(root, { attributes: true, attributeFilter: LIVE3 });
+        startTicker(root);
+      }
+      /** The keys, through the engine: the clear key, and the one that jumps to the prompt from anywhere. */
+      keys() {
+        const root = this.host;
+        const s2 = getStrings();
+        const keys = [{ keys: "Mod L", what: s2.consoleKeyClear, group: s2.consoleKeyGroup, run: () => clearConsole(root) }];
+        const focusKey = attr13(root, "focus-key", ":");
+        if (focusKey === "false" || focusKey === "") return keys;
+        const input = (
+          /** @type {HTMLInputElement} */
+          root.querySelector(".kp-console__input")
+        );
+        keys.push({ keys: focusKey, what: s2.consoleKeyFocus, group: s2.consoleKeyGroup, when: () => !input.disabled, reason: s2.consoleKeyFocusReason, run: () => input.focus() });
+        return keys;
+      }
+      /** An option changed (its attribute): the console is drawn again; a new order moves the bar and the new-pill watch. */
+      onOptions() {
+        const root = this.host;
+        const now = attr13(root, "order", "newest-last");
+        if (now !== this.order) this.reorder(now);
+        drawBar(root);
+        drawBody2(root);
+        for (const b of this.st.blocks) {
+          const node = root.querySelector(`.kp-console__block[data-id="${CSS.escape(b.id)}"]`);
+          if (node instanceof HTMLElement) blockNode(root, b, node);
+        }
+      }
+      /** @param {string} now the new order */
+      reorder(now) {
+        const root = this.host;
+        const body = this.parts.body;
+        this.order = now;
+        const stage = root.querySelector(":scope > .kp-console__stage");
+        const bar = root.querySelector(":scope > .kp-console__bar");
+        if (stage && bar) {
+          if (now === "newest-first") root.prepend(bar);
+          else root.append(bar);
+        }
+        this.stopPill();
+        body.setAttribute("data-kp-follow", now === "newest-first" ? "head" : "tail");
+        this.stopPill = attachNewPills(body.parentElement ?? root);
+      }
+      /** Up and Down walk the history, Esc closes the completions or clears the line, Tab completes, a key drops a pending confirm. @param {KeyboardEvent} event */
+      async onKey(event) {
+        const { st, host: root } = this;
+        const { input, complete } = this.parts;
+        if (event.isComposing) return;
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") this.walk(event);
+        else if (event.key === "Escape") {
+          if (!complete.hidden) {
+            complete.hidden = true;
+            return;
+          }
+          if (input.value === "") return;
+          event.preventDefault();
+          input.value = "";
+          st.at = -1;
+          st.pending = null;
+          drawBar(root);
+        } else if (event.key === "Tab" && attr13(root, "tab", "none") === "complete" && st.complete && input.value.trim() !== "" && !event.shiftKey) {
+          event.preventDefault();
+          this.offer(await st.complete(input.value));
+        } else if (st.pending !== null && event.key.length === 1) {
+          st.pending = null;
+          drawBar(root);
+        }
+      }
+      /** Walk the history; the line typed before the walk comes back at its end. @param {KeyboardEvent} event */
+      walk(event) {
+        const st = this.st;
+        const input = this.parts.input;
+        if (st.history.length === 0) return;
+        event.preventDefault();
+        if (st.at === -1) st.draft = input.value;
+        if (event.key === "ArrowUp") st.at = st.at === -1 ? st.history.length - 1 : Math.max(0, st.at - 1);
+        else st.at = st.at === -1 ? -1 : st.at + 1 >= st.history.length ? -1 : st.at + 1;
+        input.value = st.at === -1 ? st.draft : st.history[st.at];
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+      /** One completion fills the line; several are offered as buttons and counted aloud. @param {string[]} found */
+      offer(found) {
+        const { input, complete } = this.parts;
+        if (found.length === 1) {
+          input.value = found[0];
+          complete.hidden = true;
+          return;
+        }
+        if (found.length === 0) return;
+        complete.replaceChildren();
+        complete.setAttribute("role", "group");
+        complete.setAttribute("aria-label", getStrings().consoleCompletions);
+        for (const f of found.slice(0, MAX_COMPLETIONS)) {
+          const b = (
+            /** @type {HTMLButtonElement} */
+            el13("kp-button kp-button--ghost kp-button--sm", "button")
+          );
+          b.type = "button";
+          b.setAttribute("data-kp-console-complete", f);
+          b.textContent = f;
+          complete.append(b);
+        }
+        complete.hidden = false;
+        say14(this.host, getStrings().consoleMatches(found.length));
+      }
+      /** A block's tool, a completion, Retry, or the earlier blocks. @param {Event} event */
+      onClick(event) {
+        const root = this.host;
+        const t = event.target instanceof Element ? event.target : null;
+        if (!t) return;
+        const tool2 = (
+          /** @type {HTMLButtonElement | null} */
+          t.closest("[data-kp-console-tool]")
+        );
+        const pick2 = t.closest("[data-kp-console-complete]");
+        if (tool2) {
+          const block = t.closest(".kp-console__block");
+          const b = this.st.blocks.find((x) => x.id === block?.getAttribute("data-id"));
+          if (b) void useTool(root, tool2.getAttribute("data-kp-console-tool") ?? "", b, tool2);
+        } else if (pick2) {
+          this.parts.input.value = pick2.getAttribute("data-kp-console-complete") ?? "";
+          this.parts.complete.hidden = true;
+          this.parts.input.focus();
+        } else if (t.closest("[data-kp-console-retry]")) root.dispatchEvent(new CustomEvent(CONSOLE_RETRY_EVENT, { bubbles: true }));
+        else if (t.closest("[data-kp-console-earlier]")) {
+          this.st.showAll = true;
+          drawBody2(root);
+        }
+      }
+    };
+  }
+});
+
+// js/console/attach.js
+function attachConsoles(root = document, options = {}) {
+  return attachAll(root, CONSOLE2, ConsoleControl, options);
+}
+var init_attach25 = __esm({
+  "js/console/attach.js"() {
+    "use strict";
+    init_controller();
+    init_constants41();
+    init_controller75();
   }
 });
 
