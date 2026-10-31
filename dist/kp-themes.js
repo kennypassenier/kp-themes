@@ -2454,7 +2454,7 @@ var init_focus = __esm({
       focusTrackFinishedText: "Nothing is left on this track.",
       focusTrackFinishedNext: (next2) => `${next2} is ready for you.`,
       focusTrackFinish: (track) => `Finish ${track}`,
-      focusTrackSwitched: (track, place3, text) => `${track}. ${place3}. ${text}`,
+      focusTrackSwitched: (track, place4, text) => `${track}. ${place4}. ${text}`,
       focusTrackUnlocked: (step) => `${step} is done. You can go on.`,
       focusTimerRunning: (clock4) => `Timer running \xB7 ${clock4}`,
       focusTimerPaused: (clock4) => `Timer paused \xB7 ${clock4}`,
@@ -6714,10 +6714,10 @@ var init_layer = __esm({
         const { host, layer } = this;
         host.append(layer);
         this.place();
-        const place3 = () => this.place();
-        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(place3)).observe(host);
-        this.listen(host, "scroll", place3, { passive: true });
-        for (const scroller of scrollersAround(host)) this.listen(scroller, "scroll", place3, { passive: true });
+        const place4 = () => this.place();
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(place4)).observe(host);
+        this.listen(host, "scroll", place4, { passive: true });
+        for (const scroller of scrollersAround(host)) this.listen(scroller, "scroll", place4, { passive: true });
         if (this.arrive) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => layer.isConnected && m.arriveShown(layer));
       }
       /** Measure and place the card again. */
@@ -8000,10 +8000,10 @@ function heirOf(list, row2, active) {
   );
   const at = [...list.children].indexOf(row2);
   const next2 = rows.find((r) => [...list.children].indexOf(r) > at) ?? rows.reverse().find((r) => [...list.children].indexOf(r) < at) ?? null;
-  const place3 = [...row2.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
+  const place4 = [...row2.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
   return next2 ? (
     /** @type {HTMLElement | undefined} */
-    next2.querySelectorAll(`${ROW_ACTIONS} > *`)[place3] ?? next2
+    next2.querySelectorAll(`${ROW_ACTIONS} > *`)[place4] ?? next2
   ) : list;
 }
 async function removeRow(row2) {
@@ -12767,7 +12767,7 @@ function attachArt(root = document) {
     [...root instanceof Element && root.matches(ART) ? [root] : [], ...root.querySelectorAll(ART)]
   );
   const made6 = [];
-  const place3 = (host) => {
+  const place4 = (host) => {
     host.querySelector(":scope > .kp-art")?.remove();
     const kind = host.dataset.kpArt ?? "";
     if (!isKind(kind)) return;
@@ -12775,13 +12775,13 @@ function attachArt(root = document) {
     host.prepend(svg2);
     made6.push(svg2);
   };
-  for (const host of hosts) place3(host);
+  for (const host of hosts) place4(host);
   if (typeof MutationObserver === "undefined" || hosts.length === 0)
     return () => {
       for (const svg2 of made6) svg2.remove();
     };
   const watch2 = new MutationObserver((records) => {
-    for (const record of records) place3(
+    for (const record of records) place4(
       /** @type {HTMLElement} */
       record.target
     );
@@ -13958,13 +13958,13 @@ var init_side = __esm({
 });
 
 // js/top-layer/raise.js
-function raiseOverlay(element, place3) {
+function raiseOverlay(element, place4) {
   if (typeof element.showPopover !== "function" || !element.isConnected) {
-    place3(element);
+    place4(element);
     return () => {
     };
   }
-  const raise = new OverlayRaise(element, { place: place3 });
+  const raise = new OverlayRaise(element, { place: place4 });
   try {
     raise.connect();
   } catch (error) {
@@ -24179,7 +24179,7 @@ function syncCalmActions(item_, state12, list) {
   );
   const showResume = state12 === "paused" && list?.getAttribute("data-kp-today-resume") !== "off";
   const showPause = state12 === "open" && list?.hasAttribute("data-kp-today-pause") === true && list.getAttribute("data-kp-today-pause") !== "off";
-  const place3 = (button6, shown5) => {
+  const place4 = (button6, shown5) => {
     const holder = (
       /** @type {HTMLElement} */
       button6.closest(".kp-tooltip-anchor") ?? button6
@@ -24197,8 +24197,8 @@ function syncCalmActions(item_, state12, list) {
   resume.setAttribute("data-kp-disabled-reason", why);
   pause.textContent = s2.statusPause;
   pause.setAttribute("aria-label", s2.statusPauseLabel(label2));
-  place3(resume, showResume);
-  place3(pause, showPause);
+  place4(resume, showResume);
+  place4(pause, showPause);
   cell.hidden = !(showResume || showPause);
 }
 var labelOf4, daysBetween;
@@ -35336,8 +35336,8 @@ function storedProgress(root) {
   if (until.startsWith("hours:") && now - stored.at > Number(until.slice(6)) * 36e5) return null;
   const state12 = stateOf2(root);
   const ids2 = new Set(state12.steps.map((step) => step.answer?.id).filter(Boolean));
-  const answers = Object.fromEntries(Object.entries(stored.answers ?? {}).filter(([id]) => ids2.has(id)));
-  const progress = { index: Math.max(0, Math.min(lastIndex(root), stored.index)), answers, startedAt: Number(stored.startedAt) || stored.at };
+  const answers2 = Object.fromEntries(Object.entries(stored.answers ?? {}).filter(([id]) => ids2.has(id)));
+  const progress = { index: Math.max(0, Math.min(lastIndex(root), stored.index)), answers: answers2, startedAt: Number(stored.startedAt) || stored.at };
   if (typeof stored.track === "string") progress.track = stored.track;
   if (stored.positions && typeof stored.positions === "object") progress.positions = stored.positions;
   if (Array.isArray(stored.done))
@@ -39382,9 +39382,9 @@ function installTip2(c) {
       stopReversing(box);
     }
     box.textContent = words3;
-    const place3 = () => floatBeside(box, item, "centre");
-    if (box.matches(":popover-open")) place3();
-    else show(box, place3);
+    const place4 = () => floatBeside(box, item, "centre");
+    if (box.matches(":popover-open")) place4();
+    else show(box, place4);
   };
   const onTipOver = (event) => {
     const item = event.target instanceof Element ? event.target.closest(tipItems()) : null;
@@ -41820,26 +41820,9 @@ var init_keys8 = __esm({
 
 // js/palette/outside.js
 function closeOnOutsidePress(dialog) {
-  const outside = (event) => {
-    if (event.target !== dialog) return false;
-    const box = dialog.getBoundingClientRect();
-    return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
-  };
-  let pressedOutside = false;
-  const onDown2 = (event) => {
-    pressedOutside = dialog.open && outside(event);
-  };
-  const onClick = (event) => {
-    const both = pressedOutside && outside(event);
-    pressedOutside = false;
-    if (both && dialog.open) dialog.close();
-  };
-  dialog.addEventListener("pointerdown", onDown2);
-  dialog.addEventListener("click", onClick);
-  return () => {
-    dialog.removeEventListener("pointerdown", onDown2);
-    dialog.removeEventListener("click", onClick);
-  };
+  const watch2 = new OutsidePress(dialog);
+  watch2.connect();
+  return () => watch2.destroy();
 }
 function openerFor(event, dialog, answersKey) {
   const opener = event.target instanceof Element ? event.target.closest(OPENER) : null;
@@ -41847,10 +41830,48 @@ function openerFor(event, dialog, answersKey) {
   const name = opener.getAttribute("data-kp-palette-open") ?? "";
   return name === "" ? answersKey : name === dialog.id;
 }
+function answers(selector, me) {
+  const nominated = document.querySelector(`${selector}[data-kp-primary]`);
+  return (nominated ?? document.querySelector(selector)) === me;
+}
+var OutsidePress;
 var init_outside = __esm({
   "js/palette/outside.js"() {
     "use strict";
+    init_controller();
     init_constants19();
+    OutsidePress = class extends Controller {
+      /** @param {HTMLDialogElement} dialog */
+      constructor(dialog) {
+        super(dialog);
+        this.dialog = dialog;
+        this.pressedOutside = false;
+      }
+      connect() {
+        const dialog = this.dialog;
+        this.listen(dialog, "pointerdown", (event) => {
+          this.pressedOutside = dialog.open && this.outside(
+            /** @type {PointerEvent} */
+            event
+          );
+        });
+        this.listen(dialog, "click", (event) => {
+          const both = this.pressedOutside && this.outside(
+            /** @type {MouseEvent} */
+            event
+          );
+          this.pressedOutside = false;
+          if (both && dialog.open) dialog.close();
+        });
+      }
+      /** Whether a press landed on the backdrop: on the dialog element, outside its border box. @param {MouseEvent} event */
+      outside(event) {
+        const dialog = this.dialog;
+        if (event.target !== dialog) return false;
+        const box = dialog.getBoundingClientRect();
+        return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+      }
+    };
   }
 });
 
@@ -41866,369 +41887,762 @@ var init_api14 = __esm({
   }
 });
 
-// js/palette/intent-filter.js
-function createIntentFilter(dialog, list, status) {
-  const doc = dialog.ownerDocument;
-  const origin = /* @__PURE__ */ new WeakMap();
-  const groupOrigin = /* @__PURE__ */ new WeakMap();
-  let plate2 = null;
-  let busy = null;
-  let state12 = "ready";
-  let stateOptions = {};
-  let footprint = 0;
-  const modeOptions = () => ({
-    foldDiacritics: dialog.dataset.kpFoldDiacritics !== "off",
-    splitHyphen: dialog.dataset.kpSplitHyphen !== "off",
-    typo: (
-      /** @type {0 | 1} */
-      dialog.dataset.kpTypo === "1" ? 1 : 0
-    )
-  });
-  const unitOf2 = (option) => {
-    const parent = option.parentElement;
-    return parent !== null && parent !== list && parent.matches('li[role="presentation"]') && parent.children.length === 1 ? parent : option;
+// js/palette/intent-dom.js
+function unitOf(list, option) {
+  const parent = option.parentElement;
+  return parent !== null && parent !== list && parent.matches('li[role="presentation"]') && parent.children.length === 1 ? parent : option;
+}
+function textsOf(option) {
+  const label2 = [];
+  const hint = [];
+  const walk = (node, inHint) => {
+    for (const child of node.childNodes) {
+      if (child instanceof HTMLElement) {
+        if (child.tagName === "KBD") continue;
+        walk(child, inHint || child.matches(".kp-palette__description, [data-kp-hint-text]"));
+      } else if (child.nodeType === Node.TEXT_NODE) (inHint ? hint : label2).push(child.textContent ?? "");
+    }
   };
-  const textsOf = (option) => {
-    const label2 = [];
-    const hint = [];
-    const walk = (node, inHint) => {
-      for (const child of node.childNodes) {
-        if (child instanceof HTMLElement) {
-          if (child.tagName === "KBD") continue;
-          walk(child, inHint || child.matches(".kp-palette__description, [data-kp-hint-text]"));
-        } else if (child.nodeType === Node.TEXT_NODE) (inHint ? hint : label2).push(child.textContent ?? "");
+  walk(option, false);
+  return { label: label2.join(""), hint: `${hint.join(" ")} ${option.dataset.kpHint ?? ""}`.trim() };
+}
+function place(doc, ordered2) {
+  const now = ordered2.slice().sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+  if (now.every((el16, i) => el16 === ordered2[i])) return;
+  const holes = now.map((el16) => {
+    const hole = doc.createComment("");
+    el16.before(hole);
+    return hole;
+  });
+  ordered2.forEach((el16, i) => holes[i].replaceWith(el16));
+}
+function clearMarks2(doc, option) {
+  const marks = option.querySelectorAll(".kp-palette__mark");
+  if (marks.length === 0) return;
+  for (const mark of marks) mark.replaceWith(doc.createTextNode(mark.textContent ?? ""));
+  option.normalize();
+}
+function wrapLabel(doc, option) {
+  const runs2 = [];
+  let run = [];
+  for (const child of [...option.childNodes]) {
+    if (child.nodeType === Node.TEXT_NODE) run.push(
+      /** @type {Text} */
+      child
+    );
+    else {
+      if (run.length > 0) runs2.push(run);
+      run = [];
+    }
+  }
+  if (run.length > 0) runs2.push(run);
+  for (const nodes of runs2) {
+    if (!nodes.some((n) => (n.data ?? "").trim() !== "")) continue;
+    const span5 = doc.createElement("span");
+    span5.className = "kp-palette__label";
+    span5.setAttribute("data-kp-generated", "");
+    nodes[0].before(span5);
+    span5.append(...nodes);
+  }
+}
+function markWords(doc, option, want, mode2) {
+  const walker = doc.createTreeWalker(option, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  for (let n; n = walker.nextNode(); ) if (n.parentElement?.tagName !== "KBD" && (n.textContent ?? "").trim() !== "") nodes.push(
+    /** @type {Text} */
+    n
+  );
+  for (const node of nodes) {
+    const ranges = intentRanges(node.data, want, mode2);
+    if (ranges.length === 0) continue;
+    const frag = doc.createDocumentFragment();
+    let at = 0;
+    for (const [from, to] of ranges) {
+      if (from > at) frag.append(node.data.slice(at, from));
+      const mark = doc.createElement("span");
+      mark.className = "kp-palette__mark";
+      mark.textContent = node.data.slice(from, to);
+      frag.append(mark);
+      at = to;
+    }
+    if (at < node.data.length) frag.append(node.data.slice(at));
+    node.replaceWith(frag);
+  }
+}
+function setHidden(el16, hidden2) {
+  if (el16.hidden !== hidden2) el16.hidden = hidden2;
+}
+var init_intent_dom = __esm({
+  "js/palette/intent-dom.js"() {
+    "use strict";
+    init_intent();
+  }
+});
+
+// js/palette/intent-rank.js
+function rankCommands2(f, options, want, mode2) {
+  const dialog = f.dialog;
+  const context2 = dialog.dataset.kpContext ?? null;
+  const recentN = Number(dialog.dataset.kpRecent) || 0;
+  const recent = recentN > 0 ? f.readRecent().slice(0, recentN) : [];
+  const failed = f.state === "error";
+  const items = options.map((option) => {
+    clearMarks2(f.doc, option);
+    if (!option.querySelector(":scope > .kp-palette__label")) wrapLabel(f.doc, option);
+    const { label: label2, hint } = textsOf(option);
+    const inContext = context2 !== null && option.dataset.kpContextOf === context2;
+    const recency = recent.indexOf(option.dataset.value ?? (option.textContent ?? "").trim());
+    const base = intentScore({ label: label2, hint, words: option.dataset.kpWords ?? "" }, want, mode2);
+    const score = base < 0 ? -1 : base + (inContext ? CONTEXT_BONUS2 : 0) + (want.length === 0 && recency >= 0 ? RECENT_BONUS2 : 0);
+    return { option, base, score, inContext, featured: option.hasAttribute("data-kp-featured"), recency, at: f.origin.get(option) ?? 0 };
+  });
+  const startSet = items.some((it) => it.featured || it.inContext || it.recency >= 0);
+  for (const it of items) {
+    let show = it.base >= 0;
+    if (failed && !it.option.hasAttribute("data-kp-static")) show = false;
+    if (show && want.length === 0 && startSet && !failed) show = it.featured || it.inContext || it.recency >= 0;
+    if (!show) it.score = -1;
+  }
+  return { items, startSet };
+}
+function orderCommands(f, items, want) {
+  const { list, doc } = f;
+  const containers = /* @__PURE__ */ new Map();
+  for (const it of items) {
+    const parent = (
+      /** @type {HTMLElement} */
+      unitOf(list, it.option).parentElement
+    );
+    containers.set(parent, [...containers.get(parent) ?? [], it]);
+  }
+  for (const [, group] of containers) {
+    group.sort((a, b) => {
+      if (a.score >= 0 !== b.score >= 0) return a.score >= 0 ? -1 : 1;
+      if (b.score !== a.score) return b.score - a.score;
+      if (want.length === 0 && a.recency !== b.recency) return (a.recency < 0 ? NOT_RECENT : a.recency) - (b.recency < 0 ? NOT_RECENT : b.recency);
+      return a.at - b.at;
+    });
+    place(doc, group.map((it) => unitOf(list, it.option)));
+  }
+  const groups = (
+    /** @type {HTMLElement[]} */
+    [...list.querySelectorAll("[data-kp-group]")]
+  );
+  if (groups.length <= 1) return;
+  const named = (f.dialog.dataset.kpGroupOrder ?? "").split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
+  const labelOf8 = (g) => (g.querySelector(".kp-palette__group-label")?.textContent ?? g.getAttribute("aria-label") ?? "").trim().toLowerCase();
+  const rank2 = (g) => {
+    const i = named.indexOf(labelOf8(g));
+    return i < 0 ? named.length + (f.groupOrigin.get(g) ?? 0) : i;
+  };
+  place(doc, groups.slice().sort((a, b) => rank2(a) - rank2(b)));
+}
+var CONTEXT_BONUS2, RECENT_BONUS2, NOT_RECENT;
+var init_intent_rank = __esm({
+  "js/palette/intent-rank.js"() {
+    "use strict";
+    init_intent();
+    init_intent_dom();
+    CONTEXT_BONUS2 = 3;
+    RECENT_BONUS2 = 2;
+    NOT_RECENT = 99;
+  }
+});
+
+// js/palette/intent-plate.js
+var ListPlate;
+var init_intent_plate = __esm({
+  "js/palette/intent-plate.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_intent_dom();
+    ListPlate = class {
+      /** @param {HTMLDialogElement} dialog @param {HTMLElement} list */
+      constructor(dialog, list) {
+        this.dialog = dialog;
+        this.list = list;
+        this.plate = null;
+        this.footprint = 0;
+        this.ownListCap = null;
+      }
+      /** The footprint is read from a list that shows commands, never from the few that stay under a failed plate. */
+      measure() {
+        const list = this.list;
+        if (!list.hidden && list.offsetHeight > 0 && (this.plate === null || this.plate.hidden)) this.footprint = list.offsetHeight;
+      }
+      ensure() {
+        if (this.plate) return this.plate;
+        this.plate = this.dialog.ownerDocument.createElement("div");
+        this.plate.className = "kp-palette__nomatch";
+        this.plate.hidden = true;
+        this.list.after(this.plate);
+        return this.plate;
+      }
+      /** `max-height` counts the padding and the border unless the list is border-box. @param {number} px */
+      capList(px5) {
+        const list = this.list;
+        this.ownListCap = list.style.getPropertyValue("--kp-palette-list-max-height");
+        const cs = getComputedStyle(list);
+        const frame3 = cs.boxSizing === "border-box" ? 0 : parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+        list.style.setProperty("--kp-palette-list-max-height", `${Math.max(px5 - frame3, 0)}px`);
+      }
+      releaseListCap() {
+        if (this.ownListCap === null) return;
+        if (this.ownListCap) this.list.style.setProperty("--kp-palette-list-max-height", this.ownListCap);
+        else this.list.style.removeProperty("--kp-palette-list-max-height");
+        this.ownListCap = null;
+      }
+      hide() {
+        if (this.plate) this.plate.hidden = true;
+        this.releaseListCap();
+        setHidden(this.list, false);
+      }
+      /**
+       * Stand the plate in the list's footprint. A plate that replaces the list is as high as the list was. A plate above the commands
+       * that stay (the failed one) is as high as the list was minus those commands, so the palette keeps its loaded footprint in a
+       * failed state too [t56-shared3-1018].
+       * @param {'empty' | 'error'} kind @param {string} title @param {string} text @param {boolean} replacesList
+       */
+      show(kind, title, text, replacesList) {
+        const { dialog, list } = this;
+        const holder = this.ensure();
+        const s2 = getStrings();
+        const retry = { actionLabel: s2.paletteRetry, onAction: () => dialog.dispatchEvent(new CustomEvent("kp-palette-retry", { bubbles: true })) };
+        holder.replaceChildren(statePlate(dialog.ownerDocument, { kind, title, text, ...kind === "error" ? retry : {} }));
+        holder.toggleAttribute("data-kp-above", !replacesList);
+        holder.hidden = false;
+        setHidden(list, replacesList);
+        this.releaseListCap();
+        const staying = replacesList || list.hidden ? 0 : list.offsetHeight;
+        holder.style.setProperty("--kp-palette-plate-height", "0px");
+        const needed = holder.offsetHeight;
+        const room = Math.max(this.footprint - staying, needed);
+        holder.style.setProperty("--kp-palette-plate-height", `${room}px`);
+        if (staying > 0 && staying + room > this.footprint) this.capList(Math.max(this.footprint - room, 0));
+      }
+      remove() {
+        this.plate?.remove();
+        this.plate = null;
+        setHidden(this.list, false);
       }
     };
-    walk(option, false);
-    return { label: label2.join(""), hint: `${hint.join(" ")} ${option.dataset.kpHint ?? ""}`.trim() };
-  };
-  const assignOrigins = (options) => {
-    let previous = -1;
-    options.forEach((option, index) => {
-      let at = origin.get(option);
-      if (at === void 0) {
-        at = previous < 0 ? index : previous + 1e-3;
-        origin.set(option, at);
-      }
-      previous = at;
-    });
-    for (const [index, group] of [...list.querySelectorAll("[data-kp-group]")].entries())
-      if (!groupOrigin.has(group)) groupOrigin.set(group, index);
-  };
-  const place3 = (ordered2) => {
-    const now = ordered2.slice().sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
-    if (now.every((el16, i) => el16 === ordered2[i])) return;
-    const holes = now.map((el16) => {
-      const hole = doc.createComment("");
-      el16.before(hole);
-      return hole;
-    });
-    ordered2.forEach((el16, i) => holes[i].replaceWith(el16));
-  };
-  const clearMarks3 = (option) => {
-    const marks = option.querySelectorAll(".kp-palette__mark");
-    if (marks.length === 0) return;
-    for (const mark of marks) mark.replaceWith(doc.createTextNode(mark.textContent ?? ""));
-    option.normalize();
-  };
-  const wrapLabel = (option) => {
-    const runs2 = [];
-    let run2 = [];
-    for (const child of [...option.childNodes]) {
-      if (child.nodeType === Node.TEXT_NODE) run2.push(
-        /** @type {Text} */
-        child
-      );
-      else {
-        if (run2.length > 0) runs2.push(run2);
-        run2 = [];
-      }
-    }
-    if (run2.length > 0) runs2.push(run2);
-    for (const nodes of runs2) {
-      if (!nodes.some((n) => (n.data ?? "").trim() !== "")) continue;
-      const span5 = doc.createElement("span");
-      span5.className = "kp-palette__label";
-      span5.setAttribute("data-kp-generated", "");
-      nodes[0].before(span5);
-      span5.append(...nodes);
-    }
-  };
-  const markWords = (option, want, mode2) => {
-    const walker = doc.createTreeWalker(option, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    for (let n; n = walker.nextNode(); )
-      if (n.parentElement?.tagName !== "KBD" && (n.textContent ?? "").trim() !== "") nodes.push(
-        /** @type {Text} */
-        n
-      );
-    for (const node of nodes) {
-      const ranges = intentRanges(node.data, want, mode2);
-      if (ranges.length === 0) continue;
-      const frag = doc.createDocumentFragment();
-      let at = 0;
-      for (const [from, to] of ranges) {
-        if (from > at) frag.append(node.data.slice(at, from));
-        const mark = doc.createElement("span");
-        mark.className = "kp-palette__mark";
-        mark.textContent = node.data.slice(from, to);
-        frag.append(mark);
-        at = to;
-      }
-      if (at < node.data.length) frag.append(node.data.slice(at));
-      node.replaceWith(frag);
-    }
-  };
-  const recentKey = () => `kp-recent:palette:${dialog.id || "palette"}`;
-  const readRecent = () => {
-    try {
-      const raw = JSON.parse(globalThis.localStorage?.getItem(recentKey()) ?? "[]");
-      return Array.isArray(raw) ? raw.map(String) : [];
-    } catch {
-      return [];
-    }
-  };
-  const ensurePlate = () => {
-    if (plate2) return plate2;
-    plate2 = doc.createElement("div");
-    plate2.className = "kp-palette__nomatch";
-    plate2.hidden = true;
-    list.after(plate2);
-    return plate2;
-  };
-  const setHidden = (el16, hidden2) => {
-    if (el16.hidden !== hidden2) el16.hidden = hidden2;
-  };
-  let ownListCap = null;
-  const capList = (px5) => {
-    ownListCap = list.style.getPropertyValue("--kp-palette-list-max-height");
-    const cs = getComputedStyle(list);
-    const frame3 = cs.boxSizing === "border-box" ? 0 : parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
-    list.style.setProperty("--kp-palette-list-max-height", `${Math.max(px5 - frame3, 0)}px`);
-  };
-  const releaseListCap = () => {
-    if (ownListCap === null) return;
-    if (ownListCap) list.style.setProperty("--kp-palette-list-max-height", ownListCap);
-    else list.style.removeProperty("--kp-palette-list-max-height");
-    ownListCap = null;
-  };
-  const hidePlate = () => {
-    if (plate2) plate2.hidden = true;
-    releaseListCap();
-    setHidden(list, false);
-  };
-  const showPlate = (kind, title, text, replacesList) => {
-    const holder = ensurePlate();
-    const s2 = getStrings();
-    holder.replaceChildren(
-      statePlate(doc, {
-        kind,
-        title,
-        text,
-        ...kind === "error" ? { actionLabel: s2.paletteRetry, onAction: () => dialog.dispatchEvent(new CustomEvent("kp-palette-retry", { bubbles: true })) } : {}
-      })
-    );
-    holder.toggleAttribute("data-kp-above", !replacesList);
-    holder.hidden = false;
-    setHidden(list, replacesList);
-    releaseListCap();
-    const staying = replacesList || list.hidden ? 0 : list.offsetHeight;
-    holder.style.setProperty("--kp-palette-plate-height", "0px");
-    const needed = holder.offsetHeight;
-    const room = Math.max(footprint - staying, needed);
-    holder.style.setProperty("--kp-palette-plate-height", `${room}px`);
-    if (staying > 0 && staying + room > footprint) capList(Math.max(footprint - room, 0));
-  };
-  const run = (rawQuery) => {
-    const s2 = getStrings();
-    const mode2 = modeOptions();
-    const want = queryWords(rawQuery, mode2);
-    if (!list.hidden && list.offsetHeight > 0 && (plate2 === null || plate2.hidden)) footprint = list.offsetHeight;
-    const options = (
-      /** @type {HTMLElement[]} */
-      [...list.querySelectorAll(OPTION_SELECTOR)]
-    );
-    assignOrigins(options);
-    const context2 = dialog.dataset.kpContext ?? null;
-    const recentN = Number(dialog.dataset.kpRecent) || 0;
-    const recent = recentN > 0 ? readRecent().slice(0, recentN) : [];
-    const max = Math.max(1, Number(dialog.dataset.kpMaxShown) || INTENT_MAX_SHOWN);
-    const failed = state12 === "error";
-    const valueOf3 = (option) => option.dataset.value ?? (option.textContent ?? "").trim();
-    const items = options.map((option) => {
-      clearMarks3(option);
-      if (!option.querySelector(":scope > .kp-palette__label")) wrapLabel(option);
-      const { label: label2, hint } = textsOf(option);
-      const value = valueOf3(option);
-      const inContext = context2 !== null && option.dataset.kpContextOf === context2;
-      const featured = option.hasAttribute("data-kp-featured");
-      const recency = recent.indexOf(value);
-      const base = intentScore({ label: label2, hint, words: option.dataset.kpWords ?? "" }, want, mode2);
-      const score = base < 0 ? -1 : base + (inContext ? 3 : 0) + (want.length === 0 && recency >= 0 ? 2 : 0);
-      return { option, base, score, inContext, featured, recency, at: origin.get(option) ?? 0 };
-    });
-    const byOption = new Map(items.map((it) => [it.option, it]));
-    const startSet = items.some((it) => it.featured || it.inContext || it.recency >= 0);
-    for (const it of items) {
-      let show = it.base >= 0;
-      if (failed && !it.option.hasAttribute("data-kp-static")) show = false;
-      if (show && want.length === 0 && startSet && !failed) show = it.featured || it.inContext || it.recency >= 0;
-      if (!show) it.score = -1;
-    }
-    const total = items.filter((it) => it.score >= 0).length;
-    const containers = /* @__PURE__ */ new Map();
-    for (const it of items) {
-      const unit2 = unitOf2(it.option);
-      const parent = (
-        /** @type {HTMLElement} */
-        unit2.parentElement
-      );
-      containers.set(parent, [...containers.get(parent) ?? [], it]);
-    }
-    for (const [, group] of containers) {
-      group.sort((a, b) => {
-        if (a.score >= 0 !== b.score >= 0) return a.score >= 0 ? -1 : 1;
-        if (b.score !== a.score) return b.score - a.score;
-        if (want.length === 0 && a.recency !== b.recency) return (a.recency < 0 ? 99 : a.recency) - (b.recency < 0 ? 99 : b.recency);
-        return a.at - b.at;
-      });
-      place3(group.map((it) => unitOf2(it.option)));
-    }
-    const groups = (
-      /** @type {HTMLElement[]} */
-      [...list.querySelectorAll("[data-kp-group]")]
-    );
-    const named = (dialog.dataset.kpGroupOrder ?? "").split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
-    const labelOf8 = (g) => (g.querySelector(".kp-palette__group-label")?.textContent ?? g.getAttribute("aria-label") ?? "").trim().toLowerCase();
-    if (groups.length > 1) {
-      const rank2 = (g) => {
-        const i = named.indexOf(labelOf8(g));
-        return i < 0 ? named.length + (groupOrigin.get(g) ?? 0) : i;
-      };
-      place3(groups.slice().sort((a, b) => rank2(a) - rank2(b)));
-    }
-    const capped = want.length > 0 || startSet;
-    let shownCount = 0;
-    for (
-      const option of
-      /** @type {HTMLElement[]} */
-      [...list.querySelectorAll(OPTION_SELECTOR)]
-    ) {
-      const it = byOption.get(option);
-      let show = (it?.score ?? -1) >= 0;
-      if (show && capped && shownCount >= max) show = false;
-      if (show) shownCount += 1;
-      setHidden(option, !show);
-      const unit2 = unitOf2(option);
-      if (unit2 !== option) setHidden(unit2, !show);
-      clearMarks3(option);
-      if (show && want.length > 0 && dialog.dataset.kpHighlight !== "off") markWords(option, want, mode2);
-    }
-    for (const group of groups) setHidden(group, group.querySelector(`${OPTION_SELECTOR}:not([hidden])`) === null);
-    if (status !== null) {
-      status.textContent = shownCount < total ? s2.paletteCapped(shownCount, total) : shownCount === 0 ? s2.noCommands : shownCount === 1 ? s2.oneCommand : s2.manyCommands(shownCount);
-    }
-    if (failed) showPlate("error", s2.paletteFailed, stateOptions.message ?? s2.paletteFailedText, false);
-    else if (shownCount === 0 && want.length > 0 && dialog.dataset.kpNomatch === "plate") {
-      const verbs = [...new Set(options.map((o) => o.dataset.kpVerb).filter((v) => v))];
-      const verb = verbs.find((v) => want.length > 1 && intentWords(v ?? "", mode2)[0]?.startsWith(want[0]));
-      const subjects = verb ? options.filter((o) => o.dataset.kpVerb === verb).map((o) => o.dataset.kpContextOf ?? "").filter(Boolean) : [];
-      showPlate(
-        "empty",
-        s2.paletteNothing,
-        noMatchText(
-          rawQuery,
-          { verbs: verb ? [verb] : [], subjects, noun: dialog.dataset.kpSubjectName ?? "", hint: dialog.dataset.kpNomatchHint ?? "" },
-          mode2
-        ),
-        true
-      );
-    } else hidePlate();
-    return shownCount;
-  };
-  return {
-    run,
-    /** @param {'ready' | 'loading' | 'error'} next @param {{ message?: string }} [options] */
-    setState(next2, options = {}) {
-      state12 = next2;
-      stateOptions = options;
-      if (next2 === "loading" && !busy) {
-        list.setAttribute("aria-busy", "true");
-        busy = openBusyCard(list, {
-          words: getStrings().paletteLoading,
-          area: () => [list],
-          className: "kp-palette__busy",
-          arrive: dialog.open
-        });
-      } else if (next2 !== "loading" && busy) {
-        list.removeAttribute("aria-busy");
-        const closing2 = busy;
-        busy = null;
-        void closing2.close();
-      }
-    },
-    /** @param {string} value */
-    remember(value) {
-      const n = Number(dialog.dataset.kpRecent) || 0;
-      if (n <= 0 || value === "") return;
-      try {
-        globalThis.localStorage?.setItem(recentKey(), JSON.stringify([value, ...readRecent().filter((v) => v !== value)].slice(0, n)));
-      } catch {
-      }
-    },
-    destroy() {
-      busy?.remove();
-      busy = null;
-      list.removeAttribute("aria-busy");
-      plate2?.remove();
-      plate2 = null;
-      setHidden(list, false);
-      const options = (
-        /** @type {HTMLElement[]} */
-        [...list.querySelectorAll(OPTION_SELECTOR)]
-      );
-      for (const option of options) {
-        clearMarks3(option);
-        for (const label2 of option.querySelectorAll(":scope > .kp-palette__label[data-kp-generated]")) label2.replaceWith(...label2.childNodes);
-        option.normalize();
-      }
-      const containers = /* @__PURE__ */ new Map();
-      for (const option of options) {
-        const unit2 = unitOf2(option);
-        const parent = (
-          /** @type {HTMLElement} */
-          unit2.parentElement
-        );
-        containers.set(parent, [...containers.get(parent) ?? [], unit2]);
-      }
-      for (const [, units] of containers)
-        place3(
-          units.slice().sort(
-            (a, b) => (origin.get(
-              /** @type {Element} */
-              a.matches(OPTION_SELECTOR) ? a : a.querySelector(OPTION_SELECTOR)
-            ) ?? 0) - (origin.get(
-              /** @type {Element} */
-              b.matches(OPTION_SELECTOR) ? b : b.querySelector(OPTION_SELECTOR)
-            ) ?? 0)
-          )
-        );
-      const groups = (
-        /** @type {HTMLElement[]} */
-        [...list.querySelectorAll("[data-kp-group]")]
-      );
-      place3(groups.slice().sort((a, b) => (groupOrigin.get(a) ?? 0) - (groupOrigin.get(b) ?? 0)));
-    }
-  };
+  }
+});
+
+// js/palette/intent-filter.js
+function createIntentFilter(dialog, list, status) {
+  return new IntentFilter(dialog, list, status);
 }
+var LATE_STEP, IntentFilter;
 var init_intent_filter = __esm({
   "js/palette/intent-filter.js"() {
     "use strict";
     init_listbox();
     init_strings();
     init_intent();
-    init_state_plate();
     init_busy_card();
+    init_intent_dom();
+    init_intent_rank();
+    init_intent_plate();
+    LATE_STEP = 1e-3;
+    IntentFilter = class {
+      /** @param {HTMLDialogElement} dialog @param {HTMLElement} list @param {HTMLElement | null} status */
+      constructor(dialog, list, status) {
+        this.dialog = dialog;
+        this.list = list;
+        this.status = status;
+        this.doc = dialog.ownerDocument;
+        this.origin = /* @__PURE__ */ new WeakMap();
+        this.groupOrigin = /* @__PURE__ */ new WeakMap();
+        this.busy = null;
+        this.state = "ready";
+        this.stateOptions = {};
+        this.plate = new ListPlate(dialog, list);
+      }
+      /** @returns {IntentMode} */
+      mode() {
+        const dialog = this.dialog;
+        return {
+          foldDiacritics: dialog.dataset.kpFoldDiacritics !== "off",
+          splitHyphen: dialog.dataset.kpSplitHyphen !== "off",
+          typo: (
+            /** @type {0 | 1} */
+            dialog.dataset.kpTypo === "1" ? 1 : 0
+          )
+        };
+      }
+      /** @param {HTMLElement[]} options */
+      assignOrigins(options) {
+        let previous = -1;
+        options.forEach((option, index) => {
+          let at = this.origin.get(option);
+          if (at === void 0) {
+            at = previous < 0 ? index : previous + LATE_STEP;
+            this.origin.set(option, at);
+          }
+          previous = at;
+        });
+        for (const [index, group] of [...this.list.querySelectorAll("[data-kp-group]")].entries()) if (!this.groupOrigin.has(group)) this.groupOrigin.set(group, index);
+      }
+      recentKey() {
+        return `kp-recent:palette:${this.dialog.id || "palette"}`;
+      }
+      /** The values chosen last, newest first. @returns {string[]} */
+      readRecent() {
+        try {
+          const raw = JSON.parse(globalThis.localStorage?.getItem(this.recentKey()) ?? "[]");
+          return Array.isArray(raw) ? raw.map(String) : [];
+        } catch {
+          return [];
+        }
+      }
+      /**
+       * Filter, rank and mark for `rawQuery`.
+       * @param {string} rawQuery
+       * @returns {number} how many commands are shown
+       */
+      run(rawQuery) {
+        const mode2 = this.mode();
+        const want = queryWords(rawQuery, mode2);
+        this.plate.measure();
+        const options = (
+          /** @type {HTMLElement[]} */
+          [...this.list.querySelectorAll(OPTION_SELECTOR)]
+        );
+        this.assignOrigins(options);
+        const { items, startSet } = rankCommands2(this, options, want, mode2);
+        const total = items.filter((it) => it.score >= 0).length;
+        orderCommands(this, items, want);
+        const shown5 = this.show(items, want, mode2, want.length > 0 || startSet);
+        this.writeStatus(shown5, total);
+        this.plateFor(rawQuery, want, mode2, options, shown5);
+        return shown5;
+      }
+      /**
+       * Which are shown: the answers, up to the cap when a query (or a start set) narrows them; the shown ones marked.
+       * @param {Ranked[]} items @param {string[]} want @param {IntentMode} mode @param {boolean} capped
+       * @returns {number} how many are shown
+       */
+      show(items, want, mode2, capped) {
+        const { list, dialog, doc } = this;
+        const max = Math.max(1, Number(dialog.dataset.kpMaxShown) || INTENT_MAX_SHOWN);
+        const byOption = new Map(items.map((it) => [it.option, it]));
+        let shownCount = 0;
+        for (
+          const option of
+          /** @type {HTMLElement[]} */
+          [...list.querySelectorAll(OPTION_SELECTOR)]
+        ) {
+          let show = (byOption.get(option)?.score ?? -1) >= 0;
+          if (show && capped && shownCount >= max) show = false;
+          if (show) shownCount += 1;
+          setHidden(option, !show);
+          const unit2 = unitOf(list, option);
+          if (unit2 !== option) setHidden(unit2, !show);
+          clearMarks2(doc, option);
+          if (show && want.length > 0 && dialog.dataset.kpHighlight !== "off") markWords(doc, option, want, mode2);
+        }
+        for (
+          const group of
+          /** @type {HTMLElement[]} */
+          [...list.querySelectorAll("[data-kp-group]")]
+        )
+          setHidden(group, group.querySelector(`${OPTION_SELECTOR}:not([hidden])`) === null);
+        return shownCount;
+      }
+      /** The status line is exact; a cap says so. @param {number} shown @param {number} total */
+      writeStatus(shown5, total) {
+        if (this.status === null) return;
+        const s2 = getStrings();
+        this.status.textContent = shown5 < total ? s2.paletteCapped(shown5, total) : shown5 === 0 ? s2.noCommands : shown5 === 1 ? s2.oneCommand : s2.manyCommands(shown5);
+      }
+      /**
+       * A failed list stands the failed plate above the commands that stay; a query that found nothing, with `data-kp-nomatch="plate"`,
+       * the empty plate that says what to try.
+       * @param {string} rawQuery @param {string[]} want @param {IntentMode} mode @param {HTMLElement[]} options @param {number} shown
+       */
+      plateFor(rawQuery, want, mode2, options, shown5) {
+        const { dialog } = this;
+        const s2 = getStrings();
+        if (this.state === "error") return this.plate.show("error", s2.paletteFailed, this.stateOptions.message ?? s2.paletteFailedText, false);
+        if (shown5 > 0 || want.length === 0 || dialog.dataset.kpNomatch !== "plate") return this.plate.hide();
+        const verbs = [...new Set(options.map((o) => o.dataset.kpVerb).filter((v) => v))];
+        const verb = verbs.find((v) => want.length > 1 && intentWords(v ?? "", mode2)[0]?.startsWith(want[0]));
+        const subjects = verb ? options.filter((o) => o.dataset.kpVerb === verb).map((o) => o.dataset.kpContextOf ?? "").filter(Boolean) : [];
+        const hints = { verbs: verb ? [verb] : [], subjects, noun: dialog.dataset.kpSubjectName ?? "", hint: dialog.dataset.kpNomatchHint ?? "" };
+        this.plate.show("empty", s2.paletteNothing, noMatchText(rawQuery, hints, mode2), true);
+      }
+      /** @param {'ready' | 'loading' | 'error'} next @param {{ message?: string }} [options] */
+      setState(next2, options = {}) {
+        const list = this.list;
+        this.state = next2;
+        this.stateOptions = options;
+        if (next2 === "loading" && !this.busy) {
+          list.setAttribute("aria-busy", "true");
+          this.busy = openBusyCard(list, { words: getStrings().paletteLoading, area: () => [list], className: "kp-palette__busy", arrive: this.dialog.open });
+        } else if (next2 !== "loading" && this.busy) {
+          list.removeAttribute("aria-busy");
+          const closing2 = this.busy;
+          this.busy = null;
+          void closing2.close();
+        }
+      }
+      /** Remember a chosen value, when the palette keeps `data-kp-recent` of them. @param {string} value */
+      remember(value) {
+        const n = Number(this.dialog.dataset.kpRecent) || 0;
+        if (n <= 0 || value === "") return;
+        try {
+          globalThis.localStorage?.setItem(this.recentKey(), JSON.stringify([value, ...this.readRecent().filter((v) => v !== value)].slice(0, n)));
+        } catch {
+        }
+      }
+      /** Give everything back: the busy card, the plate, the marks, the label wraps and the markup's own order. */
+      destroy() {
+        const { list, doc } = this;
+        this.busy?.remove();
+        this.busy = null;
+        list.removeAttribute("aria-busy");
+        this.plate.remove();
+        const options = (
+          /** @type {HTMLElement[]} */
+          [...list.querySelectorAll(OPTION_SELECTOR)]
+        );
+        for (const option of options) {
+          clearMarks2(doc, option);
+          for (const label2 of option.querySelectorAll(":scope > .kp-palette__label[data-kp-generated]")) label2.replaceWith(...label2.childNodes);
+          option.normalize();
+        }
+        this.restoreOrder(options);
+      }
+      /** @param {HTMLElement[]} options */
+      restoreOrder(options) {
+        const { list, doc, origin } = this;
+        const containers = /* @__PURE__ */ new Map();
+        for (const option of options) {
+          const unit2 = unitOf(list, option);
+          const parent = (
+            /** @type {HTMLElement} */
+            unit2.parentElement
+          );
+          containers.set(parent, [...containers.get(parent) ?? [], unit2]);
+        }
+        const at = (u) => origin.get(
+          /** @type {Element} */
+          u.matches(OPTION_SELECTOR) ? u : u.querySelector(OPTION_SELECTOR)
+        ) ?? 0;
+        for (const [, units] of containers) place(doc, units.slice().sort((a, b) => at(a) - at(b)));
+        const groups = (
+          /** @type {HTMLElement[]} */
+          [...list.querySelectorAll("[data-kp-group]")]
+        );
+        place(doc, groups.slice().sort((a, b) => (this.groupOrigin.get(a) ?? 0) - (this.groupOrigin.get(b) ?? 0)));
+      }
+    };
+  }
+});
+
+// js/palette/plain-filter.js
+function filterPlain(list, status, matcher, query) {
+  let visible3 = 0;
+  for (const element of list.querySelectorAll(OPTION_SELECTOR)) {
+    const option = (
+      /** @type {HTMLElement} */
+      element
+    );
+    const text = [...option.childNodes].filter((n) => !(n instanceof HTMLElement && n.tagName === "KBD")).map((n) => n.textContent ?? "").join("");
+    const shown5 = matcher(text.trim(), query);
+    option.hidden = !shown5;
+    if (shown5) visible3 += 1;
+  }
+  for (const element of list.querySelectorAll(GROUP)) {
+    const group = (
+      /** @type {HTMLElement} */
+      element
+    );
+    group.hidden = group.querySelector(`${OPTION_SELECTOR}:not([hidden])`) === null;
+  }
+  if (status !== null) status.textContent = RESULTS_TEXT2(visible3);
+  return visible3;
+}
+var init_plain_filter = __esm({
+  "js/palette/plain-filter.js"() {
+    "use strict";
+    init_listbox();
+    init_constants19();
+  }
+});
+
+// js/palette/palette-control.js
+var PaletteControl;
+var init_palette_control = __esm({
+  "js/palette/palette-control.js"() {
+    "use strict";
+    init_controller();
+    init_listbox();
+    init_strings();
+    init_live_options();
+    init_api14();
+    init_constants19();
+    init_intent_filter();
+    init_keys8();
+    init_outside();
+    init_plain_filter();
+    PaletteControl = class extends Controller {
+      /** @param {HTMLElement} host @param {PaletteOptions} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        const dialog = (
+          /** @type {HTMLDialogElement} */
+          host
+        );
+        this.dialog = dialog;
+        this.input = /** @type {HTMLInputElement} */
+        dialog.querySelector(INPUT2);
+        this.list = /** @type {HTMLElement} */
+        dialog.querySelector(LIST3);
+        this.status = /** @type {HTMLElement | null} */
+        dialog.querySelector(STATUS3);
+        this.match = options.match ?? "intent";
+        this.key = dialog.dataset.kpHotkey === "none" ? null : dialog.dataset.kpHotkey ?? options.hotkey ?? null;
+        this.clears = dialog.dataset.kpClearOnClose === void 0 ? options.clearOnClose ?? true : dialog.dataset.kpClearOnClose !== "false";
+        this.closes = dialog.dataset.kpCloseOnRun === void 0 ? options.closeOnRun ?? true : dialog.dataset.kpCloseOnRun !== "false";
+        this.matcher = MATCHERS2.substring;
+        this.intent = null;
+        this.lastSet = null;
+        this.clicking = null;
+        this.listbox = null;
+        this.handle = {
+          element: dialog,
+          open: (query) => this.open(query),
+          close: () => dialog.close(),
+          refresh: () => this.filter(),
+          setState: (state12, opts) => this.setState(state12, opts)
+        };
+      }
+      connect() {
+        const { dialog, list, input } = this;
+        dialog.dataset.kpPaletteAttached = "";
+        this.own(() => this.restore());
+        this.chooseMatcher();
+        this.renderKeys();
+        this.listen(list, "click", (event) => this.clicking = /** @type {MouseEvent} */
+        event, true);
+        this.listbox = createListbox({ input, list, onChoose: (_, option) => this.choose(option), onDismiss: () => dialog.close() });
+        this.listen(list, "click", () => this.clicking = null);
+        this.untab();
+        this.listen(input, "input", () => this.filter());
+        this.listen(dialog, "close", () => this.onClose());
+        this.own(closeOnOutsidePress(dialog));
+        if (this.key !== null) this.listen(document, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(document, "click", (event) => openerFor(event, dialog, answers(PALETTE, dialog)) && this.open());
+        this.stampOpeners();
+        this.filter();
+        this.own(watchOptions(dialog, ["data-kp-match"], () => this.onMatch()));
+        handles4.set(dialog, this.handle);
+      }
+      /** Put back what the palette changed: the commands shown again, the key hints taken off, the dialog closed and unmarked. */
+      restore() {
+        const { dialog, list } = this;
+        this.intent?.destroy();
+        this.listbox?.destroy();
+        for (const el16 of list.querySelectorAll(OPTION_SELECTOR)) el16.hidden = false;
+        for (const el16 of list.querySelectorAll(GROUP)) el16.hidden = false;
+        for (const el16 of list.querySelectorAll("kbd[data-kp-generated]")) el16.remove();
+        if (dialog.open) dialog.close();
+        handles4.delete(dialog);
+        delete dialog.dataset.kpPaletteAttached;
+      }
+      /**
+       * `data-kp-match` is read again when it changes [live-options-1019]. Words in any order is the default [kpadopt6-ops]: the
+       * palette ranks, marks and caps itself.
+       */
+      chooseMatcher() {
+        const { dialog, match } = this;
+        this.matcher = typeof match === "function" ? match : MATCHERS2[dialog.dataset.kpMatch ?? match] ?? MATCHERS2.substring;
+        this.intent = typeof match !== "function" && (dialog.dataset.kpMatch ?? match) === "intent" ? createIntentFilter(dialog, this.list, this.status) : null;
+      }
+      /** The old filter gives the commands back (order, marks, hidden), then the new one draws the list. */
+      onMatch() {
+        if (typeof this.match === "function") return;
+        const carried = this.lastSet;
+        this.intent?.destroy();
+        this.chooseMatcher();
+        if (this.intent !== null && carried !== null) this.intent.setState(carried.state, carried.options ?? {});
+        this.filter();
+      }
+      /** data-kp-keys, rendered: the documented attribute nothing read. */
+      renderKeys() {
+        for (const element of this.list.querySelectorAll(`${OPTION_SELECTOR}[data-kp-keys]`)) {
+          const option = (
+            /** @type {HTMLElement} */
+            element
+          );
+          if (option.querySelector("kbd") !== null) continue;
+          const kbd = document.createElement("kbd");
+          kbd.className = "kp-palette__keys";
+          kbd.textContent = option.dataset.kpKeys ?? "";
+          kbd.dataset.kpGenerated = "";
+          option.append(kbd);
+        }
+      }
+      /** A link option is pointed at, never tabbed to [scope-48]. */
+      untab() {
+        for (const element of this.list.querySelectorAll(`a${OPTION_SELECTOR}[href]:not([tabindex])`)) {
+          element.setAttribute("tabindex", "-1");
+          this.own(() => element.removeAttribute("tabindex"));
+        }
+      }
+      /** Filter for what is typed: the intent filter, or the plain matcher. */
+      filter() {
+        const listbox = (
+          /** @type {ReturnType<typeof createListbox>} */
+          this.listbox
+        );
+        const query = this.input.value.trim();
+        const shown5 = this.intent !== null ? this.intent.run(query) : filterPlain(this.list, this.status, this.matcher, query);
+        listbox.refresh();
+        if (shown5 > 0) listbox.highlight(0);
+      }
+      /** @param {'ready' | 'loading' | 'error'} state @param {{ message?: string }} [options] */
+      setState(state12, options) {
+        this.lastSet = { state: state12, ...options ? { options } : {} };
+        this.intent?.setState(state12, options);
+        this.filter();
+      }
+      /** @param {HTMLElement} option */
+      choose(option) {
+        const dialog = this.dialog;
+        const link = option instanceof HTMLAnchorElement && option.hasAttribute("href") ? option : null;
+        if (link !== null && this.clicking === null) {
+          link.click();
+          return;
+        }
+        const value = option.dataset.value ?? (option.textContent ?? "").trim();
+        const run = new CustomEvent(RUN_EVENT, { bubbles: true, cancelable: true, detail: { value, option, href: link?.href ?? null } });
+        dialog.dispatchEvent(run);
+        if (!run.defaultPrevented) this.intent?.remember(value);
+        if (run.defaultPrevented && link !== null) this.clicking?.preventDefault();
+        if (this.closes) dialog.close();
+      }
+      /** @param {string} [query] */
+      open(query) {
+        const { dialog, input } = this;
+        if (dialog.open) return;
+        if (query !== void 0) input.value = query;
+        dialog.showModal();
+        this.filter();
+        input.focus();
+        dialog.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: true } }));
+      }
+      /**
+       * Reopening with the last query still in the box is a small trap: the list looks filtered for no visible reason. The close
+       * event arrives a task later: a palette opened again with a query in between keeps that query.
+       */
+      onClose() {
+        if (this.clears && !this.dialog.open) {
+          this.input.value = "";
+          this.filter();
+        }
+        this.dialog.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: false } }));
+      }
+      /**
+       * Only ONE palette answers the key: the nominated one, else the first in the document. Found by the contract suite: with a
+       * palette from each channel on one page, both handlers fired and the second showModal() landed on top of the first.
+       * @param {KeyboardEvent} event
+       */
+      onKey(event) {
+        if (this.key === null || !isHotkey(event, this.key) || !answers(PALETTE, this.dialog)) return;
+        event.preventDefault();
+        if (this.dialog.open) this.dialog.close();
+        else this.open();
+      }
+      /** The triggers that open this palette say so, and print its key [scope-48]. Only what the markup left out is written, and only that is taken back. */
+      stampOpeners() {
+        const { dialog, key } = this;
+        const mac = isMac4();
+        for (const opener of document.querySelectorAll(OPENER)) {
+          const name = opener.getAttribute("data-kp-palette-open") ?? "";
+          if (name === "" ? !answers(PALETTE, dialog) : name !== dialog.id) continue;
+          const stamp4 = (attribute, value) => {
+            if (opener.hasAttribute(attribute)) return;
+            opener.setAttribute(attribute, value);
+            this.own(() => opener.removeAttribute(attribute));
+          };
+          stamp4("aria-haspopup", "dialog");
+          if (key === null) continue;
+          stamp4("aria-keyshortcuts", `${mac ? "Meta" : "Control"}+${key.toUpperCase()}`);
+          for (const slot of opener.querySelectorAll(KEYS_SLOT)) {
+            if ((slot.textContent ?? "").trim() !== "") continue;
+            slot.textContent = getStrings().paletteHotkey(key, mac);
+            this.own(() => slot.textContent = "");
+          }
+        }
+      }
+    };
+  }
+});
+
+// js/palette/sheet.js
+var SheetControl;
+var init_sheet2 = __esm({
+  "js/palette/sheet.js"() {
+    "use strict";
+    init_controller();
+    init_api14();
+    init_constants19();
+    init_keys8();
+    init_outside();
+    SheetControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ sheetKey?: string | null, typingSelector?: string }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.sheet = /** @type {HTMLDialogElement} */
+        host;
+        this.key = host.dataset.kpHotkey === "none" ? null : host.dataset.kpHotkey ?? options.sheetKey ?? null;
+        this.typingSelector = options.typingSelector ?? "";
+        this.handle = { element: this.sheet, open: () => this.open(), close: () => this.sheet.close(), refresh: () => {
+        }, setState: () => {
+        } };
+      }
+      connect() {
+        const sheet = this.sheet;
+        sheet.dataset.kpShortcutsAttached = "";
+        this.own(() => {
+          if (sheet.open) sheet.close();
+          handles4.delete(sheet);
+          delete sheet.dataset.kpShortcutsAttached;
+        });
+        handles4.set(sheet, this.handle);
+        if (this.key !== null) this.listen(document, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(document, "click", (event) => {
+          if (openerFor(event, sheet, false)) this.open();
+        });
+        this.listen(sheet, "close", () => sheet.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: false } })));
+        this.own(closeOnOutsidePress(sheet));
+      }
+      open() {
+        const sheet = this.sheet;
+        if (sheet.open) return;
+        sheet.showModal();
+        sheet.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: true } }));
+      }
+      /** `?` only when nobody is typing one into a field, and never with a modifier — Ctrl+? belongs to the browser. @param {KeyboardEvent} event */
+      onKey(event) {
+        if (this.key === null || event.key !== this.key || event.ctrlKey || event.metaKey || event.altKey) return;
+        if (isTyping(event.target, this.typingSelector)) return;
+        if (!answers(SHEET, this.sheet)) return;
+        event.preventDefault();
+        if (this.sheet.open) this.sheet.close();
+        else this.open();
+      }
+    };
   }
 });
 
@@ -42241,268 +42655,31 @@ function attachPalettes(root = document, {
   closeOnRun = true,
   typingSelector = 'input, textarea, select, [role="textbox"]'
 } = {}) {
-  const cleanups = [];
-  const created = [];
-  const answers = (selector, me) => {
-    const nominated = document.querySelector(`${selector}[data-kp-primary]`);
-    return (nominated ?? document.querySelector(selector)) === me;
-  };
-  for (const element of root.querySelectorAll(PALETTE)) {
-    const dialog = element;
-    if (!(dialog instanceof HTMLDialogElement) || dialog.dataset.kpPaletteAttached !== void 0) continue;
-    const input = (
-      /** @type {HTMLInputElement | null} */
-      dialog.querySelector(INPUT2)
-    );
-    const list = (
-      /** @type {HTMLElement | null} */
-      dialog.querySelector(LIST3)
-    );
-    if (input === null || list === null) continue;
-    dialog.dataset.kpPaletteAttached = "";
-    const status = (
-      /** @type {HTMLElement | null} */
-      dialog.querySelector(STATUS3)
-    );
-    const key = dialog.dataset.kpHotkey === "none" ? null : dialog.dataset.kpHotkey ?? hotkey;
-    const clears = dialog.dataset.kpClearOnClose === void 0 ? clearOnClose : dialog.dataset.kpClearOnClose !== "false";
-    const closes = dialog.dataset.kpCloseOnRun === void 0 ? closeOnRun : dialog.dataset.kpCloseOnRun !== "false";
-    let matcher = MATCHERS2.substring;
-    let intent = null;
-    const chooseMatcher = () => {
-      matcher = typeof match === "function" ? match : MATCHERS2[dialog.dataset.kpMatch ?? match] ?? MATCHERS2.substring;
-      intent = typeof match !== "function" && (dialog.dataset.kpMatch ?? match) === "intent" ? createIntentFilter(dialog, list, status) : null;
-    };
-    chooseMatcher();
-    let lastSet = null;
-    for (const element2 of list.querySelectorAll(`${OPTION_SELECTOR}[data-kp-keys]`)) {
-      const option = (
-        /** @type {HTMLElement} */
-        element2
-      );
-      if (option.querySelector("kbd") !== null) continue;
-      const kbd = document.createElement("kbd");
-      kbd.className = "kp-palette__keys";
-      kbd.textContent = option.dataset.kpKeys ?? "";
-      kbd.dataset.kpGenerated = "";
-      option.append(kbd);
-    }
-    const filter = () => {
-      const query = input.value.trim();
-      if (intent !== null) {
-        const shown5 = intent.run(query);
-        listbox.refresh();
-        if (shown5 > 0) listbox.highlight(0);
-        return;
-      }
-      let visible3 = 0;
-      for (const element2 of list.querySelectorAll(OPTION_SELECTOR)) {
-        const option = (
-          /** @type {HTMLElement} */
-          element2
-        );
-        const text = [...option.childNodes].filter((n) => !(n instanceof HTMLElement && n.tagName === "KBD")).map((n) => n.textContent ?? "").join("");
-        const shown5 = matcher(text.trim(), query);
-        option.hidden = !shown5;
-        if (shown5) visible3 += 1;
-      }
-      for (const element2 of list.querySelectorAll(GROUP)) {
-        const group = (
-          /** @type {HTMLElement} */
-          element2
-        );
-        group.hidden = group.querySelector(`${OPTION_SELECTOR}:not([hidden])`) === null;
-      }
-      listbox.refresh();
-      if (visible3 > 0) listbox.highlight(0);
-      if (status !== null) status.textContent = RESULTS_TEXT2(visible3);
-    };
-    let clicking = null;
-    const onClickStart = (event) => {
-      clicking = event;
-    };
-    const onClickEnd = () => {
-      clicking = null;
-    };
-    list.addEventListener("click", onClickStart, true);
-    const listbox = createListbox({
-      input,
-      list,
-      onChoose: (_, option) => {
-        const link = option instanceof HTMLAnchorElement && option.hasAttribute("href") ? option : null;
-        if (link !== null && clicking === null) {
-          link.click();
-          return;
-        }
-        const value = option.dataset.value ?? (option.textContent ?? "").trim();
-        const run = new CustomEvent(RUN_EVENT, { bubbles: true, cancelable: true, detail: { value, option, href: link?.href ?? null } });
-        dialog.dispatchEvent(run);
-        if (!run.defaultPrevented) intent?.remember(value);
-        if (run.defaultPrevented && link !== null) clicking?.preventDefault();
-        if (closes) dialog.close();
-      },
-      onDismiss: () => dialog.close()
-    });
-    list.addEventListener("click", onClickEnd);
-    const untabbed = [];
-    for (const element2 of list.querySelectorAll(`a${OPTION_SELECTOR}[href]:not([tabindex])`)) {
-      element2.setAttribute("tabindex", "-1");
-      untabbed.push(
-        /** @type {HTMLElement} */
-        element2
-      );
-    }
-    const openWith = (query) => {
-      if (dialog.open) return;
-      if (query !== void 0) input.value = query;
-      dialog.showModal();
-      filter();
-      input.focus();
-      dialog.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: true } }));
-    };
-    const onInput = () => filter();
-    input.addEventListener("input", onInput);
-    const onClose = () => {
-      if (clears && !dialog.open) {
-        input.value = "";
-        filter();
-      }
-      dialog.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: false } }));
-    };
-    dialog.addEventListener("close", onClose);
-    const releaseOutside = closeOnOutsidePress(dialog);
-    const onKey5 = (event) => {
-      if (key === null || !isHotkey(event, key)) return;
-      if (!answers(PALETTE, dialog)) return;
-      event.preventDefault();
-      if (dialog.open) dialog.close();
-      else openWith();
-    };
-    if (key !== null) document.addEventListener("keydown", onKey5);
-    const onOpener = (event) => {
-      if (!openerFor(event, dialog, answers(PALETTE, dialog))) return;
-      openWith();
-    };
-    document.addEventListener("click", onOpener);
-    const unstamp = [];
-    const mac = isMac4();
-    for (const opener of document.querySelectorAll(OPENER)) {
-      const name = opener.getAttribute("data-kp-palette-open") ?? "";
-      if (name === "" ? !answers(PALETTE, dialog) : name !== dialog.id) continue;
-      const stamp4 = (attribute, value) => {
-        if (opener.hasAttribute(attribute)) return;
-        opener.setAttribute(attribute, value);
-        unstamp.push(() => opener.removeAttribute(attribute));
-      };
-      stamp4("aria-haspopup", "dialog");
-      if (key === null) continue;
-      stamp4("aria-keyshortcuts", `${mac ? "Meta" : "Control"}+${key.toUpperCase()}`);
-      for (const slot of opener.querySelectorAll(KEYS_SLOT)) {
-        if ((slot.textContent ?? "").trim() !== "") continue;
-        slot.textContent = getStrings().paletteHotkey(key, mac);
-        unstamp.push(() => slot.textContent = "");
-      }
-    }
-    filter();
-    const stopMatch = watchOptions(dialog, ["data-kp-match"], () => {
-      if (typeof match === "function") return;
-      const carried = lastSet;
-      intent?.destroy();
-      chooseMatcher();
-      if (intent !== null && carried !== null) intent.setState(carried.state, carried.options ?? {});
-      filter();
-    });
-    const handle = {
-      element: dialog,
-      open: openWith,
-      close: () => dialog.close(),
-      refresh: filter,
-      setState: (state12, options) => {
-        lastSet = { state: state12, ...options ? { options } : {} };
-        intent?.setState(state12, options);
-        filter();
-      }
-    };
-    handles4.set(dialog, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      stopMatch();
-      intent?.destroy();
-      listbox.destroy();
-      list.removeEventListener("click", onClickStart, true);
-      list.removeEventListener("click", onClickEnd);
-      for (const el16 of untabbed) el16.removeAttribute("tabindex");
-      for (const undo of unstamp) undo();
-      input.removeEventListener("input", onInput);
-      dialog.removeEventListener("close", onClose);
-      releaseOutside();
-      document.removeEventListener("keydown", onKey5);
-      document.removeEventListener("click", onOpener);
-      for (const el16 of list.querySelectorAll(OPTION_SELECTOR)) el16.hidden = false;
-      for (const el16 of list.querySelectorAll(GROUP)) el16.hidden = false;
-      for (const el16 of list.querySelectorAll("kbd[data-kp-generated]")) el16.remove();
-      if (dialog.open) dialog.close();
-      handles4.delete(dialog);
-      delete dialog.dataset.kpPaletteAttached;
-    });
-  }
-  for (const element of root.querySelectorAll(SHEET)) {
-    const sheet = element;
-    if (!(sheet instanceof HTMLDialogElement) || sheet.dataset.kpShortcutsAttached !== void 0) continue;
-    sheet.dataset.kpShortcutsAttached = "";
-    const key = sheet.dataset.kpHotkey === "none" ? null : sheet.dataset.kpHotkey ?? sheetKey;
-    const openSheet = () => {
-      if (sheet.open) return;
-      sheet.showModal();
-      sheet.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: true } }));
-    };
-    const onClose = () => sheet.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: false } }));
-    const onKey5 = (event) => {
-      if (key === null || event.key !== key || event.ctrlKey || event.metaKey || event.altKey) return;
-      if (isTyping(event.target, typingSelector)) return;
-      if (!answers(SHEET, sheet)) return;
-      event.preventDefault();
-      if (sheet.open) sheet.close();
-      else openSheet();
-    };
-    if (key !== null) document.addEventListener("keydown", onKey5);
-    const onOpener = (event) => {
-      if (openerFor(event, sheet, false)) openSheet();
-    };
-    document.addEventListener("click", onOpener);
-    sheet.addEventListener("close", onClose);
-    const releaseOutside = closeOnOutsidePress(sheet);
-    const handle = { element: sheet, open: openSheet, close: () => sheet.close(), refresh: () => {
-    }, setState: () => {
-    } };
-    handles4.set(sheet, handle);
-    created.push(handle);
-    cleanups.push(() => {
-      document.removeEventListener("keydown", onKey5);
-      document.removeEventListener("click", onOpener);
-      sheet.removeEventListener("close", onClose);
-      releaseOutside();
-      if (sheet.open) sheet.close();
-      handles4.delete(sheet);
-      delete sheet.dataset.kpShortcutsAttached;
-    });
-  }
+  const palettes = [...root.querySelectorAll(PALETTE)].filter((dialog) => dialog instanceof HTMLDialogElement && !("kpPaletteAttached" in dialog.dataset)).filter((dialog) => dialog.querySelector(INPUT2) !== null && dialog.querySelector(LIST3) !== null).map((dialog) => attachOne(
+    /** @type {HTMLDialogElement} */
+    dialog,
+    PaletteControl,
+    { hotkey, match, clearOnClose, closeOnRun }
+  ));
+  const sheets = [...root.querySelectorAll(SHEET)].filter((sheet) => sheet instanceof HTMLDialogElement && !("kpShortcutsAttached" in sheet.dataset)).map((sheet) => attachOne(
+    /** @type {HTMLDialogElement} */
+    sheet,
+    SheetControl,
+    { sheetKey, typingSelector }
+  ));
+  const made6 = [...palettes, ...sheets].filter((control) => control !== void 0);
   const detach = () => {
-    for (const c of cleanups) c();
+    for (const control of made6) control.destroy();
   };
-  return Object.assign(detach, { handles: created });
+  return Object.assign(detach, { handles: made6.map((control) => control.handle) });
 }
 var init_attach11 = __esm({
   "js/palette/attach.js"() {
     "use strict";
-    init_listbox();
-    init_strings();
-    init_live_options();
-    init_api14();
+    init_controller();
     init_constants19();
-    init_intent_filter();
-    init_keys8();
-    init_outside();
+    init_palette_control();
+    init_sheet2();
   }
 });
 
@@ -43485,7 +43662,7 @@ function installBusy(c) {
       c.overlayClock.textContent = s2.tableBusyElapsed(busySeconds());
       panel.append(c.overlayClock);
     }
-    const place3 = () => {
+    const place4 = () => {
       const head = table.tHead;
       const hostBox = host.getBoundingClientRect();
       const body = (table.tBodies[0] ?? table).getBoundingClientRect();
@@ -43519,17 +43696,17 @@ function installBusy(c) {
     };
     layer.append(panel);
     host.append(layer);
-    place3();
+    place4();
     if (typeof ResizeObserver === "function") {
-      const watcher = new ResizeObserver(() => place3());
+      const watcher = new ResizeObserver(() => place4());
       watcher.observe(host);
       watcher.observe(table);
       if (table.tHead !== null) watcher.observe(table.tHead);
       const scrollers = scrollersAround(host);
-      for (const scroller of scrollers) scroller.addEventListener("scroll", place3, { passive: true });
+      for (const scroller of scrollers) scroller.addEventListener("scroll", place4, { passive: true });
       c.overlayUnwatch = () => {
         watcher.disconnect();
-        for (const scroller of scrollers) scroller.removeEventListener("scroll", place3);
+        for (const scroller of scrollers) scroller.removeEventListener("scroll", place4);
       };
     }
     c.overlayLayer = layer;
@@ -46753,7 +46930,7 @@ function installHandlers(c) {
     else render7();
   };
   c.setPageSize = setPageSize;
-  const setHidden = (next2) => {
+  const setHidden2 = (next2) => {
     c.hiddenColumns = new Set([...next2].filter((at) => headers[at] !== void 0 && !locked[at] && !controlColumn(at)));
     memory?.write(
       "columns",
@@ -46763,7 +46940,7 @@ function installHandlers(c) {
     wrap.dispatchEvent(new CustomEvent(COLUMNS_EVENT, { bubbles: true, detail: { hidden: [...c.hiddenColumns].sort((a, b) => a - b) } }));
     render7();
   };
-  c.setHidden = setHidden;
+  c.setHidden = setHidden2;
   const onColumnChange = (event) => {
     const box = (
       /** @type {HTMLInputElement} */
@@ -46774,14 +46951,14 @@ function installHandlers(c) {
     const next2 = new Set(c.hiddenColumns);
     if (box.checked) next2.delete(at);
     else next2.add(at);
-    setHidden(next2);
+    setHidden2(next2);
   };
   c.onColumnChange = onColumnChange;
   const onColumnClick = (event) => {
     if (
       /** @type {HTMLElement} */
       event.target.closest("[data-kp-datatable-columns-reset]") !== null
-    ) setHidden([]);
+    ) setHidden2([]);
   };
   c.onColumnClick = onColumnClick;
 }
@@ -47572,7 +47749,7 @@ function installHandle2(c) {
     serverSelection,
     setDensity,
     setFilter,
-    setHidden,
+    setHidden: setHidden2,
     setPageSize,
     setSort,
     sortsSeveral,
@@ -47620,7 +47797,7 @@ function installHandle2(c) {
         c.toggle.setAttribute("aria-expanded", String(!c.panel.hidden));
       }
     },
-    hideColumns: (columns2) => setHidden(columns2),
+    hideColumns: (columns2) => setHidden2(columns2),
     expand: expandKeys,
     fold: (keys) => {
       foldKeys(keys);
@@ -49766,7 +49943,7 @@ var init_values26 = __esm({
 });
 
 // js/gridlayout/place.js
-function place(tile) {
+function place2(tile) {
   const x = Number(tile.dataset.x ?? 0);
   const y = Number(tile.dataset.y ?? 0);
   const w = Number(tile.dataset.w ?? 1);
@@ -49838,7 +50015,7 @@ function applyLayout(grid2, layout3) {
     tile.dataset.h = String(Math.max(1, entry.h));
     tile.dataset.x = String(Math.max(0, Math.min(entry.x, columns2 - w)));
     tile.dataset.y = String(Math.max(0, entry.y));
-    place(tile);
+    place2(tile);
   }
 }
 var init_layout2 = __esm({
@@ -49912,7 +50089,7 @@ var init_controller36 = __esm({
         this.own(() => clearTimeout(this.timer));
       }
       placeAll() {
-        for (const tile of this.host.querySelectorAll(TILE)) place(
+        for (const tile of this.host.querySelectorAll(TILE)) place2(
           /** @type {HTMLElement} */
           tile
         );
@@ -49933,7 +50110,7 @@ var init_controller36 = __esm({
         tile.dataset.h = String(height);
         tile.dataset.x = String(Math.max(0, Math.min(nx, columns2 - width)));
         tile.dataset.y = String(Math.max(0, Math.min(ny, maxRows - height)));
-        place(tile);
+        place2(tile);
         this.announce();
       }
       /** @param {KeyboardEvent} event */
@@ -52943,7 +53120,7 @@ __export(barcell_exports, {
   attachBarCells: () => attachBarCells,
   setBarCell: () => setBarCell
 });
-function partOf(el16, className, place3) {
+function partOf(el16, className, place4) {
   const found = (
     /** @type {HTMLElement | null} */
     el16.querySelector(`:scope > .${className}`)
@@ -52951,7 +53128,7 @@ function partOf(el16, className, place3) {
   if (found) return found;
   const part7 = el16.ownerDocument.createElement("span");
   part7.className = className;
-  el16[place3](part7);
+  el16[place4](part7);
   return part7;
 }
 function autoTone(value, warnAt, badAt) {
@@ -54789,7 +54966,7 @@ function measureLanes(c) {
 function setProp(el16, name, value) {
   if (el16.style.getPropertyValue(name) !== value) el16.style.setProperty(name, value);
 }
-function place2(c, el16, item, row2) {
+function place3(c, el16, item, row2) {
   const top = c.laneTops.find((l) => l.id === item.lane)?.top ?? 0;
   setProp(el16, "--kp-g-s", String(item.start));
   setProp(el16, "--kp-g-e", String(round(item.start + item.duration)));
@@ -55068,7 +55245,7 @@ function paint8(c, { fit: fit2 = true } = {}) {
   syncBars(c, c.view);
   for (const item of c.view) {
     const bar = c.bars.get(item.id);
-    if (bar) place2(c, bar, item, c.rows.rows.get(item.id) ?? 0);
+    if (bar) place3(c, bar, item, c.rows.rows.get(item.id) ?? 0);
   }
   syncJoins(c, c.view);
   placeLabels(c);
@@ -55104,7 +55281,7 @@ function drawDraft(c, list, ids2, refit = false) {
     const bar = c.bars.get(id);
     if (!item || !bar) continue;
     const before = c.items.find((i) => i.id === id);
-    place2(c, bar, item, before && before.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
+    place3(c, bar, item, before && before.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
     const out = c.outsides.get(id);
     if (out) out.hidden = true;
     bar.removeAttribute("data-kp-label");
@@ -55185,7 +55362,7 @@ function afterLayout(c) {
   measureLanes(c);
   for (const item of c.view) {
     const bar = c.bars.get(item.id);
-    if (bar && !(c.press?.moved && c.press.id === item.id)) place2(c, bar, item, c.rows.rows.get(item.id) ?? 0);
+    if (bar && !(c.press?.moved && c.press.id === item.id)) place3(c, bar, item, c.rows.rows.get(item.id) ?? 0);
   }
   syncJoins(c, c.view);
   placeLabels(c);
@@ -56251,7 +56428,7 @@ function dropOutside(c) {
     }
   for (const bar of c.labels.keys()) if (!bar.isConnected) c.labels.delete(bar);
 }
-function clearMarks2(lane, bars) {
+function clearMarks3(lane, bars) {
   const boxes = [];
   for (const el16 of lane.points) {
     if (el16.hidden || el16.hasAttribute("data-kp-clustered")) continue;
@@ -56297,7 +56474,7 @@ function placeLabels2(c) {
       list.push({ bar: b.bar, left, right });
       rows.set(b.row, list);
     }
-    const first = clearMarks2(lane, rows.get(0) ?? []);
+    const first = clearMarks3(lane, rows.get(0) ?? []);
     for (const [row2, list] of rows) {
       const marks = (row2 === 0 ? nowBox ? [...first, nowBox] : first : nowBox ? [nowBox] : []).sort((a, b) => a.left - b.left);
       list.sort((a, b) => a.left - b.left);
@@ -56305,7 +56482,7 @@ function placeLabels2(c) {
       list.forEach((item, i) => {
         const { bar, left, right } = item;
         const need = labelWidth(c, bar);
-        let place3 = "";
+        let place4 = "";
         let roomPx = 0;
         let shift = 0;
         let inset = 0;
@@ -56351,17 +56528,17 @@ function placeLabels2(c) {
           }
           const after = next2 - from - OUTSIDE_GAP_PX;
           const before = upTo - floor - OUTSIDE_GAP_PX;
-          if (after >= wanted) [place3, roomPx, shift] = ["after", after, from - (right + start)];
-          else if (before >= wanted) [place3, roomPx, shift] = ["before", before, left - 4 - upTo];
-          else place3 = "none";
-          if (place3 === "after") taken = from + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
+          if (after >= wanted) [place4, roomPx, shift] = ["after", after, from - (right + start)];
+          else if (before >= wanted) [place4, roomPx, shift] = ["before", before, left - 4 - upTo];
+          else place4 = "none";
+          if (place4 === "after") taken = from + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
           else taken = Math.max(taken, right);
         } else taken = Math.max(taken, right);
-        if (bar.dataset.kpLabel !== place3) {
-          if (place3) bar.dataset.kpLabel = place3;
+        if (bar.dataset.kpLabel !== place4) {
+          if (place4) bar.dataset.kpLabel = place4;
           else delete bar.dataset.kpLabel;
         }
-        setOutside(c, lane, bar, place3 === "after" || place3 === "before" ? place3 : "", roomPx, shift);
+        setOutside(c, lane, bar, place4 === "after" || place4 === "before" ? place4 : "", roomPx, shift);
       });
     }
   }
@@ -66033,10 +66210,10 @@ function buildMeasure(doc, countdown) {
   measure.innerHTML = `<svg viewBox="0 0 ${RING_BOX} ${RING_BOX}">${circle("kp-question__ring-track")}${circle("kp-question__ring-fill", ' pathLength="100"')}</svg>`;
   return measure;
 }
-function buildAnswers(doc, card, answers) {
+function buildAnswers(doc, card, answers2) {
   const list = make22(doc, "div", "kp-question__answers");
   const buttons = /* @__PURE__ */ new Map();
-  answers.forEach((a, at) => {
+  answers2.forEach((a, at) => {
     const row2 = make22(doc, "div", "kp-question__answer");
     const button6 = (
       /** @type {HTMLButtonElement} */
@@ -66329,9 +66506,9 @@ var init_run4 = __esm({
       onKey(event) {
         if (event.ctrlKey || event.metaKey || event.altKey) return;
         const n = Number(event.key);
-        const answers = this.q.answers;
-        if (Number.isInteger(n) && n >= 1 && n <= answers.length && !(event.target instanceof HTMLInputElement)) {
-          const a = answers[n - 1];
+        const answers2 = this.q.answers;
+        if (Number.isInteger(n) && n >= 1 && n <= answers2.length && !(event.target instanceof HTMLInputElement)) {
+          const a = answers2[n - 1];
           if (a) {
             event.preventDefault();
             this.choose(a.value);
@@ -66398,7 +66575,7 @@ var init_run4 = __esm({
 // js/question-card/spec.js
 function resolveQuestion(spec, now) {
   const s2 = getStrings();
-  const answers = spec.answers ?? [
+  const answers2 = spec.answers ?? [
     { value: "allow", label: s2.questionAllow },
     { value: "stop", label: s2.questionStop, tone: (
       /** @type {const} */
@@ -66409,10 +66586,10 @@ function resolveQuestion(spec, now) {
     deadline: toMs3(spec.deadline) ?? now(),
     asked: toMs3(spec.asked) ?? now(),
     urgentAt: (spec.urgentAt ?? QUESTION_URGENT_AT) * MS_PER_SECOND5,
-    answers,
+    answers: answers2,
     countdown: spec.countdown ?? "ring",
     expiredMode: spec.expired ?? "keep",
-    fallback: answers.find((a) => a.value === spec.defaultAnswer)
+    fallback: answers2.find((a) => a.value === spec.defaultAnswer)
   };
 }
 var toMs3;
@@ -66590,7 +66767,7 @@ var init_frame2 = __esm({
 });
 
 // js/feed/options.js
-function unitOf(el16) {
+function unitOf2(el16) {
   const [one, many] = optionAttr(el16, "unit").split(/[,/]/).map((word) => word.trim());
   const s2 = getStrings();
   return { one: one || s2.feedUnitOne, many: many || (one ? `${one}s` : s2.feedUnitMany) };
@@ -66604,7 +66781,7 @@ function feedOptions(el16) {
     time: ["relative", "clock", "moment"].includes(time) ? time : "auto",
     actor: actor === "mark" || actor === "off" ? actor : "chip",
     expand: expand === "one" || expand === "off" ? expand : "many",
-    unit: unitOf(el16),
+    unit: unitOf2(el16),
     level: Math.min(MAX_DAY_LEVEL, Math.max(MIN_DAY_LEVEL, Number(optionAttr(el16, "level")) || DEFAULT_DAY_LEVEL))
   };
 }

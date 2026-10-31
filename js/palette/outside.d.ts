@@ -21,3 +21,8 @@ export declare function closeOnOutsidePress(dialog: HTMLDialogElement): () => vo
  * @param {boolean} answersKey  whether this dialog is the one an empty value means
  */
 export declare function openerFor(event: Event, dialog: HTMLDialogElement, answersKey: boolean): boolean;
+/**
+ * Whether `me` answers the key: the nominated one (`data-kp-primary`), else the first in the document.
+ * @param {string} selector @param {Element} me
+ */
+export declare function answers(selector: string, me: Element): boolean;

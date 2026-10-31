@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -438,17 +438,23 @@ The interactive console: a command bar, output blocks and a run. 11 files.
 
 ## js/palette.js → js/palette/
 
-The command palette and its intent filter. 7 files.
+The command palette and its intent filter. 13 files.
 
-| File               | Does                                                                                           |
-| ------------------ | ---------------------------------------------------------------------------------------------- |
-| `api.js`           | The handle a page gets for a palette and the lookup by dialog.                                 |
-| `attach.js`        | Attaches the command palettes of a page.                                                       |
-| `constants.js`     | The part names, the opener selector, the event names and the empty-state words of the palette. |
-| `intent-filter.js` | The intent filter: the field, the matching and the keyboard of the palette list.               |
-| `keys.js`          | Keyboard facts: the platform, the matchers of a hotkey and whether the focus is typing.        |
-| `outside.js`       | Closing a dialog on an outside press and finding the control that opened it.                   |
-| `types.js`         | The types of the command palette: the matcher and the handle a page gets.                      |
+| File                 | Does                                                                                            |
+| -------------------- | ----------------------------------------------------------------------------------------------- |
+| `api.js`             | The handle a page gets for a palette and the lookup by dialog.                                  |
+| `attach.js`          | Attaches the command palettes and shortcut sheets of a page.                                    |
+| `constants.js`       | The part names, the opener selector, the event names and the empty-state words of the palette.  |
+| `intent-dom.js`      | The DOM work of the intent filter: words, marks, label wraps and the reordering.                |
+| `intent-filter.js`   | IntentFilter: the intent matcher's side of one palette: rank, cap, mark, status, plates.        |
+| `intent-plate.js`    | ListPlate: the empty or failed plate in the list's footprint.                                   |
+| `intent-rank.js`     | Ranks the commands for a query and puts the best answer first in its group.                     |
+| `keys.js`            | Keyboard facts: the platform, the matchers of a hotkey and whether the focus is typing.         |
+| `outside.js`         | Closing a dialog on an outside press (OutsidePress), its opener, and which one answers the key. |
+| `palette-control.js` | PaletteControl: one palette: matcher, listbox, key, openers and the page's handle.              |
+| `plain-filter.js`    | The plain matchers' filter: hide what does not match and the groups left empty.                 |
+| `sheet.js`           | SheetControl: one shortcut sheet, opened by its key or an opener.                               |
+| `types.js`           | The types of the command palette: the matcher and the handle a page gets.                       |
 
 ## js/entity-card.js → js/entity-card/
 
