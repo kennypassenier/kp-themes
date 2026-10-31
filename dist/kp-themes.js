@@ -12762,41 +12762,38 @@ var init_draw = __esm({
 
 // js/art/attach.js
 function attachArt(root = document) {
-  const hosts = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof Element && root.matches(ART) ? [root] : [], ...root.querySelectorAll(ART)]
-  );
-  const made6 = [];
-  const place4 = (host) => {
-    host.querySelector(":scope > .kp-art")?.remove();
-    const kind = host.dataset.kpArt ?? "";
-    if (!isKind(kind)) return;
-    const svg2 = drawArt(host.ownerDocument, kind);
-    host.prepend(svg2);
-    made6.push(svg2);
-  };
-  for (const host of hosts) place4(host);
-  if (typeof MutationObserver === "undefined" || hosts.length === 0)
-    return () => {
-      for (const svg2 of made6) svg2.remove();
-    };
-  const watch2 = new MutationObserver((records) => {
-    for (const record of records) place4(
-      /** @type {HTMLElement} */
-      record.target
-    );
-  });
-  for (const host of hosts) watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-art"] });
-  return () => {
-    watch2.disconnect();
-    for (const svg2 of made6) svg2.remove();
-  };
+  return attachAll(root, ART, ArtControl);
 }
+var ArtControl;
 var init_attach2 = __esm({
   "js/art/attach.js"() {
     "use strict";
+    init_controller();
     init_constants4();
     init_draw();
+    ArtControl = class extends Controller {
+      /** @param {HTMLElement} host */
+      constructor(host) {
+        super(host);
+        this.svg = null;
+      }
+      connect() {
+        this.own(() => this.svg?.remove());
+        this.place();
+        if (typeof MutationObserver === "undefined") return;
+        this.observe(new MutationObserver(() => this.place())).observe(this.host, { attributes: true, attributeFilter: ["data-kp-art"] });
+      }
+      /** Draw the element's kind in place of the drawing it has; an unknown kind leaves it without one. */
+      place() {
+        const host = this.host;
+        host.querySelector(":scope > .kp-art")?.remove();
+        this.svg = null;
+        const kind = host.dataset.kpArt ?? "";
+        if (!isKind(kind)) return;
+        this.svg = drawArt(host.ownerDocument, kind);
+        host.prepend(this.svg);
+      }
+    };
   }
 });
 

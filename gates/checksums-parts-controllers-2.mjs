@@ -2,6 +2,22 @@
 // written out like CONTROLLER_PART_FILES in gates/checksums-parts-controllers.mjs, which reached its 500-line limit.
 // Each module's facade `js/<name>.js` is in FILES in gates/checksums.mjs; its folder `js/<name>/` is here.
 export const CONTROLLER_PART_FILES_2 = [
+    'js/art/attach.js',
+    'js/art/console.js',
+    'js/art/constants.js',
+    'js/art/draw.js',
+    'js/art/drawing.js',
+    'js/art/fan.js',
+    'js/art/field-kit.js',
+    'js/art/horizon.js',
+    'js/art/hud.js',
+    'js/art/ledger.js',
+    'js/art/low-sun.js',
+    'js/art/machined.js',
+    'js/art/sets.js',
+    'js/art/slab.js',
+    'js/art/spectrum.js',
+    'js/art/stickers.js',
     'js/availability/api.js',
     'js/availability/attach.js',
     'js/availability/constants.js',

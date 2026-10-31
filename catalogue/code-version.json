@@ -8,7 +8,7 @@
         "js/actions.js": { "digest": "752ed11f9eed59e6", "when": ".kp-row-actions" },
         "js/alarm.js": { "digest": "f1234069084dbbb7", "when": "[data-kp-alarm]" },
         "js/anchors.js": { "digest": "1cf5841c25e107ad", "when": "[data-kp-anchors]" },
-        "js/art.js": { "digest": "22eeb301a2b92523", "when": "[data-kp-art]" },
+        "js/art.js": { "digest": "58d3433781a042cc", "when": "[data-kp-art]" },
         "js/attention.js": { "digest": "7f2c263f5049d046", "when": ".kp-attention" },
         "js/auto-refresh.js": { "digest": "eb67311c1d2d3d41", "when": "[data-kp-refresh]" },
         "js/autosize.js": { "digest": "3a0cba6ee822ba7d", "when": "textarea[data-kp-autosize]" },

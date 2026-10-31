@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`, `gantt.js`, `focus-steps.js`, `sequencer.js`, `heat.js`, `availability.js`, `usual-picker.js`, `week.js`, `graph.js`, `components.js`, `patterns.js`, `overlays.js`, `console.js`, `palette.js`, `logviewer.js`, `art.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -497,25 +497,25 @@ The live log viewer. 12 files.
 
 The drawings of an empty state, one file per theme set. 17 files.
 
-| File           | Does                                                                                |
-| -------------- | ----------------------------------------------------------------------------------- |
-| `attach.js`    | Gives every element with a kind its drawing and follows a change of the kind.       |
-| `console.js`   | Nostromo's console set of drawings.                                                 |
-| `constants.js` | The selector, the kinds and the SVG namespace of the drawings.                      |
-| `draw.js`      | Draws one kind: an svg with the group of every set.                                 |
-| `drawing.js`   | The drawing-board set of drawings.                                                  |
-| `fan.js`       | The fan set of drawings.                                                            |
-| `field-kit.js` | The field kit set of drawings.                                                      |
-| `horizon.js`   | The horizon set of drawings.                                                        |
-| `hud.js`       | The HUD set of drawings.                                                            |
-| `ledger.js`    | Formal's set, the ledger: every drawing is something a clerk does to a ledger page. |
-| `low-sun.js`   | The low sun set of drawings.                                                        |
-| `machined.js`  | Titanium's machined set of drawings.                                                |
-| `sets.js`      | Every set the package has, by the name a register shows.                            |
-| `slab.js`      | The slab set of drawings.                                                           |
-| `spectrum.js`  | Spectrum's set of drawings.                                                         |
-| `stickers.js`  | The stickers set of drawings.                                                       |
-| `types.js`     | The types of the empty-state drawings: kinds, inks and strokes.                     |
+| File           | Does                                                                                    |
+| -------------- | --------------------------------------------------------------------------------------- |
+| `attach.js`    | ArtControl: gives one element with a kind its drawing and follows a change of the kind. |
+| `console.js`   | Nostromo's console set of drawings.                                                     |
+| `constants.js` | The selector, the kinds and the SVG namespace of the drawings.                          |
+| `draw.js`      | Draws one kind: an svg with the group of every set.                                     |
+| `drawing.js`   | The drawing-board set of drawings.                                                      |
+| `fan.js`       | The fan set of drawings.                                                                |
+| `field-kit.js` | The field kit set of drawings.                                                          |
+| `horizon.js`   | The horizon set of drawings.                                                            |
+| `hud.js`       | The HUD set of drawings.                                                                |
+| `ledger.js`    | Formal's set, the ledger: every drawing is something a clerk does to a ledger page.     |
+| `low-sun.js`   | The low sun set of drawings.                                                            |
+| `machined.js`  | Titanium's machined set of drawings.                                                    |
+| `sets.js`      | Every set the package has, by the name a register shows.                                |
+| `slab.js`      | The slab set of drawings.                                                               |
+| `spectrum.js`  | Spectrum's set of drawings.                                                             |
+| `stickers.js`  | The stickers set of drawings.                                                           |
+| `types.js`     | The types of the empty-state drawings: kinds, inks and strokes.                         |
 
 ## js/menu-button.js → js/menu-button/
 
