@@ -142,7 +142,10 @@ export function lookLine(at, name, kind, found) {
 /**
  * The data components that ship standard states, how a page wires them and how the package drives them. `drive` runs in
  * the page with the module's namespace; it is self-contained (handed over as source). `states` are the ones it has.
- * @typedef {{ name: string, kind: keyof typeof KINDS, host: string, module: string, wire: string, states: string[], drive: (m: any, el: HTMLElement, state: string) => unknown }} StateComponent
+ * `reset` (optional, same terms) puts the instance back to ready once its states are measured. A component that can hold
+ * another stateful one (a card whose stage holds the app's own card) needs it: left in failed, it hides what it holds, and
+ * the inner component, driven next, was measured inside a hidden stage ("no loading look"; http-switchboard gap 42).
+ * @typedef {{ name: string, kind: keyof typeof KINDS, host: string, module: string, wire: string, states: string[], drive: (m: any, el: HTMLElement, state: string) => unknown, reset?: (m: any, el: HTMLElement) => unknown }} StateComponent
  * @type {StateComponent[]}
  */
 export const STATE_COMPONENTS = [
@@ -453,6 +456,7 @@ export const STATE_COMPONENTS = [
                     ? { words: 'Reading' }
                     : { title: state === 'empty' ? 'Nothing yet' : 'Could not read it', text: 'One sentence more.' },
             ),
+        reset: (m, el) => m.setCardState(el, 'ready'),
     },
 ];
 
@@ -1099,6 +1103,28 @@ export function streamKit(mode) {
 }
 
 /**
+ * The page-side expression that imports the package module and runs one drive (or reset) on an instance; it yields '' when
+ * done, 'gone' when the host was redrawn away, else the error's message. An expression, never eval()'d inside the page [csp-1019].
+ * @param {string} module the module URL
+ * @param {number} i the instance's data-states-i
+ * @param {Function} fn the drive or reset, handed over as source
+ * @param {string | null} state the state to drive into (null for a reset)
+ */
+export function driveExpression(module, i, fn, state) {
+    return `(async () => {
+        try {
+            const m = await import(${JSON.stringify(module)});
+            const host = document.querySelector('[data-states-i="${i}"]');
+            if (!host) return 'gone';
+            await (${fn.toString()})(m, host, ${JSON.stringify(state)});
+            return '';
+        } catch (e) {
+            return e instanceof Error ? e.message : String(e);
+        }
+    })()`;
+}
+
+/**
  * Wait until a page has settled: js/auto.js done (when the page uses it) and a moment for what arrives.
  * @param {import('playwright-core').Page} page
  */
@@ -1274,17 +1300,7 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                     // The drive is handed over as an evaluated expression, never eval()'d inside the page: a strict
                     // Content-Security-Policy (script-src 'self', no 'unsafe-eval') forbids eval but not what the driver evaluates
                     // itself, so the driven half runs on a real app too [csp-1019].
-                    const err = await d.evaluate(`(async () => {
-                        try {
-                            const m = await import(${JSON.stringify(bundle ?? `${prefix}js/${comp.module}`)});
-                            const host = document.querySelector('[data-states-i="${inst.i}"]');
-                            if (!host) return 'gone';
-                            await (${comp.drive.toString()})(m, host, ${JSON.stringify(state)});
-                            return '';
-                        } catch (e) {
-                            return e instanceof Error ? e.message : String(e);
-                        }
-                    })()`);
+                    const err = await d.evaluate(driveExpression(bundle ?? `${prefix}js/${comp.module}`, inst.i, comp.drive, state));
                     if (err === 'gone') break;
                     if (err) {
                         out.push(`${inst.section}: ${comp.name} could not be driven into ${state} through the package (${err})`);
@@ -1321,6 +1337,11 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                         ]),
                     );
                     out.push(...lines.map((l) => `${l} (driven)`));
+                }
+                // Back to ready, so a stateful component it holds is driven and measured in its own right [gap 42].
+                if (comp.reset) {
+                    const err = await d.evaluate(driveExpression(bundle ?? `${prefix}js/${comp.module}`, inst.i, comp.reset, null));
+                    if (err && err !== 'gone') out.push(`${inst.section}: ${comp.name} could not be put back to ready through the package (${err})`);
                 }
             } catch (e) {
                 out.push(`${inst.section}: ${comp.name} could not be measured (${e instanceof Error ? e.message.split('\n')[0] : e})`);
