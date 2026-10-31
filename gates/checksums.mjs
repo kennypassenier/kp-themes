@@ -18,6 +18,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 import { PART_FILES } from './checksums-parts.mjs';
 import { CONTROLLER_PART_FILES } from './checksums-parts-controllers.mjs';
+import { CONTROLLER_PART_FILES_2 } from './checksums-parts-controllers-2.mjs';
 
 /**
  * What a consumer copies [TH103].
@@ -257,6 +258,7 @@ export const FILES = [
     // The files under js/<name>/ of the split modules: gates/checksums-parts.mjs.
     ...PART_FILES,
     ...CONTROLLER_PART_FILES,
+    ...CONTROLLER_PART_FILES_2,
 ];
 
 /**

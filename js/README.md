@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`, `transfer.js`, `theme-core.js`, `deplist.js`, `docpreview.js`, `quantity.js`, `theme-picker.js`, `freshness.js`, `hovercard.js`, `stackbar.js`, `version-delta.js`, `kpi.js`, `question-card.js`, `page-contents.js`, `listbox.js`, `newpill.js`, `actions.js`, `runs.js`, `weekdays.js`, `path-trace.js`, `alarm.js`, `upload.js`, `timer-disc.js`, `flash.js`, `bullets.js`, `connection.js`, `quiet-hours.js`, `compare.js`, `viewer.js`, `gridlayout.js`, `update.js`, `lazy-register.js`, `card-state.js`, `intent.js`, `loading-pieces.js`, `attention.js`, `wizard.js`, `steplist.js`, `locale.js`, `top-layer.js`, `diagnostics.js`, `markdown.js`, `toolbar.js`, `command.js`, `tick.js`, `progressbar.js`, `busy-card.js`, `calm.js`, `lede.js`, `colorpicker.js`, `job-line.js`, `action-tiles.js`, `barcell.js`, `print.js`, `tables.js`, `reason.js`, `uptime.js`, `timer.js`, `combobox.js`, `claim.js`, `menu-button.js`, `entity-card.js`, `motion.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -139,21 +139,27 @@ The time chart, the spark chart and the key figure trend. 22 files.
 
 ## js/motion.js → js/motion/
 
-Dialogs that leave the way they came, and boxes that ease to a new size. 13 files.
+Dialogs that leave the way they came, and boxes that ease to a new size. 19 files.
 
 | File                | Does                                                                            |
 | ------------------- | ------------------------------------------------------------------------------- |
 | `arrive.js`         | An element arriving: glide, arrive and the grouped glide.                       |
-| `attach.js`         | Attaches the motion layer to a root.                                            |
-| `close.js`          | Closing dialogs and popovers: reversed entrance, ghost and native close.        |
+| `attach.js`         | MotionRoot: attaches the motion layer to a root, now and as elements arrive.    |
+| `box-size.js`       | BoxSize: one eased box that glides to its new height; easeSize().               |
+| `close.js`          | Closing a dialog as its entrance backwards, and opening it as that turned round. |
 | `constants.js`      | The attribute names, selectors and counters the motion layer shares.            |
-| `fold-size.js`      | Fold sizing: settled heights and the eased size change.                         |
+| `dialog-close.js`   | DialogClose: one dialog's leaving motion on close(), Escape and the backdrop.   |
+| `fold-control.js`   | FoldControl: one `<details>` that glides open and shut; attachFold().           |
+| `fold-size.js`      | What eased boxes and folds read: settled heights, folds, arrival mode.          |
 | `fold.js`           | Folding: timing, curve and frames of a collapsing block.                        |
 | `keyframes.js`      | Reads a theme's entrance keyframes and turns them into lines and entrances.     |
 | `leave.js`          | Leaving: the leave of one element, a batch, and repaint tracking.               |
+| `panel-close.js`    | Menus and popovers closing as their opening reversed, and the ghost close.      |
+| `reverse.js`        | Turning a CSS entrance around: playEntranceBackwards() and stopReversing().     |
 | `reversed-leave.js` | A leave played as the reverse of the arrival.                                   |
 | `size.js`           | Size easing: the curve and the stepped clock a height change runs on.           |
 | `state.js`          | The mutable values the motion parts share: what is watched, in turn or batched. |
+| `switching.js`      | Whether a theme switch is in progress, so nothing glides for it.                |
 | `timing.js`         | Reads the theme's motion timing and the reduced-motion preference.              |
 | `turns.js`          | Arrivals in turn: the gap between successive entrances.                         |
 

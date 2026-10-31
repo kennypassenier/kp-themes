@@ -1,6 +1,8 @@
 // An element arriving: glide, arrive and the grouped glide.
 import { firstMs, msOf, reduced, themeMotion } from './timing.js';
-import { opensAsReversedClose, playEntranceBackwards, stopReversing, switching } from './close.js';
+import { opensAsReversedClose } from './close.js';
+import { playEntranceBackwards, stopReversing } from './reverse.js';
+import { switching } from './switching.js';
 import { arriveAsReversedLeave } from './reversed-leave.js';
 import { playedOut } from './fold.js';
 import { layoutHeight, sizeEase } from './size.js';

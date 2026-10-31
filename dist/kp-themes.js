@@ -3452,6 +3452,179 @@ var init_keyframes = __esm({
   }
 });
 
+// js/motion/close.js
+async function closeDialog(dialog, returnValue) {
+  const close = () => nativeClose?.call(dialog, returnValue);
+  if (!dialog.open || closing.has(dialog)) return;
+  const { close: duration2 } = themeMotion(dialog);
+  const kept = entrances.get(dialog) ?? [];
+  if (duration2 <= 0) return void close();
+  closing.add(dialog);
+  const out = [];
+  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
+  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
+    try {
+      out.push(
+        target.animate(keyframes, {
+          duration: lines ? lines[at].duration : duration2,
+          ...lines ? { delay: lines[at].closeDelay } : {},
+          easing,
+          direction: "reverse",
+          fill: "forwards",
+          ...pseudoElement ? { pseudoElement } : {}
+        })
+      );
+    } catch {
+    }
+  });
+  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
+    try {
+      out.push(
+        dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards", pseudoElement: "::backdrop" })
+      );
+    } catch {
+    }
+  }
+  if (kept.length === 0) out.push(dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards" }));
+  await Promise.all(out.map((a) => a.finished.catch(() => void 0)));
+  closing.delete(dialog);
+  close();
+  for (const a of out) a.cancel();
+}
+function openAsReversedClose(dialog) {
+  if (!dialog.open || !opensAsReversedClose(dialog)) return;
+  const { close: duration2 } = themeMotion(dialog);
+  const kept = entrances.get(dialog) ?? [];
+  if (duration2 <= 0) return;
+  for (const a of entranceOf(dialog)) a.cancel();
+  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
+  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
+    try {
+      target.animate(keyframes, {
+        duration: lines ? lines[at].duration : duration2,
+        ...lines ? { delay: lines[at].openDelay } : {},
+        easing,
+        fill: "backwards",
+        ...pseudoElement ? { pseudoElement } : {}
+      });
+    } catch {
+    }
+  });
+  const fade = (
+    /** @type {Keyframe[]} */
+    [{ opacity: 1 }, { opacity: 0 }]
+  );
+  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
+    try {
+      dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards", pseudoElement: "::backdrop" });
+    } catch {
+    }
+  }
+  if (kept.length === 0) dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards" });
+}
+var opensAsReversedClose;
+var init_close = __esm({
+  "js/motion/close.js"() {
+    "use strict";
+    init_keyframes();
+    init_timing();
+    opensAsReversedClose = (el16) => getComputedStyle(el16).getPropertyValue("--kp-open").trim() === "reverse-close";
+  }
+});
+
+// js/motion/reverse.js
+function playEntranceBackwards(el16) {
+  stopReversing(el16);
+  if (reduced() || !el16.isConnected) return Promise.resolve(false);
+  const named = (pseudo) => {
+    const name = getComputedStyle(el16, pseudo).animationName;
+    return Boolean(name) && name !== "none";
+  };
+  if (![null, "::before", "::after"].some(named)) return Promise.resolve(false);
+  el16.setAttribute(REVERSING_ATTRIBUTE, "reset");
+  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el16, pseudo).animationName;
+  el16.setAttribute(REVERSING_ATTRIBUTE, "play");
+  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el16, pseudo).animationName;
+  const plays = el16.getAnimations({ subtree: true }).filter(
+    (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+    a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity
+  );
+  if (plays.length === 0) {
+    el16.removeAttribute(REVERSING_ATTRIBUTE);
+    return Promise.resolve(false);
+  }
+  return new Promise((resolve) => {
+    const own = (
+      /** @type {any} */
+      el16
+    );
+    own.__kpReversing = () => {
+      for (const a of plays) {
+        if (a.playState !== "running" || a.currentTime === null) continue;
+        const end = Number(a.effect?.getComputedTiming().endTime) || 0;
+        a.currentTime = Math.max(0, end - Number(a.currentTime));
+      }
+      resolve(false);
+    };
+    const ended = (a) => new Promise((done) => {
+      a.addEventListener("cancel", done, { once: true });
+      a.addEventListener("remove", done, { once: true });
+      a.finished.then(done, done);
+    });
+    const running = () => el16.getAnimations().filter(
+      (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+      a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
+    );
+    const settle3 = (waited) => {
+      if (own.__kpReversing === void 0) return;
+      void Promise.all(waited.map(ended)).then(() => {
+        if (own.__kpReversing === void 0) return;
+        const next2 = running();
+        if (next2.length > 0) return settle3(next2);
+        delete own.__kpReversing;
+        resolve(true);
+      });
+    };
+    settle3(plays);
+  });
+}
+function stopReversing(el16) {
+  const own = (
+    /** @type {any} */
+    el16
+  );
+  const stop = own.__kpReversing;
+  delete own.__kpReversing;
+  stop?.();
+  el16.removeAttribute(REVERSING_ATTRIBUTE);
+}
+var REVERSING_ATTRIBUTE;
+var init_reverse = __esm({
+  "js/motion/reverse.js"() {
+    "use strict";
+    init_timing();
+    REVERSING_ATTRIBUTE = "data-kp-reversing";
+  }
+});
+
+// js/motion/switching.js
+var switching;
+var init_switching = __esm({
+  "js/motion/switching.js"() {
+    "use strict";
+    switching = 0;
+    if (typeof document !== "undefined" && typeof MutationObserver === "function") {
+      new MutationObserver(() => {
+        const mine = ++switching;
+        const release2 = () => {
+          if (switching === mine) switching = 0;
+        };
+        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release2, release2)));
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    }
+  }
+});
+
 // js/motion/size.js
 function withoutOvershoot(ease) {
   const list = /^linear\((.*)\)$/.exec(ease.trim());
@@ -3541,7 +3714,7 @@ var init_size = __esm({
   "js/motion/size.js"() {
     "use strict";
     init_timing();
-    init_close();
+    init_switching();
     NAMED_EASES = /** @type {Record<string, string>} */
     {
       ease: "cubic-bezier(0.25, 0.1, 0.25, 1)",
@@ -3793,224 +3966,14 @@ var init_arrive = __esm({
     "use strict";
     init_timing();
     init_close();
+    init_reverse();
+    init_switching();
     init_reversed_leave();
     init_fold();
     init_size();
     init_fold_size();
     GROUP_FOLDING_ATTRIBUTE = "data-kp-group-folding";
     groupGlides = /* @__PURE__ */ new WeakMap();
-  }
-});
-
-// js/motion/leave.js
-function leavesState(el16) {
-  return getComputedStyle(el16).getPropertyValue("--kp-leave-state").trim() === "leave";
-}
-function leave(el16, { hide: hide2 = false } = {}) {
-  return new Promise((resolve) => {
-    if (!motionState.batch) {
-      motionState.batch = [];
-      queueMicrotask(() => {
-        const items = (
-          /** @type {Leaving[]} */
-          motionState.batch
-        );
-        motionState.batch = null;
-        void leaveInTurn(items);
-      });
-    }
-    motionState.batch.push({ el: el16, hide: hide2, resolve });
-  });
-}
-async function leaveInTurn(items) {
-  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
-  for (const item of items) {
-    const exited = new Promise((resolve) => {
-      void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
-    });
-    await exited;
-  }
-}
-async function leaveOne(el16, hide2, exited, count2 = 1) {
-  const gone = () => {
-    if (hide2) el16.hidden = true;
-    else el16.remove();
-  };
-  entering.get(el16)?.();
-  if (!el16.isConnected || el16.hasAttribute("data-kp-leaving")) return exited();
-  const before = getComputedStyle(el16).animationName;
-  const beforeSig = animationSignature(el16);
-  const rest = pseudoNames(el16);
-  const arrival2 = arrivalOf(el16);
-  const { size: size2, ease } = themeMotion(el16);
-  if (!arrival2 && size2 <= 0) {
-    exited();
-    return gone();
-  }
-  el16.setAttribute("data-kp-leaving", "");
-  const style = getComputedStyle(el16);
-  const ownName = style.animationName;
-  const turned = ownName && ownName !== "none" && ownName === before && animationSignature(el16) !== beforeSig;
-  if (turned) {
-    el16.setAttribute(REVERSING_ATTRIBUTE, "reset");
-    getComputedStyle(el16).animationName;
-    el16.removeAttribute(REVERSING_ATTRIBUTE);
-    getComputedStyle(el16).animationName;
-  }
-  const own = ownName && ownName !== "none" && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
-  const running = [];
-  const lasts = own ? own.duration : arrival2?.duration ?? 0;
-  const fold2 = style.getPropertyValue("--kp-leave-fold").trim();
-  let actor = el16;
-  if (fold2 === "ghost" && lasts > 0) {
-    actor = /** @type {HTMLElement} */
-    el16.cloneNode(true);
-    actor.setAttribute("aria-hidden", "true");
-    actor.inert = true;
-    Object.assign(actor.style, {
-      position: "absolute",
-      top: `${el16.offsetTop}px`,
-      left: `${el16.offsetLeft}px`,
-      width: `${el16.offsetWidth}px`,
-      height: `${el16.offsetHeight}px`,
-      margin: "0",
-      boxSizing: "border-box",
-      pointerEvents: "none",
-      zIndex: "1"
-    });
-    el16.after(actor);
-    const want = el16.getBoundingClientRect();
-    const got = actor.getBoundingClientRect();
-    actor.style.top = `${el16.offsetTop + want.top - got.top}px`;
-    actor.style.left = `${el16.offsetLeft + want.left - got.left}px`;
-    el16.style.setProperty("visibility", "hidden");
-    el16.style.setProperty("animation", "none");
-  }
-  if (!own && arrival2) actor.style.animation = `${arrival2.name} ${arrival2.duration}ms ${arrival2.ease} reverse forwards`;
-  if (Object.values(rest).some((sig2) => !sig2.startsWith("none "))) {
-    const inline2 = actor.style.animation;
-    actor.setAttribute(REVERSING_ATTRIBUTE, "reset");
-    for (const pseudo of [null, "::before", "::after"]) getComputedStyle(actor, pseudo).animationName;
-    actor.removeAttribute(REVERSING_ATTRIBUTE);
-    actor.style.animation = inline2;
-  }
-  getComputedStyle(actor).animationName;
-  for (const a of actor.getAnimations({ subtree: true })) {
-    const effect = (
-      /** @type {KeyframeEffect | null} */
-      a.effect
-    );
-    const pseudo = effect?.pseudoElement;
-    if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
-    const timing = effect.getTiming();
-    if (!Number.isFinite(Number(timing.iterations))) continue;
-    const keyframes = keyframesOf(effect);
-    a.cancel();
-    try {
-      running.push(
-        actor.animate(keyframes, {
-          duration: Number(timing.duration) || 0,
-          iterations: Number(timing.iterations),
-          easing: String(timing.easing ?? "linear"),
-          direction: flipped(timing.direction),
-          fill: "forwards",
-          pseudoElement: pseudo
-        }).finished.catch(() => void 0)
-      );
-    } catch {
-    }
-  }
-  const lines = style.getPropertyValue("--kp-lines").trim() === "keep";
-  const exit = lasts > 0 ? playedOut(actor, lasts + 100, lines) : Promise.resolve();
-  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
-  const stagger = Number.isNaN(set) ? 0.5 : set;
-  const capped = lasts > 0 && count2 > 2 ? cappedGap(actor, stagger, lasts, count2, lines) : null;
-  if (capped !== null) void atTime(actor, capped, exit, lines).then(exited);
-  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
-  else void exit.then(exited);
-  running.push(exit);
-  const foldTo = size2 > 0 && !(el16 instanceof HTMLTableRowElement) && !floats(el16, style) ? foldFrames(el16, style) : null;
-  if (foldTo && !foldReflows(el16, ...foldTo)) {
-    el16.style.setProperty("overflow", "clip");
-    el16.style.setProperty("box-sizing", "border-box");
-    const [from, to] = foldTo;
-    if ("height" in from) heightFolds.add(el16);
-    const after = fold2 === "after";
-    const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
-    const timing = foldTiming(style);
-    const foldEase = foldCurve(style, ease);
-    const folding = el16.animate([from, to], {
-      duration: steppedDuration(el16, withoutOvershoot(foldEase), Math.max(size2, lasts) * timing.grow),
-      delay: onStepClock(el16, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts)),
-      easing: withoutOvershoot(foldEase),
-      fill: "forwards"
-    });
-    running.push(folding.finished.catch(() => void 0));
-  }
-  await Promise.all(running);
-  heightFolds.delete(el16);
-  if (actor !== el16) actor.remove();
-  gone();
-  el16.removeAttribute("data-kp-leaving");
-  el16.style.removeProperty("animation");
-  el16.style.removeProperty("overflow");
-  el16.style.removeProperty("box-sizing");
-  el16.style.removeProperty("visibility");
-  for (const a of el16.getAnimations()) a.cancel();
-}
-function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
-  const list = [...records].filter((r) => r.type === "childList");
-  const gone = /* @__PURE__ */ new Map();
-  const keyOf8 = (e) => {
-    for (const name of keys) {
-      const value = name === "id" ? e.getAttribute("id") || e.id || null : e.getAttribute(name);
-      if (value) return `${name}=${value}`;
-    }
-    return null;
-  };
-  const sigOf = (e) => `${e.tagName}.${e.className}`;
-  const skeletal = (e) => typeof e.matches === "function" && e.matches(SKELETON) || typeof e.querySelector === "function" && e.querySelector(SKELETON) !== null;
-  for (const r of list)
-    for (const n of Array.from(r.removedNodes)) {
-      if (n?.nodeType !== 1) continue;
-      const g = gone.get(r.target) ?? { keys: /* @__PURE__ */ new Set(), sigs: /* @__PURE__ */ new Map(), skeleton: false };
-      gone.set(r.target, g);
-      const k = keyOf8(n);
-      if (k) g.keys.add(k);
-      g.sigs.set(sigOf(n), (g.sigs.get(sigOf(n)) ?? 0) + 1);
-      if (skeletal(n)) g.skeleton = true;
-    }
-  const out = /* @__PURE__ */ new Set();
-  for (const r of list)
-    for (const n of Array.from(r.addedNodes)) {
-      if (n?.nodeType !== 1) continue;
-      const g = gone.get(r.target);
-      if (!g) continue;
-      if (g.skeleton) {
-        out.add(n);
-        continue;
-      }
-      const k = keyOf8(n);
-      const left = g.sigs.get(sigOf(n)) ?? 0;
-      if (k ? g.keys.has(k) : left > 0) {
-        out.add(n);
-        if (!k) g.sigs.set(sigOf(n), left - 1);
-      }
-    }
-  return out;
-}
-var init_leave = __esm({
-  "js/motion/leave.js"() {
-    "use strict";
-    init_state();
-    init_reversed_leave();
-    init_fold();
-    init_timing();
-    init_close();
-    init_keyframes();
-    init_fold_size();
-    init_size();
-    init_constants2();
   }
 });
 
@@ -4047,201 +4010,12 @@ function firstRender(el16) {
   afterPaint(() => painted = true);
   return () => !painted || settling(el16);
 }
-function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
-  const own = (
-    /** @type {any} */
-    box
-  );
-  if (own.__kpSize) return () => {
-  };
-  own.__kpSize = true;
-  motionState.watching += 1;
-  const keys = [...arriveKeys, ...ARRIVE_KEYS];
-  let last = box.offsetHeight;
-  let running = null;
-  let followedAt = -Infinity;
-  const fresh = firstRender(box);
-  const settle3 = () => {
-    if (!box.isConnected) return;
-    const effect = (
-      /** @type {KeyframeEffect | null} */
-      running?.effect ?? null
-    );
-    if (running && effect) {
-      effect.target = null;
-      const natural = settledHeight(box);
-      effect.target = box;
-      if (Math.abs(natural - last) < 1) return;
-    }
-    const from = running ? box.offsetHeight : last;
-    running?.finish();
-    running = null;
-    const to = settledHeight(box);
-    last = to;
-    if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) {
-      if (Math.abs(to - from) < 1 && followsAFold(box)) followedAt = performance.now();
-      return;
-    }
-    if (followsAFold(box)) {
-      followedAt = performance.now();
-      return;
-    }
-    if (performance.now() - followedAt < 300 && getComputedStyle(box).getPropertyValue("--kp-leave-fold-ease").trim() !== "") {
-      followedAt = -Infinity;
-      return;
-    }
-    const { size: size2, ease } = themeMotion(box);
-    if (size2 <= 0) return;
-    const delay = to < from ? Math.max(0, foldingOutFor(box) - size2) : 0;
-    const easing = sizeEase(box, ease, to - from);
-    const { animation: mine, done } = glide(box, from, to, steppedDuration(box, easing, size2), easing, false, delay);
-    running = mine;
-    mine.finished.then(() => {
-      done();
-      if (running === mine) running = null;
-    }).catch(() => void 0);
-  };
-  const sizes = new ResizeObserver((entries2) => {
-    if (entries2.some((entry) => entry.target !== box)) settle3();
-    else if (!running) last = box.offsetHeight;
-  });
-  const watch2 = () => {
-    sizes.disconnect();
-    sizes.observe(box);
-    for (const child of box.children) sizes.observe(child);
-  };
-  watch2();
-  const list = new MutationObserver((records) => {
-    const modeOf2 = (target) => fresh() ? "none" : arriveMode(target instanceof Element ? target : box, fallback2);
-    const any = records.some((record) => modeOf2(record.target) !== "none");
-    const motion = records.length && any ? arrival(box) : null;
-    let repainted = null;
-    const hiddenBefore = /* @__PURE__ */ new Map();
-    const moved = /* @__PURE__ */ new Set();
-    for (const record of records) {
-      if (record.type === "attributes" && !hiddenBefore.has(record.target)) hiddenBefore.set(record.target, record.oldValue !== null);
-      if (record.type === "childList") for (const node of record.removedNodes) moved.add(node);
-    }
-    for (const record of records) {
-      const mode2 = modeOf2(record.target);
-      if (mode2 === "none") continue;
-      if (record.type === "attributes" && record.target instanceof HTMLElement && !record.target.hidden && hiddenBefore.get(record.target)) {
-        hiddenBefore.delete(record.target);
-        arrive(record.target, motion);
-      }
-      if (record.type === "childList")
-        for (const node of record.addedNodes) {
-          if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute("data-kp-ghost")) continue;
-          if (mode2 === "new" && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
-          arrive(node, motion);
-        }
-    }
-    watch2();
-    settle3();
-  });
-  list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"], attributeOldValue: true });
-  return () => {
-    if (!own.__kpSize) return;
-    motionState.watching -= 1;
-    sizes.disconnect();
-    list.disconnect();
-    running?.cancel();
-    box.style.removeProperty("overflow");
-    box.style.removeProperty("box-sizing");
-    delete own.__kpSize;
-  };
-}
-function attachFold(details) {
-  const own = (
-    /** @type {any} */
-    details
-  );
-  if (own.__kpFold) return () => {
-  };
-  const summary2 = details.querySelector(":scope > summary");
-  if (!summary2) return () => {
-  };
-  own.__kpFold = true;
-  motionState.watching += 1;
-  let running = null;
-  let folding = false;
-  const fresh = firstRender(details);
-  const shutHeight = () => {
-    const style = getComputedStyle(details);
-    return layoutHeight(
-      /** @type {HTMLElement} */
-      summary2
-    ) + parseFloat(style.borderBlockStartWidth || "0") + parseFloat(style.borderBlockEndWidth || "0");
-  };
-  const setOpen = (value) => {
-    details.open = value;
-    watcher.takeRecords();
-  };
-  const move = (opening, from, size2, ease) => {
-    running?.finish();
-    folding = !opening;
-    setOpen(true);
-    const to = opening ? layoutHeight(details) : shutHeight();
-    details.toggleAttribute("data-kp-folding", folding);
-    const { animation: mine, done } = glide(details, from, to, size2, sizeEase(details, ease, to - from, true), true);
-    running = mine;
-    mine.finished.then(() => {
-      done();
-      if (running !== mine) return;
-      running = null;
-      if (folding) {
-        folding = false;
-        setOpen(false);
-      }
-      details.removeAttribute("data-kp-folding");
-    }).catch(() => void 0);
-  };
-  const onClick = (event) => {
-    const { size: size2, ease } = themeMotion(details);
-    if (size2 <= 0) return;
-    event.preventDefault();
-    move(!details.open || folding, layoutHeight(details), size2, ease);
-  };
-  const watcher = new MutationObserver((records) => {
-    const was = records[0].oldValue !== null;
-    const now = details.open;
-    if (fresh() || was === now || !details.isConnected) return;
-    const { size: size2, ease } = themeMotion(details);
-    if (size2 <= 0) return;
-    let from;
-    if (running) from = layoutHeight(details);
-    else if (now) from = shutHeight();
-    else {
-      setOpen(true);
-      from = layoutHeight(details);
-    }
-    move(now, from, size2, ease);
-  });
-  watcher.observe(details, { attributes: true, attributeFilter: ["open"], attributeOldValue: true });
-  summary2.addEventListener("click", onClick);
-  return () => {
-    if (!own.__kpFold) return;
-    motionState.watching -= 1;
-    watcher.disconnect();
-    summary2.removeEventListener("click", onClick);
-    running?.cancel();
-    details.style.removeProperty("overflow");
-    details.removeAttribute("data-kp-folding");
-    delete own.__kpFold;
-  };
-}
 var FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_fold_size = __esm({
   "js/motion/fold-size.js"() {
     "use strict";
     init_as_of();
-    init_state();
     init_arrive();
-    init_constants2();
-    init_close();
-    init_timing();
-    init_size();
-    init_leave();
     FOLDING_OUT = "out";
     heightFolds = /* @__PURE__ */ new WeakSet();
     followsAFold = (box) => [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some(
@@ -4609,183 +4383,7 @@ var init_fold = __esm({
   }
 });
 
-// js/motion/close.js
-async function closeDialog(dialog, returnValue) {
-  const close = () => nativeClose?.call(dialog, returnValue);
-  if (!dialog.open || closing.has(dialog)) return;
-  const { close: duration2 } = themeMotion(dialog);
-  const kept = entrances.get(dialog) ?? [];
-  if (duration2 <= 0) return void close();
-  closing.add(dialog);
-  const out = [];
-  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
-  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
-    try {
-      out.push(
-        target.animate(keyframes, {
-          duration: lines ? lines[at].duration : duration2,
-          ...lines ? { delay: lines[at].closeDelay } : {},
-          easing,
-          direction: "reverse",
-          fill: "forwards",
-          ...pseudoElement ? { pseudoElement } : {}
-        })
-      );
-    } catch {
-    }
-  });
-  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
-    try {
-      out.push(
-        dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards", pseudoElement: "::backdrop" })
-      );
-    } catch {
-    }
-  }
-  if (kept.length === 0) out.push(dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards" }));
-  await Promise.all(out.map((a) => a.finished.catch(() => void 0)));
-  closing.delete(dialog);
-  close();
-  for (const a of out) a.cancel();
-}
-function openAsReversedClose(dialog) {
-  if (!dialog.open || !opensAsReversedClose(dialog)) return;
-  const { close: duration2 } = themeMotion(dialog);
-  const kept = entrances.get(dialog) ?? [];
-  if (duration2 <= 0) return;
-  for (const a of entranceOf(dialog)) a.cancel();
-  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
-  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
-    try {
-      target.animate(keyframes, {
-        duration: lines ? lines[at].duration : duration2,
-        ...lines ? { delay: lines[at].openDelay } : {},
-        easing,
-        fill: "backwards",
-        ...pseudoElement ? { pseudoElement } : {}
-      });
-    } catch {
-    }
-  });
-  const fade = (
-    /** @type {Keyframe[]} */
-    [{ opacity: 1 }, { opacity: 0 }]
-  );
-  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
-    try {
-      dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards", pseudoElement: "::backdrop" });
-    } catch {
-    }
-  }
-  if (kept.length === 0) dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards" });
-}
-function attachClose(dialog) {
-  const own = (
-    /** @type {any} */
-    dialog
-  );
-  if (own.__kpMotion) return () => {
-  };
-  own.__kpMotion = true;
-  motionState.watching += 1;
-  const showModal = dialog.showModal;
-  const show = dialog.show;
-  own.showModal = function() {
-    showModal.call(dialog);
-    rememberEntrance(dialog);
-    openAsReversedClose(dialog);
-  };
-  own.show = function() {
-    show.call(dialog);
-    rememberEntrance(dialog);
-    openAsReversedClose(dialog);
-  };
-  own.close = (value) => void closeDialog(dialog, value);
-  if (dialog.open) {
-    rememberEntrance(dialog);
-    openAsReversedClose(dialog);
-  }
-  const onCancel2 = (event) => {
-    if (event.defaultPrevented) return;
-    event.preventDefault();
-    void closeDialog(dialog);
-  };
-  dialog.addEventListener("cancel", onCancel2);
-  return () => {
-    if (!own.__kpMotion) return;
-    motionState.watching -= 1;
-    dialog.removeEventListener("cancel", onCancel2);
-    delete own.showModal;
-    delete own.show;
-    delete own.close;
-    delete own.__kpMotion;
-  };
-}
-function playEntranceBackwards(el16) {
-  stopReversing(el16);
-  if (reduced() || !el16.isConnected) return Promise.resolve(false);
-  const named = (pseudo) => {
-    const name = getComputedStyle(el16, pseudo).animationName;
-    return Boolean(name) && name !== "none";
-  };
-  if (![null, "::before", "::after"].some(named)) return Promise.resolve(false);
-  el16.setAttribute(REVERSING_ATTRIBUTE, "reset");
-  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el16, pseudo).animationName;
-  el16.setAttribute(REVERSING_ATTRIBUTE, "play");
-  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el16, pseudo).animationName;
-  const plays = el16.getAnimations({ subtree: true }).filter(
-    (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-    a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity
-  );
-  if (plays.length === 0) {
-    el16.removeAttribute(REVERSING_ATTRIBUTE);
-    return Promise.resolve(false);
-  }
-  return new Promise((resolve) => {
-    const own = (
-      /** @type {any} */
-      el16
-    );
-    own.__kpReversing = () => {
-      for (const a of plays) {
-        if (a.playState !== "running" || a.currentTime === null) continue;
-        const end = Number(a.effect?.getComputedTiming().endTime) || 0;
-        a.currentTime = Math.max(0, end - Number(a.currentTime));
-      }
-      resolve(false);
-    };
-    const ended = (a) => new Promise((done) => {
-      a.addEventListener("cancel", done, { once: true });
-      a.addEventListener("remove", done, { once: true });
-      a.finished.then(done, done);
-    });
-    const running = () => el16.getAnimations().filter(
-      (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-      a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
-    );
-    const settle3 = (waited) => {
-      if (own.__kpReversing === void 0) return;
-      void Promise.all(waited.map(ended)).then(() => {
-        if (own.__kpReversing === void 0) return;
-        const next2 = running();
-        if (next2.length > 0) return settle3(next2);
-        delete own.__kpReversing;
-        resolve(true);
-      });
-    };
-    settle3(plays);
-  });
-}
-function stopReversing(el16) {
-  const own = (
-    /** @type {any} */
-    el16
-  );
-  const stop = own.__kpReversing;
-  delete own.__kpReversing;
-  stop?.();
-  el16.removeAttribute(REVERSING_ATTRIBUTE);
-}
+// js/motion/panel-close.js
 async function playClose(el16) {
   stopClose(el16);
   if (reduced() || !el16.isConnected) return true;
@@ -4913,26 +4511,13 @@ function closePopoverWithGhost(event) {
     }, 0);
   }
 }
-var opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted;
-var init_close = __esm({
-  "js/motion/close.js"() {
+var CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted;
+var init_panel_close = __esm({
+  "js/motion/panel-close.js"() {
     "use strict";
-    init_state();
-    init_keyframes();
     init_timing();
     init_fold();
-    opensAsReversedClose = (el16) => getComputedStyle(el16).getPropertyValue("--kp-open").trim() === "reverse-close";
-    switching = 0;
-    if (typeof document !== "undefined" && typeof MutationObserver === "function") {
-      new MutationObserver(() => {
-        const mine = ++switching;
-        const release2 = () => {
-          if (switching === mine) switching = 0;
-        };
-        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release2, release2)));
-      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    }
-    REVERSING_ATTRIBUTE = "data-kp-reversing";
+    init_reverse();
     CLOSING_ATTRIBUTE = "data-kp-closing";
     PANEL_SELECTOR = ".kp-popover:not(.kp-tooltip), .kp-menu, .kp-combobox__list, .kp-datepicker__panel";
     ghosted = /* @__PURE__ */ new WeakSet();
@@ -4940,67 +4525,688 @@ var init_close = __esm({
   }
 });
 
-// js/motion/attach.js
-function attachMotion(root = document, { size: size2 = "", arrive: arrive3 = "all", arriveKeys = [] } = {}) {
-  const detaches = /* @__PURE__ */ new Map();
-  const sizeSelector = size2.trim() ? `${SIZE_SELECTOR}, ${size2}` : SIZE_SELECTOR;
-  const keep = (el16, detach) => {
-    const before = detaches.get(el16);
-    detaches.set(el16, before ? () => (before(), detach()) : detach);
+// js/motion/leave.js
+function leavesState(el16) {
+  return getComputedStyle(el16).getPropertyValue("--kp-leave-state").trim() === "leave";
+}
+function leave(el16, { hide: hide2 = false } = {}) {
+  return new Promise((resolve) => {
+    if (!motionState.batch) {
+      motionState.batch = [];
+      queueMicrotask(() => {
+        const items = (
+          /** @type {Leaving[]} */
+          motionState.batch
+        );
+        motionState.batch = null;
+        void leaveInTurn(items);
+      });
+    }
+    motionState.batch.push({ el: el16, hide: hide2, resolve });
+  });
+}
+async function leaveInTurn(items) {
+  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
+  for (const item of items) {
+    const exited = new Promise((resolve) => {
+      void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
+    });
+    await exited;
+  }
+}
+async function leaveOne(el16, hide2, exited, count2 = 1) {
+  const gone = () => {
+    if (hide2) el16.hidden = true;
+    else el16.remove();
   };
-  const scan = (scope) => {
-    const all = (selector) => [
-      ...scope instanceof Element && scope.matches(selector) ? [scope] : [],
-      ...scope.querySelectorAll(selector)
-    ];
-    for (const el16 of all("dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm"))
-      if (!el16.hasAttribute("data-kp-ghost")) keep(el16, attachClose(
-        /** @type {HTMLDialogElement} */
-        el16
-      ));
-    for (const el16 of all(sizeSelector))
-      if (!el16.hasAttribute("data-kp-ghost")) keep(el16, easeSize(
-        /** @type {HTMLElement} */
-        el16,
-        { arrive: arrive3, arriveKeys }
-      ));
-    for (const el16 of all(FOLD_SELECTOR)) if (el16 instanceof HTMLDetailsElement && !el16.hasAttribute("data-kp-ghost")) keep(el16, attachFold(el16));
+  entering.get(el16)?.();
+  if (!el16.isConnected || el16.hasAttribute("data-kp-leaving")) return exited();
+  const before = getComputedStyle(el16).animationName;
+  const beforeSig = animationSignature(el16);
+  const rest = pseudoNames(el16);
+  const arrival2 = arrivalOf(el16);
+  const { size: size2, ease } = themeMotion(el16);
+  if (!arrival2 && size2 <= 0) {
+    exited();
+    return gone();
+  }
+  el16.setAttribute("data-kp-leaving", "");
+  const style = getComputedStyle(el16);
+  const ownName = style.animationName;
+  const turned = ownName && ownName !== "none" && ownName === before && animationSignature(el16) !== beforeSig;
+  if (turned) {
+    el16.setAttribute(REVERSING_ATTRIBUTE, "reset");
+    getComputedStyle(el16).animationName;
+    el16.removeAttribute(REVERSING_ATTRIBUTE);
+    getComputedStyle(el16).animationName;
+  }
+  const own = ownName && ownName !== "none" && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
+  const running = [];
+  const lasts = own ? own.duration : arrival2?.duration ?? 0;
+  const fold2 = style.getPropertyValue("--kp-leave-fold").trim();
+  let actor = el16;
+  if (fold2 === "ghost" && lasts > 0) {
+    actor = /** @type {HTMLElement} */
+    el16.cloneNode(true);
+    actor.setAttribute("aria-hidden", "true");
+    actor.inert = true;
+    Object.assign(actor.style, {
+      position: "absolute",
+      top: `${el16.offsetTop}px`,
+      left: `${el16.offsetLeft}px`,
+      width: `${el16.offsetWidth}px`,
+      height: `${el16.offsetHeight}px`,
+      margin: "0",
+      boxSizing: "border-box",
+      pointerEvents: "none",
+      zIndex: "1"
+    });
+    el16.after(actor);
+    const want = el16.getBoundingClientRect();
+    const got = actor.getBoundingClientRect();
+    actor.style.top = `${el16.offsetTop + want.top - got.top}px`;
+    actor.style.left = `${el16.offsetLeft + want.left - got.left}px`;
+    el16.style.setProperty("visibility", "hidden");
+    el16.style.setProperty("animation", "none");
+  }
+  if (!own && arrival2) actor.style.animation = `${arrival2.name} ${arrival2.duration}ms ${arrival2.ease} reverse forwards`;
+  if (Object.values(rest).some((sig2) => !sig2.startsWith("none "))) {
+    const inline2 = actor.style.animation;
+    actor.setAttribute(REVERSING_ATTRIBUTE, "reset");
+    for (const pseudo of [null, "::before", "::after"]) getComputedStyle(actor, pseudo).animationName;
+    actor.removeAttribute(REVERSING_ATTRIBUTE);
+    actor.style.animation = inline2;
+  }
+  getComputedStyle(actor).animationName;
+  for (const a of actor.getAnimations({ subtree: true })) {
+    const effect = (
+      /** @type {KeyframeEffect | null} */
+      a.effect
+    );
+    const pseudo = effect?.pseudoElement;
+    if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
+    const timing = effect.getTiming();
+    if (!Number.isFinite(Number(timing.iterations))) continue;
+    const keyframes = keyframesOf(effect);
+    a.cancel();
+    try {
+      running.push(
+        actor.animate(keyframes, {
+          duration: Number(timing.duration) || 0,
+          iterations: Number(timing.iterations),
+          easing: String(timing.easing ?? "linear"),
+          direction: flipped(timing.direction),
+          fill: "forwards",
+          pseudoElement: pseudo
+        }).finished.catch(() => void 0)
+      );
+    } catch {
+    }
+  }
+  const lines = style.getPropertyValue("--kp-lines").trim() === "keep";
+  const exit = lasts > 0 ? playedOut(actor, lasts + 100, lines) : Promise.resolve();
+  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
+  const stagger = Number.isNaN(set) ? 0.5 : set;
+  const capped = lasts > 0 && count2 > 2 ? cappedGap(actor, stagger, lasts, count2, lines) : null;
+  if (capped !== null) void atTime(actor, capped, exit, lines).then(exited);
+  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
+  else void exit.then(exited);
+  running.push(exit);
+  const foldTo = size2 > 0 && !(el16 instanceof HTMLTableRowElement) && !floats(el16, style) ? foldFrames(el16, style) : null;
+  if (foldTo && !foldReflows(el16, ...foldTo)) {
+    el16.style.setProperty("overflow", "clip");
+    el16.style.setProperty("box-sizing", "border-box");
+    const [from, to] = foldTo;
+    if ("height" in from) heightFolds.add(el16);
+    const after = fold2 === "after";
+    const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
+    const timing = foldTiming(style);
+    const foldEase = foldCurve(style, ease);
+    const folding = el16.animate([from, to], {
+      duration: steppedDuration(el16, withoutOvershoot(foldEase), Math.max(size2, lasts) * timing.grow),
+      delay: onStepClock(el16, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts)),
+      easing: withoutOvershoot(foldEase),
+      fill: "forwards"
+    });
+    running.push(folding.finished.catch(() => void 0));
+  }
+  await Promise.all(running);
+  heightFolds.delete(el16);
+  if (actor !== el16) actor.remove();
+  gone();
+  el16.removeAttribute("data-kp-leaving");
+  el16.style.removeProperty("animation");
+  el16.style.removeProperty("overflow");
+  el16.style.removeProperty("box-sizing");
+  el16.style.removeProperty("visibility");
+  for (const a of el16.getAnimations()) a.cancel();
+}
+function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
+  const list = [...records].filter((r) => r.type === "childList");
+  const gone = /* @__PURE__ */ new Map();
+  const keyOf8 = (e) => {
+    for (const name of keys) {
+      const value = name === "id" ? e.getAttribute("id") || e.id || null : e.getAttribute(name);
+      if (value) return `${name}=${value}`;
+    }
+    return null;
   };
-  scan(root);
-  let sweeping = false;
-  const sweep = () => {
-    sweeping = false;
-    for (const [el16, detach] of detaches)
-      if (!el16.isConnected) {
-        detach();
-        detaches.delete(el16);
+  const sigOf = (e) => `${e.tagName}.${e.className}`;
+  const skeletal = (e) => typeof e.matches === "function" && e.matches(SKELETON) || typeof e.querySelector === "function" && e.querySelector(SKELETON) !== null;
+  for (const r of list)
+    for (const n of Array.from(r.removedNodes)) {
+      if (n?.nodeType !== 1) continue;
+      const g = gone.get(r.target) ?? { keys: /* @__PURE__ */ new Set(), sigs: /* @__PURE__ */ new Map(), skeleton: false };
+      gone.set(r.target, g);
+      const k = keyOf8(n);
+      if (k) g.keys.add(k);
+      g.sigs.set(sigOf(n), (g.sigs.get(sigOf(n)) ?? 0) + 1);
+      if (skeletal(n)) g.skeleton = true;
+    }
+  const out = /* @__PURE__ */ new Set();
+  for (const r of list)
+    for (const n of Array.from(r.addedNodes)) {
+      if (n?.nodeType !== 1) continue;
+      const g = gone.get(r.target);
+      if (!g) continue;
+      if (g.skeleton) {
+        out.add(n);
+        continue;
       }
-  };
-  const later = new MutationObserver((records) => {
-    for (const record of records) {
-      for (const node of record.addedNodes) if (node instanceof Element) scan(node);
-      if (record.removedNodes.length && !sweeping) {
-        sweeping = true;
-        queueMicrotask(sweep);
+      const k = keyOf8(n);
+      const left = g.sigs.get(sigOf(n)) ?? 0;
+      if (k ? g.keys.has(k) : left > 0) {
+        out.add(n);
+        if (!k) g.sigs.set(sigOf(n), left - 1);
       }
     }
-  });
-  later.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), { childList: true, subtree: true });
-  return () => {
-    later.disconnect();
-    for (const one of detaches.values()) one();
-    detaches.clear();
-  };
+  return out;
 }
+var init_leave = __esm({
+  "js/motion/leave.js"() {
+    "use strict";
+    init_state();
+    init_reversed_leave();
+    init_fold();
+    init_timing();
+    init_reverse();
+    init_keyframes();
+    init_fold_size();
+    init_size();
+    init_constants2();
+  }
+});
+
+// js/motion/box-size.js
+function batchOf(records) {
+  const hiddenBefore = /* @__PURE__ */ new Map();
+  const moved = /* @__PURE__ */ new Set();
+  for (const record of records) {
+    if (record.type === "attributes" && !hiddenBefore.has(record.target)) hiddenBefore.set(record.target, record.oldValue !== null);
+    if (record.type === "childList") for (const node of record.removedNodes) moved.add(node);
+  }
+  return { hiddenBefore, moved };
+}
+function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
+  if (controllerOf(box, BoxSize)) return () => {
+  };
+  const control = attachOne(box, BoxSize, { arrive: fallback2, arriveKeys });
+  return () => control?.destroy();
+}
+var FOLD_TICK_HOLD_MS, SAME_PX, BoxSize;
+var init_box_size = __esm({
+  "js/motion/box-size.js"() {
+    "use strict";
+    init_controller();
+    init_state();
+    init_arrive();
+    init_constants2();
+    init_switching();
+    init_timing();
+    init_size();
+    init_leave();
+    init_fold_size();
+    FOLD_TICK_HOLD_MS = 300;
+    SAME_PX = 1;
+    BoxSize = class extends Controller {
+      /** @param {HTMLElement} box @param {SizeOptions} [options] */
+      constructor(box, options = {}) {
+        super(box, options);
+        this.fallback = options.arrive ?? "all";
+        this.keys = [...options.arriveKeys ?? [], ...ARRIVE_KEYS];
+        this.last = 0;
+        this.running = null;
+        this.followedAt = -Infinity;
+        this.fresh = () => true;
+        this.sizes = null;
+      }
+      connect() {
+        const box = this.host;
+        motionState.watching += 1;
+        this.own(() => this.release());
+        this.last = box.offsetHeight;
+        this.fresh = firstRender(box);
+        this.sizes = this.observe(new ResizeObserver((entries2) => this.onResize(entries2)));
+        this.watch();
+        const list = this.observe(new MutationObserver((records) => this.onChange(records)));
+        list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"], attributeOldValue: true });
+      }
+      /** The glide stops and the box loses the style a glide gave it; motion watches one box fewer. */
+      release() {
+        motionState.watching -= 1;
+        this.running?.cancel();
+        this.host.style.removeProperty("overflow");
+        this.host.style.removeProperty("box-sizing");
+      }
+      /** Watch the box and each of its children as they are now. */
+      watch() {
+        const sizes = (
+          /** @type {ResizeObserver} */
+          this.sizes
+        );
+        sizes.disconnect();
+        sizes.observe(this.host);
+        for (const child of this.host.children) sizes.observe(child);
+      }
+      /** @param {ResizeObserverEntry[]} entries */
+      onResize(entries2) {
+        if (entries2.some((entry) => entry.target !== this.host)) this.settle();
+        else if (!this.running) this.last = this.host.offsetHeight;
+      }
+      /**
+       * During a glide a child may change size only because the box's height
+       * moves (a stretched or squeezed item): the size the content asks for is
+       * the same, so the glide goes on. Restarting it there started it again
+       * from where it stood on every frame, and the box crept towards its size
+       * for seconds. The effect is lifted off the box for one read, which
+       * leaves its timing alone.
+       * @returns {boolean} whether the content asks for the height already gliding to
+       */
+      asksTheSame() {
+        const effect = (
+          /** @type {KeyframeEffect | null} */
+          this.running?.effect ?? null
+        );
+        if (!this.running || !effect) return false;
+        effect.target = null;
+        const natural = settledHeight(this.host);
+        effect.target = this.host;
+        return Math.abs(natural - this.last) < SAME_PX;
+      }
+      /** Something in the box changed size: glide from the height on screen to the one it settles at. */
+      settle() {
+        const box = this.host;
+        if (!box.isConnected || this.asksTheSame()) return;
+        const from = this.running ? box.offsetHeight : this.last;
+        this.running?.finish();
+        this.running = null;
+        const to = settledHeight(box);
+        this.last = to;
+        if (this.holds(from, to)) return;
+        const { size: size2, ease } = themeMotion(box);
+        if (size2 > 0) this.glideTo(from, to, size2, ease);
+      }
+      /**
+       * Whether the box takes `to` without a glide of its own: a theme switch, a first render, no change, an
+       * empty end, or a fold in it that the box follows frame by frame.
+       * @param {number} from @param {number} to
+       */
+      holds(from, to) {
+        const box = this.host;
+        if (switching || this.fresh() || Math.abs(to - from) < SAME_PX || from === 0 || to === 0) {
+          if (Math.abs(to - from) < SAME_PX && followsAFold(box)) this.followedAt = performance.now();
+          return true;
+        }
+        if (followsAFold(box)) {
+          this.followedAt = performance.now();
+          return true;
+        }
+        const ticks = getComputedStyle(box).getPropertyValue("--kp-leave-fold-ease").trim() !== "";
+        if (performance.now() - this.followedAt < FOLD_TICK_HOLD_MS && ticks) {
+          this.followedAt = -Infinity;
+          return true;
+        }
+        return false;
+      }
+      /** @param {number} from @param {number} to @param {number} size @param {string} ease */
+      glideTo(from, to, size2, ease) {
+        const box = this.host;
+        const delay = to < from ? Math.max(0, foldingOutFor(box) - size2) : 0;
+        const easing = sizeEase(box, ease, to - from);
+        const { animation: mine, done } = glide(box, from, to, steppedDuration(box, easing, size2), easing, false, delay);
+        this.running = mine;
+        mine.finished.then(() => {
+          done();
+          if (this.running === mine) this.running = null;
+        }).catch(() => void 0);
+      }
+      /**
+       * Which arrivals play for a change under `target`. A live view that
+       * redraws its rows marks the box `data-kp-arrive="none"`, or every
+       * refresh replays every arrival (the homelab dashboard's live repaint,
+       * 2026-10-04); with `data-kp-arrive="new"` a redrawn row stays still and
+       * only a row with a key not seen a moment ago arrives [port spec G].
+       * A first render arrives as nothing: it is the page, not news.
+       * @param {Node} target
+       */
+      modeOf(target) {
+        return this.fresh() ? "none" : arriveMode(target instanceof Element ? target : this.host, this.fallback);
+      }
+      /** What changed in the box arrives the theme's way; then the box settles. @param {MutationRecord[]} records */
+      onChange(records) {
+        const any = records.some((record) => this.modeOf(record.target) !== "none");
+        this.arriveAll(records, records.length && any ? arrival(this.host) : null);
+        this.watch();
+        this.settle();
+      }
+      /**
+       * Only what changed over the whole batch arrives: an element hidden and
+       * shown again in one task was never gone (the data table hides every row
+       * and shows its page again on each render, and every shown row of every
+       * group replayed its arrival when one group folded), and an element
+       * taken out and put back is moved, not new (a sort appends its rows
+       * again). Kenny, 2026-10-05.
+       * @param {MutationRecord[]} records @param {ReturnType<typeof arrival> | null} motion
+       */
+      arriveAll(records, motion) {
+        let repainted = null;
+        const { hiddenBefore, moved } = batchOf(records);
+        for (const record of records) {
+          const mode2 = this.modeOf(record.target);
+          if (mode2 === "none") continue;
+          const target = record.target;
+          if (record.type === "attributes" && target instanceof HTMLElement && !target.hidden && hiddenBefore.get(target)) {
+            hiddenBefore.delete(target);
+            arrive(target, motion);
+          }
+          if (record.type !== "childList") continue;
+          for (const node of record.addedNodes) {
+            if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute("data-kp-ghost")) continue;
+            if (mode2 === "new" && (repainted ??= repaintedIn(records, { keys: this.keys })).has(node)) continue;
+            arrive(node, motion);
+          }
+        }
+      }
+    };
+  }
+});
+
+// js/motion/dialog-close.js
+function attachClose(dialog) {
+  if (controllerOf(dialog, DialogClose)) return () => {
+  };
+  const control = attachOne(dialog, DialogClose);
+  return () => control?.destroy();
+}
+var DialogClose;
+var init_dialog_close = __esm({
+  "js/motion/dialog-close.js"() {
+    "use strict";
+    init_controller();
+    init_state();
+    init_keyframes();
+    init_close();
+    DialogClose = class extends Controller {
+      connect() {
+        const dialog = (
+          /** @type {HTMLDialogElement} */
+          this.host
+        );
+        motionState.watching += 1;
+        this.own(() => this.release());
+        this.shadow(dialog);
+        if (dialog.open) this.opened(dialog);
+        this.listen(dialog, "cancel", (event) => {
+          if (event.defaultPrevented) return;
+          event.preventDefault();
+          void closeDialog(dialog);
+        });
+      }
+      /** Shadow the dialog's show, showModal and close with ones that play the motion. @param {HTMLDialogElement} dialog */
+      shadow(dialog) {
+        const own = (
+          /** @type {any} */
+          dialog
+        );
+        const showModal = dialog.showModal;
+        const show = dialog.show;
+        own.showModal = () => {
+          showModal.call(dialog);
+          this.opened(dialog);
+        };
+        own.show = () => {
+          show.call(dialog);
+          this.opened(dialog);
+        };
+        own.close = (value) => void closeDialog(dialog, value);
+      }
+      /** The dialog just opened: keep its entrance for the close, and play the opening as that close turned around. @param {HTMLDialogElement} dialog */
+      opened(dialog) {
+        rememberEntrance(dialog);
+        openAsReversedClose(dialog);
+      }
+      /** Motion watches one dialog fewer, and the dialog's own methods are its own again. */
+      release() {
+        const own = (
+          /** @type {any} */
+          this.host
+        );
+        motionState.watching -= 1;
+        delete own.showModal;
+        delete own.show;
+        delete own.close;
+      }
+    };
+  }
+});
+
+// js/motion/fold-control.js
+function attachFold(details) {
+  if (controllerOf(details, FoldControl) || !details.querySelector(":scope > summary")) return () => {
+  };
+  const control = attachOne(details, FoldControl);
+  return () => control?.destroy();
+}
+var FoldControl;
+var init_fold_control = __esm({
+  "js/motion/fold-control.js"() {
+    "use strict";
+    init_controller();
+    init_state();
+    init_arrive();
+    init_timing();
+    init_size();
+    init_fold_size();
+    FoldControl = class extends Controller {
+      /** @param {HTMLElement} host a `<details>` with a summary @param {Record<string, unknown>} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.details = /** @type {HTMLDetailsElement} */
+        host;
+        const details = this.details;
+        this.summary = /** @type {HTMLElement} */
+        details.querySelector(":scope > summary");
+        this.running = null;
+        this.folding = false;
+        this.fresh = () => true;
+        this.watcher = null;
+      }
+      connect() {
+        const details = this.details;
+        motionState.watching += 1;
+        this.own(() => this.release());
+        this.fresh = firstRender(details);
+        this.watcher = this.observe(new MutationObserver((records) => this.onOpenSet(records)));
+        this.watcher.observe(details, { attributes: true, attributeFilter: ["open"], attributeOldValue: true });
+        this.listen(this.summary, "click", (event) => this.onClick(event));
+      }
+      /** The glide stops and the fold loses what a glide gave it; motion watches one fold fewer. */
+      release() {
+        motionState.watching -= 1;
+        this.running?.cancel();
+        this.details.style.removeProperty("overflow");
+        this.details.removeAttribute("data-kp-folding");
+      }
+      /** The height of the fold shut: its summary and its borders. */
+      shutHeight() {
+        const style = getComputedStyle(this.details);
+        return layoutHeight(this.summary) + parseFloat(style.borderBlockStartWidth || "0") + parseFloat(style.borderBlockEndWidth || "0");
+      }
+      /** `open` set by the fold itself, which the watcher does not answer. @param {boolean} value */
+      setOpen(value) {
+        this.details.open = value;
+        this.watcher?.takeRecords();
+      }
+      /**
+       * Glide open or shut from the height the fold stands at now. While it
+       * folds shut it carries `data-kp-folding`, so what counts only what is
+       * shown (a tile set, js/tiles.js) lets it go at the start of the fold
+       * rather than at its end.
+       * @param {boolean} opening @param {number} from @param {number} size @param {string} ease
+       */
+      move(opening, from, size2, ease) {
+        const details = this.details;
+        this.running?.finish();
+        this.folding = !opening;
+        this.setOpen(true);
+        const to = opening ? layoutHeight(details) : this.shutHeight();
+        details.toggleAttribute("data-kp-folding", this.folding);
+        const { animation: mine, done } = glide(details, from, to, size2, sizeEase(details, ease, to - from, true), true);
+        this.running = mine;
+        mine.finished.then(() => {
+          done();
+          if (this.running === mine) this.landed();
+        }).catch(() => void 0);
+      }
+      /** The glide that owned the fold played out: a fold shut lets go of `open` now. */
+      landed() {
+        this.running = null;
+        if (this.folding) {
+          this.folding = false;
+          this.setOpen(false);
+        }
+        this.details.removeAttribute("data-kp-folding");
+      }
+      /** A press on the summary glides instead of jumping. @param {Event} event */
+      onClick(event) {
+        const { size: size2, ease } = themeMotion(this.details);
+        if (size2 <= 0) return;
+        event.preventDefault();
+        this.move(!this.details.open || this.folding, layoutHeight(this.details), size2, ease);
+      }
+      /** `open` changed from outside: glide from where the fold stands. @param {MutationRecord[]} records */
+      onOpenSet(records) {
+        const details = this.details;
+        const was = records[0].oldValue !== null;
+        const now = details.open;
+        if (this.fresh() || was === now || !details.isConnected) return;
+        const { size: size2, ease } = themeMotion(details);
+        if (size2 <= 0) return;
+        let from;
+        if (this.running) from = layoutHeight(details);
+        else if (now) from = this.shutHeight();
+        else {
+          this.setOpen(true);
+          from = layoutHeight(details);
+        }
+        this.move(now, from, size2, ease);
+      }
+    };
+  }
+});
+
+// js/motion/attach.js
+function attachMotion(root = document, { size: size2 = "", arrive: arrive3 = "all", arriveKeys = [] } = {}) {
+  const motion = new MotionRoot(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    root,
+    { size: size2, arrive: arrive3, arriveKeys }
+  );
+  motion.connect();
+  return () => motion.destroy();
+}
+var DIALOGS, MotionRoot;
 var init_attach = __esm({
   "js/motion/attach.js"() {
     "use strict";
+    init_controller();
     init_constants2();
-    init_close();
-    init_fold_size();
+    init_dialog_close();
+    init_box_size();
+    init_fold_control();
+    DIALOGS = "dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm";
+    MotionRoot = class extends Controller {
+      /** @param {HTMLElement} root (a Document passes too) @param {SizeOptions & { size?: string }} [options] */
+      constructor(root, options = {}) {
+        super(root, options);
+        this.sizeSelector = options.size?.trim() ? `${SIZE_SELECTOR}, ${options.size}` : SIZE_SELECTOR;
+        this.sizeOptions = { arrive: options.arrive ?? "all", arriveKeys: options.arriveKeys ?? [] };
+        this.detaches = /* @__PURE__ */ new Map();
+        this.sweeping = false;
+      }
+      connect() {
+        const root = (
+          /** @type {ParentNode} */
+          /** @type {unknown} */
+          this.host
+        );
+        this.own(() => this.letGoAll());
+        this.scan(root);
+        const later = this.observe(new MutationObserver((records) => this.onChange(records)));
+        later.observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), { childList: true, subtree: true });
+      }
+      /** @param {Element} el @param {() => void} detach */
+      keep(el16, detach) {
+        const before = this.detaches.get(el16);
+        this.detaches.set(el16, before ? () => (before(), detach()) : detach);
+      }
+      /** Wire what is under `scope`, `scope` itself included. @param {ParentNode} scope */
+      scan(scope) {
+        const all = (selector) => [
+          ...scope instanceof Element && scope.matches(selector) ? [scope] : [],
+          ...scope.querySelectorAll(selector)
+        ];
+        for (const el16 of all(DIALOGS)) if (!el16.hasAttribute("data-kp-ghost")) this.keep(el16, attachClose(
+          /** @type {HTMLDialogElement} */
+          el16
+        ));
+        for (const el16 of all(this.sizeSelector))
+          if (!el16.hasAttribute("data-kp-ghost")) this.keep(el16, easeSize(
+            /** @type {HTMLElement} */
+            el16,
+            this.sizeOptions
+          ));
+        for (const el16 of all(FOLD_SELECTOR)) if (el16 instanceof HTMLDetailsElement && !el16.hasAttribute("data-kp-ghost")) this.keep(el16, attachFold(el16));
+      }
+      /** What is added is wired; what is removed is let go a microtask later, unless it came back. @param {MutationRecord[]} records */
+      onChange(records) {
+        for (const record of records) {
+          for (const node of record.addedNodes) if (node instanceof Element) this.scan(node);
+          if (record.removedNodes.length && !this.sweeping) {
+            this.sweeping = true;
+            queueMicrotask(() => this.sweep());
+          }
+        }
+      }
+      /** Let go of every wired element no longer in the page. */
+      sweep() {
+        this.sweeping = false;
+        for (const [el16, detach] of this.detaches)
+          if (!el16.isConnected) {
+            detach();
+            this.detaches.delete(el16);
+          }
+      }
+      /** Let go of every element this root wired. */
+      letGoAll() {
+        for (const one of this.detaches.values()) one();
+        this.detaches.clear();
+      }
+    };
   }
 });
 
@@ -5046,10 +5252,13 @@ var init_motion = __esm({
     init_timing();
     init_keyframes();
     init_close();
+    init_reverse();
+    init_panel_close();
     init_size();
     init_arrive();
     init_leave();
     init_fold_size();
+    init_box_size();
     init_attach();
   }
 });

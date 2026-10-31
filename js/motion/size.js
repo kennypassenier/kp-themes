@@ -1,6 +1,6 @@
 // Size easing: the curve and the stepped clock a height change runs on.
 import { msOf, themeMotion } from './timing.js';
-import { switching } from './close.js';
+import { switching } from './switching.js';
 
 /**
  * The entrance's curve without its overshoot: a size goes to its new value

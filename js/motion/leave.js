@@ -3,7 +3,7 @@ import { motionState } from './state.js';
 import { animationSignature, entering, flipped, floats, pseudoNames } from './reversed-leave.js';
 import { arrivalOf, atTime, cappedGap, foldCurve, foldFrames, foldReflows, foldTiming, partway, playedOut } from './fold.js';
 import { firstMs, themeMotion } from './timing.js';
-import { REVERSING_ATTRIBUTE } from './close.js';
+import { REVERSING_ATTRIBUTE } from './reverse.js';
 import { keyframesOf } from './keyframes.js';
 import { heightFolds } from './fold-size.js';
 import { onStepClock, steppedDuration, withoutOvershoot } from './size.js';

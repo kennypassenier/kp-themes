@@ -38,20 +38,14 @@
 export { SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, motionWatchCount } from './motion/constants.js';
 export { registerTime, themeMotion } from './motion/timing.js';
 export { withCustomProperties, turnLines, turnEntrances } from './motion/keyframes.js';
-export {
-    closeDialog,
-    REVERSING_ATTRIBUTE,
-    playEntranceBackwards,
-    stopReversing,
-    CLOSING_ATTRIBUTE,
-    PANEL_SELECTOR,
-    playClose,
-    stopClose,
-} from './motion/close.js';
+export { closeDialog } from './motion/close.js';
+export { REVERSING_ATTRIBUTE, playEntranceBackwards, stopReversing } from './motion/reverse.js';
+export { CLOSING_ATTRIBUTE, PANEL_SELECTOR, playClose, stopClose } from './motion/panel-close.js';
 export { withoutOvershoot, reversedEase, sizeMotion } from './motion/size.js';
 export { arriveShown, GROUP_FOLDING_ATTRIBUTE, glideGroup, playArrivalBackwards } from './motion/arrive.js';
 export { leavesState, leave, repaintedIn } from './motion/leave.js';
-export { FOLDING_OUT, easeSize } from './motion/fold-size.js';
+export { FOLDING_OUT } from './motion/fold-size.js';
+export { easeSize } from './motion/box-size.js';
 export { attachMotion } from './motion/attach.js';
 
 /** @typedef {import('./motion/keyframes.js').Entrance} Entrance */
