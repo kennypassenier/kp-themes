@@ -23,30 +23,31 @@ export function installChrome(lb) {
     showChrome();
 }
 
-/** A swipe on a phone: sideways steps, down closes. @param {Lightbox} lb */
+/** A swipe on a phone: sideways steps, down closes. Where it started sits on the lightbox (`lb.swipe`). @param {Lightbox} lb */
 export function installSwipe(lb) {
-    const { picture, figure } = lb;
-    let startX = 0;
-    let startY = 0;
-    let swiping = false;
+    const { picture, swipe } = lb;
     picture.addEventListener('pointerdown', (event) => {
         if (event.pointerType === 'mouse') return;
-        swiping = true;
-        startX = event.clientX;
-        startY = event.clientY;
+        swipe.on = true;
+        swipe.x = event.clientX;
+        swipe.y = event.clientY;
     });
-    picture.addEventListener('pointerup', (event) => {
-        if (!swiping) return;
-        swiping = false;
-        if (figure.getAttribute('data-kp-zoom') === 'full') return;
-        const dx = event.clientX - startX;
-        const dy = event.clientY - startY;
-        if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) lb.go(dx < 0 ? 1 : -1);
-        else if (dy > SWIPE * SWIPE_CLOSE_FACTOR && Math.abs(dy) > Math.abs(dx)) lb.viewer.close();
-    });
+    picture.addEventListener('pointerup', (event) => onSwipeEnd(lb, event));
     picture.addEventListener('pointercancel', () => {
-        swiping = false;
+        swipe.on = false;
     });
+}
+
+/** The finger lifted: a sideways swipe steps, a downward one closes. @param {Lightbox} lb @param {PointerEvent} event */
+function onSwipeEnd(lb, event) {
+    const { swipe, figure } = lb;
+    if (!swipe.on) return;
+    swipe.on = false;
+    if (figure.getAttribute('data-kp-zoom') === 'full') return;
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) lb.go(dx < 0 ? 1 : -1);
+    else if (dy > SWIPE * SWIPE_CLOSE_FACTOR && Math.abs(dy) > Math.abs(dx)) lb.viewer.close();
 }
 
 /** The address carries the open picture; the back button closes the lightbox first. @param {Lightbox} lb @param {string} id */

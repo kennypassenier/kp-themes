@@ -42,6 +42,8 @@ export class Lightbox extends Controller {
         this.pushed = false;
         this.closedByHistory = false;
         this.chromeTimer = 0;
+        /** A swipe on a phone while a finger is down: where it started, and whether one runs. */
+        this.swipe = { x: 0, y: 0, on: false };
         // The parts below are made in `open()`.
         this.viewer = /** @type {import('../viewer.js').ViewerHandle} */ (/** @type {unknown} */ (null));
         this.picture = /** @type {HTMLElement} */ (/** @type {unknown} */ (null));

@@ -25,6 +25,12 @@ export declare class Lightbox extends Controller {
     pushed: boolean;
     closedByHistory: boolean;
     chromeTimer: number;
+    /** A swipe on a phone while a finger is down: where it started, and whether one runs. */
+    swipe: {
+        x: number;
+        y: number;
+        on: boolean;
+    };
     viewer: import("../viewer.js").ViewerHandle;
     picture: HTMLElement;
     info: HTMLElement;

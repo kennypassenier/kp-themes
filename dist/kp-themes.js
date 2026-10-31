@@ -77385,28 +77385,27 @@ function installChrome(lb) {
   showChrome();
 }
 function installSwipe(lb) {
-  const { picture, figure } = lb;
-  let startX = 0;
-  let startY = 0;
-  let swiping = false;
+  const { picture, swipe } = lb;
   picture.addEventListener("pointerdown", (event) => {
     if (event.pointerType === "mouse") return;
-    swiping = true;
-    startX = event.clientX;
-    startY = event.clientY;
+    swipe.on = true;
+    swipe.x = event.clientX;
+    swipe.y = event.clientY;
   });
-  picture.addEventListener("pointerup", (event) => {
-    if (!swiping) return;
-    swiping = false;
-    if (figure.getAttribute("data-kp-zoom") === "full") return;
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) lb.go(dx < 0 ? 1 : -1);
-    else if (dy > SWIPE * SWIPE_CLOSE_FACTOR && Math.abs(dy) > Math.abs(dx)) lb.viewer.close();
-  });
+  picture.addEventListener("pointerup", (event) => onSwipeEnd(lb, event));
   picture.addEventListener("pointercancel", () => {
-    swiping = false;
+    swipe.on = false;
   });
+}
+function onSwipeEnd(lb, event) {
+  const { swipe, figure } = lb;
+  if (!swipe.on) return;
+  swipe.on = false;
+  if (figure.getAttribute("data-kp-zoom") === "full") return;
+  const dx = event.clientX - swipe.x;
+  const dy = event.clientY - swipe.y;
+  if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) lb.go(dx < 0 ? 1 : -1);
+  else if (dy > SWIPE * SWIPE_CLOSE_FACTOR && Math.abs(dy) > Math.abs(dx)) lb.viewer.close();
 }
 function installHash(lb, id) {
   if (!lb.hashOn) return;
@@ -77470,6 +77469,7 @@ var init_lightbox = __esm({
         this.pushed = false;
         this.closedByHistory = false;
         this.chromeTimer = 0;
+        this.swipe = { x: 0, y: 0, on: false };
         this.viewer = /** @type {import('../viewer.js').ViewerHandle} */
         /** @type {unknown} */
         null;
