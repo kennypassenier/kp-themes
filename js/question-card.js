@@ -24,7 +24,8 @@
 //   urgent-at        seconds (default 30): from here the card is stronger and its time bold, announced once
 //   expired          keep (default; Kenny, 2026-10-17: "Kaart blijft met de uitkomst") | remove: what the card does at zero
 //   measure          ring (default, Kenny 2026-10-17) | bar | text: how the time left is drawn (`countdown` in the JS options; not
-//                    `data-kp-countdown`, which is the digit timer's)
+//                    `data-kp-countdown`, which is the digit timer's); the card writes it as `data-kp-measure`, and a page
+//                    that sets `data-kp-measure` on a running card has it redrawn at once, part-way in [homelab 23]
 //
 // States (`data-kp-state`): waiting; urgent; sending (the buttons busy); answered ("Allowed. The operation goes on.");
 // refused ("Not sent: why. Nothing changed; answer again."); expired (the default answer's outcome, the buttons off).

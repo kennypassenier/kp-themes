@@ -1,6 +1,8 @@
 import { SnoozePanel } from './panel.js';
 export type SnoozeHandle = import('../snooze.js').SnoozeHandle;
 export declare class SnoozePicker extends SnoozePanel {
+    /** Takes the menu button of the bar now standing apart; a no-op for chips. @type {() => void} */
+    barOff: () => void;
     /** @type {SnoozeHandle} */
     handle: SnoozeHandle;
     /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
@@ -8,6 +10,10 @@ export declare class SnoozePicker extends SnoozePanel {
         now?: () => number;
     });
     connect(): void;
+    /** The listeners of the bar now standing: the menu button (its own teardown, kept for a change of look), the chips, End snooze. */
+    wireBar(): void;
+    /** `data-kp-look` changed: close the panel (it stands under the old trigger), rebuild the bar and paint it. */
+    relook(): void;
     /** The last moment picked, kept across visits when the picker asks to be remembered. */
     readMemory(): void;
     offered(): import("./choices.js").SnoozeChoice[];

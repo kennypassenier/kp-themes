@@ -67824,7 +67824,7 @@ var init_core20 = __esm({
 });
 
 // js/question-card/run.js
-var QuestionRun;
+var MEASURES, QuestionRun;
 var init_run4 = __esm({
   "js/question-card/run.js"() {
     "use strict";
@@ -67832,6 +67832,8 @@ var init_run4 = __esm({
     init_values40();
     init_title();
     init_core20();
+    init_build13();
+    MEASURES = ["bar", "ring", "text"];
     QuestionRun = class extends QuestionCore {
       /**
        * @param {HTMLElement} host the card
@@ -67855,6 +67857,21 @@ var init_run4 = __esm({
         this.paintTime();
         if (!this.frozen) this.startClock();
         this.own(() => this.stop());
+        this.observe(new MutationObserver(() => this.remeasure())).observe(card, { attributes: true, attributeFilter: ["data-kp-measure"] });
+      }
+      /** Draw the measure `data-kp-measure` now names (ring, bar or text), in place of the one standing, part-way in as before. */
+      remeasure() {
+        const card = this.host;
+        const next2 = (
+          /** @type {'bar' | 'ring' | 'text'} */
+          card.getAttribute("data-kp-measure") ?? ""
+        );
+        if (!MEASURES.includes(next2) || next2 === this.q.countdown) return;
+        this.q.countdown = next2;
+        card.querySelector(":scope .kp-question__time > .kp-question__ring, :scope .kp-question__time > .kp-question__bar")?.remove();
+        const measure = buildMeasure(card.ownerDocument, next2);
+        if (measure) card.querySelector(".kp-question__time")?.prepend(measure);
+        this.run();
       }
       /** @returns {import('../question-card.js').QuestionHandle & { stop: () => void }} */
       makeHandle() {
@@ -80643,7 +80660,7 @@ var init_panel4 = __esm({
         this.morning = el16.dataset.kpSnoozeMorning;
         this.evening = el16.dataset.kpSnoozeEvening;
         this.max = el16.dataset.kpSnoozeMax ?? MAX_DEFAULT;
-        this.chips = el16.dataset.kpLook !== "menu";
+        this.chips = el16.getAttribute("data-kp-look") !== "menu";
         this.fixed = Date.parse(el16.dataset.kpNow ?? "");
         this.nowGiven = options.now;
         const fixed = this.fixed;
@@ -80655,6 +80672,21 @@ var init_panel4 = __esm({
         this.lower = null;
         this.bar = buildBar5(this.doc, this.s, this.id, this.chips);
         this.p = buildPanel3(this.doc, this.s, this.id);
+      }
+      /**
+       * Take a `data-kp-look` changed at runtime: rebuild the bar as chips or a menu button and put it where the old one stood
+       * [homelab 23]. The status line is rebuilt with it (same id); the panel stays.
+       * @returns {boolean} whether the look changed
+       */
+      takeLook() {
+        const chips = this.host.getAttribute("data-kp-look") !== "menu";
+        if (chips === this.chips) return false;
+        const old = this.bar;
+        this.chips = chips;
+        this.bar = buildBar5(this.doc, this.s, this.id, chips);
+        old.bar.replaceWith(this.bar.bar);
+        old.status.replaceWith(this.bar.status);
+        return true;
       }
       /** The element the panel stands under: the menu button, or the picker. */
       anchor() {
@@ -80745,6 +80777,7 @@ var init_controller73 = __esm({
       /** @param {HTMLElement} el @param {{ now?: () => number }} [options] */
       constructor(el16, options = {}) {
         super(el16, options);
+        this.barOff = () => void 0;
         this.handle = {
           element: el16,
           until: () => this.until !== null && this.until > this.now() ? this.until : null,
@@ -80757,7 +80790,7 @@ var init_controller73 = __esm({
       }
       connect() {
         const el16 = this.host;
-        const { bar, status, end, wrapper, row: row2 } = this.bar;
+        const { bar, status } = this.bar;
         const p = this.p;
         el16.classList.add("kp-snooze");
         el16.dataset.kpSnoozeAttached = "";
@@ -80770,8 +80803,29 @@ var init_controller73 = __esm({
           delete el16.dataset.kpSnoozedState;
         });
         this.own(attachDatePickers(p.panel));
-        this.own(wrapper ? attachMenuButtons(el16) : () => void 0);
+        this.own(() => this.barOff());
         this.own(() => this.lower?.());
+        this.wireBar();
+        this.listen(p.cancel, "click", () => void this.closePanel());
+        this.listen(p.apply, "click", () => this.onApply());
+        this.listen(p.panel, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(this.doc, "pointerdown", (event) => this.onOutside(event), true);
+        this.observe(new MutationObserver(() => this.relook())).observe(el16, { attributes: true, attributeFilter: ["data-kp-look"] });
+        this.setUntil(el16.dataset.kpSnoozedUntil ?? null);
+        this.paintStatus();
+        this.fill();
+        if (!Number.isFinite(this.fixed) && !this.nowGiven) {
+          const tick6 = window.setInterval(() => (this.paintStatus(), this.fill()), TICK_MS7);
+          this.own(() => clearInterval(tick6));
+        }
+      }
+      /** The listeners of the bar now standing: the menu button (its own teardown, kept for a change of look), the chips, End snooze. */
+      wireBar() {
+        const { end, wrapper, row: row2 } = this.bar;
+        this.barOff = wrapper ? attachMenuButtons(this.bar.bar) : () => void 0;
         if (wrapper) {
           this.listen(wrapper, MENU_SELECT_EVENT, (event) => this.pick(String(
             /** @type {CustomEvent} */
@@ -80782,20 +80836,16 @@ var init_controller73 = __esm({
         }
         if (row2) this.listen(row2, "click", (event) => this.onChip(event));
         this.listen(end, "click", () => this.onEnd());
-        this.listen(p.cancel, "click", () => void this.closePanel());
-        this.listen(p.apply, "click", () => this.onApply());
-        this.listen(p.panel, "keydown", (event) => this.onKey(
-          /** @type {KeyboardEvent} */
-          event
-        ));
-        this.listen(this.doc, "pointerdown", (event) => this.onOutside(event), true);
-        this.setUntil(el16.dataset.kpSnoozedUntil ?? null);
+      }
+      /** `data-kp-look` changed: close the panel (it stands under the old trigger), rebuild the bar and paint it. */
+      relook() {
+        if (!this.p.panel.hidden) void this.closePanel(false);
+        const off = this.barOff;
+        if (!this.takeLook()) return;
+        off();
+        this.wireBar();
         this.paintStatus();
         this.fill();
-        if (!Number.isFinite(this.fixed) && !this.nowGiven) {
-          const tick6 = window.setInterval(() => (this.paintStatus(), this.fill()), TICK_MS7);
-          this.own(() => clearInterval(tick6));
-        }
       }
       /** The last moment picked, kept across visits when the picker asks to be remembered. */
       readMemory() {

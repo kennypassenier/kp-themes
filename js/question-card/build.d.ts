@@ -16,6 +16,8 @@ export type CardParts = {
      */
     voice: HTMLElement;
 };
+/** The ring or the bar that shrinks over the whole wait; none for `text`. @param {Document} doc @param {ResolvedQuestion['countdown']} countdown */
+export declare function buildMeasure(doc: Document, countdown: ResolvedQuestion['countdown']): HTMLElement | null;
 /**
  * Build a question card.
  * @param {Document} doc

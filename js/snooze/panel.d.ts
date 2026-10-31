@@ -50,6 +50,12 @@ export declare class SnoozePanel extends Controller {
     constructor(el: HTMLElement, options?: {
         now?: () => number;
     });
+    /**
+     * Take a `data-kp-look` changed at runtime: rebuild the bar as chips or a menu button and put it where the old one stood
+     * [homelab 23]. The status line is rebuilt with it (same id); the panel stays.
+     * @returns {boolean} whether the look changed
+     */
+    takeLook(): boolean;
     /** The element the panel stands under: the menu button, or the picker. */
     anchor(): HTMLElement;
     /** @param {HTMLElement} p */

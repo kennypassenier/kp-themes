@@ -27,7 +27,11 @@ each line its example and its option row, and empties the list.
 - gaps-1031, site/components/command.html: a masked token `data-kp-command-secret` with `data-kp-command-secret-mask` (`dots` default, `tail`) and `data-kp-command-secret-reveal` (`on` default, `off`), Copy copying the real value.
 =======
 - gaps-1031 (2026-10-31), site/components/unsaved.html: the bar counts a quantity, a time field and a tag input as one control each (their own events, written back through their setters; a field marked `data-kp-untracked` stays out); `data-kp-placement` is switchable at runtime; and the `attachUnsaved(root, { show })` option row: `show(control, value, row)` returns the page's own words for a value in the list (both "was" and "now"), for a mirrored editor.
+<<<<<<< HEAD
 >>>>>>> 46e3163c2 ([gaps-1031] The unsaved bar takes a runtime placement and the page's own value words)
+=======
+- gaps-1031, site/components/question-card.html and site/components/snooze.html: the question card's `data-kp-measure` (ring, bar, text) and the snooze picker's `data-kp-look` (chips, menu) are switchable at runtime: a "switchable at runtime" note in each option row.
+>>>>>>> 104c86933 ([gaps-1031] A question card's measure and a snooze picker's look switch at runtime)
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's

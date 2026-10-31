@@ -10,6 +10,8 @@ export declare class QuestionRun extends QuestionCore {
      */
     constructor(host: HTMLElement, init: import('./core.js').QuestionInit);
     connect(): void;
+    /** Draw the measure `data-kp-measure` now names (ring, bar or text), in place of the one standing, part-way in as before. */
+    remeasure(): void;
     /** @returns {import('../question-card.js').QuestionHandle & { stop: () => void }} */
     makeHandle(): import('../question-card.js').QuestionHandle & {
         stop: () => void;
