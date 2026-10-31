@@ -494,7 +494,7 @@ for (const button of document.querySelectorAll('[data-doc-list-state]')) {
                             <tr><td><code>--kp-list-row-pad</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
                             <tr><td><code>--kp-list-stepper-card</code></td><td><code>13rem</code></td></tr>
                             <tr><td><code>--kp-list-stepper-min</code></td><td><code>14rem</code></td></tr>
-                            <tr><td><code>--kp-list-tracks</code></td><td><code>[identity] minmax(0, 1.6fr) [status] minmax(0, 2fr) [stepper] minmax(var(--kp-list-stepper-min, 14rem), 1fr) [switch] auto</code></td></tr>
+                            <tr><td><code>--kp-list-tracks</code></td><td><code>[identity] minmax(0, 1.6fr) [status] minmax(0, 2fr) [stepper] minmax(clamp(0px, (100% - 40rem) * 999, var(--kp-list-stepper-min, 14rem)), 1fr) [switch] auto</code></td></tr>
                             <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>

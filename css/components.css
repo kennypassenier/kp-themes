@@ -34497,12 +34497,14 @@
      * failed are the card's (`.kp-card[data-kp-state]`, js/card-state.js): put the list in the card's data and the states fill its footprint.
      * Knobs [KT6]: `--kp-list-tracks` (the four column tracks), `--kp-list-stepper-min` (14rem, the room a stepper fills), `--kp-list-row-pad`
      * (the row's block padding), `--kp-list-gap` (the room between columns), `--kp-list-stepper-card` (13rem, the room a card keeps for its stepper). */
+    /* The stepper's least width holds only at the wide layout: it is clamped on the card break, which the list's own container query
+     * cannot do for its own tracks. */
     .kp-list {
         container: kp-list / inline-size;
         display: grid;
         grid-template-columns: var(
             --kp-list-tracks,
-            [identity] minmax(0, 1.6fr) [status] minmax(0, 2fr) [stepper] minmax(var(--kp-list-stepper-min, 14rem), 1fr) [switch] auto
+            [identity] minmax(0, 1.6fr) [status] minmax(0, 2fr) [stepper] minmax(clamp(0px, (100% - 40rem) * 999, var(--kp-list-stepper-min, 14rem)), 1fr) [switch] auto
         );
         column-gap: var(--kp-list-gap, var(--kp-space-lg, 1.5rem));
         margin: 0;
@@ -34795,11 +34797,16 @@
      * The labels stand once in a head row; every row is a subgrid of the same tracks, so the time, the days and the dose of all rows line up,
      * and the remove button is the last track. Under 40rem the head goes and each cell carries its own label (its `data-label`), the row is
      * a card. The empty plate (`.kp-rows__empty`) keeps the room of three rows. Knobs [KT6]: `--kp-rows-tracks` (the column tracks, remove
-     * included), `--kp-rows-empty-min` (the plate's least height, 9rem). */
+     * included; a value set here keeps its minimums at every width), `--kp-rows-empty-min` (the plate's least height, 9rem). */
     .kp-rows {
         container: kp-rows / inline-size;
         display: grid;
-        grid-template-columns: var(--kp-rows-tracks, minmax(8rem, 1fr) minmax(0, 3fr) minmax(10rem, 1.2fr) auto);
+        /* The least widths hold only at the wide layout. A container query cannot reach the container's own tracks, so each minimum is
+         * clamped on the same 40rem break: under it the clamp gives 0 and the cards no longer keep the wide minimums in a narrow card. */
+        grid-template-columns: var(
+            --kp-rows-tracks,
+            minmax(clamp(0px, (100% - 40rem) * 999, 8rem), 1fr) minmax(0, 3fr) minmax(clamp(0px, (100% - 40rem) * 999, 10rem), 1.2fr) auto
+        );
         column-gap: var(--kp-space-md, 0.75rem);
         row-gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;

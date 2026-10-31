@@ -24,11 +24,11 @@ export const rowEditorDescriptor = {
     examples: [
         {
             title: 'When to take it: one to six times, each with its days and dose',
-            why: 'The markup holds the rows, the template and nothing else: the module writes the head row from the first row’s `data-label`s, a remove button in each row, the add button (“Add a time”, from `data-kp-rows-unit="time,times"`) and the line under the rows. At the fewest rows (`data-kp-rows-min="1"`) removing is off and the line says why; at the most (`data-kp-rows-max="6"`) adding is. `{n}` in the template is a number that is never reused, so the names stay unique. `kp-rows-change` tells the page `{ count, rows }` after every add or remove; the values are read from each row’s own controls. The column tracks are a knob: this page sets the time and dose columns a little narrower than their default, so the editor fits a phone inside the page’s own margins.',
+            why: 'The markup holds the rows, the template and nothing else: the module writes the head row from the first row’s `data-label`s, a remove button in each row, the add button (“Add a time”, from `data-kp-rows-unit="time,times"`) and the line under the rows. At the fewest rows (`data-kp-rows-min="1"`) removing is off and the line says why; at the most (`data-kp-rows-max="6"`) adding is. `{n}` in the template is a number that is never reused, so the names stay unique. `kp-rows-change` tells the page `{ count, rows }` after every add or remove; the values are read from each row’s own controls. Under 40rem of its own width each row is a card and the wide columns’ least widths drop away, so the editor fits a narrow card on a phone.',
             markup: `
 <h3 class="kp-card__title" id="doc-when-title">When to take it</h3>
 <p class="kp-text-muted">Ibuprofen 400 mg. Each slot is a time, the days it runs on and how many to take.</p>
-<div class="kp-rows" id="doc-rows" data-kp-rows data-kp-rows-min="1" data-kp-rows-max="6" data-kp-rows-unit="time,times" style="--kp-rows-tracks: minmax(7rem, 1fr) minmax(0, 3fr) minmax(9rem, 1.2fr) auto" aria-labelledby="doc-when-title">
+<div class="kp-rows" id="doc-rows" data-kp-rows data-kp-rows-min="1" data-kp-rows-max="6" data-kp-rows-unit="time,times" aria-labelledby="doc-when-title">
 <ol class="kp-rows__list" data-kp-rows-list>
 <li class="kp-rows__row">
 ${cells('at-a', '08:00', '1,2,3,4,5', 1)}
