@@ -10534,6 +10534,8 @@
         "||||.kp-tabbar__tab": "a22078a69497b339",
         "||||.kp-tabbar__tab[aria-current]:not([aria-current='false'])": "94ef3ab60e158199",
         "||||.kp-table": "12f2dbfb544be269",
+        "||||.kp-table)[data-kp-tones='calm']": "87954e4bfc26fe1a",
+        "||||.kp-table)[data-kp-tones='calm'][data-kp-logged-fill='success']": "94aa24c6a22f2762",
         "||||.kp-table-wrap": "af14c359d5574264",
         "||||.kp-table-wrap:not(-visible)": "d7b3ad8f9e070791",
         "||||.kp-table__actions": "34b80865c485130a",
@@ -11265,6 +11267,9 @@
         "||||textarea:user-invalid": "e54ec1c63ec713e5",
         "||||th": "6c1f242ff200e4c6",
         "||||th)": "bc80563dffd75c4b",
+        "||||th)[data-kp-tone='logged']": "b4217c31b79ed9e0",
+        "||||th)[data-kp-tone='paused']": "3930fcee52aef2ad",
+        "||||th)[data-kp-tone='quiet']": "7ac62eae9be76cc5",
         "||||th[aria-sort='ascending']": "440a7f944b496fba",
         "||||th[aria-sort='descending']": "dba550b40756c2ad",
         "||||th[data-kp-fixed-end]": "3d8079a6ab37b36c",
@@ -11433,7 +11438,7 @@
             ]
         },
         "data": {
-            "modules": "63fe9b20558f169d",
+            "modules": "48fd74b8654336c8",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",

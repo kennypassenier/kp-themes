@@ -31,7 +31,11 @@ each line its example and its option row, and empties the list.
 >>>>>>> 46e3163c2 ([gaps-1031] The unsaved bar takes a runtime placement and the page's own value words)
 =======
 - gaps-1031, site/components/question-card.html and site/components/snooze.html: the question card's `data-kp-measure` (ring, bar, text) and the snooze picker's `data-kp-look` (chips, menu) are switchable at runtime: a "switchable at runtime" note in each option row.
+<<<<<<< HEAD
 >>>>>>> 104c86933 ([gaps-1031] A question card's measure and a snooze picker's look switch at runtime)
+=======
+- gaps-1031, site/components/datatable.html (and the calm tones section): `data-kp-tones="calm"` on a `.kp-datatable` or `.kp-table` with `data-kp-tone="logged | quiet | paused"` on a cell (and `data-kp-logged-fill="success"`): an option row and an example of a freezer list whose old-portion hint is a quiet cell.
+>>>>>>> 61932f49b ([gaps-1031] A data table's cells take the calm tones)
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's

@@ -1,4 +1,4 @@
-/* @part: calm-tones: Calm tones for the calendar, the heat grid and the uptime strip */
+/* @part: calm-tones: Calm tones for the calendar, the heat grid, the uptime strip and data table cells */
     /* --- Calm tones for the calendar, the heat grid and the uptime strip [kpadopt6] -----
  * `data-kp-tones="calm"` (js/calm-tones.js): `logged` is the theme's accent (`--primary`, "this is mine"; `data-kp-logged-fill=
  * "success"` on the component asks for the success plate), `quiet` is the muted plate lowered a step toward the page with no
@@ -54,6 +54,37 @@
 
     :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='quiet'] {
         --kp-uptime-fill: var(--kp-quiet-fill);
+    }
+
+    /* [gaps-1031, audhd-recepten 3] A data table's cells take the calm tones too: `data-kp-tones="calm"` on the `.kp-datatable` (or on a
+ * bare `.kp-table`) and `data-kp-tone="logged | quiet | paused"` on a cell. Opt-in: a table without the attribute is drawn as before,
+ * and a cell keeps its own words (a quiet cell is only lowered, never emptied). The whole cell takes the calendar's plate and ink
+ * (the same knobs, set on the calm table only); `data-kp-logged-fill="success"` on the table asks for the success plate. */
+    :is(.kp-datatable, .kp-table)[data-kp-tones='calm'] {
+        --kp-logged-fill: var(--primary);
+        --kp-logged-ink: var(--primary-foreground);
+        --kp-quiet-fill: color-mix(in oklab, var(--muted) 55%, var(--card));
+        --kp-quiet-ink: var(--muted-foreground);
+    }
+
+    :is(.kp-datatable, .kp-table)[data-kp-tones='calm'][data-kp-logged-fill='success'] {
+        --kp-logged-fill: var(--success);
+        --kp-logged-ink: var(--success-foreground);
+    }
+
+    :is(.kp-datatable, .kp-table)[data-kp-tones='calm'] :is(td, th)[data-kp-tone='logged'] {
+        background: var(--kp-logged-fill);
+        color: var(--kp-logged-ink);
+    }
+
+    :is(.kp-datatable, .kp-table)[data-kp-tones='calm'] :is(td, th)[data-kp-tone='quiet'] {
+        background: var(--kp-quiet-fill);
+        color: var(--kp-quiet-ink);
+    }
+
+    :is(.kp-datatable, .kp-table)[data-kp-tones='calm'] :is(td, th)[data-kp-tone='paused'] {
+        background-image: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+        color: var(--muted-foreground);
     }
 
     /* A calm calendar's plate stands over its grid, centred, at the heading size; a failed month is dimmed under it. */
