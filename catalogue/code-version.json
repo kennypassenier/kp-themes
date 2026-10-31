@@ -57,7 +57,7 @@
         "js/gridlayout.js": { "digest": "83eb9805d31b6c94", "when": "[data-kp-grid]" },
         "js/heat.js": { "digest": "4154a57d205be862", "when": "[data-kp-heat]" },
         "js/hovercard.js": { "digest": "b4816d15b9febdcc", "when": "[data-kp-hovercard]" },
-        "js/idmark.js": { "digest": "05dc2b4624a3da55", "when": "[data-kp-idmark]" },
+        "js/idmark.js": { "digest": "425e154c506ff232", "when": "[data-kp-idmark]" },
         "js/job-line.js": { "digest": "88b9429b33d7506b", "when": "[data-kp-jobline]" },
         "js/json-field.js": { "digest": "f3b2a6701aefb5c4", "when": "textarea[data-kp-json]" },
         "js/keys.js": { "digest": "2e44ce22f8dd8260", "when": ".kp-kbd[data-kp-key]" },

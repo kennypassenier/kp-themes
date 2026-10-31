@@ -1265,11 +1265,11 @@ The bottom tab bar and the count on a tab, as a TabbarController over small part
 
 ## js/idmark.js → js/idmark/
 
-The identity mark made from a name. It keeps no state per element, so it is split by responsibility and has no controller class. 6 files.
+The identity mark made from a name, split by responsibility; one attachIdmarks call is an IdmarkRoot controller. 6 files.
 
 | File           | Does                                                                                             |
 | -------------- | ------------------------------------------------------------------------------------------------ |
-| `attach.js`    | attachIdmarks: every mark under a root drawn, and the ones added or renamed later.               |
+| `attach.js`    | IdmarkRoot: every mark under a root drawn, and the ones added or renamed later.                  |
 | `avatar.js`    | The avatar part of a mark: status dot, the label a screen reader hears, and the photo.           |
 | `draw.js`      | setIdmark: one mark drawn from a name, and the record of what each was drawn from.               |
 | `group.js`     | setIdmarkGroup: marks with an exact "+N" for the people left out.                                |

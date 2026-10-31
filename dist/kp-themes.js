@@ -25610,31 +25610,59 @@ function paintMarks(root) {
   }
 }
 function attachIdmarks(root = document) {
-  paintMarks(root);
-  const View = (root instanceof Document ? root : root.ownerDocument)?.defaultView;
-  if (!View?.MutationObserver) return () => {
-  };
-  let queued = false;
-  const observer = new View.MutationObserver((records) => {
-    const relevant = records.some(
-      (record) => record.type === "attributes" || [...record.addedNodes].some((node) => node instanceof View.Element && (node.matches(IDMARK) || node.querySelector(IDMARK) !== null))
-    );
-    if (!relevant || queued) return;
-    queued = true;
-    View.queueMicrotask(() => {
-      queued = false;
-      paintMarks(root);
-    });
-  });
-  observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-kp-idmark", ...AVATAR_ATTRIBUTES] });
-  return () => observer.disconnect();
+  const control = new IdmarkRoot(root);
+  control.connect();
+  return () => control.destroy();
 }
+var WATCHED7, IdmarkRoot;
 var init_attach5 = __esm({
   "js/idmark/attach.js"() {
     "use strict";
+    init_controller();
     init_avatar();
     init_draw4();
     init_mark();
+    WATCHED7 = ["data-kp-idmark", ...AVATAR_ATTRIBUTES];
+    IdmarkRoot = class extends Controller {
+      /** @param {ParentNode} root */
+      constructor(root) {
+        super(
+          /** @type {HTMLElement} */
+          /** @type {unknown} */
+          root
+        );
+        this.root = root;
+        this.view = null;
+        this.queued = false;
+      }
+      connect() {
+        const { root } = this;
+        paintMarks(root);
+        this.view = (root instanceof Document ? root : root.ownerDocument)?.defaultView ?? null;
+        if (!this.view?.MutationObserver) return;
+        const watch2 = this.observe(new this.view.MutationObserver((records) => this.onChange(records)));
+        watch2.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED7 });
+      }
+      /** Whether a batch of records can have changed a mark: a watched attribute, or a mark added. @param {MutationRecord[]} records */
+      relevant(records) {
+        const View = (
+          /** @type {Window & typeof globalThis} */
+          this.view
+        );
+        return records.some(
+          (record) => record.type === "attributes" || [...record.addedNodes].some((node) => node instanceof View.Element && (node.matches(IDMARK) || node.querySelector(IDMARK) !== null))
+        );
+      }
+      /** Queue one repaint for the changes of this microtask. @param {MutationRecord[]} records */
+      onChange(records) {
+        if (this.queued || !this.relevant(records)) return;
+        this.queued = true;
+        this.view?.queueMicrotask(() => {
+          this.queued = false;
+          if (!this.destroyed) paintMarks(this.root);
+        });
+      }
+    };
   }
 });
 
@@ -51607,7 +51635,7 @@ var init_paint6 = __esm({
 });
 
 // js/calendar/controller.js
-var WATCHED7, CalendarController;
+var WATCHED8, CalendarController;
 var init_controller40 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
@@ -51624,7 +51652,7 @@ var init_controller40 = __esm({
     init_dom6();
     init_keys10();
     init_paint6();
-    WATCHED7 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
+    WATCHED8 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
     CalendarController = class extends Controller {
       /**
        * @param {HTMLElement} host the calendar
@@ -51717,7 +51745,7 @@ var init_controller40 = __esm({
             paintCalendar(this);
           })
         );
-        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED7 });
+        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED8 });
       }
       /** Move by whole months and say so. @param {number} months */
       step(months) {
@@ -65993,7 +66021,7 @@ var init_keys13 = __esm({
 });
 
 // js/timefield/controller.js
-var WATCHED8, TimeController;
+var WATCHED9, TimeController;
 var init_controller54 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
@@ -66006,7 +66034,7 @@ var init_controller54 = __esm({
     init_field();
     init_keys13();
     init_parse2();
-    WATCHED8 = [
+    WATCHED9 = [
       "disabled",
       "data-kp-disabled",
       "data-kp-disabled-reason",
@@ -66074,7 +66102,7 @@ var init_controller54 = __esm({
             if (field2.list.open) field2.list.draw();
           })
         );
-        observer.observe(host, { attributes: true, attributeFilter: WATCHED8 });
+        observer.observe(host, { attributes: true, attributeFilter: WATCHED9 });
       }
       /** Digits typed fast: 0230 becomes 02:30 as the fourth digit arrives; an open list follows the typed time. */
       onInput() {
@@ -69161,7 +69189,7 @@ var init_keys14 = __esm({
 });
 
 // js/rating/controller.js
-var REDRAW, WATCHED9, RatingController;
+var REDRAW, WATCHED10, RatingController;
 var init_controller59 = __esm({
   "js/rating/controller.js"() {
     "use strict";
@@ -69175,7 +69203,7 @@ var init_controller59 = __esm({
     init_paint10();
     init_read8();
     REDRAW = ["data-kp-rating-max", "data-kp-rating-step", "data-kp-rating-mode"];
-    WATCHED9 = [
+    WATCHED10 = [
       ...REDRAW,
       "data-kp-rating-value",
       "data-kp-rating-labels",
@@ -69287,7 +69315,7 @@ var init_controller59 = __esm({
           event
         ));
         this.listen(parts2.retry, "click", () => el16.dispatchEvent(new CustomEvent(RATING_RETRY_EVENT, { bubbles: true })));
-        this.observe(new MutationObserver((records) => this.onAttributes(records))).observe(el16, { attributes: true, attributeFilter: WATCHED9 });
+        this.observe(new MutationObserver((records) => this.onAttributes(records))).observe(el16, { attributes: true, attributeFilter: WATCHED10 });
         this.own(() => window.clearTimeout(this.flashTimer));
       }
       /** Give the element back what it held before the rating drew into it. */
@@ -81921,7 +81949,7 @@ var init_graph = __esm({
 });
 
 // js/loading-pieces/values.js
-var PIECES_PROPERTY, PIECES_ATTRIBUTE, PIECE_CARRIERS, ALL, WATCHED10, SHAPE;
+var PIECES_PROPERTY, PIECES_ATTRIBUTE, PIECE_CARRIERS, ALL, WATCHED11, SHAPE;
 var init_values49 = __esm({
   "js/loading-pieces/values.js"() {
     "use strict";
@@ -81935,7 +81963,7 @@ var init_values49 = __esm({
       spinner: ".kp-spinner"
     };
     ALL = Object.values(PIECE_CARRIERS).join(", ");
-    WATCHED10 = ["class", "aria-busy", "data-kp-indeterminate", "data-kp-loading", "data-kp-tone", "data-theme", "hidden"];
+    WATCHED11 = ["class", "aria-busy", "data-kp-indeterminate", "data-kp-loading", "data-kp-tone", "data-theme", "hidden"];
     SHAPE = Object.freeze({
       /** The unit of a day's or plate's legs and heads, in px. */
       unit: 9,
@@ -82151,7 +82179,7 @@ var init_watch4 = __esm({
           /** @type {Node} */
           scope instanceof Document ? scope.documentElement : scope
         );
-        watch2.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED10 });
+        watch2.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED11 });
         if (target !== document.documentElement) watch2.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
         this.everything = true;
         this.schedule();
