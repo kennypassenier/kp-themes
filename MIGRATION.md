@@ -18,8 +18,12 @@ What a consumer notices:
   `js/components/type-confirm.js` now (the `js/components.js` export is unchanged). The `types.js` files in the folders hold only
   JSDoc typedefs; nothing imports them at runtime, so a copy may leave them out.
 - **Rather than copying the tree, serve `dist/kp-themes.min.js`**: one self-contained ES module with every export, one request
-  instead of hundreds on a cold page. Never mix the bundle with modules from the tree on one page: the controller registry and the
-  dictionary would exist twice.
+  instead of hundreds on a cold page. It boots like `js/auto.js`: `<script type="module" src="…/kp-themes.min.js">` applies the
+  stored theme and attaches everything the page carries on DOMContentLoaded, and sets `data-kp-auto-ready` (same marks as
+  auto.js, measured on the alarm, data table and list pages). So swap the `js/auto.js` tag for it; every export (the flat names
+  and one `<module>Exports` namespace per module, such as `progressbarExports.setProgress`) is importable from the same file.
+  Never load both, and never mix the bundle with modules from the tree on one page: the controller registry and the dictionary
+  would exist twice.
 - **One element that fails to wire no longer stops an `attach…` call.** The error is reported with `reportError` (it reaches
   `window.onerror` and the console), that element is undone and the others are wired. Code that wrapped an attach call in
   `try`/`catch` to notice a broken element listens for the `error` event on `window` instead.

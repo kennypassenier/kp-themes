@@ -108,6 +108,10 @@
             "types": "./js/patterns.d.ts",
             "default": "./js/patterns.js"
         },
+        "./js/state-plate": {
+            "types": "./js/state-plate.d.ts",
+            "default": "./js/state-plate.js"
+        },
         "./js/structure": {
             "types": "./js/structure.d.ts",
             "default": "./js/structure.js"

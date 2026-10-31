@@ -66,7 +66,12 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     assert.equal(EXCLUDED.length, 2, 'the exclusions are fonts/ and *.map, and adding a third is a decision');
     assert.ok(files.length >= 80, `expected the copyable set, found ${files.length}`);
     assert.ok(!files.some((f) => f.startsWith('fonts/')), 'the fonts ship as their own asset');
-    assert.ok(!files.some((f) => f.endsWith('.map')), 'source maps are debugging aid, not something a consumer serves');
+    // One map ships since 12.0.0: the JavaScript bundle's, because consumers serve that file and it names its map [release-1200].
+    assert.deepEqual(
+        files.filter((f) => f.endsWith('.map')),
+        ['dist/kp-themes.min.js.map'],
+        'source maps are debugging aid, except the one beside the bundle a consumer serves',
+    );
     // The three groups chassis-rs had to pull off the tag one by one.
     for (const file of ['js/theme-core.js', 'js/components.js', 'css/cyberpunk-register.css', 'css/layout.css', 'css/utilities.css']) {
         assert.ok(files.includes(file), `${file} is what CF1 exists about and is not in the tarball`);

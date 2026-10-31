@@ -44,8 +44,11 @@ const ROOT = new URL('../', import.meta.url);
 // later and calls `attachAll(host)` (the catalogue index) gets them too.
 const EAGER_6_1_0 = readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8');
 const EXTRA = NEEDS.flatMap((need) => {
-    const from = /import\(\s*'([^']+)'\s*\)/.exec(need.load.toString())?.[1];
-    if (!from) throw new Error(`NEEDS entry ${need.name}: its load() names no module`);
+    const named = /import\(\s*'([^']+)'\s*\)/.exec(need.load.toString())?.[1];
+    if (!named) throw new Error(`NEEDS entry ${need.name}: its load() names no module`);
+    // The NEEDS lists live in js/auto/ since the split, so their paths start `../`; the eager entry is served as js/auto.js,
+    // one folder up, where the same module is `./` [release-1200].
+    const from = named.replace(/^\.\.\//, './');
     const names = [...need.attach.toString().matchAll(/\bm\.(\w+)\(root\)/g)].map((m) => m[1]);
     if (!names.length) throw new Error(`NEEDS entry ${need.name}: its attach() calls nothing as m.name(root)`);
     return names.filter((name) => !new RegExp(`\\b${name}\\b`).test(EAGER_6_1_0)).map((name) => [from, name]);
@@ -256,6 +259,9 @@ const stable = async (page, quiet = 1) => {
 /** Pages that compose themselves from fetched pages in several steps. */
 const SLOW_COMPOSE = new Set(['catalogue/index.html']);
 
+/** Pages whose many iframes each load the eager entry (see the timeout below). */
+const MANY_FRAMES = new Set(['site/components/sidenav.html']);
+
 test.describe.configure({ mode: 'parallel' });
 
 for (const path of PAGES) {
@@ -269,6 +275,10 @@ for (const path of PAGES) {
             await page.waitForSelector('html[data-kp-auto-ready]', { state: 'attached' });
             const quiet = SLOW_COMPOSE.has(path) ? 15 : 1;
             if (SLOW_COMPOSE.has(path)) test.setTimeout(90_000);
+            // A page of many framed examples loads the eager entry once per frame, and since the split that entry
+            // fetches every module file (about 1200) per frame: the sidenav page's 18 frames take longer than 30 s
+            // to reach load on that side alone [release-1200].
+            if (MANY_FRAMES.has(path)) test.setTimeout(150_000);
             const lazy = await stable(page, quiet);
 
             const context = await browser.newContext();

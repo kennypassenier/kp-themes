@@ -20,7 +20,8 @@
 //   - `fonts/` — five megabytes of woff2 that already ship as fonts.tar.
 //     A consumer that wants the faces takes that asset; one that vendors
 //     a stylesheet does not want them in the same download.
-//   - `*.map` — four megabytes of source maps for the minified twins.
+//   - `*.map` — four megabytes of source maps for the minified twins
+//     (all but the JavaScript bundle's own map, see EXCLUDED).
 //     They are debugging aid, not something a consumer serves, and they
 //     are on the tag for whoever wants them.
 //
@@ -41,7 +42,9 @@ import process from 'node:process';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Left out of the tarball, with the reason in the header above. */
-export const EXCLUDED = [/^fonts\//, /\.map$/];
+// The one map that does ship is the JavaScript bundle's: since 12.0.0 a consumer serves `dist/kp-themes.min.js` itself
+// (chassis-rs, one request instead of hundreds), and that file names its map on its last line [release-1200].
+export const EXCLUDED = [/^fonts\//, /^(?!dist\/kp-themes\.min\.js\.map$).*\.map$/];
 
 /**
  * The files the tarball carries, read from the manifest itself.
