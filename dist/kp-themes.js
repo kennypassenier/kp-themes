@@ -26296,6 +26296,12 @@ var init_type_confirm = __esm({
 });
 
 // js/components/confirm-dialog.js
+function firstDescriptionField(description) {
+  for (const field2 of description.querySelectorAll(DESCRIPTION_FIELD)) {
+    if (field2 instanceof HTMLElement && field2.getClientRects().length > 0 && !field2.closest("[inert]")) return field2;
+  }
+  return null;
+}
 function openConfirmation(button6, { phrase, description: richText, acceptLook = "destructive", strings, onAccept, onCancel: onCancel2, className = "", initialFocus = "cancel", dependents, blocked, typeName, anyCase, loses, acceptLabel, acceptFollows, acceptVerb } = {}) {
   const s2 = { ...getStrings(), ...strings };
   const text = phrase ?? button6.getAttribute("data-kp-confirm") ?? s2.confirm;
@@ -26409,16 +26415,18 @@ function openConfirmation(button6, { phrase, description: richText, acceptLook =
     else onCancel2?.();
   });
   dialog.showModal();
+  field2 ??= stop === null && rich ? firstDescriptionField(description) : null;
   (field2 ?? (initialFocus === "accept" && stop === null ? accept : cancel)).focus();
   return dialog;
 }
-var dialogSeq;
+var dialogSeq, DESCRIPTION_FIELD;
 var init_confirm_dialog = __esm({
   "js/components/confirm-dialog.js"() {
     "use strict";
     init_strings();
     init_type_confirm();
     dialogSeq = 0;
+    DESCRIPTION_FIELD = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), [contenteditable="true"]';
   }
 });
 
