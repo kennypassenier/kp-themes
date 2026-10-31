@@ -125,9 +125,35 @@ export function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = 
 
     block.append(label, input, rule, status);
 
-    let matched = false;
-    const update = () => {
-        const now = typeConfirmMatches(input.value, name, { anyCase });
+    const field = new TypeConfirmField({ doc, block, input, status, name, anyCase, onChange, words: s });
+    input.addEventListener('input', () => field.update());
+    field.update();
+    return { block, input, matched: () => field.matched };
+}
+
+/** One live type-to-confirm field: whether the typed name matches, and the status line and event when that answer turns. */
+class TypeConfirmField {
+    /**
+     * @param {{ doc: Document, block: HTMLElement, input: HTMLInputElement, status: HTMLElement, name: string, anyCase: boolean,
+     *   onChange?: (matched: boolean, value: string) => void, words: import('../strings.js').Strings }} parts
+     */
+    constructor({ doc, block, input, status, name, anyCase, onChange, words }) {
+        this.doc = doc;
+        this.block = block;
+        this.input = input;
+        this.status = status;
+        this.name = name;
+        this.anyCase = anyCase;
+        this.onChange = onChange;
+        this.words = words;
+        /** Whether the typed text matches the name, as last announced. */
+        this.matched = false;
+    }
+
+    /** Read the field: draw the status line, and announce the answer when it turns. */
+    update() {
+        const { doc, block, input, status, name, words: s } = this;
+        const now = typeConfirmMatches(input.value, name, { anyCase: this.anyCase });
         const typed = input.value.trim() !== '';
         block.dataset.kpMatched = String(now);
         if (now) {
@@ -136,15 +162,11 @@ export function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = 
             badge.textContent = s.typeConfirmMatched;
             status.replaceChildren(badge);
         } else status.textContent = typed ? s.typeConfirmMismatch : '';
-        if (now !== matched) {
-            matched = now;
-            onChange?.(now, input.value);
-            block.dispatchEvent(new CustomEvent(TYPE_CONFIRM_EVENT, { bubbles: true, detail: { matched: now, value: input.value, name } }));
-        }
-    };
-    input.addEventListener('input', update);
-    update();
-    return { block, input, matched: () => matched };
+        if (now === this.matched) return;
+        this.matched = now;
+        this.onChange?.(now, input.value);
+        block.dispatchEvent(new CustomEvent(TYPE_CONFIRM_EVENT, { bubbles: true, detail: { matched: now, value: input.value, name } }));
+    }
 }
 /**
  * Wire every typed confirmation block a page put in its own dialog or form

@@ -300,7 +300,7 @@ Confirmations, skip links, back to top and the navigation toggles, menus and sti
 | `state-word.js`     | Writes a state word onto an element.                                                         |
 | `sticky-nav.js`     | StickyNavControl: compacts the sticky nav once the page scrolls.                             |
 | `to-top.js`         | ToTopControl: the back-to-top button.                                                        |
-| `type-confirm.js`   | The type-to-confirm field, and TypeConfirmControl for a block a page puts in its own dialog. |
+| `type-confirm.js`   | The type-to-confirm field (TypeConfirmField), and TypeConfirmControl for a page's own block. |
 
 ## js/heat.js → js/heat/
 

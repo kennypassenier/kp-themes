@@ -26184,26 +26184,10 @@ function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = false, 
   status.id = `${id}-status`;
   status.setAttribute("aria-live", "polite");
   block.append(label2, input, rule, status);
-  let matched = false;
-  const update2 = () => {
-    const now = typeConfirmMatches(input.value, name, { anyCase });
-    const typed = input.value.trim() !== "";
-    block.dataset.kpMatched = String(now);
-    if (now) {
-      const badge = doc.createElement("span");
-      badge.className = "kp-badge kp-badge--success kp-type-confirm__match";
-      badge.textContent = s2.typeConfirmMatched;
-      status.replaceChildren(badge);
-    } else status.textContent = typed ? s2.typeConfirmMismatch : "";
-    if (now !== matched) {
-      matched = now;
-      onChange?.(now, input.value);
-      block.dispatchEvent(new CustomEvent(TYPE_CONFIRM_EVENT, { bubbles: true, detail: { matched: now, value: input.value, name } }));
-    }
-  };
-  input.addEventListener("input", update2);
-  update2();
-  return { block, input, matched: () => matched };
+  const field2 = new TypeConfirmField({ doc, block, input, status, name, anyCase, onChange, words: s2 });
+  input.addEventListener("input", () => field2.update());
+  field2.update();
+  return { block, input, matched: () => field2.matched };
 }
 function attachTypeConfirms(root = document, { strings } = {}) {
   const made6 = (
@@ -26214,7 +26198,7 @@ function attachTypeConfirms(root = document, { strings } = {}) {
     for (const control of made6.splice(0)) control?.destroy();
   };
 }
-var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeSeq, TypeConfirmControl;
+var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeSeq, TypeConfirmField, TypeConfirmControl;
 var init_type_confirm = __esm({
   "js/components/type-confirm.js"() {
     "use strict";
@@ -26228,6 +26212,40 @@ var init_type_confirm = __esm({
     TYPE_CONFIRM_EVENT = "kp-type-confirm";
     TYPE_CONFIRM = "[data-kp-type-confirm]";
     typeSeq = 0;
+    TypeConfirmField = class {
+      /**
+       * @param {{ doc: Document, block: HTMLElement, input: HTMLInputElement, status: HTMLElement, name: string, anyCase: boolean,
+       *   onChange?: (matched: boolean, value: string) => void, words: import('../strings.js').Strings }} parts
+       */
+      constructor({ doc, block, input, status, name, anyCase, onChange, words: words3 }) {
+        this.doc = doc;
+        this.block = block;
+        this.input = input;
+        this.status = status;
+        this.name = name;
+        this.anyCase = anyCase;
+        this.onChange = onChange;
+        this.words = words3;
+        this.matched = false;
+      }
+      /** Read the field: draw the status line, and announce the answer when it turns. */
+      update() {
+        const { doc, block, input, status, name, words: s2 } = this;
+        const now = typeConfirmMatches(input.value, name, { anyCase: this.anyCase });
+        const typed = input.value.trim() !== "";
+        block.dataset.kpMatched = String(now);
+        if (now) {
+          const badge = doc.createElement("span");
+          badge.className = "kp-badge kp-badge--success kp-type-confirm__match";
+          badge.textContent = s2.typeConfirmMatched;
+          status.replaceChildren(badge);
+        } else status.textContent = typed ? s2.typeConfirmMismatch : "";
+        if (now === this.matched) return;
+        this.matched = now;
+        this.onChange?.(now, input.value);
+        block.dispatchEvent(new CustomEvent(TYPE_CONFIRM_EVENT, { bubbles: true, detail: { matched: now, value: input.value, name } }));
+      }
+    };
     TypeConfirmControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
       constructor(host, options = {}) {
