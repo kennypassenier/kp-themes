@@ -33,6 +33,11 @@
         display: none;
     }
 
+    /* Without the head, the body is the preview's first row and the one that stretches over a held footprint; the Inbox link under it. */
+    .kp-notices[data-kp-notices-look='preview'] .kp-notices__page {
+        grid-template-rows: minmax(0, 1fr) auto;
+    }
+
     .kp-notices__trigger {
         gap: var(--kp-space-sm, 0.5rem);
         white-space: nowrap;
