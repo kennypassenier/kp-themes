@@ -19091,6 +19091,9 @@
         color: var(--foreground);
         font-family: var(--font-mono, ui-monospace, monospace);
         font-weight: 600;
+        /* [gaps-1031] The name is what must be typed, letter for letter: it never takes a theme's capitals from its label (nostromo,
+         * cyberpunk, brutalism, synthwave and deco write field labels in capitals, so "media" read "MEDIA" and "MEDIA" was refused). */
+        text-transform: none;
         overflow-wrap: anywhere;
         user-select: all;
         /* A long name that breaks keeps its chip's room on every line. */
