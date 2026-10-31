@@ -8285,6 +8285,45 @@ var init_registry = __esm({
   }
 });
 
+// js/effects-core/hook.js
+var EffectHook;
+var init_hook = __esm({
+  "js/effects-core/hook.js"() {
+    "use strict";
+    EffectHook = class {
+      /** @param {EffectsContext} ctx what attachEffects shares with its hooks */
+      constructor(ctx) {
+        this.ctx = ctx;
+      }
+      /** Ready the hook for the engine; the base has nothing to wire up front, so a hook is wired by the reveals it is asked for. */
+      connect() {
+        return this;
+      }
+      /**
+       * Register an undo step: it runs when reduced motion switches on mid-session and at detach.
+       * @template {() => void} F
+       * @param {F} undo
+       * @returns {F}
+       */
+      own(undo) {
+        this.ctx.cleanups.push(undo);
+        return undo;
+      }
+      /**
+       * Add an event listener that the attach's cleanups remove.
+       * @param {EventTarget} target
+       * @param {string} type
+       * @param {EventListener} handler
+       * @param {AddEventListenerOptions | boolean} [options]
+       */
+      listen(target, type, handler, options) {
+        target.addEventListener(type, handler, options);
+        this.own(() => target.removeEventListener(type, handler, options));
+      }
+    };
+  }
+});
+
 // js/effects/headline-special.js
 function tracking(run) {
   const { ctx, el: el16 } = run;
@@ -8389,33 +8428,7 @@ function words(run) {
   ctx.later(finish2, TIMINGS[wordKeyframe(routine)].durationMs + index * cfg.wordStagger + END_GRACE_MS);
 }
 function typeOut(run) {
-  const { ctx, el: el16, text } = run;
-  const { doc, cfg } = ctx;
-  ctx.state.pending++;
-  const chars = [...text];
-  const caret = doc.createElement("span");
-  caret.setAttribute("data-caret", "");
-  caret.setAttribute("aria-hidden", "true");
-  el16.classList.add(STATE.typing);
-  el16.textContent = "";
-  el16.append(caret);
-  let typed = 0;
-  let ended = false;
-  const finish2 = run.once(() => {
-    ended = true;
-    el16.classList.remove(STATE.typing);
-  });
-  const perChar = 1e3 / Math.max(1, cfg.cps);
-  const step = () => {
-    if (ended) return;
-    typed++;
-    el16.textContent = chars.slice(0, typed).join("");
-    if (typed < chars.length) {
-      el16.append(caret);
-      ctx.later(step, perChar);
-    } else finish2();
-  };
-  ctx.later(step, cfg.lead);
+  new TypeRun(run).play();
 }
 function glyphSpan(doc, ch) {
   const span5 = doc.createElement("span");
@@ -8429,41 +8442,7 @@ function glyphSpan(doc, ch) {
   return span5;
 }
 function decipher(run) {
-  const { ctx, el: el16, text } = run;
-  const { doc, view, cfg, state: state12, frames, finishers } = ctx;
-  state12.pending++;
-  const chars = [...text];
-  const spans = chars.map((ch) => glyphSpan(doc, ch));
-  el16.replaceChildren(...spans);
-  const perChar = 1e3 / Math.max(1, cfg.cps);
-  let start = 0;
-  let finished = false;
-  const finish2 = () => {
-    if (finished) return;
-    finished = true;
-    run.rest(false);
-    el16.classList.add(STATE.glitching);
-    const off = () => el16.classList.remove(STATE.glitching);
-    el16.addEventListener("animationend", off, { once: true });
-    ctx.later(off, TIMINGS["kp-slice-1"].durationMs + END_GRACE_MS);
-    state12.pending--;
-    ctx.done();
-  };
-  finishers.push(finish2);
-  let id = 0;
-  const schedule = () => {
-    const next2 = view ? view.requestAnimationFrame(tick6) : 0;
-    frames.add(next2);
-    return next2;
-  };
-  const tick6 = (now) => {
-    frames.delete(id);
-    if (state12.detached || finished) return;
-    if (start === 0) start = now;
-    if (settleGlyphs(spans, chars, now - start, cfg, perChar)) finish2();
-    else id = schedule();
-  };
-  id = schedule();
+  new DecipherRun(run).play();
 }
 function settleGlyphs(spans, chars, t, cfg, perChar) {
   let all = true;
@@ -8482,7 +8461,7 @@ function settleGlyphs(spans, chars, t, cfg, perChar) {
   });
   return all;
 }
-var WORD_ROUTINES, randomGlyph, wordKeyframe;
+var WORD_ROUTINES, randomGlyph, wordKeyframe, SECOND, perCharOf, TypeRun, DecipherRun;
 var init_headline_text = __esm({
   "js/effects/headline-text.js"() {
     "use strict";
@@ -8491,6 +8470,92 @@ var init_headline_text = __esm({
     WORD_ROUTINES = ["shout", "slam", "focus", "resolve", "blur"];
     randomGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
     wordKeyframe = (routine) => routine === "blur" ? "kp-word-in" : routine === "shout" ? "kp-sig-phantom-fly" : `kp-${routine}`;
+    SECOND = 1e3;
+    perCharOf = (cfg) => SECOND / Math.max(1, cfg.cps);
+    TypeRun = class {
+      /** @param {HeadlineRun} run */
+      constructor(run) {
+        this.run = run;
+        this.chars = [...run.text];
+        this.caret = run.ctx.doc.createElement("span");
+        this.typed = 0;
+        this.ended = false;
+        this.perChar = perCharOf(run.ctx.cfg);
+        this.finish = run.once(() => {
+          this.ended = true;
+          run.el.classList.remove(STATE.typing);
+        });
+      }
+      play() {
+        const { run, caret } = this;
+        const { ctx, el: el16 } = run;
+        ctx.state.pending++;
+        caret.setAttribute("data-caret", "");
+        caret.setAttribute("aria-hidden", "true");
+        el16.classList.add(STATE.typing);
+        el16.textContent = "";
+        el16.append(caret);
+        ctx.later(() => this.step(), ctx.cfg.lead);
+      }
+      step() {
+        if (this.ended) return;
+        const { run, chars, caret } = this;
+        this.typed++;
+        run.el.textContent = chars.slice(0, this.typed).join("");
+        if (this.typed < chars.length) {
+          run.el.append(caret);
+          run.ctx.later(() => this.step(), this.perChar);
+        } else this.finish();
+      }
+    };
+    DecipherRun = class {
+      /** @param {HeadlineRun} run */
+      constructor(run) {
+        this.run = run;
+        this.chars = [...run.text];
+        this.spans = this.chars.map((ch) => glyphSpan(run.ctx.doc, ch));
+        this.perChar = perCharOf(run.ctx.cfg);
+        this.start = 0;
+        this.finished = false;
+        this.id = 0;
+      }
+      play() {
+        const { ctx, el: el16 } = this.run;
+        ctx.state.pending++;
+        el16.replaceChildren(...this.spans);
+        ctx.finishers.push(() => this.finish());
+        this.id = this.schedule();
+      }
+      /** The glyphs have settled, or the motion was cut short: the rest state, then one slice burst. */
+      finish() {
+        if (this.finished) return;
+        this.finished = true;
+        const { run } = this;
+        const { ctx, el: el16 } = run;
+        run.rest(false);
+        el16.classList.add(STATE.glitching);
+        const off = () => el16.classList.remove(STATE.glitching);
+        el16.addEventListener("animationend", off, { once: true });
+        ctx.later(off, TIMINGS["kp-slice-1"].durationMs + END_GRACE_MS);
+        ctx.state.pending--;
+        ctx.done();
+      }
+      schedule() {
+        const { view, frames } = this.run.ctx;
+        const next2 = view ? view.requestAnimationFrame((now) => this.tick(now)) : 0;
+        frames.add(next2);
+        return next2;
+      }
+      /** @param {number} now */
+      tick(now) {
+        const { state: state12, frames, cfg } = this.run.ctx;
+        frames.delete(this.id);
+        if (state12.detached || this.finished) return;
+        if (this.start === 0) this.start = now;
+        if (settleGlyphs(this.spans, this.chars, now - this.start, cfg, this.perChar)) this.finish();
+        else this.id = this.schedule();
+      }
+    };
   }
 });
 
@@ -8625,13 +8690,20 @@ __export(headline_exports, {
   install: () => install
 });
 function install(ctx) {
-  const headline = (el16, atRest = false) => new HeadlineRun(ctx, el16, atRest).play();
-  return { headline };
+  return new HeadlineHook(ctx).connect();
 }
+var HeadlineHook;
 var init_headline = __esm({
   "js/effects/headline.js"() {
     "use strict";
+    init_hook();
     init_headline_run();
+    HeadlineHook = class extends EffectHook {
+      /** @param {Element} el @param {boolean} [atRest] straight to rest, as a detach does for a reveal it never started */
+      headline(el16, atRest = false) {
+        return new HeadlineRun(this.ctx, el16, atRest).play();
+      }
+    };
   }
 });
 
@@ -8640,89 +8712,109 @@ var emphasis_exports = {};
 __export(emphasis_exports, {
   install: () => install2
 });
-function install2(ctx) {
-  const { state: state12, reduced: reduced4, cfg, cleanups, finishers, done, announce: announce4, later, routineOf, seen, started: started2 } = ctx;
-  const clearInSteps = (marks, first, step, on, routine) => {
-    if (marks.length === 0) return;
-    state12.pending++;
-    finishers.push(() => {
-      for (const mark of marks) mark.classList.add(STATE.cleared);
-    });
-    marks.forEach((mark, i) => {
-      later(
-        () => {
-          mark.classList.add(STATE.cleared);
-          if (i === marks.length - 1) {
-            state12.pending--;
-            announce4(on, "emphasis", routine, false);
-            done();
-          }
-        },
-        first + i * step
-      );
-    });
-  };
-  const emphasis = (container) => {
-    const marks = [...container.querySelectorAll("mark")];
-    for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? "");
-    const routine = routineOf(container, "emphasis");
-    const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
-    if (marks.length === 0) {
-      announce4(container, "emphasis", routine, true);
-      return;
-    }
-    const atRest = () => {
-      for (const mark of marks) mark.classList.add(STATE.cleared);
-      announce4(container, "emphasis", routine, true);
-    };
-    if (routine === "" || reduced4()) {
-      atRest();
-      if (trigger) wireTrigger(trigger, marks, container, routine);
-      return;
-    }
-    if (trigger) {
-      wireTrigger(trigger, marks, container, routine);
-      trigger.setAttribute("aria-pressed", "false");
-      container.setAttribute(REVEAL_STATE, "armed");
-      return;
-    }
-    if (seen(container, "emphasis")) {
-      atRest();
-      return;
-    }
-    clearInSteps(marks, cfg.delay, cfg.stagger, container, routine);
-  };
-  const wireTrigger = (trigger, marks, container, routine) => {
-    const onClick = () => {
-      const open4 = trigger.getAttribute("aria-pressed") !== "true";
-      trigger.setAttribute("aria-pressed", String(open4));
-      for (const mark of marks) mark.classList.toggle(STATE.cleared, open4);
-      container.toggleAttribute(HOOKS.openState, open4);
-      announce4(container, "emphasis", routine, false);
-    };
-    trigger.addEventListener("click", onClick);
-    cleanups.push(() => trigger.removeEventListener("click", onClick));
-  };
-  const looseMarks = (scope) => {
-    const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started2.has(m));
-    if (marks.length === 0) return;
-    for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? "");
-    for (const m of marks) started2.add(m);
-    const first = marks[0];
-    const routine = routineOf(first, "emphasis");
-    if (routine === "" || reduced4() || seen(first, "emphasis")) {
-      for (const mark of marks) mark.classList.add(STATE.cleared);
-      announce4(first, "emphasis", routine, true);
-      return;
-    }
-    clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
-  };
-  return { clearInSteps, emphasis, wireTrigger, looseMarks };
+function copyText(marks) {
+  for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? "");
 }
+function clearAll(marks) {
+  for (const mark of marks) mark.classList.add(STATE.cleared);
+}
+function install2(ctx) {
+  return new EmphasisHook(ctx).connect();
+}
+var EmphasisHook;
 var init_emphasis = __esm({
   "js/effects/emphasis.js"() {
     "use strict";
     init_effects();
+    init_hook();
+    EmphasisHook = class extends EffectHook {
+      /** @param {Element[]} marks @param {number} first @param {number} step @param {Element} on @param {string} routine */
+      clearInSteps(marks, first, step, on, routine) {
+        const { state: state12, finishers, done, announce: announce4, later } = this.ctx;
+        if (marks.length === 0) return;
+        state12.pending++;
+        finishers.push(() => clearAll(marks));
+        marks.forEach((mark, i) => {
+          later(() => {
+            mark.classList.add(STATE.cleared);
+            if (i !== marks.length - 1) return;
+            state12.pending--;
+            announce4(on, "emphasis", routine, false);
+            done();
+          }, first + i * step);
+        });
+      }
+      /** @param {Element} container an element carrying data-kp-reveal="emphasis" */
+      emphasis(container) {
+        const { reduced: reduced4, cfg, announce: announce4, routineOf, seen } = this.ctx;
+        const marks = [...container.querySelectorAll("mark")];
+        copyText(marks);
+        const routine = routineOf(container, "emphasis");
+        const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
+        if (marks.length === 0) {
+          announce4(container, "emphasis", routine, true);
+          return;
+        }
+        if (routine === "" || reduced4()) {
+          this.atRest(marks, container, routine);
+          if (trigger) this.wireTrigger(trigger, marks, container, routine);
+          return;
+        }
+        if (trigger) {
+          this.arm(trigger, marks, container, routine);
+          return;
+        }
+        if (seen(container, "emphasis")) {
+          this.atRest(marks, container, routine);
+          return;
+        }
+        this.clearInSteps(marks, cfg.delay, cfg.stagger, container, routine);
+      }
+      /** @param {Element[]} marks @param {Element} container @param {string} routine */
+      atRest(marks, container, routine) {
+        clearAll(marks);
+        this.ctx.announce(container, "emphasis", routine, true);
+      }
+      /**
+       * The dossier: the marks stay covered until the trigger opens the file; the register staggers the lift. A second press
+       * closes it. Armed is a state, and it was the one nobody could see: nothing has happened yet, so nothing is announced
+       * [TF2], but it is readable, or "waiting for a click" and "never wired at all" look identical from outside.
+       * @param {Element} trigger @param {Element[]} marks @param {Element} container @param {string} routine
+       */
+      arm(trigger, marks, container, routine) {
+        this.wireTrigger(trigger, marks, container, routine);
+        trigger.setAttribute("aria-pressed", "false");
+        container.setAttribute(REVEAL_STATE, "armed");
+      }
+      /** @param {Element} trigger @param {Element[]} marks @param {Element} container @param {string} routine */
+      wireTrigger(trigger, marks, container, routine) {
+        this.listen(trigger, "click", () => this.toggle(trigger, marks, container, routine));
+      }
+      /** A press on the trigger opens or closes the file. @param {Element} trigger @param {Element[]} marks @param {Element} container @param {string} routine */
+      toggle(trigger, marks, container, routine) {
+        const open4 = trigger.getAttribute("aria-pressed") !== "true";
+        trigger.setAttribute("aria-pressed", String(open4));
+        for (const mark of marks) mark.classList.toggle(STATE.cleared, open4);
+        container.toggleAttribute(HOOKS.openState, open4);
+        this.ctx.announce(container, "emphasis", routine, false);
+      }
+      /** The marks outside any emphasis container clear on load, one after another. @param {ParentNode} scope */
+      looseMarks(scope) {
+        const { reduced: reduced4, cfg, announce: announce4, routineOf, seen, started: started2 } = this.ctx;
+        const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started2.has(m));
+        if (marks.length === 0) return;
+        copyText(marks);
+        for (const m of marks) started2.add(m);
+        const first = marks[0];
+        const routine = routineOf(first, "emphasis");
+        if (routine === "" || reduced4() || seen(first, "emphasis")) {
+          clearAll(marks);
+          announce4(first, "emphasis", routine, true);
+          return;
+        }
+        this.clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
+      }
+    };
   }
 });
 
@@ -8732,21 +8824,38 @@ __export(rule_exports, {
   install: () => install3
 });
 function install3(ctx) {
-  const { state: state12, view, reduced: reduced4, cfg, finishers, done, announce: announce4, routineOf, seen } = ctx;
-  const rule = (el16) => {
-    const routine = routineOf(el16, "rule");
-    const draw6 = (skipped) => {
-      el16.classList.add(STATE.in);
-      announce4(el16, "rule", routine, skipped);
-    };
-    if (routine === "" || reduced4() || seen(el16, "rule") || !view || typeof view.IntersectionObserver !== "function") {
-      draw6(true);
-      return;
-    }
-    state12.pending++;
-    finishers.push(() => draw6(false));
-    state12.io ??= new view.IntersectionObserver(
-      (entries2) => {
+  return new RuleHook(ctx).connect();
+}
+var RuleHook;
+var init_rule = __esm({
+  "js/effects/rule.js"() {
+    "use strict";
+    init_effects();
+    init_hook();
+    RuleHook = class extends EffectHook {
+      /** @param {Element} el */
+      rule(el16) {
+        const { state: state12, view, reduced: reduced4, cfg, finishers, routineOf, seen } = this.ctx;
+        const routine = routineOf(el16, "rule");
+        if (routine === "" || reduced4() || seen(el16, "rule") || !view || typeof view.IntersectionObserver !== "function") {
+          this.draw(el16, routine, true);
+          return;
+        }
+        state12.pending++;
+        finishers.push(() => this.draw(el16, routine, false));
+        state12.io ??= new view.IntersectionObserver((entries2) => this.onSeen(entries2, routine), {
+          threshold: cfg.threshold
+        });
+        state12.io?.observe(el16);
+      }
+      /** @param {Element} el @param {string} routine @param {boolean} skipped */
+      draw(el16, routine, skipped) {
+        el16.classList.add(STATE.in);
+        this.ctx.announce(el16, "rule", routine, skipped);
+      }
+      /** The rules that entered the viewport draw, once each. @param {IntersectionObserverEntry[]} entries @param {string} routine */
+      onSeen(entries2, routine) {
+        const { state: state12, announce: announce4, done } = this.ctx;
         for (const entry of entries2) {
           if (!entry.isIntersecting) continue;
           state12.io?.unobserve(entry.target);
@@ -8755,17 +8864,8 @@ function install3(ctx) {
           state12.pending--;
           done();
         }
-      },
-      { threshold: cfg.threshold }
-    );
-    state12.io?.observe(el16);
-  };
-  return { rule };
-}
-var init_rule = __esm({
-  "js/effects/rule.js"() {
-    "use strict";
-    init_effects();
+      }
+    };
   }
 });
 
@@ -8774,76 +8874,114 @@ var count_exports = {};
 __export(count_exports, {
   install: () => install4
 });
-function install4(ctx) {
-  const { doc, view, reduced: reduced4, cleanups } = ctx;
-  const countUp = (el16) => {
-    const text = el16.textContent ?? "";
-    const match = /-?[\d][\d\s.,\u00a0\u202f]*/.exec(text);
-    if (match === null) {
-      el16.setAttribute(HOOKS.countState, "done");
-      return;
-    }
-    const whole2 = match[0].trim();
-    const before = text.slice(0, match.index);
-    const after = text.slice(match.index + match[0].length);
-    const locale = (
-      /** @type {HTMLElement | null} */
-      el16.closest("[lang]")?.lang || doc?.documentElement?.lang || void 0
-    );
-    const parts2 = new Intl.NumberFormat(locale).formatToParts(12345.6);
-    const groupSep = parts2.find((part7) => part7.type === "group")?.value ?? "";
-    const decimalSep = parts2.find((part7) => part7.type === "decimal")?.value ?? ".";
-    const cut = decimalSep === "" ? -1 : whole2.lastIndexOf(decimalSep);
-    const decimals = cut < 0 ? 0 : whole2.length - cut - 1;
-    const digitsOnly = (part7) => part7.replace(/[^\d-]/g, "");
-    const target = Number(cut < 0 ? digitsOnly(whole2) : `${digitsOnly(whole2.slice(0, cut))}.${digitsOnly(whole2.slice(cut + 1))}`);
-    if (!Number.isFinite(target)) {
-      el16.setAttribute(HOOKS.countState, "done");
-      return;
-    }
-    const grouped = groupSep !== "" && whole2.includes(groupSep);
-    const render7 = (value) => {
-      const [int, frac] = value.toFixed(decimals).split(".");
-      const body = grouped ? int.replace(/\B(?=(\d{3})+(?!\d))/g, groupSep) : int;
-      return `${before}${body}${decimals ? decimalSep + frac : ""}${after}`;
-    };
-    const style = view?.getComputedStyle(el16);
-    const asked = style?.getPropertyValue(COUNT_KNOB).trim() ?? "";
-    const duration2 = asked === "" || !Number.isFinite(Number(asked)) ? 900 : Number(asked);
-    const askedFrom = style?.getPropertyValue(COUNT_FROM_KNOB).trim() ?? "";
-    const from = askedFrom === "" || !Number.isFinite(Number(askedFrom)) ? 0 : Number(askedFrom);
-    const rest = () => {
-      el16.textContent = render7(target);
-      el16.setAttribute(HOOKS.countState, "done");
-      el16.dispatchEvent(new CustomEvent("kp-count", { bubbles: true, detail: { value: target, counted: false } }));
-    };
-    if (reduced4() || duration2 <= 0 || target === from) {
-      rest();
-      return;
-    }
-    el16.setAttribute(HOOKS.countState, "running");
-    const startedAt = view?.performance?.now?.() ?? Date.now();
-    let frame3 = 0;
-    const step = () => {
-      const now = view?.performance?.now?.() ?? Date.now();
-      const t = Math.min(1, (now - startedAt) / duration2);
-      const eased = 1 - (1 - t) ** 3;
-      el16.textContent = render7(from + (target - from) * eased);
-      if (t < 1 && !reduced4()) frame3 = view?.requestAnimationFrame?.(step) ?? 0;
-      else rest();
-    };
-    frame3 = view?.requestAnimationFrame?.(step) ?? 0;
-    cleanups.push(() => {
-      if (frame3) view?.cancelAnimationFrame?.(frame3);
-      rest();
-    });
-  };
-  return { countUp };
+function numberKnob(style, name, fallback2) {
+  const asked = style?.getPropertyValue(name).trim() ?? "";
+  return asked === "" || !Number.isFinite(Number(asked)) ? fallback2 : Number(asked);
 }
+function separatorsOf(el16, doc) {
+  const locale = (
+    /** @type {HTMLElement | null} */
+    el16.closest("[lang]")?.lang || doc?.documentElement?.lang || void 0
+  );
+  const parts2 = new Intl.NumberFormat(locale).formatToParts(SAMPLE);
+  return {
+    group: parts2.find((part7) => part7.type === "group")?.value ?? "",
+    decimal: parts2.find((part7) => part7.type === "decimal")?.value ?? "."
+  };
+}
+function install4(ctx) {
+  return new CountHook(ctx).connect();
+}
+var DEFAULT_DURATION, SAMPLE, DIGITS, CountRun, CountHook;
 var init_count = __esm({
   "js/effects/count.js"() {
     "use strict";
     init_effects();
+    init_hook();
+    DEFAULT_DURATION = 900;
+    SAMPLE = 12345.6;
+    DIGITS = /-?[\d][\d\s.,  ]*/;
+    CountRun = class {
+      /** @param {import('../effects.js').EffectsContext} ctx @param {Element} el @param {RegExpExecArray} match */
+      constructor(ctx, el16, match) {
+        this.ctx = ctx;
+        this.el = el16;
+        const text = el16.textContent ?? "";
+        const whole2 = match[0].trim();
+        this.before = text.slice(0, match.index);
+        this.after = text.slice(match.index + match[0].length);
+        const sep = separatorsOf(el16, ctx.doc);
+        this.decimalSep = sep.decimal;
+        const cut = sep.decimal === "" ? -1 : whole2.lastIndexOf(sep.decimal);
+        this.decimals = cut < 0 ? 0 : whole2.length - cut - 1;
+        const digitsOnly = (part7) => part7.replace(/[^\d-]/g, "");
+        this.target = Number(cut < 0 ? digitsOnly(whole2) : `${digitsOnly(whole2.slice(0, cut))}.${digitsOnly(whole2.slice(cut + 1))}`);
+        this.groupSep = sep.group !== "" && whole2.includes(sep.group) ? sep.group : "";
+        const style = ctx.view?.getComputedStyle(el16);
+        this.duration = numberKnob(style, COUNT_KNOB, DEFAULT_DURATION);
+        this.from = numberKnob(style, COUNT_FROM_KNOB, 0);
+        this.startedAt = 0;
+        this.frame = 0;
+      }
+      /** Put a value back in the authored shape: same grouping, same decimals. @param {number} value */
+      render(value) {
+        const [int, frac] = value.toFixed(this.decimals).split(".");
+        const body = this.groupSep ? int.replace(/\B(?=(\d{3})+(?!\d))/g, this.groupSep) : int;
+        return `${this.before}${body}${this.decimals ? this.decimalSep + frac : ""}${this.after}`;
+      }
+      /**
+       * The rest state, and the only state a reader who asked for less movement ever sees: the real number, whatever happened
+       * before.
+       */
+      rest() {
+        const { el: el16, target } = this;
+        el16.textContent = this.render(target);
+        el16.setAttribute(HOOKS.countState, "done");
+        el16.dispatchEvent(new CustomEvent("kp-count", { bubbles: true, detail: { value: target, counted: false } }));
+      }
+      /** @param {(undo: () => void) => void} own registers the stop with the attach */
+      play(own) {
+        const { el: el16, ctx } = this;
+        if (ctx.reduced() || this.duration <= 0 || this.target === this.from) {
+          this.rest();
+          return;
+        }
+        el16.setAttribute(HOOKS.countState, "running");
+        this.startedAt = this.now();
+        this.frame = ctx.view?.requestAnimationFrame?.(() => this.step()) ?? 0;
+        own(() => {
+          if (this.frame) ctx.view?.cancelAnimationFrame?.(this.frame);
+          this.rest();
+        });
+      }
+      now() {
+        return this.ctx.view?.performance?.now?.() ?? Date.now();
+      }
+      step() {
+        const { ctx, target, from } = this;
+        const t = Math.min(1, (this.now() - this.startedAt) / this.duration);
+        const eased = 1 - (1 - t) ** 3;
+        this.el.textContent = this.render(from + (target - from) * eased);
+        if (t < 1 && !ctx.reduced()) this.frame = ctx.view?.requestAnimationFrame?.(() => this.step()) ?? 0;
+        else this.rest();
+      }
+    };
+    CountHook = class extends EffectHook {
+      /** @param {Element} el */
+      countUp(el16) {
+        const match = DIGITS.exec(el16.textContent ?? "");
+        if (match === null) {
+          el16.setAttribute(HOOKS.countState, "done");
+          return;
+        }
+        const run = new CountRun(this.ctx, el16, match);
+        if (!Number.isFinite(run.target)) {
+          el16.setAttribute(HOOKS.countState, "done");
+          return;
+        }
+        run.play((undo) => this.own(undo));
+      }
+    };
   }
 });
 
@@ -8853,51 +8991,319 @@ __export(caret_exports, {
   install: () => install5
 });
 function install5(ctx) {
-  const { root, doc, view, rootStyle, cleanups, carets: carets2 } = ctx;
-  const caret = () => {
-    const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : "";
-    if (routine !== "block" || !view) return;
-    const inputs = (
-      /** @type {HTMLInputElement[]} */
-      [...root.querySelectorAll("input.kp-field__input")].filter(
-        (el16) => /^(text|email|search|url|tel|password)?$/.test(el16.getAttribute("type") ?? "")
-      )
-    );
-    for (const input of inputs) {
-      if (carets2.has(input)) continue;
-      carets2.add(input);
-      const put = () => {
+  return new CaretHook(ctx).connect();
+}
+var TEXT_LIKE, MOVES, PROBE_DIGITS, FALLBACK_CH, CaretHook;
+var init_caret = __esm({
+  "js/effects/caret.js"() {
+    "use strict";
+    init_effects();
+    init_hook();
+    TEXT_LIKE = /^(text|email|search|url|tel|password)?$/;
+    MOVES = ["input", "keyup", "click", "focus", "select"];
+    PROBE_DIGITS = 20;
+    FALLBACK_CH = 8;
+    CaretHook = class extends EffectHook {
+      caret() {
+        const { root, view, rootStyle, carets: carets2 } = this.ctx;
+        const routine = rootStyle ? rootStyle.getPropertyValue(CARET_KNOB).trim() : "";
+        if (routine !== "block" || !view) return;
+        const inputs = (
+          /** @type {HTMLInputElement[]} */
+          [...root.querySelectorAll("input.kp-field__input")].filter(
+            (el16) => TEXT_LIKE.test(el16.getAttribute("type") ?? "")
+          )
+        );
+        for (const input of inputs) {
+          if (carets2.has(input)) continue;
+          carets2.add(input);
+          this.wire(input);
+        }
+      }
+      /** @param {HTMLInputElement} input */
+      wire(input) {
+        const put = () => this.put(input);
+        const clear2 = () => input.style.removeProperty("--kp-col");
+        for (const ev of MOVES) input.addEventListener(ev, put);
+        input.addEventListener("blur", clear2);
+        this.own(() => {
+          for (const ev of MOVES) input.removeEventListener(ev, put);
+          input.removeEventListener("blur", clear2);
+          clear2();
+        });
+      }
+      /** Write the caret's column, measured in the field's own font. @param {HTMLInputElement} input */
+      put(input) {
+        const { doc, view } = this.ctx;
         if (!view) return;
         const cs = view.getComputedStyle(input);
         const probe = doc.createElement("span");
         probe.style.cssText = "position:absolute;visibility:hidden;white-space:pre;";
         probe.style.font = cs.font || `${cs.fontSize} ${cs.fontFamily}`;
-        probe.textContent = "0".repeat(20);
+        probe.textContent = "0".repeat(PROBE_DIGITS);
         doc.body?.append(probe);
-        const ch = probe.getBoundingClientRect().width / 20 || 8;
+        const ch = probe.getBoundingClientRect().width / PROBE_DIGITS || FALLBACK_CH;
         probe.remove();
         const room = input.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
         const max = Math.max(0, Math.floor(room / ch) - 1);
         const col = Math.min(input.selectionStart ?? input.value.length, max);
         input.style.setProperty("--kp-col", String(col));
-      };
-      const clear = () => input.style.removeProperty("--kp-col");
-      const events = ["input", "keyup", "click", "focus", "select"];
-      for (const ev of events) input.addEventListener(ev, put);
-      input.addEventListener("blur", clear);
-      cleanups.push(() => {
-        for (const ev of events) input.removeEventListener(ev, put);
-        input.removeEventListener("blur", clear);
-        clear();
-      });
-    }
-  };
-  return { caret };
+      }
+    };
+  }
+});
+
+// js/effects/pointer-light.js
+function clear(el16) {
+  for (const prop of Object.values(LIGHT)) el16.style.removeProperty(prop);
 }
-var init_caret = __esm({
-  "js/effects/caret.js"() {
+var SHADE_GAIN, BASE_LIFT, DIGITS2, PointerLight;
+var init_pointer_light = __esm({
+  "js/effects/pointer-light.js"() {
     "use strict";
     init_effects();
+    SHADE_GAIN = 1.4;
+    BASE_LIFT = 0.6;
+    DIGITS2 = 3;
+    PointerLight = class {
+      /** @param {EffectsContext} ctx @param {Window} view */
+      constructor(ctx, view) {
+        this.ctx = ctx;
+        this.view = view;
+        this.lit = [];
+        this.at = null;
+        this.recollect = 0;
+        this.queued = 0;
+      }
+      /** Wire the ways out and the theme watch, and build the list. @param {(undo: () => void) => void} own */
+      connect(own) {
+        const { doc, html } = this.ctx;
+        const { view } = this;
+        const onDown2 = (event) => {
+          if (
+            /** @type {PointerEvent} */
+            event.pointerType === "touch"
+          ) this.away();
+        };
+        const onKey5 = (event) => {
+          if (
+            /** @type {KeyboardEvent} */
+            event.key === "Tab"
+          ) this.away();
+        };
+        const away = () => this.away();
+        const schedule = () => this.schedule();
+        const themes = new MutationObserver(() => this.onTheme());
+        themes.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
+        doc.addEventListener("pointerdown", onDown2, { passive: true });
+        doc.addEventListener("keydown", onKey5, { passive: true });
+        html.addEventListener("pointerleave", away, { passive: true });
+        view.addEventListener("scroll", schedule, { passive: true });
+        own(() => {
+          themes.disconnect();
+          doc.removeEventListener("pointerdown", onDown2);
+          doc.removeEventListener("keydown", onKey5);
+          html.removeEventListener("pointerleave", away);
+          view.removeEventListener("scroll", schedule);
+          for (const el16 of this.lit) clear(el16);
+          this.lit = [];
+        });
+        this.collect();
+        return this;
+      }
+      /**
+       * Which elements this theme lights is the theme's own answer, read from the cascade rather than hard-coded here: a
+       * register that never declares `--kp-light: pointer` gets an empty list and the frame does nothing at all.
+       */
+      collect() {
+        for (const el16 of this.lit) clear(el16);
+        this.lit = /** @type {HTMLElement[]} */
+        [...this.ctx.root.querySelectorAll(LIGHT_SELECTOR)].filter(
+          (el16) => this.view.getComputedStyle(el16).getPropertyValue(LIGHT_KNOB).trim() === "pointer"
+        );
+      }
+      paint() {
+        const here = this.at;
+        if (!here || this.ctx.reduced()) {
+          for (const el16 of this.lit) clear(el16);
+          return;
+        }
+        for (const el16 of this.lit) this.paintOne(el16, here);
+      }
+      /** @param {HTMLElement} el @param {{ x: number, y: number }} here */
+      paintOne(el16, here) {
+        const box = el16.getBoundingClientRect();
+        if (box.bottom < 0 || box.top > this.view.innerHeight) {
+          clear(el16);
+          return;
+        }
+        const dx = box.left + box.width / 2 - here.x;
+        const dy = box.top + box.height / 2 - here.y;
+        const distance = Math.hypot(dx, dy);
+        const k = SHADE_GAIN / Math.max(distance, LIGHT_REACH);
+        const near2 = 1 - Math.min(distance / LIGHT_FAR, 1);
+        el16.style.setProperty(LIGHT.x, (dx * k).toFixed(DIGITS2));
+        el16.style.setProperty(LIGHT.y, (dy * k).toFixed(DIGITS2));
+        el16.style.setProperty(LIGHT.near, near2.toFixed(DIGITS2));
+        el16.style.setProperty(LIGHT.lift, (BASE_LIFT + near2).toFixed(DIGITS2));
+        el16.style.setProperty(LIGHT.atX, `${Math.round(here.x - box.left)}px`);
+        el16.style.setProperty(LIGHT.atY, `${Math.round(here.y - box.top)}px`);
+      }
+      /** Paint in the next frame, once however often it is asked. */
+      schedule() {
+        const { frames } = this.ctx;
+        if (this.queued) return;
+        this.queued = this.view.requestAnimationFrame(() => {
+          frames.delete(this.queued);
+          this.queued = 0;
+          this.paint();
+        });
+        frames.add(this.queued);
+      }
+      onTheme() {
+        const { frames } = this.ctx;
+        if (this.recollect) return;
+        this.recollect = this.view.requestAnimationFrame(() => {
+          frames.delete(this.recollect);
+          this.recollect = 0;
+          this.collect();
+          this.paint();
+        });
+        frames.add(this.recollect);
+      }
+      away() {
+        this.at = null;
+        this.schedule();
+      }
+      /** The pointer moved: light from where it is, or go out for a touch. @param {PointerEvent | MouseEvent} event */
+      put(event) {
+        this.at = "pointerType" in event && event.pointerType === "touch" ? null : { x: event.clientX, y: event.clientY };
+        this.paint();
+      }
+    };
+  }
+});
+
+// js/effects/press-bus.js
+function pressed(event) {
+  const target = event.target;
+  return target instanceof Element ? (
+    /** @type {HTMLElement | null} */
+    target.closest(PRESSED)
+  ) : null;
+}
+var PRESSED, isPress, PressBus;
+var init_press_bus = __esm({
+  "js/effects/press-bus.js"() {
+    "use strict";
+    init_effects();
+    PRESSED = ".kp-button, .kp-icon-button";
+    isPress = (key) => key === " " || key === "Enter";
+    PressBus = class {
+      /** @param {EffectsContext} ctx */
+      constructor(ctx) {
+        this.ctx = ctx;
+        this.marked = /* @__PURE__ */ new Set();
+        this.holding = /* @__PURE__ */ new Map();
+      }
+      /** The theme answers per press, not once: a page can change theme after the bus is armed. */
+      asked() {
+        const { rootStyle } = this.ctx;
+        return rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : "";
+      }
+      /** @param {(undo: () => void) => void} own */
+      connect(own) {
+        const { doc } = this.ctx;
+        const onDown2 = (event) => this.onDown(event);
+        const onKey5 = (event) => this.onKey(event);
+        doc.addEventListener("pointerdown", onDown2, { passive: true });
+        doc.addEventListener("keydown", onKey5);
+        own(() => {
+          doc.removeEventListener("pointerdown", onDown2);
+          doc.removeEventListener("keydown", onKey5);
+          this.takeBack();
+        });
+      }
+      /** Remove every mark and every hold this bus wrote [KT6]. */
+      takeBack() {
+        for (const el16 of this.marked) {
+          el16.style.removeProperty(PRESS.x);
+          el16.style.removeProperty(PRESS.y);
+          el16.removeAttribute(PRESS_SIZE);
+        }
+        this.marked.clear();
+        for (const [el16, timer] of this.holding) {
+          window.clearTimeout(timer);
+          el16.removeAttribute("data-kp-pressed");
+        }
+        this.holding.clear();
+      }
+      /**
+       * `--kp-press: hold`: a press a stylesheet plays as an animation on `:active` is cut where the finger lifts, so a quick tap
+       * shows part of it. The press is marked for the time the animation takes (`--kp-press-hold`, else PRESS_HOLD_MS) and the
+       * register keys the same animation on the mark as well as on `:active`.
+       * @param {Event} event
+       */
+      hold(event) {
+        const target = event.target;
+        const el16 = target instanceof Element ? (
+          /** @type {HTMLElement | null} */
+          target.closest(PRESS_HELD)
+        ) : null;
+        if (!el16) return;
+        const given = parseFloat(getComputedStyle(el16).getPropertyValue(PRESS_HOLD));
+        const ms = Number.isFinite(given) && given > 0 ? given : PRESS_HOLD_MS;
+        window.clearTimeout(this.holding.get(el16));
+        el16.setAttribute("data-kp-pressed", "");
+        const timer = window.setTimeout(() => {
+          el16.removeAttribute("data-kp-pressed");
+          this.holding.delete(el16);
+        }, ms);
+        this.holding.set(el16, timer);
+      }
+      /** A theme that letters its buttons gets each one's width. @param {HTMLElement} el */
+      letter(el16) {
+        el16.setAttribute(PRESS_SIZE, String(Math.round(el16.getBoundingClientRect().width)));
+        this.marked.add(el16);
+      }
+      /** @param {Event} event */
+      onDown(event) {
+        const pointer = (
+          /** @type {PointerEvent} */
+          event
+        );
+        if (this.asked() === "hold") return this.hold(event);
+        const el16 = pressed(event);
+        if (!el16) return;
+        if (this.asked() === "size") return this.letter(el16);
+        const button6 = el16.closest(".kp-button");
+        if (this.asked() !== "point" || !(button6 instanceof HTMLElement)) return;
+        const box = button6.getBoundingClientRect();
+        button6.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
+        button6.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
+        this.marked.add(button6);
+      }
+      /**
+       * A key press has no point: the stylesheet's own default takes over again, which puts the stain in the middle of the
+       * button. It has a size all the same, so a theme that letters it gets it.
+       * @param {Event} event
+       */
+      onKey(event) {
+        const keyboard = (
+          /** @type {KeyboardEvent} */
+          event
+        );
+        if (this.asked() === "hold") return isPress(keyboard.key) && !keyboard.repeat ? this.hold(event) : void 0;
+        const el16 = pressed(event);
+        if (!el16 || !isPress(keyboard.key)) return;
+        if (this.asked() === "size") return this.letter(el16);
+        const button6 = el16.closest(".kp-button");
+        if (this.asked() !== "point" || !(button6 instanceof HTMLElement)) return;
+        button6.style.removeProperty(PRESS.x);
+        button6.style.removeProperty(PRESS.y);
+        this.marked.delete(button6);
+      }
+    };
   }
 });
 
@@ -8907,220 +9313,76 @@ __export(pointer_exports, {
   install: () => install6
 });
 function install6(ctx) {
-  const { root, doc, html, view, reduced: reduced4, rootStyle, frames, cleanups } = ctx;
-  const pointerLight = () => {
-    if (!view) return null;
-    let lit = [];
-    let at = null;
-    let recollect = 0;
-    let queued = 0;
-    const clear = (el16) => {
-      for (const prop of Object.values(LIGHT)) el16.style.removeProperty(prop);
-    };
-    const collect2 = () => {
-      for (const el16 of lit) clear(el16);
-      lit = /** @type {HTMLElement[]} */
-      [...root.querySelectorAll(LIGHT_SELECTOR)].filter(
-        (el16) => view.getComputedStyle(el16).getPropertyValue(LIGHT_KNOB).trim() === "pointer"
-      );
-    };
-    const paint12 = () => {
-      const here = at;
-      if (!here || reduced4()) {
-        for (const el16 of lit) clear(el16);
-        return;
-      }
-      for (const el16 of lit) {
-        const box = el16.getBoundingClientRect();
-        if (box.bottom < 0 || box.top > view.innerHeight) {
-          clear(el16);
-          continue;
-        }
-        const dx = box.left + box.width / 2 - here.x;
-        const dy = box.top + box.height / 2 - here.y;
-        const distance = Math.hypot(dx, dy);
-        const k = 1.4 / Math.max(distance, LIGHT_REACH);
-        const near2 = 1 - Math.min(distance / LIGHT_FAR, 1);
-        el16.style.setProperty(LIGHT.x, (dx * k).toFixed(3));
-        el16.style.setProperty(LIGHT.y, (dy * k).toFixed(3));
-        el16.style.setProperty(LIGHT.near, near2.toFixed(3));
-        el16.style.setProperty(LIGHT.lift, (0.6 + near2).toFixed(3));
-        el16.style.setProperty(LIGHT.atX, `${Math.round(here.x - box.left)}px`);
-        el16.style.setProperty(LIGHT.atY, `${Math.round(here.y - box.top)}px`);
-      }
-    };
-    const schedule = () => {
-      if (queued) return;
-      queued = view.requestAnimationFrame(() => {
-        frames.delete(queued);
-        queued = 0;
-        paint12();
-      });
-      frames.add(queued);
-    };
-    const away = () => {
-      at = null;
-      schedule();
-    };
-    const onDown2 = (event) => {
-      if (event.pointerType === "touch") away();
-    };
-    const onKey5 = (event) => {
-      if (event.key === "Tab") away();
-    };
-    const themes = new MutationObserver(() => {
-      if (recollect) return;
-      recollect = view.requestAnimationFrame(() => {
-        frames.delete(recollect);
-        recollect = 0;
-        collect2();
-        paint12();
-      });
-      frames.add(recollect);
-    });
-    themes.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
-    doc.addEventListener("pointerdown", onDown2, { passive: true });
-    doc.addEventListener("keydown", onKey5, { passive: true });
-    html.addEventListener("pointerleave", away, { passive: true });
-    view.addEventListener("scroll", schedule, { passive: true });
-    cleanups.push(() => {
-      themes.disconnect();
-      doc.removeEventListener("pointerdown", onDown2);
-      doc.removeEventListener("keydown", onKey5);
-      html.removeEventListener("pointerleave", away);
-      view.removeEventListener("scroll", schedule);
-      for (const el16 of lit) clear(el16);
-      lit = [];
-    });
-    collect2();
-    return {
-      /** @param {PointerEvent | MouseEvent} event */
-      put(event) {
-        at = "pointerType" in event && event.pointerType === "touch" ? null : { x: event.clientX, y: event.clientY };
-        paint12();
-      }
-    };
-  };
-  const pointerBus = () => {
-    const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : "";
-    if (routine !== "track" || !view || reduced4()) return;
-    const light = pointerLight();
-    let frame3 = 0;
-    const onMove2 = (event) => {
-      if (frame3) return;
-      frame3 = view.requestAnimationFrame(() => {
-        frames.delete(frame3);
-        frame3 = 0;
-        const w = view.innerWidth || 1;
-        const h2 = view.innerHeight || 1;
-        html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
-        html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h2))));
-        light?.put(event);
-      });
-      frames.add(frame3);
-    };
-    doc.addEventListener("pointermove", onMove2, { passive: true });
-    cleanups.push(() => {
-      doc.removeEventListener("pointermove", onMove2);
-      html.style.removeProperty(POINTER.x);
-      html.style.removeProperty(POINTER.y);
-    });
-  };
-  const pressBus = () => {
-    const asked = () => rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : "";
-    if (!["point", "size", "hold"].includes(asked()) || !view) return;
-    const PRESSED = ".kp-button, .kp-icon-button";
-    const marked = /* @__PURE__ */ new Set();
-    const pressed = (event) => {
-      const target = event.target;
-      return target instanceof Element ? (
-        /** @type {HTMLElement | null} */
-        target.closest(PRESSED)
-      ) : null;
-    };
-    const holding = /* @__PURE__ */ new Map();
-    const hold = (event) => {
-      const target = event.target;
-      const el16 = target instanceof Element ? (
-        /** @type {HTMLElement | null} */
-        target.closest(PRESS_HELD)
-      ) : null;
-      if (!el16) return;
-      const given = parseFloat(getComputedStyle(el16).getPropertyValue(PRESS_HOLD));
-      const ms = Number.isFinite(given) && given > 0 ? given : PRESS_HOLD_MS;
-      window.clearTimeout(holding.get(el16));
-      el16.setAttribute("data-kp-pressed", "");
-      holding.set(
-        el16,
-        window.setTimeout(() => {
-          el16.removeAttribute("data-kp-pressed");
-          holding.delete(el16);
-        }, ms)
-      );
-    };
-    const letter = (el16) => {
-      el16.setAttribute(PRESS_SIZE, String(Math.round(el16.getBoundingClientRect().width)));
-      marked.add(el16);
-    };
-    const onDown2 = (event) => {
-      const pointer = (
-        /** @type {PointerEvent} */
-        event
-      );
-      if (asked() === "hold") return hold(event);
-      const el16 = pressed(event);
-      if (!el16) return;
-      if (asked() === "size") return letter(el16);
-      const button6 = el16.closest(".kp-button");
-      if (asked() !== "point" || !(button6 instanceof HTMLElement)) return;
-      const box = button6.getBoundingClientRect();
-      button6.style.setProperty(PRESS.x, `${Math.round(pointer.clientX - box.left)}px`);
-      button6.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
-      marked.add(button6);
-    };
-    const onKey5 = (event) => {
-      const key = (
-        /** @type {KeyboardEvent} */
-        event.key
-      );
-      if (asked() === "hold")
-        return key === " " || key === "Enter" ? (
-          /** @type {KeyboardEvent} */
-          event.repeat ? void 0 : hold(event)
-        ) : void 0;
-      const el16 = pressed(event);
-      if (!el16 || key !== " " && key !== "Enter") return;
-      if (asked() === "size") return letter(el16);
-      const button6 = el16.closest(".kp-button");
-      if (asked() !== "point" || !(button6 instanceof HTMLElement)) return;
-      button6.style.removeProperty(PRESS.x);
-      button6.style.removeProperty(PRESS.y);
-      marked.delete(button6);
-    };
-    doc.addEventListener("pointerdown", onDown2, { passive: true });
-    doc.addEventListener("keydown", onKey5);
-    cleanups.push(() => {
-      doc.removeEventListener("pointerdown", onDown2);
-      doc.removeEventListener("keydown", onKey5);
-      for (const el16 of marked) {
-        el16.style.removeProperty(PRESS.x);
-        el16.style.removeProperty(PRESS.y);
-        el16.removeAttribute(PRESS_SIZE);
-      }
-      marked.clear();
-      for (const [el16, timer] of holding) {
-        window.clearTimeout(timer);
-        el16.removeAttribute("data-kp-pressed");
-      }
-      holding.clear();
-    });
-  };
-  return { pointerLight, pointerBus, pressBus };
+  return new PointerHook(ctx).connect();
 }
+var PRESS_STYLES, PointerBus, PointerHook;
 var init_pointer = __esm({
   "js/effects/pointer.js"() {
     "use strict";
     init_effects();
+    init_hook();
+    init_pointer_light();
+    init_press_bus();
+    PRESS_STYLES = ["point", "size", "hold"];
+    PointerBus = class {
+      /** @param {import('../effects.js').EffectsContext} ctx @param {Window} view @param {PointerLight | null} light */
+      constructor(ctx, view, light) {
+        this.ctx = ctx;
+        this.view = view;
+        this.light = light;
+        this.frame = 0;
+      }
+      /** @param {(undo: () => void) => void} own */
+      connect(own) {
+        const { doc, html } = this.ctx;
+        const onMove2 = (event) => this.onMove(
+          /** @type {PointerEvent} */
+          event
+        );
+        doc.addEventListener("pointermove", onMove2, { passive: true });
+        own(() => {
+          doc.removeEventListener("pointermove", onMove2);
+          html.style.removeProperty(POINTER.x);
+          html.style.removeProperty(POINTER.y);
+        });
+      }
+      /** @param {PointerEvent | MouseEvent} event */
+      onMove(event) {
+        const { view } = this;
+        const { html, frames } = this.ctx;
+        if (this.frame) return;
+        this.frame = view.requestAnimationFrame(() => {
+          frames.delete(this.frame);
+          this.frame = 0;
+          const w = view.innerWidth || 1;
+          const h2 = view.innerHeight || 1;
+          html.style.setProperty(POINTER.x, String(Math.min(1, Math.max(0, event.clientX / w))));
+          html.style.setProperty(POINTER.y, String(Math.min(1, Math.max(0, event.clientY / h2))));
+          this.light?.put(event);
+        });
+        frames.add(this.frame);
+      }
+    };
+    PointerHook = class extends EffectHook {
+      /** The pointer light of this attach, or null when there is no window to light. */
+      pointerLight() {
+        const { view } = this.ctx;
+        if (!view) return null;
+        return new PointerLight(this.ctx, view).connect((undo) => this.own(undo));
+      }
+      pointerBus() {
+        const { view, reduced: reduced4, rootStyle } = this.ctx;
+        const routine = rootStyle ? rootStyle.getPropertyValue(POINTER_KNOB).trim() : "";
+        if (routine !== "track" || !view || reduced4()) return;
+        new PointerBus(this.ctx, view, this.pointerLight()).connect((undo) => this.own(undo));
+      }
+      pressBus() {
+        const { view, rootStyle } = this.ctx;
+        const asked = rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : "";
+        if (!PRESS_STYLES.includes(asked) || !view) return;
+        new PressBus(this.ctx).connect((undo) => this.own(undo));
+      }
+    };
   }
 });
 
@@ -9130,57 +9392,80 @@ __export(measure_exports, {
   install: () => install7
 });
 function install7(ctx) {
-  const { root, doc, view, rootStyle, cleanups } = ctx;
-  const measure = () => {
-    const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : "";
-    if (routine !== "live" || !view) return;
-    const words3 = getStrings();
-    const headlines = [...root.querySelectorAll(`[${HOOKS.reveal}='headline']`)].filter((h2) => !h2.closest("[data-kp-measured]"));
-    for (const h1 of headlines) {
-      const wrap = doc.createElement("span");
-      wrap.setAttribute("data-kp-measured", "");
-      h1.replaceWith(wrap);
-      wrap.append(h1);
-      for (const corner of ["tl", "tr", "bl", "br"]) {
-        const bracket = doc.createElement("i");
-        bracket.setAttribute("data-kp-measure-bracket", corner);
-        bracket.setAttribute("aria-hidden", "true");
-        wrap.append(bracket);
-      }
-      const readout = doc.createElement("span");
-      readout.setAttribute("data-kp-measure", "");
-      readout.setAttribute("aria-hidden", "true");
-      readout.textContent = words3.measureLoading;
-      wrap.append(readout);
-      let timer;
-      const update2 = () => {
-        const box = h1.getBoundingClientRect();
-        readout.textContent = words3.measureBox(Math.round(box.width), Math.round(box.height));
-        wrap.setAttribute("data-kp-measured", "live");
-      };
-      update2();
-      const schedule = () => {
-        clearTimeout(timer);
-        timer = setTimeout(update2, 100);
-      };
-      view.addEventListener("resize", schedule);
-      cleanups.push(() => {
-        clearTimeout(timer);
-        view?.removeEventListener("resize", schedule);
-      });
-      try {
-        if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(update2);
-      } catch {
-      }
-    }
-  };
-  return { measure };
+  return new MeasureHook(ctx).connect();
 }
+var CORNERS, RESIZE_SETTLE, MeasureFrame, MeasureHook;
 var init_measure = __esm({
   "js/effects/measure.js"() {
     "use strict";
     init_effects();
+    init_hook();
     init_strings();
+    CORNERS = ["tl", "tr", "bl", "br"];
+    RESIZE_SETTLE = 100;
+    MeasureFrame = class {
+      /** @param {import('../effects.js').EffectsContext} ctx @param {Element} h1 */
+      constructor(ctx, h1) {
+        this.ctx = ctx;
+        this.h1 = h1;
+        this.words = getStrings();
+        this.wrap = ctx.doc.createElement("span");
+        this.readout = ctx.doc.createElement("span");
+        this.timer = void 0;
+      }
+      /** Wrap the headline, draw the brackets and the readout, and keep the readout true. @param {(undo: () => void) => void} own */
+      build(own) {
+        const { ctx, h1, wrap, readout } = this;
+        const { doc, view } = ctx;
+        wrap.setAttribute("data-kp-measured", "");
+        h1.replaceWith(wrap);
+        wrap.append(h1);
+        for (const corner of CORNERS) {
+          const bracket = doc.createElement("i");
+          bracket.setAttribute("data-kp-measure-bracket", corner);
+          bracket.setAttribute("aria-hidden", "true");
+          wrap.append(bracket);
+        }
+        readout.setAttribute("data-kp-measure", "");
+        readout.setAttribute("aria-hidden", "true");
+        readout.textContent = this.words.measureLoading;
+        wrap.append(readout);
+        this.update();
+        const schedule = () => this.schedule();
+        view?.addEventListener("resize", schedule);
+        own(() => {
+          clearTimeout(this.timer);
+          view?.removeEventListener("resize", schedule);
+        });
+        this.afterFonts();
+      }
+      update() {
+        const box = this.h1.getBoundingClientRect();
+        this.readout.textContent = this.words.measureBox(Math.round(box.width), Math.round(box.height));
+        this.wrap.setAttribute("data-kp-measured", "live");
+      }
+      schedule() {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => this.update(), RESIZE_SETTLE);
+      }
+      /** Measure again once the web fonts have loaded; without the font-loading API the load-time measurement stands. */
+      afterFonts() {
+        const { doc } = this.ctx;
+        try {
+          if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(() => this.update());
+        } catch {
+        }
+      }
+    };
+    MeasureHook = class extends EffectHook {
+      measure() {
+        const { root, view, rootStyle } = this.ctx;
+        const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : "";
+        if (routine !== "live" || !view) return;
+        const headlines = [...root.querySelectorAll(`[${HOOKS.reveal}='headline']`)].filter((h2) => !h2.closest("[data-kp-measured]"));
+        for (const h1 of headlines) new MeasureFrame(this.ctx, h1).build((undo) => this.own(undo));
+      }
+    };
   }
 });
 
@@ -9190,44 +9475,213 @@ __export(marquee_exports, {
   install: () => install8
 });
 function install8(ctx) {
-  const { doc, view, rootStyle, cleanups, root } = ctx;
-  const marquee = () => {
-    for (const band of root.querySelectorAll(`[${HOOKS.marquee}]`)) {
-      if (band.hasAttribute("data-kp-marquee-ready")) continue;
-      const items = [...band.childNodes];
-      if (items.length === 0) continue;
-      const track = doc.createElement("div");
-      track.setAttribute("data-kp-marquee-track", "");
-      const run = doc.createElement("div");
-      run.setAttribute("data-kp-marquee-run", "");
-      run.append(...items);
-      const copy3 = (
-        /** @type {HTMLElement} */
-        run.cloneNode(true)
-      );
-      copy3.setAttribute("aria-hidden", "true");
-      track.append(run, copy3);
-      band.append(track);
-      band.setAttribute("data-kp-marquee-ready", "");
-      band.setAttribute("data-kp-marquee-runs", "2");
-      const pause = (rootStyle ? rootStyle.getPropertyValue(MARQUEE_PAUSE_KNOB).trim() : "") || "offscreen";
-      if (pause !== "offscreen" || !view || !("IntersectionObserver" in view)) continue;
-      const observer = new view.IntersectionObserver(
-        (entries2) => {
-          for (const entry of entries2) entry.target.toggleAttribute("data-kp-paused", !entry.isIntersecting);
-        },
-        { threshold: 0 }
-      );
-      observer.observe(band);
-      cleanups.push(() => observer.disconnect());
-    }
-  };
-  return { marquee };
+  return new MarqueeHook(ctx).connect();
 }
+var RUNS, MarqueeHook;
 var init_marquee = __esm({
   "js/effects/marquee.js"() {
     "use strict";
     init_effects();
+    init_hook();
+    RUNS = 2;
+    MarqueeHook = class extends EffectHook {
+      marquee() {
+        for (const band of this.ctx.root.querySelectorAll(`[${HOOKS.marquee}]`)) {
+          if (band.hasAttribute("data-kp-marquee-ready")) continue;
+          if (band.childNodes.length === 0) continue;
+          this.build(band);
+          this.pauseOffscreen(band);
+        }
+      }
+      /** Move the band's items into a run, clone it, and mark the band ready. @param {Element} band */
+      build(band) {
+        const { doc } = this.ctx;
+        const track = doc.createElement("div");
+        track.setAttribute("data-kp-marquee-track", "");
+        const run = doc.createElement("div");
+        run.setAttribute("data-kp-marquee-run", "");
+        run.append(...band.childNodes);
+        const copy3 = (
+          /** @type {HTMLElement} */
+          run.cloneNode(true)
+        );
+        copy3.setAttribute("aria-hidden", "true");
+        track.append(run, copy3);
+        band.append(track);
+        band.setAttribute("data-kp-marquee-ready", "");
+        band.setAttribute("data-kp-marquee-runs", String(RUNS));
+      }
+      /** Paused, not stopped, while off screen: the animation keeps its position and carries on from it. @param {Element} band */
+      pauseOffscreen(band) {
+        const { view, rootStyle } = this.ctx;
+        const pause = (rootStyle ? rootStyle.getPropertyValue(MARQUEE_PAUSE_KNOB).trim() : "") || "offscreen";
+        if (pause !== "offscreen" || !view || !("IntersectionObserver" in view)) return;
+        const observer = new view.IntersectionObserver(
+          (entries2) => {
+            for (const entry of entries2) entry.target.toggleAttribute("data-kp-paused", !entry.isIntersecting);
+          },
+          { threshold: 0 }
+        );
+        observer.observe(band);
+        this.own(() => observer.disconnect());
+      }
+    };
+  }
+});
+
+// js/effects/arrival-run.js
+var PERCENT_STEP, LINE_STEP, PERCENT_HOLD, LINE_HOLD, OFF_GRACE, PERCENT_MIN, PERCENT_JITTER, DEFAULT_COUNT, FULL, ArrivalRun;
+var init_arrival_run = __esm({
+  "js/effects/arrival-run.js"() {
+    "use strict";
+    init_effects();
+    init_strings();
+    PERCENT_STEP = 110;
+    LINE_STEP = 190;
+    PERCENT_HOLD = 220;
+    LINE_HOLD = 320;
+    OFF_GRACE = 50;
+    PERCENT_MIN = 7;
+    PERCENT_JITTER = 9;
+    DEFAULT_COUNT = 640;
+    FULL = 100;
+    ArrivalRun = class {
+      /** @param {EffectsContext} ctx @param {HTMLElement} body */
+      constructor(ctx, body) {
+        this.ctx = ctx;
+        this.body = body;
+        const { doc, html, rootStyle } = ctx;
+        const words3 = getStrings();
+        this.routine = ctx.arrivalRoutine;
+        this.card = this.routine === "card";
+        this.theme = html.getAttribute("data-theme") ?? "";
+        const own = words3.arrivalWordsByTheme?.[this.theme] ?? {};
+        this.said = { line: own.line ?? words3.arrivalLine, progress: own.progress ?? words3.arrivalProgress, ready: own.ready ?? words3.arrivalReady };
+        this.lines = words3.arrivalLinesByTheme?.[this.theme] ?? null;
+        this.total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || DEFAULT_COUNT;
+        const askedRate = parseFloat(rootStyle?.getPropertyValue(KNOBS.arrivalRate) ?? "");
+        this.rate = Number.isFinite(askedRate) && askedRate > 0 ? askedRate : 1;
+        this.overlay = doc.createElement("div");
+        this.line = doc.createElement("pre");
+        this.skip = doc.createElement("button");
+        this.skipLabel = words3.arrivalSkip;
+        this.bar = rootStyle?.getPropertyValue(KNOBS.arrivalBar).trim() === "block" ? doc.createElement("div") : null;
+        this.ended = false;
+        this.removed = false;
+        this.pct = 0;
+        this.shown = 0;
+      }
+      /** Put the overlay up and run it. @param {(undo: () => void) => void} own registers the take-down with the attach */
+      play(own) {
+        const { ctx } = this;
+        this.build();
+        this.pace();
+        ctx.state.pending++;
+        this.wireEnds();
+        ctx.finishers.push(() => this.end());
+        own(() => {
+          this.overlay.remove();
+          if (!this.removed) this.release();
+        });
+        if (this.card) {
+          this.line.textContent = this.theme;
+          this.paced(() => this.end(), TIMINGS["kp-bar-run"].durationMs + ctx.cfg.cardHold);
+        } else if (this.lines && this.lines.length > 0) this.lineStep();
+        else this.step();
+      }
+      build() {
+        const { overlay, line, skip, bar } = this;
+        overlay.className = ARRIVAL.root;
+        line.className = ARRIVAL.line;
+        line.setAttribute("aria-live", "polite");
+        skip.type = "button";
+        skip.className = ARRIVAL.skip;
+        skip.textContent = this.skipLabel;
+        if (bar) {
+          bar.className = ARRIVAL.bar;
+          bar.setAttribute("aria-hidden", "true");
+          bar.style.setProperty(BOOT_PROGRESS, "0");
+        }
+        overlay.append(line, ...bar ? [bar] : [], skip);
+        this.body.append(overlay);
+      }
+      /**
+       * Skip ends it, and so does a click anywhere on the overlay (CP1, Kenny 2026-09-09): an overlay that covers the whole
+       * viewport and answers one 90-pixel button is indistinguishable from a page that has stopped working. A theme that wants
+       * the old behaviour sets `--kp-arrival-dismiss: skip-only`.
+       */
+      wireEnds() {
+        const end = () => this.end();
+        this.skip.addEventListener("click", end);
+        if (this.ctx.rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== "skip-only") this.overlay.addEventListener("click", end);
+      }
+      /** @param {() => void} fn @param {number} ms */
+      paced(fn, ms) {
+        this.ctx.later(fn, ms / this.rate);
+      }
+      /** The overlay's CSS animations at the same rate, read after a style flush so an animation a class has just started is in the list. */
+      pace() {
+        const { overlay, rate } = this;
+        if (rate === 1 || typeof overlay.getAnimations !== "function") return;
+        void this.ctx.view?.getComputedStyle(overlay).opacity;
+        for (const animation of overlay.getAnimations({ subtree: true })) animation.playbackRate = rate;
+      }
+      /** The headlines held for this overlay start once it has gone [scope-86]: on its own end, on Skip, on a click and at detach. */
+      release() {
+        const { doc, arrivalsOnScreen: arrivalsOnScreen2 } = this.ctx;
+        const held2 = arrivalsOnScreen2.get(doc);
+        arrivalsOnScreen2.delete(doc);
+        if (held2) for (const go of [...held2]) go();
+      }
+      remove() {
+        if (this.removed) return;
+        this.removed = true;
+        const { ctx } = this;
+        this.overlay.remove();
+        ctx.announce(ctx.html, "arrival", this.routine, false);
+        ctx.state.pending--;
+        this.release();
+        ctx.done();
+      }
+      end() {
+        if (this.ended) return;
+        this.ended = true;
+        if (this.ctx.reduced()) {
+          this.remove();
+          return;
+        }
+        this.overlay.classList.add(STATE.off);
+        this.pace();
+        const remove = () => this.remove();
+        this.overlay.addEventListener("animationend", remove, { once: true });
+        this.paced(remove, TIMINGS[this.card ? "kp-load-out" : "kp-crt-off"].durationMs + OFF_GRACE);
+      }
+      /** The percentage mode: a line counting up to 100%. */
+      step() {
+        if (this.ended) return;
+        const { said } = this;
+        this.pct = Math.min(FULL, this.pct + PERCENT_MIN + Math.floor(Math.random() * PERCENT_JITTER));
+        const done = this.pct === FULL;
+        this.line.textContent = [said.line, `${said.progress} ${this.pct}%`.trim(), done ? said.ready : ""].filter(Boolean).join("\n");
+        this.bar?.style.setProperty(BOOT_PROGRESS, String(this.pct / FULL));
+        if (done) this.paced(() => this.end(), PERCENT_HOLD);
+        else this.paced(() => this.step(), PERCENT_STEP);
+      }
+      /**
+       * The lines mode [S49, A11]: a theme whose own boot is a POST shows its lines one after another, cumulatively, rather than a
+       * percentage. The words are the dictionary's (KT5), and a `{count}` counts up to the theme's declared total the way a
+       * memory test does.
+       */
+      lineStep() {
+        const { lines, total } = this;
+        if (this.ended || !lines) return;
+        const shown5 = ++this.shown;
+        this.line.textContent = lines.slice(0, shown5).map((text, index) => text.replace("{count}", String(index === shown5 - 1 ? Math.round(total * shown5 / lines.length) : total))).join("\n");
+        this.bar?.style.setProperty(BOOT_PROGRESS, String(shown5 / lines.length));
+        if (shown5 === lines.length) this.paced(() => this.end(), LINE_HOLD);
+        else this.paced(() => this.lineStep(), LINE_STEP);
+      }
+    };
   }
 });
 
@@ -9237,138 +9691,25 @@ __export(arrival_exports, {
   install: () => install9
 });
 function install9(ctx) {
-  const {
-    state: state12,
-    doc,
-    html,
-    view,
-    reduced: reduced4,
-    rootStyle,
-    cfg,
-    cleanups,
-    finishers,
-    done,
-    announce: announce4,
-    later,
-    arrivalRoutine,
-    arrivalPerformed,
-    arrivalPlays,
-    arrivalsOnScreen: arrivalsOnScreen2
-  } = ctx;
-  const arrival2 = () => {
-    const routine = arrivalRoutine;
-    if (!arrivalPerformed || !doc.body) return;
-    const card = routine === "card";
-    if (!arrivalPlays) {
-      announce4(html, "arrival", routine, true);
-      return;
-    }
-    const release2 = () => {
-      const held2 = arrivalsOnScreen2.get(doc);
-      arrivalsOnScreen2.delete(doc);
-      if (held2) for (const go of [...held2]) go();
-    };
-    const words3 = getStrings();
-    const theme = html.getAttribute("data-theme") ?? "";
-    const own = words3.arrivalWordsByTheme?.[theme] ?? {};
-    const said = {
-      line: own.line ?? words3.arrivalLine,
-      progress: own.progress ?? words3.arrivalProgress,
-      ready: own.ready ?? words3.arrivalReady
-    };
-    const askedRate = parseFloat(rootStyle?.getPropertyValue(KNOBS.arrivalRate) ?? "");
-    const rate = Number.isFinite(askedRate) && askedRate > 0 ? askedRate : 1;
-    const paced = (fn, ms) => later(fn, ms / rate);
-    const pace = () => {
-      if (rate === 1 || typeof overlay.getAnimations !== "function") return;
-      void view?.getComputedStyle(overlay).opacity;
-      for (const animation of overlay.getAnimations({ subtree: true })) animation.playbackRate = rate;
-    };
-    const overlay = doc.createElement("div");
-    overlay.className = ARRIVAL.root;
-    const line = doc.createElement("pre");
-    line.className = ARRIVAL.line;
-    line.setAttribute("aria-live", "polite");
-    const skip = doc.createElement("button");
-    skip.type = "button";
-    skip.className = ARRIVAL.skip;
-    skip.textContent = words3.arrivalSkip;
-    const bar = rootStyle?.getPropertyValue(KNOBS.arrivalBar).trim() === "block" ? doc.createElement("div") : null;
-    if (bar) {
-      bar.className = ARRIVAL.bar;
-      bar.setAttribute("aria-hidden", "true");
-      bar.style.setProperty(BOOT_PROGRESS, "0");
-    }
-    overlay.append(line, ...bar ? [bar] : [], skip);
-    doc.body.append(overlay);
-    pace();
-    state12.pending++;
-    let ended = false;
-    let pct = 0;
-    let removed = false;
-    const remove = () => {
-      if (removed) return;
-      removed = true;
-      overlay.remove();
-      announce4(html, "arrival", routine, false);
-      state12.pending--;
-      release2();
-      done();
-    };
-    const end = () => {
-      if (ended) return;
-      ended = true;
-      if (reduced4()) {
-        remove();
-        return;
-      }
-      overlay.classList.add(STATE.off);
-      pace();
-      overlay.addEventListener("animationend", remove, { once: true });
-      paced(remove, TIMINGS[card ? "kp-load-out" : "kp-crt-off"].durationMs + 50);
-    };
-    const step = () => {
-      if (ended) return;
-      pct = Math.min(100, pct + 7 + Math.floor(Math.random() * 9));
-      line.textContent = [said.line, `${said.progress} ${pct}%`.trim(), pct === 100 ? said.ready : ""].filter(Boolean).join("\n");
-      bar?.style.setProperty(BOOT_PROGRESS, String(pct / 100));
-      if (pct === 100) paced(end, 220);
-      else paced(step, 110);
-    };
-    const lines = words3.arrivalLinesByTheme?.[theme] ?? null;
-    let shown5 = 0;
-    const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
-    const lineStep = () => {
-      if (ended || !lines) return;
-      shown5++;
-      const upto = lines.slice(0, shown5);
-      line.textContent = upto.map(
-        (text, index) => text.replace("{count}", String(index === shown5 - 1 ? Math.round(total * shown5 / lines.length) : total))
-      ).join("\n");
-      bar?.style.setProperty(BOOT_PROGRESS, String(shown5 / lines.length));
-      if (shown5 === lines.length) paced(end, 320);
-      else paced(lineStep, 190);
-    };
-    skip.addEventListener("click", end);
-    if (rootStyle?.getPropertyValue(KNOBS.arrivalDismiss).trim() !== "skip-only") overlay.addEventListener("click", end);
-    finishers.push(end);
-    cleanups.push(() => {
-      overlay.remove();
-      if (!removed) release2();
-    });
-    if (card) {
-      line.textContent = theme;
-      paced(end, TIMINGS["kp-bar-run"].durationMs + cfg.cardHold);
-    } else if (lines && lines.length > 0) lineStep();
-    else step();
-  };
-  return { arrival: arrival2 };
+  return new ArrivalHook(ctx).connect();
 }
+var ArrivalHook;
 var init_arrival = __esm({
   "js/effects/arrival.js"() {
     "use strict";
-    init_effects();
-    init_strings();
+    init_hook();
+    init_arrival_run();
+    ArrivalHook = class extends EffectHook {
+      arrival() {
+        const { doc, html, announce: announce4, arrivalRoutine, arrivalPerformed, arrivalPlays } = this.ctx;
+        if (!arrivalPerformed || !doc.body) return;
+        if (!arrivalPlays) {
+          announce4(html, "arrival", arrivalRoutine, true);
+          return;
+        }
+        new ArrivalRun(this.ctx, doc.body).play((undo) => this.own(undo));
+      }
+    };
   }
 });
 
@@ -9609,7 +9950,7 @@ var init_context = __esm({
 });
 
 // js/effects-core/engine.js
-var PRESS_STYLES, EffectsEngine;
+var PRESS_STYLES2, EffectsEngine;
 var init_engine = __esm({
   "js/effects-core/engine.js"() {
     "use strict";
@@ -9619,7 +9960,7 @@ var init_engine = __esm({
     init_registry();
     init_vocabulary();
     init_as_of();
-    PRESS_STYLES = ["point", "size", "hold"];
+    PRESS_STYLES2 = ["point", "size", "hold"];
     EffectsEngine = class extends EffectsBase {
       /** @param {Document | Element} root @param {EffectsOptions} options */
       constructor(root, options) {
@@ -9756,7 +10097,7 @@ var init_engine = __esm({
        */
       armThemeBuses() {
         const wantPointer = !this.pointerArmed && this.asked(POINTER_KNOB) === "track";
-        const wantPress = !this.pressArmed && PRESS_STYLES.includes(this.asked(PRESS_KNOB));
+        const wantPress = !this.pressArmed && PRESS_STYLES2.includes(this.asked(PRESS_KNOB));
         if (!wantPointer && !wantPress) return;
         this.pointerArmed ||= wantPointer;
         this.pressArmed ||= wantPress;
@@ -11458,7 +11799,7 @@ function nameOf(el16) {
   const cell = el16.querySelector('th, td, [role="cell"], [role="gridcell"], .kp-action-list__title') ?? el16;
   return plainText(cell) || el16.id;
 }
-async function copyText(doc, text) {
+async function copyText2(doc, text) {
   try {
     await navigator.clipboard.writeText(text);
     return true;
@@ -11824,7 +12165,7 @@ var init_controller3 = __esm({
           view.history.replaceState(null, "", hash);
         } catch {
         }
-        const ok = await copyText(this.doc, text);
+        const ok = await copyText2(this.doc, text);
         this.showCopied(el16, button6, ok);
         button6.dispatchEvent(new CustomEvent(ANCHOR_COPY_EVENT, { bubbles: true, detail: { id, url, text, markdown, ok } }));
         this.timers.push(view.setTimeout(() => button6.removeAttribute("data-kp-anchor-state"), this.copiedMs()));
@@ -14950,8 +15291,8 @@ function paint2(group, values) {
     on = /* @__PURE__ */ new Set([[...on][0]]);
   }
   for (const item of items) {
-    const pressed = multi && isAll(item) ? on.size === 0 : on.has(valueOf(item));
-    item.setAttribute(multi ? "aria-pressed" : "aria-checked", String(pressed));
+    const pressed2 = multi && isAll(item) ? on.size === 0 : on.has(valueOf(item));
+    item.setAttribute(multi ? "aria-pressed" : "aria-checked", String(pressed2));
   }
   roving(group);
   layout(group);
@@ -15314,12 +15655,12 @@ var init_link = __esm({
       toField() {
         const handle = combobox(this.target() ?? this.host);
         if (!handle) return;
-        const pressed = getSegmentedValues(this.host);
+        const pressed2 = getSegmentedValues(this.host);
         const chips = this.chipValues();
         const own = this.single() ? [] : handle.values().filter((value) => !chips.has(value));
         this.writing = true;
         try {
-          handle.set([...own, ...pressed]);
+          handle.set([...own, ...pressed2]);
         } finally {
           this.writing = false;
         }
@@ -17414,9 +17755,9 @@ var init_toggle = __esm({
         if (!tile || tile.hasAttribute("data-kp-kpi-owned")) return;
         if (FLIPPED.has(event)) return;
         FLIPPED.add(event);
-        const pressed = tile.getAttribute("aria-pressed") !== "true";
-        tile.setAttribute("aria-pressed", String(pressed));
-        tile.dispatchEvent(new CustomEvent(KPI_TOGGLE_EVENT, { bubbles: true, detail: { pressed } }));
+        const pressed2 = tile.getAttribute("aria-pressed") !== "true";
+        tile.setAttribute("aria-pressed", String(pressed2));
+        tile.dispatchEvent(new CustomEvent(KPI_TOGGLE_EVENT, { bubbles: true, detail: { pressed: pressed2 } }));
       }
     };
   }
@@ -18220,7 +18561,7 @@ function nextTile(boxes, from, way) {
   const inRow = beyond.filter(({ b }) => sameRow(near2.b, b));
   return inRow.reduce((best, c) => Math.abs(cx(c.b) - cx(box)) < Math.abs(cx(best.b) - cx(box)) ? c : best).i;
 }
-var TILES_SET, TILE_ROW_MIN, visible, TILES_KEYS, TILES_MOVE_EVENT, TILES_EXIT_EVENT, STOP_CANDIDATES, MOVES, KEEPS_KEYS;
+var TILES_SET, TILE_ROW_MIN, visible, TILES_KEYS, TILES_MOVE_EVENT, TILES_EXIT_EVENT, STOP_CANDIDATES, MOVES2, KEEPS_KEYS;
 var init_geometry2 = __esm({
   "js/tiles/geometry.js"() {
     "use strict";
@@ -18236,7 +18577,7 @@ var init_geometry2 = __esm({
     TILES_MOVE_EVENT = "kp-tiles-move";
     TILES_EXIT_EVENT = "kp-tiles-exit";
     STOP_CANDIDATES = 'a[href], button:not(:disabled), input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), summary, [tabindex]';
-    MOVES = /* @__PURE__ */ new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
+    MOVES2 = /* @__PURE__ */ new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
     KEEPS_KEYS = 'input:not([type="checkbox"]):not([type="radio"]):not([type="button"]), textarea, select, [contenteditable=""], [contenteditable="true"], [role="slider"], [role="menu"], [role="listbox"], [data-kp-tiles-keys-ignore]';
   }
 });
@@ -18361,7 +18702,7 @@ var init_keys5 = __esm({
       /** @param {KeyboardEvent} event */
       onKey(event) {
         this.onLetter(event);
-        if (!this.on() || !MOVES.has(event.key) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
+        if (!this.on() || !MOVES2.has(event.key) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
         const target = (
           /** @type {Element} */
           event.target
@@ -22843,7 +23184,7 @@ function clearClipboardLater(field2, secret, wait, say17) {
     if (cleared) say17(s2.secretClipboardCleared);
     field2.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
   };
-  const clear = async () => {
+  const clear2 = async () => {
     let reason = "timer";
     try {
       const now = await navigator.clipboard.readText();
@@ -22860,7 +23201,7 @@ function clearClipboardLater(field2, secret, wait, say17) {
         for (const name of events) document.removeEventListener(name, again2, true);
         window.removeEventListener("focus", again2);
         dropFocus = null;
-        void clear();
+        void clear2();
       };
       for (const name of events) document.addEventListener(name, again2, true);
       window.addEventListener("focus", again2);
@@ -22870,7 +23211,7 @@ function clearClipboardLater(field2, secret, wait, say17) {
       };
     }
   };
-  const timer = window.setTimeout(() => void clear(), wait);
+  const timer = window.setTimeout(() => void clear2(), wait);
   return () => {
     window.clearTimeout(timer);
     dropFocus?.();
@@ -28018,7 +28359,7 @@ var init_view = __esm({
 });
 
 // js/thread/controller.js
-async function copyText2(button6, text) {
+async function copyText3(button6, text) {
   const strings = getStrings();
   try {
     await button6.ownerDocument.defaultView?.navigator.clipboard.writeText(text);
@@ -28126,7 +28467,7 @@ var init_controller16 = __esm({
           /** @type {HTMLElement | null} */
           target.closest(".kp-thread__copy")
         );
-        if (copy3) void copyText2(copy3, this.spec.messages?.find((m) => m.key === key)?.text ?? "");
+        if (copy3) void copyText3(copy3, this.spec.messages?.find((m) => m.key === key)?.text ?? "");
         const act = target.closest("[data-kp-thread-act]");
         if (act) el16.dispatchEvent(new CustomEvent(THREAD_ACTION_EVENT, { bubbles: true, detail: { key, id: act.getAttribute("data-kp-thread-act") } }));
       }
@@ -29796,7 +30137,7 @@ function toggleFold(ctl, button6) {
   button6.firstElementChild.textContent = ctl.folded ? strings.codeShowAll(ctl.lines) : strings.codeShowLess;
   ctl.host.dispatchEvent(new CustomEvent("kp-code-fold", { bubbles: true, detail: { folded: ctl.folded } }));
 }
-async function copyText3(ctl, button6) {
+async function copyText4(ctl, button6) {
   const strings = getStrings();
   const el16 = ctl.host;
   const word = (
@@ -29837,7 +30178,7 @@ async function onToolClick(ctl, event) {
   if (tool2 === "wrap") toggleWrap(ctl, button6);
   else if (tool2 === "fold" && button6.dataset.kpCodeOpen === "dialog") openInDialog(ctl);
   else if (tool2 === "fold") toggleFold(ctl, button6);
-  else if (tool2 === "copy") await copyText3(ctl, button6);
+  else if (tool2 === "copy") await copyText4(ctl, button6);
 }
 var init_actions3 = __esm({
   "js/code/actions.js"() {
@@ -30742,22 +31083,22 @@ function parts(bar, memory) {
   toggle2.setAttribute("aria-expanded", "false");
   actions.id ||= `${id}-actions`;
   toggle2.setAttribute("aria-controls", actions.id);
-  const clear = (
+  const clear2 = (
     /** @type {HTMLButtonElement} */
     make9(doc, "kp-button kp-button--ghost kp-selection__clear", "button")
   );
-  clear.type = "button";
-  clear.textContent = strings.selectionClear;
-  clear.title = strings.selectionClearTitle;
+  clear2.type = "button";
+  clear2.textContent = strings.selectionClear;
+  clear2.title = strings.selectionClearTitle;
   const live4 = make9(doc, "kp-sr-only kp-selection__live");
   live4.setAttribute("role", "status");
   live4.setAttribute("aria-live", "polite");
-  panel.append(count2, names, offer, result, toggle2, actions, clear);
+  panel.append(count2, names, offer, result, toggle2, actions, clear2);
   bar.replaceChildren(panel, live4);
   bar.setAttribute("role", "region");
   if (!bar.hasAttribute("aria-label") && !bar.hasAttribute("aria-labelledby")) bar.setAttribute("aria-label", strings.selectionLabel);
   void memory;
-  return { panel, count: count2, names, offer, result, actions, toggle: toggle2, clear, live: live4 };
+  return { panel, count: count2, names, offer, result, actions, toggle: toggle2, clear: clear2, live: live4 };
 }
 function draw3(bar, memory) {
   const strings = getStrings();
@@ -31954,7 +32295,7 @@ var init_state9 = __esm({
 });
 
 // js/json-field/tools.js
-async function copyText4(c) {
+async function copyText5(c) {
   const { word } = c.parts;
   c.view?.clearTimeout(c.copyTimer);
   try {
@@ -31982,7 +32323,7 @@ async function handleTool(c, event) {
   if (which === "format") c.format();
   else if (which === "minify") c.minify();
   else if (which === "wrap") toggleWrap2(c, button6);
-  else if (which === "copy") await copyText4(c);
+  else if (which === "copy") await copyText5(c);
 }
 function lockTools(c) {
   const area = c.area;
@@ -37797,12 +38138,12 @@ function part4(list, name) {
       el8("kp-button kp-button--ghost kp-button--sm kp-checklist__none", "button")
     );
     none.type = "button";
-    const clear = (
+    const clear2 = (
       /** @type {HTMLButtonElement} */
       el8("kp-button kp-button--ghost kp-button--sm kp-checklist__clear", "button")
     );
-    clear.type = "button";
-    actions.append(all, none, clear);
+    clear2.type = "button";
+    actions.append(all, none, clear2);
     node.append(status, actions);
     list.prepend(node);
   } else if (name === "body") {
@@ -38036,9 +38377,9 @@ function renderBar(list, items, strings) {
   const none = button6("none");
   none.textContent = strings.checklistUncheckAll;
   none.disabled = done === 0 || rest;
-  const clear = button6("clear");
-  clear.textContent = strings.checklistClear;
-  clear.disabled = done === 0 || rest;
+  const clear2 = button6("clear");
+  clear2.textContent = strings.checklistClear;
+  clear2.disabled = done === 0 || rest;
   button6("undo").textContent = strings.checklistUndo;
 }
 function renderEmpty(list, body, total, strings) {
@@ -38239,9 +38580,9 @@ var init_controller29 = __esm({
         if (!on && !items.some((item) => item.checked)) return;
         for (const item of items) item.checked = on;
         void glide2(list, render(list));
-        const pressed = on ? ".kp-checklist__all" : ".kp-checklist__none";
+        const pressed2 = on ? ".kp-checklist__all" : ".kp-checklist__none";
         const opposite = on ? ".kp-checklist__none:not(:disabled)" : ".kp-checklist__all:not(:disabled)";
-        if (document.activeElement === document.body || target.closest(pressed)?.matches(":disabled"))
+        if (document.activeElement === document.body || target.closest(pressed2)?.matches(":disabled"))
           part4(list, "bar").querySelector(opposite)?.focus();
         say7(list, getStrings().checklistSummary(on ? items.length : 0, items.length));
         emit2(list, CHECKLIST_EVENT, { id: null, checked: on });
@@ -38713,7 +39054,7 @@ function tagOf(filter, removeGlyph, strings) {
   item.append(filter.label, remove);
   return { item, remove };
 }
-function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\xD7", decorate: decorate2 } = {}) {
+function setToolbarActive(toolbar, filters, { clearAll: clearAll2 = true, removeGlyph = "\xD7", decorate: decorate2 } = {}) {
   const mark = (part7, info) => {
     if (!decorate2) return;
     const key = toolbar.getAttribute("data-kp-key");
@@ -38737,7 +39078,7 @@ function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\x
   );
   button6.textContent = strings.toolbarClearAll;
   mark(button6, { kind: "clear-all", label: strings.toolbarClearAll });
-  button6.hidden = !clearAll;
+  button6.hidden = !clearAll2;
   row2.hidden = filters.length === 0;
 }
 var init_active = __esm({
@@ -38812,8 +39153,8 @@ var init_controller31 = __esm({
         const toolbar = toolbarOf(event);
         if (!toolbar || HANDLED3.has(event) || !(event.target instanceof Element)) return;
         const remove = event.target.closest(REMOVE);
-        const clear = event.target.closest(CLEAR);
-        if (!(remove instanceof HTMLElement) && !clear) return;
+        const clear2 = event.target.closest(CLEAR);
+        if (!(remove instanceof HTMLElement) && !clear2) return;
         HANDLED3.add(event);
         const crosses = [...toolbar.querySelectorAll(REMOVE)];
         if (remove instanceof HTMLElement) {
@@ -38832,8 +39173,8 @@ var init_controller31 = __esm({
        * goes to the tag that took its place, else the last one, else the search.
        * @param {Element} toolbar @param {HTMLElement} pressed @param {number} at
        */
-      keepFocus(toolbar, pressed, at) {
-        if (pressed.isConnected && toolbar.contains(document.activeElement) && document.activeElement !== document.body) return;
+      keepFocus(toolbar, pressed2, at) {
+        if (pressed2.isConnected && toolbar.contains(document.activeElement) && document.activeElement !== document.body) return;
         const left = [...toolbar.querySelectorAll(REMOVE)];
         const next2 = (
           /** @type {HTMLElement | undefined} */
@@ -52584,11 +52925,11 @@ var init_wire2 = __esm({
           HEAT_CELL
         ));
         if (el16.querySelector(HEAT_CELL)) {
-          const pressed = (
+          const pressed2 = (
             /** @type {NodeListOf<HTMLElement>} */
             el16.querySelectorAll('.kp-heat__label-button[aria-pressed="true"]')
           );
-          LIT.set(el16, new Set([...pressed].map((b) => b.dataset.key ?? "")));
+          LIT.set(el16, new Set([...pressed2].map((b) => b.dataset.key ?? "")));
           if (!el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)) placeStop(el16, HEAT_CELL, void 0);
         }
       }
@@ -52620,13 +52961,13 @@ var init_wire2 = __esm({
         const el16 = this.host;
         const key = label2.dataset.key ?? "";
         const keys = new Set(LIT.get(el16) ?? []);
-        const pressed = !keys.has(key);
+        const pressed2 = !keys.has(key);
         if (!el16.hasAttribute("data-kp-heat-owned")) {
-          if (pressed) keys.add(key);
+          if (pressed2) keys.add(key);
           else keys.delete(key);
           setHeatRows(el16, [...keys]);
         }
-        el16.dispatchEvent(new CustomEvent(HEAT_ROW_EVENT, { bubbles: true, detail: { key, pressed, keys: [...keys] } }));
+        el16.dispatchEvent(new CustomEvent(HEAT_ROW_EVENT, { bubbles: true, detail: { key, pressed: pressed2, keys: [...keys] } }));
       }
       /** Arrows, Home and End move the stop; PageUp and PageDown page; Escape lets go of the pick. @param {KeyboardEvent} event */
       onKey(event) {
@@ -53031,26 +53372,26 @@ function otherColumn(m, root, key, kind, arrow) {
     other.find((n) => related.includes(n.closest(".kp-uses__node")?.getAttribute("data-key") ?? "")) ?? other[0]
   );
 }
-function keyTarget(m, root, card, key, kind, pressed) {
+function keyTarget(m, root, card, key, kind, pressed2) {
   const sameColumn = cardsOf(root, kind);
   const at = sameColumn.indexOf(card);
-  if (pressed === "ArrowDown") return (
+  if (pressed2 === "ArrowDown") return (
     /** @type {HTMLElement} */
     sameColumn[Math.min(sameColumn.length - 1, at + 1)]
   );
-  if (pressed === "ArrowUp") return (
+  if (pressed2 === "ArrowUp") return (
     /** @type {HTMLElement} */
     sameColumn[Math.max(0, at - 1)]
   );
-  if (pressed === "Home") return (
+  if (pressed2 === "Home") return (
     /** @type {HTMLElement} */
     sameColumn[0]
   );
-  if (pressed === "End") return (
+  if (pressed2 === "End") return (
     /** @type {HTMLElement} */
     sameColumn[sameColumn.length - 1]
   );
-  if (pressed === "ArrowRight" || pressed === "ArrowLeft") return otherColumn(m, root, key, kind, pressed);
+  if (pressed2 === "ArrowRight" || pressed2 === "ArrowLeft") return otherColumn(m, root, key, kind, pressed2);
   return void 0;
 }
 var cardsOf;
@@ -57119,15 +57460,15 @@ function build6(c) {
   zoom.type = "button";
   zoom.title = s2.ganttZoomTitle;
   zoom.dataset.kpGanttZoom = "";
-  const clear = make17(doc, "button", "kp-button kp-button--sm", s2.ganttClear);
-  clear.type = "button";
-  clear.title = s2.ganttClearTitle;
-  clear.dataset.kpGanttClear = "";
-  c.selection.append(c.selectionText, zoom, clear);
+  const clear2 = make17(doc, "button", "kp-button kp-button--sm", s2.ganttClear);
+  clear2.type = "button";
+  clear2.title = s2.ganttClearTitle;
+  clear2.dataset.kpGanttClear = "";
+  c.selection.append(c.selectionText, zoom, clear2);
   bar.append(c.ranges, c.liveButton, c.selection);
   c.decorate?.(c.liveButton, { kind: "live", host: c.el, key: keyOf6(c.el) });
   c.decorate?.(zoom, { kind: "zoom", host: c.el, key: keyOf6(c.el) });
-  c.decorate?.(clear, { kind: "clear", host: c.el, key: keyOf6(c.el) });
+  c.decorate?.(clear2, { kind: "clear", host: c.el, key: keyOf6(c.el) });
   c.scroll = make17(doc, "div", "kp-gantt__scroll");
   c.body = make17(doc, "div", "kp-gantt__body");
   c.body.setAttribute("role", "group");
@@ -63759,7 +64100,7 @@ var init_read6 = __esm({
 });
 
 // js/transfer/core.js
-var FULL, TransferCore;
+var FULL2, TransferCore;
 var init_core15 = __esm({
   "js/transfer/core.js"() {
     "use strict";
@@ -63770,7 +64111,7 @@ var init_core15 = __esm({
     init_math3();
     init_read6();
     init_values35();
-    FULL = 100;
+    FULL2 = 100;
     TransferCore = class extends Controller {
       /**
        * @param {HTMLElement} row
@@ -63814,8 +64155,8 @@ var init_core15 = __esm({
         const stalled = st.phase === "running" && stalledFor >= numberOf2(row2, "data-kp-stall-after", DEFAULT_STALL_AFTER_S);
         const rate = stalled ? 0 : transferRate(st.samples, numberOf2(row2, "data-kp-rate-window", DEFAULT_RATE_WINDOW_S));
         const measured2 = (last?.t ?? now) - st.start;
-        const percent = known4 ? Math.min(FULL, Math.floor(done / /** @type {number} */
-        total * FULL)) : null;
+        const percent = known4 ? Math.min(FULL2, Math.floor(done / /** @type {number} */
+        total * FULL2)) : null;
         return { now, last, done, total, known: known4, stalledFor, stalled, rate, measured: measured2, percent };
       }
       /**
@@ -68822,14 +69163,14 @@ function buildRow4(max) {
 }
 function buildActions2() {
   const actions = make25("span", "kp-rating__actions");
-  const clear = make25("button", "kp-button kp-button--sm kp-rating__clear");
-  clear.type = "button";
+  const clear2 = make25("button", "kp-button kp-button--sm kp-rating__clear");
+  clear2.type = "button";
   const save2 = make25("button", "kp-button kp-button--sm kp-button--primary kp-rating__save");
   save2.type = "button";
   const drop = make25("button", "kp-button kp-button--sm kp-rating__drop");
   drop.type = "button";
-  actions.append(clear, save2, drop);
-  return { actions, clear, save: save2, drop };
+  actions.append(clear2, save2, drop);
+  return { actions, clear: clear2, save: save2, drop };
 }
 function buildFailure2() {
   const failure = make25("span", "kp-alert kp-alert--destructive kp-rating__failure");
@@ -68846,7 +69187,7 @@ function buildRating(el16, max) {
   const { row: row2, stars } = buildRow4(max);
   const caption = make25("span", "kp-rating__caption");
   caption.id = `kp-rating-${serial9}-caption`;
-  const { actions, clear, save: save2, drop } = buildActions2();
+  const { actions, clear: clear2, save: save2, drop } = buildActions2();
   const reason = make25("span", "kp-rating__reason");
   reason.id = `kp-rating-${serial9}-reason`;
   reason.hidden = true;
@@ -68864,7 +69205,7 @@ function buildRating(el16, max) {
   const body = make25("span", "kp-rating__body");
   body.append(row2, foot, reason, flash, failure, live4, ...field2 ? [field2] : []);
   el16.replaceChildren(body);
-  return { row: row2, stars, caption, actions, clear, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field: field2 };
+  return { row: row2, stars, caption, actions, clear: clear2, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field: field2 };
 }
 var make25;
 var init_build14 = __esm({
@@ -69382,10 +69723,10 @@ var init_controller59 = __esm({
       }
       /** Clear, Save and Cancel. @param {MouseEvent} event */
       onActions(event) {
-        const { clear, save: save2, drop } = this.parts;
+        const { clear: clear2, save: save2, drop } = this.parts;
         const button6 = event.target instanceof Element ? event.target.closest("button") : null;
         if (!button6) return;
-        if (button6 === clear) commit2(this, 0, "clear");
+        if (button6 === clear2) commit2(this, 0, "clear");
         else if (button6 === save2) commit2(this, this.draft, "pointer");
         else if (button6 === drop) {
           this.draft = this.value;
@@ -71338,25 +71679,25 @@ var init_parts14 = __esm({
       paintClear() {
         const container = toggleGroup(this.button)?.container;
         if (!container || !container.hasAttribute("data-kp-toggle-clear")) return;
-        let clear = (
+        let clear2 = (
           /** @type {HTMLButtonElement | null} */
           container.querySelector(":scope > .kp-toggle__clear")
         );
-        if (!clear) {
-          clear = /** @type {HTMLButtonElement} */
+        if (!clear2) {
+          clear2 = /** @type {HTMLButtonElement} */
           made3(this.doc, "kp-button kp-button--ghost kp-toggle__clear", "button");
-          clear.type = "button";
-          clear.addEventListener("click", () => {
+          clear2.type = "button";
+          clear2.addEventListener("click", () => {
             const first = toggleGroup(this.button)?.members.find((m) => stateOf5(m) === "true" && !m.hasAttribute("data-kp-toggle-all"));
             if (first) this.clearGroup(first);
           });
-          container.append(clear);
+          container.append(clear2);
         }
         const n = togglePressedKeys(this.button).length;
-        clear.textContent = this.s.toggleClear(n);
-        clear.toggleAttribute("data-kp-idle", n === 0);
-        clear.inert = n === 0;
-        clear.setAttribute("aria-hidden", String(n === 0));
+        clear2.textContent = this.s.toggleClear(n);
+        clear2.toggleAttribute("data-kp-idle", n === 0);
+        clear2.inert = n === 0;
+        clear2.setAttribute("aria-hidden", String(n === 0));
       }
       /** Everything off but the All member (a Clear press, or pressing All). @param {HTMLElement} from */
       clearGroup(from) {
@@ -73053,7 +73394,7 @@ function listenForStarKey(card) {
     button6.click();
   });
 }
-function appendStar(card, el16, data, pressed, starKey) {
+function appendStar(card, el16, data, pressed2, starKey) {
   const doc = card.ownerDocument;
   const ns = "http://www.w3.org/2000/svg";
   const button6 = (
@@ -73063,7 +73404,7 @@ function appendStar(card, el16, data, pressed, starKey) {
   button6.type = "button";
   button6.setAttribute("data-kp-toggle", "");
   button6.setAttribute("data-kp-look", "icon");
-  button6.setAttribute("aria-pressed", String(pressed));
+  button6.setAttribute("aria-pressed", String(pressed2));
   if (starKey !== "off") button6.setAttribute("aria-keyshortcuts", starKey);
   const glyph3 = doc.createElementNS(ns, "svg");
   glyph3.setAttribute("class", "kp-entity__star-glyph");
@@ -76989,9 +77330,9 @@ function actionsFor(lb, item) {
       label: action.label,
       ...action.tone ? { tone: action.tone } : {},
       run: () => {
-        const pressed = doc.activeElement;
-        if (action.confirm && pressed instanceof HTMLElement) {
-          openConfirmation(pressed, { phrase: action.confirm, acceptLabel: action.label, onAccept: action.run });
+        const pressed2 = doc.activeElement;
+        if (action.confirm && pressed2 instanceof HTMLElement) {
+          openConfirmation(pressed2, { phrase: action.confirm, acceptLabel: action.label, onAccept: action.run });
         } else action.run();
       }
     });
@@ -79157,15 +79498,15 @@ var init_input4 = __esm({
 });
 
 // js/runs/values.js
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS3;
+var RUNS2, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT2, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS3;
 var init_values48 = __esm({
   "js/runs/values.js"() {
     "use strict";
-    RUNS = "[data-kp-runs]";
+    RUNS2 = "[data-kp-runs]";
     RUNS_RETRY_EVENT = "kp-runs-retry";
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
-    DEFAULT_COUNT = 3;
+    DEFAULT_COUNT2 = 3;
     REFRESH_MS = 6e4;
     MINUTE_S4 = 60;
     DAY_S3 = 86400;
@@ -79179,7 +79520,7 @@ function readRunsOptions(el16, nowOption) {
   const fixed = Date.parse(el16.dataset.kpNow ?? "");
   return {
     zone: el16.dataset.kpTimeZone || CHART_TIME_ZONE,
-    count: Math.max(1, Number(el16.dataset.kpRunsCount) || DEFAULT_COUNT),
+    count: Math.max(1, Number(el16.dataset.kpRunsCount) || DEFAULT_COUNT2),
     more: Math.max(0, Number(el16.dataset.kpRunsMore) || 0),
     relative: el16.dataset.kpRunsRelative !== "false",
     warn: el16.dataset.kpRunsWarn !== "false",
@@ -79522,7 +79863,7 @@ var init_controller72 = __esm({
 // js/runs.js
 var runs_exports = {};
 __export(runs_exports, {
-  RUNS: () => RUNS,
+  RUNS: () => RUNS2,
   RUNS_RETRY_EVENT: () => RUNS_RETRY_EVENT,
   RUNS_STATES: () => RUNS_STATES,
   attachRuns: () => attachRuns,
@@ -79544,7 +79885,7 @@ function setRunsState(element, state12, options) {
   runs(element)?.setState(state12, options);
 }
 function attachRuns(root = document, options = {}) {
-  return attachAll(root, RUNS, RunsList, options);
+  return attachAll(root, RUNS2, RunsList, options);
 }
 var init_runs = __esm({
   "js/runs.js"() {
@@ -80681,7 +81022,7 @@ var init_layout4 = __esm({
 });
 
 // js/graph/labels.js
-function graphArrow(from, bend, to, clear, size2 = 9) {
+function graphArrow(from, bend, to, clear2, size2 = 9) {
   const at = (t2) => ({
     x: (1 - t2) * (1 - t2) * from.x + 2 * (1 - t2) * t2 * bend.x + t2 * t2 * to.x,
     y: (1 - t2) * (1 - t2) * from.y + 2 * (1 - t2) * t2 * bend.y + t2 * t2 * to.y
@@ -80691,7 +81032,7 @@ function graphArrow(from, bend, to, clear, size2 = 9) {
   for (let i = 0; i < 24; i += 1) {
     const mid = (lo + hi) / 2;
     const p = at(mid);
-    if (Math.hypot(p.x - to.x, p.y - to.y) > clear) lo = mid;
+    if (Math.hypot(p.x - to.x, p.y - to.y) > clear2) lo = mid;
     else hi = mid;
   }
   const t = lo;
@@ -90654,7 +90995,7 @@ export {
   ROW_SELECT,
   ROW_SELECT_AUTO,
   ROW_SELECT_EVENT,
-  RUNS,
+  RUNS2 as RUNS,
   RUNS_RETRY_EVENT,
   RUNS_STATES,
   RUN_EVENT,

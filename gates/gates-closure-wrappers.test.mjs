@@ -46,8 +46,8 @@ test('AR28: the vendored modules import nothing outside themselves', () => {
         [],
     );
     // Six until fix-56: chassis-rs bakes js/effects.js too, and since
-    // scope-117 the eleven files it takes to run (17), plus, since the 2026-10-30 split, the 39 parts of strings and components, the 10 parts of effects.js and the 3 helpers of its headline hook, and the 7 parts of theme-core, and the controller base with the 6 parts of theme-picker, and (mc-1030) the strings part rows-attention.
-    assert.equal(VENDORED.length, 84);
+    // scope-117 the eleven files it takes to run (17), plus, since the 2026-10-30 split, the 39 parts of strings and components, the 10 parts of effects.js and the 3 helpers of its headline hook, and the 7 parts of theme-core, and the controller base with the 6 parts of theme-picker, and (mc-1030) the strings part rows-attention, and (ctrl-b13) the hook base and the 3 parts of the arrival and pointer hooks.
+    assert.equal(VENDORED.length, 88);
 });
 
 test('AR28: the closure walk reads an import it must not miss', () => {

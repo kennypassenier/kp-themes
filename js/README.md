@@ -1170,13 +1170,14 @@ The loader: its table of selectors in three parts, and one AutoLoader per root. 
 
 ## js/effects.js → js/effects-core/
 
-The effects module: the vocabulary, the knobs and the DI5 table, and one EffectsEngine per attach that builds the context the hooks in js/effects/ receive; the headline hook is split over three helpers beside it. 13 files.
+The effects module: the vocabulary, the knobs and the DI5 table, and one EffectsEngine per attach that builds the context the hooks in js/effects/ receive. Every hook is an EffectHook class made once per attach; the headline hook is split over three helpers beside it, the arrival and the pointer hook over their own. 17 files.
 
 | File                               | Does                                                                                                           |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `effects-core/base.js`             | EffectsBase: the settings read once, the timers, the memo, the unknown values and the hooks fetched on demand. |
 | `effects-core/context.js`          | The context a hook receives from attachEffects, built from the engine.                                         |
 | `effects-core/engine.js`           | EffectsEngine: the dispatch of the reveals, the arrival decision, the theme buses and the handle.              |
+| `effects-core/hook.js`             | EffectHook: the base of every hook class, its context and the undo steps it adds to the attach's cleanups.     |
 | `effects-core/knobs.js`            | The custom properties, attributes, events and fixed numbers a theme sets and the module writes back.           |
 | `effects-core/registry.js`         | What is kept per page rather than per attach: what has started, the arrivals on screen, the unknown values.    |
 | `effects-core/timings-early.js`    | The DI5 table, part one: the 5.0.0 register, synthwave, alarm and the first theme ports.                       |
@@ -1184,9 +1185,12 @@ The effects module: the vocabulary, the knobs and the DI5 table, and one Effects
 | `effects-core/timings-grammars.js` | The DI5 table, part three: the phantom throw and the light and dark grammars.                                  |
 | `effects-core/timings.js`          | The DI5 table merged from its three parts, in row order.                                                       |
 | `effects-core/vocabulary.js`       | The hook vocabulary: attributes, values, state classes and the knobs that name routines.                       |
+| `effects/arrival-run.js`           | ArrivalRun: one arrival overlay on screen, its line, bar and Skip, and the end that runs once.                 |
 | `effects/headline-run.js`          | HeadlineRun: one headline reveal, its rest state and the routines that are one class and one keyframe.         |
 | `effects/headline-special.js`      | The tracking, draw, arrive and ink routines.                                                                   |
-| `effects/headline-text.js`         | The word routines, the typed headline and the decipher.                                                        |
+| `effects/headline-text.js`         | The word routines, the typed headline (TypeRun) and the decipher (DecipherRun).                                |
+| `effects/pointer-light.js`         | PointerLight: the shade pair's light per lit element, and the four ways it goes out.                           |
+| `effects/press-bus.js`             | PressBus: the press point, size or hold a theme asks for, written on the pressed button.                       |
 
 ## js/range.js → js/range/
 

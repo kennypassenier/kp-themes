@@ -42,39 +42,59 @@ export function words(run) {
     ctx.later(finish, TIMINGS[wordKeyframe(routine)].durationMs + index * cfg.wordStagger + END_GRACE_MS);
 }
 
+/** One second, in ms: the decipher rate is in characters per second. */
+const SECOND = 1000;
+
+/** The ms one character takes at the decipher rate. @param {{ cps: number }} cfg */
+const perCharOf = (cfg) => SECOND / Math.max(1, cfg.cps);
+
+/** One typed headline: the glyphs typed so far, and whether its finish has run. */
+class TypeRun {
+    /** @param {HeadlineRun} run */
+    constructor(run) {
+        this.run = run;
+        this.chars = [...run.text];
+        this.caret = run.ctx.doc.createElement('span');
+        this.typed = 0;
+        this.ended = false;
+        this.perChar = perCharOf(run.ctx.cfg);
+        this.finish = run.once(() => {
+            this.ended = true;
+            run.el.classList.remove(STATE.typing);
+        });
+    }
+
+    play() {
+        const { run, caret } = this;
+        const { ctx, el } = run;
+        ctx.state.pending++;
+        caret.setAttribute('data-caret', '');
+        caret.setAttribute('aria-hidden', 'true');
+        el.classList.add(STATE.typing);
+        el.textContent = '';
+        el.append(caret);
+        ctx.later(() => this.step(), ctx.cfg.lead);
+    }
+
+    step() {
+        if (this.ended) return;
+        const { run, chars, caret } = this;
+        this.typed++;
+        run.el.textContent = chars.slice(0, this.typed).join('');
+        if (this.typed < chars.length) {
+            run.el.append(caret);
+            run.ctx.later(() => this.step(), this.perChar);
+        } else this.finish();
+    }
+}
+
 /**
  * The terminal headline [TM2]: typed one glyph at a time at the decipher rate, a block caret riding the last one; the caret
  * leaves with the last glyph and the element rests as its text.
  * @param {HeadlineRun} run
  */
 export function typeOut(run) {
-    const { ctx, el, text } = run;
-    const { doc, cfg } = ctx;
-    ctx.state.pending++;
-    const chars = [...text];
-    const caret = doc.createElement('span');
-    caret.setAttribute('data-caret', '');
-    caret.setAttribute('aria-hidden', 'true');
-    el.classList.add(STATE.typing);
-    el.textContent = '';
-    el.append(caret);
-    let typed = 0;
-    let ended = false;
-    const finish = run.once(() => {
-        ended = true;
-        el.classList.remove(STATE.typing);
-    });
-    const perChar = 1000 / Math.max(1, cfg.cps);
-    const step = () => {
-        if (ended) return;
-        typed++;
-        el.textContent = chars.slice(0, typed).join('');
-        if (typed < chars.length) {
-            el.append(caret);
-            ctx.later(step, perChar);
-        } else finish();
-    };
-    ctx.later(step, cfg.lead);
+    new TypeRun(run).play();
 }
 
 /** One glyph span of the decipher: the letter's noise, or a space as it is. @param {Document} doc @param {string} ch */
@@ -90,49 +110,67 @@ function glyphSpan(doc, ch) {
     return span;
 }
 
+/** One deciphering headline: its glyph spans, when it started, the frame asked for, and whether its finish has run. */
+class DecipherRun {
+    /** @param {HeadlineRun} run */
+    constructor(run) {
+        this.run = run;
+        this.chars = [...run.text];
+        this.spans = this.chars.map((ch) => glyphSpan(run.ctx.doc, ch));
+        this.perChar = perCharOf(run.ctx.cfg);
+        this.start = 0;
+        this.finished = false;
+        this.id = 0;
+    }
+
+    play() {
+        const { ctx, el } = this.run;
+        ctx.state.pending++;
+        el.replaceChildren(...this.spans);
+        ctx.finishers.push(() => this.finish());
+        this.id = this.schedule();
+    }
+
+    /** The glyphs have settled, or the motion was cut short: the rest state, then one slice burst. */
+    finish() {
+        if (this.finished) return;
+        this.finished = true;
+        const { run } = this;
+        const { ctx, el } = run;
+        run.rest(false);
+        el.classList.add(STATE.glitching);
+        const off = () => el.classList.remove(STATE.glitching);
+        el.addEventListener('animationend', off, { once: true });
+        // No animation (a quiet register, or reduced motion switched on mid-run): the class comes off on its own.
+        ctx.later(off, TIMINGS['kp-slice-1'].durationMs + END_GRACE_MS);
+        ctx.state.pending--;
+        ctx.done();
+    }
+
+    schedule() {
+        const { view, frames } = this.run.ctx;
+        const next = view ? view.requestAnimationFrame((/** @type {number} */ now) => this.tick(now)) : 0;
+        frames.add(next);
+        return next;
+    }
+
+    /** @param {number} now */
+    tick(now) {
+        const { state, frames, cfg } = this.run.ctx;
+        frames.delete(this.id);
+        if (state.detached || this.finished) return;
+        if (this.start === 0) this.start = now;
+        if (settleGlyphs(this.spans, this.chars, now - this.start, cfg, this.perChar)) this.finish();
+        else this.id = this.schedule();
+    }
+}
+
 /**
  * The default headline: every glyph starts as noise and settles into its letter at the decipher rate, then one slice burst.
  * @param {HeadlineRun} run
  */
 export function decipher(run) {
-    const { ctx, el, text } = run;
-    const { doc, view, cfg, state, frames, finishers } = ctx;
-    state.pending++;
-    const chars = [...text];
-    const spans = chars.map((ch) => glyphSpan(doc, ch));
-    el.replaceChildren(...spans);
-    const perChar = 1000 / Math.max(1, cfg.cps);
-    let start = 0;
-    let finished = false;
-    const finish = () => {
-        if (finished) return;
-        finished = true;
-        run.rest(false);
-        el.classList.add(STATE.glitching);
-        const off = () => el.classList.remove(STATE.glitching);
-        el.addEventListener('animationend', off, { once: true });
-        // No animation (a quiet register, or reduced motion switched on
-        // mid-run): the class comes off on its own.
-        ctx.later(off, TIMINGS['kp-slice-1'].durationMs + END_GRACE_MS);
-        state.pending--;
-        ctx.done();
-    };
-    finishers.push(finish);
-    let id = 0;
-    const schedule = () => {
-        const next = view ? view.requestAnimationFrame(tick) : 0;
-        frames.add(next);
-        return next;
-    };
-    /** @param {number} now */
-    const tick = (now) => {
-        frames.delete(id);
-        if (state.detached || finished) return;
-        if (start === 0) start = now;
-        if (settleGlyphs(spans, chars, now - start, cfg, perChar)) finish();
-        else id = schedule();
-    };
-    id = schedule();
+    new DecipherRun(run).play();
 }
 
 /**

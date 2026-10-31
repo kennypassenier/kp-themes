@@ -81,10 +81,13 @@ export const VENDORED = [
     // the closure held by luck. Since scope-117 it fetches its hooks with
     // import() and attaches through js/as-of.js: chassis-rs bakes all eleven
     // at its 7.0.0 upgrade, as MIGRATION.md's task for it says. Since the 2026-10-30 split js/effects.js is a facade over
-    // js/effects-core/ and the headline hook sits over js/effects/headline-*.js; chassis-rs bakes the parts in beside them.
+    // js/effects-core/ and the headline hook sits over js/effects/headline-*.js; chassis-rs bakes the parts in beside them. Since
+    // ctrl-b13 (2026-10-31) every hook is a class over js/effects-core/hook.js, and the arrival and pointer hooks have parts
+    // beside them (arrival-run.js, pointer-light.js, press-bus.js).
     'js/effects.js',
     'js/effects-core/base.js',
     'js/effects-core/context.js',
+    'js/effects-core/hook.js',
     'js/effects-core/engine.js',
     'js/effects-core/knobs.js',
     'js/effects-core/registry.js',
@@ -103,9 +106,12 @@ export const VENDORED = [
     'js/effects/count.js',
     'js/effects/caret.js',
     'js/effects/pointer.js',
+    'js/effects/pointer-light.js',
+    'js/effects/press-bus.js',
     'js/effects/measure.js',
     'js/effects/marquee.js',
     'js/effects/arrival.js',
+    'js/effects/arrival-run.js',
     // Since the 2026-10-30 split, js/strings.js and js/components.js are facades over the files in
     // js/strings/ and js/components/. chassis-rs bakes the parts in beside them at its next upgrade,
     // or the facades' imports 404.
