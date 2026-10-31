@@ -3789,13 +3789,13 @@ var init_turns = __esm({
 });
 
 // js/as-of.js
-function asOf(root, present, attach) {
+function asOf(root, present2, attach) {
   const own = {
     querySelectorAll: Object.getOwnPropertyDescriptor(root, "querySelectorAll"),
     querySelector: Object.getOwnPropertyDescriptor(root, "querySelector")
   };
   const all = root.querySelectorAll;
-  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
+  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present2.has(element));
   Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
   Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
   try {
@@ -9283,8 +9283,8 @@ var init_base = __esm({
         this.ctx = null;
       }
       /** @param {WeakSet<Element> | null} present the page as attach found it, or null once attach is over */
-      holdPresent(present) {
-        this.present = present;
+      holdPresent(present2) {
+        this.present = present2;
       }
       /** @param {EffectsContext} ctx */
       setContext(ctx) {
@@ -49704,8 +49704,8 @@ function sourceIndex(name) {
   return hash % CHART_COLOURS + 1;
 }
 function attachLogs(root = document) {
-  const present = presentUnder(root);
-  return asOf(root, present, () => {
+  const present2 = presentUnder(root);
+  return asOf(root, present2, () => {
     const marked = [...root.querySelectorAll("[data-kp-source]")];
     for (const el16 of marked) {
       const name = el16.getAttribute("data-kp-source") || el16.textContent?.trim() || "";
@@ -50728,9 +50728,9 @@ function syncCalmLegend(el16) {
   const own = legend?.getAttribute("data-kp-legend-source") === "auto";
   if (legend && !own && legend.childElementCount > 0) return;
   if (isCalmTones(el16) && el16.getAttribute("data-kp-legend") !== "hide") {
-    const present = new Set([...el16.querySelectorAll(".kp-heat__cell[data-kp-tone]")].map((c) => c.getAttribute("data-kp-tone")));
-    const all = el16.getAttribute("data-kp-legend") === "all" || !["logged", "quiet", "paused"].some((t) => present.has(t));
-    const entries2 = calmLegendEntries().filter((e) => all || present.has(e.tone));
+    const present2 = new Set([...el16.querySelectorAll(".kp-heat__cell[data-kp-tone]")].map((c) => c.getAttribute("data-kp-tone")));
+    const all = el16.getAttribute("data-kp-legend") === "all" || !["logged", "quiet", "paused"].some((t) => present2.has(t));
+    const entries2 = calmLegendEntries().filter((e) => all || present2.has(e.tone));
     const signature2 = entries2.map((e) => e.tone).join(" ");
     if (own && !legend?.hidden && legend?.getAttribute("data-kp-legend-tones") === signature2) return;
     const made6 = setHeatLegend(el16, entries2, { source: "auto" });
@@ -51184,123 +51184,19 @@ var init_pick = __esm({
 });
 
 // js/heat/wire.js
-function wireHeat(el16) {
-  const onClick = (event) => {
-    const target = (
-      /** @type {Element} */
-      event.target
-    );
-    const label = (
-      /** @type {HTMLElement | null} */
-      target.closest(".kp-heat__label-button")
-    );
-    if (label && el16.contains(label)) {
-      const key2 = label.dataset.key ?? "";
-      const keys = new Set(LIT.get(el16) ?? []);
-      const pressed = !keys.has(key2);
-      if (!el16.hasAttribute("data-kp-heat-owned")) {
-        if (pressed) keys.add(key2);
-        else keys.delete(key2);
-        setHeatRows(el16, [...keys]);
-      }
-      el16.dispatchEvent(new CustomEvent(HEAT_ROW_EVENT, { bubbles: true, detail: { key: key2, pressed, keys: [...keys] } }));
-      return;
-    }
-    const cell = (
-      /** @type {HTMLElement | null} */
-      target.closest(HEAT_CELL)
-    );
-    if (!cell || !el16.contains(cell) || cell.hasAttribute("aria-disabled")) return;
-    STOPS2.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
-    const key = cell.dataset.colKey ?? "";
-    const already = el16.getAttribute("data-kp-heat-picked") === key;
-    if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, already ? null : key);
-    el16.dispatchEvent(
-      new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: key, cell, picked: !already } })
-    );
-  };
-  const onKey5 = (event) => {
-    const cell = (
-      /** @type {HTMLElement | null} */
-      (event.target instanceof Element ? event.target : null)?.closest(HEAT_CELL) ?? null
-    );
-    if (!cell || !el16.contains(cell)) return;
-    const grid2 = cellGrid(el16, HEAT_CELL);
-    let r = Number(cell.dataset.r);
-    let c = Number(cell.dataset.c);
-    const rowsN = grid2.length;
-    const colsN = (grid2[r] ?? []).length;
-    const key = event.key;
-    let askLatest = false;
-    if (key === "ArrowRight") c = Math.min(colsN - 1, c + 1);
-    else if (key === "ArrowLeft") c = Math.max(0, c - 1);
-    else if (key === "ArrowDown") r = Math.min(rowsN - 1, r + 1);
-    else if (key === "ArrowUp") r = Math.max(0, r - 1);
-    else if (key === "Home" || key === "End") {
-      c = key === "Home" ? 0 : colsN - 1;
-      if (event.ctrlKey) r = key === "Home" ? 0 : rowsN - 1;
-      const latest = el16.getAttribute("data-kp-heat-latest");
-      askLatest = latest !== null && key === (latest === "start" ? "Home" : "End");
-    } else if (key === "PageUp" || key === "PageDown") {
-      event.preventDefault();
-      const earlier = key === "PageUp";
-      const detail = { direction: earlier ? "earlier" : "later" };
-      if (PAGING.has(el16)) {
-        const bound = PAGING.get(el16) ?? {};
-        const next2 = heatOffset(el16) + (earlier ? 1 : -1);
-        if (bound.max !== void 0 && next2 > bound.max || next2 < (bound.min ?? 0)) return;
-        detail.offset = next2;
-        if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPaging(el16, { offset: next2 });
-      }
-      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail }));
-      return;
-    } else if (key === "Escape") {
-      if (el16.getAttribute("data-kp-heat-picked") == null) return;
-      event.preventDefault();
-      if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, null);
-      el16.dispatchEvent(
-        new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: null, cell, picked: false } })
-      );
-      return;
-    } else return;
-    event.preventDefault();
-    const to = grid2[r]?.[c];
-    if (!to) return;
-    STOPS2.set(el16, { r, c });
-    placeStop(el16, HEAT_CELL, { r, c });
-    to.focus();
-    if (askLatest) el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: "latest" } }));
-  };
-  const onFocus = (event) => {
-    const cell = (
-      /** @type {HTMLElement | null} */
-      (event.target instanceof Element ? event.target : null)?.closest(HEAT_CELL) ?? null
-    );
-    if (!cell || !el16.contains(cell)) return;
-    const at = { r: Number(cell.dataset.r), c: Number(cell.dataset.c) };
-    const now = STOPS2.get(el16);
-    if (now?.r !== at.r || now?.c !== at.c) placeStop(el16, HEAT_CELL, at);
-  };
-  el16.addEventListener("click", onClick);
-  el16.addEventListener("keydown", onKey5);
-  el16.addEventListener("focusin", onFocus);
-  syncCalmLegend(el16);
-  const legendWatch = new MutationObserver(() => syncCalmLegend(el16));
-  legendWatch.observe(el16, { attributes: true, attributeFilter: ["data-kp-tones", "data-kp-legend"] });
-  if (el16.querySelector(HEAT_CELL)) {
-    const pressed = (
-      /** @type {NodeListOf<HTMLElement>} */
-      el16.querySelectorAll('.kp-heat__label-button[aria-pressed="true"]')
-    );
-    LIT.set(el16, new Set([...pressed].map((b) => b.dataset.key ?? "")));
-    if (!el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)) placeStop(el16, HEAT_CELL, void 0);
-  }
-  return () => {
-    el16.removeEventListener("click", onClick);
-    el16.removeEventListener("keydown", onKey5);
-    el16.removeEventListener("focusin", onFocus);
-    legendWatch.disconnect();
-  };
+function cellOf(grid2, event, selector) {
+  const cell = (
+    /** @type {HTMLElement | null} */
+    (event.target instanceof Element ? event.target : null)?.closest(selector) ?? null
+  );
+  return cell && grid2.contains(cell) ? cell : null;
+}
+function followFocus(grid2, event, selector) {
+  const cell = cellOf(grid2, event, selector);
+  if (!cell) return;
+  const at = { r: Number(cell.dataset.r), c: Number(cell.dataset.c) };
+  const now = STOPS2.get(grid2);
+  if (now?.r !== at.r || now?.c !== at.c) placeStop(grid2, selector, at);
 }
 function attachHeats(root = document) {
   const doc = root instanceof Document ? root : (
@@ -51308,26 +51204,13 @@ function attachHeats(root = document) {
     root.ownerDocument
   );
   attachHoverCards(doc);
-  const undo = [];
-  const all = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof Element && root.matches(HEAT) ? [root] : [], ...root.querySelectorAll(HEAT)]
-  );
-  for (const el16 of all) {
-    if (WIRED2.has(el16)) continue;
-    const off = wireHeat(el16);
-    WIRED2.set(el16, off);
-    undo.push(() => {
-      off();
-      WIRED2.delete(el16);
-    });
-  }
-  return () => undo.forEach((fn) => fn());
+  return attachAll(root, HEAT, HeatGrid);
 }
-var WIRED2;
+var HeatGrid;
 var init_wire3 = __esm({
   "js/heat/wire.js"() {
     "use strict";
+    init_controller();
     init_hovercard();
     init_constants22();
     init_draw8();
@@ -51335,7 +51218,135 @@ var init_wire3 = __esm({
     init_legend2();
     init_paging();
     init_pick();
-    WIRED2 = /* @__PURE__ */ new WeakMap();
+    HeatGrid = class extends Controller {
+      connect() {
+        const el16 = this.host;
+        syncCalmLegend(el16);
+        const legendWatch = this.observe(new MutationObserver(() => syncCalmLegend(el16)));
+        legendWatch.observe(el16, { attributes: true, attributeFilter: ["data-kp-tones", "data-kp-legend"] });
+        this.listen(el16, "click", (event) => this.onClick(event));
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(el16, "focusin", (event) => followFocus(
+          el16,
+          /** @type {FocusEvent} */
+          event,
+          HEAT_CELL
+        ));
+        if (el16.querySelector(HEAT_CELL)) {
+          const pressed = (
+            /** @type {NodeListOf<HTMLElement>} */
+            el16.querySelectorAll('.kp-heat__label-button[aria-pressed="true"]')
+          );
+          LIT.set(el16, new Set([...pressed].map((b) => b.dataset.key ?? "")));
+          if (!el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)) placeStop(el16, HEAT_CELL, void 0);
+        }
+      }
+      /** A row label lights its row; a cell picks its column. @param {Event} event */
+      onClick(event) {
+        const el16 = this.host;
+        const target = (
+          /** @type {Element} */
+          event.target
+        );
+        const label = (
+          /** @type {HTMLElement | null} */
+          target.closest(".kp-heat__label-button")
+        );
+        if (label && el16.contains(label)) return this.pressLabel(label);
+        const cell = (
+          /** @type {HTMLElement | null} */
+          target.closest(HEAT_CELL)
+        );
+        if (!cell || !el16.contains(cell) || cell.hasAttribute("aria-disabled")) return;
+        STOPS2.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
+        const key = cell.dataset.colKey ?? "";
+        const already = el16.getAttribute("data-kp-heat-picked") === key;
+        if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, already ? null : key);
+        el16.dispatchEvent(new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: key, cell, picked: !already } }));
+      }
+      /** @param {HTMLElement} label */
+      pressLabel(label) {
+        const el16 = this.host;
+        const key = label.dataset.key ?? "";
+        const keys = new Set(LIT.get(el16) ?? []);
+        const pressed = !keys.has(key);
+        if (!el16.hasAttribute("data-kp-heat-owned")) {
+          if (pressed) keys.add(key);
+          else keys.delete(key);
+          setHeatRows(el16, [...keys]);
+        }
+        el16.dispatchEvent(new CustomEvent(HEAT_ROW_EVENT, { bubbles: true, detail: { key, pressed, keys: [...keys] } }));
+      }
+      /** Arrows, Home and End move the stop; PageUp and PageDown page; Escape lets go of the pick. @param {KeyboardEvent} event */
+      onKey(event) {
+        const el16 = this.host;
+        const cell = cellOf(el16, event, HEAT_CELL);
+        if (!cell) return;
+        if (event.key === "PageUp" || event.key === "PageDown") return this.page(event);
+        if (event.key === "Escape") return this.unpick(event, cell);
+        const grid2 = cellGrid(el16, HEAT_CELL);
+        const moved = this.moveFrom(grid2, cell, event);
+        if (!moved) return;
+        event.preventDefault();
+        const { r, c, askLatest } = moved;
+        const to = grid2[r]?.[c];
+        if (!to) return;
+        STOPS2.set(el16, { r, c });
+        placeStop(el16, HEAT_CELL, { r, c });
+        to.focus();
+        if (askLatest) el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: "latest" } }));
+      }
+      /**
+       * Where an arrow, Home or End moves the stop from `cell`, or null for another key.
+       * @param {HTMLElement[][]} grid @param {HTMLElement} cell @param {KeyboardEvent} event
+       * @returns {{ r: number, c: number, askLatest: boolean } | null}
+       */
+      moveFrom(grid2, cell, event) {
+        let r = Number(cell.dataset.r);
+        let c = Number(cell.dataset.c);
+        const rowsN = grid2.length;
+        const colsN = (grid2[r] ?? []).length;
+        const key = event.key;
+        let askLatest = false;
+        if (key === "ArrowRight") c = Math.min(colsN - 1, c + 1);
+        else if (key === "ArrowLeft") c = Math.max(0, c - 1);
+        else if (key === "ArrowDown") r = Math.min(rowsN - 1, r + 1);
+        else if (key === "ArrowUp") r = Math.max(0, r - 1);
+        else if (key === "Home" || key === "End") {
+          c = key === "Home" ? 0 : colsN - 1;
+          if (event.ctrlKey) r = key === "Home" ? 0 : rowsN - 1;
+          const latest = this.host.getAttribute("data-kp-heat-latest");
+          askLatest = latest !== null && key === (latest === "start" ? "Home" : "End");
+        } else return null;
+        return { r, c, askLatest };
+      }
+      /** PageUp asks for earlier columns, PageDown for later ones; a grid with a paging bar pages by it [wish-1120]. @param {KeyboardEvent} event */
+      page(event) {
+        const el16 = this.host;
+        event.preventDefault();
+        const earlier = event.key === "PageUp";
+        const detail = { direction: earlier ? "earlier" : "later" };
+        if (PAGING.has(el16)) {
+          const bound = PAGING.get(el16) ?? {};
+          const next2 = heatOffset(el16) + (earlier ? 1 : -1);
+          if (bound.max !== void 0 && next2 > bound.max || next2 < (bound.min ?? 0)) return;
+          detail.offset = next2;
+          if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPaging(el16, { offset: next2 });
+        }
+        el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail }));
+      }
+      /** @param {KeyboardEvent} event @param {HTMLElement} cell */
+      unpick(event, cell) {
+        const el16 = this.host;
+        if (el16.getAttribute("data-kp-heat-picked") == null) return;
+        event.preventDefault();
+        if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, null);
+        el16.dispatchEvent(new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: null, cell, picked: false } }));
+      }
+    };
   }
 });
 
@@ -52390,162 +52401,151 @@ var init_matrix = __esm({
 });
 
 // js/heat/matrix-wire.js
-function wireMatrix(el16) {
-  const pin = (cell, source) => {
-    const was = cell.getAttribute("aria-pressed") === "true";
-    if (!el16.hasAttribute("data-kp-matrix-owned")) setMatrixPick(el16, { row: cell.dataset.rowKey ?? "", column: cell.dataset.colKey ?? "" });
-    STOPS2.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
-    el16.dispatchEvent(
-      new CustomEvent(MATRIX_PICK_EVENT, {
-        bubbles: true,
-        detail: { rowKey: cell.dataset.rowKey, colKey: cell.dataset.colKey, cell, source, again: was }
-      })
-    );
-  };
-  const onClick = (event) => {
-    const target = (
-      /** @type {Element} */
-      event.target
-    );
-    const head = (
-      /** @type {HTMLElement | null} */
-      target.closest("button.kp-matrix__col, button.kp-matrix__row")
-    );
-    if (head && el16.contains(head)) {
-      const key = head.dataset.key ?? "";
-      if (!el16.hasAttribute("data-kp-matrix-owned")) {
-        const lit = new Set(LIT.get(el16) ?? []);
-        if (lit.has(key)) lit.delete(key);
-        else lit.add(key);
-        setMatrixLit(el16, [...lit]);
-      }
-      el16.dispatchEvent(new CustomEvent(MATRIX_LIGHT_EVENT, { bubbles: true, detail: { keys: [...LIT.get(el16) ?? []], key } }));
-      return;
-    }
-    const cell = (
-      /** @type {HTMLElement | null} */
-      target.closest(MATRIX_CELL)
-    );
-    if (cell && el16.contains(cell) && !cell.hasAttribute("aria-disabled")) pin(cell, "pointer");
-  };
-  const onKey5 = (event) => {
-    const cell = (
-      /** @type {HTMLElement | null} */
-      (event.target instanceof Element ? event.target : null)?.closest(MATRIX_CELL) ?? null
-    );
-    if (!cell || !el16.contains(cell)) {
-      if (event.key === "Escape" && (LIT.get(el16)?.size ?? 0) > 0 && !el16.hasAttribute("data-kp-matrix-owned")) {
-        setMatrixLit(el16, []);
-        el16.dispatchEvent(new CustomEvent(MATRIX_LIGHT_EVENT, { bubbles: true, detail: { keys: [], key: null } }));
-      }
-      return;
-    }
-    if (event.key === "Escape" && (LIT.get(el16)?.size ?? 0) > 0) {
-      event.preventDefault();
-      if (!el16.hasAttribute("data-kp-matrix-owned")) setMatrixLit(el16, []);
-      el16.dispatchEvent(new CustomEvent(MATRIX_LIGHT_EVENT, { bubbles: true, detail: { keys: [], key: null } }));
-      return;
-    }
-    const step = (
-      /** @type {Record<string, [number, number]>} */
-      {
-        ArrowRight: [0, 1],
-        ArrowLeft: [0, -1],
-        ArrowDown: [1, 0],
-        ArrowUp: [-1, 0]
-      }[event.key]
-    );
-    const grid2 = cellGrid(el16, MATRIX_CELL);
-    const rowsN = Math.max(grid2.length, el16.querySelectorAll(".kp-matrix__grid > .kp-matrix__line").length - 1);
-    const colsN = Number(
-      /** @type {HTMLElement} */
-      el16.querySelector(".kp-matrix__grid").style.getPropertyValue("--kp-matrix-cols")
-    ) || 1;
-    let r = Number(cell.dataset.r);
-    let c = Number(cell.dataset.c);
-    if (step) {
-      for (let i = 0; i < rowsN * colsN; i++) {
-        r = (r + step[0] + rowsN) % rowsN;
-        c = (c + step[1] + colsN) % colsN;
-        if (grid2[r]?.[c]) break;
-      }
-    } else if (event.key === "Home" || event.key === "End") {
-      const row2 = (grid2[r] ?? []).map((x, i) => x ? i : -1).filter((i) => i >= 0);
-      c = event.key === "Home" ? row2[0] : row2[row2.length - 1];
-      if (event.ctrlKey) {
-        const rr = grid2.map((x, i) => x ? i : -1).filter((i) => i >= 0);
-        r = event.key === "Home" ? rr[0] : rr[rr.length - 1];
-        const cc = (grid2[r] ?? []).map((x, i) => x ? i : -1).filter((i) => i >= 0);
-        c = event.key === "Home" ? cc[0] : cc[cc.length - 1];
-      }
-    } else return;
-    event.preventDefault();
-    const to = grid2[r]?.[c];
-    if (!to) return;
-    placeStop(el16, MATRIX_CELL, { r, c });
-    to.focus();
-    if (el16.getAttribute("data-kp-matrix-select") === "follow") pin(to, "keyboard");
-  };
-  const onFocus = (event) => {
-    const cell = (
-      /** @type {HTMLElement | null} */
-      (event.target instanceof Element ? event.target : null)?.closest(MATRIX_CELL) ?? null
-    );
-    if (!cell || !el16.contains(cell)) return;
-    const at = { r: Number(cell.dataset.r), c: Number(cell.dataset.c) };
-    const now = STOPS2.get(el16);
-    if (now?.r !== at.r || now?.c !== at.c) placeStop(el16, MATRIX_CELL, at);
-  };
-  el16.addEventListener("click", onClick);
-  el16.addEventListener("keydown", onKey5);
-  el16.addEventListener("focusin", onFocus);
-  if (el16.querySelector(MATRIX_CELL)) {
-    const lit = (
-      /** @type {NodeListOf<HTMLElement>} */
-      el16.querySelectorAll('button.kp-matrix__col[aria-pressed="true"], button.kp-matrix__row[aria-pressed="true"]')
-    );
-    LIT.set(el16, new Set([...lit].map((b) => b.dataset.key ?? "")));
-    markHot(el16);
-    if (!el16.querySelector(`${MATRIX_CELL}[tabindex="0"]`)) placeStop(el16, MATRIX_CELL, void 0);
-  }
-  return () => {
-    el16.removeEventListener("click", onClick);
-    el16.removeEventListener("keydown", onKey5);
-    el16.removeEventListener("focusin", onFocus);
-  };
-}
 function attachMatrices(root = document) {
   const doc = root instanceof Document ? root : (
     /** @type {Element} */
     root.ownerDocument
   );
   attachHoverCards(doc);
-  const undo = [];
-  const all = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof Element && root.matches(MATRIX) ? [root] : [], ...root.querySelectorAll(MATRIX)]
-  );
-  for (const el16 of all) {
-    if (MATRIX_WIRED.has(el16)) continue;
-    const off = wireMatrix(el16);
-    MATRIX_WIRED.set(el16, off);
-    undo.push(() => {
-      off();
-      MATRIX_WIRED.delete(el16);
-    });
-  }
-  return () => undo.forEach((fn) => fn());
+  return attachAll(root, MATRIX, MatrixGrid);
 }
-var MATRIX_WIRED;
+var STEPS, present, MatrixGrid;
 var init_matrix_wire = __esm({
   "js/heat/matrix-wire.js"() {
     "use strict";
+    init_controller();
     init_hovercard();
     init_constants22();
     init_draw8();
     init_grid_state();
     init_matrix();
-    MATRIX_WIRED = /* @__PURE__ */ new WeakMap();
+    init_wire3();
+    STEPS = { ArrowRight: [0, 1], ArrowLeft: [0, -1], ArrowDown: [1, 0], ArrowUp: [-1, 0] };
+    present = (list) => list.map((x, i) => x ? i : -1).filter((i) => i >= 0);
+    MatrixGrid = class extends Controller {
+      connect() {
+        const el16 = this.host;
+        this.listen(el16, "click", (event) => this.onClick(event));
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(el16, "focusin", (event) => followFocus(
+          el16,
+          /** @type {FocusEvent} */
+          event,
+          MATRIX_CELL
+        ));
+        if (el16.querySelector(MATRIX_CELL)) {
+          const lit = (
+            /** @type {NodeListOf<HTMLElement>} */
+            el16.querySelectorAll('button.kp-matrix__col[aria-pressed="true"], button.kp-matrix__row[aria-pressed="true"]')
+          );
+          LIT.set(el16, new Set([...lit].map((b) => b.dataset.key ?? "")));
+          markHot(el16);
+          if (!el16.querySelector(`${MATRIX_CELL}[tabindex="0"]`)) placeStop(el16, MATRIX_CELL, void 0);
+        }
+      }
+      /** Pin a cell: it is the pick and the tab stop, and the page hears of it. @param {HTMLElement} cell @param {string} source */
+      pin(cell, source) {
+        const el16 = this.host;
+        const was = cell.getAttribute("aria-pressed") === "true";
+        if (!el16.hasAttribute("data-kp-matrix-owned")) setMatrixPick(el16, { row: cell.dataset.rowKey ?? "", column: cell.dataset.colKey ?? "" });
+        STOPS2.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
+        const detail = { rowKey: cell.dataset.rowKey, colKey: cell.dataset.colKey, cell, source, again: was };
+        el16.dispatchEvent(new CustomEvent(MATRIX_PICK_EVENT, { bubbles: true, detail }));
+      }
+      /** A header lights its row or column; a cell is pinned. @param {Event} event */
+      onClick(event) {
+        const el16 = this.host;
+        const target = (
+          /** @type {Element} */
+          event.target
+        );
+        const head = (
+          /** @type {HTMLElement | null} */
+          target.closest("button.kp-matrix__col, button.kp-matrix__row")
+        );
+        if (head && el16.contains(head)) {
+          const key = head.dataset.key ?? "";
+          if (!el16.hasAttribute("data-kp-matrix-owned")) {
+            const lit = new Set(LIT.get(el16) ?? []);
+            if (lit.has(key)) lit.delete(key);
+            else lit.add(key);
+            setMatrixLit(el16, [...lit]);
+          }
+          el16.dispatchEvent(new CustomEvent(MATRIX_LIGHT_EVENT, { bubbles: true, detail: { keys: [...LIT.get(el16) ?? []], key } }));
+          return;
+        }
+        const cell = (
+          /** @type {HTMLElement | null} */
+          target.closest(MATRIX_CELL)
+        );
+        if (cell && el16.contains(cell) && !cell.hasAttribute("aria-disabled")) this.pin(cell, "pointer");
+      }
+      /** Escape puts every light out; arrows, Home and End move the stop, and pin it when the matrix follows. @param {KeyboardEvent} event */
+      onKey(event) {
+        const el16 = this.host;
+        const cell = cellOf(el16, event, MATRIX_CELL);
+        const lit = (LIT.get(el16)?.size ?? 0) > 0;
+        if (!cell) {
+          if (event.key === "Escape" && lit && !el16.hasAttribute("data-kp-matrix-owned")) {
+            setMatrixLit(el16, []);
+            el16.dispatchEvent(new CustomEvent(MATRIX_LIGHT_EVENT, { bubbles: true, detail: { keys: [], key: null } }));
+          }
+          return;
+        }
+        if (event.key === "Escape" && lit) {
+          event.preventDefault();
+          if (!el16.hasAttribute("data-kp-matrix-owned")) setMatrixLit(el16, []);
+          el16.dispatchEvent(new CustomEvent(MATRIX_LIGHT_EVENT, { bubbles: true, detail: { keys: [], key: null } }));
+          return;
+        }
+        const grid2 = cellGrid(el16, MATRIX_CELL);
+        const at = this.moveFrom(grid2, cell, event);
+        if (!at) return;
+        event.preventDefault();
+        const to = grid2[at.r]?.[at.c];
+        if (!to) return;
+        placeStop(el16, MATRIX_CELL, at);
+        to.focus();
+        if (el16.getAttribute("data-kp-matrix-select") === "follow") this.pin(to, "keyboard");
+      }
+      /**
+       * Where a key moves the stop from `cell`: arrows wrap round and skip the cells that cannot be pressed; Home and End go to
+       * the first or last cell of the row (of the matrix with Ctrl). Null for another key.
+       * @param {HTMLElement[][]} grid @param {HTMLElement} cell @param {KeyboardEvent} event
+       * @returns {{ r: number, c: number } | null}
+       */
+      moveFrom(grid2, cell, event) {
+        const el16 = this.host;
+        const step = STEPS[event.key];
+        const rowsN = Math.max(grid2.length, el16.querySelectorAll(".kp-matrix__grid > .kp-matrix__line").length - 1);
+        const colsN = Number(
+          /** @type {HTMLElement} */
+          el16.querySelector(".kp-matrix__grid").style.getPropertyValue("--kp-matrix-cols")
+        ) || 1;
+        let r = Number(cell.dataset.r);
+        let c = Number(cell.dataset.c);
+        if (step) {
+          for (let i = 0; i < rowsN * colsN; i++) {
+            r = (r + step[0] + rowsN) % rowsN;
+            c = (c + step[1] + colsN) % colsN;
+            if (grid2[r]?.[c]) break;
+          }
+          return { r, c };
+        }
+        if (event.key !== "Home" && event.key !== "End") return null;
+        const first = event.key === "Home";
+        const pickOf = (list) => first ? list[0] : list[list.length - 1];
+        c = pickOf(present(grid2[r] ?? []));
+        if (event.ctrlKey) {
+          r = pickOf(present(grid2));
+          c = pickOf(present(grid2[r] ?? []));
+        }
+        return { r, c };
+      }
+    };
   }
 });
 
@@ -79749,9 +79749,9 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
       if (tried.best !== attempt) return drawGraph(g, tried.best, { ...tried, locked: true });
     }
   }
-  const present = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
+  const present2 = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
   g.legend.replaceChildren(
-    ...present.map((k, index) => {
+    ...present2.map((k, index) => {
       const li = make32(doc, "li");
       const button6 = make32(doc, "button", "kp-graph__kind");
       button6.type = "button";
@@ -79768,7 +79768,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
       return li;
     })
   );
-  g.legend.hidden = present.length === 0 || data.nodes.length < 2;
+  g.legend.hidden = present2.length === 0 || data.nodes.length < 2;
   restyleGraph(g);
   renderDetail(g);
   applyView(g);
@@ -82505,7 +82505,7 @@ function attachAvailability(root = document) {
     const stopReasons = attachDisabledReasons(el_);
     let drag = null;
     let suppress = false;
-    const cellOf = (event) => {
+    const cellOf2 = (event) => {
       const t = event.target instanceof Element ? event.target : null;
       const c = (
         /** @type {HTMLElement | null} */
@@ -82565,7 +82565,7 @@ function attachAvailability(root = document) {
         if (key) setHeatPick(grid2, grid2.getAttribute("data-kp-heat-picked") === key ? null : key);
         return;
       }
-      const cell = cellOf(event);
+      const cell = cellOf2(event);
       if (!cell) return;
       event.stopPropagation();
       const person = cell.getAttribute("data-row-key") ?? "";
@@ -82577,7 +82577,7 @@ function attachAvailability(root = document) {
     const onDown2 = (event) => {
       if (event.button !== 0 || event.pointerType === "touch" || attr11(el_, "paint", "on") === "false" || attr11(el_, "press", "menu") === "menu")
         return;
-      const cell = cellOf(event);
+      const cell = cellOf2(event);
       if (!cell) return;
       const person = cell.getAttribute("data-row-key") ?? "";
       const column = cell.getAttribute("data-col-key") ?? "";
