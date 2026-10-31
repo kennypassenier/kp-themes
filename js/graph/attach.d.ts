@@ -1,9 +1,7 @@
 export type GraphDecorateInfo = import('./options.js').GraphDecorateInfo;
 export type GraphDetailInfo = import('./options.js').GraphDetailInfo;
-export type GraphModel = import('./instance.js').GraphModel;
 /** @typedef {import('./options.js').GraphDecorateInfo} GraphDecorateInfo */
 /** @typedef {import('./options.js').GraphDetailInfo} GraphDetailInfo */
-/** @typedef {import('./instance.js').GraphModel} GraphModel */
 /**
  * Build every graph under `root`: a bar with the kinds and Show all, the
  * picture (one tab stop: arrows between nodes, Enter or Space picks, Esc

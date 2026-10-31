@@ -141,8 +141,8 @@ function watchOptions(element, attributes, onChange) {
       const name = record.attributeName;
       if (name !== null && !before.has(name)) before.set(name, record.oldValue);
     }
-    const changed2 = [...before].filter(([name, was]) => element.getAttribute(name) !== was).map(([name]) => name);
-    if (changed2.length > 0) onChange(changed2);
+    const changed3 = [...before].filter(([name, was]) => element.getAttribute(name) !== was).map(([name]) => name);
+    if (changed3.length > 0) onChange(changed3);
   });
   watcher.observe(element, { attributes: true, attributeOldValue: true, attributeFilter: [...attributes] });
   return () => watcher.disconnect();
@@ -7129,9 +7129,9 @@ var init_core = __esm({
       }
       /** Remember what the tick was set to; true when that is a change. @param {boolean} checked */
       flip(checked) {
-        const changed2 = this.ticked !== checked;
+        const changed3 = this.ticked !== checked;
         this.ticked = checked;
-        return changed2;
+        return changed3;
       }
       /** An empty gate hides itself and remembers that it did. @param {string | null} state */
       paintEmpty(state12) {
@@ -7323,15 +7323,15 @@ var init_controller2 = __esm({
       set(checked, fire2) {
         const { host, ui, s: s2 } = this;
         if (checked && this.tickBlock()) return;
-        const changed2 = this.flip(checked);
+        const changed3 = this.flip(checked);
         ui.box.checked = checked;
-        if (changed2 && this.mode() === "all") {
+        if (changed3 && this.mode() === "all") {
           for (const other of siblingsOf(host)) if (other !== host) HANDLES.get(other)?.set(checked);
         }
         this.paint();
         for (const g of siblingsOf(host)) g.dispatchEvent(new CustomEvent("kp-ack-sync"));
         this.syncTargets();
-        if (changed2 && fire2) {
+        if (changed3 && fire2) {
           const remaining = siblingsOf(host).filter(open).length;
           host.dispatchEvent(new CustomEvent(ACK_EVENT, { bubbles: true, detail: { key: this.key(), checked, remaining, at: (/* @__PURE__ */ new Date()).toISOString() } }));
           this.say(remaining === 0 ? s2.ackEnabled : s2.ackDisabled(remaining));
@@ -15367,8 +15367,8 @@ function choose(group, item) {
   const before = getSegmentedValues(group);
   paint2(group, nextValues(group, item, before));
   const after = getSegmentedValues(group);
-  const changed2 = after.length !== before.length || after.some((v, at) => v !== before[at]);
-  if (!changed2) return;
+  const changed3 = after.length !== before.length || after.some((v, at) => v !== before[at]);
+  if (!changed3) return;
   group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf(item), values: after, item } }));
 }
 var init_actions2 = __esm({
@@ -19771,9 +19771,9 @@ function installSetup(c) {
   c.readout = readout;
   const legend = h(doc, "div", { class: "kp-chart__legend", role: "group" });
   c.legend = legend;
-  const showAll = h(doc, "button", { type: "button", class: "kp-chart__show-all", title: strings.showAllTitle }, strings.showAll);
-  c.showAll = showAll;
-  showAll.hidden = true;
+  const showAll2 = h(doc, "button", { type: "button", class: "kp-chart__show-all", title: strings.showAllTitle }, strings.showAll);
+  c.showAll = showAll2;
+  showAll2.hidden = true;
   const hint = h(
     doc,
     "p",
@@ -19812,7 +19812,7 @@ var init_setup = __esm({
 
 // js/chart/plot/readers.js
 function installReaders(c) {
-  const { decorate: decorate2, group, host, key, kindsOff, plot, release: release2, showAll, strings } = c;
+  const { decorate: decorate2, group, host, key, kindsOff, plot, release: release2, showAll: showAll2, strings } = c;
   const visible3 = () => c.points.map((_, i) => i).filter((i) => c.sel.size === 0 || c.sel.has(i));
   c.visible = visible3;
   const range = () => {
@@ -19831,7 +19831,7 @@ function installReaders(c) {
   c.setSel = setSel;
   const decorateOwn = () => {
     decorateWith(decorate2, plot, { kind: "plot", host, key: key() });
-    decorateWith(decorate2, showAll, { kind: "show-all", host, key: key() });
+    decorateWith(decorate2, showAll2, { kind: "show-all", host, key: key() });
     decorateWith(decorate2, release2, { kind: "release", host, key: key() });
   };
   c.decorateOwn = decorateOwn;
@@ -19890,7 +19890,7 @@ function installLegend(c) {
     plot,
     release: release2,
     setSel,
-    showAll,
+    showAll: showAll2,
     strings,
     toneOf: toneOf4
   } = c;
@@ -20002,7 +20002,7 @@ function installLegend(c) {
       decorateWith(decorate2, button6, { kind: "source", host, key: key(), index: i, label: series.label });
       return { button: button6, value };
     });
-    legend.replaceChildren(...c.items.map((it) => it.button), showAll);
+    legend.replaceChildren(...c.items.map((it) => it.button), showAll2);
   }
   function skeletonLegend() {
     const n = Number(host.getAttribute("data-kp-chart-sources"));
@@ -20018,7 +20018,7 @@ function installLegend(c) {
     );
     legend.hidden = !(n > 1);
   }
-  showAll.addEventListener("click", () => {
+  showAll2.addEventListener("click", () => {
     setSel(/* @__PURE__ */ new Set());
     c.draw();
   });
@@ -20493,7 +20493,7 @@ function installTip(c) {
     pin,
     pinWord,
     readout,
-    showAll,
+    showAll: showAll2,
     shownEvents,
     strings,
     time,
@@ -20521,7 +20521,7 @@ function installTip(c) {
       it.button.toggleAttribute("data-kp-off", !on);
       it.value.textContent = series.total != null && t == null ? series.total.toLocaleString(locale) : v == null ? "" : fmt(v, "legend");
     });
-    showAll.hidden = c.sel.size === 0;
+    showAll2.hidden = c.sel.size === 0;
   }
   const rowsAt = (t, strict = false) => visible3().filter((si) => {
     const p = c.points[si];
@@ -21384,7 +21384,7 @@ var init_core3 = __esm({
         const plan = this.plan(items);
         const leaving = items.filter((_, i) => plan[i]);
         const folded2 = leaving.filter((li) => !isSep(li));
-        const changed2 = this.changed(items, folded2);
+        const changed3 = this.changed(items, folded2);
         this.markItems(items, leaving, folded2);
         this.foldedNow = folded2;
         const groups = this.groups.build(leaving);
@@ -21392,7 +21392,7 @@ var init_core3 = __esm({
         this.drawMenu(groups);
         host.setAttribute("data-kp-nav-fold-ready", "");
         this.publishUsed();
-        if (changed2) host.dispatchEvent(new CustomEvent(NAV_FOLD_EVENT, { bubbles: true, detail: { folded: folded2.length, items: folded2 } }));
+        if (changed3) host.dispatchEvent(new CustomEvent(NAV_FOLD_EVENT, { bubbles: true, detail: { folded: folded2.length, items: folded2 } }));
       }
     };
   }
@@ -27290,7 +27290,7 @@ var init_controller15 = __esm({
         this.observe(
           new MutationObserver((records) => {
             const spec = { ...this.spec };
-            let changed2 = false;
+            let changed3 = false;
             for (const record of records) {
               const name = (
                 /** @type {keyof typeof OPTION_ATTRIBUTES} */
@@ -27299,9 +27299,9 @@ var init_controller15 = __esm({
               if (!name || !(name in OPTION_ATTRIBUTES) || el16.getAttribute(name) === seen[name]) continue;
               seen[name] = el16.getAttribute(name);
               delete spec[OPTION_ATTRIBUTES[name]];
-              changed2 = true;
+              changed3 = true;
             }
-            if (changed2) this.set(
+            if (changed3) this.set(
               /** @type {ThreadSpec} */
               spec
             );
@@ -28726,11 +28726,11 @@ function buildFold(ctl, lineCount, bodyId) {
   more.setAttribute("aria-controls", bodyId);
   more.setAttribute("aria-expanded", String(!ctl.folded));
   const word = make7(doc, "kp-code__word");
-  const showAll = ctl.cell ? strings.payloadShowAll(lineCount) : strings.codeShowAll(lineCount);
+  const showAll2 = ctl.cell ? strings.payloadShowAll(lineCount) : strings.codeShowAll(lineCount);
   const dialogue = ctl.cell && ctl.spec.open === "dialog";
   if (dialogue) more.dataset.kpCodeOpen = "dialog";
-  word.setAttribute("data-kp-code-words", [showAll, strings.codeShowLess].join("\n"));
-  word.textContent = ctl.folded || dialogue ? dialogue ? strings.payloadOpen : showAll : strings.codeShowLess;
+  word.setAttribute("data-kp-code-words", [showAll2, strings.codeShowLess].join("\n"));
+  word.textContent = ctl.folded || dialogue ? dialogue ? strings.payloadOpen : showAll2 : strings.codeShowLess;
   if (dialogue) word.setAttribute("data-kp-code-words", strings.payloadOpen);
   more.append(word);
   return more;
@@ -29519,15 +29519,15 @@ var init_core6 = __esm({
         const a = list.indexOf(this.rowByKey(this.anchorKey) ?? to);
         const b = list.indexOf(to);
         if (a < 0 || b < 0) return { changed: 0, skipped: 0 };
-        let changed2 = 0;
+        let changed3 = 0;
         let skipped = 0;
         for (const row2 of list.slice(Math.min(a, b), Math.max(a, b) + 1)) {
           const box = boxOf(row2);
           if (!box) continue;
           if (!tickable(box)) skipped += 1;
-          else if (this.setBox(box, checked)) changed2 += 1;
+          else if (this.setBox(box, checked)) changed3 += 1;
         }
-        return { changed: changed2, skipped };
+        return { changed: changed3, skipped };
       }
       /** Say how many are ticked (and how many could not be), then fire. @param {string} source @param {number} skipped */
       said(source, skipped) {
@@ -30127,9 +30127,9 @@ function sync(bar, memory) {
     }
   }
   if (memory.items.length === 0) memory.namesOpen = false;
-  const changed2 = before.length !== memory.items.length || before.some((item, i) => item.key !== memory.items[i]?.key);
+  const changed3 = before.length !== memory.items.length || before.some((item, i) => item.key !== memory.items[i]?.key);
   draw3(bar, memory);
-  if (changed2) {
+  if (changed3) {
     for (const mark of bar.ownerDocument.querySelectorAll("[data-kp-refused]")) {
       mark.removeAttribute("data-kp-refused");
       mark.querySelector(":scope .kp-selection__refusal")?.remove();
@@ -31773,7 +31773,7 @@ var init_forms = __esm({
 function setState(c, next2, message, where = {}) {
   const { area, strings, holder, field: field2 } = c;
   const { root, status } = c.parts;
-  const changed2 = next2 !== c.state || status.textContent !== message;
+  const changed3 = next2 !== c.state || status.textContent !== message;
   c.state = next2;
   root.setAttribute("data-kp-json-state", next2);
   c.errorLine = next2 === "invalid" ? where.line ?? 0 : 0;
@@ -31789,7 +31789,7 @@ function setState(c, next2, message, where = {}) {
     else area.removeAttribute("aria-invalid");
   }
   field2?.classList.toggle("kp-field--invalid", broken);
-  if (changed2) {
+  if (changed3) {
     const detail = { state: next2, line: where.line ?? null, column: where.column ?? null, message, keys: where.keys ?? null };
     area.dispatchEvent(new CustomEvent(JSON_STATE_EVENT, { bubbles: true, detail }));
   }
@@ -36509,14 +36509,14 @@ var init_api12 = __esm({
 // js/focus-steps/wake.js
 function paintWake(root, wakeState) {
   const state12 = stateOf2(root);
-  const changed2 = state12.wakeState !== wakeState;
+  const changed3 = state12.wakeState !== wakeState;
   state12.wakeState = wakeState;
   root.setAttribute("data-kp-focus-steps-screen", wakeState);
   const strings = getStrings();
   const line = part2(root, "wake");
   if (line)
     line.textContent = wakeState === "on" ? strings.focusWakeOn : wakeState === "unsupported" ? strings.focusWakeUnsupported : strings.focusWakeOff;
-  if (changed2) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_WAKE_EVENT, { bubbles: true, detail: { state: wakeState } }));
+  if (changed3) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_WAKE_EVENT, { bubbles: true, detail: { state: wakeState } }));
 }
 async function holdScreen(root) {
   const wake = root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake");
@@ -41072,11 +41072,11 @@ var init_select_control = __esm({
       take(option) {
         const { select: select2 } = this;
         const value = option.dataset.value ?? "";
-        const changed2 = select2.value !== value;
+        const changed3 = select2.value !== value;
         select2.value = value;
         this.close();
         select2.focus();
-        if (changed2) {
+        if (changed3) {
           select2.dispatchEvent(new Event("input", { bubbles: true }));
           select2.dispatchEvent(new Event("change", { bubbles: true }));
         }
@@ -54772,20 +54772,20 @@ function settleDraw(c) {
   paint8(c);
 }
 function commit(c, list, source) {
-  const changed2 = changedIds(c.items, list);
+  const changed3 = changedIds(c.items, list);
   c.press = null;
   c.kb = null;
   c.guide.hidden = true;
   c.readout.hidden = true;
   c.el.removeAttribute("data-kp-editing");
-  if (!changed2.length) {
+  if (!changed3.length) {
     settleDraw(c);
     flushPending(c);
     return false;
   }
   c.items = list;
   settleDraw(c);
-  emit3(c, SEQUENCER_CHANGE_EVENT, { items: outItems(c, c.items), changed: changed2, source, total: sequencerTotalOf(c.items) });
+  emit3(c, SEQUENCER_CHANGE_EVENT, { items: outItems(c, c.items), changed: changed3, source, total: sequencerTotalOf(c.items) });
   flushPending(c);
   return true;
 }
@@ -64516,13 +64516,13 @@ var init_field = __esm({
        */
       write(value, { text, silent = false, converted = false } = {}) {
         const { root, input } = this;
-        const changed2 = this.value !== value;
+        const changed3 = this.value !== value;
         this.value = value;
         this.hidden.value = value;
         input.value = text ?? value;
         root.setAttribute("data-kp-value", value);
         root.toggleAttribute("data-kp-empty", value === "");
-        if (!changed2 || silent) return;
+        if (!changed3 || silent) return;
         memoryFor(root, "time")?.write("value", value);
         if (value) this.say(getStrings().timeSaid(value));
         root.dispatchEvent(new CustomEvent(TIME_EVENT, { bubbles: true, detail: { value, text: input.value, converted } }));
@@ -76520,11 +76520,11 @@ var init_core25 = __esm({
       /** @param {number} thumb @param {number} want @param {boolean} commit */
       move(thumb, want, commit3) {
         const next2 = this.allowed(thumb, want);
-        const changed2 = next2 !== this.values[thumb];
+        const changed3 = next2 !== this.values[thumb];
         this.values[thumb] = next2;
         this.paint();
         this.clearWhy();
-        if (changed2 || commit3) this.announce(thumb, commit3);
+        if (changed3 || commit3) this.announce(thumb, commit3);
       }
       /** `loading` shows the skeleton and switches the slider off. @param {'ready' | 'loading'} state */
       setState(state12) {
@@ -76636,11 +76636,11 @@ var init_controller66 = __esm({
         if (thumb < 0) return;
         const next2 = this.allowed(thumb, Number(input.value));
         if (next2 !== Number(input.value)) input.value = String(next2);
-        const changed2 = next2 !== this.values[thumb];
+        const changed3 = next2 !== this.values[thumb];
         this.values[thumb] = next2;
         this.paint();
         this.clearWhy();
-        if (changed2) this.announce(thumb, this.o.commitOnInput);
+        if (changed3) this.announce(thumb, this.o.commitOnInput);
       }
       /** @param {Event} event */
       onChange(event) {
@@ -80011,434 +80011,554 @@ var init_api26 = __esm({
   }
 });
 
-// js/graph/attach.js
-function attachGraphs(root = document, { decorate: decorate2, strings, detail } = {}) {
-  const undo = [];
-  const s2 = resolveStrings(strings);
-  const hosts = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof Element && root.matches(GRAPH) ? [root] : [], ...root.querySelectorAll(GRAPH)]
+// js/graph/select.js
+function togglePick(g, id) {
+  if (g.selected.has(id)) g.selected.delete(id);
+  else g.selected.add(id);
+  if (g.options.detail) {
+    if (g.selected.has(id)) g.detail = id;
+    else if (g.detail === id) g.detail = null;
+    renderDetail(g);
+  }
+  changed2(g);
+}
+function setHover(g, id) {
+  if (g.hover === id) return;
+  g.hover = id;
+  changed2(g);
+}
+function showAll(g) {
+  if (g.selected.size === 0 && g.hidden.size === 0 && !g.detail) return false;
+  g.selected.clear();
+  g.hidden.clear();
+  g.detail = null;
+  renderDetail(g);
+  changed2(g);
+  return true;
+}
+function closeDetail(g, refocus) {
+  if (!g.detail) return false;
+  const id = g.detail;
+  g.detail = null;
+  renderDetail(g);
+  changed2(g);
+  if (refocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(id)}"]`)?.focus();
+  return true;
+}
+var changed2;
+var init_select2 = __esm({
+  "js/graph/select.js"() {
+    "use strict";
+    init_view6();
+    changed2 = (g) => {
+      restyleGraph(g);
+      graphChanged(g);
+    };
+  }
+});
+
+// js/graph/build.js
+function buildBar6(doc, s2) {
+  const bar = make32(doc, "div", "kp-graph__bar");
+  const legend = make32(doc, "ul", "kp-graph__kinds");
+  legend.setAttribute("aria-label", s2.graphKinds);
+  legend.hidden = true;
+  const showAll2 = make32(doc, "button", "kp-button kp-button--sm kp-graph__show-all", s2.graphShowAll);
+  showAll2.type = "button";
+  showAll2.title = s2.graphShowAllTitle;
+  showAll2.setAttribute("data-kp-idle", "");
+  bar.append(legend, showAll2);
+  return { bar, legend, showAll: showAll2 };
+}
+function buildZoom(doc, s2) {
+  const zoomBox = make32(doc, "div", "kp-graph__zoom");
+  zoomBox.setAttribute("role", "group");
+  zoomBox.setAttribute("aria-label", s2.graphZoom);
+  zoomBox.hidden = true;
+  const zoomOut = make32(doc, "button", "kp-button kp-button--sm kp-graph__zoom-out", "\u2212");
+  const zoomIn = make32(doc, "button", "kp-button kp-button--sm kp-graph__zoom-in", "+");
+  const zoomReset = make32(doc, "button", "kp-button kp-button--sm kp-graph__zoom-reset", s2.graphZoomReset);
+  for (
+    const [button6, label] of
+    /** @type {const} */
+    [
+      [zoomOut, s2.graphZoomOut],
+      [zoomIn, s2.graphZoomIn],
+      [zoomReset, s2.graphZoomResetTitle]
+    ]
+  ) {
+    button6.type = "button";
+    button6.title = label;
+    button6.setAttribute("aria-label", label);
+  }
+  zoomBox.append(zoomOut, zoomIn, zoomReset);
+  return { zoomBox, zoomIn, zoomOut, zoomReset };
+}
+function buildBox(el16, s2) {
+  const doc = el16.ownerDocument;
+  const box = make32(doc, "div", "kp-graph__box");
+  const svg2 = (
+    /** @type {SVGSVGElement} */
+    /** @type {unknown} */
+    svgEl(doc, "svg", { class: "kp-graph__svg", role: "group" })
   );
-  for (const el16 of hosts) {
-    if (graphs.has(el16)) continue;
-    const doc = el16.ownerDocument;
-    const view = doc.defaultView;
-    const initial = dataChild(el16);
-    const script = el16.querySelector(":scope > script[data-kp-graph-data]");
-    const bar = make32(doc, "div", "kp-graph__bar");
-    const legend = make32(doc, "ul", "kp-graph__kinds");
-    legend.setAttribute("aria-label", s2.graphKinds);
-    legend.hidden = true;
-    const showAll = make32(doc, "button", "kp-button kp-button--sm kp-graph__show-all", s2.graphShowAll);
-    showAll.type = "button";
-    showAll.title = s2.graphShowAllTitle;
-    showAll.setAttribute("data-kp-idle", "");
-    bar.append(legend, showAll);
-    const box = make32(doc, "div", "kp-graph__box");
-    const svg2 = (
-      /** @type {SVGSVGElement} */
-      /** @type {unknown} */
-      svgEl(doc, "svg", { class: "kp-graph__svg", role: "group" })
-    );
-    svg2.setAttribute("aria-label", `${el16.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint}`);
-    const note2 = make32(doc, "p", "kp-graph__note");
-    note2.setAttribute("role", "status");
-    const plate2 = make32(doc, "div", "kp-graph__state");
-    plate2.hidden = true;
-    const zoomBox = make32(doc, "div", "kp-graph__zoom");
-    zoomBox.setAttribute("role", "group");
-    zoomBox.setAttribute("aria-label", s2.graphZoom);
-    zoomBox.hidden = true;
-    const zoomOut = make32(doc, "button", "kp-button kp-button--sm kp-graph__zoom-out", "\u2212");
-    const zoomIn = make32(doc, "button", "kp-button kp-button--sm kp-graph__zoom-in", "+");
-    const zoomReset = make32(doc, "button", "kp-button kp-button--sm kp-graph__zoom-reset", s2.graphZoomReset);
-    for (
-      const [button6, label] of
-      /** @type {const} */
-      [
-        [zoomOut, s2.graphZoomOut],
-        [zoomIn, s2.graphZoomIn],
-        [zoomReset, s2.graphZoomResetTitle]
-      ]
-    ) {
-      button6.type = "button";
-      button6.title = label;
-      button6.setAttribute("aria-label", label);
-    }
-    zoomBox.append(zoomOut, zoomIn, zoomReset);
-    const panel = make32(doc, "aside", "kp-graph__detail");
-    panel.setAttribute("role", "region");
-    panel.hidden = true;
-    box.append(svg2, note2, plate2, zoomBox, panel);
-    const hint = make32(doc, "p", "kp-graph__hint", s2.graphHint);
-    el16.replaceChildren(bar, box, hint, ...script ? [script] : []);
-    const g = {
-      el: el16,
-      data: null,
-      state: "loading",
-      words: "",
-      selected: /* @__PURE__ */ new Set(),
-      hidden: /* @__PURE__ */ new Set(),
-      hover: null,
-      focus: null,
-      drawnWidth: -1,
-      bar,
-      showAll,
-      legend,
-      box,
-      svg: svg2,
-      note: note2,
-      plate: plate2,
-      drawn: false,
-      text: "",
-      art: null,
-      hint,
-      decorate: decorate2,
-      strings: s2,
-      labels: [],
-      size: [0, 0],
-      options: graphOptionsOf(el16),
-      world: null,
-      at: /* @__PURE__ */ new Map(),
-      view: { k: 1, x: 0, y: 0 },
-      zoomBox,
-      zoomIn,
-      zoomOut,
-      zoomReset,
-      panel,
-      detail: null,
-      detailShown: null,
-      readyHeight: 0,
-      readyWidth: 0,
-      ...detail ? { detailHook: detail } : {}
-    };
-    graphs.set(el16, g);
-    decorate2?.(showAll, { kind: "show-all", host: el16, key: keyOf7(el16) });
-    decorate2?.(zoomIn, { kind: "zoom-in", host: el16, key: keyOf7(el16) });
-    decorate2?.(zoomOut, { kind: "zoom-out", host: el16, key: keyOf7(el16) });
-    decorate2?.(zoomReset, { kind: "zoom-reset", host: el16, key: keyOf7(el16) });
-    if (initial) setGraphData(el16, initial);
-    else drawGraph(g);
-    const nodeOf = (target) => (
-      /** @type {SVGGElement | null} */
-      target instanceof Element ? target.closest(".kp-graph__node") : null
-    );
-    const toggle2 = (id) => {
-      if (g.selected.has(id)) g.selected.delete(id);
-      else g.selected.add(id);
-      if (g.options.detail) {
-        if (g.selected.has(id)) g.detail = id;
-        else if (g.detail === id) g.detail = null;
-        renderDetail(g);
+  svg2.setAttribute("aria-label", `${el16.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint}`);
+  const note2 = make32(doc, "p", "kp-graph__note");
+  note2.setAttribute("role", "status");
+  const plate2 = make32(doc, "div", "kp-graph__state");
+  plate2.hidden = true;
+  const zoom = buildZoom(doc, s2);
+  const panel = make32(doc, "aside", "kp-graph__detail");
+  panel.setAttribute("role", "region");
+  panel.hidden = true;
+  box.append(svg2, note2, plate2, zoom.zoomBox, panel);
+  return { box, svg: svg2, note: note2, plate: plate2, panel, ...zoom };
+}
+function newGraph(el16, s2, decorate2, detail) {
+  return {
+    ...buildBar6(el16.ownerDocument, s2),
+    ...buildBox(el16, s2),
+    el: el16,
+    hint: make32(el16.ownerDocument, "p", "kp-graph__hint", s2.graphHint),
+    decorate: decorate2,
+    strings: s2,
+    data: null,
+    state: "loading",
+    words: "",
+    text: "",
+    art: null,
+    drawn: false,
+    drawnWidth: -1,
+    selected: /* @__PURE__ */ new Set(),
+    hidden: /* @__PURE__ */ new Set(),
+    hover: null,
+    focus: null,
+    labels: [],
+    size: [0, 0],
+    options: graphOptionsOf(el16),
+    world: null,
+    at: /* @__PURE__ */ new Map(),
+    view: { k: 1, x: 0, y: 0 },
+    detail: null,
+    detailShown: null,
+    readyHeight: 0,
+    readyWidth: 0,
+    ...detail ? { detailHook: detail } : {}
+  };
+}
+function mountGraph(g) {
+  const script = g.el.querySelector(":scope > script[data-kp-graph-data]");
+  g.el.replaceChildren(g.bar, g.box, g.hint, ...script ? [script] : []);
+}
+var init_build17 = __esm({
+  "js/graph/build.js"() {
+    "use strict";
+    init_options9();
+    init_instance3();
+  }
+});
+
+// js/graph/pan.js
+var DRAG_THRESHOLD, WHEEL_LINE, WHEEL_PINCH, WHEEL_PIXEL, KEY_PAN_STEP, onNodeOf, GraphPan;
+var init_pan = __esm({
+  "js/graph/pan.js"() {
+    "use strict";
+    init_instance3();
+    init_view6();
+    DRAG_THRESHOLD = 4;
+    WHEEL_LINE = 0.05;
+    WHEEL_PINCH = 0.01;
+    WHEEL_PIXEL = 15e-4;
+    KEY_PAN_STEP = 56;
+    onNodeOf = (target) => target instanceof Element && !!target.closest(".kp-graph__node");
+    GraphPan = class {
+      /** @param {GraphModel} g */
+      constructor(g) {
+        this.g = g;
+        this.dragged = false;
+        this.pointers = /* @__PURE__ */ new Map();
+        this.panFrom = null;
+        this.pinch = null;
       }
-      restyleGraph(g);
-      graphChanged(g);
-    };
-    const setHover = (id) => {
-      if (g.hover === id) return;
-      g.hover = id;
-      restyleGraph(g);
-      graphChanged(g);
-    };
-    const clear = () => {
-      if (g.selected.size === 0 && g.hidden.size === 0 && !g.detail) return false;
-      g.selected.clear();
-      g.hidden.clear();
-      g.detail = null;
-      renderDetail(g);
-      restyleGraph(g);
-      graphChanged(g);
-      return true;
-    };
-    const closeDetail = (refocus) => {
-      if (!g.detail) return false;
-      const id = g.detail;
-      g.detail = null;
-      renderDetail(g);
-      restyleGraph(g);
-      graphChanged(g);
-      if (refocus) svg2.querySelector(`[data-kp-id="${CSS.escape(id)}"]`)?.focus();
-      return true;
-    };
-    const order = () => (
-      /** @type {SVGGElement[]} */
-      [...svg2.querySelectorAll(".kp-graph__node")]
-    );
-    const focusNode = (node) => {
-      for (const other of order()) other.setAttribute("tabindex", other === node ? "0" : "-1");
-      g.focus = node.getAttribute("data-kp-id");
-      node.focus({ preventScroll: false });
-      revealNode(g, g.focus);
-    };
-    const onOver = (event) => {
-      const node = nodeOf(event.target);
-      if (node) setHover(node.getAttribute("data-kp-id"));
-    };
-    const onOut = (event) => {
-      const node = nodeOf(event.target);
-      if (node && !node.contains(
-        /** @type {Node | null} */
-        event.relatedTarget
-      )) setHover(null);
-    };
-    const onFocus = (event) => {
-      const node = nodeOf(event.target);
-      if (node) {
-        g.focus = node.getAttribute("data-kp-id");
-        setHover(g.focus);
+      /** Two pointers are down: remember the zoom and the world point under their middle. */
+      pinchStart() {
+        const g = this.g;
+        const [a, b] = [...this.pointers.values()];
+        if (!a || !b) return;
+        const mid = pictureAt(g, (a.x + b.x) / 2, (a.y + b.y) / 2);
+        this.pinch = { dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, k: g.view.k, wx: (mid.x - g.view.x) / g.view.k, wy: (mid.y - g.view.y) / g.view.k };
+        this.panFrom = null;
       }
-    };
-    const onBlur = (event) => {
-      if (!svg2.contains(
-        /** @type {Node | null} */
-        event.relatedTarget
-      )) setHover(null);
-    };
-    const onClick = (event) => {
-      const node = nodeOf(event.target);
-      if (!node) return;
-      const id = node.getAttribute("data-kp-id") ?? "";
-      for (const other of order()) other.setAttribute("tabindex", other === node ? "0" : "-1");
-      g.focus = id;
-      toggle2(id);
-    };
-    let dragged = false;
-    const pointers = /* @__PURE__ */ new Map();
-    let panFrom = null;
-    let pinch = null;
-    const pinchStart = () => {
-      const [a, b] = [...pointers.values()];
-      if (!a || !b) return;
-      const mid = pictureAt(g, (a.x + b.x) / 2, (a.y + b.y) / 2);
-      pinch = {
-        dist: Math.hypot(a.x - b.x, a.y - b.y) || 1,
-        k: g.view.k,
-        wx: (mid.x - g.view.x) / g.view.k,
-        wy: (mid.y - g.view.y) / g.view.k
-      };
-      panFrom = null;
-    };
-    const onDown2 = (event) => {
-      if (!g.options.zoom || event.pointerType === "mouse" && event.button !== 0) return;
-      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY, onNode: !!nodeOf(event.target) });
-      if (pointers.size === 2) pinchStart();
-      else if (pointers.size === 1) {
-        dragged = false;
-        panFrom = nodeOf(event.target) ? null : { x: event.clientX, y: event.clientY };
+      /** @param {PointerEvent} event */
+      onDown(event) {
+        if (!this.g.options.zoom || event.pointerType === "mouse" && event.button !== 0) return;
+        this.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY, onNode: onNodeOf(event.target) });
+        if (this.pointers.size === 2) this.pinchStart();
+        else if (this.pointers.size === 1) {
+          this.dragged = false;
+          this.panFrom = onNodeOf(event.target) ? null : { x: event.clientX, y: event.clientY };
+        }
       }
-    };
-    const onMove2 = (event) => {
-      const known4 = pointers.get(event.pointerId);
-      if (!known4 || !g.options.zoom) return;
-      known4.x = event.clientX;
-      known4.y = event.clientY;
-      if (pinch && pointers.size >= 2) {
-        const [a, b] = [...pointers.values()];
+      /** @param {PointerEvent} event */
+      onMove(event) {
+        const known4 = this.pointers.get(event.pointerId);
+        if (!known4 || !this.g.options.zoom) return;
+        known4.x = event.clientX;
+        known4.y = event.clientY;
+        if (this.pinch && this.pointers.size >= 2) this.pinchMove(this.pinch);
+        else if (this.panFrom && this.pointers.size === 1) this.panMove(event, this.panFrom);
+      }
+      /** Zoom by how far the two pointers moved apart, about the world point they started on. @param {{ dist: number, k: number, wx: number, wy: number }} pinch */
+      pinchMove(pinch) {
+        const g = this.g;
+        const [a, b] = [...this.pointers.values()];
         if (!a || !b) return;
         const mid = pictureAt(g, (a.x + b.x) / 2, (a.y + b.y) / 2);
         const k = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, pinch.k * (Math.hypot(a.x - b.x, a.y - b.y) || 1) / pinch.dist));
         g.view = { k, x: mid.x - pinch.wx * k, y: mid.y - pinch.wy * k };
         clampView(g);
         applyView(g);
-        dragged = true;
-      } else if (panFrom && pointers.size === 1) {
-        const rect = svg2.getBoundingClientRect();
+        this.dragged = true;
+      }
+      /** Pan by how far the pointer moved, once it passed the drag threshold. @param {PointerEvent} event @param {{ x: number, y: number }} from */
+      panMove(event, from) {
+        const g = this.g;
+        const rect = g.svg.getBoundingClientRect();
         const scale = g.size[0] / (rect.width || g.size[0]);
-        const dx = event.clientX - panFrom.x;
-        const dy = event.clientY - panFrom.y;
-        if (!dragged && Math.hypot(dx, dy) < 4) return;
-        if (!dragged) {
-          dragged = true;
-          g.el.setAttribute("data-kp-panning", "");
-          try {
-            svg2.setPointerCapture(event.pointerId);
-          } catch {
-          }
-        }
+        const dx = event.clientX - from.x;
+        const dy = event.clientY - from.y;
+        if (!this.dragged && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+        if (!this.dragged) this.startDrag(event);
         g.view.x += dx * scale;
         g.view.y += dy * scale;
-        panFrom = { x: event.clientX, y: event.clientY };
+        this.panFrom = { x: event.clientX, y: event.clientY };
         clampView(g);
         applyView(g);
       }
-    };
-    const onUp2 = (event) => {
-      pointers.delete(event.pointerId);
-      if (pointers.size < 2) pinch = null;
-      if (pointers.size === 0) {
-        panFrom = null;
-        g.el.removeAttribute("data-kp-panning");
-      }
-    };
-    const onClickCapture = (event) => {
-      if (!dragged) return;
-      dragged = false;
-      event.stopPropagation();
-      event.preventDefault();
-    };
-    const onWheel = (event) => {
-      if (!g.options.zoom) return;
-      event.preventDefault();
-      const unit2 = event.deltaMode === 1 ? 0.05 : event.ctrlKey ? 0.01 : 15e-4;
-      const at = pictureAt(g, event.clientX, event.clientY);
-      zoomTo(g, g.view.k * Math.exp(-event.deltaY * unit2), at.x, at.y);
-    };
-    const zoomKey = (event) => {
-      if (!g.options.zoom || event.ctrlKey || event.metaKey || event.altKey) return false;
-      const [W, H] = g.size;
-      if (event.key === "+" || event.key === "=") zoomTo(g, g.view.k * ZOOM_STEP, W / 2, H / 2, true);
-      else if (event.key === "-" || event.key === "_") zoomTo(g, g.view.k / ZOOM_STEP, W / 2, H / 2, true);
-      else if (event.key === "0") {
-        g.view = { k: 1, x: 0, y: 0 };
-        applyView(g, true);
-      } else if (event.shiftKey && event.key.startsWith("Arrow")) {
-        const step = 56;
-        g.view.x += event.key === "ArrowLeft" ? step : event.key === "ArrowRight" ? -step : 0;
-        g.view.y += event.key === "ArrowUp" ? step : event.key === "ArrowDown" ? -step : 0;
-        clampView(g);
-        applyView(g, true);
-      } else return false;
-      event.preventDefault();
-      return true;
-    };
-    const onZoomBox = (event) => {
-      const button6 = event.target instanceof Element ? event.target.closest("button") : null;
-      if (!button6 || button6.getAttribute("aria-disabled") === "true") return;
-      graphZoom(el16, button6 === zoomIn ? "in" : button6 === zoomOut ? "out" : "reset");
-    };
-    const onKey5 = (event) => {
-      const node = nodeOf(event.target);
-      if (!node) return;
-      if (zoomKey(event)) return;
-      const nodes = order();
-      const at = nodes.indexOf(node);
-      const hasHub = !!svg2.querySelector(".kp-graph__node--hub");
-      const ringStart = hasHub ? 1 : 0;
-      const ringCount = nodes.length - ringStart;
-      let to = null;
-      if (event.key === "ArrowRight" || event.key === "ArrowDown")
-        to = at < ringStart ? ringStart : ringStart + (at - ringStart + 1) % ringCount;
-      else if (event.key === "ArrowLeft" || event.key === "ArrowUp")
-        to = at < ringStart ? nodes.length - 1 : ringStart + (at - ringStart - 1 + ringCount) % ringCount;
-      else if (event.key === "Home") to = 0;
-      else if (event.key === "End") to = nodes.length - 1;
-      else if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        toggle2(node.getAttribute("data-kp-id") ?? "");
-        return;
-      } else if (event.key === "Escape") {
-        if (closeDetail(false) || clear()) {
-          event.preventDefault();
-          event.stopPropagation();
+      /** @param {PointerEvent} event */
+      startDrag(event) {
+        this.dragged = true;
+        this.g.el.setAttribute("data-kp-panning", "");
+        try {
+          this.g.svg.setPointerCapture(event.pointerId);
+        } catch {
         }
-        return;
       }
-      if (to == null || !nodes[to] || ringCount < 1) return;
-      event.preventDefault();
-      focusNode(nodes[to]);
-    };
-    const onKind = (event) => {
-      const button6 = (
-        /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest("[data-kp-kind]") : null
-      );
-      if (!button6) return;
-      const kind = button6.dataset.kpKind ?? "";
-      graphHideKind(el16, kind, !g.hidden.has(kind));
-    };
-    const onShowAll = () => clear();
-    const onPanel = (event) => {
-      if (event.target instanceof Element && event.target.closest(".kp-graph__detail-close")) closeDetail(true);
-    };
-    const onPanelKey2 = (event) => {
-      if (event.key !== "Escape" || event.defaultPrevented) return;
-      if (closeDetail(true)) {
-        event.preventDefault();
+      /** @param {PointerEvent} event */
+      onUp(event) {
+        this.pointers.delete(event.pointerId);
+        if (this.pointers.size < 2) this.pinch = null;
+        if (this.pointers.size === 0) {
+          this.panFrom = null;
+          this.g.el.removeAttribute("data-kp-panning");
+        }
+      }
+      /** A drag must not end as a pick. @param {MouseEvent} event */
+      onClickCapture(event) {
+        if (!this.dragged) return;
+        this.dragged = false;
         event.stopPropagation();
+        event.preventDefault();
+      }
+      /** @param {WheelEvent} event */
+      onWheel(event) {
+        const g = this.g;
+        if (!g.options.zoom) return;
+        event.preventDefault();
+        const unit2 = event.deltaMode === 1 ? WHEEL_LINE : event.ctrlKey ? WHEEL_PINCH : WHEEL_PIXEL;
+        const at = pictureAt(g, event.clientX, event.clientY);
+        zoomTo(g, g.view.k * Math.exp(-event.deltaY * unit2), at.x, at.y);
+      }
+      /** The keys of a zoomed picture: + - 0 and Shift+arrows; true when the key was one of them. @param {KeyboardEvent} event */
+      zoomKey(event) {
+        const g = this.g;
+        if (!g.options.zoom || event.ctrlKey || event.metaKey || event.altKey) return false;
+        const [W, H] = g.size;
+        if (event.key === "+" || event.key === "=") zoomTo(g, g.view.k * ZOOM_STEP, W / 2, H / 2, true);
+        else if (event.key === "-" || event.key === "_") zoomTo(g, g.view.k / ZOOM_STEP, W / 2, H / 2, true);
+        else if (event.key === "0") {
+          g.view = { k: 1, x: 0, y: 0 };
+          applyView(g, true);
+        } else if (event.shiftKey && event.key.startsWith("Arrow")) {
+          g.view.x += event.key === "ArrowLeft" ? KEY_PAN_STEP : event.key === "ArrowRight" ? -KEY_PAN_STEP : 0;
+          g.view.y += event.key === "ArrowUp" ? KEY_PAN_STEP : event.key === "ArrowDown" ? -KEY_PAN_STEP : 0;
+          clampView(g);
+          applyView(g, true);
+        } else return false;
+        event.preventDefault();
+        return true;
       }
     };
-    const onDocKey = (event) => {
-      if (event.key !== "Escape" || event.defaultPrevented) return;
-      if (
-        /** @type {Element | null} */
-        event.target?.closest?.('dialog, input, textarea, select, [role="menu"]')
-      ) return;
-      if (!closeDetail(false)) clear();
-    };
-    svg2.addEventListener("pointerover", onOver);
-    svg2.addEventListener("pointerout", onOut);
-    svg2.addEventListener("focusin", onFocus);
-    svg2.addEventListener("focusout", onBlur);
-    svg2.addEventListener("click", onClickCapture, true);
-    svg2.addEventListener("click", onClick);
-    svg2.addEventListener("keydown", onKey5);
-    svg2.addEventListener("pointerdown", onDown2);
-    svg2.addEventListener("pointermove", onMove2);
-    svg2.addEventListener("pointerup", onUp2);
-    svg2.addEventListener("pointercancel", onUp2);
-    svg2.addEventListener("wheel", onWheel, { passive: false });
-    zoomBox.addEventListener("click", onZoomBox);
-    panel.addEventListener("click", onPanel);
-    panel.addEventListener("keydown", onPanelKey2);
-    legend.addEventListener("click", onKind);
-    showAll.addEventListener("click", onShowAll);
-    doc.addEventListener("keydown", onDocKey);
-    const sizes = view ? new view.ResizeObserver(() => {
-      if (box.clientWidth !== g.drawnWidth) drawGraph(g);
-    }) : null;
-    sizes?.observe(box);
-    const options = view ? new view.MutationObserver(() => drawGraph(g)) : null;
-    options?.observe(el16, { attributes: true, attributeFilter: GRAPH_OPTION_ATTRIBUTES });
-    const onFonts = () => {
-      if (g.options.labels === "below") {
-        drawGraph(g);
-        return;
-      }
-      for (const l of g.labels) {
-        l.length = l.full.length;
-        l.text.textContent = l.full;
-      }
-      if (isShown(svg2)) fitDrawnLabels(g.labels, g.size[0], g.size[1]);
-    };
-    doc.fonts?.addEventListener("loadingdone", onFonts);
-    undo.push(() => {
-      doc.fonts?.removeEventListener("loadingdone", onFonts);
-      sizes?.disconnect();
-      options?.disconnect();
-      svg2.removeEventListener("pointerover", onOver);
-      svg2.removeEventListener("pointerout", onOut);
-      svg2.removeEventListener("focusin", onFocus);
-      svg2.removeEventListener("focusout", onBlur);
-      svg2.removeEventListener("click", onClickCapture, true);
-      svg2.removeEventListener("click", onClick);
-      svg2.removeEventListener("keydown", onKey5);
-      svg2.removeEventListener("pointerdown", onDown2);
-      svg2.removeEventListener("pointermove", onMove2);
-      svg2.removeEventListener("pointerup", onUp2);
-      svg2.removeEventListener("pointercancel", onUp2);
-      svg2.removeEventListener("wheel", onWheel);
-      zoomBox.removeEventListener("click", onZoomBox);
-      panel.removeEventListener("click", onPanel);
-      panel.removeEventListener("keydown", onPanelKey2);
-      legend.removeEventListener("click", onKind);
-      showAll.removeEventListener("click", onShowAll);
-      doc.removeEventListener("keydown", onDocKey);
-      graphs.delete(el16);
-    });
   }
-  return () => undo.splice(0).forEach((off) => off());
-}
-var init_attach22 = __esm({
-  "js/graph/attach.js"() {
+});
+
+// js/graph/controller.js
+var nodeOf, GraphControl;
+var init_controller71 = __esm({
+  "js/graph/controller.js"() {
     "use strict";
+    init_controller();
     init_strings();
     init_constants38();
     init_instance3();
     init_api26();
-    init_options9();
     init_layout4();
     init_draw14();
     init_view6();
+    init_select2();
+    init_build17();
+    init_pan();
+    nodeOf = (target) => (
+      /** @type {SVGGElement | null} */
+      target instanceof Element ? target.closest(".kp-graph__node") : null
+    );
+    GraphControl = class extends Controller {
+      /** @param {HTMLElement} host @param {GraphAttachOptions} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.g = newGraph(host, resolveStrings(options.strings), options.decorate, options.detail);
+        this.pan = new GraphPan(this.g);
+      }
+      connect() {
+        const g = this.g;
+        const initial = dataChild(this.host);
+        mountGraph(g);
+        graphs.set(this.host, g);
+        this.own(() => graphs.delete(this.host));
+        for (
+          const [part7, kind] of
+          /** @type {const} */
+          [
+            [g.showAll, "show-all"],
+            [g.zoomIn, "zoom-in"],
+            [g.zoomOut, "zoom-out"],
+            [g.zoomReset, "zoom-reset"]
+          ]
+        )
+          g.decorate?.(part7, { kind, host: this.host, key: keyOf7(this.host) });
+        if (initial) setGraphData(this.host, initial);
+        else drawGraph(g);
+        this.wirePicture();
+        this.wireParts();
+        this.watch();
+      }
+      /** The picture's listeners: hover, focus, picks, keys, and the zoom and pan forwarded to the GraphPan. */
+      wirePicture() {
+        const { svg: svg2 } = this.g;
+        const pan = this.pan;
+        this.listen(svg2, "pointerover", (event) => this.onOver(event));
+        this.listen(svg2, "pointerout", (event) => this.onOut(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(svg2, "focusin", (event) => this.onFocus(event));
+        this.listen(svg2, "focusout", (event) => this.onBlur(
+          /** @type {FocusEvent} */
+          event
+        ));
+        this.listen(svg2, "click", (event) => pan.onClickCapture(
+          /** @type {MouseEvent} */
+          event
+        ), true);
+        this.listen(svg2, "click", (event) => this.onClick(event));
+        this.listen(svg2, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(svg2, "pointerdown", (event) => pan.onDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(svg2, "pointermove", (event) => pan.onMove(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(svg2, "pointerup", (event) => pan.onUp(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(svg2, "pointercancel", (event) => pan.onUp(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(svg2, "wheel", (event) => pan.onWheel(
+          /** @type {WheelEvent} */
+          event
+        ), { passive: false });
+      }
+      /** The listeners of the parts around the picture: the zoom buttons, the details panel, the kinds, Show all and Esc on the page. */
+      wireParts() {
+        const g = this.g;
+        this.listen(g.zoomBox, "click", (event) => this.onZoomBox(event));
+        this.listen(g.panel, "click", (event) => {
+          if (event.target instanceof Element && event.target.closest(".kp-graph__detail-close")) closeDetail(this.g, true);
+        });
+        this.listen(g.panel, "keydown", (event) => this.onPanelKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(g.legend, "click", (event) => this.onKind(event));
+        this.listen(g.showAll, "click", () => showAll(this.g));
+        this.listen(this.host.ownerDocument, "keydown", (event) => this.onDocKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+      }
+      /** Redraw on a new width or a changed option attribute, and fit the labels again when a web font arrives. */
+      watch() {
+        const g = this.g;
+        const doc = this.host.ownerDocument;
+        const view = doc.defaultView;
+        if (view) {
+          this.observe(new view.ResizeObserver(() => g.box.clientWidth !== g.drawnWidth && drawGraph(g))).observe(g.box);
+          this.observe(new view.MutationObserver(() => drawGraph(g))).observe(this.host, { attributes: true, attributeFilter: GRAPH_OPTION_ATTRIBUTES });
+        }
+        if (doc.fonts) this.listen(doc.fonts, "loadingdone", () => this.onFonts());
+      }
+      /**
+       * A web font that arrives after the drawing changes every label's width: fit them again, in place (no node is rebuilt). Names
+       * that stand whole need the room measured again, so that mode draws again.
+       */
+      onFonts() {
+        const g = this.g;
+        if (g.options.labels === "below") {
+          drawGraph(g);
+          return;
+        }
+        for (const l of g.labels) {
+          l.length = l.full.length;
+          l.text.textContent = l.full;
+        }
+        if (isShown(g.svg)) fitDrawnLabels(g.labels, g.size[0], g.size[1]);
+      }
+      /** The drawn nodes, hub first, in ring order. */
+      order() {
+        return (
+          /** @type {SVGGElement[]} */
+          [...this.g.svg.querySelectorAll(".kp-graph__node")]
+        );
+      }
+      /** Make `node` the one tab stop. @param {SVGGElement} node */
+      tabTo(node) {
+        for (const other of this.order()) other.setAttribute("tabindex", other === node ? "0" : "-1");
+        this.g.focus = node.getAttribute("data-kp-id");
+      }
+      /** @param {SVGGElement} node */
+      focusNode(node) {
+        this.tabTo(node);
+        node.focus({ preventScroll: false });
+        revealNode(this.g, this.g.focus);
+      }
+      /** @param {Event} event */
+      onOver(event) {
+        const node = nodeOf(event.target);
+        if (node) setHover(this.g, node.getAttribute("data-kp-id"));
+      }
+      /** @param {PointerEvent} event */
+      onOut(event) {
+        const node = nodeOf(event.target);
+        if (node && !node.contains(
+          /** @type {Node | null} */
+          event.relatedTarget
+        )) setHover(this.g, null);
+      }
+      /** @param {Event} event */
+      onFocus(event) {
+        const node = nodeOf(event.target);
+        if (!node) return;
+        this.g.focus = node.getAttribute("data-kp-id");
+        setHover(this.g, this.g.focus);
+      }
+      /** @param {FocusEvent} event */
+      onBlur(event) {
+        if (!this.g.svg.contains(
+          /** @type {Node | null} */
+          event.relatedTarget
+        )) setHover(this.g, null);
+      }
+      /** @param {Event} event */
+      onClick(event) {
+        const node = nodeOf(event.target);
+        if (!node) return;
+        this.tabTo(node);
+        togglePick(this.g, node.getAttribute("data-kp-id") ?? "");
+      }
+      /** @param {Event} event */
+      onZoomBox(event) {
+        const g = this.g;
+        const button6 = event.target instanceof Element ? event.target.closest("button") : null;
+        if (!button6 || button6.getAttribute("aria-disabled") === "true") return;
+        graphZoom(this.host, button6 === g.zoomIn ? "in" : button6 === g.zoomOut ? "out" : "reset");
+      }
+      /** Arrows walk the ring, Home and End jump, Enter or Space picks, Esc closes the details or shows all. @param {KeyboardEvent} event */
+      onKey(event) {
+        const node = nodeOf(event.target);
+        if (!node || this.pan.zoomKey(event)) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          togglePick(this.g, node.getAttribute("data-kp-id") ?? "");
+        } else if (event.key === "Escape") {
+          if (closeDetail(this.g, false) || showAll(this.g)) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        } else this.walk(event, node);
+      }
+      /** Move the focus along the ring (the hub, when there is one, stands before it). @param {KeyboardEvent} event @param {SVGGElement} node */
+      walk(event, node) {
+        const nodes = this.order();
+        const at = nodes.indexOf(node);
+        const ringStart = this.g.svg.querySelector(".kp-graph__node--hub") ? 1 : 0;
+        const ringCount = nodes.length - ringStart;
+        let to = null;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") to = at < ringStart ? ringStart : ringStart + (at - ringStart + 1) % ringCount;
+        else if (event.key === "ArrowLeft" || event.key === "ArrowUp")
+          to = at < ringStart ? nodes.length - 1 : ringStart + (at - ringStart - 1 + ringCount) % ringCount;
+        else if (event.key === "Home") to = 0;
+        else if (event.key === "End") to = nodes.length - 1;
+        if (to == null || !nodes[to] || ringCount < 1) return;
+        event.preventDefault();
+        this.focusNode(nodes[to]);
+      }
+      /** @param {Event} event */
+      onKind(event) {
+        const button6 = (
+          /** @type {HTMLElement | null} */
+          event.target instanceof Element ? event.target.closest("[data-kp-kind]") : null
+        );
+        if (!button6) return;
+        const kind = button6.dataset.kpKind ?? "";
+        graphHideKind(this.host, kind, !this.g.hidden.has(kind));
+      }
+      /** @param {KeyboardEvent} event */
+      onPanelKey(event) {
+        if (event.key !== "Escape" || event.defaultPrevented || !closeDetail(this.g, true)) return;
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      /** Esc anywhere on the page (outside a dialog, a field or a menu) closes the details, then shows all. @param {KeyboardEvent} event */
+      onDocKey(event) {
+        if (event.key !== "Escape" || event.defaultPrevented) return;
+        if (
+          /** @type {Element | null} */
+          event.target?.closest?.('dialog, input, textarea, select, [role="menu"]')
+        ) return;
+        if (!closeDetail(this.g, false)) showAll(this.g);
+      }
+    };
+  }
+});
+
+// js/graph/attach.js
+function attachGraphs(root = document, { decorate: decorate2, strings, detail } = {}) {
+  return attachAll(root, GRAPH, GraphControl, { decorate: decorate2, strings, detail });
+}
+var init_attach22 = __esm({
+  "js/graph/attach.js"() {
+    "use strict";
+    init_controller();
+    init_constants38();
+    init_controller71();
   }
 });
 
@@ -81525,7 +81645,7 @@ var init_state27 = __esm({
 
 // js/claim/controller.js
 var LIVE_OPTIONS5, ClaimList;
-var init_controller71 = __esm({
+var init_controller72 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -81695,7 +81815,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller71();
+    init_controller72();
   }
 });
 
@@ -82667,7 +82787,7 @@ var init_keys16 = __esm({
 
 // js/availability/controller.js
 var CELL2, LIVE_OPTIONS6, cellOf2, AvailabilityControl;
-var init_controller72 = __esm({
+var init_controller73 = __esm({
   "js/availability/controller.js"() {
     "use strict";
     init_controller();
@@ -82886,7 +83006,7 @@ var init_attach24 = __esm({
     init_api28();
     init_constants40();
     init_facts();
-    init_controller72();
+    init_controller73();
   }
 });
 
@@ -84071,7 +84191,7 @@ var init_actions7 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS7, QrControl;
-var init_controller73 = __esm({
+var init_controller74 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -84175,7 +84295,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller73();
+    init_controller74();
     init_state28();
     init_state28();
     init_matrix2();
@@ -86202,8 +86322,8 @@ var init_constants43 = __esm({
 });
 
 // js/diff/words.js
-function segmentsOf(tokens, changed2) {
-  const flags = [...changed2];
+function segmentsOf(tokens, changed3) {
+  const flags = [...changed3];
   for (let i = 1; i < tokens.length - 1; i += 1) if (!flags[i] && /^\s+$/.test(tokens[i]) && flags[i - 1] && flags[i + 1]) flags[i] = true;
   const out = [];
   tokens.forEach((text, i) => {
