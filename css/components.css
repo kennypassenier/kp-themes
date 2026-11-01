@@ -12836,6 +12836,86 @@
         outline: 2px dashed var(--focus-ring);
         outline-offset: 1px;
     }
+    /* --- Popover form [ux-1101] -------------------------------------------------
+ * A small form anchored to its button (js/popover-form.js): a label over one row of field and accept button, and a problem
+ * line under them that holds its height, so a refusal moves nothing. The form is a `.kp-menu`, the raised plate every register
+ * already paints opaque, hung under the button at its start edge the way a menu button hangs its menu, and moved by the
+ * script when it would leave the screen. Under a coarse pointer its fields are a fingertip high, like the buttons.
+ * Knobs: --kp-popover-form-min (16rem), --kp-popover-form-max (min(22rem, 100vw - 2rem)), the plate's width. */
+    .kp-popover-form {
+        position: relative;
+        display: inline-flex;
+        inline-size: fit-content;
+        max-inline-size: 100%;
+    }
+
+    .kp-popover-form > .kp-popover-form__panel {
+        position: absolute;
+        z-index: 30;
+        inset-block-start: calc(100% + var(--kp-space-xs, 0.25rem));
+        inset-inline-start: 0;
+        box-sizing: border-box;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: var(--kp-popover-form-min, 16rem);
+        max-inline-size: var(--kp-popover-form-max, min(22rem, 100vw - 2rem));
+        padding: var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    .kp-popover-form > .kp-popover-form__panel[hidden] {
+        display: none;
+    }
+
+    /* Lifted over a container that would clip it: placed in window coordinates by the script. */
+    .kp-popover-form > .kp-popover-form__panel:popover-open {
+        position: fixed !important;
+        inset: auto;
+        margin: 0;
+    }
+
+    .kp-popover-form__label {
+        font-weight: 600;
+    }
+
+    .kp-popover-form__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The field takes the room, the accept button its own width, both on one line. */
+    .kp-popover-form__row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-popover-form__row > :first-child {
+        min-inline-size: 0;
+    }
+
+    .kp-popover-form__problem {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-popover-form__panel[aria-busy] {
+        cursor: progress;
+    }
+
+    @media (pointer: coarse) {
+        .kp-popover-form__panel :is(input:not([type='checkbox'], [type='radio']), select) {
+            min-block-size: var(--kp-touch-target, 2.75rem);
+        }
+    }
+
     /* --- Board: lanes of cards a person moves between [habits-1101] ----------
  * `section.kp-board[data-kp-board]` (js/board.js). Each lane is the pipeline's lane (`.kp-pipeline__lane`, its head, name and
  * count), so every register paints it as its own; the cards are the page's, in a reorder list the lanes share. Wide, the lanes

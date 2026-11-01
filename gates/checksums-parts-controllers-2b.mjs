@@ -177,4 +177,7 @@ export const CONTROLLER_PART_FILES_2B = [
     'js/markdown-editor/toolbar.js',
     'js/task-row/build.js',
     'js/task-row/facts.js',
+    'js/popover-form/accept.js',
+    'js/popover-form/constants.js',
+    'js/popover-form/controller.js',
 ];

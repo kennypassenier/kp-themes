@@ -110,6 +110,7 @@ export const NOT_DATA = {
     'js/sentence.js': 'a field that waits shows its own skeleton at the width it had (setSentenceFieldState); no data area',
     'js/snooze.js': "the picker's button shows the theme's spinner while the page saves the reminder (setSnoozeBusy); no data area",
     'js/menu-button.js': "a menu's loading items, inside the menu's own plate",
+    'js/popover-form.js': "a small form's own busy mark (aria-busy) while the page saves what it accepted, inside the form's plate [ux-1101]",
     'js/segmented.js': "a segment's busy mark",
     'js/tabbar.js': "a tab's busy mark",
     'js/patterns.js': "a secret field's own one-line spinner while its one value is read (`.kp-secret`) [kpadopt4]",

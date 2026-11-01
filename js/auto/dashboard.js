@@ -44,6 +44,8 @@ export const DASHBOARD_NEEDS = [
     { name: 'menu-button', when: '[data-kp-menu-button]', load: () => import('../menu-button.js'), attach: (m, root) => [m.attachMenuButtons(root)] },
     // The context menu [habits-1101]: a right click, a long press or Shift+F10 on a marked element opens a kp menu there.
     { name: 'context-menu', when: '[data-kp-context-menu]', load: () => import('../context-menu.js'), attach: (m, root) => [m.attachContextMenus(root)] },
+    // The popover form anchored to its button [ux-1101].
+    { name: 'popover-form', when: '[data-kp-popover-form]', load: () => import('../popover-form.js'), attach: (m, root) => [m.attachPopoverForms(root)] },
     // The segmented control, the list toolbar and the inline key line [kpadopt-controls].
     { name: 'segmented', when: '[data-kp-segmented]', load: () => import('../segmented.js'), attach: (m, root) => [m.attachSegmented(root)] },
     // Action tiles, status rows and the facet list [kpadopt2-tiles].

@@ -464,6 +464,10 @@
             "types": "./js/context-menu.d.ts",
             "default": "./js/context-menu.js"
         },
+        "./js/popover-form": {
+            "types": "./js/popover-form.d.ts",
+            "default": "./js/popover-form.js"
+        },
         "./js/row-pick": {
             "types": "./js/row-pick.d.ts",
             "default": "./js/row-pick.js"

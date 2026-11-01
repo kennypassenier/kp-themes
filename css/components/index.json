@@ -86,6 +86,7 @@
         "run-timeline/fits-its-width.css",
         "pipeline.css",
         "task-row.css",
+        "popover-form.css",
         "board.css",
         "diff/base.css",
         "diff/diff-inside-file-has.css",

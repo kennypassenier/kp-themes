@@ -585,6 +585,16 @@ The context menu: a right click, a long press or Shift+F10 opens a kp menu at th
 | `controller.js` | ContextMenuRoot: the right click, the long press, the keys, and which entries an element shows.   |
 | `values.js`     | The selector, attributes, events and timings of the context menu.                                 |
 
+## js/popover-form.js → js/popover-form/
+
+The popover form: a small form anchored to its button, one field and accept, light dismiss [ux-1101]. 3 files.
+
+| File            | Does                                                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `accept.js`     | Accepting: the browser's validity first, then the page's event, then the wait for its answer with its failure in the form. |
+| `constants.js`  | The selectors, attribute names and events of the popover form.                                                            |
+| `controller.js` | PopoverFormControl: opens under its button on the menu's plate, Enter accepts, Escape and light dismiss close it.          |
+
 ## js/diff.js → js/diff/
 
 The diff view with file headers, folded context and changed words. 13 files.
