@@ -16006,6 +16006,166 @@
         color: var(--foreground);
     }
 
+    /* --- Task row [habits-1101] ---------------------------------------------
+ * `.kp-task-row` (js/task-row.js): one grid with fixed tracks, handle · check · title · actions, every icon track one icon button
+ * wide (--kp-task-row-icon), so rows line up from top to bottom whatever their titles and the buttons of one role share a
+ * column. The facts line runs under the title and the actions both, so a narrow column (a day of a planner, a board's lane)
+ * keeps its facts on few lines. The row is the card plate; it stays that inside a reorder list, whose item look it replaces.
+ * Knobs: --kp-task-row-icon (2.25rem; 2.75rem on a touch screen), --kp-task-row-gap (0.25rem between rows of a .kp-task-list). */
+    .kp-task-list {
+        display: grid;
+        gap: var(--kp-task-row-gap, var(--kp-space-xs, 0.25rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        min-inline-size: 0;
+    }
+
+    .kp-task-row,
+    .kp-reorder [data-kp-item].kp-task-row {
+        --kp-task-row-icon: 2.25rem;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: var(--kp-task-row-icon) var(--kp-task-row-icon) minmax(0, 1fr) auto;
+        grid-template-areas:
+            'handle check title actions'
+            '. . facts facts';
+        align-items: start;
+        gap: 0 var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    @media (pointer: coarse) {
+        .kp-task-row,
+        .kp-reorder [data-kp-item].kp-task-row {
+            --kp-task-row-icon: 2.75rem;
+        }
+    }
+
+    .kp-task-row:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 1px;
+    }
+
+    /* The priority edge inside the 1 px border, so the content of a priority row keeps its neighbours' edge. */
+    .kp-task-row[data-kp-priority='high'] {
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    .kp-task-row[data-kp-priority='medium'] {
+        box-shadow: inset 3px 0 0 var(--warning);
+    }
+
+    .kp-task-row__handle,
+    .kp-task-row .kp-icon-button {
+        inline-size: var(--kp-task-row-icon);
+        block-size: var(--kp-task-row-icon);
+        min-inline-size: 0;
+        padding: 0;
+    }
+
+    .kp-task-row__handle {
+        grid-area: handle;
+        color: var(--muted-foreground);
+        cursor: grab;
+        touch-action: none;
+    }
+
+    .kp-task-row[data-kp-dragging] .kp-task-row__handle {
+        cursor: grabbing;
+    }
+
+    .kp-task-row__hit {
+        grid-area: check;
+        display: grid;
+        place-items: center;
+        block-size: var(--kp-task-row-icon);
+        cursor: pointer;
+    }
+
+    .kp-task-row__title {
+        grid-area: title;
+        align-self: start;
+        min-inline-size: 0;
+        margin: 0;
+        padding: calc((var(--kp-task-row-icon) - 1lh) / 2) var(--kp-space-xs, 0.25rem);
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: inherit;
+        font: inherit;
+        line-height: 1.4;
+        text-align: start;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-task-row__title:hover {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-task-row__title:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: -2px;
+    }
+
+    .kp-task-row[data-kp-done] .kp-task-row__title {
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-task-row__facts {
+        grid-area: facts;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: 0 var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-task-row__facts:empty {
+        display: none;
+    }
+
+    .kp-task-row__fact {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-task-row__fact--project {
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-task-row__actions {
+        grid-area: actions;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: var(--kp-task-row-icon);
+        align-items: center;
+    }
+
+    /* Picked (js/row-pick.js): ringed and tinted, so a picked row and the cursor's ring read apart. */
+    .kp-task-row[data-kp-picked] {
+        border-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) 9%, var(--card));
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .kp-task-row.is-cursor {
+        outline: 2px dashed var(--focus-ring);
+        outline-offset: 1px;
+    }
     /* --- Board: lanes of cards a person moves between [habits-1101] ----------
  * `section.kp-board[data-kp-board]` (js/board.js). Each lane is the pipeline's lane (`.kp-pipeline__lane`, its head, name and
  * count), so every register paints it as its own; the cards are the page's, in a reorder list the lanes share. Wide, the lanes

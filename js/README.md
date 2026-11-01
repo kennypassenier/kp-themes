@@ -1290,6 +1290,15 @@ The board: lanes of the page's cards that move between lanes, as a Board control
 | `lanes.js`      | BoardLanes: each lane dressed as the pipeline's, its list in the group, the count, limit and flag. |
 | `values.js`     | The selectors, events and sizes of the board, and the element maker.                              |
 
+## js/task-row.js → js/task-row/
+
+The task row: a check, a title, a line of facts and fixed action columns, drawn from the package's parts [habits-1101]. 2 files.
+
+| File       | Does                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------- |
+| `build.js` | buildTaskRow: the handle, the check, the title, the facts and the actions, and their events. |
+| `facts.js` | One fact as a package part: a badge, a categorical dot or chip, or a muted word.             |
+
 ## js/tabbar.js → js/tabbar/
 
 The bottom tab bar and the count on a tab, as a TabbarController over small parts. 5 files.

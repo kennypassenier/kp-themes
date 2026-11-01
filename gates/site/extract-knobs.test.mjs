@@ -216,7 +216,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [habits-1101]: the board reads --kp-board-gap, -lane-min, -lane-narrow, -min and -drop-min: 1135 + 5 = 1140.
     // Re-pinned 2026-11-01 [habits-1101]: the categorical colours: --kp-cat, --kp-cat-1 … -12, --kp-cat-ink and --kp-cat-dot: 1140 + 15 = 1155.
     // Re-pinned 2026-11-01 [habits-1101]: the Markdown editor reads --kp-md-editor-gap, --kp-md-editor-min and --kp-control-height-sm: 1155 + 3 = 1158.
-    assert.equal(result.expected, 1158, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-11-01 [habits-1101]: the task row reads --kp-task-row-icon and --kp-task-row-gap: 1158 + 2 = 1160.
+    assert.equal(result.expected, 1160, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -312,7 +313,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [habits-1101]: the board's five knobs are read through var(): 1125 + 5 = 1130.
     // Re-pinned 2026-11-01 [habits-1101]: the fifteen of the categorical colours are read through var(): 1130 + 15 = 1145.
     // Re-pinned 2026-11-01 [habits-1101]: the Markdown editor's three are read through var(): 1145 + 3 = 1148.
-    assert.equal(result.readCount, 1148);
+    // Re-pinned 2026-11-01 [habits-1101]: the task row's two are read through var(): 1148 + 2 = 1150.
+    assert.equal(result.readCount, 1150);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

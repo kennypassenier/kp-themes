@@ -169,6 +169,7 @@ js/notices.js              the notification centre: counter, newest panel, per-s
 js/passkeys.js             the list of ways to sign in: passkeys, magic links, passwords, tokens
 js/path-trace.js           the path of one connection: hops, each allowed or refused
 js/pipeline.js             where each item stands, one lane per stage
+js/task-row.js             a task as a row: check, title, facts, fixed action columns, from the package's parts [habits-1101]
 js/board.js                lanes of the page's cards that move between lanes, a count and a limit per lane [habits-1101]
 js/print.js                the words a printed list needs, and a Print button
 js/problems.js             the problem alert: what is wrong, why, and what to do now

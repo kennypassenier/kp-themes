@@ -12,6 +12,7 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- habits-1101, site/components/task-row.html (new page, generated from gates/site/descriptors/task-row.mjs): the task row with `buildTaskRow`, its facts, actions, menu and context menu, in a reorder group with row picking; one example of a Today list.
 - habits-1101, site/components/markdown.html: the reader's `tasks` option (`off`, `show`, `toggle`), `kp-markdown-task` and `toggleTaskLine`; the Markdown editor (`js/markdown-editor.js`): `data-kp-md-editor`, `data-kp-md-preview` (`side`, `tabs`, `off`), `data-kp-md-headings`, the toolbar and its keys, `showMarkdownView`, `refreshMarkdownPreview`; one example with a task's notes.
 - habits-1101, site/components/badge.html and the tokens page: the twelve categorical colours `--kp-cat-1` … `--kp-cat-12` with `--kp-cat-ink`, `data-kp-cat`, `.kp-cat-chip` and `.kp-cat-dot`; one example with the twelve as chips and as dots beside project names.
 - habits-1101, site/components/pipeline.html (or a page of its own): the board (`js/board.js`): `data-kp-board`, `data-kp-board-lane`, `-label`, `-limit`, `-narrow` (`scroll`, `tabs`), `-group`, `setBoardState`, `showBoardLane`, `recountBoard`, `kp-board-lane`, `kp-board-retry`; one example with three lanes of task rows and a limit.

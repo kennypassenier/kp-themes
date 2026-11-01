@@ -128,6 +128,7 @@ import { keysDescriptor } from './descriptors/keys.mjs';
 import { actionTileDescriptor } from './descriptors/action-tile.mjs';
 import { statusRowDescriptor } from './descriptors/status-row.mjs';
 import { listDescriptor } from './descriptors/list.mjs';
+import { taskRowDescriptor } from './descriptors/task-row.mjs';
 import { facetsDescriptor } from './descriptors/facets.mjs';
 import { quantityDescriptor } from './descriptors/quantity.mjs';
 import { checklistDescriptor } from './descriptors/checklist.mjs';
@@ -298,6 +299,7 @@ export const DESCRIPTORS = [
     actionTileDescriptor,
     statusRowDescriptor,
     listDescriptor,
+    taskRowDescriptor,
     facetsDescriptor,
     quantityDescriptor,
     checklistDescriptor,

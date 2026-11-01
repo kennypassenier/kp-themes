@@ -24,7 +24,9 @@ export class RowPickCore extends Controller {
         this.live.className = 'kp-sr-only';
         this.live.setAttribute('role', 'status');
         this.live.setAttribute('aria-live', 'polite');
-        this.host.append(this.live);
+        // A list holds only its rows: in a `ul` or a reorder list the line stands after it, so the list's order counts no stranger.
+        if (this.host.matches('ul, ol, [data-kp-reorder]')) this.host.after(this.live);
+        else this.host.append(this.live);
     }
 
     /** @param {string} text */

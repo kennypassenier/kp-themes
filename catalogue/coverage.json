@@ -55,6 +55,8 @@
         "kp-pipeline",
         "kp-context-menu",
         "kp-board",
+        "kp-task-row",
+        "kp-task-list",
         "kp-md-editor",
         "kp-cat-chip",
         "kp-cat-dot",

@@ -456,6 +456,10 @@
             "types": "./js/markdown-editor.d.ts",
             "default": "./js/markdown-editor.js"
         },
+        "./js/task-row": {
+            "types": "./js/task-row.d.ts",
+            "default": "./js/task-row.js"
+        },
         "./js/context-menu": {
             "types": "./js/context-menu.d.ts",
             "default": "./js/context-menu.js"

@@ -321,4 +321,6 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/markdown-editor/controller.js',
     'js/markdown-editor/edits.js',
     'js/markdown-editor/toolbar.js',
+    'js/task-row/build.js',
+    'js/task-row/facts.js',
 ];
