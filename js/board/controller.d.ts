@@ -19,6 +19,8 @@ export declare class Board extends BoardLanes {
     });
     connect(): void;
     markDrawn(): void;
+    /** Lanes the page added to the board after it was attached join the track, its tabs, its group and its counts. */
+    adopt(): void;
     /** Whether the board is narrow now, and whether its lanes are tabs. */
     tabbed(): boolean;
     /** The narrow layout: with tabs only the chosen lane shows (a tab panel); otherwise every lane, in the track. */

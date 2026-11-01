@@ -44,6 +44,7 @@ export class Board extends BoardLanes {
         const view = el.ownerDocument.defaultView;
         if (view && 'MutationObserver' in view) this.observe(new view.MutationObserver(() => this.count())).observe(this.track, { childList: true, subtree: true });
         if (view && 'ResizeObserver' in view) this.observe(new view.ResizeObserver(() => this.layout())).observe(el);
+        if (view && 'MutationObserver' in view) this.observe(new view.MutationObserver(() => this.adopt())).observe(el, { childList: true });
         this.listen(el, 'kp-reorder', (event) => this.follow(/** @type {CustomEvent} */ (event)));
         this.listen(this.tabs, 'click', (event) => this.onTab(event));
         this.listen(this.tabs, 'keydown', (event) => this.onTabKey(/** @type {KeyboardEvent} */ (event)));
@@ -54,6 +55,16 @@ export class Board extends BoardLanes {
 
     markDrawn() {
         this.drawn = true;
+    }
+
+    /** Lanes the page added to the board after it was attached join the track, its tabs, its group and its counts. */
+    adopt() {
+        if (!this.buildLanes()) return;
+        if (!this.lanes.some((lane) => Board.keyOf(lane) === this.selected)) this.selected = Board.keyOf(this.lanes[0] ?? this.host);
+        this.drawTabs();
+        this.own(attachStructure(this.track));
+        this.count();
+        this.layout();
     }
 
     /** Whether the board is narrow now, and whether its lanes are tabs. */

@@ -55,12 +55,25 @@
         box-shadow: inset 3px 0 0 var(--warning);
     }
 
+    /* The icon buttons take the row's type and the title's line height, so a glyph and the title's first line share one baseline
+       (the browser's own button size put the timer 1.5 px off the title). */
     .kp-task-row__handle,
     .kp-task-row .kp-icon-button {
         inline-size: var(--kp-task-row-icon);
         block-size: var(--kp-task-row-icon);
         min-inline-size: 0;
         padding: 0;
+        font: inherit;
+        line-height: 1.4;
+    }
+
+    /* One handle look in every list: the row's icon button, also inside a reorder list, whose own handle is a bordered chip. */
+    .kp-task-row > .kp-task-row__handle[data-kp-handle] {
+        padding: 0;
+        border-color: transparent;
+        background: none;
+        font: inherit;
+        line-height: 1.4;
     }
 
     .kp-task-row__handle {
@@ -84,7 +97,7 @@
 
     .kp-task-row__title {
         grid-area: title;
-        align-self: start;
+        align-self: baseline;
         min-inline-size: 0;
         margin: 0;
         padding: calc((var(--kp-task-row-icon) - 1lh) / 2) var(--kp-space-xs, 0.25rem);
@@ -140,8 +153,11 @@
         color: var(--card-foreground, var(--foreground));
     }
 
+    /* The actions stand on the title's first baseline: beside a title on two lines they stay on its first line, and the grid itself
+       holds them there. */
     .kp-task-row__actions {
         grid-area: actions;
+        align-self: baseline;
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: var(--kp-task-row-icon);

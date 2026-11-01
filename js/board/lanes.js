@@ -37,11 +37,17 @@ export class BoardLanes extends Controller {
         return /** @type {HTMLElement | null} */ (lane.querySelector('[data-kp-reorder]'));
     }
 
-    /** The lanes the page gave as children, moved into the track and dressed. */
+    /**
+     * The lanes the page gave as children, moved into the track and dressed; a lane the page adds to the board later (a board
+     * attached before its data arrived) joins the same way. Returns whether any lane joined.
+     */
     buildLanes() {
-        this.lanes = /** @type {HTMLElement[]} */ ([...this.host.querySelectorAll(`:scope > ${LANE}, :scope > .kp-board__track > ${LANE}`)]);
-        this.track.replaceChildren(...this.lanes);
+        const added = /** @type {HTMLElement[]} */ ([...this.host.querySelectorAll(`:scope > ${LANE}`)]);
+        if (added.length === 0 && this.lanes.length > 0) return false;
+        this.track.append(...added);
+        this.lanes = /** @type {HTMLElement[]} */ ([...this.track.querySelectorAll(`:scope > ${LANE}`)]);
         this.lanes.forEach((lane, index) => this.dressLane(lane, index));
+        return added.length > 0;
     }
 
     /** One lane: the pipeline's lane parts, its head, its list in the group, its empty line. @param {HTMLElement} lane @param {number} index */

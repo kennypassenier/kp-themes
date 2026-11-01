@@ -19,8 +19,11 @@ export declare class BoardLanes extends Controller {
     static keyOf(lane: HTMLElement): string;
     /** The list of a lane. @param {HTMLElement} lane @returns {HTMLElement | null} */
     static listOf(lane: HTMLElement): HTMLElement | null;
-    /** The lanes the page gave as children, moved into the track and dressed. */
-    buildLanes(): void;
+    /**
+     * The lanes the page gave as children, moved into the track and dressed; a lane the page adds to the board later (a board
+     * attached before its data arrived) joins the same way. Returns whether any lane joined.
+     */
+    buildLanes(): boolean;
     /** One lane: the pipeline's lane parts, its head, its list in the group, its empty line. @param {HTMLElement} lane @param {number} index */
     dressLane(lane: HTMLElement, index: number): void;
     /** Every lane's count, its limit, its flag and its empty line; going over a limit is said once. */

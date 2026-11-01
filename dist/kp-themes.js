@@ -60828,12 +60828,21 @@ var init_lanes4 = __esm({
           lane.querySelector("[data-kp-reorder]")
         );
       }
-      /** The lanes the page gave as children, moved into the track and dressed. */
+      /**
+       * The lanes the page gave as children, moved into the track and dressed; a lane the page adds to the board later (a board
+       * attached before its data arrived) joins the same way. Returns whether any lane joined.
+       */
       buildLanes() {
+        const added = (
+          /** @type {HTMLElement[]} */
+          [...this.host.querySelectorAll(`:scope > ${LANE}`)]
+        );
+        if (added.length === 0 && this.lanes.length > 0) return false;
+        this.track.append(...added);
         this.lanes = /** @type {HTMLElement[]} */
-        [...this.host.querySelectorAll(`:scope > ${LANE}, :scope > .kp-board__track > ${LANE}`)];
-        this.track.replaceChildren(...this.lanes);
+        [...this.track.querySelectorAll(`:scope > ${LANE}`)];
         this.lanes.forEach((lane, index) => this.dressLane(lane, index));
+        return added.length > 0;
       }
       /** One lane: the pipeline's lane parts, its head, its list in the group, its empty line. @param {HTMLElement} lane @param {number} index */
       dressLane(lane, index) {
@@ -60945,6 +60954,7 @@ var init_controller47 = __esm({
         const view = el16.ownerDocument.defaultView;
         if (view && "MutationObserver" in view) this.observe(new view.MutationObserver(() => this.count())).observe(this.track, { childList: true, subtree: true });
         if (view && "ResizeObserver" in view) this.observe(new view.ResizeObserver(() => this.layout())).observe(el16);
+        if (view && "MutationObserver" in view) this.observe(new view.MutationObserver(() => this.adopt())).observe(el16, { childList: true });
         this.listen(el16, "kp-reorder", (event) => this.follow(
           /** @type {CustomEvent} */
           event
@@ -60960,6 +60970,15 @@ var init_controller47 = __esm({
       }
       markDrawn() {
         this.drawn = true;
+      }
+      /** Lanes the page added to the board after it was attached join the track, its tabs, its group and its counts. */
+      adopt() {
+        if (!this.buildLanes()) return;
+        if (!this.lanes.some((lane) => _Board.keyOf(lane) === this.selected)) this.selected = _Board.keyOf(this.lanes[0] ?? this.host);
+        this.drawTabs();
+        this.own(attachStructure(this.track));
+        this.count();
+        this.layout();
       }
       /** Whether the board is narrow now, and whether its lanes are tabs. */
       tabbed() {
