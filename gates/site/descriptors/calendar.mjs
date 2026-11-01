@@ -5,11 +5,11 @@ export const calendarDescriptor = {
         id: 'calendar',
         title: 'Month heatmap',
         group: 'Data',
-        classes: ['kp-calendar', 'kp-calendar-layout'],
+        classes: ['kp-calendar', 'kp-calendar-layout', 'kp-date-nav'],
         exports: [],
         // The calendar's own hooks follow from its class (`data-kp-calendar-…`);
         // these are the generic ones it reads or writes on its parts.
-        aliases: ['time-zone', 'locale', 'week-starts-on', 'heading-level', 'key', 'date', 'tone', 'today', 'pad', 'state', 'tones', 'quiet', 'logged', 'calm-map', 'paused', 'legend', 'dim', 'plate'],
+        aliases: ['time-zone', 'locale', 'week-starts-on', 'heading-level', 'key', 'date', 'tone', 'today', 'pad', 'state', 'tones', 'quiet', 'logged', 'calm-map', 'paused', 'legend', 'dim', 'plate', 'calendar-nav', 'date-nav', 'date-nav-at', 'date-nav-for', 'date-nav-today', 'date-nav-current', 'date-nav-change'],
         intro: 'A month as a grid of days, each a plate in the colour of its state, with a short count under the number: a month of nightly backups, of shifts covered, of readings received. js/calendar.js builds it into a `section.kp-calendar[data-kp-calendar]`: the month’s title between ‹ Prev and Next ›, Today, a line for the state, a six-week `table[role=grid]` with one tab stop and the keys of a date grid, and a legend. The page hands it every day’s state by date; today is the day in Europe/Brussels, whatever the reader’s zone.',
         whenToUse:
             'Where a reader looks for the bad days in a month of one daily outcome and picks one to see why. Not for picking a date in a form, which is the date picker, and not for a value over time, which is a time chart.',
@@ -107,6 +107,9 @@ document.querySelector('[data-doc-calm-fill]').addEventListener('click', (event)
         ],
         variants: [
             { name: '[data-kp-calendar]', what: 'The calendar; `data-kp-calendar-month="YYYY-MM"` is the month it shows first (today’s by default) and `data-kp-calendar-selected="YYYY-MM-DD"` the day picked at first.' },
+            { name: 'data-kp-date-nav', what: 'The date navigation [ux-1101] (js/date-nav.js), `month` (default), `week` or `day`: the label of the range shown (“November 2026”, “Week 45 · 02/11 to 08/11/2026”), “current” after it while the range holds today (`data-kp-date-nav-current` written), then Previous, Today and Next on three equal tracks, each named for the mode. PageUp and PageDown step, Home goes back to today. `data-kp-date-nav-at` is the day shown (today when absent), `data-kp-date-nav-today` today for a page whose clock is not the visitor’s, and `data-kp-date-nav-for` the id of a week agenda or a calendar it drives, which then hears its own `kp-week-range` or `kp-calendar-month` with `source: \'date-nav\'`. `attachDateNavs(root)`, `setDateNav(nav, day)`, `getDateNav(nav)`.' },
+            { name: 'kp-date-nav-change', what: 'Fired on the date navigation when a person moved it: `{ mode, at, start, end, by }`, the days as `YYYY-MM-DD`, `by` being `prev`, `next` or `today`.' },
+            { name: 'data-kp-calendar-nav', what: '`spread` lays the month buttons over the grid’s seven columns; `off` [ux-1101] hides the calendar’s own navigation when a date navigation drives it, so the page shows one.' },
             { name: '.kp-calendar-layout', what: 'The calendar beside the page’s own detail of the picked day; one column under 45rem of its own width.' },
             { name: 'data-kp-tone="ok|warn|bad"', what: 'A day on its status plate, the text in the plate’s own ink: all done, partly done, nothing done.' },
             { name: 'data-kp-tone="muted|none"', what: 'Nothing to do that day (a muted plate), or nothing known about it (an outline).' },

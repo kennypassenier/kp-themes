@@ -7,6 +7,7 @@
     "task-list": "the list of task rows [habits-1101]: a grid with a gap, the rows carry the identity; demoed in formal only",
     "board": "the board [habits-1101]: its lanes are the pipeline's lane parts, which every register already paints; demoed in formal only, each register answers the board's own track, tabs and empty line once it is judged in that theme",
     "popover-form": "the popover form [ux-1101]: its plate is the menu's .kp-menu, its fields and buttons the package's own, which every register already paints; demoed in formal only, each register answers it once it is judged in that theme",
+    "date-nav": "the date navigation [ux-1101]: a label and the package's small buttons, which every register already paints; demoed in formal only, each register answers it once it is judged in that theme",
     "context-menu": "the context menu's invisible anchor [habits-1101]; its plate is the menu button's .kp-menu--rich, which every register already paints; demoed in formal only, each register answers it once it is judged in that theme",
     "action-list": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
     "row-actions": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",

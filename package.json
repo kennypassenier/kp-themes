@@ -468,6 +468,10 @@
             "types": "./js/popover-form.d.ts",
             "default": "./js/popover-form.js"
         },
+        "./js/date-nav": {
+            "types": "./js/date-nav.d.ts",
+            "default": "./js/date-nav.js"
+        },
         "./js/row-pick": {
             "types": "./js/row-pick.d.ts",
             "default": "./js/row-pick.js"

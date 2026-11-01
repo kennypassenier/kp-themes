@@ -595,6 +595,17 @@ The popover form: a small form anchored to its button, one field and accept, lig
 | `constants.js`  | The selectors, attribute names and events of the popover form.                                                            |
 | `controller.js` | PopoverFormControl: opens under its button on the menu's plate, Enter accepts, Escape and light dismiss close it.          |
 
+## js/date-nav.js → js/date-nav/
+
+The date navigation: the range shown, then Previous, Today and Next on equal tracks, month, week or day [ux-1101]. 4 files.
+
+| File            | Does                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `constants.js`  | The selectors, attribute names, events and fixed numbers of the date navigation.                            |
+| `controller.js` | DateNavControl: builds the label and the three buttons, the keys, the status line and the event.             |
+| `link.js`       | Drives a week agenda or a calendar named by `data-kp-date-nav-for`, which then hears its own range event.    |
+| `range.js`      | The arithmetic and the words: the range a mode shows around a day, one step away, the ISO week and the label. |
+
 ## js/diff.js → js/diff/
 
 The diff view with file headers, folded context and changed words. 13 files.

@@ -87,6 +87,7 @@
         "pipeline.css",
         "task-row.css",
         "popover-form.css",
+        "date-nav.css",
         "board.css",
         "diff/base.css",
         "diff/diff-inside-file-has.css",

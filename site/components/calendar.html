@@ -508,8 +508,9 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-calendar</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-calendar</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-calendar-month</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-calendar-nav</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-calendar-next</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-calendar-prev</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-calendar-selected</code></td><td>read</td></tr>
@@ -518,6 +519,11 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                             <tr><td><code>data-kp-date</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-date-format</code></td><td>prose, read</td></tr>
                             <tr><td><code>data-kp-date-input</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-date-nav</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-date-nav-at</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-date-nav-current</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-date-nav-for</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-date-nav-today</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-date-open</code></td><td>written, selector</td></tr>
                             <tr><td><code>data-kp-date-panel</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-date-value</code></td><td>read, written</td></tr>
@@ -568,6 +574,7 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                             <tr><td><code>kp-calendar-pick</code></td><td>Fired on the calendar, bubbling, when a day is picked: `detail` `{ date: 'YYYY-MM-DD', source: 'pointer' | 'keyboard' }`.</td></tr>
                             <tr><td><code>kp-calendar-month</code></td><td>Fired on the calendar, bubbling, when a person moves it to another month: `detail` `{ year, month }` (month 1-12).</td></tr>
                             <tr><td><code>kp-calendar-retry</code></td><td>Fired on a calendar, bubbling, when Retry is pressed on its failed plate (every tone) [r1r2-1019].</td></tr>
+                            <tr><td><code>kp-date-nav-change</code></td><td>Fired on the navigation, bubbling, when a person moved the range: `detail` `{ mode, at, start, end, by }`, the dates as `YYYY-MM-DD`, `by` being `prev`, `next` or `today`.</td></tr>
                             <tr><td><code>kp-date-change</code></td><td>Fired when a date is chosen, typed or set. A contract value [TH26]: `{ iso, date, source }`.</td></tr>
                             <tr><td><code>kp-date-open</code></td><td>Fired when the panel opens or closes: `{ open }`.</td></tr>
                             <tr><td><code>kp-date-month</code></td><td>Fired when the visible month changes: `{ year, month }` (month 0-11).</td></tr>
@@ -588,6 +595,7 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                             <tr><td><code>--kp-calendar-spinner</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-calendar-title-size</code></td><td><code>1.125rem</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-date-nav-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-glyph-alert</code></td><td><code>'!'</code></td></tr>
                             <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
                             <tr><td><code>--kp-glyph-clock</code></td><td><code>'◷'</code></td></tr>
@@ -606,6 +614,7 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-stateplate-floor</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-text-lg</code></td><td><code>1.125rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-time-width</code></td><td><code>8.5rem</code></td></tr>
@@ -643,6 +652,9 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>[data-kp-calendar]</code></td><td>The calendar; `data-kp-calendar-month=&quot;YYYY-MM&quot;` is the month it shows first (today’s by default) and `data-kp-calendar-selected=&quot;YYYY-MM-DD&quot;` the day picked at first.</td></tr>
+                            <tr><td><code>data-kp-date-nav</code></td><td>The date navigation [ux-1101] (js/date-nav.js), `month` (default), `week` or `day`: the label of the range shown (“November 2026”, “Week 45 · 02/11 to 08/11/2026”), “current” after it while the range holds today (`data-kp-date-nav-current` written), then Previous, Today and Next on three equal tracks, each named for the mode. PageUp and PageDown step, Home goes back to today. `data-kp-date-nav-at` is the day shown (today when absent), `data-kp-date-nav-today` today for a page whose clock is not the visitor’s, and `data-kp-date-nav-for` the id of a week agenda or a calendar it drives, which then hears its own `kp-week-range` or `kp-calendar-month` with `source: 'date-nav'`. `attachDateNavs(root)`, `setDateNav(nav, day)`, `getDateNav(nav)`.</td></tr>
+                            <tr><td><code>kp-date-nav-change</code></td><td>Fired on the date navigation when a person moved it: `{ mode, at, start, end, by }`, the days as `YYYY-MM-DD`, `by` being `prev`, `next` or `today`.</td></tr>
+                            <tr><td><code>data-kp-calendar-nav</code></td><td>`spread` lays the month buttons over the grid’s seven columns; `off` [ux-1101] hides the calendar’s own navigation when a date navigation drives it, so the page shows one.</td></tr>
                             <tr><td><code>.kp-calendar-layout</code></td><td>The calendar beside the page’s own detail of the picked day; one column under 45rem of its own width.</td></tr>
                             <tr><td><code>data-kp-tone=&quot;ok|warn|bad&quot;</code></td><td>A day on its status plate, the text in the plate’s own ink: all done, partly done, nothing done.</td></tr>
                             <tr><td><code>data-kp-tone=&quot;muted|none&quot;</code></td><td>Nothing to do that day (a muted plate), or nothing known about it (an outline).</td></tr>

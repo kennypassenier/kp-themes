@@ -1,0 +1,48 @@
+/* @part: date-nav: Date navigation */
+    /* --- Date navigation [ux-1101] ----------------------------------------------
+ * `.kp-date-nav` (js/date-nav.js): the label of the range shown, then Previous, Today and Next on three equal tracks as wide
+ * as the widest of them, so the three keep one width whatever their words and stand still when the label changes length.
+ * The label takes the room that is left; on a narrow column the buttons go under it and keep their tracks. The label is set
+ * in figures that line up (tabular), so "Week 45" and "Week 46" are one width. `data-kp-calendar-nav="off"` hides a
+ * calendar's own navigation when a date navigation drives it, so a page shows one. Knob: --kp-date-nav-gap. */
+    .kp-date-nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-date-nav-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    .kp-date-nav__label {
+        flex: 1 1 14rem;
+        min-inline-size: 0;
+        margin: 0;
+        font-size: var(--kp-text-lg, 1.125rem);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-date-nav__current {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 400;
+    }
+
+    .kp-date-nav__steps {
+        display: grid;
+        flex: 0 1 auto;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-date-nav__steps > .kp-button {
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .kp-calendar[data-kp-calendar-nav='off'] > .kp-calendar__nav {
+        display: none;
+    }
+

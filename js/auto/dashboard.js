@@ -46,6 +46,8 @@ export const DASHBOARD_NEEDS = [
     { name: 'context-menu', when: '[data-kp-context-menu]', load: () => import('../context-menu.js'), attach: (m, root) => [m.attachContextMenus(root)] },
     // The popover form anchored to its button [ux-1101].
     { name: 'popover-form', when: '[data-kp-popover-form]', load: () => import('../popover-form.js'), attach: (m, root) => [m.attachPopoverForms(root)] },
+    // The date navigation: previous, today and next [ux-1101].
+    { name: 'date-nav', when: '[data-kp-date-nav]', load: () => import('../date-nav.js'), attach: (m, root) => [m.attachDateNavs(root)] },
     // The segmented control, the list toolbar and the inline key line [kpadopt-controls].
     { name: 'segmented', when: '[data-kp-segmented]', load: () => import('../segmented.js'), attach: (m, root) => [m.attachSegmented(root)] },
     // Action tiles, status rows and the facet list [kpadopt2-tiles].
