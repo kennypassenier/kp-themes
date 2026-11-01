@@ -64,6 +64,7 @@ concatenates that file into `css/themes.css`.
 | `avatar.css`                    | Avatar                                                                           |
 | `back-to-top.css`               | Back to top                                                                      |
 | `badge.css`                     | Badge                                                                            |
+| `categorical.css`               | Categorical colours [habits-1101]                                                |
 | `bar-cell.css`                  | A value with a bar, in a table cell                                              |
 | `breadcrumb-pagination.css`     | Breadcrumb and pagination                                                        |
 | `bullet-rows.css`               | Bullet rows                                                                      |

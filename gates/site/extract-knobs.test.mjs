@@ -214,7 +214,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-31 [mc-r2]: the button that follows a quantity reads --kp-accept-reason-size and --kp-accept-disabled-opacity: 1132 + 2 = 1134.
     // Re-pinned 2026-11-01 [habits-1101]: the floating selection bar publishes --kp-selection-lift for the toasts, read through var(): 1134 + 1 = 1135.
     // Re-pinned 2026-11-01 [habits-1101]: the board reads --kp-board-gap, -lane-min, -lane-narrow, -min and -drop-min: 1135 + 5 = 1140.
-    assert.equal(result.expected, 1140, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-11-01 [habits-1101]: the categorical colours: --kp-cat, --kp-cat-1 … -12, --kp-cat-ink and --kp-cat-dot: 1140 + 15 = 1155.
+    assert.equal(result.expected, 1155, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -308,7 +309,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-31 [mc-r2]: the two accept-follows knobs, both read through var(): 1122 + 2 = 1124.
     // Re-pinned 2026-11-01 [habits-1101]: --kp-selection-lift is read through var(): 1124 + 1 = 1125.
     // Re-pinned 2026-11-01 [habits-1101]: the board's five knobs are read through var(): 1125 + 5 = 1130.
-    assert.equal(result.readCount, 1130);
+    // Re-pinned 2026-11-01 [habits-1101]: the fifteen of the categorical colours are read through var(): 1130 + 15 = 1145.
+    assert.equal(result.readCount, 1145);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

@@ -426,11 +426,27 @@
                             <tr><td><code>--kp-badge-size</code></td><td><code>var(--kp-text-sm, 0.8125rem)</code></td></tr>
                             <tr><td><code>--kp-badge-wrap</code></td><td><code>anywhere</code></td></tr>
                             <tr><td><code>--kp-badges-min</code></td><td><code>8rem</code></td></tr>
+                            <tr><td><code>--kp-cat</code></td><td><code>var(--muted-foreground)</code></td></tr>
+                            <tr><td><code>--kp-cat-1</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-10</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-11</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-12</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-2</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-3</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-4</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-5</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-6</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-7</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-8</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-9</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-cat-dot</code></td><td><code>0.625rem</code></td></tr>
+                            <tr><td><code>--kp-cat-ink</code></td><td><code>var(--background)</code></td></tr>
                             <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-version-gap</code></td><td><code>0.4em</code></td></tr>
                     </tbody></table></div>
                 </section>
@@ -446,6 +462,7 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-cat-chip / .kp-cat-dot</code></td><td>A project’s or a tag’s own colour [habits-1101]: `data-kp-cat=&quot;1&quot;` … `&quot;12&quot;` picks one of the theme’s twelve categorical colours (the tokens kp-cat-1 to kp-cat-12: red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate) for the element and what it holds. `.kp-cat-chip` is a filled label with the theme’s categorical ink (the token kp-cat-ink) on it; `.kp-cat-dot` a round mark beside a name. Each colour reads as ink on the ground and as a fill in every theme; neighbours differ in lightness too.</td></tr>
                             <tr><td><code>.kp-badge</code></td><td>The default: the quiet ground and its ink, for counts and neutral labels.</td></tr>
                             <tr><td><code>.kp-badges</code></td><td>A run of badges in one cell, wrapping as a grid whose columns are as wide as their widest badge (at least a knob’s width), so a wrapped run stands in columns and a label is never cut. A `ul` works too: the list’s marks and room are taken away.</td></tr>
                             <tr><td><code>semantic</code></td><td>A badge carrying a status colour. It must say what it means in text; one carrying none is refused by the contract enforcer.</td></tr>

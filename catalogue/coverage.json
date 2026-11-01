@@ -55,6 +55,8 @@
         "kp-pipeline",
         "kp-context-menu",
         "kp-board",
+        "kp-cat-chip",
+        "kp-cat-dot",
         "kp-problem",
         "kp-problems",
         "kp-quantity",

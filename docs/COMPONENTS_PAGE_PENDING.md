@@ -12,6 +12,7 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- habits-1101, site/components/badge.html and the tokens page: the twelve categorical colours `--kp-cat-1` … `--kp-cat-12` with `--kp-cat-ink`, `data-kp-cat`, `.kp-cat-chip` and `.kp-cat-dot`; one example with the twelve as chips and as dots beside project names.
 - habits-1101, site/components/pipeline.html (or a page of its own): the board (`js/board.js`): `data-kp-board`, `data-kp-board-lane`, `-label`, `-limit`, `-narrow` (`scroll`, `tabs`), `-group`, `setBoardState`, `showBoardLane`, `recountBoard`, `kp-board-lane`, `kp-board-retry`; one example with three lanes of task rows and a limit.
 - habits-1101, site/components/menu-button.html: the context menu (`js/context-menu.js`): `data-kp-context-menu` (empty, `inner`, an id), `setContextMenu`, `attachContextMenus`, `openContextMenu`, `data-kp-context-menu-label`, `data-kp-context-press`, `kp-context-menu-open`; one example with a task row whose right click shows its ⋯ entries.
 - habits-1101, site/components/reorder.html: `data-kp-reorder-group`, `data-kp-reorder-list` and `data-kp-reorder-label`, the ← / → keys and `fromList` / `toList` in `kp-reorder`; one example with two day lists that share their tasks.

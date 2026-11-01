@@ -5,9 +5,9 @@ export const badgeDescriptor = {
         id: 'badge',
         title: 'Badge',
         group: 'Feedback',
-        classes: ['kp-badge', 'kp-badges'],
+        classes: ['kp-badge', 'kp-badges', 'kp-cat-chip', 'kp-cat-dot'],
         exports: ['Badge'],
-        aliases: ['semantic'],
+        aliases: ['semantic', 'cat'],
         intro: 'A small pill for a state — a status, a count, a label. It says what it is in text; the colour is the second channel and never the only one.',
         whenToUse:
             'To mark a row or a card with a state the reader scans for. Not as a button: a pill that acts is a button, and painting one as a badge hides that it can be pressed. Not for long text either — a badge that wraps to two lines is a sentence wearing a costume.',
@@ -46,6 +46,7 @@ export const badgeDescriptor = {
             },
         ],
         variants: [
+            { name: '.kp-cat-chip / .kp-cat-dot', what: 'A project’s or a tag’s own colour [habits-1101]: `data-kp-cat="1"` … `"12"` picks one of the theme’s twelve categorical colours (the tokens kp-cat-1 to kp-cat-12: red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate) for the element and what it holds. `.kp-cat-chip` is a filled label with the theme’s categorical ink (the token kp-cat-ink) on it; `.kp-cat-dot` a round mark beside a name. Each colour reads as ink on the ground and as a fill in every theme; neighbours differ in lightness too.' },
             { name: '.kp-badge', what: 'The default: the quiet ground and its ink, for counts and neutral labels.' },
             { name: '.kp-badges', what: 'A run of badges in one cell, wrapping as a grid whose columns are as wide as their widest badge (at least a knob’s width), so a wrapped run stands in columns and a label is never cut. A `ul` works too: the list’s marks and room are taken away.' },
             { name: 'semantic', what: 'A badge carrying a status colour. It must say what it means in text; one carrying none is refused by the contract enforcer.' },

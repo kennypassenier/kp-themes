@@ -564,6 +564,8 @@
         "kp-secret": ["@component:data"],
         "kp-pipeline": ["@component:data"],
         "kp-board": ["@component:data"],
+        "kp-cat-chip": ["@component:feedback"],
+        "kp-cat-dot": ["@component:feedback"],
         "kp-art": ["@component:data"],
         "kp-health": ["@component:data"],
         "kp-tiles": ["@component:data"],

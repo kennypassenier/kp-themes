@@ -75,6 +75,20 @@
     --chart-3: hsl(80, 30%, 38%);
     --chart-4: hsl(15, 55%, 45%);
     --chart-5: hsl(220, 15%, 55%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(5, 39%, 49%);
+    --kp-cat-2: hsl(28, 96%, 27%);
+    --kp-cat-3: hsl(41, 92%, 30%);
+    --kp-cat-4: hsl(76, 97%, 18%);
+    --kp-cat-5: hsl(138, 49%, 33%);
+    --kp-cat-6: hsl(173, 93%, 19%);
+    --kp-cat-7: hsl(188, 93%, 28%);
+    --kp-cat-8: hsl(212, 68%, 34%);
+    --kp-cat-9: hsl(235, 37%, 55%);
+    --kp-cat-10: hsl(270, 36%, 40%);
+    --kp-cat-11: hsl(328, 43%, 37%);
+    --kp-cat-12: hsl(214, 17%, 26%);
+    --kp-cat-ink: hsl(40, 25%, 97%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(218, 45%, 35%);
     --code-string: hsl(35, 55%, 38%);
@@ -207,6 +221,20 @@
     --chart-3: hsl(318, 92%, 66%);
     --chart-4: hsl(78, 88%, 60%);
     --chart-5: hsl(200, 22%, 93%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(5, 60%, 63%);
+    --kp-cat-2: hsl(23, 94%, 69%);
+    --kp-cat-3: hsl(40, 76%, 42%);
+    --kp-cat-4: hsl(81, 44%, 57%);
+    --kp-cat-5: hsl(136, 38%, 46%);
+    --kp-cat-6: hsl(173, 69%, 47%);
+    --kp-cat-7: hsl(188, 86%, 38%);
+    --kp-cat-8: hsl(214, 100%, 76%);
+    --kp-cat-9: hsl(235, 61%, 69%);
+    --kp-cat-10: hsl(268, 95%, 82%);
+    --kp-cat-11: hsl(331, 90%, 79%);
+    --kp-cat-12: hsl(214, 32%, 83%);
+    --kp-cat-ink: hsl(220, 16%, 5%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(188, 96%, 62%);
     --code-string: hsl(268, 90%, 70%);
@@ -337,6 +365,20 @@
     --chart-3: hsl(353, 84%, 62%);
     --chart-4: hsl(263, 100%, 70%);
     --chart-5: hsl(50, 12%, 82%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(4, 100%, 69%);
+    --kp-cat-2: hsl(23, 100%, 73%);
+    --kp-cat-3: hsl(42, 97%, 41%);
+    --kp-cat-4: hsl(76, 73%, 47%);
+    --kp-cat-5: hsl(147, 99%, 35%);
+    --kp-cat-6: hsl(174, 98%, 42%);
+    --kp-cat-7: hsl(187, 99%, 38%);
+    --kp-cat-8: hsl(214, 99%, 78%);
+    --kp-cat-9: hsl(236, 100%, 77%);
+    --kp-cat-10: hsl(268, 99%, 84%);
+    --kp-cat-11: hsl(331, 99%, 82%);
+    --kp-cat-12: hsl(214, 31%, 86%);
+    --kp-cat-ink: hsl(270, 9%, 4%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(56, 98%, 51%);
     --code-string: hsl(184, 100%, 50%);
@@ -463,6 +505,20 @@
     --chart-3: hsl(48, 98%, 68%);
     --chart-4: hsl(258, 100%, 72%);
     --chart-5: hsl(260, 100%, 91%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(4, 78%, 63%);
+    --kp-cat-2: hsl(24, 100%, 65%);
+    --kp-cat-3: hsl(41, 91%, 39%);
+    --kp-cat-4: hsl(78, 61%, 46%);
+    --kp-cat-5: hsl(145, 84%, 35%);
+    --kp-cat-6: hsl(174, 99%, 39%);
+    --kp-cat-7: hsl(188, 92%, 36%);
+    --kp-cat-8: hsl(214, 100%, 73%);
+    --kp-cat-9: hsl(237, 88%, 73%);
+    --kp-cat-10: hsl(268, 100%, 80%);
+    --kp-cat-11: hsl(330, 100%, 77%);
+    --kp-cat-12: hsl(214, 44%, 81%);
+    --kp-cat-ink: hsl(263, 89%, 7%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(341, 100%, 64%);
     --code-string: hsl(179, 94%, 59%);
@@ -589,6 +645,20 @@
     --chart-3: hsl(210, 60%, 55%);
     --chart-4: hsl(41, 100%, 36%);
     --chart-5: hsl(270, 50%, 60%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(5, 39%, 49%);
+    --kp-cat-2: hsl(28, 95%, 27%);
+    --kp-cat-3: hsl(41, 92%, 30%);
+    --kp-cat-4: hsl(75, 97%, 18%);
+    --kp-cat-5: hsl(138, 49%, 33%);
+    --kp-cat-6: hsl(173, 97%, 19%);
+    --kp-cat-7: hsl(188, 93%, 28%);
+    --kp-cat-8: hsl(213, 66%, 35%);
+    --kp-cat-9: hsl(235, 37%, 55%);
+    --kp-cat-10: hsl(270, 35%, 41%);
+    --kp-cat-11: hsl(328, 42%, 38%);
+    --kp-cat-12: hsl(214, 19%, 27%);
+    --kp-cat-ink: hsl(285, 45%, 97%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(330, 55%, 52%);
     --code-string: hsl(160, 45%, 35%);
@@ -718,6 +788,20 @@
     --chart-3: hsl(200, 50%, 42%);
     --chart-4: hsl(88, 35%, 38%);
     --chart-5: hsl(35, 25%, 45%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(6, 34%, 48%);
+    --kp-cat-2: hsl(25, 72%, 28%);
+    --kp-cat-3: hsl(39, 66%, 33%);
+    --kp-cat-4: hsl(77, 76%, 19%);
+    --kp-cat-5: hsl(135, 36%, 35%);
+    --kp-cat-6: hsl(173, 89%, 19%);
+    --kp-cat-7: hsl(188, 90%, 28%);
+    --kp-cat-8: hsl(213, 56%, 34%);
+    --kp-cat-9: hsl(234, 29%, 52%);
+    --kp-cat-10: hsl(269, 31%, 38%);
+    --kp-cat-11: hsl(329, 36%, 36%);
+    --kp-cat-12: hsl(214, 14%, 25%);
+    --kp-cat-ink: hsl(42, 32%, 95%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(158, 42%, 32%);
     --code-string: hsl(24, 70%, 41%);
@@ -847,6 +931,20 @@
     --chart-3: hsl(160, 55%, 55%);
     --chart-4: hsl(280, 60%, 70%);
     --chart-5: hsl(2, 70%, 66%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(6, 50%, 60%);
+    --kp-cat-2: hsl(23, 84%, 68%);
+    --kp-cat-3: hsl(39, 67%, 42%);
+    --kp-cat-4: hsl(81, 40%, 57%);
+    --kp-cat-5: hsl(135, 36%, 44%);
+    --kp-cat-6: hsl(172, 55%, 50%);
+    --kp-cat-7: hsl(187, 100%, 34%);
+    --kp-cat-8: hsl(214, 97%, 74%);
+    --kp-cat-9: hsl(234, 50%, 65%);
+    --kp-cat-10: hsl(268, 78%, 79%);
+    --kp-cat-11: hsl(331, 76%, 77%);
+    --kp-cat-12: hsl(214, 23%, 81%);
+    --kp-cat-ink: hsl(215, 65%, 12%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(190, 80%, 62%);
     --code-string: hsl(35, 85%, 60%);
@@ -976,6 +1074,20 @@
     --chart-3: hsl(45, 70%, 55%);
     --chart-4: hsl(95, 40%, 52%);
     --chart-5: hsl(320, 40%, 62%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(6, 53%, 62%);
+    --kp-cat-2: hsl(23, 89%, 70%);
+    --kp-cat-3: hsl(39, 63%, 44%);
+    --kp-cat-4: hsl(81, 42%, 59%);
+    --kp-cat-5: hsl(135, 34%, 46%);
+    --kp-cat-6: hsl(172, 57%, 52%);
+    --kp-cat-7: hsl(187, 95%, 36%);
+    --kp-cat-8: hsl(214, 99%, 76%);
+    --kp-cat-9: hsl(234, 53%, 67%);
+    --kp-cat-10: hsl(268, 86%, 81%);
+    --kp-cat-11: hsl(331, 83%, 79%);
+    --kp-cat-12: hsl(214, 26%, 83%);
+    --kp-cat-ink: hsl(20, 14%, 10%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(28, 85%, 58%);
     --code-string: hsl(12, 65%, 58%);
@@ -1105,6 +1217,20 @@
     --chart-3: hsl(255, 60%, 52%);
     --chart-4: hsl(205, 90%, 36%);
     --chart-5: hsl(140, 60%, 28%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(1, 67%, 51%);
+    --kp-cat-2: hsl(28, 95%, 27%);
+    --kp-cat-3: hsl(41, 93%, 31%);
+    --kp-cat-4: hsl(76, 97%, 18%);
+    --kp-cat-5: hsl(146, 94%, 27%);
+    --kp-cat-6: hsl(173, 96%, 19%);
+    --kp-cat-7: hsl(188, 97%, 28%);
+    --kp-cat-8: hsl(210, 99%, 32%);
+    --kp-cat-9: hsl(240, 75%, 64%);
+    --kp-cat-10: hsl(273, 60%, 44%);
+    --kp-cat-11: hsl(321, 96%, 33%);
+    --kp-cat-12: hsl(0, 0%, 26%);
+    --kp-cat-ink: hsl(50, 100%, 97%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(45, 100%, 29%);
     --code-string: hsl(0, 85%, 45%);
@@ -1235,6 +1361,20 @@
     --chart-3: hsl(210, 70%, 60%);
     --chart-4: hsl(355, 75%, 60%);
     --chart-5: hsl(40, 45%, 72%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(6, 51%, 60%);
+    --kp-cat-2: hsl(23, 85%, 69%);
+    --kp-cat-3: hsl(39, 66%, 43%);
+    --kp-cat-4: hsl(81, 40%, 57%);
+    --kp-cat-5: hsl(135, 35%, 45%);
+    --kp-cat-6: hsl(172, 56%, 51%);
+    --kp-cat-7: hsl(188, 93%, 35%);
+    --kp-cat-8: hsl(214, 99%, 75%);
+    --kp-cat-9: hsl(234, 51%, 66%);
+    --kp-cat-10: hsl(268, 80%, 80%);
+    --kp-cat-11: hsl(331, 78%, 77%);
+    --kp-cat-12: hsl(214, 30%, 82%);
+    --kp-cat-ink: hsl(200, 25%, 8%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(43, 65%, 55%);
     --code-string: hsl(165, 55%, 45%);
@@ -1364,6 +1504,20 @@
     --chart-3: hsl(38, 60%, 35%);
     --chart-4: hsl(140, 35%, 30%);
     --chart-5: hsl(205, 45%, 35%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(4, 48%, 38%);
+    --kp-cat-2: hsl(27, 97%, 19%);
+    --kp-cat-3: hsl(41, 97%, 23%);
+    --kp-cat-4: hsl(76, 100%, 12%);
+    --kp-cat-5: hsl(145, 97%, 20%);
+    --kp-cat-6: hsl(173, 94%, 13%);
+    --kp-cat-7: hsl(188, 91%, 22%);
+    --kp-cat-8: hsl(211, 98%, 23%);
+    --kp-cat-9: hsl(237, 35%, 44%);
+    --kp-cat-10: hsl(271, 47%, 30%);
+    --kp-cat-11: hsl(326, 59%, 26%);
+    --kp-cat-12: hsl(214, 21%, 16%);
+    --kp-cat-ink: hsl(38, 28%, 78%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(17, 74%, 36%);
     --code-string: hsl(24, 12%, 15%);
@@ -1499,6 +1653,20 @@
     --chart-3: hsl(186, 78%, 58%);
     --chart-4: hsl(12, 88%, 62%);
     --chart-5: hsl(212, 16%, 87%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
+    --kp-cat-1: hsl(6, 43%, 61%);
+    --kp-cat-2: hsl(23, 75%, 71%);
+    --kp-cat-3: hsl(37, 46%, 47%);
+    --kp-cat-4: hsl(82, 36%, 61%);
+    --kp-cat-5: hsl(134, 26%, 48%);
+    --kp-cat-6: hsl(171, 48%, 58%);
+    --kp-cat-7: hsl(189, 62%, 42%);
+    --kp-cat-8: hsl(214, 85%, 75%);
+    --kp-cat-9: hsl(234, 42%, 65%);
+    --kp-cat-10: hsl(267, 65%, 80%);
+    --kp-cat-11: hsl(332, 66%, 78%);
+    --kp-cat-12: hsl(214, 25%, 83%);
+    --kp-cat-ink: hsl(216, 16%, 10%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(214, 84%, 62%);
     --code-string: hsl(268, 76%, 69%);

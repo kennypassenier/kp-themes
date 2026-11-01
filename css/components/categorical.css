@@ -1,0 +1,83 @@
+/* @part: categorical: Categorical colours */
+    /* --- Categorical colours [habits-1101] ----------------------------------
+ * Twelve colours a page gives a project, a tag or a series by name, from the theme: `--kp-cat-1` … `--kp-cat-12` (red, orange,
+ * amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each readable as ink on the ground and as a fill under
+ * `--kp-cat-ink`. `data-kp-cat="1"` … `"12"` on any element sets `--kp-cat` to that colour for it and what it holds, so a part
+ * paints with `var(--kp-cat)`. Two parts use it: `.kp-cat-dot`, a small round mark beside a name, and `.kp-cat-chip`, a filled
+ * label (a tag) with the ink on it. */
+    [data-kp-cat='1'] {
+        --kp-cat: var(--kp-cat-1);
+    }
+
+    [data-kp-cat='2'] {
+        --kp-cat: var(--kp-cat-2);
+    }
+
+    [data-kp-cat='3'] {
+        --kp-cat: var(--kp-cat-3);
+    }
+
+    [data-kp-cat='4'] {
+        --kp-cat: var(--kp-cat-4);
+    }
+
+    [data-kp-cat='5'] {
+        --kp-cat: var(--kp-cat-5);
+    }
+
+    [data-kp-cat='6'] {
+        --kp-cat: var(--kp-cat-6);
+    }
+
+    [data-kp-cat='7'] {
+        --kp-cat: var(--kp-cat-7);
+    }
+
+    [data-kp-cat='8'] {
+        --kp-cat: var(--kp-cat-8);
+    }
+
+    [data-kp-cat='9'] {
+        --kp-cat: var(--kp-cat-9);
+    }
+
+    [data-kp-cat='10'] {
+        --kp-cat: var(--kp-cat-10);
+    }
+
+    [data-kp-cat='11'] {
+        --kp-cat: var(--kp-cat-11);
+    }
+
+    [data-kp-cat='12'] {
+        --kp-cat: var(--kp-cat-12);
+    }
+
+    .kp-cat-dot {
+        display: inline-block;
+        flex: none;
+        inline-size: var(--kp-cat-dot, 0.625rem);
+        block-size: var(--kp-cat-dot, 0.625rem);
+        border-radius: 50%;
+        background: var(--kp-cat, var(--muted-foreground));
+        vertical-align: middle;
+    }
+
+    .kp-cat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--kp-cat, var(--muted));
+        color: var(--kp-cat-ink, var(--background));
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        line-height: 1.6;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    a.kp-cat-chip:hover {
+        text-decoration: underline;
+    }
