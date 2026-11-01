@@ -16,6 +16,10 @@
 //                                                 comment and the `@layer`
 //                                                 line), the parts inside it,
 //                                                 and the exact closing text.
+// Inside `files` an entry is a part name or a nested group
+//   { "open": "...", "files": [...], "close": "..." }
+// with the same shape, at any depth: a wrapper such as one `@media` block
+// that spans several parts is a group around those parts.
 // The output is the items concatenated, nothing added between them.
 //
 // Every part starts with one header line, `/* @part: <what it styles> */`.
@@ -49,6 +53,23 @@ function manifestDirs() {
     return dirs;
 }
 
+/**
+ * Join manifest entries into text: a string is a part, an object with `file` a part, and an object with
+ * `files` a group whose open and close text wrap its (recursively rendered) entries.
+ * @param {(string|{file?: string, open?: string, files?: any[], close?: string})[]} entries
+ * @param {(name: string) => string} part
+ * @returns {string}
+ */
+export function render(entries, part) {
+    return entries
+        .map((e) => {
+            if (typeof e === 'string') return part(e);
+            if (e.file) return part(e.file);
+            return (e.open ?? '') + render(e.files ?? [], part) + (e.close ?? '');
+        })
+        .join('');
+}
+
 /** @returns {{ output: string, text: string, problems: string[] }[]} */
 export function build() {
     return manifestDirs().map((dir) => {
@@ -66,11 +87,7 @@ export function build() {
             if (!HEADER.test(raw)) problems.push(`${dir}/${name} has no \`/* @part: ... */\` header line`);
             return raw.replace(HEADER, '');
         };
-        let text = '';
-        for (const item of manifest.items) {
-            if (item.file) text += part(item.file);
-            else text += item.open + item.files.map(part).join('') + item.close;
-        }
+        const text = render(manifest.items, part);
         for (const f of walk(join(ROOT, dir))) {
             const rel = relative(join(ROOT, dir), f);
             if (rel !== 'index.json' && !used.has(rel)) problems.push(`${dir}/${rel} is not listed in index.json (an orphan part is never built)`);

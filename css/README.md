@@ -20,7 +20,9 @@ its parts, so a hand edit of a generated file is refused. Edit a part, regenerat
   it never reaches the output.
 - Every part is whole, valid CSS: complete rules and at-rule blocks, so it can be read and linted on its own
   (`npm run check:css-parse` parses each one). The manifest wraps parts in their `@layer … {` … `}`: it holds the
-  exact opening and the closing, and the parts hold what sits inside.
+  exact opening and the closing, and the parts hold what sits inside. A second wrapper inside it (one `@media`,
+  `@supports` or `@layer` block that spans several parts) is a group in the `files` list:
+  `{ "open": "    @media (...) {\n", "files": ["x/a.css", "x/b.css"], "close": "    }\n" }`, nestable at any depth.
 - No hand-written source file may pass 500 lines (`npm run check:file-size`, `gates/file-size.json`).
 
 ## How the generated files are built
