@@ -23727,6 +23727,22 @@
         white-space: nowrap;
     }
 
+    /* The bar without its own freshness line [ux-1101]: `data-kp-refresh-line="off"` on a `.kp-refresh` leaves "updated 12 s ago"
+ * (and "updating…" in its place) out, for a page that already says how fresh its data is in its own header (kyu: "Updated 2 min
+ * ago" beside the bar's "not updated yet"). Outside a form grid the bar then packs to its content, so Refresh now stands beside the
+ * chooser as one control; in a form grid both keep their tracks. A failed refresh still says so in its note with Retry now. `on` (default) is the approved bar. With
+ * the menu look (`data-kp-look="menu"`) the control is one menu button and one Refresh now. */
+    .kp-refresh[data-kp-refresh-line='off'] > .kp-refresh__bar > .kp-refresh__line {
+        display: none;
+    }
+
+    .kp-refresh[data-kp-refresh-line='off']:where(:not(.kp-formgrid .kp-refresh)) > .kp-refresh__bar {
+        grid-template-columns: none;
+        grid-auto-columns: max-content;
+        grid-auto-flow: column;
+        justify-content: start;
+    }
+
     /* The menu hangs from the button's start edge: the chooser stands at the start of its row. */
     .kp-refresh__menu > .kp-menu {
         inset-inline: 0 auto;

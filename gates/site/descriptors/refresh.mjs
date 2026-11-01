@@ -74,6 +74,7 @@ control.addEventListener('kp-refresh', (event) => event.detail.done(true));
             { name: 'data-kp-refresh-mode', what: '`event` (default: the app fetches), `page` (reload the page) or `region` (fetch the same URL and swap only the region).' },
             { name: 'data-kp-refresh-region', what: 'The selector of the element swapped in `region` mode; focus and scroll stay.' },
             { name: 'data-kp-look', what: '`segmented` (default) or `menu`.' },
+            { name: 'data-kp-refresh-line', what: '`on` (default) or `off` [ux-1101]: `off` leaves the bar’s own freshness line (“updated 12 s ago”, “updating…”) out, for a page that already says how fresh its data is in its header; Refresh now keeps its place. With `data-kp-look="menu"` the control is one menu button and Refresh now.' },
             { name: 'data-kp-remember', what: 'A name: the choice is kept per page and device.' },
             { name: 'data-kp-stale-after', what: 'Seconds after which the freshness line turns stale; three times the interval by default.' },
             { name: 'data-kp-refresh-hover', what: '`pause`: no refresh while the pointer is over a table being read.' },

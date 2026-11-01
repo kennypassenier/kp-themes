@@ -61,7 +61,7 @@ concatenates that file into `css/themes.css`.
 | `anchors/`                      | Link anchors on headings and rows (2 parts)                                      |
 | `annotations/`                  | Annotations (3 parts)                                                            |
 | `attention-band.css`            | Attention band                                                                   |
-| `auto-refresh/`                 | The automatic refresh chooser (2 parts)                                          |
+| `auto-refresh/`                 | The automatic refresh chooser (3 parts)                                          |
 | `autogrow-textarea.css`         | A text box that grows with its text                                              |
 | `avatar.css`                    | Avatar                                                                           |
 | `back-to-top.css`               | Back to top                                                                      |

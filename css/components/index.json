@@ -175,6 +175,7 @@
       "open": "@layer kp.components {\n",
       "files": [
         "auto-refresh/base.css",
+        "auto-refresh/own-line-off.css",
         "auto-refresh/menu-hangs-from-buttons.css"
       ],
       "close": "}\n\n"
