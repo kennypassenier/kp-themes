@@ -84740,6 +84740,7 @@ function ringGeometry(W, H, { ring = 0.36, inset, stretch = 1 } = {}) {
     rx = Math.min(rx, W * 0.24);
     ry = Math.max(ry, Hs * ring);
   }
+  ry = Math.min(ry, Math.max(Hs * 0.15, cy - top - LABEL_ROOM));
   return { cx, cy, rx: rx * stretch, ry };
 }
 function placeRing(data, { cx, cy, rx, ry }, phase = 0, inner = 1, first = 0) {
@@ -84855,13 +84856,14 @@ function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), li
   );
   return two9.misses < one.misses || two9.misses === one.misses && two9.H < one.H ? { at: two9.at, H: two9.H, wraps: two9.wraps } : { at: one.at, H: one.H, wraps: /* @__PURE__ */ new Map() };
 }
-var keyOf8, ringOf, graphLayout;
+var keyOf8, ringOf, LABEL_ROOM, graphLayout;
 var init_layout4 = __esm({
   "js/graph/layout.js"() {
     "use strict";
     init_instance3();
     keyOf8 = (host) => host.getAttribute("data-kp-key") ?? void 0;
     ringOf = (data, hub) => data.nodes.filter((n) => n.id !== hub).sort((a, b) => Number(!!a.external) - Number(!!b.external) || a.label.localeCompare(b.label) || a.id.localeCompare(b.id));
+    LABEL_ROOM = 40;
     graphLayout = (data, W, H, options) => placeRing(data, ringGeometry(W, H, options), options?.phase ?? 0);
   }
 });

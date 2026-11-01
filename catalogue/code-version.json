@@ -56,7 +56,7 @@
         "js/freshness.js": { "digest": "9860eeec293d8074", "when": "[data-kp-ago]" },
         "js/gallery.js": { "digest": "2f2618d208c40830", "when": "[data-kp-gallery]" },
         "js/gantt.js": { "digest": "7cf70577bdda21f5", "when": "[data-kp-gantt]" },
-        "js/graph.js": { "digest": "e8b5496682723818", "when": "[data-kp-graph]" },
+        "js/graph.js": { "digest": "0b824d527fbd50cd", "when": "[data-kp-graph]" },
         "js/gridlayout.js": { "digest": "83eb9805d31b6c94", "when": "[data-kp-grid]" },
         "js/heat.js": { "digest": "1f69244454584a96", "when": "[data-kp-heat]" },
         "js/hovercard.js": { "digest": "b4816d15b9febdcc", "when": "[data-kp-hovercard]" },
