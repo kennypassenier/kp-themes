@@ -6,6 +6,19 @@
         white-space: nowrap;
     }
 
+    /* A label too long for its tab tightens before it is cut [habits-1101 theme-sweep]: js/tabbar/fit.js sets the
+ * loosest step at which every label fits, on the whole bar, so the labels keep one size and one tracking. `tight`
+ * closes the tracking to --kp-tabbar-tight-tracking (0; a register with spaced capitals keeps a little of its
+ * spacing), `small` also lowers the size to --kp-tabbar-small-size (0.6875rem). Only past both does the ellipsis
+ * come. */
+    .kp-tabbar[data-kp-tabbar-fit] .kp-tabbar__label {
+        letter-spacing: var(--kp-tabbar-tight-tracking, 0);
+    }
+
+    .kp-tabbar[data-kp-tabbar-fit='small'] .kp-tabbar__label {
+        font-size: var(--kp-tabbar-small-size, 0.6875rem);
+    }
+
     /* The mark: a line along the bar's top edge over the current tab. It grows
  * from the middle when a tab becomes current; a register gives it the
  * theme's own shape. */

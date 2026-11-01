@@ -138,6 +138,7 @@ export const CONTROLLER_PART_FILES_1B = [
     'js/tabbar/count-watch.js',
     'js/tabbar/count.js',
     'js/tabbar/dialog.js',
+    'js/tabbar/fit.js',
     'js/theme-core/apply.js',
     'js/theme-core/preview.js',
     'js/theme-core/read.js',

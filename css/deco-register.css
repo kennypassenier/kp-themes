@@ -4297,6 +4297,11 @@
         text-transform: uppercase;
     }
 
+    /* A label too long for its tab stays in spaced capitals as it tightens, the spacing only narrower (js/tabbar/fit.js). */
+    [data-theme='deco'] .kp-tabbar {
+        --kp-tabbar-tight-tracking: 0.05em;
+    }
+
     [data-theme='deco'] .kp-tabbar__tab::before {
         inset-inline: 0.25rem;
         block-size: 1px;
@@ -6301,6 +6306,12 @@
         [data-theme='deco'] .kp-segmented:not(.kp-segmented--chips, .kp-segmented--block) {
             --kp-seg-tracking: 0.02em;
             --kp-seg-size: 0.68rem;
+            --kp-seg-item-pad-inline: 0.375rem;
+        }
+        /* A full-width track closes its tracking and padding up the same way, at its own size, so three words in
+           spaced capitals ("Pomodoro / Countdown / Flow") sit whole on a phone [habits-1101 theme-sweep]. */
+        [data-theme='deco'] .kp-segmented.kp-segmented--block:not(.kp-segmented--chips) {
+            --kp-seg-tracking: 0.02em;
             --kp-seg-item-pad-inline: 0.375rem;
         }
     }

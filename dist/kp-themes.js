@@ -2470,7 +2470,7 @@ var init_focus = __esm({
       focusTrackFinishedText: "Nothing is left on this track.",
       focusTrackFinishedNext: (next2) => `${next2} is ready for you.`,
       focusTrackFinish: (track) => `Finish ${track}`,
-      focusTrackSwitched: (track, place4, text) => `${track}. ${place4}. ${text}`,
+      focusTrackSwitched: (track, place5, text) => `${track}. ${place5}. ${text}`,
       focusTrackUnlocked: (step) => `${step} is done. You can go on.`,
       focusTimerRunning: (clock4) => `Timer running \xB7 ${clock4}`,
       focusTimerPaused: (clock4) => `Timer paused \xB7 ${clock4}`,
@@ -6857,10 +6857,10 @@ var init_layer = __esm({
         const { host, layer } = this;
         host.append(layer);
         this.place();
-        const place4 = () => this.place();
-        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(place4)).observe(host);
-        this.listen(host, "scroll", place4, { passive: true });
-        for (const scroller of scrollersAround(host)) this.listen(scroller, "scroll", place4, { passive: true });
+        const place5 = () => this.place();
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(place5)).observe(host);
+        this.listen(host, "scroll", place5, { passive: true });
+        for (const scroller of scrollersAround(host)) this.listen(scroller, "scroll", place5, { passive: true });
         if (this.arrive) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => layer.isConnected && m.arriveShown(layer));
       }
       /** Measure and place the card again. */
@@ -8191,10 +8191,10 @@ function heirOf(list, row2, active) {
   );
   const at = [...list.children].indexOf(row2);
   const next2 = rows.find((r) => [...list.children].indexOf(r) > at) ?? rows.reverse().find((r) => [...list.children].indexOf(r) < at) ?? null;
-  const place4 = [...row2.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
+  const place5 = [...row2.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
   return next2 ? (
     /** @type {HTMLElement | undefined} */
-    next2.querySelectorAll(`${ROW_ACTIONS} > *`)[place4] ?? next2
+    next2.querySelectorAll(`${ROW_ACTIONS} > *`)[place5] ?? next2
   ) : list;
 }
 async function removeRow(row2) {
@@ -14542,13 +14542,13 @@ var init_side = __esm({
 });
 
 // js/top-layer/raise.js
-function raiseOverlay(element, place4) {
+function raiseOverlay(element, place5) {
   if (typeof element.showPopover !== "function" || !element.isConnected) {
-    place4(element);
+    place5(element);
     return () => {
     };
   }
-  const raise = new OverlayRaise(element, { place: place4 });
+  const raise = new OverlayRaise(element, { place: place5 });
   try {
     raise.connect();
   } catch (error) {
@@ -23231,6 +23231,35 @@ var init_dialog = __esm({
   }
 });
 
+// js/tabbar/fit.js
+function anyCut(bar) {
+  for (const label2 of bar.querySelectorAll(".kp-tabbar__label")) {
+    const el16 = (
+      /** @type {HTMLElement} */
+      label2
+    );
+    if (el16.clientWidth > 0 && el16.scrollWidth > el16.clientWidth) return true;
+  }
+  return false;
+}
+function fitTabbar(bar) {
+  for (const step of TABBAR_FIT_STEPS) {
+    if (step) bar.setAttribute(TABBAR_FIT_ATTRIBUTE, step);
+    else bar.removeAttribute(TABBAR_FIT_ATTRIBUTE);
+    if (!anyCut(bar)) return step;
+  }
+  return TABBAR_FIT_STEPS[TABBAR_FIT_STEPS.length - 1];
+}
+var TABBAR_FIT_STEPS, TABBAR_FIT_ATTRIBUTE;
+var init_fit3 = __esm({
+  "js/tabbar/fit.js"() {
+    "use strict";
+    TABBAR_FIT_STEPS = /** @type {const} */
+    ["", "tight", "small"];
+    TABBAR_FIT_ATTRIBUTE = "data-kp-tabbar-fit";
+  }
+});
+
 // js/tabbar/controller.js
 var TabbarController;
 var init_controller11 = __esm({
@@ -23239,6 +23268,7 @@ var init_controller11 = __esm({
     init_controller();
     init_badge();
     init_dialog();
+    init_fit3();
     TabbarController = class extends Controller {
       /** @param {HTMLElement} bar */
       constructor(bar) {
@@ -23250,7 +23280,18 @@ var init_controller11 = __esm({
       connect() {
         if (!this.view) return;
         this.publishHeight();
+        this.fitLabels();
         this.wireDialogs();
+      }
+      /** The labels tighten before any is cut (js/tabbar/fit.js): measured on a resize, a redraw of the tabs and the fonts' arrival. */
+      fitLabels() {
+        const { host: bar, doc, view } = this;
+        const fit2 = () => fitTabbar(bar);
+        if (typeof ResizeObserver !== "undefined") this.observe(new ResizeObserver(fit2)).observe(bar);
+        this.observe(new view.MutationObserver(fit2)).observe(bar, { childList: true, subtree: true, characterData: true });
+        this.own(() => bar.removeAttribute(TABBAR_FIT_ATTRIBUTE));
+        void doc.fonts?.ready.then(() => this.host.isConnected && fit2());
+        fit2();
       }
       /** The height, published while the bar is on the screen. A static bar sits in the page's flow and gives nobody room to keep. */
       publishHeight() {
@@ -23915,18 +23956,18 @@ var init_controller13 = __esm({
       }
       /** Open it under its button with the first field focused and selected; what was typed last time is gone. */
       open() {
-        const { form: form2, opener, host, place: place4 } = this;
+        const { form: form2, opener, host, place: place5 } = this;
         const view = host.ownerDocument.defaultView;
-        if (!form2 || !opener || !place4 || !view || this.isOpen()) return;
+        if (!form2 || !opener || !place5 || !view || this.isOpen()) return;
         stopClose(form2);
         form2.inert = false;
         form2.reset();
         writeProblem(form2, "");
         form2.hidden = false;
         opener.setAttribute("aria-expanded", "true");
-        place4.open = true;
-        placeMenu(place4, view, coveredEdges(view, host, form2));
-        raiseMenu(place4, view);
+        place5.open = true;
+        placeMenu(place5, view, coveredEdges(view, host, form2));
+        raiseMenu(place5, view);
         this.listenWhileOpen(view);
         const field2 = (
           /** @type {HTMLInputElement | null} */
@@ -23971,10 +24012,10 @@ var init_controller13 = __esm({
        * @param {CloseReason} reason @param {boolean} focus
        */
       close(reason, focus) {
-        const { form: form2, opener, place: place4, host } = this;
-        if (!form2 || !opener || !place4 || !this.isOpen()) return;
+        const { form: form2, opener, place: place5, host } = this;
+        if (!form2 || !opener || !place5 || !this.isOpen()) return;
         opener.setAttribute("aria-expanded", "false");
-        place4.open = false;
+        place5.open = false;
         for (const off of this.off.splice(0)) off();
         if (focus) opener.focus();
         form2.inert = true;
@@ -23982,7 +24023,7 @@ var init_controller13 = __esm({
           if (!played || this.isOpen()) return;
           form2.hidden = true;
           form2.inert = false;
-          lowerMenu(place4);
+          lowerMenu(place5);
           stopClose(form2);
           unplaceMenu(form2);
         });
@@ -28211,7 +28252,7 @@ function syncCalmActions(item_, state12, list) {
   );
   const showResume = state12 === "paused" && list?.getAttribute("data-kp-today-resume") !== "off";
   const showPause = state12 === "open" && list?.hasAttribute("data-kp-today-pause") === true && list.getAttribute("data-kp-today-pause") !== "off";
-  const place4 = (button6, shown5) => {
+  const place5 = (button6, shown5) => {
     const holder = (
       /** @type {HTMLElement} */
       button6.closest(".kp-tooltip-anchor") ?? button6
@@ -28229,8 +28270,8 @@ function syncCalmActions(item_, state12, list) {
   resume.setAttribute("data-kp-disabled-reason", why);
   pause.textContent = s2.statusPause;
   pause.setAttribute("aria-label", s2.statusPauseLabel(label2));
-  place4(resume, showResume);
-  place4(pause, showPause);
+  place5(resume, showResume);
+  place5(pause, showPause);
   cell.hidden = !(showResume || showPause);
 }
 var labelOf5, daysBetween;
@@ -44197,9 +44238,9 @@ var init_tip2 = __esm({
           stopReversing(box);
         }
         box.textContent = words3;
-        const place4 = () => this.floatBeside(box, item, "centre");
-        if (box.matches(":popover-open")) place4();
-        else this.show(box, place4);
+        const place5 = () => this.floatBeside(box, item, "centre");
+        if (box.matches(":popover-open")) place5();
+        else this.show(box, place5);
       }
       /** @param {PointerEvent} event */
       onTipOver(event) {
@@ -48484,16 +48525,16 @@ var init_busy4 = __esm({
       watchOverlay(layer, panel) {
         if (typeof ResizeObserver !== "function") return;
         const { table, wrap: host } = this.t;
-        const place4 = () => this.placeOverlay(layer, panel);
-        const watcher = new ResizeObserver(() => place4());
+        const place5 = () => this.placeOverlay(layer, panel);
+        const watcher = new ResizeObserver(() => place5());
         watcher.observe(host);
         watcher.observe(table);
         if (table.tHead !== null) watcher.observe(table.tHead);
         const scrollers = scrollersAround(host);
-        for (const scroller of scrollers) scroller.addEventListener("scroll", place4, { passive: true });
+        for (const scroller of scrollers) scroller.addEventListener("scroll", place5, { passive: true });
         this.overlayUnwatch = () => {
           watcher.disconnect();
-          for (const scroller of scrollers) scroller.removeEventListener("scroll", place4);
+          for (const scroller of scrollers) scroller.removeEventListener("scroll", place5);
         };
       }
       /** Put the layer over the rows: under the header, above the foot, across what is seen. @param {HTMLElement} layer @param {HTMLElement} panel */
@@ -56034,9 +56075,33 @@ function drawAxis(doc, columns2, { every, picked, loading }) {
   const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
   const before = open4[open4.length - 2];
   if (every > 1 && before !== void 0 && before === open4[open4.length - 1] - 1) named.delete(before);
-  columns2.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i))));
+  const made6 = columns2.map((c, i) => column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i)));
+  placeAxis(made6);
+  heads.append(...made6);
   axis.append(heads);
   return axis;
+}
+function placeAxis(heads) {
+  const n = heads.length;
+  const at = heads.map((h2, i) => h2.textContent ? i : -1).filter((i) => i >= 0);
+  heads.forEach((h2, i) => place3(h2, i, i));
+  at.forEach((i, k) => {
+    const prev = k > 0 ? at[k - 1] : -1;
+    const next2 = k < at.length - 1 ? at[k + 1] : n;
+    const back = prev < 0 ? i : Math.floor((i - prev - 1) / 2);
+    const ahead = next2 >= n ? n - 1 - i : Math.floor((next2 - i - 1) / 2);
+    if (i === n - 1 && n > 1) return place3(heads[i], i - back, i);
+    if (i === 0 && n > 1) {
+      heads[i].setAttribute("data-kp-heat-reach", "end");
+      return place3(heads[i], 0, ahead);
+    }
+    const reach3 = Math.min(back, ahead);
+    place3(heads[i], i - reach3, i + reach3);
+  });
+}
+function place3(head, from, to) {
+  head.style.setProperty("--kp-heat-from", String(from + 1));
+  head.style.setProperty("--kp-heat-to", String(to + 2));
 }
 function heatArea(el16) {
   const cells = [...el16.querySelectorAll(":scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells")].map((c) => c.getBoundingClientRect());
@@ -57919,7 +57984,7 @@ __export(barcell_exports, {
   attachBarCells: () => attachBarCells,
   setBarCell: () => setBarCell
 });
-function partOf(el16, className, place4) {
+function partOf(el16, className, place5) {
   const found = (
     /** @type {HTMLElement | null} */
     el16.querySelector(`:scope > .${className}`)
@@ -57927,7 +57992,7 @@ function partOf(el16, className, place4) {
   if (found) return found;
   const part7 = el16.ownerDocument.createElement("span");
   part7.className = className;
-  el16[place4](part7);
+  el16[place5](part7);
   return part7;
 }
 function autoTone(value, warnAt, badAt) {
@@ -59029,7 +59094,7 @@ function measureLanes(c) {
 function setProp(el16, name, value) {
   if (el16.style.getPropertyValue(name) !== value) el16.style.setProperty(name, value);
 }
-function place3(c, el16, item, row2) {
+function place4(c, el16, item, row2) {
   const top = c.laneTops.find((l) => l.id === item.lane)?.top ?? 0;
   setProp(el16, "--kp-g-s", String(item.start));
   setProp(el16, "--kp-g-e", String(round(item.start + item.duration)));
@@ -59308,7 +59373,7 @@ function paint8(c, { fit: fit2 = true } = {}) {
   syncBars(c, c.view);
   for (const item of c.view) {
     const bar = c.bars.get(item.id);
-    if (bar) place3(c, bar, item, c.rows.rows.get(item.id) ?? 0);
+    if (bar) place4(c, bar, item, c.rows.rows.get(item.id) ?? 0);
   }
   syncJoins(c, c.view);
   placeLabels(c);
@@ -59344,7 +59409,7 @@ function drawDraft(c, list, ids2, refit = false) {
     const bar = c.bars.get(id);
     if (!item || !bar) continue;
     const before = c.items.find((i) => i.id === id);
-    place3(c, bar, item, before && before.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
+    place4(c, bar, item, before && before.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
     const out = c.outsides.get(id);
     if (out) out.hidden = true;
     bar.removeAttribute("data-kp-label");
@@ -59425,7 +59490,7 @@ function afterLayout(c) {
   measureLanes(c);
   for (const item of c.view) {
     const bar = c.bars.get(item.id);
-    if (bar && !(c.press?.moved && c.press.id === item.id)) place3(c, bar, item, c.rows.rows.get(item.id) ?? 0);
+    if (bar && !(c.press?.moved && c.press.id === item.id)) place4(c, bar, item, c.rows.rows.get(item.id) ?? 0);
   }
   syncJoins(c, c.view);
   placeLabels(c);
@@ -60545,7 +60610,7 @@ function placeLabels2(c) {
       list.forEach((item, i) => {
         const { bar, left, right } = item;
         const need = labelWidth(c, bar);
-        let place4 = "";
+        let place5 = "";
         let roomPx = 0;
         let shift = 0;
         let inset = 0;
@@ -60591,17 +60656,17 @@ function placeLabels2(c) {
           }
           const after = next2 - from - OUTSIDE_GAP_PX;
           const before = upTo - floor - OUTSIDE_GAP_PX;
-          if (after >= wanted) [place4, roomPx, shift] = ["after", after, from - (right + start)];
-          else if (before >= wanted) [place4, roomPx, shift] = ["before", before, left - 4 - upTo];
-          else place4 = "none";
-          if (place4 === "after") taken = from + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
+          if (after >= wanted) [place5, roomPx, shift] = ["after", after, from - (right + start)];
+          else if (before >= wanted) [place5, roomPx, shift] = ["before", before, left - 4 - upTo];
+          else place5 = "none";
+          if (place5 === "after") taken = from + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
           else taken = Math.max(taken, right);
         } else taken = Math.max(taken, right);
-        if (bar.dataset.kpLabel !== place4) {
-          if (place4) bar.dataset.kpLabel = place4;
+        if (bar.dataset.kpLabel !== place5) {
+          if (place5) bar.dataset.kpLabel = place5;
           else delete bar.dataset.kpLabel;
         }
-        setOutside(c, lane, bar, place4 === "after" || place4 === "before" ? place4 : "", roomPx, shift);
+        setOutside(c, lane, bar, place5 === "after" || place5 === "before" ? place5 : "", roomPx, shift);
       });
     }
   }
@@ -60951,7 +61016,7 @@ function placeFitLabels(c) {
     }
 }
 var FIT_GAP_PX, SIDE_GAP_PX, BAR_PAD_PX, OUTSIDE_PAD_PX, PLACED2, isFit, free, onNow;
-var init_fit3 = __esm({
+var init_fit4 = __esm({
   "js/gantt/fit.js"() {
     "use strict";
     init_labels2();
@@ -61197,7 +61262,7 @@ var init_selection3 = __esm({
     init_window();
     init_points();
     init_labels2();
-    init_fit3();
+    init_fit4();
     init_build9();
     init_axis();
     init_scale();
@@ -61535,7 +61600,7 @@ var init_paint9 = __esm({
     init_points();
     init_chrome2();
     init_busy5();
-    init_fit3();
+    init_fit4();
     init_selection3();
     HELD = /* @__PURE__ */ new WeakMap();
   }
@@ -61896,7 +61961,7 @@ var init_controller48 = __esm({
     init_chrome2();
     init_model7();
     init_input2();
-    init_fit3();
+    init_fit4();
     MIN_ZOOM_S = 60;
     CHROME_OPTIONS = ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint", "data-kp-gantt-rest"];
     GanttControl = class extends GanttInput {
@@ -63323,7 +63388,7 @@ function edges(el16, track) {
   el16.toggleAttribute("data-kp-uptime-before", track.scrollLeft > 1);
   el16.toggleAttribute("data-kp-uptime-after", track.scrollLeft < max - 1);
 }
-var init_fit4 = __esm({
+var init_fit5 = __esm({
   "js/uptime/fit.js"() {
     "use strict";
     init_strings();
@@ -63618,7 +63683,7 @@ var init_draw10 = __esm({
     init_state_plate();
     init_constants30();
     init_figures();
-    init_fit4();
+    init_fit5();
     init_group4();
     init_helpers4();
     init_state19();
@@ -63814,7 +63879,7 @@ var init_controller51 = __esm({
     "use strict";
     init_constants30();
     init_draw10();
-    init_fit4();
+    init_fit5();
     init_group4();
     init_info();
     init_state19();
@@ -69598,6 +69663,12 @@ function buildToggle() {
   toggle2.append(el9("kp-time__glyph", "span"));
   return toggle2;
 }
+function builtInPlace(root, build8) {
+  if (root.hasAttribute("data-kp-arrive")) return build8();
+  root.setAttribute("data-kp-arrive", "none");
+  build8();
+  queueMicrotask(() => root.removeAttribute("data-kp-arrive"));
+}
 function buildParts4(root) {
   const n = nextFieldNumber2();
   root.classList.add("kp-time");
@@ -69621,7 +69692,7 @@ function buildParts4(root) {
   input.setAttribute("aria-controls", popup.id);
   const skeleton2 = el9("kp-skeleton kp-time__skeleton", "span");
   skeleton2.setAttribute("aria-hidden", "true");
-  root.replaceChildren(control, hidden2, why, zone, popup, skeleton2);
+  builtInPlace(root, () => root.replaceChildren(control, hidden2, why, zone, popup, skeleton2));
   return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
 }
 var el9;
@@ -79485,7 +79556,7 @@ function cssAutosizeSupported() {
   return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
 }
 var px3, WRAP_PROPS, TWIN_STYLE, TWINS;
-var init_fit5 = __esm({
+var init_fit6 = __esm({
   "js/autosize/fit.js"() {
     "use strict";
     init_constants38();
@@ -79756,7 +79827,7 @@ var init_measure2 = __esm({
   "js/autosize/measure.js"() {
     "use strict";
     init_constants38();
-    init_fit5();
+    init_fit6();
   }
 });
 
@@ -79865,7 +79936,7 @@ var init_controller73 = __esm({
     init_constants38();
     init_counter();
     init_draft();
-    init_fit5();
+    init_fit6();
     init_hooks();
     init_measure2();
     init_status();
@@ -80091,7 +80162,7 @@ var init_autosize = __esm({
   "js/autosize.js"() {
     "use strict";
     init_constants38();
-    init_fit5();
+    init_fit6();
     init_api23();
   }
 });
@@ -94457,9 +94528,9 @@ var make38 = (doc, tag, className, text) => {
 };
 function handleCell(doc, spec, s2) {
   if (spec.handle === false) {
-    const place4 = make38(doc, "span", "kp-task-row__handle");
-    place4.setAttribute("aria-hidden", "true");
-    return place4;
+    const place5 = make38(doc, "span", "kp-task-row__handle");
+    place5.setAttribute("aria-hidden", "true");
+    return place5;
   }
   const handle = make38(doc, "button", "kp-icon-button kp-task-row__handle", "\u283F");
   handle.type = "button";

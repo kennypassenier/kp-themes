@@ -10,6 +10,11 @@
         text-transform: uppercase;
     }
 
+    /* A label too long for its tab stays in spaced capitals as it tightens, the spacing only narrower (js/tabbar/fit.js). */
+    [data-theme='deco'] .kp-tabbar {
+        --kp-tabbar-tight-tracking: 0.05em;
+    }
+
     [data-theme='deco'] .kp-tabbar__tab::before {
         inset-inline: 0.25rem;
         block-size: 1px;

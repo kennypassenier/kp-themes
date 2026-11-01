@@ -1369,15 +1369,16 @@ The task row: a check, a title, a line of facts and fixed action columns, drawn 
 
 ## js/tabbar.js → js/tabbar/
 
-The bottom tab bar and the count on a tab, as a TabbarController over small parts. 5 files.
+The bottom tab bar and the count on a tab, as a TabbarController over small parts. 6 files.
 
 | File             | Does                                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------------------ |
 | `badge.js`       | The calls a page makes on the bottom bar: the count badge, the current tab and a tab that waits.       |
-| `controller.js`  | TabbarController: the bar's height on the root and its More tab wired to its dialog.                   |
+| `controller.js`  | TabbarController: the bar's height on the root, its labels fitted and its More tab wired to its dialog. |
 | `count-watch.js` | TabCountRoot: every count under a root drawn now and when an attribute changes.                        |
 | `count.js`       | The count on an underline tab: read from attributes, drawn as a badge part, written by setTabCount.    |
 | `dialog.js`      | TabbarDialog: the More tab follows its dialog and the drawer closes on a press outside or on an entry. |
+| `fit.js`         | fitTabbar: the labels tighten (tracking, then size) before any is cut.                                 |
 
 ## js/idmark.js → js/idmark/
 

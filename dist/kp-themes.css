@@ -18454,17 +18454,31 @@
         justify-content: flex-end;
     }
 
+    .kp-heat__col[data-kp-heat-reach='end'] {
+        justify-content: flex-start;
+    }
+
+    /* A name stands inside its own header [habits-1101 theme-sweep]: js/heat/draw-parts.js gives it the empty columns
+     * beside it (--kp-heat-from and --kp-heat-to, grid lines), and an unnamed header keeps its own column under it, all
+     * on the axis's one row. A page's own markup without them flows as before. */
+    .kp-heat__axis > .kp-heat__cells > .kp-heat__col {
+        grid-row: 1;
+        grid-column: var(--kp-heat-from, auto) / var(--kp-heat-to, auto);
+    }
+
     .kp-heat .kp-heat__col[data-kp-minor] {
         overflow: hidden;
         font-size: 0;
         user-select: none;
     }
 
-    /* On a phone every second name goes: thirty columns are 8 px each there. */
+    /* On a phone every second name goes: thirty columns are 8 px each there. Important, so a register that sets the
+     * axis's type (a later layer) cannot bring a name back that has no room [habits-1101 theme-sweep: cut in cyberpunk,
+     * blueprint, deco, nostromo and titanium]. */
     @media (max-width: 40rem) {
         .kp-heat .kp-heat__col:not([data-kp-minor], [data-kp-picked], :last-child):nth-child(6n + 4) {
             overflow: hidden;
-            font-size: 0;
+            font-size: 0 !important;
             user-select: none;
         }
     }
@@ -19215,6 +19229,19 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    /* A label too long for its tab tightens before it is cut [habits-1101 theme-sweep]: js/tabbar/fit.js sets the
+ * loosest step at which every label fits, on the whole bar, so the labels keep one size and one tracking. `tight`
+ * closes the tracking to --kp-tabbar-tight-tracking (0; a register with spaced capitals keeps a little of its
+ * spacing), `small` also lowers the size to --kp-tabbar-small-size (0.6875rem). Only past both does the ellipsis
+ * come. */
+    .kp-tabbar[data-kp-tabbar-fit] .kp-tabbar__label {
+        letter-spacing: var(--kp-tabbar-tight-tracking, 0);
+    }
+
+    .kp-tabbar[data-kp-tabbar-fit='small'] .kp-tabbar__label {
+        font-size: var(--kp-tabbar-small-size, 0.6875rem);
     }
 
     /* The mark: a line along the bar's top edge over the current tab. It grows
@@ -20143,11 +20170,14 @@
         box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
     }
 
-    /* Every segment the same width on a full-width control. */
+    /* Every segment the same width on a full-width control, as long as every label fits its share; a longer label
+ * keeps its words and the others share what is left [habits-1101 theme-sweep: "Pomodoro" and "Countdown" were cut
+ * beside a third segment with room to spare]. Too long for the track altogether, it scrolls like any segmented
+ * control (js/segmented.js), and a register that wraps its labels between words gives the words their room here. */
     .kp-segmented--block {
         display: grid;
         inline-size: 100%;
-        grid-auto-columns: minmax(0, 1fr);
+        grid-auto-columns: minmax(min-content, 1fr);
     }
 
     .kp-segmented__item {
@@ -58093,6 +58123,11 @@
         text-transform: uppercase;
     }
 
+    /* A label too long for its tab keeps a trace of the capitals' spacing as it tightens (js/tabbar/fit.js). */
+    [data-theme='brutalism'] .kp-tabbar {
+        --kp-tabbar-tight-tracking: 0.02em;
+    }
+
     [data-theme='brutalism'] .kp-tabbar__tab::before {
         content: none;
     }
@@ -82128,6 +82163,11 @@
         text-transform: uppercase;
     }
 
+    /* A label too long for its tab stays in spaced capitals as it tightens, the spacing only narrower (js/tabbar/fit.js). */
+    [data-theme='deco'] .kp-tabbar {
+        --kp-tabbar-tight-tracking: 0.05em;
+    }
+
     [data-theme='deco'] .kp-tabbar__tab::before {
         inset-inline: 0.25rem;
         block-size: 1px;
@@ -84132,6 +84172,12 @@
         [data-theme='deco'] .kp-segmented:not(.kp-segmented--chips, .kp-segmented--block) {
             --kp-seg-tracking: 0.02em;
             --kp-seg-size: 0.68rem;
+            --kp-seg-item-pad-inline: 0.375rem;
+        }
+        /* A full-width track closes its tracking and padding up the same way, at its own size, so three words in
+           spaced capitals ("Pomodoro / Countdown / Flow") sit whole on a phone [habits-1101 theme-sweep]. */
+        [data-theme='deco'] .kp-segmented.kp-segmented--block:not(.kp-segmented--chips) {
+            --kp-seg-tracking: 0.02em;
             --kp-seg-item-pad-inline: 0.375rem;
         }
     }
@@ -90520,6 +90566,23 @@
 
     [data-theme='blueprint'] .kp-calendar__busy-text {
         font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* The picked day focused [habits-1101 theme-sweep]: the pick's ring is the pen's cyan, and so is the package's ring
+       for a focused pick (--ring is --primary here), so today picked looked the same with and without the keyboard on
+       it. Focused, the pick keeps its cyan line and a second ring stands round it, as the house ring stands off a part:
+       a dark gap the width of the ring beyond the cyan, then the focus ring's light band. Today keeps its inner ring. */
+    [data-theme='blueprint'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        box-shadow:
+            0 0 0 calc(4px + var(--focus-ring-width, 2px)) var(--focus-ring-contrast),
+            0 0 0 calc(4px + 2 * var(--focus-ring-width, 2px)) var(--focus-ring);
+    }
+
+    [data-theme='blueprint'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day[data-kp-today]:focus-visible {
+        box-shadow:
+            inset 0 0 0 2px currentColor,
+            0 0 0 calc(4px + var(--focus-ring-width, 2px)) var(--focus-ring-contrast),
+            0 0 0 calc(4px + 2 * var(--focus-ring-width, 2px)) var(--focus-ring);
     }
 }
 

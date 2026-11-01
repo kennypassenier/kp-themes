@@ -65,9 +65,45 @@ export function drawAxis(doc, columns, { every, picked, loading }) {
     const named = new Set(open.filter((_, at) => at % every === 0 || at === open.length - 1));
     const before = open[open.length - 2];
     if (every > 1 && before !== undefined && before === open[open.length - 1] - 1) named.delete(before);
-    columns.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? '' : c.label, c.minor ?? !named.has(i))));
+    const made = columns.map((c, i) => column(c.key, loading && !c.label ? '' : c.label, c.minor ?? !named.has(i)));
+    placeAxis(made);
+    heads.append(...made);
     axis.append(heads);
     return axis;
+}
+
+/**
+ * Gives each name on the axis the empty columns beside it, so it stands inside its own header and not across its
+ * neighbours [habits-1101 theme-sweep: two digits are 14 px, a phone's column 4 px]. A name reaches as far each way as
+ * it can while staying centred on its column: half the empty columns to the next name, or all of them to the edge.
+ * The first name, on the start edge, reaches only forward and starts there (`data-kp-heat-reach="end"`); the last, on
+ * the end edge, reaches only back and ends there. The headers are placed by `--kp-heat-from` and `--kp-heat-to`
+ * (grid lines), an unnamed one on its own column under a name that covers it, so every column keeps its header.
+ * @param {HTMLElement[]} heads
+ */
+function placeAxis(heads) {
+    const n = heads.length;
+    const at = heads.map((h, i) => (h.textContent ? i : -1)).filter((i) => i >= 0);
+    heads.forEach((h, i) => place(h, i, i));
+    at.forEach((i, k) => {
+        const prev = k > 0 ? at[k - 1] : -1;
+        const next = k < at.length - 1 ? at[k + 1] : n;
+        const back = prev < 0 ? i : Math.floor((i - prev - 1) / 2);
+        const ahead = next >= n ? n - 1 - i : Math.floor((next - i - 1) / 2);
+        if (i === n - 1 && n > 1) return place(heads[i], i - back, i);
+        if (i === 0 && n > 1) {
+            heads[i].setAttribute('data-kp-heat-reach', 'end');
+            return place(heads[i], 0, ahead);
+        }
+        const reach = Math.min(back, ahead);
+        place(heads[i], i - reach, i + reach);
+    });
+}
+
+/** @param {HTMLElement} head @param {number} from the first column, from 0 @param {number} to the last column */
+function place(head, from, to) {
+    head.style.setProperty('--kp-heat-from', String(from + 1));
+    head.style.setProperty('--kp-heat-to', String(to + 2));
 }
 
 /**

@@ -99,11 +99,14 @@
         box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
     }
 
-    /* Every segment the same width on a full-width control. */
+    /* Every segment the same width on a full-width control, as long as every label fits its share; a longer label
+ * keeps its words and the others share what is left [habits-1101 theme-sweep: "Pomodoro" and "Countdown" were cut
+ * beside a third segment with room to spare]. Too long for the track altogether, it scrolls like any segmented
+ * control (js/segmented.js), and a register that wraps its labels between words gives the words their room here. */
     .kp-segmented--block {
         display: grid;
         inline-size: 100%;
-        grid-auto-columns: minmax(0, 1fr);
+        grid-auto-columns: minmax(min-content, 1fr);
     }
 
     .kp-segmented__item {

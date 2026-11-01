@@ -149,17 +149,31 @@
         justify-content: flex-end;
     }
 
+    .kp-heat__col[data-kp-heat-reach='end'] {
+        justify-content: flex-start;
+    }
+
+    /* A name stands inside its own header [habits-1101 theme-sweep]: js/heat/draw-parts.js gives it the empty columns
+     * beside it (--kp-heat-from and --kp-heat-to, grid lines), and an unnamed header keeps its own column under it, all
+     * on the axis's one row. A page's own markup without them flows as before. */
+    .kp-heat__axis > .kp-heat__cells > .kp-heat__col {
+        grid-row: 1;
+        grid-column: var(--kp-heat-from, auto) / var(--kp-heat-to, auto);
+    }
+
     .kp-heat .kp-heat__col[data-kp-minor] {
         overflow: hidden;
         font-size: 0;
         user-select: none;
     }
 
-    /* On a phone every second name goes: thirty columns are 8 px each there. */
+    /* On a phone every second name goes: thirty columns are 8 px each there. Important, so a register that sets the
+     * axis's type (a later layer) cannot bring a name back that has no room [habits-1101 theme-sweep: cut in cyberpunk,
+     * blueprint, deco, nostromo and titanium]. */
     @media (max-width: 40rem) {
         .kp-heat .kp-heat__col:not([data-kp-minor], [data-kp-picked], :last-child):nth-child(6n + 4) {
             overflow: hidden;
-            font-size: 0;
+            font-size: 0 !important;
             user-select: none;
         }
     }

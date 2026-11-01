@@ -62,5 +62,11 @@
             --kp-seg-size: 0.68rem;
             --kp-seg-item-pad-inline: 0.375rem;
         }
+        /* A full-width track closes its tracking and padding up the same way, at its own size, so three words in
+           spaced capitals ("Pomodoro / Countdown / Flow") sit whole on a phone [habits-1101 theme-sweep]. */
+        [data-theme='deco'] .kp-segmented.kp-segmented--block:not(.kp-segmented--chips) {
+            --kp-seg-tracking: 0.02em;
+            --kp-seg-item-pad-inline: 0.375rem;
+        }
     }
 

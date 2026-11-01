@@ -4217,6 +4217,11 @@
         text-transform: uppercase;
     }
 
+    /* A label too long for its tab keeps a trace of the capitals' spacing as it tightens (js/tabbar/fit.js). */
+    [data-theme='brutalism'] .kp-tabbar {
+        --kp-tabbar-tight-tracking: 0.02em;
+    }
+
     [data-theme='brutalism'] .kp-tabbar__tab::before {
         content: none;
     }
