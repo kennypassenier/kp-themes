@@ -6624,6 +6624,9 @@ var init_reason = __esm({
         this.tip = doc.createElement("span");
         this.tip.className = "kp-popover kp-tooltip";
         this.tip.setAttribute("role", "tooltip");
+        this.line = doc.createElement("span");
+        this.line.className = "kp-reason__line";
+        this.line.setAttribute("aria-hidden", "true");
         this.before = host.getAttribute("aria-describedby");
       }
       connect() {
@@ -6636,9 +6639,10 @@ var init_reason = __esm({
         const parent = control.parentNode;
         if (!parent) return;
         parent.insertBefore(this.anchor, control);
-        this.anchor.append(control, this.tip);
+        this.anchor.append(control, this.tip, this.line);
         this.own(() => this.restoreDescription());
         this.own(() => this.tip.remove());
+        this.own(() => this.line.remove());
         this.own(() => {
           if (this.anchor.parentNode) this.anchor.replaceWith(control);
         });
@@ -6666,6 +6670,7 @@ var init_reason = __esm({
         const text = control.getAttribute("data-kp-disabled-reason") ?? "";
         const shown5 = text !== "" && isOff(control);
         tip.textContent = shown5 ? text : "";
+        this.line.textContent = shown5 ? text : "";
         if (!shown5) tip.hidden = true;
         anchor.toggleAttribute("data-kp-reason-off", shown5);
         const ids2 = (control.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id !== "" && id !== tip.id);
@@ -33960,16 +33965,17 @@ function setState(c, next2, message, where = {}) {
   c.errorLine = next2 === "invalid" ? where.line ?? 0 : 0;
   const broken = next2 === "invalid";
   area.setCustomValidity(broken ? strings.jsonBlocked : "");
+  const marked = broken && c.touched;
   if (holder) {
-    status.textContent = broken ? "" : message;
-    if (broken) showError(area, message);
+    status.textContent = marked ? "" : message;
+    if (marked) showError(area, message);
     else clearError(area);
   } else {
     status.textContent = message;
-    if (broken) area.setAttribute("aria-invalid", "true");
+    if (marked) area.setAttribute("aria-invalid", "true");
     else area.removeAttribute("aria-invalid");
   }
-  field2?.classList.toggle("kp-field--invalid", broken);
+  field2?.classList.toggle("kp-field--invalid", marked);
   if (changed3) {
     const detail = { state: next2, line: where.line ?? null, column: where.column ?? null, message, keys: where.keys ?? null };
     area.dispatchEvent(new CustomEvent(JSON_STATE_EVENT, { bubbles: true, detail }));
@@ -34059,6 +34065,7 @@ var init_controller25 = __esm({
         this.parts = buildFrame(this.doc, this.id, this.strings, { wrap: this.wrap, gutter: this.gutterWanted() });
         this.state = "empty";
         this.parsed = void 0;
+        this.touched = false;
         this.errorLine = 0;
         this.debounce = void 0;
         this.copyTimer = void 0;
@@ -34138,6 +34145,7 @@ var init_controller25 = __esm({
             area.form,
             "reset",
             () => this.view?.setTimeout(() => {
+              this.touched = false;
               this.check();
               grow(this);
             }, 0)
@@ -34145,6 +34153,7 @@ var init_controller25 = __esm({
         }
         this.listen(area, "input", () => this.onInput());
         this.listen(area, "blur", () => this.onBlur());
+        this.listen(area, "invalid", () => this.touch());
         this.listen(area, "scroll", () => this.onScroll(), { passive: true });
         this.listen(gutter, "wheel", (event) => this.onGutterWheel(
           /** @type {WheelEvent} */
@@ -34213,8 +34222,15 @@ var init_controller25 = __esm({
         this.view?.clearTimeout(this.debounce);
         this.debounce = this.view?.setTimeout(() => this.check(), JSON_CHECK_MS);
       }
+      /** The reader has left the field or tried to submit: show what is wrong, and go on showing it as they type. */
+      touch() {
+        if (this.touched) return;
+        this.touched = true;
+        this.check();
+      }
       onBlur() {
         this.view?.clearTimeout(this.debounce);
+        this.touched = true;
         this.check();
         if (this.formatOption() === "on-blur" && this.state === "valid") this.format();
       }
@@ -61996,13 +62012,17 @@ function leaveGroupCard(el16) {
   if (group.loading.size > 0) group.card.place();
   return { last: group.loading.size === 0, card: group.card, host };
 }
-var infoMode;
+function infoMode(el16) {
+  const open4 = SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen;
+  return open4 === "info" || open4 === void 0 && coarsePointer();
+}
+var coarsePointer;
 var init_group4 = __esm({
   "js/uptime/group.js"() {
     "use strict";
     init_busy_card();
     init_state19();
-    infoMode = (el16) => (SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen) === "info";
+    coarsePointer = () => typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
   }
 });
 
@@ -62522,6 +62542,28 @@ var init_controller48 = __esm({
         );
         return cell && this.host.contains(cell) && !this.panel?.contains(cell) ? cell : null;
       }
+      /**
+       * On a coarse pointer a cell is 11 px wide and a finger is not: a tap on the strip's row, between cells or beside one, goes to the
+       * cell nearest to it along the row [ux-1101, uptime-touch].
+       * @param {MouseEvent} event @returns {HTMLElement | null}
+       */
+      nearestCell(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!coarsePointer() || target === null || this.panel?.contains(target) || target.closest(TRACK) === null) return null;
+        const cells = (
+          /** @type {HTMLElement[]} */
+          [...this.host.querySelectorAll(`${TRACK} > ${CELL}:not([hidden])`)]
+        );
+        const distance = (cell) => {
+          const box = cell.getBoundingClientRect();
+          return Math.abs(box.left + box.width / 2 - event.clientX);
+        };
+        return cells.reduce(
+          (best, cell) => best === null || distance(cell) < distance(best) ? cell : best,
+          /** @type {HTMLElement | null} */
+          null
+        );
+      }
       /** The index a key or arrow leads to, or -1 for a key that moves nothing. @param {string} key @param {number} at @param {number} count */
       static target(key, at, count2) {
         if (key === "ArrowRight" || key === "ArrowDown") return Math.min(count2 - 1, at + 1);
@@ -62561,7 +62603,7 @@ var init_controller48 = __esm({
       /** @param {MouseEvent} event */
       onClick(event) {
         const el16 = this.host;
-        const cell = this.cellOf(event);
+        const cell = this.cellOf(event) ?? this.nearestCell(event);
         if (!cell) return;
         const periods = SPECS.get(el16)?.periods ?? [];
         const index = periods.findIndex((p) => p.key === cell.dataset.kpKey);
@@ -69143,6 +69185,13 @@ var init_core19 = __esm({
         this.items = chipItems(this.o, s2);
         this.lines = buildLines(host, this.o, this.id);
         this.quick = buildQuick(doc, this.o, s2);
+        this.touched = false;
+      }
+      /** The reader has interacted: show what is missing, and go on showing it. */
+      touch() {
+        if (this.touched) return;
+        this.touched = true;
+        this.paint();
       }
       /** The picked values, in the order the chips stand. @returns {string[]} */
       picked() {
@@ -69176,7 +69225,7 @@ var init_core19 = __esm({
         const { summary: summary2, why, reason } = this.lines;
         const have = this.values();
         summary2.textContent = this.words();
-        const ok = have.length >= this.o.min;
+        const ok = have.length >= this.o.min || !this.touched;
         why.hidden = ok;
         why.textContent = ok ? "" : this.s.weekdaysMin(this.o.min);
         const described = [this.o.showSummary ? summary2.id : "", ok ? "" : why.id, reason.hidden ? "" : reason.id].filter(Boolean).join(" ");
@@ -69237,6 +69286,15 @@ var init_controller58 = __esm({
         });
         this.own(attachSegmented(el16));
         this.listen(this.group, SEGMENTED_EVENT, (event) => this.onChips(event));
+        this.listen(el16, "focusout", (event) => {
+          const next2 = (
+            /** @type {FocusEvent} */
+            event.relatedTarget
+          );
+          if (!(next2 instanceof Node && el16.contains(next2))) this.touch();
+        });
+        const form2 = el16.closest("form");
+        if (form2 !== null) this.listen(form2, "submit", () => this.touch());
         this.listen(this.quick.quick, "click", (event) => this.onPreset(
           /** @type {MouseEvent} */
           event
@@ -69263,6 +69321,7 @@ var init_controller58 = __esm({
       /** @param {Event} event */
       onChips(event) {
         if (event.target !== this.group) return;
+        this.touched = true;
         this.change(true);
       }
       /** @param {MouseEvent} event */
@@ -69275,6 +69334,7 @@ var init_controller58 = __esm({
           button6.dataset.kpWeekdaysPreset
         );
         const same2 = button6.getAttribute("aria-pressed") === "true";
+        this.touched = true;
         this.set(same2 ? [] : SETS[name]);
         this.change(true);
       }

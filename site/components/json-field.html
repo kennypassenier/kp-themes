@@ -370,6 +370,7 @@
                             <tr><td><code>data-kp-json-gutter</code></td><td>On by default; `false` takes the line numbers away.</td></tr>
                             <tr><td><code>data-kp-json-wrap</code></td><td>Long lines wrap and the gutter follows; by default they scroll inside the field.</td></tr>
                             <tr><td><code>data-kp-json-schema</code></td><td>A URL or inline JSON handed to the page in `kp-json-validate`, whose handler may refuse a value that parses.</td></tr>
+                            <tr><td><code>invalid only after the field is left</code></td><td>The red border, the error line and `aria-invalid` appear after the reader has left the field or tried to submit (as `:user-invalid` does for a native field), then stay live while they type; a required JSON field that is still empty opens plain. The state, its event and the form’s hold-back are unchanged.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>

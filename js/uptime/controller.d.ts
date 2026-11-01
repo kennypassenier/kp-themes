@@ -18,6 +18,12 @@ export declare class UptimeControl extends UptimeInfo {
     onScroll(event: Event): void;
     /** The cell an event happened in, if it is one of this strip's pressable cells outside the quick info. @param {Event} event @returns {HTMLElement | null} */
     cellOf(event: Event): HTMLElement | null;
+    /**
+     * On a coarse pointer a cell is 11 px wide and a finger is not: a tap on the strip's row, between cells or beside one, goes to the
+     * cell nearest to it along the row [ux-1101, uptime-touch].
+     * @param {MouseEvent} event @returns {HTMLElement | null}
+     */
+    nearestCell(event: MouseEvent): HTMLElement | null;
     /** The index a key or arrow leads to, or -1 for a key that moves nothing. @param {string} key @param {number} at @param {number} count */
     static target(key: string, at: number, count: number): number;
     /** @param {KeyboardEvent} event */

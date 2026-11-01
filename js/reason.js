@@ -43,6 +43,10 @@ class DisabledReasonController extends Controller {
         this.tip = doc.createElement('span');
         this.tip.className = 'kp-popover kp-tooltip';
         this.tip.setAttribute('role', 'tooltip');
+        /** The reason as a plain line under the control, which a coarse pointer shows instead of the tooltip [ux-1101]. */
+        this.line = doc.createElement('span');
+        this.line.className = 'kp-reason__line';
+        this.line.setAttribute('aria-hidden', 'true');
         /** The description the control had before the reason was added to it. */
         this.before = host.getAttribute('aria-describedby');
     }
@@ -57,9 +61,10 @@ class DisabledReasonController extends Controller {
         const parent = control.parentNode;
         if (!parent) return;
         parent.insertBefore(this.anchor, control);
-        this.anchor.append(control, this.tip);
+        this.anchor.append(control, this.tip, this.line);
         this.own(() => this.restoreDescription());
         this.own(() => this.tip.remove());
+        this.own(() => this.line.remove());
         this.own(() => {
             if (this.anchor.parentNode) this.anchor.replaceWith(control);
         });
@@ -86,6 +91,7 @@ class DisabledReasonController extends Controller {
         const text = control.getAttribute('data-kp-disabled-reason') ?? '';
         const shown = text !== '' && isOff(control);
         tip.textContent = shown ? text : '';
+        this.line.textContent = shown ? text : '';
         if (!shown) tip.hidden = true;
         anchor.toggleAttribute('data-kp-reason-off', shown);
         const ids = (control.getAttribute('aria-describedby') ?? '').split(/\s+/).filter((id) => id !== '' && id !== tip.id);

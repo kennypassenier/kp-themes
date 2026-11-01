@@ -397,6 +397,7 @@ attachWeekdays(document.getElementById(<span class="kp-code__string">'doc-weekda
                             <tr><td><code>data-kp-presets</code></td><td>The quick picks, `weekdays,weekend,every`, or `false` for none.</td></tr>
                             <tr><td><code>data-kp-value</code></td><td>The days at first, `1,4` or `mon,thu`.</td></tr>
                             <tr><td><code>data-kp-disabled</code></td><td>The whole picker is off; `data-kp-disabled-reason` says why, under the chips.</td></tr>
+                            <tr><td><code>the minimum shows after a pick</code></td><td>The “pick at least n days” line and `aria-invalid` appear after the reader has picked, left the group or tried to submit, not while the picker opens empty (as `:user-invalid` does for a native field).</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>

@@ -44,6 +44,7 @@ export const jsonFieldDescriptor = {
             { name: 'data-kp-json-gutter', what: 'On by default; `false` takes the line numbers away.' },
             { name: 'data-kp-json-wrap', what: 'Long lines wrap and the gutter follows; by default they scroll inside the field.' },
             { name: 'data-kp-json-schema', what: 'A URL or inline JSON handed to the page in `kp-json-validate`, whose handler may refuse a value that parses.' },
+            { name: 'invalid only after the field is left', what: 'The red border, the error line and `aria-invalid` appear after the reader has left the field or tried to submit (as `:user-invalid` does for a native field), then stay live while they type; a required JSON field that is still empty opens plain. The state, its event and the form’s hold-back are unchanged.' },
         ],
         accessibility: [
             'Built in — the message sits in a status line tied to the field with `aria-describedby`; Tab indents, Shift+Tab takes one indent off, Esc then Tab leaves the field, so the keyboard is never trapped; Mod+Shift+F formats.',

@@ -22,5 +22,11 @@ export declare function leaveGroupCard(el: HTMLElement): {
     card: import('../busy-card.js').BusyCard;
     host: Element;
 } | null;
-/** Whether a press on a cell opens its quick info. @param {HTMLElement} el */
-export declare const infoMode: (el: HTMLElement) => boolean;
+/** Whether the primary pointer is a finger: nothing hovers, so a hover card is out of reach [ux-1101, uptime-touch]. */
+export declare const coarsePointer: () => boolean;
+/**
+ * Whether a press on a cell opens its quick info (the per-period list). "Hover card only" (no `open`) does not apply on a coarse
+ * pointer: a tap opens the quick info there, as `open: 'info'` does everywhere. A strip that says `open: 'none'` stays as it is.
+ * @param {HTMLElement} el
+ */
+export declare function infoMode(el: HTMLElement): boolean;

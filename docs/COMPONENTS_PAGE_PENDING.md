@@ -42,6 +42,8 @@ each line its example and its option row, and empties the list.
 - gaps-1031, site/components/datatable.html (and the calm tones section): `data-kp-tones="calm"` on a `.kp-datatable` or `.kp-table` with `data-kp-tone="logged | quiet | paused"` on a cell (and `data-kp-logged-fill="success"`): an option row and an example of a freezer list whose old-portion hint is a quiet cell.
 - ux-1101 (2026-11-01), site/components/datatable.html: the Filters popover (`data-kp-filters="inline"` keeps the inline panel; `--kp-datatable-filters-width`), the visible Min / Max / From / To labels, the empty and failed table that is only its plate, and `data-kp-datatable-keep-pager` (the pager hides on one page).
 - ux-1101, site/components/datatable.html: `data-kp-row-actions="menu"` with `data-kp-row-primary` (one primary action and a row menu, also in phone cards), and the fixed column tracks while a group folds (a sentence, no option).
+- ux-1101, site/components/action-columns.html: `data-kp-actions-narrow="stack"` (the narrow list's buttons are one row, the primary first, by default; `stack` keeps one per line), with a before and after.
+- ux-1101, site/components/disabled-reason.html and uptime.html: the reason printed under the control on a coarse pointer; the uptime row tap on a coarse pointer (sentences, no options).
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's

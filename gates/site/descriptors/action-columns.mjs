@@ -160,6 +160,7 @@ list.addEventListener('click', async (event) => {
             },
             { name: 'data-kp-action-measuring', what: 'What the script writes on a table for the moment it measures, every button at its own size.' },
             { name: 'a disabled action', what: 'A button with a reason keeps its column: the reason’s wrapper wears the button’s `data-kp-action`.' },
+            { name: 'data-kp-actions-narrow="stack"', what: 'On a list narrower than 30rem the row’s buttons stand in one row under its text, full width, the primary first (it is last in the markup and is moved to the front with `order`, so the focus order stays the wider list’s); a label is never wrapped or cut, and only a row whose labels cannot share one line drops a button to the next. `stack` on the list keeps the earlier look: one button per line, centred under the row.' },
         ],
         accessibility: [
             'Built in — the buttons keep their order in the markup; the columns are layout only, so the tab order is the row’s own.',

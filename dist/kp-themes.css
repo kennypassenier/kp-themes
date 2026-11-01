@@ -7539,14 +7539,15 @@
         justify-self: start;
     }
 
-    /* On a narrow list (under 30rem) the row's text takes the whole line
-     * and its buttons stack under it, one per line, each centred under the
-     * row (Kenny, 2026-10-05: "the phone view can center the buttons, left
-     * alignment doesn't look nice"), each label on a single line: a label is
-     * never wrapped or cut (Kenny's UI rule; the equal columns of the wider
-     * list cut "Review and update all 4…" by 20 px on the dashboard's Inbox,
-     * action-columns-narrow-M1). The wider list keeps the equal columns
-     * Kenny approved (2026-10-04). */
+    /* On a narrow list (under 30rem) the row's text takes the whole line and its buttons stand under it in ONE row, full width, the
+     * primary first [ux-1101, action-list-narrow; Medicine Cabinet: at 390 a dose row stacked Skip above Take, centred and word-wide,
+     * and the primary was the second target]. The row is a wrapping flex line: every button grows to share the width, a label is never
+     * wrapped or cut (Kenny's UI rule; the equal columns of the wider list cut "Review and update all 4…" by 20 px on the dashboard's
+     * Inbox, action-columns-narrow-M1), and only when the labels cannot share one line does a button drop to the next. The primary is
+     * the last button in the markup (the order rule), so here it is moved to the front with `order`: the markup and the focus order
+     * stay as the wider list has them. The wider list keeps the equal columns Kenny approved (2026-10-04).
+     * `data-kp-actions-narrow="stack"` on the list keeps the earlier narrow look: one button per line, centred under the row (Kenny,
+     * 2026-10-05: "the phone view can center the buttons"). */
     @container kp-action-list (max-width: 30rem) {
         .kp-action-list > li {
             grid-template-columns: minmax(0, 1fr);
@@ -7557,14 +7558,31 @@
             grid-column: 1;
         }
 
-        .kp-action-list .kp-row-actions {
+        .kp-action-list:not([data-kp-actions-narrow='stack']) .kp-row-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: stretch;
+            gap: var(--kp-action-gap, var(--kp-space-sm, 0.5rem));
+        }
+
+        .kp-action-list:not([data-kp-actions-narrow='stack']) .kp-row-actions > * {
+            flex: 1 1 auto;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .kp-action-list:not([data-kp-actions-narrow='stack']) .kp-row-actions > :last-child:not(:first-child) {
+            order: -1;
+        }
+
+        .kp-action-list[data-kp-actions-narrow='stack'] .kp-row-actions {
             grid-template-columns: minmax(0, 1fr);
             grid-auto-flow: row;
             justify-content: stretch;
             row-gap: var(--kp-space-xs, 0.25rem);
         }
 
-        .kp-action-list .kp-row-actions > * {
+        .kp-action-list[data-kp-actions-narrow='stack'] .kp-row-actions > * {
             grid-column: 1;
             justify-self: center;
             inline-size: auto;
@@ -25793,6 +25811,31 @@
 
     .kp-reason[data-kp-reason-off] {
         cursor: not-allowed;
+    }
+
+    /* On a coarse pointer a tooltip cannot be reached (nothing hovers, and a disabled button takes no tap), so the reason is printed
+     * under the control as a plain line instead [ux-1101, disabled-touch; Medicine Cabinet: "I took one" out of stock]. The line is
+     * `.kp-reason__line`, which js/reason.js keeps beside the tooltip (the tooltip stays the description a screen reader hears); the
+     * control keeps its place and the line takes its width and wraps. A fine pointer never sees it. */
+    .kp-reason__line {
+        display: none;
+    }
+
+    @media (pointer: coarse) {
+        .kp-reason[data-kp-reason-off] {
+            flex-direction: column;
+            align-items: stretch;
+            gap: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-reason[data-kp-reason-off] > .kp-reason__line {
+            display: block;
+            color: var(--muted-foreground);
+            font-size: var(--kp-text-sm, 0.8125rem);
+            line-height: 1.3;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
     }
 
     /* --- A disabled control in a column of buttons [b3b4-1019; kyu gap 16] ---

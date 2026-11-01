@@ -60,6 +60,7 @@ attachWeekdays(document.getElementById('doc-weekdays-narrow').parentElement);
             { name: 'data-kp-presets', what: 'The quick picks, `weekdays,weekend,every`, or `false` for none.' },
             { name: 'data-kp-value', what: 'The days at first, `1,4` or `mon,thu`.' },
             { name: 'data-kp-disabled', what: 'The whole picker is off; `data-kp-disabled-reason` says why, under the chips.' },
+            { name: 'the minimum shows after a pick', what: 'The “pick at least n days” line and `aria-invalid` appear after the reader has picked, left the group or tried to submit, not while the picker opens empty (as `:user-invalid` does for a native field).' },
         ],
         accessibility: [
             'Built in — the chips are one tab stop with arrow keys; each is a toggle button with its full day name; the line in words is read when it changes.',

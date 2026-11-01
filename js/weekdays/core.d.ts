@@ -24,6 +24,8 @@ export declare class WeekdaysCore extends Controller {
         quick: HTMLDivElement;
         buttons: Map<string, HTMLButtonElement>;
     };
+    /** Whether the reader has picked, left the group or tried to submit: only then does "pick at least n" show [ux-1101, required-early]. */
+    touched: boolean;
     /**
      * @param {HTMLElement} host
      * @param {{ locale?: string, weekStartsOn?: number }} [options]
@@ -32,6 +34,8 @@ export declare class WeekdaysCore extends Controller {
         locale?: string;
         weekStartsOn?: number;
     });
+    /** The reader has interacted: show what is missing, and go on showing it. */
+    touch(): void;
     /** The picked values, in the order the chips stand. @returns {string[]} */
     picked(): string[];
     /** @returns {(number | 'last')[]} */

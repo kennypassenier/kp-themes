@@ -29,6 +29,8 @@ export declare class JsonFieldController extends Controller {
     state: 'empty' | 'valid' | 'invalid' | 'text';
     /** The parsed value of a valid text. @type {unknown} */
     parsed: unknown;
+    /** Whether the reader has left the field or tried to submit: only then does an invalid state show its marks [ux-1101]. */
+    touched: boolean;
     /** The line the error is on, 0 for none. */
     errorLine: number;
     /** @type {number | undefined} */
@@ -71,6 +73,8 @@ export declare class JsonFieldController extends Controller {
     /** After a rewrite: no pending check, check now, size the box. */
     settle(): void;
     onInput(): void;
+    /** The reader has left the field or tried to submit: show what is wrong, and go on showing it as they type. */
+    touch(): void;
     onBlur(): void;
     onScroll(): void;
     /** The wheel over the line numbers scrolls the text, as it does over the box [kpadopt5-r3]. @param {WheelEvent} event */
