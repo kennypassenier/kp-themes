@@ -17823,6 +17823,9 @@
  * three buttons, the same row in every month: below --kp-calendar-nav-fit
  * (20.5rem, which holds formal's widest month in English); a register
  * whose type is wider sets its own, measured with its widest month. The
+ * calendar also measures the words it carries (--kp-calendar-nav-measured,
+ * js/calendar/nav-fit.js), and the larger of the two wins, so a longer
+ * language folds in time [kitchen-1101]. The
  * nav is a container so its children can compare the two (100cqi). */
     .kp-calendar__nav {
         container: kp-calendar-nav / inline-size;
@@ -17840,25 +17843,30 @@
         white-space: nowrap;
     }
 
+    /* Previous and Next are one role, one width (measured by js/calendar/nav-fit.js) [almanac-1101]. */
+    .kp-calendar__nav > :is([data-kp-calendar-prev], [data-kp-calendar-next]) {
+        min-inline-size: var(--kp-calendar-step-min, auto);
+    }
+
     .kp-calendar__nav > [data-kp-calendar-prev] {
-        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-row: calc(1 + max(0, sign(max(var(--kp-calendar-nav-fit, 20.5rem), var(--kp-calendar-nav-measured, 0px)) - 100cqi)));
         grid-column: 1;
     }
 
     .kp-calendar__nav > [data-kp-calendar-next] {
-        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
-        grid-column: calc(3 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-row: calc(1 + max(0, sign(max(var(--kp-calendar-nav-fit, 20.5rem), var(--kp-calendar-nav-measured, 0px)) - 100cqi)));
+        grid-column: calc(3 - max(0, sign(max(var(--kp-calendar-nav-fit, 20.5rem), var(--kp-calendar-nav-measured, 0px)) - 100cqi)));
     }
 
     .kp-calendar__nav > [data-kp-calendar-today] {
-        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
-        grid-column: calc(4 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-row: calc(1 + max(0, sign(max(var(--kp-calendar-nav-fit, 20.5rem), var(--kp-calendar-nav-measured, 0px)) - 100cqi)));
+        grid-column: calc(4 - max(0, sign(max(var(--kp-calendar-nav-fit, 20.5rem), var(--kp-calendar-nav-measured, 0px)) - 100cqi)));
     }
 
     .kp-calendar__title {
         grid-row: 1;
-        grid-column: calc(2 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi))) / span
-            calc(1 + 2 * max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: calc(2 - max(0, sign(max(var(--kp-calendar-nav-fit, 20.5rem), var(--kp-calendar-nav-measured, 0px)) - 100cqi))) / span
+            calc(1 + 2 * max(0, sign(max(var(--kp-calendar-nav-fit, 20.5rem), var(--kp-calendar-nav-measured, 0px)) - 100cqi)));
         margin: 0;
         font-size: clamp(var(--kp-text-sm, 0.8125rem), 5.4cqi, var(--kp-calendar-title-size, 1.125rem));
         text-align: center;
@@ -17986,6 +17994,12 @@
         font-variant-numeric: tabular-nums;
         line-height: 1.1;
         cursor: pointer;
+    }
+
+    /* A day still to come, with nothing about it, answers no press [almanac-1101 future-days]: it keeps its dashed
+     * look and its place in the keyboard path, and says it is unavailable. */
+    .kp-calendar__day[aria-disabled='true'] {
+        cursor: default;
     }
 
     .kp-calendar__day[hidden] {

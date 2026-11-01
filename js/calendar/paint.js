@@ -4,6 +4,7 @@ import { BUSY_LAYERS, leaveBusyLayers } from './busy.js';
 import { dayFor } from './day.js';
 import { dayKey, formatDayKey, monthCells, two } from './dates.js';
 import { keyOf } from './dom.js';
+import { measureNavFit } from './nav-fit.js';
 import { syncStatePlate } from './plate.js';
 
 /** @typedef {import('./controller.js').CalendarController} Calendar */
@@ -42,12 +43,16 @@ function paintCell(c, i, iso, today, stop, monthChanged) {
     if (!mine) {
         cell.td.removeAttribute('aria-selected');
         delete cell.button.dataset.kpDate;
+        cell.button.removeAttribute('aria-disabled');
         cell.button.tabIndex = -1;
         return;
     }
     const day = dayFor(c, iso, today);
     cell.button.dataset.kpDate = iso;
     cell.button.dataset.kpTone = day.tone;
+    // A day still to come with nothing about it answers no press [almanac-1101 future-days].
+    if (day.tone === 'future') cell.button.setAttribute('aria-disabled', 'true');
+    else cell.button.removeAttribute('aria-disabled');
     cell.button.toggleAttribute('data-kp-today', iso === today);
     cell.num.textContent = iso.slice(8, 10);
     // Every tone that carries a count prints it (a calm quiet or paused day never carries one); the shared tones never do.
@@ -73,6 +78,7 @@ export function paintCalendar(c) {
     const monthChanged = c.shownMonth !== ym;
     c.shownMonth = ym;
     c.title.textContent = c.strings.monthTitle(c.months[c.month - 1] ?? '', c.year);
+    measureNavFit(c);
     c.grid.setAttribute('aria-busy', String(busy));
     const inMonth = (/** @type {string | null} */ iso) => !!iso && iso.startsWith(ym);
     // One tab stop: the day last moved to, else the picked day, else today, else the 1st.

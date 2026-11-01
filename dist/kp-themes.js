@@ -24302,6 +24302,54 @@ var init_keys6 = __esm({
   }
 });
 
+// js/calendar/nav-fit.js
+function measureNavFit(c) {
+  const nav = c.title.parentElement;
+  if (!nav || !nav.isConnected) return;
+  const titles = c.months.map((month) => c.strings.monthTitle(month, c.year));
+  const buttons = [...nav.children].filter((child) => child !== c.title);
+  const key = [...titles, ...buttons.map((b) => b.textContent)].join("\n");
+  if (MEASURED.get(c.el) === key) return;
+  const widest3 = widestTitle(c.title, nav, titles);
+  if (widest3 === 0) return;
+  MEASURED.set(c.el, key);
+  equalSteps(c.el, buttons);
+  const rest = buttons.reduce((sum, b) => sum + b.getBoundingClientRect().width, 0);
+  const gap = Number.parseFloat(getComputedStyle(nav).columnGap) || 0;
+  c.el.style.setProperty("--kp-calendar-nav-measured", `${Math.ceil(widest3 + rest + gap * buttons.length + 1)}px`);
+}
+function equalSteps(el16, buttons) {
+  el16.style.removeProperty("--kp-calendar-step-min");
+  const steps2 = buttons.filter((b) => b.matches("[data-kp-calendar-prev], [data-kp-calendar-next]"));
+  const widest3 = Math.max(0, ...steps2.map((b) => b.getBoundingClientRect().width));
+  if (widest3 > 0) el16.style.setProperty("--kp-calendar-step-min", `${Math.ceil(widest3)}px`);
+}
+function widestTitle(title, nav, titles) {
+  const probe = (
+    /** @type {HTMLElement} */
+    title.cloneNode(false)
+  );
+  probe.removeAttribute("id");
+  probe.removeAttribute("aria-live");
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText = "position:absolute;visibility:hidden;inline-size:max-content;font-size:var(--kp-calendar-title-size, 1.125rem)";
+  nav.append(probe);
+  let widest3 = 0;
+  for (const text of titles) {
+    probe.textContent = text;
+    widest3 = Math.max(widest3, probe.getBoundingClientRect().width);
+  }
+  probe.remove();
+  return widest3;
+}
+var MEASURED;
+var init_nav_fit = __esm({
+  "js/calendar/nav-fit.js"() {
+    "use strict";
+    MEASURED = /* @__PURE__ */ new WeakMap();
+  }
+});
+
 // js/calendar/plate.js
 function syncStatePlate(c) {
   const calm = isCalmTones(c.el);
@@ -24370,12 +24418,15 @@ function paintCell(c, i, iso, today, stop, monthChanged) {
   if (!mine) {
     cell.td.removeAttribute("aria-selected");
     delete cell.button.dataset.kpDate;
+    cell.button.removeAttribute("aria-disabled");
     cell.button.tabIndex = -1;
     return;
   }
   const day2 = dayFor(c, iso, today);
   cell.button.dataset.kpDate = iso;
   cell.button.dataset.kpTone = day2.tone;
+  if (day2.tone === "future") cell.button.setAttribute("aria-disabled", "true");
+  else cell.button.removeAttribute("aria-disabled");
   cell.button.toggleAttribute("data-kp-today", iso === today);
   cell.num.textContent = iso.slice(8, 10);
   const counted2 = day2.count && !NO_COUNT_TONES.includes(day2.tone);
@@ -24399,6 +24450,7 @@ function paintCalendar(c) {
   const monthChanged = c.shownMonth !== ym;
   c.shownMonth = ym;
   c.title.textContent = c.strings.monthTitle(c.months[c.month - 1] ?? "", c.year);
+  measureNavFit(c);
   c.grid.setAttribute("aria-busy", String(busy));
   const inMonth = (iso) => !!iso && iso.startsWith(ym);
   const stop = [c.focus, c.selected, today].find(inMonth) ?? `${ym}-01`;
@@ -24414,6 +24466,7 @@ var init_paint3 = __esm({
     init_day();
     init_dates2();
     init_dom3();
+    init_nav_fit();
     init_plate2();
     NO_COUNT_TONES = ["future", "before", "loading"];
     monthKey = (c) => `${c.year}-${two2(c.month)}`;
@@ -24553,7 +24606,8 @@ var init_controller14 = __esm({
       }
       /** @param {MouseEvent} event */
       onDay(event) {
-        const iso = this.dayOf(event)?.dataset.kpDate;
+        const day2 = this.dayOf(event);
+        const iso = day2?.getAttribute("aria-disabled") === "true" ? void 0 : day2?.dataset.kpDate;
         if (iso) this.pick(iso, event.detail === 0 ? "keyboard" : "pointer");
       }
       /** @param {KeyboardEvent} event */

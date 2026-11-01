@@ -16,6 +16,7 @@ export const PART_FILES = [
     'js/calendar/day.js',
     'js/calendar/dom.js',
     'js/calendar/keys.js',
+    'js/calendar/nav-fit.js',
     'js/calendar/paint.js',
     'js/calendar/plate.js',
     'js/calendar/state.js',
