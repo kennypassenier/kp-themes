@@ -223,7 +223,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [ux-1101]: the three-way chip's word look reads --kp-tri-tag-size: 1163 + 1 = 1164.
     // Re-pinned 2026-11-01 [ux-1101]: the popover form reads --kp-popover-form-min and -max: 1164 + 2 = 1166.
     // Re-pinned 2026-11-01 [ux-1101]: the date navigation reads --kp-date-nav-gap: 1166 + 1 = 1167.
-    assert.equal(result.expected, 1167, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-11-02 [kitchen-1101]: the calendar publishes --kp-calendar-nav-measured and --kp-calendar-step-min: 1167 + 2 = 1169.
+    assert.equal(result.expected, 1169, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -326,7 +327,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [ux-1101]: --kp-tri-tag-size is read through var(): 1153 + 1 = 1154.
     // Re-pinned 2026-11-01 [ux-1101]: the popover form's two are read through var(): 1154 + 2 = 1156.
     // Re-pinned 2026-11-01 [ux-1101]: --kp-date-nav-gap is read through var(): 1156 + 1 = 1157.
-    assert.equal(result.readCount, 1157);
+    // Re-pinned 2026-11-02 [kitchen-1101]: the calendar's two measured knobs are read through var(): 1157 + 2 = 1159.
+    assert.equal(result.readCount, 1159);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
