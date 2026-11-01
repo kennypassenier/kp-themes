@@ -3235,7 +3235,7 @@ function say(doc, text) {
     if (region) region.textContent = text;
   }, 30);
 }
-function setCalm(on, { doc = document, scope, loading, remember: remember3 = true, announce: announce4 = true } = {}) {
+function setCalm(on, { doc = document, scope, loading, remember: remember3 = true, announce: announce5 = true } = {}) {
   const root = doc.documentElement;
   const was = root.hasAttribute(CALM_ATTRIBUTE);
   if (scope !== void 0) root.setAttribute("data-kp-calm-scope", scope);
@@ -3251,7 +3251,7 @@ function setCalm(on, { doc = document, scope, loading, remember: remember3 = tru
   }
   syncSwitches(doc);
   if (was === on && scope === void 0 && loading === void 0) return;
-  if (announce4 && was !== on) say(doc, on ? getStrings().calmOn : getStrings().calmOff);
+  if (announce5 && was !== on) say(doc, on ? getStrings().calmOn : getStrings().calmOff);
   root.dispatchEvent(
     new CustomEvent(CALM_EVENT, {
       bubbles: true,
@@ -7681,13 +7681,13 @@ function hideBusy(tile) {
   if (mark?.querySelector(".kp-spinner")) mark.replaceChildren();
   tile.querySelector(":scope > .kp-action__state")?.remove();
 }
-function syncTile(tile, { announce: announce4 = false } = {}) {
+function syncTile(tile, { announce: announce5 = false } = {}) {
   const busy = tile.getAttribute("aria-busy") === "true";
   if (busy) showBusy(tile);
   else hideBusy(tile);
   const before = synced.get(tile);
   synced.set(tile, busy);
-  if (announce4 && before !== void 0 && before !== busy) {
+  if (announce5 && before !== void 0 && before !== busy) {
     tile.dispatchEvent(new CustomEvent(ACTION_BUSY_EVENT, { bubbles: true, detail: { tile, busy } }));
   }
 }
@@ -8444,16 +8444,16 @@ function tracking(run) {
 }
 function draw(run) {
   const { ctx, el: el16, routine } = run;
-  const { state: state12, view, cfg, announce: announce4, done, finishers } = ctx;
+  const { state: state12, view, cfg, announce: announce5, done, finishers } = ctx;
   if (!view || typeof view.IntersectionObserver !== "function") {
     el16.classList.add(STATE.in);
-    announce4(el16, "headline", routine, true);
+    announce5(el16, "headline", routine, true);
     return;
   }
   state12.pending++;
   finishers.push(() => {
     el16.classList.add(STATE.in);
-    announce4(el16, "headline", routine, false);
+    announce5(el16, "headline", routine, false);
   });
   state12.ioHeadline ??= new view.IntersectionObserver(
     (entries2) => {
@@ -8461,7 +8461,7 @@ function draw(run) {
         if (!entry.isIntersecting) continue;
         state12.ioHeadline?.unobserve(entry.target);
         entry.target.classList.add(STATE.in);
-        announce4(entry.target, "headline", routine, false);
+        announce5(entry.target, "headline", routine, false);
         state12.pending--;
         done();
       }
@@ -8830,7 +8830,7 @@ var init_emphasis = __esm({
     EmphasisHook = class extends EffectHook {
       /** @param {Element[]} marks @param {number} first @param {number} step @param {Element} on @param {string} routine */
       clearInSteps(marks, first, step, on, routine) {
-        const { state: state12, finishers, done, announce: announce4, later } = this.ctx;
+        const { state: state12, finishers, done, announce: announce5, later } = this.ctx;
         if (marks.length === 0) return;
         state12.pending++;
         finishers.push(() => clearAll(marks));
@@ -8839,20 +8839,20 @@ var init_emphasis = __esm({
             mark.classList.add(STATE.cleared);
             if (i !== marks.length - 1) return;
             state12.pending--;
-            announce4(on, "emphasis", routine, false);
+            announce5(on, "emphasis", routine, false);
             done();
           }, first + i * step);
         });
       }
       /** @param {Element} container an element carrying data-kp-reveal="emphasis" */
       emphasis(container) {
-        const { reduced: reduced4, cfg, announce: announce4, routineOf, seen } = this.ctx;
+        const { reduced: reduced4, cfg, announce: announce5, routineOf, seen } = this.ctx;
         const marks = [...container.querySelectorAll("mark")];
         copyText(marks);
         const routine = routineOf(container, "emphasis");
         const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
         if (marks.length === 0) {
-          announce4(container, "emphasis", routine, true);
+          announce5(container, "emphasis", routine, true);
           return;
         }
         if (routine === "" || reduced4()) {
@@ -8900,7 +8900,7 @@ var init_emphasis = __esm({
       }
       /** The marks outside any emphasis container clear on load, one after another. @param {ParentNode} scope */
       looseMarks(scope) {
-        const { reduced: reduced4, cfg, announce: announce4, routineOf, seen, started: started2 } = this.ctx;
+        const { reduced: reduced4, cfg, announce: announce5, routineOf, seen, started: started2 } = this.ctx;
         const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started2.has(m));
         if (marks.length === 0) return;
         copyText(marks);
@@ -8909,7 +8909,7 @@ var init_emphasis = __esm({
         const routine = routineOf(first, "emphasis");
         if (routine === "" || reduced4() || seen(first, "emphasis")) {
           clearAll(marks);
-          announce4(first, "emphasis", routine, true);
+          announce5(first, "emphasis", routine, true);
           return;
         }
         this.clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
@@ -8955,12 +8955,12 @@ var init_rule = __esm({
       }
       /** The rules that entered the viewport draw, once each. @param {IntersectionObserverEntry[]} entries @param {string} routine */
       onSeen(entries2, routine) {
-        const { state: state12, announce: announce4, done } = this.ctx;
+        const { state: state12, announce: announce5, done } = this.ctx;
         for (const entry of entries2) {
           if (!entry.isIntersecting) continue;
           state12.io?.unobserve(entry.target);
           entry.target.classList.add(STATE.in);
-          announce4(entry.target, "rule", routine, false);
+          announce5(entry.target, "rule", routine, false);
           state12.pending--;
           done();
         }
@@ -9801,10 +9801,10 @@ var init_arrival = __esm({
     init_arrival_run();
     ArrivalHook = class extends EffectHook {
       arrival() {
-        const { doc, html, announce: announce4, arrivalRoutine, arrivalPerformed, arrivalPlays } = this.ctx;
+        const { doc, html, announce: announce5, arrivalRoutine, arrivalPerformed, arrivalPlays } = this.ctx;
         if (!arrivalPerformed || !doc.body) return;
         if (!arrivalPlays) {
-          announce4(html, "arrival", arrivalRoutine, true);
+          announce5(html, "arrival", arrivalRoutine, true);
           return;
         }
         new ArrivalRun(this.ctx, doc.body).play((undo) => this.own(undo));
@@ -16380,14 +16380,13 @@ var init_region = __esm({
   }
 });
 
-// js/auto-refresh/controller.js
-var RefreshController;
-var init_controller5 = __esm({
-  "js/auto-refresh/controller.js"() {
+// js/auto-refresh/base.js
+var RefreshBase;
+var init_base2 = __esm({
+  "js/auto-refresh/base.js"() {
     "use strict";
     init_controller();
     init_freshness();
-    init_live_options();
     init_remember();
     init_strings();
     init_bar();
@@ -16396,7 +16395,7 @@ var init_controller5 = __esm({
     init_labels();
     init_region();
     init_words();
-    RefreshController = class extends Controller {
+    RefreshBase = class extends Controller {
       /**
        * @param {HTMLElement} host
        * @param {{ now?: () => number }} [options] `now` so a test never reads the real clock
@@ -16442,45 +16441,6 @@ var init_controller5 = __esm({
       /** `event` (the app fetches), `page` (reload) or `region` (swap one element). */
       mode() {
         return this.host.getAttribute("data-kp-refresh-mode") ?? "event";
-      }
-      connect() {
-        const el16 = this.host;
-        const { bar, count: count2, custom, failure } = this.parts;
-        el16.classList.add("kp-refresh");
-        this.chooser.build();
-        this.labels.paintLabel();
-        this.labels.paintTitle();
-        el16.replaceChildren(bar, count2, custom, failure);
-        this.chooser.wire();
-        this.own(() => this.chooser.unwire?.());
-        this.own(() => this.view.clearTimeout(this.timer));
-        this.wireEvents();
-        this.own(watchOptions(el16, WATCHED_ATTRIBUTES, (names) => this.onOptions(names)));
-        this.paintChoice();
-        this.paintAgo();
-        this.schedule();
-      }
-      /** Listen to the chooser, the custom form, the buttons, the R key and the tab's visibility. */
-      wireEvents() {
-        const { custom, now, retry } = this.parts;
-        const picked = (event) => this.onPicked(
-          /** @type {CustomEvent} */
-          event
-        );
-        this.listen(this.host, "kp-menu-select", picked);
-        this.listen(this.host, "kp-segmented-change", picked);
-        this.listen(custom, "submit", (event) => this.onCustomSubmit(
-          /** @type {SubmitEvent} */
-          event
-        ));
-        custom.addEventListener("keydown", (event) => this.onCustomKey(event));
-        this.listen(now, "click", () => this.refreshNow("now"));
-        this.listen(retry, "click", () => this.refreshNow("retry"));
-        this.listen(this.doc, "keydown", (event) => this.onKey(
-          /** @type {KeyboardEvent} */
-          event
-        ));
-        this.listen(this.doc, "visibilitychange", () => this.onVisible());
       }
       // --- Painting. ---
       staleAfter() {
@@ -16625,6 +16585,66 @@ var init_controller5 = __esm({
         this.view.clearTimeout(this.timer);
         this.fire(true);
       }
+      /** Whether a refresh is owed on return (one was missed while hidden, or its time came); clears the mark and sets the reason. */
+      takeReturnDue() {
+        if (!this.missedWhileHidden && this.clock() < this.dueAt) return false;
+        this.missedWhileHidden = false;
+        this.reason = "return";
+        return true;
+      }
+    };
+  }
+});
+
+// js/auto-refresh/controller.js
+var RefreshController;
+var init_controller5 = __esm({
+  "js/auto-refresh/controller.js"() {
+    "use strict";
+    init_live_options();
+    init_strings();
+    init_base2();
+    init_constants5();
+    RefreshController = class extends RefreshBase {
+      connect() {
+        const el16 = this.host;
+        const { bar, count: count2, custom, failure } = this.parts;
+        el16.classList.add("kp-refresh");
+        this.chooser.build();
+        this.labels.paintLabel();
+        this.labels.paintTitle();
+        el16.replaceChildren(bar, count2, custom, failure);
+        this.chooser.wire();
+        this.own(() => this.chooser.unwire?.());
+        this.own(() => this.view.clearTimeout(this.timer));
+        this.wireEvents();
+        this.own(watchOptions(el16, WATCHED_ATTRIBUTES, (names) => this.onOptions(names)));
+        this.paintChoice();
+        this.paintAgo();
+        this.schedule();
+      }
+      /** Listen to the chooser, the custom form, the buttons, the R key and the tab's visibility. */
+      wireEvents() {
+        const { custom, now, retry } = this.parts;
+        const picked = (event) => this.onPicked(
+          /** @type {CustomEvent} */
+          event
+        );
+        this.listen(this.host, "kp-menu-select", picked);
+        this.listen(this.host, "kp-segmented-change", picked);
+        this.listen(custom, "submit", (event) => this.onCustomSubmit(
+          /** @type {SubmitEvent} */
+          event
+        ));
+        custom.addEventListener("keydown", (event) => this.onCustomKey(event));
+        this.listen(now, "click", () => this.refreshNow("now"));
+        this.listen(retry, "click", () => this.refreshNow("retry"));
+        this.listen(this.doc, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(this.doc, "visibilitychange", () => this.onVisible());
+      }
       // --- Events. ---
       /** The chooser picked a value: "other" opens the custom form. @param {CustomEvent} event */
       onPicked(event) {
@@ -16680,11 +16700,8 @@ var init_controller5 = __esm({
           return;
         }
         if (this.interval > 0 && !this.busy) {
-          if (this.missedWhileHidden || this.clock() >= this.dueAt) {
-            this.missedWhileHidden = false;
-            this.reason = "return";
-            this.fire();
-          } else this.schedule(Math.max(0, this.dueAt - this.clock()));
+          if (this.takeReturnDue()) this.fire();
+          else this.schedule(Math.max(0, this.dueAt - this.clock()));
         }
       }
       /**
@@ -16958,14 +16975,14 @@ var init_store2 = __esm({
 });
 
 // js/theme-core/apply.js
-function applyTheme(theme, { root, darkClass, strict = false, announce: announce4 = true } = {}) {
+function applyTheme(theme, { root, darkClass, strict = false, announce: announce5 = true } = {}) {
   const known4 = asTheme(theme);
   if (known4 === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
   const next2 = known4 ?? DEFAULT_THEME;
   const element = rootOf(root);
   if (known4 === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next2, "apply", element);
   const previous = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme"));
-  if (announce4 && previous !== next2) {
+  if (announce5 && previous !== next2) {
     const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
     if (!element.dispatchEvent(ask)) {
       endPreview({ root: element, darkClass });
@@ -16977,7 +16994,7 @@ function applyTheme(theme, { root, darkClass, strict = false, announce: announce
   element.removeAttribute(PENDING_THEME_ATTRIBUTE);
   const cls = darkClass === void 0 ? config2.darkClass : darkClass;
   if (cls) element.classList.toggle(cls, DARK.has(next2));
-  if (announce4 && previous !== next2) {
+  if (announce5 && previous !== next2) {
     element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next2, previous, root: element } }));
   }
   return next2;
@@ -17560,7 +17577,7 @@ var init_item2 = __esm({
        * @param {{ announce?: boolean }} [options]
        * @returns {StepState}
        */
-      sync({ announce: announce4 = false } = {}) {
+      sync({ announce: announce5 = false } = {}) {
         const { item } = this;
         const state12 = known(item.getAttribute("data-state"));
         if (item.getAttribute("data-state") !== state12) item.setAttribute("data-state", state12);
@@ -17571,7 +17588,7 @@ var init_item2 = __esm({
         const previous = this.state;
         this.state = state12;
         const list = item.closest(STEPLIST_SELECTOR);
-        if (list && announce4 && previous !== void 0 && previous !== state12) this.announce(list, state12, previous);
+        if (list && announce5 && previous !== void 0 && previous !== state12) this.announce(list, state12, previous);
         return state12;
       }
       /** The mark, with the theme's spinner on the running step. @param {StepState} state */
@@ -20388,7 +20405,7 @@ function buildParts2(doc, strings) {
   return { plot, tipTime, release: release2, pinWord, pin, tipRows, tipFoot, tipEvents, tip, note: note2, readout, legend, showAll: showAll2, hint, annKey, tipMedian, parts: parts2 };
 }
 var PlotBase;
-var init_base2 = __esm({
+var init_base3 = __esm({
   "js/chart/plot/base.js"() {
     "use strict";
     init_controller();
@@ -20548,7 +20565,7 @@ var init_legend = __esm({
     init_dom2();
     init_attach4();
     init_selection();
-    init_base2();
+    init_base3();
     MAX_STUBS = 50;
     STUB_WIDTH = 12;
     PlotLegend = class extends PlotBase {
@@ -21372,7 +21389,7 @@ var init_trend_view = __esm({
        * @param {number} k
        * @param {boolean} [announce] say it to a screen reader (keys only)
        */
-      show(k, announce4 = false) {
+      show(k, announce5 = false) {
         const { pts, plot, cross, ctx } = this;
         if (pts.length < 2) return;
         const i = Math.max(0, Math.min(pts.length - 1, k));
@@ -21385,7 +21402,7 @@ var init_trend_view = __esm({
         cross.style.insetInlineStart = `${x}px`;
         cross.hidden = false;
         this.placeChip(moment, this.fmt(value, "spark"), x, width);
-        if (announce4) this.live.textContent = `${moment} \xB7 ${this.fmt(value, "readout")}`;
+        if (announce5) this.live.textContent = `${moment} \xB7 ${this.fmt(value, "readout")}`;
       }
       /**
        * The chip over the line, kept inside the trend; the value under the moment when the two do not fit on one line, and in the
@@ -23472,7 +23489,7 @@ var init_sync2 = __esm({
        * @param {{ announce?: boolean, options?: CardStateOptions }} [how]
        * @returns {CardState}
        */
-      sync({ announce: announce4 = false, options } = {}) {
+      sync({ announce: announce5 = false, options } = {}) {
         const { card } = this;
         const state12 = known2(card.getAttribute("data-kp-state"));
         if (card.getAttribute("data-kp-state") !== state12) card.setAttribute("data-kp-state", state12);
@@ -23489,7 +23506,7 @@ var init_sync2 = __esm({
         this.syncBusy(parts2.stage, loading, opts);
         this.drawn = true;
         this.state = state12;
-        if (announce4 && previous !== void 0 && previous !== state12)
+        if (announce5 && previous !== void 0 && previous !== state12)
           card.dispatchEvent(new CustomEvent(CARD_STATE_EVENT, { bubbles: true, detail: { card, state: state12, previous } }));
         return state12;
       }
@@ -25312,7 +25329,7 @@ function writeText2(item, { label: label2, detail, fix, since }) {
     part7.replaceChildren(fix);
   }
 }
-function syncItem2(item, { announce: announce4 = false } = {}) {
+function syncItem2(item, { announce: announce5 = false } = {}) {
   const calm = isCalm2(item.closest(STATUS_LIST));
   const state12 = known3(item.getAttribute("data-state"), calm);
   if (item.getAttribute("data-state") !== state12) item.setAttribute("data-state", state12);
@@ -25348,7 +25365,7 @@ function syncItem2(item, { announce: announce4 = false } = {}) {
   } else syncAction(item, state12, list);
   const previous = synced2.get(item);
   synced2.set(item, state12);
-  if (list && announce4 && previous !== void 0 && previous !== state12) {
+  if (list && announce5 && previous !== void 0 && previous !== state12) {
     if (state12 !== "loading") {
       say3(list, {
         label: labelOf4(item),
@@ -38136,7 +38153,7 @@ function finish(list, timer, { quiet = false } = {}) {
   if (!quiet) {
     const sound = list.getAttribute("data-kp-timers-sound") ?? "chime";
     const speak = list.getAttribute("data-kp-timers-speak") === "on";
-    const announce4 = () => {
+    const announce5 = () => {
       const length = playTimerSound(sound);
       if (speak)
         setTimeout(
@@ -38145,14 +38162,14 @@ function finish(list, timer, { quiet = false } = {}) {
         );
     };
     if (sound !== "off" || speak) {
-      announce4();
+      announce5();
       const ring = Number(list.getAttribute("data-kp-timers-ring") ?? 60);
       if (ring > 0) {
         const until = Date.now() + ring * 1e3;
         timer.card.setAttribute("data-kp-timer-ringing", "");
         timer.ring = setInterval(() => {
           if (Date.now() >= until || timer.state !== "done") return stopRing(timer);
-          announce4();
+          announce5();
         }, 4e3);
       }
     }
@@ -40591,7 +40608,7 @@ var init_helpers2 = __esm({
 
 // js/sidenav/base.js
 var SidenavBase;
-var init_base3 = __esm({
+var init_base4 = __esm({
   "js/sidenav/base.js"() {
     "use strict";
     init_controller();
@@ -40773,7 +40790,7 @@ var init_shift = __esm({
     init_helpers2();
     init_options4();
     init_constants18();
-    init_base3();
+    init_base4();
     MOVED = /** @type {const} */
     ["marginInlineStart", "marginInlineEnd", "paddingInlineStart", "paddingInlineEnd"];
     INSTANT = { duration: "0s", ease: "linear", delay: "0s" };
@@ -51778,14 +51795,14 @@ var init_view2 = __esm({
        * Draw the current step; announce it (focus and event) unless rendering silently.
        * @param {{ announce?: boolean, previous?: number }} [how]
        */
-      show({ announce: announce4 = true, previous = this.at } = {}) {
+      show({ announce: announce5 = true, previous = this.at } = {}) {
         const { at, steps: steps2 } = this;
         steps2.forEach((step, i) => {
           step.hidden = i !== at;
         });
         this.showLabels();
         this.showButtons();
-        if (!announce4) return;
+        if (!announce5) return;
         if (this.moveFocus) {
           steps2[at]?.setAttribute("tabindex", "-1");
           steps2[at]?.focus();
@@ -52188,7 +52205,7 @@ var init_colorpicker = __esm({
        * @param {boolean} announce
        * @returns {ColourDetail}
        */
-      update(announce4) {
+      update(announce5) {
         const picker = this.host;
         const colour = this.read();
         const text = formatHsl(colour);
@@ -52198,7 +52215,7 @@ var init_colorpicker = __esm({
         const against = this.target();
         const { ratio, ok } = this.measure(colour, against);
         const detail = { value: text, ...colour, ratio, ok, against };
-        if (announce4) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
+        if (announce5) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
         return detail;
       }
       /**
@@ -53259,12 +53276,12 @@ var init_controller42 = __esm({
         this.moveFocus(to);
       }
       /** @param {number} year @param {number} month @param {boolean} announce */
-      showMonth(year, month, announce4) {
+      showMonth(year, month, announce5) {
         if (this.year === year && this.month === month) return;
         this.year = year;
         this.month = month;
         paintCalendar(this);
-        if (announce4) this.el.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month } }));
+        if (announce5) this.el.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month } }));
       }
       /** @param {string} iso */
       buttonFor(iso) {
@@ -66191,10 +66208,10 @@ function sharedSize(done, total, base) {
   const scaled = new Intl.NumberFormat(void 0, { maximumFractionDigits: power === 0 ? 0 : SIZE_DECIMALS }).format(done / base ** power);
   return getStrings().jobLineBytes(scaled, all);
 }
-function jobLineText(report3, { base = DECIMAL_BASE } = {}) {
+function jobLineText(report4, { base = DECIMAL_BASE } = {}) {
   const s2 = getStrings();
   const parts2 = [];
-  const { step, steps: steps2, done, total } = report3;
+  const { step, steps: steps2, done, total } = report4;
   if (Number.isFinite(step) && Number.isFinite(steps2) && /** @type {number} */
   steps2 > 0)
     parts2.push(s2.jobLineStep(
@@ -66222,16 +66239,16 @@ function jobLineText(report3, { base = DECIMAL_BASE } = {}) {
     void 0,
     { base }
   )));
-  let eta = report3.etaSeconds;
-  if (!Number.isFinite(eta) && Number.isFinite(report3.rate) && /** @type {number} */
-  report3.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
+  let eta = report4.etaSeconds;
+  if (!Number.isFinite(eta) && Number.isFinite(report4.rate) && /** @type {number} */
+  report4.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
     eta = Math.max(
       0,
       /** @type {number} */
       total - /** @type {number} */
       done
     ) / /** @type {number} */
-    report3.rate;
+    report4.rate;
   }
   if (Number.isFinite(eta)) parts2.push(s2.transferLeft(transferEta(
     /** @type {number} */
@@ -66247,12 +66264,12 @@ function stepPosition(list) {
   const index = at >= 0 ? at : waiting >= 0 ? waiting : items.length - 1;
   return { step: Math.max(0, index) + 1, steps: items.length };
 }
-function paint10(line, report3) {
+function paint10(line, report4) {
   const base = (
     /** @type {1000 | 1024} */
     line.getAttribute("data-kp-bytes-base") === String(BINARY_BASE) ? BINARY_BASE : DECIMAL_BASE
   );
-  const text = jobLineText(report3, { base });
+  const text = jobLineText(report4, { base });
   if (line.textContent !== text) {
     line.textContent = text;
     line.dispatchEvent(new CustomEvent(JOBLINE_EVENT, { bubbles: true, detail: { text } }));
@@ -66263,16 +66280,16 @@ function listOf4(line) {
   const found = target ? document.querySelector(target) : null;
   return found?.matches(STEPLIST_SELECTOR) ? found : null;
 }
-function setJobLine(line, report3) {
+function setJobLine(line, report4) {
   const next2 = { ...reports.get(line) ?? {} };
-  for (const [key, value] of Object.entries(report3)) {
+  for (const [key, value] of Object.entries(report4)) {
     if (value === null || value === void 0) delete /** @type {any} */
     next2[key];
     else next2[key] = value;
   }
   reports.set(line, next2);
   const list = listOf4(line);
-  paint10(line, list && !("step" in report3) ? { ...next2, ...stepPosition(list) } : next2);
+  paint10(line, list && !("step" in report4) ? { ...next2, ...stepPosition(list) } : next2);
 }
 function buildJobLine({ label: label2, steplist } = {}) {
   const line = document.createElement("p");
@@ -77551,6 +77568,117 @@ var init_draft = __esm({
   }
 });
 
+// js/autosize/hooks.js
+function hookValueSetter(c) {
+  const area = c.area;
+  const descriptor = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value");
+  if (!descriptor?.get || !descriptor.set) return;
+  const { get, set } = descriptor;
+  Object.defineProperty(area, "value", {
+    configurable: true,
+    get() {
+      return get.call(this);
+    },
+    set(v) {
+      set.call(this, v);
+      c.measure();
+      c.drawCounter();
+    }
+  });
+  c.own(() => {
+    delete /** @type {any} */
+    area.value;
+  });
+}
+function registerSubmitKey(c) {
+  const area = c.area;
+  if (attr8(area, "data-kp-submit-key", "off") !== "mod-enter") return;
+  void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
+    if (c.destroyed) return;
+    const unregister = registerShortcuts2(
+      area,
+      [
+        {
+          keys: "Mod Enter",
+          what: c.strings.autosizeSubmit,
+          group: c.strings.autosizeGroup,
+          when: () => c.doc.activeElement === area && !area.disabled && !area.readOnly,
+          run: () => {
+            if (area.form?.requestSubmit) area.form.requestSubmit();
+            else area.form?.submit();
+          }
+        }
+      ],
+      { dev: false }
+    );
+    c.own(() => unregister?.());
+  });
+}
+var attr8;
+var init_hooks = __esm({
+  "js/autosize/hooks.js"() {
+    "use strict";
+    attr8 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
+  }
+});
+
+// js/autosize/measure.js
+function measureArea(c) {
+  const area = c.area;
+  if (c.state === "loading") {
+    const cs = c.view.getComputedStyle(area);
+    area.style.blockSize = `${Math.ceil(c.minRows() * lineHeightOf(cs) + chromeOf(cs))}px`;
+    area.style.overflowY = "hidden";
+    return;
+  }
+  const engine2 = c.engineInUse();
+  area.setAttribute("data-kp-autosize-engine-used", engine2);
+  if (engine2 === "css") measureCss(c);
+  else measureJs(c);
+}
+function measureCss(c) {
+  const area = c.area;
+  const cs = c.view.getComputedStyle(area);
+  const lh = lineHeightOf(cs);
+  const chrome = chromeOf(cs);
+  const rows = c.maxRows();
+  const cap2 = c.phoneCap();
+  area.style.blockSize = "";
+  area.style.overflowY = "";
+  area.style.setProperty("--kp-autosize-min", `${Math.ceil(c.minRows() * lh + chrome)}px`);
+  const most = rows === null ? "none" : `${Math.ceil(Math.min(rows * lh + chrome, cap2 ?? Number.POSITIVE_INFINITY))}px`;
+  area.style.setProperty("--kp-autosize-max", most);
+  const result = fitTextarea(area, { minRows: c.minRows(), maxRows: rows, ...cap2 !== void 0 ? { maxPx: cap2 } : {}, apply: false });
+  report2(c, result.height, result.lines, result.capped);
+}
+function measureJs(c) {
+  const area = c.area;
+  const cap2 = c.phoneCap();
+  area.style.removeProperty("--kp-autosize-min");
+  area.style.removeProperty("--kp-autosize-max");
+  const result = fitTextarea(area, {
+    minRows: c.minRows(),
+    maxRows: c.maxRows(),
+    ...cap2 !== void 0 ? { maxPx: cap2 } : {},
+    keepPx: c.shrinks() ? 0 : c.tallest
+  });
+  c.tallest = Math.max(c.tallest, result.height);
+  report2(c, result.height, result.lines, result.capped);
+}
+function report2(c, height, lines, capped) {
+  c.area.toggleAttribute("data-kp-autosize-capped", capped);
+  if (height === c.lastHeight) return;
+  c.lastHeight = height;
+  c.area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail: { height, lines, capped } }));
+}
+var init_measure2 = __esm({
+  "js/autosize/measure.js"() {
+    "use strict";
+    init_constants35();
+    init_fit3();
+  }
+});
+
 // js/autosize/state.js
 var state10, nextErrorNumber;
 var init_state25 = __esm({
@@ -77646,7 +77774,7 @@ var init_status = __esm({
 });
 
 // js/autosize/controller.js
-var attr8, AutosizeController;
+var AutosizeController;
 var init_controller70 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
@@ -77657,8 +77785,9 @@ var init_controller70 = __esm({
     init_counter();
     init_draft();
     init_fit3();
+    init_hooks();
+    init_measure2();
     init_status();
-    attr8 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
     AutosizeController = class extends Controller {
       /**
        * @param {HTMLElement} host the textarea
@@ -77741,7 +77870,7 @@ var init_controller70 = __esm({
         this.own(() => this.reset());
         area.classList.add("kp-autosize");
         if (!area.hasAttribute("data-kp-resize")) area.setAttribute("data-kp-resize", "vertical");
-        this.hookValueSetter();
+        hookValueSetter(this);
         this.watchSize();
         restoreDraft(area);
         const form2 = area.form;
@@ -77749,7 +77878,7 @@ var init_controller70 = __esm({
           this.listen(form2, "submit", () => forgetDraft(area));
           this.listen(form2, "reset", () => this.onChange());
         }
-        this.registerSubmitKey();
+        registerSubmitKey(this);
         this.listen(area, "input", () => this.onInput());
         this.listen(area, "paste", () => {
           this.pasteAt = area.selectionStart;
@@ -77759,28 +77888,9 @@ var init_controller70 = __esm({
         this.drawCounter();
         if (area.getAttribute("data-kp-state") === "loading") applyState(this, "loading");
       }
-      /** A script writes `value =`: the setter is the one door. */
-      hookValueSetter() {
-        const area = this.area;
-        const descriptor = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value");
-        if (!descriptor?.get || !descriptor.set) return;
-        const { get, set } = descriptor;
-        const c = this;
-        Object.defineProperty(area, "value", {
-          configurable: true,
-          get() {
-            return get.call(this);
-          },
-          set(v) {
-            set.call(this, v);
-            c.measure();
-            c.drawCounter();
-          }
-        });
-        this.own(() => {
-          delete /** @type {any} */
-          area.value;
-        });
+      /** Size the box for its text, with the engine in use, and report the height. */
+      measure() {
+        measureArea(this);
       }
       /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. */
       watchSize() {
@@ -77800,31 +77910,6 @@ var init_controller70 = __esm({
         if (this.view.visualViewport) this.listen(this.view.visualViewport, "resize", onViewport);
         if (this.phoneQuery) this.listen(this.phoneQuery, "change", onViewport);
         void this.doc.fonts?.ready.then(() => this.measure());
-      }
-      /** Mod+Enter submits, and the `?` sheet lists it. */
-      registerSubmitKey() {
-        const area = this.area;
-        if (attr8(area, "data-kp-submit-key", "off") !== "mod-enter") return;
-        void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
-          if (this.destroyed) return;
-          const unregister = registerShortcuts2(
-            area,
-            [
-              {
-                keys: "Mod Enter",
-                what: this.strings.autosizeSubmit,
-                group: this.strings.autosizeGroup,
-                when: () => this.doc.activeElement === area && !area.disabled && !area.readOnly,
-                run: () => {
-                  if (area.form?.requestSubmit) area.form.requestSubmit();
-                  else area.form?.submit();
-                }
-              }
-            ],
-            { dev: false }
-          );
-          this.own(() => unregister?.());
-        });
       }
       /** Undo what the box got: the card, frame, counter, twin, inline sizes, class and marks. */
       reset() {
@@ -77871,59 +77956,6 @@ var init_controller70 = __esm({
         if (box.bottom > visible4 || box.top < 0) {
           if (area.selectionStart === area.value.length) area.scrollIntoView({ block: "nearest" });
         }
-      }
-      // --- Measure. ---
-      /** Size the box for its text, with the engine in use, and report the height. */
-      measure() {
-        const area = this.area;
-        if (this.state === "loading") {
-          const cs = this.view.getComputedStyle(area);
-          area.style.blockSize = `${Math.ceil(this.minRows() * lineHeightOf(cs) + chromeOf(cs))}px`;
-          area.style.overflowY = "hidden";
-          return;
-        }
-        const engine2 = this.engineInUse();
-        area.setAttribute("data-kp-autosize-engine-used", engine2);
-        if (engine2 === "css") this.measureCss();
-        else this.measureJs();
-      }
-      /** The browser sizes the field; the package says the least and the most, and measures to report. */
-      measureCss() {
-        const area = this.area;
-        const cs = this.view.getComputedStyle(area);
-        const lh = lineHeightOf(cs);
-        const chrome = chromeOf(cs);
-        const rows = this.maxRows();
-        const cap2 = this.phoneCap();
-        area.style.blockSize = "";
-        area.style.overflowY = "";
-        area.style.setProperty("--kp-autosize-min", `${Math.ceil(this.minRows() * lh + chrome)}px`);
-        const most = rows === null ? "none" : `${Math.ceil(Math.min(rows * lh + chrome, cap2 ?? Number.POSITIVE_INFINITY))}px`;
-        area.style.setProperty("--kp-autosize-max", most);
-        const result = fitTextarea(area, { minRows: this.minRows(), maxRows: rows, ...cap2 !== void 0 ? { maxPx: cap2 } : {}, apply: false });
-        this.report(result.height, result.lines, result.capped);
-      }
-      /** The package sizes the field itself, from the twin's measure. */
-      measureJs() {
-        const area = this.area;
-        const cap2 = this.phoneCap();
-        area.style.removeProperty("--kp-autosize-min");
-        area.style.removeProperty("--kp-autosize-max");
-        const result = fitTextarea(area, {
-          minRows: this.minRows(),
-          maxRows: this.maxRows(),
-          ...cap2 !== void 0 ? { maxPx: cap2 } : {},
-          keepPx: this.shrinks() ? 0 : this.tallest
-        });
-        this.tallest = Math.max(this.tallest, result.height);
-        this.report(result.height, result.lines, result.capped);
-      }
-      /** Mark the cap, and fire the event when the height changed. @param {number} height @param {number} lines @param {boolean} capped */
-      report(height, lines, capped) {
-        this.area.toggleAttribute("data-kp-autosize-capped", capped);
-        if (height === this.lastHeight) return;
-        this.lastHeight = height;
-        this.area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail: { height, lines, capped } }));
       }
     };
   }
@@ -82476,6 +82508,99 @@ var init_snooze = __esm({
   }
 });
 
+// js/row-editor/dom.js
+function ensureAddAndStatus(host) {
+  const doc = host.ownerDocument;
+  if (!host.querySelector("[data-kp-rows-add]")) {
+    const add = doc.createElement("button");
+    add.type = "button";
+    add.className = "kp-button";
+    add.setAttribute("data-kp-rows-add", "");
+    host.append(add);
+  }
+  if (!host.querySelector(".kp-rows__status")) {
+    const status = doc.createElement("p");
+    status.className = "kp-rows__status";
+    status.setAttribute("role", "status");
+    host.append(status);
+  }
+}
+function buildHead4(doc, labels) {
+  if (labels.length === 0) return null;
+  const head = doc.createElement("div");
+  head.className = "kp-rows__head";
+  head.setAttribute("aria-hidden", "true");
+  for (const cell of labels) {
+    const label2 = doc.createElement("span");
+    label2.className = "kp-rows__label";
+    label2.textContent = cell.getAttribute("data-label");
+    head.append(label2);
+  }
+  return head;
+}
+function numberRow(row2, n) {
+  for (const el16 of [row2, ...row2.querySelectorAll("*")]) {
+    for (const attribute of el16.getAttributeNames()) {
+      const value = el16.getAttribute(attribute) ?? "";
+      if (value.includes("{n}")) el16.setAttribute(attribute, value.replaceAll("{n}", String(n)));
+    }
+    for (const node of el16.childNodes) if (node.nodeType === Node.TEXT_NODE && node.textContent?.includes("{n}")) node.textContent = node.textContent.replaceAll("{n}", String(n));
+  }
+}
+function writeRemoveButtons(rows, s2, unit2, atMin) {
+  for (const [at, row2] of rows.entries()) {
+    let button6 = row2.querySelector("[data-kp-rows-remove]");
+    if (!button6) {
+      button6 = row2.ownerDocument.createElement("button");
+      button6.className = "kp-button kp-rows__remove";
+      button6.setAttribute("data-kp-rows-remove", "");
+      button6.setAttribute("type", "button");
+      button6.textContent = "\xD7";
+      row2.append(button6);
+    }
+    button6.setAttribute("aria-label", s2.rowsRemove(unit2, at + 1));
+    button6.toggleAttribute("aria-disabled", atMin);
+    if (atMin) button6.setAttribute("aria-disabled", "true");
+  }
+}
+function writeAddButton(add, s2, unit2, atMax) {
+  if (!add) return;
+  if (!add.textContent?.trim() || add.hasAttribute("data-kp-rows-written")) {
+    add.textContent = s2.rowsAdd(unit2);
+    add.setAttribute("data-kp-rows-written", "");
+  }
+  add.toggleAttribute("aria-disabled", atMax);
+  if (atMax) add.setAttribute("aria-disabled", "true");
+}
+function announce3(host, words3) {
+  let live4 = host.querySelector(".kp-rows__live");
+  if (!live4) {
+    live4 = host.ownerDocument.createElement("span");
+    live4.className = "kp-sr-only kp-rows__live";
+    live4.setAttribute("role", "status");
+    host.appendChild(live4);
+  }
+  const line = live4;
+  line.textContent = "";
+  queueMicrotask(() => {
+    line.textContent = words3;
+  });
+}
+function emitRows(host, type, row2, index, rows) {
+  host.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { row: row2, index, count: rows.length } }));
+  host.dispatchEvent(new CustomEvent("kp-rows-change", { bubbles: true, detail: { count: rows.length, rows } }));
+}
+var whole;
+var init_dom12 = __esm({
+  "js/row-editor/dom.js"() {
+    "use strict";
+    whole = (value, fallback2) => {
+      const n = Number.parseInt(value ?? "", 10);
+      return Number.isFinite(n) && n >= 0 ? n : fallback2;
+    };
+  }
+});
+
 // js/row-editor.js
 var row_editor_exports = {};
 __export(row_editor_exports, {
@@ -82510,19 +82635,16 @@ function removeEditorRow(host, row2) {
     RowEditor
   )?.remove(row2);
 }
-var ROWS2, FOCUSABLE3, whole, RowEditor;
+var ROWS2, FOCUSABLE3, RowEditor;
 var init_row_editor = __esm({
   "js/row-editor.js"() {
     "use strict";
     init_controller();
     init_strings();
+    init_dom12();
     init_state_plate();
     ROWS2 = "[data-kp-rows]";
     FOCUSABLE3 = 'input:not([type="hidden"]):not(:disabled), button:not(:disabled), select:not(:disabled), [tabindex="0"]';
-    whole = (value, fallback2) => {
-      const n = Number.parseInt(value ?? "", 10);
-      return Number.isFinite(n) && n >= 0 ? n : fallback2;
-    };
     RowEditor = class extends Controller {
       /** @param {HTMLElement} host */
       constructor(host) {
@@ -82580,35 +82702,14 @@ var init_row_editor = __esm({
       ensureParts() {
         const doc = this.host.ownerDocument;
         if (!this.host.querySelector(":scope > .kp-rows__head")) this.makeHead(doc);
-        if (!this.host.querySelector("[data-kp-rows-add]")) {
-          const add = doc.createElement("button");
-          add.type = "button";
-          add.className = "kp-button";
-          add.setAttribute("data-kp-rows-add", "");
-          this.host.append(add);
-        }
-        if (!this.host.querySelector(".kp-rows__status")) {
-          const status = doc.createElement("p");
-          status.className = "kp-rows__status";
-          status.setAttribute("role", "status");
-          this.host.append(status);
-        }
+        ensureAddAndStatus(this.host);
       }
       /** The labels once, over the columns, from the labels of the first row (or of the template). @param {Document} doc */
       makeHead(doc) {
         const sample = this.rows()[0] ?? this.template()?.content.firstElementChild;
         const labels = [...sample?.querySelectorAll(":scope > [data-label]") ?? []];
-        if (labels.length === 0) return;
-        const head = doc.createElement("div");
-        head.className = "kp-rows__head";
-        head.setAttribute("aria-hidden", "true");
-        for (const cell of labels) {
-          const label2 = doc.createElement("span");
-          label2.className = "kp-rows__label";
-          label2.textContent = cell.getAttribute("data-label");
-          head.append(label2);
-        }
-        this.host.insertBefore(head, this.list);
+        const head = buildHead4(doc, labels);
+        if (head) this.host.insertBefore(head, this.list);
       }
       /** @returns {HTMLTemplateElement | null} */
       template() {
@@ -82633,7 +82734,7 @@ var init_row_editor = __esm({
           template.content.firstElementChild?.cloneNode(true)
         );
         this.serial += 1;
-        this.number(row2, this.serial);
+        numberRow(row2, this.serial);
         this.list.append(row2);
         this.wire(row2);
         const index = this.rows().length;
@@ -82659,16 +82760,6 @@ var init_row_editor = __esm({
         focus?.focus();
         this.say(getStrings().rowsRemoved(this.units[0], at + 1, left.length));
       }
-      /** Give `{n}` in a new row's attributes and text its number. @param {Element} row @param {number} n */
-      number(row2, n) {
-        for (const el16 of [row2, ...row2.querySelectorAll("*")]) {
-          for (const attribute of el16.getAttributeNames()) {
-            const value = el16.getAttribute(attribute) ?? "";
-            if (value.includes("{n}")) el16.setAttribute(attribute, value.replaceAll("{n}", String(n)));
-          }
-          for (const node of el16.childNodes) if (node.nodeType === Node.TEXT_NODE && node.textContent?.includes("{n}")) node.textContent = node.textContent.replaceAll("{n}", String(n));
-        }
-      }
       /** Attach the package's controls inside a new row, as the boot attached the first rows'. @param {HTMLElement} row */
       wire(row2) {
         if (this.host.getAttribute("data-kp-rows-attach") === "none") return;
@@ -82679,35 +82770,13 @@ var init_row_editor = __esm({
       }
       /** Write what depends on the count: the remove buttons, the add button, the plate and the line under the rows. */
       sync() {
-        const doc = this.host.ownerDocument;
         const s2 = getStrings();
         const rows = this.rows();
         const [unit2, units] = this.units;
         const atMin = rows.length <= this.min;
         const atMax = rows.length >= this.max;
-        for (const [at, row2] of rows.entries()) {
-          let button6 = row2.querySelector("[data-kp-rows-remove]");
-          if (!button6) {
-            button6 = doc.createElement("button");
-            button6.className = "kp-button kp-rows__remove";
-            button6.setAttribute("data-kp-rows-remove", "");
-            button6.setAttribute("type", "button");
-            button6.textContent = "\xD7";
-            row2.append(button6);
-          }
-          button6.setAttribute("aria-label", s2.rowsRemove(unit2, at + 1));
-          button6.toggleAttribute("aria-disabled", atMin);
-          if (atMin) button6.setAttribute("aria-disabled", "true");
-        }
-        const add = this.host.querySelector("[data-kp-rows-add]");
-        if (add) {
-          if (!add.textContent?.trim() || add.hasAttribute("data-kp-rows-written")) {
-            add.textContent = s2.rowsAdd(unit2);
-            add.setAttribute("data-kp-rows-written", "");
-          }
-          add.toggleAttribute("aria-disabled", atMax);
-          if (atMax) add.setAttribute("aria-disabled", "true");
-        }
+        writeRemoveButtons(rows, s2, unit2, atMin);
+        writeAddButton(this.host.querySelector("[data-kp-rows-add]"), s2, unit2, atMax);
         const status = this.host.querySelector(".kp-rows__status");
         if (status) status.textContent = atMax ? s2.rowsAtMax(this.max, units) : atMin && this.min > 0 ? s2.rowsAtMin(this.min, this.min === 1 ? unit2 : units) : "";
         this.host.toggleAttribute("data-kp-rows-empty", rows.length === 0);
@@ -82728,24 +82797,11 @@ var init_row_editor = __esm({
       }
       /** Say something to a screen reader, in the status line. @param {string} words */
       say(words3) {
-        const live4 = this.host.querySelector(".kp-rows__live") ?? this.host.appendChild(this.makeLive());
-        live4.textContent = "";
-        queueMicrotask(() => {
-          live4.textContent = words3;
-        });
-      }
-      /** @returns {HTMLElement} */
-      makeLive() {
-        const live4 = this.host.ownerDocument.createElement("span");
-        live4.className = "kp-sr-only kp-rows__live";
-        live4.setAttribute("role", "status");
-        return live4;
+        announce3(this.host, words3);
       }
       /** @param {string} type @param {HTMLElement} row @param {number} index */
       emit(type, row2, index) {
-        const rows = this.rows();
-        this.host.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { row: row2, index, count: rows.length } }));
-        this.host.dispatchEvent(new CustomEvent("kp-rows-change", { bubbles: true, detail: { count: rows.length, rows } }));
+        emitRows(this.host, type, row2, index, this.rows());
       }
       /** Let go of the controls inside the rows and of what this wrote. */
       release() {
@@ -83306,7 +83362,151 @@ var init_view6 = __esm({
   }
 });
 
-// js/graph/draw.js
+// js/graph/draw-parts.js
+function drawEdges(doc, data, at, base) {
+  const edges2 = svgEl(doc, "g", { class: "kp-graph__edges" });
+  const bends = graphBends(data.edges);
+  const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
+  const byId = new Map(data.nodes.map((n) => [n.id, n]));
+  const name = (id) => byId.get(id)?.label ?? id;
+  data.edges.forEach((e, i) => {
+    const a = at.get(e.from);
+    const b = at.get(e.to);
+    if (!a || !b) return;
+    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    const mx = (a.x + b.x) / 2 - (b.y - a.y) / len * bends[i];
+    const my = (a.y + b.y) / 2 + (b.x - a.x) / len * bends[i];
+    const kind = kinds.get(e.kind);
+    const path = svgEl(doc, "path", {
+      d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
+      class: "kp-graph__edge",
+      "data-kp-from": e.from,
+      "data-kp-to": e.to,
+      "data-kp-kind": e.kind,
+      "data-kp-style": kind?.style ?? "solid"
+    });
+    if (kind?.colour) path.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
+    const title = svgEl(doc, "title");
+    title.textContent = `${name(e.from)} \u2192 ${name(e.to)}: ${e.detail || kind?.label || e.kind}`;
+    path.append(title);
+    edges2.append(path);
+    const way = e.arrows ?? "to";
+    const ends = way === "both" ? ["to", "from"] : way === "none" ? [] : [way];
+    for (const end of ends) {
+      const toward = end === "to" ? e.to : e.from;
+      const near2 = end === "to" ? a : b;
+      const far = end === "to" ? b : a;
+      const r = radiusOf(
+        /** @type {GraphNode} */
+        byId.get(toward),
+        base
+      ) + (byId.get(toward)?.flag === "mismatch" ? 5 : 0);
+      const head = svgEl(doc, "path", {
+        d: graphArrow(near2, { x: mx, y: my }, far, r + 3),
+        class: "kp-graph__arrow",
+        "data-kp-from": e.from,
+        "data-kp-to": e.to,
+        "data-kp-kind": e.kind,
+        "data-kp-style": kind?.style ?? "solid",
+        "aria-hidden": "true"
+      });
+      if (kind?.colour) head.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
+      edges2.append(head);
+    }
+  });
+  return edges2;
+}
+function drawNodes(g, world, { data, at, base, hub, wraps }) {
+  const doc = g.el.ownerDocument;
+  const below = g.options.labels === "below";
+  const byId = new Map(data.nodes.map((n) => [n.id, n]));
+  const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
+  const labels = [];
+  const ring = ringOf(data, hub);
+  const order = [...hub ? [hub] : [], ...ring.map((n) => n.id)];
+  if (!g.focus || !order.includes(g.focus)) g.focus = order[0] ?? null;
+  order.forEach((id, index) => {
+    const n = (
+      /** @type {GraphNode} */
+      byId.get(id)
+    );
+    const p = at.get(id);
+    if (!p) return;
+    const r = radiusOf(n, base);
+    const node = svgEl(doc, "g", {
+      class: `kp-graph__node${n.external ? " kp-graph__node--external" : ""}${id === hub ? " kp-graph__node--hub" : ""}`,
+      "data-kp-id": id,
+      role: "button",
+      tabindex: id === g.focus ? 0 : -1,
+      "aria-pressed": String(g.selected.has(id)),
+      "aria-label": `${n.label}, ${n.description}`
+    });
+    if (!n.external) node.setAttribute("style", `--kp-graph-hue: ${n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360)}`);
+    if (n.colour) node.style.setProperty("--kp-graph-node-colour", n.colour);
+    const title = svgEl(doc, "title");
+    title.textContent = `${n.label}: ${n.description}`;
+    node.append(title, svgEl(doc, "circle", { class: "kp-graph__ring", cx: p.x, cy: p.y, r }));
+    if (!n.external) node.append(svgEl(doc, "circle", { class: "kp-graph__core", cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
+    if (n.flag === "mismatch") node.append(svgEl(doc, "circle", { class: "kp-graph__flag", cx: p.x, cy: p.y, r: r + 5 }));
+    const dx = below || id === hub ? 0 : Math.cos(p.angle);
+    const dy = below || id === hub ? 1 : Math.sin(p.angle);
+    const off = r + (n.flag === "mismatch" ? 10 : 6);
+    const anchor = dx > 0.35 ? "start" : dx < -0.35 ? "end" : "middle";
+    const lx = p.x + dx * off;
+    const ly = below ? p.y + r + (n.flag === "mismatch" ? 5 : 0) + 16 : p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
+    const text = (
+      /** @type {SVGTextElement} */
+      svgEl(doc, "text", { class: "kp-graph__label", x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor })
+    );
+    const wrapped = below ? wraps.get(id) : void 0;
+    if (wrapped) {
+      for (const [row2, words3] of wrapped.entries()) {
+        const tspan = svgEl(doc, "tspan", { x: lx.toFixed(1) });
+        if (row2 > 0) tspan.setAttribute("dy", "16");
+        tspan.textContent = words3;
+        text.append(tspan);
+      }
+    } else text.textContent = n.label;
+    text.setAttribute("aria-hidden", "true");
+    node.append(text);
+    labels.push({ text, full: n.label, length: n.label.length });
+    world.append(node);
+    g.decorate?.(node, { kind: "node", host: g.el, key: keyOf8(g.el), index, value: id, label: n.label });
+  });
+  return labels;
+}
+function drawLegend(g, doc, data) {
+  const present2 = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
+  g.legend.replaceChildren(
+    ...present2.map((k, index) => {
+      const li = make35(doc, "li");
+      const button6 = make35(doc, "button", "kp-graph__kind");
+      button6.type = "button";
+      button6.dataset.kpKind = k.kind;
+      button6.title = k.hint;
+      button6.setAttribute("aria-pressed", String(!g.hidden.has(k.kind)));
+      const sample = svgEl(doc, "svg", { class: "kp-graph__sample", viewBox: "0 0 24 8", "aria-hidden": "true" });
+      const line = svgEl(doc, "line", { x1: 1, y1: 4, x2: 23, y2: 4, "data-kp-style": k.style });
+      line.setAttribute("style", `--kp-graph-edge-colour: ${k.colour}`);
+      sample.append(line);
+      button6.append(sample, make35(doc, "span", "", k.label));
+      li.append(button6);
+      g.decorate?.(button6, { kind: "kind", host: g.el, key: keyOf8(g.el), index, value: k.kind, label: k.label });
+      return li;
+    })
+  );
+  g.legend.hidden = present2.length === 0 || data.nodes.length < 2;
+}
+var init_draw_parts = __esm({
+  "js/graph/draw-parts.js"() {
+    "use strict";
+    init_labels3();
+    init_layout4();
+    init_instance3();
+  }
+});
+
+// js/graph/label-lines.js
 function groupsTouching(world) {
   const boxes = [...world.querySelectorAll(".kp-graph__node")].map((n) => (
     /** @type {SVGGraphicsElement} */
@@ -83347,6 +83547,17 @@ function graphLabelLines(label2, target, widthOf) {
   const edges2 = [0, ...cuts, pieces.length];
   return edges2.slice(1).map((to, i) => join(edges2[i], to));
 }
+var SIDE_ROOM;
+var init_label_lines = __esm({
+  "js/graph/label-lines.js"() {
+    "use strict";
+    SIDE_ROOM = [1, 1.1, 1.2, 1.3, 1.4].flatMap(
+      (height) => [1, 0.9, 1.1, 0.8, 1.2].flatMap((stretch) => [0, 0.25, 0.5, 0.75].map((phase) => ({ height, stretch, phase })))
+    );
+  }
+});
+
+// js/graph/draw.js
 function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: false }) {
   const doc = g.el.ownerDocument;
   const o = graphOptionsOf(g.el);
@@ -83452,115 +83663,14 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   }
   g.at = at;
   const hub = hubOf(data);
-  const bends = graphBends(data.edges);
-  const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
-  const byId = new Map(data.nodes.map((n) => [n.id, n]));
-  const name = (id) => byId.get(id)?.label ?? id;
   const world = (
     /** @type {SVGGElement} */
     svgEl(doc, "g", { class: "kp-graph__world" })
   );
   g.world = world;
-  const edges2 = svgEl(doc, "g", { class: "kp-graph__edges" });
-  data.edges.forEach((e, i) => {
-    const a = at.get(e.from);
-    const b = at.get(e.to);
-    if (!a || !b) return;
-    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-    const mx = (a.x + b.x) / 2 - (b.y - a.y) / len * bends[i];
-    const my = (a.y + b.y) / 2 + (b.x - a.x) / len * bends[i];
-    const kind = kinds.get(e.kind);
-    const path = svgEl(doc, "path", {
-      d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
-      class: "kp-graph__edge",
-      "data-kp-from": e.from,
-      "data-kp-to": e.to,
-      "data-kp-kind": e.kind,
-      "data-kp-style": kind?.style ?? "solid"
-    });
-    if (kind?.colour) path.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
-    const title = svgEl(doc, "title");
-    title.textContent = `${name(e.from)} \u2192 ${name(e.to)}: ${e.detail || kind?.label || e.kind}`;
-    path.append(title);
-    edges2.append(path);
-    const way = e.arrows ?? "to";
-    const ends = way === "both" ? ["to", "from"] : way === "none" ? [] : [way];
-    for (const end of ends) {
-      const toward = end === "to" ? e.to : e.from;
-      const near2 = end === "to" ? a : b;
-      const far = end === "to" ? b : a;
-      const r = radiusOf(
-        /** @type {GraphNode} */
-        byId.get(toward),
-        base
-      ) + (byId.get(toward)?.flag === "mismatch" ? 5 : 0);
-      const head = svgEl(doc, "path", {
-        d: graphArrow(near2, { x: mx, y: my }, far, r + 3),
-        class: "kp-graph__arrow",
-        "data-kp-from": e.from,
-        "data-kp-to": e.to,
-        "data-kp-kind": e.kind,
-        "data-kp-style": kind?.style ?? "solid",
-        "aria-hidden": "true"
-      });
-      if (kind?.colour) head.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
-      edges2.append(head);
-    }
-  });
+  const edges2 = drawEdges(doc, data, at, base);
   world.append(edges2);
-  const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
-  const labels = [];
-  const ring = ringOf(data, hub);
-  const order = [...hub ? [hub] : [], ...ring.map((n) => n.id)];
-  if (!g.focus || !order.includes(g.focus)) g.focus = order[0] ?? null;
-  order.forEach((id, index) => {
-    const n = (
-      /** @type {GraphNode} */
-      byId.get(id)
-    );
-    const p = at.get(id);
-    if (!p) return;
-    const r = radiusOf(n, base);
-    const node = svgEl(doc, "g", {
-      class: `kp-graph__node${n.external ? " kp-graph__node--external" : ""}${id === hub ? " kp-graph__node--hub" : ""}`,
-      "data-kp-id": id,
-      role: "button",
-      tabindex: id === g.focus ? 0 : -1,
-      "aria-pressed": String(g.selected.has(id)),
-      "aria-label": `${n.label}, ${n.description}`
-    });
-    if (!n.external) node.setAttribute("style", `--kp-graph-hue: ${n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360)}`);
-    if (n.colour) node.style.setProperty("--kp-graph-node-colour", n.colour);
-    const title = svgEl(doc, "title");
-    title.textContent = `${n.label}: ${n.description}`;
-    node.append(title, svgEl(doc, "circle", { class: "kp-graph__ring", cx: p.x, cy: p.y, r }));
-    if (!n.external) node.append(svgEl(doc, "circle", { class: "kp-graph__core", cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
-    if (n.flag === "mismatch") node.append(svgEl(doc, "circle", { class: "kp-graph__flag", cx: p.x, cy: p.y, r: r + 5 }));
-    const dx = below || id === hub ? 0 : Math.cos(p.angle);
-    const dy = below || id === hub ? 1 : Math.sin(p.angle);
-    const off = r + (n.flag === "mismatch" ? 10 : 6);
-    const anchor = dx > 0.35 ? "start" : dx < -0.35 ? "end" : "middle";
-    const lx = p.x + dx * off;
-    const ly = below ? p.y + r + (n.flag === "mismatch" ? 5 : 0) + 16 : p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
-    const text = (
-      /** @type {SVGTextElement} */
-      svgEl(doc, "text", { class: "kp-graph__label", x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor })
-    );
-    const wrapped = below ? wraps.get(id) : void 0;
-    if (wrapped) {
-      for (const [row2, words3] of wrapped.entries()) {
-        const tspan = svgEl(doc, "tspan", { x: lx.toFixed(1) });
-        if (row2 > 0) tspan.setAttribute("dy", "16");
-        tspan.textContent = words3;
-        text.append(tspan);
-      }
-    } else text.textContent = n.label;
-    text.setAttribute("aria-hidden", "true");
-    node.append(text);
-    labels.push({ text, full: n.label, length: n.label.length });
-    world.append(node);
-    g.decorate?.(node, { kind: "node", host: g.el, key: keyOf8(g.el), index, value: id, label: n.label });
-  });
+  const labels = drawNodes(g, world, { data, at, base, hub, wraps });
   g.svg.append(world);
   g.labels = labels;
   if (isShown(g.svg) && !below) fitDrawnLabels(labels, W, H);
@@ -83575,32 +83685,12 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
       if (tried.best !== attempt) return drawGraph(g, tried.best, { ...tried, locked: true });
     }
   }
-  const present2 = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
-  g.legend.replaceChildren(
-    ...present2.map((k, index) => {
-      const li = make35(doc, "li");
-      const button6 = make35(doc, "button", "kp-graph__kind");
-      button6.type = "button";
-      button6.dataset.kpKind = k.kind;
-      button6.title = k.hint;
-      button6.setAttribute("aria-pressed", String(!g.hidden.has(k.kind)));
-      const sample = svgEl(doc, "svg", { class: "kp-graph__sample", viewBox: "0 0 24 8", "aria-hidden": "true" });
-      const line = svgEl(doc, "line", { x1: 1, y1: 4, x2: 23, y2: 4, "data-kp-style": k.style });
-      line.setAttribute("style", `--kp-graph-edge-colour: ${k.colour}`);
-      sample.append(line);
-      button6.append(sample, make35(doc, "span", "", k.label));
-      li.append(button6);
-      g.decorate?.(button6, { kind: "kind", host: g.el, key: keyOf8(g.el), index, value: k.kind, label: k.label });
-      return li;
-    })
-  );
-  g.legend.hidden = present2.length === 0 || data.nodes.length < 2;
+  drawLegend(g, doc, data);
   restyleGraph(g);
   renderDetail(g);
   applyView(g);
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
-var SIDE_ROOM;
 var init_draw14 = __esm({
   "js/graph/draw.js"() {
     "use strict";
@@ -83610,10 +83700,8 @@ var init_draw14 = __esm({
     init_instance3();
     init_layout4();
     init_constants38();
-    init_labels3();
-    SIDE_ROOM = [1, 1.1, 1.2, 1.3, 1.4].flatMap(
-      (height) => [1, 0.9, 1.1, 0.8, 1.2].flatMap((stretch) => [0, 0.25, 0.5, 0.75].map((phase) => ({ height, stretch, phase })))
-    );
+    init_draw_parts();
+    init_label_lines();
   }
 });
 
@@ -85250,7 +85338,7 @@ async function request(list, id, action, person, { undo = true } = {}) {
     }
   }
   write(list, id, by);
-  announce3(list, item.label, by, joining, person);
+  announce4(list, item.label, by, joining, person);
   if (!joining && undo) offerUndo2(list, item, previousBy, person);
 }
 function refuse2(list, item, by, why) {
@@ -85272,7 +85360,7 @@ function refuse2(list, item, by, why) {
     setTimeout(() => note2.remove(), CLAIM_REFUSED_MS);
   }
 }
-function announce3(list, label2, by, joining, person) {
+function announce4(list, label2, by, joining, person) {
   const s2 = getStrings();
   if (list.getAttribute("data-kp-announce") === "off") return;
   say11(list, by.length ? s2.claimAnnounce(label2, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label2));
@@ -90665,7 +90753,7 @@ function fileOf(root, path) {
   const section = [...root.querySelectorAll(".kp-diffview__file")].find((node) => node.getAttribute("data-kp-diff-path") === path);
   return file && section instanceof HTMLElement ? { file, section } : null;
 }
-function toggleFile(root, path, open4, announce4 = true) {
+function toggleFile(root, path, open4, announce5 = true) {
   const found = fileOf(root, path);
   if (!found) return;
   const st = stateOf11(root);
@@ -90680,7 +90768,7 @@ function toggleFile(root, path, open4, announce4 = true) {
   if (open4 && body.childElementCount === 0) fillBody(root, st, file, body);
   body.hidden = !open4;
   syncBar(root);
-  if (announce4) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
+  if (announce5) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
 }
 async function copyPath(root, button6) {
   const path = button6.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
@@ -91386,15 +91474,15 @@ init_strings();
 function diagnose(stylesheet, script, strings = getStrings()) {
   const onlyInStylesheet = stylesheet.themes.filter((name) => !script.themes.includes(name));
   const onlyInScript = script.themes.filter((name) => !stylesheet.themes.includes(name));
-  const report3 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
-  if (stylesheet.version === null) return report3("no-version", strings.diagnosticsNoVersion);
+  const report4 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
+  if (stylesheet.version === null) return report4("no-version", strings.diagnosticsNoVersion);
   const order = compareVersions(stylesheet.version, script.version ?? "");
   if (order === null || order === 0) {
-    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report3("match", strings.diagnosticsMatch);
-    return report3("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
+    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report4("match", strings.diagnosticsMatch);
+    return report4("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
   }
-  if (order < 0) return report3("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
-  return report3("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
+  if (order < 0) return report4("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
+  return report4("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
 }
 function diagnostics({ root, strings } = {}) {
   return diagnose(stylesheetSide({ root }), scriptSide(), strings ?? getStrings());
@@ -91429,38 +91517,38 @@ function tableHead(s2) {
   thead.append(head);
   return thead;
 }
-function tableBody(s2, report3) {
+function tableBody(s2, report4) {
   const unknown = s2.diagnosticsUnknownVersion;
   const tbody = document.createElement("tbody");
   tbody.append(
-    tableRow(s2.diagnosticsVersion, report3.stylesheet.version ?? unknown, report3.script.version ?? unknown, "version"),
-    tableRow(s2.diagnosticsThemes, report3.stylesheet.themes.join(" "), report3.script.themes.join(" "), "themes"),
+    tableRow(s2.diagnosticsVersion, report4.stylesheet.version ?? unknown, report4.script.version ?? unknown, "version"),
+    tableRow(s2.diagnosticsThemes, report4.stylesheet.themes.join(" "), report4.script.themes.join(" "), "themes"),
     tableRow(
       s2.diagnosticsEffects,
       "\u2014",
-      report3.script.unknownEffects?.length ? report3.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
+      report4.script.unknownEffects?.length ? report4.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
       "effects"
     )
   );
   return tbody;
 }
-function verdictLine(report3) {
+function verdictLine(report4) {
   const verdict = document.createElement("p");
-  verdict.className = report3.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
+  verdict.className = report4.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
   verdict.dataset.kpDiagnostic = "verdict";
-  verdict.dataset.kpStatus = report3.status;
-  verdict.textContent = report3.verdict;
+  verdict.dataset.kpStatus = report4.status;
+  verdict.textContent = report4.verdict;
   return verdict;
 }
-function detailList(s2, report3) {
+function detailList(s2, report4) {
   const detail = document.createElement("ul");
   detail.dataset.kpDiagnostic = "detail";
   for (
     const [names, sentence2] of
     /** @type {[string[], (n: string) => string][]} */
     [
-      [report3.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
-      [report3.onlyInScript, s2.diagnosticsOnlyInScript]
+      [report4.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
+      [report4.onlyInScript, s2.diagnosticsOnlyInScript]
     ]
   ) {
     if (names.length === 0) continue;
@@ -91472,14 +91560,14 @@ function detailList(s2, report3) {
 }
 function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   const s2 = strings ?? getStrings();
-  const report3 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
+  const report4 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
   const heading = document.createElement("h2");
   heading.textContent = s2.diagnosticsHeading;
   const table = document.createElement("table");
   table.className = "kp-table";
-  table.append(tableHead(s2), tableBody(s2, report3));
-  target.replaceChildren(heading, verdictLine(report3), table, detailList(s2, report3));
-  return report3;
+  table.append(tableHead(s2), tableBody(s2, report4));
+  target.replaceChildren(heading, verdictLine(report4), table, detailList(s2, report4));
+  return report4;
 }
 
 // kp-themes-entry.js
@@ -91644,7 +91732,7 @@ function ensureRegister(theme, { pattern = REGISTER_PATTERN, doc = document } = 
 }
 
 // js/lazy-register/controller.js
-var report2 = (error) => console.error(error instanceof Error ? error.message : error);
+var report3 = (error) => console.error(error instanceof Error ? error.message : error);
 var LazyRegisters = class extends Controller {
   /**
    * @param {HTMLElement} host the element that wears the theme (default: theme-core's root)
@@ -91662,7 +91750,7 @@ var LazyRegisters = class extends Controller {
     this.listen(this.host, BEFORE_THEME_EVENT, (e) => this.onBefore(e));
     this.own(onThemeChange((theme, { previous }) => this.onChange(theme, previous), { root: this.host }));
     this.own(() => this.dropHeld());
-    ensureRegister(currentTheme({ root: this.host }), this.loadOptions).catch(report2);
+    ensureRegister(currentTheme({ root: this.host }), this.loadOptions).catch(report3);
   }
   /**
    * Before a change: when the new register is not here yet, refuse the
@@ -91698,11 +91786,11 @@ var LazyRegisters = class extends Controller {
   /** The register failed: the held change is dropped and the error reported. @param {Element} element @param {string} theme @param {unknown} error */
   giveUp(element, theme, error) {
     if (element.getAttribute(PENDING_THEME_ATTRIBUTE) === theme) element.removeAttribute(PENDING_THEME_ATTRIBUTE);
-    report2(error);
+    report3(error);
   }
   /** A theme was worn: fetch its register, and prune the previous one when asked to. @param {string} theme @param {string | null | undefined} previous */
   onChange(theme, previous) {
-    ensureRegister(theme, this.loadOptions).catch(report2);
+    ensureRegister(theme, this.loadOptions).catch(report3);
     if (!this.prune || !previous || previous === theme) return;
     const link2 = registerLink(previous, this.loadOptions);
     if (!link2) return;

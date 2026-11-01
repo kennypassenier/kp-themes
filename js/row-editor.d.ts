@@ -33,8 +33,6 @@ export declare class RowEditor extends Controller {
     add(): HTMLElement | null;
     /** Take a row away; the focus goes to the row now in its place, else to the add button. @param {HTMLElement} row */
     remove(row: HTMLElement): void;
-    /** Give `{n}` in a new row's attributes and text its number. @param {Element} row @param {number} n */
-    number(row: Element, n: number): void;
     /** Attach the package's controls inside a new row, as the boot attached the first rows'. @param {HTMLElement} row */
     wire(row: HTMLElement): void;
     /** Write what depends on the count: the remove buttons, the add button, the plate and the line under the rows. */
@@ -43,8 +41,6 @@ export declare class RowEditor extends Controller {
     paintPlate(empty: boolean): void;
     /** Say something to a screen reader, in the status line. @param {string} words */
     say(words: string): void;
-    /** @returns {HTMLElement} */
-    makeLive(): HTMLElement;
     /** @param {string} type @param {HTMLElement} row @param {number} index */
     emit(type: string, row: HTMLElement, index: number): void;
     /** Let go of the controls inside the rows and of what this wrote. */

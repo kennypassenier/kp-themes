@@ -48,12 +48,10 @@ export declare class AutosizeController extends Controller {
         lines: number;
     };
     connect(): void;
-    /** A script writes `value =`: the setter is the one door. */
-    hookValueSetter(): void;
+    /** Size the box for its text, with the engine in use, and report the height. */
+    measure(): void;
     /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. */
     watchSize(): void;
-    /** Mod+Enter submits, and the `?` sheet lists it. */
-    registerSubmitKey(): void;
     /** Undo what the box got: the card, frame, counter, twin, inline sizes, class and marks. */
     reset(): void;
     /** A person types, pastes or cuts. */
@@ -61,12 +59,4 @@ export declare class AutosizeController extends Controller {
     onChange(): void;
     drawCounter(): void;
     keepCaretInView(): void;
-    /** Size the box for its text, with the engine in use, and report the height. */
-    measure(): void;
-    /** The browser sizes the field; the package says the least and the most, and measures to report. */
-    measureCss(): void;
-    /** The package sizes the field itself, from the twin's measure. */
-    measureJs(): void;
-    /** Mark the cap, and fire the event when the height changed. @param {number} height @param {number} lines @param {boolean} capped */
-    report(height: number, lines: number, capped: boolean): void;
 }

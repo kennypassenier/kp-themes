@@ -228,9 +228,13 @@ Rows picked without select boxes (Ctrl/Cmd+click, Shift+click, a long press on t
 | `core.js`       | RowPickCore: the picks, the anchor, the cursor, the marks on the rows and the voice.            |
 | `rows.js`       | The selectors, attributes and pure helpers of row picking.                                      |
 
-## js/row-editor.js
+## js/row-editor.js → js/row-editor/
 
-The repeating row editor (one file, no folder): the RowEditor controller over `[data-kp-rows]`, its head row, add and remove, min and max with the reason said, the empty plate, and `addEditorRow`, `removeEditorRow` and `editorRowsOf` [mc-1030].
+The repeating row editor: the RowEditor controller over `[data-kp-rows]`, its head row, add and remove, min and max with the reason said, the empty plate, and `addEditorRow`, `removeEditorRow` and `editorRowsOf` [mc-1030]. The controller stays in `js/row-editor.js`; 1 part file.
+
+| File     | Does                                                                                                                  |
+| -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `dom.js` | The DOM pieces: the head row, the add button and status line, the row numbering, the count-driven buttons, the voice. |
 
 ## js/sequencer.js → js/sequencer/
 
@@ -279,7 +283,7 @@ The side navigation: panel, rail, slim, peek, fly-outs and the resize grip. 14 f
 
 ## js/graph.js → js/graph/
 
-The network graph. 13 files.
+The network graph. 15 files.
 
 | File            | Does                                                                                 |
 | --------------- | ------------------------------------------------------------------------------------ |
@@ -288,8 +292,10 @@ The network graph. 13 files.
 | `build.js`      | Builds the parts of one graph (the bar, the picture and the hint) and its model.     |
 | `constants.js`  | The event names and option attributes of the network graph.                          |
 | `controller.js` | GraphControl: one graph placed and wired, its hover, focus, keys and redraw watches. |
+| `draw-parts.js` | The drawn pieces of the graph: the edges with their arrow heads, the nodes with their names, and the legend of kinds. |
 | `draw.js`       | Draws the graph: nodes, edges and labels.                                            |
 | `instance.js`   | One graph's state and the SVG helpers every part uses.                               |
+| `label-lines.js` | How a name breaks into lines, the room tried for names beside the ring, and the count of touching node groups. |
 | `labels.js`     | Pure label and edge geometry: arrows, bends and label fitting.                       |
 | `layout.js`     | Pure layout: the hub, the rings and the room a graph needs.                          |
 | `options.js`    | Reads and sets the graph's options.                                                  |
@@ -1014,7 +1020,7 @@ The activity feed: who did what, day by day, with a row per event, states, Load 
 
 ## js/autosize.js → js/autosize/
 
-The growing text box: it grows with its text, counts, keeps a draft, submits with Mod+Enter and has a loading and an error state. 8 files.
+The growing text box: it grows with its text, counts, keeps a draft, submits with Mod+Enter and has a loading and an error state. 10 files.
 
 | File            | Does                                                                                                                             |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -1024,6 +1030,8 @@ The growing text box: it grows with its text, counts, keeps a draft, submits wit
 | `counter.js`    | The character and line counter under a box, and the polite line that announces 90 % and 100 % of `maxlength`.                    |
 | `draft.js`      | A draft kept on this device until the form is sent: the storage key, keeping, bringing back and forgetting it.                   |
 | `fit.js`        | Measures how tall a box needs to be: line height and chrome of a computed style, and the exact fit on a hidden twin.             |
+| `hooks.js` | The doors into a box from outside: a script writing `value =`, and the Mod+Enter submit key. |
+| `measure.js` | How the box measures: the browser's own sizing or the package's, and the height event. |
 | `state.js`      | The counter that gives each box's error line an id of its own.                                                                   |
 | `status.js`     | The states of a box: `loading` lays the busy card over it inside a frame, `error` writes the sentence in the field's error line. |
 
@@ -1062,12 +1070,13 @@ Forms without a framework: field messages, the summary, the valid and invalid ev
 
 ## js/auto-refresh.js → js/auto-refresh/
 
-The automatic refresh chooser: an interval picker with a freshness line, back-off retries, Refresh now and the R key. 8 files.
+The automatic refresh chooser: an interval picker with a freshness line, back-off retries, Refresh now and the R key. 9 files.
 
 | File            | Does                                                                                                                                                         |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `api.js`        | The calls a page makes on a refresh control: attach, get its handle, answer a refresh, set the interval and the title.                                       |
 | `bar.js`        | Builds the fixed parts of a refresh control: the chooser holder, the custom seconds form, the freshness line, the buttons, the run bar and the failure note. |
+| `base.js` | The state, painting and schedule of a refresh control: the interval, the timer with its back-off, a refresh in progress. |
 | `chooser.js`    | The chooser: segments or a menu, whichever `data-kp-look` names, built, wired, redrawn and filled with the choices.                                          |
 | `constants.js`  | The selector, events, defaults, option attributes, fixed numbers and types of the automatic refresh chooser.                                                 |
 | `controller.js` | One automatic refresh control: the interval, the schedule with its back-off, what makes a refresh wait, and the events [kpadopt5-ops].                       |
