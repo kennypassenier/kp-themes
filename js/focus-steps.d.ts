@@ -1,6 +1,6 @@
 export { FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, } from './focus-steps/constants.js';
 export { goToStep, getStepIndex, getStepsPassed, getSteps, setFocusSteps, setFocusStepsState } from './focus-steps/api.js';
-export { attachFocusSteps } from './focus-steps/attach.js';
+export { attachFocusSteps, nextStep, prevStep } from './focus-steps/attach.js';
 export type FocusIngredient = import('./focus-steps/constants.js').FocusIngredient;
 export type FocusChoice = import('./focus-steps/constants.js').FocusChoice;
 export type FocusAnswer = import('./focus-steps/constants.js').FocusAnswer;

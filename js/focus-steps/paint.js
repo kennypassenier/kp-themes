@@ -1,6 +1,7 @@
 // Paints the focused step.
 import { getStrings } from '../strings.js';
 import { statePlate } from '../state-plate.js';
+import { appendBody } from './detail.js';
 import { focusState } from './state.js';
 import { el, part, stateOf } from './dom.js';
 import { answering, buildResumeAsk, emptyAction, lastIndex, onSummary, opt, summaryOn } from './resume.js';
@@ -102,6 +103,7 @@ export function paint(root, arrive) {
             const text = el('kp-focus-steps__text', 'p');
             text.textContent = step.text;
             holder.append(text);
+            appendBody(holder, step);
             if (step.answer) buildAnswer(root, holder, step, text);
             if (step.note) {
                 const note = el(`kp-alert kp-alert--${step.noteTone === 'warning' ? 'warning' : 'info'} kp-focus-steps__note`, 'p');
@@ -150,6 +152,7 @@ export function paint(root, arrive) {
         const text = el('kp-focus-steps__text', 'p');
         text.textContent = step.text;
         holder.append(text);
+        appendBody(holder, step);
         if (blocks.length) {
             // The step waits: what for, how long, and the button to the track that can go on.
             holder.setAttribute('data-kp-focus-steps-locked', '');

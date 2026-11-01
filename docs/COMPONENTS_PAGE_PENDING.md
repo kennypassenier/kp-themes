@@ -12,6 +12,7 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- habits-1101, site/components/focus-steps.html: a step's `body` (Node or Markdown, `.kp-focus-steps__detail`) and the functions `nextStep(root)` / `prevStep(root)`; one example with a Markdown body and a page-bound Enter key.
 - habits-1101, site/components/structure.html: `attachStructure(root)` also wires `root` itself when it is a tree, reorder list or split pane (the option row for `root` says so).
 - habits-1101, site/components/selection.html: a floating-bottom bar publishes `--kp-selection-lift` on the root (toasts rise above it; a custom property, not an option), and under 30rem the count has its own row (the narrow layout text says so).
 - habits-1101 (2026-11-01), site/components/calendar.html: a calm calendar prints a count on every tone that carries one (a `warn` day under `data-kp-calm-map="none"`), not on logged only; the calm paragraph says so.

@@ -194,7 +194,7 @@ The run timeline. 16 files.
 
 ## js/focus-steps.js → js/focus-steps/
 
-One step at a time with the screen kept on (cook mode), with parallel tracks. 17 files.
+One step at a time with the screen kept on (cook mode), with parallel tracks. 18 files.
 
 | File           | Does                                                                                               |
 | -------------- | -------------------------------------------------------------------------------------------------- |
@@ -204,6 +204,7 @@ One step at a time with the screen kept on (cook mode), with parallel tracks. 17
 | `blockers.js`  | What blocks a step: the blockers, their names and the lane summaries.                              |
 | `constants.js` | The attribute, event names and state table of the focus steps.                                     |
 | `controller.js` | FocusStepsControl: one view: buttons, shortcuts, timers, live options and the screen hold.         |
+| `detail.js`    | A step's `body`: a Node or Markdown drawn under its text.                                          |
 | `dom.js`       | Element lookups and the markup of one step.                                                        |
 | `flow.js`      | The step flow: taking an answer, advancing, the answer and summary markup.                         |
 | `input.js`     | FocusStepsInput: next and back, the keys, the swipe and Read aloud of one view.                    |

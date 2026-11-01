@@ -21291,6 +21291,21 @@
         text-wrap: pretty;
     }
 
+    /* A step's body (Markdown or a node the page built) under its text: it wraps inside the step's measure. */
+    .kp-focus-steps__detail {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        line-height: 1.5;
+    }
+
+    .kp-focus-steps__detail > :first-child {
+        margin-block-start: 0;
+    }
+
+    .kp-focus-steps__detail > :last-child {
+        margin-block-end: 0;
+    }
+
     /* What the step needs sits in a box with room of its own on every side: the title and the rows never touch its
        edge, whatever a register draws there (a bar, a clip, a border) [cook-1017; Kenny: "text die tegen de rand plakt
        zonder marge"]. `--kp-focus-steps-needs-pad` sets it (1rem on the sides). */

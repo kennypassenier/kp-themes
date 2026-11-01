@@ -56,6 +56,10 @@ export type FocusAnswer = {
 export type FocusStep = {
     text: string;
     /**
+     * the longer detail under the text: a Node (copied on every draw) or Markdown drawn with `markdownFragment`
+     */
+    body?: Node | string;
+    /**
      * makes the step a question
      */
     answer?: FocusAnswer;
@@ -212,6 +216,7 @@ export type TrackAlert = {
 /**
  * @typedef {object} FocusStep
  * @property {string} text
+ * @property {Node | string} [body] the longer detail under the text: a Node (copied on every draw) or Markdown drawn with `markdownFragment`
  * @property {FocusAnswer} [answer] makes the step a question
  * @property {(FocusIngredient | string)[]} [ingredients]
  * @property {{ seconds: number, name?: string, id?: string }} [timer] `id` names the timer in the timer list (default: the step's `id`)

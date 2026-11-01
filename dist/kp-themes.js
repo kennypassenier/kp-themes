@@ -35837,6 +35837,22 @@ var init_blockers = __esm({
   }
 });
 
+// js/focus-steps/detail.js
+function appendBody(holder, step) {
+  const { body } = step;
+  if (body === void 0 || body === "") return;
+  const detail = holder.ownerDocument.createElement("div");
+  detail.className = "kp-focus-steps__detail";
+  detail.append(typeof body === "string" ? markdownFragment(holder.ownerDocument, body) : body.cloneNode(true));
+  holder.append(detail);
+}
+var init_detail = __esm({
+  "js/focus-steps/detail.js"() {
+    "use strict";
+    init_markdown();
+  }
+});
+
 // js/focus-steps/lanes.js
 function ensureLanes(root) {
   const found = root.querySelector(".kp-focus-steps__lanes");
@@ -36042,6 +36058,7 @@ function paint4(root, arrive3) {
       const text = el6("kp-focus-steps__text", "p");
       text.textContent = step.text;
       holder.append(text);
+      appendBody(holder, step);
       if (step.answer) buildAnswer(root, holder, step, text);
       if (step.note) {
         const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
@@ -36088,6 +36105,7 @@ function paint4(root, arrive3) {
     const text = el6("kp-focus-steps__text", "p");
     text.textContent = step.text;
     holder.append(text);
+    appendBody(holder, step);
     if (blocks.length) {
       holder.setAttribute("data-kp-focus-steps-locked", "");
       const wait = el6("kp-alert kp-alert--info kp-focus-steps__wait", "div");
@@ -36191,6 +36209,7 @@ var init_paint4 = __esm({
     "use strict";
     init_strings();
     init_state_plate();
+    init_detail();
     init_state12();
     init_dom5();
     init_resume();
@@ -38190,6 +38209,12 @@ function attachFocusSteps(scope = document) {
     for (const control of made6) control?.destroy();
   };
 }
+function nextStep(root) {
+  controllerOf(root, FocusStepsControl)?.next();
+}
+function prevStep(root) {
+  controllerOf(root, FocusStepsControl)?.prev();
+}
 var init_attach8 = __esm({
   "js/focus-steps/attach.js"() {
     "use strict";
@@ -38220,6 +38245,8 @@ __export(focus_steps_exports, {
   getSteps: () => getSteps,
   getStepsPassed: () => getStepsPassed,
   goToStep: () => goToStep,
+  nextStep: () => nextStep,
+  prevStep: () => prevStep,
   setFocusSteps: () => setFocusSteps,
   setFocusStepsState: () => setFocusStepsState
 });
@@ -92301,6 +92328,7 @@ export {
   newpill_exports as newpillExports,
   nextSelection,
   nextSorts,
+  nextStep,
   nextTile,
   niceMax,
   no_flash_exports as noFlashExports,
@@ -92366,6 +92394,7 @@ export {
   preparePrint,
   presetMs,
   prettyJson,
+  prevStep,
   previewTheme,
   previewTypeOf,
   previewedTheme,

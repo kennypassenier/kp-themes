@@ -306,4 +306,5 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/question-card/batch.js',
     'js/command/secret.js',
     'js/selection-bar/lift.js',
+    'js/focus-steps/detail.js',
 ];
