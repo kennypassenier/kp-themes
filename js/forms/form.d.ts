@@ -45,6 +45,14 @@ export declare class FormController extends Controller {
     onFocusOut(event: Event): void;
     /** @param {Event} event */
     onInput(event: Event): void;
+    /** A summary on show follows the fields: the message each shows now, a fixed field gone, the summary hidden when none is left. */
+    refreshSummary(): void;
+    /** What the summary needs of the settings. */
+    look(): {
+        summaryHeading: string;
+        summaryHeadingClass: string;
+        wrapper: string;
+    };
     /** Show the summary of the invalid fields and move the focus. @param {HTMLElement[]} bad */
     showSummary(bad: HTMLElement[]): void;
     /** Check every field; show the summary and fire `kp-form-invalid` when one is wrong. @returns {boolean} */

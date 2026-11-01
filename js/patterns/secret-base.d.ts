@@ -27,6 +27,8 @@ export declare class SecretBase extends Controller {
     timer: number;
     /** The timer that puts Copy's own words back. */
     copiedTimer: number;
+    /** The words Copy had before the first copy of a run of copies, which it gets back. */
+    copyIdle: string;
     /** Cancels the clipboard clearing a copy scheduled. */
     cancelClear: () => void;
     /** The polite region. Set by the subclass's build. @type {HTMLElement | null} */
@@ -54,9 +56,9 @@ export declare class SecretBase extends Controller {
      * @param {HTMLButtonElement} copy
      * @param {() => string | Promise<string>} read
      * @param {string} name what the announcement calls the field
-     * @param {() => void} settle puts the button's own words back
+     * @param {(idle: string) => void} settle puts the button's own words back: the ones it had before the copy
      */
-    copyOut(copy: HTMLButtonElement, read: () => string | Promise<string>, name: string, settle: () => void): Promise<void>;
+    copyOut(copy: HTMLButtonElement, read: () => string | Promise<string>, name: string, settle: (idle: string) => void): Promise<void>;
     /** Empty the clipboard again some seconds after a copy [wish-1120, homelab 108]. @param {string} secret */
     scheduleClear(secret: string): void;
 }

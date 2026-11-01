@@ -185,7 +185,7 @@ test('graphOptionsOf: no attribute is the approved look, and a bad number is no 
     /** @type {Map<string, string>} */
     const attrs = new Map();
     const host = /** @type {Element} */ (/** @type {unknown} */ ({ getAttribute: (/** @type {string} */ n) => attrs.get(n) ?? null, hasAttribute: (/** @type {string} */ n) => attrs.has(n) }));
-    assert.deepEqual(graphOptionsOf(host), { labels: 'beside', chrome: 'outside', colour: 'theme', direction: 'none', zoom: false, detail: false, ring: null, node: null });
+    assert.deepEqual(graphOptionsOf(host), { labels: 'beside', chrome: 'outside', colour: 'theme', direction: 'none', zoom: false, detail: false, ring: null, node: null, height: null });
     attrs.set('data-kp-labels', 'below').set('data-kp-zoom', '').set('data-kp-detail', 'off').set('data-kp-ring-radius', '9').set('data-kp-node-radius', 'abc');
     const o = graphOptionsOf(host);
     assert.equal(o.labels, 'below');

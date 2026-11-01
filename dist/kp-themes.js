@@ -15119,16 +15119,24 @@ function attachMenuButtons(root = document, { decorate: decorate2, strings } = {
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(MENU_BUTTON)]
   );
-  const made6 = wrappers.filter((wrapper) => !controllerOf(wrapper, MenuButtonControl)).map((wrapper) => attachOne(wrapper, MenuButtonControl, { decorate: decorate2, strings }));
+  const wire = (wrapper) => controllerOf(wrapper, MenuButtonControl) ? void 0 : attachOne(wrapper, MenuButtonControl, { decorate: decorate2, strings });
+  const made6 = wrappers.map(wire);
+  const late = (event) => {
+    const wrapper = event.target instanceof Element ? event.target.closest(MENU_BUTTON) : null;
+    if (wrapper instanceof HTMLElement) made6.push(wire(wrapper));
+  };
+  for (const type of LATE_EVENTS) root.addEventListener(type, late, true);
   for (
     const menu of
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(".kp-popover[popover] > .kp-menu")]
   ) countMenu(menu);
   return () => {
+    for (const type of LATE_EVENTS) root.removeEventListener(type, late, true);
     for (const control of made6) control?.destroy();
   };
 }
+var LATE_EVENTS;
 var init_attach3 = __esm({
   "js/menu-button/attach.js"() {
     "use strict";
@@ -15136,6 +15144,7 @@ var init_attach3 = __esm({
     init_constants6();
     init_count2();
     init_controller4();
+    LATE_EVENTS = ["pointerdown", "focusin", "keydown", "click"];
   }
 });
 
@@ -23827,6 +23836,7 @@ var init_secret_base = __esm({
         this.left = 0;
         this.timer = 0;
         this.copiedTimer = 0;
+        this.copyIdle = "";
         this.cancelClear = () => {
         };
         this.spoken = null;
@@ -23879,7 +23889,7 @@ var init_secret_base = __esm({
        * @param {HTMLButtonElement} copy
        * @param {() => string | Promise<string>} read
        * @param {string} name what the announcement calls the field
-       * @param {() => void} settle puts the button's own words back
+       * @param {(idle: string) => void} settle puts the button's own words back: the ones it had before the copy
        */
       async copyOut(copy3, read, name, settle3) {
         let text = "";
@@ -23893,12 +23903,13 @@ var init_secret_base = __esm({
           return;
         }
         delete copy3.dataset.kpCopyFailed;
+        if (!copy3.hasAttribute("data-kp-copied")) this.copyIdle = copy3.textContent ?? "";
         copy3.textContent = this.s.copied;
         copy3.dataset.kpCopied = "";
         copy3.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
         this.say(this.s.copiedAnnouncement(name));
         window.clearTimeout(this.copiedTimer);
-        this.copiedTimer = window.setTimeout(settle3, this.copiedMs);
+        this.copiedTimer = window.setTimeout(() => settle3(this.copyIdle), this.copiedMs);
         this.scheduleClear(text);
       }
       /** Empty the clipboard again some seconds after a copy [wish-1120, homelab 108]. @param {string} secret */
@@ -24323,10 +24334,9 @@ var init_secret_display = __esm({
       /** The value already shown is copied as it stands; a hidden one is read, copied and never drawn. @param {HTMLButtonElement} copy */
       onCopy(copy3) {
         if (this.disabledWhy() !== void 0) return;
-        const idle = this.s.secretCopy;
         const name = this.host.getAttribute("aria-label") ?? this.s.secretLabel;
         const read = () => this.state === "shown" ? this.parts.value.textContent ?? "" : this.read("copy");
-        void this.copyOut(copy3, read, name, () => {
+        void this.copyOut(copy3, read, name, (idle) => {
           copy3.textContent = idle;
           delete copy3.dataset.kpCopied;
         });
@@ -24505,7 +24515,8 @@ var init_secret_input = __esm({
       onCopy(copy3) {
         if (this.parts.input.value === "") return;
         const text = this.parts.input.value;
-        void this.copyOut(copy3, () => text, this.name, () => {
+        void this.copyOut(copy3, () => text, this.name, (idle) => {
+          copy3.textContent = idle;
           delete copy3.dataset.kpCopied;
           this.paint();
         });
@@ -33422,6 +33433,9 @@ function showError(field2, message, { wrapper = ".kp-field", invalidClass = "kp-
   const described = (marked.getAttribute("aria-describedby") ?? "").split(/\s+/).filter(Boolean);
   if (!described.includes(holder.id)) marked.setAttribute("aria-describedby", [...described, holder.id].join(" "));
 }
+function messageOf(field2, { wrapper = ".kp-field" } = {}) {
+  return field2.closest(wrapper)?.querySelector(FIELD_ERROR)?.textContent?.trim() ?? "";
+}
 function clearError(field2, { wrapper = ".kp-field", invalidClass = "kp-field--invalid" } = {}) {
   const box = field2.closest(wrapper);
   const holder = (
@@ -33460,7 +33474,7 @@ function dedupe(list) {
     return true;
   });
 }
-function summaryLine(field2) {
+function summaryLine(field2, wrapper) {
   const item = document.createElement("li");
   const link2 = document.createElement("a");
   link2.href = `#${field2.getAttribute("id") ?? ""}`;
@@ -33470,16 +33484,23 @@ function summaryLine(field2) {
     field2.focus();
   });
   item.append(link2);
+  const message = messageOf(field2, { wrapper });
+  if (message !== "") {
+    const why = document.createElement("span");
+    why.className = "kp-form__summary-message";
+    why.textContent = ` ${message}`;
+    item.append(why);
+  }
   return item;
 }
-function writeSummary(summary2, bad, { summaryHeading, summaryHeadingClass }) {
+function writeSummary(summary2, bad, { summaryHeading, summaryHeadingClass, wrapper }) {
   summary2.textContent = "";
   const heading = document.createElement(summaryHeading);
   heading.className = summaryHeadingClass;
   const s2 = getStrings();
   heading.textContent = bad.length === 1 ? s2.formSummaryOne : s2.formSummaryMany(bad.length);
   const list = document.createElement("ul");
-  for (const field2 of bad) list.append(summaryLine(field2));
+  for (const field2 of bad) list.append(summaryLine(field2, wrapper));
   summary2.append(heading, list);
   summary2.hidden = false;
 }
@@ -33596,12 +33617,27 @@ var init_form = __esm({
         const field2 = this.fieldOf(event);
         if (field2 === null) return;
         if (this.when === "blur" || this.again === "blur" && stateHolder(field2).getAttribute("aria-invalid") === "true") this.validateField(field2);
+        this.refreshSummary();
       }
       /** @param {Event} event */
       onInput(event) {
         const field2 = this.fieldOf(event);
         if (field2 === null) return;
         if (this.when === "input" || this.again === "input" && stateHolder(field2).getAttribute("aria-invalid") === "true") this.validateField(field2);
+        this.refreshSummary();
+      }
+      /** A summary on show follows the fields: the message each shows now, a fixed field gone, the summary hidden when none is left. */
+      refreshSummary() {
+        const summary2 = this.summary;
+        if (summary2 === null || summary2.hidden) return;
+        const bad = dedupe(this.handle.invalid());
+        if (bad.length === 0) summary2.hidden = true;
+        else writeSummary(summary2, bad, this.look());
+      }
+      /** What the summary needs of the settings. */
+      look() {
+        const { summaryHeading, summaryHeadingClass, wrapper } = this.settings;
+        return { summaryHeading, summaryHeadingClass, wrapper };
       }
       /** Show the summary of the invalid fields and move the focus. @param {HTMLElement[]} bad */
       showSummary(bad) {
@@ -33610,7 +33646,7 @@ var init_form = __esm({
           if (this.settings.focusFirstInvalid) bad[0]?.focus();
           return;
         }
-        writeSummary(summary2, bad, this.settings);
+        writeSummary(summary2, bad, this.look());
         if (this.focusOnError) summary2.focus();
       }
       /** Check every field; show the summary and fire `kp-form-invalid` when one is wrong. @returns {boolean} */

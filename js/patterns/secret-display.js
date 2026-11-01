@@ -241,10 +241,9 @@ export class SecretControl extends SecretBase {
     /** The value already shown is copied as it stands; a hidden one is read, copied and never drawn. @param {HTMLButtonElement} copy */
     onCopy(copy) {
         if (this.disabledWhy() !== undefined) return;
-        const idle = this.s.secretCopy;
         const name = this.host.getAttribute('aria-label') ?? this.s.secretLabel;
         const read = () => (this.state === 'shown' ? (this.parts.value.textContent ?? '') : this.read('copy'));
-        void this.copyOut(copy, read, name, () => {
+        void this.copyOut(copy, read, name, (idle) => {
             copy.textContent = idle;
             delete copy.dataset.kpCopied;
         });

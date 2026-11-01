@@ -51,7 +51,7 @@
             "digest": "fef9666c44fdaddb",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-sequencer], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
         },
-        "js/forms.js": { "digest": "ba62638b564a10cb", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },
+        "js/forms.js": { "digest": "8f15af1f536e9d1a", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },
         "js/freshness.js": { "digest": "9860eeec293d8074", "when": "[data-kp-ago]" },
         "js/gallery.js": { "digest": "2f2618d208c40830", "when": "[data-kp-gallery]" },
         "js/gantt.js": { "digest": "7cf70577bdda21f5", "when": "[data-kp-gantt]" },
@@ -72,7 +72,7 @@
         "js/log.js": { "digest": "a4be314cde32f0ef", "when": "[data-kp-source]" },
         "js/logviewer.js": { "digest": "e06a7ba52573eb82", "when": "[data-kp-logviewer]" },
         "js/master-detail.js": { "digest": "a7ae68a985fea8a0", "when": "[data-kp-master-detail]" },
-        "js/menu-button.js": { "digest": "182fe0609f7e772d", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "6c91005493fe4d74", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "ecd4acaf7531756f",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
@@ -84,7 +84,7 @@
         "js/palette.js": { "digest": "bf36f30b237824bf", "when": "[data-kp-palette], [data-kp-shortcuts]" },
         "js/passkeys.js": { "digest": "d90d32e3a6206ae7", "when": "[data-kp-passkeys]" },
         "js/path-trace.js": { "digest": "a9ed28d3c55f21a5", "when": "[data-kp-trace]" },
-        "js/patterns.js": { "digest": "eb8e9904fcda80a8", "when": "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]" },
+        "js/patterns.js": { "digest": "7763b4bba9dd0e71", "when": "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]" },
         "js/pipeline.js": { "digest": "605ca14ef529b4f9", "when": "[data-kp-pipeline]" },
         "js/print.js": { "digest": "8c62d261fc3a8a91", "when": "[data-kp-print-action], [data-kp-checklist], [data-kp-print-sheet]" },
         "js/problems.js": { "digest": "be69d397b102b4eb", "when": "[data-kp-problems]" },

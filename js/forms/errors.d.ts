@@ -30,6 +30,15 @@ export declare function showError(field: HTMLElement, message: string, { wrapper
     invalidClass?: string;
 }): void;
 /**
+ * The message a field shows now: what showError put in its error slot, or '' when it shows none.
+ *
+ * @param {HTMLElement} field
+ * @param {{ wrapper?: string }} [options]
+ */
+export declare function messageOf(field: HTMLElement, { wrapper }?: {
+    wrapper?: string;
+}): string;
+/**
  * Clear what showError put there.
  *
  * @param {HTMLElement} field
