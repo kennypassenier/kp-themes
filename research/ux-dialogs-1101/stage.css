@@ -1,0 +1,54 @@
+/* research/ux-dialogs-1101: a stage frame's own page. Everything with a kp- class is the package; pg- is this page's frame. */
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+}
+
+/* The app's page: its head (title, one sentence, its one action on the same grid row) over its list. */
+.pg-stage {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+}
+
+.pg-stage__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-stage__head h2 {
+    margin: 0;
+}
+
+.pg-stage__head p {
+    margin: var(--kp-space-xs, 0.25rem) 0 0;
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 40rem) {
+    .pg-stage {
+        padding: var(--kp-space-md, 1rem);
+    }
+
+    .pg-stage__head {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+    }
+}
+
+.pg-stage__room {
+    display: grid;
+    min-inline-size: 0;
+}
+
+/* The typed confirmation's list as it was before [uxdialogs1101], to show "now" beside "new". */
+html[data-pg-scene='typed'][data-pg-variant='now'] .kp-type-confirm__list {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+}

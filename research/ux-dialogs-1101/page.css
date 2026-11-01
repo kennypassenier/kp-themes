@@ -1,0 +1,83 @@
+/* research/ux-dialogs-1101: the frame of the page. Everything with a kp- class is the package (inside the stage frames);
+ * the pg- classes are this page's own frame. Every element fills its column (Kenny's full-width rule). */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-changed,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the frames answer their own width, not the window's. */
+.pg-component {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+/* A stage frame: a page of its own, as tall as a laptop's dialog needs; at a phone's width as tall as a phone. */
+.pg-stage-frame {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: var(--pg-stage-height, 36rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.pg-component[data-pg-width='phone'] .pg-stage-frame,
+.pg-phone .pg-stage-frame {
+    --pg-stage-height: 44rem;
+    inline-size: 390px;
+    max-inline-size: 100%;
+    margin-inline: auto;
+}
+
+/* Two frames under each other, each in its own named frame; the default one marked where the section asks it. */
+.pg-pair {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.pg-frame {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.pg-frame[data-pg-default] {
+    border-style: solid;
+    border-color: var(--border-strong);
+}
+
+.pg-frame__name {
+    display: flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.pg-frame:not([data-pg-default]) .pg-frame__default {
+    visibility: hidden;
+}

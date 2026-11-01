@@ -477,6 +477,28 @@
             "fingerprint": "a7cb3b401d68ce04",
             "update": null
         },
+        "research/ux-dialogs-1101/demo.html": {
+            "facts": {
+                "id": "ux-dialogs-1101",
+                "themes": "formal",
+                "ask": null,
+                "askText": "What the app review of 2026-11-01 found in the package’s dialogs, drawers and confirmations, built as you answered: the drawer beside its list and its widths, the close guard, the confirmation’s words and the typed confirmation’s list (options or changes you already decided), and three options whose default you set here (the backdrop, the dialog on a phone, a confirmation inside a dialog). Each component runs in its own small window, so a modal, a drawer and a phone’s width are real; where you choose a default, the approved look and the new one stand under each other and the approved one stays the default until you choose. Formal only, on the apps’ own data (Kitchen, Medicine Cabinet, HTTPSwitchboard, kyu; names and counts are mock). 8 sections, 8 pairs.",
+                "sections": [
+                    { "item": "drawer-beside", "themes": null, "topic": "drawer", "mode": null },
+                    { "item": "drawer-width", "themes": null, "topic": "drawer", "mode": null },
+                    { "item": "dialog-guard", "themes": null, "topic": "guard", "mode": null },
+                    { "item": "dialog-backdrop", "themes": null, "topic": "dialog", "mode": null },
+                    { "item": "dialog-phone-sheet", "themes": null, "topic": "dialog", "mode": null },
+                    { "item": "dialog-stacking", "themes": null, "topic": "dialog", "mode": null },
+                    { "item": "confirm-text", "themes": null, "topic": "confirm", "mode": null },
+                    { "item": "typed-confirm-font", "themes": null, "topic": "confirm", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"ux-dialogs-1101-787e6d76-4423-4fec-a45c-ac2a1eece18a\",\"received\":[]}\n        "
+            },
+            "fingerprint": "5245b93b14063d36",
+            "update": null
+        },
         "research/habits-1101/demo.html": {
             "facts": {
                 "id": "habits-1101",
