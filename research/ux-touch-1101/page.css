@@ -1,0 +1,132 @@
+/* research/ux-touch-1101: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-changed,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    container: pg-stage / inline-size;
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+.pg-component > * {
+    min-inline-size: 0;
+}
+
+/* What the page heard or measured: one line high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+}
+
+/* The approved look above the new one, each in a named frame on one grid. */
+.pg-pair {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.pg-frame {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.pg-frame[data-pg-frame='new'] {
+    border-style: solid;
+    border-color: var(--border-strong);
+}
+
+.pg-frame__name {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+/* The secret field and the form row under it, the row whose place is measured. */
+.pg-secret-row {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-under {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+    color: var(--muted-foreground);
+}
+
+/* The old field held still at its shown state: its drain stands two thirds full rather than running. */
+.pg-drain-still {
+    visibility: visible;
+    scale: 0.66 1;
+}
+
+/* A dialog held open in the page: the package's dialog plate, standing in the flow so its ✕ can be pressed. */
+.pg-dialog-still {
+    position: relative;
+    max-inline-size: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/* Hit areas tinted, on request. */
+.pg-component[data-pg-hits] {
+    --kp-touch-hit-paint: color-mix(in oklab, var(--primary) 16%, transparent);
+    --kp-touch-hit-outline: 1px dashed color-mix(in oklab, var(--primary) 60%, transparent);
+}
+
+/* A target whose hit area is still under 44 px, ringed while the areas are shown. */
+.pg-component[data-pg-hits] [data-pg-small] {
+    outline: 2px solid var(--destructive);
+    outline-offset: 1px;
+}
+
+/* A phone-sized window on one documentation page. */
+.pg-phone {
+    display: grid;
+    justify-items: center;
+}
+
+.pg-phone__screen {
+    inline-size: 390px;
+    max-inline-size: 100%;
+    block-size: 40rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+/* The radios' words take the rest of their row, so the two rows end on one edge. */
+.pg-component .kp-field__option > span {
+    flex: 1 1 auto;
+}

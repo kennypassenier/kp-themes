@@ -496,6 +496,24 @@
             },
             "fingerprint": "ce0153ffcb13c539",
             "update": null
+        },
+        "research/ux-touch-1101/demo.html": {
+            "facts": {
+                "id": "ux-touch-1101",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Your answers of 01/11/2026 to the review of the apps, built: a board on a phone shows one lane under a switcher and moves cards with “Move to”; the secret field keeps its height when it shows its value; every small part takes a 44 px hit area on a touch screen without changing its look; the documentation folds its navigation on a phone. Formal only (names, counts and values are mock). 4 sections, 4 pairs.",
+                "sections": [
+                    { "item": "board-phone", "themes": null, "topic": "board", "mode": null },
+                    { "item": "secret-reveal", "themes": null, "topic": "secret", "mode": null },
+                    { "item": "touch-targets", "themes": null, "topic": "touch", "mode": null },
+                    { "item": "docs-nav", "themes": null, "topic": "docs", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20\",\"received\":[]}\n        "
+            },
+            "fingerprint": "d2fdff4e5442c073",
+            "update": null
         }
     },
     "decided": {
