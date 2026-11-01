@@ -43,7 +43,7 @@ export type SplitHandle = {
 /** The handle for an attached tree, reorder list or split pane. @param {Element} element @returns {TreeHandle | ReorderHandle | SplitHandle | null} */
 export declare function structure(element: Element): TreeHandle | ReorderHandle | SplitHandle | null;
 /**
- * @param {ParentNode} root
+ * @param {ParentNode} root the element to look below; an element that is itself a tree, reorder list or split pane is wired too
  * @param {{ typeahead?: boolean, typeaheadMs?: number, clickToggles?: boolean, selectable?: boolean, reorderPointer?: boolean, splitStep?: number, splitLargeStep?: number, collapseOnDoubleClick?: boolean }} [options]
  *   Defaults; per element as data-attributes: `data-kp-typeahead="false"`, `data-kp-click="select"`, `data-kp-selectable`, `data-kp-pointer="false"`, `data-kp-step`, `data-kp-large-step`, `data-kp-orientation="horizontal"`, `data-kp-collapse`.
  * @returns {(() => void) & { handles: (TreeHandle | ReorderHandle | SplitHandle)[] }} detach

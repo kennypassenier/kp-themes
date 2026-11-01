@@ -22,7 +22,7 @@
 // Since the controller split [closure-pattern B]: each control is one controller class, TreeControl, ReorderControl and
 // SplitControl in js/structure/, on js/controller.js.
 
-import { attachOne, controllerOf } from './controller.js';
+import { attachOne, controllerOf, hostsOf } from './controller.js';
 import { ReorderControl } from './structure/reorder.js';
 import { DEFAULTS, REORDER, SPLIT, TREE } from './structure/shared.js';
 import { SplitControl } from './structure/split.js';
@@ -69,7 +69,7 @@ const KINDS = [
 ];
 
 /**
- * @param {ParentNode} root
+ * @param {ParentNode} root the element to look below; an element that is itself a tree, reorder list or split pane is wired too
  * @param {{ typeahead?: boolean, typeaheadMs?: number, clickToggles?: boolean, selectable?: boolean, reorderPointer?: boolean, splitStep?: number, splitLargeStep?: number, collapseOnDoubleClick?: boolean }} [options]
  *   Defaults; per element as data-attributes: `data-kp-typeahead="false"`, `data-kp-click="select"`, `data-kp-selectable`, `data-kp-pointer="false"`, `data-kp-step`, `data-kp-large-step`, `data-kp-orientation="horizontal"`, `data-kp-collapse`.
  * @returns {(() => void) & { handles: (TreeHandle | ReorderHandle | SplitHandle)[] }} detach
@@ -81,8 +81,9 @@ export function attachStructure(root = document, options = {}) {
     /** @type {(TreeHandle | ReorderHandle | SplitHandle)[]} */
     const created = [];
     for (const [selector, Kind] of KINDS) {
-        for (const element of root.querySelectorAll(selector)) {
-            if (!(element instanceof HTMLElement) || Kind.isAttached(element)) continue;
+        // `root` itself counts when it matches: passing the list element wires the list.
+        for (const element of hostsOf(root, selector)) {
+            if (Kind.isAttached(element)) continue;
             const control = attachOne(element, /** @type {new (host: HTMLElement, options?: any) => TreeControl | ReorderControl | SplitControl} */ (Kind), o);
             if (!control) continue;
             made.push(control);

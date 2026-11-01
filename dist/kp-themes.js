@@ -50242,8 +50242,8 @@ function attachStructure(root = document, options = {}) {
   const made6 = [];
   const created = [];
   for (const [selector, Kind] of KINDS2) {
-    for (const element of root.querySelectorAll(selector)) {
-      if (!(element instanceof HTMLElement) || Kind.isAttached(element)) continue;
+    for (const element of hostsOf(root, selector)) {
+      if (Kind.isAttached(element)) continue;
       const control = attachOne(
         element,
         /** @type {new (host: HTMLElement, options?: any) => TreeControl | ReorderControl | SplitControl} */
