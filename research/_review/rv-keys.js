@@ -18,6 +18,7 @@
 // The journal stays append-only: an undo and a bulk approval are appended as entries (`kind: 'undo' | 'bulk'`,
 // progress.js), nothing is ever removed.
 import { journal, storeKey } from './progress.js';
+import { mountLast } from './rv-last.js';
 
 /** The physical key of every action; the only place a key is named. */
 export const KEYS = {
@@ -115,6 +116,8 @@ export function mountKeys(api) {
     else head?.append(legendEl);
     if (slots.status) slots.status.append(said);
     else head?.append(said);
+    // "Last: approved · Undo": the newest entry of the undo stack, with a button that takes it back [ux-1101, review-tools].
+    const last = mountLast(slots.status ?? head ?? api.dialog, { undo: () => void undo() });
     for (const [name, [title, hint]] of Object.entries(OPTION_TEXT)) {
         const row = el('label', 'rvk-panel__row');
         const box = document.createElement('input');
@@ -163,7 +166,9 @@ export function mountKeys(api) {
         } catch {
             /* the stack holds for this visit; the journal has everything */
         }
+        last.paint(stack.at(-1), options.undo);
     };
+    last.paint(stack.at(-1), options.undo);
 
     const step = () => api.steps[api.index()];
     const isAspect = () => Boolean(step()?.aspect);
@@ -187,6 +192,7 @@ export function mountKeys(api) {
         saveOptions(options);
         const box = panel.querySelector(`[data-rvk-option="${name}"]`);
         if (box) box.checked = options[name];
+        if (name === 'undo') last.paint(stack.at(-1), options.undo);
         if (!options.rejected) closePop();
         if (!options.bulk) cancelConfirm();
         paintLegend();

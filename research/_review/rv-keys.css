@@ -215,3 +215,17 @@
     flex: 1 1 100%;
     margin: 0;
 }
+
+/* "Last: approved · Undo" in the verdict panel's foot [ux-1101]: the newest verdict and the button that takes it back. */
+.rvk-last {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+}
+
+.rvk-last[hidden] {
+    display: none;
+}

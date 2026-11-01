@@ -23,6 +23,15 @@
         flex: 0 0 auto;
     }
 
+    /* The navigation's labels wrap instead of being cut with an ellipsis ("Alerts, toasts, badges, p…"): a label is never cut [ux-1101,
+       review-tools; DEMO_RULES: labels wrap]. A long name takes a second line and its row grows. */
+    .cat-nav .kp-sidenav__label {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
     .cat-column {
         flex: 1 1 auto;
         min-inline-size: 0;

@@ -204,7 +204,7 @@ Without a snapshot, or for a section new in this round, the button is not shown 
 | Option     | Default | What                                                                                                                                                                                 |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `legend`   | on      | the list of keys in the dialog's help popover                                                                                                                                        |
-| `undo`     | on      | **W** undoes the last approve or reject and returns to that step with its boxes; the journal gets an entry `kind: "undo"`, nothing is deleted                                        |
+| `undo`     | on      | **W** undoes the last approve or reject and returns to that step with its boxes; the journal gets an entry `kind: "undo"`, nothing is deleted. The verdict panel's foot shows "Last: approved · Undo" (`rv-last.js`) and its button does the same |
 | `rejected` | on      | **B** (or the button) opens "Rejected so far", an overlay on the stage: rejections with notes, changed defaults, removed options; each line jumps to its pair; Esc closes it         |
 | `bulk`     | off     | **G** approves the rest of a theme, offered only after 3 approvals in a row in it; a confirm line gives the pair count; journal and answer say "approved unseen, N pairs"; 10 s undo |
 

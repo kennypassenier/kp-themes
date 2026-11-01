@@ -1358,6 +1358,14 @@ first, in your order within a severity. `action` left out keeps the action
 an item has, `null` removes it, and a new node equal in markup to the one
 shown keeps the one shown (and its listeners).
 
+**The band or the Problems list?** Use one of them for a problem, not both.
+The band is the short list of what needs attention now, worst first, each
+with its fix, at the top of a page. `.kp-problems` is the detail of one
+subject (what is wrong, why, the remedy), on the page about it. Together
+they show the same alert twice (http-switchboard showed one per profile):
+let the band hold only what the Problems list does not, or let a band item
+open that problem's card instead of repeating it.
+
 ### A state word that keeps its width
 
 ```html
@@ -1840,6 +1848,14 @@ the button's centre falls across the menu, in px from its left edge (kept 14 px
 inside it; not written when the menu hangs above its button). A theme may read
 it to start something under the button; deco's gold inlay does, and every other
 register ignores it.
+
+**Row actions go behind a menu.** The actions of a table or list row are
+one primary button and a row menu under a "⋯" menu button, not a stack of
+small buttons with the destructive one in the middle. A data table does it
+from the markup it already has: `data-kp-row-actions="menu"` on the table
+keeps the primary action (`data-kp-row-primary`, else the first that is not
+destructive) on the row, moves the others into the menu (the same elements,
+their listeners kept) and does the same in its phone cards.
 
 ### Help, a drawer and a short tour
 

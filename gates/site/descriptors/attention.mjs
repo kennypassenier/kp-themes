@@ -98,6 +98,7 @@ band.addEventListener('kp-attention-toggle', (event) => {
             { name: '.kp-attention__more', what: 'The toggle the cap writes, last on the band: “Show 4 more” with the exact number, then “Show fewer”; `aria-expanded` and `aria-controls` the band. Hidden while nothing is over the cap.' },
             { name: 'data-kp-folded / data-kp-attention-expanded', what: 'Written by the script, never by you: on a problem folded away, and on the band while the folded problems are shown.' },
             { name: 'kp-attention-toggle', what: 'Fired on the band at each press of the toggle: `{ expanded, shown, total }`.' },
+            { name: 'the band or the Problems list', what: 'Use one for a problem, not both: the band is the short list of what needs attention now, worst first, each with its fix, at the top of a page; `.kp-problems` is the detail of one subject (what is wrong, why, the remedy), on the page about it. When a page has both, a problem shows once: either the band holds only what the Problems list below does not, or a band item links to (or expands into) that problem’s card, so the same alert never appears twice for one profile.' },
             { name: '.kp-attention__icon, __text, __actions', what: 'A solid round icon, the problem in a strong line and a sentence, and the action that fixes it. In a band under 34rem the actions go under the words.' },
         ],
         accessibility: [

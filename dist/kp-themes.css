@@ -38636,6 +38636,35 @@
         opacity: 0.6;
     }
 
+    /* A column head [ux-1101, docs-guidance; Medicine Cabinet: "Active" was repeated beside every switch]. A first row marked
+     * `.kp-listrow--head` (and `aria-hidden="true"`: it only repeats what the controls are named) names the columns on the list's own
+     * tracks, with the same cells as a row (`.kp-listrow__identity`, `__status`, `__stepper`, `__switch`, `__action`). While the list
+     * has one and is wide, the rows drop the word beside their switch: it stays in the control's name for a screen reader, and the head
+     * carries it for the eye. In the card layout the head is not drawn and every row says the word itself again. */
+    .kp-listrow--head {
+        padding-block: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-listrow--head > .kp-listrow__switch {
+        justify-self: end;
+    }
+
+    @container kp-list (width > 40rem) {
+        .kp-list:has(> .kp-listrow--head) > .kp-listrow:not(.kp-listrow--head) .kp-switch > :not(input) {
+            position: absolute;
+            inline-size: 1px;
+            block-size: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+    }
+
     /* The phone card: the identity and the status each on a line, the stepper filling the line beside the switch, the action on a line of its own. */
     @container kp-list (max-width: 40rem) {
         .kp-listrow {
@@ -38665,6 +38694,10 @@
 
         .kp-listrow__status:empty,
         .kp-listrow__action:empty {
+            display: none;
+        }
+
+        .kp-listrow--head {
             display: none;
         }
     }

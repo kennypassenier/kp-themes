@@ -152,10 +152,13 @@
         margin-block-start: 0;
     }
 
-    /* The list's area: a minimum height of a few rows, so reading to read jumps little, and the host the busy card is laid over. */
+    /* The list's area: a minimum height of a few rows, so reading to read jumps little, and the host the busy card is laid over. It
+       leaves a gutter at its end edge for the floating "Top" button (`.kp-to-top`, fixed at the window's bottom end), which covered the
+       Start button of the row under it at 1280 px [ux-1101, review-tools]. Knob: --agenda-top-gutter. */
     .agenda__area {
         position: relative;
         min-block-size: 22rem;
+        padding-inline-end: var(--agenda-top-gutter, 5.5rem);
     }
 
     /* The rows: four shared columns. */

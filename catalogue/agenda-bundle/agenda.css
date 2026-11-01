@@ -38985,6 +38985,35 @@
         opacity: 0.6;
     }
 
+    /* A column head [ux-1101, docs-guidance; Medicine Cabinet: "Active" was repeated beside every switch]. A first row marked
+     * `.kp-listrow--head` (and `aria-hidden="true"`: it only repeats what the controls are named) names the columns on the list's own
+     * tracks, with the same cells as a row (`.kp-listrow__identity`, `__status`, `__stepper`, `__switch`, `__action`). While the list
+     * has one and is wide, the rows drop the word beside their switch: it stays in the control's name for a screen reader, and the head
+     * carries it for the eye. In the card layout the head is not drawn and every row says the word itself again. */
+    .kp-listrow--head {
+        padding-block: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-listrow--head > .kp-listrow__switch {
+        justify-self: end;
+    }
+
+    @container kp-list (width > 40rem) {
+        .kp-list:has(> .kp-listrow--head) > .kp-listrow:not(.kp-listrow--head) .kp-switch > :not(input) {
+            position: absolute;
+            inline-size: 1px;
+            block-size: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+    }
+
     /* The phone card: the identity and the status each on a line, the stepper filling the line beside the switch, the action on a line of its own. */
     @container kp-list (max-width: 40rem) {
         .kp-listrow {
@@ -39014,6 +39043,10 @@
 
         .kp-listrow__status:empty,
         .kp-listrow__action:empty {
+            display: none;
+        }
+
+        .kp-listrow--head {
             display: none;
         }
     }
@@ -40156,6 +40189,15 @@
         inset-block-start: 0;
         block-size: 100vh;
         flex: 0 0 auto;
+    }
+
+    /* The navigation's labels wrap instead of being cut with an ellipsis ("Alerts, toasts, badges, p…"): a label is never cut [ux-1101,
+       review-tools; DEMO_RULES: labels wrap]. A long name takes a second line and its row grows. */
+    .cat-nav .kp-sidenav__label {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .cat-column {
@@ -41442,10 +41484,13 @@
         margin-block-start: 0;
     }
 
-    /* The list's area: a minimum height of a few rows, so reading to read jumps little, and the host the busy card is laid over. */
+    /* The list's area: a minimum height of a few rows, so reading to read jumps little, and the host the busy card is laid over. It
+       leaves a gutter at its end edge for the floating "Top" button (`.kp-to-top`, fixed at the window's bottom end), which covered the
+       Start button of the row under it at 1280 px [ux-1101, review-tools]. Knob: --agenda-top-gutter. */
     .agenda__area {
         position: relative;
         min-block-size: 22rem;
+        padding-inline-end: var(--agenda-top-gutter, 5.5rem);
     }
 
     /* The rows: four shared columns. */

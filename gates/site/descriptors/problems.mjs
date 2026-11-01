@@ -93,6 +93,7 @@ document.addEventListener('kp-problem-dismiss', (event) => {
             { name: 'data-kp-remedy-label', what: 'The word before the remedy; “What now” by default.' },
             { name: 'data-kp-problem-layout', what: '`stacked` (default) or `inline`, which runs what, why and remedy into one paragraph.' },
             { name: 'per item', what: '`severity` (`critical`, `warning` default, `info`), `command` (set in code with a Copy button), `action`, `dismissible` (default off: a real problem is not closable until it is fixed).' },
+            { name: 'the Problems list or the band', what: 'A problem is shown once. `.kp-problems` is the detail of one subject with its why and its remedy; the attention band (`.kp-attention`) is the short list of what needs attention now across the page. Put a problem in one of them, or let the band item open its Problems card instead of repeating it.' },
             { name: 'shared columns', what: 'Alerts of one `.kp-problems` share four columns (icon, text, fix, close) from 34rem, so every text ends and every fix starts on one edge. A `data-kp-subgrid` list shares the form grid’s columns and a list directly in a form grid spans its tracks.' },
         ],
         accessibility: [

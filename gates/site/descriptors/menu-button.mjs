@@ -62,6 +62,7 @@ export const menuButtonDescriptor = {
             { name: 'empty', what: 'No entries: the button stays, grey, and its title says why; `data-kp-menu-empty="hide"` takes it away instead.' },
             { name: 'in a page header', what: 'In a `.kp-page-header` 40rem wide or narrower, the open menu spans the header’s buttons, inside the screen.' },
             { name: 'a refill while open', what: 'Waits until the menu closes, so a live update never moves an entry under the pointer or the focus; a fill that shows the same is skipped.' },
+            { name: 'row actions', what: 'The actions of a table or list row go behind a menu, not in a stack of small buttons: one primary action stays on the row and the rest sit in a row menu under a “⋯” menu button (a data table does this for you with `data-kp-row-actions="menu"`, also in its phone cards). The destructive action goes in the menu, never beside the primary one.' },
             { name: 'pastel', what: 'The menu opens and closes as pastel’s popover (the menu page): its pass on its ::backdrop, the landing onto it, the close as the opening backwards. A loading menu becomes caterpillar, a head on its top-end corner and stepping legs along its foot, until its entries arrive.' },
         ],
         accessibility: [

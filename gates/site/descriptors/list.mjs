@@ -101,6 +101,7 @@ for (const button of document.querySelectorAll('[data-doc-list-state]')) {
         { name: '.kp-listrow__stepper', what: 'The stepper column, for a `.kp-quantity` with `data-kp-quantity-fill`, which then fills it so every row’s minus and plus line up.' },
         { name: '.kp-listrow__switch', what: 'The switch at the end edge; in a card it shares the stepper’s line and wraps under it when the line is too short for both.' },
         { name: '.kp-listrow--muted', what: 'A row that is off (an inactive medicine): the name and the status are quieted, the controls keep their look so they still read as usable.' },
+        { name: '.kp-listrow--head', what: 'A column head: a first row of the list with the same cells as a row (`.kp-listrow__identity`, `__status`, `__stepper`, `__switch`), written `aria-hidden="true"`. While the list has one and is wider than 40rem, the rows drop the word beside their switch (it stays in the control’s name) and the head carries it once over the switch column; in the card layout the head is not drawn and every row says the word again.' },
         { name: 'as cards', what: 'Under 40rem of the list’s own width: the identity and the status each on a full line, the stepper and the switch on the line under them.' },
         { name: 'loading, empty, failed', what: 'The card’s own states (`.kp-card[data-kp-state]`, js/card-state.js) over the list in its data, holding the list’s footprint.' },
     ],
