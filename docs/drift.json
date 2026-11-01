@@ -369,12 +369,14 @@
         "docs/UTILITIES.md": {
             "why": "The hand-written utility list; gates/check-utilities.mjs already compares its class names with the generated ones. The families and scale it explains come from gates/generate-utilities.mjs; css/utilities.css is that generator's output and is left out.",
             "sources": [
-                "gates/generate-utilities.mjs"
+                "gates/generate-utilities.mjs",
+                "gates/utilities-families.mjs"
             ],
-            "hash": "ad0369effbbc15fbd8177a179d615e18ff9d3cb365a5d440ec06e8eb708d4410",
-            "doc": "a5cdb8b3a5da70d22d5d169324018730c9781b59e17a8890b97af649b2db8757",
+            "hash": "ef23b7dbcd9fad7831ece4fce7b3e5a69f0605a01532632bebe3ec74c6813450",
+            "doc": "6be7917625ccac9ccf7ee9b6c16d73ec84b718b716b90053c14deb885bcf289c",
             "files": {
-                "gates/generate-utilities.mjs": "d474fce4b918a1b6fe9dc405a641b8217ba54d2d1b2f212d769f7249285f53da"
+                "gates/generate-utilities.mjs": "91af418ef85204e5428c6d680051f8993665987edc82963ae32d518fbe48ab56",
+                "gates/utilities-families.mjs": "379c315dee467b61a6f0b48599ccb200e58ff934f73f9a0ac15292a3ad3e1b73"
             }
         },
         "research/datatable/README.md": {

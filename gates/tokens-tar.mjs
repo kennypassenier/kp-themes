@@ -49,7 +49,7 @@ export function files() {
     const themes = readdirSync(new URL('themes/', ROOT), { withFileTypes: true })
         .filter((e) => e.isDirectory())
         .map((e) => `themes/${e.name}/tokens.json`);
-    return [...ENTRIES, 'js/contrast.js', 'gates/config.json', 'css/themes.css', 'css/fonts.css', 'themes/order.json', ...themes, 'VERSION'].sort();
+    return [...ENTRIES, 'gates/invariants-shared.mjs', 'gates/invariants-states.mjs', 'gates/site/highlight-js.mjs', 'js/contrast.js', 'gates/config.json', 'css/themes.css', 'css/fonts.css', 'themes/order.json', ...themes, 'VERSION'].sort();
 }
 
 /** @param {string} out absolute path of the tar to write */

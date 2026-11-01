@@ -2,7 +2,8 @@
 
 118 single-purpose classes in `@layer kp.utilities`, the last layer, so a
 utility beats a component's own value without `!important` (AR17). They
-are generated from `gates/generate-utilities.mjs`; **this list is written
+are generated from `gates/generate-utilities.mjs` (the families are in
+`gates/utilities-families.mjs`); **this list is written
 by hand**, and `gates/check-utilities.mjs` lays the two beside each other
 in both directions. A list generated from the same source could not
 disagree with the stylesheet, so it would measure nothing.
