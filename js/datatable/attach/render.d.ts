@@ -25,8 +25,14 @@ export declare class TableRender {
      * @param {HTMLElement} status @param {ReturnType<typeof getStrings>} s
      */
     startBusyClock(status: HTMLElement, s: ReturnType<typeof getStrings>): void;
-    /** The pager: the page-size choice, Back, the page and Next. @param {HTMLElement} pager @param {ReturnType<typeof getStrings>} s @param {number} pages */
-    writePager(pager: HTMLElement, s: ReturnType<typeof getStrings>, pages: number): void;
+    /**
+     * Whether the pager has anything to offer: more than one page, or more rows than the smallest page size a reader can choose.
+     * Two rows under "Previous 1 / 1 Next" is chrome without a use [ux-1101]; `data-kp-datatable-keep-pager` keeps it.
+     * @param {number} pages @param {number} count
+     */
+    pagerUseful(pages: number, count: number): boolean;
+    /** The pager: the page-size choice, Back, the page and Next. @param {HTMLElement} pager @param {ReturnType<typeof getStrings>} s @param {number} pages @param {number} count */
+    writePager(pager: HTMLElement, s: ReturnType<typeof getStrings>, pages: number, count: number): void;
     /**
      * The empty slot. Nothing yet, or nothing matching: each of the slot's two optional parts says its own thing and offers its own
      * way out [fix-85].

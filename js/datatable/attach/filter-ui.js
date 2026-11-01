@@ -2,6 +2,7 @@
 import { ADD_FILTER, FILTERS, FILTER_TOGGLE, PILLS } from '../selectors.js';
 import { TableFilterChoices } from './filter-choices.js';
 import { attachDatePickers } from '../../datepicker.js';
+import { FilterPopover } from './filter-popover.js';
 /** @typedef {import('../events.js').FilterKind} FilterKind */
 /** @typedef {import('./controller.js').DataTableControl} DataTableControl */
 
@@ -18,6 +19,8 @@ export class TableFilterUi {
         this.panel = null;
         /** @type {HTMLButtonElement | null} */
         this.toggle = null;
+        /** The panel's popover, unless the table keeps it inline [ux-1101]. @type {FilterPopover | null} */
+        this.popover = null;
         /** @type {HTMLElement | null} */
         this.pills = null;
         this.addMode = (this.t.wrap.dataset.kpFilterMode ?? this.t.settings.filterMode) === 'add';
@@ -69,6 +72,22 @@ export class TableFilterUi {
         const toggle = this.takeToggle(panel);
         toggle.setAttribute('aria-controls', panel.id);
         toggle.setAttribute('aria-expanded', String(!panel.hidden));
+        if (FilterPopover.wanted(this.t)) {
+            const open = !panel.hidden;
+            this.popover = new FilterPopover(this.t, panel, toggle);
+            if (open) this.popover.open(false);
+        }
+    }
+
+    /** Open or close the panel, wherever it is drawn. @param {boolean} open @param {boolean} [focus] */
+    setPanelOpen(open, focus = false) {
+        if (this.panel === null || this.toggle === null) return;
+        if (this.popover !== null) {
+            this.popover.setOpen(open, focus);
+            return;
+        }
+        this.panel.hidden = !open;
+        this.toggle.setAttribute('aria-expanded', String(open));
     }
 
     /** The panel's toggle: the page's, or one made here, in the top bar. @param {HTMLElement} panel */
@@ -108,24 +127,25 @@ export class TableFilterUi {
     /**
      * A range filter's two bounds: numbers, or the package's own date pickers. A date bound is the package's own date picker, not a
      * bare date input, so it wears every theme's picker (scope-58, Kenny's second nostromo pass). The picker holds ISO in
-     * data-kp-date-value whatever the field shows.
+     * data-kp-date-value whatever the field shows. Every bound has its own visible label, "Min" and "Max" for numbers, "From" and
+     * "To" for days [ux-1101]; the column's name is the fieldset's legend.
      * @param {number} at @param {FilterKind} kind
      */
     rangeField(at, kind) {
         const { identity } = this.t;
-        const label = this.t.columns.labelOf(at);
         const range = identity.make('div', 'kp-datatable__range');
-        for (const bound of ['from', 'to']) {
+        for (const bound of /** @type {const} */ (['from', 'to'])) {
             const input = /** @type {HTMLInputElement} */ (identity.make('input', 'kp-field__input'));
             input.dataset.kpFilterBound = bound;
-            input.setAttribute('aria-label', bound === 'from' ? identity.s0.tableFilterFrom(label) : identity.s0.tableFilterTo(label));
-            if (kind === 'range') {
-                input.type = 'number';
-                range.append(input);
-                continue;
-            }
             input.id = `${identity.id}-filter-${at}-${bound}`;
-            range.append(this.choices.datePickerFor(input));
+            const words = kind === 'range' ? [identity.s0.tableFilterMin, identity.s0.tableFilterMax] : [identity.s0.tableFilterFromLabel, identity.s0.tableFilterToLabel];
+            const label = /** @type {HTMLLabelElement} */ (identity.make('label', 'kp-field__label kp-datatable__bound-label'));
+            label.htmlFor = input.id;
+            label.textContent = bound === 'from' ? words[0] : words[1];
+            const cell = identity.make('div', 'kp-datatable__bound');
+            if (kind === 'range') input.type = 'number';
+            cell.append(label, kind === 'range' ? input : this.choices.datePickerFor(input));
+            range.append(cell);
         }
         return range;
     }

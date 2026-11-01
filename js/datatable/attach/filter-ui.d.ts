@@ -1,4 +1,5 @@
 import { TableFilterChoices } from './filter-choices.js';
+import { FilterPopover } from './filter-popover.js';
 export type FilterKind = import('../events.js').FilterKind;
 export type DataTableControl = import('./controller.js').DataTableControl;
 /** @typedef {import('../events.js').FilterKind} FilterKind */
@@ -13,6 +14,8 @@ export declare class TableFilterUi {
     panel: HTMLElement | null;
     /** @type {HTMLButtonElement | null} */
     toggle: HTMLButtonElement | null;
+    /** The panel's popover, unless the table keeps it inline [ux-1101]. @type {FilterPopover | null} */
+    popover: FilterPopover | null;
     /** @type {HTMLElement | null} */
     pills: HTMLElement | null;
     addMode: boolean;
@@ -33,6 +36,8 @@ export declare class TableFilterUi {
     findPills(): void;
     /** The panel mode: the panel of every filter, and the toggle that opens it. */
     buildPanel(): void;
+    /** Open or close the panel, wherever it is drawn. @param {boolean} open @param {boolean} [focus] */
+    setPanelOpen(open: boolean, focus?: boolean): void;
     /** The panel's toggle: the page's, or one made here, in the top bar. @param {HTMLElement} panel */
     takeToggle(panel: HTMLElement): HTMLButtonElement;
     /** One filter column's fieldset in the panel: a choice list, or a range of two bounds. @param {number} at */
@@ -40,7 +45,8 @@ export declare class TableFilterUi {
     /**
      * A range filter's two bounds: numbers, or the package's own date pickers. A date bound is the package's own date picker, not a
      * bare date input, so it wears every theme's picker (scope-58, Kenny's second nostromo pass). The picker holds ISO in
-     * data-kp-date-value whatever the field shows.
+     * data-kp-date-value whatever the field shows. Every bound has its own visible label, "Min" and "Max" for numbers, "From" and
+     * "To" for days [ux-1101]; the column's name is the fieldset's legend.
      * @param {number} at @param {FilterKind} kind
      */
     rangeField(at: number, kind: FilterKind): HTMLElement;

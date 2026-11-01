@@ -7369,6 +7369,7 @@ data-cat-server
                             <tr><td><code>data-kp-datatable-filter-toggle</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-filters</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-datatable-grid-readout</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-datatable-keep-pager</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-datatable-loading</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-datatable-page-size</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-datatable-pager</code></td><td>selector</td></tr>
@@ -7408,7 +7409,9 @@ data-cat-server
                             <tr><td><code>data-kp-filter-ui</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-filter-unpill</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-filter-value</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-filters</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-filters-open</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-filters-popover</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-fixed</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-fixed-columns</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-fixed-end</code></td><td>read, written</td></tr>
@@ -7605,6 +7608,7 @@ data-cat-server
                             <tr><td><code>--kp-datatable-filter-editor-radius</code></td><td><code>var(--radius, 0.5rem)</code></td></tr>
                             <tr><td><code>--kp-datatable-filter-editor-title-weight</code></td><td><code>600</code></td></tr>
                             <tr><td><code>--kp-datatable-filter-min</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-datatable-filters-width</code></td><td><code>34rem</code></td></tr>
                             <tr><td><code>--kp-datatable-fixed-end</code></td><td><code>0</code></td></tr>
                             <tr><td><code>--kp-datatable-fixed-ground</code></td><td><code>var(--kp-datatable-head-ground, var(--background))</code></td></tr>
                             <tr><td><code>--kp-datatable-fixed-rule</code></td><td><code>var(--border-strong)</code></td></tr>
@@ -7692,6 +7696,8 @@ data-cat-server
                             <tr><td><code>live options</code></td><td>The row for `data-kp-sort-multi`, `data-kp-filter-mode` and the other attributes above is switchable at runtime: changing the attribute redraws the table, and the table keeps its view (sort, filters, page) while it switches.</td></tr>
                             <tr><td><code>data-kp-cards=&quot;spread&quot;</code></td><td>Cards derive `data-label` from the header; card lines sit on two tracks (label, value), and `spread` puts the label and the value at the opposite edges of the line.</td></tr>
                             <tr><td><code>data-kp-filter-ui=&quot;none&quot;</code></td><td>Leaves out the filter controls while the filters still apply (a page that sets them itself).</td></tr>
+                            <tr><td><code>data-kp-filters=&quot;inline&quot;</code></td><td>The Filters panel opens as a popover under its button, over the table, with a visible label on every input (Min and Max, From and To); the table does not move. `inline` keeps the older panel that opens in the flow and pushes the table down.</td></tr>
+                            <tr><td><code>data-kp-datatable-keep-pager</code></td><td>The pager hides itself when there is nothing to page: one page, and fewer rows than the smallest page size. This attribute on the table keeps it. While the empty or failed plate covers the rows, the count line, the pager and the sort summary leave and the plate fills the table’s footprint.</td></tr>
                             <tr><td><code>data-kp-cards-at</code></td><td>On the table: the width of its own under which it becomes cards, `30rem` or `480px` (a bare number is rem). It can lower the 40rem the cards answer to, never raise it. While wider, the script writes `data-kp-cards-idle` and the card rules do not apply.</td></tr>
                             <tr><td><code>data-kp-col=&quot;actions&quot;</code></td><td>On a header: its column is a fixed track as wide as its buttons and never wraps; the script marks the cells under it alike. In a card that cell has no label and its buttons fill a row across the card.</td></tr>
                             <tr><td><code>.kp-table__actions</code></td><td>The buttons of one row, in equal columns, so every row’s Edit and Delete have one width (a knob sets the least).</td></tr>

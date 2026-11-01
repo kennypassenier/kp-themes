@@ -218,7 +218,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [habits-1101]: the Markdown editor reads --kp-md-editor-gap, --kp-md-editor-min and --kp-control-height-sm: 1155 + 3 = 1158.
     // Re-pinned 2026-11-01 [habits-1101]: the task row reads --kp-task-row-icon and --kp-task-row-gap: 1158 + 2 = 1160.
     // Re-pinned 2026-11-01 [gantt-fit-1101]: a fitted run timeline places a label by its own start, --kp-g-label-at, read through var(): 1160 + 1 = 1161.
-    assert.equal(result.expected, 1161, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-11-01 [ux-1101]: the filter popover's width (--kp-datatable-filters-width), read through var(): 1161 + 1 = 1162.
+    assert.equal(result.expected, 1162, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -316,7 +317,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [habits-1101]: the Markdown editor's three are read through var(): 1145 + 3 = 1148.
     // Re-pinned 2026-11-01 [habits-1101]: the task row's two are read through var(): 1148 + 2 = 1150.
     // Re-pinned 2026-11-01 [gantt-fit-1101]: --kp-g-label-at is read through var(): 1150 + 1 = 1151.
-    assert.equal(result.readCount, 1151);
+    // Re-pinned 2026-11-01 [ux-1101]: --kp-datatable-filters-width is read through var(): 1151 + 1 = 1152.
+    assert.equal(result.readCount, 1152);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

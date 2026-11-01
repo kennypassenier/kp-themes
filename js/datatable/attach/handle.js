@@ -99,8 +99,7 @@ export class TableHandle {
             if (column === null) filterEditing.closeFilterEditor(false);
             else filterEditing.openFilterEditor(column, this.t.model.filters.has(column) ? column : null);
         } else if (filterUi.panel !== null && filterUi.toggle !== null) {
-            filterUi.panel.hidden = column === null;
-            filterUi.toggle.setAttribute('aria-expanded', String(!filterUi.panel.hidden));
+            filterUi.setPanelOpen(column !== null);
         }
     }
 

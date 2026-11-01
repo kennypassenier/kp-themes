@@ -1,0 +1,39 @@
+/* @part: datatable: The filter panel as a popover under its Filters button, with a visible label on every bound */
+    /* The panel opens over the table, anchored to its button, and the table does not move [ux-1101, table-filters].
+     * Fixed, as the add-filter menu is (see base.css): placed against the window, still following its anchor, and flipped above
+     * the button where the window has no room below. `data-kp-filters="inline"` on a table keeps the old panel in the flow.
+     * Knobs: `--kp-datatable-filters-width` (default 34rem). */
+    .kp-datatable__filters[data-kp-filters-popover] {
+        position: fixed;
+        inset: auto;
+        inset-block-start: anchor(bottom);
+        inset-inline-end: anchor(end);
+        position-try-fallbacks: flip-block, flip-inline;
+        inline-size: min(var(--kp-datatable-filters-width, 34rem), calc(100vw - 2 * var(--kp-space-md, 0.75rem)));
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        overflow: visible;
+    }
+
+    .kp-datatable__filters[data-kp-filters-popover][hidden] {
+        display: none;
+    }
+
+    /* A bound is its label over its field, so min and max are never an unnamed pair of boxes. */
+    .kp-datatable__bound {
+        display: flex;
+        flex: 1 1 7rem;
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-datatable__range > .kp-datatable__bound > input {
+        min-inline-size: 0;
+    }
+
+    /* A date range stays on one line: two labelled days, each with its calendar button. */
+    .kp-datatable__range:has(> .kp-datatable__bound > .kp-datepicker) {
+        flex-wrap: nowrap;
+    }

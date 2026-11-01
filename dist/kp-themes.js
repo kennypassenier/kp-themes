@@ -1098,6 +1098,11 @@ var init_table_heat = __esm({
       tableFilterOpenEnd: "any",
       tableFilterFrom: (column) => `${column}, from`,
       tableFilterTo: (column) => `${column}, to`,
+      tableFilterMin: "Min",
+      tableFilterMax: "Max",
+      tableFilterFromLabel: "From",
+      tableFilterToLabel: "To",
+      tableRowMenu: "More actions",
       tableRemoveFilter: (label2) => `Remove filter ${label2}`,
       tableClearFilters: "Clear all filters",
       toolbarShowingOnly: "Showing only",
@@ -46885,6 +46890,101 @@ var init_datepicker = __esm({
   }
 });
 
+// js/datatable/attach/filter-popover.js
+var SURFACE_CLASS, MARK, KEEP_OPEN, FilterPopover;
+var init_filter_popover = __esm({
+  "js/datatable/attach/filter-popover.js"() {
+    "use strict";
+    SURFACE_CLASS = "kp-popover";
+    MARK = "data-kp-filters-popover";
+    KEEP_OPEN = "[data-kp-date-panel], [data-kp-datepicker]";
+    FilterPopover = class {
+      /** @param {DataTableControl} t @param {HTMLElement} panel @param {HTMLElement} toggle */
+      constructor(t, panel, toggle2) {
+        this.t = t;
+        this.panel = panel;
+        this.toggle = toggle2;
+        this.onPointer = this.closeOnOutside.bind(this);
+        this.onKey = this.closeOnEscape.bind(this);
+        this.dress();
+        t.own(() => this.release());
+      }
+      /** Whether a table asked for the popover: the default, `data-kp-filters="inline"` is the old panel. @param {DataTableControl} t */
+      static wanted(t) {
+        return t.wrap.dataset.kpFilters !== "inline";
+      }
+      /** Make the panel a popover anchored to the toggle; the detach puts the page's markup back. */
+      dress() {
+        const { panel, toggle: toggle2 } = this;
+        const anchor = `--${panel.id}`;
+        const addedClass = !panel.classList.contains(SURFACE_CLASS);
+        if (addedClass) panel.classList.add(SURFACE_CLASS);
+        panel.setAttribute("popover", "manual");
+        panel.setAttribute(MARK, "");
+        panel.style.setProperty("position-anchor", anchor);
+        toggle2.style.setProperty("anchor-name", anchor);
+        this.t.identity.undo.push(() => {
+          this.close(false);
+          if (addedClass) panel.classList.remove(SURFACE_CLASS);
+          panel.removeAttribute("popover");
+          panel.removeAttribute(MARK);
+          panel.style.removeProperty("position-anchor");
+          toggle2.style.removeProperty("anchor-name");
+        });
+      }
+      get isOpen() {
+        return !this.panel.hidden;
+      }
+      /** @param {boolean} open @param {boolean} [focus]  move the focus in (a reader's press), not for a panel that opens with the page */
+      setOpen(open4, focus = false) {
+        if (open4) this.open(focus);
+        else this.close(focus);
+      }
+      /** @param {boolean} focus */
+      open(focus) {
+        this.panel.hidden = false;
+        if (this.panel.isConnected && !this.panel.matches(":popover-open")) this.panel.showPopover();
+        this.toggle.setAttribute("aria-expanded", "true");
+        document.addEventListener("pointerdown", this.onPointer, true);
+        document.addEventListener("keydown", this.onKey, true);
+        if (focus) this.panel.querySelector("input, button")?.focus();
+      }
+      /** @param {boolean} giveFocusBack */
+      close(giveFocusBack) {
+        document.removeEventListener("pointerdown", this.onPointer, true);
+        document.removeEventListener("keydown", this.onKey, true);
+        if (this.panel.isConnected && this.panel.matches(":popover-open")) this.panel.hidePopover();
+        this.panel.hidden = true;
+        this.toggle.setAttribute("aria-expanded", "false");
+        if (giveFocusBack) this.toggle.focus();
+      }
+      /** Light dismiss: a press anywhere but the panel, its button or its calendar. @param {PointerEvent} event */
+      closeOnOutside(event) {
+        const target = (
+          /** @type {Element | null} */
+          event.target instanceof Element ? event.target : null
+        );
+        if (target === null || this.panel.contains(target) || this.toggle.contains(target) || target.closest(KEEP_OPEN) !== null) return;
+        this.close(false);
+      }
+      /** @param {KeyboardEvent} event */
+      closeOnEscape(event) {
+        if (event.key !== "Escape" || !this.panel.contains(
+          /** @type {Node} */
+          document.activeElement
+        )) return;
+        event.stopPropagation();
+        this.close(true);
+      }
+      /** Stop listening to the page. */
+      release() {
+        document.removeEventListener("pointerdown", this.onPointer, true);
+        document.removeEventListener("keydown", this.onKey, true);
+      }
+    };
+  }
+});
+
 // js/datatable/attach/filter-ui.js
 var TableFilterUi;
 var init_filter_ui = __esm({
@@ -46893,6 +46993,7 @@ var init_filter_ui = __esm({
     init_selectors();
     init_filter_choices();
     init_datepicker();
+    init_filter_popover();
     TableFilterUi = class {
       /** @param {DataTableControl} t */
       constructor(t) {
@@ -46901,6 +47002,7 @@ var init_filter_ui = __esm({
         this.filterColumns = this.t.columns.filterKinds.flatMap((kind, at) => kind === null ? [] : [at]);
         this.panel = null;
         this.toggle = null;
+        this.popover = null;
         this.pills = null;
         this.addMode = (this.t.wrap.dataset.kpFilterMode ?? this.t.settings.filterMode) === "add";
         this.bareFilters = this.t.wrap.dataset.kpFilterUi === "none";
@@ -46947,6 +47049,21 @@ var init_filter_ui = __esm({
         const toggle2 = this.takeToggle(panel);
         toggle2.setAttribute("aria-controls", panel.id);
         toggle2.setAttribute("aria-expanded", String(!panel.hidden));
+        if (FilterPopover.wanted(this.t)) {
+          const open4 = !panel.hidden;
+          this.popover = new FilterPopover(this.t, panel, toggle2);
+          if (open4) this.popover.open(false);
+        }
+      }
+      /** Open or close the panel, wherever it is drawn. @param {boolean} open @param {boolean} [focus] */
+      setPanelOpen(open4, focus = false) {
+        if (this.panel === null || this.toggle === null) return;
+        if (this.popover !== null) {
+          this.popover.setOpen(open4, focus);
+          return;
+        }
+        this.panel.hidden = !open4;
+        this.toggle.setAttribute("aria-expanded", String(open4));
       }
       /** The panel's toggle: the page's, or one made here, in the top bar. @param {HTMLElement} panel */
       takeToggle(panel) {
@@ -46990,27 +47107,35 @@ var init_filter_ui = __esm({
       /**
        * A range filter's two bounds: numbers, or the package's own date pickers. A date bound is the package's own date picker, not a
        * bare date input, so it wears every theme's picker (scope-58, Kenny's second nostromo pass). The picker holds ISO in
-       * data-kp-date-value whatever the field shows.
+       * data-kp-date-value whatever the field shows. Every bound has its own visible label, "Min" and "Max" for numbers, "From" and
+       * "To" for days [ux-1101]; the column's name is the fieldset's legend.
        * @param {number} at @param {FilterKind} kind
        */
       rangeField(at, kind) {
         const { identity } = this.t;
-        const label2 = this.t.columns.labelOf(at);
         const range = identity.make("div", "kp-datatable__range");
-        for (const bound of ["from", "to"]) {
+        for (
+          const bound of
+          /** @type {const} */
+          ["from", "to"]
+        ) {
           const input = (
             /** @type {HTMLInputElement} */
             identity.make("input", "kp-field__input")
           );
           input.dataset.kpFilterBound = bound;
-          input.setAttribute("aria-label", bound === "from" ? identity.s0.tableFilterFrom(label2) : identity.s0.tableFilterTo(label2));
-          if (kind === "range") {
-            input.type = "number";
-            range.append(input);
-            continue;
-          }
           input.id = `${identity.id}-filter-${at}-${bound}`;
-          range.append(this.choices.datePickerFor(input));
+          const words3 = kind === "range" ? [identity.s0.tableFilterMin, identity.s0.tableFilterMax] : [identity.s0.tableFilterFromLabel, identity.s0.tableFilterToLabel];
+          const label2 = (
+            /** @type {HTMLLabelElement} */
+            identity.make("label", "kp-field__label kp-datatable__bound-label")
+          );
+          label2.htmlFor = input.id;
+          label2.textContent = bound === "from" ? words3[0] : words3[1];
+          const cell = identity.make("div", "kp-datatable__bound");
+          if (kind === "range") input.type = "number";
+          cell.append(label2, kind === "range" ? input : this.choices.datePickerFor(input));
+          range.append(cell);
         }
         return range;
       }
@@ -48127,7 +48252,7 @@ var init_render2 = __esm({
         this.t.groups.syncGroups(s2);
         if (controls.status !== null) this.writeStatus(controls.status, s2, from, count2);
         this.t.busy.drawOverlay(s2);
-        if (controls.pager !== null) this.writePager(controls.pager, s2, pages);
+        if (controls.pager !== null) this.writePager(controls.pager, s2, pages, count2);
         if (controls.empty !== null) this.syncEmpty(controls.empty, count2);
         if (controls.failedSlot !== null) {
           const reason = controls.failedSlot.querySelector("[data-kp-datatable-failed-reason]");
@@ -48197,9 +48322,20 @@ var init_render2 = __esm({
           if (model.overlayClock !== null) model.overlayClock.textContent = words3;
         }, BUSY_TICK_MS);
       }
-      /** The pager: the page-size choice, Back, the page and Next. @param {HTMLElement} pager @param {ReturnType<typeof getStrings>} s @param {number} pages */
-      writePager(pager, s2, pages) {
+      /**
+       * Whether the pager has anything to offer: more than one page, or more rows than the smallest page size a reader can choose.
+       * Two rows under "Previous 1 / 1 Next" is chrome without a use [ux-1101]; `data-kp-datatable-keep-pager` keeps it.
+       * @param {number} pages @param {number} count
+       */
+      pagerUseful(pages, count2) {
+        const { controls, wrap: wrap2 } = this.t;
+        if (wrap2.dataset.kpDatatableKeepPager !== void 0 || pages > 1) return true;
+        return count2 > Math.min(controls.size, ...controls.sizes);
+      }
+      /** The pager: the page-size choice, Back, the page and Next. @param {HTMLElement} pager @param {ReturnType<typeof getStrings>} s @param {number} pages @param {number} count */
+      writePager(pager, s2, pages, count2) {
         const { model } = this.t;
+        pager.hidden = !this.pagerUseful(pages, count2);
         pager.textContent = "";
         if (this.t.layoutSetup.sizeLabel !== null) pager.append(this.t.layoutSetup.sizeLabel);
         pager.append(this.pagerButton(s2.previous, model.page > 0, () => model.page -= 1, "back"));
@@ -49032,8 +49168,7 @@ var init_handlers = __esm({
       }
       onToggle() {
         if (this.t.filterUi.panel === null || this.t.filterUi.toggle === null) return;
-        this.t.filterUi.panel.hidden = !this.t.filterUi.panel.hidden;
-        this.t.filterUi.toggle.setAttribute("aria-expanded", String(!this.t.filterUi.panel.hidden));
+        this.t.filterUi.setPanelOpen(Boolean(this.t.filterUi.panel.hidden), true);
       }
       /** @param {number | string} column @param {FilterValue | null} value */
       setFilter(column, value) {
@@ -50136,8 +50271,7 @@ var init_handle2 = __esm({
           if (column === null) filterEditing.closeFilterEditor(false);
           else filterEditing.openFilterEditor(column, this.t.model.filters.has(column) ? column : null);
         } else if (filterUi.panel !== null && filterUi.toggle !== null) {
-          filterUi.panel.hidden = column === null;
-          filterUi.toggle.setAttribute("aria-expanded", String(!filterUi.panel.hidden));
+          filterUi.setPanelOpen(column !== null);
         }
       }
       /** @param {State} next */
@@ -50367,7 +50501,10 @@ var init_unwire = __esm({
       /** The pager emptied, the slots as they were, the busy count and layer gone. */
       restoreSlots() {
         const { controls, busy, model } = this.t;
-        if (controls.pager !== null) controls.pager.textContent = "";
+        if (controls.pager !== null) {
+          controls.pager.textContent = "";
+          controls.pager.hidden = false;
+        }
         if (controls.empty !== null) controls.empty.hidden = busy.emptyWasHidden;
         if (controls.loadingSlot !== null) controls.loadingSlot.hidden = true;
         if (controls.failedSlot !== null) controls.failedSlot.hidden = true;

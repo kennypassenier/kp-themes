@@ -93,6 +93,7 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/datatable/attach/expand.js',
     'js/datatable/attach/filter-choices.js',
     'js/datatable/attach/filter-editor.js',
+    'js/datatable/attach/filter-popover.js',
     'js/datatable/attach/filter-ui.js',
     'js/datatable/attach/groups.js',
     'js/datatable/attach/handle-watch.js',

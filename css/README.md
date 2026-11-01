@@ -88,7 +88,7 @@ concatenates that file into `css/themes.css`.
 | `console/`                      | An interactive console (2 parts)                                                 |
 | `conversation/`                 | Conversation thread (2 parts)                                                    |
 | `countdown.css`                 | Countdown                                                                        |
-| `datatable/`                    | DataTable (5 parts)                                                              |
+| `datatable/`                    | DataTable (6 parts)                                                              |
 | `date-picker.css`               | Date picker                                                                      |
 | `dated-option-picker.css`       | Dated option picker                                                              |
 | `dependency-list.css`           | Dependency list                                                                  |

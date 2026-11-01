@@ -83,11 +83,10 @@
         min-inline-size: 0;
     }
 
-    /* A date bound is the package's date picker (scope-58): each takes a
- * whole row of the range, so its calendar button stays beside its field. */
-    .kp-datatable__range > .kp-datepicker {
-        --kp-datepicker-input-min: 5rem;
-        flex: 1 1 100%;
+    /* A date bound is the package's date picker (scope-58): it fills its labelled cell [ux-1101], so its calendar button stays beside
+ * its field. */
+    .kp-datatable__range > .kp-datatable__bound > .kp-datepicker {
+        --kp-datepicker-input-min: 4rem;
         min-inline-size: 0;
     }
 

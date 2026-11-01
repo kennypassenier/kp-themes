@@ -156,6 +156,18 @@
         display: none;
     }
 
+    /* The plate is the whole footprint [ux-1101, table-states]: the line that counts rows ("Showing 0 of 0"), the pager and the sort
+     * summary describe rows that are not there, so they leave while a plate stands in the rows' place. The search stays: a search that
+     * found nothing needs its way out. A pager with nothing to page hides itself (`hidden`, js/datatable/attach/render.js). */
+    .kp-datatable[data-kp-state-covered] > .kp-datatable__bar:has(> [data-kp-datatable-status], > [data-kp-datatable-pager]):not(:has([data-kp-datatable-search])),
+    .kp-datatable[data-kp-state-covered] [data-kp-datatable-sort-summary] {
+        display: none;
+    }
+
+    .kp-datatable__pager[hidden] {
+        display: none;
+    }
+
     .kp-datatable > :is([data-kp-datatable-empty], [data-kp-datatable-failed]).kp-stateplate {
         min-block-size: max(var(--kp-stateplate-floor, 12rem), min(var(--kp-datatable-held, 0px), var(--kp-footprint-max, 48rem)));
         /* The host is held at its loaded height (js/footprint.js): the plate takes what the toolbar and the pager leave [states-check-1019]. */
