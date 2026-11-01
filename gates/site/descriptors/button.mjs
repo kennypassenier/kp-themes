@@ -49,6 +49,14 @@ export const buttonDescriptor = {
 `,
             },
             {
+                title: 'A confirmation worded from markup',
+                why: '`data-kp-confirm-label` names Confirm with what it does, so the reader sees the action rather than “Yes, do it”. `data-kp-confirm-description` replaces the dictionary’s sentence under the phrase; leave it empty when the phrase already says it all, and the dialog shows the phrase alone.',
+                markup: `
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete 8 dead letters? They cannot be replayed afterwards." data-kp-confirm-label="Delete 8 dead letters" data-kp-confirm-description="">Prune</button>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Remove the topic alerts?" data-kp-confirm-label="Remove alerts" data-kp-confirm-description="Its 3 subscribers stop getting messages; the topic can be made again.">Remove</button>
+`,
+            },
+            {
                 title: 'A removal that depends on something',
                 why: 'The confirmation lists what still uses the thing (`data-kp-confirm-dependents`, one name per `;`, under a heading with the exact count). `data-kp-confirm-blocked` makes it a notice with one Close button and the sentence that says what to do first; `data-kp-confirm-type` turns Confirm on only once that name is typed (the typed confirmation).',
                 markup: `
@@ -115,6 +123,8 @@ export const buttonDescriptor = {
                 name: '.kp-confirm',
                 what: 'The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.',
             },
+            { name: 'data-kp-confirm-label', what: 'The words on Confirm, for a plain and a typed confirmation alike; else the dictionary’s (plain) or the button’s own words (typed).' },
+            { name: 'data-kp-confirm-description', what: 'The sentence under the phrase in place of the dictionary’s; empty shows the phrase alone.' },
             { name: 'data-kp-confirm-dependents', what: 'What still uses the thing, one name per `;`: listed in the confirmation (`.kp-confirm__dependents`, `.kp-confirm__list`) under a heading with the exact count.' },
             { name: 'data-kp-confirm-blocked', what: 'The removal may not go ahead: the confirmation says this sentence (empty: the dictionary’s) and offers only Close.' },
             { name: 'data-kp-confirm-type', what: 'Confirm turns on only once this name is typed: the typed confirmation (its own page), with what will be lost, the rule and a line that says whether it matches; Enter in the field confirms. A blocked removal shows no field.' },

@@ -32,6 +32,9 @@
  * (`data-kp-confirm-label`), else the button's own words. A blocked removal
  * shows no field: there is nothing to confirm.
  *
+ * A plain confirmation reads its words from the button too [kyu-ux-1101]: `data-kp-confirm-label` names Confirm ("Delete 8 dead letters")
+ * and `data-kp-confirm-description` replaces the dictionary's sentence; an empty one drops the sentence when the phrase already says it.
+ *
  * Rich content [mc-1030]: `description` may be a node or a list of nodes (several paragraphs, a list) in place of the dictionary's sentence,
  * and `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive (take a dose anyway, add stock).
  * `className: 'kp-dialog--wide'` gives it a wider step; the default is the narrow question width.

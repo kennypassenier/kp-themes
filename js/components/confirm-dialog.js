@@ -53,6 +53,9 @@ function firstDescriptionField(description) {
  * (`data-kp-confirm-label`), else the button's own words. A blocked removal
  * shows no field: there is nothing to confirm.
  *
+ * A plain confirmation reads its words from the button too [kyu-ux-1101]: `data-kp-confirm-label` names Confirm ("Delete 8 dead letters")
+ * and `data-kp-confirm-description` replaces the dictionary's sentence; an empty one drops the sentence when the phrase already says it.
+ *
  * Rich content [mc-1030]: `description` may be a node or a list of nodes (several paragraphs, a list) in place of the dictionary's sentence,
  * and `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive (take a dose anyway, add stock).
  * `className: 'kp-dialog--wide'` gives it a wider step; the default is the narrow question width.
@@ -115,8 +118,12 @@ export function openConfirmation(
     const description = document.createElement(rich ? 'div' : 'p');
     description.className = 'kp-dialog__description';
     description.id = `${id}-description`;
+    // From markup [kyu-ux-1101]: `data-kp-confirm-description` is the sentence; empty drops it when the phrase already says it all.
+    const describedBy = button.getAttribute('data-kp-confirm-description');
+    const plainText = typeof richText === 'string' ? richText : (describedBy ?? s.confirmDescription);
     if (stop === null && rich) description.append(...(Array.isArray(richText) ? richText : [richText]));
-    else description.textContent = stop ?? (typeof richText === 'string' ? richText : s.confirmDescription);
+    else description.textContent = stop ?? plainText;
+    const silent = stop === null && !rich && plainText.trim() === '';
 
     const cancel = document.createElement('button');
     cancel.type = 'button';
@@ -129,7 +136,7 @@ export function openConfirmation(
     accept.type = 'button';
     accept.className = acceptLook === 'primary' ? 'kp-button kp-button--primary' : 'kp-button kp-button--destructive';
     accept.setAttribute('data-kp-confirm-accept', '');
-    accept.textContent = acceptLabel ?? s.confirmAccept;
+    accept.textContent = acceptLabel ?? button.getAttribute('data-kp-confirm-label') ?? s.confirmAccept;
     if (acceptFollows !== undefined) {
         accept.setAttribute('data-kp-accept-follows', typeof acceptFollows === 'string' ? acceptFollows : acceptFollows.id);
         if (acceptVerb !== undefined) accept.setAttribute('data-kp-accept-verb', acceptVerb);
@@ -143,7 +150,8 @@ export function openConfirmation(
     // A removal something still depends on is a notice: one way out, nothing to confirm [kpadopt4].
     if (stop === null) actions.append(cancel, accept);
     else actions.append(cancel);
-    dialog.append(title, description);
+    if (silent) dialog.removeAttribute('aria-describedby');
+    dialog.append(...(silent ? [title] : [title, description]));
 
     if (users.length > 0) {
         const block = document.createElement('section');
@@ -162,7 +170,7 @@ export function openConfirmation(
         }
         block.append(heading, list);
         dialog.append(block);
-        dialog.setAttribute('aria-describedby', `${id}-description ${id}-dependents`);
+        dialog.setAttribute('aria-describedby', silent ? `${id}-dependents` : `${id}-description ${id}-dependents`);
     }
 
     // The typed name, opt-in: `typeName` or the button's `data-kp-confirm-type`.

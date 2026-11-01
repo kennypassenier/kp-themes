@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Added (opt-in): a plain confirmation takes its words from markup, `data-kp-confirm-label` and `data-kp-confirm-description`** [kyu-ux-1101, chassis-rs gap 22]. `data-kp-confirm-label` named Confirm on a typed confirmation only, and the sentence under the phrase came from the dictionary or from `openConfirmation` options. Now `data-kp-confirm-label` names Confirm on a plain one too ("Delete 8 dead letters" in place of "Yes, do it"), and `data-kp-confirm-description` replaces the dictionary's sentence; an empty one drops it, with `aria-describedby`, when the phrase already says it. JS options still win over the attributes. Documented on the button page.
 - **Fixed: Undo toasts after the first stayed 2 px tall and never left** [habits, 2026-11-01]. Under a theme that keeps the lines of a part (`--kp-lines: keep`, formal among them) the motion counted the Undo ring's 6 s drain as part of the toast's arrival and leave, so later toasts kept a 0 height for about 5.4 s and a dismissed one waited on the paused drain for ever. The ring is now marked `data-kp-motion-clock`, and motion never waits on an element inside one. Measured on Habits' repro in formal with motion attached: three toasts 58/58/58 px, all gone after the window (were [58, 2, 2] and never removed).
 
 Seven gaps Kenny's Habits app reported [habits-1101]. Everything new is opt-in; the faults (toasts over a floating selection bar, the selection count on a phone, the calm calendar's counts) are fixed for everyone.

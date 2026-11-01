@@ -26880,8 +26880,11 @@ function openConfirmation(button6, { phrase, description: richText, acceptLook =
   const description = document.createElement(rich ? "div" : "p");
   description.className = "kp-dialog__description";
   description.id = `${id}-description`;
+  const describedBy2 = button6.getAttribute("data-kp-confirm-description");
+  const plainText2 = typeof richText === "string" ? richText : describedBy2 ?? s2.confirmDescription;
   if (stop === null && rich) description.append(...Array.isArray(richText) ? richText : [richText]);
-  else description.textContent = stop ?? (typeof richText === "string" ? richText : s2.confirmDescription);
+  else description.textContent = stop ?? plainText2;
+  const silent = stop === null && !rich && plainText2.trim() === "";
   const cancel = document.createElement("button");
   cancel.type = "button";
   cancel.className = "kp-button";
@@ -26892,7 +26895,7 @@ function openConfirmation(button6, { phrase, description: richText, acceptLook =
   accept.type = "button";
   accept.className = acceptLook === "primary" ? "kp-button kp-button--primary" : "kp-button kp-button--destructive";
   accept.setAttribute("data-kp-confirm-accept", "");
-  accept.textContent = acceptLabel ?? s2.confirmAccept;
+  accept.textContent = acceptLabel ?? button6.getAttribute("data-kp-confirm-label") ?? s2.confirmAccept;
   if (acceptFollows !== void 0) {
     accept.setAttribute("data-kp-accept-follows", typeof acceptFollows === "string" ? acceptFollows : acceptFollows.id);
     if (acceptVerb !== void 0) accept.setAttribute("data-kp-accept-verb", acceptVerb);
@@ -26904,7 +26907,8 @@ function openConfirmation(button6, { phrase, description: richText, acceptLook =
   actions.className = "kp-dialog__actions";
   if (stop === null) actions.append(cancel, accept);
   else actions.append(cancel);
-  dialog.append(title, description);
+  if (silent) dialog.removeAttribute("aria-describedby");
+  dialog.append(...silent ? [title] : [title, description]);
   if (users.length > 0) {
     const block = document.createElement("section");
     block.className = "kp-confirm__dependents";
@@ -26922,7 +26926,7 @@ function openConfirmation(button6, { phrase, description: richText, acceptLook =
     }
     block.append(heading, list);
     dialog.append(block);
-    dialog.setAttribute("aria-describedby", `${id}-description ${id}-dependents`);
+    dialog.setAttribute("aria-describedby", silent ? `${id}-dependents` : `${id}-description ${id}-dependents`);
   }
   const name = typeName ?? button6.getAttribute("data-kp-confirm-type") ?? "";
   let field2 = null;
