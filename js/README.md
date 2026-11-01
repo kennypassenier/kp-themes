@@ -606,6 +606,16 @@ The date navigation: the range shown, then Previous, Today and Next on equal tra
 | `link.js`       | Drives a week agenda or a calendar named by `data-kp-date-nav-for`, which then hears its own range event.    |
 | `range.js`      | The arithmetic and the words: the range a mode shows around a day, one step away, the ISO week and the label. |
 
+## js/row-undo.js → js/row-undo/
+
+The row deleted with Undo: held out at once, the Undo toast, put back or committed when the window closes [ux-1101]. 3 files.
+
+| File            | Does                                                                                                            |
+| --------------- | --------------------------------------------------------------------------------------------------------------- |
+| `constants.js`  | The selectors, attribute names and events of the row deleted with Undo.                                         |
+| `controller.js` | RowUndoRoot: the delegated press on a `[data-kp-row-delete]` control under the root.                           |
+| `delete.js`     | deleteRowWithUndo: hold the row out, move the focus, the toast, Undo puts it back, the commit lets it leave.     |
+
 ## js/diff.js → js/diff/
 
 The diff view with file headers, folded context and changed words. 13 files.

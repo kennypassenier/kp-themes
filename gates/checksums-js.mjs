@@ -131,6 +131,7 @@ export const JS_FILES = [
     'js/pipeline.js',
     'js/board.js',
     'js/task-row.js',
+    'js/row-undo.js',
     'js/date-nav.js',
     'js/popover-form.js',
     'js/art.js',

@@ -472,6 +472,10 @@
             "types": "./js/date-nav.d.ts",
             "default": "./js/date-nav.js"
         },
+        "./js/row-undo": {
+            "types": "./js/row-undo.d.ts",
+            "default": "./js/row-undo.js"
+        },
         "./js/row-pick": {
             "types": "./js/row-pick.d.ts",
             "default": "./js/row-pick.js"

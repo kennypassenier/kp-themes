@@ -171,6 +171,7 @@ js/path-trace.js           the path of one connection: hops, each allowed or ref
 js/pipeline.js             where each item stands, one lane per stage
 js/popover-form.js         a small form anchored to its button: one field and accept, light dismiss [ux-1101]
 js/date-nav.js             one date navigation: the range shown, previous, today and next, month, week or day [ux-1101]
+js/row-undo.js             a row's Delete with Undo: held out, the Undo toast, put back or committed [ux-1101]
 js/task-row.js             a task as a row: check, title, facts, fixed action columns, from the package's parts [habits-1101]
 js/board.js                lanes of the page's cards that move between lanes, a count and a limit per lane [habits-1101]
 js/print.js                the words a printed list needs, and a Print button

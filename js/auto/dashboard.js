@@ -48,6 +48,8 @@ export const DASHBOARD_NEEDS = [
     { name: 'popover-form', when: '[data-kp-popover-form]', load: () => import('../popover-form.js'), attach: (m, root) => [m.attachPopoverForms(root)] },
     // The date navigation: previous, today and next [ux-1101].
     { name: 'date-nav', when: '[data-kp-date-nav]', load: () => import('../date-nav.js'), attach: (m, root) => [m.attachDateNavs(root)] },
+    // The row deleted with Undo [ux-1101].
+    { name: 'row-undo', when: '[data-kp-row-delete]', load: () => import('../row-undo.js'), attach: (m, root) => [m.attachRowUndo(root)] },
     // The segmented control, the list toolbar and the inline key line [kpadopt-controls].
     { name: 'segmented', when: '[data-kp-segmented]', load: () => import('../segmented.js'), attach: (m, root) => [m.attachSegmented(root)] },
     // Action tiles, status rows and the facet list [kpadopt2-tiles].

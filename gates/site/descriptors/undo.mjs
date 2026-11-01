@@ -7,7 +7,7 @@ export const undoDescriptor = {
         group: 'Feedback',
         classes: ['kp-undo'],
         exports: [],
-        aliases: ['undo'],
+        aliases: ['undo', 'row-delete', 'row-name', 'row-deleting', 'row-delete-undo', 'row-delete-commit'],
         intro: 'A toast with Undo and a visible clock. After an action it says what happened and offers Undo for a few seconds, instead of asking “are you sure?” before. In the default mode nothing reaches the server until the window closes, so Undo only has to put the rows back.',
         whenToUse: 'An action that is easy to take back: deleting rows, discarding a draft. For an action that cannot be undone, ask first with the confirm button.',
         examples: [
@@ -52,6 +52,7 @@ for (const button of document.querySelectorAll('[data-doc-undo]')) {
             },
         ],
         variants: [
+            { name: 'data-kp-row-delete', what: 'The row deleted with Undo [ux-1101] (js/row-undo.js): a control so marked deletes its row (the nearest `[data-kp-row-key]`, `tr` or `li`) with this toast. Its value is the row’s name (else the row’s `data-kp-row-name`). `kp-row-delete` `{ row, key, name }` fires first, cancelable; the row is held out at once (a data table’s own `data-kp-row-hidden`, so its count and pager follow; `hidden` in a list; `data-kp-row-deleting` meanwhile) and the focus goes to the same control in the next row. Undo puts it back with the focus on its control (`kp-row-delete-undo`); when the window closes `kp-row-delete-commit` `{ row, key, name, waitUntil(promise) }` fires on its table or list and the row leaves once the promise resolves, or comes back when it rejects. `attachRowUndo(root)`; `deleteRowWithUndo(row, { name, control, ms })` from a page’s own code.' },
             { name: '.kp-toast--undo', what: 'The toast’s own class (`UNDO_TOAST`), on the ordinary toast of js/overlays.js. It carries `data-kp-undo-state` (counting, committing, failed, undone, done) and `data-kp-paused` while the pointer or the focus holds it.' },
             { name: '.kp-undo / __text / __ringbox / __ring / __secs / __clock', what: 'The parts inside it: the words, the box of the ring (a track and a fill that drains over the window), the seconds left in words and the plain clock of `text`.' },
             { name: 'UNDO_RESTORED_MS / UNDO_MAX', what: 'How long “Restored” stays after Undo (1500 ms) and how many toasts stand at once (3), the defaults behind `max`.' },
