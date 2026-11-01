@@ -63,7 +63,15 @@
         "drawer-tour.css",
         "sidenav/signature.css",
         "month-heatmap/signature-3.css",
-        "navbar/signature.css"
+        {
+          "open": "    @media (prefers-reduced-motion: no-preference) {\n",
+          "files": [
+            "navbar/signature.css",
+            "navbar/dropdown-pointer-or-focus.css"
+          ],
+          "close": "    }\n\n"
+        },
+        "navbar/reduced-motion.css"
       ],
       "close": "}\n\n"
     },

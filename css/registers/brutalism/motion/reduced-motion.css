@@ -1,0 +1,7 @@
+/* @part: motion: a reader who asked for no motion gets no menu close */
+    /* A reader who asked for no motion gets no close of the bar's menus to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='brutalism'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }

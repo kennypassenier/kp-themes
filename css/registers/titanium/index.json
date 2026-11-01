@@ -57,7 +57,14 @@
         "tokens/signature-2.css",
         "datatable/signature.css",
         "popover/signature-2.css",
-        "motion/signature-3.css",
+        {
+          "open": "    @media (prefers-reduced-motion: no-preference) {\n",
+          "files": [
+            "motion/signature-3.css",
+            "motion/header-dropdown-mega-menu.css"
+          ],
+          "close": "    }\n\n"
+        },
         "motion/side-navigation-alarm-cut.css",
         "navbar/signature-3.css",
         "month-heatmap/signature-2.css",

@@ -238,6 +238,13 @@
         "form-grid/row-with-button-on.css",
         "form-grid/a-json-field-is-a-size.css",
         "form-grid/on-narrow-grid-under.css",
+        {
+          "open": "    @container kp-formgrid (max-width: 36rem) {\n",
+          "files": [
+            "form-grid/row-with-action-label.css"
+          ],
+          "close": "    }\n\n"
+        },
         "form-grid/stacked-whatever-width-same.css",
         "code-block/base.css",
         "code-block/toml-shell-text-tables.css",

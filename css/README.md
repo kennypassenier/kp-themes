@@ -103,7 +103,7 @@ concatenates that file into `css/themes.css`.
 | `flash-button.css`              | The flash button                                                                 |
 | `focus-steps.css`               | One step at a time                                                               |
 | `form-field/`                   | Form field (2 parts)                                                             |
-| `form-grid/`                    | Form grid (6 parts)                                                              |
+| `form-grid/`                    | Form grid (7 parts)                                                              |
 | `form-rows.css`                 | Form rows                                                                        |
 | `forms.css`                     | Forms                                                                            |
 | `freshness-line.css`            | Freshness line                                                                   |

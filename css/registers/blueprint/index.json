@@ -56,7 +56,14 @@
         "datatable.css",
         "month-heatmap/signature.css",
         "dialog/signature-2.css",
-        "navbar/signature-2.css",
+        {
+          "open": "    @media (prefers-reduced-motion: no-preference) {\n",
+          "files": [
+            "navbar/signature-2.css",
+            "navbar/on-phone-bars-menu.css"
+          ],
+          "close": "    }\n\n"
+        },
         "button/signature.css",
         "menu-button.css",
         "combobox.css",
@@ -66,7 +73,14 @@
         "state-word.css",
         "progress-spinner-skeleton/signature-4.css",
         "meter/signature-3.css",
-        "progress-spinner-skeleton/signature-5.css",
+        {
+          "open": "    @media (prefers-reduced-motion: no-preference) {\n",
+          "files": [
+            "progress-spinner-skeleton/signature-5.css",
+            "progress-spinner-skeleton/frame-keyframes.css"
+          ],
+          "close": "    }\n"
+        },
         "sidenav/signature.css"
       ],
       "close": "}\n\n"

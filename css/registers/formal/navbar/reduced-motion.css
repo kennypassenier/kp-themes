@@ -1,0 +1,7 @@
+/* @part: navbar: a reader who asked for no motion gets no close */
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='formal'] .kp-nav {
+            --kp-nav-close-time: 0ms;
+        }
+    }
