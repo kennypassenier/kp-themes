@@ -1,4 +1,4 @@
-// Builds research/ux-touch-1101/demo.html: four of Kenny's answers of 01/11/2026 to the UX review (~/Projects/ux-review/kp-themes.md
+// Round 2 builds only docs-nav (the rest approved 2026-11-01 23:40 UTC). Round 1 built: four of Kenny's answers of 01/11/2026 to the UX review (~/Projects/ux-review/kp-themes.md
 // and kp-themes-components.md), one section per visible change (DEMO_RULES ch. 1 and 6): the board on a phone, the secret field that
 // keeps its height, the touch hit areas (the dialog's ✕ among them) and the documentation's folded navigation. Formal only. The
 // sections are written once in sections.mjs, their markup in markup.mjs; demo.js fills the board from data.js and wires the controls by
@@ -49,7 +49,7 @@ const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 
 // A round id is never reused: once Kenny's answer to it is recorded (it is in `received`), the next page gets a new one.
 const roundId = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) && !received.includes(current) ? current : `${ID}-${randomUUID()}`;
 
-const title = 'Touch, the board on a phone, the secret field and the documentation on a phone';
+const title = 'The documentation on a phone folds its navigation';
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="${THEMES.join(',')}">
     <head>
@@ -86,10 +86,9 @@ const page = `<!doctype html>
             <header class="pg-head">
                 <h1>${escapeHtml(title)}</h1>
                 <p class="cat-intro">
-                    Your answers of 01/11/2026 to the review of the apps, built: a board on a phone shows one lane under a switcher and moves cards
-                    with &ldquo;Move to&rdquo;; the secret field keeps its height when it shows its value; every small part takes a 44 px hit area
-                    on a touch screen without changing its look; the documentation folds its navigation on a phone. Formal only (names, counts and
-                    values are mock). ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
+                    Round 2 of your answers of 01/11/2026 to the app review: the documentation on a phone, which you sent back because its window
+                    showed a 404 (the review copy had no documentation to load; the window now loads the published one). The board on a phone, the
+                    secret field and the touch hit areas are approved and leave this page. Formal only. ${SECTIONS.length} section, ${SECTIONS.length * THEMES.length} pair.
                 </p>
                 <p>Each section says under <b>Expected</b> what you should see and what each control does. Where a look changes, the approved look stands above the new one. A touch screen&rsquo;s behaviour is shown with a switch, because a mouse cannot be a finger.</p>
             </header>

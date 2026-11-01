@@ -1,4 +1,18 @@
 {
     "demo": "ux-touch-1101",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20",
+            "allJudged": true,
+            "comment": "Kenny, 2026-11-01 23:40 UTC: 4 of 4 judged, 3 approved, 1 not approved (formal). Approved: board-phone, secret-reveal, touch-targets.",
+            "notApproved": [
+                {
+                    "item": "docs-nav",
+                    "theme": "formal",
+                    "note": "Wat is hier aan d ehand? ik krijg een 404?"
+                }
+            ]
+        }
+    ]
 }

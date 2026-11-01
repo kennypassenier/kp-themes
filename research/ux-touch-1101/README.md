@@ -1,5 +1,13 @@
 # research/ux-touch-1101: the board on a phone, the secret field, touch targets and the documentation on a phone
 
+**Round 1** (page round `ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20`, four sections) was judged 2026-11-01 23:40 UTC: `board-phone`,
+`secret-reveal` and `touch-targets` approved, `docs-nav` not ("Wat is hier aan de hand? ik krijg een 404?", `VERDICTS.json`). Round 1 is kept in `_previous/`.
+
+**Round 2** shows only `docs-nav`, formal only (DEMO_RULES ch. 6). The 404 was the review copy lacking `site/`: the window loaded
+`../../site/components/badge.html`, and the published review at `/kp-themes/review/` has no `site/` folder. Under `/review/` or `/review-branch/`
+the window now loads one level up, the published documentation (`https://kennypassenier.github.io/kp-themes/site/components/badge.html`, 200).
+The builder and `sections.mjs` hold only this section; the other three sections are in git history.
+
 Kenny's answers of 2026-11-01 to the review of the apps (`~/Projects/ux-review/kp-themes.md`, `kp-themes-components.md`), built.
 One review page, formal only, one section per visible change:
 

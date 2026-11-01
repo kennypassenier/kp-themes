@@ -1,5 +1,7 @@
 # research/ux-parts-1101: seven parts from the app review
 
+**Decided (2026-11-01 23:40 UTC):** Kenny approved both pairs (formal) in round 2, so all seven parts are decided. Recorded in `VERDICTS.json`; the page is not offered again.
+
 The app review of 2026-11-01 (`~/Projects/ux-review/kp-themes.md` and `kp-themes-components.md`, reviewers A and B over kyu,
 Almanac, homelab, http-switchboard, Medicine Cabinet and Kitchen) found seven things the package lacked: three options whose
 default the demo set ("Als optie, demo kiest") and four parts to build ("Bouwen, met demo").

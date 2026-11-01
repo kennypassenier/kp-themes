@@ -461,22 +461,6 @@
             "fingerprint": "83f012d2600f0685",
             "update": null
         },
-        "research/ux-parts-1101/demo.html": {
-            "facts": {
-                "id": "ux-parts-1101",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 2 of the app review’s parts: the two options you sent back because their phone version was unwatchable and unusable. The chips now take a calm grid of whole chips under the search on a phone; the refresh control puts every choice on a row of its own that scrolls. Their desktop looks are as you saw them. The five parts you approved are no longer on this page; the three-way chip now shows its state as a word by default, as you chose. Formal only, on Medicine Cabinet’s and kyu’s own data (counts are mock). 2 sections, 2 pairs.",
-                "sections": [
-                    { "item": "chips-narrow", "themes": null, "topic": "segmented", "mode": null },
-                    { "item": "auto-refresh-form", "themes": null, "topic": "refresh", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\"round\":\"ux-parts-1101-26c2c709-c4df-4de8-9117-f9c2ebc7f7e6\",\"received\":[\"ux-parts-1101-e994c521-37e0-4c56-b12b-ed4d536f4d1e\"]}\n        "
-            },
-            "fingerprint": "a7cb3b401d68ce04",
-            "update": null
-        },
         "research/ux-dialogs-1101/demo.html": {
             "facts": {
                 "id": "ux-dialogs-1101",
@@ -524,21 +508,17 @@
                 "id": "ux-touch-1101",
                 "themes": "formal",
                 "ask": null,
-                "askText": "Your answers of 01/11/2026 to the review of the apps, built: a board on a phone shows one lane under a switcher and moves cards with “Move to”; the secret field keeps its height when it shows its value; every small part takes a 44 px hit area on a touch screen without changing its look; the documentation folds its navigation on a phone. Formal only (names, counts and values are mock). 4 sections, 4 pairs.",
-                "sections": [
-                    { "item": "board-phone", "themes": null, "topic": "board", "mode": null },
-                    { "item": "secret-reveal", "themes": null, "topic": "secret", "mode": null },
-                    { "item": "touch-targets", "themes": null, "topic": "touch", "mode": null },
-                    { "item": "docs-nav", "themes": null, "topic": "docs", "mode": null }
-                ],
+                "askText": "Round 2 of your answers of 01/11/2026 to the app review: the documentation on a phone, which you sent back because its window showed a 404 (the review copy had no documentation to load; the window now loads the published one). The board on a phone, the secret field and the touch hit areas are approved and leave this page. Formal only. 1 section, 1 pair.",
+                "sections": [{ "item": "docs-nav", "themes": null, "topic": "docs", "mode": null }],
                 "extra": null,
-                "round": "\n            {\"round\":\"ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20\",\"received\":[]}\n        "
+                "round": "\n            {\"round\":\"ux-touch-1101-d012253b-db87-47db-a696-de74508208ab\",\"received\":[\"ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20\"]}\n        "
             },
-            "fingerprint": "d2fdff4e5442c073",
+            "fingerprint": "2d2f95d2693974f4",
             "update": null
         }
     },
     "decided": {
+        "research/ux-parts-1101/demo.html": "2026-11-01 23:40 UTC, Kenny: both remaining pairs approved in formal in round 2 (research/ux-parts-1101/VERDICTS.json)",
         "research/ux-fixes-1101/demo.html": "2026-11-01 23:22, Kenny: all eight pairs approved in formal (research/ux-fixes-1101/VERDICTS.json)",
         "research/gantt-fit-1101/demo.html": "2026-11-01 23:22, Kenny: the one pair approved in formal (research/gantt-fit-1101/VERDICTS.json)",
         "research/gaps-1031/demo.html": "2026-10-31 22:17, Kenny: all seven pairs approved in formal (research/gaps-1031/VERDICTS.json)",

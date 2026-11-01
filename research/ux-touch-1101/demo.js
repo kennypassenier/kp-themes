@@ -78,7 +78,13 @@ if (docs) {
         inner()?.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') ?? 'formal');
         setTimeout(report, 400);
     });
-    window.addEventListener('load', () => docs.setAttribute('src', docs.dataset.pgSrc ?? ''), { once: true });
+    // The published review (/review/ or /review-branch/) carries no site/: the documentation lives one level up, beside it.
+    // Kenny opened the section on the Agenda and the window showed a 404 [uxtouch-1101 docs-nav].
+    const docsSrc = () => {
+        const src = docs.dataset.pgSrc ?? '';
+        return /\/review(-branch)?\/research\//.test(location.pathname) ? `../${src}` : src;
+    };
+    window.addEventListener('load', () => docs.setAttribute('src', docsSrc()), { once: true });
     on('docs-menu', (value) => {
         const button = /** @type {HTMLElement | null | undefined} */ (inner()?.querySelector('.sc-nav__launcher button'));
         if ((value === 'open') !== (button?.getAttribute('aria-expanded') === 'true')) button?.click();

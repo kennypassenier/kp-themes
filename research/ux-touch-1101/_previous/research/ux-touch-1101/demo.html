@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="ux-touch-1101" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Touch, the board on a phone, the secret field and the documentation on a phone</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>Touch, the board on a phone, the secret field and the documentation on a phone</h1>
+                <p class="cat-intro">
+                    Your answers of 01/11/2026 to the review of the apps, built: a board on a phone shows one lane under a switcher and moves cards
+                    with &ldquo;Move to&rdquo;; the secret field keeps its height when it shows its value; every small part takes a 44 px hit area
+                    on a touch screen without changing its look; the documentation folds its navigation on a phone. Formal only (names, counts and
+                    values are mock). 4 sections, 4 pairs.
+                </p>
+                <p>Each section says under <b>Expected</b> what you should see and what each control does. Where a look changes, the approved look stands above the new one. A touch screen&rsquo;s behaviour is shown with a switch, because a mouse cannot be a finger.</p>
+            </header>
+
+        <section id="board-phone" data-review-item="board-phone" data-review-topic="board" data-review-topic-title="The board" data-review-components="board-phone" data-review-title="A board on a phone: one lane under a switcher" aria-labelledby="h-board-phone">
+            <header class="pg-intro"><h2 id="h-board-phone">Weekly review, the Boards page</h2><p>Four lanes as the Habits app has them: Inbox, Doing (at most 2), Waiting and Done. The cards are the app&rsquo;s task rows (mock titles).</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your answer of 01/11/2026, board-phone: one column with a switcher): On a phone each lane took 85% of the width and the board scrolled sideways; you rejected that. Under 40rem of its own width the board now shows one lane, with a switcher above it that names every lane and its exact count.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Phone</b>: one row of four buttons, &ldquo;Inbox 4 · Doing 2 / 2 · Waiting 1 · Done 7&rdquo;, the name over its count; under it only the chosen lane&rsquo;s cards. Nothing scrolls sideways.</li><li>Press a lane&rsquo;s button (or Tab to the switcher and use ← →) and its cards replace the others.</li><li><b>Move to</b>: open a card&rsquo;s ⋯ menu (or right-click it, or Shift+F10): &ldquo;Move to&rdquo; lists the other lanes with what they hold. Pick one: the card leaves this lane, the counts change at once, the line under the board says where it went, and the lane you were in stays on screen.</li><li>Move a card into Doing: it reads 3 / 2 and its count turns red (over the limit); nothing is refused.</li><li><b>Full width</b>: the lanes stand side by side and drag as approved; the menus carry Move to as well.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that the four buttons fit one row at 390 px with every count readable, that the chosen lane is plain to see, and that a move from the menu never leaves you in another lane.</p></div>
+            <div data-review-controls data-review-controls-for="board-phone-component"><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="board-phone-component" aria-pressed="true">Phone, 390 px</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="board-phone-component" aria-pressed="false">Full width</button></div></div>
+            <div id="board-phone-component" class="pg-component" data-pg-width="phone">
+        <div class="kp-board" id="pg-board" role="region" data-kp-board aria-label="Weekly review"></div><p class="pg-log" id="pg-board-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="secret-reveal" data-review-item="secret-reveal" data-review-topic="secret" data-review-topic-title="The secret field" data-review-components="secret-reveal" data-review-title="A secret field keeps its height when it is revealed" aria-labelledby="h-secret-reveal">
+            <header class="pg-intro"><h2 id="h-secret-reveal">kyu&rsquo;s API token</h2><p>The token shows for 10 seconds; the drain under the value runs out with the countdown. The dashed row under the field is the next row of a form.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your answer of 01/11/2026, secret-reveal: a fixed height): In kyu, Reveal grew the field and added a &ldquo;Hides in 10 s&rdquo; line, so everything below jumped 61 px and jumped back when it hid. The field now keeps one height and the countdown stands inside the value&rsquo;s box.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Before</b> (held still in its shown state): the countdown on a line under the buttons.</li><li><b>New</b>: press Reveal. The token and &ldquo;Hides in 10 s&rdquo; stand inside the value&rsquo;s box, the drain along its foot; the dashed row does not move. The line under it says how far the row moved: 0 px.</li><li>The token never runs under the countdown: it stops before it, and a longer value scrolls inside the box.</li><li><b>Wrap</b>: a long value wraps in a box of fixed height (two lines) and scrolls inside it; the row below stays put.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that the countdown reads as part of the field, not as a second value, and that nothing under the field moves when it shows and hides.</p></div>
+            <div data-review-controls data-review-controls-for="secret-reveal-component"><div role="group" aria-label="Value"><button type="button" class="kp-button kp-button--sm" data-pg="secret-wrap" data-value="line" data-target="secret-reveal-component" aria-pressed="true">One line</button><button type="button" class="kp-button kp-button--sm" data-pg="secret-wrap" data-value="wrap" data-target="secret-reveal-component" aria-pressed="false">Wrap, two lines</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="secret-reveal-component" aria-pressed="false">Phone, 390 px</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="secret-reveal-component" aria-pressed="true">Full width</button></div></div>
+            <div id="secret-reveal-component" class="pg-component" data-pg-width="full">
+        <div class="pg-pair">
+            <div class="pg-frame" data-pg-frame="before"><p class="pg-frame__name"><b>Before</b>, as approved</p><div class="pg-secret-row">
+                <div class="kp-secret" role="group" aria-label="API token, as it was" data-kp-secret-state="shown">
+                    <code class="kp-secret__value">kyu_live_4Fq9Zr7Lm2Xc8Vb1Nw6Tp3Hs</code>
+                    <div class="kp-secret__actions"><button type="button" class="kp-button kp-secret__reveal" tabindex="-1">Hide</button><button type="button" class="kp-button kp-copyable__button kp-secret__copy" tabindex="-1">Copy</button></div>
+                    <p class="kp-secret__line"><span class="kp-secret__drain pg-drain-still" aria-hidden="true"></span><span class="kp-secret__words">Hides in 10 s</span></p>
+                </div>
+                <p class="pg-under">Webhook URL · the next row of the form</p>
+            </div></div>
+            <div class="pg-frame" data-pg-frame="new"><p class="pg-frame__name"><b>New</b></p><div class="pg-secret-row">
+                <div class="kp-secret" id="pg-secret" data-kp-secret data-kp-secret-ttl="10" data-kp-secret-label="API token" data-kp-secret-value="kyu_live_4Fq9Zr7Lm2Xc8Vb1Nw6Tp3Hs"></div>
+                <p class="pg-under" id="pg-secret-under">Webhook URL · the next row of the form</p>
+            </div><p class="pg-log" id="pg-secret-log" role="status" aria-live="polite"></p></div>
+        </div>
+            </div>
+        </section>
+
+        <section id="touch-targets" data-review-item="touch-targets" data-review-topic="touch" data-review-topic-title="Touch targets" data-review-components="touch-targets" data-review-title="On a touch screen every small part is a fingertip wide" aria-labelledby="h-touch-targets">
+            <header class="pg-intro"><h2 id="h-touch-targets">Medicine Cabinet, on a phone</h2><p>Chips, a switch, a check box, radios, a quantity, a text field, a select, a time field, an uptime row, name links in a table and a list, and a dialog&rsquo;s ✕. A mouse cannot be a finger, so the switch makes this stage behave as a touch screen does (<code>data-kp-touch</code>).</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your answer of 01/11/2026, touch-targets: invisibly bigger; dialog-close: the ✕ stays, 44 px): The apps counted up to 340 targets under 44 px on a phone. Under a touch screen every small part now takes a 44 px hit area that you cannot see; only text fields and selects stand taller, because a field cannot carry an invisible area.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Mouse</b>: every part as approved.</li><li><b>Touch</b>: the parts look the same; text fields, the select and the time field stand 44 px tall. The line under the stage counts the targets whose hit area is under 44 px.</li><li><b>Show hit areas</b>: each invisible area is tinted, so you can see it is at least 44 by 44 px around its part (uptime cells only in height: a tap on the row opens the nearest hour).</li><li>The ✕ of the dialog keeps its place and look; its hit area is 44 px.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that Touch changes nothing you can see except the fields&rsquo; height, and that the tinted areas do not swallow a neighbour&rsquo;s text.</p></div>
+            <div data-review-controls data-review-controls-for="touch-targets-component"><div role="group" aria-label="Pointer"><button type="button" class="kp-button kp-button--sm" data-pg="pointer" data-value="mouse" data-target="touch-targets-component" aria-pressed="true">Mouse</button><button type="button" class="kp-button kp-button--sm" data-pg="pointer" data-value="touch" data-target="touch-targets-component" aria-pressed="false">Touch</button></div><div role="group" aria-label="Hit areas"><button type="button" class="kp-button kp-button--sm" data-pg="hits" data-value="off" data-target="touch-targets-component" aria-pressed="true">Hidden</button><button type="button" class="kp-button kp-button--sm" data-pg="hits" data-value="on" data-target="touch-targets-component" aria-pressed="false">Show hit areas</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="touch-targets-component" aria-pressed="true">Phone, 390 px</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="touch-targets-component" aria-pressed="false">Full width</button></div></div>
+            <div id="touch-targets-component" class="pg-component" data-pg-width="phone">
+        <div class="kp-formgrid" aria-label="Touch targets">
+                <div class="kp-formgrid__row"><p class="kp-formgrid__label">Show</p><div class="kp-formgrid__control"><div class="kp-segmented kp-segmented--chips" data-kp-segmented="single" aria-label="Show"><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="true"><span class="kp-segmented__label">All</span><span class="kp-segmented__count">14</span></button><button type="button" class="kp-segmented__item" data-value="due" role="radio" aria-checked="false"><span class="kp-segmented__label">Due today</span><span class="kp-segmented__count">3</span></button><button type="button" class="kp-segmented__item" data-value="low" role="radio" aria-checked="false"><span class="kp-segmented__label">Low stock</span><span class="kp-segmented__count">1</span></button></div></div></div>
+                <div class="kp-formgrid__row"><p class="kp-formgrid__label">Night alarms</p><div class="kp-formgrid__control"><label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" checked /><span class="kp-switch__state" aria-hidden="true"></span><span>Ring between 22:00 and 07:00</span></label></div></div>
+                <div class="kp-formgrid__row"><p class="kp-formgrid__label">Reminder</p><div class="kp-formgrid__control"><div class="kp-field kp-field--check"><input class="kp-field__check" type="checkbox" id="pg-t-remind" checked /><label class="kp-field__label" for="pg-t-remind">Remind me when stock is low</label></div></div></div>
+                <div class="kp-formgrid__row"><p class="kp-formgrid__label">Taken</p><div class="kp-formgrid__control"><fieldset class="kp-fieldset" aria-label="Taken"><label class="kp-field__option"><input class="kp-field__check" type="radio" name="pg-t-taken" value="meal" checked /><span>With a meal</span></label><label class="kp-field__option"><input class="kp-field__check" type="radio" name="pg-t-taken" value="empty" /><span>On an empty stomach</span></label></fieldset></div></div>
+                <div class="kp-formgrid__row"><p class="kp-formgrid__label">Tablets</p><div class="kp-formgrid__control"><div class="kp-quantity" data-kp-quantity data-kp-quantity-min="0" data-kp-quantity-max="200" data-kp-quantity-unit="tablets" data-kp-quantity-unit-one="tablet" data-kp-quantity-label="Tablets of Ibuprofen 400 mg"><input class="kp-quantity__input" value="14" /></div></div></div>
+                <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="pg-t-name">Name</label><div class="kp-formgrid__control"><input class="kp-field__input" id="pg-t-name" value="Ibuprofen 400 mg" /></div></div>
+                <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="pg-t-shelf">Shelf</label><div class="kp-formgrid__control"><select class="kp-field__input" id="pg-t-shelf"><option>Bathroom cabinet</option><option>Kitchen drawer</option></select></div></div>
+                <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="pg-t-at">Take at</label><div class="kp-formgrid__control"><div class="kp-time" data-kp-time data-kp-time-id="pg-t-at" data-kp-name="at" data-kp-value="08:00"></div></div></div>
+            </div><div class="kp-uptime" id="pg-t-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="48"></div>
+            <div class="kp-table-wrap"><table class="kp-table" aria-label="Medicines"><thead><tr><th scope="col">Name</th><th scope="col">Stock</th></tr></thead><tbody>
+                <tr><td><a href="#pg-t-ibu">Ibuprofen 400 mg</a></td><td>14 tablets</td></tr>
+                <tr><td><a href="#pg-t-para">Paracetamol 500 mg</a></td><td>32 tablets</td></tr>
+                <tr><td><a href="#pg-t-cet">Cetirizine 10 mg</a></td><td>0 tablets</td></tr>
+            </tbody></table></div>
+            <ul class="kp-list" aria-label="Cabinet"><li class="kp-listrow"><div class="kp-listrow__identity"><a class="kp-listrow__name" href="#pg-t-ibu">Ibuprofen 400 mg</a><span class="kp-listrow__meta">Film-coated tablet · pain and fever</span></div></li></ul>
+            <div class="kp-dialog pg-dialog-still" role="group" aria-label="Add stock, held open"><h3 class="kp-dialog__title">Add stock</h3><p class="kp-dialog__description">Ibuprofen 400 mg: how many tablets came in?</p><button type="button" class="kp-icon-button kp-dialog__close" aria-label="Close">×</button></div><p class="pg-log" id="pg-touch-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="docs-nav" data-review-item="docs-nav" data-review-topic="docs" data-review-topic-title="The documentation site" data-review-components="docs-nav" data-review-title="The documentation on a phone folds its navigation" aria-labelledby="h-docs-nav">
+            <header class="pg-intro"><h2 id="h-docs-nav">The Badge page, 390 px wide</h2><p>The page itself, in a window of a phone&rsquo;s width. Wider than 40rem the navigation is the column it always was.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your answer of 01/11/2026, docs-phone-nav: fold): At 390 px every page of the documentation drew the whole side navigation first, so a page&rsquo;s own text started about 5194 px down. On a phone the navigation now folds behind a menu button, as <code>.kp-sidenav</code> does for apps.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Closed</b>: a menu button top left and the theme button top right on one row; the page&rsquo;s title right under them.</li><li><b>Open</b>: the navigation slides in from the left over the page, the theme&rsquo;s own panel, no dimmed backdrop. Escape or the button closes it and the focus goes back to the button.</li><li>The line under the window says where the page&rsquo;s text starts.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that the menu button is easy to find and that the opened panel reads as the theme&rsquo;s own navigation.</p></div>
+            <div data-review-controls data-review-controls-for="docs-nav-component"><div role="group" aria-label="Menu"><button type="button" class="kp-button kp-button--sm" data-pg="docs-menu" data-value="closed" data-target="docs-nav-component" aria-pressed="true">Closed</button><button type="button" class="kp-button kp-button--sm" data-pg="docs-menu" data-value="open" data-target="docs-nav-component" aria-pressed="false">Open</button></div></div>
+            <div id="docs-nav-component" class="pg-component" data-pg-width="full">
+        <div class="pg-phone"><iframe id="pg-docs" class="pg-phone__screen" title="The Badge page of the documentation, 390 px wide" data-pg-src="../../site/components/badge.html"></iframe></div><p class="pg-log" id="pg-docs-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        </body>
+</html>
