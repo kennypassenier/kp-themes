@@ -70,7 +70,9 @@ export const flipped = (direction) =>
  * on its pseudo-elements and, where the register keeps the lines of a part
  * (`--kp-lines: keep`, see keepsLines()), those of every line inside it that
  * ends, each on its own element with its own wait. A line that never ends (a
- * spinner, a caret) is no exit.
+ * spinner, a caret) is no exit, and neither is a clock (an element inside
+ * `[data-kp-motion-clock]`, such as the Undo toast's draining ring), which
+ * runs for the length of a window rather than for the exit.
  * @param {HTMLElement} actor
  * @param {boolean} lines
  * @returns {CSSAnimation[]}
@@ -82,6 +84,7 @@ export function exitsOf(actor, lines) {
             const effect = /** @type {KeyframeEffect | null} */ (a.effect);
             const target = effect?.target;
             if (target === actor) return true;
+            if (target instanceof Element && target.closest('[data-kp-motion-clock]')) return false;
             return lines && target != null && actor.contains(target) && Number.isFinite(Number(effect?.getComputedTiming().activeDuration));
         })
     );

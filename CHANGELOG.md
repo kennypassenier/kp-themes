@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Fixed: Undo toasts after the first stayed 2 px tall and never left** [habits, 2026-11-01]. Under a theme that keeps the lines of a part (`--kp-lines: keep`, formal among them) the motion counted the Undo ring's 6 s drain as part of the toast's arrival and leave, so later toasts kept a 0 height for about 5.4 s and a dismissed one waited on the paused drain for ever. The ring is now marked `data-kp-motion-clock`, and motion never waits on an element inside one. Measured on Habits' repro in formal with motion attached: three toasts 58/58/58 px, all gone after the window (were [58, 2, 2] and never removed).
+
 Seven gaps Kenny's Habits app reported [habits-1101]. Everything new is opt-in; the faults (toasts over a floating selection bar, the selection count on a phone, the calm calendar's counts) are fixed for everyone.
 
 - **Fixed: a calm calendar prints a count on every tone that carries one** [habits-1101, calm calendar hides warn counts]. `js/calendar/paint.js` printed counts on `logged` only, so a `warn` day (kept with `data-kp-calm-map="none"`) lost its number. Measured at 390 px: the `warn` day's count was ` ` before, `3` after; `logged` unchanged (`2`), a `quiet` day still prints none (a calm quiet or paused day never carries a count), `future`, `before` and `loading` still print none.

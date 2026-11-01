@@ -6,7 +6,7 @@ export const sizeMotionDescriptor = {
         title: 'Closing and resizing',
         group: 'Theming',
         classes: [],
-        aliases: ['size-motion', 'resizing', 'arriving', 'leaving', 'arrive', 'folding', 'gliding', 'reversing', 'settling', 'closing', 'ghost'],
+        aliases: ['size-motion', 'resizing', 'arriving', 'leaving', 'arrive', 'folding', 'gliding', 'reversing', 'settling', 'closing', 'ghost', 'motion-clock'],
         exports: [],
         intro: 'A dialog leaves the way it came, and a box that changes size eases to its new height, growing and shrinking alike. Nothing here has a speed of its own: every duration and curve is read from the theme’s dialog entrance.',
         whenToUse:
@@ -24,6 +24,7 @@ export const sizeMotionDescriptor = {
             },
         ],
         variants: [
+            { name: 'data-kp-motion-clock', what: 'On an element that runs for the length of a window rather than for an exit (the Undo toast’s draining ring): an arrival or a leave never waits on the animations inside it, also where the register keeps a part’s lines.' },
             { name: 'data-kp-size-motion', what: 'Ease this box to its new height whenever its content changes size.' },
             { name: '--kp-close-max', what: 'The longest a dialog may take to leave. It leaves in two thirds of its entrance, never longer than this. Default 600ms.' },
             { name: '--kp-size-max', what: 'The longest a box may take to change size. It takes four fifths of the dialog entrance, never longer than this. Default 480ms.' },
