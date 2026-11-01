@@ -1,6 +1,19 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/gantt-fit-1101/demo.html": {
+            "facts": {
+                "id": "gantt-fit-1101",
+                "themes": "formal",
+                "ask": null,
+                "askText": "You chose to make Kitchen’s cook timeline fit a phone’s width (2026-11-01). Formal only, on Kitchen’s own cook plan: the spaghetti recipe its cook-mode checks use, two tracks, drawn with the calls the app makes. 1 section, 1 pair.",
+                "sections": [{ "item": "gantt-fit", "themes": null, "topic": "gantt", "mode": null }],
+                "extra": null,
+                "round": "\n            {\"round\":\"gantt-fit-1101-5ba15524-b5a7-4abe-83c3-c139588ac602\",\"received\":[]}\n        "
+            },
+            "fingerprint": "4a1131d692f86fbd",
+            "update": null
+        },
         "research/graph-1020/demo.html": {
             "facts": {
                 "id": "graph-1020",

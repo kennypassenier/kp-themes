@@ -1,0 +1,44 @@
+/* research/gantt-fit-1101: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column, each card fills it, each timeline its card,
+ * as Kitchen's cook page holds its timeline card (kitchen/web/css/pages/cook.css .ck-timelinecard). */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the two cards one above the other, each answering its own width, not the window's. */
+.pg-component {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.pg-timelinecard .kp-card__stage,
+.pg-slot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-inline-size: 0;
+}
+
+.pg-timelinecard {
+    min-inline-size: 0;
+}
+
+/* The width control: the stage at a phone's 390 px, centred. */
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+}

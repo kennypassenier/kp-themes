@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="gantt-fit-1101" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The run timeline fits its width</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>The run timeline fits its width</h1>
+                <p class="cat-intro">
+                    You chose to make Kitchen&rsquo;s cook timeline fit a phone&rsquo;s width (2026-11-01). Formal only, on Kitchen&rsquo;s own cook plan: the
+                    spaghetti recipe its cook-mode checks use, two tracks, drawn with the calls the app makes. 1 section, 1 pair.
+                </p>
+                <p>The section says under <b>Expected</b> what you should see and what each control does. The stage opens at a phone&rsquo;s 390 px.</p>
+            </header>
+
+        <section id="gantt-fit" data-review-item="gantt-fit" data-review-topic="gantt" data-review-topic-title="The run timeline" data-review-components="gantt-fit" data-review-title="The run timeline fits its width" aria-labelledby="h-gantt-fit">
+            <div class="pg-asked"><p><b>What is asked</b> (your choice &ldquo;Passend maken&rdquo; for Kitchen&rsquo;s cook timeline, 2026-11-01): On a phone the timeline keeps a readable plot width and scrolls sideways inside its frame, so Kitchen&rsquo;s cook plan showed only its first half: the later bars and their labels stood past the frame&rsquo;s edge, and a lane with a running step kept an empty row. The new option <code>data-kp-gantt-scroll="fit"</code> lays the whole plan across the frame at every width, with no sideways scroll. Every bar&rsquo;s label stays whole: inside the bar when it fits, else after it, else before it, and only when there is no room beside it, on its own line right under the bar. A lane is as tall as the rows it uses. A timeline without the option is unchanged.</p></div>
+            <div class="pg-intro"><h2 id="h-gantt-fit">Spaghetti: cooking now</h2><p>Kitchen&rsquo;s cook plan in the middle of cooking: the water has boiled, the pasta is in the pan (the striped bar, with what is left of its ten minutes hatched after the red line for now), and the sauce and sitting down are still to do. The upper card is the timeline as it is today, the lower card the same plan fitted.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Phone, 390 px</b> (as it opens): the upper timeline scrolls sideways and its later bars and labels are out of sight. The lower one shows the whole plan from the first bar to &ldquo;Sit down&rdquo; without scrolling; no label is cut and none stands on the red line beside its bar. &ldquo;Boil the water&rdquo; has no room beside its bar and stands on its own line under it. No lane has an empty row at its foot.</li><li><b>Full width</b>: both show the whole plan; the lower one lays &ldquo;Cook the pasta&rdquo; after its hatched rest instead of over it, and its Pasta lane has no spare row (two rows, the upper three).</li><li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> drive both timelines: the busy card over the lanes, then the package&rsquo;s plate with its words and a normal Retry, at the timeline&rsquo;s full size.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal is a paper plate: thin rules, the track colours as soft plates with a firm edge, the words in the page&rsquo;s ink. Check that every label in the lower card reads whole and clearly belongs to its bar, and that the axis keeps readable times.</p></div>
+            <div data-review-controls data-review-controls-for="gantt-fit-component"><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="ready" data-target="gantt-fit-component" aria-pressed="true">Ready</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="loading" data-target="gantt-fit-component" aria-pressed="false">Loading</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="empty" data-target="gantt-fit-component" aria-pressed="false">Empty</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="error" data-target="gantt-fit-component" aria-pressed="false">Failed</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="gantt-fit-component" aria-pressed="true">Phone, 390 px</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="gantt-fit-component" aria-pressed="false">Full width</button></div></div>
+            <div id="gantt-fit-component" class="pg-component" data-pg-width="phone">
+        <section class="kp-card pg-timelinecard" aria-labelledby="pg-gantt-now-t">
+            <div class="kp-card__header"><h3 class="kp-card__title" id="pg-gantt-now-t">Today: keeps its width and scrolls</h3></div>
+            <p class="kp-card__body">The timeline as Kitchen shows it now, without the option.</p>
+            <div class="kp-card__stage"><div class="kp-card__data pg-slot"><section class="kp-gantt" id="pg-gantt-now" data-kp-gantt data-kp-gantt-range="all" data-kp-gantt-toolbar="off" data-kp-gantt-legend="off" data-kp-gantt-hint="off" data-kp-gantt-ghosts="1 1" aria-label="Cooking timeline, one row per track"></section></div></div>
+        </section>
+        <section class="kp-card pg-timelinecard" aria-labelledby="pg-gantt-fit-t">
+            <div class="kp-card__header"><h3 class="kp-card__title" id="pg-gantt-fit-t">Fitted: <code>data-kp-gantt-scroll="fit"</code></h3></div>
+            <p class="kp-card__body">The same plan with the new option.</p>
+            <div class="kp-card__stage"><div class="kp-card__data pg-slot"><section class="kp-gantt" id="pg-gantt-fit" data-kp-gantt data-kp-gantt-range="all" data-kp-gantt-toolbar="off" data-kp-gantt-legend="off" data-kp-gantt-hint="off" data-kp-gantt-ghosts="1 1" data-kp-gantt-scroll="fit" aria-label="Cooking timeline, one row per track, fitted"></section></div></div>
+        </section>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"gantt-fit-1101-5ba15524-b5a7-4abe-83c3-c139588ac602","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
