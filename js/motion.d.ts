@@ -6,7 +6,8 @@ export { REVERSING_ATTRIBUTE, playEntranceBackwards, stopReversing } from './mot
 export { CLOSING_ATTRIBUTE, PANEL_SELECTOR, playClose, stopClose } from './motion/panel-close.js';
 export { withoutOvershoot, reversedEase, sizeMotion } from './motion/size.js';
 export { arriveShown, GROUP_FOLDING_ATTRIBUTE, glideGroup, playArrivalBackwards } from './motion/arrive.js';
-export { leavesState, leave, repaintedIn } from './motion/leave.js';
+export { leavesState, leave } from './motion/leave.js';
+export { repaintedIn } from './motion/repaint.js';
 export { FOLDING_OUT } from './motion/fold-size.js';
 export { easeSize } from './motion/box-size.js';
 export { attachMotion } from './motion/attach.js';
@@ -14,11 +15,11 @@ export type Entrance = import('./motion/keyframes.js').Entrance;
 export type Line = import('./motion/keyframes.js').Line;
 export type Arriving = import('./motion/turns.js').Arriving;
 export type Leaving = import('./motion/leave.js').Leaving;
-export type RepaintNode = import('./motion/leave.js').RepaintNode;
+export type RepaintNode = import('./motion/repaint.js').RepaintNode;
 export type SizeOptions = import('./motion/fold-size.js').SizeOptions;
 /** @typedef {import('./motion/keyframes.js').Entrance} Entrance */
 /** @typedef {import('./motion/keyframes.js').Line} Line */
 /** @typedef {import('./motion/turns.js').Arriving} Arriving */
 /** @typedef {import('./motion/leave.js').Leaving} Leaving */
-/** @typedef {import('./motion/leave.js').RepaintNode} RepaintNode */
+/** @typedef {import('./motion/repaint.js').RepaintNode} RepaintNode */
 /** @typedef {import('./motion/fold-size.js').SizeOptions} SizeOptions */

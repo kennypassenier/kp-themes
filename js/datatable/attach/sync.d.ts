@@ -1,3 +1,4 @@
+import { TableSyncColumns } from './sync-columns.js';
 export type FilterValue = import('../events.js').FilterValue;
 export type GridHandle = import('../grid.js').GridHandle;
 export type View = import('../events.js').View;
@@ -9,6 +10,8 @@ export type DataTableControl = import('./controller.js').DataTableControl;
 export declare class TableSync {
     /** The table this part belongs to. */
     t: import("./controller.js").DataTableControl;
+    /** The column choice: hidden columns, the list of boxes and the count. */
+    columnSync: TableSyncColumns;
     /** Keys ticked in a server-backed table, which outlive the rows of one page. @type {Set<string>} */
     serverSelection: Set<string>;
     fixedAttribute: string | undefined;
@@ -48,8 +51,6 @@ export declare class TableSync {
     syncCardSort(): void;
     syncSortMarks(): void;
     syncColumns(): void;
-    /** The column menu's list, built once: a box per column that may be hidden, then "Show all columns". @param {HTMLElement} list */
-    buildColumnList(list: HTMLElement): void;
     syncFixed(): void;
     labelCells(): void;
 }

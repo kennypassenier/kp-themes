@@ -315,6 +315,11 @@
             "tags": ["@component:data"],
             "why": "a data component holds its loaded height while a state shows [t56-statefix-1018]"
         },
+        {
+            "path": "js/footprint/*.js",
+            "tags": ["@component:data"],
+            "why": "the first-load estimate of a data component's footprint [t56-statefix-1018]"
+        },
         { "path": "js/problems.js", "tags": ["@component:feedback"], "why": "the problem alert [kpadopt5]" },
         { "path": "js/problems/*.js", "tags": ["@component:feedback"], "why": "the problem alert [kpadopt5]" },
         { "path": "js/console.js", "tags": ["@component:data"], "why": "the interactive console [kpadopt6]" },

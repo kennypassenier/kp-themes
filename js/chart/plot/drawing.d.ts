@@ -2,6 +2,9 @@ import { PlotFrame } from './frame.js';
 export type ChartSeries = import('../words.js').ChartSeries;
 export type PlotMedian = import('./base.js').PlotMedian;
 export type PlotGeometry = import('./base.js').PlotGeometry;
+/** @typedef {import('../words.js').ChartSeries} ChartSeries */
+/** @typedef {import('./base.js').PlotMedian} PlotMedian */
+/** @typedef {import('./base.js').PlotGeometry} PlotGeometry */
 export declare class PlotDrawing extends PlotFrame {
     /** The most readings any source has, and whether that is too few for a trend. */
     have: number;

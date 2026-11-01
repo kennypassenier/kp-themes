@@ -76,8 +76,4 @@ export declare class Lightbox extends Controller {
     show(): void;
     /** What happens when the picture of `item` would not load: a plate with Retry in the stage. @param {import('./constants.js').GalleryItem} item */
     failed(item: import('./constants.js').GalleryItem): void;
-    /** @param {import('./constants.js').GalleryItem} item */
-    buildVideo(item: import('./constants.js').GalleryItem): HTMLVideoElement;
-    /** @param {import('./constants.js').GalleryItem} item */
-    buildImage(item: import('./constants.js').GalleryItem): HTMLImageElement;
 }

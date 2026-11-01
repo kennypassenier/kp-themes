@@ -47,12 +47,4 @@ export declare class TableHandle {
         group: string | null;
         selector: string | null;
     } | null): void;
-    /**
-     * Rows the page added, removed or held are the table's rows at once, without a call to refresh(): the count, the pager and the
-     * pages follow the body [b3b4-1019; homelab gap 34, kyu gap 28]. The table's own sort and page moves put the same rows back in
-     * another order, which changes nothing here.
-     */
-    watchRows(): void;
-    /** Wire the table again after an option attribute changed, and give the page's handle the view it had. */
-    wireAgain(): void;
 }

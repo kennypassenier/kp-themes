@@ -23,12 +23,5 @@ export declare function goNext(root: HTMLElement): void;
 export declare function pressAnswer(root: HTMLElement, button: HTMLElement): boolean;
 /** The marks and the Next button of the question shown, without redrawing it (the focus stays where it is). @param {HTMLElement} root */
 export declare function paintAnswerState(root: HTMLElement): void;
-/**
- * Draw one question's answers under its text.
- * @param {HTMLElement} root @param {HTMLElement} holder @param {FocusStep} step @param {HTMLElement} text
- */
-export declare function buildAnswer(root: HTMLElement, holder: HTMLElement, step: FocusStep, text: HTMLElement): void;
-/** The summary after the last question: each question and what was answered. @param {HTMLElement} root @param {HTMLElement} holder */
-export declare function buildSummary(root: HTMLElement, holder: HTMLElement): void;
 /** @param {Element} root @param {string} message */
 export declare function say(root: Element, message: string): void;

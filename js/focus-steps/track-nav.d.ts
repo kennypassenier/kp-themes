@@ -15,19 +15,6 @@ export declare function recompute(root: HTMLElement): void;
 /** The step's timer button and the waiting plate follow the clock. @param {HTMLElement} root @param {import('../timer.js').TimerState[]} timers */
 export declare function paintLive(root: HTMLElement, timers: import('../timer.js').TimerState[]): void;
 /**
- * Next on the active track: the step is passed, the track goes on to its next, or is finished. A step that waits is not passed.
- * @param {HTMLElement} root
- */
-export declare function trackNext(root: HTMLElement): void;
-/** Back on the active track: from the finished plate the last step again, else the step before, to be done again. @param {HTMLElement} root */
-export declare function trackPrev(root: HTMLElement): boolean;
-/**
- * A script goes to a step: its track becomes the active one, at that step.
- * @param {HTMLElement} root @param {number} index
- * @returns {boolean} whether it moved
- */
-export declare function trackGo(root: HTMLElement, index: number): boolean;
-/**
  * A step timer ended: its track asks for the person.
  * @param {HTMLElement} root @param {number} i the step @param {import('../timer.js').TimerState} timer
  */

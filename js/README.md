@@ -30,7 +30,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 
 ## js/datatable.js → js/datatable/
 
-The data table: sorting, filtering, paging, cards, detail rows, reorder, editing, server mode. 38 files.
+The data table: sorting, filtering, paging, cards, detail rows, reorder, editing, server mode. 42 files.
 
 | File                      | Does                                                                                                      |
 | ------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -41,11 +41,14 @@ The data table: sorting, filtering, paging, cards, detail rows, reorder, editing
 | `attach/controller.js`    | DataTableControl: one data table; makes its parts in order, binds their listeners, wires the table again. |
 | `attach/controls.js`      | TableControls: finds the controls around the table and reads its options.                                 |
 | `attach/details.js`       | TableDetails: the detail rows, the expand cell and the reorder cell.                                      |
+| `attach/edit-field.js` | TableEditField: the editor's control per kind, the check of a value, and the app's say on a change. |
 | `attach/edit.js`          | TableEdit: in-cell editing: open, commit, undo and the app's say.                                         |
 | `attach/expand.js`        | TableExpand: expanding and folding rows and the row keys.                                                 |
+| `attach/filter-choices.js` | TableFilterChoices: a choice filter's values, the boxes that follow them, and the date picker's markup. |
 | `attach/filter-editor.js` | TableFilterEditor: the add-filter mode's editor, opened from a pill or the add menu.                      |
 | `attach/filter-ui.js`     | TableFilterUi: the filter panel, the add-filter button and menu, the pills row and the choice lists.      |
 | `attach/groups.js`        | TableGroups: row groups: collecting, folding, placing and syncing them.                                   |
+| `attach/handle-watch.js` | Keeps a table in step with its body: the rows the page adds or removes, and the wiring again after an option changed. |
 | `attach/handle.js`        | TableHandle: the handle a page gets back, the rows watch and the wiring again for a changed option.       |
 | `attach/handlers.js`      | TableHandlers: the search, scope, density, sort, page size and column controls.                           |
 | `attach/identity.js`      | TableIdentity: the table's id, its undo list and the arrival mark.                                        |
@@ -57,6 +60,7 @@ The data table: sorting, filtering, paging, cards, detail rows, reorder, editing
 | `attach/selection.js`     | TableSelection: focus memory, announcements and the select-all.                                           |
 | `attach/server.js`        | TableServer: server mode: sending a request and applying the answer.                                      |
 | `attach/sort-setup.js`    | TableSortSetup: the card sort, the sort summary, the column menu and the edit log.                        |
+| `attach/sync-columns.js` | TableSyncColumns: the hidden columns, the column menu's boxes and the count of shown columns. |
 | `attach/sync.js`          | TableSync: syncs selection, sort marks, columns, fixed columns and card labels with the state.            |
 | `attach/types.js`         | The options one attachDataTables() call resolved, and what the call shares with its tables (types only).  |
 | `attach/unwire.js`        | TableUnwire: the detach that undoes everything the table added, in the old order.                         |
@@ -114,7 +118,7 @@ The dictionary of every user-visible string, by component group. 32 files.
 
 ## js/chart.js → js/chart/
 
-The time chart, the spark chart and the key figure trend. 25 files.
+The time chart, the spark chart and the key figure trend. 26 files.
 
 | File                 | Does                                                                                                               |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -130,6 +134,7 @@ The time chart, the spark chart and the key figure trend. 25 files.
 | `plot/drawing.js`    | PlotDrawing: one drawing's sources, medians and runs, event marks, edge counts, brush and crosshair.               |
 | `plot/frame.js`      | PlotFrame: one drawing's scales, grid, time axis, thresholds and the events' bands.                                |
 | `plot/legend.js`     | PlotLegend: the source keys, the key of event kinds above the plot, and the loading skeleton.                      |
+| `plot/marks.js` | The measures of the marks a full chart draws: columns, dots, median words, event marks, edge counts. |
 | `plot/pointer.js`    | PlotPointer: the crosshair, the pin, the brush that zooms, and the keys that walk the readings.                    |
 | `plot/tip.js`        | PlotTip: the legend's values, the tooltip beside the crosshair, and what the chart announces.                      |
 | `plot.js`            | The full chart: one PlotChart per chart element, and startChart() for every chart's controller.                    |
@@ -146,7 +151,7 @@ The time chart, the spark chart and the key figure trend. 25 files.
 
 ## js/motion.js → js/motion/
 
-Dialogs that leave the way they came, and boxes that ease to a new size. 19 files.
+Dialogs that leave the way they came, and boxes that ease to a new size. 22 files.
 
 | File                | Does                                                                            |
 | ------------------- | ------------------------------------------------------------------------------- |
@@ -159,15 +164,18 @@ Dialogs that leave the way they came, and boxes that ease to a new size. 19 file
 | `fold-control.js`   | FoldControl: one `<details>` that glides open and shut; attachFold().           |
 | `fold-size.js`      | What eased boxes and folds read: settled heights, folds, arrival mode.          |
 | `fold.js`           | Folding: timing, curve and frames of a collapsing block.                        |
+| `ghost.js` | The stand-in that plays a leaving element's exit while the element folds its space shut. |
 | `keyframes.js`      | Reads a theme's entrance keyframes and turns them into lines and entrances.     |
 | `leave.js`          | Leaving: the leave of one element, a batch, and repaint tracking.               |
 | `panel-close.js`    | Menus and popovers closing as their opening reversed, and the ghost close.      |
+| `repaint.js` | Repaint tracking: which added elements only repaint what was there, and what a batch of records says. |
 | `reverse.js`        | Turning a CSS entrance around: playEntranceBackwards() and stopReversing().     |
 | `reversed-leave.js` | A leave played as the reverse of the arrival.                                   |
 | `size.js`           | Size easing: the curve and the stepped clock a height change runs on.           |
 | `state.js`          | The mutable values the motion parts share: what is watched, in turn or batched. |
 | `switching.js`      | Whether a theme switch is in progress, so nothing glides for it.                |
 | `timing.js`         | Reads the theme's motion timing and the reduced-motion preference.              |
+| `turned-exits.js` | The exits of a leave turned around: each plays from the timeline's end backwards. |
 | `turns.js`          | Arrivals in turn: the gap between successive entrances.                         |
 
 ## js/gantt.js → js/gantt/
@@ -195,10 +203,11 @@ The run timeline. 16 files.
 
 ## js/focus-steps.js → js/focus-steps/
 
-One step at a time with the screen kept on (cook mode), with parallel tracks. 18 files.
+One step at a time with the screen kept on (cook mode), with parallel tracks. 21 files.
 
 | File           | Does                                                                                               |
 | -------------- | -------------------------------------------------------------------------------------------------- |
+| `answer-ui.js` | The markup of a question: its answers (text box, choices, same-as buttons, skip) and the summary. |
 | `api.js`       | The functions a page calls to move, read and set the focus steps.                                  |
 | `attach.js`    | Attaches the focus-steps views of a page.                                                          |
 | `band.js`      | The band above the step: alerts, the wait line and the suggestion.                                 |
@@ -207,16 +216,26 @@ One step at a time with the screen kept on (cook mode), with parallel tracks. 18
 | `controller.js` | FocusStepsControl: one view: buttons, shortcuts, timers, live options and the screen hold.         |
 | `detail.js`    | A step's `body`: a Node or Markdown drawn under its text.                                          |
 | `dom.js`       | Element lookups and the markup of one step.                                                        |
-| `flow.js`      | The step flow: taking an answer, advancing, the answer and summary markup.                         |
+| `flow.js`      | The step flow: taking an answer, advancing, the answer state.                                      |
 | `input.js`     | FocusStepsInput: next and back, the keys, the swipe and Read aloud of one view.                    |
 | `lanes.js`     | The lanes beside the focus step: build, paint and lay out.                                         |
 | `memory.js`    | Remembers progress and restores it.                                                                |
+| `paint-extras.js` | The extra parts of a shown step: the wait, the ingredients and the timer's start button. |
 | `paint.js`     | Paints the focused step.                                                                           |
 | `resume.js`    | The resume question and the helpers that read an answer.                                           |
 | `state.js`     | The mutable values the focus-steps parts share: the id counter and the lazily loaded timer module. |
 | `track-nav.js` | Moving between tracks: switch, next, previous, go and start.                                       |
+| `track-steps.js` | Moving along a track: next, previous and go to a step. |
 | `tracks.js`    | Tracks: which steps run in parallel and the timers they wait for.                                  |
 | `wake.js`      | Keeps the screen awake while a step runs.                                                          |
+
+## js/footprint.js → js/footprint/
+
+A data component keeps the height it had while a state shows in its place. The controller stays in `js/footprint.js`; 1 part file.
+
+| File          | Does                                                                                                      |
+| ------------- | --------------------------------------------------------------------------------------------------------- |
+| `estimate.js` | The first-load estimate: the frame of a host plus the rows it would hold, a row as a line or as a card.   |
 
 ## js/row-pick.js → js/row-pick/
 
@@ -322,13 +341,14 @@ Confirmations, skip links, back to top and the navigation toggles, menus and sti
 
 ## js/heat.js → js/heat/
 
-The heat grid and the matrix: coloured cells a person reads at a glance and asks about. 12 files.
+The heat grid and the matrix: coloured cells a person reads at a glance and asks about. 13 files.
 
 | File             | Does                                                                                      |
 | ---------------- | ----------------------------------------------------------------------------------------- |
 | `card.js`        | The busy card over a loading grid and the redraw that waits for it.                       |
 | `constants.js`   | The selectors, event names, tone list and cell selectors of the heat grid and the matrix. |
 | `dom.js`         | Element, tone and unit helpers every part of the heat grid uses.                          |
+| `draw-parts.js` | The pieces of a drawn grid: the state plate, the axis of column names, and the area a busy card covers. |
 | `draw.js`        | Draws the heat grid from its spec.                                                        |
 | `grid-state.js`  | The per-grid memory the drawing and the wiring share: decorate, tab stop and lit keys.    |
 | `legend.js`      | The legend under a heat grid: its entries, its keys and the calm tones.                   |
@@ -341,12 +361,13 @@ The heat grid and the matrix: coloured cells a person reads at a glance and asks
 
 ## js/availability.js → js/availability/
 
-The availability grid: who can come, edited cell by cell. 12 files.
+The availability grid: who can come, edited cell by cell. 13 files.
 
 | File           | Does                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------- |
 | `api.js`       | The functions a page calls to set the spec and read or set an answer.                 |
 | `attach.js`    | Attaches the availability grids of a page.                                            |
+| `cell.js` | One cell of the grid: its face from its answer, and the spoken line. |
 | `constants.js` | The selector, event names, answer words and timings of the availability grid.         |
 | `controller.js` | AvailabilityControl: one grid's presses, painted strokes, scroll memory and options.  |
 | `dates.js`     | Pure date helpers: the days and the range an availability grid spans.                 |
@@ -803,7 +824,7 @@ The time field: a 24-hour text box, a list of times, keys that step, presets and
 
 ## js/gallery.js → js/gallery/
 
-The photo gallery: a grid of tiles that open large in the viewer, with previous and next, zoom, swipe and an address per picture. 8 files.
+The photo gallery: a grid of tiles that open large in the viewer, with previous and next, zoom, swipe and an address per picture. 9 files.
 
 | File                | Does                                                                                                                                |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -813,6 +834,7 @@ The photo gallery: a grid of tiles that open large in the viewer, with previous 
 | `gallery.js`        | One gallery: its pictures and spec, how it draws itself in each state, the busy card, and what it remembers.                        |
 | `lightbox-info.js`  | What the lightbox shows beside the picture: its caption and facts, and the buttons in the foot.                                     |
 | `lightbox-input.js` | How a person moves the lightbox: the controls that fade, the swipe on a phone, and the address that carries the open picture.       |
+| `lightbox-media.js` | What the lightbox puts in its stage: the video and the image, and the zoom of the picture. |
 | `lightbox.js`       | The lightbox of one opened picture: the viewer shell, previous and next, zoom, the picture's load, and closing.                     |
 | `render.js`         | Builds the gallery's tiles and plates: the grid and its cells, the add tile, the failed-picture tile and the empty or failed plate. |
 
@@ -1103,11 +1125,12 @@ The JSON text box: it checks what is typed, marks the line, formats and minifies
 
 ## js/master-detail.js → js/master-detail/
 
-The master-detail layout: a list and its detail side by side, folding to one pane on a phone, with states, history and a listbox keyboard. 6 files.
+The master-detail layout: a list and its detail side by side, folding to one pane on a phone, with states, history and a listbox keyboard. 7 files.
 
 | File              | Does                                                                                                                                                                  |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `api.js`          | The calls a page makes on a master-detail layout: attach, get its handle, set its state, select, open and close.                                                      |
+| `base.js` | The state and movement of a layout: the columns, the list as a listbox, selecting, opening and closing the folded detail. |
 | `constants.js`    | The selector, events, default widths, fold points and types of the master-detail layout.                                                                              |
 | `controller.js`   | One master-detail layout: the list as a listbox, the selection, opening and closing the folded detail, history, keys and states [kpadopt5-ops].                       |
 | `detail-state.js` | The detail pane's state: empty, loading, error or ready; its plates, its busy card and the watch that lets a component's own failed plate win [kyugaps-1019, KYU 54]. |
@@ -1148,11 +1171,12 @@ The quote card: your own earlier words with who wrote them and when, a Hide with
 
 ## js/thread.js → js/thread/
 
-The message thread, as a ThreadControl controller made by the first setThread(). 4 files.
+The message thread, as a ThreadControl controller made by the first setThread(). 5 files.
 
 | File            | Does                                                                                     |
 | --------------- | ---------------------------------------------------------------------------------------- |
 | `controller.js` | ThreadControl: set(spec), the options switchable by attribute, the clicks, Copy.         |
+| `list.js` | The thread's list: a divider per day when asked, then each run of messages. |
 | `message.js`    | One message: a system line, or a bubble with avatar, head, folded text, files and foot. |
 | `options.js`    | Selector, events, time zone, the options, days, runs of messages, the newest end.       |
 | `view.js`       | ThreadView: the state, loading, the note, the messages in their days, scroll and folds.  |

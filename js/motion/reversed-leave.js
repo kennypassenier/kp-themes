@@ -1,4 +1,6 @@
 // A leave played as the reverse of the arrival.
+import { playTurnedExits } from './turned-exits.js';
+import { ghostOf } from './ghost.js';
 import { motionState } from './state.js';
 import { firstMs, themeMotion } from './timing.js';
 import { keepsLines, keyframesOf } from './keyframes.js';
@@ -120,25 +122,7 @@ export function arriveAsReversedLeave(el) {
     /** @type {HTMLElement} */
     let actor = el;
     if (fold === 'ghost' && lasts > 0) {
-        actor = /** @type {HTMLElement} */ (el.cloneNode(true));
-        actor.setAttribute('aria-hidden', 'true');
-        actor.inert = true;
-        Object.assign(actor.style, {
-            position: 'absolute',
-            top: `${el.offsetTop}px`,
-            left: `${el.offsetLeft}px`,
-            width: `${el.offsetWidth}px`,
-            height: `${el.offsetHeight}px`,
-            margin: '0',
-            boxSizing: 'border-box',
-            pointerEvents: 'none',
-            zIndex: '1',
-        });
-        el.after(actor);
-        const want = el.getBoundingClientRect();
-        const got = actor.getBoundingClientRect();
-        actor.style.top = `${el.offsetTop + want.top - got.top}px`;
-        actor.style.left = `${el.offsetLeft + want.left - got.left}px`;
+        actor = ghostOf(el);
         el.style.setProperty('visibility', 'hidden');
     }
     // The exit, read off the actor and taken over: its keyframes and timing.
@@ -176,39 +160,7 @@ export function arriveAsReversedLeave(el) {
     // The leave is over when its last exit (a pseudo-element's may run
     // longer than the first) and its fold are.
     const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
-    /** @type {Animation[]} */
-    const plays = [];
-    for (const exit of exits) {
-        // In the leave this exit ran from its delay to its end; turned
-        // around it ends at the timeline's end. Its iterations play in the
-        // opposite order, each backwards: a normal or reverse exit swaps
-        // direction, an alternating one keeps its own for an even count.
-        const { iterations = 1, direction = 'normal', easing = 'linear', duration } = exit.timing;
-        const even = Number(iterations) % 2 === 0;
-        /** @type {Record<PlaybackDirection, PlaybackDirection>} */
-        const turned = {
-            normal: 'reverse',
-            reverse: 'normal',
-            alternate: even ? 'alternate' : 'alternate-reverse',
-            'alternate-reverse': even ? 'alternate-reverse' : 'alternate',
-        };
-        const back = turned[direction] ?? 'reverse';
-        try {
-            plays.push(
-                exit.target.animate(exit.keyframes, {
-                    duration: Number(duration) || 0,
-                    iterations: Number(iterations),
-                    delay: finiteMs(total - exit.end),
-                    easing: String(easing),
-                    direction: back,
-                    fill: 'both',
-                    ...(exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}),
-                }),
-            );
-        } catch {
-            /* an engine that cannot animate that pseudo-element skips it, as the leave does */
-        }
-    }
+    const plays = playTurnedExits(exits, total);
     // When the leave would have let the next of a row go: leaveOne() waits
     // until every exit is `--kp-leave-stagger` of the way through, or over.
     const set = parseFloat(style.getPropertyValue('--kp-leave-stagger'));

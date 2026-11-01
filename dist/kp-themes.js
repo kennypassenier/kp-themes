@@ -3662,6 +3662,136 @@ var init_reverse = __esm({
   }
 });
 
+// js/motion/turns.js
+function arriveInTurn(items) {
+  if (items.length < 2) return;
+  if (getComputedStyle(items[0].el).getPropertyValue("--kp-arrive-turn").trim() === "siblings") {
+    const rows = /* @__PURE__ */ new Map();
+    for (const item of items) rows.set(item.el.parentElement, [...rows.get(item.el.parentElement) ?? [], item]);
+    if (rows.size > 1) {
+      for (const row2 of rows.values()) turnsOf(row2);
+      return;
+    }
+  }
+  turnsOf(items);
+}
+function turnsOf(items) {
+  if (items.length < 2) return;
+  items = items.filter((item) => Number.isFinite(item.total) && Number.isFinite(item.lag));
+  if (items.length < 2) return;
+  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
+  let start = 0;
+  const ends = items.map((item) => {
+    const end = start + item.total;
+    start += inTurnGap(item.lag, items.length);
+    return end;
+  });
+  const last = Math.max(...ends);
+  items.forEach((item, k) => {
+    const later = last - ends[k];
+    if (later <= 0) return;
+    for (const play of item.plays) {
+      const effect = play.effect;
+      if (!effect) continue;
+      effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
+    }
+  });
+}
+function inTurnGap(gap, count2) {
+  if (count2 < 3 || !(gap > 0)) return gap;
+  const budget = Math.max(IN_TURN_MS, gap);
+  return (count2 - 1) * gap <= budget ? gap : budget / (count2 - 1);
+}
+function reaches(timing, end, share) {
+  if (!Number.isFinite(end)) return 0;
+  if (typeof KeyframeEffect === "undefined" || typeof Animation === "undefined") return end * share;
+  const effect = new KeyframeEffect(null, null, timing);
+  const probe = new Animation(effect, null);
+  for (let t = 0; t < end; t += 1) {
+    probe.currentTime = t;
+    const now = effect.getComputedTiming();
+    if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
+  }
+  return end;
+}
+var finiteMs, IN_TURN_MS;
+var init_turns = __esm({
+  "js/motion/turns.js"() {
+    "use strict";
+    finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
+    IN_TURN_MS = 600;
+  }
+});
+
+// js/motion/turned-exits.js
+function playTurnedExits(exits, total) {
+  const plays = [];
+  for (const exit of exits) {
+    const { iterations = 1, direction = "normal", easing = "linear", duration: duration2 } = exit.timing;
+    const even = Number(iterations) % 2 === 0;
+    const turned = {
+      normal: "reverse",
+      reverse: "normal",
+      alternate: even ? "alternate" : "alternate-reverse",
+      "alternate-reverse": even ? "alternate-reverse" : "alternate"
+    };
+    const back = turned[direction] ?? "reverse";
+    try {
+      plays.push(
+        exit.target.animate(exit.keyframes, {
+          duration: Number(duration2) || 0,
+          iterations: Number(iterations),
+          delay: finiteMs(total - exit.end),
+          easing: String(easing),
+          direction: back,
+          fill: "both",
+          ...exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}
+        })
+      );
+    } catch {
+    }
+  }
+  return plays;
+}
+var init_turned_exits = __esm({
+  "js/motion/turned-exits.js"() {
+    "use strict";
+    init_turns();
+  }
+});
+
+// js/motion/ghost.js
+function ghostOf(el16) {
+  const actor = (
+    /** @type {HTMLElement} */
+    el16.cloneNode(true)
+  );
+  actor.setAttribute("aria-hidden", "true");
+  actor.inert = true;
+  Object.assign(actor.style, {
+    position: "absolute",
+    top: `${el16.offsetTop}px`,
+    left: `${el16.offsetLeft}px`,
+    width: `${el16.offsetWidth}px`,
+    height: `${el16.offsetHeight}px`,
+    margin: "0",
+    boxSizing: "border-box",
+    pointerEvents: "none",
+    zIndex: "1"
+  });
+  el16.after(actor);
+  const want = el16.getBoundingClientRect();
+  const got = actor.getBoundingClientRect();
+  actor.style.top = `${el16.offsetTop + want.top - got.top}px`;
+  actor.style.left = `${el16.offsetLeft + want.left - got.left}px`;
+  return actor;
+}
+var init_ghost = __esm({
+  "js/motion/ghost.js"() {
+    "use strict";
+  }
+});
+
 // js/motion/switching.js
 var switching;
 var init_switching = __esm({
@@ -3779,67 +3909,6 @@ var init_size = __esm({
       "step-start": "steps(1, jump-start)",
       "step-end": "steps(1, jump-end)"
     };
-  }
-});
-
-// js/motion/turns.js
-function arriveInTurn(items) {
-  if (items.length < 2) return;
-  if (getComputedStyle(items[0].el).getPropertyValue("--kp-arrive-turn").trim() === "siblings") {
-    const rows = /* @__PURE__ */ new Map();
-    for (const item of items) rows.set(item.el.parentElement, [...rows.get(item.el.parentElement) ?? [], item]);
-    if (rows.size > 1) {
-      for (const row2 of rows.values()) turnsOf(row2);
-      return;
-    }
-  }
-  turnsOf(items);
-}
-function turnsOf(items) {
-  if (items.length < 2) return;
-  items = items.filter((item) => Number.isFinite(item.total) && Number.isFinite(item.lag));
-  if (items.length < 2) return;
-  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
-  let start = 0;
-  const ends = items.map((item) => {
-    const end = start + item.total;
-    start += inTurnGap(item.lag, items.length);
-    return end;
-  });
-  const last = Math.max(...ends);
-  items.forEach((item, k) => {
-    const later = last - ends[k];
-    if (later <= 0) return;
-    for (const play of item.plays) {
-      const effect = play.effect;
-      if (!effect) continue;
-      effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
-    }
-  });
-}
-function inTurnGap(gap, count2) {
-  if (count2 < 3 || !(gap > 0)) return gap;
-  const budget = Math.max(IN_TURN_MS, gap);
-  return (count2 - 1) * gap <= budget ? gap : budget / (count2 - 1);
-}
-function reaches(timing, end, share) {
-  if (!Number.isFinite(end)) return 0;
-  if (typeof KeyframeEffect === "undefined" || typeof Animation === "undefined") return end * share;
-  const effect = new KeyframeEffect(null, null, timing);
-  const probe = new Animation(effect, null);
-  for (let t = 0; t < end; t += 1) {
-    probe.currentTime = t;
-    const now = effect.getComputedTiming();
-    if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
-  }
-  return end;
-}
-var finiteMs, IN_TURN_MS;
-var init_turns = __esm({
-  "js/motion/turns.js"() {
-    "use strict";
-    finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
-    IN_TURN_MS = 600;
   }
 });
 
@@ -4117,26 +4186,7 @@ function arriveAsReversedLeave(el16) {
   const fold2 = style.getPropertyValue("--kp-leave-fold").trim();
   let actor = el16;
   if (fold2 === "ghost" && lasts > 0) {
-    actor = /** @type {HTMLElement} */
-    el16.cloneNode(true);
-    actor.setAttribute("aria-hidden", "true");
-    actor.inert = true;
-    Object.assign(actor.style, {
-      position: "absolute",
-      top: `${el16.offsetTop}px`,
-      left: `${el16.offsetLeft}px`,
-      width: `${el16.offsetWidth}px`,
-      height: `${el16.offsetHeight}px`,
-      margin: "0",
-      boxSizing: "border-box",
-      pointerEvents: "none",
-      zIndex: "1"
-    });
-    el16.after(actor);
-    const want = el16.getBoundingClientRect();
-    const got = actor.getBoundingClientRect();
-    actor.style.top = `${el16.offsetTop + want.top - got.top}px`;
-    actor.style.left = `${el16.offsetLeft + want.left - got.left}px`;
+    actor = ghostOf(el16);
     el16.style.setProperty("visibility", "hidden");
   }
   getComputedStyle(actor).animationName;
@@ -4176,32 +4226,7 @@ function arriveAsReversedLeave(el16) {
   const foldFor = frames && !foldReflows(el16, ...frames) ? steppedDuration(el16, withoutOvershoot(foldEase), Math.max(size2, lasts) * timing.grow) : 0;
   const foldAt = onStepClock(el16, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts));
   const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
-  const plays = [];
-  for (const exit of exits) {
-    const { iterations = 1, direction = "normal", easing = "linear", duration: duration2 } = exit.timing;
-    const even = Number(iterations) % 2 === 0;
-    const turned = {
-      normal: "reverse",
-      reverse: "normal",
-      alternate: even ? "alternate" : "alternate-reverse",
-      "alternate-reverse": even ? "alternate-reverse" : "alternate"
-    };
-    const back = turned[direction] ?? "reverse";
-    try {
-      plays.push(
-        exit.target.animate(exit.keyframes, {
-          duration: Number(duration2) || 0,
-          iterations: Number(iterations),
-          delay: finiteMs(total - exit.end),
-          easing: String(easing),
-          direction: back,
-          fill: "both",
-          ...exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}
-        })
-      );
-    } catch {
-    }
-  }
+  const plays = playTurnedExits(exits, total);
   const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
   const stagger = Number.isNaN(set) ? 0.5 : set;
   const lag = lasts <= 0 ? 0 : stagger > 0 && stagger < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, stagger))) : Math.max(lasts, ...exits.map((exit) => exit.end));
@@ -4263,6 +4288,8 @@ var entering, animationSignature, pseudoNames, floats, flipped;
 var init_reversed_leave = __esm({
   "js/motion/reversed-leave.js"() {
     "use strict";
+    init_turned_exits();
+    init_ghost();
     init_state();
     init_timing();
     init_keyframes();
@@ -4641,26 +4668,7 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
   const fold2 = style.getPropertyValue("--kp-leave-fold").trim();
   let actor = el16;
   if (fold2 === "ghost" && lasts > 0) {
-    actor = /** @type {HTMLElement} */
-    el16.cloneNode(true);
-    actor.setAttribute("aria-hidden", "true");
-    actor.inert = true;
-    Object.assign(actor.style, {
-      position: "absolute",
-      top: `${el16.offsetTop}px`,
-      left: `${el16.offsetLeft}px`,
-      width: `${el16.offsetWidth}px`,
-      height: `${el16.offsetHeight}px`,
-      margin: "0",
-      boxSizing: "border-box",
-      pointerEvents: "none",
-      zIndex: "1"
-    });
-    el16.after(actor);
-    const want = el16.getBoundingClientRect();
-    const got = actor.getBoundingClientRect();
-    actor.style.top = `${el16.offsetTop + want.top - got.top}px`;
-    actor.style.left = `${el16.offsetLeft + want.left - got.left}px`;
+    actor = ghostOf(el16);
     el16.style.setProperty("visibility", "hidden");
     el16.style.setProperty("animation", "none");
   }
@@ -4736,6 +4744,22 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
   el16.style.removeProperty("visibility");
   for (const a of el16.getAnimations()) a.cancel();
 }
+var init_leave = __esm({
+  "js/motion/leave.js"() {
+    "use strict";
+    init_state();
+    init_reversed_leave();
+    init_fold();
+    init_timing();
+    init_reverse();
+    init_keyframes();
+    init_fold_size();
+    init_size();
+    init_ghost();
+  }
+});
+
+// js/motion/repaint.js
 function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
   const list = [...records].filter((r) => r.type === "childList");
   const gone = /* @__PURE__ */ new Map();
@@ -4777,22 +4801,6 @@ function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
     }
   return out;
 }
-var init_leave = __esm({
-  "js/motion/leave.js"() {
-    "use strict";
-    init_state();
-    init_reversed_leave();
-    init_fold();
-    init_timing();
-    init_reverse();
-    init_keyframes();
-    init_fold_size();
-    init_size();
-    init_constants2();
-  }
-});
-
-// js/motion/box-size.js
 function batchOf(records) {
   const hiddenBefore = /* @__PURE__ */ new Map();
   const moved = /* @__PURE__ */ new Set();
@@ -4802,6 +4810,14 @@ function batchOf(records) {
   }
   return { hiddenBefore, moved };
 }
+var init_repaint = __esm({
+  "js/motion/repaint.js"() {
+    "use strict";
+    init_constants2();
+  }
+});
+
+// js/motion/box-size.js
 function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   if (controllerOf(box, BoxSize)) return () => {
   };
@@ -4819,7 +4835,7 @@ var init_box_size = __esm({
     init_switching();
     init_timing();
     init_size();
-    init_leave();
+    init_repaint();
     init_fold_size();
     FOLD_TICK_HOLD_MS = 300;
     SAME_PX = 1;
@@ -5312,6 +5328,7 @@ var init_motion = __esm({
     init_size();
     init_arrive();
     init_leave();
+    init_repaint();
     init_fold_size();
     init_box_size();
     init_attach();
@@ -13428,8 +13445,8 @@ function placeItems(band, wanted, going) {
     let prev = el16.isConnected && el16.parentElement === band ? el16.previousElementSibling : null;
     while (prev && (!prev.classList.contains("kp-attention__item") || prev.hasAttribute("data-kp-leaving") || going.has(prev)))
       prev = prev.previousElementSibling;
-    const inPlace = el16.parentElement === band && prev === before;
-    if (!inPlace) {
+    const inPlace2 = el16.parentElement === band && prev === before;
+    if (!inPlace2) {
       if (before) before.after(el16);
       else {
         const first = [...band.children].find((c) => c.classList.contains("kp-attention__item"));
@@ -20116,16 +20133,11 @@ var init_frame = __esm({
   }
 });
 
-// js/chart/plot/drawing.js
-var MARKS, PlotDrawing;
-var init_drawing2 = __esm({
-  "js/chart/plot/drawing.js"() {
+// js/chart/plot/marks.js
+var MARKS;
+var init_marks3 = __esm({
+  "js/chart/plot/marks.js"() {
     "use strict";
-    init_dom2();
-    init_attach4();
-    init_stats();
-    init_selection();
-    init_frame();
     MARKS = Object.freeze({
       /** A column's share of the room its neighbours leave, its narrowest and widest, and the slots a lone column divides the plot in. */
       columnShare: 0.76,
@@ -20149,6 +20161,20 @@ var init_drawing2 = __esm({
       edgeInset: 2,
       edgeRise: 5
     });
+  }
+});
+
+// js/chart/plot/drawing.js
+var PlotDrawing;
+var init_drawing2 = __esm({
+  "js/chart/plot/drawing.js"() {
+    "use strict";
+    init_dom2();
+    init_attach4();
+    init_stats();
+    init_selection();
+    init_frame();
+    init_marks3();
     PlotDrawing = class extends PlotFrame {
       /** @param {ConstructorParameters<typeof PlotFrame>} args */
       constructor(...args) {
@@ -28687,6 +28713,40 @@ var init_message = __esm({
   }
 });
 
+// js/thread/list.js
+function threadList(host, { spec, expanded }, options, locale) {
+  const doc = host.ownerDocument;
+  const sorted = [...spec.messages ?? []].sort((a, b) => a.at - b.at);
+  const newestKey = [...sorted].reverse().find((m) => m.dir !== "system")?.key;
+  const groups = groupMessages(sorted, options.group);
+  if (options.order === "newest") groups.reverse();
+  const list = make6(doc, "kp-thread__list", "ol");
+  let previousDay = "";
+  for (const group of groups) {
+    const day2 = dayKey(group[0].at);
+    if (options.days && day2 !== previousDay) {
+      const divider = make6(doc, "kp-thread__day", "li");
+      divider.setAttribute("role", "separator");
+      const text = make6(doc, "kp-thread__day-text", "time");
+      text.setAttribute("datetime", new Date(group[0].at).toISOString());
+      text.textContent = dayLabel(group[0].at, locale);
+      divider.append(text);
+      list.append(divider);
+    }
+    previousDay = day2;
+    const members = options.order === "newest" ? [...group].reverse() : group;
+    members.forEach((message, index) => list.append(messageItem(doc, message, { options, first: index === 0, newestKey, expanded, locale, spec })));
+  }
+  return list;
+}
+var init_list2 = __esm({
+  "js/thread/list.js"() {
+    "use strict";
+    init_message();
+    init_options2();
+  }
+});
+
 // js/thread/view.js
 var WAIT_LINES, LOCALE, LINE_EM, FONT_PX, ThreadView;
 var init_view = __esm({
@@ -28695,7 +28755,7 @@ var init_view = __esm({
     init_busy_card();
     init_controller();
     init_strings();
-    init_message();
+    init_list2();
     init_options2();
     WAIT_LINES = { in: ["100%", "92%", "58%"], out: ["100%", "64%"] };
     LOCALE = "en-GB";
@@ -28847,7 +28907,7 @@ var init_view = __esm({
         scroll.setAttribute("tabindex", "0");
         scroll.setAttribute("role", "region");
         scroll.setAttribute("aria-label", spec.label ?? el16.getAttribute("aria-label") ?? strings.threadLabel);
-        scroll.append(this.listOf(options, locale));
+        scroll.append(threadList(this.host, { spec: this.spec, expanded: this.expanded }, options, locale));
         const jump = make6(doc, "kp-button kp-button--sm kp-thread__jump", "button");
         jump.setAttribute("type", "button");
         jump.hidden = true;
@@ -28866,32 +28926,6 @@ var init_view = __esm({
           this.scrollToNewest(false);
           jump.hidden = atNewest(scroll, options.order);
         }
-      }
-      /** The list: a divider per day (when asked), then each run of messages. @param {ReturnType<typeof threadOptions>} options @param {string} locale */
-      listOf(options, locale) {
-        const doc = this.host.ownerDocument;
-        const sorted = [...this.spec.messages ?? []].sort((a, b) => a.at - b.at);
-        const newestKey = [...sorted].reverse().find((m) => m.dir !== "system")?.key;
-        const groups = groupMessages(sorted, options.group);
-        if (options.order === "newest") groups.reverse();
-        const list = make6(doc, "kp-thread__list", "ol");
-        let previousDay = "";
-        for (const group of groups) {
-          const day2 = dayKey(group[0].at);
-          if (options.days && day2 !== previousDay) {
-            const divider = make6(doc, "kp-thread__day", "li");
-            divider.setAttribute("role", "separator");
-            const text = make6(doc, "kp-thread__day-text", "time");
-            text.setAttribute("datetime", new Date(group[0].at).toISOString());
-            text.textContent = dayLabel(group[0].at, locale);
-            divider.append(text);
-            list.append(divider);
-          }
-          previousDay = day2;
-          const members = options.order === "newest" ? [...group].reverse() : group;
-          members.forEach((message, index) => list.append(messageItem(doc, message, { options, first: index === 0, newestKey, expanded: this.expanded, locale, spec: this.spec })));
-        }
-        return list;
       }
       /** Wrapping changes with the width: the lines a message has, and so its fold, are measured again. */
       watchWidth() {
@@ -29984,6 +30018,54 @@ var init_language = __esm({
   }
 });
 
+// js/footprint/estimate.js
+function firstLoadEstimate(host) {
+  const rows = rowsHint(host);
+  if (!rows) return 0;
+  return Math.max(0, host.getBoundingClientRect().height - inPlace(host)) + rows * rowHeight(host);
+}
+function rowsHint(host) {
+  const given2 = Number.parseInt(host.getAttribute("data-kp-footprint-rows") ?? "", 10);
+  if (given2 > 0) return given2;
+  if (!host.matches("[data-kp-datatable]")) return 0;
+  const size2 = Number.parseInt(host.getAttribute("data-kp-page-size") ?? "", 10);
+  return size2 > 0 ? size2 : DEFAULT_ROWS;
+}
+function rowHeight(host) {
+  const doc = host.ownerDocument;
+  const rem = parseFloat(doc.defaultView?.getComputedStyle(doc.documentElement).fontSize ?? "") || FALLBACK_REM_PX;
+  const raw = getComputedStyle(host).getPropertyValue("--kp-footprint-row").trim();
+  const unit2 = /^(\d+(?:\.\d+)?)(px|rem)?$/.exec(raw);
+  if (unit2) return Number(unit2[1]) * (unit2[2] === "px" ? 1 : rem);
+  return cardRow(host, rem) || ROW_REM * rem;
+}
+function cardRow(host, rem) {
+  if (!host.matches("[data-kp-datatable]") || !(host.hasAttribute("data-kp-cards") || host.querySelector("table[data-kp-cards]"))) return 0;
+  if (host.getBoundingClientRect().width > CARDS_BELOW_REM * rem) return 0;
+  const lines = [...host.querySelectorAll("thead th")].filter((th) => (th.textContent ?? "").trim() !== "").length;
+  return lines > 0 ? (CARD_FRAME_REM + lines * CARD_LINE_REM) * rem : 0;
+}
+function inPlace(host) {
+  const parts2 = host.querySelectorAll("tbody, .kp-stateplate, [data-kp-datatable-empty]");
+  let sum = 0;
+  for (const part7 of parts2) {
+    if (!part7.parentElement?.closest(".kp-stateplate, [data-kp-datatable-empty]")) sum += part7.getBoundingClientRect().height;
+  }
+  return sum;
+}
+var DEFAULT_ROWS, ROW_REM, CARDS_BELOW_REM, CARD_FRAME_REM, CARD_LINE_REM, FALLBACK_REM_PX;
+var init_estimate = __esm({
+  "js/footprint/estimate.js"() {
+    "use strict";
+    DEFAULT_ROWS = 10;
+    ROW_REM = 2.75;
+    CARDS_BELOW_REM = 40;
+    CARD_FRAME_REM = 1.75;
+    CARD_LINE_REM = 2.5;
+    FALLBACK_REM_PX = 16;
+  }
+});
+
 // js/footprint.js
 var footprint_exports = {};
 __export(footprint_exports, {
@@ -29996,11 +30078,12 @@ function holdFootprint(host) {
   const hold = attachOne(host, FootprintHold);
   return () => hold?.destroy();
 }
-var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, STATE_ATTRIBUTES, DEFAULT_ROWS, ROW_REM, CARDS_BELOW_REM, CARD_FRAME_REM, CARD_LINE_REM, FALLBACK_REM_PX, FootprintHold, attachFootprints;
+var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, STATE_ATTRIBUTES, FootprintHold, attachFootprints;
 var init_footprint = __esm({
   "js/footprint.js"() {
     "use strict";
     init_controller();
+    init_estimate();
     FOOTPRINT_HOSTS = [
       "[data-kp-matrix]",
       "[data-kp-heat]",
@@ -30029,12 +30112,6 @@ var init_footprint = __esm({
     FOOTPRINT_MAX = "48rem";
     HOLDING = /* @__PURE__ */ new Set(["loading", "empty", "error"]);
     STATE_ATTRIBUTES = ["data-kp-state", "data-kp-state-covered"];
-    DEFAULT_ROWS = 10;
-    ROW_REM = 2.75;
-    CARDS_BELOW_REM = 40;
-    CARD_FRAME_REM = 1.75;
-    CARD_LINE_REM = 2.5;
-    FALLBACK_REM_PX = 16;
     FootprintHold = class extends Controller {
       /** @param {HTMLElement} host */
       constructor(host) {
@@ -30084,7 +30161,7 @@ var init_footprint = __esm({
         this.content = entry?.contentBoxSize?.[0]?.blockSize ?? rect.height;
       }
       hold() {
-        if (!this.holding && !this.border && !this.guess && this.laidOut) this.guess = this.estimate();
+        if (!this.holding && !this.border && !this.guess && this.laidOut) this.guess = firstLoadEstimate(this.host);
         const wanted = this.height();
         if (!wanted) return this.release();
         const style = this.host.style;
@@ -30114,54 +30191,6 @@ var init_footprint = __esm({
       /** Whether a table has rows of data to be measured: a table with none has no loaded height to remember. */
       hasRows() {
         return !this.host.matches("[data-kp-datatable]") || this.host.querySelector("tbody > tr:not([data-kp-skeleton-row])") !== null;
-      }
-      /**
-       * A host that fails or turns up empty on its very first read has no loaded height to hold [statestwo-1019, almanac 26]. A table
-       * (and any host that says so with `data-kp-footprint-rows="N"`) is held at what N rows would make it: its own frame (toolbar, head
-       * and foot: the host less what stands in the rows' place) plus N rows of `--kp-footprint-row`; N is the hint, else the table's
-       * `data-kp-page-size`, else DEFAULT_ROWS. A loaded height, once there is one, wins.
-       */
-      estimate() {
-        const rows = this.rowsHint();
-        if (!rows) return 0;
-        return Math.max(0, this.host.getBoundingClientRect().height - this.inPlace()) + rows * this.rowHeight();
-      }
-      rowsHint() {
-        const given2 = Number.parseInt(this.host.getAttribute("data-kp-footprint-rows") ?? "", 10);
-        if (given2 > 0) return given2;
-        if (!this.host.matches("[data-kp-datatable]")) return 0;
-        const size2 = Number.parseInt(this.host.getAttribute("data-kp-page-size") ?? "", 10);
-        return size2 > 0 ? size2 : DEFAULT_ROWS;
-      }
-      /** One row [px]: `--kp-footprint-row` when the page sets it, else a card in the card layout, else ROW_REM. */
-      rowHeight() {
-        const doc = this.host.ownerDocument;
-        const rem = parseFloat(doc.defaultView?.getComputedStyle(doc.documentElement).fontSize ?? "") || FALLBACK_REM_PX;
-        const raw = getComputedStyle(this.host).getPropertyValue("--kp-footprint-row").trim();
-        const unit2 = /^(\d+(?:\.\d+)?)(px|rem)?$/.exec(raw);
-        if (unit2) return Number(unit2[1]) * (unit2[2] === "px" ? 1 : rem);
-        return this.cardRow(rem) || ROW_REM * rem;
-      }
-      /**
-       * What one row is as a card [px], or 0 when the table is not laid out as cards: the card layout is on while the table's own
-       * width is under CARDS_BELOW_REM and the markup asked for it with `data-kp-cards`.
-       * @param {number} rem
-       */
-      cardRow(rem) {
-        const host = this.host;
-        if (!host.matches("[data-kp-datatable]") || !(host.hasAttribute("data-kp-cards") || host.querySelector("table[data-kp-cards]"))) return 0;
-        if (host.getBoundingClientRect().width > CARDS_BELOW_REM * rem) return 0;
-        const lines = [...host.querySelectorAll("thead th")].filter((th) => (th.textContent ?? "").trim() !== "").length;
-        return lines > 0 ? (CARD_FRAME_REM + lines * CARD_LINE_REM) * rem : 0;
-      }
-      /** What stands in the rows' place now (skeleton rows, the plate, the empty slot) [px]: not frame. */
-      inPlace() {
-        const parts2 = this.host.querySelectorAll("tbody, .kp-stateplate, [data-kp-datatable-empty]");
-        let sum = 0;
-        for (const part7 of parts2) {
-          if (!part7.parentElement?.closest(".kp-stateplate, [data-kp-datatable-empty]")) sum += part7.getBoundingClientRect().height;
-        }
-        return sum;
       }
     };
     attachFootprints = (root = document) => attachAll(root, FOOTPRINT_HOSTS, FootprintHold);
@@ -34642,7 +34671,7 @@ function draw4(el16, memory) {
   }
   p.list.replaceChildren(...nodes);
 }
-var init_list2 = __esm({
+var init_list3 = __esm({
   "js/request-inspector/list.js"() {
     "use strict";
     init_segmented();
@@ -34662,7 +34691,7 @@ var init_controller26 = __esm({
     init_strings();
     init_copy2();
     init_format2();
-    init_list2();
+    init_list3();
     OPTIONS2 = ["data-kp-secrets-in-copy", "data-kp-requests-open", "data-kp-copy-as", "data-kp-secret-headers", "data-kp-requests-max"];
     RequestInspector = class extends Controller {
       /** @param {HTMLElement} el @param {InspectorOptions} [given] */
@@ -34781,7 +34810,7 @@ var init_api9 = __esm({
     init_strings();
     init_controller26();
     init_format2();
-    init_list2();
+    init_list3();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
   }
 });
@@ -36825,480 +36854,7 @@ var init_lanes = __esm({
   }
 });
 
-// js/focus-steps/paint.js
-function paint4(root, arrive3) {
-  const strings = getStrings();
-  const state12 = stateOf2(root);
-  const { steps: steps2, index } = state12;
-  const total = steps2.length;
-  const step = steps2[index];
-  const asking = answering(root);
-  const onSum = onSummary(root);
-  const tracked = tracksOn(root);
-  const track = tracked ? activeTrack(state12) : void 0;
-  const showLanes = tracked && root.getAttribute("data-kp-focus-steps-error") === null && !root.hasAttribute("aria-busy");
-  if (showLanes) {
-    root.setAttribute("data-kp-focus-tracked", "");
-    ensureLanes(root);
-    layoutLanes(root);
-  } else if (root.hasAttribute("data-kp-focus-tracked")) dropLanes(root);
-  const passed = track !== void 0 && track.order.every((i) => state12.done.has(i));
-  const timers = tracked ? timerStates(root) : [];
-  const blocks = tracked && step && !passed ? blockersOf(state12, index, timers) : [];
-  state12.lockKey = blocks.map((b) => b.index).join(",");
-  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track ? strings.focusTrackCount(track.name, track.pos + 1, track.order.length) : asking ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
-  const bar = part2(root, "bar");
-  const shownTotal = total + (summaryOn(root) ? 1 : 0);
-  bar.style.setProperty("--kp-value", String(track ? (track.pos + 1) / track.order.length : shownTotal ? (index + 1) / shownTotal : 0));
-  const progress = asking ? opt(root, "progress", "count") ?? "count" : "count";
-  bar.hidden = progress !== "count";
-  part2(root, "count").hidden = progress === "off";
-  const wakeLine = (
-    /** @type {HTMLElement | null} */
-    root.querySelector(".kp-focus-steps__wake")
-  );
-  if (wakeLine) wakeLine.hidden = asking && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
-  const speakButton = (
-    /** @type {HTMLElement | null} */
-    root.querySelector(".kp-focus-steps__speak")
-  );
-  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking && opt(root, "speak") !== "true";
-  const holder = part2(root, "step");
-  const error = root.getAttribute("data-kp-focus-steps-error");
-  holder.replaceChildren();
-  holder.removeAttribute("data-kp-focus-steps-kind");
-  holder.removeAttribute("data-kp-focus-steps-locked");
-  const saveError = root.getAttribute("data-kp-state") === "save-error";
-  if (asking || root.getAttribute("data-kp-focus-mode") === "answer") {
-    if (saveError) {
-      holder.append(
-        statePlate(document, {
-          kind: "error",
-          title: strings.focusSaveFailedTitle,
-          text: error ?? strings.focusSaveFailedText,
-          actionLabel: strings.focusSaveRetry,
-          actionAttribute: "data-kp-focus-save-retry"
-        })
-      );
-      holder.setAttribute("data-kp-focus-steps-kind", "error");
-    } else if (error !== null) {
-      holder.append(
-        statePlate(document, {
-          kind: "error",
-          title: strings.focusAnswerFailedTitle,
-          text: error === strings.focusFailed ? strings.focusAnswerFailedText : error,
-          actionLabel: strings.focusRetry,
-          actionAttribute: "data-kp-focus-retry"
-        })
-      );
-      holder.setAttribute("data-kp-focus-steps-kind", "error");
-    } else if (!step && !onSum && !root.hasAttribute("aria-busy")) {
-      holder.append(
-        statePlate(document, {
-          kind: "empty",
-          title: strings.focusAnswerEmptyTitle,
-          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusAnswerEmptyText,
-          ...emptyAction(root) ? { actionLabel: emptyAction(root), actionAttribute: "data-kp-focus-empty-action" } : {}
-        })
-      );
-      holder.setAttribute("data-kp-focus-steps-kind", "empty");
-    } else if (onSum) buildSummary(root, holder);
-    else if (step) {
-      if (state12.pendingResume) holder.append(buildResumeAsk());
-      const text = el6("kp-focus-steps__text", "p");
-      text.textContent = step.text;
-      holder.append(text);
-      appendBody(holder, step);
-      if (step.answer) buildAnswer(root, holder, step, text);
-      if (step.note) {
-        const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
-        note2.textContent = step.note;
-        holder.append(note2);
-      }
-    }
-  } else if (error !== null) {
-    holder.append(
-      statePlate(document, {
-        kind: "error",
-        title: strings.focusReadFailedTitle,
-        text: error === strings.focusFailed ? strings.focusReadFailedText : error,
-        actionLabel: strings.focusRetry,
-        actionAttribute: "data-kp-focus-retry"
-      })
-    );
-    holder.setAttribute("data-kp-focus-steps-kind", "error");
-  } else if (!step) {
-    if (!root.hasAttribute("aria-busy")) {
-      holder.append(
-        statePlate(document, {
-          kind: "empty",
-          title: strings.focusReadEmptyTitle,
-          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusEmpty,
-          ...emptyAction(root) ? { actionLabel: emptyAction(root), actionAttribute: "data-kp-focus-empty-action" } : {}
-        })
-      );
-      holder.setAttribute("data-kp-focus-steps-kind", "empty");
-    }
-  } else if (track && passed) {
-    const next3 = suggestion(laneSummaries(root));
-    const plate2 = statePlate(document, {
-      kind: "empty",
-      title: strings.focusTrackFinishedTitle(track.name),
-      text: next3 ? strings.focusTrackFinishedNext(next3.name) : strings.focusTrackFinishedText,
-      ...next3 ? { actionLabel: strings.focusTrackGo(next3.name) } : {}
-    });
-    if (next3) plate2.querySelector(".kp-stateplate__action")?.setAttribute("data-kp-focus-go", String(state12.tracks.indexOf(next3.track)));
-    holder.append(plate2);
-    holder.setAttribute("data-kp-focus-steps-kind", "finished");
-  } else {
-    if (state12.pendingResume) holder.append(buildResumeAsk());
-    const text = el6("kp-focus-steps__text", "p");
-    text.textContent = step.text;
-    holder.append(text);
-    appendBody(holder, step);
-    if (blocks.length) {
-      holder.setAttribute("data-kp-focus-steps-locked", "");
-      const wait = el6("kp-alert kp-alert--info kp-focus-steps__wait", "div");
-      wait.setAttribute("role", "status");
-      const what = el6("kp-focus-steps__wait-text");
-      const title = el6("kp-focus-steps__wait-title", "strong");
-      title.textContent = strings.focusTrackWaitTitle(blockerNames(state12, blocks));
-      const line = el6("kp-focus-steps__wait-line", "span");
-      line.textContent = waitLine2(state12, blocks, timers, index);
-      what.append(title, line);
-      wait.append(what);
-      const next3 = suggestion(laneSummaries(root));
-      if (next3) {
-        const go = (
-          /** @type {HTMLButtonElement} */
-          el6("kp-button kp-button--primary kp-focus-steps__wait-go", "button")
-        );
-        go.type = "button";
-        go.setAttribute("data-kp-focus-go", String(state12.tracks.indexOf(next3.track)));
-        go.textContent = strings.focusTrackGo(next3.name);
-        wait.append(go);
-      }
-      holder.append(wait);
-    }
-    if (step.ingredients?.length) {
-      const needs = el6("kp-focus-steps__needs", "section");
-      const title = el6("kp-focus-steps__needs-title", "h3");
-      focusState.serial += 1;
-      title.id = `kp-focus-steps-${focusState.serial}-needs`;
-      title.textContent = strings.focusNeeds;
-      needs.setAttribute("aria-labelledby", title.id);
-      const list = el6("kp-focus-steps__needs-list", "ul");
-      for (const item of step.ingredients) {
-        const row2 = el6("kp-focus-steps__need", "li");
-        const { name, amount } = typeof item === "string" ? { name: item, amount: "" } : item;
-        const a = el6("kp-focus-steps__amount", "span");
-        a.textContent = amount ?? "";
-        const n = el6("kp-focus-steps__name", "span");
-        n.textContent = name;
-        row2.append(a, n);
-        list.append(row2);
-      }
-      needs.append(title, list);
-      holder.append(needs);
-    }
-    if (step.timer && step.timer.seconds > 0) {
-      const minutes = Math.round(step.timer.seconds / 60);
-      const button6 = (
-        /** @type {HTMLButtonElement} */
-        el6("kp-button kp-focus-steps__timer", "button")
-      );
-      button6.type = "button";
-      button6.setAttribute("data-kp-timer-start", String(step.timer.seconds));
-      button6.setAttribute("data-kp-timer-name", step.timer.name ?? strings.focusCount(index + 1, total));
-      button6.setAttribute("data-kp-timer-id", timerIdOf(state12, index));
-      if (blocks.length) button6.setAttribute("aria-disabled", "true");
-      const list = root.getAttribute("data-kp-focus-steps-timers");
-      if (list) button6.setAttribute("data-kp-timer-for", list);
-      button6.textContent = strings.focusTimer(step.timer.seconds < 60 ? `${step.timer.seconds} s` : `${minutes} min`);
-      holder.append(button6);
-    }
-    if (step.note) {
-      const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
-      note2.textContent = step.note;
-      holder.append(note2);
-    }
-  }
-  const prev = (
-    /** @type {HTMLButtonElement} */
-    part2(root, "prev")
-  );
-  const next2 = (
-    /** @type {HTMLButtonElement} */
-    part2(root, "next")
-  );
-  const busy = root.hasAttribute("aria-busy");
-  const blocked = !step && !onSum || error !== null || busy || saveError;
-  const atStart = track ? track.pos === 0 && !passed : index === 0;
-  if (blocked || atStart) prev.setAttribute("aria-disabled", "true");
-  else prev.removeAttribute("aria-disabled");
-  prev.hidden = asking && opt(root, "back") === "off";
-  if (blocked || passed || blocks.length > 0) next2.setAttribute("aria-disabled", "true");
-  else next2.removeAttribute("aria-disabled");
-  const last = track ? passed || track.pos === track.order.length - 1 : total > 0 && index === lastIndex(root);
-  const nextText = (
-    /** @type {HTMLElement} */
-    next2.querySelector(".kp-button__text")
-  );
-  nextText.textContent = track ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track.name) : strings.focusNext : last ? strings.focusDone : asking && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
-  next2.toggleAttribute("data-kp-focus-steps-last", last);
-  if (asking && step?.answer && !blocked) paintAnswerState(root);
-  part2(root, "body").scrollTop = 0;
-  if (showLanes) {
-    paintLanes(root);
-    paintLive(root, timers);
-  }
-  if (arrive3) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => holder.isConnected && m.arriveShown(holder));
-}
-var init_paint4 = __esm({
-  "js/focus-steps/paint.js"() {
-    "use strict";
-    init_strings();
-    init_state_plate();
-    init_detail();
-    init_state12();
-    init_dom5();
-    init_resume();
-    init_tracks();
-    init_lanes();
-    init_blockers();
-    init_flow();
-    init_band();
-    init_track_nav();
-  }
-});
-
-// js/focus-steps/memory.js
-function stepsKey(root) {
-  return stateOf2(root).steps.map((step) => step.id ?? step.answer?.id ?? step.title ?? step.text.slice(0, 24)).join("|");
-}
-function remember2(root) {
-  const memory = memoryOf3(root);
-  if (!memory) return;
-  const state12 = stateOf2(root);
-  if (!state12.steps.length) return;
-  memory.write("progress", {
-    index: state12.index,
-    answers: state12.answers,
-    startedAt: state12.startedAt,
-    at: Date.now(),
-    key: stepsKey(root),
-    ...tracksOn(root) ? { track: state12.track, positions: Object.fromEntries(state12.tracks.map((t) => [t.key, t.pos])), done: [...state12.done] } : {}
-  });
-}
-function storedProgress(root) {
-  const memory = memoryOf3(root);
-  if (!memory) return null;
-  const stored = memory.read(
-    /** @type {string} */
-    "progress",
-    /** @type {any} */
-    null
-  );
-  if (!stored || typeof stored.at !== "number" || typeof stored.index !== "number") return null;
-  if (typeof stored.key === "string" && stored.key !== stepsKey(root)) return null;
-  const until = opt(root, "resume-until", "midnight") ?? "midnight";
-  const now = Date.now();
-  if (until === "midnight" && agoMoment(stored.at).slice(0, 10) !== agoMoment(now).slice(0, 10)) return null;
-  if (until.startsWith("hours:") && now - stored.at > Number(until.slice(6)) * 36e5) return null;
-  const state12 = stateOf2(root);
-  const ids2 = new Set(state12.steps.map((step) => step.answer?.id).filter(Boolean));
-  const answers2 = Object.fromEntries(Object.entries(stored.answers ?? {}).filter(([id]) => ids2.has(id)));
-  const progress = { index: Math.max(0, Math.min(lastIndex(root), stored.index)), answers: answers2, startedAt: Number(stored.startedAt) || stored.at };
-  if (typeof stored.track === "string") progress.track = stored.track;
-  if (stored.positions && typeof stored.positions === "object") progress.positions = stored.positions;
-  if (Array.isArray(stored.done))
-    progress.done = stored.done.filter(
-      (i) => Number.isInteger(i) && /** @type {number} */
-      i >= 0 && /** @type {number} */
-      i < state12.steps.length
-    );
-  return progress;
-}
-function applyProgress(root, stored) {
-  const state12 = stateOf2(root);
-  state12.answers = /** @type {FocusState['answers']} */
-  stored.answers;
-  state12.startedAt = stored.startedAt;
-  state12.index = stored.index;
-  state12.pendingResume = null;
-  if (tracksOn(root)) {
-    for (const track of state12.tracks) {
-      const pos = stored.positions?.[track.key];
-      if (typeof pos === "number") track.pos = Math.max(0, Math.min(track.order.length - 1, pos));
-    }
-    state12.done = new Set(stored.done ?? []);
-    const active = state12.tracks.find((t) => t.key === stored.track) ?? trackOfStep(state12, stored.index) ?? state12.tracks[0];
-    if (active) {
-      state12.track = active.key;
-      if (typeof stored.positions?.[active.key] !== "number") active.pos = Math.max(0, active.order.indexOf(stored.index));
-      state12.index = active.order[active.pos] ?? stored.index;
-    }
-    renderBand(root);
-  }
-  paint4(root, false);
-  recompute(root);
-  say5(root, getStrings().focusResumed(state12.index + 1));
-  root.dispatchEvent(
-    new CustomEvent(FOCUS_STEPS_RESUME_EVENT, {
-      bubbles: true,
-      detail: { index: state12.index, answers: { ...state12.answers }, track: state12.track, done: [...state12.done] }
-    })
-  );
-}
-function startResume(root) {
-  if (opt(root, "resume") === "off" || !root.hasAttribute("data-kp-remember")) return;
-  const stored = storedProgress(root);
-  if (!stored || !hasMoved(stored)) return;
-  if (opt(root, "resume") === "ask") {
-    stateOf2(root).pendingResume = stored;
-    paint4(root, false);
-  } else applyProgress(root, stored);
-}
-var memoryOf3, hasMoved;
-var init_memory = __esm({
-  "js/focus-steps/memory.js"() {
-    "use strict";
-    init_freshness();
-    init_strings();
-    init_remember();
-    init_dom5();
-    init_tracks();
-    init_resume();
-    init_band();
-    init_paint4();
-    init_track_nav();
-    init_flow();
-    init_constants15();
-    memoryOf3 = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
-    hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
-  }
-});
-
-// js/focus-steps/flow.js
-function takeAnswer(root, value, source, extra = {}) {
-  const state12 = stateOf2(root);
-  const step = state12.steps[state12.index];
-  const answer2 = step?.answer;
-  if (!answer2) return false;
-  const before = new CustomEvent(FOCUS_STEPS_BEFORE_ANSWER_EVENT, {
-    bubbles: true,
-    cancelable: true,
-    detail: { index: state12.index, id: answer2.id, value, source }
-  });
-  if (!root.dispatchEvent(before)) return false;
-  if (!state12.startedAt) state12.startedAt = Date.now();
-  state12.answers[answer2.id] = { value, source };
-  delete state12.draft[answer2.id];
-  remember2(root);
-  root.dispatchEvent(
-    new CustomEvent(FOCUS_STEPS_ANSWER_EVENT, {
-      bubbles: true,
-      detail: { index: state12.index, id: answer2.id, value, source, previous: answer2.previous ?? null, ...extra }
-    })
-  );
-  const strings = getStrings();
-  const said = source === "skip" ? strings.focusSkipped : wordsOf2(answer2, value);
-  say5(root, strings.focusAnswered(said, state12.index + 1, state12.steps.length));
-  return true;
-}
-function scheduleAdvance(root) {
-  const state12 = stateOf2(root);
-  window.clearTimeout(state12.timer);
-  const ms = Number(opt(root, "advance-ms", "350"));
-  state12.timer = window.setTimeout(() => goNext(root), Number.isFinite(ms) && ms >= 0 ? ms : 350);
-}
-function goNext(root) {
-  if (tracksOn(root)) return trackNext(root);
-  const state12 = stateOf2(root);
-  window.clearTimeout(state12.timer);
-  if (!state12.steps.length || root.hasAttribute("aria-busy")) return;
-  const atLast = state12.index === lastIndex(root);
-  if (!atLast) {
-    goToStep(root, state12.index + 1);
-    return;
-  }
-  const finishedAt = Date.now();
-  const detail = { total: state12.steps.length };
-  if (answering(root)) {
-    state12.finished = { total: state12.steps.length, answers: { ...state12.answers }, startedAt: state12.startedAt || finishedAt, finishedAt };
-    Object.assign(detail, state12.finished);
-  }
-  memoryOf3(root)?.forget("progress");
-  root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail }));
-}
-function pressAnswer(root, button6) {
-  const state12 = stateOf2(root);
-  const answer2 = state12.steps[state12.index]?.answer;
-  if (!answer2) return false;
-  if (button6.classList.contains("kp-focus-steps__choice")) {
-    if (button6.getAttribute("aria-disabled") === "true") return true;
-    const value = button6.dataset.kpValue ?? "";
-    if (answer2.kind === "multi") {
-      const held2 = (
-        /** @type {string[]} */
-        [.../** @type {string[]} */
-        currentValue(root, answer2) ?? []]
-      );
-      const at = held2.indexOf(value);
-      if (at >= 0) held2.splice(at, 1);
-      else held2.push(value);
-      state12.draft[answer2.id] = held2;
-      delete state12.answers[answer2.id];
-      paintAnswerState(root);
-    } else if (takeAnswer(root, value, "tap")) {
-      paintAnswerState(root);
-      if ((opt(root, "advance", "auto") ?? "auto") === "auto") scheduleAdvance(root);
-    }
-    return true;
-  }
-  if (button6.classList.contains("kp-focus-steps__same")) {
-    const which = button6.dataset.kpSame === "usual" ? "usual" : "yesterday";
-    const value = which === "usual" ? answer2.usual : answer2.previous;
-    if (value === void 0) return true;
-    if (takeAnswer(root, value, "same", { same: which })) {
-      paintAnswerState(root);
-      if (answer2.kind === "choice" && (opt(root, "advance", "auto") ?? "auto") === "auto") scheduleAdvance(root);
-    }
-    return true;
-  }
-  if (button6.classList.contains("kp-focus-steps__skip")) {
-    if (takeAnswer(root, null, "skip")) {
-      paintAnswerState(root);
-      scheduleAdvance(root);
-    }
-    return true;
-  }
-  return false;
-}
-function paintAnswerState(root) {
-  const state12 = stateOf2(root);
-  const answer2 = state12.steps[state12.index]?.answer;
-  if (!answer2) return;
-  const value = currentValue(root, answer2);
-  const given2 = state12.answers[answer2.id];
-  for (
-    const button6 of
-    /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(".kp-focus-steps__choice")]
-  ) {
-    const v = button6.dataset.kpValue ?? "";
-    const on = !(given2?.source === "skip") && (Array.isArray(value) ? value.includes(v) : value === v);
-    button6.setAttribute("aria-pressed", String(on));
-    button6.toggleAttribute("data-kp-chosen", on);
-  }
-  for (const button6 of root.querySelectorAll(".kp-focus-steps__skip")) button6.setAttribute("aria-pressed", String(given2?.source === "skip"));
-  const next2 = (
-    /** @type {HTMLElement} */
-    part2(root, "next")
-  );
-  if (answerReady(root, answer2)) next2.removeAttribute("aria-disabled");
-  else next2.setAttribute("aria-disabled", "true");
-}
+// js/focus-steps/answer-ui.js
 function buildAnswer(root, holder, step, text) {
   const strings = getStrings();
   const answer2 = (
@@ -37438,6 +36994,627 @@ function buildSummary(root, holder) {
   }
   holder.append(title, list);
 }
+var init_answer_ui = __esm({
+  "js/focus-steps/answer-ui.js"() {
+    "use strict";
+    init_strings();
+    init_state12();
+    init_dom5();
+    init_resume();
+    init_flow();
+  }
+});
+
+// js/focus-steps/paint-extras.js
+function waitBlock(root, holder, state12, blocks, timers, index) {
+  const strings = getStrings();
+  holder.setAttribute("data-kp-focus-steps-locked", "");
+  const wait = el6("kp-alert kp-alert--info kp-focus-steps__wait", "div");
+  wait.setAttribute("role", "status");
+  const what = el6("kp-focus-steps__wait-text");
+  const title = el6("kp-focus-steps__wait-title", "strong");
+  title.textContent = strings.focusTrackWaitTitle(blockerNames(state12, blocks));
+  const line = el6("kp-focus-steps__wait-line", "span");
+  line.textContent = waitLine2(state12, blocks, timers, index);
+  what.append(title, line);
+  wait.append(what);
+  const next2 = suggestion(laneSummaries(root));
+  if (next2) {
+    const go = (
+      /** @type {HTMLButtonElement} */
+      el6("kp-button kp-button--primary kp-focus-steps__wait-go", "button")
+    );
+    go.type = "button";
+    go.setAttribute("data-kp-focus-go", String(state12.tracks.indexOf(next2.track)));
+    go.textContent = strings.focusTrackGo(next2.name);
+    wait.append(go);
+  }
+  holder.append(wait);
+}
+function needsList(ingredients) {
+  const strings = getStrings();
+  const needs = el6("kp-focus-steps__needs", "section");
+  const title = el6("kp-focus-steps__needs-title", "h3");
+  focusState.serial += 1;
+  title.id = `kp-focus-steps-${focusState.serial}-needs`;
+  title.textContent = strings.focusNeeds;
+  needs.setAttribute("aria-labelledby", title.id);
+  const list = el6("kp-focus-steps__needs-list", "ul");
+  for (const item of ingredients) {
+    const row2 = el6("kp-focus-steps__need", "li");
+    const { name, amount } = typeof item === "string" ? { name: item, amount: "" } : item;
+    const a = el6("kp-focus-steps__amount", "span");
+    a.textContent = amount ?? "";
+    const n = el6("kp-focus-steps__name", "span");
+    n.textContent = name;
+    row2.append(a, n);
+    list.append(row2);
+  }
+  needs.append(title, list);
+  return needs;
+}
+function timerButton2(root, state12, timer, blocked, index, total) {
+  const strings = getStrings();
+  const minutes = Math.round(timer.seconds / 60);
+  const button6 = (
+    /** @type {HTMLButtonElement} */
+    el6("kp-button kp-focus-steps__timer", "button")
+  );
+  button6.type = "button";
+  button6.setAttribute("data-kp-timer-start", String(timer.seconds));
+  button6.setAttribute("data-kp-timer-name", timer.name ?? strings.focusCount(index + 1, total));
+  button6.setAttribute("data-kp-timer-id", timerIdOf(state12, index));
+  if (blocked) button6.setAttribute("aria-disabled", "true");
+  const list = root.getAttribute("data-kp-focus-steps-timers");
+  if (list) button6.setAttribute("data-kp-timer-for", list);
+  button6.textContent = strings.focusTimer(timer.seconds < 60 ? `${timer.seconds} s` : `${minutes} min`);
+  return button6;
+}
+var init_paint_extras = __esm({
+  "js/focus-steps/paint-extras.js"() {
+    "use strict";
+    init_strings();
+    init_state12();
+    init_dom5();
+    init_tracks();
+    init_blockers();
+    init_band();
+  }
+});
+
+// js/focus-steps/paint.js
+function paint4(root, arrive3) {
+  const strings = getStrings();
+  const state12 = stateOf2(root);
+  const { steps: steps2, index } = state12;
+  const total = steps2.length;
+  const step = steps2[index];
+  const asking = answering(root);
+  const onSum = onSummary(root);
+  const tracked = tracksOn(root);
+  const track = tracked ? activeTrack(state12) : void 0;
+  const showLanes = tracked && root.getAttribute("data-kp-focus-steps-error") === null && !root.hasAttribute("aria-busy");
+  if (showLanes) {
+    root.setAttribute("data-kp-focus-tracked", "");
+    ensureLanes(root);
+    layoutLanes(root);
+  } else if (root.hasAttribute("data-kp-focus-tracked")) dropLanes(root);
+  const passed = track !== void 0 && track.order.every((i) => state12.done.has(i));
+  const timers = tracked ? timerStates(root) : [];
+  const blocks = tracked && step && !passed ? blockersOf(state12, index, timers) : [];
+  state12.lockKey = blocks.map((b) => b.index).join(",");
+  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track ? strings.focusTrackCount(track.name, track.pos + 1, track.order.length) : asking ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
+  const bar = part2(root, "bar");
+  const shownTotal = total + (summaryOn(root) ? 1 : 0);
+  bar.style.setProperty("--kp-value", String(track ? (track.pos + 1) / track.order.length : shownTotal ? (index + 1) / shownTotal : 0));
+  const progress = asking ? opt(root, "progress", "count") ?? "count" : "count";
+  bar.hidden = progress !== "count";
+  part2(root, "count").hidden = progress === "off";
+  const wakeLine = (
+    /** @type {HTMLElement | null} */
+    root.querySelector(".kp-focus-steps__wake")
+  );
+  if (wakeLine) wakeLine.hidden = asking && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
+  const speakButton = (
+    /** @type {HTMLElement | null} */
+    root.querySelector(".kp-focus-steps__speak")
+  );
+  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking && opt(root, "speak") !== "true";
+  const holder = part2(root, "step");
+  const error = root.getAttribute("data-kp-focus-steps-error");
+  holder.replaceChildren();
+  holder.removeAttribute("data-kp-focus-steps-kind");
+  holder.removeAttribute("data-kp-focus-steps-locked");
+  const saveError = root.getAttribute("data-kp-state") === "save-error";
+  if (asking || root.getAttribute("data-kp-focus-mode") === "answer") {
+    if (saveError) {
+      holder.append(
+        statePlate(document, {
+          kind: "error",
+          title: strings.focusSaveFailedTitle,
+          text: error ?? strings.focusSaveFailedText,
+          actionLabel: strings.focusSaveRetry,
+          actionAttribute: "data-kp-focus-save-retry"
+        })
+      );
+      holder.setAttribute("data-kp-focus-steps-kind", "error");
+    } else if (error !== null) {
+      holder.append(
+        statePlate(document, {
+          kind: "error",
+          title: strings.focusAnswerFailedTitle,
+          text: error === strings.focusFailed ? strings.focusAnswerFailedText : error,
+          actionLabel: strings.focusRetry,
+          actionAttribute: "data-kp-focus-retry"
+        })
+      );
+      holder.setAttribute("data-kp-focus-steps-kind", "error");
+    } else if (!step && !onSum && !root.hasAttribute("aria-busy")) {
+      holder.append(
+        statePlate(document, {
+          kind: "empty",
+          title: strings.focusAnswerEmptyTitle,
+          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusAnswerEmptyText,
+          ...emptyAction(root) ? { actionLabel: emptyAction(root), actionAttribute: "data-kp-focus-empty-action" } : {}
+        })
+      );
+      holder.setAttribute("data-kp-focus-steps-kind", "empty");
+    } else if (onSum) buildSummary(root, holder);
+    else if (step) {
+      if (state12.pendingResume) holder.append(buildResumeAsk());
+      const text = el6("kp-focus-steps__text", "p");
+      text.textContent = step.text;
+      holder.append(text);
+      appendBody(holder, step);
+      if (step.answer) buildAnswer(root, holder, step, text);
+      if (step.note) {
+        const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
+        note2.textContent = step.note;
+        holder.append(note2);
+      }
+    }
+  } else if (error !== null) {
+    holder.append(
+      statePlate(document, {
+        kind: "error",
+        title: strings.focusReadFailedTitle,
+        text: error === strings.focusFailed ? strings.focusReadFailedText : error,
+        actionLabel: strings.focusRetry,
+        actionAttribute: "data-kp-focus-retry"
+      })
+    );
+    holder.setAttribute("data-kp-focus-steps-kind", "error");
+  } else if (!step) {
+    if (!root.hasAttribute("aria-busy")) {
+      holder.append(
+        statePlate(document, {
+          kind: "empty",
+          title: strings.focusReadEmptyTitle,
+          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusEmpty,
+          ...emptyAction(root) ? { actionLabel: emptyAction(root), actionAttribute: "data-kp-focus-empty-action" } : {}
+        })
+      );
+      holder.setAttribute("data-kp-focus-steps-kind", "empty");
+    }
+  } else if (track && passed) {
+    const next3 = suggestion(laneSummaries(root));
+    const plate2 = statePlate(document, {
+      kind: "empty",
+      title: strings.focusTrackFinishedTitle(track.name),
+      text: next3 ? strings.focusTrackFinishedNext(next3.name) : strings.focusTrackFinishedText,
+      ...next3 ? { actionLabel: strings.focusTrackGo(next3.name) } : {}
+    });
+    if (next3) plate2.querySelector(".kp-stateplate__action")?.setAttribute("data-kp-focus-go", String(state12.tracks.indexOf(next3.track)));
+    holder.append(plate2);
+    holder.setAttribute("data-kp-focus-steps-kind", "finished");
+  } else {
+    if (state12.pendingResume) holder.append(buildResumeAsk());
+    const text = el6("kp-focus-steps__text", "p");
+    text.textContent = step.text;
+    holder.append(text);
+    appendBody(holder, step);
+    if (blocks.length) waitBlock(root, holder, state12, blocks, timers, index);
+    if (step.ingredients?.length) holder.append(needsList(step.ingredients));
+    if (step.timer && step.timer.seconds > 0) holder.append(timerButton2(root, state12, step.timer, blocks.length > 0, index, total));
+    if (step.note) {
+      const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
+      note2.textContent = step.note;
+      holder.append(note2);
+    }
+  }
+  const prev = (
+    /** @type {HTMLButtonElement} */
+    part2(root, "prev")
+  );
+  const next2 = (
+    /** @type {HTMLButtonElement} */
+    part2(root, "next")
+  );
+  const busy = root.hasAttribute("aria-busy");
+  const blocked = !step && !onSum || error !== null || busy || saveError;
+  const atStart = track ? track.pos === 0 && !passed : index === 0;
+  if (blocked || atStart) prev.setAttribute("aria-disabled", "true");
+  else prev.removeAttribute("aria-disabled");
+  prev.hidden = asking && opt(root, "back") === "off";
+  if (blocked || passed || blocks.length > 0) next2.setAttribute("aria-disabled", "true");
+  else next2.removeAttribute("aria-disabled");
+  const last = track ? passed || track.pos === track.order.length - 1 : total > 0 && index === lastIndex(root);
+  const nextText = (
+    /** @type {HTMLElement} */
+    next2.querySelector(".kp-button__text")
+  );
+  nextText.textContent = track ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track.name) : strings.focusNext : last ? strings.focusDone : asking && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
+  next2.toggleAttribute("data-kp-focus-steps-last", last);
+  if (asking && step?.answer && !blocked) paintAnswerState(root);
+  part2(root, "body").scrollTop = 0;
+  if (showLanes) {
+    paintLanes(root);
+    paintLive(root, timers);
+  }
+  if (arrive3) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => holder.isConnected && m.arriveShown(holder));
+}
+var init_paint4 = __esm({
+  "js/focus-steps/paint.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_detail();
+    init_dom5();
+    init_resume();
+    init_tracks();
+    init_lanes();
+    init_blockers();
+    init_answer_ui();
+    init_flow();
+    init_paint_extras();
+    init_band();
+    init_track_nav();
+  }
+});
+
+// js/focus-steps/memory.js
+function stepsKey(root) {
+  return stateOf2(root).steps.map((step) => step.id ?? step.answer?.id ?? step.title ?? step.text.slice(0, 24)).join("|");
+}
+function remember2(root) {
+  const memory = memoryOf3(root);
+  if (!memory) return;
+  const state12 = stateOf2(root);
+  if (!state12.steps.length) return;
+  memory.write("progress", {
+    index: state12.index,
+    answers: state12.answers,
+    startedAt: state12.startedAt,
+    at: Date.now(),
+    key: stepsKey(root),
+    ...tracksOn(root) ? { track: state12.track, positions: Object.fromEntries(state12.tracks.map((t) => [t.key, t.pos])), done: [...state12.done] } : {}
+  });
+}
+function storedProgress(root) {
+  const memory = memoryOf3(root);
+  if (!memory) return null;
+  const stored = memory.read(
+    /** @type {string} */
+    "progress",
+    /** @type {any} */
+    null
+  );
+  if (!stored || typeof stored.at !== "number" || typeof stored.index !== "number") return null;
+  if (typeof stored.key === "string" && stored.key !== stepsKey(root)) return null;
+  const until = opt(root, "resume-until", "midnight") ?? "midnight";
+  const now = Date.now();
+  if (until === "midnight" && agoMoment(stored.at).slice(0, 10) !== agoMoment(now).slice(0, 10)) return null;
+  if (until.startsWith("hours:") && now - stored.at > Number(until.slice(6)) * 36e5) return null;
+  const state12 = stateOf2(root);
+  const ids2 = new Set(state12.steps.map((step) => step.answer?.id).filter(Boolean));
+  const answers2 = Object.fromEntries(Object.entries(stored.answers ?? {}).filter(([id]) => ids2.has(id)));
+  const progress = { index: Math.max(0, Math.min(lastIndex(root), stored.index)), answers: answers2, startedAt: Number(stored.startedAt) || stored.at };
+  if (typeof stored.track === "string") progress.track = stored.track;
+  if (stored.positions && typeof stored.positions === "object") progress.positions = stored.positions;
+  if (Array.isArray(stored.done))
+    progress.done = stored.done.filter(
+      (i) => Number.isInteger(i) && /** @type {number} */
+      i >= 0 && /** @type {number} */
+      i < state12.steps.length
+    );
+  return progress;
+}
+function applyProgress(root, stored) {
+  const state12 = stateOf2(root);
+  state12.answers = /** @type {FocusState['answers']} */
+  stored.answers;
+  state12.startedAt = stored.startedAt;
+  state12.index = stored.index;
+  state12.pendingResume = null;
+  if (tracksOn(root)) {
+    for (const track of state12.tracks) {
+      const pos = stored.positions?.[track.key];
+      if (typeof pos === "number") track.pos = Math.max(0, Math.min(track.order.length - 1, pos));
+    }
+    state12.done = new Set(stored.done ?? []);
+    const active = state12.tracks.find((t) => t.key === stored.track) ?? trackOfStep(state12, stored.index) ?? state12.tracks[0];
+    if (active) {
+      state12.track = active.key;
+      if (typeof stored.positions?.[active.key] !== "number") active.pos = Math.max(0, active.order.indexOf(stored.index));
+      state12.index = active.order[active.pos] ?? stored.index;
+    }
+    renderBand(root);
+  }
+  paint4(root, false);
+  recompute(root);
+  say5(root, getStrings().focusResumed(state12.index + 1));
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_RESUME_EVENT, {
+      bubbles: true,
+      detail: { index: state12.index, answers: { ...state12.answers }, track: state12.track, done: [...state12.done] }
+    })
+  );
+}
+function startResume(root) {
+  if (opt(root, "resume") === "off" || !root.hasAttribute("data-kp-remember")) return;
+  const stored = storedProgress(root);
+  if (!stored || !hasMoved(stored)) return;
+  if (opt(root, "resume") === "ask") {
+    stateOf2(root).pendingResume = stored;
+    paint4(root, false);
+  } else applyProgress(root, stored);
+}
+var memoryOf3, hasMoved;
+var init_memory = __esm({
+  "js/focus-steps/memory.js"() {
+    "use strict";
+    init_freshness();
+    init_strings();
+    init_remember();
+    init_dom5();
+    init_tracks();
+    init_resume();
+    init_band();
+    init_paint4();
+    init_track_nav();
+    init_flow();
+    init_constants15();
+    memoryOf3 = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
+    hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
+  }
+});
+
+// js/focus-steps/track-steps.js
+function trackNext(root) {
+  const state12 = stateOf2(root);
+  const track = activeTrack(state12);
+  if (!track || !state12.steps.length || root.hasAttribute("aria-busy")) return;
+  const from = track.order[track.pos] ?? 0;
+  if (blockersOf(state12, from, timerStates(root)).length) return;
+  state12.alerts.delete(track.key);
+  state12.done.add(from);
+  if (track.pos < track.order.length - 1) {
+    track.pos += 1;
+    state12.index = track.order[track.pos] ?? from;
+  }
+  if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+  renderBand(root);
+  paint4(root, true);
+  const strings = getStrings();
+  const finished = track.order.every((i) => state12.done.has(i));
+  say5(
+    root,
+    finished ? strings.focusTrackFinishedTitle(track.name) : `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`
+  );
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_EVENT, {
+      bubbles: true,
+      detail: { index: state12.index, from, total: state12.steps.length, step: state12.steps[state12.index] ?? null, track: track.name }
+    })
+  );
+  recompute(root);
+  if (state12.tracks.every((t) => t.order.every((i) => state12.done.has(i)))) {
+    memoryOf3(root)?.forget("progress");
+    root.dispatchEvent(
+      new CustomEvent(FOCUS_STEPS_DONE_EVENT, {
+        bubbles: true,
+        detail: { total: state12.steps.length, tracks: state12.tracks.map((t) => t.name) }
+      })
+    );
+  } else remember2(root);
+}
+function trackPrev(root) {
+  const state12 = stateOf2(root);
+  const track = activeTrack(state12);
+  if (!track || root.hasAttribute("aria-busy")) return false;
+  const from = track.order[track.pos] ?? 0;
+  if (state12.done.has(from)) state12.done.delete(from);
+  else if (track.pos > 0) {
+    track.pos -= 1;
+    state12.index = track.order[track.pos] ?? from;
+    state12.done.delete(state12.index);
+  } else return false;
+  state12.alerts.delete(track.key);
+  if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+  renderBand(root);
+  paint4(root, true);
+  const strings = getStrings();
+  say5(root, `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`);
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_EVENT, {
+      bubbles: true,
+      detail: { index: state12.index, from, total: state12.steps.length, step: state12.steps[state12.index] ?? null, track: track.name }
+    })
+  );
+  recompute(root);
+  remember2(root);
+  return true;
+}
+function trackGo(root, index) {
+  const state12 = stateOf2(root);
+  const to = Math.max(0, Math.min(state12.steps.length - 1, index));
+  const track = trackOfStep(state12, to);
+  if (!track || root.hasAttribute("aria-busy")) return false;
+  const was = state12.index;
+  if (track.key === state12.track && to === was) return false;
+  track.pos = track.order.indexOf(to);
+  if (track.key !== state12.track) {
+    state12.track = track.key;
+    state12.index = to;
+    state12.alerts.delete(track.key);
+    renderBand(root);
+    paint4(root, true);
+    root.dispatchEvent(
+      new CustomEvent(FOCUS_STEPS_TRACK_EVENT, {
+        bubbles: true,
+        detail: { track: track.name, key: track.key, from: "", index: to, step: state12.steps[to] ?? null, reason: "script" }
+      })
+    );
+  } else {
+    state12.index = to;
+    paint4(root, true);
+  }
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_EVENT, {
+      bubbles: true,
+      detail: { index: to, from: was, total: state12.steps.length, step: state12.steps[to] ?? null, track: track.name }
+    })
+  );
+  remember2(root);
+  recompute(root);
+  return true;
+}
+var init_track_steps = __esm({
+  "js/focus-steps/track-steps.js"() {
+    "use strict";
+    init_strings();
+    init_dom5();
+    init_tracks();
+    init_band();
+    init_paint4();
+    init_memory();
+    init_flow();
+    init_constants15();
+    init_blockers();
+    init_track_nav();
+  }
+});
+
+// js/focus-steps/flow.js
+function takeAnswer(root, value, source, extra = {}) {
+  const state12 = stateOf2(root);
+  const step = state12.steps[state12.index];
+  const answer2 = step?.answer;
+  if (!answer2) return false;
+  const before = new CustomEvent(FOCUS_STEPS_BEFORE_ANSWER_EVENT, {
+    bubbles: true,
+    cancelable: true,
+    detail: { index: state12.index, id: answer2.id, value, source }
+  });
+  if (!root.dispatchEvent(before)) return false;
+  if (!state12.startedAt) state12.startedAt = Date.now();
+  state12.answers[answer2.id] = { value, source };
+  delete state12.draft[answer2.id];
+  remember2(root);
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_ANSWER_EVENT, {
+      bubbles: true,
+      detail: { index: state12.index, id: answer2.id, value, source, previous: answer2.previous ?? null, ...extra }
+    })
+  );
+  const strings = getStrings();
+  const said = source === "skip" ? strings.focusSkipped : wordsOf2(answer2, value);
+  say5(root, strings.focusAnswered(said, state12.index + 1, state12.steps.length));
+  return true;
+}
+function scheduleAdvance(root) {
+  const state12 = stateOf2(root);
+  window.clearTimeout(state12.timer);
+  const ms = Number(opt(root, "advance-ms", "350"));
+  state12.timer = window.setTimeout(() => goNext(root), Number.isFinite(ms) && ms >= 0 ? ms : 350);
+}
+function goNext(root) {
+  if (tracksOn(root)) return trackNext(root);
+  const state12 = stateOf2(root);
+  window.clearTimeout(state12.timer);
+  if (!state12.steps.length || root.hasAttribute("aria-busy")) return;
+  const atLast = state12.index === lastIndex(root);
+  if (!atLast) {
+    goToStep(root, state12.index + 1);
+    return;
+  }
+  const finishedAt = Date.now();
+  const detail = { total: state12.steps.length };
+  if (answering(root)) {
+    state12.finished = { total: state12.steps.length, answers: { ...state12.answers }, startedAt: state12.startedAt || finishedAt, finishedAt };
+    Object.assign(detail, state12.finished);
+  }
+  memoryOf3(root)?.forget("progress");
+  root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail }));
+}
+function pressAnswer(root, button6) {
+  const state12 = stateOf2(root);
+  const answer2 = state12.steps[state12.index]?.answer;
+  if (!answer2) return false;
+  if (button6.classList.contains("kp-focus-steps__choice")) {
+    if (button6.getAttribute("aria-disabled") === "true") return true;
+    const value = button6.dataset.kpValue ?? "";
+    if (answer2.kind === "multi") {
+      const held2 = (
+        /** @type {string[]} */
+        [.../** @type {string[]} */
+        currentValue(root, answer2) ?? []]
+      );
+      const at = held2.indexOf(value);
+      if (at >= 0) held2.splice(at, 1);
+      else held2.push(value);
+      state12.draft[answer2.id] = held2;
+      delete state12.answers[answer2.id];
+      paintAnswerState(root);
+    } else if (takeAnswer(root, value, "tap")) {
+      paintAnswerState(root);
+      if ((opt(root, "advance", "auto") ?? "auto") === "auto") scheduleAdvance(root);
+    }
+    return true;
+  }
+  if (button6.classList.contains("kp-focus-steps__same")) {
+    const which = button6.dataset.kpSame === "usual" ? "usual" : "yesterday";
+    const value = which === "usual" ? answer2.usual : answer2.previous;
+    if (value === void 0) return true;
+    if (takeAnswer(root, value, "same", { same: which })) {
+      paintAnswerState(root);
+      if (answer2.kind === "choice" && (opt(root, "advance", "auto") ?? "auto") === "auto") scheduleAdvance(root);
+    }
+    return true;
+  }
+  if (button6.classList.contains("kp-focus-steps__skip")) {
+    if (takeAnswer(root, null, "skip")) {
+      paintAnswerState(root);
+      scheduleAdvance(root);
+    }
+    return true;
+  }
+  return false;
+}
+function paintAnswerState(root) {
+  const state12 = stateOf2(root);
+  const answer2 = state12.steps[state12.index]?.answer;
+  if (!answer2) return;
+  const value = currentValue(root, answer2);
+  const given2 = state12.answers[answer2.id];
+  for (
+    const button6 of
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(".kp-focus-steps__choice")]
+  ) {
+    const v = button6.dataset.kpValue ?? "";
+    const on = !(given2?.source === "skip") && (Array.isArray(value) ? value.includes(v) : value === v);
+    button6.setAttribute("aria-pressed", String(on));
+    button6.toggleAttribute("data-kp-chosen", on);
+  }
+  for (const button6 of root.querySelectorAll(".kp-focus-steps__skip")) button6.setAttribute("aria-pressed", String(given2?.source === "skip"));
+  const next2 = (
+    /** @type {HTMLElement} */
+    part2(root, "next")
+  );
+  if (answerReady(root, answer2)) next2.removeAttribute("aria-disabled");
+  else next2.setAttribute("aria-disabled", "true");
+}
 function say5(root, message) {
   const region = part2(root, "live");
   region.textContent = "";
@@ -37447,13 +37624,12 @@ var init_flow = __esm({
   "js/focus-steps/flow.js"() {
     "use strict";
     init_strings();
-    init_state12();
     init_dom5();
     init_constants15();
     init_memory();
     init_resume();
     init_tracks();
-    init_track_nav();
+    init_track_steps();
     init_api11();
   }
 });
@@ -37615,105 +37791,6 @@ function paintLive(root, timers) {
     const text = waitLine2(state12, blockersOf(state12, state12.index, timers), timers, state12.index);
     if (here && line.textContent !== text) line.textContent = text;
   }
-}
-function trackNext(root) {
-  const state12 = stateOf2(root);
-  const track = activeTrack(state12);
-  if (!track || !state12.steps.length || root.hasAttribute("aria-busy")) return;
-  const from = track.order[track.pos] ?? 0;
-  if (blockersOf(state12, from, timerStates(root)).length) return;
-  state12.alerts.delete(track.key);
-  state12.done.add(from);
-  if (track.pos < track.order.length - 1) {
-    track.pos += 1;
-    state12.index = track.order[track.pos] ?? from;
-  }
-  if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
-  renderBand(root);
-  paint4(root, true);
-  const strings = getStrings();
-  const finished = track.order.every((i) => state12.done.has(i));
-  say5(
-    root,
-    finished ? strings.focusTrackFinishedTitle(track.name) : `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`
-  );
-  root.dispatchEvent(
-    new CustomEvent(FOCUS_STEPS_EVENT, {
-      bubbles: true,
-      detail: { index: state12.index, from, total: state12.steps.length, step: state12.steps[state12.index] ?? null, track: track.name }
-    })
-  );
-  recompute(root);
-  if (state12.tracks.every((t) => t.order.every((i) => state12.done.has(i)))) {
-    memoryOf3(root)?.forget("progress");
-    root.dispatchEvent(
-      new CustomEvent(FOCUS_STEPS_DONE_EVENT, {
-        bubbles: true,
-        detail: { total: state12.steps.length, tracks: state12.tracks.map((t) => t.name) }
-      })
-    );
-  } else remember2(root);
-}
-function trackPrev(root) {
-  const state12 = stateOf2(root);
-  const track = activeTrack(state12);
-  if (!track || root.hasAttribute("aria-busy")) return false;
-  const from = track.order[track.pos] ?? 0;
-  if (state12.done.has(from)) state12.done.delete(from);
-  else if (track.pos > 0) {
-    track.pos -= 1;
-    state12.index = track.order[track.pos] ?? from;
-    state12.done.delete(state12.index);
-  } else return false;
-  state12.alerts.delete(track.key);
-  if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
-  renderBand(root);
-  paint4(root, true);
-  const strings = getStrings();
-  say5(root, `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`);
-  root.dispatchEvent(
-    new CustomEvent(FOCUS_STEPS_EVENT, {
-      bubbles: true,
-      detail: { index: state12.index, from, total: state12.steps.length, step: state12.steps[state12.index] ?? null, track: track.name }
-    })
-  );
-  recompute(root);
-  remember2(root);
-  return true;
-}
-function trackGo(root, index) {
-  const state12 = stateOf2(root);
-  const to = Math.max(0, Math.min(state12.steps.length - 1, index));
-  const track = trackOfStep(state12, to);
-  if (!track || root.hasAttribute("aria-busy")) return false;
-  const was = state12.index;
-  if (track.key === state12.track && to === was) return false;
-  track.pos = track.order.indexOf(to);
-  if (track.key !== state12.track) {
-    state12.track = track.key;
-    state12.index = to;
-    state12.alerts.delete(track.key);
-    renderBand(root);
-    paint4(root, true);
-    root.dispatchEvent(
-      new CustomEvent(FOCUS_STEPS_TRACK_EVENT, {
-        bubbles: true,
-        detail: { track: track.name, key: track.key, from: "", index: to, step: state12.steps[to] ?? null, reason: "script" }
-      })
-    );
-  } else {
-    state12.index = to;
-    paint4(root, true);
-  }
-  root.dispatchEvent(
-    new CustomEvent(FOCUS_STEPS_EVENT, {
-      bubbles: true,
-      detail: { index: to, from: was, total: state12.steps.length, step: state12.steps[to] ?? null, track: track.name }
-    })
-  );
-  remember2(root);
-  recompute(root);
-  return true;
 }
 function timerEnded(root, i, timer) {
   const state12 = stateOf2(root);
@@ -38612,6 +38689,7 @@ var init_api11 = __esm({
     init_state12();
     init_tracks();
     init_track_nav();
+    init_track_steps();
     init_dom5();
     init_resume();
     init_paint4();
@@ -38700,7 +38778,7 @@ var init_input = __esm({
     init_resume();
     init_flow();
     init_tracks();
-    init_track_nav();
+    init_track_steps();
     init_api11();
     SWIPE_SLOPE = 1.5;
     FocusStepsInput = class extends Controller {
@@ -45807,6 +45885,107 @@ var init_chrome = __esm({
   }
 });
 
+// js/datatable/attach/filter-choices.js
+var TableFilterChoices;
+var init_filter_choices = __esm({
+  "js/datatable/attach/filter-choices.js"() {
+    "use strict";
+    init_selectors();
+    init_filter();
+    init_locale();
+    init_sort();
+    init_strings();
+    TableFilterChoices = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+      }
+      /**
+       * A choice filter's values: the header's `data-kp-filter-options`, else
+       * every value the rows hold, in the column's declared order or the
+       * locale's. The add-filter editor asks when it opens and the filter
+       * panel asks again on refresh(), so rows written after the attach are
+       * in both.
+       *
+       * @param {number} at
+       */
+      choiceValues(at) {
+        const declared2 = splitList2(this.t.columns.headers[at]?.dataset.kpFilterOptions);
+        if (declared2.length > 0) return declared2;
+        const values = [...new Set(this.t.model.all.map((row2) => this.t.columns.choiceText(row2, at)).filter((v) => v !== ""))];
+        const order = this.t.columns.orders[at];
+        return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(this.t.controls.locale).compare) : collator(this.t.controls.locale).compare(a, b));
+      }
+      /**
+       * Put a panel fieldset's boxes in step with the choice values: one box
+       * per value the rows hold now, ticked where `ticked` has it, and a
+       * ticked value no row holds any more stays, so it can still be
+       * unticked. Nothing is rebuilt while the list already matches, so a
+       * focused box keeps its focus.
+       *
+       * @param {Element} set @param {number} at @param {string[]} ticked
+       */
+      fillChoices(set, at, ticked) {
+        const values = [...this.choiceValues(at)];
+        for (const value of ticked) if (!values.includes(value)) values.push(value);
+        const boxes = (
+          /** @type {HTMLInputElement[]} */
+          [...set.querySelectorAll('input[type="checkbox"]')]
+        );
+        if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
+        for (const box of boxes) box.closest(".kp-field__option")?.remove();
+        for (const value of values) {
+          const option = this.t.identity.make("label", "kp-field__option");
+          const box = (
+            /** @type {HTMLInputElement} */
+            this.t.identity.make("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.value = value;
+          box.checked = ticked.includes(value);
+          option.append(box, ` ${value}`);
+          set.append(option);
+        }
+      }
+      /**
+       * The package's date picker around a text field: the markup the
+       * standalone picker has, class for class and string for string — a
+       * plain button with the glyph, named by aria-label and title
+       * [Kenny's note of 2026-09-13 — it was a ghost button reading
+       * "Calendar"]. The caller attaches it.
+       *
+       * @param {HTMLInputElement} input
+       */
+      datePickerFor(input) {
+        const picker = this.t.identity.make("div", "kp-datepicker");
+        picker.dataset.kpDatepicker = "";
+        picker.dataset.kpLocale = this.t.controls.locale;
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.dataset.kpDateInput = "";
+        const s2 = getStrings();
+        const opener = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-button")
+        );
+        opener.type = "button";
+        opener.dataset.kpDateOpen = "";
+        opener.setAttribute("aria-label", s2.calendarOpen);
+        opener.title = s2.calendarOpen;
+        const glyph3 = this.t.identity.make("span");
+        glyph3.setAttribute("aria-hidden", "true");
+        glyph3.textContent = s2.calendarButton;
+        opener.append(glyph3);
+        const datePanel = this.t.identity.make("div", "kp-datepicker__panel");
+        datePanel.dataset.kpDatePanel = "";
+        datePanel.hidden = true;
+        picker.append(input, opener, datePanel);
+        return picker;
+      }
+    };
+  }
+});
+
 // js/datepicker/constants.js
 var PICKER2, DATE_EVENT, OPEN_EVENT3, MONTH_EVENT, JUMP_COLUMNS, MONTHS_PER_YEAR, YEARS_PER_BLOCK, JUMP_PAGE, DAYS_PER_WEEK, LAST_WEEKDAY;
 var init_constants20 = __esm({
@@ -46664,15 +46843,13 @@ var init_filter_ui = __esm({
   "js/datatable/attach/filter-ui.js"() {
     "use strict";
     init_selectors();
+    init_filter_choices();
     init_datepicker();
-    init_filter();
-    init_locale();
-    init_sort();
-    init_strings();
     TableFilterUi = class {
       /** @param {DataTableControl} t */
       constructor(t) {
         this.t = t;
+        this.choices = new TableFilterChoices(t);
         this.filterColumns = this.t.columns.filterKinds.flatMap((kind, at) => kind === null ? [] : [at]);
         this.panel = null;
         this.toggle = null;
@@ -46754,7 +46931,7 @@ var init_filter_ui = __esm({
         legend.textContent = columns2.labelOf(at);
         set.append(legend);
         if (kind === "choice") {
-          this.fillChoices(set, at, []);
+          this.choices.fillChoices(set, at, []);
           return set;
         }
         const range = this.rangeField(at, kind);
@@ -46785,7 +46962,7 @@ var init_filter_ui = __esm({
             continue;
           }
           input.id = `${identity.id}-filter-${at}-${bound}`;
-          range.append(this.datePickerFor(input));
+          range.append(this.choices.datePickerFor(input));
         }
         return range;
       }
@@ -46867,88 +47044,6 @@ var init_filter_ui = __esm({
         });
         this.addButton = found;
         return found;
-      }
-      /**
-       * A choice filter's values: the header's `data-kp-filter-options`, else
-       * every value the rows hold, in the column's declared order or the
-       * locale's. The add-filter editor asks when it opens and the filter
-       * panel asks again on refresh(), so rows written after the attach are
-       * in both.
-       *
-       * @param {number} at
-       */
-      choiceValues(at) {
-        const declared2 = splitList2(this.t.columns.headers[at]?.dataset.kpFilterOptions);
-        if (declared2.length > 0) return declared2;
-        const values = [...new Set(this.t.model.all.map((row2) => this.t.columns.choiceText(row2, at)).filter((v) => v !== ""))];
-        const order = this.t.columns.orders[at];
-        return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(this.t.controls.locale).compare) : collator(this.t.controls.locale).compare(a, b));
-      }
-      /**
-       * Put a panel fieldset's boxes in step with the choice values: one box
-       * per value the rows hold now, ticked where `ticked` has it, and a
-       * ticked value no row holds any more stays, so it can still be
-       * unticked. Nothing is rebuilt while the list already matches, so a
-       * focused box keeps its focus.
-       *
-       * @param {Element} set @param {number} at @param {string[]} ticked
-       */
-      fillChoices(set, at, ticked) {
-        const values = [...this.choiceValues(at)];
-        for (const value of ticked) if (!values.includes(value)) values.push(value);
-        const boxes = (
-          /** @type {HTMLInputElement[]} */
-          [...set.querySelectorAll('input[type="checkbox"]')]
-        );
-        if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
-        for (const box of boxes) box.closest(".kp-field__option")?.remove();
-        for (const value of values) {
-          const option = this.t.identity.make("label", "kp-field__option");
-          const box = (
-            /** @type {HTMLInputElement} */
-            this.t.identity.make("input", CHECK_CLASS)
-          );
-          box.type = "checkbox";
-          box.value = value;
-          box.checked = ticked.includes(value);
-          option.append(box, ` ${value}`);
-          set.append(option);
-        }
-      }
-      /**
-       * The package's date picker around a text field: the markup the
-       * standalone picker has, class for class and string for string — a
-       * plain button with the glyph, named by aria-label and title
-       * [Kenny's note of 2026-09-13 — it was a ghost button reading
-       * "Calendar"]. The caller attaches it.
-       *
-       * @param {HTMLInputElement} input
-       */
-      datePickerFor(input) {
-        const picker = this.t.identity.make("div", "kp-datepicker");
-        picker.dataset.kpDatepicker = "";
-        picker.dataset.kpLocale = this.t.controls.locale;
-        input.type = "text";
-        input.inputMode = "numeric";
-        input.dataset.kpDateInput = "";
-        const s2 = getStrings();
-        const opener = (
-          /** @type {HTMLButtonElement} */
-          this.t.identity.make("button", "kp-button")
-        );
-        opener.type = "button";
-        opener.dataset.kpDateOpen = "";
-        opener.setAttribute("aria-label", s2.calendarOpen);
-        opener.title = s2.calendarOpen;
-        const glyph3 = this.t.identity.make("span");
-        glyph3.setAttribute("aria-hidden", "true");
-        glyph3.textContent = s2.calendarButton;
-        opener.append(glyph3);
-        const datePanel = this.t.identity.make("div", "kp-datepicker__panel");
-        datePanel.dataset.kpDatePanel = "";
-        datePanel.hidden = true;
-        picker.append(input, opener, datePanel);
-        return picker;
       }
     };
   }
@@ -47647,6 +47742,83 @@ var init_groups2 = __esm({
   }
 });
 
+// js/datatable/attach/sync-columns.js
+var TableSyncColumns;
+var init_sync_columns = __esm({
+  "js/datatable/attach/sync-columns.js"() {
+    "use strict";
+    init_selectors();
+    init_strings();
+    TableSyncColumns = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+      }
+      syncColumns() {
+        this.t.columns.headers.forEach((header, at) => {
+          header.hidden = this.t.sortSetup.hiddenColumns.has(at) || (this.t.columns.headersWereHidden[at] ?? false);
+        });
+        for (const row2 of this.t.body.rows) {
+          if (row2.matches(DETAIL) || row2.matches(GROUP_ROW)) continue;
+          this.t.columns.headers.forEach((_, at) => {
+            const cell = row2.cells[at];
+            if (cell !== void 0) cell.hidden = this.t.sortSetup.hiddenColumns.has(at);
+          });
+        }
+        if (this.t.sortSetup.columnList !== null && this.t.sortSetup.columnList.childElementCount > 0) {
+          for (const box of this.t.sortSetup.columnList.querySelectorAll("[data-kp-datatable-column]")) {
+            const input = (
+              /** @type {HTMLInputElement} */
+              box
+            );
+            input.checked = !this.t.sortSetup.hiddenColumns.has(Number(input.value));
+          }
+        } else if (this.t.sortSetup.columnList !== null) this.buildColumnList(this.t.sortSetup.columnList);
+        if (this.t.sortSetup.columnCount !== null)
+          this.t.sortSetup.columnCount.textContent = getStrings().tableColumnsShown(
+            this.t.sortSetup.choosable.length - [...this.t.sortSetup.hiddenColumns].filter((at) => this.t.sortSetup.choosable.includes(at)).length,
+            this.t.sortSetup.choosable.length
+          );
+      }
+      /** The column menu's list, built once: a box per column that may be hidden, then "Show all columns". @param {HTMLElement} list */
+      buildColumnList(list) {
+        const s2 = getStrings();
+        for (const at of this.t.sortSetup.choosable) {
+          const item = this.t.identity.make("li");
+          const label2 = (
+            /** @type {HTMLLabelElement} */
+            this.t.identity.make("label", "kp-menu__item kp-datatable__column-option")
+          );
+          const box = (
+            /** @type {HTMLInputElement} */
+            this.t.identity.make("input", CHECK_CLASS)
+          );
+          box.type = "checkbox";
+          box.value = String(at);
+          box.dataset.kpDatatableColumn = "";
+          box.checked = !this.t.sortSetup.hiddenColumns.has(at);
+          box.disabled = this.t.sortSetup.locked[at] ?? false;
+          label2.append(box, ` ${this.t.sortSetup.locked[at] ? s2.tableColumnLocked(this.t.columns.labelOf(at)) : this.t.columns.labelOf(at)}`);
+          item.append(label2);
+          list.append(item);
+        }
+        const separator = this.t.identity.make("li", "kp-menu__separator");
+        separator.setAttribute("role", "separator");
+        const resetItem = this.t.identity.make("li");
+        const reset = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-menu__item")
+        );
+        reset.type = "button";
+        reset.dataset.kpDatatableColumnsReset = "";
+        reset.textContent = s2.tableShowAllColumns;
+        resetItem.append(reset);
+        list.append(separator, resetItem);
+      }
+    };
+  }
+});
+
 // js/datatable/attach/sync.js
 var TableSync;
 var init_sync5 = __esm({
@@ -47655,10 +47827,12 @@ var init_sync5 = __esm({
     init_selectors();
     init_strings();
     init_grid();
+    init_sync_columns();
     TableSync = class {
       /** @param {DataTableControl} t */
       constructor(t) {
         this.t = t;
+        this.columnSync = new TableSyncColumns(t);
         this.serverSelection = /* @__PURE__ */ new Set();
         this.fixedAttribute = this.t.wrap.dataset.kpFixedColumns;
         this.fixedCount = this.fixedAttribute === void 0 ? 0 : Number.parseInt(this.fixedAttribute, 10) || this.t.columns.keyColumn + 1;
@@ -47844,65 +48018,7 @@ var init_sync5 = __esm({
         }
       }
       syncColumns() {
-        this.t.columns.headers.forEach((header, at) => {
-          header.hidden = this.t.sortSetup.hiddenColumns.has(at) || (this.t.columns.headersWereHidden[at] ?? false);
-        });
-        for (const row2 of this.t.body.rows) {
-          if (row2.matches(DETAIL) || row2.matches(GROUP_ROW)) continue;
-          this.t.columns.headers.forEach((_, at) => {
-            const cell = row2.cells[at];
-            if (cell !== void 0) cell.hidden = this.t.sortSetup.hiddenColumns.has(at);
-          });
-        }
-        if (this.t.sortSetup.columnList !== null && this.t.sortSetup.columnList.childElementCount > 0) {
-          for (const box of this.t.sortSetup.columnList.querySelectorAll("[data-kp-datatable-column]")) {
-            const input = (
-              /** @type {HTMLInputElement} */
-              box
-            );
-            input.checked = !this.t.sortSetup.hiddenColumns.has(Number(input.value));
-          }
-        } else if (this.t.sortSetup.columnList !== null) this.buildColumnList(this.t.sortSetup.columnList);
-        if (this.t.sortSetup.columnCount !== null)
-          this.t.sortSetup.columnCount.textContent = getStrings().tableColumnsShown(
-            this.t.sortSetup.choosable.length - [...this.t.sortSetup.hiddenColumns].filter((at) => this.t.sortSetup.choosable.includes(at)).length,
-            this.t.sortSetup.choosable.length
-          );
-      }
-      /** The column menu's list, built once: a box per column that may be hidden, then "Show all columns". @param {HTMLElement} list */
-      buildColumnList(list) {
-        const s2 = getStrings();
-        for (const at of this.t.sortSetup.choosable) {
-          const item = this.t.identity.make("li");
-          const label2 = (
-            /** @type {HTMLLabelElement} */
-            this.t.identity.make("label", "kp-menu__item kp-datatable__column-option")
-          );
-          const box = (
-            /** @type {HTMLInputElement} */
-            this.t.identity.make("input", CHECK_CLASS)
-          );
-          box.type = "checkbox";
-          box.value = String(at);
-          box.dataset.kpDatatableColumn = "";
-          box.checked = !this.t.sortSetup.hiddenColumns.has(at);
-          box.disabled = this.t.sortSetup.locked[at] ?? false;
-          label2.append(box, ` ${this.t.sortSetup.locked[at] ? s2.tableColumnLocked(this.t.columns.labelOf(at)) : this.t.columns.labelOf(at)}`);
-          item.append(label2);
-          list.append(item);
-        }
-        const separator = this.t.identity.make("li", "kp-menu__separator");
-        separator.setAttribute("role", "separator");
-        const resetItem = this.t.identity.make("li");
-        const reset = (
-          /** @type {HTMLButtonElement} */
-          this.t.identity.make("button", "kp-menu__item")
-        );
-        reset.type = "button";
-        reset.dataset.kpDatatableColumnsReset = "";
-        reset.textContent = s2.tableShowAllColumns;
-        resetItem.append(reset);
-        list.append(separator, resetItem);
+        this.columnSync.syncColumns();
       }
       syncFixed() {
         if (this.fixedCount > 0 || this.fixedEndCount > 0) syncFixedColumns(this.t.table, this.fixedCount, this.fixedEndCount);
@@ -48339,7 +48455,7 @@ var init_filter_editor = __esm({
         const legend = identity.make("legend", "kp-sr-only");
         legend.textContent = s2.tableFilterChoicesLegend(label2);
         const choices = identity.make("div", "kp-datatable__filter-editor-choices");
-        for (const value of this.t.filterUi.choiceValues(at)) {
+        for (const value of this.t.filterUi.choices.choiceValues(at)) {
           const option = identity.make("label", "kp-field__option");
           const box = (
             /** @type {HTMLInputElement} */
@@ -48385,7 +48501,7 @@ var init_filter_editor = __esm({
             field2.append(text, input);
             pair.append(field2);
           } else {
-            const picker = this.t.filterUi.datePickerFor(input);
+            const picker = this.t.filterUi.choices.datePickerFor(input);
             picker.prepend(text);
             pair.append(picker);
           }
@@ -48596,7 +48712,7 @@ var init_apply2 = __esm({
           );
           if (this.t.columns.filterKinds[at] !== "choice") continue;
           const value = this.t.model.filters.get(at);
-          this.t.filterUi.fillChoices(set, at, Array.isArray(value) ? value : []);
+          this.t.filterUi.choices.fillChoices(set, at, Array.isArray(value) ? value : []);
         }
       }
       /** Read the panel's controls into the filter state. */
@@ -49241,92 +49357,20 @@ var init_selection2 = __esm({
   }
 });
 
-// js/datatable/attach/edit.js
-var TableEdit;
-var init_edit = __esm({
-  "js/datatable/attach/edit.js"() {
+// js/datatable/attach/edit-field.js
+var TableEditField;
+var init_edit_field = __esm({
+  "js/datatable/attach/edit-field.js"() {
     "use strict";
     init_strings();
-    init_selectors();
     init_filter();
     init_combobox();
     init_datepicker();
     init_events();
-    TableEdit = class {
+    TableEditField = class {
       /** @param {DataTableControl} t */
       constructor(t) {
         this.t = t;
-        this.editing = null;
-        this.lastEdit = null;
-        this.listWasOpen = false;
-      }
-      /** @param {string} text @param {{ undo?: boolean }} [options] */
-      logEdit(text, { undo: withUndo = false } = {}) {
-        if (this.t.sortSetup.editLog === null) return;
-        this.t.sortSetup.editLog.textContent = text;
-        if (!withUndo) return;
-        const button6 = (
-          /** @type {HTMLButtonElement} */
-          this.t.identity.make("button", "kp-button kp-button--ghost kp-button--sm")
-        );
-        button6.type = "button";
-        button6.dataset.kpDatatableUndo = "";
-        button6.textContent = getStrings().undo;
-        this.t.sortSetup.editLog.append(" ", button6);
-      }
-      /** Write a saved value into its cell, into the badge or the element that held the text. @param {HTMLTableCellElement} cell @param {string} value */
-      writeCell(cell, value) {
-        const holder = (
-          /** @type {HTMLElement} */
-          cell.querySelector(EDIT_VALUE) ?? cell
-        );
-        const only = holder.children.length === 1 && holder.children[0]?.children.length === 0 ? holder.children[0] : null;
-        if (only !== null && (holder.textContent ?? "").trim() === (only.textContent ?? "").trim()) only.textContent = value;
-        else holder.textContent = value;
-      }
-      closeEditor() {
-        if (this.editing === null) return;
-        const current2 = this.editing;
-        this.editing = null;
-        current2.detach();
-        current2.holder.remove();
-        current2.button.hidden = false;
-        this.t.sync.grid?.sync();
-      }
-      /** Open the editor of cell `column` of `row`, saving the one that is open first. @param {HTMLTableRowElement} row @param {number} column */
-      async openEditor(row2, column) {
-        if (this.editing !== null && !await this.commitEdit(true)) return;
-        const { columns: columns2, identity } = this.t;
-        const kind = columns2.editKinds[column];
-        const cell = row2.cells[column];
-        const button6 = (
-          /** @type {HTMLButtonElement | null} */
-          cell?.querySelector(EDIT_CELL) ?? null
-        );
-        if (kind === null || kind === void 0 || cell === void 0 || button6 === null) return;
-        const s2 = getStrings();
-        const key = columns2.keyOf(row2);
-        const previous = columns2.cellText(row2, column);
-        const holder = identity.make("div", "kp-datatable__editor");
-        holder.dataset.kpDatatableEditorWrap = "";
-        holder.setAttribute("data-density", "compact");
-        const errorId = `${identity.id}-edit-error`;
-        const error = identity.make("p", "kp-field__error");
-        error.id = errorId;
-        error.hidden = true;
-        const control = this.editField(kind, column, previous, holder);
-        control.dataset.kpDatatableEditor = "";
-        control.setAttribute("aria-label", s2.tableEditField(columns2.labelOf(column), key));
-        control.setAttribute("aria-describedby", errorId);
-        if (columns2.headers[column]?.dataset.kpEditRequired !== void 0) control.setAttribute("aria-required", "true");
-        holder.append(error);
-        button6.hidden = true;
-        cell.append(holder);
-        const detach = this.startField(kind, control, holder, previous);
-        this.editing = { row: row2, column, kind, button: button6, holder, control, error, previous, detach, busy: false };
-        control.focus();
-        if (control instanceof HTMLInputElement && kind !== "date") control.select();
-        this.logEdit(s2.tableEditing(columns2.labelOf(column), key));
       }
       /**
        * The editor's field, put in `holder`: a select of the column's values, a number or text input, or the package's date picker.
@@ -49369,7 +49413,7 @@ var init_edit = __esm({
         } else if (kind === "text") input.type = "text";
         if (kind === "date") {
           input.id = `${identity.id}-edit-date`;
-          holder.append(this.t.filterUi.datePickerFor(input));
+          holder.append(this.t.filterUi.choices.datePickerFor(input));
         } else holder.append(input);
         return input;
       }
@@ -49390,14 +49434,6 @@ var init_edit = __esm({
         const handle = picker === null ? null : datePicker(picker);
         if (previous !== "") handle?.set(previous);
         return detachPickers;
-      }
-      /** @param {string} message */
-      refuse(message) {
-        if (this.editing === null) return;
-        this.editing.error.textContent = message;
-        this.editing.error.hidden = false;
-        this.editing.control.setAttribute("aria-invalid", "true");
-        this.editing.control.focus();
       }
       /**
        * Tell the app about a change and wait for its answer: null when it
@@ -49455,6 +49491,104 @@ var init_edit = __esm({
         if (kind === "number" && value !== "" && Number.isNaN(Number(value))) return s2.tableEditInvalid;
         return null;
       }
+    };
+  }
+});
+
+// js/datatable/attach/edit.js
+var TableEdit;
+var init_edit = __esm({
+  "js/datatable/attach/edit.js"() {
+    "use strict";
+    init_strings();
+    init_selectors();
+    init_combobox();
+    init_edit_field();
+    TableEdit = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.editing = null;
+        this.lastEdit = null;
+        this.listWasOpen = false;
+        this.field = new TableEditField(t);
+      }
+      /** @param {string} text @param {{ undo?: boolean }} [options] */
+      logEdit(text, { undo: withUndo = false } = {}) {
+        if (this.t.sortSetup.editLog === null) return;
+        this.t.sortSetup.editLog.textContent = text;
+        if (!withUndo) return;
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          this.t.identity.make("button", "kp-button kp-button--ghost kp-button--sm")
+        );
+        button6.type = "button";
+        button6.dataset.kpDatatableUndo = "";
+        button6.textContent = getStrings().undo;
+        this.t.sortSetup.editLog.append(" ", button6);
+      }
+      /** Write a saved value into its cell, into the badge or the element that held the text. @param {HTMLTableCellElement} cell @param {string} value */
+      writeCell(cell, value) {
+        const holder = (
+          /** @type {HTMLElement} */
+          cell.querySelector(EDIT_VALUE) ?? cell
+        );
+        const only = holder.children.length === 1 && holder.children[0]?.children.length === 0 ? holder.children[0] : null;
+        if (only !== null && (holder.textContent ?? "").trim() === (only.textContent ?? "").trim()) only.textContent = value;
+        else holder.textContent = value;
+      }
+      closeEditor() {
+        if (this.editing === null) return;
+        const current2 = this.editing;
+        this.editing = null;
+        current2.detach();
+        current2.holder.remove();
+        current2.button.hidden = false;
+        this.t.sync.grid?.sync();
+      }
+      /** Open the editor of cell `column` of `row`, saving the one that is open first. @param {HTMLTableRowElement} row @param {number} column */
+      async openEditor(row2, column) {
+        if (this.editing !== null && !await this.commitEdit(true)) return;
+        const { columns: columns2, identity } = this.t;
+        const kind = columns2.editKinds[column];
+        const cell = row2.cells[column];
+        const button6 = (
+          /** @type {HTMLButtonElement | null} */
+          cell?.querySelector(EDIT_CELL) ?? null
+        );
+        if (kind === null || kind === void 0 || cell === void 0 || button6 === null) return;
+        const s2 = getStrings();
+        const key = columns2.keyOf(row2);
+        const previous = columns2.cellText(row2, column);
+        const holder = identity.make("div", "kp-datatable__editor");
+        holder.dataset.kpDatatableEditorWrap = "";
+        holder.setAttribute("data-density", "compact");
+        const errorId = `${identity.id}-edit-error`;
+        const error = identity.make("p", "kp-field__error");
+        error.id = errorId;
+        error.hidden = true;
+        const control = this.field.editField(kind, column, previous, holder);
+        control.dataset.kpDatatableEditor = "";
+        control.setAttribute("aria-label", s2.tableEditField(columns2.labelOf(column), key));
+        control.setAttribute("aria-describedby", errorId);
+        if (columns2.headers[column]?.dataset.kpEditRequired !== void 0) control.setAttribute("aria-required", "true");
+        holder.append(error);
+        button6.hidden = true;
+        cell.append(holder);
+        const detach = this.field.startField(kind, control, holder, previous);
+        this.editing = { row: row2, column, kind, button: button6, holder, control, error, previous, detach, busy: false };
+        control.focus();
+        if (control instanceof HTMLInputElement && kind !== "date") control.select();
+        this.logEdit(s2.tableEditing(columns2.labelOf(column), key));
+      }
+      /** @param {string} message */
+      refuse(message) {
+        if (this.editing === null) return;
+        this.editing.error.textContent = message;
+        this.editing.error.hidden = false;
+        this.editing.control.setAttribute("aria-invalid", "true");
+        this.editing.control.focus();
+      }
       /** @param {boolean} save @returns {Promise<boolean>} whether the editor closed */
       async commitEdit(save2) {
         const current2 = this.editing;
@@ -49470,7 +49604,7 @@ var init_edit = __esm({
           return true;
         }
         const value = kind === "date" ? control.dataset.kpDateValue ?? (control.value.trim() === "" ? "" : control.value.trim()) : control.value.trim();
-        const wrong = this.checkValue(kind, column, value, s2);
+        const wrong = this.field.checkValue(kind, column, value, s2);
         if (wrong !== null) {
           this.refuse(wrong);
           return false;
@@ -49481,7 +49615,7 @@ var init_edit = __esm({
           return true;
         }
         current2.busy = true;
-        const refused = await this.askApp(row2, column, value, previous, false);
+        const refused = await this.field.askApp(row2, column, value, previous, false);
         current2.busy = false;
         if (this.editing !== current2) return true;
         if (refused !== null) {
@@ -49504,7 +49638,7 @@ var init_edit = __esm({
         const last = this.lastEdit;
         if (last === null) return;
         const s2 = getStrings();
-        const refused = await this.askApp(last.row, last.column, last.before, last.after, true);
+        const refused = await this.field.askApp(last.row, last.column, last.before, last.after, true);
         if (refused !== null) {
           this.logEdit(refused);
           return;
@@ -49805,7 +49939,44 @@ var init_wire = __esm({
   }
 });
 
-// js/datatable/attach/handle.js
+// js/datatable/attach/handle-watch.js
+function watchRows(t) {
+  const { body, model, wrap: wrap2 } = t;
+  let queued = false;
+  const resync = () => {
+    queued = false;
+    model.holdRows();
+    const now = [...body.rows].filter((row2) => model.isRow(row2));
+    if (now.length === model.all.length && now.every((row2) => model.all.includes(row2))) return;
+    handles5.get(wrap2)?.refresh({ keepPage: true });
+  };
+  const onBody = () => {
+    if (queued) return;
+    queued = true;
+    queueMicrotask(resync);
+  };
+  const rowsWatch = new MutationObserver(onBody);
+  rowsWatch.observe(body, { childList: true });
+  const holdWatch = new MutationObserver(onBody);
+  holdWatch.observe(body, { attributes: true, attributeFilter: ["data-kp-row-hidden"], subtree: true });
+  t.identity.undo.push(() => {
+    rowsWatch.disconnect();
+    holdWatch.disconnect();
+  });
+}
+function wireAgain(t) {
+  const { wrap: wrap2, call } = t;
+  const old = handles5.get(wrap2);
+  if (old === void 0) return;
+  const was = old.view();
+  const selected = old.selected();
+  const fresh = t.rewire(old);
+  if (fresh === void 0) return;
+  Object.assign(old, fresh);
+  handles5.set(wrap2, old);
+  call.created.splice(call.created.indexOf(fresh), 1, old);
+  restoreView(old, was, selected, call.sortsSeveral(wrap2));
+}
 function restoreView(handle, was, selected, several) {
   if (was.query !== "") handle.query(was.query);
   if (was.scope !== null) handle.scope(was.scope);
@@ -49824,12 +49995,21 @@ function restoreView(handle, was, selected, several) {
   if (was.page > 0) handle.page(was.page);
   if (was.state !== "ready") handle.state(was.state);
 }
+var init_handle_watch = __esm({
+  "js/datatable/attach/handle-watch.js"() {
+    "use strict";
+    init_instance();
+  }
+});
+
+// js/datatable/attach/handle.js
 var LIVE_OPTIONS2, TableHandle;
 var init_handle2 = __esm({
   "js/datatable/attach/handle.js"() {
     "use strict";
     init_instance();
     init_live_options();
+    init_handle_watch();
     LIVE_OPTIONS2 = ["data-kp-sort-multi", "data-kp-filter-mode", "data-kp-filter-ui", "data-kp-expand-single", "data-kp-fixed-end"];
     TableHandle = class {
       /** @param {DataTableControl} t */
@@ -49838,8 +50018,8 @@ var init_handle2 = __esm({
         this.handle = this.makeHandle();
         handles5.set(t.wrap, this.handle);
         t.call.created.push(this.handle);
-        if (!t.controls.serverMode) this.watchRows();
-        t.identity.undo.push(watchOptions(t.wrap, LIVE_OPTIONS2, () => this.wireAgain()));
+        if (!t.controls.serverMode) watchRows(t);
+        t.identity.undo.push(watchOptions(t.wrap, LIVE_OPTIONS2, () => wireAgain(t)));
       }
       /** @returns {DataTableHandle} */
       makeHandle() {
@@ -49989,49 +50169,6 @@ var init_handle2 = __esm({
           row2?.querySelector(heldToggle) ?? null;
         }
         if (back !== null && !back.hidden && back.closest("tr")?.hidden !== true) back.focus({ preventScroll: true });
-      }
-      /**
-       * Rows the page added, removed or held are the table's rows at once, without a call to refresh(): the count, the pager and the
-       * pages follow the body [b3b4-1019; homelab gap 34, kyu gap 28]. The table's own sort and page moves put the same rows back in
-       * another order, which changes nothing here.
-       */
-      watchRows() {
-        const { body, model, wrap: wrap2 } = this.t;
-        let queued = false;
-        const resync = () => {
-          queued = false;
-          model.holdRows();
-          const now = [...body.rows].filter((row2) => model.isRow(row2));
-          if (now.length === model.all.length && now.every((row2) => model.all.includes(row2))) return;
-          handles5.get(wrap2)?.refresh({ keepPage: true });
-        };
-        const onBody = () => {
-          if (queued) return;
-          queued = true;
-          queueMicrotask(resync);
-        };
-        const rowsWatch = new MutationObserver(onBody);
-        rowsWatch.observe(body, { childList: true });
-        const holdWatch = new MutationObserver(onBody);
-        holdWatch.observe(body, { attributes: true, attributeFilter: ["data-kp-row-hidden"], subtree: true });
-        this.t.identity.undo.push(() => {
-          rowsWatch.disconnect();
-          holdWatch.disconnect();
-        });
-      }
-      /** Wire the table again after an option attribute changed, and give the page's handle the view it had. */
-      wireAgain() {
-        const { wrap: wrap2, call } = this.t;
-        const old = handles5.get(wrap2);
-        if (old === void 0) return;
-        const was = old.view();
-        const selected = old.selected();
-        const fresh = this.t.rewire(old);
-        if (fresh === void 0) return;
-        Object.assign(old, fresh);
-        handles5.set(wrap2, old);
-        call.created.splice(call.created.indexOf(fresh), 1, old);
-        restoreView(old, was, selected, call.sortsSeveral(wrap2));
       }
     };
   }
@@ -52467,14 +52604,14 @@ var init_controller41 = __esm({
         if (tile === null || /** @type {HTMLElement} */
         event.target.closest("button, a, input, select, textarea")) return;
         const cell = this.host.getBoundingClientRect().width / this.columns;
-        const rowHeight = Number.parseFloat(getComputedStyle(this.host).gridAutoRows) || cell;
+        const rowHeight2 = Number.parseFloat(getComputedStyle(this.host).gridAutoRows) || cell;
         const start = { x: Number(tile.dataset.x ?? 0), y: Number(tile.dataset.y ?? 0), w: Number(tile.dataset.w ?? 1), h: Number(tile.dataset.h ?? 1) };
         const origin = { x: event.clientX, y: event.clientY };
         tile.dataset.kpDragging = "";
         tile.setPointerCapture(event.pointerId);
         const onMove2 = (move) => {
           const dx = Math.round((move.clientX - origin.x) / cell);
-          const dy = Math.round((move.clientY - origin.y) / rowHeight);
+          const dy = Math.round((move.clientY - origin.y) / rowHeight2);
           if (Number(tile.dataset.x) !== start.x + dx || Number(tile.dataset.y) !== start.y + dy) this.set(tile, start.x + dx, start.y + dy, start.w, start.h);
         };
         const onUp2 = () => {
@@ -53536,6 +53673,77 @@ var init_dom7 = __esm({
   }
 });
 
+// js/heat/draw-parts.js
+function drawStatePlate(el16, spec, state12) {
+  const doc = el16.ownerDocument;
+  const s2 = getStrings();
+  const title = spec.message ?? (state12 === "error" ? s2.heatFailed : s2.heatEmpty);
+  const kept = PLATES.get(el16);
+  if (kept && kept.note.isConnected && el16.firstElementChild === kept.note && el16.childElementCount === 1) {
+    if (kept.state === state12 && kept.title === title && kept.text === spec.text && kept.art === spec.art) return;
+  }
+  const note2 = make13(doc, "div", "kp-heat__state", { "data-kp-state": state12 });
+  note2.append(
+    hostStatePlate(el16, {
+      kind: state12,
+      title,
+      ...spec.text ? { text: spec.text } : {},
+      art: spec.art,
+      retryEvent: HEAT_RETRY_EVENT
+    })
+  );
+  PLATES.set(el16, { note: note2, state: state12, title, text: spec.text, art: spec.art });
+  markDrawn(el16);
+  el16.replaceChildren(note2);
+}
+function drawAxis(doc, columns2, { every, picked, loading }) {
+  const column = (key, text, minor) => {
+    const head = make13(doc, "span", "kp-heat__col", { role: "columnheader", "data-col-key": key });
+    const isPicked = picked != null && key === picked;
+    if (minor) head.setAttribute("data-kp-minor", "");
+    if (isPicked) head.setAttribute("data-kp-picked", "");
+    if (minor && !isPicked && text) head.setAttribute("aria-label", text);
+    else head.textContent = text;
+    return head;
+  };
+  const axis = make13(doc, "div", "kp-heat__row kp-heat__axis", { role: "row" });
+  axis.append(make13(doc, "span", "kp-heat__label", { role: "columnheader", "aria-hidden": "true" }));
+  const heads = make13(doc, "div", "kp-heat__cells", { role: "none" });
+  const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
+  const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
+  const before = open4[open4.length - 2];
+  if (every > 1 && before !== void 0 && before === open4[open4.length - 1] - 1) named.delete(before);
+  columns2.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i))));
+  axis.append(heads);
+  return axis;
+}
+function heatArea(el16) {
+  const cells = [...el16.querySelectorAll(":scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells")].map((c) => c.getBoundingClientRect());
+  if (!cells.length) return [];
+  const box = el16.getBoundingClientRect();
+  const style = getComputedStyle(el16);
+  const floor = box.bottom - el16.clientTop - (Number.parseFloat(style.paddingBottom) || 0);
+  const top = Math.min(...cells.map((r) => r.top));
+  return [
+    {
+      top,
+      left: Math.min(...cells.map((r) => r.left)),
+      bottom: Math.max(floor, ...cells.map((r) => r.bottom)),
+      right: Math.max(...cells.map((r) => r.right))
+    }
+  ];
+}
+var init_draw_parts = __esm({
+  "js/heat/draw-parts.js"() {
+    "use strict";
+    init_state_plate();
+    init_strings();
+    init_card2();
+    init_constants22();
+    init_dom7();
+  }
+});
+
 // js/heat/grid-state.js
 var DECORATE, STOPS2, LIT;
 var init_grid_state = __esm({
@@ -53821,44 +54029,10 @@ function setHeat(el16, spec, options) {
   if (picked == null) el16.removeAttribute("data-kp-heat-picked");
   else el16.setAttribute("data-kp-heat-picked", picked);
   if (state12 === "empty" || state12 === "error") {
-    const title = spec.message ?? (state12 === "error" ? s2.heatFailed : s2.heatEmpty);
-    const kept = PLATES.get(el16);
-    if (kept && kept.note.isConnected && el16.firstElementChild === kept.note && el16.childElementCount === 1) {
-      if (kept.state === state12 && kept.title === title && kept.text === spec.text && kept.art === spec.art) return;
-    }
-    const note2 = make13(doc, "div", "kp-heat__state", { "data-kp-state": state12 });
-    note2.append(
-      hostStatePlate(el16, {
-        kind: state12,
-        title,
-        ...spec.text ? { text: spec.text } : {},
-        art: spec.art,
-        retryEvent: HEAT_RETRY_EVENT
-      })
-    );
-    PLATES.set(el16, { note: note2, state: state12, title, text: spec.text, art: spec.art });
-    markDrawn(el16);
-    el16.replaceChildren(note2);
+    drawStatePlate(el16, spec, state12);
     return;
   }
-  const column = (key, text, minor) => {
-    const head = make13(doc, "span", "kp-heat__col", { role: "columnheader", "data-col-key": key });
-    const isPicked = picked != null && key === picked;
-    if (minor) head.setAttribute("data-kp-minor", "");
-    if (isPicked) head.setAttribute("data-kp-picked", "");
-    if (minor && !isPicked && text) head.setAttribute("aria-label", text);
-    else head.textContent = text;
-    return head;
-  };
-  const axis = make13(doc, "div", "kp-heat__row kp-heat__axis", { role: "row" });
-  axis.append(make13(doc, "span", "kp-heat__label", { role: "columnheader", "aria-hidden": "true" }));
-  const heads = make13(doc, "div", "kp-heat__cells", { role: "none" });
-  const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
-  const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
-  const before = open4[open4.length - 2];
-  if (every > 1 && before !== void 0 && before === open4[open4.length - 1] - 1) named.delete(before);
-  columns2.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i))));
-  axis.append(heads);
+  const axis = drawAxis(doc, columns2, { every, picked, loading });
   let r = -1;
   const rowNode = (row2, summary2) => {
     r += 1;
@@ -53961,29 +54135,13 @@ function setHeat(el16, spec, options) {
     again2?.focus({ preventScroll: true });
   }
 }
-function heatArea(el16) {
-  const cells = [...el16.querySelectorAll(":scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells")].map((c) => c.getBoundingClientRect());
-  if (!cells.length) return [];
-  const box = el16.getBoundingClientRect();
-  const style = getComputedStyle(el16);
-  const floor = box.bottom - el16.clientTop - (Number.parseFloat(style.paddingBottom) || 0);
-  const top = Math.min(...cells.map((r) => r.top));
-  return [
-    {
-      top,
-      left: Math.min(...cells.map((r) => r.left)),
-      bottom: Math.max(floor, ...cells.map((r) => r.bottom)),
-      right: Math.max(...cells.map((r) => r.right))
-    }
-  ];
-}
 var init_draw8 = __esm({
   "js/heat/draw.js"() {
     "use strict";
     init_strings();
-    init_state_plate();
     init_calm_tones();
     init_card2();
+    init_draw_parts();
     init_constants22();
     init_dom7();
     init_grid_state();
@@ -54895,7 +55053,7 @@ var init_wire3 = __esm({
 });
 
 // js/uses-map/draw.js
-function drawStatePlate(m, ctx) {
+function drawStatePlate2(m, ctx) {
   const { el: el16, doc, strings, spec } = m;
   const box = make14(doc, "div", "kp-uses__state");
   const isError = m.state === "error";
@@ -54947,7 +55105,7 @@ function drawUsesMap(el16, spec, ctx) {
   memory.off = null;
   const m = readModel(el16, spec, memory);
   markMatrix(m);
-  if (m.state === "empty" || m.state === "error") return drawStatePlate(m, ctx);
+  if (m.state === "empty" || m.state === "error") return drawStatePlate2(m, ctx);
   const { root, svg: svg2 } = buildRoot(m);
   const list = phoneList(m);
   ctx.replaceKeepingCard(el16, [root, list]);
@@ -64053,8 +64211,8 @@ var init_each = __esm({
           null
         );
         for (const el16 of wanted) {
-          const inPlace = el16.parentElement === host && (before ? el16.previousElementSibling === before : host.firstElementChild === el16);
-          if (!inPlace) {
+          const inPlace2 = el16.parentElement === host && (before ? el16.previousElementSibling === before : host.firstElementChild === el16);
+          if (!inPlace2) {
             if (before) before.after(el16);
             else host.prepend(el16);
           }
@@ -65016,10 +65174,10 @@ var init_parts8 = __esm({
   }
 });
 
-// js/master-detail/controller.js
-var MasterDetailController;
-var init_controller53 = __esm({
-  "js/master-detail/controller.js"() {
+// js/master-detail/base.js
+var MasterDetailBase;
+var init_base5 = __esm({
+  "js/master-detail/base.js"() {
     "use strict";
     init_controller();
     init_listbox();
@@ -65028,7 +65186,7 @@ var init_controller53 = __esm({
     init_detail_state();
     init_folding();
     init_parts8();
-    MasterDetailController = class extends Controller {
+    MasterDetailBase = class extends Controller {
       /**
        * @param {HTMLElement} host
        * @param {{ history?: boolean }} [options] `history: false` leaves the browser's history alone
@@ -65059,34 +65217,6 @@ var init_controller53 = __esm({
           narrow: () => this.folding.narrow,
           setState: (next2, how) => this.detailState.setState(next2, how)
         };
-      }
-      connect() {
-        const root = this.host;
-        root.toggleAttribute("data-kp-pane-listless", this.list === null);
-        this.setColumns();
-        this.readItems();
-        this.folding.measure();
-        this.parts.mount();
-        this.listen(root, "click", (event) => this.onClick(
-          /** @type {MouseEvent} */
-          event
-        ));
-        this.listen(root, "keydown", (event) => this.onKey(
-          /** @type {KeyboardEvent} */
-          event
-        ));
-        this.listen(this.view, "popstate", () => this.onPop());
-        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(() => this.onSize())).observe(root);
-        this.observe(new MutationObserver(() => this.sync())).observe(root, { attributes: true, attributeFilter: ["data-kp-narrow"] });
-        this.own(() => this.undoMarks());
-        this.own(() => this.detailState.release());
-        this.paint();
-        this.sync();
-        if (!this.selected && !root.hasAttribute("data-kp-state") && this.list) this.detailState.setState("empty");
-        else if (root.hasAttribute("data-kp-state")) this.detailState.setState(
-          /** @type {import('./constants.js').PaneState} */
-          root.getAttribute("data-kp-state")
-        );
       }
       /** The columns, from `data-kp-pane-widths` or the defaults. */
       setColumns() {
@@ -65217,6 +65347,46 @@ var init_controller53 = __esm({
         const key = this.selected;
         (this.opener ?? this.itemOf(key))?.focus({ preventScroll: true });
         this.host.dispatchEvent(new CustomEvent(PANE_CLOSE_EVENT, { bubbles: true, detail: { pane: "detail", key } }));
+      }
+    };
+  }
+});
+
+// js/master-detail/controller.js
+var MasterDetailController;
+var init_controller53 = __esm({
+  "js/master-detail/controller.js"() {
+    "use strict";
+    init_constants28();
+    init_base5();
+    MasterDetailController = class extends MasterDetailBase {
+      connect() {
+        const root = this.host;
+        root.toggleAttribute("data-kp-pane-listless", this.list === null);
+        this.setColumns();
+        this.readItems();
+        this.folding.measure();
+        this.parts.mount();
+        this.listen(root, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(root, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(this.view, "popstate", () => this.onPop());
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(() => this.onSize())).observe(root);
+        this.observe(new MutationObserver(() => this.sync())).observe(root, { attributes: true, attributeFilter: ["data-kp-narrow"] });
+        this.own(() => this.undoMarks());
+        this.own(() => this.detailState.release());
+        this.paint();
+        this.sync();
+        if (!this.selected && !root.hasAttribute("data-kp-state") && this.list) this.detailState.setState("empty");
+        else if (root.hasAttribute("data-kp-state")) this.detailState.setState(
+          /** @type {import('./constants.js').PaneState} */
+          root.getAttribute("data-kp-state")
+        );
       }
       // --- Events. ---
       /** @param {MouseEvent} event */
@@ -67578,7 +67748,7 @@ var init_build12 = __esm({
 
 // js/timefield/list.js
 var TimeList;
-var init_list3 = __esm({
+var init_list4 = __esm({
   "js/timefield/list.js"() {
     "use strict";
     init_strings();
@@ -67800,7 +67970,7 @@ var init_field = __esm({
     init_build12();
     init_state20();
     init_parse2();
-    init_list3();
+    init_list4();
     TimeField = class {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -72031,7 +72201,7 @@ var init_controller63 = __esm({
 
 // js/quote/list.js
 var QuoteListController;
-var init_list4 = __esm({
+var init_list5 = __esm({
   "js/quote/list.js"() {
     "use strict";
     init_controller();
@@ -72166,7 +72336,7 @@ var init_api22 = __esm({
     init_actions4();
     init_constants32();
     init_controller63();
-    init_list4();
+    init_list5();
     init_render4();
   }
 });
@@ -79403,6 +79573,62 @@ var init_lightbox_input = __esm({
   }
 });
 
+// js/gallery/lightbox-media.js
+function zoomFigure(lb, how, event) {
+  const { figure, picture: picture2 } = lb;
+  const now = figure.getAttribute("data-kp-zoom") === "full";
+  const want = how === "toggle" ? !now : how === "in";
+  if (want === now) return;
+  figure.setAttribute("data-kp-zoom", want ? "full" : "fit");
+  if (want && event) {
+    const img = picture2.querySelector("img");
+    if (img) {
+      const box = img.getBoundingClientRect();
+      const px5 = (event.clientX - box.left) / (box.width || 1);
+      const py = (event.clientY - box.top) / (box.height || 1);
+      lb.view.requestAnimationFrame(() => {
+        picture2.scrollLeft = px5 * picture2.scrollWidth - picture2.clientWidth / 2;
+        picture2.scrollTop = py * picture2.scrollHeight - picture2.clientHeight / 2;
+      });
+    }
+  } else if (!want) {
+    picture2.scrollTo(0, 0);
+  }
+}
+function buildVideo(lb, item) {
+  const video = (
+    /** @type {HTMLVideoElement} */
+    make32(lb.doc, "video", "kp-gallery__video")
+  );
+  video.controls = true;
+  video.setAttribute("playsinline", "");
+  video.preload = "metadata";
+  if (item.poster) video.poster = item.poster;
+  video.setAttribute("aria-label", item.alt || item.caption || lb.strings.galleryPicture);
+  video.addEventListener("loadedmetadata", () => lb.items[lb.at]?.id === item.id && lb.viewer.setState("ready"));
+  video.addEventListener("error", () => lb.failed(item));
+  video.src = item.src;
+  return video;
+}
+function buildImage(lb, item) {
+  const img = (
+    /** @type {HTMLImageElement} */
+    make32(lb.doc, "img", "kp-gallery__image")
+  );
+  img.alt = item.alt || item.caption || "";
+  img.addEventListener("load", () => lb.items[lb.at]?.id === item.id && lb.viewer.setState("ready"));
+  img.addEventListener("error", () => lb.failed(item));
+  img.src = item.src;
+  if (lb.zoomOn) img.addEventListener("dblclick", (event) => lb.zoom("toggle", event));
+  return img;
+}
+var init_lightbox_media = __esm({
+  "js/gallery/lightbox-media.js"() {
+    "use strict";
+    init_dom11();
+  }
+});
+
 // js/gallery/lightbox.js
 var Lightbox;
 var init_lightbox = __esm({
@@ -79417,6 +79643,7 @@ var init_lightbox = __esm({
     init_dom11();
     init_lightbox_info();
     init_lightbox_input();
+    init_lightbox_media();
     Lightbox = class extends Controller {
       /** @param {Gallery} gallery @param {string} id the picture to open */
       constructor(gallery, id) {
@@ -79574,25 +79801,7 @@ var init_lightbox = __esm({
       }
       /** @param {'in' | 'out' | 'toggle'} how @param {PointerEvent | MouseEvent} [event] */
       zoom(how, event) {
-        const { figure, picture: picture2 } = this;
-        const now = figure.getAttribute("data-kp-zoom") === "full";
-        const want = how === "toggle" ? !now : how === "in";
-        if (want === now) return;
-        figure.setAttribute("data-kp-zoom", want ? "full" : "fit");
-        if (want && event) {
-          const img = picture2.querySelector("img");
-          if (img) {
-            const box = img.getBoundingClientRect();
-            const px5 = (event.clientX - box.left) / (box.width || 1);
-            const py = (event.clientY - box.top) / (box.height || 1);
-            this.view.requestAnimationFrame(() => {
-              picture2.scrollLeft = px5 * picture2.scrollWidth - picture2.clientWidth / 2;
-              picture2.scrollTop = py * picture2.scrollHeight - picture2.clientHeight / 2;
-            });
-          }
-        } else if (!want) {
-          picture2.scrollTo(0, 0);
-        }
+        zoomFigure(this, how, event);
       }
       toggleFull() {
         if (this.doc.fullscreenElement) void this.doc.exitFullscreen();
@@ -79624,7 +79833,7 @@ var init_lightbox = __esm({
         this.next.setAttribute("data-kp-disabled-reason", this.next.disabled ? strings.galleryLast : "");
         picture2.replaceChildren();
         viewer.setState("loading");
-        picture2.append(item.kind === "video" ? this.buildVideo(item) : this.buildImage(item));
+        picture2.append(item.kind === "video" ? buildVideo(this, item) : buildImage(this, item));
         for (let d = 1; d <= this.preload; d++) {
           for (const n of [items[this.at + d], items[this.at - d]]) if (n && n.kind !== "video") new Image().src = n.src;
         }
@@ -79644,35 +79853,6 @@ var init_lightbox = __esm({
             this.show();
           }
         });
-      }
-      /** @param {import('./constants.js').GalleryItem} item */
-      buildVideo(item) {
-        const video = (
-          /** @type {HTMLVideoElement} */
-          make32(this.doc, "video", "kp-gallery__video")
-        );
-        video.controls = true;
-        video.setAttribute("playsinline", "");
-        video.preload = "metadata";
-        if (item.poster) video.poster = item.poster;
-        video.setAttribute("aria-label", item.alt || item.caption || this.strings.galleryPicture);
-        video.addEventListener("loadedmetadata", () => this.items[this.at]?.id === item.id && this.viewer.setState("ready"));
-        video.addEventListener("error", () => this.failed(item));
-        video.src = item.src;
-        return video;
-      }
-      /** @param {import('./constants.js').GalleryItem} item */
-      buildImage(item) {
-        const img = (
-          /** @type {HTMLImageElement} */
-          make32(this.doc, "img", "kp-gallery__image")
-        );
-        img.alt = item.alt || item.caption || "";
-        img.addEventListener("load", () => this.items[this.at]?.id === item.id && this.viewer.setState("ready"));
-        img.addEventListener("error", () => this.failed(item));
-        img.src = item.src;
-        if (this.zoomOn) img.addEventListener("dblclick", (event) => this.zoom("toggle", event));
-        return img;
       }
     };
   }
@@ -83192,7 +83372,7 @@ function fitDrawnLabels(labels, W, H) {
     return l.text.getBBox();
   });
 }
-function ghostOf(doc, last, W, H, layoutOptions, base) {
+function ghostOf2(doc, last, W, H, layoutOptions, base) {
   const data = last?.nodes.length ? last : {
     nodes: ["hub", "a", "b", "c", "d", "e", "f"].map((id) => ({ id, label: id, description: "" })),
     edges: ["a", "b", "c", "d", "e", "f"].map((to) => ({ from: "hub", to, kind: "link" })),
@@ -83497,7 +83677,7 @@ function drawLegend(g, doc, data) {
   );
   g.legend.hidden = present2.length === 0 || data.nodes.length < 2;
 }
-var init_draw_parts = __esm({
+var init_draw_parts2 = __esm({
   "js/graph/draw-parts.js"() {
     "use strict";
     init_labels3();
@@ -83639,7 +83819,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   g.note.hidden = !loading;
   g.plate.replaceChildren();
   g.plate.hidden = loading || g.state === "ready";
-  if (loading) g.svg.append(ghostOf(doc, g.data, W, H, layoutOptions, base));
+  if (loading) g.svg.append(ghostOf2(doc, g.data, W, H, layoutOptions, base));
   else if (!g.plate.hidden)
     g.plate.append(
       hostStatePlate(g.el, {
@@ -83700,7 +83880,7 @@ var init_draw14 = __esm({
     init_instance3();
     init_layout4();
     init_constants38();
-    init_draw_parts();
+    init_draw_parts2();
     init_label_lines();
   }
 });
@@ -85780,6 +85960,63 @@ var init_facts = __esm({
   }
 });
 
+// js/availability/cell.js
+function say12(root, message) {
+  if (root.getAttribute("data-kp-announce") === "off") return;
+  let region = (
+    /** @type {HTMLElement | null} */
+    root.querySelector(":scope > .kp-availability__live")
+  );
+  if (!region) {
+    region = el11("kp-sr-only kp-availability__live", "span");
+    region.setAttribute("role", "status");
+    root.append(region);
+  }
+  const target = region;
+  target.textContent = "";
+  setTimeout(() => target.textContent = message, 60);
+}
+function paintCell2(root, cell) {
+  const st = stateOf7(root);
+  const person = cell.getAttribute("data-row-key") ?? "";
+  const column = cell.getAttribute("data-col-key") ?? "";
+  const a = st.set.answers[person]?.[column];
+  const col = st.set.columns.find((c) => c.key === column);
+  const p = (st.spec.people ?? []).find((q) => q.id === person);
+  cell.setAttribute("data-kp-tone", toneOf3(a));
+  cell.setAttribute("data-kp-availability-answer", a ?? "none");
+  const own = editable(root, person, column);
+  cell.toggleAttribute("data-kp-availability-editable", own);
+  cell.setAttribute("aria-disabled", String(!own));
+  cell.toggleAttribute("data-kp-inert", !own);
+  cell.setAttribute("aria-label", getStrings().availabilityCell(p?.name ?? person, col?.label ?? column, wordOf(a)));
+  const saving = st.saving.has(cellKey(person, column));
+  cell.toggleAttribute("data-kp-availability-saving", saving);
+  cell.toggleAttribute("data-kp-availability-refused", st.refused.has(cellKey(person, column)));
+  let face = (
+    /** @type {HTMLElement | null} */
+    cell.querySelector(":scope > .kp-availability__face")
+  );
+  if (!face) {
+    face = el11("kp-availability__face", "span");
+    face.setAttribute("aria-hidden", "true");
+    cell.append(face);
+  }
+  face.replaceChildren();
+  if (saving) {
+    const spin = el11("kp-spinner", "span");
+    face.append(spin);
+  } else if (st.refused.has(cellKey(person, column))) face.textContent = "!";
+  else face.textContent = glyphOf(a);
+}
+var init_cell = __esm({
+  "js/availability/cell.js"() {
+    "use strict";
+    init_strings();
+    init_facts();
+  }
+});
+
 // js/availability/list.js
 function syncListCard(root, body, on) {
   const card = LIST_CARDS.get(root);
@@ -85861,7 +86098,7 @@ function columnsList(root, people, waiting = false) {
   return wrap2;
 }
 var LIST_CARDS;
-var init_list5 = __esm({
+var init_list6 = __esm({
   "js/availability/list.js"() {
     "use strict";
     init_strings();
@@ -85872,54 +86109,6 @@ var init_list5 = __esm({
 });
 
 // js/availability/paint.js
-function say12(root, message) {
-  if (root.getAttribute("data-kp-announce") === "off") return;
-  let region = (
-    /** @type {HTMLElement | null} */
-    root.querySelector(":scope > .kp-availability__live")
-  );
-  if (!region) {
-    region = el11("kp-sr-only kp-availability__live", "span");
-    region.setAttribute("role", "status");
-    root.append(region);
-  }
-  const target = region;
-  target.textContent = "";
-  setTimeout(() => target.textContent = message, 60);
-}
-function paintCell2(root, cell) {
-  const st = stateOf7(root);
-  const person = cell.getAttribute("data-row-key") ?? "";
-  const column = cell.getAttribute("data-col-key") ?? "";
-  const a = st.set.answers[person]?.[column];
-  const col = st.set.columns.find((c) => c.key === column);
-  const p = (st.spec.people ?? []).find((q) => q.id === person);
-  cell.setAttribute("data-kp-tone", toneOf3(a));
-  cell.setAttribute("data-kp-availability-answer", a ?? "none");
-  const own = editable(root, person, column);
-  cell.toggleAttribute("data-kp-availability-editable", own);
-  cell.setAttribute("aria-disabled", String(!own));
-  cell.toggleAttribute("data-kp-inert", !own);
-  cell.setAttribute("aria-label", getStrings().availabilityCell(p?.name ?? person, col?.label ?? column, wordOf(a)));
-  const saving = st.saving.has(cellKey(person, column));
-  cell.toggleAttribute("data-kp-availability-saving", saving);
-  cell.toggleAttribute("data-kp-availability-refused", st.refused.has(cellKey(person, column)));
-  let face = (
-    /** @type {HTMLElement | null} */
-    cell.querySelector(":scope > .kp-availability__face")
-  );
-  if (!face) {
-    face = el11("kp-availability__face", "span");
-    face.setAttribute("aria-hidden", "true");
-    cell.append(face);
-  }
-  face.replaceChildren();
-  if (saving) {
-    const spin = el11("kp-spinner", "span");
-    face.append(spin);
-  } else if (st.refused.has(cellKey(person, column))) face.textContent = "!";
-  else face.textContent = glyphOf(a);
-}
 function paintSummary(root) {
   const st = stateOf7(root);
   const s2 = getStrings();
@@ -86163,7 +86352,8 @@ var init_paint12 = __esm({
     init_state_plate();
     init_remember();
     init_facts();
-    init_list5();
+    init_list6();
+    init_cell();
   }
 });
 
@@ -86264,6 +86454,7 @@ var init_api27 = __esm({
     "use strict";
     init_strings();
     init_facts();
+    init_cell();
     init_paint12();
   }
 });
@@ -86410,6 +86601,7 @@ var init_request3 = __esm({
     init_api27();
     init_constants40();
     init_facts();
+    init_cell();
     init_paint12();
   }
 });

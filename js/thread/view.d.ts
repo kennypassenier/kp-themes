@@ -1,6 +1,5 @@
 import { Controller } from '../controller.js';
 import { getStrings } from '../strings.js';
-import { threadOptions } from './options.js';
 export type ThreadSpec = import('../thread.js').ThreadSpec;
 export type Strings = ReturnType<typeof getStrings>;
 export declare class ThreadView extends Controller {
@@ -34,8 +33,6 @@ export declare class ThreadView extends Controller {
     drawNote(failed: boolean, refocus: boolean): void;
     /** The messages in their days, the scroll kept where the reader left it unless they were at the newest. */
     drawMessages(): void;
-    /** The list: a divider per day (when asked), then each run of messages. @param {ReturnType<typeof threadOptions>} options @param {string} locale */
-    listOf(options: ReturnType<typeof threadOptions>, locale: string): HTMLElement;
     /** Wrapping changes with the width: the lines a message has, and so its fold, are measured again. */
     watchWidth(): void;
     /** Measure every foldable body and show or hide its Show all: a message with no more lines than its limit is shown whole. */
