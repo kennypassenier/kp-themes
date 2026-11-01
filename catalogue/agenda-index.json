@@ -460,6 +460,26 @@
             },
             "fingerprint": "83f012d2600f0685",
             "update": null
+        },
+        "research/habits-1101/demo.html": {
+            "facts": {
+                "id": "habits-1101",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Six things Kenny’s Habits todo app had to draw itself, now parts of the package: tasks that move between lists, an editable board, a context menu, a Markdown editor, twelve categorical colours and the task row. Every one is opt-in: without it everything is exactly as you approved it. Formal only, on the app’s own shapes and words (the task titles, projects and tags are mock). 6 sections, 6 pairs.",
+                "sections": [
+                    { "item": "reorder-group", "themes": null, "topic": "reorder", "mode": null },
+                    { "item": "board", "themes": null, "topic": "board", "mode": null },
+                    { "item": "context-menu", "themes": null, "topic": "context-menu", "mode": null },
+                    { "item": "md-editor", "themes": null, "topic": "markdown", "mode": null },
+                    { "item": "categorical", "themes": null, "topic": "categorical", "mode": null },
+                    { "item": "task-row", "themes": null, "topic": "task-row", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"habits-1101-be02d9a3-f606-4066-8953-54303a15792a\",\"received\":[]}\n        "
+            },
+            "fingerprint": "ce0153ffcb13c539",
+            "update": null
         }
     },
     "decided": {

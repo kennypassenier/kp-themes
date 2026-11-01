@@ -1,0 +1,123 @@
+/* research/habits-1101: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    container: pg-stage / inline-size;
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+/* The Planner: three days side by side, one under the other on a narrow stage. */
+.pg-days {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+@container pg-stage (max-width: 44rem) {
+    .pg-days {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.pg-day {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.pg-day__name {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* A day is a drop target as tall as its neighbours, however few tasks it has. */
+.pg-day__list {
+    align-content: start;
+    min-block-size: 9rem;
+}
+
+/* The twelve colours: tiles of one size on one grid. */
+.pg-cats {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pg-cat {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    justify-items: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+}
+
+.pg-cat__name {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.pg-cat__project {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    font-weight: 600;
+}
+
+@container pg-stage (max-width: 60rem) {
+    .pg-cats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@container pg-stage (max-width: 30rem) {
+    .pg-cats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* What the page heard: one line high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-lg, 1.5rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 2lh;
+    overflow-wrap: anywhere;
+}

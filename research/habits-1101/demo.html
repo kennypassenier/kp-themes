@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="habits-1101" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Six parts the Habits app asked for</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>Six parts the Habits app asked for</h1>
+                <p class="cat-intro">
+                    Six things Kenny&rsquo;s Habits todo app had to draw itself, now parts of the package: tasks that move between lists, an
+                    editable board, a context menu, a Markdown editor, twelve categorical colours and the task row. Every one is opt-in: without it
+                    everything is exactly as you approved it. Formal only, on the app&rsquo;s own shapes and words (the task titles, projects and
+                    tags are mock). 6 sections, 6 pairs.
+                </p>
+                <p>Each section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a phone&rsquo;s 390 px.</p>
+            </header>
+
+        <section id="reorder-group" data-review-item="reorder-group" data-review-topic="reorder" data-review-topic-title="The reorder list" data-review-components="reorder-group" data-review-title="Drag between lists: a task to another day" aria-labelledby="h-reorder-group">
+            <div class="pg-asked"><p><b>What is asked</b> (habits gap: drag between lists): A reorder list moved items only within itself, so the Planner sent a task to another day through its ⋯ menu. <code>data-kp-reorder-group="planner"</code> on the three days lets a task go from one day to another: drag it by its handle over the other day, or press ← / → on the handle. The move is said with the day’s name, and <code>kp-reorder</code> adds <code>fromList</code> and <code>toList</code> (the days’ dates). Without a group (the default) a list keeps its items as approved.</p></div>
+            <div class="pg-intro"><h2 id="h-reorder-group">This week in the Planner</h2><p>Three days of the Planner, each a list of task rows keyed by its date.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Shared</b>: drag “Call the plumber about the leak” by its handle onto Tuesday: it goes in where the pointer is, Monday counts one fewer, and the line under the days says <code>fromList 2026-11-02 → toList 2026-11-03</code> with its place. With the keyboard: Tab to a handle, ← / → to the day before or after (the focus stays on the handle), ↑ / ↓ within the day; past Wednesday it says there is no list further.</li><li><b>Each list its own (as approved)</b>: a task cannot leave its day; ↑ / ↓ still reorder it.</li><li><b>Phone</b>: the days stand under each other; a task dragged down onto the next day goes into it.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the task rows on the page’s paper, the dragged row dashed in navy. Check that a task lands where the pointer is, never in a gap between days, and that nothing jumps under the pointer.</p></div>
+            <div data-review-controls data-review-controls-for="reorder-group-component"><div role="group" aria-label="Group"><button type="button" class="kp-button kp-button--sm" data-pg="group" data-value="shared" data-target="pg-days" aria-pressed="true">Shared</button><button type="button" class="kp-button kp-button--sm" data-pg="group" data-value="own" data-target="pg-days" aria-pressed="false">Each list its own (default)</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="reorder-group-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="reorder-group-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="reorder-group-component" class="pg-component" data-pg-width="full">
+        <div class="pg-days" id="pg-days"><section class="pg-day" aria-labelledby="pg-day-2026-11-02"><h3 class="pg-day__name" id="pg-day-2026-11-02">Monday 2 November</h3><ul class="kp-task-list pg-day__list" data-kp-reorder data-kp-reorder-group="planner" data-kp-reorder-list="2026-11-02" aria-labelledby="pg-day-2026-11-02" data-pg-day="2026-11-02"></ul></section><section class="pg-day" aria-labelledby="pg-day-2026-11-03"><h3 class="pg-day__name" id="pg-day-2026-11-03">Tuesday 3 November</h3><ul class="kp-task-list pg-day__list" data-kp-reorder data-kp-reorder-group="planner" data-kp-reorder-list="2026-11-03" aria-labelledby="pg-day-2026-11-03" data-pg-day="2026-11-03"></ul></section><section class="pg-day" aria-labelledby="pg-day-2026-11-04"><h3 class="pg-day__name" id="pg-day-2026-11-04">Wednesday 4 November</h3><ul class="kp-task-list pg-day__list" data-kp-reorder data-kp-reorder-group="planner" data-kp-reorder-list="2026-11-04" aria-labelledby="pg-day-2026-11-04" data-pg-day="2026-11-04"></ul></section></div><p class="pg-log" id="pg-days-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="board" data-review-item="board" data-review-topic="board" data-review-topic-title="The board" data-review-components="board" data-review-title="Board: cards that move between lanes" aria-labelledby="h-board">
+            <div class="pg-asked"><p><b>What is asked</b> (habits gap: kanban board): The pipeline is read-only, so the Boards page moved cards with a “Move to …” menu. <code>data-kp-board</code> is the editable board: the pipeline’s lanes, the app’s task rows as cards, moved by drag or ← / →; <code>data-kp-board-limit</code> a lane’s limit; narrow, the lanes scroll in the board’s box (<code>scroll</code>, default) or turn to <code>tabs</code>.</p></div>
+            <div class="pg-intro"><h2 id="h-board">Weekly review</h2><p>Three tags as lanes, as the Boards page has them: To do, Doing (at most 3), Waiting.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Ready</b>: three lanes side by side at one width, as tall as the tallest; Doing reads “3 / 3”. Drag a card from To do into Doing: Doing reads “4 / 3”, turns to its failing look with “Over the limit” under its name, and nothing is refused. Waiting, once empty, says “Nothing here yet. Drag a card here.” in a dashed place and still takes a card.</li><li><b>Limit off</b>: Doing shows its plain count. <b>Loading</b>: the busy card over the lanes. <b>Empty</b> and <b>Failed</b>: the package’s plate over the whole board at its height (Failed with Try again).</li><li><b>Phone, Scroll</b>: each lane 85% of the box, snapping, the next lane peeking; the page itself never scrolls sideways. <b>Phone, Tabs</b>: one lane under the tabs To do, Doing, Waiting with their counts; a card sent with → brings its lane into view.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the pipeline’s ledger columns, each head an engraved plate under the double rule. Check that the counts are exact, that an over-full lane reads as a warning and not a fault, and that the empty lane invites a drop.</p></div>
+            <div data-review-controls data-review-controls-for="board-component"><div role="group" aria-label="Narrow"><button type="button" class="kp-button kp-button--sm" data-pg="narrow" data-value="scroll" data-target="pg-board" aria-pressed="true">Scroll (default)</button><button type="button" class="kp-button kp-button--sm" data-pg="narrow" data-value="tabs" data-target="pg-board" aria-pressed="false">Tabs</button></div><div role="group" aria-label="Limit"><button type="button" class="kp-button kp-button--sm" data-pg="limit" data-value="3" data-target="pg-board" aria-pressed="true">Doing at most 3</button><button type="button" class="kp-button kp-button--sm" data-pg="limit" data-value="0" data-target="pg-board" aria-pressed="false">No limit</button></div><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="ready" data-target="pg-board" aria-pressed="true">Ready</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="loading" data-target="pg-board" aria-pressed="false">Loading</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="empty" data-target="pg-board" aria-pressed="false">Empty</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="error" data-target="pg-board" aria-pressed="false">Failed</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="board-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="board-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="board-component" class="pg-component" data-pg-width="full">
+        <div class="kp-board" id="pg-board" role="region" data-kp-board data-kp-board-narrow="scroll" aria-label="Weekly review"></div><p class="pg-log" id="pg-board-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="context-menu" data-review-item="context-menu" data-review-topic="context-menu" data-review-topic-title="The context menu" data-review-components="context-menu" data-review-title="Context menu: a right click or a long press on a row" aria-labelledby="h-context-menu">
+            <div class="pg-asked"><p><b>What is asked</b> (habits gap: context menu): A task’s actions were only behind its ⋯ button. <code>data-kp-context-menu</code> on any element opens a kp menu at the pointer on a right click, a long press on touch and Shift+F10, with the menu button’s plate, keys and <code>kp-menu-select</code>; <code>inner</code> shows the element’s own ⋯ entries and reports the pick there. Shift with a right click keeps the browser’s menu.</p></div>
+            <div class="pg-intro"><h2 id="h-context-menu">Today</h2><p>Four tasks of the Today page, each with the app’s own ⋯ menu.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Closed</b>: right-click anywhere on a row: its menu opens with its top corner at the pointer, the focus on “Today”; ↓ ↑ Home End and a letter move, Enter picks, Esc closes and gives the focus back. The line under the list names the pick and the task. Focus a row’s title and press Shift+F10: the same menu hangs from the title’s start edge.</li><li><b>Opened</b>: the first row’s menu is shown open, as the menu button’s rich menu: groups under small capitals, Delete in the destructive ink.</li><li><b>Phone</b>: a long press on a row opens it at the finger; near the edge it moves inside the screen.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the menu button’s paper plate with its ruled items, the same as the ⋯ menu beside it. Check that it opens where you clicked and never detached from the row.</p></div>
+            <div data-review-controls data-review-controls-for="context-menu-component"><div role="group" aria-label="Shown"><button type="button" class="kp-button kp-button--sm" data-pg="shown" data-value="closed" data-target="pg-ctx" aria-pressed="true">Closed</button><button type="button" class="kp-button kp-button--sm" data-pg="shown" data-value="opened" data-target="pg-ctx" aria-pressed="false">Opened</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="context-menu-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="context-menu-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="context-menu-component" class="pg-component" data-pg-width="full">
+        <ul class="kp-task-list" id="pg-ctx" aria-label="Today"></ul><p class="pg-log" id="pg-ctx-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="md-editor" data-review-item="md-editor" data-review-topic="markdown" data-review-topic-title="Markdown notes" data-review-components="md-editor" data-review-title="Markdown editor: a toolbar, shortcuts and a preview" aria-labelledby="h-md-editor">
+            <div class="pg-asked"><p><b>What is asked</b> (habits gap: Markdown editor): Only the reader existed, so the app’s notes were a text area with an Edit / Preview switch. <code>data-kp-md-editor</code> round the text area adds a toolbar (bold, italic, heading, list, checklist, link), Mod+B, Mod+I and Mod+K, a list that continues on Enter, and the reader’s preview beside the text when the editor is at least 48rem wide, behind Write / Preview tabs when narrower. A box ticked in the preview is written into the text. <code>data-kp-md-preview</code>: <code>side</code> (default), <code>tabs</code> or <code>off</code>.</p></div>
+            <div class="pg-intro"><h2 id="h-md-editor">Notes of “Plan the team offsite”</h2><p>The task’s notes in Markdown, with a checklist of what is still open.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Side</b>: the toolbar over the text, the preview beside it at the same height (it scrolls inside). Select words and press Ctrl+B: they turn bold in the preview. At the end of “- [ ] Book the venue” press Enter: a new “- [ ] ” item starts; Enter again on it ends the list. Tick “Send the agenda” in the preview: its line in the text reads “- [x]”.</li><li><b>Tabs</b>: Write and Preview tabs over one pane. <b>Off</b>: the toolbar and the text only.</li><li><b>Phone</b>: the tabs, whichever is set; the tools wrap under each other, never cut.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the tools are the package’s small bordered buttons, the preview the reader on the card stock. Check that the tools line up as one row of equals and that the preview reads as the text’s twin.</p></div>
+            <div data-review-controls data-review-controls-for="md-editor-component"><div role="group" aria-label="Preview"><button type="button" class="kp-button kp-button--sm" data-pg="preview" data-value="side" data-target="pg-md" aria-pressed="true">Side (default)</button><button type="button" class="kp-button kp-button--sm" data-pg="preview" data-value="tabs" data-target="pg-md" aria-pressed="false">Tabs</button><button type="button" class="kp-button kp-button--sm" data-pg="preview" data-value="off" data-target="pg-md" aria-pressed="false">Off</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="md-editor-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="md-editor-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="md-editor-component" class="pg-component" data-pg-width="full">
+        <div class="kp-md-editor" id="pg-md" data-kp-md-editor><textarea class="kp-field__input kp-field__input--multiline" aria-label="Notes of Plan the team offsite" rows="12"></textarea></div><p class="pg-log" id="pg-md-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="categorical" data-review-item="categorical" data-review-topic="categorical" data-review-topic-title="Categorical colours" data-review-components="categorical" data-review-title="Twelve categorical colours for projects and tags" aria-labelledby="h-categorical">
+            <div class="pg-asked"><p><b>What is asked</b> (habits gap: categorical colours): There were five chart colours, and a project or a tag needs one of twelve, so the app mapped twelve names to hues itself. Every theme now has <code>--kp-cat-1</code> … <code>--kp-cat-12</code> (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate) and <code>--kp-cat-ink</code>; <code>data-kp-cat="1"</code> … <code>"12"</code> picks one, <code>.kp-cat-dot</code> is a round mark and <code>.kp-cat-chip</code> a filled tag. Each reads as ink on the page and as a fill; neighbours differ in lightness as well as hue.</p></div>
+            <div class="pg-intro"><h2 id="h-categorical">The app’s twelve colours</h2><p>Each colour as the app uses it: a project’s dot and a tag’s chip (the names are mock).</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Full width</b>: twelve tiles of one size in rows of six (four on a tablet), each with the colour’s name, a project with its dot and a tag as a chip. Every chip’s words read on its fill; no two neighbours look alike.</li><li><b>Phone</b>: two tiles a row, the same tiles.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: editorial inks, not a rainbow of sweets: navy, oxblood, bronze, moss. Check that each tag can be told from its neighbour at a glance, and that slate reads as the neutral one.</p></div>
+            <div data-review-controls data-review-controls-for="categorical-component"><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="categorical-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="categorical-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="categorical-component" class="pg-component" data-pg-width="full">
+        <ul class="pg-cats" id="pg-cats" aria-label="The twelve categorical colours"></ul>
+            </div>
+        </section>
+
+        <section id="task-row" data-review-item="task-row" data-review-topic="task-row" data-review-topic-title="The task row" data-review-components="task-row" data-review-title="Task row: check, title, facts and fixed action columns" aria-labelledby="h-task-row">
+            <div class="pg-asked"><p><b>What is asked</b> (habits gap: task row): The app built its task row from kp parts by hand. <code>.kp-task-row</code> (<code>buildTaskRow</code>) is that row: the reorder handle, the field’s check box, the title, a line of facts (deadline badge, project dot, tag chip) and fixed action columns (the app’s timer, then the ⋯ menu, also on a right click), keyed for row picking.</p></div>
+            <div class="pg-intro"><h2 id="h-task-row">Inbox</h2><p>Five Inbox tasks with every fact the app shows; one is done, one has its timer running.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Handle shown</b>: handles, boxes and titles each on one edge from row to row, the timer and the ⋯ in two columns of their own; the facts wrap under the title and the actions. The high-priority row has a red edge inside its border, the medium one an amber edge; the done row is muted and struck through.</li><li>Tick a box: the row turns done and the line under the list says so. Ctrl+click two rows: they are ringed and tinted. Press a title: the line says the panel would open.</li><li><b>Handle hidden</b>: the first column stays, empty, so nothing moves. <b>Phone</b>: the same columns; a long title wraps, never cut.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: each row a ruled entry on the card stock, the actions in a fixed column like a ledger’s margin. Check that the same function sits in the same place in every row.</p></div>
+            <div data-review-controls data-review-controls-for="task-row-component"><div role="group" aria-label="Handle"><button type="button" class="kp-button kp-button--sm" data-pg="handle" data-value="on" data-target="pg-rows" aria-pressed="true">Handle shown (default)</button><button type="button" class="kp-button kp-button--sm" data-pg="handle" data-value="off" data-target="pg-rows" aria-pressed="false">Handle hidden</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="task-row-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="task-row-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="task-row-component" class="pg-component" data-pg-width="full">
+        <ul class="kp-task-list" id="pg-rows" data-kp-reorder data-kp-row-pick aria-label="Inbox"></ul><p class="pg-log" id="pg-rows-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"habits-1101-be02d9a3-f606-4066-8953-54303a15792a","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
