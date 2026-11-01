@@ -27,6 +27,7 @@
 /** @typedef {import('./feed-sequencer.js').FeedSequencerStrings} FeedSequencerStrings */
 /** @typedef {import('./rows-attention.js').RowsAttentionStrings} RowsAttentionStrings */
 /** @typedef {import('./board-menu-markdown.js').BoardMenuMarkdownStrings} BoardMenuMarkdownStrings */
+/** @typedef {import('./ux-parts.js').UxPartsStrings} UxPartsStrings */
 export type TogglePaletteAckStrings = import('./toggle-palette-ack.js').TogglePaletteAckStrings;
 export type DeplistTraceEntityStrings = import('./deplist-trace-entity.js').DeplistTraceEntityStrings;
 export type AlertStatusIdmarkStrings = import('./alert-status-idmark.js').AlertStatusIdmarkStrings;
@@ -56,7 +57,8 @@ export type UsualLogviewerStrings = import('./usual-logviewer.js').UsualLogviewe
 export type FeedSequencerStrings = import('./feed-sequencer.js').FeedSequencerStrings;
 export type RowsAttentionStrings = import('./rows-attention.js').RowsAttentionStrings;
 export type BoardMenuMarkdownStrings = import('./board-menu-markdown.js').BoardMenuMarkdownStrings;
-export type Strings = TogglePaletteAckStrings & DeplistTraceEntityStrings & AlertStatusIdmarkStrings & PasskeysThreadChartStrings & StackbarBulletsCodeStrings & SelectionUndoNewpillStrings & ReqNoticesStrings & QuestionTransferConnStrings & TableHeatStrings & FormDateCopyStrings & SplitConfirmChartStrings & CalendarWeekGanttStrings & PipelineUptimeTimerStrings & RangeWeekdaysRunsStrings & SnoozeDatedSliderStrings & ViewerPreviewGalleryStrings & UsesUnsavedCompareStrings & ProblemGraphDiagnosticsStrings & QuantityChecklistFocusStrings & ClaimStrings & AvailabilityQrTimeStrings & ConsoleStrings & DiffRatingStrings & QuoteStatusCalmStrings & FocusStrings & UsualLogviewerStrings & FeedSequencerStrings & RowsAttentionStrings & BoardMenuMarkdownStrings;
+export type UxPartsStrings = import('./ux-parts.js').UxPartsStrings;
+export type Strings = TogglePaletteAckStrings & DeplistTraceEntityStrings & AlertStatusIdmarkStrings & PasskeysThreadChartStrings & StackbarBulletsCodeStrings & SelectionUndoNewpillStrings & ReqNoticesStrings & QuestionTransferConnStrings & TableHeatStrings & FormDateCopyStrings & SplitConfirmChartStrings & CalendarWeekGanttStrings & PipelineUptimeTimerStrings & RangeWeekdaysRunsStrings & SnoozeDatedSliderStrings & ViewerPreviewGalleryStrings & UsesUnsavedCompareStrings & ProblemGraphDiagnosticsStrings & QuantityChecklistFocusStrings & ClaimStrings & AvailabilityQrTimeStrings & ConsoleStrings & DiffRatingStrings & QuoteStatusCalmStrings & FocusStrings & UsualLogviewerStrings & FeedSequencerStrings & RowsAttentionStrings & BoardMenuMarkdownStrings & UxPartsStrings;
 /**
  * Every user-visible string the package can produce, by key.
  *
@@ -88,6 +90,7 @@ export type Strings = TogglePaletteAckStrings & DeplistTraceEntityStrings & Aler
  *     UsualLogviewerStrings &
  *     FeedSequencerStrings &
  *     RowsAttentionStrings &
- *     BoardMenuMarkdownStrings} Strings
+ *     BoardMenuMarkdownStrings &
+ *     UxPartsStrings} Strings
  */
 export {};

@@ -28,6 +28,7 @@
 /** @typedef {import('./feed-sequencer.js').FeedSequencerStrings} FeedSequencerStrings */
 /** @typedef {import('./rows-attention.js').RowsAttentionStrings} RowsAttentionStrings */
 /** @typedef {import('./board-menu-markdown.js').BoardMenuMarkdownStrings} BoardMenuMarkdownStrings */
+/** @typedef {import('./ux-parts.js').UxPartsStrings} UxPartsStrings */
 
 /**
  * Every user-visible string the package can produce, by key.
@@ -60,7 +61,8 @@
  *     UsualLogviewerStrings &
  *     FeedSequencerStrings &
  *     RowsAttentionStrings &
- *     BoardMenuMarkdownStrings} Strings
+ *     BoardMenuMarkdownStrings &
+ *     UxPartsStrings} Strings
  */
 
 export {};

@@ -2730,6 +2730,39 @@ var init_board_menu_markdown = __esm({
   }
 });
 
+// js/strings/ux-parts.js
+var UX_PARTS_STRINGS;
+var init_ux_parts = __esm({
+  "js/strings/ux-parts.js"() {
+    "use strict";
+    UX_PARTS_STRINGS = {
+      segmentedFoldName: "Show",
+      segmentedFoldAll: "All",
+      segmentedFoldButton: (name, chosen) => `${name}: ${chosen}`,
+      segmentedFoldMany: (n) => `${n} chosen`,
+      triTagAny: "either",
+      triTagInclude: "want",
+      triTagExclude: "not",
+      popoverFormInvalid: "This value cannot be used.",
+      popoverFormClose: "Close",
+      dateNavGroup: "Dates shown",
+      dateNavPrev: "\u2039 Previous",
+      dateNavNext: "Next \u203A",
+      dateNavToday: "Today",
+      dateNavPrevTitle: (unit2) => `Previous ${unit2}`,
+      dateNavNextTitle: (unit2) => `Next ${unit2}`,
+      dateNavTodayTitle: (unit2) => `Show this ${unit2}`,
+      dateNavUnits: { day: "day", week: "week", month: "month" },
+      dateNavWeekLabel: (n, from, to) => `Week ${n} \xB7 ${from} to ${to}`,
+      dateNavShown: (range) => `Now showing ${range}`,
+      dateNavCurrent: "current",
+      rowDeleted: (name) => `${name} deleted`,
+      rowDeletedNameless: "Row deleted",
+      rowRestored: (name) => `${name} is back`
+    };
+  }
+});
+
 // js/strings/defaults.js
 var DEFAULT_STRINGS;
 var init_defaults = __esm({
@@ -2764,6 +2797,7 @@ var init_defaults = __esm({
     init_feed_sequencer();
     init_rows_attention();
     init_board_menu_markdown();
+    init_ux_parts();
     DEFAULT_STRINGS = Object.freeze({
       ...TOGGLE_PALETTE_ACK_STRINGS,
       ...DEPLIST_TRACE_ENTITY_STRINGS,
@@ -2793,7 +2827,8 @@ var init_defaults = __esm({
       ...USUAL_LOGVIEWER_STRINGS,
       ...FEED_SEQUENCER_STRINGS,
       ...ROWS_ATTENTION_STRINGS,
-      ...BOARD_MENU_MARKDOWN_STRINGS
+      ...BOARD_MENU_MARKDOWN_STRINGS,
+      ...UX_PARTS_STRINGS
     });
   }
 });
@@ -15419,6 +15454,121 @@ var init_tri = __esm({
   }
 });
 
+// js/segmented/fold.js
+function nameOf2(group) {
+  const own = group.getAttribute("aria-label");
+  if (own) return own;
+  const ids2 = (group.getAttribute("aria-labelledby") ?? "").split(/\s+/).filter(Boolean);
+  const text = ids2.map((id) => group.ownerDocument.getElementById(id)?.textContent?.trim() ?? "").join(" ").trim();
+  return text || getStrings().segmentedFoldName;
+}
+function chosenWords(group) {
+  const s2 = getStrings();
+  const items = itemsOf2(group);
+  const on = items.filter((item) => isOn(group, item) && !(isMulti(group) && isAll(item)));
+  if (on.length === 1) return labelOf2(on[0]);
+  if (on.length > 1) return s2.segmentedFoldMany(on.length);
+  const all = items.find(isAll);
+  return all ? labelOf2(all) : s2.segmentedFoldAll;
+}
+function entryOf(group, item) {
+  const count2 = item.querySelector(".kp-segmented__count")?.textContent?.trim();
+  return {
+    label: count2 ? `${labelOf2(item)} \xB7 ${count2}` : labelOf2(item),
+    value: valueOf(item),
+    disabled: itemDisabled(item) ? item.getAttribute("data-kp-disabled-reason") || item.title || labelOf2(item) : null,
+    attrs: { role: isMulti(group) ? "menuitemcheckbox" : "menuitemradio", "aria-checked": String(isOn(group, item)) }
+  };
+}
+function paintFold(group, fold2) {
+  fold2.button.textContent = `${getStrings().segmentedFoldButton(nameOf2(group), chosenWords(group))} \u25BE`;
+  const entries2 = itemsOf2(group).filter((item) => !item.hidden).map((item) => entryOf(group, item));
+  setMenu(fold2.host, [{ group: "", items: entries2 }]);
+  for (const entry of fold2.host.querySelectorAll('[role="menuitemcheckbox"], [role="menuitemradio"]')) {
+    const item = itemsOf2(group).find((one) => valueOf(one) === entry.getAttribute("data-kp-value"));
+    if (item) entry.setAttribute("aria-checked", String(isOn(group, item)));
+  }
+}
+function buildFold(group) {
+  const doc = group.ownerDocument;
+  const host = doc.createElement("div");
+  host.className = "kp-menu-button kp-segmented__fold";
+  host.setAttribute("data-kp-menu-button", "");
+  const button6 = doc.createElement("button");
+  button6.type = "button";
+  button6.className = "kp-button kp-segmented__fold-button";
+  const menu = doc.createElement("div");
+  menu.className = "kp-menu";
+  menu.setAttribute("role", "menu");
+  menu.setAttribute("aria-label", nameOf2(group));
+  host.append(button6, menu);
+  group.before(host);
+  const control = attachOne(host, MenuButtonControl, {});
+  const pick2 = (event) => {
+    const value = (
+      /** @type {CustomEvent<{ value: string }>} */
+      event.detail?.value
+    );
+    const item = itemsOf2(group).find((one) => valueOf(one) === value);
+    if (!item) return;
+    item.click();
+    if (isMulti(group)) event.preventDefault();
+    paintFold(
+      group,
+      /** @type {Fold} */
+      folds.get(group)
+    );
+  };
+  host.addEventListener(MENU_SELECT_EVENT, pick2);
+  const off = () => {
+    host.removeEventListener(MENU_SELECT_EVENT, pick2);
+    control?.destroy();
+    host.remove();
+  };
+  return { host, button: button6, off };
+}
+function syncFold(group, folded2) {
+  let fold2 = folds.get(group);
+  if (!fold2 && !folded2) return;
+  if (!fold2) {
+    fold2 = buildFold(group);
+    folds.set(group, fold2);
+  }
+  const hadFocus = folded2 !== !fold2.host.hidden && (folded2 ? group : fold2.host).contains(group.ownerDocument.activeElement);
+  fold2.host.hidden = !folded2;
+  paintFold(group, fold2);
+  if (hadFocus) (folded2 ? fold2.button : (
+    /** @type {HTMLElement | undefined} */
+    itemsOf2(group).find((item) => item.tabIndex === 0)
+  ))?.focus();
+}
+function repaintFold(group) {
+  const fold2 = folds.get(group);
+  if (fold2 && !fold2.host.hidden) paintFold(
+    /** @type {HTMLElement} */
+    group,
+    fold2
+  );
+}
+function dropFold(group) {
+  folds.get(group)?.off();
+  folds.delete(group);
+  if (group instanceof HTMLElement) group.removeAttribute("data-kp-segmented-folded");
+}
+var folds;
+var init_fold2 = __esm({
+  "js/segmented/fold.js"() {
+    "use strict";
+    init_controller();
+    init_controller4();
+    init_constants6();
+    init_open();
+    init_strings();
+    init_read2();
+    folds = /* @__PURE__ */ new WeakMap();
+  }
+});
+
 // js/segmented/paint.js
 function paintTriValues(group, values) {
   const include = new Set(values);
@@ -15448,6 +15598,7 @@ function paint2(group, values) {
   }
   roving(group);
   layout(group);
+  repaintFold(group);
 }
 var init_paint2 = __esm({
   "js/segmented/paint.js"() {
@@ -15456,6 +15607,7 @@ var init_paint2 = __esm({
     init_plate();
     init_roving();
     init_tri();
+    init_fold2();
   }
 });
 
@@ -15838,6 +15990,70 @@ var init_link = __esm({
   }
 });
 
+// js/segmented/fit.js
+function lengthPx(group, text) {
+  const match = /^\s*([\d.]+)\s*(px|rem|em)\s*$/.exec(text);
+  if (!match) return 0;
+  const n = Number(match[1]);
+  if (match[2] === "px") return n;
+  const of = match[2] === "rem" ? group.ownerDocument.documentElement : group;
+  return n * (parseFloat(getComputedStyle(of).fontSize) || REM_FALLBACK_PX);
+}
+function balanceTracks(count2, track, room, gap) {
+  if (count2 <= 0) return { cols: 1, rows: 0 };
+  const across = Math.max(1, Math.floor((room + gap + SLACK_PX) / (track + gap)));
+  const rows = Math.ceil(count2 / across);
+  return { cols: Math.ceil(count2 / rows), rows };
+}
+function widest2(group, items) {
+  group.setAttribute(MEASURE_ATTRIBUTE, "");
+  const widths2 = items.map((item) => item.getBoundingClientRect().width);
+  group.removeAttribute(MEASURE_ATTRIBUTE);
+  return Math.ceil(Math.max(0, ...widths2));
+}
+function clearFit(group) {
+  group.style.removeProperty(COLS_PROPERTY);
+  group.style.removeProperty(TRACK_PROPERTY);
+  group.removeAttribute(COLS_ATTRIBUTE);
+  group.removeAttribute(FOLDED_ATTRIBUTE2);
+  syncFold(group, false);
+}
+function fitGroup(group) {
+  if (!fitsTracks(group)) return clearFit(group);
+  const items = itemsOf2(group).filter((item) => !item.hidden);
+  const room = group.clientWidth;
+  if (room <= 0 || !items.length) return;
+  const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
+  const track = Math.min(widest2(group, items), room);
+  const { cols, rows } = balanceTracks(items.length, track, room, gap);
+  group.style.setProperty(COLS_PROPERTY, String(cols));
+  group.style.setProperty(TRACK_PROPERTY, `${track}px`);
+  group.setAttribute(COLS_ATTRIBUTE, String(cols));
+  const foldAt = lengthPx(group, group.getAttribute(FOLD_AT_ATTRIBUTE) ?? FOLD_AT_DEFAULT);
+  const folds2 = !isTri(group) && foldAt > 0 && room < foldAt && rows > 1;
+  group.toggleAttribute(FOLDED_ATTRIBUTE2, folds2);
+  syncFold(group, folds2);
+}
+var FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLDED_ATTRIBUTE2, MEASURE_ATTRIBUTE, FOLD_AT_DEFAULT, COLS_PROPERTY, TRACK_PROPERTY, COLS_ATTRIBUTE, SLACK_PX, REM_FALLBACK_PX, fitsTracks;
+var init_fit2 = __esm({
+  "js/segmented/fit.js"() {
+    "use strict";
+    init_read2();
+    init_fold2();
+    FIT_ATTRIBUTE = "data-kp-segmented-fit";
+    FOLD_AT_ATTRIBUTE = "data-kp-segmented-fold-at";
+    FOLDED_ATTRIBUTE2 = "data-kp-segmented-folded";
+    MEASURE_ATTRIBUTE = "data-kp-segmented-measure";
+    FOLD_AT_DEFAULT = "30rem";
+    COLS_PROPERTY = "--kp-seg-cols";
+    TRACK_PROPERTY = "--kp-seg-track";
+    COLS_ATTRIBUTE = "data-kp-segmented-cols";
+    SLACK_PX = 0.5;
+    REM_FALLBACK_PX = 16;
+    fitsTracks = (group) => group.classList.contains("kp-segmented--chips") && group.getAttribute(FIT_ATTRIBUTE) === "tracks";
+  }
+});
+
 // js/segmented/group.js
 function enhance(group) {
   const el16 = (
@@ -15860,6 +16076,8 @@ var init_group = __esm({
     init_mode();
     init_link();
     init_tri();
+    init_fit2();
+    init_fold2();
     SegmentedGroup = class extends Controller {
       /** @param {HTMLElement} host the group */
       constructor(host) {
@@ -15871,11 +16089,20 @@ var init_group = __esm({
         const group = this.host;
         if (!group.hasAttribute("role")) group.setAttribute("role", isMulti(group) || isTri(group) ? "group" : "radiogroup");
         if (typeof ResizeObserver !== "undefined") {
-          this.sizes = this.observe(new ResizeObserver(() => layout(group)));
+          this.sizes = this.observe(
+            new ResizeObserver(() => {
+              layout(group);
+              fitGroup(group);
+            })
+          );
           this.sizes.observe(group);
         }
         this.listen(group, "scroll", () => reach(group), { passive: true });
-        if (typeof document !== "undefined" && document.fonts?.ready) document.fonts.ready.then(() => layout(group));
+        if (typeof document !== "undefined" && document.fonts?.ready)
+          document.fonts.ready.then(() => {
+            layout(group);
+            fitGroup(group);
+          });
         this.mode = group.getAttribute("data-kp-segmented") ?? "single";
         this.own(
           watchOptions(group, ["data-kp-segmented"], () => {
@@ -15884,6 +16111,8 @@ var init_group = __esm({
             this.switchMode(was);
           })
         );
+        this.own(watchOptions(group, [FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE], () => fitGroup(group)));
+        this.own(() => dropFold(group));
         if (group.hasAttribute(LINK_ATTRIBUTE)) {
           const link2 = attachOne(group, SegmentedLink);
           if (link2) this.own(() => link2.destroy());
@@ -15902,6 +16131,7 @@ var init_group = __esm({
         }
         if (isTri(group)) paintTri(group);
         else paint2(group, getSegmentedValues(group));
+        fitGroup(group);
       }
       /**
        * `data-kp-segmented` changed from `was` to something else: the roles and the state attributes are written the way the new
@@ -16175,6 +16405,10 @@ var init_root = __esm({
 // js/segmented.js
 var segmented_exports = {};
 __export(segmented_exports, {
+  FIT_ATTRIBUTE: () => FIT_ATTRIBUTE,
+  FOLDED_ATTRIBUTE: () => FOLDED_ATTRIBUTE2,
+  FOLD_AT_ATTRIBUTE: () => FOLD_AT_ATTRIBUTE,
+  FOLD_AT_DEFAULT: () => FOLD_AT_DEFAULT,
   GLIDE_ATTRIBUTE: () => GLIDE_ATTRIBUTE,
   MORE_ATTRIBUTE: () => MORE_ATTRIBUTE,
   OVERFLOW_ATTRIBUTE: () => OVERFLOW_ATTRIBUTE,
@@ -16185,6 +16419,7 @@ __export(segmented_exports, {
   TRI_ATTRIBUTE: () => TRI_ATTRIBUTE,
   TRI_STATES: () => TRI_STATES,
   attachSegmented: () => attachSegmented,
+  balanceTracks: () => balanceTracks,
   getSegmentedTri: () => getSegmentedTri,
   getSegmentedValues: () => getSegmentedValues,
   itemsOf: () => itemsOf2,
@@ -16205,6 +16440,7 @@ var init_segmented = __esm({
     init_api();
     init_items2();
     init_root();
+    init_fit2();
   }
 });
 
@@ -17948,7 +18184,7 @@ function kpiColumns(n, width, { allowed: allowed2 = STRIP_DEFAULTS.allowed, minT
   }
   return { columns: columns2, spanLast: false };
 }
-function lengthPx(el16, text, fallback2) {
+function lengthPx2(el16, text, fallback2) {
   const m = /^\s*(-?[\d.]+)\s*(px|rem|em)?\s*$/.exec(text);
   if (!m) return fallback2;
   const n = Number(m[1]);
@@ -17989,7 +18225,7 @@ function fitKpiStrip(strip, width) {
   tile.hidden).length;
   const allowed2 = strip.getAttribute("data-kp-kpis-columns") || STRIP_DEFAULTS.allowed;
   const gapPx = parseFloat(style.columnGap) || 0;
-  let minTilePx = lengthPx(strip, style.getPropertyValue("--kp-kpi-min"), STRIP_DEFAULTS.minTilePx);
+  let minTilePx = lengthPx2(strip, style.getPropertyValue("--kp-kpi-min"), STRIP_DEFAULTS.minTilePx);
   for (let last = Infinity; ; ) {
     const { columns: columns2, spanLast } = kpiColumns(n, inner, { allowed: allowed2, minTilePx, gapPx });
     strip.style.setProperty("--kp-kpis-columns", String(columns2));
@@ -22270,10 +22506,10 @@ function planFold({ widths: widths2, gap, room, moreWidth, keep = [] }) {
   return fits.map((f) => !f);
 }
 function planSeparators(plan, seps) {
-  const shown5 = plan.map((folds, i) => !folds && !seps[i]);
-  if (!plan.some((folds, i) => folds && !seps[i])) return plan.map((folds, i) => seps[i] ? false : folds);
-  return plan.map((folds, i) => {
-    if (!seps[i]) return folds;
+  const shown5 = plan.map((folds2, i) => !folds2 && !seps[i]);
+  if (!plan.some((folds2, i) => folds2 && !seps[i])) return plan.map((folds2, i) => seps[i] ? false : folds2);
+  return plan.map((folds2, i) => {
+    if (!seps[i]) return folds2;
     return !(shown5.slice(0, i).includes(true) && shown5.slice(i + 1).includes(true));
   });
 }
@@ -25928,7 +26164,7 @@ function wireRow(row2) {
   }
   const only = row2.querySelector(".kp-facet__only");
   if (only && !row2.hasAttribute("data-kp-facet-all")) {
-    only.setAttribute("aria-label", getStrings().facetOnlyLabel(nameOf2(row2)));
+    only.setAttribute("aria-label", getStrings().facetOnlyLabel(nameOf3(row2)));
     if (!only.textContent?.trim()) only.textContent = getStrings().facetOnly;
   }
 }
@@ -26003,7 +26239,7 @@ function syncGroup(group) {
   const empty = group.querySelector(".kp-facets__empty");
   if (empty instanceof HTMLElement) empty.hidden = rows.length > 0;
 }
-var serial2, el4, countText, rowsOf, checkOf, nameOf2;
+var serial2, el4, countText, rowsOf, checkOf, nameOf3;
 var init_rows2 = __esm({
   "js/facets/rows.js"() {
     "use strict";
@@ -26021,7 +26257,7 @@ var init_rows2 = __esm({
       [...group.querySelectorAll(".kp-facet:not([data-kp-facet-all])")]
     );
     checkOf = (row2) => row2.querySelector(".kp-facet__check");
-    nameOf2 = (row2) => row2.querySelector(".kp-facet__name")?.textContent?.trim() ?? "";
+    nameOf3 = (row2) => row2.querySelector(".kp-facet__name")?.textContent?.trim() ?? "";
   }
 });
 
@@ -26154,7 +26390,7 @@ var init_controller15 = __esm({
         if (!only || !row2 || !group.contains(row2)) return;
         const value = row2.getAttribute("data-value") ?? "";
         setFacetValues(group, [value]);
-        this.say(getStrings().facetShowingOnly(nameOf2(row2)));
+        this.say(getStrings().facetShowingOnly(nameOf3(row2)));
         this.emit("only", value);
       }
     };
@@ -30503,7 +30739,7 @@ function buildCode(ctl, lines, json) {
   }
   return code;
 }
-function buildFold(ctl, lineCount, bodyId) {
+function buildFold2(ctl, lineCount, bodyId) {
   const doc = ctl.host.ownerDocument;
   const strings = getStrings();
   const more = (
@@ -30535,7 +30771,7 @@ function buildFoot(ctl, lineCount, bodyId, foldable) {
   }
   if (foldable) {
     if (!spec.truncated) foot.append(make8(doc, ""));
-    foot.append(buildFold(ctl, lineCount, bodyId));
+    foot.append(buildFold2(ctl, lineCount, bodyId));
   }
   foot.hidden = !spec.truncated && !foldable;
   return foot;
@@ -33416,7 +33652,7 @@ var init_state10 = __esm({
 });
 
 // js/forms/errors.js
-function nameOf3(field2) {
+function nameOf4(field2) {
   if (field2.getAttribute("type") === "radio") {
     const legend = field2.closest("fieldset")?.querySelector("legend")?.textContent?.trim();
     if (legend !== void 0 && legend !== "") return legend;
@@ -33495,7 +33731,7 @@ function summaryLine(field2, wrapper) {
   const item = document.createElement("li");
   const link2 = document.createElement("a");
   link2.href = `#${field2.getAttribute("id") ?? ""}`;
-  link2.textContent = nameOf3(field2);
+  link2.textContent = nameOf4(field2);
   link2.addEventListener("click", (click) => {
     click.preventDefault();
     field2.focus();
@@ -33674,7 +33910,7 @@ var init_form = __esm({
           return true;
         }
         this.showSummary(bad);
-        this.form.dispatchEvent(new CustomEvent(INVALID_EVENT, { bubbles: true, detail: { fields: bad, names: bad.map(nameOf3) } }));
+        this.form.dispatchEvent(new CustomEvent(INVALID_EVENT, { bubbles: true, detail: { fields: bad, names: bad.map(nameOf4) } }));
         return false;
       }
       /** Show messages by field name: what a server sends back. @param {Record<string, string>} errors */
@@ -33949,7 +34185,7 @@ __export(forms_exports, {
   attachSwitches: () => attachSwitches,
   clearError: () => clearError,
   form: () => form,
-  nameOf: () => nameOf3,
+  nameOf: () => nameOf4,
   showError: () => showError
 });
 var init_forms = __esm({
@@ -35414,8 +35650,8 @@ function fitLabel(group, names, half, measure) {
       const start = Math.max(LABEL_IN, allowed2 * 0.75 * (rows === 2 ? 1.5 : 1) / sin);
       const room = LABEL_OUT - start;
       if (room < 16) continue;
-      const widest2 = Math.max(...lines.map(unit2));
-      const size2 = Math.min(allowed2, room / Math.max(1e-4, widest2));
+      const widest3 = Math.max(...lines.map(unit2));
+      const size2 = Math.min(allowed2, room / Math.max(1e-4, widest3));
       if (size2 < LABEL_MIN) continue;
       const grown = Math.max(LABEL_IN, size2 * 0.75 * (rows === 2 ? 1.5 : 1) / sin);
       const plan = { size: size2, start: grown, lines };
@@ -38090,8 +38326,8 @@ function paint5(timer) {
     /** @type {HTMLElement} */
     card.querySelector(".kp-timer__sizer")
   );
-  const widest2 = [strings.timerPause, strings.timerResume, strings.timerStopRing].join("\n");
-  if (sizer.textContent !== widest2) sizer.textContent = widest2;
+  const widest3 = [strings.timerPause, strings.timerResume, strings.timerStopRing].join("\n");
+  if (sizer.textContent !== widest3) sizer.textContent = widest3;
   const more = (
     /** @type {HTMLButtonElement} */
     card.querySelector(".kp-timer__more")
@@ -39914,11 +40150,11 @@ function writeSpinbutton(input, rules, value, text, unit2) {
   input.setAttribute("aria-valuetext", unit2 ? getStrings().quantityValue(text, unit2) : text);
 }
 function writeWidth(root, rules, value) {
-  const widest2 = Math.max(
+  const widest3 = Math.max(
     ...[rules.min, rules.max, value].filter(Number.isFinite).map((v) => formatQuantity(v, rules).length),
     rules.decimals > 0 ? rules.decimals + 2 : 1
   );
-  root.style.setProperty("--kp-quantity-chars", String(widest2));
+  root.style.setProperty("--kp-quantity-chars", String(widest3));
 }
 function writeButtons(root, rules, value, disabled2) {
   for (
@@ -56098,7 +56334,7 @@ var init_constants24 = __esm({
 });
 
 // js/week/helpers.js
-function nameOf4(c, e, hhmm, iso) {
+function nameOf5(c, e, hhmm, iso) {
   const s2 = c.strings;
   const state12 = e.state === "next" ? s2.weekNextRun : e.state === "off" ? s2.weekOff : e.state === "skipped" ? s2.weekSkipped : e.state === "reference" ? s2.weekReference : "";
   return [`${e.label}, ${dayName(c, iso)} ${dm(iso, true)} ${hhmm}`, state12, e.detail ?? ""].filter(Boolean).join(", ");
@@ -56639,7 +56875,7 @@ function paint7(c) {
     );
     if (time.textContent !== hhmm) time.textContent = hhmm;
     if (label2.textContent !== event.label) label2.textContent = event.label;
-    const name = nameOf4(c, event, hhmm, day2);
+    const name = nameOf5(c, event, hhmm, day2);
     if (button6.getAttribute("aria-label") !== name) button6.setAttribute("aria-label", name);
     button6.setAttribute("data-kp-hovercard", event.detail || `${event.label} \xB7 ${hhmm}`);
     if (event.state === "reference") button6.setAttribute("role", "note");
@@ -59740,7 +59976,7 @@ function placeFitLabels(c) {
     }
 }
 var FIT_GAP_PX, SIDE_GAP_PX, BAR_PAD_PX, OUTSIDE_PAD_PX, PLACED2, isFit, free, onNow;
-var init_fit2 = __esm({
+var init_fit3 = __esm({
   "js/gantt/fit.js"() {
     "use strict";
     init_labels2();
@@ -59986,7 +60222,7 @@ var init_selection3 = __esm({
     init_window();
     init_points();
     init_labels2();
-    init_fit2();
+    init_fit3();
     init_build9();
     init_axis();
     init_scale();
@@ -60324,7 +60560,7 @@ var init_paint9 = __esm({
     init_points();
     init_chrome2();
     init_busy5();
-    init_fit2();
+    init_fit3();
     init_selection3();
     HELD = /* @__PURE__ */ new WeakMap();
   }
@@ -60685,7 +60921,7 @@ var init_controller45 = __esm({
     init_chrome2();
     init_model7();
     init_input2();
-    init_fit2();
+    init_fit3();
     MIN_ZOOM_S = 60;
     CHROME_OPTIONS = ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint", "data-kp-gantt-rest"];
     GanttControl = class extends GanttInput {
@@ -61962,7 +62198,7 @@ function edges(el16, track) {
   el16.toggleAttribute("data-kp-uptime-before", track.scrollLeft > 1);
   el16.toggleAttribute("data-kp-uptime-after", track.scrollLeft < max - 1);
 }
-var init_fit3 = __esm({
+var init_fit4 = __esm({
   "js/uptime/fit.js"() {
     "use strict";
     init_strings();
@@ -62257,7 +62493,7 @@ var init_draw10 = __esm({
     init_state_plate();
     init_constants27();
     init_figures();
-    init_fit3();
+    init_fit4();
     init_group4();
     init_helpers4();
     init_state19();
@@ -62453,7 +62689,7 @@ var init_controller48 = __esm({
     "use strict";
     init_constants27();
     init_draw10();
-    init_fit3();
+    init_fit4();
     init_group4();
     init_info();
     init_state19();
@@ -72479,14 +72715,14 @@ function measureFold(c) {
   const { textEl, more } = c;
   if (!textEl || !more) return;
   const lines = attr6(c.el, "lines") ?? String(QUOTE_LINES);
-  const folds = lines !== "all" && Number(lines) > 0;
-  const open4 = c.expanded || !folds;
+  const folds2 = lines !== "all" && Number(lines) > 0;
+  const open4 = c.expanded || !folds2;
   textEl.removeAttribute("data-kp-folded");
   const whole2 = textEl.getBoundingClientRect().height;
   textEl.toggleAttribute("data-kp-folded", !open4);
   const shown5 = textEl.getBoundingClientRect().height;
   const overflows = open4 ? c.expanded : whole2 - shown5 > FOLD_SLACK_PX;
-  more.hidden = !(folds && overflows);
+  more.hidden = !(folds2 && overflows);
   more.setAttribute("aria-expanded", String(c.expanded));
   more.textContent = c.expanded ? getStrings().quoteShowLess : getStrings().quoteShowAll;
 }
@@ -78124,7 +78360,7 @@ function cssAutosizeSupported() {
   return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
 }
 var px3, WRAP_PROPS, TWIN_STYLE, TWINS;
-var init_fit4 = __esm({
+var init_fit5 = __esm({
   "js/autosize/fit.js"() {
     "use strict";
     init_constants35();
@@ -78395,7 +78631,7 @@ var init_measure2 = __esm({
   "js/autosize/measure.js"() {
     "use strict";
     init_constants35();
-    init_fit4();
+    init_fit5();
   }
 });
 
@@ -78504,7 +78740,7 @@ var init_controller70 = __esm({
     init_constants35();
     init_counter();
     init_draft();
-    init_fit4();
+    init_fit5();
     init_hooks();
     init_measure2();
     init_status();
@@ -78730,7 +78966,7 @@ var init_autosize = __esm({
   "js/autosize.js"() {
     "use strict";
     init_constants35();
-    init_fit4();
+    init_fit5();
     init_api23();
   }
 });
@@ -81197,7 +81433,7 @@ var init_slider = __esm({
 });
 
 // js/sentence/fields.js
-function nameOf5(control) {
+function nameOf6(control) {
   const label2 = control.getAttribute("aria-label");
   if (label2) return label2;
   const by = control.getAttribute("aria-labelledby");
@@ -81208,7 +81444,7 @@ function nameOf5(control) {
   return "";
 }
 function computedText(output) {
-  return output.hasAttribute("data-kp-sentence-empty") ? getStrings().sentenceEmpty(nameOf5(output)) : output.textContent?.trim() ?? "";
+  return output.hasAttribute("data-kp-sentence-empty") ? getStrings().sentenceEmpty(nameOf6(output)) : output.textContent?.trim() ?? "";
 }
 function setSentenceComputed(element, name, text) {
   const value = text === null || text === void 0 ? "" : String(text).trim();
@@ -81227,11 +81463,11 @@ function fieldText(field2) {
   const picker = field2.querySelector(".kp-weekdays");
   if (picker) return weekdays(picker)?.summary() ?? "";
   const select2 = field2.querySelector("select");
-  if (select2 instanceof HTMLSelectElement) return select2.selectedOptions[0]?.textContent?.trim() || s2.sentenceEmpty(nameOf5(select2));
+  if (select2 instanceof HTMLSelectElement) return select2.selectedOptions[0]?.textContent?.trim() || s2.sentenceEmpty(nameOf6(select2));
   const input = field2.querySelector('input:not([type="hidden"]), textarea');
   if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
-    if (input instanceof HTMLInputElement && (input.type === "checkbox" || input.type === "radio")) return input.checked ? nameOf5(input) : "";
-    return input.value.trim() || s2.sentenceEmpty(nameOf5(input));
+    if (input instanceof HTMLInputElement && (input.type === "checkbox" || input.type === "radio")) return input.checked ? nameOf6(input) : "";
+    return input.value.trim() || s2.sentenceEmpty(nameOf6(input));
   }
   return field2.textContent?.trim() ?? "";
 }
@@ -81263,7 +81499,7 @@ function setSentenceInvalid(element, name, why) {
   field2?.setAttribute("data-kp-invalid", "");
   if (line) {
     control.setAttribute("aria-describedby", line.id);
-    setSentenceWhy(element, getStrings().sentenceWhy(nameOf5(control), why));
+    setSentenceWhy(element, getStrings().sentenceWhy(nameOf6(control), why));
   }
 }
 function setSentenceWhy(element, text) {
@@ -81466,7 +81702,7 @@ var init_controller73 = __esm({
       nameControls() {
         for (const field2 of this.host.querySelectorAll(".kp-sentence__field")) {
           for (const control of field2.querySelectorAll(NAMEABLE)) {
-            if (nameOf5(control) || control.id && this.doc.querySelector(`label[for="${CSS.escape(control.id)}"]`)) continue;
+            if (nameOf6(control) || control.id && this.doc.querySelector(`label[for="${CSS.escape(control.id)}"]`)) continue;
             control.setAttribute("aria-label", wordsBefore(field2).join(" ") || getStrings().sentenceField);
           }
         }
@@ -84273,8 +84509,8 @@ function graphLabelLines(label2, target, widthOf) {
     let best = { widest: Infinity, cuts: [] };
     for (let to = from + 1; to <= pieces.length - (left - 1); to += 1) {
       const rest = cut(to, left - 1);
-      const widest2 = Math.max(width(from, to), rest.widest);
-      if (widest2 < best.widest) best = { widest: widest2, cuts: [to, ...rest.cuts] };
+      const widest3 = Math.max(width(from, to), rest.widest);
+      if (widest3 < best.widest) best = { widest: widest3, cuts: [to, ...rest.cuts] };
     }
     return best;
   };
@@ -90945,7 +91181,7 @@ function foldContext(lines, keep = DIFF_CONTEXT, min = DIFF_FOLD_MIN) {
   if (start < n) out.push({ kind: "lines", from: start, lines: lines.slice(start) });
   return out;
 }
-var init_fold2 = __esm({
+var init_fold3 = __esm({
   "js/diff/fold.js"() {
     "use strict";
     init_constants43();
@@ -91192,7 +91428,7 @@ var init_lines3 = __esm({
     init_strings();
     init_state_plate();
     init_constants43();
-    init_fold2();
+    init_fold3();
     init_model13();
     init_read9();
     init_words4();
@@ -91690,7 +91926,7 @@ var init_diff = __esm({
     "use strict";
     init_constants43();
     init_words4();
-    init_fold2();
+    init_fold3();
     init_actions8();
     init_attach27();
   }
@@ -94136,6 +94372,7 @@ export {
   FIELD_EVENT,
   FILE_EVENT,
   FINISH_EVENT,
+  FIT_ATTRIBUTE,
   FLASH_BUTTON,
   FLASH_ERROR_MS,
   FLASH_EVENT,
@@ -94153,7 +94390,10 @@ export {
   FOCUS_STEPS_TRACK_ATTENTION_EVENT,
   FOCUS_STEPS_TRACK_EVENT,
   FOCUS_STEPS_WAKE_EVENT,
+  FOLDED_ATTRIBUTE2 as FOLDED_ATTRIBUTE,
   FOLDING_OUT,
+  FOLD_AT_ATTRIBUTE,
+  FOLD_AT_DEFAULT,
   FOLD_SELECTOR,
   FOLLOW,
   FOLLOWS,
@@ -94832,6 +95072,7 @@ export {
   availability_exports as availabilityExports,
   availabilityRange,
   axisStep,
+  balanceTracks,
   barcell_exports as barcellExports,
   board_exports as boardExports,
   boundText,
@@ -95112,7 +95353,7 @@ export {
   motionAllowed,
   motion_exports as motionExports,
   motionWatchCount,
-  nameOf3 as nameOf,
+  nameOf4 as nameOf,
   nav_fold_exports as navFoldExports,
   nearNames,
   newPill,

@@ -53,6 +53,14 @@
 // "any":"not answered"}'`: what a screen reader hears after a chip and what a
 // press announces (the usual picker's Not today, js/usual-picker.js).
 //
+// Chips on whole tracks [ux-1101]: `data-kp-segmented-fit="tracks"` on a chip group (`flow`, the default, is the approved
+// wrap) lays the chips on equal tracks as wide as the widest chip, the rows balanced so no chip stands alone on a second
+// line (7 chips that fit 6 across lie as 4 + 3). Under `data-kp-segmented-fold-at` (default `30rem`; `none` never folds) a
+// single or multi group that needs more than one row folds into the package's menu button, "Show: All ▾" (the group's own
+// name, then what is chosen), whose entries are the chips with their counts; a pick is a press on the chip, so the event and
+// the announcement are the group's own. The group stays in the page, collapsed, so the page reads its values as before. Both
+// attributes switch at runtime. A three-way group lies on tracks but never folds.
+//
 // Events (bubbling, on the group):
 //   kp-segmented-change   { value: string | null, values: string[], item }
 //                         `values` are the values on (empty = All); `value`
@@ -86,6 +94,7 @@ export { layout } from './segmented/plate.js';
 export { setSegmentedTri, setSegmentedValues, resetSegmented, setSegmentedCounts } from './segmented/api.js';
 export { setSegmentedItems } from './segmented/items.js';
 export { attachSegmented } from './segmented/root.js';
+export { FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLDED_ATTRIBUTE, FOLD_AT_DEFAULT, balanceTracks } from './segmented/fit.js';
 
 /** @typedef {import('./segmented/constants.js').SegmentedItem} SegmentedItem */
 /** @typedef {import('./segmented/constants.js').TriValues} TriValues */

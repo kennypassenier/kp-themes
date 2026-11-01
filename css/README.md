@@ -164,7 +164,7 @@ concatenates that file into `css/themes.css`.
 | `request-inspector.css`         | The request inspector                                                            |
 | `run-timeline/`                 | Run timeline (5 parts)                                                           |
 | `running-job-button.css`        | A running-job button                                                             |
-| `segmented-toolbar/`            | Segmented control, filter chips, list toolbar, key line (3 parts)                |
+| `segmented-toolbar/`            | Segmented control, filter chips, list toolbar, key line (4 parts)                |
 | `sentence-form.css`             | Sentence form                                                                    |
 | `sequencer/`                    | The editable timeline (2 parts)                                                  |
 | `accept-follows.css`            | The line that says why a quantity-following button is off                        |

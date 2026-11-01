@@ -20631,6 +20631,63 @@
         text-transform: uppercase;
     }
 
+    /* Chips on whole tracks [ux-1101]: `data-kp-segmented-fit="tracks"` on a `.kp-segmented--chips` group. js/segmented/fit.js
+ * measures the widest chip and writes the number of tracks (--kp-seg-cols) and one track's width (--kp-seg-track), balanced
+ * over the rows so no chip stands alone on a line; every chip fills its track, so the chips of one group share one width and
+ * their edges line up from row to row. Until the script has measured (`data-kp-segmented-cols` absent) the chips flow as
+ * approved. Under the fold width the group collapses in place (its width still read, out of sight and out of reach) and the
+ * package's menu button stands before it, "Show: All ▾" (`.kp-segmented__fold`, js/segmented/fold.js). Knob: --kp-chip-gap. */
+    .kp-segmented--chips[data-kp-segmented-fit='tracks'] {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-cols] {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-seg-cols, 1), minmax(0, var(--kp-seg-track, max-content)));
+        justify-content: start;
+        align-items: stretch;
+    }
+
+    .kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-cols] > .kp-segmented__item {
+        justify-content: center;
+        min-inline-size: 0;
+        text-align: center;
+    }
+
+    /* One synchronous read: every chip in one row at its own width. */
+    .kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-measure] {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-measure] > .kp-segmented__item {
+        flex: none;
+        inline-size: max-content;
+    }
+
+    /* Folded: collapsed where it stands, so its width is still the width it would have. */
+    .kp-segmented--chips[data-kp-segmented-folded] {
+        block-size: 0;
+        margin-block: 0;
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    .kp-segmented__fold {
+        align-self: start;
+    }
+
+    .kp-segmented__fold > .kp-menu {
+        min-inline-size: max(var(--kp-menu-min-width, 10rem), 100%);
+    }
+
+    @media (pointer: coarse) {
+        .kp-segmented--chips[data-kp-segmented-fit='tracks'] > .kp-segmented__item {
+            min-block-size: var(--kp-touch-target, 2.75rem);
+        }
+    }
+
     .kp-toolbar__state {
         display: flex;
         align-items: center;

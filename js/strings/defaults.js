@@ -28,6 +28,7 @@ import { USUAL_LOGVIEWER_STRINGS } from './usual-logviewer.js';
 import { FEED_SEQUENCER_STRINGS } from './feed-sequencer.js';
 import { ROWS_ATTENTION_STRINGS } from './rows-attention.js';
 import { BOARD_MENU_MARKDOWN_STRINGS } from './board-menu-markdown.js';
+import { UX_PARTS_STRINGS } from './ux-parts.js';
 /** @typedef {import('./types.js').Strings} Strings */
 
 /**
@@ -67,4 +68,5 @@ export const DEFAULT_STRINGS = Object.freeze({
     ...FEED_SEQUENCER_STRINGS,
     ...ROWS_ATTENTION_STRINGS,
     ...BOARD_MENU_MARKDOWN_STRINGS,
+    ...UX_PARTS_STRINGS,
 });

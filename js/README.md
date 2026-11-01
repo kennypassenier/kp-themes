@@ -767,13 +767,15 @@ The date picker: a typed field with a calendar panel of days, months and years, 
 
 ## js/segmented.js → js/segmented/
 
-The segmented control and the filter chips: single, single-or-none, multi and three-way groups, with the plate under the chosen segment. 15 files.
+The segmented control and the filter chips: single, single-or-none, multi and three-way groups, with the plate under the chosen segment. 17 files.
 
 | File           | Does                                                                                                                           |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `actions.js`   | Pressing an item: what a click or the keyboard's choice does, and the event it fires.                                          |
 | `api.js`       | The calls a page makes on a group: set its values, its three-way chips and its counts, or reset it; none fires a press.        |
 | `constants.js` | The selectors, attribute names, event name and fixed numbers of the segmented control, and the types of its items.             |
+| `fit.js`       | Chips on whole tracks [ux-1101]: equal tracks as wide as the widest chip, rows balanced, and when the group folds.             |
+| `fold.js`      | The folded chip group [ux-1101]: the menu button that stands in for the chips under the fold width.                            |
 | `group.js`     | One segmented group: the roles and states its markup left out, its size and scroll watching, and its mode watching.            |
 | `items.js`     | Replaces the items of a group when the values change under it, keeping what is on and where the focus was.                     |
 | `keys.js`      | The keyboard of a group: where an arrow, Home or End moves the focus, and the delete of a three-way chip.                      |

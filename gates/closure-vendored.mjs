@@ -90,6 +90,7 @@ export const VENDORED = [
     'js/strings/toggle-palette-ack.js',
     'js/strings/uses-unsaved-compare.js',
     'js/strings/usual-logviewer.js',
+    'js/strings/ux-parts.js',
     'js/strings/viewer-preview-gallery.js',
     'js/components/confirm-dialog.js',
     'js/components/contracts.js',
