@@ -51,7 +51,7 @@ export function writeTri(item, state) {
     writeTag(item);
 }
 
-/** The visible words of a three-way group (`data-kp-segmented-tri-look="word"`) [ux-1101]: its own `data-kp-segmented-tags`, else the dictionary's. @param {Element} item */
+/** The visible words of a three-way group (the word look, the default; `data-kp-segmented-tri-look="mark"` hides them) [ux-1101]: its own `data-kp-segmented-tags`, else the dictionary's. @param {Element} item */
 function tagWords(item) {
     const strings = getStrings();
     const words = { any: strings.triTagAny, include: strings.triTagInclude, exclude: strings.triTagExclude };

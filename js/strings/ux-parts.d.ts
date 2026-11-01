@@ -16,7 +16,7 @@ export type UxPartsStrings = {
      */
     segmentedFoldMany: (n: number) => string;
     /**
-     * A three-way chip's visible word while it does not matter (`data-kp-segmented-tri-look="word"`) [ux-1101]
+     * A three-way chip's visible word while it does not matter (the word look, the default of `data-kp-segmented-tri-look`) [ux-1101]
      */
     triTagAny: string;
     /**
@@ -102,7 +102,7 @@ export type UxPartsStrings = {
  * @property {string} segmentedFoldAll  What that button says while nothing (or All) is chosen [ux-1101]
  * @property {(name: string, chosen: string) => string} segmentedFoldButton  The folded group's button, "Show: Due" [ux-1101]
  * @property {(n: number) => string} segmentedFoldMany  What the button says for several values on at once, "3 chosen" [ux-1101]
- * @property {string} triTagAny  A three-way chip's visible word while it does not matter (`data-kp-segmented-tri-look="word"`) [ux-1101]
+ * @property {string} triTagAny  A three-way chip's visible word while it does not matter (the word look, the default of `data-kp-segmented-tri-look`) [ux-1101]
  * @property {string} triTagInclude  Its visible word while the value must be in [ux-1101]
  * @property {string} triTagExclude  Its visible word while the value must not be in [ux-1101]
  * @property {string} popoverFormInvalid  A popover form's problem line when the field is refused and the browser gave no words of its own [ux-1101]
