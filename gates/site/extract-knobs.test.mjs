@@ -226,8 +226,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-02 [kitchen-1101]: the calendar publishes --kp-calendar-nav-measured and --kp-calendar-step-min: 1167 + 2 = 1169.
     // Re-pinned 2026-11-01 [uxtouch1101]: the board's switcher (--kp-board-switch-min), the secret's clock (--kp-secret-clock written and
     // read, --kp-secret-clock-gap) and the touch hit areas (--kp-touch-hit-paint, -hit-outline, --kp-touch-check-gap), all read
-    // through var(): 1167 + 6 = 1173.
-    assert.equal(result.expected, 1169, 'AR21 counted the --kp-* properties in css/components.css');
+    // through var(): 1169 + 6 = 1175.
+    assert.equal(result.expected, 1175, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -331,8 +331,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [ux-1101]: the popover form's two are read through var(): 1154 + 2 = 1156.
     // Re-pinned 2026-11-01 [ux-1101]: --kp-date-nav-gap is read through var(): 1156 + 1 = 1157.
     // Re-pinned 2026-11-02 [kitchen-1101]: the calendar's two measured knobs are read through var(): 1157 + 2 = 1159.
-    // Re-pinned 2026-11-01 [uxtouch1101]: the board's switcher, the secret's clock (two) and the touch hit areas (three) are read through var(): 1157 + 6 = 1163.
-    assert.equal(result.readCount, 1159);
+    // Re-pinned 2026-11-01 [uxtouch1101]: the board's switcher, the secret's clock (two) and the touch hit areas (three) are read through var(): 1159 + 6 = 1165.
+    assert.equal(result.readCount, 1165);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
