@@ -4,7 +4,7 @@ export { layout } from './segmented/plate.js';
 export { setSegmentedTri, setSegmentedValues, resetSegmented, setSegmentedCounts } from './segmented/api.js';
 export { setSegmentedItems } from './segmented/items.js';
 export { attachSegmented } from './segmented/root.js';
-export { FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLDED_ATTRIBUTE, FOLD_AT_DEFAULT, balanceTracks } from './segmented/fit.js';
+export { FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLD_ATTRIBUTE, FOLDED_ATTRIBUTE, FOLD_AT_DEFAULT, NARROW_ATTRIBUTE, balanceTracks } from './segmented/fit.js';
 export type SegmentedItem = import('./segmented/constants.js').SegmentedItem;
 export type TriValues = import('./segmented/constants.js').TriValues;
 /** @typedef {import('./segmented/constants.js').SegmentedItem} SegmentedItem */

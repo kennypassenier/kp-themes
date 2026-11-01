@@ -461,6 +461,22 @@
             "fingerprint": "83f012d2600f0685",
             "update": null
         },
+        "research/ux-parts-1101/demo.html": {
+            "facts": {
+                "id": "ux-parts-1101",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Round 2 of the app review’s parts: the two options you sent back because their phone version was unwatchable and unusable. The chips now take a calm grid of whole chips under the search on a phone; the refresh control puts every choice on a row of its own that scrolls. Their desktop looks are as you saw them. The five parts you approved are no longer on this page; the three-way chip now shows its state as a word by default, as you chose. Formal only, on Medicine Cabinet’s and kyu’s own data (counts are mock). 2 sections, 2 pairs.",
+                "sections": [
+                    { "item": "chips-narrow", "themes": null, "topic": "segmented", "mode": null },
+                    { "item": "auto-refresh-form", "themes": null, "topic": "refresh", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"ux-parts-1101-26c2c709-c4df-4de8-9117-f9c2ebc7f7e6\",\"received\":[\"ux-parts-1101-e994c521-37e0-4c56-b12b-ed4d536f4d1e\"]}\n        "
+            },
+            "fingerprint": "a7cb3b401d68ce04",
+            "update": null
+        },
         "research/habits-1101/demo.html": {
             "facts": {
                 "id": "habits-1101",

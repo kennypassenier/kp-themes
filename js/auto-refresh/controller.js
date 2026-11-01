@@ -4,6 +4,7 @@ import { watchOptions } from '../live-options.js';
 import { getStrings } from '../strings.js';
 import { RefreshBase } from './base.js';
 import { REFRESH_DEFAULT, WATCHED_ATTRIBUTES } from './constants.js';
+import { NARROW_ATTRIBUTE, isNarrow } from './narrow.js';
 
 /** The controller of one `[data-kp-refresh]` control. */
 export class RefreshController extends RefreshBase {
@@ -11,6 +12,7 @@ export class RefreshController extends RefreshBase {
         const el = this.host;
         const { bar, count, custom, failure } = this.parts;
         el.classList.add('kp-refresh');
+        el.toggleAttribute(NARROW_ATTRIBUTE, isNarrow(el));
         this.chooser.build();
         this.labels.paintLabel();
         this.labels.paintTitle();
@@ -20,6 +22,7 @@ export class RefreshController extends RefreshBase {
         this.own(() => this.view.clearTimeout(this.timer));
         this.wireEvents();
         this.own(watchOptions(el, WATCHED_ATTRIBUTES, (names) => this.onOptions(names)));
+        if (typeof ResizeObserver !== 'undefined') this.observe(new ResizeObserver(() => this.fitNarrow())).observe(el);
         this.paintChoice();
         this.paintAgo();
         this.schedule();
@@ -111,6 +114,7 @@ export class RefreshController extends RefreshBase {
     onOptions(names) {
         if (names.includes('data-kp-refresh-title')) this.labels.paintTitle();
         if (names.includes('data-kp-refresh-label')) this.labels.paintLabel();
+        if (names.includes('data-kp-refresh-line') || names.includes('data-kp-refresh-stack')) this.fitNarrow();
         if (names.includes('data-kp-look') && this.chooser.look() !== this.chooser.drawnLook) this.chooser.redraw(this.choices(), this.interval);
         if (names.includes('data-kp-refresh-choices')) this.paintChoice();
         if (names.includes('data-kp-stale-after') || names.includes('data-kp-announce')) this.paintAgo();
@@ -118,5 +122,15 @@ export class RefreshController extends RefreshBase {
             const next = Number(this.host.getAttribute('data-kp-refresh'));
             if (Number.isFinite(next) && next >= 0 && Math.round(next) !== this.interval) this.setInterval(next, 'script');
         }
+    }
+
+    /** The bar is narrow or not at the control's width now [ux-1101 round 2]: the attribute follows, the chooser turns into segments
+     * (or back into the look it names) and the current choice is brought into view. */
+    fitNarrow() {
+        const narrow = isNarrow(this.host);
+        if (narrow === this.host.hasAttribute(NARROW_ATTRIBUTE)) return;
+        this.host.toggleAttribute(NARROW_ATTRIBUTE, narrow);
+        if (this.chooser.look() !== this.chooser.drawnLook) this.chooser.redraw(this.choices(), this.interval);
+        else this.chooser.showCurrent();
     }
 }

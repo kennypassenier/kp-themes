@@ -13791,7 +13791,9 @@ var init_constants5 = __esm({
       "data-kp-stale-after",
       "data-kp-announce",
       "data-kp-refresh-label",
-      "data-kp-refresh-title"
+      "data-kp-refresh-title",
+      "data-kp-refresh-line",
+      "data-kp-refresh-stack"
     ];
     TYPING_SELECTOR = 'input:not([type=checkbox], [type=radio], [type=button], [type=submit]), textarea, select, [contenteditable=""], [contenteditable="true"]';
   }
@@ -14190,6 +14192,51 @@ var init_freshness = __esm({
   }
 });
 
+// js/auto-refresh/narrow.js
+function narrowFor({ lineOff, inFormGrid, stack, width, rem }) {
+  if (!lineOff || inFormGrid || stack === "never") return false;
+  if (stack === "always") return true;
+  return width > 0 && width < NARROW_AT_REM * rem;
+}
+function isNarrow(el16) {
+  return narrowFor({
+    lineOff: el16.getAttribute("data-kp-refresh-line") === "off",
+    inFormGrid: el16.closest(".kp-formgrid") !== null,
+    stack: el16.getAttribute("data-kp-refresh-stack") ?? "auto",
+    width: el16.clientWidth,
+    rem: parseFloat(getComputedStyle(el16.ownerDocument.documentElement).fontSize) || REM_FALLBACK_PX
+  });
+}
+function buildCaption(doc) {
+  const caption = make2(doc, "span", "kp-refresh__caption");
+  caption.setAttribute("aria-hidden", "true");
+  caption.textContent = getStrings().refreshLabel;
+  return caption;
+}
+function showChosen(track) {
+  if (!track || track.scrollWidth <= track.clientWidth) return;
+  const chosen = (
+    /** @type {HTMLElement | null} */
+    track.querySelector('[aria-checked="true"]')
+  );
+  if (!chosen) return;
+  const box = track.getBoundingClientRect();
+  const item = chosen.getBoundingClientRect();
+  track.scrollLeft += centreBy(box.left, box.width, item.left, item.width);
+}
+var NARROW_ATTRIBUTE, NARROW_AT_REM, REM_FALLBACK_PX, centreBy;
+var init_narrow = __esm({
+  "js/auto-refresh/narrow.js"() {
+    "use strict";
+    init_strings();
+    init_bar();
+    NARROW_ATTRIBUTE = "data-kp-refresh-narrow";
+    NARROW_AT_REM = 30;
+    REM_FALLBACK_PX = 16;
+    centreBy = (trackLeft, trackWidth, itemLeft, itemWidth) => itemLeft - trackLeft - (trackWidth - itemWidth) / 2;
+  }
+});
+
 // js/auto-refresh/bar.js
 function make2(doc, tag, className) {
   const node = doc.createElement(tag);
@@ -14270,14 +14317,16 @@ function buildBar(doc) {
   count2.setAttribute("aria-hidden", "true");
   const { note: note2, retry, failure } = buildFailure(doc);
   const bar = make2(doc, "div", "kp-refresh__bar");
-  bar.append(chooser, line, now);
-  return { chooser, custom, input, problem, line, ago, busyWords, now, count: count2, note: note2, retry, failure, bar };
+  const caption = buildCaption(doc);
+  bar.append(caption, chooser, line, now);
+  return { chooser, custom, input, problem, line, ago, busyWords, now, count: count2, note: note2, retry, failure, bar, caption };
 }
 var init_bar = __esm({
   "js/auto-refresh/bar.js"() {
     "use strict";
     init_strings();
     init_constants5();
+    init_narrow();
   }
 });
 
@@ -16032,7 +16081,7 @@ function lengthPx(group, text) {
   const n = Number(match[1]);
   if (match[2] === "px") return n;
   const of = match[2] === "rem" ? group.ownerDocument.documentElement : group;
-  return n * (parseFloat(getComputedStyle(of).fontSize) || REM_FALLBACK_PX);
+  return n * (parseFloat(getComputedStyle(of).fontSize) || REM_FALLBACK_PX2);
 }
 function balanceTracks(count2, track, room, gap) {
   if (count2 <= 0) return { cols: 1, rows: 0 };
@@ -16050,26 +16099,37 @@ function clearFit(group) {
   group.style.removeProperty(COLS_PROPERTY);
   group.style.removeProperty(TRACK_PROPERTY);
   group.removeAttribute(COLS_ATTRIBUTE);
+  group.removeAttribute(NARROW_ATTRIBUTE2);
   group.removeAttribute(FOLDED_ATTRIBUTE2);
   syncFold(group, false);
+}
+function isNarrow2(group) {
+  const foldAt = lengthPx(group, group.getAttribute(FOLD_AT_ATTRIBUTE) ?? FOLD_AT_DEFAULT);
+  return narrowAt(
+    /** @type {HTMLElement} */
+    (group.closest(".kp-toolbar") ?? group).clientWidth,
+    foldAt
+  );
 }
 function fitGroup(group) {
   if (!fitsTracks(group)) return clearFit(group);
   const items = itemsOf2(group).filter((item) => !item.hidden);
+  if (!items.length) return;
+  const narrow = isNarrow2(group);
+  group.toggleAttribute(NARROW_ATTRIBUTE2, narrow);
   const room = group.clientWidth;
-  if (room <= 0 || !items.length) return;
+  if (room <= 0) return;
   const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
   const track = Math.min(widest2(group, items), room);
   const { cols, rows } = balanceTracks(items.length, track, room, gap);
   group.style.setProperty(COLS_PROPERTY, String(cols));
   group.style.setProperty(TRACK_PROPERTY, `${track}px`);
   group.setAttribute(COLS_ATTRIBUTE, String(cols));
-  const foldAt = lengthPx(group, group.getAttribute(FOLD_AT_ATTRIBUTE) ?? FOLD_AT_DEFAULT);
-  const folds2 = !isTri(group) && foldAt > 0 && room < foldAt && rows > 1;
+  const folds2 = foldsToMenu({ narrow, fold: group.getAttribute(FOLD_ATTRIBUTE), tri: isTri(group), rows });
   group.toggleAttribute(FOLDED_ATTRIBUTE2, folds2);
   syncFold(group, folds2);
 }
-var FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLDED_ATTRIBUTE2, MEASURE_ATTRIBUTE, FOLD_AT_DEFAULT, COLS_PROPERTY, TRACK_PROPERTY, COLS_ATTRIBUTE, SLACK_PX, REM_FALLBACK_PX, fitsTracks;
+var FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLD_ATTRIBUTE, NARROW_ATTRIBUTE2, FOLDED_ATTRIBUTE2, MEASURE_ATTRIBUTE, FOLD_AT_DEFAULT, COLS_PROPERTY, TRACK_PROPERTY, COLS_ATTRIBUTE, SLACK_PX, REM_FALLBACK_PX2, fitsTracks, narrowAt, foldsToMenu;
 var init_fit2 = __esm({
   "js/segmented/fit.js"() {
     "use strict";
@@ -16077,6 +16137,8 @@ var init_fit2 = __esm({
     init_fold2();
     FIT_ATTRIBUTE = "data-kp-segmented-fit";
     FOLD_AT_ATTRIBUTE = "data-kp-segmented-fold-at";
+    FOLD_ATTRIBUTE = "data-kp-segmented-fold";
+    NARROW_ATTRIBUTE2 = "data-kp-segmented-narrow";
     FOLDED_ATTRIBUTE2 = "data-kp-segmented-folded";
     MEASURE_ATTRIBUTE = "data-kp-segmented-measure";
     FOLD_AT_DEFAULT = "30rem";
@@ -16084,8 +16146,10 @@ var init_fit2 = __esm({
     TRACK_PROPERTY = "--kp-seg-track";
     COLS_ATTRIBUTE = "data-kp-segmented-cols";
     SLACK_PX = 0.5;
-    REM_FALLBACK_PX = 16;
+    REM_FALLBACK_PX2 = 16;
     fitsTracks = (group) => group.classList.contains("kp-segmented--chips") && group.getAttribute(FIT_ATTRIBUTE) === "tracks";
+    narrowAt = (room, foldAt) => foldAt > 0 && room > 0 && room < foldAt;
+    foldsToMenu = ({ narrow, fold: fold2, tri, rows }) => narrow && fold2 === "menu" && !tri && rows > 1;
   }
 });
 
@@ -16146,7 +16210,7 @@ var init_group = __esm({
             this.switchMode(was);
           })
         );
-        this.own(watchOptions(group, [FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE], () => fitGroup(group)));
+        this.own(watchOptions(group, [FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLD_ATTRIBUTE], () => fitGroup(group)));
         this.own(watchOptions(group, ["data-kp-segmented-tags"], () => this.refresh()));
         this.own(() => dropFold(group));
         if (group.hasAttribute(LINK_ATTRIBUTE)) {
@@ -16452,10 +16516,12 @@ var segmented_exports = {};
 __export(segmented_exports, {
   FIT_ATTRIBUTE: () => FIT_ATTRIBUTE,
   FOLDED_ATTRIBUTE: () => FOLDED_ATTRIBUTE2,
+  FOLD_ATTRIBUTE: () => FOLD_ATTRIBUTE,
   FOLD_AT_ATTRIBUTE: () => FOLD_AT_ATTRIBUTE,
   FOLD_AT_DEFAULT: () => FOLD_AT_DEFAULT,
   GLIDE_ATTRIBUTE: () => GLIDE_ATTRIBUTE,
   MORE_ATTRIBUTE: () => MORE_ATTRIBUTE,
+  NARROW_ATTRIBUTE: () => NARROW_ATTRIBUTE2,
   OVERFLOW_ATTRIBUTE: () => OVERFLOW_ATTRIBUTE,
   SEGMENTED: () => SEGMENTED,
   SEGMENTED_EVENT: () => SEGMENTED_EVENT,
@@ -16517,6 +16583,7 @@ var init_chooser = __esm({
     init_segmented();
     init_strings();
     init_bar();
+    init_narrow();
     init_words();
     Chooser = class {
       /**
@@ -16532,9 +16599,17 @@ var init_chooser = __esm({
         this.drawnLook = null;
         this.unwire = null;
       }
-      /** The look the attribute names. @returns {'menu' | 'segmented'} */
+      /** The look the attribute names; a narrow bar shows every choice, so it is segments there [ux-1101 round 2]. @returns {'menu' | 'segmented'} */
       look() {
+        if (this.el.hasAttribute(NARROW_ATTRIBUTE)) return "segmented";
         return this.el.getAttribute("data-kp-look") === "menu" ? "menu" : "segmented";
+      }
+      /** On the narrow bar, bring the current choice into the middle of its scrolling row, once the row is laid out. */
+      showCurrent() {
+        if (!this.segHost || !this.el.hasAttribute(NARROW_ATTRIBUTE)) return;
+        const track = this.segHost;
+        const view = this.el.ownerDocument.defaultView;
+        if (view) view.requestAnimationFrame(() => showChosen(track));
       }
       /** Build the chooser parts of the look the attribute names (segments or a menu) and put them in the bar. */
       build() {
@@ -16588,6 +16663,7 @@ var init_chooser = __esm({
         } else if (this.segHost) {
           setSegmentedItems(this.segHost, [...list.map((n) => ({ value: String(n), label: wordsFor(n) })), { value: "other", label: s2.refreshOther }]);
           setSegmentedValues(this.segHost, [String(interval)]);
+          this.showCurrent();
         }
       }
       /** Draw the chooser again in a new look, keeping the focus inside it. @param {number[]} choices @param {number} interval */
@@ -16930,11 +17006,13 @@ var init_controller5 = __esm({
     init_strings();
     init_base2();
     init_constants5();
+    init_narrow();
     RefreshController = class extends RefreshBase {
       connect() {
         const el16 = this.host;
         const { bar, count: count2, custom, failure } = this.parts;
         el16.classList.add("kp-refresh");
+        el16.toggleAttribute(NARROW_ATTRIBUTE, isNarrow(el16));
         this.chooser.build();
         this.labels.paintLabel();
         this.labels.paintTitle();
@@ -16944,6 +17022,7 @@ var init_controller5 = __esm({
         this.own(() => this.view.clearTimeout(this.timer));
         this.wireEvents();
         this.own(watchOptions(el16, WATCHED_ATTRIBUTES, (names) => this.onOptions(names)));
+        if (typeof ResizeObserver !== "undefined") this.observe(new ResizeObserver(() => this.fitNarrow())).observe(el16);
         this.paintChoice();
         this.paintAgo();
         this.schedule();
@@ -17037,6 +17116,7 @@ var init_controller5 = __esm({
       onOptions(names) {
         if (names.includes("data-kp-refresh-title")) this.labels.paintTitle();
         if (names.includes("data-kp-refresh-label")) this.labels.paintLabel();
+        if (names.includes("data-kp-refresh-line") || names.includes("data-kp-refresh-stack")) this.fitNarrow();
         if (names.includes("data-kp-look") && this.chooser.look() !== this.chooser.drawnLook) this.chooser.redraw(this.choices(), this.interval);
         if (names.includes("data-kp-refresh-choices")) this.paintChoice();
         if (names.includes("data-kp-stale-after") || names.includes("data-kp-announce")) this.paintAgo();
@@ -17044,6 +17124,15 @@ var init_controller5 = __esm({
           const next2 = Number(this.host.getAttribute("data-kp-refresh"));
           if (Number.isFinite(next2) && next2 >= 0 && Math.round(next2) !== this.interval) this.setInterval(next2, "script");
         }
+      }
+      /** The bar is narrow or not at the control's width now [ux-1101 round 2]: the attribute follows, the chooser turns into segments
+       * (or back into the look it names) and the current choice is brought into view. */
+      fitNarrow() {
+        const narrow = isNarrow(this.host);
+        if (narrow === this.host.hasAttribute(NARROW_ATTRIBUTE)) return;
+        this.host.toggleAttribute(NARROW_ATTRIBUTE, narrow);
+        if (this.chooser.look() !== this.chooser.drawnLook) this.chooser.redraw(this.choices(), this.interval);
+        else this.chooser.showCurrent();
       }
     };
   }
@@ -44387,7 +44476,7 @@ var init_controls = __esm({
 
 // js/sidenav/narrow.js
 var SidenavNarrow;
-var init_narrow = __esm({
+var init_narrow2 = __esm({
   "js/sidenav/narrow.js"() {
     "use strict";
     init_options4();
@@ -44514,7 +44603,7 @@ var init_resizer = __esm({
     init_strings();
     init_options4();
     init_constants23();
-    init_narrow();
+    init_narrow2();
     SidenavResizer = class extends SidenavNarrow {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
       constructor(host, options) {
@@ -95228,6 +95317,7 @@ export {
   FOCUS_STEPS_WAKE_EVENT,
   FOLDED_ATTRIBUTE2 as FOLDED_ATTRIBUTE,
   FOLDING_OUT,
+  FOLD_ATTRIBUTE,
   FOLD_AT_ATTRIBUTE,
   FOLD_AT_DEFAULT,
   FOLD_SELECTOR,
@@ -95338,6 +95428,7 @@ export {
   MONTH_EVENT,
   MORE_ATTRIBUTE,
   NAMES_PROPERTY,
+  NARROW_ATTRIBUTE2 as NARROW_ATTRIBUTE,
   NAV_COMPACT_EVENT,
   NAV_FOLD,
   NAV_FOLD_EVENT,

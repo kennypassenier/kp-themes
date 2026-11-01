@@ -364,11 +364,12 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                             <tr><td><code>data-kp-refresh-hover</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-key</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-label</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-refresh-line</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-refresh-line</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-mode</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-refresh-narrow</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-refresh-region</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-slot</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-refresh-stack</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-refresh-stack</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-title</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-run</code></td><td>written</td></tr>
                     </tbody></table></div>
@@ -397,6 +398,7 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-touch-target</code></td><td><code>2.75rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
@@ -420,7 +422,7 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                             <tr><td><code>data-kp-refresh-mode</code></td><td>`event` (default: the app fetches), `page` (reload the page) or `region` (fetch the same URL and swap only the region).</td></tr>
                             <tr><td><code>data-kp-refresh-region</code></td><td>The selector of the element swapped in `region` mode; focus and scroll stay.</td></tr>
                             <tr><td><code>data-kp-look</code></td><td>`segmented` (default) or `menu`.</td></tr>
-                            <tr><td><code>data-kp-refresh-line</code></td><td>`on` (default) or `off` [ux-1101]: `off` leaves the bar’s own freshness line (“updated 12 s ago”, “updating…”) out, for a page that already says how fresh its data is in its header; Refresh now keeps its place. With `data-kp-look=&quot;menu&quot;` the control is one menu button and Refresh now.</td></tr>
+                            <tr><td><code>data-kp-refresh-line</code></td><td>`on` (default) or `off` [ux-1101]: `off` leaves the bar’s own freshness line (“updated 12 s ago”, “updating…”) out, for a page that already says how fresh its data is in its header; Refresh now keeps its place. With `data-kp-look=&quot;menu&quot;` the control is one menu button and Refresh now. Under 30rem of the control’s own width (outside a form grid) the bar is two rows: the caption “Refresh automatically” (or the title or label) with Refresh now, then every choice as segments on a row of their own, 44 px high, that scroll sideways with a fade on the side that has more and open with the current one in view; the menu look shows those segments while narrow. The script writes `data-kp-refresh-narrow`; `data-kp-refresh-stack=&quot;always&quot;` or `&quot;never&quot;` decides it by hand.</td></tr>
                             <tr><td><code>data-kp-remember</code></td><td>A name: the choice is kept per page and device.</td></tr>
                             <tr><td><code>data-kp-stale-after</code></td><td>Seconds after which the freshness line turns stale; three times the interval by default.</td></tr>
                             <tr><td><code>data-kp-refresh-hover</code></td><td>`pause`: no refresh while the pointer is over a table being read.</td></tr>

@@ -1,8 +1,8 @@
-// Builds research/ux-parts-1101/demo.html: the seven parts and options Kenny approved from the app review of 2026-11-01
-// (~/Projects/ux-review/kp-themes.md and kp-themes-components.md). One review page, formal only, one section per item (DEMO_RULES
-// ch. 1 and 6). The sections are written once in sections.mjs (their markup in markup.mjs); demo.js fills and wires them with the
-// apps' own data. An option (chips-narrow, tri-state-chip, empty-ghost-lines, auto-refresh-form) shows the approved look and the
-// new one under each other and asks only which is the default (DEMO_RULES ch. 7). Names, counts, days and runs are mock.
+// Builds research/ux-parts-1101/demo.html, round 2: the two options Kenny did not approve in round 1 (2026-11-01 23:22, both
+// "the phone version"), chips-narrow and auto-refresh-form, with their phone looks redone. The five approved sections left the page
+// (DEMO_RULES ch. 6); round 1 is in _previous/ and git history. Formal only, one section per item. The sections are written once in
+// sections.mjs (their markup in markup.mjs); demo.js and demo-more.js wire them. Each shows the approved look and the new one
+// under each other and asks only which is the default (DEMO_RULES ch. 7). Names and counts are mock.
 // Run: node research/ux-parts-1101/build.mjs (the page keeps its round id until the verdict is recorded; a round already answered gets a new one).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
@@ -49,7 +49,7 @@ const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 
 // A round id is never reused: once Kenny's answer to it is recorded (it is in `received`), the next page gets a new one.
 const roundId = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) && !received.includes(current) ? current : `${ID}-${randomUUID()}`;
 
-const title = 'Seven parts from the app review';
+const title = 'Two options from the app review, their phone looks redone';
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="${THEMES.join(',')}">
     <head>
@@ -86,11 +86,11 @@ const page = `<!doctype html>
             <header class="pg-head">
                 <h1>${escapeHtml(title)}</h1>
                 <p class="cat-intro">
-                    Seven things the app review of 2026-11-01 found missing in the package, built as you answered: three new parts (the popover form,
-                    the date navigation, Delete with Undo), the three-way chip&rsquo;s state as a word, and three options whose default you set here
-                    (chips on whole tracks, the empty plate without lines, the refresh control without its own line). Every option shows the approved
-                    look and the new one under each other; the approved look stays the default until you choose. Formal only, on the apps&rsquo; own
-                    data (Medicine Cabinet, Kitchen, kyu, Almanac; names, counts and days are mock). ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
+                    Round 2 of the app review&rsquo;s parts: the two options you sent back because their phone version was unwatchable and
+                    unusable. The chips now take a calm grid of whole chips under the search on a phone; the refresh control puts every choice
+                    on a row of its own that scrolls. Their desktop looks are as you saw them. The five parts you approved are no longer on
+                    this page; the three-way chip now shows its state as a word by default, as you chose. Formal only, on Medicine
+                    Cabinet&rsquo;s and kyu&rsquo;s own data (counts are mock). ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
                 </p>
                 <p>Each section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a phone&rsquo;s 390 px.</p>
             </header>

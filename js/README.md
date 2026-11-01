@@ -1126,7 +1126,7 @@ Forms without a framework: field messages, the summary, the valid and invalid ev
 
 ## js/auto-refresh.js → js/auto-refresh/
 
-The automatic refresh chooser: an interval picker with a freshness line, back-off retries, Refresh now and the R key. 9 files.
+The automatic refresh chooser: an interval picker with a freshness line, back-off retries, Refresh now and the R key. 10 files.
 
 | File            | Does                                                                                                                                                         |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -1137,6 +1137,7 @@ The automatic refresh chooser: an interval picker with a freshness line, back-of
 | `constants.js`  | The selector, events, defaults, option attributes, fixed numbers and types of the automatic refresh chooser.                                                 |
 | `controller.js` | One automatic refresh control: the interval, the schedule with its back-off, what makes a refresh wait, and the events [kpadopt5-ops].                       |
 | `labels.js`     | The bar's title and label cells: drawn while `data-kp-refresh-title` and `data-kp-refresh-label` have words [wish-1028, formgrid-notes-1019].                |
+| `narrow.js` | The narrow bar of a control without its own freshness line: two rows, every choice on its own scrolling row, the current one in view [ux-1101]. |
 | `region.js`     | What stops a refresh for now, and the `region` mode: fetch the same URL and swap one element's children.                                                     |
 | `words.js`      | The words and numbers of the chooser: the seconds offered, and "Every 30 s", "Every 2 min", "Paused".                                                        |
 

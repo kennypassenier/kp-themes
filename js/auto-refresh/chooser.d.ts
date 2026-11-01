@@ -17,8 +17,10 @@ export declare class Chooser {
      * @param {HTMLElement} holder the element the chooser parts go in
      */
     constructor(el: HTMLElement, holder: HTMLElement);
-    /** The look the attribute names. @returns {'menu' | 'segmented'} */
+    /** The look the attribute names; a narrow bar shows every choice, so it is segments there [ux-1101 round 2]. @returns {'menu' | 'segmented'} */
     look(): 'menu' | 'segmented';
+    /** On the narrow bar, bring the current choice into the middle of its scrolling row, once the row is laid out. */
+    showCurrent(): void;
     /** Build the chooser parts of the look the attribute names (segments or a menu) and put them in the bar. */
     build(): void;
     /** Wire the menu or the segments of the look drawn now. */

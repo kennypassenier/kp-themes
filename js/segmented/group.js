@@ -8,7 +8,7 @@ import { paint } from './paint.js';
 import { rewriteForMode } from './mode.js';
 import { LINK_ATTRIBUTE, SegmentedLink } from './link.js';
 import { paintTri, setTriValues, writeTri } from './tri.js';
-import { FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, fitGroup } from './fit.js';
+import { FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLD_ATTRIBUTE, fitGroup } from './fit.js';
 import { dropFold } from './fold.js';
 
 /** Wires one group. Idempotent: `refresh()` brings the group in line again whenever a page touches it. */
@@ -52,7 +52,7 @@ export class SegmentedGroup extends Controller {
         // A group tied to a tag input or combobox keeps the two in step. (Until mc-r2 this registered the attach as an undo step, so the link was
         // never made: the chips and the field did not follow each other, which is what Kenny found.)
         // Chips on tracks and their fold [ux-1101] are read again when their attributes change; the fold goes with the group.
-        this.own(watchOptions(group, [FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE], () => fitGroup(group)));
+        this.own(watchOptions(group, [FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE, FOLD_ATTRIBUTE], () => fitGroup(group)));
         // A three-way group's own visible words are written again when they change [ux-1101].
         this.own(watchOptions(group, ['data-kp-segmented-tags'], () => this.refresh()));
         this.own(() => dropFold(group));

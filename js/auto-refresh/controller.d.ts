@@ -20,4 +20,7 @@ export declare class RefreshController extends RefreshBase {
      * @param {string[]} names
      */
     onOptions(names: string[]): void;
+    /** The bar is narrow or not at the control's width now [ux-1101 round 2]: the attribute follows, the chooser turns into segments
+     * (or back into the look it names) and the current choice is brought into view. */
+    fitNarrow(): void;
 }

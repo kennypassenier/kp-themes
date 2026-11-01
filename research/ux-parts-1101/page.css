@@ -88,38 +88,3 @@
 .pg-frame:not([data-pg-default]) .pg-frame__default {
     visibility: hidden;
 }
-
-/* Almanac's Status: the month and the week, each its heading, its navigation and its data. */
-.pg-status {
-    display: grid;
-    gap: var(--kp-space-xl, 2rem);
-    min-inline-size: 0;
-}
-
-.pg-status__block {
-    display: grid;
-    gap: var(--kp-space-sm, 0.5rem);
-    min-inline-size: 0;
-}
-
-.pg-status__block > h3 {
-    margin: 0;
-}
-
-/* Kitchen's wheel filters: each filter's name over its chips, the three filters one under the other. */
-.pg-wheel {
-    display: grid;
-    gap: var(--kp-space-md, 0.75rem);
-    min-inline-size: 0;
-}
-
-.pg-wheel__filter {
-    display: grid;
-    gap: var(--kp-space-xs, 0.25rem);
-    min-inline-size: 0;
-}
-
-.pg-wheel__name {
-    margin: 0;
-    font-weight: 600;
-}

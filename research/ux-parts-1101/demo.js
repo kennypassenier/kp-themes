@@ -1,10 +1,8 @@
-// research/ux-parts-1101: the page's own wiring. Every component is the package's; this file wires the control groups, the
-// default each option section asks, and the first four sections (chips, three-way chips, the popover form, the empty plate);
-// demo-more.js wires the refresh control, the date navigation and Delete with Undo. Each section is wired by its own elements,
-// so it works on any page that shows it. The data is mock.
+// research/ux-parts-1101, round 2: the page's own wiring. Every component is the package's; this file wires the control groups,
+// the defaults each section asks and the filter chips; demo-more.js wires the refresh control. Each section is wired by its own
+// elements, so it works on any page that shows it. The data is mock.
 
-import { attachSegmented, setSegmentedTri } from '../../js/segmented.js';
-import { attachPopoverForms, openPopoverForm } from '../../js/popover-form.js';
+import { attachSegmented } from '../../js/segmented.js';
 
 export const $ = (/** @type {string} */ id) => /** @type {HTMLElement | null} */ (document.getElementById(id));
 
@@ -30,17 +28,38 @@ export const say = (id, text) => {
     const line = $(id);
     if (line) line.textContent = text;
 };
-/** A promise that settles after `ms`, as a server would. @param {number} ms @param {string} [refusal] */
-export const answer = (ms, refusal) => new Promise((resolve, reject) => setTimeout(() => (refusal ? reject(new Error(refusal)) : resolve(true)), ms));
+/** A promise that settles after `ms`, as a server would. @param {number} ms */
+export const answer = (ms) => new Promise((resolve) => setTimeout(() => resolve(true), ms));
 /** How long the mock server takes to answer [ms]. */
 export const REPLY_MS = 600;
 
-on('width', (value, target) => target?.setAttribute('data-pg-width', value));
+/**
+ * The approved looks fold on the WINDOW's width (the list toolbar under 48rem, the refresh bar under 40rem), which a 390 px stage
+ * inside a wide window never reaches; on a phone the window is that narrow. So the stage at a phone's width gives the approved
+ * frame the folded markup a phone would show it in (the toolbar's own `kp-toolbar--stacked`, the bar's `data-kp-refresh-stack`),
+ * and takes it away at full width. The new looks fold on their own width and need nothing.
+ * @param {HTMLElement | null} stage @param {boolean} phone
+ */
+function asOnAPhone(stage, phone) {
+    const now = stage?.querySelector('[data-pg-frame="now"]');
+    for (const toolbar of now?.querySelectorAll('.kp-toolbar') ?? []) toolbar.classList.toggle('kp-toolbar--stacked', phone);
+    for (const bar of now?.querySelectorAll('.kp-refresh') ?? []) bar.setAttribute('data-kp-refresh-stack', phone ? 'always' : 'auto');
+}
+
+on('width', (value, target) => {
+    target?.setAttribute('data-pg-width', value);
+    asOnAPhone(target, value === 'phone');
+});
 
 // The default an option section asks (DEMO_RULES ch. 7): the review kit fires `review:choice`; the frame it names wears the mark.
 document.addEventListener('review:choice', (event) => {
-    const { value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
+    const { id, value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
     const section = event.target instanceof Element ? event.target : null;
+    // What a narrow group on tracks does: the grid (default) or the menu of round 1, on the new look's group.
+    if (id === 'narrow') {
+        $('pg-chips-new')?.setAttribute('data-kp-segmented-fold', value);
+        return;
+    }
     for (const frame of section?.querySelectorAll('[data-pg-frame]') ?? []) frame.toggleAttribute('data-pg-default', frame.getAttribute('data-pg-frame') === value);
 });
 
@@ -53,41 +72,3 @@ for (const [id, name] of [['pg-chips-now', 'Now'], ['pg-chips-new', 'New']]) {
         say('pg-chips-log', `${name}: kp-segmented-change, values [${values.join(', ')}]`);
     });
 }
-
-// ---------------------------------------------------------------- 2 · tri-state-chip (Kitchen's wheel filters)
-for (const prefix of ['pg-wheel-now', 'pg-wheel']) {
-    const ing = $(`${prefix}-ing`);
-    if (ing) setSegmentedTri(ing, { include: ['chicken'], exclude: ['mushrooms'] });
-    $(prefix)?.addEventListener('kp-segmented-change', (event) => {
-        const { value, state } = /** @type {CustomEvent<{ value: string, state: string }>} */ (event).detail;
-        say('pg-wheel-log', `${prefix === 'pg-wheel' ? 'New' : 'Now'}: kp-segmented-change, ${value} is now ${state}`);
-    });
-}
-
-// ---------------------------------------------------------------- 3 · popover-form (Medicine Cabinet's Add stock)
-const cabinet = $('pg-cabinet');
-if (cabinet) attachPopoverForms(cabinet);
-cabinet?.addEventListener('kp-popover-form-accept', (event) => {
-    const { value, opener, waitUntil } = /** @type {CustomEvent<{ value: string, opener: HTMLElement, waitUntil: (p: Promise<unknown>) => void }>} */ (event).detail;
-    const wrapper = /** @type {HTMLElement | null} */ (opener.closest('[data-kp-popover-form]'));
-    const name = wrapper?.dataset.pgName ?? '';
-    const fails = pressed('save', 'pg-cabinet', 'ok') === 'fail';
-    say('pg-cabinet-log', `kp-popover-form-accept: ${value} for ${name}${fails ? ', the save will fail' : ''}`);
-    const save = answer(REPLY_MS, fails ? 'The cabinet did not answer; nothing was added.' : undefined).then(() => {
-        const badge = $(`pg-stock-${wrapper?.id.replace('pg-add-', '')}`);
-        if (!badge) return;
-        const boxes = Number(badge.dataset.pgBoxes ?? 0) + Number(value);
-        badge.dataset.pgBoxes = String(boxes);
-        badge.textContent = boxes === 1 ? '1 box' : `${boxes} boxes`;
-        badge.classList.toggle('kp-badge--warning', boxes === 0);
-        say('pg-cabinet-log', `Saved: ${name} now has ${badge.textContent}`);
-    });
-    waitUntil(save);
-});
-on('save', (value) =>
-    say('pg-cabinet-log', value === 'fail' ? 'The next Add fails: the cabinet will not answer.' : 'The next Add is saved.'),
-);
-on('open', () => {
-    const first = $('pg-add-ibuprofen');
-    if (first) openPopoverForm(first);
-});

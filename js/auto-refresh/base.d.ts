@@ -21,6 +21,7 @@ export declare class RefreshBase extends Controller {
         retry: HTMLButtonElement;
         failure: HTMLElement;
         bar: HTMLElement;
+        caption: HTMLElement;
     };
     chooser: Chooser;
     labels: BarLabels;

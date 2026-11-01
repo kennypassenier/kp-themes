@@ -33,6 +33,7 @@ export const CONTROLLER_PART_FILES = [
     'js/auto-refresh/constants.js',
     'js/auto-refresh/controller.js',
     'js/auto-refresh/labels.js',
+    'js/auto-refresh/narrow.js',
     'js/auto-refresh/region.js',
     'js/auto-refresh/words.js',
     'js/auto/dashboard.js',

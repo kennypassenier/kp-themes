@@ -1,7 +1,8 @@
-// research/ux-parts-1101: the seven sections of the review page, each written once: what is asked, the heading and one sentence,
-// what to expect, what to look at, the default it asks (where the part is an option), the controls and the component.
+// research/ux-parts-1101, round 2: the two sections Kenny did not approve in round 1 (2026-11-01 23:22), each written once: what
+// is asked, the heading and one sentence, what changed, what to expect, what to look at, the default it asks, the controls and the
+// component. The five approved sections left the page (DEMO_RULES ch. 6); round 1 is in _previous/ and in git history.
 
-import { almanacStatus, cabinet, chipToolbar, deadLetters, group, log, pair, stockTable, topicsHeader, wheelFilters, width } from './markup.mjs';
+import { chipToolbar, log, pair, topicsHeader, width } from './markup.mjs';
 
 /** The one question an option section asks: which look is the default. @param {string} id @param {string} label @param {string} now @param {string} next */
 const defaultOf = (id, label, now, next) => [{ id, label, default: 'now', options: [{ value: 'now', label: now }, { value: 'new', label: next }] }];
@@ -9,130 +10,42 @@ const defaultOf = (id, label, now, next) => [{ id, label, default: 'now', option
 export const SECTIONS = [
     {
         id: 'chips-narrow',
-        title: 'Filter chips: whole tracks, and a menu when narrow',
+        title: 'Filter chips: whole tracks, and a calm grid on a phone',
         topic: 'segmented',
         topicTitle: 'Filter chips',
         item: 'chips-narrow, Medicine Cabinet',
-        asked: 'Medicine Cabinet&rsquo;s chips wrapped raggedly (one chip alone on a second line) and, on a phone, scrolled sideways with &ldquo;Switched off&rdquo; cut. <code>data-kp-segmented-fit="tracks"</code> lays the chips on equal tracks, the rows balanced, and under <code>data-kp-segmented-fold-at</code> (30rem) folds them into the package&rsquo;s menu button. You choose the default; the other stays an option.',
+        asked: 'Kenny, 2026-11-01: &ldquo;the phone version is unwatchable&rdquo;. <b>Why it was:</b> the toolbar kept the search and the filters side by side at a phone&rsquo;s width (it only stacks on the window&rsquo;s width, not its own), so the filters got 28 px and &ldquo;Show: All ▾&rdquo; broke one letter per line; and the menu hid every filter and count behind one button. <b>What changed:</b> under 30rem of the toolbar&rsquo;s own width (<code>data-kp-segmented-fold-at</code>) the chips take a row of their own under the search and share its whole width: two balanced columns, both edges on the search&rsquo;s edges, every chip 44 px high with its name at the start and its count at the end, the chosen one filled. The menu stays an option for a long list (<code>data-kp-segmented-fold="menu"</code>). The desktop look is as before.',
         h2: 'What the Overview shows',
         intro: 'The cabinet&rsquo;s six filters beside its search, with their exact counts.',
         expected: [
-            '<b>Now</b>: the chips flow; at full width the last chips wrap under the first with a ragged edge. <b>New</b>: every chip is as wide as &ldquo;Switched off 4&rdquo;; the rows hold 3 + 3, never 5 + 1.',
-            '<b>Phone</b>: <b>Now</b> wraps into three ragged rows; <b>New</b> becomes one button, &ldquo;Show: All ▾&rdquo;. Open it: the six filters with their counts, the chosen one ticked; a pick closes it, says &ldquo;Show: Due today&rdquo; and the line under the frames names the value.',
+            '<b>Phone</b>: <b>New</b> is the search, then the six filters on three rows of two, all 44 px high, the counts in one column per side, nothing cut, nothing scrolls. A press on a chip fills it and the line under the frames names the values. <b>Now</b> shows the approved chips as a phone shows them: one line that scrolls sideways.',
+            '<b>Full width</b>: <b>New</b> is as you saw it, the chips on equal tracks beside the search, the rows balanced; <b>Now</b> wraps raggedly. <b>On a phone</b> (in the verdict panel) sets what a narrow group does: the grid, or the menu button of round 1.',
         ],
-        look: 'Formal: the chips are the approved pills; the menu is the package&rsquo;s plate. Check that the tracks line up from row to row and that nothing is cut.',
-        choices: defaultOf('fit', 'The default look of a chip group', 'Flow (now)', 'Whole tracks, a menu when narrow'),
+        look: 'Formal: the approved pills on two equal columns. Check that both edges of the grid line up with the search, that every row is full and that the chosen filter is found at a glance.',
+        choices: [
+            ...defaultOf('fit', 'The default look of a chip group', 'Flow (now)', 'Whole tracks, a grid on a phone'),
+            { id: 'narrow', label: 'On a phone, a group on tracks', default: 'grid', options: [{ value: 'grid', label: 'A grid of whole chips' }, { value: 'menu', label: 'One menu button' }] },
+        ],
         controls: width('chips-narrow-component'),
         component: `${pair(chipToolbar('pg-chips-now', ''), chipToolbar('pg-chips-new', ' data-kp-segmented-fit="tracks"'))}
         ${log('pg-chips-log')}`,
     },
     {
-        id: 'tri-state-chip',
-        title: 'Three-way chips: the state as a word',
-        topic: 'segmented',
-        topicTitle: 'Filter chips',
-        item: 'tri-state-chip, Kitchen',
-        asked: 'Kitchen&rsquo;s wheel filters are three-way chips: once = want, twice = not, thrice = either; the review found the state hard to read from the ring. <code>data-kp-segmented-tri-look="word"</code> writes the state after the label (&ldquo;either&rdquo;, &ldquo;want&rdquo;, &ldquo;not&rdquo;). New in every three-way group: <kbd>+</kbd> wants the focused chip, <kbd>-</kbd> leaves it out, <kbd>Delete</kbd> lets go; the event carries the state.',
-        h2: 'Filters: want, not, or either way',
-        intro: 'The wheel&rsquo;s meal, time and ingredient filters; Chicken is wanted and Mushrooms left out.',
-        expected: [
-            '<b>New</b>: each chip ends in a small word: &ldquo;EITHER&rdquo; (dashed, muted), &ldquo;WANT&rdquo; on the filled chip, &ldquo;NOT&rdquo; on red with the label struck through. A press walks either &rarr; want &rarr; not &rarr; either; the chip keeps its width; the line under each row says what is chosen; the line under the filters names the event&rsquo;s state.',
-            '<b>Now</b>: the same chips with the approved ring, check and cross. <b>Phone</b>: the chips wrap; nothing is cut.',
-        ],
-        look: 'Formal: the word is a small capital tag on the approved chip. Check that the three states read at a glance and that no chip changes width on a press.',
-        choices: defaultOf('look', 'The default look of a three-way chip', 'The ring mark (now)', 'The word'),
-        controls: width('tri-state-chip-component'),
-        component: `${pair(wheelFilters.replaceAll('id="pg-wheel', 'id="pg-wheel-now').replaceAll('aria-labelledby="pg-wheel', 'aria-labelledby="pg-wheel-now').replaceAll(' data-kp-segmented-tri-look="word"', ''), wheelFilters)}
-        ${log('pg-wheel-log')}`,
-    },
-    {
-        id: 'popover-form',
-        title: 'Popover form: Add stock without a dialog',
-        topic: 'popover-form',
-        topicTitle: 'Popover form',
-        item: 'popover-form, Medicine Cabinet',
-        asked: 'Medicine Cabinet&rsquo;s &ldquo;Add stock&rdquo; opened a modal holding one number. <code>data-kp-popover-form</code> hangs a small form under its button, on the menu&rsquo;s plate: one field and Add, Enter accepts, Escape or a press outside closes it, and the page&rsquo;s save can refuse with its own words.',
-        h2: 'The cabinet',
-        intro: 'Three medicines and their stock; &ldquo;Open the first form&rdquo; shows Ibuprofen&rsquo;s form open.',
-        expected: [
-            'The form hangs under &ldquo;Add stock&rdquo; with &ldquo;Boxes to add&rdquo;, the box size, the number selected and Add. Type 3 and Enter: the form closes, the focus is back on the button, the stock reads &ldquo;5 boxes&rdquo; and the line names the event. 30 says why it is refused (20 at most) and stays open.',
-            '<b>Save fails</b>: Add waits, then &ldquo;The cabinet did not answer; nothing was added.&rdquo; under the row, the form still open with your number. <b>Phone</b>: the form stays on the screen under its button.',
-        ],
-        look: 'Formal: the form is the menu&rsquo;s paper plate with the package&rsquo;s field and primary button. Check the field and Add on one line and that the problem line does not push the form around.',
-        controls: group('The save', 'save', [['ok', 'Saves', true], ['fail', 'Fails']], 'pg-cabinet') + group('Open', 'open', [['first', 'Open the first form']], 'pg-cabinet') + width('popover-form-component'),
-        component: `${cabinet}
-        ${log('pg-cabinet-log')}`,
-    },
-    {
-        id: 'empty-ghost-lines',
-        title: 'Empty plate: without the ruled lines',
-        topic: 'empty',
-        topicTitle: 'The empty plate',
-        item: 'empty-ghost-lines, kyu',
-        asked: 'kyu read formal&rsquo;s three ruled lines under every empty message as a skeleton still loading. <code>data-kp-empty-lines="off"</code> on the plate or any element round it (the page&rsquo;s html for all) leaves them out. You choose the default.',
-        h2: 'Dead letters',
-        intro: 'kyu&rsquo;s dead-letter table on a good day: nothing failed.',
-        expected: [
-            '<b>Now</b>: &ldquo;No dead letters&rdquo; centred on the plate, three grey ruled lines at its foot. <b>New</b>: the same plate and words, no lines; the double rule along the top stays.',
-            'Both plates fill the same footprint. <b>Phone</b>: the words wrap, still centred.',
-        ],
-        look: 'Formal: the ruled paper plate. Check that the plate without lines still reads as formal and as finished, not as loading.',
-        choices: defaultOf('lines', 'The default empty plate', 'With the ruled lines (now)', 'Without them'),
-        controls: width('empty-ghost-lines-component'),
-        component: pair(deadLetters('pg-dead-now'), `<div data-kp-empty-lines="off">${deadLetters('pg-dead-new')}</div>`),
-    },
-    {
         id: 'auto-refresh-form',
-        title: 'Auto-refresh: one control, no second freshness line',
+        title: 'Auto-refresh: no second freshness line, every choice in reach on a phone',
         topic: 'refresh',
         topicTitle: 'Auto-refresh',
         item: 'auto-refresh-form, kyu',
-        asked: 'kyu&rsquo;s refresh bar printed &ldquo;not updated yet&rdquo; beside the header&rsquo;s own &ldquo;Updated 2 min ago&rdquo;. <code>data-kp-refresh-line="off"</code> leaves the bar&rsquo;s line out, and with the menu look the control is one button and Refresh now. You choose the default.',
+        asked: 'Kenny, 2026-11-01: &ldquo;the phone version is unusable, the options with paused and every x.. should be on their own line and maybe even scrollable&rdquo;. <b>What changed:</b> under 30rem of the control&rsquo;s own width, <code>data-kp-refresh-line="off"</code> lays the control on two rows: &ldquo;Refresh automatically&rdquo; with Refresh now on the first, and every choice, Paused to Other&hellip;, on a row of its own under them. That row scrolls sideways when it does not fit, fades on the side that has more and opens with the current choice in view; every target is 44 px high. The menu look turns into that row on a phone, so every choice is one tap away. The desktop look is as before.',
         h2: 'Topics',
         intro: 'kyu&rsquo;s Topics header with its refresh control.',
         expected: [
-            '<b>Now</b>: the segmented bar, &ldquo;not updated yet&rdquo; and Refresh now at the far end, under a header that already says &ldquo;Updated 2 min ago&rdquo;. <b>New</b>: &ldquo;Every 30 s ▾&rdquo; with Refresh now beside it; one freshness line on the page, the header&rsquo;s.',
-            'Open the menu: the choices with the current one ticked. <b>Phone</b>: both fit; nothing scrolls sideways.',
+            '<b>Phone</b>: <b>New</b> has &ldquo;Refresh automatically&rdquo; and Refresh now on one row, then Paused, Every 15 s, Every 30 s (chosen), Every 1 min, Every 5 min and Other&hellip; on their own row; swipe or Tab along it: the edge fades only where more choices wait. A press chooses at once. One freshness line on the page, the header&rsquo;s. <b>Now</b> is the approved bar as a phone folds it: segments, &ldquo;not updated yet&rdquo; and Refresh now under each other.',
+            '<b>Full width</b>: <b>New</b> is as you saw it, &ldquo;Every 30 s ▾&rdquo; with Refresh now beside it; <b>Now</b> is the approved bar.',
         ],
-        look: 'Formal: the package&rsquo;s menu button and small button. Check that the page says how fresh it is once.',
-        choices: defaultOf('form', 'The default refresh control', 'Segments and its own line (now)', 'Menu, no own line'),
+        look: 'Formal: the package&rsquo;s segmented track and small button. Check that the choices have their own row, that the current one is visible without scrolling and that the fade says there is more.',
+        choices: defaultOf('form', 'The default refresh control', 'Segments and its own line (now)', 'No own line; a menu, every choice on its own row on a phone'),
         controls: width('auto-refresh-form-component'),
         component: pair(topicsHeader('pg-refresh-now', ''), topicsHeader('pg-refresh-new', ' data-kp-look="menu" data-kp-refresh-line="off"')),
-    },
-    {
-        id: 'date-nav',
-        title: 'Date navigation: one part for the month and the week',
-        topic: 'date-nav',
-        topicTitle: 'Date navigation',
-        item: 'date-nav, Almanac',
-        asked: 'Almanac&rsquo;s Status had a month navigation (Prev / Next / Today in three widths) and a week navigation (&lsaquo; Today &rsaquo;) in two styles. <code>data-kp-date-nav</code> (month, week, day) is one part: the range shown, then Previous, Today and Next on three equal tracks; it drives the calendar and the week through <code>data-kp-date-nav-for</code>.',
-        h2: 'Status',
-        intro: 'The month&rsquo;s deliveries and the week&rsquo;s syncs; today is Sunday 01/11/2026. The days and runs are mock.',
-        expected: [
-            'Both navigations read the same way: &ldquo;November 2026 current&rdquo; and &ldquo;Week 44 · 26/10 to 01/11/2026 current&rdquo;, then three buttons of one width. Next moves the calendar to December (the line names the event), Previous moves the week to week 43; Today comes back. In a navigation, PageUp and PageDown step and Home goes to today.',
-            '<b>Loading</b>, <b>Empty</b> and <b>Failed</b> are the calendar&rsquo;s and the week&rsquo;s own states; the navigations stay. <b>Phone</b>: the buttons go under the label, same widths.',
-        ],
-        look: 'Formal: the package&rsquo;s small buttons under a plain label. Check the three buttons share one width in both, and that nothing moves when the label grows.',
-        controls: group('State', 'state', [['ready', 'Ready', true], ['loading', 'Loading'], ['empty', 'Empty'], ['error', 'Failed']], 'date-nav-component') + width('date-nav-component'),
-        component: `${almanacStatus}
-        ${log('pg-dates-log')}`,
-    },
-    {
-        id: 'row-undo-delete',
-        title: 'Delete with Undo: a row action for tables and lists',
-        topic: 'undo',
-        topicTitle: 'Undo',
-        item: 'row-undo-delete, Medicine Cabinet',
-        asked: 'The Undo toast is the right answer to a delete that can be taken back, yet apps reached for a confirm. <code>data-kp-row-delete</code> on a row&rsquo;s button deletes the row with the toast: the row goes at once, Undo brings it back, and the page hears <code>kp-row-delete-commit</code> when the window closes.',
-        h2: 'Medicines in the cabinet',
-        intro: 'Five medicines, each with Delete.',
-        expected: [
-            'Delete on Ibuprofen: its row goes at once, the table counts four, the focus is on Paracetamol&rsquo;s Delete, and the toast says &ldquo;Ibuprofen 400 mg deleted&rdquo; with its clock. Undo: the row is back where it stood with the focus on its Delete; the line names <code>kp-row-delete-undo</code>. Leave it: after the window the line names <code>kp-row-delete-commit</code>.',
-            '<b>Save fails</b>: after the window the row comes back and the toast says it was not done. <b>Phone</b>: the table turns to cards; Delete stays in each.',
-        ],
-        look: 'Formal: the package&rsquo;s table, button and Undo toast. Check that nothing else in the table moves when a row goes and comes back.',
-        controls: group('The delete', 'commit', [['ok', 'Saves', true], ['fail', 'Fails']], 'pg-stock') + group('Rows', 'rows', [['reset', 'All five again']], 'pg-stock') + width('row-undo-delete-component'),
-        component: `${stockTable}
-        ${log('pg-stock-log')}`,
     },
 ];

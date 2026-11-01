@@ -18,4 +18,5 @@ export declare function buildBar(doc: Document): {
     retry: HTMLButtonElement;
     failure: HTMLElement;
     bar: HTMLElement;
+    caption: HTMLElement;
 };

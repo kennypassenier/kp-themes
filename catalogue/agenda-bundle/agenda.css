@@ -20843,8 +20843,10 @@
  * measures the widest chip and writes the number of tracks (--kp-seg-cols) and one track's width (--kp-seg-track), balanced
  * over the rows so no chip stands alone on a line; every chip fills its track, so the chips of one group share one width and
  * their edges line up from row to row. Until the script has measured (`data-kp-segmented-cols` absent) the chips flow as
- * approved. Under the fold width the group collapses in place (its width still read, out of sight and out of reach) and the
- * package's menu button stands before it, "Show: All ▾" (`.kp-segmented__fold`, js/segmented/fold.js). Knob: --kp-chip-gap. */
+ * approved. Narrow (`data-kp-segmented-narrow`, written under `data-kp-segmented-fold-at` of its toolbar's width) the group
+ * takes a row of its own under the search and its tracks share that whole row; with `data-kp-segmented-fold="menu"` it
+ * collapses in place instead (its width still read, out of sight and out of reach) and the package's menu button stands
+ * before it, "Show: All ▾" (`.kp-segmented__fold`, js/segmented/fold.js). Knob: --kp-chip-gap. */
     .kp-segmented--chips[data-kp-segmented-fit='tracks'] {
         flex: 1 1 auto;
         min-inline-size: 0;
@@ -20876,6 +20878,32 @@
         inline-size: max-content;
     }
 
+    /* Narrow [ux-1101 round 2]: the group's tracks share its whole row, so the grid's two edges line up with the search above it
+     * and no row ends ragged; each chip is a touch target high, its label at the start and its count at the end of its track, so
+     * the counts stand in one column per track and the chosen chip, filled, is found at a glance. Nothing scrolls. */
+    .kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-cols][data-kp-segmented-narrow] {
+        grid-template-columns: repeat(var(--kp-seg-cols, 1), minmax(0, 1fr));
+        justify-content: stretch;
+        overflow: visible;
+    }
+
+    .kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-cols][data-kp-segmented-narrow] > .kp-segmented__item {
+        justify-content: space-between;
+        min-block-size: var(--kp-touch-target, 2.75rem);
+        text-align: start;
+    }
+
+    /* A list toolbar that holds a narrow group stands as one column (search, then the chips under it), as the stacked toolbar
+     * does, keyed on its own room rather than the window's. */
+    .kp-toolbar:has(> .kp-toolbar__filters .kp-segmented[data-kp-segmented-narrow]) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-toolbar:has(> .kp-toolbar__filters .kp-segmented[data-kp-segmented-narrow]) > .kp-toolbar__filters {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     /* Folded: collapsed where it stands, so its width is still the width it would have. */
     .kp-segmented--chips[data-kp-segmented-folded] {
         block-size: 0;
@@ -20886,6 +20914,11 @@
 
     .kp-segmented__fold {
         align-self: start;
+    }
+
+    /* The menu of a narrow group (`data-kp-segmented-fold="menu"`) is a touch target high, as the chips it stands for. */
+    .kp-segmented__fold:has(+ .kp-segmented[data-kp-segmented-narrow]) > .kp-segmented__fold-button {
+        min-block-size: var(--kp-touch-target, 2.75rem);
     }
 
     .kp-segmented__fold > .kp-menu {
@@ -27267,6 +27300,61 @@
         justify-content: start;
     }
 
+
+    /* The narrow bar [ux-1101 round 2]: under 30rem of the control's own width (js/auto-refresh/narrow.js writes
+     * `data-kp-refresh-narrow`; `data-kp-refresh-stack` says `always` or `never`) the bar is two rows on two tracks. The first holds
+     * the caption ("Refresh automatically", or the page's own title or label) and Refresh now at the end; the second holds every
+     * choice, segments on one line across the whole width, which scroll sideways with the segmented control's own fade on the side
+     * that has more, the current choice brought into view. Everything is a touch target high. Outside a form grid only; a form grid
+     * stacks the bar on its own width. */
+    .kp-refresh__caption {
+        display: none;
+    }
+
+    .kp-refresh[data-kp-refresh-line='off'][data-kp-refresh-narrow]:not(.kp-formgrid .kp-refresh) > .kp-refresh__bar {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-auto-columns: auto;
+        grid-auto-flow: row;
+        justify-content: stretch;
+        /* The window's own fold (under 40rem, menu-hangs-from-buttons.css) starts every cell at the start edge; here each has its place. */
+        justify-items: stretch;
+        align-items: center;
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-refresh[data-kp-refresh-line='off'][data-kp-refresh-narrow]:not(.kp-formgrid .kp-refresh) > .kp-refresh__bar:not(:has(> .kp-refresh__title, > .kp-refresh__label)) > .kp-refresh__caption {
+        display: block;
+        min-inline-size: 0;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    .kp-refresh[data-kp-refresh-line='off'][data-kp-refresh-narrow]:not(.kp-formgrid .kp-refresh) > .kp-refresh__bar > :is(.kp-refresh__caption, .kp-refresh__title, .kp-refresh__label) {
+        grid-column: 1;
+    }
+
+    .kp-refresh[data-kp-refresh-line='off'][data-kp-refresh-narrow]:not(.kp-formgrid .kp-refresh) > .kp-refresh__bar > .kp-refresh__now {
+        grid-row: 1;
+        grid-column: 2;
+        justify-self: end;
+        min-block-size: var(--kp-touch-target, 2.75rem);
+    }
+
+    .kp-refresh[data-kp-refresh-line='off'][data-kp-refresh-narrow]:not(.kp-formgrid .kp-refresh) > .kp-refresh__bar > .kp-refresh__chooser {
+        grid-column: 1 / -1;
+    }
+
+    .kp-refresh[data-kp-refresh-line='off'][data-kp-refresh-narrow]:not(.kp-formgrid .kp-refresh) .kp-refresh__segments {
+        inline-size: 100%;
+    }
+
+    .kp-refresh[data-kp-refresh-line='off'][data-kp-refresh-narrow]:not(.kp-formgrid .kp-refresh) .kp-refresh__segments > .kp-segmented__item {
+        min-block-size: var(--kp-touch-target, 2.75rem);
+    }
     /* The menu hangs from the button's start edge: the chooser stands at the start of its row. */
     .kp-refresh__menu > .kp-menu {
         inset-inline: 0 auto;

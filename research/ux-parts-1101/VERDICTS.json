@@ -1,4 +1,30 @@
 {
     "demo": "ux-parts-1101",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "ux-parts-1101-e994c521-37e0-4c56-b12b-ed4d536f4d1e",
+            "allJudged": true,
+            "comment": "Kenny, 2026-11-01 23:22: 7 of 7 judged, 5 approved, 2 not approved (formal). Default changed: tri-state-chip.",
+            "notApproved": [
+                {
+                    "item": "chips-narrow",
+                    "theme": "formal",
+                    "note": "the phone version is unwatchable"
+                },
+                {
+                    "item": "auto-refresh-form",
+                    "theme": "formal",
+                    "note": "the phone version is unusable, the options with paused and every x.. should be on their own line and maybe even scrollable"
+                }
+            ],
+            "choices": [
+                {
+                    "item": "tri-state-chip",
+                    "theme": "formal",
+                    "change": "default changed: The default look of a three-way chip: The word"
+                }
+            ]
+        }
+    ]
 }

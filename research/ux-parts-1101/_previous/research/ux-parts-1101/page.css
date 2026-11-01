@@ -1,0 +1,125 @@
+/* research/ux-parts-1101: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+.pg-component[data-pg-width='tablet'] {
+    max-inline-size: 820px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+.pg-slot {
+    display: grid;
+    min-inline-size: 0;
+}
+
+
+/* What the page heard: one line high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-lg, 1.5rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+    overflow-wrap: anywhere;
+}
+
+/* An option shown twice, the approved look over the new one: each in its own named frame, the default one marked. */
+.pg-pair {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.pg-frame {
+    /* An empty table never had a loaded height to hold: its plate stands on the floor (14rem), and the held height, which an
+       empty-from-start table reads back from its own plate, is not used (it grew to the 48rem cap at 1280 and swung 2 px at 390). */
+    --kp-footprint-max: 0px;
+    --kp-stateplate-floor: 14rem;
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.pg-frame[data-pg-default] {
+    border-style: solid;
+    border-color: var(--border-strong);
+}
+
+.pg-frame__name {
+    display: flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.pg-frame:not([data-pg-default]) .pg-frame__default {
+    visibility: hidden;
+}
+
+/* Almanac's Status: the month and the week, each its heading, its navigation and its data. */
+.pg-status {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    min-inline-size: 0;
+}
+
+.pg-status__block {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-status__block > h3 {
+    margin: 0;
+}
+
+/* Kitchen's wheel filters: each filter's name over its chips, the three filters one under the other. */
+.pg-wheel {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.pg-wheel__filter {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.pg-wheel__name {
+    margin: 0;
+    font-weight: 600;
+}
