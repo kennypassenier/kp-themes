@@ -357,7 +357,10 @@
                             <tr><td><code>data-kp-reorder-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-reorder-cell</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-reorder-column</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-reorder-group</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-reorder-handle</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-reorder-label</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-reorder-list</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-reorder-status</code></td><td>selector, written</td></tr>
                     </tbody></table></div>
                 </section>
@@ -386,7 +389,7 @@
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
-                            <tr><td><code>kp-reorder</code></td><td>Fired on a reorder list when the order changed. A contract value [TH26]: `{ order, id, from, to }`.</td></tr>
+                            <tr><td><code>kp-reorder</code></td><td>Fired on a reorder list when the order changed. A contract value [TH26]: `{ order, id, from, to }`; a list in a group (`data-kp-reorder-group`) adds `fromList` and `toList`, the keys of the list the item left and the one it is in now (`data-kp-reorder-list`, else the id) [habits-1101]. A move across lists fires on the list that took the item.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -413,6 +416,9 @@
                             <tr><td><code>pointer drag</code></td><td>The same move with a pointer, added beside the keyboard rather than instead of it.</td></tr>
                             <tr><td><code>dragging</code></td><td>While an item is being moved it is marked, so the stylesheet can lift it out of the row.</td></tr>
                             <tr><td><code>item label</code></td><td>The name used in the announcement can be the item’s own text or a label element inside it.</td></tr>
+                            <tr><td><code>data-kp-reorder-group</code></td><td>Lists with the same group name take each other’s items [habits-1101]: drag an item over another list of the group, or press ← / → on its handle to send it to the list before or after (document order, mirrored right to left). The move is said with the list’s name, and `kp-reorder` (fired on the list that took the item) adds `fromList` and `toList` to `{ order, id, from, to }`. A list without a group is unchanged.</td></tr>
+                            <tr><td><code>data-kp-reorder-list</code></td><td>The key a list is reported by in `fromList` / `toList`; the list’s id when absent.</td></tr>
+                            <tr><td><code>data-kp-reorder-label</code></td><td>The list’s name in what is said, when it has no `aria-label` or `aria-labelledby`.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>

@@ -2686,6 +2686,45 @@ var init_rows_attention = __esm({
   }
 });
 
+// js/strings/board-menu-markdown.js
+var BOARD_MENU_MARKDOWN_STRINGS;
+var init_board_menu_markdown = __esm({
+  "js/strings/board-menu-markdown.js"() {
+    "use strict";
+    BOARD_MENU_MARKDOWN_STRINGS = {
+      reorderMovedTo: (name, list, at, of) => `${name} moved to ${list}, position ${at} of ${of}`,
+      reorderGroupEnd: "There is no list further that way",
+      reorderGroupKeys: "Arrow up and down move it within the list; arrow left and right move it to the list before or after.",
+      boardCountLabel: (count2, limit) => limit > 0 ? `${count2} of at most ${limit}` : String(count2),
+      boardOver: "Over the limit",
+      boardOverSaid: (lane, count2, limit) => `${lane} holds ${count2}, more than its limit of ${limit}`,
+      boardLaneEmpty: "Nothing here yet. Drag a card here.",
+      boardLanes: "Lanes",
+      boardLoading: "Reading the board",
+      boardEmpty: "Nothing on the board yet.",
+      boardFailed: (reason) => reason ? `Could not read the board: ${reason}` : "Could not read the board.",
+      boardRetry: "Try again",
+      contextMenuLabel: "Actions",
+      mdToolbar: "Formatting",
+      mdBold: "Bold",
+      mdItalic: "Italic",
+      mdHeading: "Heading",
+      mdList: "Bulleted list",
+      mdChecklist: "Checklist",
+      mdLink: "Link",
+      mdLinkText: "link text",
+      mdWithKeys: (action, keys) => `${action} (${keys})`,
+      mdWrite: "Write",
+      mdPreview: "Preview",
+      mdPreviewEmpty: "Nothing to preview yet.",
+      taskRowDone: (title) => `Done: ${title}`,
+      taskRowReopen: (title) => `Reopen: ${title}`,
+      taskRowMove: (title) => `Move ${title}`,
+      taskRowMore: (title) => `More for ${title}`
+    };
+  }
+});
+
 // js/strings/defaults.js
 var DEFAULT_STRINGS;
 var init_defaults = __esm({
@@ -2719,6 +2758,7 @@ var init_defaults = __esm({
     init_usual_logviewer();
     init_feed_sequencer();
     init_rows_attention();
+    init_board_menu_markdown();
     DEFAULT_STRINGS = Object.freeze({
       ...TOGGLE_PALETTE_ACK_STRINGS,
       ...DEPLIST_TRACE_ENTITY_STRINGS,
@@ -2747,7 +2787,8 @@ var init_defaults = __esm({
       ...FOCUS_STRINGS,
       ...USUAL_LOGVIEWER_STRINGS,
       ...FEED_SEQUENCER_STRINGS,
-      ...ROWS_ATTENTION_STRINGS
+      ...ROWS_ATTENTION_STRINGS,
+      ...BOARD_MENU_MARKDOWN_STRINGS
     });
   }
 });
@@ -50127,6 +50168,68 @@ var init_datatable = __esm({
   }
 });
 
+// js/structure/reorder-group.js
+function groupLists(list) {
+  const name = groupOf2(list);
+  if (name === null) return [list];
+  const all = (
+    /** @type {HTMLElement[]} */
+    [...list.ownerDocument.querySelectorAll(`[data-kp-reorder-group="${CSS.escape(name)}"]`)]
+  );
+  return all.filter((other) => other.dataset[ATTACHED2] !== void 0);
+}
+function listName(list) {
+  const label2 = list.getAttribute("aria-label");
+  if (label2) return label2;
+  const ids2 = (list.getAttribute("aria-labelledby") ?? "").split(/\s+/).filter(Boolean);
+  const words3 = ids2.map((id) => list.ownerDocument.getElementById(id)?.textContent?.trim() ?? "").filter(Boolean);
+  if (words3.length) return words3.join(" ");
+  return list.dataset.kpReorderLabel ?? listKey(list);
+}
+function listAt(lists, x, y) {
+  for (const list of lists) {
+    if (!shownList(list)) continue;
+    const box = list.getBoundingClientRect();
+    if (x >= box.left && x <= box.right && y >= box.top && y <= box.bottom) return list;
+  }
+  return null;
+}
+function indexAt2(list, item, y) {
+  const others = [...list.children].filter((child) => child !== item);
+  const at = others.findIndex((child) => {
+    const box = child.getBoundingClientRect();
+    return y < box.top + box.height / 2;
+  });
+  return at === -1 ? others.length : at;
+}
+function neighbour(list, step) {
+  const lists = groupLists(list);
+  return lists[lists.indexOf(list) + step] ?? null;
+}
+function nudgeScroll(item, x) {
+  for (let el16 = item.parentElement; el16; el16 = el16.parentElement) {
+    if (el16.scrollWidth <= el16.clientWidth) continue;
+    const style = getComputedStyle(el16);
+    if (style.overflowX !== "auto" && style.overflowX !== "scroll") continue;
+    const box = el16.getBoundingClientRect();
+    if (x < box.left + EDGE_PX) el16.scrollLeft -= EDGE_STEP_PX;
+    else if (x > box.right - EDGE_PX) el16.scrollLeft += EDGE_STEP_PX;
+    return;
+  }
+}
+var ATTACHED2, EDGE_PX, EDGE_STEP_PX, groupOf2, shownList, listKey;
+var init_reorder_group = __esm({
+  "js/structure/reorder-group.js"() {
+    "use strict";
+    ATTACHED2 = "kpReorderAttached";
+    EDGE_PX = 40;
+    EDGE_STEP_PX = 16;
+    groupOf2 = (list) => list.dataset.kpReorderGroup || null;
+    shownList = (list) => list.checkVisibility ? list.checkVisibility() : list.offsetParent !== null;
+    listKey = (list) => list.dataset.kpReorderList ?? list.id ?? "";
+  }
+});
+
 // js/structure/shared.js
 function visibleItems(tree) {
   return (
@@ -50174,13 +50277,14 @@ var init_reorder2 = __esm({
     "use strict";
     init_controller();
     init_strings();
+    init_reorder_group();
     init_shared();
     handleAt = (target) => (
       /** @type {HTMLElement | null} */
       /** @type {HTMLElement} */
       target.closest("[data-kp-handle]")
     );
-    ReorderControl = class extends Controller {
+    ReorderControl = class _ReorderControl extends Controller {
       /** Whether the element is already wired: it carries the mark connect() stamps. @param {HTMLElement} element */
       static isAttached(element) {
         return element.dataset.kpReorderAttached !== void 0;
@@ -50201,7 +50305,7 @@ var init_reorder2 = __esm({
         this.mountLive();
         this.own(() => {
           this.endDrag?.();
-          list.replaceChildren(...this.original);
+          if (groupOf2(list) === null) list.replaceChildren(...this.original);
           if (this.madeLive) this.live?.remove();
           delete list.dataset.kpReorderAttached;
         });
@@ -50213,6 +50317,13 @@ var init_reorder2 = __esm({
           /** @type {PointerEvent} */
           event
         ));
+        this.listen(list, "focusin", (event) => this.describeHandle(event.target));
+      }
+      /** A handle in a list that shares its items says its keys, ← → included, when it gets the focus. @param {EventTarget | null} target */
+      describeHandle(target) {
+        if (groupOf2(this.host) === null || !(target instanceof HTMLElement) || !target.matches("[data-kp-handle]")) return;
+        target.setAttribute("aria-keyshortcuts", "ArrowUp ArrowDown ArrowLeft ArrowRight Home End");
+        if (!target.hasAttribute("aria-description")) target.setAttribute("aria-description", getStrings().reorderGroupKeys);
       }
       mountLive() {
         this.live = /** @type {HTMLElement | null} */
@@ -50245,11 +50356,42 @@ var init_reorder2 = __esm({
         }
         list.dispatchEvent(new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: this.order(), id: "", from: -1, to: -1 } }));
       }
-      /** @param {HTMLElement} item @param {number} from @param {number} to */
-      announce(item, from, to) {
-        const name = item.dataset.kpLabel ?? item.querySelector("[data-kp-item-label]")?.textContent?.trim() ?? item.dataset.kpItem ?? "";
-        if (this.live) this.live.textContent = getStrings().reorderMoved(name, to + 1, this.host.children.length);
-        this.host.dispatchEvent(new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: this.order(), id: item.dataset.kpItem ?? "", from, to } }));
+      /** @param {HTMLElement} item */
+      static nameOf(item) {
+        return item.dataset.kpLabel ?? item.querySelector("[data-kp-item-label]")?.textContent?.trim() ?? item.dataset.kpItem ?? "";
+      }
+      /**
+       * Say the move and report it. A list in a group adds `fromList` and `toList` (the lists' keys) to the detail; `source` is the list
+       * the item came from when it crossed over.
+       * @param {HTMLElement} item @param {number} from @param {number} to @param {HTMLElement} [source]
+       */
+      announce(item, from, to, source = this.host) {
+        const name = _ReorderControl.nameOf(item);
+        const strings = getStrings();
+        const said = source === this.host ? strings.reorderMoved(name, to + 1, this.host.children.length) : strings.reorderMovedTo(name, listName(this.host), to + 1, this.host.children.length);
+        this.say(said);
+        const detail = { order: this.order(), id: item.dataset.kpItem ?? "", from, to };
+        if (groupOf2(this.host) !== null) Object.assign(detail, { fromList: listKey(source), toList: listKey(this.host) });
+        this.host.dispatchEvent(new CustomEvent(REORDER_EVENT2, { bubbles: true, detail }));
+      }
+      /** @param {string} words */
+      say(words3) {
+        if (this.live) this.live.textContent = words3;
+      }
+      /**
+       * Take an item from another list of the group and put it at `index` here.
+       * @param {HTMLElement} item @param {number} index
+       */
+      receive(item, index) {
+        const source = (
+          /** @type {HTMLElement} */
+          item.parentElement
+        );
+        const from = [...source.children].indexOf(item);
+        const children = [...this.host.children];
+        const at = Math.max(0, Math.min(children.length, index));
+        this.host.insertBefore(item, children[at] ?? null);
+        this.announce(item, from, at, source);
       }
       /** @param {HTMLElement} item @param {number} to */
       moveTo(item, to) {
@@ -50268,6 +50410,12 @@ var init_reorder2 = __esm({
         if (handle === null) return;
         const item = handle.closest("[data-kp-item]");
         if (!(item instanceof HTMLElement)) return;
+        if ((event.key === "ArrowLeft" || event.key === "ArrowRight") && groupOf2(this.host) !== null) {
+          event.preventDefault();
+          this.keyAcross(item, event.key === "ArrowRight" ? 1 : -1);
+          handle.focus();
+          return;
+        }
         const at = [...this.host.children].indexOf(item);
         const targets = { ArrowUp: at - 1, ArrowDown: at + 1, Home: 0, End: this.host.children.length - 1 };
         const to = targets[event.key];
@@ -50275,6 +50423,21 @@ var init_reorder2 = __esm({
         event.preventDefault();
         this.moveTo(item, to);
         handle.focus();
+      }
+      /**
+       * ← or →: the item goes to the list before or after in the group (mirrored right to left), at the same place or the last one.
+       * @param {HTMLElement} item @param {number} side 1 for →, -1 for ←
+       */
+      keyAcross(item, side) {
+        const rtl = getComputedStyle(this.host).direction === "rtl";
+        const target = neighbour(this.host, rtl ? -side : side);
+        const control = target ? controllerOf(target, _ReorderControl) : void 0;
+        if (!control) {
+          this.say(getStrings().reorderGroupEnd);
+          return;
+        }
+        control.receive(item, [...this.host.children].indexOf(item));
+        item.scrollIntoView?.({ block: "nearest", inline: "nearest" });
       }
       /**
        * The pointer route: drag by the handle, drop between siblings. The move and release are heard on the window, not on the
@@ -50292,7 +50455,7 @@ var init_reorder2 = __esm({
         const pointerId = event.pointerId;
         item.dataset.kpDragging = "";
         const onMove2 = (move) => {
-          if (move.pointerId === pointerId) this.dragOver(item, move.clientY);
+          if (move.pointerId === pointerId) this.dragOver(item, move.clientX, move.clientY);
         };
         const onUp2 = (up) => {
           if (up && up.pointerId !== pointerId) return;
@@ -50308,13 +50471,31 @@ var init_reorder2 = __esm({
         window.addEventListener("pointerup", onUp2);
         window.addEventListener("pointercancel", onUp2);
       }
-      /** The dragged item takes the place of the sibling under the pointer. @param {HTMLElement} item @param {number} y */
-      dragOver(item, y) {
-        for (const sibling of this.host.children) {
+      /**
+       * The dragged item goes over to another list of the group under the pointer, or takes the place of the sibling under it in the
+       * list it stands in now (which may no longer be this one).
+       * @param {HTMLElement} item @param {number} x @param {number} y
+       */
+      dragOver(item, x, y) {
+        const here = (
+          /** @type {HTMLElement} */
+          item.parentElement
+        );
+        const owner = controllerOf(here, _ReorderControl) ?? this;
+        if (groupOf2(this.host) !== null) {
+          nudgeScroll(item, x);
+          const over = listAt(groupLists(this.host), x, y);
+          const control = over && over !== here ? controllerOf(over, _ReorderControl) : void 0;
+          if (over && control) {
+            control.receive(item, indexAt2(over, item, y));
+            return;
+          }
+        }
+        for (const sibling of here.children) {
           if (sibling === item) continue;
           const box = sibling.getBoundingClientRect();
           if (y >= box.top && y <= box.bottom) {
-            this.moveTo(item, [...this.host.children].indexOf(sibling));
+            owner.moveTo(item, [...here.children].indexOf(sibling));
             break;
           }
         }
@@ -50447,7 +50628,7 @@ var init_split = __esm({
 });
 
 // js/structure/tree.js
-function groupOf2(item) {
+function groupOf3(item) {
   const inside = item.querySelector(':scope > [role="group"]');
   if (inside instanceof HTMLElement) return inside;
   const next2 = item.nextElementSibling;
@@ -50541,7 +50722,7 @@ var init_tree = __esm({
         if (!item.hasAttribute("aria-expanded")) return;
         if (item.getAttribute("aria-expanded") === "true" === expanded) return;
         const flip = () => item.setAttribute("aria-expanded", String(expanded));
-        const group = this.quiet || !leavesState(this.host) ? null : groupOf2(item);
+        const group = this.quiet || !leavesState(this.host) ? null : groupOf3(item);
         if (group !== null) glideGroup(group, expanded, flip);
         else flip();
         this.remember();
@@ -62022,7 +62203,7 @@ var init_core14 = __esm({
 });
 
 // js/range/panel.js
-var EDGE_PX, GAP_PX, RangePanel;
+var EDGE_PX2, GAP_PX, RangePanel;
 var init_panel2 = __esm({
   "js/range/panel.js"() {
     "use strict";
@@ -62032,7 +62213,7 @@ var init_panel2 = __esm({
     init_motion();
     init_build10();
     init_values30();
-    EDGE_PX = 8;
+    EDGE_PX2 = 8;
     GAP_PX = 6;
     RangePanel = class {
       /** @param {RangeCore} range the picker this panel belongs to */
@@ -62100,7 +62281,7 @@ var init_panel2 = __esm({
       place(p) {
         const box = this.range.host.getBoundingClientRect();
         const width = p.offsetWidth;
-        const left = Math.max(EDGE_PX, Math.min(box.left, this.range.doc.documentElement.clientWidth - width - EDGE_PX));
+        const left = Math.max(EDGE_PX2, Math.min(box.left, this.range.doc.documentElement.clientWidth - width - EDGE_PX2));
         p.style.setProperty("left", `${left}px`);
         p.style.setProperty("top", `${box.bottom + GAP_PX}px`);
         placeBlockSide(p, box);
@@ -81091,7 +81272,7 @@ var init_build16 = __esm({
 });
 
 // js/snooze/panel.js
-var seq6, DAY_MS4, EDGE_PX2, GAP_PX2, MAX_DEFAULT, SnoozePanel;
+var seq6, DAY_MS4, EDGE_PX3, GAP_PX2, MAX_DEFAULT, SnoozePanel;
 var init_panel4 = __esm({
   "js/snooze/panel.js"() {
     "use strict";
@@ -81105,7 +81286,7 @@ var init_panel4 = __esm({
     init_choices();
     seq6 = 0;
     DAY_MS4 = 864e5;
-    EDGE_PX2 = 8;
+    EDGE_PX3 = 8;
     GAP_PX2 = 6;
     MAX_DEFAULT = "7d";
     SnoozePanel = class extends Controller {
@@ -81156,7 +81337,7 @@ var init_panel4 = __esm({
       /** @param {HTMLElement} p */
       place(p) {
         const box = this.anchor().getBoundingClientRect();
-        const left = Math.max(EDGE_PX2, Math.min(box.left, this.doc.documentElement.clientWidth - p.offsetWidth - EDGE_PX2));
+        const left = Math.max(EDGE_PX3, Math.min(box.left, this.doc.documentElement.clientWidth - p.offsetWidth - EDGE_PX3));
         p.style.setProperty("left", `${left}px`);
         p.style.setProperty("top", `${box.bottom + GAP_PX2}px`);
         placeBlockSide(p, box);

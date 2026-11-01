@@ -310,4 +310,5 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/row-pick/controller.js',
     'js/row-pick/core.js',
     'js/row-pick/rows.js',
+    'js/structure/reorder-group.js',
 ];

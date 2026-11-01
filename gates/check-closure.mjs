@@ -135,6 +135,7 @@ export const VENDORED = [
     'js/strings/range-weekdays-runs.js',
     'js/strings/req-notices.js',
     'js/strings/rows-attention.js',
+    'js/strings/board-menu-markdown.js',
     'js/strings/runtime.js',
     'js/strings/selection-undo-newpill.js',
     'js/strings/snooze-dated-slider.js',

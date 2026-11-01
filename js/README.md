@@ -75,7 +75,7 @@ The data table: sorting, filtering, paging, cards, detail rows, reorder, editing
 
 ## js/strings.js → js/strings/
 
-The dictionary of every user-visible string, by component group. 31 files.
+The dictionary of every user-visible string, by component group. 32 files.
 
 | File                           | Does                                                                                                                           |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -88,6 +88,7 @@ The dictionary of every user-visible string, by component group. 31 files.
 | `deplist-trace-entity.js`      | The words of the dependency list, the path trace and the entity card.                                                          |
 | `diff-rating.js`               | The words of the diff and of ratings.                                                                                          |
 | `rows-attention.js`            | The words of the repeating row editor and the attention band's cap.                                                            |
+| `board-menu-markdown.js`       | The words of drag between lists, the board, the context menu, the Markdown editor and the task row [habits-1101].             |
 | `feed-sequencer.js`            | The words of the feed and the sequencer.                                                                                       |
 | `focus.js`                     | The words of the focus steps, their tracks and their resume question.                                                          |
 | `form-date-copy.js`            | The words of forms, the date picker, upload, the wizard, copy buttons and secrets.                                             |
@@ -699,11 +700,12 @@ The QR code, as a QrControl controller over a per-code state. 6 files.
 
 ## js/structure.js → js/structure/
 
-The tree, the reorder list and the split pane, one controller each. 4 files.
+The tree, the reorder list and the split pane, one controller each. 5 files.
 
 | File         | Does                                                                                    |
 | ------------ | --------------------------------------------------------------------------------------- |
 | `reorder.js` | ReorderControl: the grab handle, keys and pointer, the move said in words.              |
+| `reorder-group.js` | Lists that share their items: the group, the list under a point, a list's key and name. |
 | `shared.js`  | The selectors, the events, the defaults and the walk of a tree's visible items.         |
 | `split.js`   | SplitControl: the separator by keys and pointer, vertical too, the fold on double click. |
 | `tree.js`    | TreeControl: walking, opening, typeahead, one tab stop, selection, remembered branches. |

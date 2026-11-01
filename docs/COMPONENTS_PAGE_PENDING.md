@@ -12,6 +12,7 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- habits-1101, site/components/reorder.html: `data-kp-reorder-group`, `data-kp-reorder-list` and `data-kp-reorder-label`, the ← / → keys and `fromList` / `toList` in `kp-reorder`; one example with two day lists that share their tasks.
 - habits-1101, a page for `js/row-pick.js` (site/components, next to the selection bar and the data table's select column): `data-kp-row-pick`, `data-kp-row-key`, `data-kp-picked`, `data-kp-pick-mode`, `data-kp-pick-ignore`, the five key functions bound with `registerShortcuts`, and the selection bar fed with no boxes.
 - habits-1101, site/components/sidenav.html: the `kp-sidenav-group` event (`{ id, expanded, source }`) and the `.kp-sidenav__category-action` slot beside a category toggle (stays visible folded; `data-kp-sidenav-slim-hide` hides it in the rail); one example with a "+ New project" action.
 - habits-1101, site/components/focus-steps.html: a step's `body` (Node or Markdown, `.kp-focus-steps__detail`) and the functions `nextStep(root)` / `prevStep(root)`; one example with a Markdown body and a page-bound Enter key.

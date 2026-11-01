@@ -19,6 +19,11 @@
 // and detach restores what attach stamped, which the first version left
 // on every treeitem.
 //
+// Since habits-1101: lists marked with one `data-kp-reorder-group="<name>"` take each other's items. Drag an item over another list
+// of the group, or press ← / → on its handle to send it to the list before or after (document order, mirrored right to left);
+// the move is said with the list's name (`aria-label`, `aria-labelledby` or `data-kp-reorder-label`), and `kp-reorder` adds
+// `fromList` / `toList` (`data-kp-reorder-list`, else the id). A list without a group is unchanged.
+//
 // Since the controller split [closure-pattern B]: each control is one controller class, TreeControl, ReorderControl and
 // SplitControl in js/structure/, on js/controller.js.
 

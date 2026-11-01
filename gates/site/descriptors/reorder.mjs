@@ -7,7 +7,7 @@ export const reorderDescriptor = {
         group: 'Data',
         classes: ['kp-reorder'],
         exports: ['Reorder'],
-        aliases: ['item', 'handle', 'label', 'pointer', 'dragging'],
+        aliases: ['item', 'handle', 'label', 'pointer', 'dragging', 'reorder-group', 'reorder-list', 'reorder-label'],
         intro: 'A list whose items can be moved: a real grab handle that moves an item with the arrow keys, and a pointer drag beside it. Every move is announced in words and reported as the new order.',
         whenToUse:
             'When the order is the data — a playlist, a checklist, columns in a report. Not for sorting by a property, which belongs to the table and needs no dragging. Not for a list of two: a pair is better served by a swap.',
@@ -29,6 +29,9 @@ export const reorderDescriptor = {
             { name: 'pointer drag', what: 'The same move with a pointer, added beside the keyboard rather than instead of it.' },
             { name: 'dragging', what: 'While an item is being moved it is marked, so the stylesheet can lift it out of the row.' },
             { name: 'item label', what: 'The name used in the announcement can be the item’s own text or a label element inside it.' },
+            { name: 'data-kp-reorder-group', what: 'Lists with the same group name take each other’s items [habits-1101]: drag an item over another list of the group, or press ← / → on its handle to send it to the list before or after (document order, mirrored right to left). The move is said with the list’s name, and `kp-reorder` (fired on the list that took the item) adds `fromList` and `toList` to `{ order, id, from, to }`. A list without a group is unchanged.' },
+            { name: 'data-kp-reorder-list', what: 'The key a list is reported by in `fromList` / `toList`; the list’s id when absent.' },
+            { name: 'data-kp-reorder-label', what: 'The list’s name in what is said, when it has no `aria-label` or `aria-labelledby`.' },
         ],
         accessibility: [
             'Built in — the whole gesture exists on the keyboard, which is the half a drag library leaves out.',

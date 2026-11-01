@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "da820fadc0caeee7",
+    "base": "f2edca0885cb8346",
     "modules": {
         "js/accept-follows.js": { "digest": "0fdf861ed688c68e", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
@@ -110,7 +110,7 @@
         "js/stackbar.js": { "digest": "22ee6b6374f0c210", "when": "[data-kp-stackbar]" },
         "js/statusrow.js": { "digest": "0fed80955a05324a", "when": ".kp-statuslist" },
         "js/steplist.js": { "digest": "2bc8e0c21252bbd1", "when": ".kp-steplist" },
-        "js/structure.js": { "digest": "aa62fc4515a6eeb2", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
+        "js/structure.js": { "digest": "e46253d9799835bf", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
         "js/tabbar.js": { "digest": "4541699731425d55", "when": ".kp-tabbar" },
         "js/tables.js": { "digest": "f44c970942c89bca", "when": ".kp-table-wrap" },
         "js/thread.js": { "digest": "98fafc3d3895dbe1", "when": "[data-kp-thread]" },
@@ -14605,6 +14605,9 @@
                 "data-kp-remember",
                 "data-kp-remember-hold",
                 "data-kp-reorder",
+                "data-kp-reorder-group",
+                "data-kp-reorder-label",
+                "data-kp-reorder-list",
                 "data-kp-reorder-status",
                 "data-kp-resizable",
                 "data-kp-resizing",
