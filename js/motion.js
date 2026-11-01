@@ -35,7 +35,7 @@
 // comes and goes, and any element marked `data-kp-size-motion`. Boxes that
 // appear later (a framework's render) are picked up as they arrive.
 
-export { SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, motionWatchCount } from './motion/constants.js';
+export { SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, motionWatchCount, DIALOG_CLOSE_REQUEST_EVENT } from './motion/constants.js';
 export { registerTime, themeMotion } from './motion/timing.js';
 export { withCustomProperties, turnLines, turnEntrances } from './motion/keyframes.js';
 export { closeDialog } from './motion/close.js';

@@ -364,6 +364,37 @@ replaces them like every other string. `openConfirmation(button, …)` is
 exported if you want the same dialog somewhere else, and it hands you the
 `<dialog>` it made.
 
+**The words come from your sentence** [uxdialogs1101]. Ask a question and
+Confirm says it: `data-kp-confirm="Delete 8 dead letters?"` gives a red
+"Delete 8 dead letters", not "Yes, do it" (the phrase's first sentence
+without "Are you sure you want to"; a label longer than 32 characters keeps
+its verb, "Delete"). A phrase that already says it cannot be undone ("…?
+This cannot be undone.") drops that sentence from the description, so it
+is not said twice. Your own words still win: `acceptLabel`,
+`data-kp-confirm-label`, `data-kp-confirm-description`, or a
+`confirmAccept` of your own in the dictionary (then nothing is built from
+the phrase). Another language brings its own rules with the dictionary's
+`confirmLabelFrom(phrase)` and `confirmSaysIrreversible(text)`.
+
+**Restorable? Do not ask: offer Undo** [uxdialogs1101]. A confirmation
+is for what cannot come back. What can (a row moved to a bin, a setting
+that has an old value, anything your server can restore) is deleted at
+once with an Undo: `undoToast(…)`, or `data-kp-row-delete` on a row's
+button (the row goes, the toast offers Undo, the server hears it after the
+window). To keep yourself to that, mark the button
+`data-kp-confirm-restorable` (or pass `restorable: true`): the confirmation
+then refuses to open and says why in the console, and `openConfirmation`
+returns a dialog that never opened (`data-kp-confirm-refused`).
+
+**One level inside a dialog** [uxdialogs1101]. A confirmation opened from a
+button inside an open modal dialog opens a second modal over it (`over`,
+the default). With `data-kp-dialog-stack="replace"` on that dialog (or on
+any element round it, `<html>` for the whole page; `stack: 'replace'` from
+a script) it takes the dialog's place instead: the dialog keeps its size,
+its own parts step aside, and the question stands there with Back where
+Cancel was. Back, Escape and Confirm give the dialog its body back, with
+the focus on the button that asked.
+
 The obstacle of 3.x is still there as a variant:
 `data-kp-confirm-mode="inline"`, or `confirmMode="inline"` on the React
 button. The first click arms the button and changes its label to your
@@ -403,6 +434,34 @@ focus trap is how focus traps break, so there is none here.
 A dialog opened by a `data-kp-dialog` trigger or the React `Dialog` opens
 at the top every time, the dialog and its `.kp-dialog__body` scrolled back
 to 0, unless the element it focuses lies further down [scope-96].
+
+Three options a dialog can take, each off until you set it, each on the
+dialog or on any element round it (`<html>` for the whole page)
+[uxdialogs1101]:
+
+- `data-kp-backdrop="scrim"`: a translucent scrim (`--kp-dialog-scrim`,
+  black at 40 %) instead of the theme's backdrop, so the page behind a
+  modal stays readable (the row a confirmation acts on). `opaque` (default)
+  is the theme's own; a dialog that says `opaque` keeps it under a page
+  that says `scrim`.
+- `data-kp-dialog-phone="sheet"`: under 40rem a modal `.kp-dialog` stands
+  on the foot of the screen, the whole width, its actions one row of equal
+  buttons where the thumb is. `centre` (default) keeps it in the middle.
+- `data-kp-dialog-guard`: once its form changed, every way out asks "Discard
+  your changes?" with Keep editing (the focus) and Discard: a
+  `data-kp-dialog-close` without a value or with `cancel` (Cancel, ✕),
+  Escape, a backdrop press (`closedby="any"`), `closeDialog()` and a beside
+  drawer's Escape. A close with another value (`data-kp-dialog-close="save"`)
+  and a submit inside the dialog go through. "Changed" means a value differs
+  from what the form held just before its first edit, read as the unsaved
+  bar reads it (a quantity, a time field or a tag input as one value; a
+  field marked `data-kp-untracked` is left out). `attachDialogs` starts it;
+  a page that opens its dialogs itself calls `attachDialogGuards()` once.
+  A page's own close button calls `requestDialogClose(dialog)`; after an
+  answer it saved some other way, `markDialogSaved(dialog)`. Each change of
+  `dialogChanged(dialog)` is yours to read. `closeDialog()` fires the
+  cancelable `kp-dialog-close-request` (`{ returnValue }`) first, which is
+  how the guard holds it.
 
 Both channels also say whether an overlay's box scrolls: `attachScrollbars`
 (in `attachAll`, and inside the React `Dialog`, `DropdownMenu` and
@@ -1890,7 +1949,24 @@ that scrolls, and a foot that stays.
 
 `.kp-drawer` lays out any element; a `dialog.kp-drawer` is placed at the
 edge and slides in (not under reduced motion), and opens and closes as any
-`.kp-dialog` does. A `.kp-help` card's `.kp-help__list` puts the words beside
+`.kp-dialog` does. `data-kp-drawer-width` sizes it for what it holds:
+`narrow` (`--kp-drawer-narrow`, 22rem) for two or three fields, `wide`
+(`--kp-drawer-wide`, 48rem) for an editor; without it 28rem. Under 40rem
+every drawer is the whole window [uxdialogs1101].
+
+`data-kp-drawer-mode="beside"` keeps the list it edits in sight
+[uxdialogs1101]: a `data-kp-dialog` trigger (or `openDialog(drawer, {
+trigger })`) opens it with `show()`, without a backdrop, so the page stays
+usable; the row the trigger sits in (`[data-kp-drawer-row]`, a `tr`, an
+`li` or a `role="row"`) is marked `data-kp-drawer-current` (a muted plate
+with a primary edge at its start), the trigger carries `aria-expanded`, and
+Escape closes it and gives the focus back to the trigger. A trigger in
+another row moves it there (asking first when it guards a changed form) and
+fires `kp-dialog-open` again with `moved: true`, so you fill it with that
+row. Mark the list's container `data-kp-drawer-room` and it makes room at
+its end edge while the drawer is open (`--kp-drawer-room`), so nothing
+stands under it. Under 40rem it opens modal: there is no room beside
+anything. `modal` (default) is the drawer as before. A `.kp-help` card's `.kp-help__list` puts the words beside
 their meanings, the meanings starting at one edge across every card; in a
 card of 22rem or less each word goes over its meaning. Knobs:
 `--kp-drawer-width` (`min(28rem, 100vw)`), `--kp-help-term` (8rem, the
@@ -2424,7 +2500,10 @@ and a press fires `kp-uptime-pick` (`{ key, index, period }`). The dictionary wo
 ### A typed confirmation
 
 For the few actions that delete what cannot come back, the confirmation dialog of the destructive button can ask for
-the name first. Add `data-kp-confirm-type` to a button that already has `data-kp-confirm`:
+the name first. Keep it for those [uxdialogs1101]: a mass delete (a whole stack, every dead letter of a hub) or one
+that no backup brings back. An everyday delete (a recipe, a dish, one row) is a plain confirmation, or better, when it
+can come back, an Undo (see "Restorable? Do not ask: offer Undo" above): a field to type in on every small delete
+teaches people to type without reading. Add `data-kp-confirm-type` to a button that already has `data-kp-confirm`:
 
 ```html
 <button

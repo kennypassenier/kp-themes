@@ -175,6 +175,8 @@ concatenates that file into `css/themes.css`.
 | `badge-run.css`                 | A run of badges that wraps                                                       |
 | `datatable-columns.css`         | A table's actions column and card threshold                                      |
 | `dialog-widths.css`             | Dialog width steps                                                               |
+| `dialog-options.css`            | Dialog backdrop, phone sheet and the one-level confirmation                      |
+| `drawer-beside.css`             | Drawer widths and the drawer beside the list                                     |
 | `list-row.css`                  | A list of rows with columns that continue                                        |
 | `page-header-updated.css`       | The page header's updated line                                                   |
 | `quantity-fill.css`             | A quantity that fills its cell                                                   |

@@ -2,6 +2,7 @@
 export declare const TOAST_MS = 5000;
 /** Dispatched on the dialog, bubbling, when a wired trigger opened it: `{ trigger, modal }`. */
 export declare const DIALOG_OPEN_EVENT = "kp-dialog-open";
+export { DIALOG_CLOSE_REQUEST_EVENT } from '../motion/constants.js';
 /** Dispatched on a tab list, bubbling, when the selected tab changed: `{ index, tab, panel, previous }`. */
 export declare const TAB_CHANGE_EVENT = "kp-tab-change";
 /**

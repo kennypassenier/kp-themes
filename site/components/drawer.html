@@ -617,7 +617,11 @@ color: var(--popover-foreground);
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
-                    <p class="kp-text-muted">This unit reads no data attributes of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-drawer-current</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-drawer-mode</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-drawer-row</code></td><td>selector</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
@@ -635,7 +639,12 @@ color: var(--popover-foreground);
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-dialog-close-size</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-drawer-narrow</code></td><td><code>22rem</code></td></tr>
+                            <tr><td><code>--kp-drawer-room</code></td><td><code>calc(min(28rem, 100vw) + var(--kp-space-md, 1rem))</code></td></tr>
+                            <tr><td><code>--kp-drawer-shadow</code></td><td><code>-1rem 0 2rem -1.5rem rgb(0 0 0 / 0.45)</code></td></tr>
+                            <tr><td><code>--kp-drawer-wide</code></td><td><code>48rem</code></td></tr>
                             <tr><td><code>--kp-drawer-width</code></td><td><code>min(28rem, 100vw)</code></td></tr>
+                            <tr><td><code>--kp-drawer-z</code></td><td><code>40</code></td></tr>
                             <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
@@ -660,6 +669,7 @@ color: var(--popover-foreground);
                             <tr><td><code>.kp-drawer__foot</code></td><td>The drawer’s action, always in view at the bottom.</td></tr>
                             <tr><td><code>pastel</code></td><td>In pastel the drawer opens as pastel’s dialog (its pass, the landing onto it, a strip of washi tape) and swings from its top-end corner; it closes as that opening backwards.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

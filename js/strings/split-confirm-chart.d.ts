@@ -28,6 +28,34 @@ export type SplitConfirmChartStrings = {
      */
     confirmClose: string;
     /**
+     * Whether a confirmation's phrase already says the action cannot be undone; the dictionary's sentence that says so is then left out [uxdialogs1101]
+     */
+    confirmSaysIrreversible: (text: string) => boolean;
+    /**
+     * Confirm's words built from the phrase's verb and object, "Delete 8 dead letters?" to "Delete 8 dead letters"; '' keeps `confirmAccept` [uxdialogs1101]
+     */
+    confirmLabelFrom: (phrase: string) => string;
+    /**
+     * The way back of a confirmation that took over its dialog's body (`data-kp-dialog-stack="replace"`) [uxdialogs1101]
+     */
+    confirmBack: string;
+    /**
+     * The question a guarded dialog asks when a changed form would close (`data-kp-dialog-guard`) [uxdialogs1101]
+     */
+    dialogGuardTitle: string;
+    /**
+     * The sentence under it [uxdialogs1101]
+     */
+    dialogGuardText: string;
+    /**
+     * Its way back to the form [uxdialogs1101]
+     */
+    dialogGuardKeep: string;
+    /**
+     * Its button that closes and drops the changes [uxdialogs1101]
+     */
+    dialogGuardDiscard: string;
+    /**
      * The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
      */
     alarmAction: string;
@@ -324,6 +352,13 @@ export type SplitConfirmChartStrings = {
  * @property {(count: number) => string} confirmDependents  The heading over what still uses the thing a confirmation would remove, "Still in use by 2" (`data-kp-confirm-dependents`) [kpadopt4]
  * @property {string} confirmBlocked  What a confirmation that may not go ahead says when the page gives no sentence (`data-kp-confirm-blocked`) [kpadopt4]
  * @property {string} confirmClose  The one button of a confirmation that may not go ahead [kpadopt4]
+ * @property {(text: string) => boolean} confirmSaysIrreversible  Whether a confirmation's phrase already says the action cannot be undone; the dictionary's sentence that says so is then left out [uxdialogs1101]
+ * @property {(phrase: string) => string} confirmLabelFrom  Confirm's words built from the phrase's verb and object, "Delete 8 dead letters?" to "Delete 8 dead letters"; '' keeps `confirmAccept` [uxdialogs1101]
+ * @property {string} confirmBack  The way back of a confirmation that took over its dialog's body (`data-kp-dialog-stack="replace"`) [uxdialogs1101]
+ * @property {string} dialogGuardTitle  The question a guarded dialog asks when a changed form would close (`data-kp-dialog-guard`) [uxdialogs1101]
+ * @property {string} dialogGuardText  The sentence under it [uxdialogs1101]
+ * @property {string} dialogGuardKeep  Its way back to the form [uxdialogs1101]
+ * @property {string} dialogGuardDiscard  Its button that closes and drops the changes [uxdialogs1101]
  * @property {string} alarmAction  The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
  * @property {string} alarmKeepOpen  The button that stops an alarm's countdown and keeps it open [scope-94]
  * @property {string} alarmHint  The key hint beside the acknowledge button; hidden from a screen reader [scope-94]

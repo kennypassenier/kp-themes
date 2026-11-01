@@ -5,7 +5,7 @@
    plus every export that exactly one module declares, flat.
    Declared by more than one module, so flat under the module's prefix
    (setProgress from progressbar.js is progressbarSetProgress) and in each namespace:
-   ROW_OPEN_EVENT, OPEN_EVENT, MATCHERS, REORDER_EVENT, setProgress. */
+   ROW_OPEN_EVENT, OPEN_EVENT, MATCHERS, REORDER_EVENT, DIALOG_CLOSE_REQUEST_EVENT, setProgress. */
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __esm = (fn, res, err) => function __init() {
@@ -137,12 +137,12 @@ function watchOptions(element, attributes, onChange) {
   const view = element.ownerDocument.defaultView;
   if (view === null || typeof view.MutationObserver !== "function") return () => void 0;
   const watcher = new view.MutationObserver((records) => {
-    const before = /* @__PURE__ */ new Map();
+    const before2 = /* @__PURE__ */ new Map();
     for (const record of records) {
       const name = record.attributeName;
-      if (name !== null && !before.has(name)) before.set(name, record.oldValue);
+      if (name !== null && !before2.has(name)) before2.set(name, record.oldValue);
     }
-    const changed3 = [...before].filter(([name, was]) => element.getAttribute(name) !== was).map(([name]) => name);
+    const changed3 = [...before2].filter(([name, was]) => element.getAttribute(name) !== was).map(([name]) => name);
     if (changed3.length > 0) onChange(changed3);
   });
   watcher.observe(element, { attributes: true, attributeOldValue: true, attributeFilter: [...attributes] });
@@ -357,9 +357,9 @@ function parseQuantity(text) {
   const comma = t.lastIndexOf(",");
   const point2 = t.lastIndexOf(".");
   if (comma >= 0 && point2 >= 0) {
-    const mark = comma > point2 ? "," : ".";
-    const group = mark === "," ? "." : ",";
-    t = t.split(group).join("").replace(mark, ".");
+    const mark2 = comma > point2 ? "," : ".";
+    const group = mark2 === "," ? "." : ",";
+    t = t.split(group).join("").replace(mark2, ".");
   } else if (comma >= 0) {
     t = t.replace(",", ".");
   }
@@ -392,9 +392,9 @@ function getQuantity(root) {
   const kept = root.getAttribute("data-kp-quantity-value");
   if (kept !== null && kept !== "") return Number(kept);
   const input = inputOf(root);
-  const read = input ? parseQuantity(input.value) : NaN;
+  const read2 = input ? parseQuantity(input.value) : NaN;
   const rules = rulesOf(root);
-  return settleQuantity(Number.isFinite(read) ? read : Number.isFinite(rules.min) ? rules.min : 0, rules);
+  return settleQuantity(Number.isFinite(read2) ? read2 : Number.isFinite(rules.min) ? rules.min : 0, rules);
 }
 var inputOf, isDisabled, unitFor;
 var init_read = __esm({
@@ -449,7 +449,7 @@ var init_toggle_palette_ack = __esm({
       intentNoMatch: "Try other words, or fewer of them.",
       intentNoSubject: (name, verb, subjects, noun) => `There is no ${noun === "" ? "match" : noun} called "${name}". ${verb} works on: ${subjects.join(", ")}.`,
       paletteNothing: "Nothing matches",
-      paletteCapped: (shown5, total) => `${shown5} of ${total} shown, type more words`,
+      paletteCapped: (shown6, total) => `${shown6} of ${total} shown, type more words`,
       paletteLoading: "Loading the commands\u2026",
       paletteFailed: "The commands could not be read",
       paletteFailedText: "The places below still work.",
@@ -744,7 +744,7 @@ var init_stackbar_bullets_code = __esm({
       codeLines: (lines) => lines === 1 ? "1 line" : `${lines} lines`,
       codeEmpty: "Nothing to show.",
       codeBinary: (size2) => `Binary data (${size2}), not shown as text.`,
-      codeTruncated: (shown5, total) => `Showing the first ${shown5} of ${total}.`,
+      codeTruncated: (shown6, total) => `Showing the first ${shown6} of ${total}.`,
       codeLoading: "Reading\u2026",
       codeError: "Could not be read.",
       codeCopiedAnnouncement: (title) => `${title} copied`,
@@ -887,7 +887,7 @@ var init_req_notices = __esm({
       reqToneError: "Server error",
       reqToneNone: "No answer",
       reqSourceTest: "test",
-      reqCount: (shown5, total) => shown5 === total ? `${total} requests` : `${shown5} of ${total} requests`,
+      reqCount: (shown6, total) => shown6 === total ? `${total} requests` : `${shown6} of ${total} requests`,
       reqNoMatch: "No request matches this filter.",
       reqSummary: (method, path, status) => `${method} ${path}, ${status}`,
       // kpadopt5-ops:notices:start
@@ -1078,7 +1078,7 @@ var init_table_heat = __esm({
       tableSelectRow: (key) => `Select row ${key}`,
       tableEmpty: "Nothing found.",
       tableRows: (n) => `${n} rows`,
-      tableRowsFiltered: (shown5, total) => `${shown5} of ${total} rows`,
+      tableRowsFiltered: (shown6, total) => `${shown6} of ${total} rows`,
       /** The pager's position, "2 / 5". A function, so a consumer reorders it. @param {number} at @param {number} of */
       tablePage: (at, of) => `${at} / ${of}`,
       /**
@@ -1185,7 +1185,7 @@ var init_table_heat = __esm({
       tableColumnsLabel: "Visible columns",
       tableColumnLocked: (column) => `${column} (always shown)`,
       tableShowAllColumns: "Show every column",
-      tableColumnsShown: (shown5, total) => `${shown5} of ${total} columns shown`,
+      tableColumnsShown: (shown6, total) => `${shown6} of ${total} columns shown`,
       tableDetailsColumn: "Details",
       tableRowDetails: (key) => `Details for ${key}`,
       tableReorderColumn: "Move row",
@@ -1195,7 +1195,7 @@ var init_table_heat = __esm({
       tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
       tableEditField: (column, key) => `${column} of ${key}`,
       tableEditing: (column, key) => `Editing ${column} of ${key}. Press Enter to save, or Escape to cancel.`,
-      tableEdited: (key, column, before, after) => `${key}: ${column} changed from ${before} to ${after}.`,
+      tableEdited: (key, column, before2, after) => `${key}: ${column} changed from ${before2} to ${after}.`,
       tableEditUndone: (key, column, value) => `Undone: ${key} ${column} is ${value} again.`,
       tableEditCancelled: "Edit cancelled; nothing changed.",
       tableEditRequired: "A value is required.",
@@ -1323,6 +1323,22 @@ var init_split_confirm_chart = __esm({
       confirmDependents: (count2) => `Still in use by ${count2}`,
       confirmBlocked: "Remove what uses it first, then try again.",
       confirmClose: "Close",
+      // A phrase that says it already drops the dictionary's "This cannot be undone." [uxdialogs1101].
+      confirmSaysIrreversible: (text) => /\b(?:cannot|can['’]t|can not) be undone\b|\birreversibl|\bfor good\b|\bpermanently\b/i.test(text),
+      // "Delete 8 dead letters?" → "Delete 8 dead letters": the first sentence, a question, without "Are you sure you want to"; a long one keeps its verb.
+      confirmLabelFrom: (phrase) => {
+        const first = phrase.trim().split(/(?<=[?.!])\s+/)[0] ?? "";
+        if (!first.endsWith("?")) return "";
+        const bare = first.slice(0, -1).trim().replace(/^(?:are you sure(?: you want)?|do you (?:really )?want|really)\s+(?:to\s+)?/i, "");
+        if (!/^\p{L}/u.test(bare) || /^(?:is|are|was|were|do|does|did|should|shall|will|would|can|could|may|might|has|have)\b/i.test(bare)) return "";
+        const label2 = bare.charAt(0).toLocaleUpperCase() + bare.slice(1);
+        return label2.length <= 32 ? label2 : label2.split(/\s+/)[0] ?? "";
+      },
+      confirmBack: "Back",
+      dialogGuardTitle: "Discard your changes?",
+      dialogGuardText: "What you changed here is not saved yet.",
+      dialogGuardKeep: "Keep editing",
+      dialogGuardDiscard: "Discard",
       // The alarm [scope-94]. The headline, the detail and the code line are
       // the caller's words; these are the ones the component adds itself. The
       // countdown and the key hint are hidden from a screen reader, which hears
@@ -1514,7 +1530,7 @@ var init_pipeline_uptime_timer = __esm({
         percent === null ? null : `${percent} up`,
         incidents === null ? null : incidents === 1 ? "1 incident" : `${incidents} incidents`
       ].filter(Boolean).join(" \xB7 "),
-      uptimeShown: (shown5, total) => `${shown5} of ${total} shown`,
+      uptimeShown: (shown6, total) => `${shown6} of ${total} shown`,
       uptimeInfoFigures: (percent, incidents) => [percent === null ? null : `${percent}% up`, incidents === null ? null : incidents === 1 ? "1 incident" : `${incidents} incidents`].filter(Boolean).join(" \xB7 "),
       uptimeOpen: (label2) => `Open ${label2}`,
       // The typed confirmation [kpadopt4-ideas].
@@ -1866,8 +1882,8 @@ var init_uses_unsaved_compare = __esm({
       // The compare slider [kpadopt4-ideas].
       compareBefore: "Before",
       compareAfter: "After",
-      compareSlider: (before, after) => `Divider between ${before} and ${after}`,
-      compareValue: (percent, before, after) => `${percent}% ${before}, ${100 - percent}% ${after}`,
+      compareSlider: (before2, after) => `Divider between ${before2} and ${after}`,
+      compareValue: (percent, before2, after) => `${percent}% ${before2}, ${100 - percent}% ${after}`,
       compareFailed: "This image could not be loaded.",
       compareRetry: "Retry",
       compareLoading: "Loading the images\u2026",
@@ -2555,7 +2571,7 @@ var init_usual_logviewer = __esm({
       logviewerNotCopied: "Not copied",
       logviewerDownload: "Download",
       logviewerNothing: "There are no lines shown to copy.",
-      logviewerCount: (shown5, total) => shown5 === total ? `${total} ${total === 1 ? "line" : "lines"}` : `${shown5} of ${total} lines shown`,
+      logviewerCount: (shown6, total) => shown6 === total ? `${total} ${total === 1 ? "line" : "lines"}` : `${shown6} of ${total} lines shown`,
       logviewerDropped: (n, max) => `${n} earlier ${n === 1 ? "line" : "lines"} dropped, the newest ${max} are kept`,
       logviewerLoading: "Reading the log\u2026",
       logviewerEmptyTitle: "No log lines yet",
@@ -2585,7 +2601,7 @@ var init_feed_sequencer = __esm({
       feedUnitMany: "events",
       feedToday: "Today",
       feedYesterday: "Yesterday",
-      feedShown: (shown5, total, unit2) => `${shown5} of ${total} ${unit2}`,
+      feedShown: (shown6, total, unit2) => `${shown6} of ${total} ${unit2}`,
       feedFailed: (n) => `${n} failed`,
       feedAllOk: "all ok",
       feedStateRunning: "running",
@@ -2605,8 +2621,8 @@ var init_feed_sequencer = __esm({
       feedEarlierLoading: "Loading earlier\u2026",
       feedEarlierError: "Earlier activity could not be loaded.",
       feedEarlierRetry: "Try again",
-      feedBackTo: (shown5, total, date) => shown5 === total ? `Showing ${shown5}, back to ${date}` : `Showing ${shown5} of ${total}, back to ${date}`,
-      feedEnd: (shown5, date) => `Nothing earlier: all ${shown5} are shown, back to ${date}.`,
+      feedBackTo: (shown6, total, date) => shown6 === total ? `Showing ${shown6}, back to ${date}` : `Showing ${shown6} of ${total}, back to ${date}`,
+      feedEnd: (shown6, date) => `Nothing earlier: all ${shown6} are shown, back to ${date}.`,
       feedNew: (title) => `New: ${title}`,
       feedNewMany: (n, title) => `${n} new, the newest: ${title}`,
       // gap-activity-feed:feed:end
@@ -2851,10 +2867,10 @@ function stringProperties(strings = current) {
   const word = strings.loadingWord;
   const out = {};
   for (let tick6 = 0; tick6 <= 7; tick6++) {
-    const shown5 = Math.round(tick6 * word.length / 7);
+    const shown6 = Math.round(tick6 * word.length / 7);
     const turn2 = tick6 * 5 % CIPHER.length;
     const noise = (CIPHER.slice(turn2) + CIPHER.slice(0, turn2)).repeat(Math.ceil(word.length / CIPHER.length) + 1);
-    out[`--kp-loading-word-${tick6}`] = JSON.stringify(word.slice(0, shown5) + noise.slice(0, word.length - shown5));
+    out[`--kp-loading-word-${tick6}`] = JSON.stringify(word.slice(0, shown6) + noise.slice(0, word.length - shown6));
   }
   return out;
 }
@@ -3096,92 +3112,6 @@ var init_build = __esm({
   }
 });
 
-// js/overlays/constants.js
-var TOAST_MS, DIALOG_OPEN_EVENT, TAB_CHANGE_EVENT, TOAST_LINGER_MS, TOAST_SHOW_EVENT, TOAST_HIDE_EVENT, TOAST_PAUSE_EVENT, TABS_OVERFLOW, ALERT_DISMISS_EVENT, DISMISS_OWNED, TOOLTIP_EVENT, TOOLTIP_OWNED, SCROLL_OVERFLOW, SCROLL_BOXES;
-var init_constants = __esm({
-  "js/overlays/constants.js"() {
-    "use strict";
-    TOAST_MS = 5e3;
-    DIALOG_OPEN_EVENT = "kp-dialog-open";
-    TAB_CHANGE_EVENT = "kp-tab-change";
-    TOAST_LINGER_MS = 2e3;
-    TOAST_SHOW_EVENT = "kp-toast-show";
-    TOAST_HIDE_EVENT = "kp-toast-hide";
-    TOAST_PAUSE_EVENT = "kp-toast-pause";
-    TABS_OVERFLOW = "data-kp-tabs-overflow";
-    ALERT_DISMISS_EVENT = "kp-alert-dismiss";
-    DISMISS_OWNED = "[data-kp-dismiss-owner]";
-    TOOLTIP_EVENT = "kp-tooltip";
-    TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
-    SCROLL_OVERFLOW = "data-kp-popover-overflowing";
-    SCROLL_BOXES = ".kp-popover, .kp-dialog, .kp-dialog__body";
-  }
-});
-
-// js/overlays/dialogs.js
-function openAtTop(dialog) {
-  const body = dialog.querySelector(":scope > .kp-dialog__body");
-  for (const box of [dialog, body]) if (box) box.scrollTop = 0;
-  const focused2 = document.activeElement;
-  if (focused2 instanceof HTMLElement && focused2 !== dialog && dialog.contains(focused2))
-    focused2.scrollIntoView({ block: "nearest", inline: "nearest" });
-}
-function attachDialogs(root = document, { modal = true } = {}) {
-  const triggers = (
-    /** @type {HTMLElement[]} */
-    [...root.querySelectorAll("[data-kp-dialog]")].filter((trigger) => !("kpDialogAttached" in trigger.dataset)).filter((trigger) => document.getElementById(trigger.dataset.kpDialog ?? "") instanceof HTMLDialogElement).map((trigger) => attachOne(trigger, DialogTrigger, { modal }))
-  );
-  const closers = (
-    /** @type {HTMLElement[]} */
-    [...root.querySelectorAll("[data-kp-dialog-close]")].filter((button6) => !("kpDialogCloseAttached" in button6.dataset)).map((button6) => attachOne(button6, DialogCloser))
-  );
-  return () => {
-    for (const control of [...triggers.splice(0), ...closers.splice(0)]) control?.destroy();
-  };
-}
-var DialogTrigger, DialogCloser, closeLabel;
-var init_dialogs = __esm({
-  "js/overlays/dialogs.js"() {
-    "use strict";
-    init_controller();
-    init_strings();
-    init_constants();
-    DialogTrigger = class extends Controller {
-      /** @param {HTMLElement} host @param {{ modal?: boolean }} [options] */
-      constructor(host, options = {}) {
-        super(host, options);
-        this.dialog = /** @type {HTMLDialogElement} */
-        document.getElementById(host.dataset.kpDialog ?? "");
-        this.modal = options.modal ?? true;
-      }
-      connect() {
-        const trigger = this.host;
-        trigger.dataset.kpDialogAttached = "";
-        this.own(() => delete trigger.dataset.kpDialogAttached);
-        this.listen(trigger, "click", () => this.open());
-      }
-      open() {
-        const { host: trigger, dialog } = this;
-        const asModal = trigger.dataset.kpDialogMode === void 0 ? this.modal : trigger.dataset.kpDialogMode !== "non-modal";
-        if (dialog.open) return;
-        if (asModal) dialog.showModal();
-        else dialog.show();
-        openAtTop(dialog);
-        dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
-      }
-    };
-    DialogCloser = class extends Controller {
-      connect() {
-        const button6 = this.host;
-        button6.dataset.kpDialogCloseAttached = "";
-        this.own(() => delete button6.dataset.kpDialogCloseAttached);
-        this.listen(button6, "click", () => button6.closest("dialog")?.close(button6.dataset.kpDialogClose || void 0));
-      }
-    };
-    closeLabel = () => getStrings().close;
-  }
-});
-
 // js/motion/state.js
 var motionState;
 var init_state = __esm({
@@ -3206,8 +3136,8 @@ var init_state = __esm({
 function motionWatchCount() {
   return motionState.watching;
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON;
-var init_constants2 = __esm({
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, DIALOG_CLOSE_REQUEST_EVENT;
+var init_constants = __esm({
   "js/motion/constants.js"() {
     "use strict";
     init_state();
@@ -3228,6 +3158,1577 @@ var init_constants2 = __esm({
     ARRIVE_KEYS = /** @type {readonly string[]} */
     Object.freeze(["data-kp-key", "data-kp-row-key", "id"]);
     SKELETON = ".kp-skeleton, [data-kp-skeleton]";
+    DIALOG_CLOSE_REQUEST_EVENT = "kp-dialog-close-request";
+  }
+});
+
+// js/overlays/constants.js
+var TOAST_MS, DIALOG_OPEN_EVENT, TAB_CHANGE_EVENT, TOAST_LINGER_MS, TOAST_SHOW_EVENT, TOAST_HIDE_EVENT, TOAST_PAUSE_EVENT, TABS_OVERFLOW, ALERT_DISMISS_EVENT, DISMISS_OWNED, TOOLTIP_EVENT, TOOLTIP_OWNED, SCROLL_OVERFLOW, SCROLL_BOXES;
+var init_constants2 = __esm({
+  "js/overlays/constants.js"() {
+    "use strict";
+    init_constants();
+    TOAST_MS = 5e3;
+    DIALOG_OPEN_EVENT = "kp-dialog-open";
+    TAB_CHANGE_EVENT = "kp-tab-change";
+    TOAST_LINGER_MS = 2e3;
+    TOAST_SHOW_EVENT = "kp-toast-show";
+    TOAST_HIDE_EVENT = "kp-toast-hide";
+    TOAST_PAUSE_EVENT = "kp-toast-pause";
+    TABS_OVERFLOW = "data-kp-tabs-overflow";
+    ALERT_DISMISS_EVENT = "kp-alert-dismiss";
+    DISMISS_OWNED = "[data-kp-dismiss-owner]";
+    TOOLTIP_EVENT = "kp-tooltip";
+    TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
+    SCROLL_OVERFLOW = "data-kp-popover-overflowing";
+    SCROLL_BOXES = ".kp-popover, .kp-dialog, .kp-dialog__body";
+  }
+});
+
+// js/components/type-confirm.js
+function typeConfirmMatches(typed, name, { anyCase = false } = {}) {
+  const a = typed.trim();
+  const b = name.trim();
+  if (b === "") return false;
+  return anyCase ? a.toLocaleLowerCase() === b.toLocaleLowerCase() : a === b;
+}
+function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = false, loses = null, strings, onChange, block: given2 }) {
+  const s2 = { ...getStrings(), ...strings };
+  const base = fieldId ? fieldId : `kp-type-confirm-${++typeSeq}`;
+  const id = base;
+  const inputId = fieldId ? fieldId : `${base}-input`;
+  const block = given2 ?? doc.createElement("div");
+  block.classList.add("kp-type-confirm", "kp-field");
+  block.replaceChildren();
+  if (loses !== null && (!Array.isArray(loses) || loses.length > 0)) {
+    const box = doc.createElement("div");
+    box.className = "kp-type-confirm__loses";
+    const head = doc.createElement("p");
+    head.className = "kp-type-confirm__loses-title";
+    head.id = `${id}-loses`;
+    head.textContent = s2.typeConfirmLoses;
+    box.append(head);
+    if (Array.isArray(loses)) {
+      const list = doc.createElement("ul");
+      list.className = "kp-type-confirm__list";
+      list.setAttribute("aria-labelledby", head.id);
+      for (const line of loses) {
+        const item = doc.createElement("li");
+        item.textContent = line;
+        list.append(item);
+      }
+      box.append(list);
+    } else box.append(
+      /** @type {Node} */
+      loses
+    );
+    block.append(box);
+  }
+  const label2 = doc.createElement("label");
+  label2.className = "kp-field__label kp-type-confirm__label";
+  label2.htmlFor = inputId;
+  const [before2, after = ""] = s2.typeConfirmLabel("\0").split("\0");
+  const code = doc.createElement("code");
+  code.className = "kp-type-confirm__name";
+  code.textContent = name;
+  label2.append(before2, code, after);
+  const input = doc.createElement("input");
+  input.type = "text";
+  input.className = "kp-field__input kp-type-confirm__input";
+  input.id = inputId;
+  if (fieldName) input.name = fieldName;
+  input.autocomplete = "off";
+  input.spellcheck = false;
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("aria-describedby", `${id}-rule ${id}-status`);
+  const rule = doc.createElement("p");
+  rule.className = "kp-field__help kp-type-confirm__rule";
+  rule.id = `${id}-rule`;
+  rule.textContent = anyCase ? s2.typeConfirmRuleAnyCase : s2.typeConfirmRuleExact;
+  const status = doc.createElement("p");
+  status.className = "kp-type-confirm__status";
+  status.id = `${id}-status`;
+  status.setAttribute("aria-live", "polite");
+  block.append(label2, input, rule, status);
+  const field2 = new TypeConfirmField({ doc, block, input, status, name, anyCase, onChange, words: s2 });
+  input.addEventListener("input", () => field2.update());
+  field2.update();
+  return { block, input, matched: () => field2.matched };
+}
+function attachTypeConfirms(root = document, { strings } = {}) {
+  const made6 = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(TYPE_CONFIRM)].filter((block) => !("kpTypeConfirmAttached" in block.dataset)).map((block) => attachOne(block, TypeConfirmControl, { strings }))
+  );
+  return () => {
+    for (const control of made6.splice(0)) control?.destroy();
+  };
+}
+var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeSeq, TypeConfirmField, TypeConfirmControl;
+var init_type_confirm = __esm({
+  "js/components/type-confirm.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    VIOLATION_EVENT = "kp-contract-violation";
+    CONFIRM_WINDOW_MS = 4e3;
+    CONFIRM_MODES = /** @type {const} */
+    ["dialog", "inline"];
+    CONFIRM_OWNED = "[data-kp-confirm-owner]";
+    TYPE_CONFIRM_EVENT = "kp-type-confirm";
+    TYPE_CONFIRM = "[data-kp-type-confirm]";
+    typeSeq = 0;
+    TypeConfirmField = class {
+      /**
+       * @param {{ doc: Document, block: HTMLElement, input: HTMLInputElement, status: HTMLElement, name: string, anyCase: boolean,
+       *   onChange?: (matched: boolean, value: string) => void, words: import('../strings.js').Strings }} parts
+       */
+      constructor({ doc, block, input, status, name, anyCase, onChange, words: words3 }) {
+        this.doc = doc;
+        this.block = block;
+        this.input = input;
+        this.status = status;
+        this.name = name;
+        this.anyCase = anyCase;
+        this.onChange = onChange;
+        this.words = words3;
+        this.matched = false;
+      }
+      /** Read the field: draw the status line, and announce the answer when it turns. */
+      update() {
+        const { doc, block, input, status, name, words: s2 } = this;
+        const now = typeConfirmMatches(input.value, name, { anyCase: this.anyCase });
+        const typed = input.value.trim() !== "";
+        block.dataset.kpMatched = String(now);
+        if (now) {
+          const badge = doc.createElement("span");
+          badge.className = "kp-badge kp-badge--success kp-type-confirm__match";
+          badge.textContent = s2.typeConfirmMatched;
+          status.replaceChildren(badge);
+        } else status.textContent = typed ? s2.typeConfirmMismatch : "";
+        if (now === this.matched) return;
+        this.matched = now;
+        this.onChange?.(now, input.value);
+        block.dispatchEvent(new CustomEvent(TYPE_CONFIRM_EVENT, { bubbles: true, detail: { matched: now, value: input.value, name } }));
+      }
+    };
+    TypeConfirmControl = class extends Controller {
+      /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.strings = options.strings;
+        const target = host.dataset.kpTypeConfirmFor ? host.ownerDocument.getElementById(host.dataset.kpTypeConfirmFor) : null;
+        this.button = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
+        this.wasDisabled = this.button?.disabled ?? false;
+      }
+      connect() {
+        const block = this.host;
+        const doc = block.ownerDocument;
+        block.dataset.kpTypeConfirmAttached = "";
+        this.own(() => {
+          block.replaceChildren();
+          block.classList.remove("kp-type-confirm", "kp-field");
+          delete block.dataset.kpMatched;
+          delete block.dataset.kpTypeConfirmAttached;
+          if (this.button) this.button.disabled = this.wasDisabled;
+        });
+        const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
+        const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
+        if (lost instanceof Element) {
+          lost.removeAttribute("id");
+          lost.removeAttribute("hidden");
+        }
+        const typed = buildTypeConfirm(doc, {
+          name: block.dataset.kpTypeConfirm ?? "",
+          anyCase: block.dataset.kpTypeConfirmCase === "any",
+          loses: lost,
+          strings: this.strings,
+          block,
+          onChange: (matched) => this.hold(matched)
+        });
+        this.hold(typed.matched());
+      }
+      /** The button is on only while the name matches, and never when the page had disabled it. @param {boolean} matched */
+      hold(matched) {
+        if (this.button) this.button.disabled = !matched || this.wasDisabled;
+      }
+    };
+  }
+});
+
+// js/components/confirm-dialog.js
+function firstDescriptionField(description) {
+  for (const field2 of description.querySelectorAll(DESCRIPTION_FIELD)) {
+    if (field2 instanceof HTMLElement && field2.getClientRects().length > 0 && !field2.closest("[inert]")) return field2;
+  }
+  return null;
+}
+function unrepeated(sentence2, phrase, s2) {
+  if (!s2.confirmSaysIrreversible(phrase)) return sentence2;
+  return sentence2.split(/(?<=[.!?])\s+/).filter((part7) => !s2.confirmSaysIrreversible(part7)).join(" ");
+}
+function stackHost(button6, stack) {
+  const host = button6.closest("dialog[open]");
+  const mode2 = stack ?? button6.closest("[data-kp-dialog-stack]")?.getAttribute("data-kp-dialog-stack");
+  if (!(host instanceof HTMLDialogElement) || mode2 !== "replace" || !host.matches(":modal")) return null;
+  return host.hasAttribute("data-kp-confirm-replaced") ? null : host;
+}
+function takeOver(host, dialog) {
+  host.style.minBlockSize = `${Math.round(host.getBoundingClientRect().height)}px`;
+  host.setAttribute("data-kp-confirm-replaced", "");
+  host.append(dialog);
+  const back = (event) => {
+    if (event.target !== host) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    dialog.close("");
+  };
+  window.addEventListener("cancel", back, true);
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || event.defaultPrevented) return;
+    event.preventDefault();
+    dialog.close("");
+  });
+  return () => {
+    window.removeEventListener("cancel", back, true);
+    host.removeAttribute("data-kp-confirm-replaced");
+    host.style.minBlockSize = "";
+  };
+}
+function openConfirmation(button6, { phrase, description: richText, acceptLook = "destructive", strings, onAccept, onCancel: onCancel3, className = "", initialFocus = "cancel", dependents, blocked, typeName, anyCase, loses, acceptLabel, acceptFollows, acceptVerb, restorable, stack } = {}) {
+  const s2 = { ...getStrings(), ...strings };
+  if (restorable ?? button6.hasAttribute("data-kp-confirm-restorable")) {
+    console.error("kp-themes: openConfirmation refused: this action is restorable. Delete at once and offer Undo (undoToast, data-kp-row-delete) instead of asking first.", button6);
+    const refused = document.createElement("dialog");
+    refused.setAttribute("data-kp-confirm-refused", "");
+    return refused;
+  }
+  const text = phrase ?? button6.getAttribute("data-kp-confirm") ?? s2.confirm;
+  const users = (dependents ?? (button6.getAttribute("data-kp-confirm-dependents") ?? "").split(";").map((name2) => name2.trim()).filter(Boolean)).slice();
+  const blockedAttribute = button6.getAttribute("data-kp-confirm-blocked");
+  const stop = blocked === void 0 ? blockedAttribute === null ? null : blockedAttribute.trim() || s2.confirmBlocked : blocked === false ? null : blocked === true ? s2.confirmBlocked : blocked;
+  const displaced = [...document.querySelectorAll("[popover]")].filter((el16) => el16.matches(":popover-open"));
+  const host = stackHost(button6, stack);
+  const id = `kp-confirm-${++dialogSeq}`;
+  const dialog = document.createElement("dialog");
+  dialog.className = `${host ? "kp-confirm--inline" : "kp-dialog"} kp-confirm ${className}`.trim();
+  dialog.setAttribute("data-kp-confirm-dialog", "");
+  dialog.setAttribute("aria-labelledby", `${id}-phrase`);
+  dialog.setAttribute("aria-describedby", `${id}-description`);
+  const title = document.createElement("h2");
+  title.className = "kp-dialog__title";
+  title.id = `${id}-phrase`;
+  title.textContent = text;
+  const rich = richText !== void 0 && typeof richText !== "string";
+  const description = document.createElement(rich ? "div" : "p");
+  description.className = "kp-dialog__description";
+  description.id = `${id}-description`;
+  const describedBy2 = button6.getAttribute("data-kp-confirm-description");
+  const ownSentence = unrepeated(s2.confirmDescription, text, s2);
+  const plainText2 = typeof richText === "string" ? richText : describedBy2 ?? (host ? ownSentence.replace(s2.confirmCancel, s2.confirmBack) : ownSentence);
+  if (stop === null && rich) description.append(...Array.isArray(richText) ? richText : [richText]);
+  else description.textContent = stop ?? plainText2;
+  const silent = stop === null && !rich && plainText2.trim() === "";
+  const cancel = document.createElement("button");
+  cancel.type = "button";
+  cancel.className = "kp-button";
+  cancel.setAttribute("data-kp-confirm-cancel", "");
+  cancel.textContent = host && strings?.confirmCancel === void 0 ? s2.confirmBack : stop === null ? s2.confirmCancel : s2.confirmClose;
+  cancel.addEventListener("click", () => dialog.close(""));
+  const accept = document.createElement("button");
+  accept.type = "button";
+  accept.className = acceptLook === "primary" ? "kp-button kp-button--primary" : "kp-button kp-button--destructive";
+  accept.setAttribute("data-kp-confirm-accept", "");
+  const ownWord = s2.confirmAccept === DEFAULT_STRINGS.confirmAccept ? s2.confirmLabelFrom(text) : "";
+  accept.textContent = acceptLabel ?? button6.getAttribute("data-kp-confirm-label") ?? (ownWord || s2.confirmAccept);
+  if (acceptFollows !== void 0) {
+    accept.setAttribute("data-kp-accept-follows", typeof acceptFollows === "string" ? acceptFollows : acceptFollows.id);
+    if (acceptVerb !== void 0) accept.setAttribute("data-kp-accept-verb", acceptVerb);
+  }
+  accept.addEventListener("click", () => {
+    if (!accept.disabled) dialog.close("accept");
+  });
+  const actions = document.createElement("div");
+  actions.className = "kp-dialog__actions";
+  if (stop === null) actions.append(cancel, accept);
+  else actions.append(cancel);
+  if (silent) dialog.removeAttribute("aria-describedby");
+  dialog.append(...silent ? [title] : [title, description]);
+  if (users.length > 0) {
+    const block = document.createElement("section");
+    block.className = "kp-confirm__dependents";
+    block.setAttribute("aria-labelledby", `${id}-dependents`);
+    const heading = document.createElement("h3");
+    heading.className = "kp-dialog__heading";
+    heading.id = `${id}-dependents`;
+    heading.textContent = s2.confirmDependents(users.length);
+    const list = document.createElement("ul");
+    list.className = "kp-confirm__list";
+    for (const name2 of users) {
+      const item = document.createElement("li");
+      item.textContent = name2;
+      list.append(item);
+    }
+    block.append(heading, list);
+    dialog.append(block);
+    dialog.setAttribute("aria-describedby", silent ? `${id}-dependents` : `${id}-description ${id}-dependents`);
+  }
+  const name = typeName ?? button6.getAttribute("data-kp-confirm-type") ?? "";
+  let field2 = null;
+  if (name.trim() !== "" && stop === null) {
+    dialog.classList.add("kp-confirm--typed");
+    const own = (button6.textContent ?? "").trim().replace(/\s*(?:…|\.\.\.)$/, "");
+    accept.textContent = acceptLabel ?? button6.getAttribute("data-kp-confirm-label") ?? (own || s2.confirmAccept);
+    const lostId = button6.getAttribute("data-kp-confirm-loses");
+    const lostSource = lostId ? document.getElementById(lostId) : null;
+    const lost = loses ?? (lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null);
+    if (lost instanceof Element) {
+      lost.removeAttribute("id");
+      lost.removeAttribute("hidden");
+    }
+    const body = document.createElement("div");
+    body.className = "kp-dialog__body";
+    const typed = buildTypeConfirm(document, {
+      name,
+      anyCase: anyCase ?? button6.getAttribute("data-kp-confirm-case") === "any",
+      loses: lost,
+      strings,
+      onChange: (matched) => {
+        accept.disabled = !matched;
+      }
+    });
+    accept.disabled = !typed.matched();
+    typed.input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !accept.disabled) {
+        event.preventDefault();
+        dialog.close("accept");
+      }
+    });
+    body.append(typed.block);
+    field2 = typed.input;
+    dialog.append(body);
+  }
+  dialog.append(actions);
+  if (host) for (const popover of displaced) popover.hidePopover();
+  const giveBack = host ? takeOver(host, dialog) : null;
+  if (!host) document.body.append(dialog);
+  dialog.addEventListener("close", () => {
+    const taken = dialog.returnValue === "accept";
+    dialog.remove();
+    giveBack?.();
+    for (const popover of displaced) {
+      if (popover.isConnected && !popover.matches(":popover-open")) popover.showPopover();
+    }
+    if (button6.isConnected) button6.focus();
+    if (taken) onAccept?.();
+    else onCancel3?.();
+  });
+  if (host) dialog.show();
+  else dialog.showModal();
+  field2 ??= stop === null && rich ? firstDescriptionField(description) : null;
+  (field2 ?? (initialFocus === "accept" && stop === null ? accept : cancel)).focus();
+  return dialog;
+}
+var dialogSeq, DESCRIPTION_FIELD;
+var init_confirm_dialog = __esm({
+  "js/components/confirm-dialog.js"() {
+    "use strict";
+    init_strings();
+    init_type_confirm();
+    dialogSeq = 0;
+    DESCRIPTION_FIELD = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), [contenteditable="true"]';
+  }
+});
+
+// js/quantity/build.js
+function ensureInput(root) {
+  let input = inputOf(root);
+  if (!input) {
+    input = document.createElement("input");
+    input.className = "kp-quantity__input";
+    root.append(input);
+  }
+  return input;
+}
+function ensureField(root, input) {
+  let field2 = (
+    /** @type {HTMLElement | null} */
+    root.querySelector(".kp-quantity__field")
+  );
+  if (!field2) {
+    field2 = document.createElement("span");
+    field2.className = "kp-quantity__field";
+    input.before(field2);
+    field2.append(input);
+  }
+  return field2;
+}
+function ensureUnit(root, field2) {
+  let unit2 = (
+    /** @type {HTMLElement | null} */
+    root.querySelector(".kp-quantity__unit")
+  );
+  const unitWord = root.getAttribute("data-kp-quantity-unit");
+  if (!unit2 && unitWord) {
+    unit2 = document.createElement("span");
+    unit2.className = "kp-quantity__unit";
+    unit2.setAttribute("aria-hidden", "true");
+    field2.append(unit2);
+  }
+  if (unit2) {
+    const one = root.getAttribute("data-kp-quantity-unit-one");
+    unit2.setAttribute("data-kp-words", [unitWord ?? "", one ?? ""].filter(Boolean).join("\n"));
+  }
+}
+function ensureButton(root, field2, by, label2) {
+  const strings = getStrings();
+  let b = (
+    /** @type {HTMLButtonElement | null} */
+    root.querySelector(`.kp-quantity__step[data-kp-quantity-by="${by}"]`)
+  );
+  if (!b) {
+    b = document.createElement("button");
+    b.type = "button";
+    b.className = "kp-button kp-quantity__step";
+    b.setAttribute("data-kp-quantity-by", String(by));
+    const glyph3 = document.createElement("span");
+    glyph3.className = "kp-quantity__glyph";
+    glyph3.setAttribute("aria-hidden", "true");
+    b.append(glyph3);
+    if (by < 0) field2.before(b);
+    else field2.after(b);
+  }
+  b.setAttribute("aria-label", by < 0 ? strings.quantityLess(label2) : strings.quantityMore(label2));
+}
+function nameThem(root, input, label2) {
+  input.setAttribute("role", "spinbutton");
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("inputmode", rulesOf(root).decimals > 0 || rulesOf(root).min < 0 ? "decimal" : "numeric");
+  if (label2 && !input.hasAttribute("aria-label") && !input.hasAttribute("aria-labelledby") && !input.labels?.length) {
+    input.setAttribute("aria-label", label2);
+  }
+  if (root.getAttribute("role") === null) root.setAttribute("role", "group");
+  if (label2 && !root.hasAttribute("aria-label") && !root.hasAttribute("aria-labelledby")) root.setAttribute("aria-label", label2);
+}
+function build(root) {
+  const label2 = root.getAttribute("data-kp-quantity-label") ?? "";
+  const input = ensureInput(root);
+  const field2 = ensureField(root, input);
+  ensureUnit(root, field2);
+  ensureButton(root, field2, -1, label2);
+  ensureButton(root, field2, 1, label2);
+  nameThem(root, input, label2);
+  return input;
+}
+var init_build2 = __esm({
+  "js/quantity/build.js"() {
+    "use strict";
+    init_strings();
+    init_math();
+    init_read();
+  }
+});
+
+// js/quantity/paint.js
+function writeSpinbutton(input, rules, value, text, unit2) {
+  input.removeAttribute("aria-invalid");
+  if (Number.isFinite(rules.min)) input.setAttribute("aria-valuemin", String(rules.min));
+  else input.removeAttribute("aria-valuemin");
+  if (Number.isFinite(rules.max)) input.setAttribute("aria-valuemax", String(rules.max));
+  else input.removeAttribute("aria-valuemax");
+  input.setAttribute("aria-valuenow", String(value));
+  input.setAttribute("aria-valuetext", unit2 ? getStrings().quantityValue(text, unit2) : text);
+}
+function writeWidth(root, rules, value) {
+  const widest3 = Math.max(
+    ...[rules.min, rules.max, value].filter(Number.isFinite).map((v) => formatQuantity(v, rules).length),
+    rules.decimals > 0 ? rules.decimals + 2 : 1
+  );
+  root.style.setProperty("--kp-quantity-chars", String(widest3));
+}
+function writeButtons(root, rules, value, disabled2) {
+  for (
+    const b of
+    /** @type {NodeListOf<HTMLButtonElement>} */
+    root.querySelectorAll(".kp-quantity__step")
+  ) {
+    const by = Number(b.getAttribute("data-kp-quantity-by"));
+    const atBound = by < 0 ? value <= rules.min : value >= rules.max;
+    b.disabled = disabled2;
+    if (atBound && !disabled2) b.setAttribute("aria-disabled", "true");
+    else b.removeAttribute("aria-disabled");
+  }
+}
+function paint(root, value) {
+  const rules = rulesOf(root);
+  const input = build(root);
+  const text = formatQuantity(value, rules);
+  if (document.activeElement !== input || input.value !== text) input.value = text;
+  root.setAttribute("data-kp-quantity-value", String(value));
+  const unit2 = unitFor(root, value);
+  writeSpinbutton(input, rules, value, text, unit2);
+  const shown6 = root.querySelector(".kp-quantity__unit");
+  if (shown6) shown6.textContent = unit2;
+  writeWidth(root, rules, value);
+  const disabled2 = isDisabled(root);
+  input.disabled = disabled2;
+  writeButtons(root, rules, value, disabled2);
+}
+function change(root, wanted, source) {
+  if (isDisabled(root)) return false;
+  const rules = rulesOf(root);
+  const previous = getQuantity(root);
+  const value = settleQuantity(wanted, rules);
+  paint(root, value);
+  if (value === previous) return false;
+  root.dispatchEvent(new CustomEvent(QUANTITY_EVENT, { bubbles: true, detail: { value, previous, source } }));
+  return true;
+}
+var init_paint = __esm({
+  "js/quantity/paint.js"() {
+    "use strict";
+    init_strings();
+    init_values();
+    init_build2();
+    init_math();
+    init_read();
+  }
+});
+
+// js/quantity/controller.js
+var RELEASE_EVENTS, QuantityControl;
+var init_controller2 = __esm({
+  "js/quantity/controller.js"() {
+    "use strict";
+    init_controller();
+    init_values();
+    init_math();
+    init_paint();
+    init_read();
+    RELEASE_EVENTS = ["pointerup", "pointerleave", "pointercancel", "blur"];
+    QuantityControl = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.timer = null;
+        this.pressed = null;
+      }
+      connect() {
+        const root = this.host;
+        paint(root, getQuantity(root));
+        this.listen(root, "pointerdown", (event) => this.down(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(root, "click", (event) => this.click(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(root, "keydown", (event) => this.key(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(root, "input", () => this.typing());
+        this.listen(root, "focusout", () => this.commit());
+        for (const type of RELEASE_EVENTS) this.listen(root, type, () => this.stop(), true);
+        this.own(() => this.stop());
+      }
+      /** Stop the repeat of a held button. */
+      stop() {
+        if (this.timer !== null) clearTimeout(this.timer);
+        this.timer = null;
+      }
+      /** Remember the button a pointer pressed, or forget it. @param {HTMLElement | null} button */
+      press(button6) {
+        this.pressed = button6;
+      }
+      /** The step button an event happened on, if it is one of this quantity's. @param {Event} event @returns {HTMLElement | null} */
+      stepButton(event) {
+        const b = event.target instanceof Element ? (
+          /** @type {HTMLElement | null} */
+          event.target.closest(".kp-quantity__step")
+        ) : null;
+        return b && this.host.contains(b) ? b : null;
+      }
+      /** One step of a button. @param {HTMLElement} b @returns {boolean} whether the value moved */
+      stepOnce(b) {
+        if (b.getAttribute("aria-disabled") === "true") return false;
+        const by = Number(b.getAttribute("data-kp-quantity-by")) || 0;
+        return change(this.host, getQuantity(this.host) + by * rulesOf(this.host).step, "button");
+      }
+      /**
+       * A press in the number's box beside the number (its padding, the unit) puts the caret in the number, as the box's text cursor
+       * promises: the whole box, a fingertip high, is the number's target [uxtouch1101; the number alone is a few characters wide].
+       * @param {PointerEvent} event
+       */
+      focusFromField(event) {
+        const field2 = event.target instanceof Element ? event.target.closest(".kp-quantity__field") : null;
+        const input = inputOf(this.host);
+        if (!field2 || !input || event.target === input || isDisabled(this.host) || !this.host.contains(field2)) return;
+        event.preventDefault();
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+      /** A pointer went down on a button: step now, and again while it is held, slowly first and then faster. @param {PointerEvent} event */
+      down(event) {
+        this.focusFromField(event);
+        const b = this.stepButton(event);
+        if (!b || event.button !== 0 || isDisabled(this.host)) return;
+        this.press(b);
+        this.stepOnce(b);
+        let repeats = 0;
+        const again2 = () => {
+          repeats += 1;
+          if (!this.stepOnce(b)) return this.stop();
+          this.timer = setTimeout(again2, repeats > HOLD_SLOW_REPEATS ? HOLD_FAST : HOLD_SLOW);
+        };
+        this.stop();
+        this.timer = setTimeout(again2, HOLD_DELAY);
+      }
+      /** @param {MouseEvent} event */
+      click(event) {
+        const b = this.stepButton(event);
+        if (!b) return;
+        if (event.detail > 0 && this.pressed === b) {
+          this.press(null);
+          return;
+        }
+        this.press(null);
+        this.stepOnce(b);
+      }
+      /**
+       * Where a key moves the value to, or null when the key means nothing here.
+       * @param {string} key
+       * @param {number} now
+       * @returns {number | null}
+       */
+      target(key, now) {
+        const rules = rulesOf(this.host);
+        if (key === "ArrowUp") return now + rules.step;
+        if (key === "ArrowDown") return now - rules.step;
+        if (key === "PageUp") return now + rules.step * PAGE_STEPS;
+        if (key === "PageDown") return now - rules.step * PAGE_STEPS;
+        if (key === "Home" && Number.isFinite(rules.min)) return rules.min;
+        if (key === "End" && Number.isFinite(rules.max)) return rules.max;
+        return null;
+      }
+      /** @param {KeyboardEvent} event */
+      key(event) {
+        if (event.target !== inputOf(this.host) || event.altKey || event.ctrlKey || event.metaKey) return;
+        const now = getQuantity(this.host);
+        if (event.key === "Enter") return this.commit();
+        if (event.key === "Escape") return paint(this.host, now);
+        const to = this.target(event.key, now);
+        if (to === null) return;
+        event.preventDefault();
+        change(this.host, to, "key");
+      }
+      /** Mark a text that is not a number while it stands. */
+      typing() {
+        const input = inputOf(this.host);
+        if (!input) return;
+        const read2 = parseQuantity(input.value);
+        if (input.value.trim() === "" || !Number.isFinite(read2)) input.setAttribute("aria-invalid", "true");
+        else input.removeAttribute("aria-invalid");
+      }
+      /** Take what is typed: change to it, or put the last value back. */
+      commit() {
+        const input = inputOf(this.host);
+        if (!input) return;
+        const read2 = parseQuantity(input.value);
+        if (!Number.isFinite(read2)) paint(this.host, getQuantity(this.host));
+        else change(this.host, read2, "typed");
+      }
+    };
+  }
+});
+
+// js/quantity.js
+var quantity_exports = {};
+__export(quantity_exports, {
+  HOLD_DELAY: () => HOLD_DELAY,
+  HOLD_FAST: () => HOLD_FAST,
+  HOLD_SLOW: () => HOLD_SLOW,
+  QUANTITY: () => QUANTITY,
+  QUANTITY_EVENT: () => QUANTITY_EVENT,
+  attachQuantities: () => attachQuantities,
+  decimalsOf: () => decimalsOf,
+  formatQuantity: () => formatQuantity,
+  getQuantity: () => getQuantity,
+  parseQuantity: () => parseQuantity,
+  setQuantity: () => setQuantity,
+  settleQuantity: () => settleQuantity
+});
+function setQuantity(root, value) {
+  if (!(root instanceof HTMLElement)) return;
+  paint(root, settleQuantity(value, rulesOf(root)));
+}
+function attachQuantities(scope = document) {
+  return attachAll(scope, QUANTITY, QuantityControl);
+}
+var init_quantity = __esm({
+  "js/quantity.js"() {
+    "use strict";
+    init_controller();
+    init_values();
+    init_controller2();
+    init_math();
+    init_paint();
+    init_values();
+    init_math();
+    init_read();
+  }
+});
+
+// js/timefield/constants.js
+var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, MINUTES_PER_HOUR, MINUTES_PER_DAY, DEFAULT_STEP, DEFAULT_NEAR_WIDTH, SAY_DELAY_MS, NARROW_QUERY, POPUP_EDGE_PX, POPUP_GAP_PX, POPUP_MIN_WIDTH_PX, BARE_DIGITS;
+var init_constants3 = __esm({
+  "js/timefield/constants.js"() {
+    "use strict";
+    TIME = "[data-kp-time]";
+    TIME_EVENT = "kp-time-change";
+    TIME_RETRY_EVENT = "kp-time-retry";
+    TIME_STEPS = Object.freeze([1, 5, 10, 15, 30, 60]);
+    MINUTES_PER_HOUR = 60;
+    MINUTES_PER_DAY = 1440;
+    DEFAULT_STEP = 5;
+    DEFAULT_NEAR_WIDTH = 60;
+    SAY_DELAY_MS = 60;
+    NARROW_QUERY = "(max-width: 40rem)";
+    POPUP_EDGE_PX = 8;
+    POPUP_GAP_PX = 4;
+    POPUP_MIN_WIDTH_PX = 13 * 16;
+    BARE_DIGITS = 4;
+  }
+});
+
+// js/timefield/state.js
+var FIELDS, counter, nextFieldNumber;
+var init_state2 = __esm({
+  "js/timefield/state.js"() {
+    "use strict";
+    FIELDS = /* @__PURE__ */ new WeakMap();
+    counter = { serial: 0 };
+    nextFieldNumber = () => counter.serial += 1;
+  }
+});
+
+// js/remember/store.js
+function configureRemember(next2) {
+  if (next2.prefix !== void 0) config.prefix = next2.prefix;
+  if (next2.storage !== void 0) config.storage = next2.storage;
+}
+function storage(given2) {
+  if (given2 !== void 0) return given2;
+  if (config.storage !== void 0) return config.storage;
+  try {
+    return globalThis.localStorage ?? null;
+  } catch {
+    return null;
+  }
+}
+function rememberedName(element, component) {
+  const own = element.getAttribute(REMEMBER_ATTRIBUTE);
+  if (own !== null && own !== "") return own;
+  const alias = ALIASES[component];
+  const older = alias === void 0 ? null : element.getAttribute(alias);
+  return older === null || older === "" ? null : older;
+}
+function forgetClaims() {
+  claims.clear();
+  reported.clear();
+}
+function reportClash(element, component, name, other) {
+  const claim = `${component}:${name}`;
+  if (!reported.has(claim)) {
+    reported.add(claim);
+    console.warn(getStrings().rememberClash(name, component));
+  }
+  element.dispatchEvent(new CustomEvent(REMEMBER_CLASH_EVENT, { bubbles: true, detail: { name, component, other } }));
+}
+function memoryFor(element, component, { storage: given2 } = {}) {
+  const name = rememberedName(element, component);
+  if (name === null) return null;
+  const claim = `${component}:${name}`;
+  const holder = claims.get(claim);
+  if (holder !== void 0 && holder !== element && holder.isConnected) {
+    reportClash(element, component, name, holder);
+    return null;
+  }
+  claims.set(claim, element);
+  const key = (slot) => `${config.prefix}:${component}:${name}:${slot}`;
+  return {
+    name,
+    key,
+    read: (slot, fallback2) => {
+      const store = storage(given2);
+      if (store === null) return fallback2;
+      try {
+        const raw = store.getItem(key(slot));
+        if (raw === null) return fallback2;
+        return JSON.parse(raw);
+      } catch {
+        return fallback2;
+      }
+    },
+    write: (slot, value) => {
+      const store = storage(given2);
+      if (store === null) return false;
+      try {
+        store.setItem(key(slot), JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    forget: (slot) => {
+      const store = storage(given2);
+      if (store === null) return;
+      try {
+        store.removeItem(key(slot));
+      } catch {
+      }
+    }
+  };
+}
+function forgetRememberedExcept(component, prefix, names, { storage: given2 } = {}) {
+  const store = storage(given2);
+  if (store === null) return 0;
+  const keep = new Set(names);
+  const head = `${config.prefix}:${component}:`;
+  let removed = 0;
+  try {
+    const doomed = [];
+    for (let at = 0; at < store.length; at += 1) {
+      const key = store.key(at);
+      if (key === null || !key.startsWith(head)) continue;
+      const rest = key.slice(head.length);
+      const name = rest.slice(0, rest.lastIndexOf(":"));
+      if (name.startsWith(prefix) && !keep.has(name)) doomed.push(key);
+    }
+    for (const key of doomed) {
+      store.removeItem(key);
+      removed += 1;
+    }
+  } catch {
+  }
+  return removed;
+}
+var REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, config, ALIASES, claims, reported;
+var init_store = __esm({
+  "js/remember/store.js"() {
+    "use strict";
+    init_strings();
+    REMEMBER_ATTRIBUTE = "data-kp-remember";
+    REMEMBER_CLASH_EVENT = "kp-remember-clash";
+    REMEMBER_PREFIX = "kp-remember";
+    config = { prefix: REMEMBER_PREFIX, storage: (
+      /** @type {Storage | null | undefined} */
+      void 0
+    ) };
+    ALIASES = { sidenav: "data-kp-sidenav-remember" };
+    claims = /* @__PURE__ */ new Map();
+    reported = /* @__PURE__ */ new Set();
+  }
+});
+
+// js/remember/painters.js
+function sidenavGroups(panel) {
+  return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
+    const toggle2 = group.querySelector(".kp-sidenav__category-toggle");
+    const own = group.getAttribute(REMEMBER_ATTRIBUTE);
+    const words3 = (toggle2?.textContent ?? "").trim();
+    return { group, toggle: toggle2, id: own !== null && own !== "" ? own : words3 !== "" ? words3 : String(at) };
+  });
+}
+function treeItemId(item) {
+  return (
+    /** @type {HTMLElement} */
+    item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim()
+  );
+}
+function columnId(header) {
+  return (
+    /** @type {HTMLElement} */
+    header.dataset.kpField ?? (header.textContent ?? "").trim()
+  );
+}
+function paintSidenav(panel, memory) {
+  const open4 = memory.read("open", null);
+  if (typeof open4 === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open4));
+  const rail = memory.read("rail", null);
+  if (typeof rail === "boolean") panel.toggleAttribute("data-kp-sidenav-slim-collapsed", rail);
+  const width = memory.read("width", null);
+  if (typeof width === "number" && panel.hasAttribute("data-kp-sidenav-resizable") && panel instanceof HTMLElement)
+    panel.style.setProperty("--kp-sidenav-width", `${width}px`);
+  const groups = memory.read("groups", null);
+  if (!isFlags(groups)) return;
+  for (const { group, toggle: toggle2, id } of sidenavGroups(panel)) {
+    const state12 = groups[id];
+    if (typeof state12 !== "boolean") continue;
+    group.toggleAttribute("data-kp-sidenav-expanded", state12);
+    toggle2?.setAttribute("aria-expanded", String(state12));
+  }
+}
+function paintDisclosure(element, memory) {
+  const open4 = memory.read("open", null);
+  if (typeof open4 === "boolean") element.toggleAttribute("open", open4);
+}
+function paintTree(tree, memory) {
+  const branches = memory.read("branches", null);
+  if (!isFlags(branches)) return;
+  for (const item of tree.querySelectorAll('[role="treeitem"][aria-expanded]')) {
+    const state12 = branches[treeItemId(item)];
+    if (typeof state12 === "boolean") item.setAttribute("aria-expanded", String(state12));
+  }
+}
+function paintSplit(split, memory) {
+  const value = memory.read("value", null);
+  const separator = split.querySelector('[role="separator"]');
+  if (typeof value !== "number" || !Number.isFinite(value) || separator === null) return;
+  separator.setAttribute("aria-valuenow", String(Math.round(value)));
+  split.style.setProperty("--kp-split", `${Math.round(value)}%`);
+}
+function paintDatatable(wrap2, memory) {
+  const density = memory.read("density", null);
+  if (density === "compact") wrap2.setAttribute("data-density", "compact");
+  else if (density === "comfortable") wrap2.removeAttribute("data-density");
+  const headers = headersOf(wrap2);
+  const columns2 = (
+    /** @type {unknown} */
+    memory.read("columns", null)
+  );
+  if (Array.isArray(columns2)) {
+    for (const header of headers) header.toggleAttribute("data-kp-column-hidden", columns2.includes(columnId(header)));
+  }
+  const sort = (
+    /** @type {unknown} */
+    memory.read("sort", null)
+  );
+  if (!Array.isArray(sort)) return;
+  for (const header of headers) {
+    if (header.dataset.kpSort === void 0) continue;
+    const at = sort.findIndex((key) => key?.column === columnId(header));
+    if (at === -1) {
+      header.setAttribute("aria-sort", "none");
+      delete header.dataset.kpSortPriority;
+    } else {
+      header.setAttribute("aria-sort", sort[at].direction === "descending" ? "descending" : "ascending");
+      header.dataset.kpSortPriority = String(at + 1);
+    }
+  }
+}
+function paintAlert(element, memory) {
+  if (memory.read(
+    "dismissed",
+    /** @type {boolean} */
+    false
+  ) === true) element.hidden = true;
+}
+function paintRemembered(element, component, options) {
+  const memory = memoryFor(element, component, options);
+  if (memory !== null) PAINTERS[component](element, memory);
+  return memory;
+}
+function restoreRemembered(root = document) {
+  const selector = `[${REMEMBER_ATTRIBUTE}], [${ALIASES.sidenav}]`;
+  for (const element of root.querySelectorAll(selector)) {
+    for (const [component, mark2] of KINDS) {
+      if (!element.matches(mark2)) continue;
+      paintRemembered(element, component);
+      break;
+    }
+  }
+}
+var headersOf, isFlags, PAINTERS, KINDS;
+var init_painters = __esm({
+  "js/remember/painters.js"() {
+    "use strict";
+    init_store();
+    headersOf = (element) => [...element.querySelector("table")?.tHead?.rows[0]?.cells ?? []];
+    isFlags = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
+    PAINTERS = {
+      sidenav: paintSidenav,
+      disclosure: paintDisclosure,
+      tree: paintTree,
+      split: paintSplit,
+      datatable: paintDatatable,
+      // A tour has no markup to paint: js/tour.js reads its memory itself.
+      tour: () => {
+      },
+      // The refresh chooser and the notification centre read their own memory [kpadopt5-ops].
+      refresh: () => {
+      },
+      notices: () => {
+      },
+      // The claim chips, the availability grid, the time field and the console read their own memory [kpadopt6].
+      claim: () => {
+      },
+      availability: () => {
+      },
+      time: () => {
+      },
+      console: () => {
+      },
+      // The check-in's progress and the picker's folded list are read by their own modules [kpadopt6].
+      "focus-steps": () => {
+      },
+      picker: () => {
+      },
+      // A dismissible alert that stays closed, `data-kp-remember` on a `.kp-alert`; js/overlays.js writes it on a dismissal [wish-1120].
+      alert: paintAlert
+    };
+    KINDS = [
+      ["sidenav", ".kp-sidenav"],
+      ["tree", "[data-kp-tree]"],
+      ["split", "[data-kp-split]"],
+      ["datatable", "[data-kp-datatable]"],
+      ["disclosure", "details"],
+      ["alert", ".kp-alert"]
+    ];
+  }
+});
+
+// js/remember/disclosure.js
+var REMEMBER_HOLD_ATTRIBUTE, held, wiredDisclosures, RememberedDisclosure, RememberWatch;
+var init_disclosure = __esm({
+  "js/remember/disclosure.js"() {
+    "use strict";
+    init_controller();
+    init_painters();
+    init_store();
+    REMEMBER_HOLD_ATTRIBUTE = "data-kp-remember-hold";
+    held = (element) => element.closest(`[${REMEMBER_HOLD_ATTRIBUTE}]`) !== null;
+    wiredDisclosures = /* @__PURE__ */ new WeakSet();
+    RememberedDisclosure = class extends Controller {
+      /** @param {HTMLDetailsElement} details @param {Memory} memory */
+      constructor(details, memory) {
+        super(details);
+        this.details = details;
+        this.memory = memory;
+      }
+      connect() {
+        const details = this.details;
+        wiredDisclosures.add(details);
+        details.dataset.kpRememberAttached = "";
+        this.own(() => {
+          wiredDisclosures.delete(details);
+          delete details.dataset.kpRememberAttached;
+        });
+        this.listen(details, "toggle", () => {
+          if (!held(details)) this.memory.write("open", details.open);
+        });
+      }
+      /** A hold that went: paint what was stored back. */
+      repaint() {
+        if (!held(this.details)) paintDisclosure(this.details, this.memory);
+      }
+    };
+    RememberWatch = class {
+      /** @param {ParentNode} root */
+      constructor(root) {
+        this.root = root;
+        this.wired = /* @__PURE__ */ new Map();
+        this.sweeping = false;
+        this.later = null;
+      }
+      /** Wire what is there, then watch for more when the root is in a window. */
+      start() {
+        this.wire(this.root);
+        const root = this.root;
+        const doc = root instanceof Document ? root : root.ownerDocument ?? (typeof document === "undefined" ? null : document);
+        const view = doc?.defaultView;
+        if (!view) return;
+        this.later = new view.MutationObserver((records) => this.onRecords(records, view));
+        this.later.observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: [REMEMBER_HOLD_ATTRIBUTE]
+        });
+      }
+      stop() {
+        this.later?.disconnect();
+        for (const disclosure of this.wired.values()) disclosure.destroy();
+        this.wired.clear();
+      }
+      /** @param {ParentNode} scope */
+      wire(scope) {
+        const selector = `details[${REMEMBER_ATTRIBUTE}]`;
+        const found = [...scope instanceof Element && scope.matches(selector) ? [scope] : [], ...scope.querySelectorAll(selector)];
+        for (const element of found) {
+          const details = (
+            /** @type {HTMLDetailsElement} */
+            element
+          );
+          if (wiredDisclosures.has(details)) continue;
+          const memory = held(details) ? memoryFor(details, "disclosure") : paintRemembered(details, "disclosure");
+          if (memory === null) continue;
+          const disclosure = new RememberedDisclosure(details, memory);
+          disclosure.connect();
+          this.wired.set(details, disclosure);
+        }
+      }
+      /** @param {MutationRecord[]} records @param {Window & typeof globalThis} view */
+      onRecords(records, view) {
+        for (const record of records) {
+          if (record.type === "attributes") {
+            const target = (
+              /** @type {Element} */
+              record.target
+            );
+            if (target.hasAttribute(REMEMBER_HOLD_ATTRIBUTE)) continue;
+            for (const [details, disclosure] of this.wired) if (details === target || target.contains(details)) disclosure.repaint();
+            continue;
+          }
+          for (const node of record.addedNodes) if (node instanceof view.Element) this.wire(node);
+          if (record.removedNodes.length && !this.sweeping) {
+            this.sweeping = true;
+            queueMicrotask(() => this.sweep());
+          }
+        }
+      }
+      /** Let go of the disclosures that left the page. */
+      sweep() {
+        this.sweeping = false;
+        for (const [details, disclosure] of this.wired)
+          if (!details.isConnected) {
+            disclosure.destroy();
+            this.wired.delete(details);
+          }
+      }
+    };
+  }
+});
+
+// js/remember.js
+var remember_exports = {};
+__export(remember_exports, {
+  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
+  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
+  REMEMBER_HOLD_ATTRIBUTE: () => REMEMBER_HOLD_ATTRIBUTE,
+  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
+  attachRemembered: () => attachRemembered,
+  columnId: () => columnId,
+  configureRemember: () => configureRemember,
+  forgetClaims: () => forgetClaims,
+  forgetRememberedExcept: () => forgetRememberedExcept,
+  memoryFor: () => memoryFor,
+  paintRemembered: () => paintRemembered,
+  rememberedName: () => rememberedName,
+  restoreRemembered: () => restoreRemembered,
+  sidenavGroups: () => sidenavGroups,
+  treeItemId: () => treeItemId
+});
+function attachRemembered(root = document) {
+  const watch2 = new RememberWatch(root);
+  watch2.start();
+  return () => watch2.stop();
+}
+var init_remember = __esm({
+  "js/remember.js"() {
+    "use strict";
+    init_disclosure();
+    init_store();
+    init_painters();
+    init_disclosure();
+  }
+});
+
+// js/timefield/parse.js
+function parseTimeOfDay(text, { seconds = false } = {}) {
+  const raw = text.trim().toLowerCase().replace(/\s+/g, " ");
+  if (raw === "") return null;
+  let m = /^(\d{1,2})(?:[:.h](\d{2}))?(?::(\d{2}))?\s*(a\.?m\.?|p\.?m\.?)$/.exec(raw);
+  let hms;
+  let converted = false;
+  if (m) {
+    let h2 = Number(m[1]);
+    if (h2 < 1 || h2 > 12) return null;
+    const pm = m[4].startsWith("p");
+    if (h2 === 12) h2 = 0;
+    hms = [pm ? h2 + 12 : h2, Number(m[2] ?? 0), Number(m[3] ?? 0)];
+    converted = true;
+  } else if (m = /^(\d{1,2})[:.h](\d{2})(?::(\d{2}))?$/.exec(raw)) hms = [Number(m[1]), Number(m[2]), Number(m[3] ?? 0)];
+  else if (m = /^(\d{1,2})h$/.exec(raw)) hms = [Number(m[1]), 0, 0];
+  else if (m = /^(\d{1,2})(\d{2})$/.exec(raw)) hms = [Number(m[1]), Number(m[2]), 0];
+  else if (m = /^(\d{1,2})$/.exec(raw)) hms = [Number(m[1]), 0, 0];
+  else return null;
+  if (hms[0] > 23 || hms[1] > 59 || hms[2] > 59) return null;
+  const value = `${pad(hms[0])}:${pad(hms[1])}${seconds ? `:${pad(hms[2])}` : ""}`;
+  return { value, converted };
+}
+function timeMinutes(value) {
+  const m = /^(\d{2}):(\d{2})/.exec(value);
+  return m ? Number(m[1]) * MINUTES_PER_HOUR + Number(m[2]) : Number.NaN;
+}
+function timeText(minutes, seconds = false) {
+  const wrapped = (Math.round(minutes) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
+  return `${pad(Math.floor(wrapped / MINUTES_PER_HOUR))}:${pad(wrapped % MINUTES_PER_HOUR)}${seconds ? ":00" : ""}`;
+}
+function stepTime(value, delta, step) {
+  const now = timeMinutes(value);
+  if (Number.isNaN(now)) return { value: timeText(delta > 0 ? 0 : MINUTES_PER_DAY - step), wrapped: false };
+  const to = now % step === 0 ? now + delta * step : delta > 0 ? Math.ceil(now / step) * step + (delta - 1) * step : Math.floor(now / step) * step + (delta + 1) * step;
+  return { value: timeText(to), wrapped: to < 0 || to >= MINUTES_PER_DAY };
+}
+function timeInWindow(value, min, max) {
+  const t = timeMinutes(value);
+  const a = min ? timeMinutes(min) : Number.NaN;
+  const b = max ? timeMinutes(max) : Number.NaN;
+  if (Number.isNaN(t)) return false;
+  if (Number.isNaN(a) && Number.isNaN(b)) return true;
+  if (Number.isNaN(a)) return t <= b;
+  if (Number.isNaN(b)) return t >= a;
+  return a <= b ? t >= a && t <= b : t >= a || t <= b;
+}
+var pad;
+var init_parse = __esm({
+  "js/timefield/parse.js"() {
+    "use strict";
+    init_constants3();
+    pad = (n) => String(n).padStart(2, "0");
+  }
+});
+
+// js/timefield/attributes.js
+function presetsFromAttribute(root) {
+  const raw = attr(root, "presets", "");
+  if (!raw) return [];
+  return raw.split(",").map((part7) => part7.trim()).filter(Boolean).map((part7) => {
+    const [a, b] = part7.split("=");
+    return b === void 0 ? { label: a, value: a } : { label: a, value: b };
+  }).filter((p) => /^\d{2}:\d{2}/.test(p.value));
+}
+function entries(root) {
+  const step = stepOf(root);
+  const min = root.getAttribute("data-kp-time-min");
+  const max = root.getAttribute("data-kp-time-max");
+  const out = [];
+  if (root.hasAttribute("data-kp-time-clear")) out.push({ value: "", kind: "clear" });
+  if (root.hasAttribute("data-kp-time-now")) {
+    const d = /* @__PURE__ */ new Date();
+    out.push({ value: timeText(d.getHours() * MINUTES_PER_HOUR + d.getMinutes(), hasSeconds(root)), kind: "now" });
+  }
+  for (let m = 0; m < MINUTES_PER_DAY; m += step) {
+    const value = timeText(m, hasSeconds(root));
+    if ((min || max) && !timeInWindow(value, min, max)) continue;
+    out.push({ value, kind: "time" });
+  }
+  return out;
+}
+function nearOf(root, value) {
+  const list = (root.getAttribute("data-kp-time-near") ?? "").split(",").map((x) => x.trim()).filter(Boolean);
+  if (!list.length) return null;
+  const width = Number(root.getAttribute("data-kp-time-near-width") ?? String(DEFAULT_NEAR_WIDTH)) || DEFAULT_NEAR_WIDTH;
+  const t = timeMinutes(value);
+  for (const busy of list) {
+    const b = timeMinutes(busy);
+    const d = Math.min(Math.abs(t - b), MINUTES_PER_DAY - Math.abs(t - b));
+    if (d <= width) return busy;
+  }
+  return null;
+}
+var attr, stepOf, hasSeconds;
+var init_attributes = __esm({
+  "js/timefield/attributes.js"() {
+    "use strict";
+    init_constants3();
+    init_parse();
+    attr = (root, name, fallback2) => root.getAttribute(`data-kp-time-${name}`) ?? fallback2;
+    stepOf = (root) => {
+      const n = Number(attr(root, "step", String(DEFAULT_STEP)));
+      return TIME_STEPS.includes(n) ? n : DEFAULT_STEP;
+    };
+    hasSeconds = (root) => root.hasAttribute("data-kp-time-seconds");
+  }
+});
+
+// js/timefield/build.js
+function buildInput(root, n) {
+  const input = (
+    /** @type {HTMLInputElement} */
+    el("kp-field__input kp-time__input", "input")
+  );
+  input.type = "text";
+  input.id = root.getAttribute("data-kp-time-id") ?? `kp-time-${n}`;
+  input.setAttribute("inputmode", "numeric");
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", "false");
+  input.setAttribute("role", "combobox");
+  input.setAttribute("aria-autocomplete", "none");
+  input.setAttribute("aria-haspopup", "listbox");
+  input.setAttribute("aria-expanded", "false");
+  input.placeholder = "--:--";
+  const label2 = root.getAttribute("data-kp-label") ?? root.getAttribute("aria-label");
+  if (label2) input.setAttribute("aria-label", label2);
+  const labelled = root.getAttribute("aria-labelledby");
+  if (labelled) input.setAttribute("aria-labelledby", labelled);
+  return input;
+}
+function buildToggle() {
+  const toggle2 = (
+    /** @type {HTMLButtonElement} */
+    el("kp-time__toggle", "button")
+  );
+  toggle2.type = "button";
+  toggle2.tabIndex = -1;
+  toggle2.setAttribute("aria-label", getStrings().timeChoose);
+  toggle2.setAttribute("aria-haspopup", "listbox");
+  toggle2.append(el("kp-time__glyph", "span"));
+  return toggle2;
+}
+function builtInPlace(root, build8) {
+  if (root.hasAttribute("data-kp-arrive")) return build8();
+  root.setAttribute("data-kp-arrive", "none");
+  build8();
+  queueMicrotask(() => root.removeAttribute("data-kp-arrive"));
+}
+function buildParts2(root) {
+  const n = nextFieldNumber();
+  root.classList.add("kp-time");
+  const control = el("kp-time__control");
+  const input = buildInput(root, n);
+  control.append(input, buildToggle());
+  const hidden2 = (
+    /** @type {HTMLInputElement} */
+    el("kp-time__value", "input")
+  );
+  hidden2.type = "hidden";
+  const name = root.getAttribute("data-kp-name");
+  if (name) hidden2.name = name;
+  const why = el("kp-time__why", "p");
+  why.hidden = true;
+  why.id = `kp-time-${n}-why`;
+  const zone = el("kp-time__zone", "p");
+  const popup = el("kp-popover kp-time__popup");
+  popup.id = `kp-time-${n}-popup`;
+  popup.hidden = true;
+  input.setAttribute("aria-controls", popup.id);
+  const skeleton2 = el("kp-skeleton kp-time__skeleton", "span");
+  skeleton2.setAttribute("aria-hidden", "true");
+  builtInPlace(root, () => root.replaceChildren(control, hidden2, why, zone, popup, skeleton2));
+  return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
+}
+var el;
+var init_build3 = __esm({
+  "js/timefield/build.js"() {
+    "use strict";
+    init_strings();
+    init_attributes();
+    init_state2();
+    el = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+  }
+});
+
+// js/top-layer/rect.js
+function unturnedRect(el16, style) {
+  const box = el16.getBoundingClientRect();
+  const match = /^(-?[\d.]+)(deg|rad|turn|grad)$/.exec(style.rotate ?? "");
+  if (!match) return box;
+  const unit2 = RADIANS_PER[
+    /** @type {keyof typeof RADIANS_PER} */
+    match[2]
+  ] ?? 0;
+  const a = Number.parseFloat(match[1]) * unit2;
+  const c = Math.abs(Math.cos(a));
+  const s2 = Math.abs(Math.sin(a));
+  const det = c * c - s2 * s2;
+  if (a === 0 || Math.abs(det) < NEAR_DIAGONAL) return box;
+  const w = (c * box.width - s2 * box.height) / det;
+  const h2 = (c * box.height - s2 * box.width) / det;
+  const [ox, oy] = style.transformOrigin.split(/\s+/).map((n) => Number.parseFloat(n) || 0);
+  const dx = w / 2 - ox;
+  const dy = h2 / 2 - oy;
+  const cos = Math.cos(a);
+  const sin = Math.sin(a);
+  const left = box.left + box.width / 2 - ox - (dx * cos - dy * sin);
+  const top = box.top + box.height / 2 - oy - (dx * sin + dy * cos);
+  return new DOMRect(left, top, w, h2);
+}
+function offsetOf(el16, style, box) {
+  let x = 0;
+  let y = 0;
+  if (style.translate && style.translate !== "none") {
+    const parts2 = style.translate.split(/\s+/);
+    x += lengthOf(parts2[0], el16.offsetWidth ?? box.width);
+    y += lengthOf(parts2[1], el16.offsetHeight ?? box.height);
+  }
+  if (style.transform && style.transform !== "none" && typeof DOMMatrixReadOnly === "function") {
+    const m = new DOMMatrixReadOnly(style.transform);
+    if (m.is2D && m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1) {
+      x += m.e;
+      y += m.f;
+    }
+  }
+  return { x, y };
+}
+function layoutRect(element) {
+  const view = element.ownerDocument.defaultView;
+  if (!view) return element.getBoundingClientRect();
+  const style = view.getComputedStyle(element);
+  const el16 = (
+    /** @type {HTMLElement} */
+    element
+  );
+  const box = unturnedRect(el16, style);
+  const { x, y } = offsetOf(el16, style, box);
+  if (x === 0 && y === 0) return box;
+  return new DOMRect(box.x - x, box.y - y, box.width, box.height);
+}
+var NEAR_DIAGONAL, RADIANS_PER, lengthOf;
+var init_rect = __esm({
+  "js/top-layer/rect.js"() {
+    "use strict";
+    NEAR_DIAGONAL = 0.05;
+    RADIANS_PER = { deg: Math.PI / 180, rad: 1, turn: 2 * Math.PI, grad: Math.PI / 200 };
+    lengthOf = (part7, size2) => {
+      if (!part7) return 0;
+      const n = Number.parseFloat(part7);
+      if (!Number.isFinite(n)) return 0;
+      return part7.endsWith("%") ? n / 100 * size2 : n;
+    };
+  }
+});
+
+// js/top-layer/side.js
+function cap(element, room, outside) {
+  element.style.maxBlockSize = `${Math.max(0, Math.floor(room - outside))}px`;
+  element.style.overflowY = "auto";
+}
+function placeBlockSide(element, field2) {
+  clearBlockSide(element);
+  const drawn = layoutRect(element);
+  const style = getComputedStyle(element);
+  const height = drawn.height;
+  const outside = style.boxSizing === "border-box" ? 0 : height - (Number.parseFloat(style.height) || 0);
+  const gap = Math.max(0, drawn.top - field2.bottom);
+  const view = document.documentElement.clientHeight;
+  const below = view - drawn.top;
+  const above = field2.top - gap;
+  if (height <= below || below >= above) {
+    if (height > below) cap(element, below, outside);
+    return "below";
+  }
+  const size2 = Math.min(height, above);
+  const top = Number.parseFloat(element.style.top) || 0;
+  element.style.top = `${top + (field2.top - gap - size2 - drawn.top)}px`;
+  if (height > above) cap(element, above, outside);
+  element.dataset.kpOverlaySide = "above";
+  return "above";
+}
+var clearBlockSide;
+var init_side = __esm({
+  "js/top-layer/side.js"() {
+    "use strict";
+    init_rect();
+    clearBlockSide = (element) => {
+      element.style.removeProperty("max-block-size");
+      element.style.removeProperty("overflow-y");
+      delete element.dataset.kpOverlaySide;
+    };
+  }
+});
+
+// js/top-layer/raise.js
+function raiseOverlay(element, place5) {
+  if (typeof element.showPopover !== "function" || !element.isConnected) {
+    place5(element);
+    return () => {
+    };
+  }
+  const raise = new OverlayRaise(element, { place: place5 });
+  try {
+    raise.connect();
+  } catch (error) {
+    raise.destroy();
+    throw error;
+  }
+  return () => raise.destroy();
+}
+function raiseInPlace(element, anchor, field2 = anchor) {
+  const drawn = layoutRect(element);
+  const from = anchor.getBoundingClientRect();
+  const dx = drawn.left - from.left;
+  const dy = drawn.top - from.top;
+  const width = drawn.width;
+  const lower = raiseOverlay(element, () => {
+    const at = anchor.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    element.style.left = `${at.left + dx - (Number.parseFloat(style.marginLeft) || 0)}px`;
+    element.style.top = `${at.top + dy - (Number.parseFloat(style.marginTop) || 0)}px`;
+    element.style.width = `${width}px`;
+    placeBlockSide(element, field2.getBoundingClientRect());
+  });
+  return () => {
+    lower();
+    element.style.removeProperty("left");
+    element.style.removeProperty("top");
+    element.style.removeProperty("width");
+  };
+}
+var OverlayRaise, raised;
+var init_raise = __esm({
+  "js/top-layer/raise.js"() {
+    "use strict";
+    init_controller();
+    init_rect();
+    init_side();
+    OverlayRaise = class extends Controller {
+      /**
+       * @param {HTMLElement} host the overlay, already visible (not `hidden`)
+       * @param {{ place: (element: HTMLElement) => void }} options place puts it in window coordinates
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.place = options.place;
+      }
+      connect() {
+        const element = this.host;
+        const added = !element.hasAttribute("popover");
+        this.own(() => {
+          if (element.matches(":popover-open")) element.hidePopover();
+          if (added) element.removeAttribute("popover");
+          clearBlockSide(element);
+        });
+        if (added) element.setAttribute("popover", "manual");
+        if (!element.matches(":popover-open")) element.showPopover();
+        const follow3 = () => this.follow();
+        follow3();
+        this.listen(window, "scroll", follow3, { capture: true, passive: true });
+        this.listen(window, "resize", follow3);
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(follow3)).observe(element);
+      }
+      follow() {
+        if (this.destroyed) return;
+        const element = this.host;
+        if (element.isConnected && !element.hidden && !element.matches(":popover-open")) element.showPopover();
+        this.place(element);
+      }
+    };
+    raised = (element) => element.matches(":popover-open");
+  }
+});
+
+// js/top-layer.js
+var init_top_layer = __esm({
+  "js/top-layer.js"() {
+    "use strict";
+    init_rect();
+    init_side();
+    init_raise();
   }
 });
 
@@ -3283,7 +4784,7 @@ function say(doc, text) {
     if (region) region.textContent = text;
   }, 30);
 }
-function setCalm(on, { doc = document, scope, loading, remember: remember3 = true, announce: announce5 = true } = {}) {
+function setCalm(on, { doc = document, scope, loading, remember: remember3 = true, announce: announce6 = true } = {}) {
   const root = doc.documentElement;
   const was = root.hasAttribute(CALM_ATTRIBUTE);
   if (scope !== void 0) root.setAttribute("data-kp-calm-scope", scope);
@@ -3299,7 +4800,7 @@ function setCalm(on, { doc = document, scope, loading, remember: remember3 = tru
   }
   syncSwitches(doc);
   if (was === on && scope === void 0 && loading === void 0) return;
-  if (announce5 && was !== on) say(doc, on ? getStrings().calmOn : getStrings().calmOff);
+  if (announce6 && was !== on) say(doc, on ? getStrings().calmOn : getStrings().calmOff);
   root.dispatchEvent(
     new CustomEvent(CALM_EVENT, {
       bubbles: true,
@@ -3390,6 +4891,1132 @@ var init_calm = __esm({
   }
 });
 
+// js/timefield/list.js
+var TimeList;
+var init_list = __esm({
+  "js/timefield/list.js"() {
+    "use strict";
+    init_strings();
+    init_top_layer();
+    init_calm();
+    init_constants3();
+    init_attributes();
+    init_build3();
+    init_parse();
+    TimeList = class {
+      /** @param {TimeField} field */
+      constructor(field2) {
+        this.field = field2;
+        this.popup = /** @type {HTMLElement} */
+        /** @type {unknown} */
+        null;
+        this.open = false;
+        this.active = -1;
+        this.lower = null;
+      }
+      /** The loading bar, the failed plate with its Retry, or the preset chips. @param {import('./constants.js').TimePresets} presets */
+      buildPresets(presets) {
+        const s2 = getStrings();
+        const bar = el("kp-time__presets");
+        bar.setAttribute("role", "group");
+        bar.setAttribute("aria-label", s2.timePresets);
+        if (presets === "loading") {
+          for (let i = 0; i < 3; i += 1) bar.append(el("kp-skeleton kp-time__preset-skeleton", "span"));
+          bar.setAttribute("aria-busy", "true");
+        } else if (presets === "error") {
+          const plate2 = el("kp-alert kp-alert--destructive kp-time__presets-error");
+          plate2.setAttribute("role", "alert");
+          const text = el("kp-time__presets-text", "span");
+          text.textContent = s2.timePresetsFailed;
+          const retry = (
+            /** @type {HTMLButtonElement} */
+            el("kp-button kp-button--sm", "button")
+          );
+          retry.type = "button";
+          retry.setAttribute("data-kp-time-retry", "");
+          retry.textContent = s2.timeRetry;
+          plate2.append(text, retry);
+          bar.append(plate2);
+        } else {
+          for (const p of presets) {
+            const chip = (
+              /** @type {HTMLButtonElement} */
+              el("kp-time__preset kp-button kp-button--sm", "button")
+            );
+            chip.type = "button";
+            chip.setAttribute("data-kp-time-pick", p.value);
+            chip.textContent = p.label === p.value ? p.value : `${p.label} ${p.value}`;
+            bar.append(chip);
+          }
+        }
+        return bar;
+      }
+      /** One option of the list. @param {TimeEntry} item @param {number} index */
+      buildOption(item, index) {
+        const s2 = getStrings();
+        const { field: field2, popup } = this;
+        const o = (
+          /** @type {HTMLElement} */
+          el("kp-combobox__option kp-time__option", "li")
+        );
+        o.id = `${popup.id}-o${index}`;
+        o.setAttribute("role", "option");
+        o.setAttribute("data-kp-time-pick", item.value);
+        o.setAttribute("aria-selected", String(item.value === field2.value && item.kind === "time"));
+        o.tabIndex = -1;
+        const t = el("kp-time__option-time", "span");
+        t.textContent = item.kind === "clear" ? s2.timeNone : item.value;
+        o.append(t);
+        if (item.kind === "now") {
+          const n = el("kp-time__option-note", "span");
+          n.textContent = s2.timeNow;
+          o.append(n);
+        }
+        const near2 = item.kind === "time" ? nearOf(field2.root, item.value) : null;
+        if (near2) {
+          o.setAttribute("data-kp-time-near-mark", "");
+          const n = el("kp-time__option-note", "span");
+          n.textContent = s2.timeNear(near2);
+          o.append(n);
+          o.setAttribute("aria-description", s2.timeNear(near2));
+        }
+        return o;
+      }
+      /** The index of the time entry nearest the value, or -1 when the value is no time. @param {TimeEntry[]} items */
+      nearestIndex(items) {
+        const now = timeMinutes(this.field.value);
+        let best = -1;
+        let bestDelta = Infinity;
+        if (Number.isNaN(now)) return best;
+        items.forEach((item, index) => {
+          if (item.kind !== "time") return;
+          const d = Math.abs(timeMinutes(item.value) - now);
+          if (d < bestDelta) {
+            bestDelta = d;
+            best = index;
+          }
+        });
+        return best;
+      }
+      /** Draw the list for the current value. */
+      draw() {
+        const s2 = getStrings();
+        const { field: field2, popup } = this;
+        popup.replaceChildren();
+        const sheetTitle = el("kp-time__sheet-title", "p");
+        sheetTitle.textContent = field2.input.getAttribute("aria-label") ?? s2.timeChoose;
+        popup.append(sheetTitle);
+        const presets = field2.presets;
+        if (presets === "loading" || presets === "error" || Array.isArray(presets) && presets.length) popup.append(this.buildPresets(presets));
+        const list = el("kp-time__list", "ul");
+        list.setAttribute("role", "listbox");
+        list.setAttribute("aria-label", s2.timeList);
+        list.id = `${popup.id}-list`;
+        const items = entries(field2.root);
+        items.forEach((item, index) => list.append(this.buildOption(item, index)));
+        popup.append(list);
+        const best = this.nearestIndex(items);
+        this.active = best >= 0 ? best : items.findIndex((i) => i.kind === "time");
+        this.markActive(false);
+      }
+      /** Mark the active option and, when asked or on the first time, scroll it to the middle. @param {boolean} [scroll] */
+      markActive(scroll = true) {
+        const { field: field2, popup } = this;
+        const options = (
+          /** @type {HTMLElement[]} */
+          [...popup.querySelectorAll(".kp-time__option")]
+        );
+        options.forEach((o, i) => {
+          o.toggleAttribute("data-kp-active", i === this.active);
+          o.classList.toggle("is-active", i === this.active);
+        });
+        const at = options[this.active];
+        if (!at) {
+          field2.input.removeAttribute("aria-activedescendant");
+          return;
+        }
+        field2.input.setAttribute("aria-activedescendant", at.id);
+        const list = (
+          /** @type {HTMLElement} */
+          popup.querySelector(".kp-time__list")
+        );
+        if (scroll || !list.hasAttribute("data-kp-time-placed")) {
+          list.setAttribute("data-kp-time-placed", "");
+          const top = at.offsetTop - list.clientHeight / 2 + at.offsetHeight / 2;
+          list.scrollTo({ top: Math.max(0, top), behavior: scroll && motionAllowed(field2.root) ? "smooth" : "auto" });
+        }
+      }
+      /** Place the list: a sheet at the foot of a narrow screen, else under (or over) the field. @param {HTMLElement} popup */
+      place(popup) {
+        const { input } = this.field;
+        const r = input.closest(".kp-time__control")?.getBoundingClientRect() ?? input.getBoundingClientRect();
+        if (window.matchMedia(NARROW_QUERY).matches) {
+          popup.style.setProperty("left", "0px");
+          popup.style.setProperty("right", "0px");
+          popup.style.setProperty("bottom", "0px");
+          popup.style.setProperty("top", "auto");
+          popup.style.setProperty("width", "auto");
+          return;
+        }
+        const h2 = popup.offsetHeight;
+        const below = window.innerHeight - r.bottom;
+        const top = below >= h2 + POPUP_EDGE_PX || below >= r.top ? r.bottom + POPUP_GAP_PX : r.top - h2 - POPUP_GAP_PX;
+        popup.style.setProperty("left", `${Math.max(POPUP_EDGE_PX, Math.min(r.left, window.innerWidth - popup.offsetWidth - POPUP_EDGE_PX))}px`);
+        popup.style.setProperty("top", `${Math.max(POPUP_EDGE_PX, top)}px`);
+        popup.style.setProperty("right", "auto");
+        popup.style.setProperty("bottom", "auto");
+        popup.style.setProperty("width", `${Math.max(r.width, POPUP_MIN_WIDTH_PX)}px`);
+      }
+      show() {
+        const { field: field2, popup } = this;
+        if (this.open || attr(field2.root, "popup", "list") === "none" || field2.input.disabled) return;
+        this.open = true;
+        this.draw();
+        popup.hidden = false;
+        field2.input.setAttribute("aria-expanded", "true");
+        field2.root.setAttribute("data-kp-open", "");
+        this.lower = raiseOverlay(popup, (p) => this.place(p));
+        this.markActive(false);
+      }
+      /** @param {{ focus?: boolean }} [options] */
+      close({ focus = false } = {}) {
+        const { field: field2, popup } = this;
+        if (!this.open) return;
+        this.open = false;
+        this.lower?.();
+        this.lower = null;
+        popup.hidden = true;
+        field2.input.setAttribute("aria-expanded", "false");
+        field2.input.removeAttribute("aria-activedescendant");
+        field2.root.removeAttribute("data-kp-open");
+        if (focus) field2.input.focus();
+      }
+    };
+  }
+});
+
+// js/timefield/field.js
+function fieldFor(root) {
+  const known4 = FIELDS.get(root);
+  if (known4) return known4;
+  const field2 = new TimeField(root);
+  field2.build();
+  FIELDS.set(root, field2);
+  return field2;
+}
+var TimeField;
+var init_field = __esm({
+  "js/timefield/field.js"() {
+    "use strict";
+    init_strings();
+    init_remember();
+    init_constants3();
+    init_attributes();
+    init_build3();
+    init_state2();
+    init_parse();
+    init_list();
+    TimeField = class {
+      /** @param {HTMLElement} root */
+      constructor(root) {
+        this.root = root;
+        this.input = /** @type {HTMLInputElement} */
+        /** @type {unknown} */
+        null;
+        this.hidden = /** @type {HTMLInputElement} */
+        /** @type {unknown} */
+        null;
+        this.value = "";
+        this.presets = [];
+        this.invalid = "";
+        this.list = new TimeList(this);
+      }
+      /** Build the parts into the root. Idempotent through `fieldFor`. */
+      build() {
+        const parts2 = buildParts2(this.root);
+        this.input = parts2.input;
+        this.hidden = parts2.hidden;
+        this.list.popup = parts2.popup;
+        this.presets = parts2.presets;
+      }
+      /** Say something through the polite status region, unless the root turns announcing off. @param {string} message */
+      say(message) {
+        const { root } = this;
+        if (root.getAttribute("data-kp-announce") === "off") return;
+        let region = (
+          /** @type {HTMLElement | null} */
+          root.querySelector(":scope > .kp-time__live")
+        );
+        if (!region) {
+          region = el("kp-sr-only kp-time__live", "span");
+          region.setAttribute("role", "status");
+          root.append(region);
+        }
+        const target = region;
+        target.textContent = "";
+        setTimeout(() => target.textContent = message, SAY_DELAY_MS);
+      }
+      /** The why line. */
+      get why() {
+        return (
+          /** @type {HTMLElement} */
+          this.root.querySelector(".kp-time__why")
+        );
+      }
+      /** Show or clear the why line and the invalid mark. @param {string} message */
+      setInvalid(message) {
+        const { why, input } = this;
+        this.invalid = message;
+        why.hidden = message === "";
+        why.textContent = message;
+        why.setAttribute("role", message ? "alert" : "note");
+        why.removeAttribute("data-kp-time-note");
+        input.toggleAttribute("aria-invalid", message !== "");
+        if (message) {
+          input.setAttribute("aria-invalid", "true");
+          input.setAttribute("aria-describedby", why.id);
+        } else {
+          input.removeAttribute("aria-describedby");
+        }
+        input.setCustomValidity(message);
+        this.root.toggleAttribute("data-kp-invalid", message !== "");
+      }
+      /** A quiet note in the why line (a 12-hour paste that was converted). @param {string} message */
+      note(message) {
+        const { why } = this;
+        why.hidden = false;
+        why.textContent = message;
+        why.setAttribute("role", "status");
+        why.setAttribute("data-kp-time-note", "");
+      }
+      /**
+       * Set the value, the text and the hidden input; fire the event when it changed.
+       * @param {string} value @param {{ text?: string, silent?: boolean, converted?: boolean }} [options]
+       */
+      write(value, { text, silent = false, converted = false } = {}) {
+        const { root, input } = this;
+        const changed3 = this.value !== value;
+        this.value = value;
+        this.hidden.value = value;
+        input.value = text ?? value;
+        root.setAttribute("data-kp-value", value);
+        root.toggleAttribute("data-kp-empty", value === "");
+        if (!changed3 || silent) return;
+        memoryFor(root, "time")?.write("value", value);
+        if (value) this.say(getStrings().timeSaid(value));
+        root.dispatchEvent(new CustomEvent(TIME_EVENT, { bubbles: true, detail: { value, text: input.value, converted } }));
+      }
+      /** Refuse the typed text: no value, and the message. @param {string} message */
+      refuse(message) {
+        this.value = "";
+        this.hidden.value = "";
+        this.setInvalid(message);
+        return false;
+      }
+      /**
+       * Take a typed text as the value, or say why not.
+       * @param {string} text @param {{ silent?: boolean }} [options]
+       * @returns {boolean} whether the field now holds a valid value (or is validly empty)
+       */
+      commitText(text, { silent = false } = {}) {
+        const { root } = this;
+        const s2 = getStrings();
+        const trimmed = text.trim();
+        if (trimmed === "") {
+          this.write("", { text: "", silent });
+          this.setInvalid(root.hasAttribute("data-kp-time-required") ? s2.timeRequired : "");
+          return !root.hasAttribute("data-kp-time-required");
+        }
+        const parsed = parseTimeOfDay(trimmed, { seconds: hasSeconds(root) });
+        if (!parsed) return this.refuse(s2.timeInvalid);
+        const min = root.getAttribute("data-kp-time-min");
+        const max = root.getAttribute("data-kp-time-max");
+        if ((min || max) && !timeInWindow(parsed.value, min, max)) return this.refuse(s2.timeOutside(min ?? "00:00", max ?? "23:59"));
+        this.setInvalid("");
+        this.write(parsed.value, { silent, converted: parsed.converted });
+        if (parsed.converted) {
+          this.note(s2.timeConverted(parsed.value));
+          this.say(s2.timeConverted(parsed.value));
+        }
+        return true;
+      }
+      /** Choose a value from the list or a chip. @param {string} value */
+      pick(value) {
+        this.setInvalid("");
+        this.write(value);
+        this.list.close();
+        this.input.focus();
+        this.input.select();
+      }
+      /** Show or hide the zone line and the look, and follow disabled and loading. */
+      sync() {
+        const { root, input } = this;
+        const s2 = getStrings();
+        const zone = (
+          /** @type {HTMLElement} */
+          root.querySelector(".kp-time__zone")
+        );
+        const z = attr(root, "zone", "");
+        zone.hidden = z === "";
+        zone.textContent = z ? s2.timeZoneNote(z) : "";
+        root.classList.toggle("kp-time--inline", attr(root, "look", "field") === "inline");
+        const loading = root.getAttribute("data-kp-state") === "loading";
+        const off = root.hasAttribute("disabled") || root.hasAttribute("data-kp-disabled") || loading;
+        input.disabled = off;
+        const toggle2 = (
+          /** @type {HTMLButtonElement} */
+          root.querySelector(".kp-time__toggle")
+        );
+        const noPopup = attr(root, "popup", "list") === "none";
+        toggle2.disabled = off || noPopup;
+        toggle2.hidden = noPopup;
+        input.toggleAttribute("required", root.hasAttribute("data-kp-time-required"));
+        const reason = root.getAttribute("data-kp-disabled-reason");
+        if (off && reason && !loading) input.setAttribute("data-kp-disabled-reason", reason);
+        else input.removeAttribute("data-kp-disabled-reason");
+        root.toggleAttribute("aria-busy", loading);
+      }
+    };
+  }
+});
+
+// js/timefield/keys.js
+function onEnter(field2, event) {
+  const { list, input } = field2;
+  if (list.open) {
+    event.preventDefault();
+    const option = (
+      /** @type {HTMLElement | undefined} */
+      [...list.popup.querySelectorAll(".kp-time__option")][list.active]
+    );
+    if (option) field2.pick(option.getAttribute("data-kp-time-pick") ?? "");
+    return;
+  }
+  if (!field2.commitText(input.value)) event.preventDefault();
+}
+function onEscape(field2, event) {
+  if (!field2.list.open) return;
+  event.preventDefault();
+  event.stopPropagation();
+  field2.list.close({ focus: true });
+}
+function stepValue(field2, event, up) {
+  const { root, input } = field2;
+  const amount = event.key.startsWith("Page") || event.shiftKey ? MINUTES_PER_HOUR : stepOf(root);
+  const typed = parseTimeOfDay(input.value, { seconds: hasSeconds(root) });
+  const from = typed ? typed.value : field2.value;
+  const result = stepTime(from, up ? 1 : -1, amount);
+  const min = root.getAttribute("data-kp-time-min");
+  const max = root.getAttribute("data-kp-time-max");
+  let next2 = result.value;
+  if ((min || max) && !timeInWindow(next2, min, max)) {
+    let tries = 0;
+    while (!timeInWindow(next2, min, max) && tries < MINUTES_PER_DAY / amount + 1) {
+      next2 = stepTime(next2, up ? 1 : -1, amount).value;
+      tries += 1;
+    }
+  }
+  field2.setInvalid("");
+  field2.write(hasSeconds(root) ? `${next2}:00` : next2);
+  input.select();
+  if (result.wrapped) field2.say(up ? getStrings().timeWrappedNext(next2) : getStrings().timeWrappedPrevious(next2));
+}
+function onKey(field2, event) {
+  if (event.key === "Enter") return onEnter(field2, event);
+  if (event.key === "Escape") return onEscape(field2, event);
+  if (event.key === "ArrowDown" && event.altKey) {
+    event.preventDefault();
+    return field2.list.show();
+  }
+  const up = event.key === "ArrowUp" || event.key === "PageUp";
+  const down = event.key === "ArrowDown" || event.key === "PageDown";
+  if (!up && !down) return;
+  event.preventDefault();
+  const { list } = field2;
+  if (list.open && event.key.startsWith("Arrow")) {
+    const options = list.popup.querySelectorAll(".kp-time__option");
+    list.active = Math.max(0, Math.min(options.length - 1, list.active + (down ? 1 : -1)));
+    list.markActive();
+    return;
+  }
+  stepValue(field2, event, up);
+}
+var init_keys = __esm({
+  "js/timefield/keys.js"() {
+    "use strict";
+    init_strings();
+    init_constants3();
+    init_attributes();
+    init_parse();
+  }
+});
+
+// js/timefield/controller.js
+var WATCHED2, TimeController;
+var init_controller3 = __esm({
+  "js/timefield/controller.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_reason();
+    init_remember();
+    init_constants3();
+    init_attributes();
+    init_field();
+    init_keys();
+    init_parse();
+    WATCHED2 = [
+      "disabled",
+      "data-kp-disabled",
+      "data-kp-disabled-reason",
+      "data-kp-state",
+      ...["look", "zone", "popup", "required", "step", "min", "max", "presets", "now", "clear", "near", "near-width", "seconds"].map(
+        (n) => `data-kp-time-${n}`
+      )
+    ];
+    TimeController = class extends Controller {
+      /** @param {HTMLElement} host */
+      constructor(host) {
+        super(host);
+        this.field = /** @type {import('./field.js').TimeField} */
+        /** @type {unknown} */
+        null;
+      }
+      connect() {
+        const root = this.host;
+        const initial = root.getAttribute("data-kp-value") ?? "";
+        const field2 = this.field = fieldFor(root);
+        const remembered = memoryFor(root, "time")?.read("value", null);
+        const start = initial || (typeof remembered === "string" ? remembered : "");
+        const parsed = start ? parseTimeOfDay(start, { seconds: hasSeconds(root) }) : null;
+        field2.write(parsed ? parsed.value : "", { silent: true });
+        field2.sync();
+        this.own(attachDisabledReasons(root));
+        this.own(() => field2.list.close());
+        this.watchAttributes();
+        const doc = root.ownerDocument;
+        this.listen(doc, "pointerdown", (event) => this.onOutside(
+          /** @type {PointerEvent} */
+          event
+        ), true);
+        this.listen(field2.list.popup, "pointerdown", (event) => this.onPopupDown(
+          /** @type {PointerEvent} */
+          event
+        ));
+        this.listen(root, "focusin", () => this.onFocusIn());
+        this.listen(root, "focusout", (event) => this.onFocusOut(
+          /** @type {FocusEvent} */
+          event
+        ));
+        this.listen(root, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(field2.input, "paste", (event) => this.onPaste(
+          /** @type {ClipboardEvent} */
+          event
+        ));
+        this.listen(field2.input, "keydown", (event) => onKey(
+          field2,
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(field2.input, "input", () => this.onInput());
+      }
+      /** Every option is live: presets and the list's entries follow their attributes. */
+      watchAttributes() {
+        const { field: field2, host } = this;
+        const observer = this.observe(
+          new MutationObserver(() => {
+            field2.sync();
+            if (Array.isArray(field2.presets) || field2.presets.length === 0) field2.presets = presetsFromAttribute(host);
+            if (field2.list.open) field2.list.draw();
+          })
+        );
+        observer.observe(host, { attributes: true, attributeFilter: WATCHED2 });
+      }
+      /** Digits typed fast: 0230 becomes 02:30 as the fourth digit arrives; an open list follows the typed time. */
+      onInput() {
+        const { field: field2, host } = this;
+        const { input, list } = field2;
+        const v = input.value;
+        if (new RegExp(`^\\d{${BARE_DIGITS}}$`).test(v)) input.value = `${v.slice(0, 2)}:${v.slice(2)}`;
+        if (field2.invalid) field2.setInvalid("");
+        if (!list.open) return;
+        const p = parseTimeOfDay(input.value, { seconds: hasSeconds(host) });
+        if (!p) return;
+        list.active = this.nearestOption(timeMinutes(p.value));
+        list.markActive();
+      }
+      /** The index of the option closest to a time; the active one when none has a time. @param {number} t */
+      nearestOption(t) {
+        const { list } = this.field;
+        const options = (
+          /** @type {HTMLElement[]} */
+          [...list.popup.querySelectorAll(".kp-time__option")]
+        );
+        let best = list.active;
+        let delta = Infinity;
+        options.forEach((o, i) => {
+          const v = o.getAttribute("data-kp-time-pick") ?? "";
+          if (!v) return;
+          const d = Math.abs(timeMinutes(v) - t);
+          if (d < delta) {
+            delta = d;
+            best = i;
+          }
+        });
+        return best;
+      }
+      onBlur() {
+        const { field: field2, host } = this;
+        if (field2.list.open) return;
+        if (field2.input.value.trim() !== field2.value || field2.invalid) field2.commitText(field2.input.value);
+        else if (field2.input.value.trim() === "" && host.hasAttribute("data-kp-time-required") && host.hasAttribute("data-kp-time-touched"))
+          field2.setInvalid(getStrings().timeRequired);
+        host.setAttribute("data-kp-time-touched", "");
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const { field: field2, host } = this;
+        const { list, input } = field2;
+        const t = event.target instanceof Element ? event.target : null;
+        if (!t) return;
+        if (t.closest(".kp-time__toggle")) {
+          if (list.open) list.close({ focus: true });
+          else {
+            input.focus();
+            list.show();
+          }
+          return;
+        }
+        const choice = t.closest("[data-kp-time-pick]");
+        if (choice && list.popup.contains(choice)) return field2.pick(choice.getAttribute("data-kp-time-pick") ?? "");
+        if (t.closest("[data-kp-time-retry]")) {
+          host.dispatchEvent(new CustomEvent(TIME_RETRY_EVENT, { bubbles: true }));
+          return;
+        }
+        if (t === input && !list.open && window.matchMedia(NARROW_QUERY).matches) list.show();
+      }
+      /** @param {FocusEvent} event */
+      onFocusOut(event) {
+        const next2 = (
+          /** @type {Node | null} */
+          event.relatedTarget
+        );
+        if (next2 && this.host.contains(next2)) return;
+        if (this.field.list.open) this.field.list.close();
+        this.onBlur();
+      }
+      onFocusIn() {
+        const { input } = this.field;
+        if (!input.disabled) requestAnimationFrame(() => document.activeElement === input && input.select());
+      }
+      /** A paste is read as a time, whole: `2:30 PM` is converted. @param {ClipboardEvent} event */
+      onPaste(event) {
+        const text = event.clipboardData?.getData("text") ?? "";
+        if (!text) return;
+        event.preventDefault();
+        this.field.input.value = text.trim();
+        this.field.commitText(text);
+      }
+      /** A press on the list keeps the focus where it was, so the field does not commit half-way. @param {PointerEvent} event */
+      onPopupDown(event) {
+        if (event.target instanceof Element && this.field.list.popup.contains(event.target) && !event.target.closest("button"))
+          event.preventDefault();
+      }
+      /** @param {PointerEvent} event */
+      onOutside(event) {
+        const { list } = this.field;
+        if (list.open && event.target instanceof Node && !this.host.contains(event.target) && !list.popup.contains(event.target)) list.close();
+      }
+    };
+  }
+});
+
+// js/timefield/api.js
+function setTime(root, value, { fire: fire2 = false } = {}) {
+  if (!(root instanceof HTMLElement)) return;
+  const field2 = fieldFor(root);
+  field2.setInvalid("");
+  field2.write(value, { silent: !fire2 });
+}
+function timeValue(root) {
+  return FIELDS.get(root)?.value ?? "";
+}
+function timeValid(root) {
+  const field2 = FIELDS.get(root);
+  if (!field2) return true;
+  return field2.invalid === "" && !(root.hasAttribute("data-kp-time-required") && field2.value === "");
+}
+function setTimePresets(root, presets) {
+  const field2 = fieldFor(root);
+  field2.presets = presets;
+  if (field2.list.open) field2.list.draw();
+}
+var attachTimes;
+var init_api = __esm({
+  "js/timefield/api.js"() {
+    "use strict";
+    init_controller();
+    init_constants3();
+    init_controller3();
+    init_field();
+    init_state2();
+    attachTimes = (root = document) => attachAll(root, TIME, TimeController);
+  }
+});
+
+// js/combobox/constants.js
+var COMBOBOX, INPUT, LIST, STATUS, TAGS, EMPTY, RESULTS_TEXT, CHANGE_EVENT, OPEN_EVENT;
+var init_constants4 = __esm({
+  "js/combobox/constants.js"() {
+    "use strict";
+    init_strings();
+    COMBOBOX = "[data-kp-combobox]";
+    INPUT = 'input[role="combobox"]';
+    LIST = '[role="listbox"]';
+    STATUS = "[data-kp-combobox-status]";
+    TAGS = "[data-kp-tag-list]";
+    EMPTY = "[data-kp-combobox-empty]";
+    RESULTS_TEXT = /** @param {number} n */
+    (n) => {
+      const s2 = getStrings();
+      return n === 0 ? s2.noResults : n === 1 ? s2.oneResult : s2.manyResults(n);
+    };
+    CHANGE_EVENT = "kp-combobox-change";
+    OPEN_EVENT = "kp-combobox-open";
+  }
+});
+
+// js/combobox/handle.js
+function combobox(element) {
+  return handles.get(element) ?? null;
+}
+var handles, selectHandles;
+var init_handle = __esm({
+  "js/combobox/handle.js"() {
+    "use strict";
+    handles = /* @__PURE__ */ new WeakMap();
+    selectHandles = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/unsaved/widgets.js
+function tagValues(root) {
+  return [...root.querySelectorAll("[data-kp-tag-list] .kp-tag")].map((t) => (
+    /** @type {HTMLElement} */
+    t.dataset.value ?? (t.textContent ?? "").trim()
+  ));
+}
+function widgetOf(node) {
+  const root = (
+    /** @type {HTMLElement | null} */
+    node.closest(WIDGET)
+  );
+  if (!root || root.matches("[data-kp-untracked]") || root.querySelector("[data-kp-untracked]")) return null;
+  return root;
+}
+function readWidget(root) {
+  if (root.matches(QUANTITY)) return String(getQuantity(root));
+  if (root.matches(TIME)) return FIELDS.get(root)?.value ?? root.getAttribute("data-kp-value") ?? "";
+  return JSON.stringify(tagValues(root));
+}
+function showWidget(root, value) {
+  if (!root.matches(TAG_INPUT)) return value;
+  return (
+    /** @type {string[]} */
+    JSON.parse(value || "[]").join(", ")
+  );
+}
+function writeWidget(root, value) {
+  if (root.matches(QUANTITY)) setQuantity(root, Number(value));
+  else if (root.matches(TIME)) setTime(root, value);
+  else {
+    const handle = combobox(root);
+    if (!handle) throw new Error("kp-unsaved: a tag input must be attached (attachComboboxes) before its value can be put back");
+    handle.set(
+      /** @type {string[]} */
+      JSON.parse(value || "[]")
+    );
+  }
+}
+var TAG_INPUT, WIDGET, WIDGET_EVENTS, isWidget;
+var init_widgets = __esm({
+  "js/unsaved/widgets.js"() {
+    "use strict";
+    init_values();
+    init_read();
+    init_quantity();
+    init_constants3();
+    init_state2();
+    init_api();
+    init_constants4();
+    init_handle();
+    TAG_INPUT = "[data-kp-combobox][data-kp-tags]";
+    WIDGET = `${QUANTITY}, ${TIME}, ${TAG_INPUT}`;
+    WIDGET_EVENTS = [QUANTITY_EVENT, TIME_EVENT, CHANGE_EVENT];
+    isWidget = (el16) => el16.matches(WIDGET);
+  }
+});
+
+// js/unsaved/values.js
+function radiosNamed(c) {
+  return [...(c.form ?? c.ownerDocument).querySelectorAll(`input[type="radio"]`)].filter(
+    (r) => (
+      /** @type {HTMLInputElement} */
+      r.name === c.name
+    )
+  );
+}
+function readValue(c) {
+  if (isWidget(c)) return readWidget(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    c
+  );
+  if (c instanceof HTMLInputElement && c.type === "checkbox") return c.checked ? "on" : "off";
+  if (c instanceof HTMLInputElement && c.type === "radio") {
+    return (
+      /** @type {HTMLInputElement | undefined} */
+      radioGroup(c).find((r) => (
+        /** @type {HTMLInputElement} */
+        r.checked
+      ))?.value ?? ""
+    );
+  }
+  return c.value;
+}
+function readDefault(c) {
+  if (isWidget(c)) return readWidget(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    c
+  );
+  if (c instanceof HTMLInputElement && c.type === "checkbox") return c.defaultChecked ? "on" : "off";
+  if (c instanceof HTMLInputElement && c.type === "radio") {
+    return (
+      /** @type {HTMLInputElement | undefined} */
+      radioGroup(c).find((r) => (
+        /** @type {HTMLInputElement} */
+        r.defaultChecked
+      ))?.value ?? ""
+    );
+  }
+  if (c instanceof HTMLSelectElement) return ([...c.options].find((o) => o.defaultSelected) ?? c.options[0])?.value ?? "";
+  return c.defaultValue;
+}
+function writeValue(c, value) {
+  if (isWidget(c)) writeWidget(
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    c,
+    value
+  );
+  else if (c instanceof HTMLInputElement && c.type === "checkbox") c.checked = value === "on";
+  else if (c instanceof HTMLInputElement && c.type === "radio") {
+    for (const r of radiosNamed(c)) r.checked = /** @type {HTMLInputElement} */
+    r.value === value;
+  } else c.value = value;
+}
+function fire(c) {
+  c.dispatchEvent(new Event("input", { bubbles: true }));
+  c.dispatchEvent(new Event("change", { bubbles: true }));
+}
+var radioGroup;
+var init_values2 = __esm({
+  "js/unsaved/values.js"() {
+    "use strict";
+    init_widgets();
+    radioGroup = (c) => c.name ? radiosNamed(c) : [c];
+  }
+});
+
+// js/overlays/dialog-guard.js
+function valueOf(control) {
+  if (control instanceof HTMLSelectElement && control.multiple) return [...control.selectedOptions].map((o) => o.value).join("\n");
+  if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement) return readValue(control);
+  if (control.matches('[contenteditable="true"]')) return control.textContent ?? "";
+  if (control.matches("[role]") && !widgetOf(control)) return control.getAttribute("aria-checked") ?? control.getAttribute("aria-pressed") ?? "";
+  return readValue(
+    /** @type {HTMLInputElement} */
+    control
+  );
+}
+function read(dialog) {
+  const seen = /* @__PURE__ */ new Set();
+  const out = [];
+  for (const el16 of dialog.querySelectorAll(FIELDS2)) {
+    if (el16.closest("[data-kp-untracked], .kp-confirm--inline")) continue;
+    const control = widgetOf(el16) ?? el16;
+    if (seen.has(control)) continue;
+    seen.add(control);
+    out.push(valueOf(control));
+  }
+  return JSON.stringify(out);
+}
+function dialogChanged(dialog) {
+  const was = before.get(dialog);
+  return was !== void 0 && was !== read(dialog);
+}
+function markDialogSaved(dialog) {
+  before.set(dialog, read(dialog));
+}
+function forgetDialogEdits(dialog) {
+  before.delete(dialog);
+  released.delete(dialog);
+}
+function holds(dialog, value) {
+  if (!dialog.matches(DIALOG_GUARD) || released.has(dialog) || dialog.hasAttribute("data-kp-confirm-replaced")) return false;
+  return WAYS_OUT.has(value ?? "") && dialogChanged(dialog);
+}
+function anchorIn(dialog) {
+  const focused2 = document.activeElement;
+  return focused2 instanceof HTMLElement && dialog.contains(focused2) ? focused2 : dialog;
+}
+function ask(dialog, go, from) {
+  const s2 = getStrings();
+  asking.add(dialog);
+  const anchor = from instanceof HTMLElement && from.getClientRects().length > 0 ? from : anchorIn(dialog);
+  const opened = openConfirmation(anchor, {
+    phrase: s2.dialogGuardTitle,
+    description: s2.dialogGuardText,
+    acceptLabel: s2.dialogGuardDiscard,
+    strings: { confirmCancel: s2.dialogGuardKeep },
+    onAccept: () => {
+      asking.delete(dialog);
+      released.add(dialog);
+      go();
+    },
+    onCancel: () => asking.delete(dialog)
+  });
+  if (!opened.open) asking.delete(dialog);
+}
+function whenDialogFree(dialog, go, { value, from = null } = {}) {
+  if (asking.has(dialog)) return false;
+  if (!holds(dialog, value)) {
+    go();
+    return true;
+  }
+  ask(dialog, go, from);
+  return false;
+}
+function requestDialogClose(dialog, value, from = null) {
+  return whenDialogFree(dialog, () => dialog.close(value), { value, from });
+}
+function onEdit(event) {
+  const dialog = event.target instanceof Element ? event.target.closest(DIALOG_GUARD) : null;
+  if (dialog instanceof HTMLDialogElement && dialog.open && !before.has(dialog)) before.set(dialog, read(dialog));
+}
+function onCancel(event) {
+  const dialog = event.target;
+  if (!(dialog instanceof HTMLDialogElement) || dialog.hasAttribute("data-kp-confirm-replaced")) return;
+  if (!asking.has(dialog) && !holds(dialog, "")) return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  if (!asking.has(dialog)) ask(dialog, () => dialog.close(""), document.activeElement);
+}
+function onRequest(event) {
+  const dialog = event.target;
+  if (!(dialog instanceof HTMLDialogElement)) return;
+  const value = (
+    /** @type {CustomEvent<{ returnValue?: string }>} */
+    event.detail?.returnValue
+  );
+  if (asking.has(dialog)) return void event.preventDefault();
+  if (!holds(dialog, value)) return;
+  event.preventDefault();
+  ask(dialog, () => dialog.close(value), document.activeElement);
+}
+function onSubmit(event) {
+  const dialog = event.target instanceof Element ? event.target.closest(DIALOG_GUARD) : null;
+  if (dialog instanceof HTMLDialogElement) markDialogSaved(dialog);
+}
+function onClose(event) {
+  const dialog = event.target;
+  if (dialog instanceof HTMLDialogElement && dialog.matches(DIALOG_GUARD)) forgetDialogEdits(dialog);
+}
+function attachDialogGuards() {
+  if (attached++ === 0) for (const [type, listener] of LISTENERS) window.addEventListener(type, listener, true);
+  let done = false;
+  return () => {
+    if (done) return;
+    done = true;
+    if (--attached === 0) for (const [type, listener] of LISTENERS) window.removeEventListener(type, listener, true);
+  };
+}
+var DIALOG_GUARD, FIELDS2, WAYS_OUT, before, asking, released, LISTENERS, attached;
+var init_dialog_guard = __esm({
+  "js/overlays/dialog-guard.js"() {
+    "use strict";
+    init_confirm_dialog();
+    init_strings();
+    init_values2();
+    init_widgets();
+    init_constants2();
+    DIALOG_GUARD = 'dialog[data-kp-dialog-guard]:not([data-kp-dialog-guard="off"])';
+    FIELDS2 = 'input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="file"]), select, textarea, [role="switch"], [role="checkbox"], [role="radio"], [contenteditable="true"]';
+    WAYS_OUT = /* @__PURE__ */ new Set(["", "cancel"]);
+    before = /* @__PURE__ */ new WeakMap();
+    asking = /* @__PURE__ */ new WeakSet();
+    released = /* @__PURE__ */ new WeakSet();
+    LISTENERS = [
+      ["pointerdown", onEdit],
+      ["keydown", onEdit],
+      ["beforeinput", onEdit],
+      ["cancel", onCancel],
+      [DIALOG_CLOSE_REQUEST_EVENT, onRequest],
+      ["submit", onSubmit],
+      ["close", onClose]
+    ];
+    attached = 0;
+  }
+});
+
+// js/overlays/dialog-open.js
+function openAtTop(dialog) {
+  const body = dialog.querySelector(":scope > .kp-dialog__body");
+  for (const box of [dialog, body]) if (box) box.scrollTop = 0;
+  const focused2 = document.activeElement;
+  if (focused2 instanceof HTMLElement && focused2 !== dialog && dialog.contains(focused2))
+    focused2.scrollIntoView({ block: "nearest", inline: "nearest" });
+}
+function unmark(dialog) {
+  const was = shown.get(dialog) ?? { trigger: null, row: null };
+  was.row?.removeAttribute("data-kp-drawer-current");
+  was.trigger?.setAttribute("aria-expanded", "false");
+  shown.delete(dialog);
+  return was;
+}
+function mark(dialog, trigger) {
+  unmark(dialog);
+  const row2 = trigger?.closest(ROW) ?? null;
+  row2?.setAttribute("data-kp-drawer-current", "");
+  if (trigger) {
+    trigger.setAttribute("aria-expanded", "true");
+    if (dialog.id) trigger.setAttribute("aria-controls", dialog.id);
+  }
+  shown.set(dialog, { trigger, row: row2 });
+}
+function keepBeside(dialog) {
+  const onKey5 = (event) => {
+    if (event.key !== "Escape" || event.defaultPrevented || !dialog.open) return;
+    if (document.querySelector("dialog:modal, :popover-open")) return;
+    event.preventDefault();
+    requestDialogClose(dialog, "", document.activeElement);
+  };
+  document.addEventListener("keydown", onKey5);
+  dialog.addEventListener(
+    "close",
+    () => {
+      document.removeEventListener("keydown", onKey5);
+      const { trigger } = unmark(dialog);
+      const focused2 = document.activeElement;
+      const lost = !focused2 || focused2 === document.body || dialog.contains(focused2);
+      if (lost && trigger?.isConnected) trigger.focus();
+    },
+    { once: true }
+  );
+}
+function openDialog(dialog, { trigger = null, modal = true } = {}) {
+  const beside = dialog.matches(BESIDE) && !window.matchMedia(PHONE).matches;
+  if (dialog.open) {
+    if (!beside || !trigger || !shown.has(dialog) || shown.get(dialog)?.trigger === trigger) return;
+    whenDialogFree(
+      dialog,
+      () => {
+        forgetDialogEdits(dialog);
+        mark(dialog, trigger);
+        announce(dialog, { trigger, modal: false, beside, moved: true });
+      },
+      { from: trigger }
+    );
+    return;
+  }
+  const asModal = !beside && modal;
+  if (asModal) dialog.showModal();
+  else dialog.show();
+  if (beside) {
+    mark(dialog, trigger);
+    keepBeside(dialog);
+  }
+  openAtTop(dialog);
+  announce(dialog, { trigger, modal: asModal, beside, moved: false });
+}
+var BESIDE, PHONE, ROW, shown, announce;
+var init_dialog_open = __esm({
+  "js/overlays/dialog-open.js"() {
+    "use strict";
+    init_constants2();
+    init_dialog_guard();
+    BESIDE = 'dialog.kp-drawer[data-kp-drawer-mode="beside"]';
+    PHONE = "(max-width: 40rem)";
+    ROW = '[data-kp-drawer-row], tr, li, [role="row"]';
+    shown = /* @__PURE__ */ new WeakMap();
+    announce = (dialog, detail) => dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail }));
+  }
+});
+
+// js/overlays/dialogs.js
+function attachDialogs(root = document, { modal = true } = {}) {
+  const triggers = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll("[data-kp-dialog]")].filter((trigger) => !("kpDialogAttached" in trigger.dataset)).filter((trigger) => document.getElementById(trigger.dataset.kpDialog ?? "") instanceof HTMLDialogElement).map((trigger) => attachOne(trigger, DialogTrigger, { modal }))
+  );
+  const closers = (
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll("[data-kp-dialog-close]")].filter((button6) => !("kpDialogCloseAttached" in button6.dataset)).map((button6) => attachOne(button6, DialogCloser))
+  );
+  const stopGuards = attachDialogGuards();
+  return () => {
+    for (const control of [...triggers.splice(0), ...closers.splice(0)]) control?.destroy();
+    stopGuards();
+  };
+}
+var DialogTrigger, DialogCloser, closeLabel;
+var init_dialogs = __esm({
+  "js/overlays/dialogs.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_dialog_guard();
+    init_dialog_open();
+    init_dialog_open();
+    DialogTrigger = class extends Controller {
+      /** @param {HTMLElement} host @param {{ modal?: boolean }} [options] */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.dialog = /** @type {HTMLDialogElement} */
+        document.getElementById(host.dataset.kpDialog ?? "");
+        this.modal = options.modal ?? true;
+      }
+      connect() {
+        const trigger = this.host;
+        trigger.dataset.kpDialogAttached = "";
+        this.own(() => delete trigger.dataset.kpDialogAttached);
+        this.listen(trigger, "click", () => this.open());
+      }
+      open() {
+        const { host: trigger, dialog } = this;
+        const asModal = trigger.dataset.kpDialogMode === void 0 ? this.modal : trigger.dataset.kpDialogMode !== "non-modal";
+        openDialog(dialog, { trigger, modal: asModal });
+      }
+    };
+    DialogCloser = class extends Controller {
+      connect() {
+        const button6 = this.host;
+        button6.dataset.kpDialogCloseAttached = "";
+        this.own(() => delete button6.dataset.kpDialogCloseAttached);
+        this.listen(button6, "click", () => {
+          const dialog = button6.closest("dialog");
+          if (dialog) requestDialogClose(dialog, button6.dataset.kpDialogClose || void 0, button6);
+        });
+      }
+    };
+    closeLabel = () => getStrings().close;
+  }
+});
+
 // js/motion/timing.js
 function registerTime(el16, name) {
   const raw = getComputedStyle(el16).getPropertyValue(name).trim();
@@ -3458,10 +6085,10 @@ var init_timing = __esm({
 });
 
 // js/motion/keyframes.js
-function withCustomProperties(read, own) {
+function withCustomProperties(read2, own) {
   const customs = own.filter((frame3) => Object.keys(frame3).some((key) => key.startsWith("--")));
-  if (customs.length === 0) return read;
-  const frames = read.map((frame3) => ({ ...frame3 }));
+  if (customs.length === 0) return read2;
+  const frames = read2.map((frame3) => ({ ...frame3 }));
   const at = (frame3) => Number(frame3.computedOffset ?? frame3.offset);
   for (
     const custom of
@@ -3482,11 +6109,11 @@ function withCustomProperties(read, own) {
   return frames;
 }
 function keyframesOf(effect) {
-  const read = effect.getKeyframes();
+  const read2 = effect.getKeyframes();
   try {
-    return withCustomProperties(read, new KeyframeEffect(effect).getKeyframes());
+    return withCustomProperties(read2, new KeyframeEffect(effect).getKeyframes());
   } catch {
-    return read;
+    return read2;
   }
 }
 function lineOf(effect) {
@@ -3559,6 +6186,7 @@ var init_keyframes = __esm({
 async function closeDialog(dialog, returnValue) {
   const close = () => nativeClose?.call(dialog, returnValue);
   if (!dialog.open || closing.has(dialog)) return;
+  if (!dialog.dispatchEvent(new CustomEvent(DIALOG_CLOSE_REQUEST_EVENT, { cancelable: true, detail: { returnValue } }))) return;
   const { close: duration2 } = themeMotion(dialog);
   const kept = entrances.get(dialog) ?? [];
   if (duration2 <= 0) return void close();
@@ -3631,6 +6259,7 @@ var init_close = __esm({
     "use strict";
     init_keyframes();
     init_timing();
+    init_constants();
     opensAsReversedClose = (el16) => getComputedStyle(el16).getPropertyValue("--kp-open").trim() === "reverse-close";
   }
 });
@@ -3978,8 +6607,8 @@ function asOf(root, present2, attach) {
       /** @type {const} */
       ["querySelectorAll", "querySelector"]
     ) {
-      const before = own[name];
-      if (before) Object.defineProperty(root, name, before);
+      const before2 = own[name];
+      if (before2) Object.defineProperty(root, name, before2);
       else delete /** @type {any} */
       root[name];
     }
@@ -3993,14 +6622,14 @@ function afterPaint(fn) {
   requestAnimationFrame(() => requestAnimationFrame(fn));
 }
 function settleAfter(root, done) {
-  holds.set(root, (holds.get(root) ?? 0) + 1);
+  holds2.set(root, (holds2.get(root) ?? 0) + 1);
   root.setAttribute(SETTLING_ATTRIBUTE, "");
   let held2 = true;
   const release2 = () => {
     if (!held2) return;
     held2 = false;
-    const left = (holds.get(root) ?? 1) - 1;
-    holds.set(root, left);
+    const left = (holds2.get(root) ?? 1) - 1;
+    holds2.set(root, left);
     if (left <= 0) root.removeAttribute(SETTLING_ATTRIBUTE);
   };
   done.then(
@@ -4009,13 +6638,13 @@ function settleAfter(root, done) {
   );
   return release2;
 }
-var presentUnder, SETTLING_ATTRIBUTE, holds, settling;
+var presentUnder, SETTLING_ATTRIBUTE, holds2, settling;
 var init_as_of = __esm({
   "js/as-of.js"() {
     "use strict";
     presentUnder = (root) => new WeakSet([...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")]);
     SETTLING_ATTRIBUTE = "data-kp-settling";
-    holds = /* @__PURE__ */ new WeakMap();
+    holds2 = /* @__PURE__ */ new WeakMap();
     settling = (el16) => el16.closest(`[${SETTLING_ATTRIBUTE}]`) !== null;
   }
 });
@@ -4220,13 +6849,13 @@ function exitsOf(actor, lines) {
 function arriveAsReversedLeave(el16) {
   if (el16 instanceof HTMLTableRowElement || !el16.isConnected) return false;
   const { size: size2, ease } = themeMotion(el16);
-  const before = getComputedStyle(el16).animationName;
+  const before2 = getComputedStyle(el16).animationName;
   const beforeSig = animationSignature(el16);
   const rest = pseudoNames(el16);
   el16.setAttribute("data-kp-leaving", "");
   const style = getComputedStyle(el16);
   const ownName = style.animationName;
-  if (!ownName || ownName === "none" || ownName === before && animationSignature(el16) === beforeSig) {
+  if (!ownName || ownName === "none" || ownName === before2 && animationSignature(el16) === beforeSig) {
     el16.removeAttribute("data-kp-leaving");
     return false;
   }
@@ -4428,13 +7057,13 @@ function arrivalOf(el16) {
   el16.setAttribute("data-kp-arriving", "");
   const style = getComputedStyle(el16);
   const own = style.animationName && style.animationName !== "none";
-  const read = own ? {
+  const read2 = own ? {
     name: style.animationName.split(",")[0].trim(),
     duration: firstMs(style.animationDuration),
     ease: style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim()
   } : null;
   if (!had) el16.removeAttribute("data-kp-arriving");
-  if (read && read.duration > 0) return read;
+  if (read2 && read2.duration > 0) return read2;
   const toast2 = arrival(el16);
   if (!toast2) return null;
   const [name, duration2, ...ease] = toast2.split(" ");
@@ -4494,7 +7123,7 @@ function foldReflows(el16, from, to) {
   if (!("width" in from)) return false;
   const chain = [];
   for (let up = el16.parentElement; up && up !== document.body && chain.length < 6; up = up.parentElement) chain.push(up);
-  const before = chain.map((n) => n.getBoundingClientRect().height);
+  const before2 = chain.map((n) => n.getBoundingClientRect().height);
   const dashed = (k) => k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
   const keys = Object.keys(to).map(dashed);
   const kept = keys.map((k) => el16.style.getPropertyValue(k));
@@ -4502,7 +7131,7 @@ function foldReflows(el16, from, to) {
   keys.forEach((k, i) => el16.style.setProperty(k, values[i], "important"));
   const after = chain.map((n) => n.getBoundingClientRect().height);
   keys.forEach((k, i) => kept[i] ? el16.style.setProperty(k, kept[i]) : el16.style.removeProperty(k));
-  return after.some((h2, i) => Math.abs(h2 - before[i]) >= 1);
+  return after.some((h2, i) => Math.abs(h2 - before2[i]) >= 1);
 }
 var init_fold = __esm({
   "js/motion/fold.js"() {
@@ -4518,10 +7147,10 @@ var init_fold = __esm({
 async function playClose(el16) {
   stopClose(el16);
   if (reduced() || !el16.isConnected) return true;
-  const before = getComputedStyle(el16).animationName;
+  const before2 = getComputedStyle(el16).animationName;
   el16.setAttribute(CLOSING_ATTRIBUTE, "");
   const now = getComputedStyle(el16).animationName;
-  const own = Boolean(now) && now !== "none" && now !== before;
+  const own = Boolean(now) && now !== "none" && now !== before2;
   let stopped = false;
   const me = (
     /** @type {any} */
@@ -4572,11 +7201,11 @@ function closePopoverWithGhost(event) {
     const name = getComputedStyle(el16, pseudo).animationName;
     return Boolean(name) && name !== "none";
   });
-  const before = getComputedStyle(el16).animationName;
+  const before2 = getComputedStyle(el16).animationName;
   el16.setAttribute(CLOSING_ATTRIBUTE, "");
   const leaveOwn = getComputedStyle(el16).animationName;
   el16.removeAttribute(CLOSING_ATTRIBUTE);
-  if (!animated && (!leaveOwn || leaveOwn === "none" || leaveOwn === before)) return;
+  if (!animated && (!leaveOwn || leaveOwn === "none" || leaveOwn === before2)) return;
   const box = el16.getBoundingClientRect();
   if (box.width === 0 && box.height === 0) return;
   const sized = getComputedStyle(el16);
@@ -4692,7 +7321,7 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
   };
   entering.get(el16)?.();
   if (!el16.isConnected || el16.hasAttribute("data-kp-leaving")) return exited();
-  const before = getComputedStyle(el16).animationName;
+  const before2 = getComputedStyle(el16).animationName;
   const beforeSig = animationSignature(el16);
   const rest = pseudoNames(el16);
   const arrival2 = arrivalOf(el16);
@@ -4704,14 +7333,14 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
   el16.setAttribute("data-kp-leaving", "");
   const style = getComputedStyle(el16);
   const ownName = style.animationName;
-  const turned = ownName && ownName !== "none" && ownName === before && animationSignature(el16) !== beforeSig;
+  const turned = ownName && ownName !== "none" && ownName === before2 && animationSignature(el16) !== beforeSig;
   if (turned) {
     el16.setAttribute(REVERSING_ATTRIBUTE, "reset");
     getComputedStyle(el16).animationName;
     el16.removeAttribute(REVERSING_ATTRIBUTE);
     getComputedStyle(el16).animationName;
   }
-  const own = ownName && ownName !== "none" && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
+  const own = ownName && ownName !== "none" && (ownName !== before2 || turned) ? { duration: firstMs(style.animationDuration) } : null;
   const running = [];
   const lasts = own ? own.duration : arrival2?.duration ?? 0;
   const fold2 = style.getPropertyValue("--kp-leave-fold").trim();
@@ -4862,7 +7491,7 @@ function batchOf(records) {
 var init_repaint = __esm({
   "js/motion/repaint.js"() {
     "use strict";
-    init_constants2();
+    init_constants();
   }
 });
 
@@ -4880,7 +7509,7 @@ var init_box_size = __esm({
     init_controller();
     init_state();
     init_arrive();
-    init_constants2();
+    init_constants();
     init_switching();
     init_timing();
     init_size();
@@ -5251,7 +7880,7 @@ var init_attach = __esm({
   "js/motion/attach.js"() {
     "use strict";
     init_controller();
-    init_constants2();
+    init_constants();
     init_dialog_close();
     init_box_size();
     init_fold_control();
@@ -5281,8 +7910,8 @@ var init_attach = __esm({
       }
       /** @param {Element} el @param {() => void} detach */
       keep(el16, detach) {
-        const before = this.detaches.get(el16);
-        this.detaches.set(el16, before ? () => (before(), detach()) : detach);
+        const before2 = this.detaches.get(el16);
+        this.detaches.set(el16, before2 ? () => (before2(), detach()) : detach);
       }
       /** Wire what is under `scope`, `scope` itself included. @param {ParentNode} scope */
       scan(scope) {
@@ -5335,6 +7964,7 @@ var motion_exports = {};
 __export(motion_exports, {
   ARRIVE_KEYS: () => ARRIVE_KEYS,
   CLOSING_ATTRIBUTE: () => CLOSING_ATTRIBUTE,
+  DIALOG_CLOSE_REQUEST_EVENT: () => DIALOG_CLOSE_REQUEST_EVENT,
   FOLDING_OUT: () => FOLDING_OUT,
   FOLD_SELECTOR: () => FOLD_SELECTOR,
   GROUP_FOLDING_ATTRIBUTE: () => GROUP_FOLDING_ATTRIBUTE,
@@ -5368,7 +7998,7 @@ __export(motion_exports, {
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
-    init_constants2();
+    init_constants();
     init_timing();
     init_keyframes();
     init_close();
@@ -5412,21 +8042,21 @@ function watchTabOverflow(list, selected) {
 var init_tab_row = __esm({
   "js/overlays/tab-row.js"() {
     "use strict";
-    init_constants();
+    init_constants2();
   }
 });
 
 // js/overlays/tab-list.js
-var SWAP_MARK_MS, handles, panelOf, TabsControl;
+var SWAP_MARK_MS, handles2, panelOf, TabsControl;
 var init_tab_list = __esm({
   "js/overlays/tab-list.js"() {
     "use strict";
     init_controller();
     init_motion();
-    init_constants();
+    init_constants2();
     init_tab_row();
     SWAP_MARK_MS = 400;
-    handles = /* @__PURE__ */ new WeakMap();
+    handles2 = /* @__PURE__ */ new WeakMap();
     panelOf = (tab) => document.getElementById(tab.getAttribute("aria-controls") ?? "");
     TabsControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ activation?: 'automatic' | 'manual', loop?: boolean }} [options] */
@@ -5454,7 +8084,7 @@ var init_tab_list = __esm({
         const list = this.host;
         list.dataset.kpTabsAttached = "";
         this.own(() => this.restore());
-        handles.set(list, { tabs: () => this.tabs(), select: (index, options) => this.select(index, options) });
+        handles2.set(list, { tabs: () => this.tabs(), select: (index, options) => this.select(index, options) });
         const initial = Math.max(0, this.tabs().findIndex((t) => t.getAttribute("aria-selected") === "true"));
         this.tabs().forEach((tab, i) => {
           tab.tabIndex = i === initial ? 0 : -1;
@@ -5478,7 +8108,7 @@ var init_tab_list = __esm({
       }
       /** Take the list out of the registry and put back the tab stops, the selection and the panels attach found. */
       restore() {
-        handles.delete(this.host);
+        handles2.delete(this.host);
         delete this.host.dataset.kpTabsAttached;
         for (const b of this.before) {
           if (b.tabIndex === null) b.tab.removeAttribute("tabindex");
@@ -5492,7 +8122,7 @@ var init_tab_list = __esm({
       select(index, { focus = true } = {}) {
         const all = this.tabs();
         const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
-        let shown5 = null;
+        let shown6 = null;
         const going = [];
         all.forEach((tab2, i) => {
           const selected = i === index;
@@ -5500,13 +8130,13 @@ var init_tab_list = __esm({
           tab2.tabIndex = selected ? 0 : -1;
           const panel = panelOf(tab2);
           if (!panel) return;
-          if (selected) shown5 = panel;
+          if (selected) shown6 = panel;
           else this.send(panel, going);
         });
         const mine = ++this.turn;
         const show = (
           /** @type {HTMLElement | null} */
-          shown5
+          shown6
         );
         if (show) this.arrive(show, going, mine);
         if (focus) all[index]?.focus();
@@ -5587,7 +8217,7 @@ var init_tab_list = __esm({
 
 // js/overlays/tabs.js
 function selectTab(list, which) {
-  const handle = handles.get(list);
+  const handle = handles2.get(list);
   if (handle === void 0) return;
   const tabs = handle.tabs();
   const index = typeof which === "number" ? which : tabs.findIndex((t) => t.id === which);
@@ -5689,7 +8319,7 @@ var init_toast = __esm({
     init_controller();
     init_strings();
     init_motion();
-    init_constants();
+    init_constants2();
     goingToasts = /* @__PURE__ */ new WeakSet();
     ToastClock = class extends Controller {
       /**
@@ -5781,431 +8411,6 @@ var init_toast = __esm({
   }
 });
 
-// js/remember/store.js
-function configureRemember(next2) {
-  if (next2.prefix !== void 0) config.prefix = next2.prefix;
-  if (next2.storage !== void 0) config.storage = next2.storage;
-}
-function storage(given2) {
-  if (given2 !== void 0) return given2;
-  if (config.storage !== void 0) return config.storage;
-  try {
-    return globalThis.localStorage ?? null;
-  } catch {
-    return null;
-  }
-}
-function rememberedName(element, component) {
-  const own = element.getAttribute(REMEMBER_ATTRIBUTE);
-  if (own !== null && own !== "") return own;
-  const alias = ALIASES[component];
-  const older = alias === void 0 ? null : element.getAttribute(alias);
-  return older === null || older === "" ? null : older;
-}
-function forgetClaims() {
-  claims.clear();
-  reported.clear();
-}
-function reportClash(element, component, name, other) {
-  const claim = `${component}:${name}`;
-  if (!reported.has(claim)) {
-    reported.add(claim);
-    console.warn(getStrings().rememberClash(name, component));
-  }
-  element.dispatchEvent(new CustomEvent(REMEMBER_CLASH_EVENT, { bubbles: true, detail: { name, component, other } }));
-}
-function memoryFor(element, component, { storage: given2 } = {}) {
-  const name = rememberedName(element, component);
-  if (name === null) return null;
-  const claim = `${component}:${name}`;
-  const holder = claims.get(claim);
-  if (holder !== void 0 && holder !== element && holder.isConnected) {
-    reportClash(element, component, name, holder);
-    return null;
-  }
-  claims.set(claim, element);
-  const key = (slot) => `${config.prefix}:${component}:${name}:${slot}`;
-  return {
-    name,
-    key,
-    read: (slot, fallback2) => {
-      const store = storage(given2);
-      if (store === null) return fallback2;
-      try {
-        const raw = store.getItem(key(slot));
-        if (raw === null) return fallback2;
-        return JSON.parse(raw);
-      } catch {
-        return fallback2;
-      }
-    },
-    write: (slot, value) => {
-      const store = storage(given2);
-      if (store === null) return false;
-      try {
-        store.setItem(key(slot), JSON.stringify(value));
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    forget: (slot) => {
-      const store = storage(given2);
-      if (store === null) return;
-      try {
-        store.removeItem(key(slot));
-      } catch {
-      }
-    }
-  };
-}
-function forgetRememberedExcept(component, prefix, names, { storage: given2 } = {}) {
-  const store = storage(given2);
-  if (store === null) return 0;
-  const keep = new Set(names);
-  const head = `${config.prefix}:${component}:`;
-  let removed = 0;
-  try {
-    const doomed = [];
-    for (let at = 0; at < store.length; at += 1) {
-      const key = store.key(at);
-      if (key === null || !key.startsWith(head)) continue;
-      const rest = key.slice(head.length);
-      const name = rest.slice(0, rest.lastIndexOf(":"));
-      if (name.startsWith(prefix) && !keep.has(name)) doomed.push(key);
-    }
-    for (const key of doomed) {
-      store.removeItem(key);
-      removed += 1;
-    }
-  } catch {
-  }
-  return removed;
-}
-var REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, config, ALIASES, claims, reported;
-var init_store = __esm({
-  "js/remember/store.js"() {
-    "use strict";
-    init_strings();
-    REMEMBER_ATTRIBUTE = "data-kp-remember";
-    REMEMBER_CLASH_EVENT = "kp-remember-clash";
-    REMEMBER_PREFIX = "kp-remember";
-    config = { prefix: REMEMBER_PREFIX, storage: (
-      /** @type {Storage | null | undefined} */
-      void 0
-    ) };
-    ALIASES = { sidenav: "data-kp-sidenav-remember" };
-    claims = /* @__PURE__ */ new Map();
-    reported = /* @__PURE__ */ new Set();
-  }
-});
-
-// js/remember/painters.js
-function sidenavGroups(panel) {
-  return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
-    const toggle2 = group.querySelector(".kp-sidenav__category-toggle");
-    const own = group.getAttribute(REMEMBER_ATTRIBUTE);
-    const words3 = (toggle2?.textContent ?? "").trim();
-    return { group, toggle: toggle2, id: own !== null && own !== "" ? own : words3 !== "" ? words3 : String(at) };
-  });
-}
-function treeItemId(item) {
-  return (
-    /** @type {HTMLElement} */
-    item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim()
-  );
-}
-function columnId(header) {
-  return (
-    /** @type {HTMLElement} */
-    header.dataset.kpField ?? (header.textContent ?? "").trim()
-  );
-}
-function paintSidenav(panel, memory) {
-  const open4 = memory.read("open", null);
-  if (typeof open4 === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open4));
-  const rail = memory.read("rail", null);
-  if (typeof rail === "boolean") panel.toggleAttribute("data-kp-sidenav-slim-collapsed", rail);
-  const width = memory.read("width", null);
-  if (typeof width === "number" && panel.hasAttribute("data-kp-sidenav-resizable") && panel instanceof HTMLElement)
-    panel.style.setProperty("--kp-sidenav-width", `${width}px`);
-  const groups = memory.read("groups", null);
-  if (!isFlags(groups)) return;
-  for (const { group, toggle: toggle2, id } of sidenavGroups(panel)) {
-    const state12 = groups[id];
-    if (typeof state12 !== "boolean") continue;
-    group.toggleAttribute("data-kp-sidenav-expanded", state12);
-    toggle2?.setAttribute("aria-expanded", String(state12));
-  }
-}
-function paintDisclosure(element, memory) {
-  const open4 = memory.read("open", null);
-  if (typeof open4 === "boolean") element.toggleAttribute("open", open4);
-}
-function paintTree(tree, memory) {
-  const branches = memory.read("branches", null);
-  if (!isFlags(branches)) return;
-  for (const item of tree.querySelectorAll('[role="treeitem"][aria-expanded]')) {
-    const state12 = branches[treeItemId(item)];
-    if (typeof state12 === "boolean") item.setAttribute("aria-expanded", String(state12));
-  }
-}
-function paintSplit(split, memory) {
-  const value = memory.read("value", null);
-  const separator = split.querySelector('[role="separator"]');
-  if (typeof value !== "number" || !Number.isFinite(value) || separator === null) return;
-  separator.setAttribute("aria-valuenow", String(Math.round(value)));
-  split.style.setProperty("--kp-split", `${Math.round(value)}%`);
-}
-function paintDatatable(wrap2, memory) {
-  const density = memory.read("density", null);
-  if (density === "compact") wrap2.setAttribute("data-density", "compact");
-  else if (density === "comfortable") wrap2.removeAttribute("data-density");
-  const headers = headersOf(wrap2);
-  const columns2 = (
-    /** @type {unknown} */
-    memory.read("columns", null)
-  );
-  if (Array.isArray(columns2)) {
-    for (const header of headers) header.toggleAttribute("data-kp-column-hidden", columns2.includes(columnId(header)));
-  }
-  const sort = (
-    /** @type {unknown} */
-    memory.read("sort", null)
-  );
-  if (!Array.isArray(sort)) return;
-  for (const header of headers) {
-    if (header.dataset.kpSort === void 0) continue;
-    const at = sort.findIndex((key) => key?.column === columnId(header));
-    if (at === -1) {
-      header.setAttribute("aria-sort", "none");
-      delete header.dataset.kpSortPriority;
-    } else {
-      header.setAttribute("aria-sort", sort[at].direction === "descending" ? "descending" : "ascending");
-      header.dataset.kpSortPriority = String(at + 1);
-    }
-  }
-}
-function paintAlert(element, memory) {
-  if (memory.read(
-    "dismissed",
-    /** @type {boolean} */
-    false
-  ) === true) element.hidden = true;
-}
-function paintRemembered(element, component, options) {
-  const memory = memoryFor(element, component, options);
-  if (memory !== null) PAINTERS[component](element, memory);
-  return memory;
-}
-function restoreRemembered(root = document) {
-  const selector = `[${REMEMBER_ATTRIBUTE}], [${ALIASES.sidenav}]`;
-  for (const element of root.querySelectorAll(selector)) {
-    for (const [component, mark] of KINDS) {
-      if (!element.matches(mark)) continue;
-      paintRemembered(element, component);
-      break;
-    }
-  }
-}
-var headersOf, isFlags, PAINTERS, KINDS;
-var init_painters = __esm({
-  "js/remember/painters.js"() {
-    "use strict";
-    init_store();
-    headersOf = (element) => [...element.querySelector("table")?.tHead?.rows[0]?.cells ?? []];
-    isFlags = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
-    PAINTERS = {
-      sidenav: paintSidenav,
-      disclosure: paintDisclosure,
-      tree: paintTree,
-      split: paintSplit,
-      datatable: paintDatatable,
-      // A tour has no markup to paint: js/tour.js reads its memory itself.
-      tour: () => {
-      },
-      // The refresh chooser and the notification centre read their own memory [kpadopt5-ops].
-      refresh: () => {
-      },
-      notices: () => {
-      },
-      // The claim chips, the availability grid, the time field and the console read their own memory [kpadopt6].
-      claim: () => {
-      },
-      availability: () => {
-      },
-      time: () => {
-      },
-      console: () => {
-      },
-      // The check-in's progress and the picker's folded list are read by their own modules [kpadopt6].
-      "focus-steps": () => {
-      },
-      picker: () => {
-      },
-      // A dismissible alert that stays closed, `data-kp-remember` on a `.kp-alert`; js/overlays.js writes it on a dismissal [wish-1120].
-      alert: paintAlert
-    };
-    KINDS = [
-      ["sidenav", ".kp-sidenav"],
-      ["tree", "[data-kp-tree]"],
-      ["split", "[data-kp-split]"],
-      ["datatable", "[data-kp-datatable]"],
-      ["disclosure", "details"],
-      ["alert", ".kp-alert"]
-    ];
-  }
-});
-
-// js/remember/disclosure.js
-var REMEMBER_HOLD_ATTRIBUTE, held, wiredDisclosures, RememberedDisclosure, RememberWatch;
-var init_disclosure = __esm({
-  "js/remember/disclosure.js"() {
-    "use strict";
-    init_controller();
-    init_painters();
-    init_store();
-    REMEMBER_HOLD_ATTRIBUTE = "data-kp-remember-hold";
-    held = (element) => element.closest(`[${REMEMBER_HOLD_ATTRIBUTE}]`) !== null;
-    wiredDisclosures = /* @__PURE__ */ new WeakSet();
-    RememberedDisclosure = class extends Controller {
-      /** @param {HTMLDetailsElement} details @param {Memory} memory */
-      constructor(details, memory) {
-        super(details);
-        this.details = details;
-        this.memory = memory;
-      }
-      connect() {
-        const details = this.details;
-        wiredDisclosures.add(details);
-        details.dataset.kpRememberAttached = "";
-        this.own(() => {
-          wiredDisclosures.delete(details);
-          delete details.dataset.kpRememberAttached;
-        });
-        this.listen(details, "toggle", () => {
-          if (!held(details)) this.memory.write("open", details.open);
-        });
-      }
-      /** A hold that went: paint what was stored back. */
-      repaint() {
-        if (!held(this.details)) paintDisclosure(this.details, this.memory);
-      }
-    };
-    RememberWatch = class {
-      /** @param {ParentNode} root */
-      constructor(root) {
-        this.root = root;
-        this.wired = /* @__PURE__ */ new Map();
-        this.sweeping = false;
-        this.later = null;
-      }
-      /** Wire what is there, then watch for more when the root is in a window. */
-      start() {
-        this.wire(this.root);
-        const root = this.root;
-        const doc = root instanceof Document ? root : root.ownerDocument ?? (typeof document === "undefined" ? null : document);
-        const view = doc?.defaultView;
-        if (!view) return;
-        this.later = new view.MutationObserver((records) => this.onRecords(records, view));
-        this.later.observe(root instanceof Document ? root.documentElement : (
-          /** @type {Node} */
-          root
-        ), {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          attributeFilter: [REMEMBER_HOLD_ATTRIBUTE]
-        });
-      }
-      stop() {
-        this.later?.disconnect();
-        for (const disclosure of this.wired.values()) disclosure.destroy();
-        this.wired.clear();
-      }
-      /** @param {ParentNode} scope */
-      wire(scope) {
-        const selector = `details[${REMEMBER_ATTRIBUTE}]`;
-        const found = [...scope instanceof Element && scope.matches(selector) ? [scope] : [], ...scope.querySelectorAll(selector)];
-        for (const element of found) {
-          const details = (
-            /** @type {HTMLDetailsElement} */
-            element
-          );
-          if (wiredDisclosures.has(details)) continue;
-          const memory = held(details) ? memoryFor(details, "disclosure") : paintRemembered(details, "disclosure");
-          if (memory === null) continue;
-          const disclosure = new RememberedDisclosure(details, memory);
-          disclosure.connect();
-          this.wired.set(details, disclosure);
-        }
-      }
-      /** @param {MutationRecord[]} records @param {Window & typeof globalThis} view */
-      onRecords(records, view) {
-        for (const record of records) {
-          if (record.type === "attributes") {
-            const target = (
-              /** @type {Element} */
-              record.target
-            );
-            if (target.hasAttribute(REMEMBER_HOLD_ATTRIBUTE)) continue;
-            for (const [details, disclosure] of this.wired) if (details === target || target.contains(details)) disclosure.repaint();
-            continue;
-          }
-          for (const node of record.addedNodes) if (node instanceof view.Element) this.wire(node);
-          if (record.removedNodes.length && !this.sweeping) {
-            this.sweeping = true;
-            queueMicrotask(() => this.sweep());
-          }
-        }
-      }
-      /** Let go of the disclosures that left the page. */
-      sweep() {
-        this.sweeping = false;
-        for (const [details, disclosure] of this.wired)
-          if (!details.isConnected) {
-            disclosure.destroy();
-            this.wired.delete(details);
-          }
-      }
-    };
-  }
-});
-
-// js/remember.js
-var remember_exports = {};
-__export(remember_exports, {
-  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
-  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
-  REMEMBER_HOLD_ATTRIBUTE: () => REMEMBER_HOLD_ATTRIBUTE,
-  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
-  attachRemembered: () => attachRemembered,
-  columnId: () => columnId,
-  configureRemember: () => configureRemember,
-  forgetClaims: () => forgetClaims,
-  forgetRememberedExcept: () => forgetRememberedExcept,
-  memoryFor: () => memoryFor,
-  paintRemembered: () => paintRemembered,
-  rememberedName: () => rememberedName,
-  restoreRemembered: () => restoreRemembered,
-  sidenavGroups: () => sidenavGroups,
-  treeItemId: () => treeItemId
-});
-function attachRemembered(root = document) {
-  const watch2 = new RememberWatch(root);
-  watch2.start();
-  return () => watch2.stop();
-}
-var init_remember = __esm({
-  "js/remember.js"() {
-    "use strict";
-    init_disclosure();
-    init_store();
-    init_painters();
-    init_disclosure();
-  }
-});
-
 // js/overlays/dismissals.js
 function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
   const onClick = (event) => {
@@ -6262,7 +8467,7 @@ var init_dismissals = __esm({
     "use strict";
     init_remember();
     init_motion();
-    init_constants();
+    init_constants2();
     init_toast();
     dismissHandled = /* @__PURE__ */ new WeakSet();
   }
@@ -6295,7 +8500,7 @@ var init_tooltips = __esm({
     "use strict";
     init_controller();
     init_motion();
-    init_constants();
+    init_constants2();
     OPEN_DELAY_MS = 300;
     CLOSE_DELAY_MS = 100;
     numberOr = (value, fallback2) => value === void 0 || Number.isNaN(Number(value)) ? fallback2 : Number(value);
@@ -6345,25 +8550,25 @@ var init_tooltips = __esm({
        * losing what it held. The anchor names itself for anchor positioning, as the React channel does.
        */
       describe() {
-        const { host: anchor, tooltip, trigger, before } = this;
+        const { host: anchor, tooltip, trigger, before: before2 } = this;
         if (!tooltip.id) tooltip.id = `kp-tooltip-${this.count}-${Math.random().toString(36).slice(2, 8)}`;
-        const ids2 = (before.describedby ?? "").split(/\s+/).filter(Boolean);
+        const ids2 = (before2.describedby ?? "").split(/\s+/).filter(Boolean);
         if (!ids2.includes(tooltip.id)) trigger.setAttribute("aria-describedby", [...ids2, tooltip.id].join(" "));
-        if (before.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
-        if (before.positionAnchor === "") tooltip.style.setProperty("position-anchor", before.anchorName || `--${tooltip.id}`);
+        if (before2.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
+        if (before2.positionAnchor === "") tooltip.style.setProperty("position-anchor", before2.anchorName || `--${tooltip.id}`);
       }
       /** Put back the attributes, the styles and the hidden state attach found. */
       restore() {
-        const { host: anchor, tooltip, trigger, before } = this;
+        const { host: anchor, tooltip, trigger, before: before2 } = this;
         clearTimeout(this.timer);
         this.going = false;
         stopReversing(tooltip);
-        tooltip.hidden = before.hidden;
-        if (before.id === null) tooltip.removeAttribute("id");
-        if (before.describedby === null) trigger.removeAttribute("aria-describedby");
-        else trigger.setAttribute("aria-describedby", before.describedby);
-        if (before.anchorName === "") anchor.style.removeProperty("anchor-name");
-        if (before.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
+        tooltip.hidden = before2.hidden;
+        if (before2.id === null) tooltip.removeAttribute("id");
+        if (before2.describedby === null) trigger.removeAttribute("aria-describedby");
+        else trigger.setAttribute("aria-describedby", before2.describedby);
+        if (before2.anchorName === "") anchor.style.removeProperty("anchor-name");
+        if (before2.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
         delete anchor.dataset.kpTooltipAttached;
       }
       /** @param {boolean} open */
@@ -6415,7 +8620,7 @@ var init_scrollbars = __esm({
   "js/overlays/scrollbars.js"() {
     "use strict";
     init_controller();
-    init_constants();
+    init_constants2();
     PROPS = ["--kp-scroll-view", "--kp-scroll-ratio", "--kp-scroll-progress"];
     FALLBACK_LINE = 20;
     MIN_THUMB = 8;
@@ -6581,6 +8786,8 @@ var init_scrollbars = __esm({
 var overlays_exports = {};
 __export(overlays_exports, {
   ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
+  DIALOG_CLOSE_REQUEST_EVENT: () => DIALOG_CLOSE_REQUEST_EVENT,
+  DIALOG_GUARD: () => DIALOG_GUARD,
   DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
   DISMISS_OWNED: () => DISMISS_OWNED,
   SCROLL_BOXES: () => SCROLL_BOXES,
@@ -6594,26 +8801,34 @@ __export(overlays_exports, {
   TOAST_SHOW_EVENT: () => TOAST_SHOW_EVENT,
   TOOLTIP_EVENT: () => TOOLTIP_EVENT,
   TOOLTIP_OWNED: () => TOOLTIP_OWNED,
+  attachDialogGuards: () => attachDialogGuards,
   attachDialogs: () => attachDialogs,
   attachDismissals: () => attachDismissals,
   attachScrollbars: () => attachScrollbars,
   attachTabs: () => attachTabs,
   attachTooltips: () => attachTooltips,
   closeLabel: () => closeLabel,
+  dialogChanged: () => dialogChanged,
+  forgetDialogEdits: () => forgetDialogEdits,
+  markDialogSaved: () => markDialogSaved,
   openAtTop: () => openAtTop,
+  openDialog: () => openDialog,
+  requestDialogClose: () => requestDialogClose,
   revealTab: () => revealTab,
   selectTab: () => selectTab,
   showAlertAgain: () => showAlertAgain,
   toast: () => toast,
   toastRegion: () => toastRegion,
   watchScrollbar: () => watchScrollbar,
-  watchTabOverflow: () => watchTabOverflow
+  watchTabOverflow: () => watchTabOverflow,
+  whenDialogFree: () => whenDialogFree
 });
 var init_overlays = __esm({
   "js/overlays.js"() {
     "use strict";
-    init_constants();
+    init_constants2();
     init_dialogs();
+    init_dialog_guard();
     init_tabs();
     init_tab_row();
     init_toast();
@@ -6644,16 +8859,16 @@ function attachDisabledReasons(root = document) {
     for (const controller of made6) controller.destroy();
   };
 }
-var DISABLED_REASON, counter, isOff, WATCHED2, DisabledReasonController;
+var DISABLED_REASON, counter2, isOff, WATCHED3, DisabledReasonController;
 var init_reason = __esm({
   "js/reason.js"() {
     "use strict";
     init_overlays();
     init_controller();
     DISABLED_REASON = "[data-kp-disabled-reason]";
-    counter = 0;
+    counter2 = 0;
     isOff = (el16) => el16.matches(":disabled") || el16.getAttribute("aria-disabled") === "true";
-    WATCHED2 = ["disabled", "aria-disabled", "data-kp-disabled-reason", "data-kp-action", "data-kp-reason-line"];
+    WATCHED3 = ["disabled", "aria-disabled", "data-kp-disabled-reason", "data-kp-action", "data-kp-reason-line"];
     DisabledReasonController = class extends Controller {
       /**
        * @param {HTMLElement} host
@@ -6678,7 +8893,7 @@ var init_reason = __esm({
         this.own(() => {
           delete control.dataset.kpReasonAttached;
         });
-        this.tip.id = `kp-reason-${++counter}`;
+        this.tip.id = `kp-reason-${++counter2}`;
         const parent = control.parentNode;
         if (!parent) return;
         parent.insertBefore(this.anchor, control);
@@ -6696,7 +8911,7 @@ var init_reason = __esm({
         this.mirrorRole();
         this.sync();
         const observer = this.observe(new MutationObserver(() => this.sync()));
-        observer.observe(control, { attributes: true, attributeFilter: WATCHED2 });
+        observer.observe(control, { attributes: true, attributeFilter: WATCHED3 });
       }
       /** `data-kp-reason-line="always"` on the control prints the reason under it on every pointer, not only a coarse one; the wrapper wears it for the stylesheet. */
       mirrorLine() {
@@ -6718,13 +8933,13 @@ var init_reason = __esm({
         this.mirrorRole();
         this.mirrorLine();
         const text = control.getAttribute("data-kp-disabled-reason") ?? "";
-        const shown5 = text !== "" && isOff(control);
-        tip.textContent = shown5 ? text : "";
-        this.line.textContent = shown5 ? text : "";
-        if (!shown5) tip.hidden = true;
-        anchor.toggleAttribute("data-kp-reason-off", shown5);
+        const shown6 = text !== "" && isOff(control);
+        tip.textContent = shown6 ? text : "";
+        this.line.textContent = shown6 ? text : "";
+        if (!shown6) tip.hidden = true;
+        anchor.toggleAttribute("data-kp-reason-off", shown6);
         const ids2 = (control.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id !== "" && id !== tip.id);
-        if (shown5) ids2.push(tip.id);
+        if (shown6) ids2.push(tip.id);
         if (ids2.length > 0) control.setAttribute("aria-describedby", ids2.join(" "));
         else control.removeAttribute("aria-describedby");
       }
@@ -6739,7 +8954,7 @@ var init_reason = __esm({
 
 // js/busy-card/values.js
 var BUSY_CARD, PANEL_HEIGHT_ROOM, PANEL_WIDTH_ROOM, HALF_SEEN_SLACK, px;
-var init_values2 = __esm({
+var init_values3 = __esm({
   "js/busy-card/values.js"() {
     "use strict";
     BUSY_CARD = ".kp-datatable__busy-card";
@@ -6825,7 +9040,7 @@ var init_layer = __esm({
   "js/busy-card/layer.js"() {
     "use strict";
     init_controller();
-    init_values2();
+    init_values3();
     init_scroll();
     init_geometry();
     BusyCardLayer = class extends Controller {
@@ -6928,7 +9143,7 @@ __export(busy_card_exports, {
 var init_busy_card = __esm({
   "js/busy-card.js"() {
     "use strict";
-    init_values2();
+    init_values3();
     init_scroll();
     init_layer();
   }
@@ -6936,7 +9151,7 @@ var init_busy_card = __esm({
 
 // js/markdown/values.js
 var MARKDOWN_LIMIT, MAX_HEADING_LEVEL, DEFAULT_HEADING_LEVEL, TAB_WIDTH, LIST_ITEM, INLINE_FORMS;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/markdown/values.js"() {
     "use strict";
     MARKDOWN_LIMIT = 4e4;
@@ -7023,7 +9238,7 @@ var init_inline = __esm({
   "js/markdown/inline.js"() {
     "use strict";
     init_strings();
-    init_values3();
+    init_values4();
     external = (href) => /^https?:/i.test(href.trim());
     plain = (doc, parent, t) => {
       if (t) parent.append(doc.createTextNode(t));
@@ -7078,7 +9293,7 @@ var init_reader = __esm({
   "js/markdown/reader.js"() {
     "use strict";
     init_strings();
-    init_values3();
+    init_values4();
     init_inline();
     init_tasks();
     BLOCKS = /** @type {const} */
@@ -7237,7 +9452,7 @@ __export(markdown_exports, {
 var init_markdown = __esm({
   "js/markdown.js"() {
     "use strict";
-    init_values3();
+    init_values4();
     init_inline();
     init_reader();
     init_tasks();
@@ -7259,9 +9474,9 @@ var init_notes = __esm({
        * @param {import('../strings.js').Strings} s
        * @param {() => void} paint called when the fold opens or closes
        */
-      constructor(gate, before, s2, paint12) {
+      constructor(gate, before2, s2, paint12) {
         this.gate = gate;
-        this.before = before;
+        this.before = before2;
         this.s = s2;
         this.paint = paint12;
         this.fold = null;
@@ -7321,14 +9536,14 @@ var init_notes = __esm({
 });
 
 // js/ack-gate/values.js
-var ACK_GATE, ACK_EVENT, ACK_RETRY_EVENT, SAY_DELAY_MS, WAIT_SLACK_MS;
-var init_values4 = __esm({
+var ACK_GATE, ACK_EVENT, ACK_RETRY_EVENT, SAY_DELAY_MS2, WAIT_SLACK_MS;
+var init_values5 = __esm({
   "js/ack-gate/values.js"() {
     "use strict";
     ACK_GATE = "[data-kp-ack]";
     ACK_EVENT = "kp-ack-change";
     ACK_RETRY_EVENT = "kp-ack-retry";
-    SAY_DELAY_MS = 40;
+    SAY_DELAY_MS2 = 40;
     WAIT_SLACK_MS = 20;
   }
 });
@@ -7338,7 +9553,7 @@ var HANDLES, targetsOf, siblingsOf, open;
 var init_targets = __esm({
   "js/ack-gate/targets.js"() {
     "use strict";
-    init_values4();
+    init_values5();
     HANDLES = /* @__PURE__ */ new WeakMap();
     targetsOf = (gate) => {
       const selector = gate.getAttribute("data-kp-ack-for");
@@ -7370,7 +9585,7 @@ var init_targets = __esm({
 });
 
 // js/ack-gate/core.js
-var counter2, AckCore;
+var counter3, AckCore;
 var init_core = __esm({
   "js/ack-gate/core.js"() {
     "use strict";
@@ -7380,15 +9595,15 @@ var init_core = __esm({
     init_build();
     init_notes();
     init_targets();
-    init_values4();
-    counter2 = 0;
+    init_values5();
+    counter3 = 0;
     AckCore = class extends Controller {
       /** @param {HTMLElement} gate */
       constructor(gate) {
         super(gate);
         this.doc = gate.ownerDocument;
         this.s = getStrings();
-        this.id = `kp-ack-${++counter2}`;
+        this.id = `kp-ack-${++counter3}`;
         this.ui = buildParts(this.doc, gate, this.s, this.id);
         this.locked = gate.hasAttribute("data-kp-ack-locked");
         this.startedAt = performance.now();
@@ -7435,7 +9650,7 @@ var init_core = __esm({
       /** Say what changed in the live region, after a short pause. @param {string} text */
       say(text) {
         window.clearTimeout(this.sayTimer);
-        this.sayTimer = window.setTimeout(() => this.ui.live.textContent = text, SAY_DELAY_MS);
+        this.sayTimer = window.setTimeout(() => this.ui.live.textContent = text, SAY_DELAY_MS2);
       }
       /** The loading state's busy card, laid over the gate and taken off the way the theme's busy table's card leaves. @param {string | null} state */
       paintBusy(state12) {
@@ -7555,16 +9770,16 @@ var init_sync = __esm({
 });
 
 // js/ack-gate/controller.js
-var TONES, WATCHED3, AckGate;
-var init_controller2 = __esm({
+var TONES, WATCHED4, AckGate;
+var init_controller4 = __esm({
   "js/ack-gate/controller.js"() {
     "use strict";
     init_build();
     init_sync();
     init_targets();
-    init_values4();
+    init_values5();
     TONES = ["warning", "destructive", "info"];
-    WATCHED3 = [
+    WATCHED4 = [
       "data-kp-ack-key",
       "data-kp-ack-version",
       "data-kp-ack-label",
@@ -7679,7 +9894,7 @@ var init_controller2 = __esm({
             this.syncTargets();
             if (gate.getAttribute("data-kp-state") === null) this.keepHeight();
           })
-        ).observe(gate, { attributes: true, attributeFilter: WATCHED3 });
+        ).observe(gate, { attributes: true, attributeFilter: WATCHED4 });
       }
       /** A min-ms wait ends by itself; the held height follows the gate's size. */
       watchHeight() {
@@ -7713,10 +9928,10 @@ var init_ack_gate = __esm({
   "js/ack-gate.js"() {
     "use strict";
     init_controller();
-    init_controller2();
+    init_controller4();
     init_targets();
-    init_values4();
-    init_values4();
+    init_values5();
+    init_values5();
   }
 });
 
@@ -7736,16 +9951,16 @@ function setActionSize(element, size2) {
   return element;
 }
 function showBusy(tile) {
-  let mark = tile.querySelector(":scope > .kp-action__mark");
-  if (!mark) {
-    mark = span("kp-action__mark");
-    mark.setAttribute("aria-hidden", "true");
-    tile.querySelector(":scope > .kp-action__title")?.after(mark) ?? tile.prepend(mark);
+  let mark2 = tile.querySelector(":scope > .kp-action__mark");
+  if (!mark2) {
+    mark2 = span("kp-action__mark");
+    mark2.setAttribute("aria-hidden", "true");
+    tile.querySelector(":scope > .kp-action__title")?.after(mark2) ?? tile.prepend(mark2);
   }
-  if (!mark.querySelector(".kp-spinner")) {
+  if (!mark2.querySelector(".kp-spinner")) {
     const wheel = span("kp-spinner");
     wheel.setAttribute("aria-hidden", "true");
-    mark.replaceChildren(wheel);
+    mark2.replaceChildren(wheel);
   }
   let word = tile.querySelector(":scope > .kp-action__state");
   if (!word) {
@@ -7755,17 +9970,17 @@ function showBusy(tile) {
   word.textContent = `, ${getStrings().busy}`;
 }
 function hideBusy(tile) {
-  const mark = tile.querySelector(":scope > .kp-action__mark");
-  if (mark?.querySelector(".kp-spinner")) mark.replaceChildren();
+  const mark2 = tile.querySelector(":scope > .kp-action__mark");
+  if (mark2?.querySelector(".kp-spinner")) mark2.replaceChildren();
   tile.querySelector(":scope > .kp-action__state")?.remove();
 }
-function syncTile(tile, { announce: announce5 = false } = {}) {
+function syncTile(tile, { announce: announce6 = false } = {}) {
   const busy = tile.getAttribute("aria-busy") === "true";
   if (busy) showBusy(tile);
   else hideBusy(tile);
-  const before = synced.get(tile);
+  const before2 = synced.get(tile);
   synced.set(tile, busy);
-  if (announce5 && before !== void 0 && before !== busy) {
+  if (announce6 && before2 !== void 0 && before2 !== busy) {
     tile.dispatchEvent(new CustomEvent(ACTION_BUSY_EVENT, { bubbles: true, detail: { tile, busy } }));
   }
 }
@@ -7888,7 +10103,7 @@ var init_roles = __esm({
 
 // js/actions/values.js
 var ROW_ACTIONS, ACTION_LIST, ROW_KEYS, ROW_OPEN_EVENT;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/actions/values.js"() {
     "use strict";
     ROW_ACTIONS = ".kp-row-actions";
@@ -7943,7 +10158,7 @@ var init_fit = __esm({
   "js/actions/fit.js"() {
     "use strict";
     init_roles();
-    init_values5();
+    init_values6();
     LIST_PROPERTIES = ["--kp-action-count", "--kp-action-widths", "--kp-action-stack"];
   }
 });
@@ -7959,7 +10174,7 @@ var init_columns = __esm({
     "use strict";
     init_controller();
     init_fit();
-    init_values5();
+    init_values6();
     ROW_ATTRIBUTES = ["hidden", "data-kp-action"];
     ActionColumns = class extends Controller {
       /**
@@ -8017,11 +10232,11 @@ var init_columns = __esm({
 
 // js/actions/keys.js
 var RowKeys;
-var init_keys = __esm({
+var init_keys2 = __esm({
   "js/actions/keys.js"() {
     "use strict";
     init_controller();
-    init_values5();
+    init_values6();
     RowKeys = class extends Controller {
       connect() {
         this.settle();
@@ -8174,7 +10389,7 @@ var blockers, buttonsOf;
 var init_busy = __esm({
   "js/actions/busy.js"() {
     "use strict";
-    init_values5();
+    init_values6();
     blockers = /* @__PURE__ */ new WeakMap();
     buttonsOf = (row2) => (
       /** @type {HTMLElement[]} */
@@ -8212,7 +10427,7 @@ async function removeRow(row2) {
 var init_remove = __esm({
   "js/actions/remove.js"() {
     "use strict";
-    init_values5();
+    init_values6();
   }
 });
 
@@ -8251,9 +10466,9 @@ var init_actions = __esm({
     "use strict";
     init_controller();
     init_columns();
-    init_keys();
-    init_values5();
-    init_values5();
+    init_keys2();
+    init_values6();
+    init_values6();
     init_roles();
     init_fit();
     init_busy();
@@ -8522,16 +10737,16 @@ function tracking(run) {
 }
 function draw(run) {
   const { ctx, el: el16, routine } = run;
-  const { state: state12, view, cfg, announce: announce5, done, finishers } = ctx;
+  const { state: state12, view, cfg, announce: announce6, done, finishers } = ctx;
   if (!view || typeof view.IntersectionObserver !== "function") {
     el16.classList.add(STATE.in);
-    announce5(el16, "headline", routine, true);
+    announce6(el16, "headline", routine, true);
     return;
   }
   state12.pending++;
   finishers.push(() => {
     el16.classList.add(STATE.in);
-    announce5(el16, "headline", routine, false);
+    announce6(el16, "headline", routine, false);
   });
   state12.ioHeadline ??= new view.IntersectionObserver(
     (entries2) => {
@@ -8539,7 +10754,7 @@ function draw(run) {
         if (!entry.isIntersecting) continue;
         state12.ioHeadline?.unobserve(entry.target);
         entry.target.classList.add(STATE.in);
-        announce5(entry.target, "headline", routine, false);
+        announce6(entry.target, "headline", routine, false);
         state12.pending--;
         done();
       }
@@ -8891,10 +11106,10 @@ __export(emphasis_exports, {
   install: () => install2
 });
 function copyText(marks) {
-  for (const mark of marks) if (!mark.hasAttribute(TEXT_ATTRIBUTE)) mark.setAttribute(TEXT_ATTRIBUTE, mark.textContent ?? "");
+  for (const mark2 of marks) if (!mark2.hasAttribute(TEXT_ATTRIBUTE)) mark2.setAttribute(TEXT_ATTRIBUTE, mark2.textContent ?? "");
 }
 function clearAll(marks) {
-  for (const mark of marks) mark.classList.add(STATE.cleared);
+  for (const mark2 of marks) mark2.classList.add(STATE.cleared);
 }
 function install2(ctx) {
   return new EmphasisHook(ctx).connect();
@@ -8908,29 +11123,29 @@ var init_emphasis = __esm({
     EmphasisHook = class extends EffectHook {
       /** @param {Element[]} marks @param {number} first @param {number} step @param {Element} on @param {string} routine */
       clearInSteps(marks, first, step, on, routine) {
-        const { state: state12, finishers, done, announce: announce5, later } = this.ctx;
+        const { state: state12, finishers, done, announce: announce6, later } = this.ctx;
         if (marks.length === 0) return;
         state12.pending++;
         finishers.push(() => clearAll(marks));
-        marks.forEach((mark, i) => {
+        marks.forEach((mark2, i) => {
           later(() => {
-            mark.classList.add(STATE.cleared);
+            mark2.classList.add(STATE.cleared);
             if (i !== marks.length - 1) return;
             state12.pending--;
-            announce5(on, "emphasis", routine, false);
+            announce6(on, "emphasis", routine, false);
             done();
           }, first + i * step);
         });
       }
       /** @param {Element} container an element carrying data-kp-reveal="emphasis" */
       emphasis(container) {
-        const { reduced: reduced4, cfg, announce: announce5, routineOf, seen } = this.ctx;
+        const { reduced: reduced4, cfg, announce: announce6, routineOf, seen } = this.ctx;
         const marks = [...container.querySelectorAll("mark")];
         copyText(marks);
         const routine = routineOf(container, "emphasis");
         const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
         if (marks.length === 0) {
-          announce5(container, "emphasis", routine, true);
+          announce6(container, "emphasis", routine, true);
           return;
         }
         if (routine === "" || reduced4()) {
@@ -8972,13 +11187,13 @@ var init_emphasis = __esm({
       toggle(trigger, marks, container, routine) {
         const open4 = trigger.getAttribute("aria-pressed") !== "true";
         trigger.setAttribute("aria-pressed", String(open4));
-        for (const mark of marks) mark.classList.toggle(STATE.cleared, open4);
+        for (const mark2 of marks) mark2.classList.toggle(STATE.cleared, open4);
         container.toggleAttribute(HOOKS.openState, open4);
         this.ctx.announce(container, "emphasis", routine, false);
       }
       /** The marks outside any emphasis container clear on load, one after another. @param {ParentNode} scope */
       looseMarks(scope) {
-        const { reduced: reduced4, cfg, announce: announce5, routineOf, seen, started: started2 } = this.ctx;
+        const { reduced: reduced4, cfg, announce: announce6, routineOf, seen, started: started2 } = this.ctx;
         const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started2.has(m));
         if (marks.length === 0) return;
         copyText(marks);
@@ -8987,7 +11202,7 @@ var init_emphasis = __esm({
         const routine = routineOf(first, "emphasis");
         if (routine === "" || reduced4() || seen(first, "emphasis")) {
           clearAll(marks);
-          announce5(first, "emphasis", routine, true);
+          announce6(first, "emphasis", routine, true);
           return;
         }
         this.clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
@@ -9033,12 +11248,12 @@ var init_rule = __esm({
       }
       /** The rules that entered the viewport draw, once each. @param {IntersectionObserverEntry[]} entries @param {string} routine */
       onSeen(entries2, routine) {
-        const { state: state12, announce: announce5, done } = this.ctx;
+        const { state: state12, announce: announce6, done } = this.ctx;
         for (const entry of entries2) {
           if (!entry.isIntersecting) continue;
           state12.io?.unobserve(entry.target);
           entry.target.classList.add(STATE.in);
-          announce5(entry.target, "rule", routine, false);
+          announce6(entry.target, "rule", routine, false);
           state12.pending--;
           done();
         }
@@ -9853,10 +12068,10 @@ var init_arrival_run = __esm({
       lineStep() {
         const { lines, total } = this;
         if (this.ended || !lines) return;
-        const shown5 = ++this.shown;
-        this.line.textContent = lines.slice(0, shown5).map((text, index) => text.replace("{count}", String(index === shown5 - 1 ? Math.round(total * shown5 / lines.length) : total))).join("\n");
-        this.bar?.style.setProperty(BOOT_PROGRESS, String(shown5 / lines.length));
-        if (shown5 === lines.length) this.paced(() => this.end(), LINE_HOLD);
+        const shown6 = ++this.shown;
+        this.line.textContent = lines.slice(0, shown6).map((text, index) => text.replace("{count}", String(index === shown6 - 1 ? Math.round(total * shown6 / lines.length) : total))).join("\n");
+        this.bar?.style.setProperty(BOOT_PROGRESS, String(shown6 / lines.length));
+        if (shown6 === lines.length) this.paced(() => this.end(), LINE_HOLD);
         else this.paced(() => this.lineStep(), LINE_STEP);
       }
     };
@@ -9879,10 +12094,10 @@ var init_arrival = __esm({
     init_arrival_run();
     ArrivalHook = class extends EffectHook {
       arrival() {
-        const { doc, html, announce: announce5, arrivalRoutine, arrivalPerformed, arrivalPlays } = this.ctx;
+        const { doc, html, announce: announce6, arrivalRoutine, arrivalPerformed, arrivalPlays } = this.ctx;
         if (!arrivalPerformed || !doc.body) return;
         if (!arrivalPlays) {
-          announce5(html, "arrival", arrivalRoutine, true);
+          announce6(html, "arrival", arrivalRoutine, true);
           return;
         }
         new ArrivalRun(this.ctx, doc.body).play((undo) => this.own(undo));
@@ -10947,7 +13162,7 @@ var init_glyphs = __esm({
 
 // js/alarm/values.js
 var ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS, TICK_MS, SECOND_MS;
-var init_values6 = __esm({
+var init_values7 = __esm({
   "js/alarm/values.js"() {
     "use strict";
     ALARM_CLOSE_EVENT = "kp-alarm-close";
@@ -10959,7 +13174,7 @@ var init_values6 = __esm({
 });
 
 // js/alarm/build.js
-function el(tag, className, text) {
+function el2(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (text !== void 0) node.textContent = text;
@@ -10968,7 +13183,7 @@ function el(tag, className, text) {
 function buildDialog(base, auto, escape2, hasDetail) {
   const dialog = (
     /** @type {HTMLDialogElement} */
-    el("dialog", "kp-alarm")
+    el2("dialog", "kp-alarm")
   );
   dialog.id = base;
   dialog.tabIndex = -1;
@@ -10981,12 +13196,12 @@ function buildDialog(base, auto, escape2, hasDetail) {
   return dialog;
 }
 function buildHeadline(title, base) {
-  const heading = el("div", "kp-alarm__title");
+  const heading = el2("div", "kp-alarm__title");
   heading.setAttribute("role", "heading");
   heading.setAttribute("aria-level", "2");
-  const name = el("span", "kp-sr-only", title);
+  const name = el2("span", "kp-sr-only", title);
   name.id = `${base}-title`;
-  const glyphs = el("span", "kp-alarm__glyphs");
+  const glyphs = el2("span", "kp-alarm__glyphs");
   glyphs.dataset.text = title;
   glyphs.setAttribute("aria-hidden", "true");
   for (const part7 of glyphCells(title)) {
@@ -10994,9 +13209,9 @@ function buildHeadline(title, base) {
       glyphs.append(" ");
       continue;
     }
-    const word = el("span", "kp-alarm__word");
+    const word = el2("span", "kp-alarm__word");
     for (const { ch, i } of part7.chars) {
-      const cell = el("span", "kp-alarm__char", ch);
+      const cell = el2("span", "kp-alarm__char", ch);
       cell.style.setProperty("--i", String(i));
       cell.dataset.n1 = noiseGlyph();
       cell.dataset.n2 = noiseGlyph();
@@ -11008,27 +13223,27 @@ function buildHeadline(title, base) {
   return heading;
 }
 function buildActions(s2, label2) {
-  const actions = el("div", "kp-alarm__actions");
+  const actions = el2("div", "kp-alarm__actions");
   const ack = (
     /** @type {HTMLButtonElement} */
-    el("button", "kp-button kp-alarm__ack", label2)
+    el2("button", "kp-button kp-alarm__ack", label2)
   );
   ack.type = "button";
-  const hint = el("span", "kp-alarm__hint", s2.alarmHint);
+  const hint = el2("span", "kp-alarm__hint", s2.alarmHint);
   hint.setAttribute("aria-hidden", "true");
   actions.append(ack, hint);
   return { actions, ack };
 }
 function buildCountdown(s2, secs) {
-  const countdown = el("div", "kp-alarm__countdown");
-  const track = el("span", "kp-alarm__track");
+  const countdown = el2("div", "kp-alarm__countdown");
+  const track = el2("span", "kp-alarm__track");
   track.setAttribute("aria-hidden", "true");
-  track.append(el("span", "kp-alarm__fill"));
-  const left = el("span", "kp-alarm__left", s2.alarmCountdown(secs));
+  track.append(el2("span", "kp-alarm__fill"));
+  const left = el2("span", "kp-alarm__left", s2.alarmCountdown(secs));
   left.setAttribute("aria-hidden", "true");
   const keep = (
     /** @type {HTMLButtonElement} */
-    el("button", "kp-button kp-button--ghost kp-button--sm kp-alarm__keep", s2.alarmKeepOpen)
+    el2("button", "kp-button kp-button--ghost kp-button--sm kp-alarm__keep", s2.alarmKeepOpen)
   );
   keep.type = "button";
   countdown.append(track, left, keep);
@@ -11041,20 +13256,20 @@ function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", second
   const label2 = action || s2.alarmAction;
   const base = id ?? `kp-alarm-${++serial}`;
   const dialog = buildDialog(base, auto, escape2, Boolean(detail));
-  const scan = el("div", "kp-alarm__scan");
-  const bars = el("div", "kp-alarm__bars");
+  const scan = el2("div", "kp-alarm__scan");
+  const bars = el2("div", "kp-alarm__bars");
   scan.setAttribute("aria-hidden", "true");
   bars.setAttribute("aria-hidden", "true");
-  const panel = el("div", "kp-alarm__panel");
+  const panel = el2("div", "kp-alarm__panel");
   dialog.append(scan, bars, panel);
-  if (code) panel.append(el("p", "kp-alarm__code", code));
+  if (code) panel.append(el2("p", "kp-alarm__code", code));
   panel.append(buildHeadline(title, base));
   if (detail) {
-    const line = el("p", "kp-alarm__detail", detail);
+    const line = el2("p", "kp-alarm__detail", detail);
     line.id = `${base}-detail`;
     panel.append(line);
   }
-  const when = el("p", "kp-sr-only", auto ? s2.alarmClosesBy(secs) : s2.alarmPressTo(label2));
+  const when = el2("p", "kp-sr-only", auto ? s2.alarmClosesBy(secs) : s2.alarmPressTo(label2));
   when.id = `${base}-when`;
   when.setAttribute("aria-live", "assertive");
   panel.append(when);
@@ -11065,12 +13280,12 @@ function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", second
   return { dialog, ack, keep, when, left, strings: s2, action: label2, seconds: secs };
 }
 var serial;
-var init_build2 = __esm({
+var init_build4 = __esm({
   "js/alarm/build.js"() {
     "use strict";
     init_strings();
     init_glyphs();
-    init_values6();
+    init_values7();
     serial = 0;
   }
 });
@@ -11094,7 +13309,7 @@ var init_session = __esm({
     "use strict";
     init_controller();
     init_countdown();
-    init_values6();
+    init_values7();
     AlarmSession = class extends Controller {
       /**
        * @param {HTMLDialogElement} host the dialog
@@ -11269,19 +13484,19 @@ function attachAlarms(root = document, { strings } = {}) {
 var init_alarm = __esm({
   "js/alarm.js"() {
     "use strict";
-    init_build2();
+    init_build4();
     init_session();
     init_trigger();
-    init_values6();
+    init_values7();
     init_glyphs();
-    init_build2();
+    init_build4();
     init_countdown();
   }
 });
 
 // js/shortcuts/constants.js
 var CHORD_MS, UNKNOWN_MS, SHORTCUTS_LIVE_SHEET, SHORTCUT_EVENT, SHORTCUT_PENDING_EVENT, SHORTCUT_HINT_PLACES, ALTGR_KEYS, RESERVED, DEFAULT_TYPING_SELECTOR;
-var init_constants3 = __esm({
+var init_constants5 = __esm({
   "js/shortcuts/constants.js"() {
     "use strict";
     CHORD_MS = 1500;
@@ -11326,7 +13541,7 @@ var init_hint = __esm({
   "js/shortcuts/hint.js"() {
     "use strict";
     init_strings();
-    init_constants3();
+    init_constants5();
     ChordHint = class {
       /** @param {EngineOptions} config the board's settings, read each time */
       constructor(config4) {
@@ -11447,7 +13662,7 @@ function ignoredKey(event) {
   return event.isComposing || event.repeat || event.key === "Dead" || event.key === "Shift" || event.key === "Control" || event.key === "Alt" || event.key === "Meta";
 }
 var MODIFIERS, normal, DIGIT_CODE;
-var init_keys2 = __esm({
+var init_keys3 = __esm({
   "js/shortcuts/keys.js"() {
     "use strict";
     MODIFIERS = /* @__PURE__ */ new Set(["mod", "ctrl", "control", "alt", "shift", "meta", "cmd"]);
@@ -11562,7 +13777,7 @@ var init_sheet = __esm({
     "use strict";
     init_strings();
     init_entries();
-    init_keys2();
+    init_keys3();
     UNRANKED = 1e3;
     SCOPED_RANK = 0.5;
     listOf = (value) => (value ?? "").split(",").map((x) => x.trim()).filter(Boolean);
@@ -11574,10 +13789,10 @@ var ShortcutBoard;
 var init_board = __esm({
   "js/shortcuts/board.js"() {
     "use strict";
-    init_constants3();
+    init_constants5();
     init_entries();
     init_hint();
-    init_keys2();
+    init_keys3();
     init_sheet();
     ShortcutBoard = class {
       constructor() {
@@ -11656,9 +13871,9 @@ var init_board = __esm({
       }
       /** @param {KeyboardEvent} event */
       onKey(event) {
-        const before = this.pending;
+        const before2 = this.pending;
         this.handleKey(event);
-        if (this.pending !== before) this.announcePending();
+        if (this.pending !== before2) this.announcePending();
       }
       /** Drop the chord and its cap. */
       clearChord() {
@@ -11835,8 +14050,8 @@ var init_register = __esm({
   "js/shortcuts/register.js"() {
     "use strict";
     init_strings();
-    init_constants3();
-    init_keys2();
+    init_constants5();
+    init_keys3();
   }
 });
 
@@ -11895,12 +14110,12 @@ var init_shortcuts = __esm({
     "use strict";
     init_controller();
     init_board();
-    init_constants3();
+    init_constants5();
     init_live();
     init_register();
     init_sheet();
-    init_constants3();
-    init_keys2();
+    init_constants5();
+    init_keys3();
     board = new ShortcutBoard();
   }
 });
@@ -11972,7 +14187,7 @@ function plainText(el16) {
     /** @type {Element} */
     el16.cloneNode(true)
   );
-  for (const mark of copy3.querySelectorAll(".kp-anchor")) mark.remove();
+  for (const mark2 of copy3.querySelectorAll(".kp-anchor")) mark2.remove();
   return (copy3.textContent ?? "").replace(/\s+/g, " ").trim();
 }
 function nameOf(el16) {
@@ -12003,7 +14218,7 @@ async function copyText2(doc, text) {
     return ok;
   }
 }
-var ANCHORS, ANCHOR, ANCHOR_COPY_EVENT, ANCHOR_REVEAL_EVENT, ANCHOR_MISSING_EVENT, ANCHOR_HIT_MS, ANCHOR_WAIT_MS, ANCHOR_QUIET_MS, ANCHOR_COPIED_MS, attr, isHeading, KEYED_ROWS;
+var ANCHORS, ANCHOR, ANCHOR_COPY_EVENT, ANCHOR_REVEAL_EVENT, ANCHOR_MISSING_EVENT, ANCHOR_HIT_MS, ANCHOR_WAIT_MS, ANCHOR_QUIET_MS, ANCHOR_COPIED_MS, attr2, isHeading, KEYED_ROWS;
 var init_text = __esm({
   "js/anchors/text.js"() {
     "use strict";
@@ -12016,14 +14231,14 @@ var init_text = __esm({
     ANCHOR_WAIT_MS = 1e4;
     ANCHOR_QUIET_MS = 1e3;
     ANCHOR_COPIED_MS = 1500;
-    attr = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
+    attr2 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
     isHeading = (el16) => /^h[1-6]$/i.test(el16.tagName) || el16.matches("legend, .kp-formgrid__heading");
     KEYED_ROWS = 'tr[data-kp-row-key], [role="row"][data-kp-row-key], li[data-kp-row-key]';
   }
 });
 
 // js/anchors/marks.js
-var LEVELS, LEVEL_MIN, LEVEL_MAX, SAY_DELAY_MS2, DRAWING, AnchorMarks;
+var LEVELS, LEVEL_MIN, LEVEL_MAX, SAY_DELAY_MS3, DRAWING, AnchorMarks;
 var init_marks = __esm({
   "js/anchors/marks.js"() {
     "use strict";
@@ -12033,7 +14248,7 @@ var init_marks = __esm({
     LEVELS = "2,3";
     LEVEL_MIN = 1;
     LEVEL_MAX = 6;
-    SAY_DELAY_MS2 = 30;
+    SAY_DELAY_MS3 = 30;
     DRAWING = '.kp-skeleton, [aria-busy="true"], [data-kp-state="loading"]';
     AnchorMarks = class extends Controller {
       /** @param {HTMLElement} box @param {AnchorOptions} [options] overrides the markup */
@@ -12049,22 +14264,22 @@ var init_marks = __esm({
       }
       // The options, read when they are used: the markup, unless the page passed them to attachAnchors().
       levels() {
-        return (this.opts.levels ?? attr(this.host, "data-kp-anchor-levels", LEVELS).split(",").map(Number)).filter((n) => n >= LEVEL_MIN && n <= LEVEL_MAX);
+        return (this.opts.levels ?? attr2(this.host, "data-kp-anchor-levels", LEVELS).split(",").map(Number)).filter((n) => n >= LEVEL_MIN && n <= LEVEL_MAX);
       }
       showMode() {
-        return this.opts.show ?? attr(this.host, "data-kp-anchor-show", "hover");
+        return this.opts.show ?? attr2(this.host, "data-kp-anchor-show", "hover");
       }
       copyMode() {
-        return this.opts.copy ?? attr(this.host, "data-kp-anchor-copy", "url");
+        return this.opts.copy ?? attr2(this.host, "data-kp-anchor-copy", "url");
       }
       highlights() {
-        return (this.opts.target ?? attr(this.host, "data-kp-anchor-target", "highlight")) !== "none";
+        return (this.opts.target ?? attr2(this.host, "data-kp-anchor-target", "highlight")) !== "none";
       }
       opensFirst() {
-        return (this.opts.open ?? attr(this.host, "data-kp-anchor-open", "on") !== "off") !== false;
+        return (this.opts.open ?? attr2(this.host, "data-kp-anchor-open", "on") !== "off") !== false;
       }
       copiedMs() {
-        return Number(attr(this.host, "data-kp-flash-ms", "")) || this.opts.copiedMs || ANCHOR_COPIED_MS;
+        return Number(attr2(this.host, "data-kp-flash-ms", "")) || this.opts.copiedMs || ANCHOR_COPIED_MS;
       }
       waitMs() {
         const said = this.opts.wait ?? (this.host.hasAttribute("data-kp-anchor-wait") ? Number(this.host.getAttribute("data-kp-anchor-wait")) : Number.NaN);
@@ -12085,7 +14300,7 @@ var init_marks = __esm({
         this.live.textContent = "";
         this.view.setTimeout(() => {
           this.live.textContent = text;
-        }, SAY_DELAY_MS2);
+        }, SAY_DELAY_MS3);
       }
       /** The id of a heading or a row: its own word, else its id, else a slug of its text. @param {HTMLElement} el */
       idFor(el16) {
@@ -12103,9 +14318,9 @@ var init_marks = __esm({
         if (!el16.id) el16.id = id;
         el16.setAttribute("data-kp-anchored", kind);
         const button6 = this.makeMark(el16, kind);
-        const before = (el16.getAttribute("data-kp-anchor-position") ?? this.host.getAttribute("data-kp-anchor-position") ?? (kind === "row" ? "before" : "after")) === "before";
+        const before2 = (el16.getAttribute("data-kp-anchor-position") ?? this.host.getAttribute("data-kp-anchor-position") ?? (kind === "row" ? "before" : "after")) === "before";
         const into = kind === "row" && el16.matches('tr, [role="row"]') ? el16.querySelector('th, td, [role="cell"], [role="gridcell"], [role="rowheader"]') ?? el16 : el16;
-        if (before) into.prepend(button6);
+        if (before2) into.prepend(button6);
         else into.append(button6);
         this.marks.set(el16, button6);
       }
@@ -12134,7 +14349,7 @@ var init_marks = __esm({
       /** Mark what the mode asks for, and take the marks of rows that left. */
       scan() {
         const box = this.host;
-        const want = this.opts.anchors ?? attr(box, "data-kp-anchors", "off");
+        const want = this.opts.anchors ?? attr2(box, "data-kp-anchors", "off");
         if (want === "headings" || want === "both") {
           const wanted = this.levels().map((n) => `h${n}`).join(",");
           if (wanted) {
@@ -12171,7 +14386,7 @@ var init_marks = __esm({
 
 // js/anchors/controller.js
 var LOOK_AGAIN_MS, AnchorBox;
-var init_controller3 = __esm({
+var init_controller5 = __esm({
   "js/anchors/controller.js"() {
     "use strict";
     init_calm();
@@ -12394,7 +14609,7 @@ function attachAnchors(root = document, options = {}) {
   const made6 = [];
   for (const box of found) {
     if (box.dataset.kpAnchorsAttached !== void 0) continue;
-    if ((options.anchors ?? attr(box, "data-kp-anchors", "off")) === "off") continue;
+    if ((options.anchors ?? attr2(box, "data-kp-anchors", "off")) === "off") continue;
     const anchored = attachOne(box, AnchorBox, options);
     if (anchored) made6.push(anchored);
   }
@@ -12406,7 +14621,7 @@ var init_anchors = __esm({
   "js/anchors.js"() {
     "use strict";
     init_controller();
-    init_controller3();
+    init_controller5();
     init_text();
     init_text();
   }
@@ -12414,7 +14629,7 @@ var init_anchors = __esm({
 
 // js/art/constants.js
 var ART, ART_KINDS, SVG;
-var init_constants4 = __esm({
+var init_constants6 = __esm({
   "js/art/constants.js"() {
     "use strict";
     ART = "[data-kp-art]";
@@ -13288,7 +15503,7 @@ var isKind;
 var init_draw = __esm({
   "js/art/draw.js"() {
     "use strict";
-    init_constants4();
+    init_constants6();
     init_sets();
     isKind = (value) => (
       /** @type {readonly string[]} */
@@ -13306,7 +15521,7 @@ var init_attach2 = __esm({
   "js/art/attach.js"() {
     "use strict";
     init_controller();
-    init_constants4();
+    init_constants6();
     init_draw();
     ArtControl = class extends Controller {
       /** @param {HTMLElement} host */
@@ -13346,7 +15561,7 @@ __export(art_exports, {
 var init_art = __esm({
   "js/art.js"() {
     "use strict";
-    init_constants4();
+    init_constants6();
     init_sets();
     init_draw();
     init_attach2();
@@ -13355,7 +15570,7 @@ var init_art = __esm({
 
 // js/attention/values.js
 var ATTENTION, SEVERITIES, FLAVOUR, GLYPH, rank;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/attention/values.js"() {
     "use strict";
     ATTENTION = ".kp-attention";
@@ -13434,8 +15649,8 @@ function paintAction(el16, action) {
     actions.className = "kp-attention__actions";
     el16.append(actions);
   }
-  const shown5 = actions.childNodes.length === 1 ? actions.firstChild : null;
-  if (shown5 === action || shown5 && shown5.isEqualNode(action)) return;
+  const shown6 = actions.childNodes.length === 1 ? actions.firstChild : null;
+  if (shown6 === action || shown6 && shown6.isEqualNode(action)) return;
   actions.replaceChildren(action);
 }
 function paintItem(el16, item) {
@@ -13457,7 +15672,7 @@ var init_item = __esm({
   "js/attention/item.js"() {
     "use strict";
     init_strings();
-    init_values7();
+    init_values8();
     severityWord = (item) => {
       if (item.srSeverity !== void 0) return item.srSeverity;
       const s2 = getStrings();
@@ -13474,21 +15689,21 @@ function sortAttention(band) {
   for (const el16 of sorted) band.append(el16);
 }
 function shownByKey(band) {
-  const shown5 = /* @__PURE__ */ new Map();
+  const shown6 = /* @__PURE__ */ new Map();
   for (const el16 of itemsOf(band)) {
     if (el16.hasAttribute("data-kp-leaving")) continue;
     const key = el16.getAttribute("data-kp-key");
-    if (key !== null && !shown5.has(key)) shown5.set(key, el16);
+    if (key !== null && !shown6.has(key)) shown6.set(key, el16);
   }
-  return shown5;
+  return shown6;
 }
-function paintWanted(doc, items, shown5) {
+function paintWanted(doc, items, shown6) {
   const wanted = [];
   const seen = /* @__PURE__ */ new Set();
   for (const item of items) {
     if (seen.has(item.key)) continue;
     seen.add(item.key);
-    let el16 = shown5.get(item.key);
+    let el16 = shown6.get(item.key);
     if (!el16) {
       el16 = doc.createElement("div");
       el16.className = "kp-alert kp-attention__item";
@@ -13501,28 +15716,28 @@ function paintWanted(doc, items, shown5) {
 }
 function placeItems(band, wanted, going) {
   const order = wanted.map((el16, at) => ({ el: el16, at })).sort((a, b) => rank(a.el) - rank(b.el) || a.at - b.at);
-  let before = null;
+  let before2 = null;
   for (const { el: el16 } of order) {
     let prev = el16.isConnected && el16.parentElement === band ? el16.previousElementSibling : null;
     while (prev && (!prev.classList.contains("kp-attention__item") || prev.hasAttribute("data-kp-leaving") || going.has(prev)))
       prev = prev.previousElementSibling;
-    const inPlace2 = el16.parentElement === band && prev === before;
+    const inPlace2 = el16.parentElement === band && prev === before2;
     if (!inPlace2) {
-      if (before) before.after(el16);
+      if (before2) before2.after(el16);
       else {
         const first = [...band.children].find((c) => c.classList.contains("kp-attention__item"));
         if (first && first !== el16) first.before(el16);
         else if (!first) band.append(el16);
       }
     }
-    before = el16;
+    before2 = el16;
   }
 }
 function setAttention(band, items) {
-  const shown5 = shownByKey(band);
-  const { wanted, seen } = paintWanted(band.ownerDocument, items, shown5);
+  const shown6 = shownByKey(band);
+  const { wanted, seen } = paintWanted(band.ownerDocument, items, shown6);
   const going = /* @__PURE__ */ new Set();
-  for (const [key, el16] of shown5)
+  for (const [key, el16] of shown6)
     if (!seen.has(key)) {
       going.add(el16);
       void leave(el16);
@@ -13535,7 +15750,7 @@ var init_set = __esm({
     "use strict";
     init_motion();
     init_item();
-    init_values7();
+    init_values8();
     itemsOf = (band) => (
       /** @type {HTMLElement[]} */
       [...band.children].filter((el16) => el16.classList.contains("kp-attention__item"))
@@ -13544,7 +15759,7 @@ var init_set = __esm({
 });
 
 // js/attention/max.js
-var MAX_ATTRIBUTE, FOLDED_ATTRIBUTE, EXPANDED_ATTRIBUTE, WATCHED4, AttentionMax;
+var MAX_ATTRIBUTE, FOLDED_ATTRIBUTE, EXPANDED_ATTRIBUTE, WATCHED5, AttentionMax;
 var init_max = __esm({
   "js/attention/max.js"() {
     "use strict";
@@ -13553,7 +15768,7 @@ var init_max = __esm({
     MAX_ATTRIBUTE = "data-kp-attention-max";
     FOLDED_ATTRIBUTE = "data-kp-folded";
     EXPANDED_ATTRIBUTE = "data-kp-attention-expanded";
-    WATCHED4 = { childList: true, subtree: true, attributes: true, attributeFilter: [MAX_ATTRIBUTE, "data-kp-severity", "data-kp-leaving"] };
+    WATCHED5 = { childList: true, subtree: true, attributes: true, attributeFilter: [MAX_ATTRIBUTE, "data-kp-severity", "data-kp-leaving"] };
     AttentionMax = class extends Controller {
       /** @param {HTMLElement} host the band */
       constructor(host) {
@@ -13563,7 +15778,7 @@ var init_max = __esm({
       }
       connect() {
         const band = this.host;
-        this.observe(new MutationObserver(() => this.apply())).observe(band, WATCHED4);
+        this.observe(new MutationObserver(() => this.apply())).observe(band, WATCHED5);
         this.listen(band, "click", (event) => {
           if (this.toggle && event.target instanceof Element && event.target.closest(".kp-attention__more") === this.toggle) this.flip();
         });
@@ -13622,8 +15837,8 @@ var init_max = __esm({
         this.setExpanded(!this.expanded);
         this.apply();
         const total = this.problems().length;
-        const shown5 = this.expanded ? total : Math.min(total, this.max);
-        this.host.dispatchEvent(new CustomEvent("kp-attention-toggle", { bubbles: true, detail: { expanded: this.expanded, shown: shown5, total } }));
+        const shown6 = this.expanded ? total : Math.min(total, this.max);
+        this.host.dispatchEvent(new CustomEvent("kp-attention-toggle", { bubbles: true, detail: { expanded: this.expanded, shown: shown6, total } }));
       }
       /** @param {boolean} on */
       setExpanded(on) {
@@ -13657,7 +15872,7 @@ var init_watch = __esm({
   "js/attention/watch.js"() {
     "use strict";
     init_controller();
-    init_values7();
+    init_values8();
     init_set();
     init_max();
     BAND_OPTIONS = { childList: true, subtree: true, attributes: true, attributeFilter: ["data-kp-severity"] };
@@ -13769,14 +15984,14 @@ var init_attention = __esm({
   "js/attention.js"() {
     "use strict";
     init_watch();
-    init_values7();
+    init_values8();
     init_set();
   }
 });
 
 // js/auto-refresh/constants.js
 var REFRESH, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, REFRESH_DEFAULT, REFRESH_CHOICES, MIN_STALE_S, STALE_INTERVALS, BLOCKED_RETRY_MS, MAX_BACKOFF_POWER, SECOND_MS2, ID_RADIX, ID_START, ID_END, WATCHED_ATTRIBUTES, TYPING_SELECTOR;
-var init_constants5 = __esm({
+var init_constants7 = __esm({
   "js/auto-refresh/constants.js"() {
     "use strict";
     REFRESH = "[data-kp-refresh]";
@@ -13809,7 +16024,7 @@ var init_constants5 = __esm({
 
 // js/freshness/values.js
 var AGO, FRESHNESS_TIME_ZONE, MS_PER_SECOND, TICK_MS2, SECONDS, WIDEST_DAYS, WIDEST_HOURS, AGO_OBSERVED;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/freshness/values.js"() {
     "use strict";
     AGO = "[data-kp-ago]";
@@ -13833,7 +16048,7 @@ var init_values8 = __esm({
 
 // js/freshness/state.js
 var live, states, widths, engine;
-var init_state2 = __esm({
+var init_state3 = __esm({
   "js/freshness/state.js"() {
     "use strict";
     live = /* @__PURE__ */ new Map();
@@ -13895,7 +16110,7 @@ var init_text2 = __esm({
   "js/freshness/text.js"() {
     "use strict";
     init_strings();
-    init_values8();
+    init_values9();
     unitsOf = (el16) => el16.getAttribute("data-kp-ago-units") === "days" ? "days" : void 0;
     FORMATS = /* @__PURE__ */ new Map();
   }
@@ -13957,10 +16172,10 @@ function writeStale(el16, state12, at, now, text, strings) {
     if (!el16.hasAttribute("data-kp-stale")) el16.setAttribute("data-kp-stale", "");
   } else el16.removeAttribute("data-kp-stale");
   if (state12.stale !== null && state12.stale !== stale && el16.getAttribute("data-kp-ago-announce") === "state")
-    announce(el16, stale ? strings.agoStale(text) : strings.agoFresh(text));
+    announce2(el16, stale ? strings.agoStale(text) : strings.agoFresh(text));
   state12.stale = stale;
 }
-function paint(el16, ctx) {
+function paint2(el16, ctx) {
   const strings = resolveStrings(ctx.overrides);
   const now = ctx.now();
   const at = momentOf(el16);
@@ -13981,7 +16196,7 @@ function paint(el16, ctx) {
   writeMoment(el16, state12, at, ctx.timeZone);
   writeStale(el16, state12, at, now, text, strings);
 }
-function announce(el16, words3) {
+function announce2(el16, words3) {
   let voice = el16.nextElementSibling;
   if (!(voice instanceof HTMLElement) || !voice.hasAttribute("data-kp-ago-voice")) {
     voice = el16.ownerDocument.createElement("span");
@@ -13992,19 +16207,19 @@ function announce(el16, words3) {
   }
   voice.textContent = words3;
 }
-var init_paint = __esm({
+var init_paint2 = __esm({
   "js/freshness/paint.js"() {
     "use strict";
     init_strings();
-    init_values8();
-    init_state2();
+    init_values9();
+    init_state3();
     init_text2();
   }
 });
 
 // js/freshness/engine.js
 function tick() {
-  for (const [el16, ctx] of live) if (el16.isConnected) paint(el16, ctx);
+  for (const [el16, ctx] of live) if (el16.isConnected) paint2(el16, ctx);
 }
 function steer() {
   const doc = typeof document === "undefined" ? null : document;
@@ -14025,23 +16240,23 @@ function adopt(el16, ctx) {
       console.warn(resolveStrings(ctx.overrides).agoInLiveRegion);
     }
   }
-  paint(el16, live.get(el16) ?? ctx);
+  paint2(el16, live.get(el16) ?? ctx);
 }
 function setAgo(el16, ms) {
   if (!el16.hasAttribute("data-kp-ago")) el16.setAttribute("data-kp-ago", "");
   else if (el16.getAttribute("data-kp-ago") !== "") el16.setAttribute("data-kp-ago", "");
   if (ms == null || !Number.isFinite(ms)) el16.removeAttribute("datetime");
   else el16.setAttribute("datetime", new Date(ms).toISOString());
-  paint(el16, live.get(el16) ?? defaultContext());
+  paint2(el16, live.get(el16) ?? defaultContext());
 }
 var defaultContext, onVisibility;
 var init_engine2 = __esm({
   "js/freshness/engine.js"() {
     "use strict";
     init_strings();
-    init_values8();
-    init_state2();
-    init_paint();
+    init_values9();
+    init_state3();
+    init_paint2();
     defaultContext = () => ({ timeZone: FRESHNESS_TIME_ZONE, now: () => Date.now(), overrides: void 0, owner: {} });
     onVisibility = () => {
       if (typeof document !== "undefined" && document.visibilityState !== "hidden") tick();
@@ -14056,10 +16271,10 @@ var init_watch2 = __esm({
   "js/freshness/watch.js"() {
     "use strict";
     init_controller();
-    init_values8();
-    init_state2();
+    init_values9();
+    init_state3();
     init_engine2();
-    init_paint();
+    init_paint2();
     AgoWatch = class extends Controller {
       /**
        * @param {ParentNode} scope the scope the call was given (a document, a shadow root or an element), which is this controller's host
@@ -14155,7 +16370,7 @@ var init_watch2 = __esm({
         for (const [el16, own] of live) {
           const state12 = states.get(el16);
           if (state12) state12.sample = "";
-          if (own.owner === this.token && el16.isConnected) paint(el16, own);
+          if (own.owner === this.token && el16.isConnected) paint2(el16, own);
         }
       }
     };
@@ -14193,8 +16408,8 @@ var init_freshness = __esm({
   "js/freshness.js"() {
     "use strict";
     init_watch2();
-    init_values8();
-    init_values8();
+    init_values9();
+    init_values9();
     init_text2();
     init_engine2();
   }
@@ -14333,14 +16548,14 @@ var init_bar = __esm({
   "js/auto-refresh/bar.js"() {
     "use strict";
     init_strings();
-    init_constants5();
+    init_constants7();
     init_narrow();
   }
 });
 
 // js/menu-button/constants.js
 var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, MENU_GUTTER;
-var init_constants6 = __esm({
+var init_constants8 = __esm({
   "js/menu-button/constants.js"() {
     "use strict";
     MENU_BUTTON = "[data-kp-menu-button]";
@@ -14366,13 +16581,13 @@ function countMenu(menu) {
 var init_count2 = __esm({
   "js/menu-button/count.js"() {
     "use strict";
-    init_constants6();
+    init_constants8();
   }
 });
 
 // js/menu-button/state.js
 var menuState;
-var init_state3 = __esm({
+var init_state4 = __esm({
   "js/menu-button/state.js"() {
     "use strict";
     menuState = {
@@ -14386,7 +16601,7 @@ var menus, filled, nextId, keyOf, menuSignature;
 var init_model = __esm({
   "js/menu-button/model.js"() {
     "use strict";
-    init_state3();
+    init_state4();
     menus = /* @__PURE__ */ new WeakMap();
     filled = /* @__PURE__ */ new WeakMap();
     nextId = (prefix) => `${prefix}-${menuState.idSeq += 1}`;
@@ -14426,208 +16641,9 @@ function menuKeyTarget(event, at, labels) {
   }
   return null;
 }
-var init_keys3 = __esm({
+var init_keys4 = __esm({
   "js/menu-button/keys.js"() {
     "use strict";
-  }
-});
-
-// js/top-layer/rect.js
-function unturnedRect(el16, style) {
-  const box = el16.getBoundingClientRect();
-  const match = /^(-?[\d.]+)(deg|rad|turn|grad)$/.exec(style.rotate ?? "");
-  if (!match) return box;
-  const unit2 = RADIANS_PER[
-    /** @type {keyof typeof RADIANS_PER} */
-    match[2]
-  ] ?? 0;
-  const a = Number.parseFloat(match[1]) * unit2;
-  const c = Math.abs(Math.cos(a));
-  const s2 = Math.abs(Math.sin(a));
-  const det = c * c - s2 * s2;
-  if (a === 0 || Math.abs(det) < NEAR_DIAGONAL) return box;
-  const w = (c * box.width - s2 * box.height) / det;
-  const h2 = (c * box.height - s2 * box.width) / det;
-  const [ox, oy] = style.transformOrigin.split(/\s+/).map((n) => Number.parseFloat(n) || 0);
-  const dx = w / 2 - ox;
-  const dy = h2 / 2 - oy;
-  const cos = Math.cos(a);
-  const sin = Math.sin(a);
-  const left = box.left + box.width / 2 - ox - (dx * cos - dy * sin);
-  const top = box.top + box.height / 2 - oy - (dx * sin + dy * cos);
-  return new DOMRect(left, top, w, h2);
-}
-function offsetOf(el16, style, box) {
-  let x = 0;
-  let y = 0;
-  if (style.translate && style.translate !== "none") {
-    const parts2 = style.translate.split(/\s+/);
-    x += lengthOf(parts2[0], el16.offsetWidth ?? box.width);
-    y += lengthOf(parts2[1], el16.offsetHeight ?? box.height);
-  }
-  if (style.transform && style.transform !== "none" && typeof DOMMatrixReadOnly === "function") {
-    const m = new DOMMatrixReadOnly(style.transform);
-    if (m.is2D && m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1) {
-      x += m.e;
-      y += m.f;
-    }
-  }
-  return { x, y };
-}
-function layoutRect(element) {
-  const view = element.ownerDocument.defaultView;
-  if (!view) return element.getBoundingClientRect();
-  const style = view.getComputedStyle(element);
-  const el16 = (
-    /** @type {HTMLElement} */
-    element
-  );
-  const box = unturnedRect(el16, style);
-  const { x, y } = offsetOf(el16, style, box);
-  if (x === 0 && y === 0) return box;
-  return new DOMRect(box.x - x, box.y - y, box.width, box.height);
-}
-var NEAR_DIAGONAL, RADIANS_PER, lengthOf;
-var init_rect = __esm({
-  "js/top-layer/rect.js"() {
-    "use strict";
-    NEAR_DIAGONAL = 0.05;
-    RADIANS_PER = { deg: Math.PI / 180, rad: 1, turn: 2 * Math.PI, grad: Math.PI / 200 };
-    lengthOf = (part7, size2) => {
-      if (!part7) return 0;
-      const n = Number.parseFloat(part7);
-      if (!Number.isFinite(n)) return 0;
-      return part7.endsWith("%") ? n / 100 * size2 : n;
-    };
-  }
-});
-
-// js/top-layer/side.js
-function cap(element, room, outside) {
-  element.style.maxBlockSize = `${Math.max(0, Math.floor(room - outside))}px`;
-  element.style.overflowY = "auto";
-}
-function placeBlockSide(element, field2) {
-  clearBlockSide(element);
-  const drawn = layoutRect(element);
-  const style = getComputedStyle(element);
-  const height = drawn.height;
-  const outside = style.boxSizing === "border-box" ? 0 : height - (Number.parseFloat(style.height) || 0);
-  const gap = Math.max(0, drawn.top - field2.bottom);
-  const view = document.documentElement.clientHeight;
-  const below = view - drawn.top;
-  const above = field2.top - gap;
-  if (height <= below || below >= above) {
-    if (height > below) cap(element, below, outside);
-    return "below";
-  }
-  const size2 = Math.min(height, above);
-  const top = Number.parseFloat(element.style.top) || 0;
-  element.style.top = `${top + (field2.top - gap - size2 - drawn.top)}px`;
-  if (height > above) cap(element, above, outside);
-  element.dataset.kpOverlaySide = "above";
-  return "above";
-}
-var clearBlockSide;
-var init_side = __esm({
-  "js/top-layer/side.js"() {
-    "use strict";
-    init_rect();
-    clearBlockSide = (element) => {
-      element.style.removeProperty("max-block-size");
-      element.style.removeProperty("overflow-y");
-      delete element.dataset.kpOverlaySide;
-    };
-  }
-});
-
-// js/top-layer/raise.js
-function raiseOverlay(element, place5) {
-  if (typeof element.showPopover !== "function" || !element.isConnected) {
-    place5(element);
-    return () => {
-    };
-  }
-  const raise = new OverlayRaise(element, { place: place5 });
-  try {
-    raise.connect();
-  } catch (error) {
-    raise.destroy();
-    throw error;
-  }
-  return () => raise.destroy();
-}
-function raiseInPlace(element, anchor, field2 = anchor) {
-  const drawn = layoutRect(element);
-  const from = anchor.getBoundingClientRect();
-  const dx = drawn.left - from.left;
-  const dy = drawn.top - from.top;
-  const width = drawn.width;
-  const lower = raiseOverlay(element, () => {
-    const at = anchor.getBoundingClientRect();
-    const style = getComputedStyle(element);
-    element.style.left = `${at.left + dx - (Number.parseFloat(style.marginLeft) || 0)}px`;
-    element.style.top = `${at.top + dy - (Number.parseFloat(style.marginTop) || 0)}px`;
-    element.style.width = `${width}px`;
-    placeBlockSide(element, field2.getBoundingClientRect());
-  });
-  return () => {
-    lower();
-    element.style.removeProperty("left");
-    element.style.removeProperty("top");
-    element.style.removeProperty("width");
-  };
-}
-var OverlayRaise, raised;
-var init_raise = __esm({
-  "js/top-layer/raise.js"() {
-    "use strict";
-    init_controller();
-    init_rect();
-    init_side();
-    OverlayRaise = class extends Controller {
-      /**
-       * @param {HTMLElement} host the overlay, already visible (not `hidden`)
-       * @param {{ place: (element: HTMLElement) => void }} options place puts it in window coordinates
-       */
-      constructor(host, options) {
-        super(host, options);
-        this.place = options.place;
-      }
-      connect() {
-        const element = this.host;
-        const added = !element.hasAttribute("popover");
-        this.own(() => {
-          if (element.matches(":popover-open")) element.hidePopover();
-          if (added) element.removeAttribute("popover");
-          clearBlockSide(element);
-        });
-        if (added) element.setAttribute("popover", "manual");
-        if (!element.matches(":popover-open")) element.showPopover();
-        const follow3 = () => this.follow();
-        follow3();
-        this.listen(window, "scroll", follow3, { capture: true, passive: true });
-        this.listen(window, "resize", follow3);
-        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(follow3)).observe(element);
-      }
-      follow() {
-        if (this.destroyed) return;
-        const element = this.host;
-        if (element.isConnected && !element.hidden && !element.matches(":popover-open")) element.showPopover();
-        this.place(element);
-      }
-    };
-    raised = (element) => element.matches(":popover-open");
-  }
-});
-
-// js/top-layer.js
-var init_top_layer = __esm({
-  "js/top-layer.js"() {
-    "use strict";
-    init_rect();
-    init_side();
-    init_raise();
   }
 });
 
@@ -14747,7 +16763,7 @@ var init_placement = __esm({
   "js/menu-button/placement.js"() {
     "use strict";
     init_top_layer();
-    init_constants6();
+    init_constants8();
     PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size", "--kp-menu-anchor-x"];
     ANCHOR_EDGE = 14;
   }
@@ -15082,7 +17098,7 @@ var init_open = __esm({
   "js/menu-button/open.js"() {
     "use strict";
     init_motion();
-    init_constants6();
+    init_constants8();
     init_count2();
     init_items();
     init_model();
@@ -15100,13 +17116,13 @@ var init_open = __esm({
 
 // js/menu-button/controller.js
 var MenuButtonControl;
-var init_controller4 = __esm({
+var init_controller6 = __esm({
   "js/menu-button/controller.js"() {
     "use strict";
     init_controller();
-    init_constants6();
+    init_constants8();
     init_items();
-    init_keys3();
+    init_keys4();
     init_model();
     init_open();
     MenuButtonControl = class extends Controller {
@@ -15250,9 +17266,9 @@ var init_attach3 = __esm({
   "js/menu-button/attach.js"() {
     "use strict";
     init_controller();
-    init_constants6();
+    init_constants8();
     init_count2();
-    init_controller4();
+    init_controller6();
     LATE_EVENTS = ["pointerdown", "focusin", "keydown", "click"];
   }
 });
@@ -15278,10 +17294,10 @@ __export(menu_button_exports, {
 var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
-    init_constants6();
+    init_constants8();
     init_count2();
     init_model();
-    init_keys3();
+    init_keys4();
     init_placement();
     init_open();
     init_attach3();
@@ -15289,8 +17305,8 @@ var init_menu_button = __esm({
 });
 
 // js/segmented/constants.js
-var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, MORE_ATTRIBUTE, SCROLL_SLOP_PX, SAY_DELAY_MS3;
-var init_constants7 = __esm({
+var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, MORE_ATTRIBUTE, SCROLL_SLOP_PX, SAY_DELAY_MS4;
+var init_constants9 = __esm({
   "js/segmented/constants.js"() {
     "use strict";
     SEGMENTED = "[data-kp-segmented]";
@@ -15304,7 +17320,7 @@ var init_constants7 = __esm({
     OVERFLOW_ATTRIBUTE = "data-kp-segmented-overflow";
     MORE_ATTRIBUTE = "data-kp-segmented-more";
     SCROLL_SLOP_PX = 1;
-    SAY_DELAY_MS3 = 60;
+    SAY_DELAY_MS4 = 60;
   }
 });
 
@@ -15315,20 +17331,20 @@ function itemsOf2(group) {
     [...group.querySelectorAll(`:scope > ${SEGMENTED_ITEM}`)]
   );
 }
-function valueOf(item) {
+function valueOf2(item) {
   const own = item.getAttribute("data-value");
   if (own !== null) return own;
   return (item.querySelector(".kp-segmented__label") ?? item).textContent?.trim() ?? "";
 }
 function getSegmentedValues(group) {
-  return itemsOf2(group).filter((item) => isOn(group, item) && !((isMulti(group) || isTri(group)) && isAll(item))).map(valueOf);
+  return itemsOf2(group).filter((item) => isOn(group, item) && !((isMulti(group) || isTri(group)) && isAll(item))).map(valueOf2);
 }
 function getSegmentedTri(group) {
   const out = { include: [], exclude: [] };
   for (const item of itemsOf2(group)) {
     if (isAll(item)) continue;
     const state12 = triOf(item);
-    if (state12 !== "any") out[state12].push(valueOf(item));
+    if (state12 !== "any") out[state12].push(valueOf2(item));
   }
   return out;
 }
@@ -15336,7 +17352,7 @@ var isMulti, isTri, isOptional, triOf, isAll, labelOf2, isOn, groupDisabled, ite
 var init_read2 = __esm({
   "js/segmented/read.js"() {
     "use strict";
-    init_constants7();
+    init_constants9();
     isMulti = (group) => group.getAttribute("data-kp-segmented") === "multi";
     isTri = (group) => group.getAttribute("data-kp-segmented") === "tri";
     isOptional = (group) => group.getAttribute("data-kp-segmented") === "single-or-none";
@@ -15384,14 +17400,14 @@ function layout(group) {
 var init_plate = __esm({
   "js/segmented/plate.js"() {
     "use strict";
-    init_constants7();
+    init_constants9();
     init_read2();
   }
 });
 
 // js/segmented/state.js
 var STOPS, HANDLED;
-var init_state4 = __esm({
+var init_state5 = __esm({
   "js/segmented/state.js"() {
     "use strict";
     STOPS = /* @__PURE__ */ new WeakMap();
@@ -15414,7 +17430,7 @@ function roving(group) {
 var init_roving = __esm({
   "js/segmented/roving.js"() {
     "use strict";
-    init_state4();
+    init_state5();
     init_read2();
   }
 });
@@ -15435,12 +17451,12 @@ function triWords(item) {
 function writeTri(item, state12) {
   if (state12 === "any") item.removeAttribute(TRI_ATTRIBUTE);
   else item.setAttribute(TRI_ATTRIBUTE, state12);
-  let mark = item.querySelector(":scope > .kp-segmented__mark");
-  if (!mark) {
-    mark = document.createElement("span");
-    mark.className = "kp-segmented__mark";
-    mark.setAttribute("aria-hidden", "true");
-    item.prepend(mark);
+  let mark2 = item.querySelector(":scope > .kp-segmented__mark");
+  if (!mark2) {
+    mark2 = document.createElement("span");
+    mark2.className = "kp-segmented__mark";
+    mark2.setAttribute("aria-hidden", "true");
+    item.prepend(mark2);
   }
   let word = item.querySelector(":scope > .kp-segmented__state");
   if (!word) {
@@ -15524,14 +17540,14 @@ function sayTri(group, message) {
   }
   const target = region;
   target.textContent = "";
-  setTimeout(() => target.textContent = message, SAY_DELAY_MS3);
+  setTimeout(() => target.textContent = message, SAY_DELAY_MS4);
 }
 function setTriValues(group, { include = [], exclude = [] }) {
   const inc = new Set(include);
   const exc = new Set(exclude);
   for (const item of itemsOf2(group)) {
     if (isAll(item)) continue;
-    const value = valueOf(item);
+    const value = valueOf2(item);
     writeTri(item, inc.has(value) ? "include" : exc.has(value) ? "exclude" : "any");
   }
   paintTri(group);
@@ -15540,7 +17556,7 @@ var init_tri = __esm({
   "js/segmented/tri.js"() {
     "use strict";
     init_strings();
-    init_constants7();
+    init_constants9();
     init_read2();
     init_roving();
   }
@@ -15567,7 +17583,7 @@ function entryOf(group, item) {
   const count2 = item.querySelector(".kp-segmented__count")?.textContent?.trim();
   return {
     label: count2 ? `${labelOf2(item)} \xB7 ${count2}` : labelOf2(item),
-    value: valueOf(item),
+    value: valueOf2(item),
     disabled: itemDisabled(item) ? item.getAttribute("data-kp-disabled-reason") || item.title || labelOf2(item) : null,
     attrs: { role: isMulti(group) ? "menuitemcheckbox" : "menuitemradio", "aria-checked": String(isOn(group, item)) }
   };
@@ -15577,7 +17593,7 @@ function paintFold(group, fold2) {
   const entries2 = itemsOf2(group).filter((item) => !item.hidden).map((item) => entryOf(group, item));
   setMenu(fold2.host, [{ group: "", items: entries2 }]);
   for (const entry of fold2.host.querySelectorAll('[role="menuitemcheckbox"], [role="menuitemradio"]')) {
-    const item = itemsOf2(group).find((one) => valueOf(one) === entry.getAttribute("data-kp-value"));
+    const item = itemsOf2(group).find((one) => valueOf2(one) === entry.getAttribute("data-kp-value"));
     if (item) entry.setAttribute("aria-checked", String(isOn(group, item)));
   }
 }
@@ -15601,7 +17617,7 @@ function buildFold(group) {
       /** @type {CustomEvent<{ value: string }>} */
       event.detail?.value
     );
-    const item = itemsOf2(group).find((one) => valueOf(one) === value);
+    const item = itemsOf2(group).find((one) => valueOf2(one) === value);
     if (!item) return;
     item.click();
     if (isMulti(group)) event.preventDefault();
@@ -15652,8 +17668,8 @@ var init_fold2 = __esm({
   "js/segmented/fold.js"() {
     "use strict";
     init_controller();
-    init_controller4();
-    init_constants6();
+    init_controller6();
+    init_constants8();
     init_open();
     init_strings();
     init_read2();
@@ -15667,32 +17683,32 @@ function paintTriValues(group, values) {
   for (const item of itemsOf2(group)) {
     if (isAll(item)) continue;
     const was = triOf(item);
-    writeTri(item, include.has(valueOf(item)) ? "include" : was === "exclude" ? "exclude" : "any");
+    writeTri(item, include.has(valueOf2(item)) ? "include" : was === "exclude" ? "exclude" : "any");
   }
   paintTri(group);
 }
-function paint2(group, values) {
+function paint3(group, values) {
   if (isTri(group)) return paintTriValues(group, values);
   const multi = isMulti(group);
   const items = itemsOf2(group);
   const others = items.filter((item) => !isAll(item));
   let on = new Set(values);
   if (multi) {
-    if (group.getAttribute("data-kp-segmented-collapse") !== "false" && others.length > 0 && others.every((item) => on.has(valueOf(item)))) {
+    if (group.getAttribute("data-kp-segmented-collapse") !== "false" && others.length > 0 && others.every((item) => on.has(valueOf2(item)))) {
       on = /* @__PURE__ */ new Set();
     }
   } else if (on.size > 1) {
     on = /* @__PURE__ */ new Set([[...on][0]]);
   }
   for (const item of items) {
-    const pressed2 = multi && isAll(item) ? on.size === 0 : on.has(valueOf(item));
+    const pressed2 = multi && isAll(item) ? on.size === 0 : on.has(valueOf2(item));
     item.setAttribute(multi ? "aria-pressed" : "aria-checked", String(pressed2));
   }
   roving(group);
   layout(group);
   repaintFold(group);
 }
-var init_paint2 = __esm({
+var init_paint3 = __esm({
   "js/segmented/paint.js"() {
     "use strict";
     init_read2();
@@ -15708,7 +17724,7 @@ function valuesIn(group, mode2) {
   const on = mode2 === "tri" ? "include" : "true";
   return itemsOf2(group).filter(
     (item) => (mode2 === "tri" ? item.getAttribute(TRI_ATTRIBUTE) : item.getAttribute(mode2 === "multi" ? "aria-pressed" : "aria-checked")) === on
-  ).filter((item) => !(mode2 !== "single" && isAll(item))).map(valueOf);
+  ).filter((item) => !(mode2 !== "single" && isAll(item))).map(valueOf2);
 }
 function dropTriParts(group) {
   for (const item of itemsOf2(group)) {
@@ -15725,8 +17741,8 @@ function rewriteForMode(group, was) {
   const multi = isMulti(group);
   const all = itemsOf2(group).find(isAll);
   let values = valuesIn(group, was);
-  if (all && (multi || tri)) values = values.filter((value) => value !== valueOf(all));
-  else if (all && values.length === 0) values = [valueOf(all)];
+  if (all && (multi || tri)) values = values.filter((value) => value !== valueOf2(all));
+  else if (all && values.length === 0) values = [valueOf2(all)];
   if (was === "tri" && !tri) dropTriParts(group);
   const role = group.getAttribute("role");
   if (role === null || role === "group" || role === "radiogroup") group.setAttribute("role", multi || tri ? "group" : "radiogroup");
@@ -15743,44 +17759,9 @@ function rewriteForMode(group, was) {
 var init_mode = __esm({
   "js/segmented/mode.js"() {
     "use strict";
-    init_constants7();
+    init_constants9();
     init_read2();
     init_tri();
-  }
-});
-
-// js/combobox/handle.js
-function combobox(element) {
-  return handles2.get(element) ?? null;
-}
-var handles2, selectHandles;
-var init_handle = __esm({
-  "js/combobox/handle.js"() {
-    "use strict";
-    handles2 = /* @__PURE__ */ new WeakMap();
-    selectHandles = /* @__PURE__ */ new WeakMap();
-  }
-});
-
-// js/combobox/constants.js
-var COMBOBOX, INPUT, LIST, STATUS, TAGS, EMPTY, RESULTS_TEXT, CHANGE_EVENT, OPEN_EVENT;
-var init_constants8 = __esm({
-  "js/combobox/constants.js"() {
-    "use strict";
-    init_strings();
-    COMBOBOX = "[data-kp-combobox]";
-    INPUT = 'input[role="combobox"]';
-    LIST = '[role="listbox"]';
-    STATUS = "[data-kp-combobox-status]";
-    TAGS = "[data-kp-tag-list]";
-    EMPTY = "[data-kp-combobox-empty]";
-    RESULTS_TEXT = /** @param {number} n */
-    (n) => {
-      const s2 = getStrings();
-      return n === 0 ? s2.noResults : n === 1 ? s2.oneResult : s2.manyResults(n);
-    };
-    CHANGE_EVENT = "kp-combobox-change";
-    OPEN_EVENT = "kp-combobox-open";
   }
 });
 
@@ -15812,26 +17793,26 @@ function setSegmentedItems(group, items) {
   enhance(group);
   const multi = isMulti(group);
   const tri = isTri(group);
-  const kept = new Map(itemsOf2(group).map((item) => [valueOf(item), triOf(item)]));
+  const kept = new Map(itemsOf2(group).map((item) => [valueOf2(item), triOf(item)]));
   const on = getSegmentedValues(group).filter((value) => items.some((item) => item.value === value));
   const active = group.ownerDocument.activeElement;
-  const focused2 = active instanceof HTMLElement && group.contains(active) ? valueOf(active) : null;
+  const focused2 = active instanceof HTMLElement && group.contains(active) ? valueOf2(active) : null;
   const made6 = items.map((spec) => buildItem(spec, { multi, tri, kept }));
   STOPS.delete(group);
   group.replaceChildren(...made6);
   enhance(group);
   if (tri) paintTri(group);
-  else paint2(group, on);
-  if (focused2 !== null) made6.find((item) => valueOf(item) === focused2)?.focus();
+  else paint3(group, on);
+  if (focused2 !== null) made6.find((item) => valueOf2(item) === focused2)?.focus();
 }
 var init_items2 = __esm({
   "js/segmented/items.js"() {
     "use strict";
-    init_constants7();
-    init_state4();
+    init_constants9();
+    init_state5();
     init_read2();
     init_group();
-    init_paint2();
+    init_paint3();
     init_tri();
   }
 });
@@ -15856,7 +17837,7 @@ function resolveListbox(given2) {
   };
 }
 var OPTION_SELECTOR, HIGHLIGHT_EVENT, CHOOSE_EVENT, DISABLED_SELECTOR, TYPEAHEAD_MS, FALLBACK_PREFIX;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/listbox/values.js"() {
     "use strict";
     OPTION_SELECTOR = "[data-kp-option]";
@@ -15937,7 +17918,7 @@ var TOP_ATTRIBUTE, FIELD_ATTRIBUTE, USES_ATTRIBUTE;
 var init_link_choices = __esm({
   "js/segmented/link-choices.js"() {
     "use strict";
-    init_values9();
+    init_values10();
     init_helpers();
     TOP_ATTRIBUTE = "data-kp-segmented-top";
     FIELD_ATTRIBUTE = "data-kp-segmented-field";
@@ -15952,13 +17933,13 @@ var init_link = __esm({
     "use strict";
     init_controller();
     init_handle();
-    init_constants8();
+    init_constants4();
     init_strings();
     init_live_options();
-    init_constants7();
+    init_constants9();
     init_read2();
     init_items2();
-    init_paint2();
+    init_paint3();
     init_link_choices();
     LINK_ATTRIBUTE = "data-kp-segmented-for";
     MADE = "data-kp-search-placeholder";
@@ -16045,7 +18026,7 @@ var init_link = __esm({
       }
       /** The values the chips stand for. @returns {Set<string>} */
       chipValues() {
-        return new Set(itemsOf2(this.host).map(valueOf));
+        return new Set(itemsOf2(this.host).map(valueOf2));
       }
       /** The chips pressed: a tag input keeps its own values and takes the chips' on top; a combobox takes the chip chosen, or empties when none is. */
       toField() {
@@ -16068,15 +18049,15 @@ var init_link = __esm({
         if (!field2 || !handle) return;
         const chips = this.chipValues();
         if (!this.single()) {
-          paint2(this.host, handle.values().filter((value) => chips.has(value)));
+          paint3(this.host, handle.values().filter((value) => chips.has(value)));
           return;
         }
         const named = choiceNamed([...choicesOf(field2), ...this.chipChoices()], handle.values()[0] ?? "");
-        paint2(this.host, named && chips.has(named.value) ? [named.value] : []);
+        paint3(this.host, named && chips.has(named.value) ? [named.value] : []);
       }
       /** The chips as choices, for a field whose list does not hold them. @returns {import('./link-choices.js').Choice[]} */
       chipChoices() {
-        return itemsOf2(this.host).map((item) => ({ value: valueOf(item), label: item.textContent?.trim() ?? "", uses: 0 }));
+        return itemsOf2(this.host).map((item) => ({ value: valueOf2(item), label: item.textContent?.trim() ?? "", uses: 0 }));
       }
     };
   }
@@ -16179,7 +18160,7 @@ var init_group = __esm({
     init_live_options();
     init_read2();
     init_plate();
-    init_paint2();
+    init_paint3();
     init_mode();
     init_link();
     init_tri();
@@ -16238,7 +18219,7 @@ var init_group = __esm({
           this.sizes?.observe(item);
         }
         if (isTri(group)) paintTri(group);
-        else paint2(group, getSegmentedValues(group));
+        else paint3(group, getSegmentedValues(group));
         fitGroup(group);
       }
       /**
@@ -16251,7 +18232,7 @@ var init_group = __esm({
         if (isTri(this.host)) {
           this.refresh();
           setTriValues(this.host, { include: values });
-        } else paint2(this.host, values);
+        } else paint3(this.host, values);
       }
     };
   }
@@ -16264,11 +18245,11 @@ function setSegmentedTri(group, values) {
 }
 function setSegmentedValues(group, values) {
   enhance(group);
-  paint2(group, [...values]);
+  paint3(group, [...values]);
 }
 function resetTri(group) {
-  const before = getSegmentedTri(group);
-  if (before.include.length + before.exclude.length === 0) return;
+  const before2 = getSegmentedTri(group);
+  if (before2.include.length + before2.exclude.length === 0) return;
   setSegmentedTri(group, {});
   sayTri(group, getStrings().triCleared);
   group.dispatchEvent(
@@ -16282,14 +18263,14 @@ function resetSegmented(group) {
   enhance(group);
   if (groupDisabled(group)) return;
   if (isTri(group)) return resetTri(group);
-  const before = getSegmentedValues(group);
-  if (before.length === 0 && isMulti(group)) return;
-  paint2(group, []);
+  const before2 = getSegmentedValues(group);
+  if (before2.length === 0 && isMulti(group)) return;
+  paint3(group, []);
   group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: null, values: [], item: null } }));
 }
 function setSegmentedCounts(group, counts) {
   for (const item of itemsOf2(group)) {
-    const value = valueOf(item);
+    const value = valueOf2(item);
     if (!(value in counts)) continue;
     const n = counts[value];
     let slot = item.querySelector(".kp-segmented__count");
@@ -16302,15 +18283,15 @@ function setSegmentedCounts(group, counts) {
   }
   layout(group);
 }
-var init_api = __esm({
+var init_api2 = __esm({
   "js/segmented/api.js"() {
     "use strict";
     init_strings();
-    init_constants7();
+    init_constants9();
     init_read2();
     init_group();
     init_plate();
-    init_paint2();
+    init_paint3();
     init_tri();
   }
 });
@@ -16323,14 +18304,14 @@ function turnTri(group, item, state12) {
   sayTri(group, getStrings().triAnnounce(labelOf2(item), triWords(item)[state12]));
   const { include, exclude } = getSegmentedTri(group);
   group.dispatchEvent(
-    new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf(item), values: include, include, exclude, state: state12, item } })
+    new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf2(item), values: include, include, exclude, state: state12, item } })
   );
 }
-function nextValues(group, item, before) {
-  const value = valueOf(item);
-  if (!isMulti(group)) return isOptional(group) && before.includes(value) ? [] : [value];
+function nextValues(group, item, before2) {
+  const value = valueOf2(item);
+  if (!isMulti(group)) return isOptional(group) && before2.includes(value) ? [] : [value];
   if (isAll(item)) return [];
-  return before.includes(value) ? before.filter((v) => v !== value) : [...before, value];
+  return before2.includes(value) ? before2.filter((v) => v !== value) : [...before2, value];
 }
 function choose(group, item) {
   if (groupDisabled(group) || itemDisabled(item)) return;
@@ -16339,21 +18320,21 @@ function choose(group, item) {
     turnTri(group, item, TRI_STATES[(TRI_STATES.indexOf(triOf(item)) + 1) % TRI_STATES.length]);
     return;
   }
-  const before = getSegmentedValues(group);
-  paint2(group, nextValues(group, item, before));
+  const before2 = getSegmentedValues(group);
+  paint3(group, nextValues(group, item, before2));
   const after = getSegmentedValues(group);
-  const changed3 = after.length !== before.length || after.some((v, at) => v !== before[at]);
+  const changed3 = after.length !== before2.length || after.some((v, at) => v !== before2[at]);
   if (!changed3) return;
-  group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf(item), values: after, item } }));
+  group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf2(item), values: after, item } }));
 }
 var init_actions2 = __esm({
   "js/segmented/actions.js"() {
     "use strict";
     init_strings();
-    init_constants7();
+    init_constants9();
     init_read2();
-    init_api();
-    init_paint2();
+    init_api2();
+    init_paint3();
     init_tri();
   }
 });
@@ -16380,7 +18361,7 @@ function targetIndex(event, group, at, count2) {
   const step = stepFor(event, group);
   return step === 0 ? -1 : (at + step + count2) % count2;
 }
-var init_keys4 = __esm({
+var init_keys5 = __esm({
   "js/segmented/keys.js"() {
     "use strict";
   }
@@ -16401,12 +18382,12 @@ var init_root = __esm({
   "js/segmented/root.js"() {
     "use strict";
     init_controller();
-    init_constants7();
-    init_state4();
+    init_constants9();
+    init_state5();
     init_read2();
     init_group();
     init_actions2();
-    init_keys4();
+    init_keys5();
     init_roving();
     DIRECT_KEYS = { "+": "include", "=": "include", "-": "exclude" };
     SegmentedRoot = class extends Controller {
@@ -16548,15 +18529,15 @@ __export(segmented_exports, {
   setSegmentedItems: () => setSegmentedItems,
   setSegmentedTri: () => setSegmentedTri,
   setSegmentedValues: () => setSegmentedValues,
-  valueOf: () => valueOf
+  valueOf: () => valueOf2
 });
 var init_segmented = __esm({
   "js/segmented.js"() {
     "use strict";
-    init_constants7();
+    init_constants9();
     init_read2();
     init_plate();
-    init_api();
+    init_api2();
     init_items2();
     init_root();
     init_fit2();
@@ -16785,7 +18766,7 @@ async function regionRefresh(el16) {
 var init_region = __esm({
   "js/auto-refresh/region.js"() {
     "use strict";
-    init_constants5();
+    init_constants7();
   }
 });
 
@@ -16800,7 +18781,7 @@ var init_base2 = __esm({
     init_strings();
     init_bar();
     init_chooser();
-    init_constants5();
+    init_constants7();
     init_labels();
     init_region();
     init_words();
@@ -17007,13 +18988,13 @@ var init_base2 = __esm({
 
 // js/auto-refresh/controller.js
 var RefreshController;
-var init_controller5 = __esm({
+var init_controller7 = __esm({
   "js/auto-refresh/controller.js"() {
     "use strict";
     init_live_options();
     init_strings();
     init_base2();
-    init_constants5();
+    init_constants7();
     init_narrow();
     RefreshController = class extends RefreshBase {
       connect() {
@@ -17161,12 +19142,12 @@ function attachRefresh(root = document, { now = () => Date.now() } = {}) {
   return attachAll(root, REFRESH, RefreshController, { now });
 }
 var refreshOf;
-var init_api2 = __esm({
+var init_api3 = __esm({
   "js/auto-refresh/api.js"() {
     "use strict";
     init_controller();
-    init_constants5();
-    init_controller5();
+    init_constants7();
+    init_controller7();
     refreshOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -17192,8 +19173,8 @@ __export(auto_refresh_exports, {
 var init_auto_refresh = __esm({
   "js/auto-refresh.js"() {
     "use strict";
-    init_constants5();
-    init_api2();
+    init_constants7();
+    init_api3();
   }
 });
 
@@ -17236,7 +19217,7 @@ function configureTheme(next2) {
   if (next2.storageKey !== void 0) config2.storageKey = next2.storageKey;
 }
 var THEME_EVENT, BEFORE_THEME_EVENT, UNKNOWN_THEME_EVENT, PENDING_THEME_ATTRIBUTE, PREVIEW_THEME_ATTRIBUTE, config2, rootOf, NAMES, DARK, isTheme, asTheme, isDropped;
-var init_values10 = __esm({
+var init_values11 = __esm({
   "js/theme-core/values.js"() {
     "use strict";
     init_theme_registry();
@@ -17299,7 +19280,7 @@ var init_report = __esm({
   "js/theme-core/report.js"() {
     "use strict";
     init_strings();
-    init_values10();
+    init_values11();
     REPORT_KEY = "kp-themes-unknown-reported";
     reported2 = /* @__PURE__ */ new Set();
   }
@@ -17321,7 +19302,7 @@ var init_read3 = __esm({
   "js/theme-core/read.js"() {
     "use strict";
     init_theme_registry();
-    init_values10();
+    init_values11();
     init_report();
   }
 });
@@ -17364,7 +19345,7 @@ var init_preview = __esm({
   "js/theme-core/preview.js"() {
     "use strict";
     init_theme_registry();
-    init_values10();
+    init_values11();
   }
 });
 
@@ -17391,22 +19372,22 @@ var init_store2 = __esm({
   "js/theme-core/store.js"() {
     "use strict";
     init_theme_registry();
-    init_values10();
+    init_values11();
     init_report();
   }
 });
 
 // js/theme-core/apply.js
-function applyTheme(theme, { root, darkClass, strict = false, announce: announce5 = true } = {}) {
+function applyTheme(theme, { root, darkClass, strict = false, announce: announce6 = true } = {}) {
   const known4 = asTheme(theme);
   if (known4 === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
   const next2 = known4 ?? DEFAULT_THEME;
   const element = rootOf(root);
   if (known4 === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next2, "apply", element);
   const previous = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme"));
-  if (announce5 && previous !== next2) {
-    const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
-    if (!element.dispatchEvent(ask)) {
+  if (announce6 && previous !== next2) {
+    const ask2 = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
+    if (!element.dispatchEvent(ask2)) {
       endPreview({ root: element, darkClass });
       return previous ?? DEFAULT_THEME;
     }
@@ -17416,7 +19397,7 @@ function applyTheme(theme, { root, darkClass, strict = false, announce: announce
   element.removeAttribute(PENDING_THEME_ATTRIBUTE);
   const cls = darkClass === void 0 ? config2.darkClass : darkClass;
   if (cls) element.classList.toggle(cls, DARK.has(next2));
-  if (announce5 && previous !== next2) {
+  if (announce6 && previous !== next2) {
     element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next2, previous, root: element } }));
   }
   return next2;
@@ -17428,7 +19409,7 @@ var init_apply = __esm({
   "js/theme-core/apply.js"() {
     "use strict";
     init_theme_registry();
-    init_values10();
+    init_values11();
     init_preview();
     init_report();
     init_store2();
@@ -17466,7 +19447,7 @@ function onThemeChange(listener, { crossTab = true, root, key } = {}) {
 var init_subscribe = __esm({
   "js/theme-core/subscribe.js"() {
     "use strict";
-    init_values10();
+    init_values11();
     init_apply();
     init_read3();
     init_report();
@@ -17501,7 +19482,7 @@ var init_theme_core = __esm({
   "js/theme-core.js"() {
     "use strict";
     init_theme_registry();
-    init_values10();
+    init_values11();
     init_read3();
     init_apply();
     init_preview();
@@ -17512,7 +19493,7 @@ var init_theme_core = __esm({
 
 // js/theme-picker/values.js
 var PICKER, OPTION, STATUS2, PICK_EVENT, PREVIEW_EVENT, PREVIEW_LEAVE_MS;
-var init_values11 = __esm({
+var init_values12 = __esm({
   "js/theme-picker/values.js"() {
     "use strict";
     PICKER = "[data-kp-theme-picker]";
@@ -17555,7 +19536,7 @@ var init_marks2 = __esm({
   "js/theme-picker/marks.js"() {
     "use strict";
     init_strings();
-    init_values11();
+    init_values12();
     saveFailedText = () => getStrings().themeSaveFailed;
   }
 });
@@ -17621,7 +19602,7 @@ var init_preview2 = __esm({
     "use strict";
     init_theme_core();
     init_controller();
-    init_values11();
+    init_values12();
     init_register2();
     PickerPreview = class extends Controller {
       /**
@@ -17702,11 +19683,11 @@ function nameTrigger(picker, theme) {
   trigger.setAttribute("aria-label", `${trigger.dataset.kpThemeLabel ?? ""}: ${name}`);
 }
 var ThemePicker;
-var init_controller6 = __esm({
+var init_controller8 = __esm({
   "js/theme-picker/controller.js"() {
     "use strict";
     init_theme_core();
-    init_values11();
+    init_values12();
     init_marks2();
     init_preview2();
     ThemePicker = class extends PickerPreview {
@@ -17871,9 +19852,9 @@ var init_theme_picker = __esm({
     init_controller();
     init_theme_core();
     init_marks2();
-    init_controller6();
-    init_values11();
-    init_values11();
+    init_controller8();
+    init_values12();
+    init_values12();
     init_markup();
   }
 });
@@ -17903,7 +19884,7 @@ var init_draw2 = __esm({
 
 // js/steplist/values.js
 var STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEPLIST_EVENT, STEP_STATES, FRESH_REGION_DELAY;
-var init_values12 = __esm({
+var init_values13 = __esm({
   "js/steplist/values.js"() {
     "use strict";
     STEPLIST_SELECTOR = ".kp-steplist";
@@ -17925,7 +19906,7 @@ var known, span2;
 var init_dom = __esm({
   "js/steplist/dom.js"() {
     "use strict";
-    init_values12();
+    init_values13();
     known = (state12) => STEP_STATES.includes(
       /** @type {any} */
       state12
@@ -17962,7 +19943,7 @@ var StepRegion, regions;
 var init_region2 = __esm({
   "js/steplist/region.js"() {
     "use strict";
-    init_values12();
+    init_values13();
     init_dom();
     StepRegion = class {
       /** @param {HTMLElement} element */
@@ -17999,7 +19980,7 @@ var init_item2 = __esm({
   "js/steplist/item.js"() {
     "use strict";
     init_strings();
-    init_values12();
+    init_values13();
     init_dom();
     init_region2();
     stateWord = (state12) => {
@@ -18019,7 +20000,7 @@ var init_item2 = __esm({
        * @param {{ announce?: boolean }} [options]
        * @returns {StepState}
        */
-      sync({ announce: announce5 = false } = {}) {
+      sync({ announce: announce6 = false } = {}) {
         const { item } = this;
         const state12 = known(item.getAttribute("data-state"));
         if (item.getAttribute("data-state") !== state12) item.setAttribute("data-state", state12);
@@ -18030,22 +20011,22 @@ var init_item2 = __esm({
         const previous = this.state;
         this.state = state12;
         const list = item.closest(STEPLIST_SELECTOR);
-        if (list && announce5 && previous !== void 0 && previous !== state12) this.announce(list, state12, previous);
+        if (list && announce6 && previous !== void 0 && previous !== state12) this.announce(list, state12, previous);
         return state12;
       }
       /** The mark, with the theme's spinner on the running step. @param {StepState} state */
       drawMark(state12) {
-        let mark = this.item.querySelector(":scope > .kp-steplist__mark");
-        if (!mark) {
-          mark = span2("kp-steplist__mark");
-          this.item.prepend(mark);
+        let mark2 = this.item.querySelector(":scope > .kp-steplist__mark");
+        if (!mark2) {
+          mark2 = span2("kp-steplist__mark");
+          this.item.prepend(mark2);
         }
-        mark.setAttribute("aria-hidden", "true");
-        const spinning = mark.querySelector(".kp-spinner");
+        mark2.setAttribute("aria-hidden", "true");
+        const spinning = mark2.querySelector(".kp-spinner");
         if (state12 === "running" && !spinning) {
           const spinner2 = span2("kp-spinner");
           spinner2.setAttribute("aria-hidden", "true");
-          mark.append(spinner2);
+          mark2.append(spinner2);
         } else if (state12 !== "running" && spinning) spinning.remove();
       }
       /** The state's word, visually hidden, after the title. @param {StepState} state */
@@ -18077,7 +20058,7 @@ var init_item2 = __esm({
 
 // js/steplist/controller.js
 var StepListController;
-var init_controller7 = __esm({
+var init_controller9 = __esm({
   "js/steplist/controller.js"() {
     "use strict";
     init_controller();
@@ -18136,10 +20117,10 @@ function setStep(list, key, change2) {
   syncItem(item, { announce: true });
   return item;
 }
-var init_build3 = __esm({
+var init_build5 = __esm({
   "js/steplist/build.js"() {
     "use strict";
-    init_values12();
+    init_values13();
     init_dom();
     init_item2();
   }
@@ -18163,10 +20144,10 @@ var init_steplist = __esm({
   "js/steplist.js"() {
     "use strict";
     init_controller();
-    init_controller7();
-    init_values12();
-    init_values12();
-    init_build3();
+    init_controller9();
+    init_values13();
+    init_values13();
+    init_build5();
   }
 });
 
@@ -18212,7 +20193,7 @@ var init_scope = __esm({
 
 // js/kpi/values.js
 var SPARK, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, KPI_STRIP, TILE_LABEL, SPARK_BOX, SVG_NS, STRIP_DEFAULTS, FALLBACK_FONT_PX, LABEL_SLACK_PX, FULL_PERCENT;
-var init_values13 = __esm({
+var init_values14 = __esm({
   "js/kpi/values.js"() {
     "use strict";
     SPARK = "svg[data-kp-spark]";
@@ -18260,7 +20241,7 @@ var init_spark = __esm({
   "js/kpi/spark.js"() {
     "use strict";
     init_scope();
-    init_values13();
+    init_values14();
     numbersIn = (text) => (text ?? "").split(/[\s,]+/).filter(Boolean).map(Number);
     SparklineWatch = class extends ScopeWatch {
       connect() {
@@ -18304,7 +20285,7 @@ var FLIPPED, KpiToggles;
 var init_toggle = __esm({
   "js/kpi/toggle.js"() {
     "use strict";
-    init_values13();
+    init_values14();
     init_scope();
     FLIPPED = /* @__PURE__ */ new WeakSet();
     KpiToggles = class extends ScopeWatch {
@@ -18400,7 +20381,7 @@ function fitKpiStrip(strip, width) {
 var init_columns2 = __esm({
   "js/kpi/columns.js"() {
     "use strict";
-    init_values13();
+    init_values14();
   }
 });
 
@@ -18409,7 +20390,7 @@ var KpiStrips;
 var init_strips = __esm({
   "js/kpi/strips.js"() {
     "use strict";
-    init_values13();
+    init_values14();
     init_columns2();
     init_scope();
     KpiStrips = class extends ScopeWatch {
@@ -18473,18 +20454,18 @@ var init_strips = __esm({
 });
 
 // js/kpi/meter.js
-function meterParts(value, mark = null) {
+function meterParts(value, mark2 = null) {
   const measured2 = value != null && Number.isFinite(value);
   const v = measured2 ? Math.max(
     0,
     /** @type {number} */
     value
   ) : 0;
-  const marked = mark != null && Number.isFinite(mark);
+  const marked = mark2 != null && Number.isFinite(mark2);
   const m = marked ? Math.max(
     0,
     /** @type {number} */
-    mark
+    mark2
   ) : 0;
   return {
     measured: measured2,
@@ -18495,16 +20476,16 @@ function meterParts(value, mark = null) {
     now: measured2 ? Math.min(FULL_PERCENT, Math.round(v * FULL_PERCENT)) : null
   };
 }
-function meterText(value, mark = null, { unit: unit2 = "%", label: label2, markLabel = "" } = {}) {
+function meterText(value, mark2 = null, { unit: unit2 = "%", label: label2, markLabel = "" } = {}) {
   const strings = getStrings();
   if (value == null || !Number.isFinite(value)) return strings.meterNotMeasured;
   const share = (v) => `${Math.round(v * FULL_PERCENT)}${unit2}`;
   let text = `${share(value)} ${label2 ?? strings.meterUsed}`.trim();
-  if (mark != null && Number.isFinite(mark)) text += `; ${share(mark)} ${markLabel}`.trimEnd();
+  if (mark2 != null && Number.isFinite(mark2)) text += `; ${share(mark2)} ${markLabel}`.trimEnd();
   return text;
 }
-function setMeter(el16, { value = null, mark = null, tone = null, label: label2, markLabel = "", loading = false }) {
-  const parts2 = meterParts(loading ? null : value, loading ? null : mark);
+function setMeter(el16, { value = null, mark: mark2 = null, tone = null, label: label2, markLabel = "", loading = false }) {
+  const parts2 = meterParts(loading ? null : value, loading ? null : mark2);
   el16.setAttribute("role", "meter");
   el16.setAttribute("aria-valuemin", "0");
   el16.setAttribute("aria-valuemax", String(FULL_PERCENT));
@@ -18519,7 +20500,7 @@ function setMeter(el16, { value = null, mark = null, tone = null, label: label2,
   el16.toggleAttribute("data-kp-over", parts2.over);
   if (parts2.now != null) el16.setAttribute("aria-valuenow", String(parts2.now));
   else el16.removeAttribute("aria-valuenow");
-  el16.setAttribute("aria-valuetext", loading ? getStrings().meterMeasuring : meterText(value, mark, { label: label2, markLabel }));
+  el16.setAttribute("aria-valuetext", loading ? getStrings().meterMeasuring : meterText(value, mark2, { label: label2, markLabel }));
   if (tone) el16.setAttribute("data-kp-tone", tone);
   else el16.removeAttribute("data-kp-tone");
   let tick6 = (
@@ -18538,7 +20519,7 @@ function setMeter(el16, { value = null, mark = null, tone = null, label: label2,
     el16.style.setProperty("--kp-mark", String(Math.max(
       0,
       /** @type {number} */
-      mark
+      mark2
     )));
     tick6.toggleAttribute("data-kp-over", parts2.markOver);
   } else el16.style.removeProperty("--kp-mark");
@@ -18547,7 +20528,7 @@ var init_meter = __esm({
   "js/kpi/meter.js"() {
     "use strict";
     init_strings();
-    init_values13();
+    init_values14();
   }
 });
 
@@ -18586,7 +20567,7 @@ var init_kpi = __esm({
     init_spark();
     init_toggle();
     init_strips();
-    init_values13();
+    init_values14();
     init_spark();
     init_meter();
     init_columns2();
@@ -18595,7 +20576,7 @@ var init_kpi = __esm({
 
 // js/hovercard/values.js
 var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, OPEN_DELAY_MS2, CLOSE_DELAY_MS2, TAP_ANSWERED_MS, CONTROL_SELECTOR, ID_RADIX2, ID_RANDOM_START, ID_RANDOM_END;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/hovercard/values.js"() {
     "use strict";
     HOVERCARD_ATTRIBUTE = "data-kp-hovercard";
@@ -18619,7 +20600,7 @@ var init_core2 = __esm({
     "use strict";
     init_top_layer();
     init_controller();
-    init_values14();
+    init_values15();
     made = 0;
     stripped = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== void 0));
     HoverCardCore = class extends Controller {
@@ -18859,7 +20840,7 @@ var HoverCardTouch;
 var init_touch = __esm({
   "js/hovercard/touch.js"() {
     "use strict";
-    init_values14();
+    init_values15();
     init_show();
     HoverCardTouch = class extends HoverCardShow {
       /** Whether a tap on this anchor is the anchor's own (a link, a button, a field). @param {HTMLElement} anchor */
@@ -18902,11 +20883,11 @@ var init_touch = __esm({
 
 // js/hovercard/controller.js
 var HoverCard;
-var init_controller8 = __esm({
+var init_controller10 = __esm({
   "js/hovercard/controller.js"() {
     "use strict";
     init_motion();
-    init_values14();
+    init_values15();
     init_touch();
     HoverCard = class extends HoverCardTouch {
       /**
@@ -19061,8 +21042,8 @@ var init_hovercard = __esm({
   "js/hovercard.js"() {
     "use strict";
     init_controller();
-    init_controller8();
-    init_values14();
+    init_controller10();
+    init_values15();
   }
 });
 
@@ -19150,15 +21131,15 @@ var init_geometry2 = __esm({
 });
 
 // js/tiles/keys.js
-var LETTERS_MS, ROW_GAP_PX, WATCHED5, TileBoard;
-var init_keys5 = __esm({
+var LETTERS_MS, ROW_GAP_PX, WATCHED6, TileBoard;
+var init_keys6 = __esm({
   "js/tiles/keys.js"() {
     "use strict";
     init_controller();
     init_geometry2();
     LETTERS_MS = 700;
     ROW_GAP_PX = 16;
-    WATCHED5 = ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"];
+    WATCHED6 = ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"];
     TileBoard = class extends Controller {
       /** @param {HTMLElement} board @param {{ view: Window & typeof globalThis }} options */
       constructor(board2, options) {
@@ -19177,7 +21158,7 @@ var init_keys5 = __esm({
           if (this.queued) this.view.cancelAnimationFrame(this.queued);
           this.restore();
         });
-        this.observe(new this.view.MutationObserver(() => this.queue())).observe(board2, { childList: true, subtree: true, attributes: true, attributeFilter: WATCHED5 });
+        this.observe(new this.view.MutationObserver(() => this.queue())).observe(board2, { childList: true, subtree: true, attributes: true, attributeFilter: WATCHED6 });
         if (typeof this.view.ResizeObserver === "function") this.observe(new this.view.ResizeObserver(() => this.queue())).observe(board2);
         this.listen(board2, "toggle", () => this.queue(), true);
         this.listen(board2, "focusin", (event) => this.onFocus(event));
@@ -19335,10 +21316,10 @@ function tileSets(root) {
   );
   const grids = [...scope instanceof Element && scope.matches(".kp-tiles") ? [scope] : [], ...scope.querySelectorAll(".kp-tiles")];
   for (const grid2 of grids) {
-    const mark = grid2.closest(TILES_SET);
-    if (!mark || !(grid2 instanceof HTMLElement)) continue;
-    const name = mark.getAttribute("data-kp-tiles-set");
-    const key = name ? `name:${name}` : mark;
+    const mark2 = grid2.closest(TILES_SET);
+    if (!mark2 || !(grid2 instanceof HTMLElement)) continue;
+    const name = mark2.getAttribute("data-kp-tiles-set");
+    const key = name ? `name:${name}` : mark2;
     const list = sets.get(key) ?? [];
     list.push(grid2);
     sets.set(key, list);
@@ -19361,16 +21342,16 @@ function evenTileSet(grids) {
   }
   return tallest;
 }
-var WATCHED6, EASE_MIN_PX, shown, TileSetWatch;
+var WATCHED7, EASE_MIN_PX, shown2, TileSetWatch;
 var init_sets2 = __esm({
   "js/tiles/sets.js"() {
     "use strict";
     init_controller();
     init_motion();
     init_geometry2();
-    WATCHED6 = ["hidden", "open", "class", "data-kp-tiles-set", "data-kp-folding"];
+    WATCHED7 = ["hidden", "open", "class", "data-kp-tiles-set", "data-kp-folding"];
     EASE_MIN_PX = 1;
-    shown = (grids) => grids.flatMap((grid2) => [...grid2.children].filter(visible));
+    shown2 = (grids) => grids.flatMap((grid2) => [...grid2.children].filter(visible));
     TileSetWatch = class extends Controller {
       /** @param {ParentNode} root @param {Window & typeof globalThis} view */
       constructor(root, view) {
@@ -19404,7 +21385,7 @@ var init_sets2 = __esm({
           subtree: true,
           characterData: true,
           attributes: true,
-          attributeFilter: WATCHED6
+          attributeFilter: WATCHED7
         });
         this.listen(
           /** @type {EventTarget} */
@@ -19453,13 +21434,13 @@ var init_sets2 = __esm({
         if (busy && !move) return;
         const from = /* @__PURE__ */ new Map();
         if (busy) {
-          for (const tile of shown(grids)) from.set(tile, tile.getBoundingClientRect().height);
+          for (const tile of shown2(grids)) from.set(tile, tile.getBoundingClientRect().height);
           this.moving.delete(key);
           for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-easing");
           for (const animation of busy) animation.cancel();
         }
         const floor = evenTileSet(grids);
-        const tiles = shown(grids);
+        const tiles = shown2(grids);
         if (!move) return this.remember(tiles);
         for (const tile of tiles) if (!from.has(tile) && this.drawn.has(tile)) from.set(
           tile,
@@ -19573,7 +21554,7 @@ var init_tiles = __esm({
     "use strict";
     init_controller();
     init_geometry2();
-    init_keys5();
+    init_keys6();
     init_sets2();
     init_geometry2();
     init_sets2();
@@ -19582,7 +21563,7 @@ var init_tiles = __esm({
 
 // js/chart/constants.js
 var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART;
-var init_constants9 = __esm({
+var init_constants10 = __esm({
   "js/chart/constants.js"() {
     "use strict";
     CHART = "[data-kp-chart]";
@@ -19920,7 +21901,7 @@ var init_time = __esm({
   "js/chart/time.js"() {
     "use strict";
     init_strings();
-    init_constants9();
+    init_constants10();
     MINUTE = 6e4;
     HOUR = 60 * MINUTE;
     DAY = 24 * HOUR;
@@ -20019,8 +22000,8 @@ var SVGNS, pendingEnds;
 var init_dom2 = __esm({
   "js/chart/dom.js"() {
     "use strict";
-    init_api3();
-    init_constants9();
+    init_api4();
+    init_constants10();
     SVGNS = "http://www.w3.org/2000/svg";
     pendingEnds = [];
   }
@@ -20032,9 +22013,9 @@ var init_group2 = __esm({
   "js/chart/group.js"() {
     "use strict";
     init_stats();
-    init_api3();
+    init_api4();
     init_dom2();
-    init_constants9();
+    init_constants10();
     init_time();
     ChartGroup = class {
       /**
@@ -20276,7 +22257,7 @@ function detachChart(el16) {
   return true;
 }
 var DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, CHART_TIME_UNITS;
-var init_api3 = __esm({
+var init_api4 = __esm({
   "js/chart/api.js"() {
     "use strict";
     init_dom2();
@@ -20752,13 +22733,13 @@ var init_drawing2 = __esm({
         const { strings, time } = chart;
         for (const ev of this.events) {
           const at = Math.min(to, Math.max(from, ev.at));
-          const mark = s(doc, "g", { class: "kp-chart__mark", "data-kp-tone": chart.toneOf(ev), "data-at": at });
-          mark.append(s(doc, "circle", { class: "kp-chart__mark-hit", cx: this.x(at), cy: P.t - MARKS.markRise, r: MARKS.markHit }));
-          mark.append(s(doc, "circle", { class: "kp-chart__mark-dot", cx: this.x(at), cy: P.t - MARKS.markRise, r: MARKS.markDot }));
+          const mark2 = s(doc, "g", { class: "kp-chart__mark", "data-kp-tone": chart.toneOf(ev), "data-at": at });
+          mark2.append(s(doc, "circle", { class: "kp-chart__mark-hit", cx: this.x(at), cy: P.t - MARKS.markRise, r: MARKS.markHit }));
+          mark2.append(s(doc, "circle", { class: "kp-chart__mark-dot", cx: this.x(at), cy: P.t - MARKS.markRise, r: MARKS.markDot }));
           const title = s(doc, "title");
           title.textContent = ev.until != null && ev.until > ev.at ? strings.markBand(ev.label, time(ev.at, "full", {}), time(ev.until, "full", {})) : strings.mark(ev.label, time(ev.at, "full", {}));
-          mark.append(title);
-          this.svg.append(mark);
+          mark2.append(title);
+          this.svg.append(mark2);
         }
       }
       /** Events past the window: an arrow at that edge with their count. */
@@ -20818,7 +22799,7 @@ var init_drawing2 = __esm({
 
 // js/chart/state.js
 var chartState;
-var init_state5 = __esm({
+var init_state6 = __esm({
   "js/chart/state.js"() {
     "use strict";
     chartState = {
@@ -20828,7 +22809,7 @@ var init_state5 = __esm({
 });
 
 // js/chart/plot/base.js
-function buildParts2(doc, strings) {
+function buildParts3(doc, strings) {
   const plot = h(doc, "div", { class: "kp-chart__plot", tabindex: "0", role: "application" });
   const tipTime = h(doc, "b");
   const release2 = h(doc, "button", { type: "button", class: "kp-chart__release", "aria-label": strings.release, title: strings.release }, "\u2715");
@@ -20860,12 +22841,12 @@ var init_base3 = __esm({
   "js/chart/plot/base.js"() {
     "use strict";
     init_controller();
-    init_api3();
+    init_api4();
     init_dom2();
     init_attach4();
-    init_state5();
+    init_state6();
     init_time();
-    init_constants9();
+    init_constants10();
     PlotBase = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
       constructor(host, options) {
@@ -20906,7 +22887,7 @@ var init_base3 = __esm({
         this.items = [];
         this.skeleton = false;
         this.geo = null;
-        this.ui = buildParts2(this.doc, this.strings);
+        this.ui = buildParts3(this.doc, this.strings);
         this.state = /** @type {ChartState} */
         /** @type {unknown} */
         null;
@@ -20989,9 +22970,9 @@ var init_base3 = __esm({
         return true;
       }
       /** Whether the plot shows something new instead of lines (said once, not on every redraw); remembers it. @param {string} shown */
-      showsNew(shown5) {
-        if (shown5 === this.shown) return false;
-        this.shown = shown5;
+      showsNew(shown6) {
+        if (shown6 === this.shown) return false;
+        this.shown = shown6;
         return true;
       }
       /** Show every source again. @returns {boolean} whether some were pressed */
@@ -21343,7 +23324,7 @@ var init_draw3 = __esm({
   "js/chart/plot/draw.js"() {
     "use strict";
     init_dom2();
-    init_constants9();
+    init_constants10();
     init_state_plate();
     init_attach4();
     init_drawing2();
@@ -21510,12 +23491,12 @@ var init_pointer2 = __esm({
       /** A press on an event's mark pins it; anywhere else it starts a brush. @param {PointerEvent} e */
       onDown(e) {
         if (!this.geo || e.button !== 0) return;
-        const mark = (
+        const mark2 = (
           /** @type {Element} */
           e.target.closest?.(".kp-chart__mark")
         );
-        if (mark) {
-          this.pinned = Number(mark.getAttribute("data-at"));
+        if (mark2) {
+          this.pinned = Number(mark2.getAttribute("data-at"));
           this.group.cursor(this.pinned, this.state);
           this.announce();
           return;
@@ -21533,11 +23514,11 @@ var init_pointer2 = __esm({
           this.draw();
           return;
         }
-        const mark = (
+        const mark2 = (
           /** @type {Element} */
           e.target.closest?.(".kp-chart__mark")
         );
-        const t = mark ? Number(mark.getAttribute("data-at")) : this.timeAt(e);
+        const t = mark2 ? Number(mark2.getAttribute("data-at")) : this.timeAt(e);
         if (t == null || t < geo.from || t > geo.to) return;
         this.group.cursor(t, this.state);
       }
@@ -21624,7 +23605,7 @@ var init_pointer2 = __esm({
 
 // js/chart/plot/controller.js
 var PlotChart;
-var init_controller9 = __esm({
+var init_controller11 = __esm({
   "js/chart/plot/controller.js"() {
     "use strict";
     init_selection();
@@ -21755,7 +23736,7 @@ function startChart(chart) {
 var init_plot = __esm({
   "js/chart/plot.js"() {
     "use strict";
-    init_controller9();
+    init_controller11();
   }
 });
 
@@ -21768,13 +23749,13 @@ var init_trend_view = __esm({
     init_kpi();
     init_state_plate();
     init_busy_card();
-    init_state5();
-    init_api3();
+    init_state6();
+    init_api4();
     init_dom2();
     init_attach4();
     init_spark2();
     init_selection();
-    init_constants9();
+    init_constants10();
     TrendView = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
       constructor(host, options) {
@@ -21840,7 +23821,7 @@ var init_trend_view = __esm({
        * @param {number} k
        * @param {boolean} [announce] say it to a screen reader (keys only)
        */
-      show(k, announce5 = false) {
+      show(k, announce6 = false) {
         const { pts, plot, cross, ctx } = this;
         if (pts.length < 2) return;
         const i = Math.max(0, Math.min(pts.length - 1, k));
@@ -21853,16 +23834,16 @@ var init_trend_view = __esm({
         cross.style.insetInlineStart = `${x}px`;
         cross.hidden = false;
         this.placeChip(moment, this.fmt(value, "spark"), x, width);
-        if (announce5) this.live.textContent = `${moment} \xB7 ${this.fmt(value, "readout")}`;
+        if (announce6) this.live.textContent = `${moment} \xB7 ${this.fmt(value, "readout")}`;
       }
       /**
        * The chip over the line, kept inside the trend; the value under the moment when the two do not fit on one line, and in the
        * axis row when even that does not fit.
        * @param {string} moment @param {string} shown @param {number} x @param {number} width
        */
-      placeChip(moment, shown5, x, width) {
+      placeChip(moment, shown6, x, width) {
         const { chip, axis, doc } = this;
-        const words3 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown5)];
+        const words3 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown6)];
         chip.replaceChildren(...words3());
         chip.hidden = false;
         chip.removeAttribute("data-kp-stacked");
@@ -22052,15 +24033,15 @@ var init_trend_control = __esm({
       onKey(event) {
         const n = this.pts.length;
         if (n < 2) return;
-        const shown5 = !this.cross.hidden;
+        const shown6 = !this.cross.hidden;
         const from = this.index ?? n - 1;
         const step = event.shiftKey ? KEY_BIG_STEP2 : 1;
         let to = null;
-        if (event.key === "ArrowLeft") to = shown5 ? from - step : n - 1;
-        else if (event.key === "ArrowRight") to = shown5 ? from + step : n - 1;
+        if (event.key === "ArrowLeft") to = shown6 ? from - step : n - 1;
+        else if (event.key === "ArrowRight") to = shown6 ? from + step : n - 1;
         else if (event.key === "Home") to = 0;
         else if (event.key === "End") to = n - 1;
-        else if (event.key === "Escape" && shown5) {
+        else if (event.key === "Escape" && shown6) {
           event.preventDefault();
           event.stopPropagation();
           this.hide();
@@ -22111,7 +24092,7 @@ var init_spark_control = __esm({
     "use strict";
     init_controller();
     init_kpi();
-    init_api3();
+    init_api4();
     init_dom2();
     init_attach4();
     init_selection();
@@ -22285,10 +24266,10 @@ function trendAxisRow(host) {
   const doc = host.ownerDocument;
   const from = h(doc, "span", { class: "kp-kpi__chart-from" }, BLANK);
   const to = h(doc, "span", { class: "kp-kpi__chart-to" }, BLANK);
-  const read = h(doc, "span", { class: "kp-kpi__chart-read" });
-  read.hidden = true;
-  const row2 = h(doc, "span", { class: "kp-kpi__chart-axis", "aria-hidden": "true" }, from, to, read);
-  return { row: row2, from, to, read };
+  const read2 = h(doc, "span", { class: "kp-kpi__chart-read" });
+  read2.hidden = true;
+  const row2 = h(doc, "span", { class: "kp-kpi__chart-axis", "aria-hidden": "true" }, from, to, read2);
+  return { row: row2, from, to, read: read2 };
 }
 function trendWords(pts, series, ctx) {
   const step = series?.step ?? (pts.length > 1 ? pts[pts.length - 1][0] - pts[pts.length - 2][0] : void 0);
@@ -22427,10 +24408,10 @@ var init_attach4 = __esm({
     "use strict";
     init_locale();
     init_group2();
-    init_constants9();
+    init_constants10();
     init_words2();
     init_time();
-    init_api3();
+    init_api4();
     init_spark2();
     init_plot();
     init_stats();
@@ -22482,13 +24463,13 @@ __export(chart_exports, {
 var init_chart = __esm({
   "js/chart.js"() {
     "use strict";
-    init_constants9();
+    init_constants10();
     init_words2();
     init_stats();
     init_format();
     init_selection();
     init_time();
-    init_api3();
+    init_api4();
     init_attach4();
   }
 });
@@ -22668,11 +24649,11 @@ function planFold({ widths: widths2, gap, room, moreWidth, keep = [] }) {
   return fits.map((f) => !f);
 }
 function planSeparators(plan, seps) {
-  const shown5 = plan.map((folds2, i) => !folds2 && !seps[i]);
+  const shown6 = plan.map((folds2, i) => !folds2 && !seps[i]);
   if (!plan.some((folds2, i) => folds2 && !seps[i])) return plan.map((folds2, i) => seps[i] ? false : folds2);
   return plan.map((folds2, i) => {
     if (!seps[i]) return folds2;
-    return !(shown5.slice(0, i).includes(true) && shown5.slice(i + 1).includes(true));
+    return !(shown6.slice(0, i).includes(true) && shown6.slice(i + 1).includes(true));
   });
 }
 var init_plan = __esm({
@@ -22766,8 +24747,8 @@ var init_core3 = __esm({
       /** What the visible items use of the list, for a register that paints the list itself. */
       publishUsed() {
         const { list, more, view } = this;
-        const shown5 = this.itemsOf().filter((li) => !li.hasAttribute("data-kp-nav-folded"));
-        const last = more.hasAttribute("data-kp-nav-idle") ? shown5[shown5.length - 1] : more;
+        const shown6 = this.itemsOf().filter((li) => !li.hasAttribute("data-kp-nav-folded"));
+        const last = more.hasAttribute("data-kp-nav-idle") ? shown6[shown6.length - 1] : more;
         const box = list.getBoundingClientRect();
         const end = last ? last.getBoundingClientRect() : box;
         const rtl = view.getComputedStyle(list).direction === "rtl";
@@ -22867,7 +24848,7 @@ var init_core3 = __esm({
 
 // js/nav-fold/controller.js
 var NavFold;
-var init_controller10 = __esm({
+var init_controller12 = __esm({
   "js/nav-fold/controller.js"() {
     "use strict";
     init_menu_button();
@@ -22977,7 +24958,7 @@ var init_nav_fold = __esm({
   "js/nav-fold.js"() {
     "use strict";
     init_controller();
-    init_controller10();
+    init_controller12();
     init_read4();
     init_read4();
     init_plan();
@@ -23041,8 +25022,8 @@ function drawTabCount(tab) {
     /** @type {HTMLElement | null} */
     tab.querySelector(":scope > .kp-tab__count")
   );
-  const shown5 = state12 === "loading" || state12 === "error" || state12 === "ready" && (zero || (count2 ?? 0) > 0);
-  if (!shown5) {
+  const shown6 = state12 === "loading" || state12 === "error" || state12 === "ready" && (zero || (count2 ?? 0) > 0);
+  if (!shown6) {
     part7?.remove();
     if (DRAWN.has(tab)) {
       DRAWN.delete(tab);
@@ -23262,7 +25243,7 @@ var init_fit3 = __esm({
 
 // js/tabbar/controller.js
 var TabbarController;
-var init_controller11 = __esm({
+var init_controller13 = __esm({
   "js/tabbar/controller.js"() {
     "use strict";
     init_controller();
@@ -23299,8 +25280,8 @@ var init_controller11 = __esm({
         if (bar.classList.contains("kp-tabbar--static")) return;
         const root = doc.documentElement;
         const publish = () => {
-          const shown5 = view.getComputedStyle(bar).display !== "none";
-          root.style.setProperty(TABBAR_HEIGHT_PROPERTY, shown5 ? `${bar.offsetHeight}px` : "0px");
+          const shown6 = view.getComputedStyle(bar).display !== "none";
+          root.style.setProperty(TABBAR_HEIGHT_PROPERTY, shown6 ? `${bar.offsetHeight}px` : "0px");
         };
         if (typeof ResizeObserver !== "undefined") this.observe(new ResizeObserver(publish)).observe(bar);
         this.listen(view, "resize", publish);
@@ -23416,7 +25397,7 @@ var init_tabbar = __esm({
   "js/tabbar.js"() {
     "use strict";
     init_controller();
-    init_controller11();
+    init_controller13();
     init_badge();
     init_badge();
     init_count3();
@@ -23430,7 +25411,7 @@ function markCursor(row2, on) {
   if (on) row2.setAttribute("aria-current", "true");
   else row2.removeAttribute("aria-current");
 }
-var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf2, boxOf, keyOfRow, labelOfRow, shown2, tickable;
+var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf2, boxOf, keyOfRow, labelOfRow, shown3, tickable;
 var init_rows = __esm({
   "js/row-select/rows.js"() {
     "use strict";
@@ -23463,14 +25444,14 @@ var init_rows = __esm({
       const named = row2.dataset.kpRowLabel ?? box?.getAttribute("aria-label")?.replace(/^select\s+/i, "");
       return (named ?? row2.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, LABEL_MAX);
     };
-    shown2 = (row2) => !row2.hidden && !row2.closest("[hidden]");
+    shown3 = (row2) => !row2.hidden && !row2.closest("[hidden]");
     tickable = (box) => !box.disabled && box.getAttribute("aria-disabled") !== "true";
   }
 });
 
 // js/context-menu/values.js
 var CONTEXT_MENU, INNER, ANCHOR_CLASS, NO_CHILD, OWN_PRESS, PRESS_SLOP_PX, KEY_ECHO_MS, KEY_INSET_PX, CONTEXT_OPEN_EVENT;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/context-menu/values.js"() {
     "use strict";
     init_rows();
@@ -23505,11 +25486,11 @@ var init_anchor = __esm({
   "js/context-menu/anchor.js"() {
     "use strict";
     init_controller();
-    init_constants6();
-    init_controller4();
+    init_constants8();
+    init_controller6();
     init_model();
     init_open();
-    init_values15();
+    init_values16();
     anchors = /* @__PURE__ */ new WeakMap();
     ContextAnchor = class _ContextAnchor extends Controller {
       /** @param {HTMLElement} wrapper @param {Record<string, unknown>} [options] */
@@ -23643,14 +25624,14 @@ function menuFor(el16) {
   return { groups: typeof own === "function" ? own(el16) : own ?? [], source: null };
 }
 var given, answered, hasItems, ContextMenuRoot;
-var init_controller12 = __esm({
+var init_controller14 = __esm({
   "js/context-menu/controller.js"() {
     "use strict";
     init_controller();
     init_model();
     init_strings();
     init_anchor();
-    init_values15();
+    init_values16();
     given = /* @__PURE__ */ new WeakMap();
     answered = /* @__PURE__ */ new WeakSet();
     hasItems = (groups) => groups.some((group) => group.items.length > 0);
@@ -23810,14 +25791,14 @@ var init_context_menu = __esm({
   "js/context-menu.js"() {
     "use strict";
     init_controller();
-    init_controller12();
-    init_values15();
+    init_controller14();
+    init_values16();
   }
 });
 
 // js/popover-form/constants.js
-var POPOVER_FORM, POPOVER_FORM_PANEL, POPOVER_FORM_PROBLEM, POPOVER_FORM_ACCEPT_EVENT, POPOVER_FORM_OPEN_EVENT, POPOVER_FORM_CLOSE_EVENT, FIELDS;
-var init_constants10 = __esm({
+var POPOVER_FORM, POPOVER_FORM_PANEL, POPOVER_FORM_PROBLEM, POPOVER_FORM_ACCEPT_EVENT, POPOVER_FORM_OPEN_EVENT, POPOVER_FORM_CLOSE_EVENT, FIELDS3;
+var init_constants11 = __esm({
   "js/popover-form/constants.js"() {
     "use strict";
     POPOVER_FORM = "[data-kp-popover-form]";
@@ -23826,7 +25807,7 @@ var init_constants10 = __esm({
     POPOVER_FORM_ACCEPT_EVENT = "kp-popover-form-accept";
     POPOVER_FORM_OPEN_EVENT = "kp-popover-form-open";
     POPOVER_FORM_CLOSE_EVENT = "kp-popover-form-close";
-    FIELDS = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled)';
+    FIELDS3 = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled)';
   }
 });
 
@@ -23844,7 +25825,7 @@ function problemLine(form2) {
   }
   return line;
 }
-function writeProblem(form2, text, field2 = form2.querySelector(FIELDS)) {
+function writeProblem(form2, text, field2 = form2.querySelector(FIELDS3)) {
   const line = problemLine(form2);
   if (!line.id) line.id = `${form2.id || "kp-popover-form"}-problem`;
   line.textContent = text;
@@ -23882,7 +25863,7 @@ async function acceptForm(wrapper, form2, opener) {
   const waits = [];
   const first = (
     /** @type {HTMLInputElement | null} */
-    form2.querySelector(FIELDS)
+    form2.querySelector(FIELDS3)
   );
   const detail = { value: first?.value ?? "", values: valuesOf(form2), form: form2, opener, waitUntil: (p) => void waits.push(p) };
   if (!wrapper.dispatchEvent(new CustomEvent(POPOVER_FORM_ACCEPT_EVENT, { bubbles: true, cancelable: true, detail }))) return false;
@@ -23903,13 +25884,13 @@ var init_accept = __esm({
   "js/popover-form/accept.js"() {
     "use strict";
     init_strings();
-    init_constants10();
+    init_constants11();
   }
 });
 
 // js/popover-form/controller.js
 var idSeq, PopoverFormControl;
-var init_controller13 = __esm({
+var init_controller15 = __esm({
   "js/popover-form/controller.js"() {
     "use strict";
     init_controller();
@@ -23917,7 +25898,7 @@ var init_controller13 = __esm({
     init_covered();
     init_placement();
     init_accept();
-    init_constants10();
+    init_constants11();
     idSeq = 0;
     PopoverFormControl = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
@@ -23971,7 +25952,7 @@ var init_controller13 = __esm({
         this.listenWhileOpen(view);
         const field2 = (
           /** @type {HTMLInputElement | null} */
-          form2.querySelector(FIELDS)
+          form2.querySelector(FIELDS3)
         );
         field2?.focus();
         if (field2 && typeof field2.select === "function" && field2.type !== "range") field2.select();
@@ -24075,16 +26056,16 @@ var init_popover_form = __esm({
   "js/popover-form.js"() {
     "use strict";
     init_controller();
-    init_constants10();
+    init_constants11();
     init_accept();
-    init_controller13();
-    init_constants10();
+    init_controller15();
+    init_constants11();
   }
 });
 
 // js/date-nav/constants.js
-var DATE_NAV, AT_ATTRIBUTE, FOR_ATTRIBUTE, TODAY_ATTRIBUTE, CURRENT_ATTRIBUTE, DATE_NAV_EVENT, DATE_NAV_MODES, DAYS_PER_WEEK, ISO_WEEK_THURSDAY, DAY_MS, SAY_DELAY_MS4;
-var init_constants11 = __esm({
+var DATE_NAV, AT_ATTRIBUTE, FOR_ATTRIBUTE, TODAY_ATTRIBUTE, CURRENT_ATTRIBUTE, DATE_NAV_EVENT, DATE_NAV_MODES, DAYS_PER_WEEK, ISO_WEEK_THURSDAY, DAY_MS, SAY_DELAY_MS5;
+var init_constants12 = __esm({
   "js/date-nav/constants.js"() {
     "use strict";
     DATE_NAV = "[data-kp-date-nav]";
@@ -24098,13 +26079,13 @@ var init_constants11 = __esm({
     DAYS_PER_WEEK = 7;
     ISO_WEEK_THURSDAY = 4;
     DAY_MS = 864e5;
-    SAY_DELAY_MS4 = 60;
+    SAY_DELAY_MS5 = 60;
   }
 });
 
 // js/calendar/constants.js
 var CALENDAR, CALENDAR_PICK_EVENT, CALENDAR_MONTH_EVENT, CALENDAR_RETRY_EVENT, DAY_MS2, DAYS_PER_WEEK2, GRID_WEEKS, GRID_CELLS, MONTHS_PER_YEAR, SUNDAY_REFERENCE;
-var init_constants12 = __esm({
+var init_constants13 = __esm({
   "js/calendar/constants.js"() {
     "use strict";
     CALENDAR = "[data-kp-calendar]";
@@ -24146,7 +26127,7 @@ var init_dates2 = __esm({
   "js/calendar/dates.js"() {
     "use strict";
     init_chart();
-    init_constants12();
+    init_constants13();
     two2 = (n) => String(n).padStart(2, "0");
     isoOf = (y, m, d) => new Date(Date.UTC(y, m - 1, d)).toISOString().slice(0, 10);
     formatDayKey = (iso) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}/${iso.slice(0, 4)}`;
@@ -24267,7 +26248,7 @@ var init_dom3 = __esm({
 
 // js/calendar/state.js
 var state, nextTitleNumber;
-var init_state6 = __esm({
+var init_state7 = __esm({
   "js/calendar/state.js"() {
     "use strict";
     state = { seq: 0 };
@@ -24373,12 +26354,12 @@ function buildCalendar(el16, s2, locale, firstDay) {
   if (!el16.hasAttribute("aria-labelledby") && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-labelledby", title.id);
   return { prev, next: next2, todayButton, title, stateLine, grid: grid2, body, cells, legend, busyText };
 }
-var init_build4 = __esm({
+var init_build6 = __esm({
   "js/calendar/build.js"() {
     "use strict";
-    init_constants12();
+    init_constants13();
     init_dom3();
-    init_state6();
+    init_state7();
   }
 });
 
@@ -24452,10 +26433,10 @@ function targetDay(key, shift, iso, firstDay) {
       return null;
   }
 }
-var init_keys6 = __esm({
+var init_keys7 = __esm({
   "js/calendar/keys.js"() {
     "use strict";
-    init_constants12();
+    init_constants13();
     init_dates2();
   }
 });
@@ -24547,7 +26528,7 @@ var init_plate2 = __esm({
     init_strings();
     init_state_plate();
     init_calm_tones();
-    init_constants12();
+    init_constants13();
     init_dom3();
   }
 });
@@ -24617,7 +26598,7 @@ function paintCalendar(c) {
   syncStatePlate(c);
 }
 var NO_COUNT_TONES, monthKey;
-var init_paint3 = __esm({
+var init_paint4 = __esm({
   "js/calendar/paint.js"() {
     "use strict";
     init_busy2();
@@ -24632,8 +26613,8 @@ var init_paint3 = __esm({
 });
 
 // js/calendar/controller.js
-var WATCHED7, CalendarController;
-var init_controller14 = __esm({
+var WATCHED8, CalendarController;
+var init_controller16 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -24641,15 +26622,15 @@ var init_controller14 = __esm({
     init_strings();
     init_calm_tones();
     init_chart();
-    init_constants12();
+    init_constants13();
     init_busy2();
-    init_build4();
+    init_build6();
     init_day();
     init_dates2();
     init_dom3();
-    init_keys6();
-    init_paint3();
-    WATCHED7 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
+    init_keys7();
+    init_paint4();
+    WATCHED8 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
     CalendarController = class extends Controller {
       /**
        * @param {HTMLElement} host the calendar
@@ -24742,7 +26723,7 @@ var init_controller14 = __esm({
             paintCalendar(this);
           })
         );
-        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED7 });
+        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED8 });
       }
       /** Move by whole months and say so. @param {number} months */
       step(months) {
@@ -24778,12 +26759,12 @@ var init_controller14 = __esm({
         this.moveFocus(to);
       }
       /** @param {number} year @param {number} month @param {boolean} announce */
-      showMonth(year, month, announce5) {
+      showMonth(year, month, announce6) {
         if (this.year === year && this.month === month) return;
         this.year = year;
         this.month = month;
         paintCalendar(this);
-        if (announce5) this.el.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month } }));
+        if (announce6) this.el.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month } }));
       }
       /** @param {string} iso */
       buttonFor(iso) {
@@ -24883,12 +26864,12 @@ function attachCalendars(root = document, options = {}) {
   };
 }
 var calendarOf;
-var init_api4 = __esm({
+var init_api5 = __esm({
   "js/calendar/api.js"() {
     "use strict";
     init_controller();
-    init_constants12();
-    init_controller14();
+    init_constants13();
+    init_controller16();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -24920,15 +26901,15 @@ __export(calendar_exports, {
 var init_calendar2 = __esm({
   "js/calendar.js"() {
     "use strict";
-    init_constants12();
+    init_constants13();
     init_dates2();
-    init_api4();
+    init_api5();
   }
 });
 
 // js/week/constants.js
 var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, WEEK_RETRY_EVENT, GAP, AXIS_HOURS;
-var init_constants13 = __esm({
+var init_constants14 = __esm({
   "js/week/constants.js"() {
     "use strict";
     WEEK = "[data-kp-week]";
@@ -24997,7 +26978,7 @@ function watchArrivals(c) {
     if (!c.motion.gone) c.motion.stop = m.easeSize(c.el);
   });
 }
-function build(c) {
+function build2(c) {
   const doc = c.el.ownerDocument;
   const s2 = c.strings;
   const level = c.el.dataset.kpHeadingLevel ?? "2";
@@ -25038,9 +27019,9 @@ function build(c) {
   c.axis = make5(doc, "div", "kp-week__axis");
   c.axis.setAttribute("aria-hidden", "true");
   for (const hour of AXIS_HOURS) {
-    const mark = make5(doc, "span", "", `${two3(hour)}:00`);
-    mark.style.setProperty("--kp-week-at", String(hour / 24));
-    c.axis.append(mark);
+    const mark2 = make5(doc, "span", "", `${two3(hour)}:00`);
+    mark2.style.setProperty("--kp-week-at", String(hour / 24));
+    c.axis.append(mark2);
   }
   c.grid.append(c.axis);
   c.stateLine = make5(doc, "p", "kp-week__state");
@@ -25083,8 +27064,8 @@ function buildDays(c) {
       make5(doc, "span", "kp-week__num", iso.slice(8, 10)),
       make5(doc, "span", "kp-week__date", dm(iso))
     );
-    const mark = make5(doc, "span", "kp-week__today", s2.weekToday);
-    head.append(mark);
+    const mark2 = make5(doc, "span", "kp-week__today", s2.weekToday);
+    head.append(mark2);
     const track = make5(doc, "div", "kp-week__col");
     const now = make5(doc, "div", "kp-week__now");
     now.setAttribute("role", "separator");
@@ -25107,11 +27088,11 @@ function buildDays(c) {
     c.today.setAttribute("aria-disabled", String(c.start === today));
   }
 }
-var init_build5 = __esm({
+var init_build7 = __esm({
   "js/week/build.js"() {
     "use strict";
     init_calendar2();
-    init_constants13();
+    init_constants14();
     init_helpers2();
   }
 });
@@ -25260,7 +27241,7 @@ var menuModule;
 var init_menu = __esm({
   "js/week/menu.js"() {
     "use strict";
-    init_constants13();
+    init_constants14();
     init_helpers2();
     menuModule = /** @type {Promise<typeof import('../menu-button.js')> | null} */
     null;
@@ -25305,7 +27286,7 @@ function pillFor(c, e) {
 var init_pills = __esm({
   "js/week/pills.js"() {
     "use strict";
-    init_constants13();
+    init_constants14();
     init_helpers2();
   }
 });
@@ -25426,7 +27407,7 @@ function drawBusy(c) {
     void gone.catch(() => layer2.remove()).then(() => {
       if (c.leaving !== gone) return;
       c.leaving = null;
-      if (!c.motion.gone) paint3(c);
+      if (!c.motion.gone) paint4(c);
     });
     return;
   }
@@ -25441,7 +27422,7 @@ function drawBusy(c) {
   placeBusy(c);
   c.frame.append(layer);
 }
-function paint3(c) {
+function paint4(c) {
   const s2 = c.strings;
   const doc = c.el.ownerDocument;
   const byDay = new Map(c.cols.map((col) => [
@@ -25589,15 +27570,15 @@ function tick2(c) {
     }
     for (const item of col.items) item.button.toggleAttribute("data-kp-past", item.ms < now);
   }
-  if (c.upcoming.on && c.upcoming.items.some((item) => item.ms < now)) paint3(c);
+  if (c.upcoming.on && c.upcoming.items.some((item) => item.ms < now)) paint4(c);
 }
-var init_paint4 = __esm({
+var init_paint5 = __esm({
   "js/week/paint.js"() {
     "use strict";
     init_calendar2();
     init_state_plate();
     init_busy3();
-    init_constants13();
+    init_constants14();
     init_helpers2();
     init_menu();
     init_pills();
@@ -25607,7 +27588,7 @@ var init_paint4 = __esm({
 
 // js/week/state.js
 var weeks;
-var init_state7 = __esm({
+var init_state8 = __esm({
   "js/week/state.js"() {
     "use strict";
     weeks = /* @__PURE__ */ new WeakMap();
@@ -25621,7 +27602,7 @@ function setWeekEvents(el16, events) {
   c.events = events;
   if (c.state === "loading" || c.state === "empty" && events.length) c.state = "ready";
   else if (c.state === "ready" && !events.length) c.state = "empty";
-  paint3(c);
+  paint4(c);
 }
 function setWeekState(el16, state12, words3 = "", { text = "", art = null } = {}) {
   const c = weeks.get(el16);
@@ -25631,14 +27612,14 @@ function setWeekState(el16, state12, words3 = "", { text = "", art = null } = {}
   c.stateLine.dataset.kpWords = words3;
   c.plateText = text;
   c.plateArt = art;
-  paint3(c);
+  paint4(c);
 }
 function setWeekStart(el16, iso) {
   const c = weeks.get(el16);
   if (!c) return;
   c.start = iso;
   buildDays(c);
-  paint3(c);
+  paint4(c);
 }
 function setWeekLegend(el16, entries2) {
   const c = weeks.get(el16);
@@ -25656,18 +27637,18 @@ function setWeekLegend(el16, entries2) {
   );
   c.legend.hidden = entries2.length === 0;
 }
-var init_api5 = __esm({
+var init_api6 = __esm({
   "js/week/api.js"() {
     "use strict";
-    init_build5();
+    init_build7();
     init_helpers2();
-    init_paint4();
-    init_state7();
+    init_paint5();
+    init_state8();
   }
 });
 
 // js/date-nav/link.js
-function driveTarget(nav, range, announce5) {
+function driveTarget(nav, range, announce6) {
   const id = nav.getAttribute(FOR_ATTRIBUTE);
   if (!id) return;
   const target = nav.ownerDocument.getElementById(id);
@@ -25677,13 +27658,13 @@ function driveTarget(nav, range, announce5) {
   }
   if (target.hasAttribute("data-kp-week")) {
     setWeekStart(target, range.start);
-    if (announce5) target.dispatchEvent(new CustomEvent(WEEK_RANGE_EVENT, { bubbles: true, detail: { start: range.start, source: "date-nav" } }));
+    if (announce6) target.dispatchEvent(new CustomEvent(WEEK_RANGE_EVENT, { bubbles: true, detail: { start: range.start, source: "date-nav" } }));
     return;
   }
   if (target.hasAttribute("data-kp-calendar")) {
     const [year = 0, month = 1] = range.at.split("-").map(Number);
     calendarMonth(target, { year, month });
-    if (announce5) target.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month, source: "date-nav" } }));
+    if (announce6) target.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month, source: "date-nav" } }));
     return;
   }
   console.warn(`kp-date-nav: #${id} is neither a week agenda (data-kp-week) nor a calendar (data-kp-calendar)`);
@@ -25691,11 +27672,11 @@ function driveTarget(nav, range, announce5) {
 var init_link2 = __esm({
   "js/date-nav/link.js"() {
     "use strict";
-    init_api4();
-    init_constants12();
     init_api5();
     init_constants13();
-    init_constants11();
+    init_api6();
+    init_constants14();
+    init_constants12();
   }
 });
 
@@ -25727,16 +27708,16 @@ function labelOf4(range, names, weekWords) {
   const from = formatDayKey(range.start).slice(0, 5);
   return weekWords(isoWeek(shiftDay(range.start, MID_WEEK)), from, formatDayKey(range.end));
 }
-var MID_WEEK, modeOf2, isDay, holds2;
+var MID_WEEK, modeOf2, isDay, holds3;
 var init_range = __esm({
   "js/date-nav/range.js"() {
     "use strict";
     init_dates2();
-    init_constants11();
+    init_constants12();
     MID_WEEK = 3;
     modeOf2 = (text) => text === "week" || text === "day" ? text : "month";
     isDay = (text) => typeof text === "string" && /^\d{4}-\d{2}-\d{2}$/.test(text) && !Number.isNaN(Date.parse(`${text}T00:00:00Z`));
-    holds2 = (range, day2) => range.start <= day2 && day2 <= range.end;
+    holds3 = (range, day2) => range.start <= day2 && day2 <= range.end;
   }
 });
 
@@ -25748,7 +27729,7 @@ function make6(doc, tag, className, text) {
   return el16;
 }
 var KEYS, DateNavControl;
-var init_controller15 = __esm({
+var init_controller17 = __esm({
   "js/date-nav/controller.js"() {
     "use strict";
     init_controller();
@@ -25757,7 +27738,7 @@ var init_controller15 = __esm({
     init_live_options();
     init_locale();
     init_strings();
-    init_constants11();
+    init_constants12();
     init_link2();
     init_range();
     KEYS = { PageUp: "prev", PageDown: "next", Home: "today" };
@@ -25841,7 +27822,7 @@ var init_controller15 = __esm({
         const unit2 = s2.dateNavUnits[range.mode];
         const locale = resolveLocale(this.host.dataset.kpLocale, this.host);
         const text = labelOf4(range, calendarNames(s2, DEFAULT_STRINGS, locale), s2.dateNavWeekLabel);
-        const current2 = holds2(range, this.todayDay());
+        const current2 = holds3(range, this.todayDay());
         this.label.replaceChildren(text);
         if (current2) this.label.append(" ", make6(this.host.ownerDocument, "span", "kp-date-nav__current", s2.dateNavCurrent));
         this.host.toggleAttribute(CURRENT_ATTRIBUTE, current2);
@@ -25876,7 +27857,7 @@ var init_controller15 = __esm({
       say(text) {
         const { status } = this;
         status.textContent = "";
-        setTimeout(() => status.textContent = text, SAY_DELAY_MS4);
+        setTimeout(() => status.textContent = text, SAY_DELAY_MS5);
       }
       /** Show a day without an event (the page asked). @param {string} day */
       show(day2) {
@@ -25920,19 +27901,19 @@ var init_date_nav = __esm({
   "js/date-nav.js"() {
     "use strict";
     init_controller();
-    init_constants11();
-    init_controller15();
-    init_constants11();
+    init_constants12();
+    init_controller17();
+    init_constants12();
   }
 });
 
 // js/row-undo/constants.js
-var ROW_DELETE, ROW, NAME_ATTRIBUTE, DELETING_ATTRIBUTE, TABLE_HIDDEN_ATTRIBUTE, ROW_DELETE_EVENT, ROW_COMMIT_EVENT, ROW_UNDO_EVENT;
-var init_constants14 = __esm({
+var ROW_DELETE, ROW2, NAME_ATTRIBUTE, DELETING_ATTRIBUTE, TABLE_HIDDEN_ATTRIBUTE, ROW_DELETE_EVENT, ROW_COMMIT_EVENT, ROW_UNDO_EVENT;
+var init_constants15 = __esm({
   "js/row-undo/constants.js"() {
     "use strict";
     ROW_DELETE = "[data-kp-row-delete]";
-    ROW = "[data-kp-row-key], tr, li";
+    ROW2 = "[data-kp-row-key], tr, li";
     NAME_ATTRIBUTE = "data-kp-row-name";
     DELETING_ATTRIBUTE = "data-kp-row-deleting";
     TABLE_HIDDEN_ATTRIBUTE = "data-kp-row-hidden";
@@ -25955,7 +27936,7 @@ function clearDelay(attribute, fallback2) {
   ) * (CLEAR_UNITS[match[2] ?? "s"] ?? 1e3);
 }
 var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, CLEAR_AFTER_MS, CLEAR_UNITS, COPY_EVENT, COPY_FAILED_EVENT;
-var init_constants15 = __esm({
+var init_constants16 = __esm({
   "js/patterns/constants.js"() {
     "use strict";
     COPY = "[data-kp-copy]";
@@ -26042,7 +28023,7 @@ var reasonOf;
 var init_secret_read = __esm({
   "js/patterns/secret-read.js"() {
     "use strict";
-    init_constants15();
+    init_constants16();
     reasonOf = (error, s2) => error instanceof Error ? error.message : typeof error === "string" ? error : s2.secretNoSource;
   }
 });
@@ -26092,21 +28073,21 @@ var init_clipboard = __esm({
   "js/patterns/clipboard.js"() {
     "use strict";
     init_strings();
-    init_constants15();
+    init_constants16();
   }
 });
 
 // js/patterns/secret-base.js
-var SAY_DELAY_MS5, TICK_MS3, LAST_CALL_SECONDS, SecretBase;
+var SAY_DELAY_MS6, TICK_MS3, LAST_CALL_SECONDS, SecretBase;
 var init_secret_base = __esm({
   "js/patterns/secret-base.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_clipboard();
-    init_constants15();
+    init_constants16();
     init_secret_api();
-    SAY_DELAY_MS5 = 30;
+    SAY_DELAY_MS6 = 30;
     TICK_MS3 = 1e3;
     LAST_CALL_SECONDS = 10;
     SecretBase = class extends Controller {
@@ -26148,7 +28129,7 @@ var init_secret_base = __esm({
         const spoken = this.spoken;
         if (!spoken) return;
         spoken.textContent = "";
-        window.setTimeout(() => spoken.textContent = text, SAY_DELAY_MS5);
+        window.setTimeout(() => spoken.textContent = text, SAY_DELAY_MS6);
       }
       /** Count down from now, once a second, unless the value stays shown. @param {() => void} tick */
       startTicking(tick6) {
@@ -26166,8 +28147,8 @@ var init_secret_base = __esm({
         drain.style.removeProperty("animation");
       }
       /** Tell the page the value was shown or hidden. @param {boolean} shown @param {string} reason */
-      announce(shown5, reason) {
-        this.host.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: shown5, reason } }));
+      announce(shown6, reason) {
+        this.host.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: shown6, reason } }));
       }
       /**
        * Copy `read()`'s text: the button says so, the page hears it (never the value itself), and the clipboard is emptied again
@@ -26177,10 +28158,10 @@ var init_secret_base = __esm({
        * @param {string} name what the announcement calls the field
        * @param {(idle: string) => void} settle puts the button's own words back: the ones it had before the copy
        */
-      async copyOut(copy3, read, name, settle3) {
+      async copyOut(copy3, read2, name, settle3) {
         let text = "";
         try {
-          text = await read();
+          text = await read2();
           await navigator.clipboard.writeText(text);
         } catch (error) {
           copy3.dataset.kpCopyFailed = "";
@@ -26231,14 +28212,14 @@ function buildLine2(field2, built) {
   built.push(spoken);
   return { line, words: words3, drain, spoken };
 }
-function actionsOf(field2, before, built) {
+function actionsOf(field2, before2, built) {
   let actions = (
     /** @type {HTMLElement | null} */
     field2.querySelector(":scope > .kp-secret__actions")
   );
   if (!actions) {
     actions = make7(field2.ownerDocument, "div", "kp-secret__actions");
-    before.after(actions);
+    before2.after(actions);
     built.push(actions);
   }
   return actions;
@@ -26340,7 +28321,7 @@ function buildEntry(field2, name, built) {
   if (!input.hasAttribute("aria-label") && !input.id) input.setAttribute("aria-label", name);
   return { entry, input, authored };
 }
-function buildInput(field2, name, built) {
+function buildInput2(field2, name, built) {
   const { entry, input, authored } = buildEntry(field2, name, built);
   const actions = actionsOf(field2, entry, built);
   const button6 = (className, marker) => {
@@ -26594,9 +28575,9 @@ var init_secret_display = __esm({
       /** @param {string} text @param {string} reason */
       showText(text, reason) {
         const { host: field2, parts: parts2 } = this;
-        const shown5 = make7(this.doc, "span", "kp-secret__text");
-        shown5.textContent = text;
-        parts2.value.replaceChildren(shown5);
+        const shown6 = make7(this.doc, "span", "kp-secret__text");
+        shown6.textContent = text;
+        parts2.value.replaceChildren(shown6);
         parts2.value.classList.remove("kp-masked");
         parts2.value.tabIndex = 0;
         field2.toggleAttribute("data-kp-secret-overflow", parts2.value.scrollWidth > parts2.value.clientWidth + 1);
@@ -26647,8 +28628,8 @@ var init_secret_display = __esm({
       onCopy(copy3) {
         if (this.disabledWhy() !== void 0) return;
         const name = this.host.getAttribute("aria-label") ?? this.s.secretLabel;
-        const read = () => this.state === "shown" ? this.parts.value.textContent ?? "" : this.read("copy");
-        void this.copyOut(copy3, read, name, (idle) => {
+        const read2 = () => this.state === "shown" ? this.parts.value.textContent ?? "" : this.read("copy");
+        void this.copyOut(copy3, read2, name, (idle) => {
           copy3.textContent = idle;
           delete copy3.dataset.kpCopied;
         });
@@ -26663,7 +28644,7 @@ var init_secret_input = __esm({
   "js/patterns/secret-input.js"() {
     "use strict";
     init_live_options();
-    init_constants15();
+    init_constants16();
     init_secret_api();
     init_secret_base();
     init_secret_parts();
@@ -26680,7 +28661,7 @@ var init_secret_input = __esm({
       }
       connect() {
         const field2 = this.host;
-        this.parts = buildInput(field2, this.name, this.built);
+        this.parts = buildInput2(field2, this.name, this.built);
         const { input, authored, reveal, paste, copy: copy3 } = this.parts;
         this.spoken = this.parts.spoken;
         this.own(() => {
@@ -26864,7 +28845,7 @@ var init_secrets = __esm({
   "js/patterns/secrets.js"() {
     "use strict";
     init_controller();
-    init_constants15();
+    init_constants16();
     init_secret_api();
     init_secret_display();
     init_secret_input();
@@ -26879,7 +28860,7 @@ var init_undo = __esm({
     init_controller();
     init_overlays();
     init_strings();
-    init_constants15();
+    init_constants16();
     UndoControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ undoMs?: number, undoClassName?: string }} [options] */
       constructor(host, options = {}) {
@@ -26990,7 +28971,7 @@ var init_copy = __esm({
     init_controller();
     init_overlays();
     init_strings();
-    init_constants15();
+    init_constants16();
     init_secrets();
     init_undo();
     CopyControl = class extends Controller {
@@ -27068,7 +29049,7 @@ __export(patterns_exports, {
 var init_patterns = __esm({
   "js/patterns.js"() {
     "use strict";
-    init_constants15();
+    init_constants16();
     init_copy();
     init_secret_api();
     init_secrets();
@@ -27077,7 +29058,7 @@ var init_patterns = __esm({
 
 // js/undo-toast/values.js
 var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, MS_PER_SECOND2, CLOCK_TICK_MS;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/undo-toast/values.js"() {
     "use strict";
     UNDO_TOAST = "kp-toast--undo";
@@ -27160,12 +29141,12 @@ function buildBody2(doc, text, { ms, clock: clock4, seconds }) {
   }
   return { body, ring, secs, words: words3, said };
 }
-var init_build6 = __esm({
+var init_build8 = __esm({
   "js/undo-toast/build.js"() {
     "use strict";
     init_patterns();
     init_strings();
-    init_values16();
+    init_values17();
   }
 });
 
@@ -27176,7 +29157,7 @@ var init_core4 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values16();
+    init_values17();
     UndoCore = class extends Controller {
       /**
        * @param {HTMLElement} host the toast (it carries `dismiss`)
@@ -27270,7 +29251,7 @@ var init_core4 = __esm({
 });
 
 // js/undo-toast/stack.js
-function onKey(event) {
+function onKey2(event) {
   if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== "z") return;
   const target = event.target instanceof Element ? event.target : null;
   if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
@@ -27288,7 +29269,7 @@ function onKey(event) {
 function enter(entry) {
   live2.push(entry);
   if (!listening && typeof document !== "undefined") {
-    document.addEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey2);
     listening = true;
   }
 }
@@ -27296,7 +29277,7 @@ function leaveStack(handle) {
   const at = live2.findIndex((e) => e.handle === handle);
   if (at >= 0) live2.splice(at, 1);
   if (live2.length === 0 && listening) {
-    document.removeEventListener("keydown", onKey);
+    document.removeEventListener("keydown", onKey2);
     listening = false;
   }
 }
@@ -27321,7 +29302,7 @@ var init_run = __esm({
     "use strict";
     init_core4();
     init_stack();
-    init_values16();
+    init_values17();
     UndoRun = class extends UndoCore {
       /**
        * @param {HTMLElement} host the toast
@@ -27551,10 +29532,10 @@ var init_undo_toast = __esm({
     init_controller();
     init_overlays();
     init_strings();
-    init_build6();
+    init_build8();
     init_run();
-    init_values16();
-    init_values16();
+    init_values17();
+    init_values17();
   }
 });
 
@@ -27568,11 +29549,11 @@ function nameOf4(row2, control) {
   return control?.getAttribute("data-kp-row-delete") || row2.getAttribute(NAME_ATTRIBUTE) || "";
 }
 function focusNeighbour(row2) {
-  const shown5 = (el16) => el16 instanceof HTMLElement && el16.matches(ROW) && !el16.hidden && !el16.hasAttribute(DELETING_ATTRIBUTE);
+  const shown6 = (el16) => el16 instanceof HTMLElement && el16.matches(ROW2) && !el16.hidden && !el16.hasAttribute(DELETING_ATTRIBUTE);
   let next2 = row2.nextElementSibling;
-  while (next2 && !shown5(next2)) next2 = next2.nextElementSibling;
+  while (next2 && !shown6(next2)) next2 = next2.nextElementSibling;
   let prev = row2.previousElementSibling;
-  while (prev && !shown5(prev)) prev = prev.previousElementSibling;
+  while (prev && !shown6(prev)) prev = prev.previousElementSibling;
   const control = (
     /** @type {HTMLElement | null} */
     (next2 ?? prev)?.querySelector(ROW_DELETE) ?? null
@@ -27621,18 +29602,18 @@ var init_delete = __esm({
     "use strict";
     init_strings();
     init_undo_toast();
-    init_constants14();
+    init_constants15();
     inTable = (row2) => row2.closest("[data-kp-datatable]") !== null;
   }
 });
 
 // js/row-undo/controller.js
 var RowUndoRoot;
-var init_controller16 = __esm({
+var init_controller18 = __esm({
   "js/row-undo/controller.js"() {
     "use strict";
     init_controller();
-    init_constants14();
+    init_constants15();
     init_delete();
     RowUndoRoot = class extends Controller {
       connect() {
@@ -27644,7 +29625,7 @@ var init_controller16 = __esm({
           if (!control || !this.host.contains(control) || control.matches(':disabled, [aria-disabled="true"]')) return;
           const row2 = (
             /** @type {HTMLElement | null} */
-            control.closest(ROW)
+            control.closest(ROW2)
           );
           if (!row2) {
             console.warn("kp-row-delete: the control stands in no row (a [data-kp-row-key], a tr or an li)", control);
@@ -27680,15 +29661,15 @@ var init_row_undo = __esm({
   "js/row-undo.js"() {
     "use strict";
     init_controller();
-    init_controller16();
-    init_constants14();
+    init_controller18();
+    init_constants15();
     init_delete();
   }
 });
 
 // js/card-state/values.js
 var CARD_STATE, CARD_STATES, CARD_STATE_EVENT, CARD_RETRY_EVENT;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/card-state/values.js"() {
     "use strict";
     CARD_STATE = ".kp-card[data-kp-state]";
@@ -27706,7 +29687,7 @@ function stageOf(card) {
     card.querySelector(":scope > .kp-card__stage")
   );
   if (!stage) {
-    stage = el2(card.ownerDocument, "kp-card__stage");
+    stage = el3(card.ownerDocument, "kp-card__stage");
     const footer = card.querySelector(":scope > .kp-card__footer");
     if (footer) footer.before(stage);
     else card.append(stage);
@@ -27721,7 +29702,7 @@ function partsOf2(card) {
     stage.querySelector(":scope > .kp-card__data")
   );
   if (!data) {
-    data = el2(doc, "kp-card__data");
+    data = el3(doc, "kp-card__data");
     stage.prepend(data);
   }
   let note2 = (
@@ -27729,17 +29710,17 @@ function partsOf2(card) {
     stage.querySelector(":scope > .kp-card__state")
   );
   if (!note2) {
-    note2 = el2(doc, "kp-card__state");
+    note2 = el3(doc, "kp-card__state");
     note2.setAttribute("data-kp-card-built", "");
     stage.append(note2);
   }
   return { stage, data, note: note2 };
 }
-var el2;
+var el3;
 var init_parts = __esm({
   "js/card-state/parts.js"() {
     "use strict";
-    el2 = (doc, className, tag = "div") => {
+    el3 = (doc, className, tag = "div") => {
       const node = doc.createElement(tag);
       node.className = className;
       return node;
@@ -27750,40 +29731,40 @@ var init_parts = __esm({
 // js/card-state/note.js
 function linesOf(doc, state12, options) {
   const s2 = getStrings();
-  const title = el2(doc, "kp-card__state-title kp-stateplate__title", "strong");
+  const title = el3(doc, "kp-card__state-title kp-stateplate__title", "strong");
   title.textContent = options.title ?? (state12 === "error" ? s2.cardFailed : s2.cardEmpty);
   const lines = [title];
   if (options.art) {
-    const art = el2(doc, "kp-card__state-art kp-stateplate__art", "span");
+    const art = el3(doc, "kp-card__state-art kp-stateplate__art", "span");
     art.setAttribute("aria-hidden", "true");
     if (typeof options.art === "string") art.textContent = options.art;
     else art.append(options.art);
     lines.unshift(art);
   }
   if (options.text) {
-    const text = el2(doc, "kp-card__state-text kp-stateplate__text", "span");
+    const text = el3(doc, "kp-card__state-text kp-stateplate__text", "span");
     text.textContent = options.text;
     lines.push(text);
   }
   return lines;
 }
 function emptyPlate2(doc, lines, options) {
-  const box = el2(doc, "kp-empty kp-card__empty kp-stateplate kp-stateplate--empty");
+  const box = el3(doc, "kp-empty kp-card__empty kp-stateplate kp-stateplate--empty");
   box.append(...lines);
   if (options.action) {
-    const actions = el2(doc, "kp-card__state-actions");
+    const actions = el3(doc, "kp-card__state-actions");
     actions.append(...Array.isArray(options.action) ? options.action : [options.action]);
     box.append(actions);
   }
   return box;
 }
 function errorPlate(doc, lines, options) {
-  const alert = el2(doc, "kp-alert kp-alert--destructive kp-card__failure kp-stateplate kp-stateplate--error");
-  const body = el2(doc, "kp-alert__body");
+  const alert = el3(doc, "kp-alert kp-alert--destructive kp-card__failure kp-stateplate kp-stateplate--error");
+  const body = el3(doc, "kp-alert__body");
   body.append(...lines);
   alert.append(body);
   if (options.retry !== false) {
-    const button6 = el2(doc, "kp-button kp-card__retry kp-stateplate__action", "button");
+    const button6 = el3(doc, "kp-button kp-card__retry kp-stateplate__action", "button");
     button6.type = "button";
     button6.setAttribute("data-kp-card-retry", "");
     button6.textContent = getStrings().cardRetry;
@@ -27827,7 +29808,7 @@ var init_sync2 = __esm({
     "use strict";
     init_busy_card();
     init_strings();
-    init_values17();
+    init_values18();
     init_parts();
     init_note();
     known2 = (state12) => CARD_STATES.includes(
@@ -27852,7 +29833,7 @@ var init_sync2 = __esm({
        * @param {{ announce?: boolean, options?: CardStateOptions }} [how]
        * @returns {CardState}
        */
-      sync({ announce: announce5 = false, options } = {}) {
+      sync({ announce: announce6 = false, options } = {}) {
         const { card } = this;
         const state12 = known2(card.getAttribute("data-kp-state"));
         if (card.getAttribute("data-kp-state") !== state12) card.setAttribute("data-kp-state", state12);
@@ -27869,7 +29850,7 @@ var init_sync2 = __esm({
         this.syncBusy(parts2.stage, loading, opts);
         this.drawn = true;
         this.state = state12;
-        if (announce5 && previous !== void 0 && previous !== state12)
+        if (announce6 && previous !== void 0 && previous !== state12)
           card.dispatchEvent(new CustomEvent(CARD_STATE_EVENT, { bubbles: true, detail: { card, state: state12, previous } }));
         return state12;
       }
@@ -27928,11 +29909,11 @@ var init_sync2 = __esm({
 
 // js/card-state/controller.js
 var CardStateController;
-var init_controller17 = __esm({
+var init_controller19 = __esm({
   "js/card-state/controller.js"() {
     "use strict";
     init_controller();
-    init_values17();
+    init_values18();
     init_sync2();
     CardStateController = class extends Controller {
       connect() {
@@ -27976,9 +29957,9 @@ var init_card_state = __esm({
   "js/card-state.js"() {
     "use strict";
     init_controller();
-    init_controller17();
-    init_values17();
-    init_values17();
+    init_controller19();
+    init_values18();
+    init_values18();
     init_sync2();
   }
 });
@@ -28008,8 +29989,8 @@ function known3(state12, calm = false) {
   }
   return "unknown";
 }
-var STATUS_LIST, STATUS_ID_ATTRIBUTE, STATUS_EVENT, STATUS_RETRY_EVENT, STATUS_RESUME_EVENT, STATUS_PAUSE_EVENT, STATUS_UNDO_EVENT, STATUS_STATES, CALM_STATUS_STATES, synced2, pending, isCalm2, warned2, stateWord2, el3;
-var init_state8 = __esm({
+var STATUS_LIST, STATUS_ID_ATTRIBUTE, STATUS_EVENT, STATUS_RETRY_EVENT, STATUS_RESUME_EVENT, STATUS_PAUSE_EVENT, STATUS_UNDO_EVENT, STATUS_STATES, CALM_STATUS_STATES, synced2, pending, isCalm2, warned2, stateWord2, el4;
+var init_state9 = __esm({
   "js/statusrow/state.js"() {
     "use strict";
     init_strings();
@@ -28042,7 +30023,7 @@ var init_state8 = __esm({
         unknown: s2.statusUnknown
       }[state12];
     };
-    el3 = (className, tag = "span") => {
+    el4 = (className, tag = "span") => {
       const node = document.createElement(tag);
       node.className = className;
       return node;
@@ -28061,7 +30042,7 @@ function sayText(list, text) {
 function regionOf2(list) {
   const next2 = list.nextElementSibling;
   if (next2 instanceof HTMLElement && next2.classList.contains("kp-statuslist__live")) return next2;
-  const region = el3("kp-sr-only kp-statuslist__live");
+  const region = el4("kp-sr-only kp-statuslist__live");
   region.setAttribute("role", "status");
   region.setAttribute("aria-live", "polite");
   list.after(region);
@@ -28090,7 +30071,7 @@ var init_voice = __esm({
   "js/statusrow/voice.js"() {
     "use strict";
     init_strings();
-    init_state8();
+    init_state9();
   }
 });
 
@@ -28102,7 +30083,7 @@ function writeText2(item, { label: label2, detail, fix, since }) {
   if (fix !== void 0) {
     let part7 = item.querySelector(".kp-statusrow__fix");
     if (!part7) {
-      part7 = el3("kp-statusrow__fix");
+      part7 = el4("kp-statusrow__fix");
       const body = item.querySelector(".kp-statusrow__body");
       const word = body?.querySelector(":scope > .kp-statusrow__state");
       if (word) word.before(part7);
@@ -28111,32 +30092,32 @@ function writeText2(item, { label: label2, detail, fix, since }) {
     part7.replaceChildren(fix);
   }
 }
-function syncItem2(item, { announce: announce5 = false } = {}) {
+function syncItem2(item, { announce: announce6 = false } = {}) {
   const calm = isCalm2(item.closest(STATUS_LIST));
   const state12 = known3(item.getAttribute("data-state"), calm);
   if (item.getAttribute("data-state") !== state12) item.setAttribute("data-state", state12);
-  let mark = item.querySelector(":scope > .kp-statusrow__mark");
-  if (!mark) {
-    mark = el3("kp-statusrow__mark");
-    item.prepend(mark);
+  let mark2 = item.querySelector(":scope > .kp-statusrow__mark");
+  if (!mark2) {
+    mark2 = el4("kp-statusrow__mark");
+    item.prepend(mark2);
   }
-  mark.setAttribute("aria-hidden", "true");
-  const spinning = mark.querySelector(".kp-spinner");
+  mark2.setAttribute("aria-hidden", "true");
+  const spinning = mark2.querySelector(".kp-spinner");
   if (state12 === "loading" && !spinning) {
-    const wheel = el3("kp-spinner");
+    const wheel = el4("kp-spinner");
     wheel.setAttribute("aria-hidden", "true");
-    mark.append(wheel);
+    mark2.append(wheel);
   } else if (state12 !== "loading" && spinning) spinning.remove();
   if (state12 === "loading") item.setAttribute("aria-busy", "true");
   else item.removeAttribute("aria-busy");
   let body = item.querySelector(":scope > .kp-statusrow__body");
   if (!body) {
-    body = el3("kp-statusrow__body");
-    mark.after(body);
+    body = el4("kp-statusrow__body");
+    mark2.after(body);
   }
   let word = item.querySelector(".kp-statusrow__state");
   if (!word) {
-    word = el3("kp-statusrow__state kp-sr-only");
+    word = el4("kp-statusrow__state kp-sr-only");
     body.append(word);
   }
   word.textContent = `, ${stateWord2(state12)}`;
@@ -28147,7 +30128,7 @@ function syncItem2(item, { announce: announce5 = false } = {}) {
   } else syncAction(item, state12, list);
   const previous = synced2.get(item);
   synced2.set(item, state12);
-  if (list && announce5 && previous !== void 0 && previous !== state12) {
+  if (list && announce6 && previous !== void 0 && previous !== state12) {
     if (state12 !== "loading") {
       say3(list, {
         label: labelOf5(item),
@@ -28168,7 +30149,7 @@ function syncAction(item, state12, list) {
   if (list?.getAttribute("data-kp-status-retry") === "false") return;
   let cell = item.querySelector(":scope > .kp-statusrow__action");
   if (!cell) {
-    cell = el3("kp-statusrow__action");
+    cell = el4("kp-statusrow__action");
     const button7 = document.createElement("button");
     button7.type = "button";
     button7.className = "kp-button kp-button--sm";
@@ -28228,7 +30209,7 @@ function syncCalmActions(item_, state12, list) {
   );
   const label2 = labelOf5(item);
   if (!cell) {
-    cell = el3("kp-statusrow__action");
+    cell = el4("kp-statusrow__action");
     const resume2 = document.createElement("button");
     resume2.type = "button";
     resume2.className = "kp-button";
@@ -28252,16 +30233,16 @@ function syncCalmActions(item_, state12, list) {
   );
   const showResume = state12 === "paused" && list?.getAttribute("data-kp-today-resume") !== "off";
   const showPause = state12 === "open" && list?.hasAttribute("data-kp-today-pause") === true && list.getAttribute("data-kp-today-pause") !== "off";
-  const place5 = (button6, shown5) => {
+  const place5 = (button6, shown6) => {
     const holder = (
       /** @type {HTMLElement} */
       button6.closest(".kp-tooltip-anchor") ?? button6
     );
-    if (!shown5 && holder.contains(document.activeElement)) {
+    if (!shown6 && holder.contains(document.activeElement)) {
       item.tabIndex = -1;
       item.focus({ preventScroll: true });
     }
-    holder.hidden = !shown5;
+    holder.hidden = !shown6;
   };
   resume.textContent = s2.statusResume;
   resume.setAttribute("aria-label", s2.statusResumeLabel(label2));
@@ -28281,7 +30262,7 @@ var init_sync3 = __esm({
     init_freshness();
     init_reason();
     init_strings();
-    init_state8();
+    init_state9();
     init_voice();
     labelOf5 = (item) => item.querySelector(".kp-statusrow__label")?.textContent?.trim() ?? "";
     daysBetween = (from, to) => Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 864e5);
@@ -28399,26 +30380,26 @@ function buildStatusList(rows, { label: label2, retry = true, single = false, vo
   if (!retry) list.setAttribute("data-kp-status-retry", "false");
   if (vocab === "calm") list.setAttribute("data-kp-status-vocab", "calm");
   rows.forEach((row2) => {
-    const item = el3("kp-statusrow", "li");
+    const item = el4("kp-statusrow", "li");
     item.setAttribute(STATUS_ID_ATTRIBUTE, row2.id ?? row2.label);
     item.dataset.state = known3(row2.state, vocab === "calm");
-    const body = el3("kp-statusrow__body");
-    body.append(el3("kp-statusrow__label"), el3("kp-statusrow__detail"));
-    if (row2.fix !== void 0) body.append(el3("kp-statusrow__fix"));
-    item.append(el3("kp-statusrow__mark"), body);
+    const body = el4("kp-statusrow__body");
+    body.append(el4("kp-statusrow__label"), el4("kp-statusrow__detail"));
+    if (row2.fix !== void 0) body.append(el4("kp-statusrow__fix"));
+    item.append(el4("kp-statusrow__mark"), body);
     list.append(item);
     writeText2(item, row2);
     syncItem2(item);
   });
   return list;
 }
-var init_list = __esm({
+var init_list2 = __esm({
   "js/statusrow/list.js"() {
     "use strict";
     init_card_state();
     init_strings();
     init_undo_toast();
-    init_state8();
+    init_state9();
     init_sync3();
     init_voice();
   }
@@ -28426,14 +30407,14 @@ var init_list = __esm({
 
 // js/statusrow/controller.js
 var CALM_OPTIONS, ROWS, StatusList;
-var init_controller18 = __esm({
+var init_controller20 = __esm({
   "js/statusrow/controller.js"() {
     "use strict";
     init_controller();
     init_shortcuts();
     init_strings();
-    init_list();
-    init_state8();
+    init_list2();
+    init_state9();
     init_sync3();
     init_voice();
     CALM_OPTIONS = ["data-kp-today-since", "data-kp-today-resume", "data-kp-today-pause", "data-kp-today-order", "data-kp-today-paused", "data-kp-today-fold-after", "data-kp-today-mark"];
@@ -28558,10 +30539,10 @@ var init_statusrow = __esm({
   "js/statusrow.js"() {
     "use strict";
     init_controller();
-    init_controller18();
-    init_state8();
-    init_state8();
-    init_list();
+    init_controller20();
+    init_state9();
+    init_state9();
+    init_list2();
   }
 });
 
@@ -28625,7 +30606,7 @@ function listOf2(group) {
     group.querySelector(".kp-facets__list")
   );
   if (!list) {
-    list = el4("kp-facets__list", "ul");
+    list = el5("kp-facets__list", "ul");
     group.append(list);
   }
   return list;
@@ -28672,17 +30653,17 @@ function paintRow(row2, item) {
 function buildRow(item) {
   const row2 = (
     /** @type {HTMLLIElement} */
-    el4("kp-facet", "li")
+    el5("kp-facet", "li")
   );
   row2.setAttribute("data-value", item.value);
-  const option = el4("kp-facet__option", "label");
+  const option = el5("kp-facet__option", "label");
   const check = document.createElement("input");
   check.type = "checkbox";
   check.className = "kp-field__check kp-facet__check";
   check.checked = item.checked ?? true;
   option.append(check);
-  if (item.swatch !== void 0 || item.pattern) option.append(el4("kp-facet__swatch"));
-  option.append(el4("kp-facet__name"), el4("kp-facet__count"));
+  if (item.swatch !== void 0 || item.pattern) option.append(el5("kp-facet__swatch"));
+  option.append(el5("kp-facet__name"), el5("kp-facet__count"));
   const only = document.createElement("button");
   only.type = "button";
   only.className = "kp-button kp-button--ghost kp-button--sm kp-facet__only";
@@ -28697,13 +30678,13 @@ function ensureAll(group) {
     group.querySelector(".kp-facet[data-kp-facet-all]")
   );
   if (row2 || word === null) return row2;
-  row2 = el4("kp-facet", "li");
+  row2 = el5("kp-facet", "li");
   row2.setAttribute("data-kp-facet-all", "");
-  const option = el4("kp-facet__option", "label");
+  const option = el5("kp-facet__option", "label");
   const check = document.createElement("input");
   check.type = "checkbox";
   check.className = "kp-field__check kp-facet__check";
-  option.append(check, el4("kp-facet__name"), el4("kp-facet__count"));
+  option.append(check, el5("kp-facet__name"), el5("kp-facet__count"));
   row2.append(option);
   row2.querySelector(".kp-facet__name")?.replaceChildren(word || getStrings().facetAll);
   listOf2(group).prepend(row2);
@@ -28723,14 +30704,14 @@ function syncGroup(group) {
   const empty = group.querySelector(".kp-facets__empty");
   if (empty instanceof HTMLElement) empty.hidden = rows.length > 0;
 }
-var serial2, el4, countText, rowsOf, checkOf, nameOf5;
+var serial2, el5, countText, rowsOf, checkOf, nameOf5;
 var init_rows2 = __esm({
   "js/facets/rows.js"() {
     "use strict";
     init_strings();
     init_pattern();
     serial2 = 0;
-    el4 = (className, tag = "span") => {
+    el5 = (className, tag = "span") => {
       const node = document.createElement(tag);
       node.className = className;
       return node;
@@ -28761,8 +30742,8 @@ function setFacetCounts(group, counts, { all } = {}) {
   for (const row2 of rowsOf(group)) {
     const value = row2.getAttribute("data-value") ?? "";
     if (Object.hasOwn(counts, value)) row2.querySelector(".kp-facet__count")?.replaceChildren(String(countText(counts[value])));
-    const shown5 = Number(row2.querySelector(".kp-facet__count")?.textContent?.replace(/\D/g, "") || 0);
-    sum += shown5;
+    const shown6 = Number(row2.querySelector(".kp-facet__count")?.textContent?.replace(/\D/g, "") || 0);
+    sum += shown6;
   }
   const total = group.querySelector(".kp-facet[data-kp-facet-all] .kp-facet__count");
   if (total) total.textContent = String(countText(all === void 0 ? sum : all));
@@ -28790,7 +30771,7 @@ function setFacetItems(group, items) {
   if (!items.some((item) => item.count !== void 0)) group.removeAttribute("aria-busy");
   syncGroup(group);
 }
-var init_api6 = __esm({
+var init_api7 = __esm({
   "js/facets/api.js"() {
     "use strict";
     init_rows2();
@@ -28799,7 +30780,7 @@ var init_api6 = __esm({
 
 // js/facets/values.js
 var FACETS, FACET_EVENT;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/facets/values.js"() {
     "use strict";
     FACETS = "[data-kp-facets]";
@@ -28809,14 +30790,14 @@ var init_values18 = __esm({
 
 // js/facets/controller.js
 var SAY_FIRST_MS, SAY_MS, FacetGroup;
-var init_controller19 = __esm({
+var init_controller21 = __esm({
   "js/facets/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_api6();
+    init_api7();
     init_rows2();
-    init_values18();
+    init_values19();
     SAY_FIRST_MS = 100;
     SAY_MS = 30;
     FacetGroup = class extends Controller {
@@ -28832,7 +30813,7 @@ var init_controller19 = __esm({
         const group = this.host;
         const next2 = group.nextElementSibling;
         if (next2 instanceof HTMLElement && next2.classList.contains("kp-facets__live")) return next2;
-        const region = el4("kp-sr-only kp-facets__live");
+        const region = el5("kp-sr-only kp-facets__live");
         region.setAttribute("role", "status");
         region.setAttribute("aria-live", "polite");
         group.after(region);
@@ -28857,10 +30838,10 @@ var init_controller19 = __esm({
         const row2 = check?.closest(".kp-facet");
         if (!check || !row2 || !group.contains(row2)) return;
         if (row2.hasAttribute("data-kp-facet-all")) {
-          const before = getFacetValues(group).length;
+          const before2 = getFacetValues(group).length;
           setFacetValues(group, null);
           this.say(getStrings().facetShowingAll);
-          if (before !== rowsOf(group).length) this.emit("all");
+          if (before2 !== rowsOf(group).length) this.emit("all");
           return;
         }
         syncGroup(group);
@@ -28900,11 +30881,11 @@ var init_facets = __esm({
   "js/facets.js"() {
     "use strict";
     init_controller();
-    init_controller19();
-    init_values18();
-    init_values18();
+    init_controller21();
+    init_values19();
+    init_values19();
     init_pattern();
-    init_api6();
+    init_api7();
   }
 });
 
@@ -29062,26 +31043,26 @@ function patternSvg(doc, cells) {
   return svg2;
 }
 function setIdmark(el16, name, { slot, hue, title = true } = {}) {
-  const mark = idmarkFor(name);
+  const mark2 = idmarkFor(name);
   const doc = el16.ownerDocument;
   el16.classList.add("kp-idmark");
   if (!el16.hasAttribute("aria-hidden")) el16.setAttribute("aria-hidden", "true");
-  el16.setAttribute("data-kp-idmark", mark.name);
-  el16.toggleAttribute("data-kp-idmark-empty", mark.empty);
-  el16.setAttribute("data-kp-idmark-glyph", mark.glyph);
+  el16.setAttribute("data-kp-idmark", mark2.name);
+  el16.toggleAttribute("data-kp-idmark-empty", mark2.empty);
+  el16.setAttribute("data-kp-idmark-glyph", mark2.glyph);
   const free2 = (hue ?? el16.getAttribute("data-kp-idmark-hue")) === "free";
-  if (mark.empty) el16.style.removeProperty("--kp-idmark-colour");
-  else if (free2) el16.style.setProperty("--kp-idmark-colour", `oklch(from var(--chart-1) l c ${mark.hue})`);
-  else el16.style.setProperty("--kp-idmark-colour", `var(--chart-${slot ?? mark.slot})`);
-  if (title && mark.name) el16.title = mark.name;
+  if (mark2.empty) el16.style.removeProperty("--kp-idmark-colour");
+  else if (free2) el16.style.setProperty("--kp-idmark-colour", `oklch(from var(--chart-1) l c ${mark2.hue})`);
+  else el16.style.setProperty("--kp-idmark-colour", `var(--chart-${slot ?? mark2.slot})`);
+  if (title && mark2.name) el16.title = mark2.name;
   else el16.removeAttribute("title");
   const xs = el16.classList.contains("kp-idmark--xs");
   const letters = doc.createElement("span");
   letters.className = "kp-idmark__letters";
-  letters.textContent = mark.empty ? getStrings().idmarkUnknown : idmarkLetters(mark.name, xs ? 1 : 2);
-  el16.replaceChildren(letters, ...mark.empty ? [] : [patternSvg(doc, mark.cells)]);
-  decorateAvatar(el16, mark.name);
-  DRAWN2.set(el16, { base: baseKey(el16), slot: slot ?? mark.slot });
+  letters.textContent = mark2.empty ? getStrings().idmarkUnknown : idmarkLetters(mark2.name, xs ? 1 : 2);
+  el16.replaceChildren(letters, ...mark2.empty ? [] : [patternSvg(doc, mark2.cells)]);
+  decorateAvatar(el16, mark2.name);
+  DRAWN2.set(el16, { base: baseKey(el16), slot: slot ?? mark2.slot });
 }
 var SVG_NS3, PATTERN_BOX2, DRAWN2, baseKey;
 var init_draw4 = __esm({
@@ -29164,15 +31145,15 @@ var init_more_list = __esm({
           const li = doc.createElement("li");
           const row2 = doc.createElement("span");
           row2.className = "kp-idmark-name";
-          const mark = doc.createElement("span");
-          mark.className = `kp-idmark kp-idmark--sm${look.round ? " kp-idmark--round" : ""}`;
-          mark.setAttribute("data-kp-idmark", person.name);
-          if (person.src) mark.setAttribute("data-kp-idmark-src", person.src);
-          mark.setAttribute("aria-hidden", "true");
-          setIdmark(mark, person.name, { slot: look.colours.get(person.name.trim()), title: false });
+          const mark2 = doc.createElement("span");
+          mark2.className = `kp-idmark kp-idmark--sm${look.round ? " kp-idmark--round" : ""}`;
+          mark2.setAttribute("data-kp-idmark", person.name);
+          if (person.src) mark2.setAttribute("data-kp-idmark-src", person.src);
+          mark2.setAttribute("aria-hidden", "true");
+          setIdmark(mark2, person.name, { slot: look.colours.get(person.name.trim()), title: false });
           const text = doc.createElement("span");
           text.textContent = person.name;
-          row2.append(mark, text);
+          row2.append(mark2, text);
           li.append(row2);
           ul.append(li);
         }
@@ -29196,14 +31177,14 @@ var init_more_list = __esm({
 
 // js/idmark/group.js
 function groupMark(doc, person, { size: size2, round: round2, colours }) {
-  const mark = doc.createElement("span");
-  mark.className = ["kp-idmark", size2 === "md" ? "" : `kp-idmark--${size2}`, round2 ? "kp-idmark--round" : ""].filter(Boolean).join(" ");
-  mark.setAttribute("data-kp-idmark", person.name);
-  if (person.src) mark.setAttribute("data-kp-idmark-src", person.src);
-  if (person.status && person.status !== "none") mark.setAttribute("data-kp-idmark-status", person.status);
-  mark.setAttribute("data-kp-idmark-alt", "name");
-  setIdmark(mark, person.name, { slot: colours.get(person.name.trim()) });
-  return mark;
+  const mark2 = doc.createElement("span");
+  mark2.className = ["kp-idmark", size2 === "md" ? "" : `kp-idmark--${size2}`, round2 ? "kp-idmark--round" : ""].filter(Boolean).join(" ");
+  mark2.setAttribute("data-kp-idmark", person.name);
+  if (person.src) mark2.setAttribute("data-kp-idmark-src", person.src);
+  if (person.status && person.status !== "none") mark2.setAttribute("data-kp-idmark-status", person.status);
+  mark2.setAttribute("data-kp-idmark-alt", "name");
+  setIdmark(mark2, person.name, { slot: colours.get(person.name.trim()) });
+  return mark2;
 }
 function plainMore(doc, rest) {
   const more = doc.createElement("span");
@@ -29218,10 +31199,10 @@ function setIdmarkGroup(el16, people, { max = DEFAULT_MAX, size: size2 = "md", r
   el16.classList.toggle("kp-idmark-group--sm", size2 === "sm" || size2 === "xs");
   el16.setAttribute("role", "group");
   el16.setAttribute("aria-label", getStrings().idmarkGroup(people.length));
-  const shown5 = people.slice(0, Math.max(0, max));
-  const rest = people.slice(shown5.length);
+  const shown6 = people.slice(0, Math.max(0, max));
+  const rest = people.slice(shown6.length);
   const look = { size: size2, round: round2, colours: idmarkColours(people.map((person) => person.name)) };
-  const marks = shown5.map((person) => groupMark(doc, person, look));
+  const marks = shown6.map((person) => groupMark(doc, person, look));
   let tail = [];
   if (rest.length > 0) tail = list ? new IdmarkMoreList(doc, rest, look).build() : [plainMore(doc, rest)];
   el16.replaceChildren(...marks, ...tail);
@@ -29266,9 +31247,9 @@ function paintMarks(root) {
   const slots = slotsOf(all);
   for (const el16 of all) {
     const name = el16.getAttribute("data-kp-idmark") ?? "";
-    const before = DRAWN2.get(el16);
+    const before2 = DRAWN2.get(el16);
     const want = slots.get(el16);
-    if (before?.base === baseKey(el16) && (want === void 0 || want === before.slot) && el16.querySelector(":scope > .kp-idmark__letters")) continue;
+    if (before2?.base === baseKey(el16) && (want === void 0 || want === before2.slot) && el16.querySelector(":scope > .kp-idmark__letters")) continue;
     setIdmark(el16, name, { slot: want });
   }
 }
@@ -29277,7 +31258,7 @@ function attachIdmarks(root = document) {
   control.connect();
   return () => control.destroy();
 }
-var WATCHED8, IdmarkRoot;
+var WATCHED9, IdmarkRoot;
 var init_attach5 = __esm({
   "js/idmark/attach.js"() {
     "use strict";
@@ -29285,7 +31266,7 @@ var init_attach5 = __esm({
     init_avatar();
     init_draw4();
     init_mark();
-    WATCHED8 = ["data-kp-idmark", ...AVATAR_ATTRIBUTES];
+    WATCHED9 = ["data-kp-idmark", ...AVATAR_ATTRIBUTES];
     IdmarkRoot = class extends Controller {
       /** @param {ParentNode} root */
       constructor(root) {
@@ -29304,7 +31285,7 @@ var init_attach5 = __esm({
         this.view = (root instanceof Document ? root : root.ownerDocument)?.defaultView ?? null;
         if (!this.view?.MutationObserver) return;
         const watch2 = this.observe(new this.view.MutationObserver((records) => this.onChange(records)));
-        watch2.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED8 });
+        watch2.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED9 });
       }
       /** Whether a batch of records can have changed a mark: a watched attribute, or a mark added. @param {MutationRecord[]} records */
       relevant(records) {
@@ -29356,7 +31337,7 @@ var init_idmark = __esm({
 
 // js/passkeys/constants.js
 var PASSKEYS, PASSKEYS_REGISTER_EVENT, PASSKEYS_RETRY_EVENT, PASSKEYS_REMOVE_EVENT, PASSKEYS_RENAME_EVENT, PASSKEY_KINDS, DAY_MS3, DEFAULT_NEVER_USED_DAYS, DEFAULT_WAIT_ROWS, GLYPH_BOX, SVG_NS4, GLYPHS2;
-var init_constants16 = __esm({
+var init_constants17 = __esm({
   "js/passkeys/constants.js"() {
     "use strict";
     PASSKEYS = "[data-kp-passkeys]";
@@ -29424,318 +31405,7 @@ function unusedDays(row2, now, limit, missing = "never") {
 var init_options = __esm({
   "js/passkeys/options.js"() {
     "use strict";
-    init_constants16();
-  }
-});
-
-// js/components/type-confirm.js
-function typeConfirmMatches(typed, name, { anyCase = false } = {}) {
-  const a = typed.trim();
-  const b = name.trim();
-  if (b === "") return false;
-  return anyCase ? a.toLocaleLowerCase() === b.toLocaleLowerCase() : a === b;
-}
-function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = false, loses = null, strings, onChange, block: given2 }) {
-  const s2 = { ...getStrings(), ...strings };
-  const base = fieldId ? fieldId : `kp-type-confirm-${++typeSeq}`;
-  const id = base;
-  const inputId = fieldId ? fieldId : `${base}-input`;
-  const block = given2 ?? doc.createElement("div");
-  block.classList.add("kp-type-confirm", "kp-field");
-  block.replaceChildren();
-  if (loses !== null && (!Array.isArray(loses) || loses.length > 0)) {
-    const box = doc.createElement("div");
-    box.className = "kp-type-confirm__loses";
-    const head = doc.createElement("p");
-    head.className = "kp-type-confirm__loses-title";
-    head.id = `${id}-loses`;
-    head.textContent = s2.typeConfirmLoses;
-    box.append(head);
-    if (Array.isArray(loses)) {
-      const list = doc.createElement("ul");
-      list.className = "kp-type-confirm__list";
-      list.setAttribute("aria-labelledby", head.id);
-      for (const line of loses) {
-        const item = doc.createElement("li");
-        item.textContent = line;
-        list.append(item);
-      }
-      box.append(list);
-    } else box.append(
-      /** @type {Node} */
-      loses
-    );
-    block.append(box);
-  }
-  const label2 = doc.createElement("label");
-  label2.className = "kp-field__label kp-type-confirm__label";
-  label2.htmlFor = inputId;
-  const [before, after = ""] = s2.typeConfirmLabel("\0").split("\0");
-  const code = doc.createElement("code");
-  code.className = "kp-type-confirm__name";
-  code.textContent = name;
-  label2.append(before, code, after);
-  const input = doc.createElement("input");
-  input.type = "text";
-  input.className = "kp-field__input kp-type-confirm__input";
-  input.id = inputId;
-  if (fieldName) input.name = fieldName;
-  input.autocomplete = "off";
-  input.spellcheck = false;
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("aria-describedby", `${id}-rule ${id}-status`);
-  const rule = doc.createElement("p");
-  rule.className = "kp-field__help kp-type-confirm__rule";
-  rule.id = `${id}-rule`;
-  rule.textContent = anyCase ? s2.typeConfirmRuleAnyCase : s2.typeConfirmRuleExact;
-  const status = doc.createElement("p");
-  status.className = "kp-type-confirm__status";
-  status.id = `${id}-status`;
-  status.setAttribute("aria-live", "polite");
-  block.append(label2, input, rule, status);
-  const field2 = new TypeConfirmField({ doc, block, input, status, name, anyCase, onChange, words: s2 });
-  input.addEventListener("input", () => field2.update());
-  field2.update();
-  return { block, input, matched: () => field2.matched };
-}
-function attachTypeConfirms(root = document, { strings } = {}) {
-  const made6 = (
-    /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(TYPE_CONFIRM)].filter((block) => !("kpTypeConfirmAttached" in block.dataset)).map((block) => attachOne(block, TypeConfirmControl, { strings }))
-  );
-  return () => {
-    for (const control of made6.splice(0)) control?.destroy();
-  };
-}
-var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeSeq, TypeConfirmField, TypeConfirmControl;
-var init_type_confirm = __esm({
-  "js/components/type-confirm.js"() {
-    "use strict";
-    init_controller();
-    init_strings();
-    VIOLATION_EVENT = "kp-contract-violation";
-    CONFIRM_WINDOW_MS = 4e3;
-    CONFIRM_MODES = /** @type {const} */
-    ["dialog", "inline"];
-    CONFIRM_OWNED = "[data-kp-confirm-owner]";
-    TYPE_CONFIRM_EVENT = "kp-type-confirm";
-    TYPE_CONFIRM = "[data-kp-type-confirm]";
-    typeSeq = 0;
-    TypeConfirmField = class {
-      /**
-       * @param {{ doc: Document, block: HTMLElement, input: HTMLInputElement, status: HTMLElement, name: string, anyCase: boolean,
-       *   onChange?: (matched: boolean, value: string) => void, words: import('../strings.js').Strings }} parts
-       */
-      constructor({ doc, block, input, status, name, anyCase, onChange, words: words3 }) {
-        this.doc = doc;
-        this.block = block;
-        this.input = input;
-        this.status = status;
-        this.name = name;
-        this.anyCase = anyCase;
-        this.onChange = onChange;
-        this.words = words3;
-        this.matched = false;
-      }
-      /** Read the field: draw the status line, and announce the answer when it turns. */
-      update() {
-        const { doc, block, input, status, name, words: s2 } = this;
-        const now = typeConfirmMatches(input.value, name, { anyCase: this.anyCase });
-        const typed = input.value.trim() !== "";
-        block.dataset.kpMatched = String(now);
-        if (now) {
-          const badge = doc.createElement("span");
-          badge.className = "kp-badge kp-badge--success kp-type-confirm__match";
-          badge.textContent = s2.typeConfirmMatched;
-          status.replaceChildren(badge);
-        } else status.textContent = typed ? s2.typeConfirmMismatch : "";
-        if (now === this.matched) return;
-        this.matched = now;
-        this.onChange?.(now, input.value);
-        block.dispatchEvent(new CustomEvent(TYPE_CONFIRM_EVENT, { bubbles: true, detail: { matched: now, value: input.value, name } }));
-      }
-    };
-    TypeConfirmControl = class extends Controller {
-      /** @param {HTMLElement} host @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
-      constructor(host, options = {}) {
-        super(host, options);
-        this.strings = options.strings;
-        const target = host.dataset.kpTypeConfirmFor ? host.ownerDocument.getElementById(host.dataset.kpTypeConfirmFor) : null;
-        this.button = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
-        this.wasDisabled = this.button?.disabled ?? false;
-      }
-      connect() {
-        const block = this.host;
-        const doc = block.ownerDocument;
-        block.dataset.kpTypeConfirmAttached = "";
-        this.own(() => {
-          block.replaceChildren();
-          block.classList.remove("kp-type-confirm", "kp-field");
-          delete block.dataset.kpMatched;
-          delete block.dataset.kpTypeConfirmAttached;
-          if (this.button) this.button.disabled = this.wasDisabled;
-        });
-        const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
-        const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
-        if (lost instanceof Element) {
-          lost.removeAttribute("id");
-          lost.removeAttribute("hidden");
-        }
-        const typed = buildTypeConfirm(doc, {
-          name: block.dataset.kpTypeConfirm ?? "",
-          anyCase: block.dataset.kpTypeConfirmCase === "any",
-          loses: lost,
-          strings: this.strings,
-          block,
-          onChange: (matched) => this.hold(matched)
-        });
-        this.hold(typed.matched());
-      }
-      /** The button is on only while the name matches, and never when the page had disabled it. @param {boolean} matched */
-      hold(matched) {
-        if (this.button) this.button.disabled = !matched || this.wasDisabled;
-      }
-    };
-  }
-});
-
-// js/components/confirm-dialog.js
-function firstDescriptionField(description) {
-  for (const field2 of description.querySelectorAll(DESCRIPTION_FIELD)) {
-    if (field2 instanceof HTMLElement && field2.getClientRects().length > 0 && !field2.closest("[inert]")) return field2;
-  }
-  return null;
-}
-function openConfirmation(button6, { phrase, description: richText, acceptLook = "destructive", strings, onAccept, onCancel: onCancel2, className = "", initialFocus = "cancel", dependents, blocked, typeName, anyCase, loses, acceptLabel, acceptFollows, acceptVerb } = {}) {
-  const s2 = { ...getStrings(), ...strings };
-  const text = phrase ?? button6.getAttribute("data-kp-confirm") ?? s2.confirm;
-  const users = (dependents ?? (button6.getAttribute("data-kp-confirm-dependents") ?? "").split(";").map((name2) => name2.trim()).filter(Boolean)).slice();
-  const blockedAttribute = button6.getAttribute("data-kp-confirm-blocked");
-  const stop = blocked === void 0 ? blockedAttribute === null ? null : blockedAttribute.trim() || s2.confirmBlocked : blocked === false ? null : blocked === true ? s2.confirmBlocked : blocked;
-  const displaced = [...document.querySelectorAll("[popover]")].filter((el16) => el16.matches(":popover-open"));
-  const id = `kp-confirm-${++dialogSeq}`;
-  const dialog = document.createElement("dialog");
-  dialog.className = `kp-dialog kp-confirm ${className}`.trim();
-  dialog.setAttribute("data-kp-confirm-dialog", "");
-  dialog.setAttribute("aria-labelledby", `${id}-phrase`);
-  dialog.setAttribute("aria-describedby", `${id}-description`);
-  const title = document.createElement("h2");
-  title.className = "kp-dialog__title";
-  title.id = `${id}-phrase`;
-  title.textContent = text;
-  const rich = richText !== void 0 && typeof richText !== "string";
-  const description = document.createElement(rich ? "div" : "p");
-  description.className = "kp-dialog__description";
-  description.id = `${id}-description`;
-  const describedBy2 = button6.getAttribute("data-kp-confirm-description");
-  const plainText2 = typeof richText === "string" ? richText : describedBy2 ?? s2.confirmDescription;
-  if (stop === null && rich) description.append(...Array.isArray(richText) ? richText : [richText]);
-  else description.textContent = stop ?? plainText2;
-  const silent = stop === null && !rich && plainText2.trim() === "";
-  const cancel = document.createElement("button");
-  cancel.type = "button";
-  cancel.className = "kp-button";
-  cancel.setAttribute("data-kp-confirm-cancel", "");
-  cancel.textContent = stop === null ? s2.confirmCancel : s2.confirmClose;
-  cancel.addEventListener("click", () => dialog.close(""));
-  const accept = document.createElement("button");
-  accept.type = "button";
-  accept.className = acceptLook === "primary" ? "kp-button kp-button--primary" : "kp-button kp-button--destructive";
-  accept.setAttribute("data-kp-confirm-accept", "");
-  accept.textContent = acceptLabel ?? button6.getAttribute("data-kp-confirm-label") ?? s2.confirmAccept;
-  if (acceptFollows !== void 0) {
-    accept.setAttribute("data-kp-accept-follows", typeof acceptFollows === "string" ? acceptFollows : acceptFollows.id);
-    if (acceptVerb !== void 0) accept.setAttribute("data-kp-accept-verb", acceptVerb);
-  }
-  accept.addEventListener("click", () => {
-    if (!accept.disabled) dialog.close("accept");
-  });
-  const actions = document.createElement("div");
-  actions.className = "kp-dialog__actions";
-  if (stop === null) actions.append(cancel, accept);
-  else actions.append(cancel);
-  if (silent) dialog.removeAttribute("aria-describedby");
-  dialog.append(...silent ? [title] : [title, description]);
-  if (users.length > 0) {
-    const block = document.createElement("section");
-    block.className = "kp-confirm__dependents";
-    block.setAttribute("aria-labelledby", `${id}-dependents`);
-    const heading = document.createElement("h3");
-    heading.className = "kp-dialog__heading";
-    heading.id = `${id}-dependents`;
-    heading.textContent = s2.confirmDependents(users.length);
-    const list = document.createElement("ul");
-    list.className = "kp-confirm__list";
-    for (const name2 of users) {
-      const item = document.createElement("li");
-      item.textContent = name2;
-      list.append(item);
-    }
-    block.append(heading, list);
-    dialog.append(block);
-    dialog.setAttribute("aria-describedby", silent ? `${id}-dependents` : `${id}-description ${id}-dependents`);
-  }
-  const name = typeName ?? button6.getAttribute("data-kp-confirm-type") ?? "";
-  let field2 = null;
-  if (name.trim() !== "" && stop === null) {
-    dialog.classList.add("kp-confirm--typed");
-    const own = (button6.textContent ?? "").trim().replace(/\s*(?:…|\.\.\.)$/, "");
-    accept.textContent = acceptLabel ?? button6.getAttribute("data-kp-confirm-label") ?? (own || s2.confirmAccept);
-    const lostId = button6.getAttribute("data-kp-confirm-loses");
-    const lostSource = lostId ? document.getElementById(lostId) : null;
-    const lost = loses ?? (lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null);
-    if (lost instanceof Element) {
-      lost.removeAttribute("id");
-      lost.removeAttribute("hidden");
-    }
-    const body = document.createElement("div");
-    body.className = "kp-dialog__body";
-    const typed = buildTypeConfirm(document, {
-      name,
-      anyCase: anyCase ?? button6.getAttribute("data-kp-confirm-case") === "any",
-      loses: lost,
-      strings,
-      onChange: (matched) => {
-        accept.disabled = !matched;
-      }
-    });
-    accept.disabled = !typed.matched();
-    typed.input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" && !accept.disabled) {
-        event.preventDefault();
-        dialog.close("accept");
-      }
-    });
-    body.append(typed.block);
-    field2 = typed.input;
-    dialog.append(body);
-  }
-  dialog.append(actions);
-  document.body.append(dialog);
-  dialog.addEventListener("close", () => {
-    const taken = dialog.returnValue === "accept";
-    dialog.remove();
-    for (const popover of displaced) {
-      if (popover.isConnected && !popover.matches(":popover-open")) popover.showPopover();
-    }
-    if (button6.isConnected) button6.focus();
-    if (taken) onAccept?.();
-    else onCancel2?.();
-  });
-  dialog.showModal();
-  field2 ??= stop === null && rich ? firstDescriptionField(description) : null;
-  (field2 ?? (initialFocus === "accept" && stop === null ? accept : cancel)).focus();
-  return dialog;
-}
-var dialogSeq, DESCRIPTION_FIELD;
-var init_confirm_dialog = __esm({
-  "js/components/confirm-dialog.js"() {
-    "use strict";
-    init_strings();
-    init_type_confirm();
-    dialogSeq = 0;
-    DESCRIPTION_FIELD = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), [contenteditable="true"]';
+    init_constants17();
   }
 });
 
@@ -29765,16 +31435,16 @@ function enforceContracts(root = document, { disable = true, rules, exempt, log 
   for (const el16 of root.querySelectorAll("[data-kp-contract-error]")) restore(el16);
   const violations = findViolations(root, { rules, exempt });
   for (const v of violations) {
-    const before = {};
+    const before2 = {};
     if (disable && v.rule === "DI10" && "disabled" in v.element) {
       const button6 = (
         /** @type {HTMLButtonElement} */
         v.element
       );
-      before.disabled = button6.disabled;
+      before2.disabled = button6.disabled;
       button6.disabled = true;
     }
-    changed.set(v.element, before);
+    changed.set(v.element, before2);
     v.element.setAttribute("data-kp-contract-error", v.rule);
     log?.(`[kp-themes ${v.rule}] ${v.message}`, v.element);
     v.element.dispatchEvent(new CustomEvent(VIOLATION_EVENT, { bubbles: true, detail: v }));
@@ -29785,8 +31455,8 @@ function enforceContracts(root = document, { disable = true, rules, exempt, log 
   return Object.assign(detach, { violations });
 }
 function restore(el16) {
-  const before = changed.get(el16);
-  if (before !== void 0 && "disabled" in el16) el16.disabled = before.disabled ?? false;
+  const before2 = changed.get(el16);
+  if (before2 !== void 0 && "disabled" in el16) el16.disabled = before2.disabled ?? false;
   changed.delete(el16);
   el16.removeAttribute("data-kp-contract-error");
 }
@@ -30594,7 +32264,7 @@ var make8, actionButton, rowOf3, actionOf2;
 var init_dom4 = __esm({
   "js/passkeys/dom.js"() {
     "use strict";
-    init_constants16();
+    init_constants17();
     make8 = (doc, className, tag = "span") => {
       const node = doc.createElement(tag);
       if (className) node.className = className;
@@ -30617,7 +32287,7 @@ var init_dom4 = __esm({
 
 // js/passkeys/state.js
 var state2, nextRowNumber;
-var init_state9 = __esm({
+var init_state10 = __esm({
   "js/passkeys/state.js"() {
     "use strict";
     state2 = { serial: 0 };
@@ -30811,10 +32481,10 @@ var init_row = __esm({
     "use strict";
     init_strings();
     init_freshness();
-    init_constants16();
+    init_constants17();
     init_dom4();
     init_options();
-    init_state9();
+    init_state10();
   }
 });
 
@@ -30964,7 +32634,7 @@ function draw2(c) {
   c.height = list.getBoundingClientRect().height;
   if (hadKey) restoreFocus(c, hadKey, hadAct);
 }
-var init_paint5 = __esm({
+var init_paint6 = __esm({
   "js/passkeys/paint.js"() {
     "use strict";
     init_strings();
@@ -30978,16 +32648,16 @@ var init_paint5 = __esm({
 
 // js/passkeys/controller.js
 var reasonOf2, PasskeysController;
-var init_controller20 = __esm({
+var init_controller22 = __esm({
   "js/passkeys/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_components();
-    init_constants16();
+    init_constants17();
     init_dom4();
     init_options();
-    init_paint5();
+    init_paint6();
     init_live_options();
     reasonOf2 = (error, fallback2) => error instanceof Error && error.message ? error.message : fallback2;
     PasskeysController = class extends Controller {
@@ -31224,12 +32894,12 @@ function attachPasskeys(root = document) {
   return () => {
   };
 }
-var init_api7 = __esm({
+var init_api8 = __esm({
   "js/passkeys/api.js"() {
     "use strict";
     init_controller();
-    init_constants16();
-    init_controller20();
+    init_constants17();
+    init_controller22();
   }
 });
 
@@ -31251,9 +32921,9 @@ __export(passkeys_exports, {
 var init_passkeys = __esm({
   "js/passkeys.js"() {
     "use strict";
-    init_constants16();
+    init_constants17();
     init_options();
-    init_api7();
+    init_api8();
   }
 });
 
@@ -31297,8 +32967,8 @@ function groupMessages(messages, minutes) {
   const groups = [];
   for (const message of messages) {
     const run = groups[groups.length - 1];
-    const before = run?.[run.length - 1];
-    const joins = before !== void 0 && message.dir !== "system" && before.dir === message.dir && (before.sender ?? "") === (message.sender ?? "") && dayKey2(before.at) === dayKey2(message.at) && message.at - before.at <= minutes * 6e4 && minutes > 0;
+    const before2 = run?.[run.length - 1];
+    const joins = before2 !== void 0 && message.dir !== "system" && before2.dir === message.dir && (before2.sender ?? "") === (message.sender ?? "") && dayKey2(before2.at) === dayKey2(message.at) && message.at - before2.at <= minutes * 6e4 && minutes > 0;
     if (joins) run.push(message);
     else groups.push([message]);
   }
@@ -31387,12 +33057,12 @@ function messageItem(doc, message, context2) {
 function avatarOf(doc, message, sender, first) {
   const slot = make9(doc, "kp-thread__avatar");
   if (first && sender) {
-    const mark = make9(doc, "kp-idmark kp-idmark--sm kp-idmark--round");
-    mark.setAttribute("data-kp-idmark", sender);
-    if (message.src) mark.setAttribute("data-kp-idmark-src", message.src);
-    mark.setAttribute("aria-hidden", "true");
-    setIdmark(mark, sender);
-    slot.append(mark);
+    const mark2 = make9(doc, "kp-idmark kp-idmark--sm kp-idmark--round");
+    mark2.setAttribute("data-kp-idmark", sender);
+    if (message.src) mark2.setAttribute("data-kp-idmark-src", message.src);
+    mark2.setAttribute("aria-hidden", "true");
+    setIdmark(mark2, sender);
+    slot.append(mark2);
   }
   return slot;
 }
@@ -31499,7 +33169,7 @@ function threadList(host, { spec, expanded }, options, locale) {
   }
   return list;
 }
-var init_list2 = __esm({
+var init_list3 = __esm({
   "js/thread/list.js"() {
     "use strict";
     init_message();
@@ -31515,7 +33185,7 @@ var init_view = __esm({
     init_busy_card();
     init_controller();
     init_strings();
-    init_list2();
+    init_list3();
     init_options2();
     WAIT_LINES = { in: ["100%", "92%", "58%"], out: ["100%", "64%"] };
     LOCALE = "en-GB";
@@ -31726,12 +33396,12 @@ var init_view = __esm({
         if (!body || !button6) return;
         const limit = Number(body.getAttribute("data-kp-fold-lines"));
         const open4 = this.expanded.has(key);
-        const before = body.getAttribute("data-kp-fold");
+        const before2 = body.getAttribute("data-kp-fold");
         body.setAttribute("data-kp-fold", "open");
         const style = body.ownerDocument.defaultView?.getComputedStyle(body);
         const lineHeight2 = parseFloat(style?.lineHeight ?? "") || (parseFloat(style?.fontSize ?? "") || FONT_PX) * LINE_EM;
         const lines = Math.max(1, Math.round(body.scrollHeight / lineHeight2));
-        body.setAttribute("data-kp-fold", before ?? "folded");
+        body.setAttribute("data-kp-fold", before2 ?? "folded");
         if (lines <= limit) {
           body.removeAttribute("data-kp-fold");
           button6.hidden = true;
@@ -31755,19 +33425,19 @@ async function copyText3(button6, text) {
     button6.textContent = strings.threadCopyFailed;
     return;
   }
-  const before = button6.getAttribute("data-kp-label") ?? button6.textContent ?? "";
-  button6.setAttribute("data-kp-label", before);
+  const before2 = button6.getAttribute("data-kp-label") ?? button6.textContent ?? "";
+  button6.setAttribute("data-kp-label", before2);
   button6.style.minInlineSize = `${button6.offsetWidth}px`;
   button6.textContent = strings.copied;
   button6.setAttribute("data-kp-copied", "");
   button6.ownerDocument.defaultView?.setTimeout(() => {
-    button6.textContent = before;
+    button6.textContent = before2;
     button6.removeAttribute("data-kp-copied");
     button6.style.minInlineSize = "";
   }, COPIED_MS2);
 }
 var COPIED_MS2, ThreadControl;
-var init_controller21 = __esm({
+var init_controller23 = __esm({
   "js/thread/controller.js"() {
     "use strict";
     init_strings();
@@ -31904,7 +33574,7 @@ var init_thread = __esm({
   "js/thread.js"() {
     "use strict";
     init_controller();
-    init_controller21();
+    init_controller23();
     init_options2();
     init_options2();
   }
@@ -31912,7 +33582,7 @@ var init_thread = __esm({
 
 // js/stackbar/values.js
 var STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT, DEFAULT_LEGEND_ROWS, PALETTE_SIZE, OTHER_KEY, DECIMAL_BELOW_PERCENT;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/stackbar/values.js"() {
     "use strict";
     STACKBAR = "[data-kp-stackbar]";
@@ -31962,7 +33632,7 @@ var init_math2 = __esm({
   "js/stackbar/math.js"() {
     "use strict";
     init_strings();
-    init_values19();
+    init_values20();
     langOf = (el16) => (
       /** @type {HTMLElement | null} */
       el16.closest("[lang]")?.lang || void 0
@@ -31978,7 +33648,7 @@ var init_core5 = __esm({
     init_controller();
     init_strings();
     init_kpi();
-    init_values19();
+    init_values20();
     init_math2();
     StackbarCore = class extends Controller {
       /**
@@ -32126,7 +33796,7 @@ var StackbarParts;
 var init_parts2 = __esm({
   "js/stackbar/parts.js"() {
     "use strict";
-    init_values19();
+    init_values20();
     init_math2();
     init_core5();
     StackbarParts = class extends StackbarCore {
@@ -32186,11 +33856,11 @@ var init_parts2 = __esm({
       /** The ticks across the bar at a share of the whole. @param {StackbarDraw} c */
       marks(c) {
         const { calc, bar } = c;
-        for (const mark of c.spec.marks ?? []) {
+        for (const mark2 of c.spec.marks ?? []) {
           const tick6 = this.make("kp-stackbar__mark");
           tick6.setAttribute("aria-hidden", "true");
-          tick6.style.setProperty("--kp-at", String(calc.sum > calc.whole && calc.sum > 0 ? mark.at * calc.whole / calc.sum : mark.at));
-          if (mark.label) tick6.title = mark.label;
+          tick6.style.setProperty("--kp-at", String(calc.sum > calc.whole && calc.sum > 0 ? mark2.at * calc.whole / calc.sum : mark2.at));
+          if (mark2.label) tick6.title = mark2.label;
           bar.append(tick6);
         }
       }
@@ -32237,11 +33907,11 @@ var init_parts2 = __esm({
 
 // js/stackbar/controller.js
 var Stackbar;
-var init_controller22 = __esm({
+var init_controller24 = __esm({
   "js/stackbar/controller.js"() {
     "use strict";
     init_hovercard();
-    init_values19();
+    init_values20();
     init_parts2();
     Stackbar = class extends StackbarParts {
       connect() {
@@ -32375,9 +34045,9 @@ var init_stackbar = __esm({
   "js/stackbar.js"() {
     "use strict";
     init_controller();
-    init_controller22();
-    init_values19();
-    init_values19();
+    init_controller24();
+    init_values20();
+    init_values20();
     init_math2();
   }
 });
@@ -32434,9 +34104,9 @@ var init_tone = __esm({
 function buildLead(doc, value) {
   const lead = make10(doc, "kp-bullets__lead");
   if (typeof value === "string") {
-    const mark = make10(doc, "kp-idmark kp-idmark--sm");
-    setIdmark(mark, value);
-    lead.append(mark);
+    const mark2 = make10(doc, "kp-idmark kp-idmark--sm");
+    setIdmark(mark2, value);
+    lead.append(mark2);
   } else lead.append(value);
   return lead;
 }
@@ -32540,7 +34210,7 @@ var init_waiting = __esm({
 
 // js/bullets/values.js
 var BULLETS, BULLETS_PICK_EVENT, BULLETS_RETRY_EVENT, DEFAULT_LOADING_ROWS, DEFAULT_MAX_THRESHOLDS;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/bullets/values.js"() {
     "use strict";
     BULLETS = "[data-kp-bullets]";
@@ -32553,7 +34223,7 @@ var init_values20 = __esm({
 
 // js/bullets/controller.js
 var BulletList;
-var init_controller23 = __esm({
+var init_controller25 = __esm({
   "js/bullets/controller.js"() {
     "use strict";
     init_controller();
@@ -32563,7 +34233,7 @@ var init_controller23 = __esm({
     init_row2();
     init_waiting();
     init_make();
-    init_values20();
+    init_values21();
     BulletList = class extends Controller {
       /**
        * @param {HTMLElement} host
@@ -32731,16 +34401,16 @@ var init_bullets = __esm({
   "js/bullets.js"() {
     "use strict";
     init_controller();
-    init_controller23();
-    init_values20();
-    init_values20();
+    init_controller25();
+    init_values21();
+    init_values21();
     init_tone();
   }
 });
 
 // js/code/constants.js
 var CODE, CODE_COPIED_MS, CELL_LINES, LOADING_LINES_MIN, LOADING_LINES_MAX;
-var init_constants17 = __esm({
+var init_constants18 = __esm({
   "js/code/constants.js"() {
     "use strict";
     CODE = "[data-kp-code]";
@@ -33073,7 +34743,7 @@ function shellWord(doc, word, ctx, out) {
   ctx.expectCommand = keyword && SHELL_OPENS.has(word);
 }
 function shellToken(doc, match, ctx, out) {
-  const before = ctx.expectCommand;
+  const before2 = ctx.expectCommand;
   if (match[1] !== void 0) out.push(span4(doc, "kp-code__punct", match[1]));
   else if (match[3] !== void 0) {
     if (match[2]) out.push(doc.createTextNode(match[2]));
@@ -33092,7 +34762,7 @@ function shellToken(doc, match, ctx, out) {
     ctx.expectCommand = false;
   } else if (match[8] !== void 0) {
     out.push(span4(doc, "kp-code__var", match[8]));
-    if (before) {
+    if (before2) {
       ctx.assigned = true;
       ctx.commandAfter = true;
     }
@@ -33148,7 +34818,7 @@ var init_highlight = __esm({
 
 // js/code/state.js
 var state3, nextBodyNumber;
-var init_state10 = __esm({
+var init_state11 = __esm({
   "js/code/state.js"() {
     "use strict";
     state3 = { serial: 0 };
@@ -33266,9 +34936,9 @@ function drawText(ctl, text) {
   el16.setAttribute("data-kp-state", "ready");
   const json = isJson(spec.language);
   const pretty = json ? prettyJson(text) : null;
-  const shown5 = json && ctl.layout === "pretty" && pretty !== null ? pretty : text;
-  ctl.shown = shown5;
-  const lines = shown5.split("\n");
+  const shown6 = json && ctl.layout === "pretty" && pretty !== null ? pretty : text;
+  ctl.shown = shown6;
+  const lines = shown6.split("\n");
   ctl.lines = lines.length;
   const body = make11(el16.ownerDocument, "kp-code__body", "pre");
   body.id ||= `kp-code-${nextBodyNumber()}`;
@@ -33301,7 +34971,7 @@ var init_body = __esm({
     init_dom5();
     init_language();
     init_highlight();
-    init_state10();
+    init_state11();
   }
 });
 
@@ -33567,7 +35237,7 @@ var init_actions3 = __esm({
   "js/code/actions.js"() {
     "use strict";
     init_strings();
-    init_constants17();
+    init_constants18();
     init_body();
     init_dialog2();
     init_head();
@@ -33629,19 +35299,19 @@ var init_loading = __esm({
     "use strict";
     init_strings();
     init_busy_card();
-    init_constants17();
+    init_constants18();
     init_dom5();
   }
 });
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller24 = __esm({
+var init_controller26 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
     init_footprint();
-    init_constants17();
+    init_constants18();
     init_actions3();
     init_body();
     init_head();
@@ -33737,31 +35407,31 @@ function setCode(el16, given2) {
 }
 function specFromMarkup(el16) {
   const source = el16.querySelector("code") ?? el16.querySelector("pre");
-  const read = (name) => el16.getAttribute(`data-kp-code-${name}`) ?? void 0;
+  const read2 = (name) => el16.getAttribute(`data-kp-code-${name}`) ?? void 0;
   const cell = el16.classList.contains("kp-code--cell");
   const state12 = (
     /** @type {import('./constants.js').CodeSpec['state']} */
-    read("state")
+    read2("state")
   );
-  const layout3 = read("layout");
+  const layout3 = read2("layout");
   const binaryBytes = Number(el16.getAttribute("data-kp-binary-size"));
   const cut = (el16.getAttribute("data-kp-truncated") ?? "").split("/").map((n) => Number(n));
-  const open4 = read("open");
+  const open4 = read2("open");
   return {
     text: source?.textContent ?? "",
-    title: read("title"),
-    language: read("language"),
-    size: Number.isFinite(binaryBytes) && el16.hasAttribute("data-kp-binary-size") ? formatBytes(binaryBytes) : read("size"),
+    title: read2("title"),
+    language: read2("language"),
+    size: Number.isFinite(binaryBytes) && el16.hasAttribute("data-kp-binary-size") ? formatBytes(binaryBytes) : read2("size"),
     lines: el16.hasAttribute("data-kp-code-lines"),
     wrap: el16.hasAttribute("data-kp-code-wrap") ? true : cell ? void 0 : false,
-    maxLines: read("max") !== void 0 ? Number(read("max")) || 0 : cell ? 3 : 0,
+    maxLines: read2("max") !== void 0 ? Number(read2("max")) || 0 : cell ? 3 : 0,
     layout: layout3 === "raw" ? "raw" : layout3 === "pretty" ? "pretty" : void 0,
     state: state12 ?? (el16.hasAttribute("data-kp-binary-size") ? "binary" : void 0),
     cell,
     open: open4 === "dialog" ? "dialog" : void 0,
     downloadUrl: el16.getAttribute("data-kp-download") ?? void 0,
     copy: el16.getAttribute("data-kp-copy") === "false" ? false : void 0,
-    highlight: ["off", "false"].includes(read("highlight") ?? "") ? false : void 0,
+    highlight: ["off", "false"].includes(read2("highlight") ?? "") ? false : void 0,
     truncated: cut.length === 2 && cut.every((n) => Number.isFinite(n) && n > 0) ? { shown: formatBytes(cut[0]), total: formatBytes(cut[1]) } : void 0
   };
 }
@@ -33778,8 +35448,8 @@ var init_attach6 = __esm({
     "use strict";
     init_controller();
     init_locale();
-    init_constants17();
-    init_controller24();
+    init_constants18();
+    init_controller26();
   }
 });
 
@@ -33795,7 +35465,7 @@ __export(code_exports, {
 var init_code = __esm({
   "js/code.js"() {
     "use strict";
-    init_constants17();
+    init_constants18();
     init_language();
     init_attach6();
   }
@@ -33850,7 +35520,7 @@ function attachKeys(root = document) {
   return () => void 0;
 }
 var MOD_CAP, KEYS2, isMacPlatform, capText;
-var init_keys7 = __esm({
+var init_keys8 = __esm({
   "js/keys.js"() {
     "use strict";
     init_strings();
@@ -33919,7 +35589,7 @@ var init_core6 = __esm({
       }
       /** The rows the walk may land on, in the order they are drawn. */
       rows() {
-        return this.allRows().filter(shown2);
+        return this.allRows().filter(shown3);
       }
       /** @param {string | null} key */
       rowByKey(key) {
@@ -33942,7 +35612,7 @@ var init_core6 = __esm({
       settle() {
         const every = this.allRows();
         const current2 = this.rowByKey(this.cursorKey);
-        const stop = current2 ?? every.find(shown2) ?? every[0];
+        const stop = current2 ?? every.find(shown3) ?? every[0];
         for (const row2 of every) {
           if (!row2.hasAttribute("tabindex") || row2.hasAttribute("data-kp-roving")) {
             row2.setAttribute("data-kp-roving", "");
@@ -34016,10 +35686,10 @@ var init_core6 = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller25 = __esm({
+var init_controller27 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
-    init_keys7();
+    init_keys8();
     init_strings();
     init_core6();
     init_rows();
@@ -34303,7 +35973,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller25();
+    init_controller27();
     init_rows();
     init_rows();
   }
@@ -34323,7 +35993,7 @@ var init_rows3 = __esm({
     MULTI_ROLES = ["listbox", "grid", "treegrid", "tree"];
     PRESS_SLOP_PX2 = 10;
     keyOf4 = (row2) => row2.dataset.kpRowKey ?? "";
-    visible2 = (row2) => shown2(row2) && (row2.checkVisibility ? row2.checkVisibility() : row2.offsetParent !== null);
+    visible2 = (row2) => shown3(row2) && (row2.checkVisibility ? row2.checkVisibility() : row2.offsetParent !== null);
     ownControl = (target, extra) => target.closest(extra === "" ? CONTROLS : `${CONTROLS}, ${extra}`) !== null;
   }
 });
@@ -34448,12 +36118,12 @@ var init_core7 = __esm({
       /** Drop the picks whose row went away (a redraw, a filter that removed it), and mark the rows again. */
       settle() {
         const present2 = new Set(this.allRows().map(keyOf4));
-        const before = this.picked.size;
+        const before2 = this.picked.size;
         for (const key of this.picked) if (!present2.has(key)) this.picked.delete(key);
         if (this.anchorKey !== null && !present2.has(this.anchorKey)) this.anchorKey = null;
         if (this.cursorKey !== null && !present2.has(this.cursorKey)) this.cursorKey = null;
         if (this.picked.size === 0) this.host.removeAttribute("data-kp-selecting");
-        if (this.picked.size !== before) this.commit("refresh");
+        if (this.picked.size !== before2) this.commit("refresh");
         else this.mark();
       }
       /** Move the cursor to a row, or take it away. @param {HTMLElement | null} row */
@@ -34471,7 +36141,7 @@ var init_core7 = __esm({
 
 // js/row-pick/controller.js
 var RowPicker;
-var init_controller26 = __esm({
+var init_controller28 = __esm({
   "js/row-pick/controller.js"() {
     "use strict";
     init_strings();
@@ -34654,7 +36324,7 @@ var init_row_pick = __esm({
   "js/row-pick.js"() {
     "use strict";
     init_controller();
-    init_controller26();
+    init_controller28();
     init_rows3();
     init_rows3();
     rowPickKeys = (el16) => rowPick(el16)?.keys() ?? [];
@@ -34680,18 +36350,18 @@ function sourcesOf(bar) {
 function readSources(memory) {
   const items = /* @__PURE__ */ new Map();
   const known4 = /* @__PURE__ */ new Set();
-  let shown5 = 0;
+  let shown6 = 0;
   let shownTicked = 0;
   let index = 0;
   for (const source of memory.sources) {
     for (const host of hostsOf(source, ROW_PICK)) {
       const picker = rowPick(host);
       if (!picker) continue;
-      const read = readPicks(host, picker.keys());
-      for (const key of read.known) known4.add(key);
-      for (const item of read.items) if (!items.has(item.key)) items.set(item.key, item);
-      shown5 += read.shown;
-      shownTicked += read.shownTicked;
+      const read2 = readPicks(host, picker.keys());
+      for (const key of read2.known) known4.add(key);
+      for (const item of read2.items) if (!items.has(item.key)) items.set(item.key, item);
+      shown6 += read2.shown;
+      shownTicked += read2.shownTicked;
     }
     for (
       const box of
@@ -34704,18 +36374,18 @@ function readSources(memory) {
       known4.add(key);
       const on = shownRow(row2);
       if (on && !box.disabled) {
-        shown5 += 1;
+        shown6 += 1;
         if (box.checked) shownTicked += 1;
       }
       if (box.checked && !items.has(key)) items.set(key, { key, label: labelOf6(row2) });
     }
   }
-  return { items: [...items.values()], known: known4, shown: shown5, shownTicked };
+  return { items: [...items.values()], known: known4, shown: shown6, shownTicked };
 }
 function readPicks(source, picked) {
   const byKey = /* @__PURE__ */ new Map();
   const known4 = /* @__PURE__ */ new Set();
-  let shown5 = 0;
+  let shown6 = 0;
   let shownTicked = 0;
   for (
     const row2 of
@@ -34725,12 +36395,12 @@ function readPicks(source, picked) {
     const key = row2.dataset.kpRowKey ?? "";
     known4.add(key);
     const on = shownRow(row2);
-    if (on) shown5 += 1;
+    if (on) shown6 += 1;
     if (!picked.includes(key)) continue;
     if (on) shownTicked += 1;
     byKey.set(key, { key, label: labelOf6(row2) });
   }
-  return { items: picked.flatMap((key) => byKey.get(key) ?? []), known: known4, shown: shown5, shownTicked };
+  return { items: picked.flatMap((key) => byKey.get(key) ?? []), known: known4, shown: shown6, shownTicked };
 }
 var SELECTION, BOX, SELECTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_MATCHING_EVENT, SELECTION_ACTION_EVENT, SELECTION_LIFT_PROPERTY, SELECTION_NAMES, SELECTION_SAY_MS, make12, labelOf6, rowOf4, keyOf5, shownRow;
 var init_model2 = __esm({
@@ -34885,8 +36555,8 @@ function draw3(bar, memory) {
     }
     p.names.replaceChildren(...nodes);
   }
-  const { shown: shown5, shownTicked } = memory.sources.length ? readSources(memory) : { shown: 0, shownTicked: 0 };
-  const offerable = memory.matchingTotal > items.length && shown5 > 0 && shownTicked === shown5 && !memory.matching;
+  const { shown: shown6, shownTicked } = memory.sources.length ? readSources(memory) : { shown: 0, shownTicked: 0 };
+  const offerable = memory.matchingTotal > items.length && shown6 > 0 && shownTicked === shown6 && !memory.matching;
   p.offer.hidden = !(offerable || memory.matching);
   if (!p.offer.hidden) {
     const button6 = (
@@ -34894,7 +36564,7 @@ function draw3(bar, memory) {
       make12(bar.ownerDocument, "kp-button kp-button--ghost kp-button--sm kp-selection__take", "button")
     );
     button6.type = "button";
-    button6.textContent = memory.matching ? strings.selectionOnlyShown(shown5) : strings.selectionMatching(memory.matchingTotal);
+    button6.textContent = memory.matching ? strings.selectionOnlyShown(shown6) : strings.selectionMatching(memory.matchingTotal);
     button6.setAttribute("data-kp-selection-take", memory.matching ? "off" : "on");
     p.offer.replaceChildren(button6);
   }
@@ -34970,27 +36640,27 @@ function untick(memory) {
 }
 function sync(bar, memory) {
   const strings = getStrings();
-  const before = memory.items;
+  const before2 = memory.items;
   if (!memory.manual) {
-    const read = readSources(memory);
-    const dropped = before.filter((item) => !read.known.has(item.key)).length;
-    memory.items = read.items;
-    memory.known = read.known;
+    const read2 = readSources(memory);
+    const dropped = before2.filter((item) => !read2.known.has(item.key)).length;
+    memory.items = read2.items;
+    memory.known = read2.known;
     if (dropped > 0) say4(bar, memory, strings.selectionDropped(dropped));
-    else if (read.items.length !== before.length)
-      say4(bar, memory, read.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read.items.length));
-    if (memory.matching && (read.shown === 0 || read.shownTicked < read.shown)) {
+    else if (read2.items.length !== before2.length)
+      say4(bar, memory, read2.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read2.items.length));
+    if (memory.matching && (read2.shown === 0 || read2.shownTicked < read2.shown)) {
       memory.matching = false;
       bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: false, total: memory.matchingTotal } }));
     }
   }
   if (memory.items.length === 0) memory.namesOpen = false;
-  const changed3 = before.length !== memory.items.length || before.some((item, i) => item.key !== memory.items[i]?.key);
+  const changed3 = before2.length !== memory.items.length || before2.some((item, i) => item.key !== memory.items[i]?.key);
   draw3(bar, memory);
   if (changed3) {
-    for (const mark of bar.ownerDocument.querySelectorAll("[data-kp-refused]")) {
-      mark.removeAttribute("data-kp-refused");
-      mark.querySelector(":scope .kp-selection__refusal")?.remove();
+    for (const mark2 of bar.ownerDocument.querySelectorAll("[data-kp-refused]")) {
+      mark2.removeAttribute("data-kp-refused");
+      mark2.querySelector(":scope .kp-selection__refusal")?.remove();
     }
     const result = bar.querySelector(".kp-selection__result");
     if (result?.hasAttribute("data-kp-selection-result")) {
@@ -35031,8 +36701,8 @@ function publishLift(bar) {
   if (!view || !panel || host.getAttribute("data-kp-placement") !== "floating-bottom") return;
   const root = doc.documentElement;
   const publish = () => {
-    const shown5 = host.getAttribute("data-kp-selection-state") !== "empty";
-    const lift = shown5 ? Math.max(0, view.innerHeight - panel.getBoundingClientRect().top) : 0;
+    const shown6 = host.getAttribute("data-kp-selection-state") !== "empty";
+    const lift = shown6 ? Math.max(0, view.innerHeight - panel.getBoundingClientRect().top) : 0;
     root.style.setProperty(SELECTION_LIFT_PROPERTY, `${Math.round(lift)}px`);
   };
   if (typeof ResizeObserver !== "undefined") bar.observe(new ResizeObserver(publish)).observe(panel);
@@ -35050,7 +36720,7 @@ var init_lift = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
-var init_controller27 = __esm({
+var init_controller29 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -35247,12 +36917,12 @@ function setSelectionProgress(bar, progress) {
   if (!memory) return;
   const total = Math.max(0, Math.floor(progress.total));
   const done = Math.min(total, Math.max(0, Math.floor(progress.done)));
-  const before = memory.progress;
+  const before2 = memory.progress;
   if (!memory.busy) memory.busy = getStrings().selectionBusy("");
   memory.progress = { done, total };
   const quarter = (n) => total > 0 ? Math.floor(n / total * 4) : 0;
   const live4 = bar.querySelector(":scope > .kp-selection__live");
-  if (live4 && (!before || quarter(done) > quarter(before.done) || done === total)) live4.textContent = getStrings().selectionProgress(done, total);
+  if (live4 && (!before2 || quarter(done) > quarter(before2.done) || done === total)) live4.textContent = getStrings().selectionProgress(done, total);
   draw3(bar, memory);
 }
 function setSelectionResult(bar, result) {
@@ -35295,12 +36965,12 @@ function setSelectionRules(bar, rules) {
   draw3(bar, memory);
 }
 var memoryOf;
-var init_api8 = __esm({
+var init_api9 = __esm({
   "js/selection-bar/api.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_controller27();
+    init_controller29();
     init_draw5();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -35332,10 +37002,10 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller27();
+    init_controller29();
     init_model2();
     init_model2();
-    init_api8();
+    init_api9();
   }
 });
 
@@ -35368,7 +37038,7 @@ var init_parts3 = __esm({
 
 // js/newpill/values.js
 var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, LEAVE_FALLBACK_MS, DIVIDER_COLSPAN;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/newpill/values.js"() {
     "use strict";
     FOLLOW = "[data-kp-follow]";
@@ -35408,7 +37078,7 @@ var init_options3 = __esm({
   "js/newpill/options.js"() {
     "use strict";
     init_strings();
-    init_values21();
+    init_values22();
   }
 });
 
@@ -35493,7 +37163,7 @@ var init_draw6 = __esm({
   "js/newpill/draw.js"() {
     "use strict";
     init_core8();
-    init_values21();
+    init_values22();
     NewPillDraw = class extends NewPillCore {
       /** The pill is ruled in, and taken out the way it came [prefers-reduced-motion: at once]. @param {boolean} on */
       show(on) {
@@ -35572,7 +37242,7 @@ var init_away = __esm({
     "use strict";
     init_draw6();
     init_options3();
-    init_values21();
+    init_values22();
     NewPillAway = class extends NewPillDraw {
       /**
        * @param {HTMLElement} host the scroller
@@ -35644,13 +37314,13 @@ var init_rows4 = __esm({
 
 // js/newpill/controller.js
 var NewPill;
-var init_controller28 = __esm({
+var init_controller30 = __esm({
   "js/newpill/controller.js"() {
     "use strict";
     init_live_options();
     init_away();
     init_rows4();
-    init_values21();
+    init_values22();
     NewPill = class extends NewPillAway {
       /**
        * @param {HTMLElement} host the scroller
@@ -35808,15 +37478,15 @@ var init_newpill = __esm({
   "js/newpill.js"() {
     "use strict";
     init_controller();
-    init_controller28();
-    init_values21();
-    init_values21();
+    init_controller30();
+    init_values22();
+    init_values22();
   }
 });
 
 // js/json-field/constants.js
 var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, DEFAULT_ROWS2, MIN_ROWS, FALLBACK_LINE_HEIGHT, INDENT_NARROW, INDENT_WIDE, WATCHED_ATTRIBUTES2;
-var init_constants18 = __esm({
+var init_constants19 = __esm({
   "js/json-field/constants.js"() {
     "use strict";
     JSON_FIELD = "textarea[data-kp-json]";
@@ -35858,9 +37528,9 @@ function explainJson(text) {
     } else {
       const position = /position (\d+)/i.exec(raw);
       if (position) {
-        const before = text.slice(0, Number(position[1]));
-        line = before.split("\n").length;
-        column = before.length - before.lastIndexOf("\n");
+        const before2 = text.slice(0, Number(position[1]));
+        line = before2.split("\n").length;
+        column = before2.length - before2.lastIndexOf("\n");
       }
     }
     const why = raw.replace(/^JSON\.parse:\s*/i, "").replace(/\s+at line \d+ column \d+( of the JSON data)?/i, "").replace(/\s+in JSON at position \d+( \(line \d+ column \d+\))?/i, "").replace(/\s*\(line \d+ column \d+\)/i, "").replace(/^./, (c) => c.toLowerCase());
@@ -35972,10 +37642,10 @@ function handleKey(c, event) {
   }
   c.escaped = false;
 }
-var init_keys8 = __esm({
+var init_keys9 = __esm({
   "js/json-field/keys.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
   }
 });
 
@@ -36042,17 +37712,17 @@ function grow(c) {
 var init_layout = __esm({
   "js/json-field/layout.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
   }
 });
 
 // js/json-field/state.js
-var state4, nextFieldNumber;
-var init_state11 = __esm({
+var state4, nextFieldNumber2;
+var init_state12 = __esm({
   "js/json-field/state.js"() {
     "use strict";
     state4 = { serial: 0 };
-    nextFieldNumber = () => state4.serial += 1;
+    nextFieldNumber2 = () => state4.serial += 1;
   }
 });
 
@@ -36097,14 +37767,14 @@ function lockTools(c) {
 var init_tools = __esm({
   "js/json-field/tools.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
     init_layout();
   }
 });
 
 // js/forms/constants.js
 var FORM, SUMMARY, FIELD_ERROR, SUBMIT, VALID_EVENT, INVALID_EVENT, FIELD_EVENT, DONE_EVENT, SWITCH, SWITCH_STATE, FORMGRID_STAGE, FORMGRID_BLOCK, FORMGRID_BLOCK_DEPTH, WIDE_BLOCKS, FIT_SLACK_PX;
-var init_constants19 = __esm({
+var init_constants20 = __esm({
   "js/forms/constants.js"() {
     "use strict";
     FORM = "[data-kp-form]";
@@ -36127,7 +37797,7 @@ var init_constants19 = __esm({
 
 // js/forms/state.js
 var state5, nextHolderNumber;
-var init_state12 = __esm({
+var init_state13 = __esm({
   "js/forms/state.js"() {
     "use strict";
     state5 = { serial: 0 };
@@ -36194,8 +37864,8 @@ var init_errors = __esm({
   "js/forms/errors.js"() {
     "use strict";
     init_strings();
-    init_constants19();
-    init_state12();
+    init_constants20();
+    init_state13();
     fallback = () => getStrings().formInvalid;
   }
 });
@@ -36255,7 +37925,7 @@ var init_form = __esm({
   "js/forms/form.js"() {
     "use strict";
     init_controller();
-    init_constants19();
+    init_constants20();
     init_errors();
     init_summary();
     FormController = class extends Controller {
@@ -36436,7 +38106,7 @@ var init_formgrid_columns = __esm({
   "js/forms/formgrid-columns.js"() {
     "use strict";
     init_controller();
-    init_constants19();
+    init_constants20();
     FormgridColumnsController = class extends Controller {
       connect() {
         const grid2 = this.host;
@@ -36494,7 +38164,7 @@ var init_formgrid_stage = __esm({
   "js/forms/formgrid-stage.js"() {
     "use strict";
     init_controller();
-    init_constants19();
+    init_constants20();
     FormgridStageController = class extends Controller {
       connect() {
         const stage = this.host;
@@ -36524,7 +38194,7 @@ var init_submit = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_constants19();
+    init_constants20();
     SubmitController = class extends Controller {
       /**
        * @param {HTMLElement} host the button
@@ -36614,11 +38284,11 @@ function attachFormgridColumns(root = document) {
   };
 }
 var freshForm, freshButton, isHtml;
-var init_api9 = __esm({
+var init_api10 = __esm({
   "js/forms/api.js"() {
     "use strict";
     init_controller();
-    init_constants19();
+    init_constants20();
     init_form();
     init_formgrid_columns();
     init_formgrid_stage();
@@ -36652,7 +38322,7 @@ var init_switches = __esm({
   "js/forms/switches.js"() {
     "use strict";
     init_strings();
-    init_constants19();
+    init_constants20();
   }
 });
 
@@ -36675,9 +38345,9 @@ __export(forms_exports, {
 var init_forms = __esm({
   "js/forms.js"() {
     "use strict";
-    init_constants19();
+    init_constants20();
     init_errors();
-    init_api9();
+    init_api10();
     init_switches();
   }
 });
@@ -36751,7 +38421,7 @@ var init_validation = __esm({
   "js/json-field/validation.js"() {
     "use strict";
     init_forms();
-    init_constants18();
+    init_constants19();
     init_explain();
     init_layout();
   }
@@ -36759,17 +38429,17 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller29 = __esm({
+var init_controller31 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_constants18();
+    init_constants19();
     init_explain();
     init_frame2();
-    init_keys8();
+    init_keys9();
     init_layout();
-    init_state11();
+    init_state12();
     init_tools();
     init_validation();
     JsonFieldController = class extends Controller {
@@ -36788,7 +38458,7 @@ var init_controller29 = __esm({
         this.wrap = options.wrap ?? (this.area.hasAttribute("data-kp-json-wrap") && this.area.getAttribute("data-kp-json-wrap") !== "false");
         this.minRows = Math.max(MIN_ROWS, Number(this.area.getAttribute("rows")) || DEFAULT_ROWS2);
         this.schema = this.readSchema();
-        this.id = this.area.id || `kp-json-${nextFieldNumber()}`;
+        this.id = this.area.id || `kp-json-${nextFieldNumber2()}`;
         this.parts = buildFrame(this.doc, this.id, this.strings, { wrap: this.wrap, gutter: this.gutterWanted() });
         this.state = "empty";
         this.parsed = void 0;
@@ -36967,10 +38637,10 @@ var init_controller29 = __esm({
       /** The wheel over the line numbers scrolls the text, as it does over the box [kpadopt5-r3]. @param {WheelEvent} event */
       onGutterWheel(event) {
         const area = this.area;
-        const before = area.scrollTop;
+        const before2 = area.scrollTop;
         const lines = event.deltaMode === 1 ? event.deltaY * lineHeight(this) : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
         area.scrollTop += lines;
-        if (area.scrollTop !== before) event.preventDefault();
+        if (area.scrollTop !== before2) event.preventDefault();
       }
       /** @param {MutationRecord[]} records */
       onAttributes(records) {
@@ -37006,12 +38676,12 @@ function jsonField(area) {
 function attachJsonFields(root = document, options = {}) {
   return attachAll(root, JSON_FIELD, JsonFieldController, options);
 }
-var init_api10 = __esm({
+var init_api11 = __esm({
   "js/json-field/api.js"() {
     "use strict";
     init_controller();
-    init_constants18();
-    init_controller29();
+    init_constants19();
+    init_controller31();
   }
 });
 
@@ -37031,9 +38701,9 @@ __export(json_field_exports, {
 var init_json_field = __esm({
   "js/json-field.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
     init_explain();
-    init_api10();
+    init_api11();
   }
 });
 
@@ -37467,7 +39137,7 @@ function draw4(el16, memory) {
   }
   p.list.replaceChildren(...nodes);
 }
-var init_list3 = __esm({
+var init_list4 = __esm({
   "js/request-inspector/list.js"() {
     "use strict";
     init_segmented();
@@ -37479,7 +39149,7 @@ var init_list3 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller30 = __esm({
+var init_controller32 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -37487,7 +39157,7 @@ var init_controller30 = __esm({
     init_strings();
     init_copy2();
     init_format2();
-    init_list3();
+    init_list4();
     OPTIONS2 = ["data-kp-secrets-in-copy", "data-kp-requests-open", "data-kp-copy-as", "data-kp-secret-headers", "data-kp-requests-max"];
     RequestInspector = class extends Controller {
       /** @param {HTMLElement} el @param {InspectorOptions} [given] */
@@ -37545,12 +39215,12 @@ var init_controller30 = __esm({
           /** @type {HTMLElement | null} */
           secret.previousElementSibling
         );
-        const shown5 = secret.getAttribute("aria-pressed") !== "true";
-        secret.setAttribute("aria-pressed", String(shown5));
-        secret.textContent = shown5 ? strings.reqSecretHide : strings.reqSecretShow;
+        const shown6 = secret.getAttribute("aria-pressed") !== "true";
+        secret.setAttribute("aria-pressed", String(shown6));
+        secret.textContent = shown6 ? strings.reqSecretHide : strings.reqSecretShow;
         if (!text) return;
-        text.textContent = shown5 ? text.dataset.value ?? "" : MASK;
-        if (shown5) text.removeAttribute("aria-label");
+        text.textContent = shown6 ? text.dataset.value ?? "" : MASK;
+        if (shown6) text.removeAttribute("aria-label");
         else text.setAttribute("aria-label", strings.reqSecretMasked);
       }
       /** The code blocks inside have a segmented control of their own: only the status filter counts. @param {Event} event */
@@ -37598,15 +39268,15 @@ function setRequestsState(el16, state12, options = {}) {
   setCardState(el16, state12, state12 === "loading" ? { words: strings.reqLoading } : void 0);
 }
 var memoryOf2;
-var init_api11 = __esm({
+var init_api12 = __esm({
   "js/request-inspector/api.js"() {
     "use strict";
     init_card_state();
     init_controller();
     init_strings();
-    init_controller30();
+    init_controller32();
     init_format2();
-    init_list3();
+    init_list4();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
   }
 });
@@ -37636,16 +39306,16 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller30();
+    init_controller32();
     init_format2();
     init_format2();
-    init_api11();
+    init_api12();
   }
 });
 
 // js/tick/values.js
 var TICK, TICK_KNOB, TICK_MS4, TICK_EVENT, MAX_STEPS, SHOW_TEXT, EASE_POWER;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/tick/values.js"() {
     "use strict";
     TICK = "[data-kp-tick]";
@@ -37670,12 +39340,12 @@ function groupMarkOf(whole2, group, decimal) {
   const groupInText = whole2.match(/\d([\s.,  '])\d{3}(?!\d)/)?.[1];
   return groupInText !== void 0 && groupInText !== decimal ? groupInText : group !== "" && whole2.includes(group) ? group : "";
 }
-function renderer({ before, after, decimals, decimal, groupMark: groupMark2 }) {
+function renderer({ before: before2, after, decimals, decimal, groupMark: groupMark2 }) {
   return (next2) => {
     const [int, frac] = Math.abs(next2).toFixed(decimals).split(".");
     const sign = next2 < 0 && Number(next2.toFixed(decimals)) !== 0 ? "-" : "";
     const body = groupMark2 ? int.replace(/\B(?=(\d{3})+(?!\d))/g, groupMark2) : int;
-    return `${before}${sign}${body}${decimals ? decimal + frac : ""}${after}`;
+    return `${before2}${sign}${body}${decimals ? decimal + frac : ""}${after}`;
   };
 }
 function parseTick(text, locale) {
@@ -37683,7 +39353,7 @@ function parseTick(text, locale) {
   if (match === null) return null;
   const raw = match[0];
   const whole2 = raw.trimEnd();
-  const before = text.slice(0, match.index);
+  const before2 = text.slice(0, match.index);
   const after = raw.slice(whole2.length) + text.slice(match.index + raw.length);
   const { group, decimal } = separators(locale);
   const cut = whole2.lastIndexOf(decimal);
@@ -37692,7 +39362,7 @@ function parseTick(text, locale) {
   const value = Number(cut < 0 ? digits(whole2) : `${digits(whole2.slice(0, cut))}.${digits(whole2.slice(cut + 1))}`);
   if (!Number.isFinite(value)) return null;
   const groupMark2 = groupMarkOf(whole2, group, decimal);
-  return { value, decimals, render: renderer({ before, after, decimals, decimal, groupMark: groupMark2 }) };
+  return { value, decimals, render: renderer({ before: before2, after, decimals, decimal, groupMark: groupMark2 }) };
 }
 function numberNode(el16) {
   const walker = el16.ownerDocument.createTreeWalker(el16, SHOW_TEXT);
@@ -37703,10 +39373,10 @@ function numberNode(el16) {
   return null;
 }
 var localeOf;
-var init_parse = __esm({
+var init_parse2 = __esm({
   "js/tick/parse.js"() {
     "use strict";
-    init_values22();
+    init_values23();
     localeOf = (el16) => (
       /** @type {HTMLElement | null} */
       el16.closest("[lang]")?.lang || el16.ownerDocument.documentElement.lang || void 0
@@ -37728,8 +39398,8 @@ var init_ticker = __esm({
   "js/tick/ticker.js"() {
     "use strict";
     init_calm();
-    init_values22();
-    init_parse();
+    init_values23();
+    init_parse2();
     reduced2 = (el16) => !motionAllowed(el16);
     Ticker = class {
       /** @param {Element} el */
@@ -37848,9 +39518,9 @@ var init_watch3 = __esm({
   "js/tick/watch.js"() {
     "use strict";
     init_controller();
-    init_values22();
+    init_values23();
     init_ticker();
-    init_parse();
+    init_parse2();
     TickWatch = class extends Controller {
       /** @param {ParentNode} scope */
       constructor(scope) {
@@ -37936,8 +39606,8 @@ var init_tick = __esm({
   "js/tick.js"() {
     "use strict";
     init_watch3();
-    init_values22();
-    init_parse();
+    init_values23();
+    init_parse2();
     init_ticker();
   }
 });
@@ -37968,8 +39638,8 @@ function wheelAngles(weights) {
     return segment;
   });
 }
-var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el5, stateOf, part;
-var init_state13 = __esm({
+var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el6, stateOf, part;
+var init_state14 = __esm({
   "js/wheel/state.js"() {
     "use strict";
     WHEEL = "[data-kp-wheel]";
@@ -37992,7 +39662,7 @@ var init_state13 = __esm({
       for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
       return node;
     };
-    el5 = (className, tag = "div") => {
+    el6 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
       return node;
@@ -38013,10 +39683,10 @@ var init_state13 = __esm({
 });
 
 // js/wheel/draw.js
-function build2(root) {
+function build3(root) {
   if (root.querySelector(":scope > .kp-wheel__stage")) return;
-  const stage = el5("kp-wheel__stage");
-  const disc = el5("kp-wheel__disc");
+  const stage = el6("kp-wheel__stage");
+  const disc = el6("kp-wheel__disc");
   const face = svg("svg", { class: "kp-wheel__face", viewBox: "-100 -100 200 200", "aria-hidden": "true", focusable: "false" });
   face.append(svg("g", { class: "kp-wheel__segments" }), svg("circle", { class: "kp-wheel__rim", r: String(R), cx: "0", cy: "0" }));
   disc.append(face);
@@ -38024,15 +39694,15 @@ function build2(root) {
   pointer.append(svg("path", { d: "M1 1h18L10 17z" }));
   const spin = (
     /** @type {HTMLButtonElement} */
-    el5("kp-button kp-button--primary kp-wheel__spin", "button")
+    el6("kp-button kp-button--primary kp-wheel__spin", "button")
   );
   spin.type = "button";
   stage.append(disc, pointer, spin);
-  const result = el5("kp-wheel__result");
+  const result = el6("kp-wheel__result");
   result.setAttribute("role", "status");
-  const caption = el5("kp-wheel__caption", "p");
-  const outcome = el5("kp-wheel__outcome", "p");
-  const tag = el5("kp-wheel__tag", "p");
+  const caption = el6("kp-wheel__caption", "p");
+  const outcome = el6("kp-wheel__outcome", "p");
+  const tag = el6("kp-wheel__tag", "p");
   result.append(caption, outcome, tag);
   root.append(stage, result);
   if (!root.hasAttribute("role")) root.setAttribute("role", "group");
@@ -38158,7 +39828,7 @@ function fitLabel(group, names, half, measure) {
   }
   return best;
 }
-function paint4(root) {
+function paint5(root) {
   const strings = getStrings();
   const state12 = stateOf(root);
   const spin = (
@@ -38221,7 +39891,7 @@ var init_draw7 = __esm({
   "js/wheel/draw.js"() {
     "use strict";
     init_strings();
-    init_state13();
+    init_state14();
     LABEL_MIN = 4.5;
     LABEL_COMFORT = 6.5;
     LABEL_MAX2 = 9;
@@ -38235,8 +39905,8 @@ async function glideTo(root) {
   const order = state12.items.map((item) => item.id);
   state12.order.forEach((id, at) => {
     if (target.has(id)) return;
-    const before = state12.order.slice(0, at).reverse().find((other) => order.includes(other));
-    order.splice(before ? order.indexOf(before) + 1 : 0, 0, id);
+    const before2 = state12.order.slice(0, at).reverse().find((other) => order.includes(other));
+    order.splice(before2 ? order.indexOf(before2) + 1 : 0, 0, id);
   });
   const from = new Map(order.map((id) => [id, state12.shown.get(id) ?? 0]));
   const first = state12.order.length === 0 || [...from.values()].every((w) => w <= 1e-4);
@@ -38274,7 +39944,7 @@ async function glideTo(root) {
 }
 function setWheelItems(root, items) {
   if (!(root instanceof HTMLElement)) return;
-  build2(root);
+  build3(root);
   const state12 = stateOf(root);
   if (state12.spinning) {
     root.addEventListener(WHEEL_RESULT_EVENT, () => setWheelItems(root, items), { once: true });
@@ -38284,19 +39954,19 @@ function setWheelItems(root, items) {
   root.removeAttribute("data-kp-wheel-won");
   if (state12.last !== null && !state12.items.some((item) => item.id === state12.last)) state12.last = null;
   void glideTo(root);
-  paint4(root);
+  paint5(root);
   if (state12.items.length === 1) {
     const [only] = state12.items;
     root.setAttribute("data-kp-wheel-won", only.id);
     state12.last = only.id;
-    paint4(root);
+    paint5(root);
     drawDisc(root, true);
     root.dispatchEvent(new CustomEvent(WHEEL_RESULT_EVENT, { bubbles: true, detail: { item: { ...only }, index: 0, source: "only" } }));
   }
 }
 function setWheelState(root, kind, message) {
   if (!(root instanceof HTMLElement)) return;
-  build2(root);
+  build3(root);
   const state12 = stateOf(root);
   root.setAttribute("data-kp-state", kind);
   if (kind === "error") root.setAttribute("data-kp-wheel-error", message ?? getStrings().wheelFailed);
@@ -38311,7 +39981,7 @@ function setWheelState(root, kind, message) {
     state12.busy = null;
     void card?.close();
   }
-  paint4(root);
+  paint5(root);
 }
 function getWheelResult(root) {
   const won = root.getAttribute("data-kp-wheel-won");
@@ -38352,7 +40022,7 @@ async function spinWheel(root, { random = Math.random } = {}) {
   state12.spinning = true;
   root.setAttribute("data-kp-wheel-spinning", "");
   part(root, "result").setAttribute("aria-busy", "true");
-  paint4(root);
+  paint5(root);
   root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail: { item: { ...item }, index, turns: (to - from) / 360 } }));
   const disc = part(root, "disc");
   if (duration2 > 0 && to !== from) {
@@ -38373,7 +40043,7 @@ async function spinWheel(root, { random = Math.random } = {}) {
   root.removeAttribute("data-kp-wheel-spinning");
   root.setAttribute("data-kp-wheel-won", item.id);
   drawDisc(root, true);
-  paint4(root);
+  paint5(root);
   const result = part(root, "result");
   result.removeAttribute("aria-busy");
   root.dispatchEvent(new CustomEvent(WHEEL_RESULT_EVENT, { bubbles: true, detail: { item: { ...item }, index, source: "spin" } }));
@@ -38387,32 +40057,32 @@ var init_spin = __esm({
     init_calm();
     init_strings();
     init_draw7();
-    init_state13();
+    init_state14();
     reduced3 = () => !motionAllowed();
   }
 });
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller31 = __esm({
+var init_controller33 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
     init_draw7();
     init_spin();
-    init_state13();
+    init_state14();
     WheelControl = class extends Controller {
       connect() {
         const root = this.host;
-        build2(root);
+        build3(root);
         drawDisc(root, true);
-        paint4(root);
+        paint5(root);
         this.listen(root, "click", (event) => this.onClick(event));
         this.listen(root, "keydown", (event) => this.onKey(
           /** @type {KeyboardEvent} */
           event
         ));
-        this.observe(new MutationObserver(() => paint4(root))).observe(root, { attributes: true, attributeFilter: ["data-kp-wheel-kiosk"] });
+        this.observe(new MutationObserver(() => paint5(root))).observe(root, { attributes: true, attributeFilter: ["data-kp-wheel-kiosk"] });
         void document.fonts?.ready.then(() => root.isConnected && !stateOf(root).spinning && drawDisc(root, true));
       }
       get kiosk() {
@@ -38459,16 +40129,16 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller31();
-    init_state13();
-    init_state13();
+    init_controller33();
+    init_state14();
+    init_state14();
     init_spin();
   }
 });
 
 // js/focus-steps/constants.js
 var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED;
-var init_constants20 = __esm({
+var init_constants21 = __esm({
   "js/focus-steps/constants.js"() {
     "use strict";
     FOCUS_STEPS = "[data-kp-focus-steps]";
@@ -38491,7 +40161,7 @@ var init_constants20 = __esm({
 
 // js/focus-steps/state.js
 var focusState;
-var init_state14 = __esm({
+var init_state15 = __esm({
   "js/focus-steps/state.js"() {
     "use strict";
     focusState = {
@@ -38637,25 +40307,25 @@ var init_progressbar = __esm({
 });
 
 // js/focus-steps/dom.js
-function build3(root) {
+function build4(root) {
   if (root.querySelector(".kp-focus-steps__head")) return;
   const strings = getStrings();
   focusState.serial += 1;
-  const head = el6("kp-focus-steps__head");
-  const count2 = el6("kp-focus-steps__count");
+  const head = el7("kp-focus-steps__head");
+  const count2 = el7("kp-focus-steps__count");
   count2.id = `kp-focus-steps-${focusState.serial}-count`;
-  const bar = el6("kp-progressbar kp-focus-steps__bar");
+  const bar = el7("kp-progressbar kp-focus-steps__bar");
   bar.setAttribute("aria-hidden", "true");
   buildProgressbar(bar);
   bar.removeAttribute("role");
-  const tools = el6("kp-focus-steps__tools");
-  const wake = el6("kp-focus-steps__wake", "span");
+  const tools = el7("kp-focus-steps__tools");
+  const wake = el7("kp-focus-steps__wake", "span");
   const speak = (
     /** @type {HTMLButtonElement} */
-    el6("kp-button kp-button--sm kp-focus-steps__speak", "button")
+    el7("kp-button kp-button--sm kp-focus-steps__speak", "button")
   );
   speak.type = "button";
-  const said = el6("kp-focus-steps__speak-text", "span");
+  const said = el7("kp-focus-steps__speak-text", "span");
   said.textContent = strings.focusReadAloud;
   said.setAttribute("data-kp-words", `${strings.focusReadAloud}
 ${strings.focusStopReading}`);
@@ -38664,20 +40334,20 @@ ${strings.focusStopReading}`);
   speak.hidden = typeof speechSynthesis === "undefined";
   tools.append(wake, speak);
   head.append(count2, tools, bar);
-  const body = el6("kp-focus-steps__body");
-  const step = el6("kp-focus-steps__step", "article");
+  const body = el7("kp-focus-steps__body");
+  const step = el7("kp-focus-steps__step", "article");
   step.setAttribute("aria-labelledby", count2.id);
   step.tabIndex = -1;
   body.append(step);
-  const nav = el6("kp-focus-steps__nav");
+  const nav = el7("kp-focus-steps__nav");
   const prev = (
     /** @type {HTMLButtonElement} */
-    el6("kp-button kp-button--lg kp-focus-steps__prev", "button")
+    el7("kp-button kp-button--lg kp-focus-steps__prev", "button")
   );
   prev.type = "button";
   const next2 = (
     /** @type {HTMLButtonElement} */
-    el6("kp-button kp-button--lg kp-button--primary kp-focus-steps__next", "button")
+    el7("kp-button kp-button--lg kp-button--primary kp-focus-steps__next", "button")
   );
   next2.type = "button";
   for (
@@ -38688,29 +40358,29 @@ ${strings.focusStopReading}`);
       [next2, strings.focusNext, "next"]
     ]
   ) {
-    const mark = el6(`kp-focus-steps__glyph kp-focus-steps__glyph--${glyph3}`, "span");
-    mark.setAttribute("aria-hidden", "true");
-    const text = el6("kp-button__text", "span");
+    const mark2 = el7(`kp-focus-steps__glyph kp-focus-steps__glyph--${glyph3}`, "span");
+    mark2.setAttribute("aria-hidden", "true");
+    const text = el7("kp-button__text", "span");
     text.textContent = word;
-    if (glyph3 === "prev") button6.append(mark, text);
-    else button6.append(text, mark);
+    if (glyph3 === "prev") button6.append(mark2, text);
+    else button6.append(text, mark2);
   }
   nav.append(prev, next2);
-  const live4 = el6("kp-sr-only kp-focus-steps__live", "span");
+  const live4 = el7("kp-sr-only kp-focus-steps__live", "span");
   live4.setAttribute("role", "status");
   root.append(head, body, nav, live4);
   if (!root.hasAttribute("role")) root.setAttribute("role", "region");
   if (root.tabIndex < 0 && !root.hasAttribute("tabindex")) root.tabIndex = -1;
 }
-var el6, stateOf2, part2;
+var el7, stateOf2, part2;
 var init_dom6 = __esm({
   "js/focus-steps/dom.js"() {
     "use strict";
     init_progressbar();
     init_strings();
-    init_state14();
-    init_constants20();
-    el6 = (className, tag = "div") => {
+    init_state15();
+    init_constants21();
+    el7 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
       return node;
@@ -38752,23 +40422,23 @@ var init_dom6 = __esm({
 // js/focus-steps/resume.js
 function buildResumeAsk() {
   const strings = getStrings();
-  const ask = el6("kp-focus-steps__resume");
-  const line = el6("kp-focus-steps__resume-text", "span");
+  const ask2 = el7("kp-focus-steps__resume");
+  const line = el7("kp-focus-steps__resume-text", "span");
   line.textContent = strings.focusResumeAsk;
   const go = (
     /** @type {HTMLButtonElement} */
-    el6("kp-button kp-button--primary kp-focus-steps__resume-go", "button")
+    el7("kp-button kp-button--primary kp-focus-steps__resume-go", "button")
   );
   go.type = "button";
   go.textContent = strings.focusResumeContinue;
   const again2 = (
     /** @type {HTMLButtonElement} */
-    el6("kp-button kp-focus-steps__resume-restart", "button")
+    el7("kp-button kp-focus-steps__resume-restart", "button")
   );
   again2.type = "button";
   again2.textContent = strings.focusResumeRestart;
-  ask.append(line, go, again2);
-  return ask;
+  ask2.append(line, go, again2);
+  return ask2;
 }
 function answering(root) {
   return root.getAttribute("data-kp-focus-mode") === "answer" || stateOf2(root).steps.some((step) => step.answer);
@@ -38820,9 +40490,9 @@ function layTracks(root) {
     }
     track.order.push(i);
   });
-  const before = new Map(state12.tracks.map((t) => [t.key, t.pos]));
+  const before2 = new Map(state12.tracks.map((t) => [t.key, t.pos]));
   state12.tracks = [...found.values()];
-  for (const track of state12.tracks) track.pos = Math.min(track.order.length - 1, before.get(track.key) ?? 0);
+  for (const track of state12.tracks) track.pos = Math.min(track.order.length - 1, before2.get(track.key) ?? 0);
   if (!state12.tracks.some((t) => t.key === state12.track)) state12.track = state12.tracks[0]?.key ?? "";
 }
 function timerList(root) {
@@ -38839,7 +40509,7 @@ var init_tracks = __esm({
   "js/focus-steps/tracks.js"() {
     "use strict";
     init_strings();
-    init_state14();
+    init_state15();
     init_dom6();
     init_resume();
     tracksOn = (root) => stateOf2(root).tracks.length > 1 && opt(root, "tracks", "auto") !== "off";
@@ -38854,7 +40524,7 @@ var init_tracks = __esm({
 
 // js/countdown/constants.js
 var COUNTDOWN, COUNTDOWN_EVENT, COUNTDOWN_END_EVENT, COUNTDOWN_STEP, SECOND_MS3, MINUTE_MS, MINUTE_S, HOUR_S, DAY_S, HOUR_MS, DAY_HOURS, EPOCH_MS_DIGITS, END_SLACK_MS, ROUND_EPSILON, WATCHED_ATTRIBUTES3;
-var init_constants21 = __esm({
+var init_constants22 = __esm({
   "js/countdown/constants.js"() {
     "use strict";
     COUNTDOWN = "[data-kp-countdown], [data-kp-countdown-until]";
@@ -38917,7 +40587,7 @@ var init_duration = __esm({
   "js/countdown/duration.js"() {
     "use strict";
     init_strings();
-    init_constants21();
+    init_constants22();
   }
 });
 
@@ -38987,7 +40657,7 @@ var ZONE_FORMATS;
 var init_zones = __esm({
   "js/countdown/zones.js"() {
     "use strict";
-    init_constants21();
+    init_constants22();
     ZONE_FORMATS = /* @__PURE__ */ new Map();
   }
 });
@@ -39029,7 +40699,7 @@ function untilLabel(ms, nowMs, zone = null) {
 var init_until = __esm({
   "js/countdown/until.js"() {
     "use strict";
-    init_constants21();
+    init_constants22();
     init_zones();
   }
 });
@@ -39108,7 +40778,7 @@ function countdownClock({ seconds, now = () => performance.now(), onEnd, onChang
 var init_clock = __esm({
   "js/countdown/clock.js"() {
     "use strict";
-    init_constants21();
+    init_constants22();
   }
 });
 
@@ -39130,7 +40800,7 @@ function made2(doc, tag, className) {
   node.className = className;
   return node;
 }
-function buildParts3(doc) {
+function buildParts4(doc) {
   const title = made2(doc, "p", "kp-countdown__name");
   const time = made2(doc, "p", "kp-countdown__time");
   time.setAttribute("role", "timer");
@@ -39166,8 +40836,8 @@ var init_digits = __esm({
       paint(text) {
         if (text === this.shown) return;
         const doc = this.cells.ownerDocument;
-        const shown5 = this.shown;
-        if (text.length !== shown5.length || [...text].some((ch, i) => kindOf(ch) !== kindOf(shown5[i]))) {
+        const shown6 = this.shown;
+        if (text.length !== shown6.length || [...text].some((ch, i) => kindOf(ch) !== kindOf(shown6[i]))) {
           this.cells.replaceChildren(
             ...[...text].map((ch) => {
               const cell = doc.createElement("span");
@@ -39178,7 +40848,7 @@ var init_digits = __esm({
           );
         } else {
           [...text].forEach((ch, i) => {
-            if (ch !== shown5[i]) this.cells.children[i].textContent = ch;
+            if (ch !== shown6[i]) this.cells.children[i].textContent = ch;
           });
         }
         this.shown = text;
@@ -39189,14 +40859,14 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller32 = __esm({
+var init_controller34 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
     init_components();
     init_live_options();
     init_strings();
-    init_constants21();
+    init_constants22();
     init_clock();
     init_digits();
     init_duration();
@@ -39214,7 +40884,7 @@ var init_controller32 = __esm({
         this.strings = getStrings();
         this.doc = host.ownerDocument;
         this.wallNow = options.wall ?? (() => Date.now());
-        this.parts = buildParts3(this.doc);
+        this.parts = buildParts4(this.doc);
         this.digits = new Digits(this.parts.digits);
         this.seconds = 0;
         this.step = COUNTDOWN_STEP;
@@ -39398,9 +41068,9 @@ var init_controller32 = __esm({
       /** An option attribute changed. @param {string[]} names */
       onOptions(names) {
         const s2 = this.strings;
-        const before = this.step;
+        const before2 = this.step;
         this.read();
-        if (this.step !== before && !this.bare && this.more) {
+        if (this.step !== before2 && !this.bare && this.more) {
           setStateWord(this.more.label, s2.timerAddMinute(this.step));
           this.more.button.title = s2.timerAddMinuteTitle(this.step);
         }
@@ -39418,12 +41088,12 @@ var init_controller32 = __esm({
 
 // js/countdown/api.js
 var countdownOf, attachCountdowns;
-var init_api12 = __esm({
+var init_api13 = __esm({
   "js/countdown/api.js"() {
     "use strict";
     init_controller();
-    init_constants21();
-    init_controller32();
+    init_constants22();
+    init_controller34();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -39455,13 +41125,13 @@ __export(countdown_exports, {
 var init_countdown2 = __esm({
   "js/countdown.js"() {
     "use strict";
-    init_constants21();
+    init_constants22();
     init_duration();
     init_zones();
     init_until();
     init_clock();
     init_parts4();
-    init_api12();
+    init_api13();
   }
 });
 
@@ -39547,21 +41217,21 @@ function ensureLanes(root) {
   if (found) return found;
   const strings = getStrings();
   focusState.serial += 1;
-  const lanes = el6("kp-focus-steps__lanes", "section");
-  const title = el6("kp-focus-steps__lanes-title", "h3");
+  const lanes = el7("kp-focus-steps__lanes", "section");
+  const title = el7("kp-focus-steps__lanes-title", "h3");
   title.id = `kp-focus-steps-${focusState.serial}-lanes`;
   title.textContent = strings.focusTracksTitle;
-  const done = el6("kp-focus-steps__lanes-done", "span");
-  const list = el6("kp-focus-steps__lane-list");
+  const done = el7("kp-focus-steps__lanes-done", "span");
+  const list = el7("kp-focus-steps__lane-list");
   list.id = `kp-focus-steps-${focusState.serial}-tablist`;
   list.setAttribute("role", "tablist");
   list.setAttribute("aria-orientation", "vertical");
   list.setAttribute("aria-labelledby", title.id);
-  const hint = el6("kp-focus-steps__lanes-hint", "p");
+  const hint = el7("kp-focus-steps__lanes-hint", "p");
   hint.textContent = strings.focusTracksHint;
   lanes.setAttribute("aria-labelledby", title.id);
   lanes.append(title, done, list, hint);
-  const band = el6("kp-attention kp-focus-steps__band");
+  const band = el7("kp-attention kp-focus-steps__band");
   band.setAttribute("aria-label", strings.focusTrackBand);
   const head = part2(root, "head");
   head.before(band);
@@ -39579,14 +41249,14 @@ function dropLanes(root) {
 function buildLane(lane, at) {
   const button6 = (
     /** @type {HTMLButtonElement} */
-    el6("kp-button kp-focus-steps__lane", "button")
+    el7("kp-button kp-focus-steps__lane", "button")
   );
   button6.type = "button";
   button6.setAttribute("role", "tab");
   button6.setAttribute("data-kp-track-at", String(at));
   button6.setAttribute("data-kp-track-key", lane.key);
-  for (const name of ["name", "time", "step", "state", "count"]) button6.append(el6(`kp-focus-steps__lane-${name}`, "span"));
-  const bar = el6("kp-progressbar kp-focus-steps__lane-bar", "span");
+  for (const name of ["name", "time", "step", "state", "count"]) button6.append(el7(`kp-focus-steps__lane-${name}`, "span"));
+  const bar = el7("kp-progressbar kp-focus-steps__lane-bar", "span");
   bar.setAttribute("aria-hidden", "true");
   buildProgressbar(bar);
   bar.removeAttribute("role");
@@ -39656,7 +41326,7 @@ var init_lanes = __esm({
     "use strict";
     init_progressbar();
     init_strings();
-    init_state14();
+    init_state15();
     init_dom6();
     init_blockers();
     init_resume();
@@ -39671,15 +41341,15 @@ function buildAnswer(root, holder, step, text) {
     step.answer
   );
   const state12 = stateOf2(root);
-  const wrap2 = el6("kp-focus-steps__answer");
+  const wrap2 = el7("kp-focus-steps__answer");
   focusState.serial += 1;
   text.id = `kp-focus-steps-${focusState.serial}-question`;
   if (answer2.kind === "text") {
-    const label2 = el6("kp-sr-only", "label");
+    const label2 = el7("kp-sr-only", "label");
     label2.textContent = strings.focusTextLabel;
     const box = (
       /** @type {HTMLTextAreaElement} */
-      el6("kp-field__input kp-focus-steps__input", "textarea")
+      el7("kp-field__input kp-focus-steps__input", "textarea")
     );
     box.rows = 4;
     box.id = `kp-focus-steps-${focusState.serial}-input`;
@@ -39711,38 +41381,38 @@ function buildAnswer(root, holder, step, text) {
       }
     })();
     const choices = [...pinned.map((c) => ({ ...c, pinned: true })), ...answer2.choices ?? []];
-    const group = el6("kp-focus-steps__choices");
+    const group = el7("kp-focus-steps__choices");
     group.setAttribute("role", "group");
     group.setAttribute("aria-labelledby", text.id);
     const wanted = opt(root, "choice-layout", "auto");
     const short = choices.length <= 3 && choices.every((c) => c.label.length <= 14);
     group.setAttribute("data-kp-layout", wanted === "row" || wanted === "stack" ? wanted : short ? "row" : "stack");
     if (answer2.kind === "multi") {
-      const hint = el6("kp-focus-steps__hint", "p");
+      const hint = el7("kp-focus-steps__hint", "p");
       hint.textContent = strings.focusMultiHint;
       wrap2.append(hint);
     }
     for (const choice of choices) {
       const button6 = (
         /** @type {HTMLButtonElement} */
-        el6("kp-button kp-button--lg kp-focus-steps__choice", "button")
+        el7("kp-button kp-button--lg kp-focus-steps__choice", "button")
       );
       button6.type = "button";
       button6.dataset.kpValue = choice.value;
       button6.setAttribute("aria-pressed", "false");
       if ("pinned" in choice) button6.setAttribute("data-kp-pinned", "");
-      const mark = el6("kp-focus-steps__mark", "span");
-      mark.setAttribute("aria-hidden", "true");
-      const label2 = el6("kp-focus-steps__choice-label", "span");
+      const mark2 = el7("kp-focus-steps__mark", "span");
+      mark2.setAttribute("aria-hidden", "true");
+      const label2 = el7("kp-focus-steps__choice-label", "span");
       label2.textContent = choice.label;
-      const said = el6("kp-sr-only", "span");
+      const said = el7("kp-sr-only", "span");
       said.textContent = `, ${strings.focusPickedMark}`;
       said.hidden = true;
-      button6.append(mark, label2);
+      button6.append(mark2, label2);
       if (choice.disabled) {
         button6.setAttribute("aria-disabled", "true");
         if (choice.reason) {
-          const reason = el6("kp-focus-steps__reason", "span");
+          const reason = el7("kp-focus-steps__reason", "span");
           reason.id = `kp-focus-steps-${focusState.serial}-${group.childElementCount}-why`;
           reason.textContent = choice.reason;
           button6.setAttribute("aria-describedby", reason.id);
@@ -39754,7 +41424,7 @@ function buildAnswer(root, holder, step, text) {
     wrap2.append(group);
     const sameMode = opt(root, "same", "both");
     if (sameMode !== "off") {
-      const same2 = el6("kp-focus-steps__sames");
+      const same2 = el7("kp-focus-steps__sames");
       const kinds = [
         ["yesterday", sameMode === "usual" ? void 0 : answer2.previous],
         ["usual", sameMode === "yesterday" ? void 0 : answer2.usual]
@@ -39763,7 +41433,7 @@ function buildAnswer(root, holder, step, text) {
         if (value === void 0 || Array.isArray(value) && value.length === 0) continue;
         const button6 = (
           /** @type {HTMLButtonElement} */
-          el6("kp-button kp-focus-steps__same", "button")
+          el7("kp-button kp-focus-steps__same", "button")
         );
         button6.type = "button";
         button6.dataset.kpSame = which;
@@ -39777,7 +41447,7 @@ function buildAnswer(root, holder, step, text) {
   if (opt(root, "skip") !== "off") {
     const skip = (
       /** @type {HTMLButtonElement} */
-      el6("kp-button kp-button--ghost kp-focus-steps__skip", "button")
+      el7("kp-button kp-button--ghost kp-focus-steps__skip", "button")
     );
     skip.type = "button";
     skip.setAttribute("aria-pressed", "false");
@@ -39789,15 +41459,15 @@ function buildAnswer(root, holder, step, text) {
 function buildSummary(root, holder) {
   const strings = getStrings();
   const state12 = stateOf2(root);
-  const title = el6("kp-focus-steps__text", "p");
+  const title = el7("kp-focus-steps__text", "p");
   title.textContent = strings.focusSummaryTitle;
-  const list = el6("kp-focus-steps__summary", "dl");
+  const list = el7("kp-focus-steps__summary", "dl");
   for (const step of state12.steps) {
     if (!step.answer) continue;
     const given2 = state12.answers[step.answer.id];
-    const term = el6("kp-focus-steps__summary-q", "dt");
+    const term = el7("kp-focus-steps__summary-q", "dt");
     term.textContent = step.text;
-    const value = el6("kp-focus-steps__summary-a", "dd");
+    const value = el7("kp-focus-steps__summary-a", "dd");
     value.textContent = !given2 ? "\u2013" : given2.source === "skip" ? strings.focusSkipped : wordsOf2(step.answer, given2.value);
     list.append(term, value);
   }
@@ -39807,7 +41477,7 @@ var init_answer_ui = __esm({
   "js/focus-steps/answer-ui.js"() {
     "use strict";
     init_strings();
-    init_state14();
+    init_state15();
     init_dom6();
     init_resume();
     init_flow();
@@ -39818,12 +41488,12 @@ var init_answer_ui = __esm({
 function waitBlock(root, holder, state12, blocks, timers, index) {
   const strings = getStrings();
   holder.setAttribute("data-kp-focus-steps-locked", "");
-  const wait = el6("kp-alert kp-alert--info kp-focus-steps__wait", "div");
+  const wait = el7("kp-alert kp-alert--info kp-focus-steps__wait", "div");
   wait.setAttribute("role", "status");
-  const what = el6("kp-focus-steps__wait-text");
-  const title = el6("kp-focus-steps__wait-title", "strong");
+  const what = el7("kp-focus-steps__wait-text");
+  const title = el7("kp-focus-steps__wait-title", "strong");
   title.textContent = strings.focusTrackWaitTitle(blockerNames(state12, blocks));
-  const line = el6("kp-focus-steps__wait-line", "span");
+  const line = el7("kp-focus-steps__wait-line", "span");
   line.textContent = waitLine2(state12, blocks, timers, index);
   what.append(title, line);
   wait.append(what);
@@ -39831,7 +41501,7 @@ function waitBlock(root, holder, state12, blocks, timers, index) {
   if (next2) {
     const go = (
       /** @type {HTMLButtonElement} */
-      el6("kp-button kp-button--primary kp-focus-steps__wait-go", "button")
+      el7("kp-button kp-button--primary kp-focus-steps__wait-go", "button")
     );
     go.type = "button";
     go.setAttribute("data-kp-focus-go", String(state12.tracks.indexOf(next2.track)));
@@ -39842,19 +41512,19 @@ function waitBlock(root, holder, state12, blocks, timers, index) {
 }
 function needsList(ingredients) {
   const strings = getStrings();
-  const needs = el6("kp-focus-steps__needs", "section");
-  const title = el6("kp-focus-steps__needs-title", "h3");
+  const needs = el7("kp-focus-steps__needs", "section");
+  const title = el7("kp-focus-steps__needs-title", "h3");
   focusState.serial += 1;
   title.id = `kp-focus-steps-${focusState.serial}-needs`;
   title.textContent = strings.focusNeeds;
   needs.setAttribute("aria-labelledby", title.id);
-  const list = el6("kp-focus-steps__needs-list", "ul");
+  const list = el7("kp-focus-steps__needs-list", "ul");
   for (const item of ingredients) {
-    const row2 = el6("kp-focus-steps__need", "li");
+    const row2 = el7("kp-focus-steps__need", "li");
     const { name, amount } = typeof item === "string" ? { name: item, amount: "" } : item;
-    const a = el6("kp-focus-steps__amount", "span");
+    const a = el7("kp-focus-steps__amount", "span");
     a.textContent = amount ?? "";
-    const n = el6("kp-focus-steps__name", "span");
+    const n = el7("kp-focus-steps__name", "span");
     n.textContent = name;
     row2.append(a, n);
     list.append(row2);
@@ -39867,7 +41537,7 @@ function timerButton2(root, state12, timer, blocked, index, total) {
   const minutes = Math.round(timer.seconds / 60);
   const button6 = (
     /** @type {HTMLButtonElement} */
-    el6("kp-button kp-focus-steps__timer", "button")
+    el7("kp-button kp-focus-steps__timer", "button")
   );
   button6.type = "button";
   button6.setAttribute("data-kp-timer-start", String(timer.seconds));
@@ -39883,7 +41553,7 @@ var init_paint_extras = __esm({
   "js/focus-steps/paint-extras.js"() {
     "use strict";
     init_strings();
-    init_state14();
+    init_state15();
     init_dom6();
     init_tracks();
     init_blockers();
@@ -39892,13 +41562,13 @@ var init_paint_extras = __esm({
 });
 
 // js/focus-steps/paint.js
-function paint5(root, arrive3) {
+function paint6(root, arrive3) {
   const strings = getStrings();
   const state12 = stateOf2(root);
   const { steps: steps2, index } = state12;
   const total = steps2.length;
   const step = steps2[index];
-  const asking = answering(root);
+  const asking2 = answering(root);
   const onSum = onSummary(root);
   const tracked = tracksOn(root);
   const track = tracked ? activeTrack(state12) : void 0;
@@ -39912,30 +41582,30 @@ function paint5(root, arrive3) {
   const timers = tracked ? timerStates(root) : [];
   const blocks = tracked && step && !passed ? blockersOf(state12, index, timers) : [];
   state12.lockKey = blocks.map((b) => b.index).join(",");
-  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track ? strings.focusTrackCount(track.name, track.pos + 1, track.order.length) : asking ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
+  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track ? strings.focusTrackCount(track.name, track.pos + 1, track.order.length) : asking2 ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
   const bar = part2(root, "bar");
   const shownTotal = total + (summaryOn(root) ? 1 : 0);
   bar.style.setProperty("--kp-value", String(track ? (track.pos + 1) / track.order.length : shownTotal ? (index + 1) / shownTotal : 0));
-  const progress = asking ? opt(root, "progress", "count") ?? "count" : "count";
+  const progress = asking2 ? opt(root, "progress", "count") ?? "count" : "count";
   bar.hidden = progress !== "count";
   part2(root, "count").hidden = progress === "off";
   const wakeLine = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-focus-steps__wake")
   );
-  if (wakeLine) wakeLine.hidden = asking && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
+  if (wakeLine) wakeLine.hidden = asking2 && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
   const speakButton = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-focus-steps__speak")
   );
-  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking && opt(root, "speak") !== "true";
+  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking2 && opt(root, "speak") !== "true";
   const holder = part2(root, "step");
   const error = root.getAttribute("data-kp-focus-steps-error");
   holder.replaceChildren();
   holder.removeAttribute("data-kp-focus-steps-kind");
   holder.removeAttribute("data-kp-focus-steps-locked");
   const saveError = root.getAttribute("data-kp-state") === "save-error";
-  if (asking || root.getAttribute("data-kp-focus-mode") === "answer") {
+  if (asking2 || root.getAttribute("data-kp-focus-mode") === "answer") {
     if (saveError) {
       holder.append(
         statePlate(document, {
@@ -39971,13 +41641,13 @@ function paint5(root, arrive3) {
     } else if (onSum) buildSummary(root, holder);
     else if (step) {
       if (state12.pendingResume) holder.append(buildResumeAsk());
-      const text = el6("kp-focus-steps__text", "p");
+      const text = el7("kp-focus-steps__text", "p");
       text.textContent = step.text;
       holder.append(text);
       appendBody(holder, step);
       if (step.answer) buildAnswer(root, holder, step, text);
       if (step.note) {
-        const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
+        const note2 = el7(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
         note2.textContent = step.note;
         holder.append(note2);
       }
@@ -40018,7 +41688,7 @@ function paint5(root, arrive3) {
     holder.setAttribute("data-kp-focus-steps-kind", "finished");
   } else {
     if (state12.pendingResume) holder.append(buildResumeAsk());
-    const text = el6("kp-focus-steps__text", "p");
+    const text = el7("kp-focus-steps__text", "p");
     text.textContent = step.text;
     holder.append(text);
     appendBody(holder, step);
@@ -40026,7 +41696,7 @@ function paint5(root, arrive3) {
     if (step.ingredients?.length) holder.append(needsList(step.ingredients));
     if (step.timer && step.timer.seconds > 0) holder.append(timerButton2(root, state12, step.timer, blocks.length > 0, index, total));
     if (step.note) {
-      const note2 = el6(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
+      const note2 = el7(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
       note2.textContent = step.note;
       holder.append(note2);
     }
@@ -40044,7 +41714,7 @@ function paint5(root, arrive3) {
   const atStart = track ? track.pos === 0 && !passed : index === 0;
   if (blocked || atStart) prev.setAttribute("aria-disabled", "true");
   else prev.removeAttribute("aria-disabled");
-  prev.hidden = asking && opt(root, "back") === "off";
+  prev.hidden = asking2 && opt(root, "back") === "off";
   if (blocked || passed || blocks.length > 0) next2.setAttribute("aria-disabled", "true");
   else next2.removeAttribute("aria-disabled");
   const last = track ? passed || track.pos === track.order.length - 1 : total > 0 && index === lastIndex(root);
@@ -40052,9 +41722,9 @@ function paint5(root, arrive3) {
     /** @type {HTMLElement} */
     next2.querySelector(".kp-button__text")
   );
-  nextText.textContent = track ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track.name) : strings.focusNext : last ? strings.focusDone : asking && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
+  nextText.textContent = track ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track.name) : strings.focusNext : last ? strings.focusDone : asking2 && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
   next2.toggleAttribute("data-kp-focus-steps-last", last);
-  if (asking && step?.answer && !blocked) paintAnswerState(root);
+  if (asking2 && step?.answer && !blocked) paintAnswerState(root);
   part2(root, "body").scrollTop = 0;
   if (showLanes) {
     paintLanes(root);
@@ -40062,7 +41732,7 @@ function paint5(root, arrive3) {
   }
   if (arrive3) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => holder.isConnected && m.arriveShown(holder));
 }
-var init_paint6 = __esm({
+var init_paint7 = __esm({
   "js/focus-steps/paint.js"() {
     "use strict";
     init_strings();
@@ -40149,7 +41819,7 @@ function applyProgress(root, stored) {
     }
     renderBand(root);
   }
-  paint5(root, false);
+  paint6(root, false);
   recompute(root);
   say5(root, getStrings().focusResumed(state12.index + 1));
   root.dispatchEvent(
@@ -40165,7 +41835,7 @@ function startResume(root) {
   if (!stored || !hasMoved(stored)) return;
   if (opt(root, "resume") === "ask") {
     stateOf2(root).pendingResume = stored;
-    paint5(root, false);
+    paint6(root, false);
   } else applyProgress(root, stored);
 }
 var memoryOf3, hasMoved;
@@ -40179,10 +41849,10 @@ var init_memory = __esm({
     init_tracks();
     init_resume();
     init_band();
-    init_paint6();
+    init_paint7();
     init_track_nav();
     init_flow();
-    init_constants20();
+    init_constants21();
     memoryOf3 = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
     hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
   }
@@ -40203,7 +41873,7 @@ function trackNext(root) {
   }
   if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
   renderBand(root);
-  paint5(root, true);
+  paint6(root, true);
   const strings = getStrings();
   const finished = track.order.every((i) => state12.done.has(i));
   say5(
@@ -40241,7 +41911,7 @@ function trackPrev(root) {
   state12.alerts.delete(track.key);
   if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
   renderBand(root);
-  paint5(root, true);
+  paint6(root, true);
   const strings = getStrings();
   say5(root, `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`);
   root.dispatchEvent(
@@ -40267,7 +41937,7 @@ function trackGo(root, index) {
     state12.index = to;
     state12.alerts.delete(track.key);
     renderBand(root);
-    paint5(root, true);
+    paint6(root, true);
     root.dispatchEvent(
       new CustomEvent(FOCUS_STEPS_TRACK_EVENT, {
         bubbles: true,
@@ -40276,7 +41946,7 @@ function trackGo(root, index) {
     );
   } else {
     state12.index = to;
-    paint5(root, true);
+    paint6(root, true);
   }
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_EVENT, {
@@ -40295,10 +41965,10 @@ var init_track_steps = __esm({
     init_dom6();
     init_tracks();
     init_band();
-    init_paint6();
+    init_paint7();
     init_memory();
     init_flow();
-    init_constants20();
+    init_constants21();
     init_blockers();
     init_track_nav();
   }
@@ -40310,12 +41980,12 @@ function takeAnswer(root, value, source, extra = {}) {
   const step = state12.steps[state12.index];
   const answer2 = step?.answer;
   if (!answer2) return false;
-  const before = new CustomEvent(FOCUS_STEPS_BEFORE_ANSWER_EVENT, {
+  const before2 = new CustomEvent(FOCUS_STEPS_BEFORE_ANSWER_EVENT, {
     bubbles: true,
     cancelable: true,
     detail: { index: state12.index, id: answer2.id, value, source }
   });
-  if (!root.dispatchEvent(before)) return false;
+  if (!root.dispatchEvent(before2)) return false;
   if (!state12.startedAt) state12.startedAt = Date.now();
   state12.answers[answer2.id] = { value, source };
   delete state12.draft[answer2.id];
@@ -40434,12 +42104,12 @@ var init_flow = __esm({
     "use strict";
     init_strings();
     init_dom6();
-    init_constants20();
+    init_constants21();
     init_memory();
     init_resume();
     init_tracks();
     init_track_steps();
-    init_api13();
+    init_api14();
   }
 });
 
@@ -40455,7 +42125,7 @@ function renderBand(root) {
     const track = state12.tracks[at];
     const action = (
       /** @type {HTMLButtonElement} */
-      el6("kp-button kp-button--sm", "button")
+      el7("kp-button kp-button--sm", "button")
     );
     action.type = "button";
     if (key !== state12.track) {
@@ -40506,7 +42176,7 @@ var init_band = __esm({
     init_dom6();
     init_resume();
     init_flow();
-    init_constants20();
+    init_constants21();
     init_tracks();
     suggestion = (lanes) => lanes.find((l) => !l.active && l.status === "ringing") ?? lanes.find((l) => !l.active && l.status === "ready");
   }
@@ -40522,7 +42192,7 @@ function switchTrack(root, key, reason) {
   state12.index = to.order[to.pos] ?? 0;
   state12.alerts.delete(key);
   renderBand(root);
-  paint5(root, true);
+  paint6(root, true);
   remember2(root);
   const strings = getStrings();
   say5(root, strings.focusTrackSwitched(to.name, strings.focusLaneStep(to.pos + 1, to.order.length), state12.steps[state12.index]?.text ?? ""));
@@ -40574,7 +42244,7 @@ function recompute(root) {
     }
   }
   state12.waiting = new Set(lanes.filter((l) => l.status === "waiting").map((l) => l.key));
-  if (lockKeyOf(root) !== state12.lockKey) paint5(root, false);
+  if (lockKeyOf(root) !== state12.lockKey) paint6(root, false);
   else {
     paintLanes(root, laneSummaries(root));
     paintLive(root, timerStates(root));
@@ -40633,10 +42303,10 @@ var init_track_nav = __esm({
     init_dom6();
     init_tracks();
     init_band();
-    init_paint6();
+    init_paint7();
     init_memory();
     init_flow();
-    init_constants20();
+    init_constants21();
     init_resume();
     init_blockers();
     init_lanes();
@@ -40645,7 +42315,7 @@ var init_track_nav = __esm({
 
 // js/timer/constants.js
 var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMERS_RETRY_EVENT, TIMER_TICK_MS;
-var init_constants22 = __esm({
+var init_constants23 = __esm({
   "js/timer/constants.js"() {
     "use strict";
     TIMERS = "[data-kp-timers]";
@@ -40661,7 +42331,7 @@ var init_constants22 = __esm({
 
 // js/timer/state.js
 var LISTS, TICKERS, HANDLED2, timerState;
-var init_state15 = __esm({
+var init_state16 = __esm({
   "js/timer/state.js"() {
     "use strict";
     LISTS = /* @__PURE__ */ new WeakMap();
@@ -40686,13 +42356,13 @@ function part3(list, name) {
   );
   if (node) return node;
   if (name === "list") {
-    node = el7("kp-timers__list", "ul");
+    node = el8("kp-timers__list", "ul");
     list.prepend(node);
   } else if (name === "empty") {
-    node = el7("kp-timers__empty", "div");
+    node = el8("kp-timers__empty", "div");
     part3(list, "list").after(node);
   } else {
-    node = el7(`kp-sr-only kp-timers__${name}`, "span");
+    node = el8(`kp-sr-only kp-timers__${name}`, "span");
     node.setAttribute("role", name === "alert" ? "alert" : "status");
     list.append(node);
   }
@@ -40703,12 +42373,12 @@ function say6(list, message, where = "live") {
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
 }
-var clockOf, leftOf, stateOf3, el7, listOf3;
+var clockOf, leftOf, stateOf3, el8, listOf3;
 var init_model3 = __esm({
   "js/timer/model.js"() {
     "use strict";
     init_countdown2();
-    init_state15();
+    init_state16();
     clockOf = (timer, ms) => formatCountdown(ms, timer.total >= 36e5);
     leftOf = (timer) => timer.state === "running" && timer.endsAt !== null ? Math.max(0, timer.endsAt - Date.now()) : timer.left;
     stateOf3 = (timer) => ({
@@ -40720,7 +42390,7 @@ var init_model3 = __esm({
       state: timer.state,
       ...timer.say ? { say: timer.say } : {}
     });
-    el7 = (className, tag = "div") => {
+    el8 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
       return node;
@@ -40739,49 +42409,49 @@ var init_model3 = __esm({
 // js/timer/card.js
 function buildCard(id) {
   const strings = getStrings();
-  const card = el7("kp-timer", "li");
+  const card = el8("kp-timer", "li");
   card.setAttribute("data-kp-timer-id", id);
   timerState.serial += 1;
-  const head = el7("kp-timer__head");
-  const name = el7("kp-timer__name", "span");
+  const head = el8("kp-timer__head");
+  const name = el8("kp-timer__name", "span");
   name.id = `kp-timer-${timerState.serial}-name`;
-  const word = el7("kp-timer__state", "span");
+  const word = el8("kp-timer__state", "span");
   word.setAttribute("data-kp-words", [strings.timerRunning, strings.timerPaused, strings.timerDoneWord].join("\n"));
   head.append(name, word);
-  const time = el7("kp-timer__time");
+  const time = el8("kp-timer__time");
   time.setAttribute("role", "timer");
   time.setAttribute("aria-labelledby", name.id);
-  const bar = el7("kp-progressbar kp-timer__bar");
+  const bar = el8("kp-progressbar kp-timer__bar");
   bar.setAttribute("aria-hidden", "true");
   buildProgressbar(bar);
   bar.removeAttribute("role");
-  const actions = el7("kp-timer__actions");
+  const actions = el8("kp-timer__actions");
   const toggle2 = (
     /** @type {HTMLButtonElement} */
-    el7("kp-button kp-timer__toggle", "button")
+    el8("kp-button kp-timer__toggle", "button")
   );
   toggle2.type = "button";
   const more = (
     /** @type {HTMLButtonElement} */
-    el7("kp-button kp-timer__more", "button")
+    el8("kp-button kp-timer__more", "button")
   );
   more.type = "button";
   const remove = (
     /** @type {HTMLButtonElement} */
-    el7("kp-button kp-button--ghost kp-timer__remove", "button")
+    el8("kp-button kp-button--ghost kp-timer__remove", "button")
   );
   remove.type = "button";
-  const glyph3 = el7("kp-timer__remove-glyph", "span");
+  const glyph3 = el8("kp-timer__remove-glyph", "span");
   glyph3.setAttribute("aria-hidden", "true");
   remove.append(glyph3);
-  const sizer = el7("kp-button kp-timer__sizer", "span");
+  const sizer = el8("kp-button kp-timer__sizer", "span");
   sizer.setAttribute("aria-hidden", "true");
   actions.append(sizer, toggle2, more, remove);
   card.append(head, time, bar, actions);
   card.setAttribute("aria-labelledby", name.id);
   return card;
 }
-function paint6(timer) {
+function paint7(timer) {
   const strings = getStrings();
   const { card } = timer;
   const left = leftOf(timer);
@@ -40803,9 +42473,9 @@ function paint6(timer) {
     /** @type {HTMLElement} */
     card.querySelector(".kp-timer__time")
   );
-  const shown5 = timer.state === "done" ? strings.timerDone(timer.name) : clockOf(timer, left);
-  if (time.textContent !== shown5) time.textContent = shown5;
-  time.title = timer.state === "done" ? shown5 : "";
+  const shown6 = timer.state === "done" ? strings.timerDone(timer.name) : clockOf(timer, left);
+  if (time.textContent !== shown6) time.textContent = shown6;
+  time.title = timer.state === "done" ? shown6 : "";
   const bar = (
     /** @type {HTMLElement} */
     card.querySelector(".kp-timer__bar")
@@ -40844,7 +42514,7 @@ var init_card = __esm({
     init_strings();
     init_progressbar();
     init_model3();
-    init_state15();
+    init_state16();
   }
 });
 
@@ -40921,7 +42591,7 @@ var TIMER_SOUNDS, SOUNDS;
 var init_sound = __esm({
   "js/timer/sound.js"() {
     "use strict";
-    init_state15();
+    init_state16();
     TIMER_SOUNDS = ["chime", "bell", "buzzer"];
     SOUNDS = {
       // A soft two-note chime.
@@ -40966,10 +42636,10 @@ function sync2(list) {
   const strings = getStrings();
   const error = list.getAttribute("data-kp-timers-error");
   const loading = list.hasAttribute("aria-busy");
-  const shown5 = list.getAttribute("data-kp-state");
-  if (shown5 === null || shown5 === "ready" || shown5 === "empty") {
+  const shown6 = list.getAttribute("data-kp-state");
+  if (shown6 === null || shown6 === "ready" || shown6 === "empty") {
     if (timers.size === 0) list.setAttribute("data-kp-state", "empty");
-    else if (shown5 === "empty") list.setAttribute("data-kp-state", "ready");
+    else if (shown6 === "empty") list.setAttribute("data-kp-state", "ready");
   }
   const title = error ?? list.getAttribute("data-kp-timers-empty") ?? strings.timerEmpty;
   const plateKey = loading ? "loading" : `${error !== null ? "error" : "empty"}|${title}`;
@@ -41024,7 +42694,7 @@ function tick3(list) {
         timer.warned = true;
         say6(list, getStrings().timerLastMinute(timer.name));
       }
-      paint6(timer);
+      paint7(timer);
     }
   }
   sync2(list);
@@ -41033,13 +42703,13 @@ function finish(list, timer, { quiet = false } = {}) {
   timer.state = "done";
   timer.endsAt = null;
   timer.left = 0;
-  paint6(timer);
+  paint7(timer);
   const strings = getStrings();
   say6(list, strings.timerDone(timer.name), "alert");
   if (!quiet) {
     const sound = list.getAttribute("data-kp-timers-sound") ?? "chime";
     const speak = list.getAttribute("data-kp-timers-speak") === "on";
-    const announce5 = () => {
+    const announce6 = () => {
       const length = playTimerSound(sound);
       if (speak)
         setTimeout(
@@ -41048,14 +42718,14 @@ function finish(list, timer, { quiet = false } = {}) {
         );
     };
     if (sound !== "off" || speak) {
-      announce5();
+      announce6();
       const ring = Number(list.getAttribute("data-kp-timers-ring") ?? 60);
       if (ring > 0) {
         const until = Date.now() + ring * 1e3;
         timer.card.setAttribute("data-kp-timer-ringing", "");
         timer.ring = setInterval(() => {
           if (Date.now() >= until || timer.state !== "done") return stopRing(timer);
-          announce5();
+          announce6();
         }, 4e3);
       }
     }
@@ -41077,10 +42747,10 @@ var init_sync4 = __esm({
     init_busy_card();
     init_state_plate();
     init_card();
-    init_constants22();
+    init_constants23();
     init_model3();
     init_sound();
-    init_state15();
+    init_state16();
     BUSY = /* @__PURE__ */ new WeakMap();
     PLATE = /* @__PURE__ */ new WeakMap();
   }
@@ -41114,7 +42784,7 @@ function startTimer(list, { name, seconds, id, say: message = "" }) {
     card
   };
   timers.set(key, timer);
-  paint6(timer);
+  paint7(timer);
   part3(list, "list").append(card);
   void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => card.isConnected && m.arriveShown(card));
   sync2(list);
@@ -41128,7 +42798,7 @@ function pauseTimer(list, id) {
   timer.left = leftOf(timer);
   timer.endsAt = null;
   timer.state = "paused";
-  paint6(timer);
+  paint7(timer);
   sync2(list);
   emit(list, timer, TIMER_CHANGE_EVENT, { action: "pause" });
 }
@@ -41138,7 +42808,7 @@ function resumeTimer(list, id) {
   primeSound();
   timer.endsAt = Date.now() + timer.left;
   timer.state = "running";
-  paint6(timer);
+  paint7(timer);
   sync2(list);
   emit(list, timer, TIMER_CHANGE_EVENT, { action: "resume" });
 }
@@ -41160,7 +42830,7 @@ function addTimerTime(list, id, seconds = 60) {
     timer.left += ms;
     timer.total += ms;
   }
-  paint6(timer);
+  paint7(timer);
   sync2(list);
   emit(list, timer, TIMER_CHANGE_EVENT, { action: "add" });
 }
@@ -41207,7 +42877,7 @@ function restoreTimers(list, saved) {
     timers.set(s2.id, timer);
     part3(list, "list").append(card);
     if (timer.state === "running" && leftOf(timer) <= 0) finish(list, timer, { quiet: Date.now() - (s2.endsAt ?? 0) > 6e4 });
-    else paint6(timer);
+    else paint7(timer);
   }
   sync2(list);
 }
@@ -41217,10 +42887,10 @@ var init_run2 = __esm({
     "use strict";
     init_strings();
     init_card();
-    init_constants22();
+    init_constants23();
     init_model3();
     init_sound();
-    init_state15();
+    init_state16();
     init_sync4();
     emit = (list, timer, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf3(timer), ...extra } }));
     find = (list, id) => LISTS.get(list)?.get(id) ?? null;
@@ -41234,17 +42904,17 @@ var init_run2 = __esm({
 
 // js/timer/controller.js
 var TimerList, TimerStarters;
-var init_controller33 = __esm({
+var init_controller35 = __esm({
   "js/timer/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_countdown2();
-    init_constants22();
+    init_constants23();
     init_model3();
     init_run2();
     init_sound();
-    init_state15();
+    init_state16();
     init_sync4();
     TimerList = class extends Controller {
       connect() {
@@ -41357,8 +43027,8 @@ var init_attach7 = __esm({
   "js/timer/attach.js"() {
     "use strict";
     init_controller();
-    init_constants22();
-    init_controller33();
+    init_constants23();
+    init_controller35();
   }
 });
 
@@ -41392,7 +43062,7 @@ __export(timer_exports, {
 var init_timer = __esm({
   "js/timer.js"() {
     "use strict";
-    init_constants22();
+    init_constants23();
     init_model3();
     init_sync4();
     init_sound();
@@ -41414,14 +43084,14 @@ function goToStep(root, index) {
   state12.index = to;
   const hadFocus = root.contains(root.ownerDocument.activeElement);
   if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
-  paint5(root, true);
+  paint6(root, true);
   const strings = getStrings();
-  const asking = answering(root);
-  if (asking && hadFocus) part2(root, "step").focus({ preventScroll: true });
+  const asking2 = answering(root);
+  if (asking2 && hadFocus) part2(root, "step").focus({ preventScroll: true });
   const step = state12.steps[to];
   say5(
     root,
-    asking ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
+    asking2 ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
   );
   remember2(root);
   root.dispatchEvent(
@@ -41446,7 +43116,7 @@ function getStepsPassed(root) {
 }
 function setFocusSteps(root, steps2, { start = 0 } = {}) {
   if (!(root instanceof HTMLElement)) return;
-  build3(root);
+  build4(root);
   const state12 = stateOf2(root);
   state12.steps = steps2.map((step) => ({ ...step }));
   state12.index = Math.max(0, Math.min(steps2.length - 1, start));
@@ -41461,13 +43131,13 @@ function setFocusSteps(root, steps2, { start = 0 } = {}) {
   state12.draft = {};
   state12.finished = null;
   state12.pendingResume = null;
-  paint5(root, false);
+  paint6(root, false);
   recompute(root);
   if (start === 0) startResume(root);
 }
 function setFocusStepsState(root, kind, message) {
   if (!(root instanceof HTMLElement)) return;
-  build3(root);
+  build4(root);
   const state12 = stateOf2(root);
   root.setAttribute("data-kp-state", kind);
   if (kind === "error" || kind === "save-error")
@@ -41487,24 +43157,24 @@ function setFocusStepsState(root, kind, message) {
     state12.busy = null;
     void card?.close();
   }
-  paint5(root, false);
+  paint6(root, false);
 }
 var getStepIndex, getSteps, typing;
-var init_api13 = __esm({
+var init_api14 = __esm({
   "js/focus-steps/api.js"() {
     "use strict";
     init_strings();
     init_busy_card();
-    init_state14();
+    init_state15();
     init_tracks();
     init_track_nav();
     init_track_steps();
     init_dom6();
     init_resume();
-    init_paint6();
+    init_paint7();
     init_flow();
     init_memory();
-    init_constants20();
+    init_constants21();
     getStepIndex = (root) => stateOf2(root).index;
     getSteps = (root) => stateOf2(root).steps.map((step) => ({ ...step }));
     typing = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
@@ -41570,7 +43240,7 @@ var init_wake = __esm({
     "use strict";
     init_strings();
     init_dom6();
-    init_constants20();
+    init_constants21();
     init_resume();
   }
 });
@@ -41582,13 +43252,13 @@ var init_input = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_constants20();
+    init_constants21();
     init_dom6();
     init_resume();
     init_flow();
     init_tracks();
     init_track_steps();
-    init_api13();
+    init_api14();
     SWIPE_SLOPE = 1.5;
     FocusStepsInput = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
@@ -41728,15 +43398,15 @@ var init_input = __esm({
 
 // js/focus-steps/controller.js
 var LANE_TICK_MS, TIMER_EVENTS, LIVE_OPTIONS, FocusStepsControl;
-var init_controller34 = __esm({
+var init_controller36 = __esm({
   "js/focus-steps/controller.js"() {
     "use strict";
     init_strings();
     init_shortcuts();
     init_live_options();
-    init_constants20();
+    init_constants21();
     init_dom6();
-    init_paint6();
+    init_paint7();
     init_wake();
     init_resume();
     init_flow();
@@ -41772,8 +43442,8 @@ var init_controller34 = __esm({
         const root = this.host;
         WIRED.add(root);
         this.own(() => this.release());
-        build3(root);
-        paint5(root, false);
+        build4(root);
+        paint6(root, false);
         void holdScreen(root);
         this.listen(root, "click", (event) => this.onClick(
           /** @type {MouseEvent} */
@@ -41798,7 +43468,7 @@ var init_controller34 = __esm({
         this.registerKeys();
         this.own(watchOptions(root, LIVE_OPTIONS, (names) => this.onOptions(names)));
         this.watchTimers();
-        this.own(watchOptions(root, ["data-kp-focus-steps-empty", "data-kp-focus-steps-empty-action"], () => paint5(root, false)));
+        this.own(watchOptions(root, ["data-kp-focus-steps-empty", "data-kp-focus-steps-empty-action"], () => paint6(root, false)));
       }
       /** The view lets go of the speech, the screen and its marks. */
       release() {
@@ -41842,7 +43512,7 @@ var init_controller34 = __esm({
         const root = this.host;
         if (names.some((n) => n === "data-kp-wake" || n === "data-kp-focus-steps-wake")) applyWake(root);
         if (names.includes("data-kp-track-shared")) layTracks(root);
-        paint5(root, false);
+        paint6(root, false);
         if (names.includes("data-kp-track-attention") || names.includes("data-kp-tracks")) renderBand(root);
         recompute(root);
       }
@@ -41923,7 +43593,7 @@ var init_controller34 = __esm({
         else if (button6.classList.contains("kp-focus-steps__resume-restart")) {
           memoryOf3(root)?.forget("progress");
           state12.pendingResume = null;
-          paint5(root, false);
+          paint6(root, false);
         } else if (button6.classList.contains("kp-focus-steps__next")) this.next();
         else if (button6.classList.contains("kp-focus-steps__prev")) this.prev();
         else if (button6.classList.contains("kp-focus-steps__speak")) this.speak(button6);
@@ -41956,8 +43626,8 @@ var init_attach8 = __esm({
   "js/focus-steps/attach.js"() {
     "use strict";
     init_controller();
-    init_constants20();
-    init_controller34();
+    init_constants21();
+    init_controller36();
   }
 });
 
@@ -41990,8 +43660,8 @@ __export(focus_steps_exports, {
 var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
-    init_constants20();
-    init_api13();
+    init_constants21();
+    init_api14();
     init_attach8();
   }
 });
@@ -42004,44 +43674,44 @@ function part4(list, name) {
   );
   if (node) return node;
   if (name === "bar") {
-    node = el8("kp-checklist__bar");
-    const status = el8("kp-checklist__status");
-    const said = el8("kp-checklist__said", "span");
+    node = el9("kp-checklist__bar");
+    const status = el9("kp-checklist__status");
+    const said = el9("kp-checklist__said", "span");
     const undo = (
       /** @type {HTMLButtonElement} */
-      el8("kp-button kp-button--sm kp-checklist__undo", "button")
+      el9("kp-button kp-button--sm kp-checklist__undo", "button")
     );
     undo.type = "button";
     undo.hidden = true;
     status.append(said, undo);
-    const actions = el8("kp-checklist__actions");
+    const actions = el9("kp-checklist__actions");
     const all = (
       /** @type {HTMLButtonElement} */
-      el8("kp-button kp-button--ghost kp-button--sm kp-checklist__all", "button")
+      el9("kp-button kp-button--ghost kp-button--sm kp-checklist__all", "button")
     );
     all.type = "button";
     const none = (
       /** @type {HTMLButtonElement} */
-      el8("kp-button kp-button--ghost kp-button--sm kp-checklist__none", "button")
+      el9("kp-button kp-button--ghost kp-button--sm kp-checklist__none", "button")
     );
     none.type = "button";
     const clear2 = (
       /** @type {HTMLButtonElement} */
-      el8("kp-button kp-button--ghost kp-button--sm kp-checklist__clear", "button")
+      el9("kp-button kp-button--ghost kp-button--sm kp-checklist__clear", "button")
     );
     clear2.type = "button";
     actions.append(all, none, clear2);
     node.append(status, actions);
     list.prepend(node);
   } else if (name === "body") {
-    node = el8("kp-checklist__body");
+    node = el9("kp-checklist__body");
     part4(list, "bar").after(node);
   } else if (name === "live") {
-    node = el8("kp-sr-only kp-checklist__live", "span");
+    node = el9("kp-sr-only kp-checklist__live", "span");
     node.setAttribute("role", "status");
     list.append(node);
   } else {
-    node = el8(`kp-checklist__${name}`, "div");
+    node = el9(`kp-checklist__${name}`, "div");
     part4(list, "body").append(node);
   }
   return node;
@@ -42051,11 +43721,11 @@ function say7(list, message) {
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
 }
-var el8;
+var el9;
 var init_parts5 = __esm({
   "js/checklist/parts.js"() {
     "use strict";
-    el8 = (className, tag = "div") => {
+    el9 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
       return node;
@@ -42068,7 +43738,7 @@ function getChecklistItems(list) {
   return (ITEMS.get(list) ?? []).map((item) => ({ ...item }));
 }
 var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RETRY_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, PLATE2, BUSY2, serial3, nextSerial, sinks;
-var init_state16 = __esm({
+var init_state17 = __esm({
   "js/checklist/state.js"() {
     "use strict";
     CHECKLIST = "[data-kp-checklist]";
@@ -42100,17 +43770,17 @@ function groupsOf(items) {
 }
 function rowFor(row2, item) {
   if (!row2) {
-    row2 = el8("kp-checklist__item", "li");
-    const label2 = el8("kp-checklist__row", "label");
+    row2 = el9("kp-checklist__item", "li");
+    const label2 = el9("kp-checklist__row", "label");
     const check2 = (
       /** @type {HTMLInputElement} */
-      el8("kp-field__check kp-checklist__check", "input")
+      el9("kp-field__check kp-checklist__check", "input")
     );
     check2.type = "checkbox";
     const serial9 = nextSerial();
-    const text2 = el8("kp-checklist__label", "span");
+    const text2 = el9("kp-checklist__label", "span");
     text2.id = `kp-checklist-${serial9}-label`;
-    const detail2 = el8("kp-checklist__detail", "span");
+    const detail2 = el9("kp-checklist__detail", "span");
     detail2.id = `kp-checklist-${serial9}-detail`;
     check2.setAttribute("aria-labelledby", text2.id);
     label2.append(check2, text2, detail2);
@@ -42143,7 +43813,7 @@ var init_rows5 = __esm({
   "js/checklist/rows.js"() {
     "use strict";
     init_parts5();
-    init_state16();
+    init_state17();
     shownOrder = (list, items) => sinks(list) ? [...items.filter((i) => !i.checked), ...items.filter((i) => i.checked)] : items;
   }
 });
@@ -42153,7 +43823,7 @@ function render(list) {
   const strings = getStrings();
   const items = ITEMS.get(list) ?? [];
   const body = part4(list, "body");
-  const before = /* @__PURE__ */ new Map();
+  const before2 = /* @__PURE__ */ new Map();
   const rows = /* @__PURE__ */ new Map();
   for (
     const row2 of
@@ -42162,13 +43832,13 @@ function render(list) {
   ) {
     const id = row2.getAttribute("data-id") ?? "";
     rows.set(id, row2);
-    before.set(id, row2.getBoundingClientRect());
+    before2.set(id, row2.getBoundingClientRect());
   }
   renderGroups(list, body, items, rows, strings);
   renderBar(list, items, strings);
   renderEmpty(list, body, items.length, strings);
   list.dispatchEvent(new CustomEvent(CHECKLIST_RENDER_EVENT));
-  return before;
+  return before2;
 }
 function renderGroups(list, body, items, rows, strings) {
   const sections = /* @__PURE__ */ new Map();
@@ -42211,16 +43881,16 @@ function renderGroups(list, body, items, rows, strings) {
   for (const gone of sections.values()) gone.remove();
 }
 function newSection(key, level) {
-  const section = el8("kp-checklist__group", "section");
+  const section = el9("kp-checklist__group", "section");
   section.setAttribute("data-group", key);
   if (key) {
-    const head = el8("kp-checklist__head", `h${level}`);
+    const head = el9("kp-checklist__head", `h${level}`);
     head.id = `kp-checklist-${nextSerial()}-head`;
-    head.append(el8("kp-checklist__title", "span"), el8("kp-checklist__count", "span"));
+    head.append(el9("kp-checklist__title", "span"), el9("kp-checklist__count", "span"));
     section.append(head);
     section.setAttribute("aria-labelledby", head.id);
   }
-  section.append(el8("kp-checklist__list", "ul"));
+  section.append(el9("kp-checklist__list", "ul"));
   return section;
 }
 function placeRows(list, ul, members, rows) {
@@ -42272,10 +43942,10 @@ function renderBar(list, items, strings) {
 function renderEmpty(list, body, total, strings) {
   const empty = part4(list, "empty");
   const error = list.getAttribute("data-kp-checklist-error");
-  const shown5 = list.getAttribute("data-kp-state");
-  if (shown5 === null || shown5 === "ready" || shown5 === "empty") {
+  const shown6 = list.getAttribute("data-kp-state");
+  if (shown6 === null || shown6 === "ready" || shown6 === "empty") {
     if (total === 0) list.setAttribute("data-kp-state", "empty");
-    else if (shown5 === "empty") list.setAttribute("data-kp-state", "ready");
+    else if (shown6 === "empty") list.setAttribute("data-kp-state", "ready");
   }
   const title = error ?? list.getAttribute("data-kp-checklist-empty") ?? strings.checklistEmpty;
   const plateKey = `${error !== null ? "error" : "empty"}|${title}`;
@@ -42287,7 +43957,7 @@ function renderEmpty(list, body, total, strings) {
   empty.toggleAttribute("data-kp-checklist-failed", error !== null);
   body.append(empty);
 }
-async function glide2(list, before) {
+async function glide2(list, before2) {
   if (!motionAllowed()) return;
   const { themeMotion: themeMotion2 } = await Promise.resolve().then(() => (init_motion(), motion_exports));
   const { size: size2, ease } = themeMotion2(list);
@@ -42297,7 +43967,7 @@ async function glide2(list, before) {
     /** @type {NodeListOf<HTMLElement>} */
     list.querySelectorAll(".kp-checklist__item")
   ) {
-    const was = before.get(row2.getAttribute("data-id") ?? "");
+    const was = before2.get(row2.getAttribute("data-id") ?? "");
     if (!was) continue;
     const dy = was.top - row2.getBoundingClientRect().top;
     if (Math.abs(dy) < GLIDE_MIN_PX) continue;
@@ -42314,7 +43984,7 @@ var init_render = __esm({
     init_strings();
     init_parts5();
     init_rows5();
-    init_state16();
+    init_state17();
     HEADING_LEVEL = 3;
     HEADING_MIN = 2;
     HEADING_MAX = 6;
@@ -42379,30 +44049,30 @@ function endUndo(list) {
     part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
 }
 var emit2;
-var init_api14 = __esm({
+var init_api15 = __esm({
   "js/checklist/api.js"() {
     "use strict";
     init_busy_card();
     init_strings();
     init_parts5();
     init_render();
-    init_state16();
+    init_state17();
     emit2 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
   }
 });
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller35 = __esm({
+var init_controller37 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_api14();
+    init_api15();
     init_parts5();
     init_render();
     init_rows5();
-    init_state16();
+    init_state17();
     Checklist = class extends Controller {
       /** @param {HTMLElement} list */
       constructor(list) {
@@ -42540,359 +44210,16 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller35();
-    init_state16();
-    init_state16();
-    init_api14();
-  }
-});
-
-// js/quantity/build.js
-function ensureInput(root) {
-  let input = inputOf(root);
-  if (!input) {
-    input = document.createElement("input");
-    input.className = "kp-quantity__input";
-    root.append(input);
-  }
-  return input;
-}
-function ensureField(root, input) {
-  let field2 = (
-    /** @type {HTMLElement | null} */
-    root.querySelector(".kp-quantity__field")
-  );
-  if (!field2) {
-    field2 = document.createElement("span");
-    field2.className = "kp-quantity__field";
-    input.before(field2);
-    field2.append(input);
-  }
-  return field2;
-}
-function ensureUnit(root, field2) {
-  let unit2 = (
-    /** @type {HTMLElement | null} */
-    root.querySelector(".kp-quantity__unit")
-  );
-  const unitWord = root.getAttribute("data-kp-quantity-unit");
-  if (!unit2 && unitWord) {
-    unit2 = document.createElement("span");
-    unit2.className = "kp-quantity__unit";
-    unit2.setAttribute("aria-hidden", "true");
-    field2.append(unit2);
-  }
-  if (unit2) {
-    const one = root.getAttribute("data-kp-quantity-unit-one");
-    unit2.setAttribute("data-kp-words", [unitWord ?? "", one ?? ""].filter(Boolean).join("\n"));
-  }
-}
-function ensureButton(root, field2, by, label2) {
-  const strings = getStrings();
-  let b = (
-    /** @type {HTMLButtonElement | null} */
-    root.querySelector(`.kp-quantity__step[data-kp-quantity-by="${by}"]`)
-  );
-  if (!b) {
-    b = document.createElement("button");
-    b.type = "button";
-    b.className = "kp-button kp-quantity__step";
-    b.setAttribute("data-kp-quantity-by", String(by));
-    const glyph3 = document.createElement("span");
-    glyph3.className = "kp-quantity__glyph";
-    glyph3.setAttribute("aria-hidden", "true");
-    b.append(glyph3);
-    if (by < 0) field2.before(b);
-    else field2.after(b);
-  }
-  b.setAttribute("aria-label", by < 0 ? strings.quantityLess(label2) : strings.quantityMore(label2));
-}
-function nameThem(root, input, label2) {
-  input.setAttribute("role", "spinbutton");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("inputmode", rulesOf(root).decimals > 0 || rulesOf(root).min < 0 ? "decimal" : "numeric");
-  if (label2 && !input.hasAttribute("aria-label") && !input.hasAttribute("aria-labelledby") && !input.labels?.length) {
-    input.setAttribute("aria-label", label2);
-  }
-  if (root.getAttribute("role") === null) root.setAttribute("role", "group");
-  if (label2 && !root.hasAttribute("aria-label") && !root.hasAttribute("aria-labelledby")) root.setAttribute("aria-label", label2);
-}
-function build4(root) {
-  const label2 = root.getAttribute("data-kp-quantity-label") ?? "";
-  const input = ensureInput(root);
-  const field2 = ensureField(root, input);
-  ensureUnit(root, field2);
-  ensureButton(root, field2, -1, label2);
-  ensureButton(root, field2, 1, label2);
-  nameThem(root, input, label2);
-  return input;
-}
-var init_build7 = __esm({
-  "js/quantity/build.js"() {
-    "use strict";
-    init_strings();
-    init_math();
-    init_read();
-  }
-});
-
-// js/quantity/paint.js
-function writeSpinbutton(input, rules, value, text, unit2) {
-  input.removeAttribute("aria-invalid");
-  if (Number.isFinite(rules.min)) input.setAttribute("aria-valuemin", String(rules.min));
-  else input.removeAttribute("aria-valuemin");
-  if (Number.isFinite(rules.max)) input.setAttribute("aria-valuemax", String(rules.max));
-  else input.removeAttribute("aria-valuemax");
-  input.setAttribute("aria-valuenow", String(value));
-  input.setAttribute("aria-valuetext", unit2 ? getStrings().quantityValue(text, unit2) : text);
-}
-function writeWidth(root, rules, value) {
-  const widest3 = Math.max(
-    ...[rules.min, rules.max, value].filter(Number.isFinite).map((v) => formatQuantity(v, rules).length),
-    rules.decimals > 0 ? rules.decimals + 2 : 1
-  );
-  root.style.setProperty("--kp-quantity-chars", String(widest3));
-}
-function writeButtons(root, rules, value, disabled2) {
-  for (
-    const b of
-    /** @type {NodeListOf<HTMLButtonElement>} */
-    root.querySelectorAll(".kp-quantity__step")
-  ) {
-    const by = Number(b.getAttribute("data-kp-quantity-by"));
-    const atBound = by < 0 ? value <= rules.min : value >= rules.max;
-    b.disabled = disabled2;
-    if (atBound && !disabled2) b.setAttribute("aria-disabled", "true");
-    else b.removeAttribute("aria-disabled");
-  }
-}
-function paint7(root, value) {
-  const rules = rulesOf(root);
-  const input = build4(root);
-  const text = formatQuantity(value, rules);
-  if (document.activeElement !== input || input.value !== text) input.value = text;
-  root.setAttribute("data-kp-quantity-value", String(value));
-  const unit2 = unitFor(root, value);
-  writeSpinbutton(input, rules, value, text, unit2);
-  const shown5 = root.querySelector(".kp-quantity__unit");
-  if (shown5) shown5.textContent = unit2;
-  writeWidth(root, rules, value);
-  const disabled2 = isDisabled(root);
-  input.disabled = disabled2;
-  writeButtons(root, rules, value, disabled2);
-}
-function change(root, wanted, source) {
-  if (isDisabled(root)) return false;
-  const rules = rulesOf(root);
-  const previous = getQuantity(root);
-  const value = settleQuantity(wanted, rules);
-  paint7(root, value);
-  if (value === previous) return false;
-  root.dispatchEvent(new CustomEvent(QUANTITY_EVENT, { bubbles: true, detail: { value, previous, source } }));
-  return true;
-}
-var init_paint7 = __esm({
-  "js/quantity/paint.js"() {
-    "use strict";
-    init_strings();
-    init_values();
-    init_build7();
-    init_math();
-    init_read();
-  }
-});
-
-// js/quantity/controller.js
-var RELEASE_EVENTS, QuantityControl;
-var init_controller36 = __esm({
-  "js/quantity/controller.js"() {
-    "use strict";
-    init_controller();
-    init_values();
-    init_math();
-    init_paint7();
-    init_read();
-    RELEASE_EVENTS = ["pointerup", "pointerleave", "pointercancel", "blur"];
-    QuantityControl = class extends Controller {
-      /**
-       * @param {HTMLElement} host
-       * @param {Record<string, unknown>} [options]
-       */
-      constructor(host, options) {
-        super(host, options);
-        this.timer = null;
-        this.pressed = null;
-      }
-      connect() {
-        const root = this.host;
-        paint7(root, getQuantity(root));
-        this.listen(root, "pointerdown", (event) => this.down(
-          /** @type {PointerEvent} */
-          event
-        ));
-        this.listen(root, "click", (event) => this.click(
-          /** @type {MouseEvent} */
-          event
-        ));
-        this.listen(root, "keydown", (event) => this.key(
-          /** @type {KeyboardEvent} */
-          event
-        ));
-        this.listen(root, "input", () => this.typing());
-        this.listen(root, "focusout", () => this.commit());
-        for (const type of RELEASE_EVENTS) this.listen(root, type, () => this.stop(), true);
-        this.own(() => this.stop());
-      }
-      /** Stop the repeat of a held button. */
-      stop() {
-        if (this.timer !== null) clearTimeout(this.timer);
-        this.timer = null;
-      }
-      /** Remember the button a pointer pressed, or forget it. @param {HTMLElement | null} button */
-      press(button6) {
-        this.pressed = button6;
-      }
-      /** The step button an event happened on, if it is one of this quantity's. @param {Event} event @returns {HTMLElement | null} */
-      stepButton(event) {
-        const b = event.target instanceof Element ? (
-          /** @type {HTMLElement | null} */
-          event.target.closest(".kp-quantity__step")
-        ) : null;
-        return b && this.host.contains(b) ? b : null;
-      }
-      /** One step of a button. @param {HTMLElement} b @returns {boolean} whether the value moved */
-      stepOnce(b) {
-        if (b.getAttribute("aria-disabled") === "true") return false;
-        const by = Number(b.getAttribute("data-kp-quantity-by")) || 0;
-        return change(this.host, getQuantity(this.host) + by * rulesOf(this.host).step, "button");
-      }
-      /**
-       * A press in the number's box beside the number (its padding, the unit) puts the caret in the number, as the box's text cursor
-       * promises: the whole box, a fingertip high, is the number's target [uxtouch1101; the number alone is a few characters wide].
-       * @param {PointerEvent} event
-       */
-      focusFromField(event) {
-        const field2 = event.target instanceof Element ? event.target.closest(".kp-quantity__field") : null;
-        const input = inputOf(this.host);
-        if (!field2 || !input || event.target === input || isDisabled(this.host) || !this.host.contains(field2)) return;
-        event.preventDefault();
-        input.focus();
-        input.setSelectionRange(input.value.length, input.value.length);
-      }
-      /** A pointer went down on a button: step now, and again while it is held, slowly first and then faster. @param {PointerEvent} event */
-      down(event) {
-        this.focusFromField(event);
-        const b = this.stepButton(event);
-        if (!b || event.button !== 0 || isDisabled(this.host)) return;
-        this.press(b);
-        this.stepOnce(b);
-        let repeats = 0;
-        const again2 = () => {
-          repeats += 1;
-          if (!this.stepOnce(b)) return this.stop();
-          this.timer = setTimeout(again2, repeats > HOLD_SLOW_REPEATS ? HOLD_FAST : HOLD_SLOW);
-        };
-        this.stop();
-        this.timer = setTimeout(again2, HOLD_DELAY);
-      }
-      /** @param {MouseEvent} event */
-      click(event) {
-        const b = this.stepButton(event);
-        if (!b) return;
-        if (event.detail > 0 && this.pressed === b) {
-          this.press(null);
-          return;
-        }
-        this.press(null);
-        this.stepOnce(b);
-      }
-      /**
-       * Where a key moves the value to, or null when the key means nothing here.
-       * @param {string} key
-       * @param {number} now
-       * @returns {number | null}
-       */
-      target(key, now) {
-        const rules = rulesOf(this.host);
-        if (key === "ArrowUp") return now + rules.step;
-        if (key === "ArrowDown") return now - rules.step;
-        if (key === "PageUp") return now + rules.step * PAGE_STEPS;
-        if (key === "PageDown") return now - rules.step * PAGE_STEPS;
-        if (key === "Home" && Number.isFinite(rules.min)) return rules.min;
-        if (key === "End" && Number.isFinite(rules.max)) return rules.max;
-        return null;
-      }
-      /** @param {KeyboardEvent} event */
-      key(event) {
-        if (event.target !== inputOf(this.host) || event.altKey || event.ctrlKey || event.metaKey) return;
-        const now = getQuantity(this.host);
-        if (event.key === "Enter") return this.commit();
-        if (event.key === "Escape") return paint7(this.host, now);
-        const to = this.target(event.key, now);
-        if (to === null) return;
-        event.preventDefault();
-        change(this.host, to, "key");
-      }
-      /** Mark a text that is not a number while it stands. */
-      typing() {
-        const input = inputOf(this.host);
-        if (!input) return;
-        const read = parseQuantity(input.value);
-        if (input.value.trim() === "" || !Number.isFinite(read)) input.setAttribute("aria-invalid", "true");
-        else input.removeAttribute("aria-invalid");
-      }
-      /** Take what is typed: change to it, or put the last value back. */
-      commit() {
-        const input = inputOf(this.host);
-        if (!input) return;
-        const read = parseQuantity(input.value);
-        if (!Number.isFinite(read)) paint7(this.host, getQuantity(this.host));
-        else change(this.host, read, "typed");
-      }
-    };
-  }
-});
-
-// js/quantity.js
-var quantity_exports = {};
-__export(quantity_exports, {
-  HOLD_DELAY: () => HOLD_DELAY,
-  HOLD_FAST: () => HOLD_FAST,
-  HOLD_SLOW: () => HOLD_SLOW,
-  QUANTITY: () => QUANTITY,
-  QUANTITY_EVENT: () => QUANTITY_EVENT,
-  attachQuantities: () => attachQuantities,
-  decimalsOf: () => decimalsOf,
-  formatQuantity: () => formatQuantity,
-  getQuantity: () => getQuantity,
-  parseQuantity: () => parseQuantity,
-  setQuantity: () => setQuantity,
-  settleQuantity: () => settleQuantity
-});
-function setQuantity(root, value) {
-  if (!(root instanceof HTMLElement)) return;
-  paint7(root, settleQuantity(value, rulesOf(root)));
-}
-function attachQuantities(scope = document) {
-  return attachAll(scope, QUANTITY, QuantityControl);
-}
-var init_quantity = __esm({
-  "js/quantity.js"() {
-    "use strict";
-    init_controller();
-    init_values();
-    init_controller36();
-    init_math();
-    init_paint7();
-    init_values();
-    init_math();
-    init_read();
+    init_controller37();
+    init_state17();
+    init_state17();
+    init_api15();
   }
 });
 
 // js/toolbar/values.js
 var TOOLBAR, TOOLBAR_REMOVE_EVENT, TOOLBAR_CLEAR_EVENT, SEARCH, ACTIVE, LIST2, CLEAR, REMOVE;
-var init_values23 = __esm({
+var init_values24 = __esm({
   "js/toolbar/values.js"() {
     "use strict";
     TOOLBAR = "[data-kp-toolbar]";
@@ -42956,7 +44283,7 @@ function tagOf(filter, removeGlyph, strings) {
   return { item, remove };
 }
 function setToolbarActive(toolbar, filters, { clearAll: clearAll2 = true, removeGlyph = "\xD7", decorate: decorate2 } = {}) {
-  const mark = (part7, info) => {
+  const mark2 = (part7, info) => {
     if (!decorate2) return;
     const key = toolbar.getAttribute("data-kp-key");
     decorate2(part7, { ...info, host: (
@@ -42973,12 +44300,12 @@ function setToolbarActive(toolbar, filters, { clearAll: clearAll2 = true, remove
   list.replaceChildren(
     ...filters.map((filter) => {
       const { item, remove } = tagOf(filter, removeGlyph, strings);
-      mark(remove, { kind: "tag-remove", value: filter.id ?? filter.label, label: filter.label });
+      mark2(remove, { kind: "tag-remove", value: filter.id ?? filter.label, label: filter.label });
       return item;
     })
   );
   button6.textContent = strings.toolbarClearAll;
-  mark(button6, { kind: "clear-all", label: strings.toolbarClearAll });
+  mark2(button6, { kind: "clear-all", label: strings.toolbarClearAll });
   button6.hidden = !clearAll2;
   row2.hidden = filters.length === 0;
 }
@@ -42986,7 +44313,7 @@ var init_active = __esm({
   "js/toolbar/active.js"() {
     "use strict";
     init_strings();
-    init_values23();
+    init_values24();
   }
 });
 
@@ -43002,12 +44329,12 @@ function watchToolbars(root) {
   return () => watch2.destroy();
 }
 var HANDLED3, toolbarOf, ToolbarWatch;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/toolbar/controller.js"() {
     "use strict";
     init_controller();
     init_active();
-    init_values23();
+    init_values24();
     HANDLED3 = /* @__PURE__ */ new WeakSet();
     toolbarOf = (event) => event.target instanceof Element ? event.target.closest(TOOLBAR) : null;
     ToolbarWatch = class extends Controller {
@@ -43119,8 +44446,8 @@ function attachToolbars(root = document) {
 var init_toolbar = __esm({
   "js/toolbar.js"() {
     "use strict";
-    init_controller37();
-    init_values23();
+    init_controller38();
+    init_values24();
     init_active();
   }
 });
@@ -43224,14 +44551,14 @@ var init_dashboard = __esm({
       // A button whose words follow a quantity in its dialog: "Add 3 boxes" [mc-r2].
       { name: "accept-follows", when: "[data-kp-accept-follows]", load: () => Promise.resolve().then(() => (init_accept_follows(), accept_follows_exports)), attach: (m, root) => [m.attachAcceptFollows(root)] },
       { name: "toolbar", when: "[data-kp-toolbar]", load: () => Promise.resolve().then(() => (init_toolbar(), toolbar_exports)), attach: (m, root) => [m.attachToolbars(root)] },
-      { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys7(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] }
+      { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys8(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] }
     ];
   }
 });
 
 // js/sidenav/constants.js
 var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_GROUP_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles3, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, REFUSE_FALLBACK_MS, REFUSE_STILL_MS, REFUSE_TRAVEL, HOVER_DELAY_MS, RESIZE_STEP, RESIZE_SHIFT_STEPS, RESIZE_MIN_WIDTH, RESIZE_MAX_WIDTH;
-var init_constants23 = __esm({
+var init_constants24 = __esm({
   "js/sidenav/constants.js"() {
     "use strict";
     SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
@@ -43508,7 +44835,7 @@ var FOCUSABLE;
 var init_helpers3 = __esm({
   "js/sidenav/helpers.js"() {
     "use strict";
-    init_constants23();
+    init_constants24();
     FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   }
 });
@@ -43522,7 +44849,7 @@ var init_base4 = __esm({
     init_remember();
     init_motion();
     init_options4();
-    init_constants23();
+    init_constants24();
     SidenavBase = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
       constructor(host, options) {
@@ -43696,7 +45023,7 @@ var init_shift = __esm({
     init_strings();
     init_helpers3();
     init_options4();
-    init_constants23();
+    init_constants24();
     init_base4();
     MOVED = /** @type {const} */
     ["marginInlineStart", "marginInlineEnd", "paddingInlineStart", "paddingInlineEnd"];
@@ -43716,12 +45043,12 @@ var init_shift = __esm({
        * @param {string} mark
        * @param {boolean} travels
        */
-      shift(target, property, value, mark, travels) {
+      shift(target, property, value, mark2, travels) {
         const timing = travels ? slideTiming(this.panel) : INSTANT;
         target.style.setProperty("--kp-sidenav-shift-duration", timing.duration);
         target.style.setProperty("--kp-sidenav-shift-ease", timing.ease);
         target.style.setProperty("--kp-sidenav-shift-delay", timing.delay);
-        target.setAttribute("data-kp-sidenav-shift", mark);
+        target.setAttribute("data-kp-sidenav-shift", mark2);
         for (const one of MOVED) target.style[one] = "";
         target.style[property] = value;
       }
@@ -43861,7 +45188,7 @@ var init_open2 = __esm({
     init_calm();
     init_helpers3();
     init_options4();
-    init_constants23();
+    init_constants24();
     init_shift();
     MS_PER_S = 1e3;
     SidenavOpen = class extends SidenavShift {
@@ -43979,9 +45306,9 @@ var init_open2 = __esm({
         const probe = this.doc.createElement("span");
         probe.style.cssText = `position:absolute;visibility:hidden;transition-duration:${time}`;
         this.panel.append(probe);
-        const read = parseFloat(getComputedStyle(probe).transitionDuration) * MS_PER_S;
+        const read2 = parseFloat(getComputedStyle(probe).transitionDuration) * MS_PER_S;
         probe.remove();
-        const leg = Math.max(REFUSE_MIN_MS, Number.isFinite(read) && read > 0 ? read : REFUSE_FALLBACK_MS);
+        const leg = Math.max(REFUSE_MIN_MS, Number.isFinite(read2) && read2 > 0 ? read2 : REFUSE_FALLBACK_MS);
         this.panel.animate({ [property]: ["0px", `calc(-1 * ${travel})`] }, { duration: leg, easing, iterations: 2, direction: "alternate" });
         return leg * 2;
       }
@@ -44082,7 +45409,7 @@ var init_slim = __esm({
     init_strings();
     init_helpers3();
     init_options4();
-    init_constants23();
+    init_constants24();
     init_open2();
     SidenavSlim = class extends SidenavOpen {
       /**
@@ -44149,7 +45476,7 @@ var init_tip2 = __esm({
   "js/sidenav/tip.js"() {
     "use strict";
     init_motion();
-    init_constants23();
+    init_constants24();
     init_options4();
     init_slim();
     SidenavTip = class extends SidenavSlim {
@@ -44293,7 +45620,7 @@ var init_flyout = __esm({
     "use strict";
     init_helpers3();
     init_options4();
-    init_constants23();
+    init_constants24();
     init_tip2();
     CATEGORY = ".kp-sidenav__category";
     SidenavFlyout = class extends SidenavTip {
@@ -44469,7 +45796,7 @@ var init_controls = __esm({
     "use strict";
     init_remember();
     init_helpers3();
-    init_constants23();
+    init_constants24();
     init_options4();
     init_flyout();
     SidenavControls = class extends SidenavFlyout {
@@ -44582,7 +45909,7 @@ var init_narrow2 = __esm({
   "js/sidenav/narrow.js"() {
     "use strict";
     init_options4();
-    init_constants23();
+    init_constants24();
     init_controls();
     SidenavNarrow = class extends SidenavControls {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
@@ -44621,11 +45948,11 @@ var init_narrow2 = __esm({
       }
       /** Change the mode without the slide: a resize is not an opening. @param {() => void} change */
       still(change2) {
-        const before = this.panel.style.transition;
+        const before2 = this.panel.style.transition;
         this.panel.style.transition = "none";
         change2();
         void this.panel.offsetWidth;
-        this.panel.style.transition = before;
+        this.panel.style.transition = before2;
       }
       applyNarrow() {
         const box = this.panel.parentElement;
@@ -44704,7 +46031,7 @@ var init_resizer = __esm({
     "use strict";
     init_strings();
     init_options4();
-    init_constants23();
+    init_constants24();
     init_narrow2();
     SidenavResizer = class extends SidenavNarrow {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
@@ -44863,10 +46190,10 @@ var init_resizer = __esm({
 
 // js/sidenav/controller.js
 var SHIFT_KNOBS, ID_RADIX3, ID_FROM, ID_TO, SidenavControl;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/sidenav/controller.js"() {
     "use strict";
-    init_constants23();
+    init_constants24();
     init_options4();
     init_resizer();
     SHIFT_KNOBS = ["--kp-sidenav-shift-duration", "--kp-sidenav-shift-ease", "--kp-sidenav-shift-delay"];
@@ -45083,8 +46410,8 @@ var init_attach9 = __esm({
   "js/sidenav/attach.js"() {
     "use strict";
     init_controller();
-    init_constants23();
-    init_controller38();
+    init_constants24();
+    init_controller39();
   }
 });
 
@@ -45108,7 +46435,7 @@ __export(sidenav_exports, {
 var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
-    init_constants23();
+    init_constants24();
     init_options4();
     init_helpers3();
     init_attach9();
@@ -45149,7 +46476,7 @@ var init_core9 = __esm({
     "use strict";
     init_controller();
     init_scroll2();
-    init_values9();
+    init_values10();
     ListboxCore = class extends Controller {
       /**
        * @param {HTMLElement} list the element with role="listbox"
@@ -45293,7 +46620,7 @@ var init_core9 = __esm({
 
 // js/listbox/controller.js
 var ListboxController;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/listbox/controller.js"() {
     "use strict";
     init_core9();
@@ -45466,9 +46793,9 @@ function createListbox(options) {
 var init_listbox = __esm({
   "js/listbox.js"() {
     "use strict";
-    init_controller39();
+    init_controller40();
     init_scroll2();
-    init_values9();
+    init_values10();
     init_match();
   }
 });
@@ -45496,7 +46823,7 @@ var init_core10 = __esm({
     init_controller();
     init_strings();
     init_top_layer();
-    init_constants8();
+    init_constants4();
     init_helpers();
     init_matchers();
     ComboboxBase = class extends Controller {
@@ -45616,18 +46943,18 @@ var init_core10 = __esm({
       }
       /** Put the markup back as the server wrote it. */
       restore() {
-        const { input, list, tagList, status, before } = this;
-        if (before.expanded === null) input.removeAttribute("aria-expanded");
-        else input.setAttribute("aria-expanded", before.expanded);
-        list.hidden = before.listHidden;
+        const { input, list, tagList, status, before: before2 } = this;
+        if (before2.expanded === null) input.removeAttribute("aria-expanded");
+        else input.setAttribute("aria-expanded", before2.expanded);
+        list.hidden = before2.listHidden;
         [...list.querySelectorAll(OPTION_SELECTOR)].forEach((o, i) => {
-          o.hidden = before.hidden[i] ?? false;
+          o.hidden = before2.hidden[i] ?? false;
         });
         if (tagList) {
-          tagList.replaceChildren(...before.tags);
+          tagList.replaceChildren(...before2.tags);
           tagList.hidden = this.tagsHidden;
         }
-        if (status) status.textContent = before.status;
+        if (status) status.textContent = before2.status;
         this.unslot();
         if (this.empty !== null && this.empty !== this.serverEmpty) this.empty.remove();
         if (this.serverEmpty !== null) this.serverEmpty.hidden = this.emptyWasHidden;
@@ -45666,9 +46993,9 @@ var init_core10 = __esm({
           const text = (option.textContent ?? "").toLowerCase();
           const taken = this.isTags && !this.duplicates && this.chosen.includes(option.dataset.value ?? text);
           const matched = !taken && (query === "" || this.matcher(text, query));
-          const shown5 = hook?.shown && !taken ? hook.shown(option, query, matched) : matched;
-          option.hidden = !shown5;
-          if (shown5) visible4 += 1;
+          const shown6 = hook?.shown && !taken ? hook.shown(option, query, matched) : matched;
+          option.hidden = !shown6;
+          if (shown6) visible4 += 1;
         }
         hook?.after?.(query, visible4);
         if (hook?.after) visible4 = [...list.querySelectorAll(OPTION_SELECTOR)].filter((o) => !/** @type {HTMLElement} */
@@ -45826,7 +47153,7 @@ var init_tags = __esm({
 
 // js/combobox/controller.js
 var ComboboxControl;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/combobox/controller.js"() {
     "use strict";
     init_listbox();
@@ -45844,7 +47171,7 @@ var init_controller40 = __esm({
         box.dataset.kpComboboxAttached = "";
         list.dataset.kpArrive = "none";
         this.own(() => {
-          handles2.delete(box);
+          handles.delete(box);
           delete box.dataset.kpComboboxAttached;
         });
         this.own(() => this.restore());
@@ -45873,7 +47200,7 @@ var init_controller40 = __esm({
         this.filter();
         list.hidden = true;
         input.setAttribute("aria-expanded", "false");
-        handles2.set(box, this.handle);
+        handles.set(box, this.handle);
       }
       /** The handle a page gets back: read the values, replace them, open, close, type, refresh and extend. @returns {ComboboxHandle} */
       makeHandle() {
@@ -45986,14 +47313,14 @@ var init_attach10 = __esm({
   "js/combobox/attach.js"() {
     "use strict";
     init_controller();
-    init_constants8();
-    init_controller40();
+    init_constants4();
+    init_controller41();
   }
 });
 
 // js/combobox/state.js
 var comboboxState;
-var init_state17 = __esm({
+var init_state18 = __esm({
   "js/combobox/state.js"() {
     "use strict";
     comboboxState = {
@@ -46010,9 +47337,9 @@ var init_select_control = __esm({
     init_controller();
     init_listbox();
     init_top_layer();
-    init_constants8();
+    init_constants4();
     init_handle();
-    init_state17();
+    init_state18();
     OPENING_KEYS = ["ArrowDown", "ArrowUp", "Home", "End", "Enter", " ", "F4"];
     MAX_GAP = 8;
     SelectControl = class extends Controller {
@@ -46097,15 +47424,15 @@ var init_select_control = __esm({
       }
       /** Take the list away and give the select back its attributes. */
       restore() {
-        const { select: select2, list, labelled, before } = this;
+        const { select: select2, list, labelled, before: before2 } = this;
         list.remove();
         if (labelled && labelled.id === `${list.id}-label`) labelled.removeAttribute("id");
         for (
           const [name, value] of
           /** @type {const} */
           [
-            ["aria-expanded", before.expanded],
-            ["aria-controls", before.controls]
+            ["aria-expanded", before2.expanded],
+            ["aria-controls", before2.controls]
           ]
         ) {
           if (value === null) select2.removeAttribute(name);
@@ -46305,7 +47632,7 @@ __export(combobox_exports, {
 var init_combobox = __esm({
   "js/combobox.js"() {
     "use strict";
-    init_constants8();
+    init_constants4();
     init_matchers();
     init_handle();
     init_attach10();
@@ -46315,7 +47642,7 @@ var init_combobox = __esm({
 
 // js/palette/constants.js
 var PALETTE, SHEET, INPUT2, LIST3, STATUS3, GROUP, OPENER, KEYS_SLOT, RUN_EVENT, OPEN_EVENT2, RESULTS_TEXT2;
-var init_constants24 = __esm({
+var init_constants25 = __esm({
   "js/palette/constants.js"() {
     "use strict";
     init_strings();
@@ -46338,7 +47665,7 @@ var init_constants24 = __esm({
 
 // js/intent/values.js
 var INTENT_MAX_SHOWN, LABEL_WEIGHT, HINT_WEIGHT, EXACT_BONUS, FIRST_WORD_BONUS, CONTEXT_BONUS, RECENT_BONUS, TYPO_MIN_LENGTH, WORD;
-var init_values24 = __esm({
+var init_values25 = __esm({
   "js/intent/values.js"() {
     "use strict";
     INTENT_MAX_SHOWN = 40;
@@ -46395,7 +47722,7 @@ var fold, intentWords;
 var init_tokens = __esm({
   "js/intent/tokens.js"() {
     "use strict";
-    init_values24();
+    init_values25();
     fold = (ch) => ch.normalize("NFD").replace(/\p{M}/gu, "");
     intentWords = (text, options) => intentTokens(text, options).map((t) => t.w);
   }
@@ -46426,7 +47753,7 @@ function matchIntent(text, query, options = {}) {
 var init_match2 = __esm({
   "js/intent/match.js"() {
     "use strict";
-    init_values24();
+    init_values25();
     init_tokens();
   }
 });
@@ -46474,7 +47801,7 @@ function intentRanges(text, want, options = {}) {
 var init_score = __esm({
   "js/intent/score.js"() {
     "use strict";
-    init_values24();
+    init_values25();
     init_tokens();
     init_match2();
   }
@@ -46512,7 +47839,7 @@ var init_rank = __esm({
   "js/intent/rank.js"() {
     "use strict";
     init_strings();
-    init_values24();
+    init_values25();
     init_tokens();
     init_score();
   }
@@ -46535,7 +47862,7 @@ __export(intent_exports, {
 var init_intent = __esm({
   "js/intent.js"() {
     "use strict";
-    init_values24();
+    init_values25();
     init_tokens();
     init_match2();
     init_score();
@@ -46560,7 +47887,7 @@ function isTyping(target, typingSelector) {
   return target.isContentEditable || target.matches(typingSelector);
 }
 var MATCHERS2;
-var init_keys9 = __esm({
+var init_keys10 = __esm({
   "js/palette/keys.js"() {
     "use strict";
     init_listbox();
@@ -46601,7 +47928,7 @@ var init_outside = __esm({
   "js/palette/outside.js"() {
     "use strict";
     init_controller();
-    init_constants24();
+    init_constants25();
     OutsidePress = class extends Controller {
       /** @param {HTMLDialogElement} dialog */
       constructor(dialog) {
@@ -46642,7 +47969,7 @@ function palette(element) {
   return handles4.get(element) ?? null;
 }
 var handles4;
-var init_api15 = __esm({
+var init_api16 = __esm({
   "js/palette/api.js"() {
     "use strict";
     handles4 = /* @__PURE__ */ new WeakMap();
@@ -46681,7 +48008,7 @@ function place(doc, ordered2) {
 function clearMarks2(doc, option) {
   const marks = option.querySelectorAll(".kp-palette__mark");
   if (marks.length === 0) return;
-  for (const mark of marks) mark.replaceWith(doc.createTextNode(mark.textContent ?? ""));
+  for (const mark2 of marks) mark2.replaceWith(doc.createTextNode(mark2.textContent ?? ""));
   option.normalize();
 }
 function wrapLabel(doc, option) {
@@ -46721,10 +48048,10 @@ function markWords(doc, option, want, mode2) {
     let at = 0;
     for (const [from, to] of ranges) {
       if (from > at) frag.append(node.data.slice(at, from));
-      const mark = doc.createElement("span");
-      mark.className = "kp-palette__mark";
-      mark.textContent = node.data.slice(from, to);
-      frag.append(mark);
+      const mark2 = doc.createElement("span");
+      mark2.className = "kp-palette__mark";
+      mark2.textContent = node.data.slice(from, to);
+      frag.append(mark2);
       at = to;
     }
     if (at < node.data.length) frag.append(node.data.slice(at));
@@ -46976,10 +48303,10 @@ var init_intent_filter = __esm({
         const { items, startSet } = rankCommands2(this, options, want, mode2);
         const total = items.filter((it) => it.score >= 0).length;
         orderCommands(this, items, want);
-        const shown5 = this.show(items, want, mode2, want.length > 0 || startSet);
-        this.writeStatus(shown5, total);
-        this.plateFor(rawQuery, want, mode2, options, shown5);
-        return shown5;
+        const shown6 = this.show(items, want, mode2, want.length > 0 || startSet);
+        this.writeStatus(shown6, total);
+        this.plateFor(rawQuery, want, mode2, options, shown6);
+        return shown6;
       }
       /**
        * Which are shown: the answers, up to the cap when a query (or a start set) narrows them; the shown ones marked.
@@ -47014,21 +48341,21 @@ var init_intent_filter = __esm({
         return shownCount;
       }
       /** The status line is exact; a cap says so. @param {number} shown @param {number} total */
-      writeStatus(shown5, total) {
+      writeStatus(shown6, total) {
         if (this.status === null) return;
         const s2 = getStrings();
-        this.status.textContent = shown5 < total ? s2.paletteCapped(shown5, total) : shown5 === 0 ? s2.noCommands : shown5 === 1 ? s2.oneCommand : s2.manyCommands(shown5);
+        this.status.textContent = shown6 < total ? s2.paletteCapped(shown6, total) : shown6 === 0 ? s2.noCommands : shown6 === 1 ? s2.oneCommand : s2.manyCommands(shown6);
       }
       /**
        * A failed list stands the failed plate above the commands that stay; a query that found nothing, with `data-kp-nomatch="plate"`,
        * the empty plate that says what to try.
        * @param {string} rawQuery @param {string[]} want @param {IntentMode} mode @param {HTMLElement[]} options @param {number} shown
        */
-      plateFor(rawQuery, want, mode2, options, shown5) {
+      plateFor(rawQuery, want, mode2, options, shown6) {
         const { dialog } = this;
         const s2 = getStrings();
         if (this.state === "error") return this.plate.show("error", s2.paletteFailed, this.stateOptions.message ?? s2.paletteFailedText, false);
-        if (shown5 > 0 || want.length === 0 || dialog.dataset.kpNomatch !== "plate") return this.plate.hide();
+        if (shown6 > 0 || want.length === 0 || dialog.dataset.kpNomatch !== "plate") return this.plate.hide();
         const verbs = [...new Set(options.map((o) => o.dataset.kpVerb).filter((v) => v))];
         const verb = verbs.find((v) => want.length > 1 && intentWords(v ?? "", mode2)[0]?.startsWith(want[0]));
         const subjects = verb ? options.filter((o) => o.dataset.kpVerb === verb).map((o) => o.dataset.kpContextOf ?? "").filter(Boolean) : [];
@@ -47113,9 +48440,9 @@ function filterPlain(list, status, matcher, query) {
       element
     );
     const text = [...option.childNodes].filter((n) => !(n instanceof HTMLElement && n.tagName === "KBD")).map((n) => n.textContent ?? "").join("");
-    const shown5 = matcher(text.trim(), query);
-    option.hidden = !shown5;
-    if (shown5) visible4 += 1;
+    const shown6 = matcher(text.trim(), query);
+    option.hidden = !shown6;
+    if (shown6) visible4 += 1;
   }
   for (const element of list.querySelectorAll(GROUP)) {
     const group = (
@@ -47131,7 +48458,7 @@ var init_plain_filter = __esm({
   "js/palette/plain-filter.js"() {
     "use strict";
     init_listbox();
-    init_constants24();
+    init_constants25();
   }
 });
 
@@ -47144,10 +48471,10 @@ var init_palette_control = __esm({
     init_listbox();
     init_strings();
     init_live_options();
-    init_api15();
-    init_constants24();
+    init_api16();
+    init_constants25();
     init_intent_filter();
-    init_keys9();
+    init_keys10();
     init_outside();
     init_plain_filter();
     PaletteControl = class extends Controller {
@@ -47265,9 +48592,9 @@ var init_palette_control = __esm({
           this.listbox
         );
         const query = this.input.value.trim();
-        const shown5 = this.intent !== null ? this.intent.run(query) : filterPlain(this.list, this.status, this.matcher, query);
+        const shown6 = this.intent !== null ? this.intent.run(query) : filterPlain(this.list, this.status, this.matcher, query);
         listbox.refresh();
-        if (shown5 > 0) listbox.highlight(0);
+        if (shown6 > 0) listbox.highlight(0);
       }
       /** @param {'ready' | 'loading' | 'error'} state @param {{ message?: string }} [options] */
       setState(state12, options) {
@@ -47354,9 +48681,9 @@ var init_sheet2 = __esm({
   "js/palette/sheet.js"() {
     "use strict";
     init_controller();
-    init_api15();
-    init_constants24();
-    init_keys9();
+    init_api16();
+    init_constants25();
+    init_keys10();
     init_outside();
     SheetControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ sheetKey?: string | null, typingSelector?: string }} [options] */
@@ -47439,7 +48766,7 @@ var init_attach11 = __esm({
   "js/palette/attach.js"() {
     "use strict";
     init_controller();
-    init_constants24();
+    init_constants25();
     init_palette_control();
     init_sheet2();
   }
@@ -47461,10 +48788,10 @@ __export(palette_exports, {
 var init_palette = __esm({
   "js/palette.js"() {
     "use strict";
-    init_constants24();
-    init_keys9();
+    init_constants25();
+    init_keys10();
     init_outside();
-    init_api15();
+    init_api16();
     init_attach11();
   }
 });
@@ -47681,13 +49008,13 @@ function filterPills(kind, column, value, s2, locale) {
     }
   ];
 }
-var splitList2, shown3;
+var splitList2, shown4;
 var init_filter = __esm({
   "js/datatable/filter.js"() {
     "use strict";
     init_locale();
     splitList2 = (attribute) => (attribute ?? "").split(",").map((part7) => part7.trim()).filter((part7) => part7 !== "");
-    shown3 = (element) => !/** @type {HTMLElement} */
+    shown4 = (element) => !/** @type {HTMLElement} */
     element.hidden && getComputedStyle(element).display !== "none";
   }
 });
@@ -47742,15 +49069,15 @@ var init_grid_control = __esm({
       }
       /** The rows a reader can move through. */
       rows() {
-        return [...this.table.rows].filter((row2) => shown3(row2) && !row2.matches(SKELETON_ROW) && row2.cells.length > 0);
+        return [...this.table.rows].filter((row2) => shown4(row2) && !row2.matches(SKELETON_ROW) && row2.cells.length > 0);
       }
       /** @param {HTMLTableRowElement} row */
       cellsOf(row2) {
-        return [...row2.cells].filter(shown3);
+        return [...row2.cells].filter(shown4);
       }
       /** The one control a cell hands its focus to, or the cell. @param {HTMLTableCellElement} cell */
       targetOf(cell) {
-        const controls = [...cell.querySelectorAll(FOCUSABLE2)].filter((control) => control.closest(EDITOR_WRAP) === null && shown3(control));
+        const controls = [...cell.querySelectorAll(FOCUSABLE2)].filter((control) => control.closest(EDITOR_WRAP) === null && shown4(control));
         return (
           /** @type {HTMLElement} */
           controls.length === 1 ? controls[0] : cell
@@ -47902,7 +49229,7 @@ function syncFixedColumns(table, count2, endCount = 0) {
     let offset = 0;
     for (const cell of head.cells) {
       if (cell.cellIndex >= count2) break;
-      if (!shown3(cell)) continue;
+      if (!shown4(cell)) continue;
       starts.set(cell.cellIndex, offset);
       offset += cell.getBoundingClientRect().width;
       last = cell.cellIndex;
@@ -47915,7 +49242,7 @@ function syncFixedColumns(table, count2, endCount = 0) {
     let taken = 0;
     for (let at = head.cells.length - 1; at >= 0 && taken < endCount; at--) {
       const cell = head.cells[at];
-      if (!shown3(cell)) continue;
+      if (!shown4(cell)) continue;
       if (starts.has(cell.cellIndex)) break;
       ends.set(cell.cellIndex, offset);
       offset += cell.getBoundingClientRect().width;
@@ -47950,9 +49277,9 @@ function syncFixedColumns(table, count2, endCount = 0) {
   }
 }
 function watchScrolled(element, box) {
-  const mark = new ScrollMark(element, { box });
-  mark.connect();
-  return () => mark.destroy();
+  const mark2 = new ScrollMark(element, { box });
+  mark2.connect();
+  return () => mark2.destroy();
 }
 function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove: onMove2 } = {}) {
   const grid2 = new GridControl(table, { pageRows, onMove: onMove2 });
@@ -47993,7 +49320,7 @@ var init_instance = __esm({
 
 // js/datatable/state.js
 var datatableState;
-var init_state18 = __esm({
+var init_state19 = __esm({
   "js/datatable/state.js"() {
     "use strict";
     datatableState = {
@@ -48103,7 +49430,7 @@ var TableIdentity;
 var init_identity = __esm({
   "js/datatable/attach/identity.js"() {
     "use strict";
-    init_state18();
+    init_state19();
     init_strings();
     init_tables();
     TableIdentity = class {
@@ -48817,7 +50144,7 @@ var init_filter_choices = __esm({
 
 // js/datepicker/constants.js
 var PICKER2, DATE_EVENT, OPEN_EVENT3, MONTH_EVENT, JUMP_COLUMNS, MONTHS_PER_YEAR2, YEARS_PER_BLOCK, JUMP_PAGE, DAYS_PER_WEEK3, LAST_WEEKDAY;
-var init_constants25 = __esm({
+var init_constants26 = __esm({
   "js/datepicker/constants.js"() {
     "use strict";
     PICKER2 = "[data-kp-datepicker]";
@@ -48878,7 +50205,7 @@ var init_dates3 = __esm({
   "js/datepicker/dates.js"() {
     "use strict";
     init_locale();
-    init_constants25();
+    init_constants26();
   }
 });
 
@@ -49124,7 +50451,7 @@ var init_grid2 = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_constants25();
+    init_constants26();
     init_dates3();
   }
 });
@@ -49209,10 +50536,10 @@ function onPanelClick(ctl, event) {
   ctl.choose(/* @__PURE__ */ new Date(`${day2.dataset.kpDay}T00:00:00`));
 }
 var jumpCellOf, dayCellOf, isChoose;
-var init_keys10 = __esm({
+var init_keys11 = __esm({
   "js/datepicker/keys.js"() {
     "use strict";
-    init_constants25();
+    init_constants26();
     init_dates3();
     jumpCellOf = (target) => (
       /** @type {HTMLElement | null} */
@@ -49232,7 +50559,7 @@ var init_opening = __esm({
   "js/datepicker/opening.js"() {
     "use strict";
     init_motion();
-    init_constants25();
+    init_constants26();
     init_place();
     PanelOpening = class {
       /** @param {import('./controller.js').DatePickerController} ctl */
@@ -49357,7 +50684,7 @@ var init_views = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_constants25();
+    init_constants26();
     init_dates3();
     init_grid2();
     init_place();
@@ -49378,9 +50705,9 @@ var init_views = __esm({
       }
       /** Draw, and say so when the day grid now shows another month. */
       redraw() {
-        const before = this.shown;
+        const before2 = this.shown;
         drawPanel(this.ctl);
-        if (this.view === "days" && this.shown !== before) {
+        if (this.view === "days" && this.shown !== before2) {
           const { picker, cursor } = this.ctl;
           picker.dispatchEvent(new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } }));
         }
@@ -49448,16 +50775,16 @@ function partsOf5(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
     init_controller();
     init_motion();
-    init_constants25();
+    init_constants26();
     init_dates3();
     init_grid2();
-    init_keys10();
+    init_keys11();
     init_opening();
     init_settings();
     init_views();
@@ -49521,19 +50848,19 @@ var init_controller41 = __esm({
       }
       /** Put back what the picker changed on its markup. */
       restore() {
-        const { picker, input, open: open4, panel, before } = this;
+        const { picker, input, open: open4, panel, before: before2 } = this;
         stopClose(panel);
         panel.inert = false;
         this.opening.lower();
         panel.textContent = "";
         panel.style.removeProperty("min-inline-size");
         panel.style.removeProperty("min-block-size");
-        panel.hidden = before.panelHidden;
-        input.placeholder = before.placeholder;
-        if (before.value === void 0) delete input.dataset.kpDateValue;
-        else input.dataset.kpDateValue = before.value;
-        if (before.expanded === null) open4.removeAttribute("aria-expanded");
-        else open4.setAttribute("aria-expanded", before.expanded);
+        panel.hidden = before2.panelHidden;
+        input.placeholder = before2.placeholder;
+        if (before2.value === void 0) delete input.dataset.kpDateValue;
+        else input.dataset.kpDateValue = before2.value;
+        if (before2.expanded === null) open4.removeAttribute("aria-expanded");
+        else open4.setAttribute("aria-expanded", before2.expanded);
         delete picker.dataset.kpDatepickerAttached;
       }
       /** The date in the field, or null when it is empty or not a date. */
@@ -49586,8 +50913,8 @@ var init_controller41 = __esm({
       tidy() {
         const date = this.read();
         if (date === null) return;
-        const shown5 = formatDate(date, this.settings.locale, this.settings.numeric);
-        if (this.input.value !== shown5) this.input.value = shown5;
+        const shown6 = formatDate(date, this.settings.locale, this.settings.numeric);
+        if (this.input.value !== shown6) this.input.value = shown6;
       }
       onFocusOut() {
         setTimeout(() => {
@@ -49632,8 +50959,8 @@ var init_attach12 = __esm({
   "js/datepicker/attach.js"() {
     "use strict";
     init_controller();
-    init_constants25();
-    init_controller41();
+    init_constants26();
+    init_controller42();
   }
 });
 
@@ -49660,7 +50987,7 @@ __export(datepicker_exports, {
 var init_datepicker = __esm({
   "js/datepicker.js"() {
     "use strict";
-    init_constants25();
+    init_constants26();
     init_dates3();
     init_place();
     init_attach12();
@@ -51098,10 +52425,10 @@ var init_sync5 = __esm({
           const key = this.t.model.sorts[index];
           header.setAttribute("aria-sort", key === void 0 ? "none" : key.direction);
           if (key === void 0 || this.t.model.sorts.length < 2) return;
-          const mark = this.t.identity.make("span", "kp-datatable__sort-order");
-          mark.setAttribute("aria-hidden", "true");
-          mark.textContent = String(index + 1);
-          (header.querySelector("button") ?? header).append(mark);
+          const mark2 = this.t.identity.make("span", "kp-datatable__sort-order");
+          mark2.setAttribute("aria-hidden", "true");
+          mark2.textContent = String(index + 1);
+          (header.querySelector("button") ?? header).append(mark2);
         });
         if (this.t.sortSetup.openingSort !== null) {
           const atOpening = JSON.stringify(this.t.model.sorts) === this.t.sortSetup.openingSort;
@@ -51432,10 +52759,10 @@ var init_pills2 = __esm({
           button6.append(this.t.columns.labelOf(at));
           if (on) {
             button6.dataset.kpFilterMarked = "";
-            const mark = this.t.identity.make("span", "kp-badge");
-            mark.setAttribute("aria-hidden", "true");
-            mark.textContent = s2.tableFilterMarked;
-            button6.append(" ", mark);
+            const mark2 = this.t.identity.make("span", "kp-badge");
+            mark2.setAttribute("aria-hidden", "true");
+            mark2.textContent = s2.tableFilterMarked;
+            button6.append(" ", mark2);
           }
           item.append(button6);
           this.t.filterUi.addMenu.append(item);
@@ -51695,9 +53022,9 @@ var init_filter_editor = __esm({
           ));
           next2 = values.length > 0 ? values : null;
         } else if (kind === "range" || kind === "date") {
-          const read = this.readBounds(form2, at, kind);
-          if (read.refused) return;
-          next2 = read.value;
+          const read2 = this.readBounds(form2, at, kind);
+          if (read2.refused) return;
+          next2 = read2.value;
         }
         if (next2 !== null) this.editorReturn = at;
         this.t.handlers.setFilter(at, next2);
@@ -51710,7 +53037,7 @@ var init_filter_editor = __esm({
        */
       readBounds(form2, at, kind) {
         const s2 = getStrings();
-        const read = (bound) => {
+        const read2 = (bound) => {
           const input = (
             /** @type {HTMLInputElement} */
             form2.querySelector(`[data-kp-filter-bound="${bound}"]`)
@@ -51718,7 +53045,7 @@ var init_filter_editor = __esm({
           const label2 = bound === "from" ? s2.tableFilterFrom(this.t.columns.labelOf(at)) : s2.tableFilterTo(this.t.columns.labelOf(at));
           return { text: input.value, iso: input.dataset.kpDateValue, label: label2 };
         };
-        const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s2, this.t.controls.locale);
+        const result = readFilterBounds(kind, { from: read2("from"), to: read2("to") }, s2, this.t.controls.locale);
         for (const input of form2.querySelectorAll("[data-kp-filter-bound]")) input.removeAttribute("aria-invalid");
         if (result.error === void 0) return { refused: false, value: result.value };
         const error = (
@@ -51847,7 +53174,7 @@ var init_apply2 = __esm({
               b.value
             ));
           else {
-            const read = (bound) => {
+            const read2 = (bound) => {
               const input = (
                 /** @type {HTMLInputElement | null} */
                 set.querySelector(`[data-kp-filter-bound="${bound}"]`)
@@ -51855,7 +53182,7 @@ var init_apply2 = __esm({
               if (input === null) return "";
               return input.dataset.kpDateInput === void 0 ? input.value : input.dataset.kpDateValue ?? "";
             };
-            value = { from: read("from"), to: read("to") };
+            value = { from: read2("from"), to: read2("to") };
           }
           if (kind !== null && kind !== void 0 && filterActive(kind, value)) this.t.model.filters.set(at, value);
         }
@@ -52091,9 +53418,9 @@ var init_handlers = __esm({
       }
       onPanel() {
         if (this.t.apply.writing) return;
-        const before = JSON.stringify([...this.t.model.filters]);
+        const before2 = JSON.stringify([...this.t.model.filters]);
         this.t.apply.readControls();
-        if (JSON.stringify([...this.t.model.filters]) === before) return;
+        if (JSON.stringify([...this.t.model.filters]) === before2) return;
         this.t.pills.renderPills();
         this.t.apply.applyFilter();
       }
@@ -52583,8 +53910,8 @@ var init_edit_field = __esm({
         const event = new CustomEvent(EDIT_EVENT, { bubbles: true, cancelable: true, detail });
         this.t.wrap.dispatchEvent(event);
         if (event.defaultPrevented && refused === null) refused = s2.tableEditInvalid;
-        const onEdit = this.t.settings.onEdit;
-        if (onEdit !== void 0) waits.push(Promise.resolve().then(() => onEdit(detail)));
+        const onEdit2 = this.t.settings.onEdit;
+        if (onEdit2 !== void 0) waits.push(Promise.resolve().then(() => onEdit2(detail)));
         if (refused === null && waits.length > 0) {
           try {
             for (const answer2 of await Promise.all(waits)) {
@@ -53465,12 +54792,12 @@ var init_unwire = __esm({
 
 // js/datatable/attach/controller.js
 var UNMADE, DataTableControl;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/datatable/attach/controller.js"() {
     "use strict";
     init_controller();
     init_remember();
-    init_state18();
+    init_state19();
     init_instance();
     init_identity();
     init_controls2();
@@ -53648,7 +54975,7 @@ function attachDataTables(root = document, {
   detail: detailFn,
   load: loadFn,
   rowKey: rowKeyFn,
-  onEdit,
+  onEdit: onEdit2,
   expandGlyph = "\u25B8",
   collapseGlyph = "\u25BE",
   gridPageRows = GRID_PAGE_ROWS,
@@ -53672,7 +54999,7 @@ function attachDataTables(root = document, {
     detailFn,
     loadFn,
     rowKeyFn,
-    onEdit,
+    onEdit: onEdit2,
     expandGlyph,
     collapseGlyph,
     gridPageRows,
@@ -53718,7 +55045,7 @@ var init_attach13 = __esm({
     init_instance();
     init_events();
     init_selectors();
-    init_controller42();
+    init_controller43();
   }
 });
 
@@ -53757,7 +55084,7 @@ var init_layout_hooks = __esm({
         const box = host.querySelector(".kp-table-wrap") ?? host;
         const view = host.ownerDocument.defaultView;
         if (!view || typeof ResizeObserver === "undefined") return;
-        const read = () => {
+        const read2 = () => {
           const rem = Number.parseFloat(view.getComputedStyle(host.ownerDocument.documentElement).fontSize) || 16;
           const wide = box.getBoundingClientRect().width >= thresholdPx(host.getAttribute("data-kp-cards-at"), rem);
           if (host.hasAttribute(IDLE_ATTRIBUTE) === wide) return;
@@ -53767,16 +55094,16 @@ var init_layout_hooks = __esm({
             [host, box]
           ));
         };
-        this.observe(new ResizeObserver(read)).observe(box);
-        this.observe(new MutationObserver(read)).observe(host, { attributes: true, attributeFilter: ["data-kp-cards-at"] });
+        this.observe(new ResizeObserver(read2)).observe(box);
+        this.observe(new MutationObserver(read2)).observe(host, { attributes: true, attributeFilter: ["data-kp-cards-at"] });
         this.own(() => host.removeAttribute(IDLE_ATTRIBUTE));
-        read();
+        read2();
       }
     };
     ActionColumn = class extends Controller {
       connect() {
         const table = this.host;
-        const mark = () => {
+        const mark2 = () => {
           const heads = [...table.querySelectorAll("thead th")];
           const at = heads.findIndex((th) => th.getAttribute("data-kp-col") === "actions");
           if (at < 0) return;
@@ -53789,8 +55116,8 @@ var init_layout_hooks = __esm({
           }
         };
         const body = table.querySelector("tbody");
-        if (body && typeof MutationObserver !== "undefined") this.observe(new MutationObserver(mark)).observe(body, { childList: true });
-        mark();
+        if (body && typeof MutationObserver !== "undefined") this.observe(new MutationObserver(mark2)).observe(body, { childList: true });
+        mark2();
       }
     };
   }
@@ -54599,7 +55926,7 @@ var init_accepts = __esm({
 
 // js/upload/values.js
 var UPLOAD, UPLOAD_INPUT, UPLOAD_ZONE, UPLOAD_LIST, FILE_EVENT, REJECT_EVENT, REMOVE_EVENT, REMOVE_CLASS, REMOVE_GLYPH, PERCENT2;
-var init_values25 = __esm({
+var init_values26 = __esm({
   "js/upload/values.js"() {
     "use strict";
     UPLOAD = "[data-kp-upload]";
@@ -54635,7 +55962,7 @@ function setError(item, message) {
 var init_item3 = __esm({
   "js/upload/item.js"() {
     "use strict";
-    init_values25();
+    init_values26();
   }
 });
 
@@ -54681,7 +56008,7 @@ var init_row3 = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_values25();
+    init_values26();
   }
 });
 
@@ -54696,7 +56023,7 @@ var init_core11 = __esm({
     init_accepts();
     init_item3();
     init_row3();
-    init_values25();
+    init_values26();
     UploadCore = class extends Controller {
       /**
        * @param {HTMLElement} host the upload
@@ -54773,12 +56100,12 @@ var init_core11 = __esm({
 
 // js/upload/controller.js
 var UploadZone;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/upload/controller.js"() {
     "use strict";
     init_motion();
     init_core11();
-    init_values25();
+    init_values26();
     UploadZone = class extends UploadCore {
       /**
        * @param {HTMLElement} host
@@ -54836,8 +56163,8 @@ var init_controller43 = __esm({
           button6.closest("li, [data-kp-upload-file]")
         );
         if (item === null || item.hasAttribute("data-kp-leaving")) return;
-        const ask = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: this.rows.get(item), item } });
-        if (!item.dispatchEvent(ask)) return;
+        const ask2 = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: this.rows.get(item), item } });
+        if (!item.dispatchEvent(ask2)) return;
         this.rows.delete(item);
         if (leavesState(item)) {
           item.inert = true;
@@ -54916,9 +56243,9 @@ var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
     init_controller();
-    init_controller43();
-    init_values25();
-    init_values25();
+    init_controller44();
+    init_values26();
+    init_values26();
     init_accepts();
     init_item3();
   }
@@ -54962,7 +56289,7 @@ var init_validate = __esm({
 
 // js/wizard/values.js
 var WIZARD, STEP_EVENT, BEFORE_STEP_EVENT, FINISH_EVENT;
-var init_values26 = __esm({
+var init_values27 = __esm({
   "js/wizard/values.js"() {
     "use strict";
     WIZARD = "[data-kp-wizard]";
@@ -54979,7 +56306,7 @@ var init_view2 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values26();
+    init_values27();
     putBack = (el16, name, was) => {
       if (was === null || was === void 0) el16.removeAttribute(name);
       else el16.setAttribute(name, was);
@@ -55064,14 +56391,14 @@ var init_view2 = __esm({
        * Draw the current step; announce it (focus and event) unless rendering silently.
        * @param {{ announce?: boolean, previous?: number }} [how]
        */
-      show({ announce: announce5 = true, previous = this.at } = {}) {
+      show({ announce: announce6 = true, previous = this.at } = {}) {
         const { at, steps: steps2 } = this;
         steps2.forEach((step, i) => {
           step.hidden = i !== at;
         });
         this.showLabels();
         this.showButtons();
-        if (!announce5) return;
+        if (!announce6) return;
         if (this.moveFocus) {
           steps2[at]?.setAttribute("tabindex", "-1");
           steps2[at]?.focus();
@@ -55101,23 +56428,23 @@ var init_view2 = __esm({
       }
       /** Put the steps, labels and buttons back as the snapshot had them. */
       restore() {
-        const before = this.before;
-        if (before === null) return;
+        const before2 = this.before;
+        if (before2 === null) return;
         const { back, next: next2, status } = this;
         this.steps.forEach((step, i) => {
-          step.hidden = before.hidden[i] ?? false;
-          putBack(step, "tabindex", before.tabindex[i]);
+          step.hidden = before2.hidden[i] ?? false;
+          putBack(step, "tabindex", before2.tabindex[i]);
         });
         this.labels.forEach((label2, i) => {
-          const state12 = before.labelState[i];
+          const state12 = before2.labelState[i];
           if (state12 === null || state12 === void 0) delete label2.dataset.state;
           else label2.dataset.state = state12;
-          putBack(label2, "aria-current", before.labelCurrent[i]);
-          putBack(label2, "tabindex", before.labelTab[i]);
+          putBack(label2, "aria-current", before2.labelCurrent[i]);
+          putBack(label2, "tabindex", before2.labelTab[i]);
         });
-        if (back !== null) back.disabled = before.back;
-        if (next2 !== null) next2.textContent = before.next;
-        if (status !== null) status.textContent = before.status;
+        if (back !== null) back.disabled = before2.back;
+        if (next2 !== null) next2.textContent = before2.next;
+        if (status !== null) status.textContent = before2.status;
       }
     };
   }
@@ -55125,11 +56452,11 @@ var init_view2 = __esm({
 
 // js/wizard/controller.js
 var WizardController;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/wizard/controller.js"() {
     "use strict";
     init_validate();
-    init_values26();
+    init_values27();
     init_view2();
     WizardController = class extends WizardView {
       connect() {
@@ -55162,8 +56489,8 @@ var init_controller44 = __esm({
         if (to < 0 || to >= steps2.length || to === at) return false;
         const direction = to > at ? "forward" : "back";
         if (direction === "forward" && this.gate && !stepIsValid(steps2[at])) return false;
-        const ask = new CustomEvent(BEFORE_STEP_EVENT, { bubbles: true, cancelable: true, detail: { from: at, to, direction } });
-        if (!this.host.dispatchEvent(ask)) return false;
+        const ask2 = new CustomEvent(BEFORE_STEP_EVENT, { bubbles: true, cancelable: true, detail: { from: at, to, direction } });
+        if (!this.host.dispatchEvent(ask2)) return false;
         const { beforeStep } = (
           /** @type {import('../wizard.js').WizardOptions} */
           this.options
@@ -55225,8 +56552,8 @@ var init_attach14 = __esm({
   "js/wizard/attach.js"() {
     "use strict";
     init_controller();
-    init_controller44();
-    init_values26();
+    init_controller45();
+    init_values27();
   }
 });
 
@@ -55246,7 +56573,7 @@ var init_wizard = __esm({
   "js/wizard.js"() {
     "use strict";
     init_attach14();
-    init_values26();
+    init_values27();
     init_attach14();
   }
 });
@@ -55474,7 +56801,7 @@ var init_colorpicker = __esm({
        * @param {boolean} announce
        * @returns {ColourDetail}
        */
-      update(announce5) {
+      update(announce6) {
         const picker = this.host;
         const colour = this.read();
         const text = formatHsl(colour);
@@ -55484,7 +56811,7 @@ var init_colorpicker = __esm({
         const against = this.target();
         const { ratio, ok } = this.measure(colour, against);
         const detail = { value: text, ...colour, ratio, ok, against };
-        if (announce5) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
+        if (announce6) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
         return detail;
       }
       /**
@@ -55516,8 +56843,8 @@ var init_colorpicker = __esm({
 });
 
 // js/gridlayout/values.js
-var GRID2, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, DEFAULT_STEP, PLACEMENT_PROPERTIES;
-var init_values27 = __esm({
+var GRID2, TILE, LAYOUT_EVENT, LAYOUT_COMMIT_EVENT, COLUMNS, COMMIT_MS, DEFAULT_STEP2, PLACEMENT_PROPERTIES;
+var init_values28 = __esm({
   "js/gridlayout/values.js"() {
     "use strict";
     GRID2 = "[data-kp-grid]";
@@ -55526,7 +56853,7 @@ var init_values27 = __esm({
     LAYOUT_COMMIT_EVENT = "kp-grid-commit";
     COLUMNS = 6;
     COMMIT_MS = 400;
-    DEFAULT_STEP = 1;
+    DEFAULT_STEP2 = 1;
     PLACEMENT_PROPERTIES = ["--kp-tile-x", "--kp-tile-y", "--kp-tile-w", "--kp-tile-h"];
   }
 });
@@ -55571,7 +56898,7 @@ var init_place2 = __esm({
   "js/gridlayout/place.js"() {
     "use strict";
     init_strings();
-    init_values27();
+    init_values28();
   }
 });
 
@@ -55611,19 +56938,19 @@ var init_layout2 = __esm({
   "js/gridlayout/layout.js"() {
     "use strict";
     init_place2();
-    init_values27();
+    init_values28();
   }
 });
 
 // js/gridlayout/controller.js
 var MovableGrid;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/gridlayout/controller.js"() {
     "use strict";
     init_controller();
     init_layout2();
     init_place2();
-    init_values27();
+    init_values28();
     MovableGrid = class extends Controller {
       /**
        * @param {HTMLElement} host the grid
@@ -55631,7 +56958,7 @@ var init_controller45 = __esm({
        */
       constructor(host, options = {}) {
         super(host, options);
-        const { step = DEFAULT_STEP, rows = Infinity, commitMs = COMMIT_MS, pointer = true } = options;
+        const { step = DEFAULT_STEP2, rows = Infinity, commitMs = COMMIT_MS, pointer = true } = options;
         this.columns = Number.parseInt(host.dataset.kpColumns ?? "", 10) || COLUMNS;
         this.stride = Number.parseInt(host.dataset.kpStep ?? "", 10) || step;
         this.maxRows = Number.parseInt(host.dataset.kpRows ?? "", 10) || rows;
@@ -55793,9 +57120,9 @@ var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_controller();
-    init_controller45();
-    init_values27();
-    init_values27();
+    init_controller46();
+    init_values28();
+    init_values28();
     init_layout2();
   }
 });
@@ -55925,7 +57252,7 @@ var init_page = __esm({
 
 // js/heat/constants.js
 var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES2, HEAT_CELL, MATRIX_CELL, GLYPHS3;
-var init_constants26 = __esm({
+var init_constants27 = __esm({
   "js/heat/constants.js"() {
     "use strict";
     HEAT = "[data-kp-heat]";
@@ -56023,7 +57350,7 @@ var toneOf2, unit;
 var init_dom7 = __esm({
   "js/heat/dom.js"() {
     "use strict";
-    init_constants26();
+    init_constants27();
     toneOf2 = (tone) => TONES2.includes(tone ?? "") ? (
       /** @type {GridTone} */
       tone
@@ -56073,8 +57400,8 @@ function drawAxis(doc, columns2, { every, picked, loading }) {
   const heads = make15(doc, "div", "kp-heat__cells", { role: "none" });
   const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
   const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
-  const before = open4[open4.length - 2];
-  if (every > 1 && before !== void 0 && before === open4[open4.length - 1] - 1) named.delete(before);
+  const before2 = open4[open4.length - 2];
+  if (every > 1 && before2 !== void 0 && before2 === open4[open4.length - 1] - 1) named.delete(before2);
   const made6 = columns2.map((c, i) => column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i)));
   placeAxis(made6);
   heads.append(...made6);
@@ -56125,7 +57452,7 @@ var init_draw_parts = __esm({
     init_state_plate();
     init_strings();
     init_card2();
-    init_constants26();
+    init_constants27();
     init_dom7();
   }
 });
@@ -56233,7 +57560,7 @@ var init_legend2 = __esm({
     "use strict";
     init_strings();
     init_calm_tones();
-    init_keys7();
+    init_keys8();
     init_dom7();
     legendCount = 0;
   }
@@ -56243,8 +57570,8 @@ var init_legend2 = __esm({
 function pagerOf(el16) {
   const kept = PAGERS.get(el16);
   if (kept?.isConnected) return kept;
-  const before = el16.previousElementSibling;
-  return before instanceof HTMLElement && before.matches(".kp-heat__pager") ? before : null;
+  const before2 = el16.previousElementSibling;
+  return before2 instanceof HTMLElement && before2.matches(".kp-heat__pager") ? before2 : null;
 }
 function heatOffset(el16) {
   const n = Number(el16.getAttribute("data-kp-heat-offset"));
@@ -56330,7 +57657,7 @@ var init_paging = __esm({
   "js/heat/paging.js"() {
     "use strict";
     init_strings();
-    init_constants26();
+    init_constants27();
     init_dom7();
     init_grid_state();
     MARKED = /* @__PURE__ */ new WeakSet();
@@ -56372,7 +57699,7 @@ function setHeat(el16, spec, options) {
     else DECORATE.delete(el16);
   }
   const decorate2 = DECORATE.get(el16);
-  const mark = (part7, info) => {
+  const mark2 = (part7, info) => {
     if (!decorate2) return;
     const key = el16.getAttribute("data-kp-key");
     decorate2(part7, { ...info, host: el16, ...key === null ? {} : { key } });
@@ -56434,16 +57761,16 @@ function setHeat(el16, spec, options) {
         "data-key": row2.key
       }) : label2;
       if (row2.mark) {
-        const mark2 = make15(doc, "i", "kp-heat__mark", { "aria-hidden": "true" });
-        mark2.style.setProperty("--kp-heat-mark", row2.mark);
-        inner.append(mark2);
+        const mark3 = make15(doc, "i", "kp-heat__mark", { "aria-hidden": "true" });
+        mark3.style.setProperty("--kp-heat-mark", row2.mark);
+        inner.append(mark3);
       }
       const text = make15(doc, "span", `kp-heat__label-text${row2.muted ? " kp-heat__label-text--muted" : ""}`);
       text.textContent = row2.label;
       text.title = row2.label;
       inner.append(text);
       if (inner !== label2) label2.append(inner);
-      if (inner !== label2) mark(inner, { kind: "row-label", value: row2.key, label: row2.label });
+      if (inner !== label2) mark2(inner, { kind: "row-label", value: row2.key, label: row2.label });
     }
     const cells = make15(doc, "div", "kp-heat__cells", { role: "none" });
     columns2.forEach((col, c) => {
@@ -56489,7 +57816,7 @@ function setHeat(el16, spec, options) {
         button6.setAttribute("data-kp-picked", "");
         button6.setAttribute("aria-selected", "true");
       }
-      mark(button6, { kind: "cell", value: `${row2.key}/${col.key}`, index: c, label: button6.getAttribute("aria-label") ?? "" });
+      mark2(button6, { kind: "cell", value: `${row2.key}/${col.key}`, index: c, label: button6.getAttribute("aria-label") ?? "" });
       cells.append(button6);
     });
     node.append(label2, cells);
@@ -56528,7 +57855,7 @@ var init_draw8 = __esm({
     init_calm_tones();
     init_card2();
     init_draw_parts();
-    init_constants26();
+    init_constants27();
     init_dom7();
     init_grid_state();
     init_legend2();
@@ -56600,7 +57927,7 @@ var init_wire2 = __esm({
     "use strict";
     init_controller();
     init_hovercard();
-    init_constants26();
+    init_constants27();
     init_draw8();
     init_grid_state();
     init_legend2();
@@ -56740,7 +58067,7 @@ var init_wire2 = __esm({
 
 // js/uses-map/constants.js
 var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW;
-var init_constants27 = __esm({
+var init_constants28 = __esm({
   "js/uses-map/constants.js"() {
     "use strict";
     USES_MAP = '[data-kp-view="lines"]';
@@ -56850,16 +58177,16 @@ function tagOf2(doc, cls, line) {
   const tag = make16(doc, "span", cls);
   if (line.tone) {
     tag.setAttribute("data-kp-tone", line.tone);
-    const mark = make16(doc, "span", "kp-uses__tag-mark");
-    mark.setAttribute("aria-hidden", "true");
-    mark.textContent = TONE_GLYPH[line.tone];
-    tag.append(mark);
+    const mark2 = make16(doc, "span", "kp-uses__tag-mark");
+    mark2.setAttribute("aria-hidden", "true");
+    mark2.textContent = TONE_GLYPH[line.tone];
+    tag.append(mark2);
   }
   tag.append(make16(doc, "span", "kp-uses__tag-text"));
   tag.lastElementChild.textContent = line.label ?? "";
   return tag;
 }
-var SVG_NS5, TONE_GLYPH, make16, attr2;
+var SVG_NS5, TONE_GLYPH, make16, attr3;
 var init_dom8 = __esm({
   "js/uses-map/dom.js"() {
     "use strict";
@@ -56870,22 +58197,22 @@ var init_dom8 = __esm({
       node.className = cls;
       return node;
     };
-    attr2 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
+    attr3 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
   }
 });
 
 // js/uses-map/model.js
 function readOptions2(el16) {
   return {
-    side: attr2(el16, "data-kp-lines-side", "sources-left"),
+    side: attr3(el16, "data-kp-lines-side", "sources-left"),
     shape: (
       /** @type {'curve' | 'elbow' | 'straight'} */
-      attr2(el16, "data-kp-lines-shape", "curve")
+      attr3(el16, "data-kp-lines-shape", "curve")
     ),
-    lightMode: attr2(el16, "data-kp-lines-light", "both"),
-    countOn: attr2(el16, "data-kp-lines-count", "on") !== "off",
-    hideEmpty: attr2(el16, "data-kp-lines-empty-sources", "show") === "hide",
-    collapseBelow: Number(attr2(el16, "data-kp-lines-collapse-below", String(USES_COLLAPSE_BELOW))) || USES_COLLAPSE_BELOW
+    lightMode: attr3(el16, "data-kp-lines-light", "both"),
+    countOn: attr3(el16, "data-kp-lines-count", "on") !== "off",
+    hideEmpty: attr3(el16, "data-kp-lines-empty-sources", "show") === "hide",
+    collapseBelow: Number(attr3(el16, "data-kp-lines-collapse-below", String(USES_COLLAPSE_BELOW))) || USES_COLLAPSE_BELOW
   };
 }
 function readModel(el16, spec, memory) {
@@ -56911,7 +58238,7 @@ var init_model5 = __esm({
   "js/uses-map/model.js"() {
     "use strict";
     init_strings();
-    init_constants27();
+    init_constants28();
     init_dom8();
     init_relation();
     SKELETON_NODES = 4;
@@ -57094,7 +58421,7 @@ function keyTarget(m, root, card, key, kind, pressed2) {
   return void 0;
 }
 var cardsOf;
-var init_keys11 = __esm({
+var init_keys12 = __esm({
   "js/uses-map/keys.js"() {
     "use strict";
     cardsOf = (root, kind) => [...root.querySelectorAll(`.kp-uses__node[data-side="${kind}"] .kp-uses__card`)].filter((n) => n instanceof HTMLElement);
@@ -57260,8 +58587,8 @@ var init_wire3 = __esm({
   "js/uses-map/wire.js"() {
     "use strict";
     init_controller();
-    init_constants27();
-    init_keys11();
+    init_constants28();
+    init_keys12();
     init_lines();
     init_memory2();
     UsesWire = class extends Controller {
@@ -57523,7 +58850,7 @@ var init_draw9 = __esm({
   "js/uses-map/draw.js"() {
     "use strict";
     init_state_plate();
-    init_constants27();
+    init_constants28();
     init_dom8();
     init_memory2();
     init_model5();
@@ -57550,7 +58877,7 @@ __export(uses_map_exports, {
 var init_uses_map = __esm({
   "js/uses-map.js"() {
     "use strict";
-    init_constants27();
+    init_constants28();
     init_memory2();
     init_relation();
     init_draw9();
@@ -57630,9 +58957,9 @@ function setMatrix(el16, spec) {
       "data-key": item.key
     });
     if (item.mark) {
-      const mark = make15(doc, "i", "kp-matrix__mark", { "aria-hidden": "true" });
-      mark.style.setProperty("--kp-heat-mark", item.mark);
-      node.append(mark);
+      const mark2 = make15(doc, "i", "kp-matrix__mark", { "aria-hidden": "true" });
+      mark2.style.setProperty("--kp-heat-mark", item.mark);
+      node.append(mark2);
     }
     const text = make15(doc, "span", "kp-matrix__name");
     text.textContent = item.label;
@@ -57781,7 +59108,7 @@ var init_matrix = __esm({
     init_state_plate();
     init_uses_map();
     init_card2();
-    init_constants26();
+    init_constants27();
     init_dom7();
     init_draw8();
     init_grid_state();
@@ -57803,7 +59130,7 @@ var init_matrix_wire = __esm({
     "use strict";
     init_controller();
     init_hovercard();
-    init_constants26();
+    init_constants27();
     init_draw8();
     init_grid_state();
     init_matrix();
@@ -57965,7 +59292,7 @@ __export(heat_exports, {
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
-    init_constants26();
+    init_constants27();
     init_draw8();
     init_pick();
     init_paging();
@@ -58004,12 +59331,12 @@ function sortText(sortValue, measured2) {
   if (sortValue === void 0) return measured2 === null ? "" : String(Math.round(measured2 * SORT_SCALE) / SORT_TENTHS);
   return sortValue === null ? "" : String(sortValue);
 }
-function setBarCell(el16, { value = null, text, tone, warnAt = WARN_AT, badAt = BAD_AT, sortValue, mark = null, label: label2, markLabel, loading = false }) {
+function setBarCell(el16, { value = null, text, tone, warnAt = WARN_AT, badAt = BAD_AT, sortValue, mark: mark2 = null, label: label2, markLabel, loading = false }) {
   el16.classList.add("kp-bar-cell");
   const meter = partOf(el16, "kp-meter", "prepend");
   const number = partOf(el16, "kp-bar-cell__value", "append");
   const measured2 = value != null && Number.isFinite(value) && !loading ? value : null;
-  setMeter(meter, { value: measured2, mark, tone: tone === void 0 ? autoTone(measured2, warnAt, badAt) : tone, label: label2, markLabel, loading });
+  setMeter(meter, { value: measured2, mark: mark2, tone: tone === void 0 ? autoTone(measured2, warnAt, badAt) : tone, label: label2, markLabel, loading });
   if (loading) {
     const ghost = el16.ownerDocument.createElement("span");
     ghost.className = "kp-skeleton kp-bar-cell__ghost";
@@ -58160,18 +59487,18 @@ var init_model6 = __esm({
 
 // js/week/controller.js
 var MID_DAY, pillOf, WeekControl;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/week/controller.js"() {
     "use strict";
     init_controller();
     init_calendar2();
-    init_api5();
-    init_build5();
+    init_api6();
+    init_build7();
     init_busy3();
-    init_constants13();
+    init_constants14();
     init_menu();
-    init_paint4();
-    init_state7();
+    init_paint5();
+    init_state8();
     init_upcoming();
     init_model6();
     init_live_options();
@@ -58196,9 +59523,9 @@ var init_controller46 = __esm({
           c.motion.stop?.();
           weeks.delete(el16);
         });
-        build(c);
+        build2(c);
         buildDays(c);
-        paint3(c);
+        paint4(c);
         void Promise.resolve().then(() => (init_hovercard(), hovercard_exports)).then((m) => m.attachHoverCards(el16.ownerDocument));
         if (c.title) watchArrivals(c);
         this.watchSize();
@@ -58213,7 +59540,7 @@ var init_controller46 = __esm({
           event
         ));
         this.listen(el16, "click", (event) => this.onNav(event));
-        this.own(watchOptions(el16, ["data-kp-week-off"], () => paint3(c)));
+        this.own(watchOptions(el16, ["data-kp-week-off"], () => paint4(c)));
       }
       /** The pill's height is the CSS's; a change of width can flip grid and list, a font arriving changes the pill. */
       watchSize() {
@@ -58231,7 +59558,7 @@ var init_controller46 = __esm({
         if (key === this.lastSize) return;
         this.lastSize = key;
         if (c.upcoming.n > 0 && upcomingOn(c) !== c.upcoming.on) {
-          paint3(c);
+          paint4(c);
           return;
         }
         layout2(c);
@@ -58341,9 +59668,9 @@ var init_attach15 = __esm({
   "js/week/attach.js"() {
     "use strict";
     init_controller();
-    init_constants13();
-    init_state7();
-    init_controller46();
+    init_constants14();
+    init_state8();
+    init_controller47();
   }
 });
 
@@ -58366,16 +59693,16 @@ __export(week_exports, {
 var init_week = __esm({
   "js/week.js"() {
     "use strict";
-    init_constants13();
+    init_constants14();
     init_pills();
     init_attach15();
-    init_api5();
+    init_api6();
   }
 });
 
 // js/sequencer/constants.js
 var SEQUENCER, SEQUENCER_CHANGE_EVENT, SEQUENCER_SELECT_EVENT, SEQUENCER_REFUSE_EVENT, SEQUENCER_RETRY_EVENT, SEQUENCER_UNITS, SEQUENCER_OVERLAPS, SEQUENCER_ZOOM_MIN, SEQUENCER_ZOOM_MAX, TICK_STEPS, EPS, REACH_PX, DRAG_PX2, HEADROOM;
-var init_constants28 = __esm({
+var init_constants29 = __esm({
   "js/sequencer/constants.js"() {
     "use strict";
     SEQUENCER = "[data-kp-sequencer]";
@@ -58468,15 +59795,15 @@ var round, num;
 var init_units = __esm({
   "js/sequencer/units.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     round = (n) => Math.round(n * 1e6) / 1e6;
     num = (v, fallback2 = 0) => typeof v === "number" && Number.isFinite(v) ? v : Number.isFinite(Number(v)) && v !== "" && v != null ? Number(v) : fallback2;
   }
 });
 
 // js/sequencer/links.js
-function changedIds(before, after) {
-  const was = new Map(before.map((i) => [i.id, i]));
+function changedIds(before2, after) {
+  const was = new Map(before2.map((i) => [i.id, i]));
   return after.filter((i) => {
     const b = was.get(i.id);
     return !b || b.lane !== i.lane || Math.abs(b.start - i.start) > EPS || Math.abs(b.duration - i.duration) > EPS || (b.with ?? null) !== (i.with ?? null);
@@ -58554,7 +59881,7 @@ function sequencerApplyKey(items, id, action, options = {}) {
 var init_links = __esm({
   "js/sequencer/links.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     init_plan2();
     init_units();
   }
@@ -58754,7 +60081,7 @@ var init_plan2 = __esm({
   "js/sequencer/plan.js"() {
     "use strict";
     init_units();
-    init_constants28();
+    init_constants29();
     init_links();
     overlaps = (a, b) => a.start < b.start + b.duration - EPS && b.start < a.start + a.duration - EPS;
   }
@@ -58803,7 +60130,7 @@ function sequencerClampZoom(zoom) {
 var init_timeline = __esm({
   "js/sequencer/timeline.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     init_units();
   }
 });
@@ -58814,7 +60141,7 @@ function summary(c, item) {
   const partner = item.with ? c.view.find((i) => i.id === item.with)?.label ?? null : null;
   return c.strings.sequencerItem(item.label, lane, words2(c, item.start), words2(c, item.duration), partner);
 }
-function announce2(c, text) {
+function announce3(c, text) {
   c.announcer.textContent = "";
   c.announcer.textContent = text;
 }
@@ -59021,7 +60348,7 @@ function build5(el16, strings) {
   };
 }
 var idSeq2;
-var init_build8 = __esm({
+var init_build9 = __esm({
   "js/sequencer/build.js"() {
     "use strict";
     init_instance2();
@@ -59230,8 +60557,8 @@ function placeLabels(c) {
       const prev = row2[i - 1];
       const next2 = row2[i + 1];
       const after = (next2 ? next2.start * perUnit : width) - right - 8;
-      const before = left - Math.max(prev ? (prev.start + prev.duration) * perUnit : 0, claimed) - 8;
-      const side = fits ? null : after >= need ? "after" : before >= need ? "before" : "none";
+      const before2 = left - Math.max(prev ? (prev.start + prev.duration) * perUnit : 0, claimed) - 8;
+      const side = fits ? null : after >= need ? "after" : before2 >= need ? "before" : "none";
       if (side === "after") claimed = right + 4 + need + 4;
       let out = c.outsides.get(item.id);
       if (side === null || side === "none") {
@@ -59247,7 +60574,7 @@ function placeLabels(c) {
         out.textContent = item.label;
         out.dataset.kpSide = side;
         out.dataset.kpState = "ok";
-        setProp(out, "--kp-g-label-room", px2(side === "after" ? after : before));
+        setProp(out, "--kp-g-label-room", px2(side === "after" ? after : before2));
         setProp(out, "--kp-g-s", String(item.start));
         setProp(out, "--kp-g-e", String(round(item.start + item.duration)));
         setProp(out, "--kp-tl-top", bar.style.getPropertyValue("--kp-tl-top"));
@@ -59387,7 +60714,7 @@ var init_paint8 = __esm({
     init_busy_card();
     init_timeline();
     init_instance2();
-    init_constants28();
+    init_constants29();
     init_lanes2();
     init_bars();
   }
@@ -59408,8 +60735,8 @@ function drawDraft(c, list, ids2, refit = false) {
     const item = list.find((i) => i.id === id);
     const bar = c.bars.get(id);
     if (!item || !bar) continue;
-    const before = c.items.find((i) => i.id === id);
-    place4(c, bar, item, before && before.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
+    const before2 = c.items.find((i) => i.id === id);
+    place4(c, bar, item, before2 && before2.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
     const out = c.outsides.get(id);
     if (out) out.hidden = true;
     bar.removeAttribute("data-kp-label");
@@ -59466,16 +60793,16 @@ function refuse(c, id, plan) {
   const label2 = labelOf7(c, id);
   const s2 = c.strings;
   const text = plan.reason === "overlap" ? s2.sequencerRefusedOverlap(label2, plan.blocker ? labelOf7(c, plan.blocker) : "") : plan.reason === "locked" ? s2.sequencerRefusedLocked(label2) : plan.reason === "cycle" ? s2.sequencerRefusedLink(label2) : s2.sequencerRefusedEdge(label2);
-  announce2(c, text);
+  announce3(c, text);
   emit3(c, SEQUENCER_REFUSE_EVENT, { id, reason: plan.reason, blocker: plan.blocker });
 }
 function setZoom(c, zoom, anchorX) {
   const next2 = sequencerClampZoom(zoom);
   if (next2 === c.zoom) return false;
-  const before = c.layer.getBoundingClientRect();
+  const before2 = c.layer.getBoundingClientRect();
   const seen = c.scroll.getBoundingClientRect();
-  const ax = anchorX ?? Math.max(before.left, seen.left) + (Math.min(before.right, seen.right) - Math.max(before.left, seen.left)) / 2;
-  const frac = before.width ? Math.min(1, Math.max(0, (ax - before.left) / before.width)) : 0;
+  const ax = anchorX ?? Math.max(before2.left, seen.left) + (Math.min(before2.right, seen.right) - Math.max(before2.left, seen.left)) / 2;
+  const frac = before2.width ? Math.min(1, Math.max(0, (ax - before2.left) / before2.width)) : 0;
   c.zoom = next2;
   c.body.style.setProperty("--kp-tl-zoom", String(next2));
   const after = c.layer.getBoundingClientRect();
@@ -59508,7 +60835,7 @@ var init_edit2 = __esm({
     init_instance2();
     init_lanes2();
     init_links();
-    init_constants28();
+    init_constants29();
     init_plan2();
   }
 });
@@ -59519,7 +60846,7 @@ function focusItem(c, id) {
   for (const [key, bar] of c.bars) bar.tabIndex = key === id ? 0 : -1;
   c.bars.get(id)?.focus();
 }
-function onKey2(c, e) {
+function onKey3(c, e) {
   const target = (
     /** @type {HTMLElement} */
     e.target
@@ -59540,7 +60867,7 @@ function onKey2(c, e) {
     if (action.kind === "drop") {
       bar.removeAttribute("data-kp-grabbed");
       commit(c, c.view, "keyboard");
-      announce2(c, c.strings.sequencerDropped(summary(c, c.items.find((i) => i.id === id) ?? item)));
+      announce3(c, c.strings.sequencerDropped(summary(c, c.items.find((i) => i.id === id) ?? item)));
       return;
     }
     const plan = sequencerApplyKey(c.view, id, action, planOptions(c));
@@ -59551,7 +60878,7 @@ function onKey2(c, e) {
     if (!plan.changed.length) return;
     drawDraft(c, plan.items, plan.changed, true);
     const now = plan.items.find((i) => i.id === id) ?? item;
-    announce2(c, plan.pushed.length ? `${summary(c, now)}. ${c.strings.sequencerPushed(plan.pushed.length)}` : summary(c, now));
+    announce3(c, plan.pushed.length ? `${summary(c, now)}. ${c.strings.sequencerPushed(plan.pushed.length)}` : summary(c, now));
     return;
   }
   if (c.linking) {
@@ -59577,7 +60904,7 @@ function onKey2(c, e) {
     c.kb = { id, before: c.items };
     bar.setAttribute("data-kp-grabbed", "");
     c.el.setAttribute("data-kp-editing", "keyboard");
-    announce2(c, c.strings.sequencerGrabbed(item.label));
+    announce3(c, c.strings.sequencerGrabbed(item.label));
     return;
   }
   if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -59681,14 +61008,14 @@ function cancelEdit(c, why) {
   c.readout.hidden = true;
   c.el.removeAttribute("data-kp-editing");
   settleDraw(c);
-  if (was && why !== "quiet") announce2(c, c.strings.sequencerCancelled(labelOf7(c, was)));
+  if (was && why !== "quiet") announce3(c, c.strings.sequencerCancelled(labelOf7(c, was)));
   flushPending(c);
 }
 function startLink(c, id) {
   if (!c.editable || c.items.length < 2) return;
   c.linking = id;
   paintSelection(c);
-  announce2(c, c.strings.sequencerLinkStart(labelOf7(c, id)));
+  announce3(c, c.strings.sequencerLinkStart(labelOf7(c, id)));
 }
 function stopLink(c) {
   c.linking = null;
@@ -59705,13 +61032,13 @@ function finishLink(c, partner) {
     return;
   }
   commit(c, plan.items, "link");
-  announce2(c, c.strings.sequencerLinked(labelOf7(c, id), labelOf7(c, partner)));
+  announce3(c, c.strings.sequencerLinked(labelOf7(c, id), labelOf7(c, partner)));
 }
 function unlink(c, id) {
   const plan = sequencerUnlink(c.items, id);
   if (!plan.ok || !plan.changed.length) return;
   commit(c, plan.items, "link");
-  announce2(c, c.strings.sequencerUnlinked(labelOf7(c, id)));
+  announce3(c, c.strings.sequencerUnlinked(labelOf7(c, id)));
 }
 function navigate(c, id, e) {
   const item = c.items.find((i) => i.id === id);
@@ -59738,7 +61065,7 @@ var reachNow;
 var init_drag = __esm({
   "js/sequencer/drag.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     init_plan2();
     init_units();
     init_instance2();
@@ -59859,7 +61186,7 @@ function onUp(c, e) {
   }
   commit(c, p.last?.items ?? c.items, "pointer");
   const item = c.items.find((i) => i.id === p.id);
-  if (item) announce2(c, c.strings.sequencerDropped(summary(c, item)));
+  if (item) announce3(c, c.strings.sequencerDropped(summary(c, item)));
 }
 function overlapBlocker(c, draft, id) {
   const me = draft.find((i) => i.id === id);
@@ -59867,7 +61194,7 @@ function overlapBlocker(c, draft, id) {
   if (!me) return null;
   return draft.find((i) => !group.has(i.id) && i.lane === me.lane && overlaps(me, i))?.id ?? null;
 }
-function onCancel(c, e) {
+function onCancel2(c, e) {
   if (c.touches.delete(e.pointerId)) {
     if (c.touches.size < 2) c.pinch = null;
     return;
@@ -59879,7 +61206,7 @@ var init_pointer3 = __esm({
     "use strict";
     init_drag();
     init_edit2();
-    init_constants28();
+    init_constants29();
     init_instance2();
     init_plan2();
   }
@@ -59887,14 +61214,14 @@ var init_pointer3 = __esm({
 
 // js/sequencer/controller.js
 var ZOOM_IN, ZOOM_OUT, WHEEL_ZOOM, LIVE_OPTIONS3, SequencerControl;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/sequencer/controller.js"() {
     "use strict";
     init_strings();
     init_live_options();
     init_controller();
     init_instance2();
-    init_build8();
+    init_build9();
     init_timeline();
     init_paint8();
     init_edit2();
@@ -59966,7 +61293,7 @@ var init_controller47 = __esm({
           /** @type {FocusEvent} */
           e
         ));
-        this.listen(el16, "pointercancel", (e) => onCancel(
+        this.listen(el16, "pointercancel", (e) => onCancel2(
           c,
           /** @type {PointerEvent} */
           e
@@ -59986,7 +61313,7 @@ var init_controller47 = __esm({
           /** @type {PointerEvent} */
           e
         ));
-        this.listen(el16, "keydown", (e) => onKey2(
+        this.listen(el16, "keydown", (e) => onKey3(
           c,
           /** @type {KeyboardEvent} */
           e
@@ -60048,7 +61375,7 @@ var init_controller47 = __esm({
         if (zoomButton.getAttribute("aria-disabled") === "true") return;
         const key = zoomButton.dataset.kpSequencerZoom;
         if (setZoom(c, key === "fit" ? 1 : c.zoom * (key === "in" ? ZOOM_IN : ZOOM_OUT)))
-          announce2(c, `${c.strings.sequencerZoomLabel} ${c.strings.sequencerZoomValue(Math.round(c.zoom * 100))}`);
+          announce3(c, `${c.strings.sequencerZoomLabel} ${c.strings.sequencerZoomValue(Math.round(c.zoom * 100))}`);
       }
       /** A bar that takes the focus is the selection and the tab stop. @param {FocusEvent} e */
       onFocusIn(e) {
@@ -60099,9 +61426,9 @@ var init_attach16 = __esm({
   "js/sequencer/attach.js"() {
     "use strict";
     init_controller();
-    init_constants28();
+    init_constants29();
     init_instance2();
-    init_controller47();
+    init_controller48();
   }
 });
 
@@ -60153,7 +61480,7 @@ function setSequencerSelection(el16, id) {
   c.focusId = c.selected ?? c.focusId;
   paint8(c, { fit: false });
 }
-var init_api16 = __esm({
+var init_api17 = __esm({
   "js/sequencer/api.js"() {
     "use strict";
     init_instance2();
@@ -60203,19 +61530,19 @@ __export(sequencer_exports, {
 var init_sequencer = __esm({
   "js/sequencer.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     init_units();
     init_plan2();
     init_links();
     init_timeline();
     init_attach16();
-    init_api16();
+    init_api17();
   }
 });
 
 // js/gantt/constants.js
 var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, OPENED, gantts, two4, make18, toMs2, keyOf7;
-var init_constants29 = __esm({
+var init_constants30 = __esm({
   "js/gantt/constants.js"() {
     "use strict";
     GANTT = "[data-kp-gantt]";
@@ -60256,13 +61583,13 @@ function axisStep(span5, room, gap = 72) {
   return GANTT_STEPS.find((step) => span5 / step <= most) ?? /** @type {number} */
   GANTT_STEPS[GANTT_STEPS.length - 1];
 }
-function packRows(runs2, before = /* @__PURE__ */ new Map(), pad2 = 0, fixed = []) {
+function packRows(runs2, before2 = /* @__PURE__ */ new Map(), pad2 = 0, fixed = []) {
   const sorted = [...runs2].sort((a, b) => a.s - b.s);
   const rows = fixed.length > 0 ? [fixed.map((f) => ({ s: f.s, e: f.e }))] : [];
   const given2 = /* @__PURE__ */ new Map();
   const free2 = (row2, run) => (rows[row2] ?? []).every((other) => run.s >= other.e + pad2 || (run.e ?? Infinity) + pad2 <= other.s);
   for (const run of sorted) {
-    const wanted = before.get(run.id);
+    const wanted = before2.get(run.id);
     let row2 = wanted !== void 0 && free2(wanted, run) ? wanted : -1;
     if (row2 < 0) {
       row2 = 0;
@@ -60293,7 +61620,7 @@ var init_scale = __esm({
     "use strict";
     init_calendar2();
     init_chart();
-    init_constants29();
+    init_constants30();
     stateWord3 = (c, state12) => ({
       queued: c.strings.ganttQueued,
       running: c.strings.ganttRunning,
@@ -60368,7 +61695,7 @@ var restOn, RESTS;
 var init_window = __esm({
   "js/gantt/window.js"() {
     "use strict";
-    init_constants29();
+    init_constants30();
     init_scale();
     restOn = (c) => c.el.getAttribute("data-kp-gantt-rest") !== "off";
     RESTS = /* @__PURE__ */ new WeakMap();
@@ -60489,12 +61816,12 @@ function frame(c) {
   return w;
 }
 var idSeq3;
-var init_build9 = __esm({
+var init_build10 = __esm({
   "js/gantt/build.js"() {
     "use strict";
     init_scale();
     init_window();
-    init_constants29();
+    init_constants30();
     idSeq3 = 0;
   }
 });
@@ -60518,8 +61845,8 @@ function labelWidth(c, bar) {
     ctx.font = style.font;
     const size2 = Number.parseFloat(style.fontSize) || 11;
     const spacing = style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing) || 0;
-    const shown5 = style.textTransform === "uppercase" ? text.toUpperCase() : style.textTransform === "lowercase" ? text.toLowerCase() : text;
-    width = ctx.measureText(shown5).width + spacing * [...shown5].length + 2 * 0.375 * 16 + (bar.dataset.kpState === "failed" ? size2 * 1.25 : 0);
+    const shown6 = style.textTransform === "uppercase" ? text.toUpperCase() : style.textTransform === "lowercase" ? text.toLowerCase() : text;
+    width = ctx.measureText(shown6).width + spacing * [...shown6].length + 2 * 0.375 * 16 + (bar.dataset.kpState === "failed" ? size2 * 1.25 : 0);
   }
   c.labels.set(bar, { key, width });
   return width;
@@ -60655,9 +61982,9 @@ function placeLabels2(c) {
             }
           }
           const after = next2 - from - OUTSIDE_GAP_PX;
-          const before = upTo - floor - OUTSIDE_GAP_PX;
+          const before2 = upTo - floor - OUTSIDE_GAP_PX;
           if (after >= wanted) [place5, roomPx, shift] = ["after", after, from - (right + start)];
-          else if (before >= wanted) [place5, roomPx, shift] = ["before", before, left - 4 - upTo];
+          else if (before2 >= wanted) [place5, roomPx, shift] = ["before", before2, left - 4 - upTo];
           else place5 = "none";
           if (place5 === "after") taken = from + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
           else taken = Math.max(taken, right);
@@ -60675,7 +62002,7 @@ var MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, RUN_GAP_PX, NOW_GAP_PX;
 var init_labels2 = __esm({
   "js/gantt/labels.js"() {
     "use strict";
-    init_constants29();
+    init_constants30();
     MEASURERS = /* @__PURE__ */ new WeakMap();
     OUTSIDE_GAP_PX = 6;
     MARK_GAP_PX = 2;
@@ -60818,7 +62145,7 @@ var init_points = __esm({
   "js/gantt/points.js"() {
     "use strict";
     init_calendar2();
-    init_constants29();
+    init_constants30();
     init_scale();
   }
 });
@@ -60895,12 +62222,12 @@ function paintKinds(c) {
   for (const old of c.legend.querySelectorAll(":scope > .kp-gantt__legend-kind, :scope > .kp-gantt__legend-zone")) old.remove();
   for (const kind of c.kinds) {
     const li = make18(doc, "li", "kp-gantt__legend-kind");
-    const mark = make18(doc, "span", "kp-gantt__mark");
-    mark.dataset.kpShape = kind.shape ?? "dot";
-    if (kind.series) mark.dataset.kpSeries = String(kind.series);
-    if (kind.tone) mark.dataset.kpTone = kind.tone;
-    mark.setAttribute("aria-hidden", "true");
-    li.append(mark, make18(doc, "span", "", kind.label));
+    const mark2 = make18(doc, "span", "kp-gantt__mark");
+    mark2.dataset.kpShape = kind.shape ?? "dot";
+    if (kind.series) mark2.dataset.kpSeries = String(kind.series);
+    if (kind.tone) mark2.dataset.kpTone = kind.tone;
+    mark2.setAttribute("aria-hidden", "true");
+    li.append(mark2, make18(doc, "span", "", kind.label));
     c.legend.append(li);
   }
   const seen = /* @__PURE__ */ new Set();
@@ -60919,7 +62246,7 @@ function paintKinds(c) {
 var init_chrome2 = __esm({
   "js/gantt/chrome.js"() {
     "use strict";
-    init_constants29();
+    init_constants30();
     init_scale();
   }
 });
@@ -60940,10 +62267,10 @@ function waysOf(b, s2) {
   }
   const wide = need - BAR_PAD_PX + OUTSIDE_PAD_PX;
   const after = { l: reach3 + SIDE_GAP_PX, r: reach3 + SIDE_GAP_PX + wide };
-  const before = { l: left - SIDE_GAP_PX - wide, r: left - SIDE_GAP_PX };
+  const before2 = { l: left - SIDE_GAP_PX - wide, r: left - SIDE_GAP_PX };
   const ways = [];
   if (!open4 && after.r <= s2.room && !onNow(s2.nowX, after)) ways.push({ side: "after", x: after.l, take: { l: left, r: after.r }, inset: 0 });
-  if (before.l >= 0 && !onNow(s2.nowX, before)) ways.push({ side: "before", x: before.l, take: { l: before.l, r: reach3 }, inset: 0 });
+  if (before2.l >= 0 && !onNow(s2.nowX, before2)) ways.push({ side: "before", x: before2.l, take: { l: before2.l, r: reach3 }, inset: 0 });
   return ways;
 }
 function lineUnder(b, s2) {
@@ -61086,7 +62413,7 @@ function syncTicks2(c, w) {
   }
   if (c.days) {
     const room2 = c.axis.clientWidth;
-    let before = -Infinity;
+    let before2 = -Infinity;
     for (const id of [...c.ticks.keys()].sort((a, b) => a - b)) {
       const label2 = (
         /** @type {{ label: HTMLElement }} */
@@ -61096,10 +62423,10 @@ function syncTicks2(c, w) {
       const width = label2.offsetWidth;
       const edge = label2.tagName === "BUTTON" && x + width > room2;
       const start = edge ? room2 - width : x;
-      const crowded = edge && start < before + 6;
+      const crowded = edge && start < before2 + 6;
       label2.toggleAttribute("data-kp-gantt-edge", edge);
       label2.toggleAttribute("data-kp-gantt-crowded", crowded);
-      if (!crowded) before = start + width;
+      if (!crowded) before2 = start + width;
     }
   }
   syncDays(c);
@@ -61139,7 +62466,7 @@ function syncDays(c) {
 function edgeTicks(c, w) {
   const room = c.axis.clientWidth;
   if (!room) return;
-  let before = -Infinity;
+  let before2 = -Infinity;
   for (const t of [...c.ticks.keys()].sort((a, b) => a - b)) {
     const parts2 = (
       /** @type {{ label: HTMLElement }} */
@@ -61151,9 +62478,9 @@ function edgeTicks(c, w) {
     const edge = room - at < width + 2;
     parts2.label.toggleAttribute("data-kp-gantt-edge", edge);
     const start = edge ? at - width : at;
-    const crowded = edge && start < before + 4;
+    const crowded = edge && start < before2 + 4;
     parts2.label.toggleAttribute("data-kp-gantt-crowded", crowded);
-    if (!crowded) before = start + width;
+    if (!crowded) before2 = start + width;
   }
 }
 var init_axis = __esm({
@@ -61162,7 +62489,7 @@ var init_axis = __esm({
     init_calendar2();
     init_chart();
     init_scale();
-    init_constants29();
+    init_constants30();
   }
 });
 
@@ -61263,10 +62590,10 @@ var init_selection3 = __esm({
     init_points();
     init_labels2();
     init_fit4();
-    init_build9();
+    init_build10();
     init_axis();
     init_scale();
-    init_constants29();
+    init_constants30();
   }
 });
 
@@ -61378,7 +62705,7 @@ var init_busy5 = __esm({
   "js/gantt/busy.js"() {
     "use strict";
     init_busy_card();
-    init_constants29();
+    init_constants30();
     init_paint9();
     init_selection3();
   }
@@ -61416,8 +62743,8 @@ function paint9(c) {
     if (run.series) bar.dataset.kpSeries = String(run.series);
     else delete bar.dataset.kpSeries;
     live4.add(run.id);
-    const before2 = c.states.get(run.id);
-    if (before2 && before2 !== run.state) c.announcer.textContent = s2.ganttAnnounce(run.label, stateWord3(c, run.state));
+    const before3 = c.states.get(run.id);
+    if (before3 && before3 !== run.state) c.announcer.textContent = s2.ganttAnnounce(run.label, stateWord3(c, run.state));
     c.states.set(run.id, run.state);
     const item = { run, s: rel(c, startMs), e: endRaw == null ? null : rel(c, Math.max(endRaw, startMs)), bar, row: 0 };
     const plannedMs = run.state === "running" && run.plannedEnd != null ? toMs2(run.plannedEnd) : Number.NaN;
@@ -61458,7 +62785,7 @@ function paint9(c) {
     list.push({ s: at - markHalf, e: at + markHalf });
     marksOf.set(point2.lane, list);
   }
-  const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
+  const before2 = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
   const fit2 = isFit(c);
   const unmeasured = fit2 && c.el.isConnected && [...c.bars.values()].some((bar) => !bar.isConnected);
   const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
@@ -61470,7 +62797,7 @@ function paint9(c) {
         const e = b.e ?? HELD.get(b) ?? null;
         return { id: b.run.id, s: b.s, e: e == null ? null : Math.max(e, b.s + reach3) };
       }),
-      before,
+      before2,
       pad2,
       marksOf.get(id) ?? []
     );
@@ -61594,7 +62921,7 @@ var init_paint9 = __esm({
     "use strict";
     init_state_plate();
     init_window();
-    init_constants29();
+    init_constants30();
     init_scale();
     init_labels2();
     init_points();
@@ -61799,10 +63126,10 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint9(c);
 }
-var init_api17 = __esm({
+var init_api18 = __esm({
   "js/gantt/api.js"() {
     "use strict";
-    init_constants29();
+    init_constants30();
     init_paint9();
     init_selection3();
     init_scale();
@@ -61818,7 +63145,7 @@ var init_input2 = __esm({
   "js/gantt/input.js"() {
     "use strict";
     init_controller();
-    init_constants29();
+    init_constants30();
     init_window();
     init_selection3();
     init_axis();
@@ -61946,17 +63273,17 @@ var init_input2 = __esm({
 
 // js/gantt/controller.js
 var MIN_ZOOM_S, CHROME_OPTIONS, GanttControl;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/gantt/controller.js"() {
     "use strict";
     init_live_options();
-    init_constants29();
-    init_build9();
+    init_constants30();
+    init_build10();
     init_window();
     init_paint9();
     init_selection3();
     init_axis();
-    init_api17();
+    init_api18();
     init_scale();
     init_chrome2();
     init_model7();
@@ -62175,8 +63502,8 @@ var init_attach17 = __esm({
   "js/gantt/attach.js"() {
     "use strict";
     init_controller();
-    init_constants29();
-    init_controller48();
+    init_constants30();
+    init_controller49();
   }
 });
 
@@ -62206,16 +63533,16 @@ __export(gantt_exports, {
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
-    init_constants29();
+    init_constants30();
     init_scale();
     init_attach17();
-    init_api17();
+    init_api18();
   }
 });
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT5, make19;
-var init_values28 = __esm({
+var init_values29 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -62241,7 +63568,7 @@ var init_core12 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values28();
+    init_values29();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -62327,7 +63654,7 @@ var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
     init_core12();
-    init_values28();
+    init_values29();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -62355,14 +63682,14 @@ var init_lanes3 = __esm({
         node.setAttribute("role", "listitem");
         if (lane?.tone) node.dataset.kpTone = String(lane.tone);
         else delete node.dataset.kpTone;
-        const [mark, title, sub, meta] = (
+        const [mark2, title, sub, meta] = (
           /** @type {HTMLElement[]} */
           [...node.children]
         );
-        if (mark) {
-          mark.textContent = card.mark ?? "";
-          mark.hidden = !card.mark;
-          mark.setAttribute("aria-hidden", "true");
+        if (mark2) {
+          mark2.textContent = card.mark ?? "";
+          mark2.hidden = !card.mark;
+          mark2.setAttribute("aria-hidden", "true");
         }
         if (title) title.textContent = card.title;
         if (sub) {
@@ -62414,8 +63741,8 @@ var init_lanes3 = __esm({
         const s2 = this.strings;
         const limit = lane.closed ? 0 : this.limit();
         const open4 = this.open.has(lane.key);
-        const shown5 = limit > 0 && !open4 ? cards.slice(0, limit) : cards;
-        for (const card of shown5) list.append(this.cardNode(card, lane));
+        const shown6 = limit > 0 && !open4 ? cards.slice(0, limit) : cards;
+        for (const card of shown6) list.append(this.cardNode(card, lane));
         if (limit > 0 && cards.length > limit) {
           const more = make19(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-pipeline__more");
           more.type = "button";
@@ -62463,7 +63790,7 @@ var init_view3 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values28();
+    init_values29();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -62502,25 +63829,25 @@ var init_view3 = __esm({
         return empty && this.leaving === null ? "empty" : null;
       }
       /** Draw the plate, rebuilt only when what it says changes, so the focus on its Retry survives a repaint. @param {'error' | 'empty' | null} shown */
-      drawPlate(shown5) {
+      drawPlate(shown6) {
         const s2 = this.strings;
-        const key = shown5 === null ? "" : `${shown5}|${this.words}`;
+        const key = shown6 === null ? "" : `${shown6}|${this.words}`;
         if (this.plateChanged(key)) {
           this.plate.replaceChildren();
-          if (shown5 !== null)
+          if (shown6 !== null)
             this.plate.append(
               hostStatePlate(this.host, {
-                kind: shown5,
-                title: shown5 === "error" ? s2.pipelineFailed("") : this.words || s2.pipelineEmpty,
-                ...shown5 === "error" && this.words ? { text: this.words } : {},
+                kind: shown6,
+                title: shown6 === "error" ? s2.pipelineFailed("") : this.words || s2.pipelineEmpty,
+                ...shown6 === "error" && this.words ? { text: this.words } : {},
                 retryEvent: PIPELINE_RETRY_EVENT,
                 retryLabel: s2.pipelineRetry
               })
             );
         }
-        this.plate.hidden = shown5 === null;
-        this.board.parentElement?.toggleAttribute("inert", shown5 !== null);
-        this.closed.toggleAttribute("inert", shown5 !== null);
+        this.plate.hidden = shown6 === null;
+        this.board.parentElement?.toggleAttribute("inert", shown6 !== null);
+        this.closed.toggleAttribute("inert", shown6 !== null);
       }
       /** Everything, from the state. */
       paint() {
@@ -62575,11 +63902,11 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
-    init_values28();
+    init_values29();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -62724,15 +64051,15 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller49();
-    init_values28();
-    init_values28();
+    init_controller50();
+    init_values29();
+    init_values29();
   }
 });
 
 // js/board/values.js
 var BOARD, LANE, BOARD_RETRY_EVENT, BOARD_LANE_EVENT, MOVE_PREFIX, NARROW_REM, FALLBACK_REM_PX2, make20, itemsOf3, limitOf;
-var init_values29 = __esm({
+var init_values30 = __esm({
   "js/board/values.js"() {
     "use strict";
     BOARD = "[data-kp-board]";
@@ -62760,7 +64087,7 @@ var init_lanes4 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values29();
+    init_values30();
     boardSeq = 0;
     BoardLanes = class _BoardLanes extends Controller {
       /** @param {HTMLElement} el @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
@@ -62878,12 +64205,12 @@ var init_move = __esm({
   "js/board/move.js"() {
     "use strict";
     init_controller();
-    init_constants6();
+    init_constants8();
     init_model();
     init_open();
     init_reorder2();
     init_lanes4();
-    init_values29();
+    init_values30();
     isMoveGroup = (group) => group.items.length > 0 && group.items.every((item) => item.value?.startsWith(MOVE_PREFIX));
     BoardMoves = class extends BoardLanes {
       /** @param {HTMLElement} el @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
@@ -62996,14 +64323,14 @@ var init_move = __esm({
 
 // js/board/controller.js
 var Board;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/board/controller.js"() {
     "use strict";
     init_busy_card();
     init_state_plate();
     init_structure();
     init_move();
-    init_values29();
+    init_values30();
     Board = class _Board extends BoardMoves {
       /** @param {HTMLElement} el @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
       constructor(el16, options = {}) {
@@ -63187,22 +64514,22 @@ var init_controller50 = __esm({
       }
       /** The package's plate over the whole board for an empty or failed board; the lanes under it are not read. */
       drawPlate() {
-        const shown5 = this.state === "empty" || this.state === "error" ? this.state : null;
+        const shown6 = this.state === "empty" || this.state === "error" ? this.state : null;
         const s2 = this.strings;
         this.plate.replaceChildren();
-        if (shown5)
+        if (shown6)
           this.plate.append(
             hostStatePlate(this.host, {
-              kind: shown5,
-              title: shown5 === "error" ? s2.boardFailed("") : this.words || s2.boardEmpty,
-              ...shown5 === "error" && this.words ? { text: this.words } : {},
+              kind: shown6,
+              title: shown6 === "error" ? s2.boardFailed("") : this.words || s2.boardEmpty,
+              ...shown6 === "error" && this.words ? { text: this.words } : {},
               retryEvent: BOARD_RETRY_EVENT,
               retryLabel: s2.boardRetry
             })
           );
-        this.plate.hidden = shown5 === null;
-        this.track.toggleAttribute("inert", shown5 !== null);
-        this.tabs.toggleAttribute("inert", shown5 !== null);
+        this.plate.hidden = shown6 === null;
+        this.track.toggleAttribute("inert", shown6 !== null);
+        this.tabs.toggleAttribute("inert", shown6 !== null);
       }
       /** The loading card over the lanes, the data table's own. */
       drawBusy() {
@@ -63260,15 +64587,15 @@ var init_board2 = __esm({
   "js/board.js"() {
     "use strict";
     init_controller();
-    init_controller50();
-    init_values29();
-    init_values29();
+    init_controller51();
+    init_values30();
+    init_values30();
   }
 });
 
 // js/uptime/constants.js
 var UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, UPTIME_RETRY_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT;
-var init_constants30 = __esm({
+var init_constants31 = __esm({
   "js/uptime/constants.js"() {
     "use strict";
     UPTIME = "[data-kp-uptime]";
@@ -63311,13 +64638,13 @@ function uptimeFit(count2, width, min, gap) {
 var init_figures = __esm({
   "js/uptime/figures.js"() {
     "use strict";
-    init_constants30();
+    init_constants31();
   }
 });
 
 // js/uptime/state.js
 var SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, uptimeState;
-var init_state19 = __esm({
+var init_state20 = __esm({
   "js/uptime/state.js"() {
     "use strict";
     SPECS = /* @__PURE__ */ new WeakMap();
@@ -63375,12 +64702,12 @@ function fit(el16) {
   if (scroll && !UNPINNED.has(el16)) track.scrollLeft = track.scrollWidth;
   const from = el16.querySelector(".kp-uptime__from");
   const to = el16.querySelector(".kp-uptime__to");
-  const shown5 = el16.querySelector(".kp-uptime__shown");
+  const shown6 = el16.querySelector(".kp-uptime__shown");
   const state12 = el16.dataset.kpUptimeState;
   const real = state12 === "ready" && periods.length > 0;
   if (from) from.textContent = real ? firstShown === 0 && spec.from ? spec.from : periods[firstShown]?.label ?? "" : spec.from ?? "";
   if (to) to.textContent = spec.to ?? (real ? periods.at(-1)?.label ?? "" : "");
-  if (shown5) shown5.textContent = real && !scroll && firstShown > 0 ? s2.uptimeShown(n, cells.length) : "";
+  if (shown6) shown6.textContent = real && !scroll && firstShown > 0 ? s2.uptimeShown(n, cells.length) : "";
   if (scroll) edges(el16, track);
 }
 function edges(el16, track) {
@@ -63392,9 +64719,9 @@ var init_fit5 = __esm({
   "js/uptime/fit.js"() {
     "use strict";
     init_strings();
-    init_constants30();
+    init_constants31();
     init_figures();
-    init_state19();
+    init_state20();
   }
 });
 
@@ -63454,7 +64781,7 @@ var init_group4 = __esm({
   "js/uptime/group.js"() {
     "use strict";
     init_busy_card();
-    init_state19();
+    init_state20();
     coarsePointer = () => typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
   }
 });
@@ -63466,7 +64793,7 @@ var init_helpers4 = __esm({
     "use strict";
     init_strings();
     init_calm_tones();
-    init_constants30();
+    init_constants31();
     toneFor = (el16, state12) => isCalmTones(el16) ? state12 === "down" ? "quiet" : state12 === "none" ? "none" : "logged" : state12;
     wordFor = (el16, tone) => (isCalmTones(el16) ? calmWord(tone) : null) ?? getStrings().uptimeStateWord(
       /** @type {any} */
@@ -63642,9 +64969,9 @@ function draw5(el16, spec) {
   track.append(...cells);
   const axis = make21(el16, "div", "kp-uptime__axis");
   const from = make21(el16, "span", "kp-uptime__from");
-  const shown5 = make21(el16, "span", "kp-uptime__shown");
+  const shown6 = make21(el16, "span", "kp-uptime__shown");
   const to = make21(el16, "span", "kp-uptime__to");
-  axis.append(from, shown5, to);
+  axis.append(from, shown6, to);
   const keep = CARDS2.get(el16)?.layer;
   for (const child of [...el16.childNodes]) if (child !== keep) child.remove();
   if (keep && keep.parentElement === el16) keep.before(head, track, axis);
@@ -63681,12 +65008,12 @@ var init_draw10 = __esm({
     init_busy_card();
     init_calm_tones();
     init_state_plate();
-    init_constants30();
+    init_constants31();
     init_figures();
     init_fit5();
     init_group4();
     init_helpers4();
-    init_state19();
+    init_state20();
   }
 });
 
@@ -63743,7 +65070,7 @@ var init_panel = __esm({
   "js/uptime/panel.js"() {
     "use strict";
     init_strings();
-    init_constants30();
+    init_constants31();
     init_figures();
     init_helpers4();
   }
@@ -63758,10 +65085,10 @@ var init_info = __esm({
     init_motion();
     init_top_layer();
     init_controller();
-    init_constants30();
+    init_constants31();
     init_helpers4();
     init_panel();
-    init_state19();
+    init_state20();
     PLATE_GAP = 6;
     WINDOW_MARGIN = 8;
     TIP_PARKED = "data-kp-uptime-tip";
@@ -63874,15 +65201,15 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
-    init_constants30();
+    init_constants31();
     init_draw10();
     init_fit5();
     init_group4();
     init_info();
-    init_state19();
+    init_state20();
     PIN_SLACK = 2;
     TRACK = ".kp-uptime__track";
     UptimeControl = class _UptimeControl extends UptimeInfo {
@@ -64080,8 +65407,8 @@ var init_attach18 = __esm({
     "use strict";
     init_controller();
     init_hovercard();
-    init_constants30();
-    init_controller51();
+    init_constants31();
+    init_controller52();
   }
 });
 
@@ -64103,7 +65430,7 @@ __export(uptime_exports, {
 var init_uptime = __esm({
   "js/uptime.js"() {
     "use strict";
-    init_constants30();
+    init_constants31();
     init_figures();
     init_draw10();
     init_attach18();
@@ -64179,7 +65506,7 @@ function commandLines(text, continues) {
   return lines.map((line) => {
     const row2 = { text: line, continued: carry };
     const end = line.trimEnd();
-    carry = continues.some((mark) => end.endsWith(mark));
+    carry = continues.some((mark2) => end.endsWith(mark2));
     return row2;
   });
 }
@@ -64272,16 +65599,16 @@ function revealButton(doc, words3, codeId) {
   button6.append(face);
   return button6;
 }
-function showSecrets(code, secrets2, shown5, look, hidden2) {
+function showSecrets(code, secrets2, shown6, look, hidden2) {
   for (const span5 of code.querySelectorAll(".kp-command__secret")) {
     const secret = secrets2[Number(span5.getAttribute("data-kp-command-secret-index"))];
     if (!secret) continue;
     const face = span5.querySelector(".kp-command__secret-face");
     const said = span5.querySelector(".kp-sr-only");
-    if (face) face.textContent = shown5 ? secret.value : maskOf(secret.value, look);
-    if (said) said.textContent = shown5 ? "" : hidden2(secret.name);
-    if (face) face.toggleAttribute("aria-hidden", !shown5);
-    span5.toggleAttribute("data-kp-command-secret-shown", shown5);
+    if (face) face.textContent = shown6 ? secret.value : maskOf(secret.value, look);
+    if (said) said.textContent = shown6 ? "" : hidden2(secret.name);
+    if (face) face.toggleAttribute("aria-hidden", !shown6);
+    span5.toggleAttribute("data-kp-command-secret-shown", shown6);
   }
 }
 var MASK_DOTS, TAIL, OPEN_MARK, CLOSE_MARK, MARKED2;
@@ -64298,7 +65625,7 @@ var init_secret = __esm({
 
 // js/command/values.js
 var COMMAND, COMMAND_SHELLS, OTHER_SHELL, SCROLL_EDGE;
-var init_values30 = __esm({
+var init_values31 = __esm({
   "js/command/values.js"() {
     "use strict";
     COMMAND = "[data-kp-command]";
@@ -64333,7 +65660,7 @@ var init_block = __esm({
     init_lines2();
     init_secret();
     init_strings();
-    init_values30();
+    init_values31();
     ids = { last: 0 };
     CommandBlock = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
@@ -64399,9 +65726,9 @@ var init_block = __esm({
         const reveal = revealButton(el16.ownerDocument, { show: s2.commandSecretShow, hide: s2.commandSecretHide, label: s2.commandSecretShowLabel }, code.id);
         head.querySelector(".kp-command__copy-slot")?.before(reveal);
         this.listen(reveal, "click", () => {
-          const shown5 = reveal.getAttribute("aria-pressed") !== "true";
-          reveal.setAttribute("aria-pressed", String(shown5));
-          showSecrets(code, secrets2, shown5, look, s2.commandSecretHidden);
+          const shown6 = reveal.getAttribute("aria-pressed") !== "true";
+          reveal.setAttribute("aria-pressed", String(shown6));
+          showSecrets(code, secrets2, shown6, look, s2.commandSecretHidden);
         });
       }
       /**
@@ -64411,14 +65738,14 @@ var init_block = __esm({
        */
       restorer(pre, code) {
         const el16 = this.host;
-        const before = { pre: pre.className, code: code.innerHTML, tabIndex: pre.getAttribute("tabindex"), role: pre.getAttribute("role") };
+        const before2 = { pre: pre.className, code: code.innerHTML, tabIndex: pre.getAttribute("tabindex"), role: pre.getAttribute("role") };
         return () => {
           this.head?.remove();
           this.where?.remove();
-          pre.className = before.pre;
-          code.innerHTML = before.code;
-          if (before.tabIndex === null) pre.removeAttribute("tabindex");
-          if (before.role === null) pre.removeAttribute("role");
+          pre.className = before2.pre;
+          code.innerHTML = before2.code;
+          if (before2.tabIndex === null) pre.removeAttribute("tabindex");
+          if (before2.role === null) pre.removeAttribute("role");
           pre.removeAttribute("aria-labelledby");
           el16.removeAttribute("role");
           el16.removeAttribute("aria-labelledby");
@@ -64463,7 +65790,7 @@ var init_attach19 = __esm({
     "use strict";
     init_controller();
     init_block();
-    init_values30();
+    init_values31();
   }
 });
 
@@ -64482,14 +65809,14 @@ var init_command = __esm({
   "js/command.js"() {
     "use strict";
     init_attach19();
-    init_values30();
+    init_values31();
     init_lines2();
   }
 });
 
 // js/timer-disc/values.js
 var TIMER_DISC, TIMER_DISC_LEFT, WATCHED_OPTIONS, RESTARTING_OPTIONS, MINUTE_MS2, SECOND_MS4, TENTHS_OF_A_TURN, MIN_FILL_MS, DEFAULT_FILL_S, FALLBACK_FILL_MS;
-var init_values31 = __esm({
+var init_values32 = __esm({
   "js/timer-disc/values.js"() {
     "use strict";
     TIMER_DISC = "[data-kp-timer-disc], [data-kp-timer-disc-until]";
@@ -64526,7 +65853,7 @@ var registered, isDiscPropertyRegistered;
 var init_register3 = __esm({
   "js/timer-disc/register.js"() {
     "use strict";
-    init_values31();
+    init_values32();
     registered = false;
     isDiscPropertyRegistered = () => registered;
   }
@@ -64623,7 +65950,7 @@ var init_draw11 = __esm({
     init_countdown2();
     init_core13();
     init_share();
-    init_values31();
+    init_values32();
     DiscDraw = class extends DiscCore {
       /**
        * @param {HTMLElement} host
@@ -64744,13 +66071,13 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
     init_draw11();
     init_register3();
-    init_values31();
+    init_values32();
     TimerDisc = class extends DiscDraw {
       /**
        * @param {HTMLElement} host
@@ -64873,9 +66200,9 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller52();
-    init_values31();
-    init_values31();
+    init_controller53();
+    init_values32();
+    init_values32();
     init_share();
     timerDiscOf = (el16) => controllerOf(el16, TimerDisc)?.clock ?? null;
   }
@@ -64910,7 +66237,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values32 = __esm({
+var init_values33 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -65043,7 +66370,7 @@ function buildPanel(doc, s2, id) {
   panel.append(title, from.set, to.set, error, actions);
   return { panel, from, to, error, cancel, apply: apply2 };
 }
-var init_build10 = __esm({
+var init_build11 = __esm({
   "js/range/build.js"() {
     "use strict";
   }
@@ -65058,8 +66385,8 @@ var init_core14 = __esm({
     init_strings();
     init_segmented();
     init_chart();
-    init_values32();
-    init_build10();
+    init_values33();
+    init_build11();
     seq = 0;
     DEFAULT_PRESET_AT = 2;
     RangeCore = class extends Controller {
@@ -65132,8 +66459,8 @@ var init_panel2 = __esm({
     init_datepicker();
     init_top_layer();
     init_motion();
-    init_build10();
-    init_values32();
+    init_build11();
+    init_values33();
     EDGE_PX2 = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -65305,7 +66632,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -65386,15 +66713,15 @@ var init_range2 = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller53();
-    init_values32();
-    init_values32();
+    init_controller54();
+    init_values33();
+    init_values33();
   }
 });
 
 // js/compare/values.js
 var COMPARE, COMPARE_EVENT, INTERACTIVE, COMPARE_RETRY_EVENT, ALL_AFTER, ALL_BEFORE, STEP, BIG_STEP, MIDDLE, LABEL_EDGE, TENTH;
-var init_values33 = __esm({
+var init_values34 = __esm({
   "js/compare/values.js"() {
     "use strict";
     COMPARE = "[data-kp-compare]";
@@ -65446,7 +66773,7 @@ function buildCompareParts(doc, wordBefore, wordAfter, name) {
 var init_parts6 = __esm({
   "js/compare/parts.js"() {
     "use strict";
-    init_values33();
+    init_values34();
   }
 });
 
@@ -65458,7 +66785,7 @@ var init_core15 = __esm({
     init_controller();
     init_strings();
     init_parts6();
-    init_values33();
+    init_values34();
     CompareCore = class extends Controller {
       /**
        * @param {HTMLElement} host the slider
@@ -65513,7 +66840,7 @@ var init_load = __esm({
     "use strict";
     init_busy_card();
     init_core15();
-    init_values33();
+    init_values34();
     CompareLoad = class extends CompareCore {
       /**
        * @param {HTMLElement} host
@@ -65599,21 +66926,21 @@ function compareKey(key, at, big) {
   if (key === "End") return ALL_BEFORE;
   return null;
 }
-var init_keys12 = __esm({
+var init_keys13 = __esm({
   "js/compare/keys.js"() {
     "use strict";
-    init_values33();
+    init_values34();
   }
 });
 
 // js/compare/controller.js
 var Compare;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
-    init_keys12();
-    init_values33();
+    init_keys13();
+    init_values34();
     Compare = class extends CompareLoad {
       /**
        * @param {HTMLElement} host
@@ -65625,13 +66952,13 @@ var init_controller54 = __esm({
       }
       connect() {
         const el16 = this.host;
-        const { before, after } = this;
+        const { before: before2, after } = this;
         const { labelBefore, labelAfter, divider, handle, wait } = this.parts;
         el16.classList.add("kp-compare");
-        before.classList.add("kp-compare__pane", "kp-compare__pane--before");
+        before2.classList.add("kp-compare__pane", "kp-compare__pane--before");
         after.classList.add("kp-compare__pane", "kp-compare__pane--after");
         if (el16.dataset.kpCompareRatio) el16.style.setProperty("--kp-compare-ratio", el16.dataset.kpCompareRatio);
-        const live4 = Boolean(before.querySelector(INTERACTIVE) || after.querySelector(INTERACTIVE));
+        const live4 = Boolean(before2.querySelector(INTERACTIVE) || after.querySelector(INTERACTIVE));
         el16.dataset.kpCompareDrag = el16.dataset.kpCompareDrag ?? (live4 ? "handle" : "anywhere");
         el16.append(labelBefore, labelAfter, divider, wait);
         this.own(() => {
@@ -65737,10 +67064,10 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller54();
-    init_values33();
-    init_values33();
-    init_keys12();
+    init_controller55();
+    init_values34();
+    init_values34();
+    init_keys13();
   }
 });
 
@@ -65786,7 +67113,7 @@ function attachLedes(root = document) {
     for (const controller of made6) controller.destroy();
   };
 }
-var LEDE, counter3, DEFAULT_FOLD_LIMIT, FOLD_SLACK, LEDE_SEARCH_HOPS, HEADINGS, HOLDERS, LedeController;
+var LEDE, counter4, DEFAULT_FOLD_LIMIT, FOLD_SLACK, LEDE_SEARCH_HOPS, HEADINGS, HOLDERS, LedeController;
 var init_lede = __esm({
   "js/lede.js"() {
     "use strict";
@@ -65794,7 +67121,7 @@ var init_lede = __esm({
     init_live_options();
     init_controller();
     LEDE = ".kp-lede";
-    counter3 = 0;
+    counter4 = 0;
     DEFAULT_FOLD_LIMIT = 140;
     FOLD_SLACK = 1.5;
     LEDE_SEARCH_HOPS = 3;
@@ -65819,7 +67146,7 @@ var init_lede = __esm({
         this.own(() => {
           delete lede.dataset.kpLedeAttached;
         });
-        if (!lede.id) lede.id = `kp-lede-${++counter3}`;
+        if (!lede.id) lede.id = `kp-lede-${++counter4}`;
         this.describeHeading();
         this.draw();
         this.own(() => this.undraw());
@@ -65835,12 +67162,12 @@ var init_lede = __esm({
         const lede = this.host;
         const heading = headingOf(lede);
         if (!heading) return;
-        const before = heading.getAttribute("aria-describedby");
-        const ids2 = (before ?? "").split(/\s+/).filter(Boolean);
+        const before2 = heading.getAttribute("aria-describedby");
+        const ids2 = (before2 ?? "").split(/\s+/).filter(Boolean);
         if (!ids2.includes(lede.id)) heading.setAttribute("aria-describedby", [...ids2, lede.id].join(" "));
         this.own(() => {
-          if (before === null) heading.removeAttribute("aria-describedby");
-          else heading.setAttribute("aria-describedby", before);
+          if (before2 === null) heading.removeAttribute("aria-describedby");
+          else heading.setAttribute("aria-describedby", before2);
         });
       }
       /** The fold and the link are drawn from the two attributes, and drawn again when either changes [live-options-1019]. */
@@ -65956,7 +67283,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values34 = __esm({
+var init_values35 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -66074,15 +67401,15 @@ function paintAction2(host, p) {
     actions.className = "kp-alert__actions";
     host.append(actions);
   }
-  const shown5 = actions.childNodes.length === 1 ? actions.firstChild : null;
-  if (shown5 === p.action || shown5 && shown5.isEqualNode(p.action)) return;
+  const shown6 = actions.childNodes.length === 1 ? actions.firstChild : null;
+  if (shown6 === p.action || shown6 && shown6.isEqualNode(p.action)) return;
   actions.replaceChildren(p.action);
 }
 var init_parts7 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values34();
+    init_values35();
   }
 });
 
@@ -66123,7 +67450,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts7();
-    init_values34();
+    init_values35();
   }
 });
 
@@ -66145,7 +67472,7 @@ var init_each = __esm({
       }
       /** The alerts on show, by key: a row that is leaving is gone, and one that is arriving the theme's way (formal: its leave played backwards) is on show [homelab 89]. @returns {Map<string, HTMLElement>} */
       shownAlerts() {
-        const shown5 = /* @__PURE__ */ new Map();
+        const shown6 = /* @__PURE__ */ new Map();
         for (
           const el16 of
           /** @type {HTMLElement[]} */
@@ -66153,28 +67480,28 @@ var init_each = __esm({
         ) {
           const key = el16.getAttribute("data-kp-key");
           const leaving = el16.hasAttribute("data-kp-leaving") && !el16.hasAttribute("data-kp-arriving");
-          if (el16.classList.contains("kp-problem") && key !== null && !leaving) shown5.set(key, el16);
+          if (el16.classList.contains("kp-problem") && key !== null && !leaving) shown6.set(key, el16);
         }
-        return shown5;
+        return shown6;
       }
       /** One alert per problem, the worst first, each with its own fix. @param {Problem[]} list @param {string} remedyLabel */
       paintEach(list, remedyLabel) {
         const host = this.host;
         host.querySelector(":scope > .kp-problem--list")?.remove();
-        const shown5 = this.shownAlerts();
-        const wanted = list.map((p) => paintAlert2(shown5.get(p.key), p, host.ownerDocument, remedyLabel, host));
-        for (const [key, el16] of shown5) if (!list.some((p) => p.key === key)) void leave(el16).then(() => el16.remove());
-        let before = (
+        const shown6 = this.shownAlerts();
+        const wanted = list.map((p) => paintAlert2(shown6.get(p.key), p, host.ownerDocument, remedyLabel, host));
+        for (const [key, el16] of shown6) if (!list.some((p) => p.key === key)) void leave(el16).then(() => el16.remove());
+        let before2 = (
           /** @type {Element | null} */
           null
         );
         for (const el16 of wanted) {
-          const inPlace2 = el16.parentElement === host && (before ? el16.previousElementSibling === before : host.firstElementChild === el16);
+          const inPlace2 = el16.parentElement === host && (before2 ? el16.previousElementSibling === before2 : host.firstElementChild === el16);
           if (!inPlace2) {
-            if (before) before.after(el16);
+            if (before2) before2.after(el16);
             else host.prepend(el16);
           }
-          before = el16;
+          before2 = el16;
         }
       }
     };
@@ -66189,7 +67516,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts7();
-    init_values34();
+    init_values35();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -66337,7 +67664,7 @@ var init_board3 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values34();
+    init_values35();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -66446,17 +67773,17 @@ var init_problems = __esm({
     init_controller();
     init_board3();
     init_stamp();
-    init_values34();
-    init_values34();
+    init_values35();
+    init_values35();
   }
 });
 
 // js/flash/read.js
-var attr3, num2;
+var attr4, num2;
 var init_read5 = __esm({
   "js/flash/read.js"() {
     "use strict";
-    attr3 = (button6, name, fallback2) => button6.getAttribute(name) ?? fallback2;
+    attr4 = (button6, name, fallback2) => button6.getAttribute(name) ?? fallback2;
     num2 = (button6, name, fallback2) => {
       const n = Number.parseInt(button6.getAttribute(name) ?? "", 10);
       return Number.isFinite(n) && n >= 0 ? n : fallback2;
@@ -66505,7 +67832,7 @@ var init_faces = __esm({
       ghostWords() {
         const button6 = this.host;
         const s2 = getStrings();
-        return (button6.getAttribute("data-kp-flash-words") ?? `${attr3(button6, "data-kp-flash-word", s2.flashDone)},${attr3(button6, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
+        return (button6.getAttribute("data-kp-flash-words") ?? `${attr4(button6, "data-kp-flash-word", s2.flashDone)},${attr4(button6, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
       }
       connect() {
         const { host: button6, rest, busy, result, stack, status, line, ownLine } = this;
@@ -66563,14 +67890,14 @@ async function settle2(button6, work) {
     if (answer2 && typeof answer2 === "object" && "error" in answer2) {
       return {
         ok: false,
-        word: answer2.word ?? attr3(button6, "data-kp-refused-word", s2.flashRefused),
+        word: answer2.word ?? attr4(button6, "data-kp-refused-word", s2.flashRefused),
         line: [answer2.error, answer2.remedy].filter(Boolean).join(" ")
       };
     }
-    if (answer2 && typeof answer2 === "object") return { ok: true, word: answer2.word ?? attr3(button6, "data-kp-flash-word", s2.flashDone), line: answer2.line ?? "" };
-    return { ok: true, word: typeof answer2 === "string" && answer2 !== "" ? answer2 : attr3(button6, "data-kp-flash-word", s2.flashDone), line: "" };
+    if (answer2 && typeof answer2 === "object") return { ok: true, word: answer2.word ?? attr4(button6, "data-kp-flash-word", s2.flashDone), line: answer2.line ?? "" };
+    return { ok: true, word: typeof answer2 === "string" && answer2 !== "" ? answer2 : attr4(button6, "data-kp-flash-word", s2.flashDone), line: "" };
   } catch (error) {
-    return { ok: false, word: attr3(button6, "data-kp-failed-word", s2.flashFailed), line: error instanceof Error ? error.message : String(error) };
+    return { ok: false, word: attr4(button6, "data-kp-failed-word", s2.flashFailed), line: error instanceof Error ? error.message : String(error) };
   }
 }
 var init_outcome = __esm({
@@ -66582,8 +67909,8 @@ var init_outcome = __esm({
 });
 
 // js/flash/values.js
-var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, SAY_DELAY_MS6, RELOAD_DELAY_MS;
-var init_values35 = __esm({
+var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, SAY_DELAY_MS7, RELOAD_DELAY_MS;
+var init_values36 = __esm({
   "js/flash/values.js"() {
     "use strict";
     FLASH_BUTTON = "[data-kp-flash-button], [data-kp-post]";
@@ -66591,7 +67918,7 @@ var init_values35 = __esm({
     FLASH_RELOAD_EVENT = "kp-flash-reload";
     FLASH_MS = 1500;
     FLASH_ERROR_MS = 3e3;
-    SAY_DELAY_MS6 = 30;
+    SAY_DELAY_MS7 = 30;
     RELOAD_DELAY_MS = 600;
   }
 });
@@ -66605,7 +67932,7 @@ var init_run3 = __esm({
     init_faces();
     init_outcome();
     init_read5();
-    init_values35();
+    init_values36();
     FlashRun = class extends FlashFaces {
       /**
        * @param {HTMLElement} host the button
@@ -66668,7 +67995,7 @@ var init_run3 = __esm({
         const button6 = this.host;
         const refusal = (
           /** @type {'line' | 'button' | 'toast'} */
-          options.refusal ?? attr3(button6, "data-kp-refusal", "line")
+          options.refusal ?? attr4(button6, "data-kp-refusal", "line")
         );
         const onButton = !ok && refusal === "button" ? line : "";
         this.result.replaceChildren();
@@ -66681,7 +68008,7 @@ var init_run3 = __esm({
         this.status.textContent = "";
         window.setTimeout(() => {
           this.status.textContent = line ? `${word}. ${line}` : word;
-        }, SAY_DELAY_MS6);
+        }, SAY_DELAY_MS7);
         if (line && (ok || refusal === "line")) {
           this.line.textContent = line;
           this.line.setAttribute("data-kp-tone", ok ? "success" : "destructive");
@@ -66723,7 +68050,7 @@ async function post(button6) {
   } catch {
   }
   if (!response.ok) return { error: json?.error ?? (response.statusText || `HTTP ${response.status}`), remedy: json?.remedy };
-  const reload = attr3(button6, "data-kp-reload", "none");
+  const reload = attr4(button6, "data-kp-reload", "none");
   if (reload === "page") window.setTimeout(() => location.reload(), RELOAD_DELAY_MS);
   else if (reload === "region")
     button6.dispatchEvent(
@@ -66735,13 +68062,13 @@ var init_post = __esm({
   "js/flash/post.js"() {
     "use strict";
     init_read5();
-    init_values35();
+    init_values36();
   }
 });
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -66807,15 +68134,15 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller55();
-    init_values35();
-    init_values35();
+    init_controller56();
+    init_values36();
+    init_values36();
   }
 });
 
 // js/master-detail/constants.js
 var MASTER_DETAIL, PANE_SELECT_EVENT, PANE_OPEN_EVENT, PANE_CLOSE_EVENT, PANE_RETRY_EVENT, PANE_WIDTHS, PANE_ASIDE_WIDTH, PANE_FOLD_AT, PANE_ASIDE_FOLD_AT, DEFAULT_LIST_WIDTH, ITEM, OWN_FAILURE;
-var init_constants31 = __esm({
+var init_constants32 = __esm({
   "js/master-detail/constants.js"() {
     "use strict";
     MASTER_DETAIL = "[data-kp-master-detail]";
@@ -66842,7 +68169,7 @@ var init_detail_state = __esm({
     init_motion();
     init_state_plate();
     init_strings();
-    init_constants31();
+    init_constants32();
     DetailState = class {
       /**
        * @param {HTMLElement} root
@@ -67008,7 +68335,7 @@ var Folding;
 var init_folding = __esm({
   "js/master-detail/folding.js"() {
     "use strict";
-    init_constants31();
+    init_constants32();
     Folding = class {
       /** @param {HTMLElement} root @param {boolean} [listless] the detail + aside variant: the detail never gives way to a list */
       constructor(root, listless = false) {
@@ -67140,7 +68467,7 @@ var init_base5 = __esm({
     init_controller();
     init_listbox();
     init_motion();
-    init_constants31();
+    init_constants32();
     init_detail_state();
     init_folding();
     init_parts8();
@@ -67233,10 +68560,10 @@ var init_base5 = __esm({
       /** Write the fold marks on the layout, and let the loading look follow the pane on screen. */
       sync() {
         const root = this.host;
-        const { narrow, asideNarrow, shown: shown5 } = this.folding;
+        const { narrow, asideNarrow, shown: shown6 } = this.folding;
         root.toggleAttribute("data-kp-narrow-on", narrow);
         root.toggleAttribute("data-kp-aside-folded", Boolean(this.aside) && asideNarrow && !narrow);
-        if (this.folding.oneAtATime()) root.setAttribute("data-kp-pane-shown", shown5);
+        if (this.folding.oneAtATime()) root.setAttribute("data-kp-pane-shown", shown6);
         else root.removeAttribute("data-kp-pane-shown");
         this.detailState.reseatBusy();
       }
@@ -67312,10 +68639,10 @@ var init_base5 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
-    init_constants31();
+    init_constants32();
     init_base5();
     MasterDetailController = class extends MasterDetailBase {
       connect() {
@@ -67434,12 +68761,12 @@ function attachMasterDetails(root = document, { history: useHistory } = {}) {
   };
 }
 var masterDetail, wireable2;
-var init_api18 = __esm({
+var init_api19 = __esm({
   "js/master-detail/api.js"() {
     "use strict";
     init_controller();
-    init_constants31();
-    init_controller56();
+    init_constants32();
+    init_controller57();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean((paneOf(el16, "list") || paneOf(el16, "aside")) && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -67468,14 +68795,14 @@ __export(master_detail_exports, {
 var init_master_detail = __esm({
   "js/master-detail.js"() {
     "use strict";
-    init_constants31();
-    init_api18();
+    init_constants32();
+    init_api19();
   }
 });
 
 // js/connection/values.js
 var CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_STATES, DEFAULT_GRACE_MS, DEFAULT_BACK_MS, DEFAULT_DELAYS, TICK_MS5, SECOND_MS5;
-var init_values36 = __esm({
+var init_values37 = __esm({
   "js/connection/values.js"() {
     "use strict";
     CONNECTION = "[data-kp-connection]";
@@ -67510,7 +68837,7 @@ var sourceOf;
 var init_options5 = __esm({
   "js/connection/options.js"() {
     "use strict";
-    init_values36();
+    init_values37();
     sourceOf = (el16) => el16.getAttribute("data-kp-connection-source") ?? "both";
   }
 });
@@ -67523,8 +68850,8 @@ function make22(doc, tag, className) {
 }
 function buildBanner(doc) {
   const band = make22(doc, "div", "kp-alert kp-connection__band");
-  const mark = make22(doc, "span", "kp-connection__mark");
-  mark.setAttribute("aria-hidden", "true");
+  const mark2 = make22(doc, "span", "kp-connection__mark");
+  mark2.setAttribute("aria-hidden", "true");
   const body = make22(doc, "div", "kp-alert__body kp-connection__body");
   const title = make22(doc, "strong", "kp-connection__title");
   const why = make22(doc, "span", "kp-connection__why");
@@ -67535,10 +68862,10 @@ function buildBanner(doc) {
     make22(doc, "button", "kp-button kp-connection__retry")
   );
   retry.type = "button";
-  band.append(mark, body, retry);
+  band.append(mark2, body, retry);
   const voice = make22(doc, "span", "kp-sr-only");
   voice.setAttribute("role", "status");
-  return { band, mark, title, why, meta, retry, voice };
+  return { band, mark: mark2, title, why, meta, retry, voice };
 }
 var init_parts9 = __esm({
   "js/connection/parts.js"() {
@@ -67561,7 +68888,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -67571,7 +68898,7 @@ var init_controller57 = __esm({
     init_options5();
     init_parts9();
     init_text3();
-    init_values36();
+    init_values37();
     ConnectionBanner = class extends Controller {
       /**
        * @param {HTMLElement} host
@@ -67655,13 +68982,13 @@ var init_controller57 = __esm({
       }
       /** The band's tone and mark for a state. @param {ConnectionState} state */
       paintBand(state12) {
-        const { band, mark } = this.parts;
+        const { band, mark: mark2 } = this.parts;
         band.classList.toggle("kp-alert--warning", state12 === "offline" || state12 === "reconnecting");
         band.classList.toggle("kp-alert--success", state12 === "back");
         band.classList.toggle("kp-alert--destructive", state12 === "refused");
-        mark.replaceChildren();
-        if (state12 === "reconnecting") mark.append(make22(this.doc, "span", "kp-spinner"));
-        else mark.textContent = state12 === "back" ? "\u2713" : "!";
+        mark2.replaceChildren();
+        if (state12 === "reconnecting") mark2.append(make22(this.doc, "span", "kp-spinner"));
+        else mark2.textContent = state12 === "back" ? "\u2713" : "!";
       }
       /** @param {ConnectionState} state */
       draw(state12) {
@@ -67788,16 +69115,16 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller57();
-    init_values36();
-    init_values36();
+    init_controller58();
+    init_values37();
+    init_values37();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
   }
 });
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS6, ANNOUNCE_STEP;
-var init_values37 = __esm({
+var init_values38 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -67822,7 +69149,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values37();
+    init_values38();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -67872,7 +69199,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values37();
+    init_values38();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -67913,7 +69240,7 @@ var init_core16 = __esm({
     init_strings();
     init_math3();
     init_read6();
-    init_values37();
+    init_values38();
     FULL2 = 100;
     TransferCore = class extends Controller {
       /**
@@ -68140,7 +69467,7 @@ var init_ticker2 = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts10();
-    init_values37();
+    init_values38();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -68158,7 +69485,7 @@ var init_row4 = __esm({
     init_parts10();
     init_read6();
     init_ticker2();
-    init_values37();
+    init_values38();
     TransferRow = class extends TransferCore {
       connect() {
         const row2 = this.host;
@@ -68312,8 +69639,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row4();
-    init_values37();
-    init_values37();
+    init_values38();
+    init_values38();
     init_math3();
   }
 });
@@ -68541,7 +69868,7 @@ function mountChrome(area, ui) {
   area.classList.add("kp-jsonfield__input");
   return describedBefore;
 }
-var init_build11 = __esm({
+var init_build12 = __esm({
   "js/code-field/build.js"() {
     "use strict";
   }
@@ -68549,12 +69876,12 @@ var init_build11 = __esm({
 
 // js/code-field/values.js
 function caretPosition(text, offset) {
-  const before = text.slice(0, Math.max(0, offset));
-  const line = before.split("\n").length;
-  return { line, column: before.length - before.lastIndexOf("\n") };
+  const before2 = text.slice(0, Math.max(0, offset));
+  const line = before2.split("\n").length;
+  return { line, column: before2.length - before2.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values38 = __esm({
+var init_values39 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -68573,8 +69900,8 @@ var init_core17 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_build11();
-    init_values38();
+    init_build12();
+    init_values39();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -68704,7 +70031,7 @@ var init_problem = __esm({
     "use strict";
     init_forms();
     init_core17();
-    init_values38();
+    init_values39();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -68724,14 +70051,14 @@ var init_problem = __esm({
         return strings.codeFieldErrorPlain(problem.message);
       }
       /** Whether the problem is another than `before`. @param {CodeFieldProblem | null} before */
-      changed(before) {
+      changed(before2) {
         const now = this.problem;
-        return before?.message !== now?.message || before?.line !== now?.line || before?.column !== now?.column || before === null !== (now === null);
+        return before2?.message !== now?.message || before2?.line !== now?.line || before2?.column !== now?.column || before2 === null !== (now === null);
       }
       /** Mark the problem the page found; `null` takes it back. @param {number | null} line @param {number | null} [column] @param {string} [message] */
       setError(line, column = null, message = "") {
         const { area, ui } = this;
-        const before = this.problem;
+        const before2 = this.problem;
         if (line === null && !message) this.problem = null;
         else this.problem = { line, column: column ?? null, message };
         this.errorLine = this.problem?.line ?? 0;
@@ -68750,7 +70077,7 @@ var init_problem = __esm({
         }
         this.field?.classList.toggle("kp-field--invalid", broken);
         this.drawGutter();
-        if (this.changed(before)) {
+        if (this.changed(before2)) {
           const { problem } = this;
           area.dispatchEvent(
             new CustomEvent(CODE_FIELD_STATE_EVENT, {
@@ -68780,12 +70107,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
-    init_build11();
-    init_values38();
+    init_build12();
+    init_values39();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -68914,9 +70241,9 @@ var init_controller58 = __esm({
       /** The gutter's wheel scrolls the text. @param {WheelEvent} event */
       onGutterWheel(event) {
         const { area } = this;
-        const before = area.scrollTop;
+        const before2 = area.scrollTop;
         area.scrollTop += event.deltaMode === 1 ? event.deltaY * this.lineHeight() : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
-        if (area.scrollTop !== before) event.preventDefault();
+        if (area.scrollTop !== before2) event.preventDefault();
       }
       /** @param {KeyboardEvent} event */
       onKey(event) {
@@ -69020,15 +70347,15 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller58();
-    init_values38();
-    init_values38();
+    init_controller59();
+    init_values39();
+    init_values39();
   }
 });
 
 // js/page-contents/values.js
 var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
-var init_values39 = __esm({
+var init_values40 = __esm({
   "js/page-contents/values.js"() {
     "use strict";
     CONTENTS = "[data-kp-contents]";
@@ -69077,7 +70404,7 @@ var init_core18 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
-    init_values39();
+    init_values40();
     serial5 = 0;
     ContentsCore = class extends Controller {
       /**
@@ -69190,7 +70517,7 @@ var ContentsRead;
 var init_read7 = __esm({
   "js/page-contents/read.js"() {
     "use strict";
-    init_values39();
+    init_values40();
     init_slug();
     init_core18();
     ContentsRead = class extends ContentsCore {
@@ -69246,7 +70573,7 @@ var ContentsSpy;
 var init_spy = __esm({
   "js/page-contents/spy.js"() {
     "use strict";
-    init_values39();
+    init_values40();
     init_slug();
     init_read7();
     ContentsSpy = class extends ContentsRead {
@@ -69361,10 +70688,10 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
-    init_values39();
+    init_values40();
     init_draw12();
     init_strings();
     ContentsList = class extends ContentsDraw {
@@ -69479,910 +70806,10 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller59();
-    init_values39();
-    init_values39();
-    init_slug();
-  }
-});
-
-// js/timefield/constants.js
-var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, MINUTES_PER_HOUR, MINUTES_PER_DAY, DEFAULT_STEP2, DEFAULT_NEAR_WIDTH, SAY_DELAY_MS7, NARROW_QUERY, POPUP_EDGE_PX, POPUP_GAP_PX, POPUP_MIN_WIDTH_PX, BARE_DIGITS;
-var init_constants32 = __esm({
-  "js/timefield/constants.js"() {
-    "use strict";
-    TIME = "[data-kp-time]";
-    TIME_EVENT = "kp-time-change";
-    TIME_RETRY_EVENT = "kp-time-retry";
-    TIME_STEPS = Object.freeze([1, 5, 10, 15, 30, 60]);
-    MINUTES_PER_HOUR = 60;
-    MINUTES_PER_DAY = 1440;
-    DEFAULT_STEP2 = 5;
-    DEFAULT_NEAR_WIDTH = 60;
-    SAY_DELAY_MS7 = 60;
-    NARROW_QUERY = "(max-width: 40rem)";
-    POPUP_EDGE_PX = 8;
-    POPUP_GAP_PX = 4;
-    POPUP_MIN_WIDTH_PX = 13 * 16;
-    BARE_DIGITS = 4;
-  }
-});
-
-// js/timefield/parse.js
-function parseTimeOfDay(text, { seconds = false } = {}) {
-  const raw = text.trim().toLowerCase().replace(/\s+/g, " ");
-  if (raw === "") return null;
-  let m = /^(\d{1,2})(?:[:.h](\d{2}))?(?::(\d{2}))?\s*(a\.?m\.?|p\.?m\.?)$/.exec(raw);
-  let hms;
-  let converted = false;
-  if (m) {
-    let h2 = Number(m[1]);
-    if (h2 < 1 || h2 > 12) return null;
-    const pm = m[4].startsWith("p");
-    if (h2 === 12) h2 = 0;
-    hms = [pm ? h2 + 12 : h2, Number(m[2] ?? 0), Number(m[3] ?? 0)];
-    converted = true;
-  } else if (m = /^(\d{1,2})[:.h](\d{2})(?::(\d{2}))?$/.exec(raw)) hms = [Number(m[1]), Number(m[2]), Number(m[3] ?? 0)];
-  else if (m = /^(\d{1,2})h$/.exec(raw)) hms = [Number(m[1]), 0, 0];
-  else if (m = /^(\d{1,2})(\d{2})$/.exec(raw)) hms = [Number(m[1]), Number(m[2]), 0];
-  else if (m = /^(\d{1,2})$/.exec(raw)) hms = [Number(m[1]), 0, 0];
-  else return null;
-  if (hms[0] > 23 || hms[1] > 59 || hms[2] > 59) return null;
-  const value = `${pad(hms[0])}:${pad(hms[1])}${seconds ? `:${pad(hms[2])}` : ""}`;
-  return { value, converted };
-}
-function timeMinutes(value) {
-  const m = /^(\d{2}):(\d{2})/.exec(value);
-  return m ? Number(m[1]) * MINUTES_PER_HOUR + Number(m[2]) : Number.NaN;
-}
-function timeText(minutes, seconds = false) {
-  const wrapped = (Math.round(minutes) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
-  return `${pad(Math.floor(wrapped / MINUTES_PER_HOUR))}:${pad(wrapped % MINUTES_PER_HOUR)}${seconds ? ":00" : ""}`;
-}
-function stepTime(value, delta, step) {
-  const now = timeMinutes(value);
-  if (Number.isNaN(now)) return { value: timeText(delta > 0 ? 0 : MINUTES_PER_DAY - step), wrapped: false };
-  const to = now % step === 0 ? now + delta * step : delta > 0 ? Math.ceil(now / step) * step + (delta - 1) * step : Math.floor(now / step) * step + (delta + 1) * step;
-  return { value: timeText(to), wrapped: to < 0 || to >= MINUTES_PER_DAY };
-}
-function timeInWindow(value, min, max) {
-  const t = timeMinutes(value);
-  const a = min ? timeMinutes(min) : Number.NaN;
-  const b = max ? timeMinutes(max) : Number.NaN;
-  if (Number.isNaN(t)) return false;
-  if (Number.isNaN(a) && Number.isNaN(b)) return true;
-  if (Number.isNaN(a)) return t <= b;
-  if (Number.isNaN(b)) return t >= a;
-  return a <= b ? t >= a && t <= b : t >= a || t <= b;
-}
-var pad;
-var init_parse2 = __esm({
-  "js/timefield/parse.js"() {
-    "use strict";
-    init_constants32();
-    pad = (n) => String(n).padStart(2, "0");
-  }
-});
-
-// js/timefield/attributes.js
-function presetsFromAttribute(root) {
-  const raw = attr4(root, "presets", "");
-  if (!raw) return [];
-  return raw.split(",").map((part7) => part7.trim()).filter(Boolean).map((part7) => {
-    const [a, b] = part7.split("=");
-    return b === void 0 ? { label: a, value: a } : { label: a, value: b };
-  }).filter((p) => /^\d{2}:\d{2}/.test(p.value));
-}
-function entries(root) {
-  const step = stepOf(root);
-  const min = root.getAttribute("data-kp-time-min");
-  const max = root.getAttribute("data-kp-time-max");
-  const out = [];
-  if (root.hasAttribute("data-kp-time-clear")) out.push({ value: "", kind: "clear" });
-  if (root.hasAttribute("data-kp-time-now")) {
-    const d = /* @__PURE__ */ new Date();
-    out.push({ value: timeText(d.getHours() * MINUTES_PER_HOUR + d.getMinutes(), hasSeconds(root)), kind: "now" });
-  }
-  for (let m = 0; m < MINUTES_PER_DAY; m += step) {
-    const value = timeText(m, hasSeconds(root));
-    if ((min || max) && !timeInWindow(value, min, max)) continue;
-    out.push({ value, kind: "time" });
-  }
-  return out;
-}
-function nearOf(root, value) {
-  const list = (root.getAttribute("data-kp-time-near") ?? "").split(",").map((x) => x.trim()).filter(Boolean);
-  if (!list.length) return null;
-  const width = Number(root.getAttribute("data-kp-time-near-width") ?? String(DEFAULT_NEAR_WIDTH)) || DEFAULT_NEAR_WIDTH;
-  const t = timeMinutes(value);
-  for (const busy of list) {
-    const b = timeMinutes(busy);
-    const d = Math.min(Math.abs(t - b), MINUTES_PER_DAY - Math.abs(t - b));
-    if (d <= width) return busy;
-  }
-  return null;
-}
-var attr4, stepOf, hasSeconds;
-var init_attributes = __esm({
-  "js/timefield/attributes.js"() {
-    "use strict";
-    init_constants32();
-    init_parse2();
-    attr4 = (root, name, fallback2) => root.getAttribute(`data-kp-time-${name}`) ?? fallback2;
-    stepOf = (root) => {
-      const n = Number(attr4(root, "step", String(DEFAULT_STEP2)));
-      return TIME_STEPS.includes(n) ? n : DEFAULT_STEP2;
-    };
-    hasSeconds = (root) => root.hasAttribute("data-kp-time-seconds");
-  }
-});
-
-// js/timefield/state.js
-var FIELDS2, counter4, nextFieldNumber2;
-var init_state20 = __esm({
-  "js/timefield/state.js"() {
-    "use strict";
-    FIELDS2 = /* @__PURE__ */ new WeakMap();
-    counter4 = { serial: 0 };
-    nextFieldNumber2 = () => counter4.serial += 1;
-  }
-});
-
-// js/timefield/build.js
-function buildInput2(root, n) {
-  const input = (
-    /** @type {HTMLInputElement} */
-    el9("kp-field__input kp-time__input", "input")
-  );
-  input.type = "text";
-  input.id = root.getAttribute("data-kp-time-id") ?? `kp-time-${n}`;
-  input.setAttribute("inputmode", "numeric");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", "false");
-  input.setAttribute("role", "combobox");
-  input.setAttribute("aria-autocomplete", "none");
-  input.setAttribute("aria-haspopup", "listbox");
-  input.setAttribute("aria-expanded", "false");
-  input.placeholder = "--:--";
-  const label2 = root.getAttribute("data-kp-label") ?? root.getAttribute("aria-label");
-  if (label2) input.setAttribute("aria-label", label2);
-  const labelled = root.getAttribute("aria-labelledby");
-  if (labelled) input.setAttribute("aria-labelledby", labelled);
-  return input;
-}
-function buildToggle() {
-  const toggle2 = (
-    /** @type {HTMLButtonElement} */
-    el9("kp-time__toggle", "button")
-  );
-  toggle2.type = "button";
-  toggle2.tabIndex = -1;
-  toggle2.setAttribute("aria-label", getStrings().timeChoose);
-  toggle2.setAttribute("aria-haspopup", "listbox");
-  toggle2.append(el9("kp-time__glyph", "span"));
-  return toggle2;
-}
-function builtInPlace(root, build8) {
-  if (root.hasAttribute("data-kp-arrive")) return build8();
-  root.setAttribute("data-kp-arrive", "none");
-  build8();
-  queueMicrotask(() => root.removeAttribute("data-kp-arrive"));
-}
-function buildParts4(root) {
-  const n = nextFieldNumber2();
-  root.classList.add("kp-time");
-  const control = el9("kp-time__control");
-  const input = buildInput2(root, n);
-  control.append(input, buildToggle());
-  const hidden2 = (
-    /** @type {HTMLInputElement} */
-    el9("kp-time__value", "input")
-  );
-  hidden2.type = "hidden";
-  const name = root.getAttribute("data-kp-name");
-  if (name) hidden2.name = name;
-  const why = el9("kp-time__why", "p");
-  why.hidden = true;
-  why.id = `kp-time-${n}-why`;
-  const zone = el9("kp-time__zone", "p");
-  const popup = el9("kp-popover kp-time__popup");
-  popup.id = `kp-time-${n}-popup`;
-  popup.hidden = true;
-  input.setAttribute("aria-controls", popup.id);
-  const skeleton2 = el9("kp-skeleton kp-time__skeleton", "span");
-  skeleton2.setAttribute("aria-hidden", "true");
-  builtInPlace(root, () => root.replaceChildren(control, hidden2, why, zone, popup, skeleton2));
-  return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
-}
-var el9;
-var init_build12 = __esm({
-  "js/timefield/build.js"() {
-    "use strict";
-    init_strings();
-    init_attributes();
-    init_state20();
-    el9 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-  }
-});
-
-// js/timefield/list.js
-var TimeList;
-var init_list4 = __esm({
-  "js/timefield/list.js"() {
-    "use strict";
-    init_strings();
-    init_top_layer();
-    init_calm();
-    init_constants32();
-    init_attributes();
-    init_build12();
-    init_parse2();
-    TimeList = class {
-      /** @param {TimeField} field */
-      constructor(field2) {
-        this.field = field2;
-        this.popup = /** @type {HTMLElement} */
-        /** @type {unknown} */
-        null;
-        this.open = false;
-        this.active = -1;
-        this.lower = null;
-      }
-      /** The loading bar, the failed plate with its Retry, or the preset chips. @param {import('./constants.js').TimePresets} presets */
-      buildPresets(presets) {
-        const s2 = getStrings();
-        const bar = el9("kp-time__presets");
-        bar.setAttribute("role", "group");
-        bar.setAttribute("aria-label", s2.timePresets);
-        if (presets === "loading") {
-          for (let i = 0; i < 3; i += 1) bar.append(el9("kp-skeleton kp-time__preset-skeleton", "span"));
-          bar.setAttribute("aria-busy", "true");
-        } else if (presets === "error") {
-          const plate2 = el9("kp-alert kp-alert--destructive kp-time__presets-error");
-          plate2.setAttribute("role", "alert");
-          const text = el9("kp-time__presets-text", "span");
-          text.textContent = s2.timePresetsFailed;
-          const retry = (
-            /** @type {HTMLButtonElement} */
-            el9("kp-button kp-button--sm", "button")
-          );
-          retry.type = "button";
-          retry.setAttribute("data-kp-time-retry", "");
-          retry.textContent = s2.timeRetry;
-          plate2.append(text, retry);
-          bar.append(plate2);
-        } else {
-          for (const p of presets) {
-            const chip = (
-              /** @type {HTMLButtonElement} */
-              el9("kp-time__preset kp-button kp-button--sm", "button")
-            );
-            chip.type = "button";
-            chip.setAttribute("data-kp-time-pick", p.value);
-            chip.textContent = p.label === p.value ? p.value : `${p.label} ${p.value}`;
-            bar.append(chip);
-          }
-        }
-        return bar;
-      }
-      /** One option of the list. @param {TimeEntry} item @param {number} index */
-      buildOption(item, index) {
-        const s2 = getStrings();
-        const { field: field2, popup } = this;
-        const o = (
-          /** @type {HTMLElement} */
-          el9("kp-combobox__option kp-time__option", "li")
-        );
-        o.id = `${popup.id}-o${index}`;
-        o.setAttribute("role", "option");
-        o.setAttribute("data-kp-time-pick", item.value);
-        o.setAttribute("aria-selected", String(item.value === field2.value && item.kind === "time"));
-        o.tabIndex = -1;
-        const t = el9("kp-time__option-time", "span");
-        t.textContent = item.kind === "clear" ? s2.timeNone : item.value;
-        o.append(t);
-        if (item.kind === "now") {
-          const n = el9("kp-time__option-note", "span");
-          n.textContent = s2.timeNow;
-          o.append(n);
-        }
-        const near2 = item.kind === "time" ? nearOf(field2.root, item.value) : null;
-        if (near2) {
-          o.setAttribute("data-kp-time-near-mark", "");
-          const n = el9("kp-time__option-note", "span");
-          n.textContent = s2.timeNear(near2);
-          o.append(n);
-          o.setAttribute("aria-description", s2.timeNear(near2));
-        }
-        return o;
-      }
-      /** The index of the time entry nearest the value, or -1 when the value is no time. @param {TimeEntry[]} items */
-      nearestIndex(items) {
-        const now = timeMinutes(this.field.value);
-        let best = -1;
-        let bestDelta = Infinity;
-        if (Number.isNaN(now)) return best;
-        items.forEach((item, index) => {
-          if (item.kind !== "time") return;
-          const d = Math.abs(timeMinutes(item.value) - now);
-          if (d < bestDelta) {
-            bestDelta = d;
-            best = index;
-          }
-        });
-        return best;
-      }
-      /** Draw the list for the current value. */
-      draw() {
-        const s2 = getStrings();
-        const { field: field2, popup } = this;
-        popup.replaceChildren();
-        const sheetTitle = el9("kp-time__sheet-title", "p");
-        sheetTitle.textContent = field2.input.getAttribute("aria-label") ?? s2.timeChoose;
-        popup.append(sheetTitle);
-        const presets = field2.presets;
-        if (presets === "loading" || presets === "error" || Array.isArray(presets) && presets.length) popup.append(this.buildPresets(presets));
-        const list = el9("kp-time__list", "ul");
-        list.setAttribute("role", "listbox");
-        list.setAttribute("aria-label", s2.timeList);
-        list.id = `${popup.id}-list`;
-        const items = entries(field2.root);
-        items.forEach((item, index) => list.append(this.buildOption(item, index)));
-        popup.append(list);
-        const best = this.nearestIndex(items);
-        this.active = best >= 0 ? best : items.findIndex((i) => i.kind === "time");
-        this.markActive(false);
-      }
-      /** Mark the active option and, when asked or on the first time, scroll it to the middle. @param {boolean} [scroll] */
-      markActive(scroll = true) {
-        const { field: field2, popup } = this;
-        const options = (
-          /** @type {HTMLElement[]} */
-          [...popup.querySelectorAll(".kp-time__option")]
-        );
-        options.forEach((o, i) => {
-          o.toggleAttribute("data-kp-active", i === this.active);
-          o.classList.toggle("is-active", i === this.active);
-        });
-        const at = options[this.active];
-        if (!at) {
-          field2.input.removeAttribute("aria-activedescendant");
-          return;
-        }
-        field2.input.setAttribute("aria-activedescendant", at.id);
-        const list = (
-          /** @type {HTMLElement} */
-          popup.querySelector(".kp-time__list")
-        );
-        if (scroll || !list.hasAttribute("data-kp-time-placed")) {
-          list.setAttribute("data-kp-time-placed", "");
-          const top = at.offsetTop - list.clientHeight / 2 + at.offsetHeight / 2;
-          list.scrollTo({ top: Math.max(0, top), behavior: scroll && motionAllowed(field2.root) ? "smooth" : "auto" });
-        }
-      }
-      /** Place the list: a sheet at the foot of a narrow screen, else under (or over) the field. @param {HTMLElement} popup */
-      place(popup) {
-        const { input } = this.field;
-        const r = input.closest(".kp-time__control")?.getBoundingClientRect() ?? input.getBoundingClientRect();
-        if (window.matchMedia(NARROW_QUERY).matches) {
-          popup.style.setProperty("left", "0px");
-          popup.style.setProperty("right", "0px");
-          popup.style.setProperty("bottom", "0px");
-          popup.style.setProperty("top", "auto");
-          popup.style.setProperty("width", "auto");
-          return;
-        }
-        const h2 = popup.offsetHeight;
-        const below = window.innerHeight - r.bottom;
-        const top = below >= h2 + POPUP_EDGE_PX || below >= r.top ? r.bottom + POPUP_GAP_PX : r.top - h2 - POPUP_GAP_PX;
-        popup.style.setProperty("left", `${Math.max(POPUP_EDGE_PX, Math.min(r.left, window.innerWidth - popup.offsetWidth - POPUP_EDGE_PX))}px`);
-        popup.style.setProperty("top", `${Math.max(POPUP_EDGE_PX, top)}px`);
-        popup.style.setProperty("right", "auto");
-        popup.style.setProperty("bottom", "auto");
-        popup.style.setProperty("width", `${Math.max(r.width, POPUP_MIN_WIDTH_PX)}px`);
-      }
-      show() {
-        const { field: field2, popup } = this;
-        if (this.open || attr4(field2.root, "popup", "list") === "none" || field2.input.disabled) return;
-        this.open = true;
-        this.draw();
-        popup.hidden = false;
-        field2.input.setAttribute("aria-expanded", "true");
-        field2.root.setAttribute("data-kp-open", "");
-        this.lower = raiseOverlay(popup, (p) => this.place(p));
-        this.markActive(false);
-      }
-      /** @param {{ focus?: boolean }} [options] */
-      close({ focus = false } = {}) {
-        const { field: field2, popup } = this;
-        if (!this.open) return;
-        this.open = false;
-        this.lower?.();
-        this.lower = null;
-        popup.hidden = true;
-        field2.input.setAttribute("aria-expanded", "false");
-        field2.input.removeAttribute("aria-activedescendant");
-        field2.root.removeAttribute("data-kp-open");
-        if (focus) field2.input.focus();
-      }
-    };
-  }
-});
-
-// js/timefield/field.js
-function fieldFor(root) {
-  const known4 = FIELDS2.get(root);
-  if (known4) return known4;
-  const field2 = new TimeField(root);
-  field2.build();
-  FIELDS2.set(root, field2);
-  return field2;
-}
-var TimeField;
-var init_field = __esm({
-  "js/timefield/field.js"() {
-    "use strict";
-    init_strings();
-    init_remember();
-    init_constants32();
-    init_attributes();
-    init_build12();
-    init_state20();
-    init_parse2();
-    init_list4();
-    TimeField = class {
-      /** @param {HTMLElement} root */
-      constructor(root) {
-        this.root = root;
-        this.input = /** @type {HTMLInputElement} */
-        /** @type {unknown} */
-        null;
-        this.hidden = /** @type {HTMLInputElement} */
-        /** @type {unknown} */
-        null;
-        this.value = "";
-        this.presets = [];
-        this.invalid = "";
-        this.list = new TimeList(this);
-      }
-      /** Build the parts into the root. Idempotent through `fieldFor`. */
-      build() {
-        const parts2 = buildParts4(this.root);
-        this.input = parts2.input;
-        this.hidden = parts2.hidden;
-        this.list.popup = parts2.popup;
-        this.presets = parts2.presets;
-      }
-      /** Say something through the polite status region, unless the root turns announcing off. @param {string} message */
-      say(message) {
-        const { root } = this;
-        if (root.getAttribute("data-kp-announce") === "off") return;
-        let region = (
-          /** @type {HTMLElement | null} */
-          root.querySelector(":scope > .kp-time__live")
-        );
-        if (!region) {
-          region = el9("kp-sr-only kp-time__live", "span");
-          region.setAttribute("role", "status");
-          root.append(region);
-        }
-        const target = region;
-        target.textContent = "";
-        setTimeout(() => target.textContent = message, SAY_DELAY_MS7);
-      }
-      /** The why line. */
-      get why() {
-        return (
-          /** @type {HTMLElement} */
-          this.root.querySelector(".kp-time__why")
-        );
-      }
-      /** Show or clear the why line and the invalid mark. @param {string} message */
-      setInvalid(message) {
-        const { why, input } = this;
-        this.invalid = message;
-        why.hidden = message === "";
-        why.textContent = message;
-        why.setAttribute("role", message ? "alert" : "note");
-        why.removeAttribute("data-kp-time-note");
-        input.toggleAttribute("aria-invalid", message !== "");
-        if (message) {
-          input.setAttribute("aria-invalid", "true");
-          input.setAttribute("aria-describedby", why.id);
-        } else {
-          input.removeAttribute("aria-describedby");
-        }
-        input.setCustomValidity(message);
-        this.root.toggleAttribute("data-kp-invalid", message !== "");
-      }
-      /** A quiet note in the why line (a 12-hour paste that was converted). @param {string} message */
-      note(message) {
-        const { why } = this;
-        why.hidden = false;
-        why.textContent = message;
-        why.setAttribute("role", "status");
-        why.setAttribute("data-kp-time-note", "");
-      }
-      /**
-       * Set the value, the text and the hidden input; fire the event when it changed.
-       * @param {string} value @param {{ text?: string, silent?: boolean, converted?: boolean }} [options]
-       */
-      write(value, { text, silent = false, converted = false } = {}) {
-        const { root, input } = this;
-        const changed3 = this.value !== value;
-        this.value = value;
-        this.hidden.value = value;
-        input.value = text ?? value;
-        root.setAttribute("data-kp-value", value);
-        root.toggleAttribute("data-kp-empty", value === "");
-        if (!changed3 || silent) return;
-        memoryFor(root, "time")?.write("value", value);
-        if (value) this.say(getStrings().timeSaid(value));
-        root.dispatchEvent(new CustomEvent(TIME_EVENT, { bubbles: true, detail: { value, text: input.value, converted } }));
-      }
-      /** Refuse the typed text: no value, and the message. @param {string} message */
-      refuse(message) {
-        this.value = "";
-        this.hidden.value = "";
-        this.setInvalid(message);
-        return false;
-      }
-      /**
-       * Take a typed text as the value, or say why not.
-       * @param {string} text @param {{ silent?: boolean }} [options]
-       * @returns {boolean} whether the field now holds a valid value (or is validly empty)
-       */
-      commitText(text, { silent = false } = {}) {
-        const { root } = this;
-        const s2 = getStrings();
-        const trimmed = text.trim();
-        if (trimmed === "") {
-          this.write("", { text: "", silent });
-          this.setInvalid(root.hasAttribute("data-kp-time-required") ? s2.timeRequired : "");
-          return !root.hasAttribute("data-kp-time-required");
-        }
-        const parsed = parseTimeOfDay(trimmed, { seconds: hasSeconds(root) });
-        if (!parsed) return this.refuse(s2.timeInvalid);
-        const min = root.getAttribute("data-kp-time-min");
-        const max = root.getAttribute("data-kp-time-max");
-        if ((min || max) && !timeInWindow(parsed.value, min, max)) return this.refuse(s2.timeOutside(min ?? "00:00", max ?? "23:59"));
-        this.setInvalid("");
-        this.write(parsed.value, { silent, converted: parsed.converted });
-        if (parsed.converted) {
-          this.note(s2.timeConverted(parsed.value));
-          this.say(s2.timeConverted(parsed.value));
-        }
-        return true;
-      }
-      /** Choose a value from the list or a chip. @param {string} value */
-      pick(value) {
-        this.setInvalid("");
-        this.write(value);
-        this.list.close();
-        this.input.focus();
-        this.input.select();
-      }
-      /** Show or hide the zone line and the look, and follow disabled and loading. */
-      sync() {
-        const { root, input } = this;
-        const s2 = getStrings();
-        const zone = (
-          /** @type {HTMLElement} */
-          root.querySelector(".kp-time__zone")
-        );
-        const z = attr4(root, "zone", "");
-        zone.hidden = z === "";
-        zone.textContent = z ? s2.timeZoneNote(z) : "";
-        root.classList.toggle("kp-time--inline", attr4(root, "look", "field") === "inline");
-        const loading = root.getAttribute("data-kp-state") === "loading";
-        const off = root.hasAttribute("disabled") || root.hasAttribute("data-kp-disabled") || loading;
-        input.disabled = off;
-        const toggle2 = (
-          /** @type {HTMLButtonElement} */
-          root.querySelector(".kp-time__toggle")
-        );
-        const noPopup = attr4(root, "popup", "list") === "none";
-        toggle2.disabled = off || noPopup;
-        toggle2.hidden = noPopup;
-        input.toggleAttribute("required", root.hasAttribute("data-kp-time-required"));
-        const reason = root.getAttribute("data-kp-disabled-reason");
-        if (off && reason && !loading) input.setAttribute("data-kp-disabled-reason", reason);
-        else input.removeAttribute("data-kp-disabled-reason");
-        root.toggleAttribute("aria-busy", loading);
-      }
-    };
-  }
-});
-
-// js/timefield/keys.js
-function onEnter(field2, event) {
-  const { list, input } = field2;
-  if (list.open) {
-    event.preventDefault();
-    const option = (
-      /** @type {HTMLElement | undefined} */
-      [...list.popup.querySelectorAll(".kp-time__option")][list.active]
-    );
-    if (option) field2.pick(option.getAttribute("data-kp-time-pick") ?? "");
-    return;
-  }
-  if (!field2.commitText(input.value)) event.preventDefault();
-}
-function onEscape(field2, event) {
-  if (!field2.list.open) return;
-  event.preventDefault();
-  event.stopPropagation();
-  field2.list.close({ focus: true });
-}
-function stepValue(field2, event, up) {
-  const { root, input } = field2;
-  const amount = event.key.startsWith("Page") || event.shiftKey ? MINUTES_PER_HOUR : stepOf(root);
-  const typed = parseTimeOfDay(input.value, { seconds: hasSeconds(root) });
-  const from = typed ? typed.value : field2.value;
-  const result = stepTime(from, up ? 1 : -1, amount);
-  const min = root.getAttribute("data-kp-time-min");
-  const max = root.getAttribute("data-kp-time-max");
-  let next2 = result.value;
-  if ((min || max) && !timeInWindow(next2, min, max)) {
-    let tries = 0;
-    while (!timeInWindow(next2, min, max) && tries < MINUTES_PER_DAY / amount + 1) {
-      next2 = stepTime(next2, up ? 1 : -1, amount).value;
-      tries += 1;
-    }
-  }
-  field2.setInvalid("");
-  field2.write(hasSeconds(root) ? `${next2}:00` : next2);
-  input.select();
-  if (result.wrapped) field2.say(up ? getStrings().timeWrappedNext(next2) : getStrings().timeWrappedPrevious(next2));
-}
-function onKey3(field2, event) {
-  if (event.key === "Enter") return onEnter(field2, event);
-  if (event.key === "Escape") return onEscape(field2, event);
-  if (event.key === "ArrowDown" && event.altKey) {
-    event.preventDefault();
-    return field2.list.show();
-  }
-  const up = event.key === "ArrowUp" || event.key === "PageUp";
-  const down = event.key === "ArrowDown" || event.key === "PageDown";
-  if (!up && !down) return;
-  event.preventDefault();
-  const { list } = field2;
-  if (list.open && event.key.startsWith("Arrow")) {
-    const options = list.popup.querySelectorAll(".kp-time__option");
-    list.active = Math.max(0, Math.min(options.length - 1, list.active + (down ? 1 : -1)));
-    list.markActive();
-    return;
-  }
-  stepValue(field2, event, up);
-}
-var init_keys13 = __esm({
-  "js/timefield/keys.js"() {
-    "use strict";
-    init_strings();
-    init_constants32();
-    init_attributes();
-    init_parse2();
-  }
-});
-
-// js/timefield/controller.js
-var WATCHED9, TimeController;
-var init_controller60 = __esm({
-  "js/timefield/controller.js"() {
-    "use strict";
-    init_controller();
-    init_strings();
-    init_reason();
-    init_remember();
-    init_constants32();
-    init_attributes();
-    init_field();
-    init_keys13();
-    init_parse2();
-    WATCHED9 = [
-      "disabled",
-      "data-kp-disabled",
-      "data-kp-disabled-reason",
-      "data-kp-state",
-      ...["look", "zone", "popup", "required", "step", "min", "max", "presets", "now", "clear", "near", "near-width", "seconds"].map(
-        (n) => `data-kp-time-${n}`
-      )
-    ];
-    TimeController = class extends Controller {
-      /** @param {HTMLElement} host */
-      constructor(host) {
-        super(host);
-        this.field = /** @type {import('./field.js').TimeField} */
-        /** @type {unknown} */
-        null;
-      }
-      connect() {
-        const root = this.host;
-        const initial = root.getAttribute("data-kp-value") ?? "";
-        const field2 = this.field = fieldFor(root);
-        const remembered = memoryFor(root, "time")?.read("value", null);
-        const start = initial || (typeof remembered === "string" ? remembered : "");
-        const parsed = start ? parseTimeOfDay(start, { seconds: hasSeconds(root) }) : null;
-        field2.write(parsed ? parsed.value : "", { silent: true });
-        field2.sync();
-        this.own(attachDisabledReasons(root));
-        this.own(() => field2.list.close());
-        this.watchAttributes();
-        const doc = root.ownerDocument;
-        this.listen(doc, "pointerdown", (event) => this.onOutside(
-          /** @type {PointerEvent} */
-          event
-        ), true);
-        this.listen(field2.list.popup, "pointerdown", (event) => this.onPopupDown(
-          /** @type {PointerEvent} */
-          event
-        ));
-        this.listen(root, "focusin", () => this.onFocusIn());
-        this.listen(root, "focusout", (event) => this.onFocusOut(
-          /** @type {FocusEvent} */
-          event
-        ));
-        this.listen(root, "click", (event) => this.onClick(
-          /** @type {MouseEvent} */
-          event
-        ));
-        this.listen(field2.input, "paste", (event) => this.onPaste(
-          /** @type {ClipboardEvent} */
-          event
-        ));
-        this.listen(field2.input, "keydown", (event) => onKey3(
-          field2,
-          /** @type {KeyboardEvent} */
-          event
-        ));
-        this.listen(field2.input, "input", () => this.onInput());
-      }
-      /** Every option is live: presets and the list's entries follow their attributes. */
-      watchAttributes() {
-        const { field: field2, host } = this;
-        const observer = this.observe(
-          new MutationObserver(() => {
-            field2.sync();
-            if (Array.isArray(field2.presets) || field2.presets.length === 0) field2.presets = presetsFromAttribute(host);
-            if (field2.list.open) field2.list.draw();
-          })
-        );
-        observer.observe(host, { attributes: true, attributeFilter: WATCHED9 });
-      }
-      /** Digits typed fast: 0230 becomes 02:30 as the fourth digit arrives; an open list follows the typed time. */
-      onInput() {
-        const { field: field2, host } = this;
-        const { input, list } = field2;
-        const v = input.value;
-        if (new RegExp(`^\\d{${BARE_DIGITS}}$`).test(v)) input.value = `${v.slice(0, 2)}:${v.slice(2)}`;
-        if (field2.invalid) field2.setInvalid("");
-        if (!list.open) return;
-        const p = parseTimeOfDay(input.value, { seconds: hasSeconds(host) });
-        if (!p) return;
-        list.active = this.nearestOption(timeMinutes(p.value));
-        list.markActive();
-      }
-      /** The index of the option closest to a time; the active one when none has a time. @param {number} t */
-      nearestOption(t) {
-        const { list } = this.field;
-        const options = (
-          /** @type {HTMLElement[]} */
-          [...list.popup.querySelectorAll(".kp-time__option")]
-        );
-        let best = list.active;
-        let delta = Infinity;
-        options.forEach((o, i) => {
-          const v = o.getAttribute("data-kp-time-pick") ?? "";
-          if (!v) return;
-          const d = Math.abs(timeMinutes(v) - t);
-          if (d < delta) {
-            delta = d;
-            best = i;
-          }
-        });
-        return best;
-      }
-      onBlur() {
-        const { field: field2, host } = this;
-        if (field2.list.open) return;
-        if (field2.input.value.trim() !== field2.value || field2.invalid) field2.commitText(field2.input.value);
-        else if (field2.input.value.trim() === "" && host.hasAttribute("data-kp-time-required") && host.hasAttribute("data-kp-time-touched"))
-          field2.setInvalid(getStrings().timeRequired);
-        host.setAttribute("data-kp-time-touched", "");
-      }
-      /** @param {MouseEvent} event */
-      onClick(event) {
-        const { field: field2, host } = this;
-        const { list, input } = field2;
-        const t = event.target instanceof Element ? event.target : null;
-        if (!t) return;
-        if (t.closest(".kp-time__toggle")) {
-          if (list.open) list.close({ focus: true });
-          else {
-            input.focus();
-            list.show();
-          }
-          return;
-        }
-        const choice = t.closest("[data-kp-time-pick]");
-        if (choice && list.popup.contains(choice)) return field2.pick(choice.getAttribute("data-kp-time-pick") ?? "");
-        if (t.closest("[data-kp-time-retry]")) {
-          host.dispatchEvent(new CustomEvent(TIME_RETRY_EVENT, { bubbles: true }));
-          return;
-        }
-        if (t === input && !list.open && window.matchMedia(NARROW_QUERY).matches) list.show();
-      }
-      /** @param {FocusEvent} event */
-      onFocusOut(event) {
-        const next2 = (
-          /** @type {Node | null} */
-          event.relatedTarget
-        );
-        if (next2 && this.host.contains(next2)) return;
-        if (this.field.list.open) this.field.list.close();
-        this.onBlur();
-      }
-      onFocusIn() {
-        const { input } = this.field;
-        if (!input.disabled) requestAnimationFrame(() => document.activeElement === input && input.select());
-      }
-      /** A paste is read as a time, whole: `2:30 PM` is converted. @param {ClipboardEvent} event */
-      onPaste(event) {
-        const text = event.clipboardData?.getData("text") ?? "";
-        if (!text) return;
-        event.preventDefault();
-        this.field.input.value = text.trim();
-        this.field.commitText(text);
-      }
-      /** A press on the list keeps the focus where it was, so the field does not commit half-way. @param {PointerEvent} event */
-      onPopupDown(event) {
-        if (event.target instanceof Element && this.field.list.popup.contains(event.target) && !event.target.closest("button"))
-          event.preventDefault();
-      }
-      /** @param {PointerEvent} event */
-      onOutside(event) {
-        const { list } = this.field;
-        if (list.open && event.target instanceof Node && !this.host.contains(event.target) && !list.popup.contains(event.target)) list.close();
-      }
-    };
-  }
-});
-
-// js/timefield/api.js
-function setTime(root, value, { fire: fire2 = false } = {}) {
-  if (!(root instanceof HTMLElement)) return;
-  const field2 = fieldFor(root);
-  field2.setInvalid("");
-  field2.write(value, { silent: !fire2 });
-}
-function timeValue(root) {
-  return FIELDS2.get(root)?.value ?? "";
-}
-function timeValid(root) {
-  const field2 = FIELDS2.get(root);
-  if (!field2) return true;
-  return field2.invalid === "" && !(root.hasAttribute("data-kp-time-required") && field2.value === "");
-}
-function setTimePresets(root, presets) {
-  const field2 = fieldFor(root);
-  field2.presets = presets;
-  if (field2.list.open) field2.list.draw();
-}
-var attachTimes;
-var init_api19 = __esm({
-  "js/timefield/api.js"() {
-    "use strict";
-    init_controller();
-    init_constants32();
     init_controller60();
-    init_field();
-    init_state20();
-    attachTimes = (root = document) => attachAll(root, TIME, TimeController);
+    init_values40();
+    init_values40();
+    init_slug();
   }
 });
 
@@ -70407,15 +70834,15 @@ __export(timefield_exports, {
 var init_timefield = __esm({
   "js/timefield.js"() {
     "use strict";
-    init_constants32();
-    init_parse2();
-    init_api19();
+    init_constants3();
+    init_parse();
+    init_api();
   }
 });
 
 // js/weekdays/values.js
 var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, WEEK2, MONTH_DAYS, DEFAULT_MIN;
-var init_values40 = __esm({
+var init_values41 = __esm({
   "js/weekdays/values.js"() {
     "use strict";
     WEEKDAYS = "[data-kp-weekdays]";
@@ -70454,7 +70881,7 @@ var init_options6 = __esm({
   "js/weekdays/options.js"() {
     "use strict";
     init_locale();
-    init_values40();
+    init_values41();
   }
 });
 
@@ -70485,7 +70912,7 @@ var init_names = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_values40();
+    init_values41();
     DICTIONARY_ORDER = [6, 0, 1, 2, 3, 4, 5];
     SUNDAY = 7;
   }
@@ -70556,7 +70983,7 @@ var init_parts11 = __esm({
   "js/weekdays/parts.js"() {
     "use strict";
     init_names();
-    init_values40();
+    init_values41();
   }
 });
 
@@ -70589,7 +71016,7 @@ var init_summary3 = __esm({
     "use strict";
     init_strings();
     init_names();
-    init_values40();
+    init_values41();
   }
 });
 
@@ -70605,7 +71032,7 @@ var init_core19 = __esm({
     init_parts11();
     init_names();
     init_summary3();
-    init_values40();
+    init_values41();
     seq2 = 0;
     WeekdaysCore = class extends Controller {
       /**
@@ -70693,7 +71120,7 @@ var init_controller61 = __esm({
     init_segmented();
     init_core19();
     init_names();
-    init_values40();
+    init_values41();
     WeekdayPicker = class extends WeekdaysCore {
       /**
        * @param {HTMLElement} host
@@ -70814,8 +71241,8 @@ var init_weekdays = __esm({
     "use strict";
     init_controller();
     init_controller61();
-    init_values40();
-    init_values40();
+    init_values41();
+    init_values41();
     init_names();
     init_summary3();
   }
@@ -70823,7 +71250,7 @@ var init_weekdays = __esm({
 
 // js/quiet-hours/values.js
 var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, WATCHED_OPTIONS2, DEFAULT_STEP3, WAIT_BONES;
-var init_values41 = __esm({
+var init_values42 = __esm({
   "js/quiet-hours/values.js"() {
     "use strict";
     QUIET = "[data-kp-quiet]";
@@ -70904,7 +71331,7 @@ function buildQuiet(doc, id, s2) {
 var init_parts12 = __esm({
   "js/quiet-hours/parts.js"() {
     "use strict";
-    init_values41();
+    init_values42();
   }
 });
 
@@ -70947,7 +71374,7 @@ var init_value = __esm({
     init_strings();
     init_timefield();
     init_weekdays();
-    init_values41();
+    init_values42();
     LAST_DAY = 6;
   }
 });
@@ -70963,7 +71390,7 @@ var init_core20 = __esm({
     init_weekdays();
     init_parts12();
     init_value();
-    init_values41();
+    init_values42();
     serial6 = 0;
     QuietCore = class extends Controller {
       /**
@@ -71065,7 +71492,7 @@ var init_controller62 = __esm({
     init_weekdays();
     init_core20();
     init_value();
-    init_values41();
+    init_values42();
     QuietHours = class extends QuietCore {
       /**
        * @param {HTMLElement} host
@@ -71164,15 +71591,15 @@ var init_quiet_hours = __esm({
     "use strict";
     init_controller();
     init_controller62();
-    init_values41();
-    init_values41();
+    init_values42();
+    init_values42();
     init_value();
   }
 });
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND5, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values42 = __esm({
+var init_values43 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -71263,7 +71690,7 @@ var init_build13 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values42();
+    init_values43();
     make24 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -71296,7 +71723,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values42();
+    init_values43();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -71311,7 +71738,7 @@ var init_core21 = __esm({
     init_controller();
     init_freshness();
     init_strings();
-    init_values42();
+    init_values43();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -71428,7 +71855,7 @@ var init_run4 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values42();
+    init_values43();
     init_title();
     init_core21();
     init_build13();
@@ -71744,7 +72171,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values42();
+    init_values43();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -71798,8 +72225,8 @@ var init_question_card = __esm({
     init_batch();
     init_run4();
     init_spec();
-    init_values42();
-    init_values42();
+    init_values43();
+    init_values43();
   }
 });
 
@@ -72084,10 +72511,10 @@ function actorChip(doc, who, slot, mode2) {
   const t = getStrings();
   const actor = make26(doc, "span", "kp-feed__actor");
   const chip = make26(doc, "span", "kp-idmark-name kp-idmark-name--wrap");
-  const mark = make26(doc, "span", `kp-idmark kp-idmark--xs${["person", "agent"].includes(who.kind ?? "") ? " kp-idmark--round" : ""}`);
-  setIdmark(mark, who.name, { slot, title: mode2 === "mark" });
-  if (mode2 === "mark") chip.append(mark, make26(doc, "span", "kp-sr-only", who.name));
-  else chip.append(mark, make26(doc, "span", "kp-feed__actor-name", who.name));
+  const mark2 = make26(doc, "span", `kp-idmark kp-idmark--xs${["person", "agent"].includes(who.kind ?? "") ? " kp-idmark--round" : ""}`);
+  setIdmark(mark2, who.name, { slot, title: mode2 === "mark" });
+  if (mode2 === "mark") chip.append(mark2, make26(doc, "span", "kp-sr-only", who.name));
+  else chip.append(mark2, make26(doc, "span", "kp-feed__actor-name", who.name));
   actor.append(make26(doc, "span", "kp-sr-only", `${t.feedBy} `), chip);
   return actor;
 }
@@ -72096,11 +72523,11 @@ function rowItem2(c, row2, slots, grouped) {
   const li = make26(doc, "li", "kp-feed__row");
   li.setAttribute("data-kp-key", row2.key);
   if (row2.state) li.setAttribute("data-state", row2.state);
-  const mark = make26(doc, "span", "kp-feed__mark");
-  mark.setAttribute("aria-hidden", "true");
-  if (row2.state === "running") mark.append(make26(doc, "span", "kp-spinner"));
+  const mark2 = make26(doc, "span", "kp-feed__mark");
+  mark2.setAttribute("aria-hidden", "true");
+  if (row2.state === "running") mark2.append(make26(doc, "span", "kp-spinner"));
   const cell = make26(doc, "span", "kp-feed__mark-cell");
-  cell.append(mark);
+  cell.append(mark2);
   const text = textColumn(c, row2, li);
   const meta = make26(doc, "div", "kp-feed__meta");
   const actorMode = feedOptions(c.host).actor;
@@ -72222,14 +72649,14 @@ function paintStale(c, stale) {
   staleText.textContent = getStrings().feedStale(stale.reason, clock4);
   staleAction.textContent = getStrings().feedStaleAction;
 }
-function paintHead(c, st, shown5, total) {
+function paintHead(c, st, shown6, total) {
   const { head, count: count2, fresh, stale } = c.parts;
   const unit2 = feedOptions(c.host).unit;
   head.hidden = optionAttr(c.host, "head") === "off";
   const staleNow = st === "ready" && c.model.stale ? c.model.stale : null;
   if (st === "empty") count2.textContent = counted(0, unit2);
   else if (st !== "ready") count2.textContent = "\xA0";
-  else count2.textContent = shown5 < total ? getStrings().feedShown(shown5, total, unit2.many) : counted(total, unit2);
+  else count2.textContent = shown6 < total ? getStrings().feedShown(shown6, total, unit2.many) : counted(total, unit2);
   const updated = c.model.updatedAt;
   fresh.hidden = !!staleNow || updated == null || st !== "ready";
   if (updated != null) setAgo(fresh, updated);
@@ -72634,27 +73061,27 @@ var init_model8 = __esm({
 });
 
 // js/notices/row.js
-function markButton(doc, t, key, read) {
+function markButton(doc, t, key, read2) {
   const mine = (
     /** @type {HTMLButtonElement} */
     make27(doc, "button", "kp-button kp-button--sm kp-button--ghost kp-notices__mark-read")
   );
   const face = make27(doc, "span", "kp-notices__mark-face");
-  face.style.setProperty("--kp-notices-sizer", JSON.stringify(read ? t.noticesMarkRead : t.noticesMarkUnread));
-  face.append(make27(doc, "span", "kp-notices__mark-label", read ? t.noticesMarkUnread : t.noticesMarkRead));
+  face.style.setProperty("--kp-notices-sizer", JSON.stringify(read2 ? t.noticesMarkRead : t.noticesMarkUnread));
+  face.append(make27(doc, "span", "kp-notices__mark-label", read2 ? t.noticesMarkUnread : t.noticesMarkRead));
   mine.append(face);
   mine.type = "button";
   mine.setAttribute("data-kp-notice-read", key);
   return mine;
 }
-function noticeRow(doc, t, n, read, readOnly = false) {
+function noticeRow(doc, t, n, read2, readOnly = false) {
   const li = make27(doc, "li", "kp-notices__item");
   li.setAttribute("data-kp-key", n.key);
   li.setAttribute("data-kp-severity", n.severity);
-  li.toggleAttribute("data-kp-unread", !read);
+  li.toggleAttribute("data-kp-unread", !read2);
   li.tabIndex = 0;
-  const mark = make27(doc, "span", "kp-notices__mark", n.severity === "info" ? "i" : "!");
-  mark.setAttribute("aria-hidden", "true");
+  const mark2 = make27(doc, "span", "kp-notices__mark", n.severity === "info" ? "i" : "!");
+  mark2.setAttribute("aria-hidden", "true");
   const text = make27(doc, "div", "kp-notices__text");
   const title = make27(doc, "strong", "kp-notices__title");
   title.append(make27(doc, "span", "kp-sr-only", `${severityWord3(t, n.severity)}: `), n.title);
@@ -72665,7 +73092,7 @@ function noticeRow(doc, t, n, read, readOnly = false) {
   if (n.consequence) text.append(make27(doc, "span", "kp-notices__consequence", n.consequence));
   if (n.remedy) text.append(make27(doc, "span", "kp-notices__remedy", n.remedy));
   const actions = make27(doc, "div", "kp-notices__actions");
-  if (!readOnly) actions.append(markButton(doc, t, n.key, read));
+  if (!readOnly) actions.append(markButton(doc, t, n.key, read2));
   if (n.fix) {
     const fix = (
       /** @type {HTMLButtonElement} */
@@ -72675,7 +73102,7 @@ function noticeRow(doc, t, n, read, readOnly = false) {
     fix.setAttribute("data-kp-notice-fix", n.key);
     actions.append(fix);
   }
-  li.append(mark, text, actions);
+  li.append(mark2, text, actions);
   setAgo(since, n.since);
   return li;
 }
@@ -72970,8 +73397,8 @@ var init_controller64 = __esm({
         if (!target) return;
         const fix = target.closest("[data-kp-notice-fix]");
         if (fix) return void this.emit(NOTICE_FIX_EVENT, { key: fix.getAttribute("data-kp-notice-fix") });
-        const mark = target.closest("[data-kp-notice-read]");
-        if (mark) return this.toggleRead(mark.getAttribute("data-kp-notice-read") ?? "");
+        const mark2 = target.closest("[data-kp-notice-read]");
+        if (mark2) return this.toggleRead(mark2.getAttribute("data-kp-notice-read") ?? "");
         if (target.closest(".kp-notices__read-all")) this.readAll();
         else if (target.closest(".kp-notices__end-quiet")) this.emit(NOTICES_END_QUIET_EVENT, {});
         else if (target.closest("[data-kp-notices-retry]")) this.emit(NOTICES_RETRY_EVENT, {});
@@ -73260,9 +73687,9 @@ function paintHost2(m) {
   m.el.toggleAttribute("data-kp-previewing", m.preview !== null);
   m.el.style.setProperty("--kp-rating-max", String(m.max));
 }
-function paintStars(m, shown5) {
+function paintStars(m, shown6) {
   m.stars.forEach((star, i) => {
-    const lit = clamp(shown5 - i, 0, 1);
+    const lit = clamp(shown6 - i, 0, 1);
     star.style.setProperty("--kp-rating-fill", String(lit));
     star.toggleAttribute("data-kp-lit", lit > 0);
     star.toggleAttribute("data-kp-whole", lit >= 1);
@@ -73305,8 +73732,8 @@ function paintRole(m) {
   if (m.mode === "input" && disabled(m)) m.row.setAttribute("aria-disabled", "true");
   else m.row.removeAttribute("aria-disabled");
 }
-function paintCaption(m, shown5) {
-  m.caption.textContent = state8(m) === "ready" ? wordsOf4(m, shown5) : " ";
+function paintCaption(m, shown6) {
+  m.caption.textContent = state8(m) === "ready" ? wordsOf4(m, shown6) : " ";
   const why = disabled(m) ? m.el.getAttribute("data-kp-disabled-reason") ?? "" : "";
   m.reason.textContent = why;
   m.reason.hidden = why === "";
@@ -73347,11 +73774,11 @@ function paintActions(m) {
   if (m.field) m.field.value = m.value > 0 ? String(plain2(m.value)) : "";
 }
 function paint11(m) {
-  const shown5 = m.preview ?? m.draft;
+  const shown6 = m.preview ?? m.draft;
   paintHost2(m);
-  paintStars(m, shown5);
+  paintStars(m, shown6);
   paintRole(m);
-  paintCaption(m, shown5);
+  paintCaption(m, shown6);
   paintActions(m);
 }
 var init_paint10 = __esm({
@@ -73916,8 +74343,8 @@ function measureFold(c) {
   textEl.removeAttribute("data-kp-folded");
   const whole2 = textEl.getBoundingClientRect().height;
   textEl.toggleAttribute("data-kp-folded", !open4);
-  const shown5 = textEl.getBoundingClientRect().height;
-  const overflows = open4 ? c.expanded : whole2 - shown5 > FOLD_SLACK_PX;
+  const shown6 = textEl.getBoundingClientRect().height;
+  const overflows = open4 ? c.expanded : whole2 - shown6 > FOLD_SLACK_PX;
   more.hidden = !(folds2 && overflows);
   more.setAttribute("aria-expanded", String(c.expanded));
   more.textContent = c.expanded ? getStrings().quoteShowLess : getStrings().quoteShowAll;
@@ -74580,9 +75007,9 @@ function paintTail(m, typed) {
   const already = near2.find((item) => picked.has(item.value));
   if (already) head.push(row2("kp-usual__already", s2.usualAlreadyPicked(already.label), false));
   for (const item of near2.filter((one) => !picked.has(one.value) && !one.el.hasAttribute("aria-disabled"))) {
-    const ask = row2("kp-usual__near", s2.usualDidYouMean(item.label), true);
-    ask.dataset.kpNearValue = item.value;
-    head.push(ask);
+    const ask2 = row2("kp-usual__near", s2.usualDidYouMean(item.label), true);
+    ask2.dataset.kpNearValue = item.value;
+    head.push(ask2);
     item.el.hidden = true;
   }
   if (head.length) m.list.prepend(...head);
@@ -75772,9 +76199,9 @@ var init_handle3 = __esm({
        * Wait for the app's answer when it asked to (`detail.wait(promise)`): busy until it settles, back to the old states if it is refused.
        * @param {Promise<unknown> | null} wait @param {Map<HTMLElement, PressedState>} plan @param {Map<HTMLElement, PressedState>} before
        */
-      awaitAnswer(wait, plan, before) {
+      awaitAnswer(wait, plan, before2) {
         if (!wait) return;
-        this.pending = { plan, before };
+        this.pending = { plan, before: before2 };
         this.setBusy(true);
         Promise.resolve(wait).then(
           () => this.done(),
@@ -75928,7 +76355,7 @@ var init_controller68 = __esm({
         const plan = planFor(member, forceClear);
         if (plan.size === 0) return;
         const g = toggleGroup(member);
-        const before = new Map([...plan.keys()].map((m) => [m, stateOf5(m)]));
+        const before2 = new Map([...plan.keys()].map((m) => [m, stateOf5(m)]));
         const nextState = plan.get(member) ?? stateOf5(member);
         const after = () => g ? [...new Set(g.members.filter((m) => (plan.get(m) ?? stateOf5(m)) === "true" && !m.hasAttribute("data-kp-toggle-all")).map(toggleKey))] : nextState === "true" ? [toggleKey(member)] : [];
         let wait = null;
@@ -75947,7 +76374,7 @@ var init_controller68 = __esm({
         this.settle(plan);
         this.sayState(nextState);
         member.dispatchEvent(new CustomEvent(TOGGLE_CHANGED_EVENT, { bubbles: true, detail: { button: member, pressed: nextState === "true", group: g?.name ?? null, pressedKeys: after(), source: "press" } }));
-        this.awaitAnswer(wait, plan, before);
+        this.awaitAnswer(wait, plan, before2);
       }
       /** @param {PressedState} nextState */
       sayState(nextState) {
@@ -76037,7 +76464,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values43 = __esm({
+var init_values44 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -76106,7 +76533,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values43();
+    init_values44();
   }
 });
 
@@ -76119,15 +76546,15 @@ function toneMap(text) {
   }
   return map;
 }
-var shown4, near, ChipCore;
+var shown5, near, ChipCore;
 var init_core22 = __esm({
   "js/version-delta/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values43();
+    init_values44();
     init_level();
-    shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
+    shown5 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
     ChipCore = class extends Controller {
       /**
@@ -76210,7 +76637,7 @@ var init_view5 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values43();
+    init_values44();
     init_core22();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
@@ -76265,7 +76692,7 @@ var init_view5 = __esm({
         const url = this.host.getAttribute("data-kp-version-href") ?? this.defaults.href ?? null;
         const href = url ? url.replace("{to}", encodeURIComponent(v.to)) : null;
         const node = href ? this.part("kp-version__to", "a") : this.part("kp-version__to");
-        node.append(this.breakable(shown4(v.to, v.digest)));
+        node.append(this.breakable(shown5(v.to, v.digest)));
         if (href && node instanceof HTMLAnchorElement) {
           node.href = href;
           node.target = "_blank";
@@ -76295,7 +76722,7 @@ var init_view5 = __esm({
         if (show === "level" && !["unknown", "other"].includes(level)) return [this.levelNode(v)];
         if (show === "to" || !from) return [toNode];
         const fromNode = this.part("kp-version__from");
-        fromNode.append(this.breakable(shown4(from, v.digest)));
+        fromNode.append(this.breakable(shown5(from, v.digest)));
         const arrowNode = this.part("kp-version__arrow");
         arrowNode.setAttribute("aria-hidden", "true");
         arrowNode.textContent = v.arrow;
@@ -76321,7 +76748,7 @@ var VersionChip;
 var init_controller69 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values43();
+    init_values44();
     init_view5();
     VersionChip = class extends ChipView {
       connect() {
@@ -76426,8 +76853,8 @@ var init_version_delta = __esm({
     "use strict";
     init_controller();
     init_controller69();
-    init_values43();
-    init_values43();
+    init_values44();
+    init_values44();
     init_level();
     init_links2();
   }
@@ -76435,7 +76862,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values44 = __esm({
+var init_values45 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -76506,7 +76933,7 @@ var init_core23 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values44();
+    init_values45();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -76617,7 +77044,7 @@ var init_rows6 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values44();
+    init_values45();
     init_core23();
     DeplistRows = class extends DeplistCore {
       /**
@@ -76631,9 +77058,9 @@ var init_rows6 = __esm({
         const holder = link2 ? made4(doc, "a", "kp-deplist__name") : made4(doc, "span", "kp-deplist__name");
         if (needed) holder.classList.add("kp-deplist__name--to");
         if (holder instanceof HTMLAnchorElement && link2) holder.href = link2.replace("{name}", encodeURIComponent(name));
-        const mark = made4(doc, "span", "kp-idmark kp-idmark--xs");
-        setIdmark(mark, name);
-        holder.append(mark, made4(doc, "span", "kp-deplist__text"));
+        const mark2 = made4(doc, "span", "kp-idmark kp-idmark--xs");
+        setIdmark(mark2, name);
+        holder.append(mark2, made4(doc, "span", "kp-deplist__text"));
         holder.lastElementChild.textContent = name;
         return holder;
       }
@@ -76727,7 +77154,7 @@ var init_controller70 = __esm({
     init_flash();
     init_state_plate();
     init_strings();
-    init_values44();
+    init_values45();
     init_order();
     init_core23();
     init_rows6();
@@ -76771,8 +77198,8 @@ var init_controller70 = __esm({
       /** Redraw the list from its rows, its state and its attributes. */
       draw() {
         const o = this.settings();
-        const shown5 = this.items.filter((i) => o.self || i.from !== i.to);
-        const { rows, cycles } = orderDependencies(shown5, { numbers: o.numbers });
+        const shown6 = this.items.filter((i) => o.self || i.from !== i.to);
+        const { rows, cycles } = orderDependencies(shown6, { numbers: o.numbers });
         this.drawn = rows;
         const total = rows.length + cycles.length;
         this.writeHeading(total);
@@ -76905,8 +77332,8 @@ var init_deplist = __esm({
     "use strict";
     init_controller();
     init_controller70();
-    init_values44();
-    init_values44();
+    init_values45();
+    init_values45();
     init_order();
   }
 });
@@ -77016,7 +77443,7 @@ var init_states = __esm({
 
 // js/path-trace/values.js
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, GHOST_HOPS, WATCHED_ATTRIBUTES5;
-var init_values45 = __esm({
+var init_values46 = __esm({
   "js/path-trace/values.js"() {
     "use strict";
     TRACE = "[data-kp-trace]";
@@ -77046,7 +77473,7 @@ var init_draw13 = __esm({
     init_flash();
     init_core24();
     init_states();
-    init_values45();
+    init_values46();
     TraceDraw = class extends TraceCore {
       draw() {
         const { host, stage, foot, summary: summary2 } = this;
@@ -77176,7 +77603,7 @@ var init_controller71 = __esm({
     init_strings();
     init_draw13();
     init_states();
-    init_values45();
+    init_values46();
     Trace = class extends TraceDraw {
       /**
        * @param {HTMLElement} host
@@ -77257,8 +77684,8 @@ var init_path_trace = __esm({
     "use strict";
     init_controller();
     init_controller71();
-    init_values45();
-    init_values45();
+    init_values46();
+    init_values46();
     init_states();
   }
 });
@@ -77287,10 +77714,10 @@ function writeName(el16, name, match) {
     el16.textContent = name;
     return;
   }
-  const mark = el16.ownerDocument.createElement("mark");
-  mark.className = "kp-entity__match";
-  mark.textContent = name.slice(at, at + match.length);
-  el16.replaceChildren(name.slice(0, at), mark, name.slice(at + match.length));
+  const mark2 = el16.ownerDocument.createElement("mark");
+  mark2.className = "kp-entity__match";
+  mark2.textContent = name.slice(at, at + match.length);
+  el16.replaceChildren(name.slice(0, at), mark2, name.slice(at + match.length));
 }
 function frame2(card) {
   const kind = kindOf2(card);
@@ -77363,10 +77790,10 @@ function tickAndMark(card, el16, data, selectable, markKind) {
     el16.append(box);
   }
   if (markKind !== "none") {
-    const mark = made5(doc, "span", "kp-idmark kp-idmark--sm");
-    if (markKind === "idmark") setIdmark(mark, data.name);
-    else mark.textContent = "\u25C6";
-    el16.append(mark);
+    const mark2 = made5(doc, "span", "kp-idmark kp-idmark--sm");
+    if (markKind === "idmark") setIdmark(mark2, data.name);
+    else mark2.textContent = "\u25C6";
+    el16.append(mark2);
   }
 }
 function listenForStarKey(card) {
@@ -77595,9 +78022,9 @@ var init_drawing3 = __esm({
       begin() {
         const { card, data } = this;
         this.kind = frame2(card);
-        const before = DRAWN5.get(card);
-        this.drawn = before?.drawn ?? {};
-        this.star = before && before.data === data ? before.star : data.starred ?? before?.star ?? false;
+        const before2 = DRAWN5.get(card);
+        this.drawn = before2?.drawn ?? {};
+        this.star = before2 && before2.data === data ? before2.star : data.starred ?? before2?.star ?? false;
         DRAWN5.set(card, { data, drawn: this.drawn, star: this.star });
         card.setAttribute("data-kp-row-key", data.key);
         card.setAttribute("data-kp-entity-key", data.key);
@@ -77908,13 +78335,13 @@ var init_rows7 = __esm({
 });
 
 // js/entity-card/set.js
-function fitFlags(card, shown5) {
+function fitFlags(card, shown6) {
   const view = card.ownerDocument.defaultView;
   view?.requestAnimationFrame(() => {
     const row2 = slotOf(card, "flags");
-    if (!row2 || !card.isConnected || shown5 <= 0) return;
+    if (!row2 || !card.isConnected || shown6 <= 0) return;
     if (row2.scrollWidth > row2.clientWidth + 1) {
-      card.dataset.kpFlagsFit = String(shown5 - 1);
+      card.dataset.kpFlagsFit = String(shown6 - 1);
       const was = DRAWN5.get(card);
       if (was) {
         delete was.drawn.flags;
@@ -78262,7 +78689,7 @@ function readSettings3(el16, id) {
     storeKey: `kp-unsaved:${win.location?.pathname ?? ""}:${el16.dataset.kpName ?? id}`
   };
 }
-var config3, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW2, CONTROL, UNDO_MS_DEFAULT, ANNOUNCE_DELAY_MS2, RESTORED_TOAST_MS, SAVED_TOAST_MS, PANEL_GAP_PX, PANEL_EDGE_PX, COMPACT_BELOW_PX, WARN_MODES, PLACEMENTS;
+var config3, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW3, CONTROL, UNDO_MS_DEFAULT, ANNOUNCE_DELAY_MS2, RESTORED_TOAST_MS, SAVED_TOAST_MS, PANEL_GAP_PX, PANEL_EDGE_PX, COMPACT_BELOW_PX, WARN_MODES, PLACEMENTS;
 var init_config = __esm({
   "js/unsaved/config.js"() {
     "use strict";
@@ -78274,7 +78701,7 @@ var init_config = __esm({
     UNSAVED_UNDO_EVENT = "kp-unsaved-undo";
     UNSAVED_LEAVE_EVENT = "kp-unsaved-leave";
     UNSAVED_REVERT_EVENT = "kp-unsaved-revert";
-    ROW2 = ".kp-formrow, .kp-kv__row, [data-kp-row]";
+    ROW3 = ".kp-formrow, .kp-kv__row, [data-kp-row]";
     CONTROL = 'input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="file"], [type="image"]), select, textarea';
     UNDO_MS_DEFAULT = 6e3;
     ANNOUNCE_DELAY_MS2 = 400;
@@ -78295,136 +78722,6 @@ var init_state24 = __esm({
     "use strict";
     state9 = { seq: 0 };
     nextBarNumber = () => ++state9.seq;
-  }
-});
-
-// js/unsaved/widgets.js
-function tagValues(root) {
-  return [...root.querySelectorAll("[data-kp-tag-list] .kp-tag")].map((t) => (
-    /** @type {HTMLElement} */
-    t.dataset.value ?? (t.textContent ?? "").trim()
-  ));
-}
-function widgetOf(node) {
-  const root = (
-    /** @type {HTMLElement | null} */
-    node.closest(WIDGET)
-  );
-  if (!root || root.matches("[data-kp-untracked]") || root.querySelector("[data-kp-untracked]")) return null;
-  return root;
-}
-function readWidget(root) {
-  if (root.matches(QUANTITY)) return String(getQuantity(root));
-  if (root.matches(TIME)) return FIELDS2.get(root)?.value ?? root.getAttribute("data-kp-value") ?? "";
-  return JSON.stringify(tagValues(root));
-}
-function showWidget(root, value) {
-  if (!root.matches(TAG_INPUT)) return value;
-  return (
-    /** @type {string[]} */
-    JSON.parse(value || "[]").join(", ")
-  );
-}
-function writeWidget(root, value) {
-  if (root.matches(QUANTITY)) setQuantity(root, Number(value));
-  else if (root.matches(TIME)) setTime(root, value);
-  else {
-    const handle = combobox(root);
-    if (!handle) throw new Error("kp-unsaved: a tag input must be attached (attachComboboxes) before its value can be put back");
-    handle.set(
-      /** @type {string[]} */
-      JSON.parse(value || "[]")
-    );
-  }
-}
-var TAG_INPUT, WIDGET, WIDGET_EVENTS, isWidget;
-var init_widgets = __esm({
-  "js/unsaved/widgets.js"() {
-    "use strict";
-    init_values();
-    init_read();
-    init_quantity();
-    init_constants32();
-    init_state20();
-    init_api19();
-    init_constants8();
-    init_handle();
-    TAG_INPUT = "[data-kp-combobox][data-kp-tags]";
-    WIDGET = `${QUANTITY}, ${TIME}, ${TAG_INPUT}`;
-    WIDGET_EVENTS = [QUANTITY_EVENT, TIME_EVENT, CHANGE_EVENT];
-    isWidget = (el16) => el16.matches(WIDGET);
-  }
-});
-
-// js/unsaved/values.js
-function radiosNamed(c) {
-  return [...(c.form ?? c.ownerDocument).querySelectorAll(`input[type="radio"]`)].filter(
-    (r) => (
-      /** @type {HTMLInputElement} */
-      r.name === c.name
-    )
-  );
-}
-function readValue(c) {
-  if (isWidget(c)) return readWidget(
-    /** @type {HTMLElement} */
-    /** @type {unknown} */
-    c
-  );
-  if (c instanceof HTMLInputElement && c.type === "checkbox") return c.checked ? "on" : "off";
-  if (c instanceof HTMLInputElement && c.type === "radio") {
-    return (
-      /** @type {HTMLInputElement | undefined} */
-      radioGroup(c).find((r) => (
-        /** @type {HTMLInputElement} */
-        r.checked
-      ))?.value ?? ""
-    );
-  }
-  return c.value;
-}
-function readDefault(c) {
-  if (isWidget(c)) return readWidget(
-    /** @type {HTMLElement} */
-    /** @type {unknown} */
-    c
-  );
-  if (c instanceof HTMLInputElement && c.type === "checkbox") return c.defaultChecked ? "on" : "off";
-  if (c instanceof HTMLInputElement && c.type === "radio") {
-    return (
-      /** @type {HTMLInputElement | undefined} */
-      radioGroup(c).find((r) => (
-        /** @type {HTMLInputElement} */
-        r.defaultChecked
-      ))?.value ?? ""
-    );
-  }
-  if (c instanceof HTMLSelectElement) return ([...c.options].find((o) => o.defaultSelected) ?? c.options[0])?.value ?? "";
-  return c.defaultValue;
-}
-function writeValue(c, value) {
-  if (isWidget(c)) writeWidget(
-    /** @type {HTMLElement} */
-    /** @type {unknown} */
-    c,
-    value
-  );
-  else if (c instanceof HTMLInputElement && c.type === "checkbox") c.checked = value === "on";
-  else if (c instanceof HTMLInputElement && c.type === "radio") {
-    for (const r of radiosNamed(c)) r.checked = /** @type {HTMLInputElement} */
-    r.value === value;
-  } else c.value = value;
-}
-function fire(c) {
-  c.dispatchEvent(new Event("input", { bubbles: true }));
-  c.dispatchEvent(new Event("change", { bubbles: true }));
-}
-var radioGroup;
-var init_values46 = __esm({
-  "js/unsaved/values.js"() {
-    "use strict";
-    init_widgets();
-    radioGroup = (c) => c.name ? radiosNamed(c) : [c];
   }
 });
 
@@ -78657,10 +78954,10 @@ function revertOne(ctl, ch) {
 }
 function discardChanges(ctl) {
   if (ctl.saving) return;
-  const before = ctl.tracker.changes();
-  if (before.length === 0) return;
+  const before2 = ctl.tracker.changes();
+  if (before2.length === 0) return;
   ctl.undoStack = [];
-  for (const ch of before) {
+  for (const ch of before2) {
     for (const c of ctl.tracker.controlsOf(ch.row)) {
       const was = ctl.tracker.baseline.get(c);
       if (was !== void 0 && readValue(c) !== was) {
@@ -78672,9 +78969,9 @@ function discardChanges(ctl) {
   }
   clearProblem(ctl);
   paintBar(ctl);
-  ctl.el.dispatchEvent(new CustomEvent(UNSAVED_DISCARD_EVENT, { bubbles: true, detail: { changes: before } }));
-  ctl.live.textContent = ctl.s.unsavedDropped(before.length);
-  if (ctl.settings.undoMs > 0) offerUndo(ctl, before.length);
+  ctl.el.dispatchEvent(new CustomEvent(UNSAVED_DISCARD_EVENT, { bubbles: true, detail: { changes: before2 } }));
+  ctl.live.textContent = ctl.s.unsavedDropped(before2.length);
+  if (ctl.settings.undoMs > 0) offerUndo(ctl, before2.length);
 }
 function offerUndo(ctl, count2) {
   const { s: s2 } = ctl;
@@ -78760,7 +79057,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts15();
-    init_values46();
+    init_values2();
   }
 });
 
@@ -78770,8 +79067,8 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values46();
-    init_constants8();
+    init_values2();
+    init_constants4();
     init_widgets();
     TRACKABLE = `${CONTROL}, ${WIDGET}`;
     ChangeTracker = class {
@@ -78832,7 +79129,7 @@ var init_changes = __esm({
       rowOf(control) {
         return (
           /** @type {HTMLElement} */
-          control.closest(ROW2) ?? control
+          control.closest(ROW3) ?? control
         );
       }
       /** The controls of a row. @param {HTMLElement} row */
@@ -78923,7 +79220,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values46();
+    init_values2();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -79477,7 +79774,7 @@ var init_unsaved = __esm({
 });
 
 // js/autosize/constants.js
-var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, PHONE_HEIGHT_SHARE, NORMAL_LINE_HEIGHT, FALLBACK_FONT_PX2, COUNTER_WARN_SHARE, LEVEL_NONE, LEVEL_NEAR, LEVEL_FULL;
+var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE2, PHONE_HEIGHT_SHARE, NORMAL_LINE_HEIGHT, FALLBACK_FONT_PX2, COUNTER_WARN_SHARE, LEVEL_NONE, LEVEL_NEAR, LEVEL_FULL;
 var init_constants38 = __esm({
   "js/autosize/constants.js"() {
     "use strict";
@@ -79487,7 +79784,7 @@ var init_constants38 = __esm({
     AUTOSIZE_MIN_LINES = 3;
     AUTOSIZE_STATES = /** @type {const} */
     ["ready", "loading", "error"];
-    PHONE = "(max-width: 40em)";
+    PHONE2 = "(max-width: 40em)";
     PHONE_HEIGHT_SHARE = 0.6;
     NORMAL_LINE_HEIGHT = 1.2;
     FALLBACK_FONT_PX2 = 16;
@@ -79960,7 +80257,7 @@ var init_controller73 = __esm({
         this.card = null;
         this.frame = null;
         this.wasReadOnly = this.area.readOnly;
-        this.phoneQuery = this.view.matchMedia?.(PHONE);
+        this.phoneQuery = this.view.matchMedia?.(PHONE2);
         this.counter = new CounterLine(this.area, () => this.frame, new Intl.NumberFormat(resolveLocale(void 0, this.area)), this.strings);
         this.pasteAt = -1;
         this.width = -1;
@@ -80487,7 +80784,7 @@ var init_actions6 = __esm({
 
 // js/viewer/plate.js
 function buildPlate(doc, state12, detail, actions, strings) {
-  const shown5 = statePlate(doc, {
+  const shown6 = statePlate(doc, {
     kind: state12 === "error" ? "error" : "empty",
     title: detail.title ?? (state12 === "error" ? strings.viewerFailedTitle : strings.viewerUnsupportedTitle),
     text: detail.message ?? (state12 === "error" ? strings.viewerFailedText : strings.viewerUnsupportedText),
@@ -80501,9 +80798,9 @@ function buildPlate(doc, state12, detail, actions, strings) {
       link2.textContent = action.label ?? (action.kind === "open" ? strings.viewerOpenNew : strings.viewerDownload);
       row2.append(link2);
     }
-    shown5.append(row2);
+    shown6.append(row2);
   }
-  return shown5;
+  return shown6;
 }
 var init_plate3 = __esm({
   "js/viewer/plate.js"() {
@@ -81405,9 +81702,9 @@ function failTile(gallery, cell, tile, item) {
   tile.setAttribute("data-kp-state", "error");
   const plate2 = make33(doc, "div", "kp-gallery__fail");
   plate2.setAttribute("role", "group");
-  const mark = make33(doc, "span", "kp-gallery__fail-mark");
-  mark.setAttribute("aria-hidden", "true");
-  mark.textContent = "!";
+  const mark2 = make33(doc, "span", "kp-gallery__fail-mark");
+  mark2.setAttribute("aria-hidden", "true");
+  mark2.textContent = "!";
   const text = make33(doc, "span", "kp-gallery__fail-text");
   text.textContent = strings.galleryPictureFailed;
   const retry = (
@@ -81422,7 +81719,7 @@ function failTile(gallery, cell, tile, item) {
     cell.replaceWith(fresh);
     fresh.querySelector(".kp-gallery__open")?.focus({ preventScroll: true });
   });
-  plate2.append(mark, text, retry);
+  plate2.append(mark2, text, retry);
   tile.replaceChildren(plate2);
   el16.dispatchEvent(new CustomEvent(GALLERY_PICTURE_FAILED_EVENT, { bubbles: true, detail: { id: item.id } }));
 }
@@ -82647,8 +82944,8 @@ function setSentenceComputed(element, name, text) {
   for (const output of element.querySelectorAll("[data-kp-sentence-computed]")) {
     if (output.getAttribute("data-kp-sentence-computed") !== name) continue;
     output.toggleAttribute("data-kp-sentence-empty", value === "");
-    const shown5 = value === "" ? COMPUTED_NONE : value;
-    if (output.textContent !== shown5) output.textContent = shown5;
+    const shown6 = value === "" ? COMPUTED_NONE : value;
+    if (output.textContent !== shown6) output.textContent = shown6;
     output.setAttribute("aria-live", "off");
   }
 }
@@ -82763,13 +83060,13 @@ function reach2(c, show) {
   }
 }
 function wordsBefore(field2) {
-  const before = [];
-  for (let n = field2.previousSibling; n && before.length < NAME_WORDS; n = n.previousSibling) {
+  const before2 = [];
+  for (let n = field2.previousSibling; n && before2.length < NAME_WORDS; n = n.previousSibling) {
     if (n.nodeType !== Node.TEXT_NODE) break;
     const words3 = (n.textContent ?? "").trim().split(/\s+/).filter(Boolean);
-    before.unshift(...words3.reverse().slice(0, NAME_WORDS - before.length).reverse());
+    before2.unshift(...words3.reverse().slice(0, NAME_WORDS - before2.length).reverse());
   }
-  return before;
+  return before2;
 }
 var SENTENCE, SENTENCE_EVENT, LINES, CONTROLS3, tidy, COMPUTED_NONE, NAME_WORDS, isButton;
 var init_fields = __esm({
@@ -83080,8 +83377,8 @@ function hintOf2(c, o) {
   const age = datedAge(t, c.settings.now(), c.strings);
   return o.label ? `${age} \xB7 ${rangeMoment(t, c.settings.zone)}` : age;
 }
-function newestOf(shown5) {
-  const dated = shown5.filter((o) => !Number.isNaN(stamp2(o)));
+function newestOf(shown6) {
+  const dated = shown6.filter((o) => !Number.isNaN(stamp2(o)));
   return dated.length ? dated.reduce((a, b) => stamp2(b) > stamp2(a) ? b : a) : null;
 }
 function metaOf(doc, o) {
@@ -83741,8 +84038,8 @@ function runMoment(ms, zone = CHART_TIME_ZONE, locale) {
   const day2 = dayNames("short", locale)[new Date(Date.UTC(w.year, w.month - 1, w.day)).getUTCDay()] ?? "";
   return `${day2} ${two6(w.day)}/${two6(w.month)}/${w.year} ${two6(w.hour)}:${two6(w.minute)}`;
 }
-function clockShift(before, after, zone = CHART_TIME_ZONE) {
-  return (zoneOffset2(after, zone) - zoneOffset2(before, zone)) / MINUTE_S4;
+function clockShift(before2, after, zone = CHART_TIME_ZONE) {
+  return (zoneOffset2(after, zone) - zoneOffset2(before2, zone)) / MINUTE_S4;
 }
 var two6;
 var init_time3 = __esm({
@@ -83838,30 +84135,30 @@ var init_rows9 = __esm({
     init_time3();
     RunsRows = class extends RunsCore {
       /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
-      marksOf(run, before) {
-        const shift = clockShift(before ?? this.read.now(), run.at, this.read.zone);
+      marksOf(run, before2) {
+        const shift = clockShift(before2 ?? this.read.now(), run.at, this.read.zone);
         const marks = [];
         if (shift !== 0) marks.push(this.s.runsClockChange(shift));
         if (run.conflict) marks.push(run.conflict);
         return marks;
       }
       /** One row. @param {import('./core.js').Run} run @param {number} index @param {number | undefined} before */
-      row(run, index, before) {
-        const { doc, s: s2, read } = this;
+      row(run, index, before2) {
+        const { doc, s: s2, read: read2 } = this;
         const li = doc.createElement("li");
         li.className = "kp-runs__row";
         const time = doc.createElement("time");
         time.className = "kp-runs__when";
         time.dateTime = new Date(run.at).toISOString();
-        time.textContent = runMoment(run.at, read.zone, this.host.lang || void 0);
+        time.textContent = runMoment(run.at, read2.zone, this.host.lang || void 0);
         li.append(time);
-        if (read.relative) {
+        if (read2.relative) {
           const rel2 = doc.createElement("span");
           rel2.className = "kp-runs__rel";
-          rel2.textContent = runsRelative(run.at, read.now(), s2);
+          rel2.textContent = runsRelative(run.at, read2.now(), s2);
           li.append(rel2);
         }
-        const marks = read.warn ? this.marksOf(run, before) : [];
+        const marks = read2.warn ? this.marksOf(run, before2) : [];
         if (marks.length) {
           const flag = doc.createElement("span");
           flag.className = "kp-badge kp-badge--warning kp-runs__flag";
@@ -83886,8 +84183,8 @@ var init_rows9 = __esm({
       draw() {
         const { list, button: button6 } = this.parts;
         const { count: count2, more } = this.read;
-        const shown5 = this.expanded ? this.all : this.all.slice(0, count2);
-        const rows = this.state === "loading" && shown5.length === 0 ? this.waitRows() : shown5.map((run, i) => this.row(run, i, i === 0 ? void 0 : shown5[i - 1]?.at));
+        const shown6 = this.expanded ? this.all : this.all.slice(0, count2);
+        const rows = this.state === "loading" && shown6.length === 0 ? this.waitRows() : shown6.map((run, i) => this.row(run, i, i === 0 ? void 0 : shown6[i - 1]?.at));
         list.replaceChildren(...rows);
         list.toggleAttribute("inert", this.state !== "ready");
         if (this.state === "loading") list.setAttribute("aria-busy", "true");
@@ -84561,14 +84858,14 @@ var init_controller79 = __esm({
         this.host.dispatchEvent(new CustomEvent(SNOOZE_EVENT, { bubbles: true, detail: { until: new Date(ms).toISOString(), choice: key } }));
       }
       onApply() {
-        const read = this.readPanel();
-        if ("ms" in read) {
+        const read2 = this.readPanel();
+        if ("ms" in read2) {
           void this.closePanel();
-          return this.choose(read.ms, "pick");
+          return this.choose(read2.ms, "pick");
         }
-        this.p.error.textContent = read.words.join(" ");
-        this.markBad(read.bad);
-        read.bad[0]?.focus();
+        this.p.error.textContent = read2.words.join(" ");
+        this.markBad(read2.bad);
+        read2.bad[0]?.focus();
       }
       /** Esc closes the panel (unless the calendar in it is open); Enter in the time applies. @param {KeyboardEvent} event */
       onKey(event) {
@@ -84737,7 +85034,7 @@ function writeAddButton(add, s2, unit2, atMax) {
   add.toggleAttribute("aria-disabled", atMax);
   if (atMax) add.setAttribute("aria-disabled", "true");
 }
-function announce3(host, words3) {
+function announce4(host, words3) {
   let live4 = host.querySelector(".kp-rows__live");
   if (!live4) {
     live4 = host.ownerDocument.createElement("span");
@@ -84961,7 +85258,7 @@ var init_row_editor = __esm({
       }
       /** Say something to a screen reader, in the status line. @param {string} words */
       say(words3) {
-        announce3(this.host, words3);
+        announce4(this.host, words3);
       }
       /** @param {string} type @param {HTMLElement} row @param {number} index */
       emit(type, row2, index) {
@@ -85881,13 +86178,13 @@ function setGraphData(el16, data) {
   g.data = data;
   g.state = data.nodes.length ? "ready" : "empty";
   const ids2 = new Set(data.nodes.map((n) => n.id));
-  const before = g.selected.size;
+  const before2 = g.selected.size;
   const detailBefore = g.detail;
   for (const id of [...g.selected]) if (!ids2.has(id)) g.selected.delete(id);
   if (g.hover && !ids2.has(g.hover)) g.hover = null;
   if (g.detail && !ids2.has(g.detail)) g.detail = null;
   drawGraph(g);
-  if (g.selected.size !== before || g.detail !== detailBefore) graphChanged(g);
+  if (g.selected.size !== before2 || g.detail !== detailBefore) graphChanged(g);
 }
 function setGraphState(el16, state12, words3 = "", { text = "", art = null } = {}) {
   const g = graphs.get(el16);
@@ -87031,9 +87328,9 @@ function fillRow(list, row2, item) {
       for (const p of by) {
         const chip = el10("kp-claim__person", "span");
         if (person !== "name") {
-          const mark = el10("kp-idmark kp-idmark--sm kp-idmark--round", "span");
-          setIdmark(mark, p.name);
-          chip.append(mark);
+          const mark2 = el10("kp-idmark kp-idmark--sm kp-idmark--round", "span");
+          setIdmark(mark2, p.name);
+          chip.append(mark2);
         }
         if (person !== "idmark") {
           const name = el10("kp-claim__name", "span");
@@ -87161,7 +87458,7 @@ function decorate(list) {
     const item = byId.get(row2.getAttribute("data-id") ?? "");
     if (item) fillRow(list, row2, item);
   }
-  let shown5 = 0;
+  let shown6 = 0;
   for (
     const section of
     /** @type {NodeListOf<HTMLElement>} */
@@ -87180,7 +87477,7 @@ function decorate(list) {
       row2.hidden = !keep;
       if (keep) rows += 1;
     }
-    shown5 += rows;
+    shown6 += rows;
     section.hidden = rows === 0;
     const head = section.querySelector(".kp-checklist__head");
     let own = (
@@ -87314,7 +87611,7 @@ function decorate(list) {
     body.querySelector(":scope > .kp-claim__none")
   );
   const emptyList = items.length === 0;
-  const wantNote = !loading && !emptyList && shown5 === 0 && !list.hasAttribute("data-kp-checklist-error");
+  const wantNote = !loading && !emptyList && shown6 === 0 && !list.hasAttribute("data-kp-checklist-error");
   if (wantNote) {
     const gapsFilter = st.filter === "gaps";
     const key = `${st.filter}`;
@@ -87384,8 +87681,8 @@ async function takeAll(list) {
   const st = stateOf6(list);
   const viewer = st.viewer;
   if (!viewer) return;
-  const before = getChecklistItems(list);
-  const open4 = before.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
+  const before2 = getChecklistItems(list);
+  const open4 = before2.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
   if (open4.length === 0) return;
   const by = (i) => open4.includes(i) ? [viewer] : byOf(i);
   let waiting = null;
@@ -87395,7 +87692,7 @@ async function takeAll(list) {
     person: viewer,
     by: [viewer],
     previousBy: [],
-    items: before,
+    items: before2,
     ids: open4.map((i) => i.id),
     settle: (a) => void (waiting = a)
   };
@@ -87410,7 +87707,7 @@ async function takeAll(list) {
   }
   setChecklistItems(
     list,
-    before.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
+    before2.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
   );
   say11(list, s2.claimTookAll(open4.length));
   const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
@@ -87418,7 +87715,7 @@ async function takeAll(list) {
     undoToast(s2.claimTookAll(open4.length), {
       mode: "revert",
       ms,
-      undo: () => setChecklistItems(list, before)
+      undo: () => setChecklistItems(list, before2)
     });
 }
 async function copyGaps(list) {
@@ -87507,7 +87804,7 @@ async function request(list, id, action, person, { undo = true } = {}) {
     }
   }
   write(list, id, by);
-  announce4(list, item.label, by, joining, person);
+  announce5(list, item.label, by, joining, person);
   if (!joining && undo) offerUndo2(list, item, previousBy, person);
 }
 function refuse2(list, item, by, why) {
@@ -87529,7 +87826,7 @@ function refuse2(list, item, by, why) {
     setTimeout(() => note2.remove(), CLAIM_REFUSED_MS);
   }
 }
-function announce4(list, label2, by, joining, person) {
+function announce5(list, label2, by, joining, person) {
   const s2 = getStrings();
   if (list.getAttribute("data-kp-announce") === "off") return;
   say11(list, by.length ? s2.claimAnnounce(label2, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label2));
@@ -88378,8 +88675,8 @@ function setAvailabilityAnswer(root, person, column, answer2) {
     const target = st.spec.sets[st.unit];
     if (target) target.answers = structuredClone(st.set.answers);
   }
-  const before = new Set(availabilityBest(root));
-  void before;
+  const before2 = new Set(availabilityBest(root));
+  void before2;
   render4(root);
 }
 function ensureParts(root) {
@@ -89777,7 +90074,7 @@ function say13(root, message) {
   target.textContent = "";
   setTimeout(() => target.textContent = message, 60);
 }
-var QR, QR_COPY_EVENT, QR_REVEAL_EVENT, QR_EXPIRED_EVENT, QR_RETRY_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, STATE4, el12, attr12, valueOf2;
+var QR, QR_COPY_EVENT, QR_REVEAL_EVENT, QR_EXPIRED_EVENT, QR_RETRY_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, STATE4, el12, attr12, valueOf3;
 var init_state28 = __esm({
   "js/qr/state.js"() {
     "use strict";
@@ -89796,7 +90093,7 @@ var init_state28 = __esm({
       return node;
     };
     attr12 = (root, name, fallback2) => root.getAttribute(`data-kp-qr-${name}`) ?? fallback2;
-    valueOf2 = (root) => stateOf8(root).spec.value ?? root.getAttribute("data-kp-qr-value") ?? "";
+    valueOf3 = (root) => stateOf8(root).spec.value ?? root.getAttribute("data-kp-qr-value") ?? "";
   }
 });
 
@@ -89899,7 +90196,7 @@ function render5(root) {
     /** @type {HTMLElement} */
     root.querySelector(":scope > .kp-qr__caption")
   );
-  const value = valueOf2(root);
+  const value = valueOf3(root);
   if (st.mode !== attr12(root, "reveal", "shown")) {
     st.mode = attr12(root, "reveal", "shown");
     st.shown = st.mode !== "click";
@@ -89945,7 +90242,7 @@ function drawCode(root, plate2, caption, matrix, st, s2) {
   plate2.setAttribute("aria-label", attr12(root, "label", s2.qrLabel));
   plate2.setAttribute("aria-describedby", caption.id);
   plate2.setAttribute("data-kp-qr-look", palette2(root).look);
-  const value = valueOf2(root);
+  const value = valueOf3(root);
   if (st.said !== value) {
     st.said = value;
     say13(root, s2.qrReady);
@@ -90071,7 +90368,7 @@ async function copyLink(root) {
     /** @type {HTMLButtonElement | null} */
     root.querySelector(".kp-qr__copy")
   );
-  const value = valueOf2(root);
+  const value = valueOf3(root);
   if (!button6 || value === "") return;
   const s2 = getStrings();
   await runFlashButton(button6, async () => {
@@ -90182,7 +90479,7 @@ var init_controller83 = __esm({
               keys: "Shift C",
               what: s2.qrKey,
               group: s2.qrKeyGroup,
-              when: () => root.contains(document.activeElement) && valueOf2(root) !== "" && !root.querySelector(".kp-qr__copy:disabled"),
+              when: () => root.contains(document.activeElement) && valueOf3(root) !== "" && !root.querySelector(".kp-qr__copy:disabled"),
               reason: s2.qrKeyReason,
               run: () => void copyLink(root)
             }
@@ -90208,12 +90505,12 @@ var init_controller83 = __esm({
         if (t.closest("[data-kp-qr-retry-action]")) root.dispatchEvent(new CustomEvent(QR_RETRY_EVENT, { bubbles: true }));
       }
       /** Show or hide a code behind its cover; the focus goes to the code, or back to the Show button. @param {boolean} shown */
-      reveal(shown5) {
+      reveal(shown6) {
         const root = this.host;
-        stateOf8(root).shown = shown5;
+        stateOf8(root).shown = shown6;
         render5(root);
-        root.dispatchEvent(new CustomEvent(QR_REVEAL_EVENT, { bubbles: true, detail: { shown: shown5 } }));
-        if (shown5) {
+        root.dispatchEvent(new CustomEvent(QR_REVEAL_EVENT, { bubbles: true, detail: { shown: shown6 } }));
+        if (shown6) {
           root.querySelector(".kp-qr__plate")?.dispatchEvent(new Event("focus"));
           root.querySelector(".kp-qr__plate[tabindex]")?.focus();
         } else root.querySelector("[data-kp-qr-show]")?.focus();
@@ -90662,18 +90959,18 @@ function blockNode(root, b, node) {
         out.className = "kp-code kp-console__output";
         out.textContent = "";
       }
-      const shown5 = b.output;
-      if (out.getAttribute("data-kp-console-drawn") !== `${shown5.length}:${b.truncated}:${maxLines}`) {
-        out.setAttribute("data-kp-console-drawn", `${shown5.length}:${b.truncated}:${maxLines}`);
+      const shown6 = b.output;
+      if (out.getAttribute("data-kp-console-drawn") !== `${shown6.length}:${b.truncated}:${maxLines}`) {
+        out.setAttribute("data-kp-console-drawn", `${shown6.length}:${b.truncated}:${maxLines}`);
         setCode(out, {
-          text: shown5,
+          text: shown6,
           title: s2.consoleOutput,
           maxLines,
           wrap: false,
           ...b.truncated ? {
             truncated: {
-              shown: `${Math.round(shown5.length / 1024)} KB`,
-              total: `${Math.round((b.total ?? shown5.length) / 1024)} KB`
+              shown: `${Math.round(shown6.length / 1024)} KB`,
+              total: `${Math.round((b.total ?? shown6.length) / 1024)} KB`
             }
           } : {}
         });
@@ -91481,10 +91778,10 @@ function ensureParts4(root) {
     button6.setAttribute("data-kp-logviewer-step", step);
     button6.setAttribute("aria-label", words3);
     button6.title = words3;
-    const mark = el14("kp-logviewer__glyph", "span");
-    mark.setAttribute("aria-hidden", "true");
-    mark.textContent = glyph3;
-    button6.append(mark);
+    const mark2 = el14("kp-logviewer__glyph", "span");
+    mark2.setAttribute("aria-hidden", "true");
+    mark2.textContent = glyph3;
+    button6.append(mark2);
     return button6;
   };
   const previous = stepper("-1", "\u2191", s2.logviewerPrevious);
@@ -91691,9 +91988,9 @@ function dress3(root, row2, line) {
       let from = 0;
       for (let at = lower.indexOf(query); at !== -1; at = lower.indexOf(query, from)) {
         if (at > from) message.append(line.message.slice(from, at));
-        const mark = el14("kp-log__match", "mark");
-        mark.textContent = line.message.slice(at, at + query.length);
-        message.append(mark);
+        const mark2 = el14("kp-log__match", "mark");
+        mark2.textContent = line.message.slice(at, at + query.length);
+        message.append(mark2);
         from = at + query.length;
       }
       if (from < line.message.length) message.append(line.message.slice(from));
@@ -91714,13 +92011,13 @@ function matchWords(root) {
 function collect(root, reset = false) {
   const st = stateOf10(root);
   const log = logOf(root);
-  const before = reset ? null : st.matches[st.at] ?? null;
+  const before2 = reset ? null : st.matches[st.at] ?? null;
   st.matches = queryOf(root) === "" ? [] : (
     /** @type {HTMLElement[]} */
     [...log.querySelectorAll(".kp-log__line:not([hidden]) mark.kp-log__match")]
   );
-  st.at = before ? st.matches.indexOf(before) : -1;
-  for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
+  st.at = before2 ? st.matches.indexOf(before2) : -1;
+  for (const mark2 of log.querySelectorAll("mark[data-kp-current]")) mark2.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
 var init_rows11 = __esm({
@@ -91746,7 +92043,7 @@ function refresh2(root) {
   );
   const state12 = root.getAttribute("data-kp-state") ?? "ready";
   root.toggleAttribute("aria-busy", state12 === "loading");
-  const shown5 = st.lines.filter((line) => st.nodes.get(line.id)?.hidden === false).length;
+  const shown6 = st.lines.filter((line) => st.nodes.get(line.id)?.hidden === false).length;
   const total = st.lines.length;
   root.toggleAttribute("data-kp-log-nosource", !st.lines.some((line) => line.source !== ""));
   for (const old of stage.querySelectorAll(":scope > .kp-logviewer__plate")) old.remove();
@@ -91777,7 +92074,7 @@ function refresh2(root) {
     const p = statePlate(document, { kind: "empty", title: s2.logviewerEmptyTitle, text: attr14(root, "hint", "") || s2.logviewerEmptyText });
     p.classList.add("kp-logviewer__plate");
     stage.append(p);
-  } else if (shown5 === 0) {
+  } else if (shown6 === 0) {
     plate2 = "nomatch";
     const p = statePlate(document, {
       kind: "empty",
@@ -91823,7 +92120,7 @@ function refresh2(root) {
     bar?.querySelector(".kp-logviewer__level")
   );
   if (level) level.value = ["info", "warning", "error"].includes(attr14(root, "level", "debug")) ? attr14(root, "level", "debug") : "debug";
-  const nothing = shown5 === 0 || state12 !== "ready";
+  const nothing = shown6 === 0 || state12 !== "ready";
   for (
     const b of
     /** @type {NodeListOf<HTMLButtonElement>} */
@@ -91833,7 +92130,7 @@ function refresh2(root) {
   if (find2) find2.disabled = total === 0 || state12 !== "ready";
   const foot = root.querySelector(".kp-logviewer__foot");
   const countLine = foot?.querySelector(".kp-logviewer__count");
-  if (countLine) countLine.textContent = s2.logviewerCount(shown5, total);
+  if (countLine) countLine.textContent = s2.logviewerCount(shown6, total);
   const dropped = foot?.querySelector(".kp-logviewer__dropped");
   if (dropped) {
     dropped.textContent = st.dropped > 0 ? s2.logviewerDropped(st.dropped, maxOf(root)) : "";
@@ -91843,7 +92140,7 @@ function refresh2(root) {
   root.dispatchEvent(
     new CustomEvent(LOGVIEWER_EVENT, {
       bubbles: true,
-      detail: { total, shown: shown5, dropped: st.dropped, matches: st.matches.length, current: st.at >= 0 ? st.at + 1 : 0 }
+      detail: { total, shown: shown6, dropped: st.dropped, matches: st.matches.length, current: st.at >= 0 ? st.at + 1 : 0 }
     })
   );
 }
@@ -91964,12 +92261,12 @@ function stepLogMatch(el16, delta = 1) {
     return 0;
   }
   st.at = st.at < 0 ? delta > 0 ? 0 : st.matches.length - 1 : (st.at + delta + st.matches.length) % st.matches.length;
-  const mark = st.matches[st.at];
+  const mark2 = st.matches[st.at];
   for (const old of logOf(root).querySelectorAll("mark[data-kp-current]")) old.removeAttribute("data-kp-current");
-  mark.setAttribute("data-kp-current", "");
+  mark2.setAttribute("data-kp-current", "");
   const log = logOf(root);
   const box = log.getBoundingClientRect();
-  const at = mark.getBoundingClientRect();
+  const at = mark2.getBoundingClientRect();
   log.scrollTop += at.top - box.top - (box.height - at.height) / 2;
   if (at.left < box.left + 120) log.scrollLeft -= box.left + 120 - at.left;
   else if (at.right > box.right - 16) log.scrollLeft += at.right - (box.right - 16);
@@ -92365,10 +92662,10 @@ function foldContext(lines, keep = DIFF_CONTEXT, min = DIFF_FOLD_MIN) {
     }
     let j = i;
     while (j < n && lines[j].kind === "same") j += 1;
-    const before = i === 0 ? 0 : keep;
+    const before2 = i === 0 ? 0 : keep;
     const after = j === n ? 0 : keep;
-    if (j - i - before - after >= min) {
-      const from = i + before;
+    if (j - i - before2 - after >= min) {
+      const from = i + before2;
       const to = j - after;
       if (from > start) out.push({ kind: "lines", from: start, lines: lines.slice(start, from) });
       out.push({ kind: "fold", from, lines: lines.slice(from, to) });
@@ -92506,9 +92803,9 @@ function textOf3(text, segments) {
   for (const segment of segments) {
     if (!segment.changed) node.append(document.createTextNode(segment.text));
     else {
-      const mark = el15("kp-diff__word", "mark");
-      mark.textContent = segment.text;
-      node.append(mark);
+      const mark2 = el15("kp-diff__word", "mark");
+      mark2.textContent = segment.text;
+      node.append(mark2);
     }
   }
   return node;
@@ -92934,7 +93231,7 @@ function fileOf(root, path) {
   const section = [...root.querySelectorAll(".kp-diffview__file")].find((node) => node.getAttribute("data-kp-diff-path") === path);
   return file && section instanceof HTMLElement ? { file, section } : null;
 }
-function toggleFile(root, path, open4, announce5 = true) {
+function toggleFile(root, path, open4, announce6 = true) {
   const found = fileOf(root, path);
   if (!found) return;
   const st = stateOf11(root);
@@ -92949,7 +93246,7 @@ function toggleFile(root, path, open4, announce5 = true) {
   if (open4 && body.childElementCount === 0) fillBody(root, st, file, body);
   body.hidden = !open4;
   syncBar(root);
-  if (announce5) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
+  if (announce6) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
 }
 async function copyPath(root, button6) {
   const path = button6.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
@@ -93429,8 +93726,8 @@ var init_loader = __esm({
        */
       settle() {
         const { root } = this;
-        const mark = root instanceof Document ? root.documentElement : root instanceof Element ? root : null;
-        this.settled = mark ? settleAfter(mark, this.ready) : () => void 0;
+        const mark2 = root instanceof Document ? root.documentElement : root instanceof Element ? root : null;
+        this.settled = mark2 ? settleAfter(mark2, this.ready) : () => void 0;
       }
       detach() {
         this.detached = true;
@@ -93497,7 +93794,7 @@ function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_D
     fallback2
   ))
     throw new RangeError(`kp-themes: the register fallback "${fallback2}" is not a theme`);
-  const [before, ...rest] = pattern.split("{theme}");
+  const [before2, ...rest] = pattern.split("{theme}");
   const after = rest.join("{theme}");
   const arm = effects ? `
     d.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
@@ -93509,7 +93806,7 @@ function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_D
     } catch (e) {}${arm}
     var n = d.getAttribute(${jsString(attribute)});
     if (${JSON.stringify(names).replace(/</g, "\\u003c")}.indexOf(n) < 0) n = ${jsString(fallback2)};
-    document.write('<link rel="stylesheet" href="' + ${jsString(attributeText(before))} + n + ${jsString(attributeText(after))} + '" data-kp-register="' + n + '" blocking="render">');
+    document.write('<link rel="stylesheet" href="' + ${jsString(attributeText(before2))} + n + ${jsString(attributeText(after))} + '" data-kp-register="' + n + '" blocking="render">');
 })();`;
 }
 var NO_FLASH_SNIPPET = noFlashSnippet();
@@ -93548,8 +93845,8 @@ if (typeof document !== "undefined") {
     }
   }
   const start = () => {
-    const attached = attachAll2();
-    attached.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached.modules.join(" ")));
+    const attached2 = attachAll2();
+    attached2.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached2.modules.join(" ")));
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
   else start();
@@ -93774,7 +94071,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys7();
+init_keys8();
 init_kpi();
 
 // js/lazy-register.js
@@ -94058,8 +94355,8 @@ function prefixLines(value, start, end, kind) {
   const text = lines.map((line) => off ? line.replace(has, "") : `${line.replace(ANY_MARKER, "$1")}`.replace(/^(\s*)/, `$1${add}`)).join("\n");
   return { from, to, text, select: lines.length === 1 && start === end ? caretAfter(from, text, start - from, value.slice(from, to)) : [from, from + text.length] };
 }
-function caretAfter(from, text, into, before) {
-  const at = Math.max(0, Math.min(text.length, into + text.length - before.length));
+function caretAfter(from, text, into, before2) {
+  const at = Math.max(0, Math.min(text.length, into + text.length - before2.length));
   return [from + at, from + at];
 }
 function link(value, start, end, placeholder) {
@@ -94097,7 +94394,7 @@ function lineRange(value, line) {
 }
 
 // js/markdown-editor/toolbar.js
-init_keys7();
+init_keys8();
 var TOOLS = (
   /** @type {const} */
   [
@@ -94753,18 +95050,18 @@ var updatePlays = (idea) => idea !== "";
 
 // js/update/mark.js
 function markUpdating(host, idea, timing, { inline: inline2 = false } = {}) {
-  const before = {};
-  for (const name of UPDATE_STYLE) before[name] = host.style.getPropertyValue(name);
+  const before2 = {};
+  for (const name of UPDATE_STYLE) before2[name] = host.style.getPropertyValue(name);
   if (inline2) host.style.setProperty("display", "inline-block");
   host.style.setProperty("--kp-update-duration", `${timing.duration}ms`);
   host.style.setProperty("--kp-update-ease", timing.ease);
   host.setAttribute(UPDATING_ATTRIBUTE, idea);
-  return before;
+  return before2;
 }
-function unmarkUpdating(host, before) {
+function unmarkUpdating(host, before2) {
   host.removeAttribute(UPDATING_ATTRIBUTE);
   for (const name of UPDATE_STYLE) {
-    if (before[name]) host.style.setProperty(name, before[name]);
+    if (before2[name]) host.style.setProperty(name, before2[name]);
     else host.style.removeProperty(name);
   }
 }
@@ -94839,14 +95136,14 @@ var UpdateBatch = class {
    * @param {UpdateJob[]} jobs
    */
   readAll(jobs) {
-    const read = jobs.map((job) => {
+    const read2 = jobs.map((job) => {
       const idea = updateIdea(getComputedStyle(job.el).getPropertyValue(UPDATE_PROPERTY));
       const inline2 = idea !== "" && getComputedStyle(job.host).display === "inline";
       return { job, idea, inline: inline2 };
     });
     const timings = /* @__PURE__ */ new Map();
-    const plays = read.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: this.timingOf(timings, r.job.host) }));
-    for (const r of read) if (!updatePlays(r.idea)) r.job.resolve(0);
+    const plays = read2.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: this.timingOf(timings, r.job.host) }));
+    for (const r of read2) if (!updatePlays(r.idea)) r.job.resolve(0);
     return plays;
   }
   /**
@@ -95034,11 +95331,11 @@ var TourCore = class extends Controller {
     if (!updatePlays(idea)) return;
     const timing = updateTiming(card);
     void view.getComputedStyle(card).animationName;
-    const before = markUpdating(card, idea, timing);
+    const before2 = markUpdating(card, idea, timing);
     const done = view.setTimeout(() => this.unmarkStep(), timing.duration || STEP_MARK_FALLBACK_MS);
     this.unmarkStep = () => {
       view.clearTimeout(done);
-      unmarkUpdating(card, before);
+      unmarkUpdating(card, before2);
       this.unmarkStep = () => {
       };
     };
@@ -95278,7 +95575,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys7();
+init_keys8();
 init_kpi();
 init_lede();
 init_listbox();
@@ -95368,6 +95665,8 @@ init_combobox();
 init_palette();
 init_datatable();
 init_structure();
+init_motion();
+init_overlays();
 init_progressbar();
 init_upload();
 export {
@@ -95534,6 +95833,7 @@ export {
   DEPLIST_COLLAPSE,
   DEPLIST_RETRY_EVENT,
   DETAIL,
+  DIALOG_GUARD,
   DIALOG_OPEN_EVENT,
   DIFF,
   DIFF_CONTEXT,
@@ -95710,6 +96010,7 @@ export {
   MOD_CAP,
   MONTH_EVENT,
   MORE_ATTRIBUTE,
+  DIALOG_CLOSE_REQUEST_EVENT as MOTION_DIALOG_CLOSE_REQUEST_EVENT,
   NAMES_PROPERTY,
   NARROW_ATTRIBUTE2 as NARROW_ATTRIBUTE,
   NAV_COMPACT_EVENT,
@@ -95739,6 +96040,7 @@ export {
   OPTION_SELECTOR,
   OPT_OUT,
   OVERFLOW_ATTRIBUTE,
+  DIALOG_CLOSE_REQUEST_EVENT as OVERLAYS_DIALOG_CLOSE_REQUEST_EVENT,
   PAGE_SIZE,
   PAGE_SIZES,
   MATCHERS2 as PALETTE_MATCHERS,
@@ -96165,6 +96467,7 @@ export {
   attachDatePickers,
   attachDatedOptions,
   attachDeplists,
+  attachDialogGuards,
   attachDialogs,
   attachDiffs,
   attachDisabledReasons,
@@ -96404,6 +96707,7 @@ export {
   diagnose,
   diagnostics,
   diagnostics_exports as diagnosticsExports,
+  dialogChanged,
   diff_exports as diffExports,
   diffWords,
   discShare,
@@ -96445,6 +96749,7 @@ export {
   foldNav,
   footprint_exports as footprintExports,
   forgetClaims,
+  forgetDialogEdits,
   forgetRememberedExcept,
   forgetTour,
   form,
@@ -96553,6 +96858,7 @@ export {
   logViewerText,
   logviewer_exports as logviewerExports,
   luminance,
+  markDialogSaved,
   markUnsavedClean,
   markUpdating,
   markdown_editor_exports as markdownEditorExports,
@@ -96604,6 +96910,7 @@ export {
   openBusyCard,
   openConfirmation,
   openContextMenu,
+  openDialog,
   openDocPreview,
   openGalleryFromHash,
   openGalleryItem,
@@ -96717,6 +97024,7 @@ export {
   renderDiagnostics,
   renderShortcutSheet,
   repaintedIn,
+  requestDialogClose,
   request_inspector_exports as requestInspectorExports,
   resetSegmented,
   resetTransfer,
@@ -97098,7 +97406,7 @@ export {
   usualNotToday,
   usualPicker,
   usual_picker_exports as usualPickerExports,
-  valueOf,
+  valueOf2 as valueOf,
   version_delta_exports as versionDeltaExports,
   versionLevel,
   versionNumbers,
@@ -97116,6 +97424,7 @@ export {
   weekdaysOf,
   wheelAngles,
   wheel_exports as wheelExports,
+  whenDialogFree,
   withCustomProperties,
   withoutOvershoot,
   wizard,

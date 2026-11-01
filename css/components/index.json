@@ -446,6 +446,12 @@
       "file": "dialog-widths.css"
     },
     {
+      "file": "dialog-options.css"
+    },
+    {
+      "file": "drawer-beside.css"
+    },
+    {
       "file": "accept-follows.css"
     },
     {

@@ -2136,7 +2136,9 @@ Delete incident
                             <tr><td><code>data-kp-dialog-attached</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-dialog-close</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-dialog-close-attached</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-dialog-guard</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-dialog-mode</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-dialog-stack</code></td><td>selector, read</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -2170,6 +2172,7 @@ Delete incident
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-dialog-close-request</code></td><td>Dispatched on a dialog, cancelable, before closeDialog() closes it: `{ returnValue }`; the close guard (js/overlays/dialog-guard.js) cancels it to ask first [uxdialogs1101].</td></tr>
                             <tr><td><code>kp-dialog-open</code></td><td>Dispatched on the dialog, bubbling, when a wired trigger opened it: `{ trigger, modal }`.</td></tr>
                     </tbody></table></div>
                 </section>
@@ -2181,6 +2184,7 @@ Delete incident
                             <tr><td><code>--kp-dialog-max-height</code></td><td><code>calc(100dvh - 2rem)</code></td></tr>
                             <tr><td><code>--kp-dialog-max-width</code></td><td><code>min(32rem, calc(100vw - 2rem))</code></td></tr>
                             <tr><td><code>--kp-dialog-narrow</code></td><td><code>26rem</code></td></tr>
+                            <tr><td><code>--kp-dialog-scrim</code></td><td><code>rgb(0 0 0 / 0.4)</code></td></tr>
                             <tr><td><code>--kp-dialog-section-gap</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-dialog-section-inset</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-dialog-title-size</code></td><td><code>1.25rem</code></td></tr>
@@ -2190,6 +2194,7 @@ Delete incident
                             <tr><td><code>--kp-resize-dur</code></td><td><code>300ms</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xl</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>

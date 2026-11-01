@@ -1,0 +1,63 @@
+/* @part: drawer-beside: Drawer widths and the drawer beside the list */
+/* --- Drawer widths and the drawer beside the list [uxdialogs1101] ----------------------------------------------------
+ * `data-kp-drawer-width` on a `dialog.kp-drawer`: `narrow` (22rem) for two or three fields, `wide` (48rem) for an
+ * editor; without it the drawer keeps its 28rem. Under 40rem a drawer with a width is the whole window, as the default
+ * drawer already is there.
+ *
+ * `data-kp-drawer-mode="beside"` (js/overlays/dialog-open.js opens it with show(), not showModal()): no backdrop, the
+ * page stays usable, the row whose control opened it is marked `data-kp-drawer-current` (a muted plate with a primary
+ * edge at its start, as the master-detail list marks its row), and Escape still closes it. An element marked
+ * `data-kp-drawer-room` makes room for it at its end edge while it is open, so nothing of the list stands under it.
+ * Under 40rem a beside drawer opens modal: there is no room beside anything. `modal` (default) is the approved drawer.
+ * Knobs [KT6]: --kp-drawer-narrow (22rem), --kp-drawer-wide (48rem), --kp-drawer-room (the drawer's width and a gap),
+ * --kp-drawer-shadow, --kp-drawer-z (40). */
+@layer kp.components {
+    dialog.kp-drawer[data-kp-drawer-width='narrow'] {
+        --kp-drawer-width: min(var(--kp-drawer-narrow, 22rem), 100vw);
+    }
+
+    dialog.kp-drawer[data-kp-drawer-width='wide'] {
+        --kp-drawer-width: min(var(--kp-drawer-wide, 48rem), 100vw);
+    }
+
+    @media (max-width: 40rem) {
+        dialog.kp-drawer[data-kp-drawer-width] {
+            --kp-drawer-width: 100vw;
+        }
+    }
+}
+
+@layer kp.layout {
+    dialog.kp-drawer[data-kp-drawer-mode='beside'][open]:not(:modal) {
+        z-index: var(--kp-drawer-z, 40);
+        /* A drawer that is also a .kp-dialog would take the open dialog's cap (100dvh - 2rem); beside, it is the window's height. */
+        max-block-size: 100dvh;
+        box-shadow: var(--kp-drawer-shadow, -1rem 0 2rem -1.5rem rgb(0 0 0 / 0.45));
+    }
+
+    [data-kp-drawer-current]:not(tr) {
+        background: var(--muted);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    tr[data-kp-drawer-current] > * {
+        background: var(--muted);
+    }
+
+    tr[data-kp-drawer-current] > :first-child {
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    :root:has(dialog.kp-drawer[data-kp-drawer-mode='beside'][open]:not(:modal)) [data-kp-drawer-room] {
+        padding-inline-end: var(--kp-drawer-room, calc(min(28rem, 100vw) + var(--kp-space-md, 1rem)));
+    }
+
+    :root:has(dialog.kp-drawer[data-kp-drawer-mode='beside'][data-kp-drawer-width='narrow'][open]:not(:modal)) [data-kp-drawer-room] {
+        padding-inline-end: var(--kp-drawer-room, calc(min(var(--kp-drawer-narrow, 22rem), 100vw) + var(--kp-space-md, 1rem)));
+    }
+
+    :root:has(dialog.kp-drawer[data-kp-drawer-mode='beside'][data-kp-drawer-width='wide'][open]:not(:modal)) [data-kp-drawer-room] {
+        padding-inline-end: var(--kp-drawer-room, calc(min(var(--kp-drawer-wide, 48rem), 100vw) + var(--kp-space-md, 1rem)));
+    }
+}
+

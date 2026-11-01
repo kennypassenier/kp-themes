@@ -19,3 +19,5 @@ export declare const SKELETON = ".kp-skeleton, [data-kp-skeleton]";
  * @returns {number}
  */
 export declare function motionWatchCount(): number;
+/** Dispatched on a dialog, cancelable, before closeDialog() closes it: `{ returnValue }`; the close guard (js/overlays/dialog-guard.js) cancels it to ask first [uxdialogs1101]. */
+export declare const DIALOG_CLOSE_REQUEST_EVENT = "kp-dialog-close-request";

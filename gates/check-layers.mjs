@@ -48,6 +48,10 @@ const NOT_THEME_COLOUR = {
     'rgb(0 0 0 / 0.72)':
         'the bottom of the scrim under that caption. It darkens a photograph rather than tinting it, for the same reason the dialog backdrop does.',
     'rgb(0 0 0 / 0)': 'the top of that same scrim, where it has faded to nothing.',
+    'rgb(0 0 0 / 0.4)':
+        'the translucent scrim behind a modal dialog (`data-kp-backdrop="scrim"`) [uxdialogs1101]: lighter than the backdrop so the page stays readable, a dimming for the same reason.',
+    'rgb(0 0 0 / 0.45)':
+        'the shadow at the start edge of a drawer beside the list [uxdialogs1101]: it darkens the page along the edge so the drawer reads as on top, in every theme alike.',
     'hsl(0, 0%, 100%)': 'the print stylesheet. Paper has no theme: the ground is white.',
     'hsl(0, 0%, 0%)': 'the print stylesheet. Paper has no theme: the ink is black.',
 };

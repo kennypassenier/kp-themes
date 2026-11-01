@@ -35,6 +35,18 @@
  * A plain confirmation reads its words from the button too [kyu-ux-1101]: `data-kp-confirm-label` names Confirm ("Delete 8 dead letters")
  * and `data-kp-confirm-description` replaces the dictionary's sentence; an empty one drops the sentence when the phrase already says it.
  *
+ * Words from the sentence [uxdialogs1101]: with no `acceptLabel`, no `data-kp-confirm-label` and the dictionary's own `confirmAccept`, Confirm
+ * says what the phrase asks ("Delete 8 dead letters?" gives "Delete 8 dead letters", `confirmLabelFrom`); a phrase that already says it cannot
+ * be undone drops that sentence of the dictionary's description (`confirmSaysIrreversible`). A page's own words always win.
+ *
+ * Restorable [uxdialogs1101]: `restorable: true` (or `data-kp-confirm-restorable` on the button) refuses to open and says why in the console:
+ * what can come back is deleted at once with an Undo (`undoToast`, `data-kp-row-delete`), not asked about. It then returns a dialog that never
+ * opened (not in the page, `open` false, `data-kp-confirm-refused`), so a caller that keeps the dialog needs no other case.
+ *
+ * One level [uxdialogs1101]: `stack: 'replace'` (or `data-kp-dialog-stack="replace"` on the dialog it is opened from, or on any element
+ * round it) puts the confirmation in that dialog's place instead of a second modal over it, with Back where Cancel was; Back, Escape and
+ * Confirm give the dialog its body back. `'over'` (default) opens it over.
+ *
  * Rich content [mc-1030]: `description` may be a node or a list of nodes (several paragraphs, a list) in place of the dictionary's sentence,
  * and `acceptLook: 'primary'` draws Confirm as a primary button when what it does is not destructive (take a dose anyway, add stock).
  * `className: 'kp-dialog--wide'` gives it a wider step; the default is the narrow question width.
@@ -46,10 +58,10 @@
  * to `attachQuantities(dialog)`: this module imports neither, so chassis's closure of six modules stays six.
  *
  * @param {HTMLElement} button the control the confirmation belongs to
- * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string, acceptFollows?: string | HTMLElement, acceptVerb?: string }} [options]
- * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]
+ * @param {{ phrase?: string, description?: Node | readonly Node[] | string, acceptLook?: 'destructive' | 'primary', strings?: Partial<import('../strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeName?: string, anyCase?: boolean, loses?: Node | readonly string[] | null, acceptLabel?: string, acceptFollows?: string | HTMLElement, acceptVerb?: string, restorable?: boolean, stack?: 'over' | 'replace' }} [options]
+ * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]; a restorable action's never opens
  */
-export declare function openConfirmation(button: HTMLElement, { phrase, description: richText, acceptLook, strings, onAccept, onCancel, className, initialFocus, dependents, blocked, typeName, anyCase, loses, acceptLabel, acceptFollows, acceptVerb }?: {
+export declare function openConfirmation(button: HTMLElement, { phrase, description: richText, acceptLook, strings, onAccept, onCancel, className, initialFocus, dependents, blocked, typeName, anyCase, loses, acceptLabel, acceptFollows, acceptVerb, restorable, stack }?: {
     phrase?: string;
     description?: Node | readonly Node[] | string;
     acceptLook?: 'destructive' | 'primary';
@@ -66,4 +78,6 @@ export declare function openConfirmation(button: HTMLElement, { phrase, descript
     acceptLabel?: string;
     acceptFollows?: string | HTMLElement;
     acceptVerb?: string;
+    restorable?: boolean;
+    stack?: 'over' | 'replace';
 }): HTMLDialogElement;

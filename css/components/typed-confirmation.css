@@ -41,8 +41,10 @@
         margin: 0;
         padding-inline-start: 1.25rem;
         overflow-y: auto;
-        font-family: var(--font-mono, ui-monospace, monospace);
-        font-size: var(--kp-text-xs, 0.75rem);
+        /* [uxdialogs1101] What will be lost is read as sentences ("3 containers: jellyfin, …"), so it is set in the body font at the
+         * small step, not the code font; the name to type keeps its code chip below. */
+        font-family: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
         overflow-wrap: anywhere;
     }
 

@@ -23297,8 +23297,10 @@
         margin: 0;
         padding-inline-start: 1.25rem;
         overflow-y: auto;
-        font-family: var(--font-mono, ui-monospace, monospace);
-        font-size: var(--kp-text-xs, 0.75rem);
+        /* [uxdialogs1101] What will be lost is read as sentences ("3 containers: jellyfin, …"), so it is set in the body font at the
+         * small step, not the code font; the name to type keeps its code chip below. */
+        font-family: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
         overflow-wrap: anywhere;
     }
 
@@ -39457,6 +39459,147 @@
         box-sizing: border-box;
     }
 }
+/* --- Dialog options [uxdialogs1101] ----------------------------------------------------------------------------------
+ * Three looks the app review of 2026-11-01 asked for. Each is opt-in, switches at runtime, and leaves the approved dialog
+ * as the default. They stand in the last layer because every register paints a dialog's backdrop and edge itself, and a
+ * register beats kp.components.
+ *
+ * `data-kp-backdrop="scrim"` on a dialog, or on any element round it (`<html>` for the whole page): the page behind a
+ * modal dialog stays readable under a translucent scrim, so the row a confirmation acts on is still in sight. `opaque`
+ * (default) is the theme's own backdrop; a dialog that says `opaque` keeps it under a page that says `scrim`.
+ * Knob: --kp-dialog-scrim (rgb(0 0 0 / 0.4), a dimming rather than a theme colour, as the base backdrop is).
+ *
+ * `data-kp-dialog-phone="sheet"` on a dialog or round it: under 40rem a modal `.kp-dialog` stands on the foot of the
+ * screen, the whole width, its actions sharing one row of equal buttons where the thumb is. `centre` (default) keeps
+ * it in the middle. A drawer is never a sheet.
+ *
+ * The one-level confirmation (`data-kp-dialog-stack="replace"`, js/components/confirm-dialog.js): the dialog keeps its
+ * height, its own parts step aside, and the confirmation stands in their place; a dialog centres it, a drawer keeps it
+ * at the top. */
+@layer kp.layout {
+    :where([data-kp-backdrop='scrim']) .kp-dialog:not([data-kp-backdrop='opaque'])::backdrop,
+    .kp-dialog[data-kp-backdrop='scrim']::backdrop {
+        background: var(--kp-dialog-scrim, rgb(0 0 0 / 0.4));
+        backdrop-filter: none;
+    }
+
+    @media (max-width: 40rem) {
+        :where([data-kp-dialog-phone='sheet']) .kp-dialog:modal:not(.kp-drawer, [data-kp-dialog-phone='centre']),
+        .kp-dialog[data-kp-dialog-phone='sheet']:modal:not(.kp-drawer) {
+            inset: auto 0 0;
+            box-sizing: border-box;
+            inline-size: 100%;
+            max-inline-size: 100%;
+            max-block-size: calc(100dvh - var(--kp-space-xl, 2rem));
+            margin: 0;
+            padding-block-end: max(1.25rem, env(safe-area-inset-bottom, 0px));
+            border-inline: 0;
+            border-block-end: 0;
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
+        }
+
+        :where([data-kp-dialog-phone='sheet']) .kp-dialog:modal:not(.kp-drawer, [data-kp-dialog-phone='centre']) > .kp-dialog__actions,
+        .kp-dialog[data-kp-dialog-phone='sheet']:modal:not(.kp-drawer) > .kp-dialog__actions {
+            display: grid;
+            grid-auto-columns: minmax(0, 1fr);
+            grid-auto-flow: column;
+        }
+    }
+
+    :is(.kp-dialog, .kp-drawer)[data-kp-confirm-replaced] > :not(.kp-confirm--inline) {
+        display: none !important;
+    }
+
+    .kp-dialog[data-kp-confirm-replaced]:not(.kp-drawer) {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    dialog.kp-confirm--inline {
+        position: static;
+        inset: auto;
+        box-sizing: border-box;
+        inline-size: auto;
+        max-inline-size: none;
+        max-block-size: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        box-shadow: none;
+        animation: none;
+    }
+
+    .kp-drawer[data-kp-confirm-replaced] > .kp-confirm--inline {
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    }
+}
+
+/* --- Drawer widths and the drawer beside the list [uxdialogs1101] ----------------------------------------------------
+ * `data-kp-drawer-width` on a `dialog.kp-drawer`: `narrow` (22rem) for two or three fields, `wide` (48rem) for an
+ * editor; without it the drawer keeps its 28rem. Under 40rem a drawer with a width is the whole window, as the default
+ * drawer already is there.
+ *
+ * `data-kp-drawer-mode="beside"` (js/overlays/dialog-open.js opens it with show(), not showModal()): no backdrop, the
+ * page stays usable, the row whose control opened it is marked `data-kp-drawer-current` (a muted plate with a primary
+ * edge at its start, as the master-detail list marks its row), and Escape still closes it. An element marked
+ * `data-kp-drawer-room` makes room for it at its end edge while it is open, so nothing of the list stands under it.
+ * Under 40rem a beside drawer opens modal: there is no room beside anything. `modal` (default) is the approved drawer.
+ * Knobs [KT6]: --kp-drawer-narrow (22rem), --kp-drawer-wide (48rem), --kp-drawer-room (the drawer's width and a gap),
+ * --kp-drawer-shadow, --kp-drawer-z (40). */
+@layer kp.components {
+    dialog.kp-drawer[data-kp-drawer-width='narrow'] {
+        --kp-drawer-width: min(var(--kp-drawer-narrow, 22rem), 100vw);
+    }
+
+    dialog.kp-drawer[data-kp-drawer-width='wide'] {
+        --kp-drawer-width: min(var(--kp-drawer-wide, 48rem), 100vw);
+    }
+
+    @media (max-width: 40rem) {
+        dialog.kp-drawer[data-kp-drawer-width] {
+            --kp-drawer-width: 100vw;
+        }
+    }
+}
+
+@layer kp.layout {
+    dialog.kp-drawer[data-kp-drawer-mode='beside'][open]:not(:modal) {
+        z-index: var(--kp-drawer-z, 40);
+        /* A drawer that is also a .kp-dialog would take the open dialog's cap (100dvh - 2rem); beside, it is the window's height. */
+        max-block-size: 100dvh;
+        box-shadow: var(--kp-drawer-shadow, -1rem 0 2rem -1.5rem rgb(0 0 0 / 0.45));
+    }
+
+    [data-kp-drawer-current]:not(tr) {
+        background: var(--muted);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    tr[data-kp-drawer-current] > * {
+        background: var(--muted);
+    }
+
+    tr[data-kp-drawer-current] > :first-child {
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    :root:has(dialog.kp-drawer[data-kp-drawer-mode='beside'][open]:not(:modal)) [data-kp-drawer-room] {
+        padding-inline-end: var(--kp-drawer-room, calc(min(28rem, 100vw) + var(--kp-space-md, 1rem)));
+    }
+
+    :root:has(dialog.kp-drawer[data-kp-drawer-mode='beside'][data-kp-drawer-width='narrow'][open]:not(:modal)) [data-kp-drawer-room] {
+        padding-inline-end: var(--kp-drawer-room, calc(min(var(--kp-drawer-narrow, 22rem), 100vw) + var(--kp-space-md, 1rem)));
+    }
+
+    :root:has(dialog.kp-drawer[data-kp-drawer-mode='beside'][data-kp-drawer-width='wide'][open]:not(:modal)) [data-kp-drawer-room] {
+        padding-inline-end: var(--kp-drawer-room, calc(min(var(--kp-drawer-wide, 48rem), 100vw) + var(--kp-space-md, 1rem)));
+    }
+}
+
 @layer kp.components {
     /* --- A button that follows a quantity [mc-r2] ---
      * The reason a button is off ("Choose how many boxes first.") stands under the quantity it follows, in the field's help style but in the

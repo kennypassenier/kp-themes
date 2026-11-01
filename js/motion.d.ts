@@ -1,4 +1,4 @@
-export { SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, motionWatchCount } from './motion/constants.js';
+export { SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, motionWatchCount, DIALOG_CLOSE_REQUEST_EVENT } from './motion/constants.js';
 export { registerTime, themeMotion } from './motion/timing.js';
 export { withCustomProperties, turnLines, turnEntrances } from './motion/keyframes.js';
 export { closeDialog } from './motion/close.js';

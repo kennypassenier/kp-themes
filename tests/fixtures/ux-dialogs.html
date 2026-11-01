@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Dialogs, drawers and confirmations from the app review [uxdialogs1101]</title>
+        <!-- The package's own markup for the options of uxdialogs1101: a drawer beside a list, a guarded drawer, a dialog with a
+             confirmation that takes its place, and plain confirmations whose words come from their phrase. -->
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+    </head>
+    <body>
+        <main>
+            <div data-kp-drawer-room data-test="room">
+                <table class="kp-table">
+                    <tbody>
+                        <tr data-test="row-soups"><td>Soups</td><td><button type="button" class="kp-button" data-kp-dialog="beside" data-test="edit-soups">Edit</button></td></tr>
+                        <tr data-test="row-pasta"><td>Pasta</td><td><button type="button" class="kp-button" data-kp-dialog="beside" data-test="edit-pasta">Edit</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <dialog class="kp-drawer kp-dialog" id="beside" data-kp-drawer-mode="beside" data-kp-drawer-width="narrow" aria-label="Category" data-test="beside">
+                <div class="kp-drawer__body"><input class="kp-field__input" aria-label="Name" data-test="beside-name" /></div>
+            </dialog>
+
+            <button type="button" class="kp-button" data-kp-dialog="guarded" data-test="guarded-open">Edit the recipe</button>
+            <dialog class="kp-drawer kp-dialog" id="guarded" data-kp-dialog-guard aria-label="Recipe" data-test="guarded">
+                <form class="kp-drawer__body" id="guarded-form"><input class="kp-field__input" aria-label="Name" value="Carbonara" data-test="guarded-name" /></form>
+                <footer class="kp-drawer__foot">
+                    <button type="button" class="kp-button" data-kp-dialog-close data-test="guarded-cancel">Cancel</button>
+                    <button type="button" class="kp-button kp-button--primary" data-kp-dialog-close="save" data-test="guarded-save">Save</button>
+                </footer>
+            </dialog>
+
+            <button type="button" class="kp-button" data-kp-dialog="profiles" data-test="profiles-open">Manage profiles</button>
+            <dialog class="kp-dialog" id="profiles" data-kp-dialog-stack="replace" aria-label="Manage profiles" data-test="profiles">
+                <p data-test="profiles-row">Travel</p>
+                <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete profile Travel?" data-test="profiles-delete">Delete…</button>
+            </dialog>
+
+            <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Prune 8 dead letters? This cannot be undone." data-test="prune">Prune</button>
+            <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Archive it" data-test="statement">Archive</button>
+            <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete row?" data-kp-confirm-restorable data-test="restorable">Delete row</button>
+        </main>
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

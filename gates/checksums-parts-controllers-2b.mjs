@@ -62,6 +62,8 @@ export const CONTROLLER_PART_FILES_2B = [
     'js/motion/turned-exits.js',
     'js/motion/turns.js',
     'js/overlays/constants.js',
+    'js/overlays/dialog-guard.js',
+    'js/overlays/dialog-open.js',
     'js/overlays/dialogs.js',
     'js/overlays/dismissals.js',
     'js/overlays/scrollbars.js',
