@@ -6,7 +6,7 @@ export const emptyStateDescriptor = {
         title: 'Empty state',
         group: 'Data',
         classes: ['kp-empty', 'kp-art'],
-        aliases: ['art'],
+        aliases: ['art', 'empty-lines'],
         exports: ['EmptyState'],
         intro: 'A bordered box that says a list is empty, and which emptiness it is: nothing yet, or nothing that matched. A blank area says the page is broken instead.',
         whenToUse:
@@ -62,6 +62,7 @@ attachArt(document.getElementById('doc-art'));
             { name: 'attachArt / drawArt', what: '`attachArt(root)` draws the picture in every `[data-kp-art]` and returns a detach that takes the drawings out again; `drawArt` makes one. `ART` is the selector, `ART_KINDS` the six kinds and `ART_SETS` the sets: one `<g data-kp-art-set>` each, of which the theme’s register shows its own.' },
             { name: '.kp-art__rule / __line / __ink / __red', what: 'The strokes of a drawing: a faint ruled line, an outline, the page’s ink and the destructive ink. Each theme draws its own set with them; a theme that has none shows no drawing.' },
             { name: '.kp-empty', what: 'The box on its own: a dashed boundary and quiet ink, for a one-line emptiness with nothing to offer.' },
+            { name: 'data-kp-empty-lines', what: '`on` (default) or `off` [ux-1101], on the plate or on any element round it (the page’s `<html>` for every plate): `off` leaves out the ruled lines a theme draws under the words (formal’s three ruled lines at the plate’s foot), so the plate does not read as a skeleton still loading.' },
             { name: '.kp-empty__title', what: 'The line that names the emptiness, in the page’s full ink so it is not mistaken for help text.' },
             { name: '.kp-empty__body', what: 'One sentence under it, saying what would put something here.' },
             { name: 'filtered', what: 'The same box in its other state, with the action that clears the filter instead of the one that creates a first item.' },

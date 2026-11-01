@@ -2008,6 +2008,17 @@
             1rem / calc(100% - 4rem) 3.6rem no-repeat;
     }
 
+    /* The empty plate without its ruled lines [ux-1101]: `data-kp-empty-lines="off"` on the plate or on any element round it (the
+       page's <html> for every plate) leaves the three ruled lines at the foot out and gives the plate the air of its top, so the
+       words stand centred on a plain plate under the double rule. kyu read the lines as a skeleton still loading. The default
+       (`on`) is the approved plate. */
+    [data-theme='formal'][data-kp-empty-lines='off'] .kp-empty,
+    [data-theme='formal'] [data-kp-empty-lines='off'] .kp-empty,
+    [data-theme='formal'] .kp-empty[data-kp-empty-lines='off'] {
+        padding-block-end: 1.25rem;
+        background: none;
+    }
+
     /* Inside a card the empty state is the card's stage, which has its frame: the double rule along the top of the plate
        would be two hairlines under the card's sentence that belong to nothing (the loading, failed and filled stages draw none), and the
        ruled lines drawn at the foot of the plate would float, unrelated to the words centred above them. */
