@@ -100,7 +100,7 @@
         "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
         "js/runs.js": { "digest": "f8a2d79d94a9ea6e", "when": "[data-kp-runs]" },
         "js/segmented.js": { "digest": "0caf48010ca3715a", "when": "[data-kp-segmented]" },
-        "js/selection-bar.js": { "digest": "646be2cf89c0a19c", "when": "[data-kp-selection]" },
+        "js/selection-bar.js": { "digest": "ff4a84166a242a2c", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "0c9a0472084b1b72", "when": "[data-kp-sentence]" },
         "js/sequencer.js": { "digest": "8d32c635ac292c71", "when": "[data-kp-sequencer]" },
         "js/shortcuts.js": { "digest": "a351532d50ffbcc3", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
@@ -11443,7 +11443,7 @@
             ]
         },
         "data": {
-            "modules": "2af57585fe67e73e",
+            "modules": "3e03ea597c1f1fd3",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",
@@ -11894,6 +11894,8 @@
                 "data-kp-paused",
                 "data-kp-paused-range",
                 "data-kp-photo",
+                "data-kp-pick-ignore",
+                "data-kp-pick-mode",
                 "data-kp-picked",
                 "data-kp-pill-placement",
                 "data-kp-pill-unit",
@@ -11949,6 +11951,7 @@
                 "data-kp-row-group",
                 "data-kp-row-hidden",
                 "data-kp-row-key",
+                "data-kp-row-pick",
                 "data-kp-run",
                 "data-kp-runs",
                 "data-kp-runs-count",

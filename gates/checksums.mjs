@@ -225,6 +225,7 @@ export const FILES = [
     'js/focus-steps.js',
     'js/timer.js',
     'js/checklist.js',
+    'js/row-pick.js',
     'js/row-select.js',
     'js/selection-bar.js',
     'js/undo-toast.js',

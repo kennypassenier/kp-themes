@@ -217,6 +217,16 @@ One step at a time with the screen kept on (cook mode), with parallel tracks. 18
 | `tracks.js`    | Tracks: which steps run in parallel and the timers they wait for.                                  |
 | `wake.js`      | Keeps the screen awake while a step runs.                                                          |
 
+## js/row-pick.js → js/row-pick/
+
+Rows picked without select boxes (Ctrl/Cmd+click, Shift+click, a long press on touch), as a RowPicker controller; the keys are the page's. 3 files.
+
+| File            | Does                                                                                            |
+| --------------- | ----------------------------------------------------------------------------------------------- |
+| `controller.js` | RowPicker: the clicks, the long press, the cursor moves and the handle a page binds keys to.   |
+| `core.js`       | RowPickCore: the picks, the anchor, the cursor, the marks on the rows and the voice.            |
+| `rows.js`       | The selectors, attributes and pure helpers of row picking.                                      |
+
 ## js/row-editor.js
 
 The repeating row editor (one file, no folder): the RowEditor controller over `[data-kp-rows]`, its head row, add and remove, min and max with the reason said, the empty plate, and `addEditorRow`, `removeEditorRow` and `editorRowsOf` [mc-1030].

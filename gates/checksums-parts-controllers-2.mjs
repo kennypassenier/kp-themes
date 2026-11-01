@@ -307,4 +307,7 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/command/secret.js',
     'js/selection-bar/lift.js',
     'js/focus-steps/detail.js',
+    'js/row-pick/controller.js',
+    'js/row-pick/core.js',
+    'js/row-pick/rows.js',
 ];

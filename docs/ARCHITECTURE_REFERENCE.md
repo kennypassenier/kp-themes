@@ -178,6 +178,7 @@ js/range.js                the range picker: a preset or a custom from-to
 js/rating.js               a star rating, given or shown
 js/reason.js               a disabled control says why, as a tooltip and as its description
 js/request-inspector.js    a foldable block per captured HTTP request
+js/row-pick.js             rows picked without select boxes: Ctrl/Cmd+click, Shift+click, a long press; the keys are the page's [habits-1101]
 js/row-select.js           rows ticked with the keyboard and with Shift-click
 js/runs.js                 the next times: what a repetition really does
 js/segmented.js            the segmented control and the filter chips

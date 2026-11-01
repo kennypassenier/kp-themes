@@ -379,6 +379,8 @@ bar.addEventListener(<span class="kp-code__string">'kp-selection-action'</span>,
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-cursor-scroll</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-cursor-visible</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-pick-ignore</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-pick-mode</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-placement</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-refused</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-roving</code></td><td>selector, read, written</td></tr>
@@ -465,6 +467,10 @@ bar.addEventListener(<span class="kp-code__string">'kp-selection-action'</span>,
                             <tr><td><code>data-kp-select-all-key</code></td><td>Ctrl+A ticks every row shown, Ctrl+Shift+A unticks them (on by default, `false` turns it off).</td></tr>
                             <tr><td><code>data-kp-cursor-scroll</code></td><td>`nearest` (default) or `center`.</td></tr>
                             <tr><td><code>data-kp-select-hint</code></td><td>An element in the page where the keys are written as a keys line.</td></tr>
+                            <tr><td><code>data-kp-row-pick</code></td><td>Rows picked without select boxes [habits-1101]: on an element whose rows carry `data-kp-row-key`, Ctrl/Cmd+click toggles a row, Shift+click picks a range over the rows shown, and a long press on touch starts selection mode. `attachRowPick(root)` wires every marked element; `rowPick(el)` is its handle and `rowPickNext`, `rowPickPrev`, `rowPickToggle`, `rowPickExtend(el, direction)` and `rowPickClear` are the key actions a page binds in its own shortcut table (the module owns no key). The bar reads the picks and “Untick all” clears them; `attachRowSelect` is unchanged.</td></tr>
+                            <tr><td><code>data-kp-picked</code></td><td>On a picked row; a row with the role option, row, gridcell or treeitem also says `aria-selected` true or false, and a listbox or grid is `aria-multiselectable`.</td></tr>
+                            <tr><td><code>data-kp-pick-mode</code></td><td>`any` starts selection mode (a tap picks or unpicks) on the first pick, mouse too; by default only a long press on touch does.</td></tr>
+                            <tr><td><code>data-kp-pick-ignore</code></td><td>A selector for the parts of a row that keep their own click (links, buttons and inputs always do), such as a drag handle or an action column.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>

@@ -7,7 +7,7 @@ export const selectionDescriptor = {
         group: 'Data',
         classes: ['kp-selection'],
         exports: [],
-        aliases: ['cursor-scroll', 'cursor-visible', 'placement', 'refused', 'roving', 'selecting'],
+        aliases: ['cursor-scroll', 'cursor-visible', 'pick-ignore', 'pick-mode', 'placement', 'refused', 'roving', 'selecting'],
         intro: 'A bar that is there as soon as rows are ticked: how many (exact), which ones, the page’s actions for them and a way to untick everything. It serves a data table, a list of cards or a board. Together with the row keys, rows are ticked without the mouse: j and k walk a cursor, x ticks, Shift+x ticks a range, Esc unticks all.',
         whenToUse: 'A list where several rows can be acted on together. For the actions of one row use the row actions.',
         examples: [
@@ -89,6 +89,10 @@ bar.addEventListener('kp-selection-action', (event) => {
             { name: 'data-kp-select-all-key', what: 'Ctrl+A ticks every row shown, Ctrl+Shift+A unticks them (on by default, `false` turns it off).' },
             { name: 'data-kp-cursor-scroll', what: '`nearest` (default) or `center`.' },
             { name: 'data-kp-select-hint', what: 'An element in the page where the keys are written as a keys line.' },
+            { name: 'data-kp-row-pick', what: 'Rows picked without select boxes [habits-1101]: on an element whose rows carry `data-kp-row-key`, Ctrl/Cmd+click toggles a row, Shift+click picks a range over the rows shown, and a long press on touch starts selection mode. `attachRowPick(root)` wires every marked element; `rowPick(el)` is its handle and `rowPickNext`, `rowPickPrev`, `rowPickToggle`, `rowPickExtend(el, direction)` and `rowPickClear` are the key actions a page binds in its own shortcut table (the module owns no key). The bar reads the picks and “Untick all” clears them; `attachRowSelect` is unchanged.' },
+            { name: 'data-kp-picked', what: 'On a picked row; a row with the role option, row, gridcell or treeitem also says `aria-selected` true or false, and a listbox or grid is `aria-multiselectable`.' },
+            { name: 'data-kp-pick-mode', what: '`any` starts selection mode (a tap picks or unpicks) on the first pick, mouse too; by default only a long press on touch does.' },
+            { name: 'data-kp-pick-ignore', what: 'A selector for the parts of a row that keep their own click (links, buttons and inputs always do), such as a drag handle or an action column.' },
         ],
         accessibility: [
             'Built in — the count is said once after a burst of ticks; the cursor is a ring on the row, not a fill, so a ticked row and the cursor row read apart; on a phone a long press starts selection mode. Rows hidden by a filter are not walked, and skipped rows are counted in what is said.',
