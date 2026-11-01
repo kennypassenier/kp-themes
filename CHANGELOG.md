@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+Seven gaps Kenny's Habits app reported [habits-1101]. Everything new is opt-in; the faults (toasts over a floating selection bar, the selection count on a phone, the calm calendar's counts) are fixed for everyone.
+
+- **Fixed: a calm calendar prints a count on every tone that carries one** [habits-1101, calm calendar hides warn counts]. `js/calendar/paint.js` printed counts on `logged` only, so a `warn` day (kept with `data-kp-calm-map="none"`) lost its number. Measured at 390 px: the `warn` day's count was ` ` before, `3` after; `logged` unchanged (`2`), a `quiet` day still prints none (a calm quiet or paused day never carries a count), `future`, `before` and `loading` still print none.
+
 ## 12.1.0 — 2026-10-31
 
 Released on Kenny's go (2026-10-31 20:55: "de openstaande issues die resolved zouden moeten zijn in kp-themes naar een volgende release", 20:58: "zie dat alles gefixt is in deze release", 21:37: only kp-themes and chassis-rs for now). Every open kp-themes item in the apps' gap lists is in it: the faults Medicine Cabinet and homelab found adopting 12.0.0, the eleven names the bundle dropped (now flat under their module's prefix), the list's action column (research/list-action-1031, 1 of 1 approved), seven opt-in options homelab and kyu asked for (research/gaps-1031, 7 of 7 approved), seven behaviour fixes and two review-tool fixes. Everything new is opt-in. Behaviour changes consumers notice: the typed confirmation's name keeps its own case in nostromo, cyberpunk, brutalism, synthwave and deco; a chart with `onePointNote` draws its one reading below `minPoints`; a digit shortcut also matches its key's place on the digit row (Alt+1 on AZERTY; Shift+3 on QWERTY now fires a step written "Shift 3"); the unsaved bar counts a quantity, a time field and a tag input. Screenshot check skipped as for 12.0.0.

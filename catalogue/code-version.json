@@ -15,7 +15,7 @@
         "js/availability.js": { "digest": "2c833479bada9b84", "when": "[data-kp-availability]" },
         "js/barcell.js": { "digest": "af9763b3c1d40147", "when": "[data-kp-bar]" },
         "js/bullets.js": { "digest": "2af33c30cc6b47ba", "when": "[data-kp-bullets]" },
-        "js/calendar.js": { "digest": "06f57569124aa0d0", "when": "[data-kp-calendar]" },
+        "js/calendar.js": { "digest": "b0c6f96de14decfd", "when": "[data-kp-calendar]" },
         "js/calm.js": { "digest": "9e8fe8bae7b50f69", "when": "[data-kp-calm-switch]" },
         "js/card-state.js": { "digest": "2aab2935bba3ed51", "when": ".kp-card[data-kp-state]" },
         "js/chart.js": { "digest": "d1b91c470e565c6f", "when": "[data-kp-chart]" },
@@ -11438,7 +11438,7 @@
             ]
         },
         "data": {
-            "modules": "48fd74b8654336c8",
+            "modules": "2af57585fe67e73e",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",

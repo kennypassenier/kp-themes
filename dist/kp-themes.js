@@ -52028,7 +52028,7 @@ function paintCell(c, i, iso, today, stop, monthChanged) {
   cell.button.dataset.kpTone = day2.tone;
   cell.button.toggleAttribute("data-kp-today", iso === today);
   cell.num.textContent = iso.slice(8, 10);
-  const counted2 = day2.count && (isCalmTones(c.el) ? day2.tone === "logged" : !["future", "before", "loading"].includes(day2.tone));
+  const counted2 = day2.count && !NO_COUNT_TONES.includes(day2.tone);
   cell.count.textContent = counted2 ? (
     /** @type {string} */
     day2.count
@@ -52056,16 +52056,16 @@ function paintCalendar(c) {
   if (leaving.length > 0) leaveBusyLayers(leaving);
   syncStatePlate(c);
 }
-var monthKey;
+var NO_COUNT_TONES, monthKey;
 var init_paint6 = __esm({
   "js/calendar/paint.js"() {
     "use strict";
-    init_calm_tones();
     init_busy3();
     init_day();
     init_dates3();
     init_dom6();
     init_plate2();
+    NO_COUNT_TONES = ["future", "before", "loading"];
     monthKey = (c) => `${c.year}-${two2(c.month)}`;
   }
 });

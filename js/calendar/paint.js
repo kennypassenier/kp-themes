@@ -1,6 +1,5 @@
 // Repaints the grid in place: the month's title, each day's tone and words, the tab stop, and the busy layers that leave.
 
-import { isCalmTones } from '../calm-tones.js';
 import { BUSY_LAYERS, leaveBusyLayers } from './busy.js';
 import { dayFor } from './day.js';
 import { dayKey, formatDayKey, monthCells, two } from './dates.js';
@@ -8,6 +7,9 @@ import { keyOf } from './dom.js';
 import { syncStatePlate } from './plate.js';
 
 /** @typedef {import('./controller.js').CalendarController} Calendar */
+
+/** The tones that print no count whatever the page hands over. */
+const NO_COUNT_TONES = ['future', 'before', 'loading'];
 
 /** The month the calendar shows, as `YYYY-MM`. @param {Calendar} c */
 export const monthKey = (c) => `${c.year}-${two(c.month)}`;
@@ -48,8 +50,8 @@ function paintCell(c, i, iso, today, stop, monthChanged) {
     cell.button.dataset.kpTone = day.tone;
     cell.button.toggleAttribute('data-kp-today', iso === today);
     cell.num.textContent = iso.slice(8, 10);
-    // A calm cell prints a count on a logged day only, never on a quiet or a paused one.
-    const counted = day.count && (isCalmTones(c.el) ? day.tone === 'logged' : !['future', 'before', 'loading'].includes(day.tone));
+    // Every tone that carries a count prints it (a calm quiet or paused day never carries one); the shared tones never do.
+    const counted = day.count && !NO_COUNT_TONES.includes(day.tone);
     // A no-break space keeps the count's line when there is none, so every day is one height.
     cell.count.textContent = counted ? /** @type {string} */ (day.count) : ' ';
     const words = day.label === '' ? formatDayKey(iso) : c.strings.calendarDay(formatDayKey(iso), day.label);

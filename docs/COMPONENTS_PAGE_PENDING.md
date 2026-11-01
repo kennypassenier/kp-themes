@@ -12,6 +12,7 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- habits-1101 (2026-11-01), site/components/calendar.html: a calm calendar prints a count on every tone that carries one (a `warn` day under `data-kp-calm-map="none"`), not on logged only; the calm paragraph says so.
 - fix-1031 (2026-10-31), site/components/badge.html: the badge run's tracks are auto-fit, so the tracks no badge stands in collapse and one or a few badges keep their natural width (no option of its own; the sentence under the run says so).
 - fix-1031, site/components/toolbar.html: a labelled group (`.kp-toolbar__label` then the segmented) is a two-track grid, so wrapped chips stay beside the label; under 48rem and in `.kp-toolbar--stacked` every group has its own line and its chips scroll on it (each chip whole, the focus ring inside), where the whole filter zone used to be one scrolling line that hid the groups after the first. An example with two groups at a narrow width shows it.
 - fix-1031, site/components/dialog.html (the rich confirmation): a `description` that holds a field (a quantity, an input) gives that field the first focus, whatever `initialFocus` says.
