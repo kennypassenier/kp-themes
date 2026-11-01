@@ -12,6 +12,7 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- habits-1101, site/components/pipeline.html (or a page of its own): the board (`js/board.js`): `data-kp-board`, `data-kp-board-lane`, `-label`, `-limit`, `-narrow` (`scroll`, `tabs`), `-group`, `setBoardState`, `showBoardLane`, `recountBoard`, `kp-board-lane`, `kp-board-retry`; one example with three lanes of task rows and a limit.
 - habits-1101, site/components/menu-button.html: the context menu (`js/context-menu.js`): `data-kp-context-menu` (empty, `inner`, an id), `setContextMenu`, `attachContextMenus`, `openContextMenu`, `data-kp-context-menu-label`, `data-kp-context-press`, `kp-context-menu-open`; one example with a task row whose right click shows its ⋯ entries.
 - habits-1101, site/components/reorder.html: `data-kp-reorder-group`, `data-kp-reorder-list` and `data-kp-reorder-label`, the ← / → keys and `fromList` / `toList` in `kp-reorder`; one example with two day lists that share their tasks.
 - habits-1101, a page for `js/row-pick.js` (site/components, next to the selection bar and the data table's select column): `data-kp-row-pick`, `data-kp-row-key`, `data-kp-picked`, `data-kp-pick-mode`, `data-kp-pick-ignore`, the five key functions bound with `registerShortcuts`, and the selection bar fed with no boxes.

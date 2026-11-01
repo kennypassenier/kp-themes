@@ -448,6 +448,10 @@
             "types": "./js/checklist.d.ts",
             "default": "./js/checklist.js"
         },
+        "./js/board": {
+            "types": "./js/board.d.ts",
+            "default": "./js/board.js"
+        },
         "./js/context-menu": {
             "types": "./js/context-menu.d.ts",
             "default": "./js/context-menu.js"

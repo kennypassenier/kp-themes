@@ -5,8 +5,8 @@ export const pipelineDescriptor = {
         id: 'pipeline',
         title: 'Pipeline',
         group: 'Data',
-        classes: ['kp-pipeline'],
-        aliases: ['dimmed', 'lane'],
+        classes: ['kp-pipeline', 'kp-board'],
+        aliases: ['dimmed', 'lane', 'board', 'board-lane', 'board-label', 'board-limit', 'board-narrow', 'board-narrow-now', 'board-group', 'board-empty', 'board-tab', 'board-retry'],
         exports: [],
         intro: 'Where each item stands, a lane per stage: a read-only board, not a drag-and-drop one. `attachPipelines(root)` in js/pipeline.js fills `section.kp-pipeline[data-kp-pipeline]`; the page gives the lanes and the cards with `setPipeline(el, { lanes, cards })` and the state of the whole with `setPipelineState`. Each lane has a plate with its name and exact count in the stage’s colour (`tone` 1 to 5), its share of all, and its cards (a link with `href`, else a button; `mark`, `sub` and `meta` under the title). A lane marked `closed` stands under the board across its width. `data-kp-pipeline-limit="4"` keeps four cards per lane behind “+N more”; `data-kp-pipeline-share="false"` leaves the share out. Under 40rem of its own width the lanes turn to rows.',
         whenToUse:
@@ -99,6 +99,10 @@ failed.addEventListener('kp-pipeline-retry', () => {
             },
         ],
         variants: [
+            { name: 'data-kp-board', what: 'The editable board [habits-1101] (js/board.js, `attachBoards`): the page gives lanes (`[data-kp-board-lane="<key>"]` with `data-kp-board-label`, `data-kp-tone` and a `[data-kp-reorder]` list of its own cards); each lane is dressed as the pipeline’s lane (plate, name, exact count) and the lists share one reorder group (`data-kp-board-group`, else the board’s id), so a card moves along a lane and between lanes by pointer and by ← → on its handle, reported as `kp-reorder` with `fromList` / `toList`. An empty lane says where a card can go (`data-kp-board-empty`).' },
+            { name: 'data-kp-board-limit', what: 'A lane’s work-in-progress limit: the count reads “4 / 3” and a lane past it takes the failing-stage look with “Over the limit”, said once; nothing is refused.' },
+            { name: 'data-kp-board-narrow', what: 'Under 40rem of the board’s own width (`data-kp-board-narrow-now`): `scroll` (default) lays the lanes side by side in the board’s box, which scrolls sideways and snaps; `tabs` shows one lane under a row of tabs with each lane’s count (`kp-board-lane` `{ lane, source }` when another shows; a card sent to another lane brings it into view).' },
+            { name: 'setBoardState / showBoardLane / recountBoard', what: '`setBoardState(el, state, words)`: `loading` lays the busy card over the lanes, `empty` and `error` the package’s plate over the board (`kp-board-retry` from Try again). `showBoardLane(el, key)` shows a lane on a narrow board with tabs; `recountBoard(el)` after a limit or label changed.' },
             { name: 'setPipelineState', what: '`setPipelineState(el, state, words)` with `loading`, `ready`, `empty` or `error`; `words` is the sentence of the empty and the failed plate.' },
             { name: 'setPipelineSelected', what: 'Marks the open card with `aria-current`, or none; answer `kp-pipeline-open` with it.' },
             { name: 'data-kp-pipeline', what: 'Marks the board; `attachPipelines` fills it.' },

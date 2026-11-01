@@ -221,6 +221,7 @@ export const FILES = [
     'js/code.js',
     'js/tick.js',
     'js/pipeline.js',
+    'js/board.js',
     'js/art.js',
     'js/wheel.js',
     'js/focus-steps.js',

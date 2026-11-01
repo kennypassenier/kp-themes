@@ -81,6 +81,7 @@
         "run-timeline/narrow-timeline-keeps-readable.css",
         "run-timeline/a-lanes-name-as-a-link-and-a.css",
         "pipeline.css",
+        "board.css",
         "diff/base.css",
         "diff/diff-inside-file-has.css",
         "tree-reorder-split.css",

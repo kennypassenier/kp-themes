@@ -144,6 +144,7 @@ concatenates that file into `css/themes.css`.
 | `parallel-tracks/`              | Parallel tracks (2 parts)                                                        |
 | `passkey-list/`                 | Passkey list (2 parts)                                                           |
 | `pipeline.css`                  | Pipeline                                                                         |
+| `board.css`                     | Board [habits-1101]                                                              |
 | `plain-card.css`                | Plain card                                                                       |
 | `popover.css`                   | Dropdown and tooltip, on the popover layer                                       |
 | `problem-alert/`                | The problem alert (2 parts)                                                      |

@@ -1280,6 +1280,16 @@ The pipeline board, a lane per stage, as a PipelineBoard controller. 5 files.
 | `values.js`     | Selector and events, the small counts and the element maker.                                        |
 | `view.js`       | PipelineView: the whole board painted: lanes, state plate and the loading card.                     |
 
+## js/board.js → js/board/
+
+The board: lanes of the page's cards that move between lanes, as a Board controller [habits-1101]. 3 files.
+
+| File            | Does                                                                                               |
+| --------------- | -------------------------------------------------------------------------------------------------- |
+| `controller.js` | Board: the frame, the narrow layout and its tabs, and the states (busy card, plate).               |
+| `lanes.js`      | BoardLanes: each lane dressed as the pipeline's, its list in the group, the count, limit and flag. |
+| `values.js`     | The selectors, events and sizes of the board, and the element maker.                              |
+
 ## js/tabbar.js → js/tabbar/
 
 The bottom tab bar and the count on a tab, as a TabbarController over small parts. 5 files.

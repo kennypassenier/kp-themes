@@ -314,4 +314,7 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/context-menu/anchor.js',
     'js/context-menu/controller.js',
     'js/context-menu/values.js',
+    'js/board/controller.js',
+    'js/board/lanes.js',
+    'js/board/values.js',
 ];
