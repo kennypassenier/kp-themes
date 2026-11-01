@@ -23733,6 +23733,15 @@ function readSecret(field2, purpose, load, s2) {
     else fail(new Error(s2.secretNoSource));
   });
 }
+function displayOptions(field2) {
+  const ttl = Math.max(0, Number.parseInt(field2.dataset.kpSecretTtl ?? "", 10));
+  const maskLength = Math.max(1, Number.parseInt(field2.dataset.kpSecretMask ?? "", 10) || SECRET_MASK);
+  return {
+    hold: field2.dataset.kpSecretRevealOn === "hold",
+    seconds: Number.isFinite(ttl) ? ttl : SECRET_TTL,
+    mask: (field2.dataset.kpSecretMaskChar ?? "\u2022").repeat(maskLength)
+  };
+}
 var reasonOf;
 var init_secret_read = __esm({
   "js/patterns/secret-read.js"() {
@@ -24096,7 +24105,6 @@ var init_secret_display = __esm({
   "js/patterns/secret-display.js"() {
     "use strict";
     init_live_options();
-    init_constants10();
     init_secret_read();
     init_secret_api();
     init_secret_base();
@@ -24184,12 +24192,10 @@ var init_secret_display = __esm({
       }
       /** The three options; `readOptions()` is the one place that reads them. */
       readOptions() {
-        const field2 = this.host;
-        this.hold = field2.dataset.kpSecretRevealOn === "hold";
-        const ttl = Math.max(0, Number.parseInt(field2.dataset.kpSecretTtl ?? "", 10));
-        this.seconds = Number.isFinite(ttl) ? ttl : SECRET_TTL;
-        const maskLength = Math.max(1, Number.parseInt(field2.dataset.kpSecretMask ?? "", 10) || SECRET_MASK);
-        this.mask = (field2.dataset.kpSecretMaskChar ?? "\u2022").repeat(maskLength);
+        const { hold, seconds, mask } = displayOptions(this.host);
+        this.hold = hold;
+        this.seconds = seconds;
+        this.mask = mask;
       }
       /** @param {string[]} names the live option attributes that changed */
       onOptions(names) {
@@ -82265,6 +82271,26 @@ function buildPanel3(doc, s2, id) {
   panel.append(make34(doc, "p", "kp-snooze__panel-title", s2.snoozePickTitle), inputs, error, actions);
   return { panel, picker, date, time, error, cancel, apply: apply2 };
 }
+function paintTrigger(doc, trigger, { text, describedBy: describedBy2, busy }) {
+  trigger.replaceChildren();
+  const words3 = doc.createElement("span");
+  words3.className = "kp-button__text";
+  words3.textContent = text;
+  trigger.append(words3);
+  trigger.setAttribute("aria-describedby", describedBy2);
+  if (busy) {
+    const layer = doc.createElement("span");
+    layer.className = "kp-button__busy";
+    layer.setAttribute("aria-hidden", "true");
+    const spin = doc.createElement("span");
+    spin.className = "kp-spinner";
+    layer.append(spin);
+    trigger.append(layer);
+  }
+  trigger.toggleAttribute("data-kp-busy", busy);
+  trigger.toggleAttribute("aria-busy", busy);
+  trigger.setAttribute("aria-disabled", String(busy));
+}
 var init_build16 = __esm({
   "js/snooze/build.js"() {
     "use strict";
@@ -82413,6 +82439,7 @@ var init_controller76 = __esm({
     init_menu_button();
     init_runs();
     init_choices();
+    init_build16();
     init_panel4();
     TICK_MS7 = 3e4;
     SnoozePicker = class extends SnoozePanel {
@@ -82513,25 +82540,7 @@ var init_controller76 = __esm({
         end.hidden = !snoozed;
         end.disabled = this.busy;
         this.host.dataset.kpSnoozedState = snoozed ? "snoozed" : "idle";
-        if (this.chips) return;
-        trigger.replaceChildren();
-        const text = this.doc.createElement("span");
-        text.className = "kp-button__text";
-        text.textContent = snoozed ? s2.snoozeChange : s2.snoozeTrigger;
-        trigger.append(text);
-        trigger.setAttribute("aria-describedby", status.id);
-        if (this.busy) {
-          const layer = this.doc.createElement("span");
-          layer.className = "kp-button__busy";
-          layer.setAttribute("aria-hidden", "true");
-          const spin = this.doc.createElement("span");
-          spin.className = "kp-spinner";
-          layer.append(spin);
-          trigger.append(layer);
-        }
-        trigger.toggleAttribute("data-kp-busy", this.busy);
-        trigger.toggleAttribute("aria-busy", this.busy);
-        trigger.setAttribute("aria-disabled", String(this.busy));
+        if (!this.chips) paintTrigger(this.doc, trigger, { text: snoozed ? s2.snoozeChange : s2.snoozeTrigger, describedBy: status.id, busy: this.busy });
       }
       /** Fill the menu or the chips with what is offered now. */
       fill() {
@@ -82770,6 +82779,13 @@ function emitRows(host, type, row2, index, rows) {
   host.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { row: row2, index, count: rows.length } }));
   host.dispatchEvent(new CustomEvent("kp-rows-change", { bubbles: true, detail: { count: rows.length, rows } }));
 }
+function makeList(host) {
+  const list = host.ownerDocument.createElement("ol");
+  list.className = "kp-rows__list";
+  list.setAttribute("data-kp-rows-list", "");
+  host.prepend(list);
+  return list;
+}
 var whole;
 var init_dom12 = __esm({
   "js/row-editor/dom.js"() {
@@ -82836,7 +82852,7 @@ var init_row_editor = __esm({
       get list() {
         return (
           /** @type {HTMLElement} */
-          this.host.querySelector("[data-kp-rows-list]") ?? this.makeList()
+          this.host.querySelector("[data-kp-rows-list]") ?? makeList(this.host)
         );
       }
       get min() {
@@ -82869,14 +82885,6 @@ var init_row_editor = __esm({
           /** @type {HTMLElement[]} */
           [...this.list.children].filter((el16) => el16.classList.contains("kp-rows__row"))
         );
-      }
-      /** @returns {HTMLElement} */
-      makeList() {
-        const list = this.host.ownerDocument.createElement("ol");
-        list.className = "kp-rows__list";
-        list.setAttribute("data-kp-rows-list", "");
-        this.host.prepend(list);
-        return list;
       }
       /** The parts the markup left out: the head row, the add button and the status line. */
       ensureParts() {

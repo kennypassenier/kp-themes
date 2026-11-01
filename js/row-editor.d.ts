@@ -19,8 +19,6 @@ export declare class RowEditor extends Controller {
     connect(): void;
     /** The rows, in order. @returns {HTMLElement[]} */
     rows(): HTMLElement[];
-    /** @returns {HTMLElement} */
-    makeList(): HTMLElement;
     /** The parts the markup left out: the head row, the add button and the status line. */
     ensureParts(): void;
     /** The labels once, over the columns, from the labels of the first row (or of the template). @param {Document} doc */

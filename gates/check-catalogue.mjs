@@ -20,6 +20,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { researchDemoPages, researchReadmes } from './catalogue-research.mjs';
 import { PENDING_BARE, archivedUndecided, bareControls, blocksOutsideTheReview, decidedOutsideArchive, rootsIn, rootsShown, scriptsOutsideTheReview } from './catalogue-checks.mjs';
 export { rootsIn, rootsShown, PENDING_BARE, bareControls, decidedOutsideArchive, archivedUndecided, blocksOutsideTheReview, scriptsOutsideTheReview } from './catalogue-checks.mjs';
 
@@ -80,26 +81,8 @@ function main() {
     const reviewPages = readdirSync(dir)
         .filter((name) => name.endsWith('.html'))
         .map((name) => `catalogue/${name}`);
-    const research = new URL('research/', root);
-    if (existsSync(research)) {
-        for (const topic of readdirSync(research)) {
-            if (!existsSync(new URL(`research/${topic}/demo.html`, root))) continue;
-            // A demo that is only the source of a bundled review page (Kenny, 2026-10-19: demos of one project are bundled into one
-            // page) says so in its VERDICTS.json (`"bundledInto": "<topic>"`) and is not offered on its own; the bundle must exist.
-            const verdicts = new URL(`research/${topic}/VERDICTS.json`, root);
-            const into = existsSync(verdicts) ? JSON.parse(readFileSync(verdicts, 'utf8')).bundledInto : undefined;
-            if (into && existsSync(new URL(`research/${into}/demo.html`, root))) continue;
-            reviewPages.push(`research/${topic}/demo.html`);
-        }
-    }
-    /** @type {Record<string, string>} */
-    const readmes = {};
-    if (existsSync(research)) {
-        for (const topic of readdirSync(research)) {
-            const readme = new URL(`research/${topic}/README.md`, root);
-            if (existsSync(readme)) readmes[topic] = readFileSync(readme, 'utf8');
-        }
-    }
+    reviewPages.push(...researchDemoPages(root));
+    const readmes = researchReadmes(root);
     const archivedOpen = archivedUndecided(shell, readmes);
     if (archivedOpen.length) {
         console.error(

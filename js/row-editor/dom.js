@@ -100,3 +100,12 @@ export function emitRows(host, type, row, index, rows) {
     host.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { row, index, count: rows.length } }));
     host.dispatchEvent(new CustomEvent('kp-rows-change', { bubbles: true, detail: { count: rows.length, rows } }));
 }
+
+/** The list the markup left out, put first in the host. @param {HTMLElement} host @returns {HTMLElement} */
+export function makeList(host) {
+    const list = host.ownerDocument.createElement('ol');
+    list.className = 'kp-rows__list';
+    list.setAttribute('data-kp-rows-list', '');
+    host.prepend(list);
+    return list;
+}

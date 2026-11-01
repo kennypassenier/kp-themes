@@ -1,7 +1,6 @@
 // One secret display field [kpadopt4]: shown as a mask, shown in full on request for a few seconds, copied without being shown.
 import { watchOptions } from '../live-options.js';
-import { SECRET_MASK, SECRET_TTL } from './constants.js';
-import { readSecret, reasonOf } from './secret-read.js';
+import { displayOptions, readSecret, reasonOf } from './secret-read.js';
 import { secrets } from './secret-api.js';
 import { LAST_CALL_SECONDS, SecretBase } from './secret-base.js';
 import { buildDisplay, make } from './secret-parts.js';
@@ -93,12 +92,10 @@ export class SecretControl extends SecretBase {
 
     /** The three options; `readOptions()` is the one place that reads them. */
     readOptions() {
-        const field = this.host;
-        this.hold = field.dataset.kpSecretRevealOn === 'hold';
-        const ttl = Math.max(0, Number.parseInt(field.dataset.kpSecretTtl ?? '', 10));
-        this.seconds = Number.isFinite(ttl) ? ttl : SECRET_TTL;
-        const maskLength = Math.max(1, Number.parseInt(field.dataset.kpSecretMask ?? '', 10) || SECRET_MASK);
-        this.mask = (field.dataset.kpSecretMaskChar ?? '•').repeat(maskLength);
+        const { hold, seconds, mask } = displayOptions(this.host);
+        this.hold = hold;
+        this.seconds = seconds;
+        this.mask = mask;
     }
 
     /** @param {string[]} names the live option attributes that changed */

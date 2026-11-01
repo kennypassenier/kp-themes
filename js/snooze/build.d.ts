@@ -28,3 +28,12 @@ export declare function buildPanel(doc: Document, s: Words, id: string): {
     cancel: HTMLButtonElement;
     apply: HTMLButtonElement;
 };
+/**
+ * The trigger button's face: its words, the busy layer with a spinner while a snooze is saving, and the busy marks.
+ * @param {Document} doc @param {HTMLElement} trigger @param {{ text: string, describedBy: string, busy: boolean }} face
+ */
+export declare function paintTrigger(doc: Document, trigger: HTMLElement, { text, describedBy, busy }: {
+    text: string;
+    describedBy: string;
+    busy: boolean;
+}): void;

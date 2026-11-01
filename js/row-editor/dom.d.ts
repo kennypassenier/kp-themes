@@ -14,3 +14,5 @@ export declare function writeAddButton(add: Element | null, s: ReturnType<typeof
 export declare function announce(host: HTMLElement, words: string): void;
 /** Fire the add/remove event and the change event. @param {HTMLElement} host @param {string} type @param {HTMLElement} row @param {number} index @param {HTMLElement[]} rows */
 export declare function emitRows(host: HTMLElement, type: string, row: HTMLElement, index: number, rows: HTMLElement[]): void;
+/** The list the markup left out, put first in the host. @param {HTMLElement} host @returns {HTMLElement} */
+export declare function makeList(host: HTMLElement): HTMLElement;

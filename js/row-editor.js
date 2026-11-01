@@ -31,7 +31,7 @@
 
 import { Controller, attachAll, controllerOf } from './controller.js';
 import { getStrings } from './strings.js';
-import { announce, buildHead, emitRows, ensureAddAndStatus, numberRow, whole, writeAddButton, writeRemoveButtons } from './row-editor/dom.js';
+import { announce, buildHead, makeList, emitRows, ensureAddAndStatus, numberRow, whole, writeAddButton, writeRemoveButtons } from './row-editor/dom.js';
 import { statePlate } from './state-plate.js';
 
 export const ROWS = '[data-kp-rows]';
@@ -53,7 +53,7 @@ export class RowEditor extends Controller {
     }
 
     get list() {
-        return /** @type {HTMLElement} */ (this.host.querySelector('[data-kp-rows-list]') ?? this.makeList());
+        return /** @type {HTMLElement} */ (this.host.querySelector('[data-kp-rows-list]') ?? makeList(this.host));
     }
 
     get min() {
@@ -88,15 +88,6 @@ export class RowEditor extends Controller {
     /** The rows, in order. @returns {HTMLElement[]} */
     rows() {
         return /** @type {HTMLElement[]} */ ([...this.list.children]).filter((el) => el.classList.contains('kp-rows__row'));
-    }
-
-    /** @returns {HTMLElement} */
-    makeList() {
-        const list = this.host.ownerDocument.createElement('ol');
-        list.className = 'kp-rows__list';
-        list.setAttribute('data-kp-rows-list', '');
-        this.host.prepend(list);
-        return list;
     }
 
     /** The parts the markup left out: the head row, the add button and the status line. */
