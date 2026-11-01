@@ -11814,24 +11814,24 @@
 
     /* A narrow timeline keeps a readable plot and scrolls inside its own frame [wish-1028, Kitchen 3]: under 32rem the body is at
      * least --kp-gantt-min-width wide (30rem; 0 turns it off) and the frame scrolls sideways, with the lane names held at the start
-     * edge. data-kp-gantt-scroll="off" never scrolls, "always" keeps the minimum at every width. A mouse still brushes a range; a
-     * finger pans (touch-action). */
+     * edge. data-kp-gantt-scroll="off" never scrolls, "always" keeps the minimum at every width, "fit" lays the whole window across
+     * the width with every label whole (fits-its-width.css). A mouse still brushes a range; a finger pans (touch-action). */
     @container kp-gantt (max-width: 32rem) {
-        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__scroll {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) .kp-gantt__scroll {
             overflow-x: auto;
             touch-action: pan-x pan-y;
         }
 
-        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__body {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) .kp-gantt__body {
             min-inline-size: var(--kp-gantt-min-width, 30rem);
         }
 
-        .kp-gantt:not([data-kp-gantt-scroll='off']) :is(.kp-gantt__lane, .kp-gantt__corner) {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) :is(.kp-gantt__lane, .kp-gantt__corner) {
             position: sticky;
             inset-inline-start: 0;
         }
 
-        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__lane {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) .kp-gantt__lane {
             z-index: 2;
             background: var(--card);
         }
@@ -12123,6 +12123,37 @@
         background: var(--card);
     }
 
+    /* A timeline that fits its width [gantt-fit-1101] (`data-kp-gantt-scroll="fit"`, js/gantt/fit.js): the whole window across the
+     * frame at every width, no sideways scroll, and every bar's label whole. js/gantt/fit.js packs a lane's rows by what a bar takes
+     * with its words and puts each label inside its bar, after it, before it, or on its own line under it (`data-kp-side="below"`, the
+     * row under the bar's); it places the label by its own start (`--kp-g-label-at`, seconds like a bar's), so the words stand where
+     * the packing measured them. A lane is as tall as the rows it uses. The axis keeps its own step (fewer ticks when narrow). */
+    .kp-gantt[data-kp-gantt-scroll='fit'] .kp-gantt__outside[data-kp-side] {
+        inset-inline: calc((var(--kp-g-label-at, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%) auto;
+        max-inline-size: 100%;
+        margin-inline-start: 0;
+        text-align: start;
+    }
+
+    .kp-gantt__run[data-kp-label='below'] > .kp-gantt__label {
+        display: none;
+    }
+
+    /* A label on its own line keeps the line of a bar of its row and stands right under its bar, on its plate over the line for now
+     * (it does not leave its bar for it); only one wider than the whole plot wraps, over the rows kept for it. */
+    .kp-gantt__outside[data-kp-side='below'] {
+        z-index: 1;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    .kp-gantt__outside[data-kp-side='below'][data-kp-state='failed'] {
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        line-height: var(--kp-gantt-bar, 1.125rem);
+    }
     /* --- Pipeline: where each item stands, a lane per stage [kpadopt4] ------
  * `section.kp-pipeline[data-kp-pipeline]` (js/pipeline.js). A read-only board: lanes side by side at one width, each as
  * tall as the tallest, a plate with the stage's name and its exact count in the stage's colour (a tint of the chart

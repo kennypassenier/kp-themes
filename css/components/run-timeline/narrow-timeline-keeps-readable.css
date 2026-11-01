@@ -23,24 +23,24 @@
 
     /* A narrow timeline keeps a readable plot and scrolls inside its own frame [wish-1028, Kitchen 3]: under 32rem the body is at
      * least --kp-gantt-min-width wide (30rem; 0 turns it off) and the frame scrolls sideways, with the lane names held at the start
-     * edge. data-kp-gantt-scroll="off" never scrolls, "always" keeps the minimum at every width. A mouse still brushes a range; a
-     * finger pans (touch-action). */
+     * edge. data-kp-gantt-scroll="off" never scrolls, "always" keeps the minimum at every width, "fit" lays the whole window across
+     * the width with every label whole (fits-its-width.css). A mouse still brushes a range; a finger pans (touch-action). */
     @container kp-gantt (max-width: 32rem) {
-        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__scroll {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) .kp-gantt__scroll {
             overflow-x: auto;
             touch-action: pan-x pan-y;
         }
 
-        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__body {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) .kp-gantt__body {
             min-inline-size: var(--kp-gantt-min-width, 30rem);
         }
 
-        .kp-gantt:not([data-kp-gantt-scroll='off']) :is(.kp-gantt__lane, .kp-gantt__corner) {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) :is(.kp-gantt__lane, .kp-gantt__corner) {
             position: sticky;
             inset-inline-start: 0;
         }
 
-        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__lane {
+        .kp-gantt:not([data-kp-gantt-scroll='off'], [data-kp-gantt-scroll='fit']) .kp-gantt__lane {
             z-index: 2;
             background: var(--card);
         }

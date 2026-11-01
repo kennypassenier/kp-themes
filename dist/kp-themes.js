@@ -26321,9 +26321,9 @@ function setIdmark(el16, name, { slot, hue, title = true } = {}) {
   el16.setAttribute("data-kp-idmark", mark.name);
   el16.toggleAttribute("data-kp-idmark-empty", mark.empty);
   el16.setAttribute("data-kp-idmark-glyph", mark.glyph);
-  const free = (hue ?? el16.getAttribute("data-kp-idmark-hue")) === "free";
+  const free2 = (hue ?? el16.getAttribute("data-kp-idmark-hue")) === "free";
   if (mark.empty) el16.style.removeProperty("--kp-idmark-colour");
-  else if (free) el16.style.setProperty("--kp-idmark-colour", `oklch(from var(--chart-1) l c ${mark.hue})`);
+  else if (free2) el16.style.setProperty("--kp-idmark-colour", `oklch(from var(--chart-1) l c ${mark.hue})`);
   else el16.style.setProperty("--kp-idmark-colour", `var(--chart-${slot ?? mark.slot})`);
   if (title && mark.name) el16.title = mark.name;
   else el16.removeAttribute("title");
@@ -58626,13 +58626,13 @@ function packRows(runs2, before = /* @__PURE__ */ new Map(), pad2 = 0, fixed = [
   const sorted = [...runs2].sort((a, b) => a.s - b.s);
   const rows = fixed.length > 0 ? [fixed.map((f) => ({ s: f.s, e: f.e }))] : [];
   const given2 = /* @__PURE__ */ new Map();
-  const free = (row2, run) => (rows[row2] ?? []).every((other) => run.s >= other.e + pad2 || (run.e ?? Infinity) + pad2 <= other.s);
+  const free2 = (row2, run) => (rows[row2] ?? []).every((other) => run.s >= other.e + pad2 || (run.e ?? Infinity) + pad2 <= other.s);
   for (const run of sorted) {
     const wanted = before.get(run.id);
-    let row2 = wanted !== void 0 && free(wanted, run) ? wanted : -1;
+    let row2 = wanted !== void 0 && free2(wanted, run) ? wanted : -1;
     if (row2 < 0) {
       row2 = 0;
-      while (!free(row2, run)) row2 += 1;
+      while (!free2(row2, run)) row2 += 1;
     }
     (rows[row2] ??= []).push({ s: run.s, e: run.e ?? Infinity });
     given2.set(run.id, row2);
@@ -58890,7 +58890,7 @@ function labelWidth(c, bar) {
   c.labels.set(bar, { key, width });
   return width;
 }
-function setOutside(c, lane, bar, side, room, shift = 0) {
+function setOutside(c, lane, bar, side, room, shift = 0, row2) {
   let el16 = c.outside.get(bar);
   if (!side) {
     el16?.remove();
@@ -58908,7 +58908,7 @@ function setOutside(c, lane, bar, side, room, shift = 0) {
   if (el16.dataset.kpSide !== side) el16.dataset.kpSide = side;
   if (el16.dataset.kpState !== bar.dataset.kpState) el16.dataset.kpState = bar.dataset.kpState ?? "";
   for (const name of ["--kp-g-s", "--kp-g-e", "--kp-g-row"]) {
-    const value = bar.style.getPropertyValue(name);
+    const value = name === "--kp-g-row" && row2 !== void 0 ? String(row2) : bar.style.getPropertyValue(name);
     if (el16.style.getPropertyValue(name) !== value) el16.style.setProperty(name, value);
   }
   el16.style.setProperty("--kp-g-label-room", `${Math.floor(room)}px`);
@@ -58984,8 +58984,8 @@ function placeLabels2(c) {
         if (nowBox && need <= right - left - 2 && nowBox.right + NOW_GAP_PX > left && nowBox.left - NOW_GAP_PX < left + need) {
           crossed = nowBox.left > left && nowBox.left < right;
           if (crossed) {
-            const free = right - nowBox.right - NOW_GAP_PX - 1;
-            if (need <= free) {
+            const free2 = right - nowBox.right - NOW_GAP_PX - 1;
+            if (need <= free2) {
               inset = nowBox.right + NOW_GAP_PX - left;
               crossed = false;
             }
@@ -59290,6 +59290,114 @@ var init_chrome2 = __esm({
   }
 });
 
+// js/gantt/fit.js
+function scaleOf(c) {
+  const room = c.plot.clientWidth;
+  const w = windowOf(c);
+  const perPx = room > 0 ? c.span / room : 0;
+  return { room, from: w.from, perPx, nowX: perPx ? (w.now - w.from) / perPx : -1 };
+}
+function waysOf(b, s2) {
+  const { left, right, reach: reach3, open: open4, need } = b;
+  const take = { l: left, r: reach3 };
+  if (need <= right - left - 2) {
+    if (!onNow(s2.nowX, { l: left, r: left + need }) || s2.nowX <= left) return [{ side: "inside", x: left, take, inset: 0 }];
+    if (need <= right - s2.nowX - SIDE_GAP_PX) return [{ side: "inside", x: left, take, inset: s2.nowX + SIDE_GAP_PX - left }];
+  }
+  const wide = need - BAR_PAD_PX + OUTSIDE_PAD_PX;
+  const after = { l: reach3 + SIDE_GAP_PX, r: reach3 + SIDE_GAP_PX + wide };
+  const before = { l: left - SIDE_GAP_PX - wide, r: left - SIDE_GAP_PX };
+  const ways = [];
+  if (!open4 && after.r <= s2.room && !onNow(s2.nowX, after)) ways.push({ side: "after", x: after.l, take: { l: left, r: after.r }, inset: 0 });
+  if (before.l >= 0 && !onNow(s2.nowX, before)) ways.push({ side: "before", x: before.l, take: { l: before.l, r: reach3 }, inset: 0 });
+  return ways;
+}
+function lineUnder(b, s2) {
+  const wide = b.need - BAR_PAD_PX + OUTSIDE_PAD_PX;
+  if (wide >= s2.room) return { span: { l: 0, r: s2.room }, lines: Math.ceil(wide / s2.room) };
+  const l = Math.min(Math.max(0, b.left), s2.room - wide);
+  return { span: { l, r: l + wide }, lines: 1 };
+}
+function firstFree(rows, spans, from = 0) {
+  let row2 = from;
+  while (!spans.every((span5, k) => free(rows[row2 + k] ?? [], span5))) row2 += 1;
+  return row2;
+}
+function geometryOf(c, b, s2, minBar) {
+  const left = (b.s - s2.from) / s2.perPx;
+  const end = b.e ?? s2.from + s2.nowX * s2.perPx;
+  const right = Math.max(left + minBar, (end - s2.from) / s2.perPx);
+  const rest = restEnd(c, b.run);
+  const reach3 = rest === null ? right : Math.max(right, (rest - s2.from) / s2.perPx);
+  const open4 = b.e === null && rest === null;
+  return { left, right, reach: reach3, open: open4, need: labelWidth(c, b.bar) };
+}
+function packFit(c, bars, marks, minBar) {
+  const s2 = scaleOf(c);
+  const given2 = /* @__PURE__ */ new Map();
+  if (!s2.perPx) return { rows: given2, count: 1 };
+  const rows = [marks.map((m) => ({ l: (m.s - s2.from) / s2.perPx, r: (m.e - s2.from) / s2.perPx }))];
+  for (const b of bars) {
+    const g = geometryOf(c, b, s2, minBar);
+    const placed = placeOne(rows, g, s2);
+    PLACED2.set(b.bar, { ...placed, at: s2.from + placed.x * s2.perPx });
+    given2.set(b.run.id, placed.barRow);
+  }
+  return { rows: given2, count: Math.max(1, rows.length) };
+}
+function placeOne(rows, g, s2) {
+  const ways = waysOf(g, s2);
+  if (ways.length) {
+    for (let row3 = 0; ; row3 += 1) {
+      const way = ways.find((w) => free(rows[row3] ?? [], w.take));
+      if (!way) continue;
+      (rows[row3] ??= []).push(way.take);
+      return { side: way.side, x: way.x, row: row3, barRow: row3, inset: way.inset };
+    }
+  }
+  const under = lineUnder(g, s2);
+  const spans = [{ l: g.left, r: g.reach }, ...Array.from({ length: under.lines }, () => under.span)];
+  const row2 = firstFree(rows, spans);
+  spans.forEach((span5, k) => (rows[row2 + k] ??= []).push(span5));
+  return { side: (
+    /** @type {Side} */
+    "below"
+  ), x: under.span.l, row: row2 + 1, barRow: row2, inset: 0 };
+}
+function placeFitLabels(c) {
+  const room = c.plot.clientWidth;
+  dropOutside(c);
+  if (!room || c.state === "loading") return;
+  for (const lane of c.lanes)
+    for (const b of lane.bars) {
+      const placed = PLACED2.get(b.bar);
+      const side = !placed || b.bar.hidden || placed.side === "inside" ? "" : placed.side;
+      if (placed?.inset) b.bar.style.setProperty("--kp-g-label-inset", `${Math.round(placed.inset)}px`);
+      else b.bar.style.removeProperty("--kp-g-label-inset");
+      if (side) b.bar.dataset.kpLabel = side;
+      else delete b.bar.dataset.kpLabel;
+      setOutside(c, lane, b.bar, side, room, 0, placed?.row);
+      const el16 = c.outside.get(b.bar);
+      if (el16 && placed) el16.style.setProperty("--kp-g-label-at", placed.at.toFixed(2));
+    }
+}
+var FIT_GAP_PX, SIDE_GAP_PX, BAR_PAD_PX, OUTSIDE_PAD_PX, PLACED2, isFit, free, onNow;
+var init_fit2 = __esm({
+  "js/gantt/fit.js"() {
+    "use strict";
+    init_labels2();
+    init_window();
+    FIT_GAP_PX = 4;
+    SIDE_GAP_PX = 4;
+    BAR_PAD_PX = 12;
+    OUTSIDE_PAD_PX = 8;
+    PLACED2 = /* @__PURE__ */ new WeakMap();
+    isFit = (c) => c.el.getAttribute("data-kp-gantt-scroll") === "fit";
+    free = (row2, span5) => row2.every((o) => span5.l >= o.r + FIT_GAP_PX || span5.r + FIT_GAP_PX <= o.l);
+    onNow = (nowX, span5) => nowX > span5.l - SIDE_GAP_PX && nowX < span5.r + SIDE_GAP_PX;
+  }
+});
+
 // js/gantt/axis.js
 function syncTicks2(c, w) {
   const room = c.plot.clientWidth || 600;
@@ -59441,7 +59549,8 @@ function visible3(c) {
     }
   }
   clusterPoints(c);
-  placeLabels2(c);
+  if (isFit(c)) placeFitLabels(c);
+  else placeLabels2(c);
 }
 function refresh(c, nowMs) {
   void nowMs;
@@ -59519,6 +59628,7 @@ var init_selection3 = __esm({
     init_window();
     init_points();
     init_labels2();
+    init_fit2();
     init_build9();
     init_axis();
     init_scale();
@@ -59713,11 +59823,13 @@ function paint9(c) {
     marksOf.set(point2.lane, list);
   }
   const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
+  const fit2 = isFit(c);
+  const unmeasured = fit2 && c.el.isConnected && [...c.bars.values()].some((bar) => !bar.isConnected);
   const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
   const lanes = [];
   for (const [id, lane] of laneById) {
     const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
-    const packed = packRows(
+    const packed = fit2 ? packFit(c, bars, marksOf.get(id) ?? [], minBar) : packRows(
       bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach3) })),
       before,
       pad2,
@@ -59734,7 +59846,7 @@ function paint9(c) {
     fillLaneLabel(c, model.label, lane);
     model.track.setAttribute("aria-label", lane.label);
     const spare = bars.some((b) => b.e == null) ? 1 : 0;
-    model.rows = Math.max(model.rows, packed.count + spare);
+    model.rows = fit2 ? packed.count : Math.max(model.rows, packed.count + spare);
     for (const b of bars) b.row = packed.rows.get(b.run.id) ?? 0;
     model.bars = bars;
     lanes.push(model);
@@ -59804,10 +59916,12 @@ function paint9(c) {
   c.plate.dataset.kpState = plateKind ?? "";
   paintGhosts(c);
   c.busy?.place();
+  if (fit2) c.held = null;
   holdHeight(c);
   visible3(c);
   refresh(c, nowMs);
   syncTabStops2(c);
+  if (unmeasured) paint9(c);
 }
 function holdHeight(c) {
   if (c.state !== "ready" || c.lanes.length === 0) {
@@ -59845,6 +59959,7 @@ var init_paint9 = __esm({
     init_points();
     init_chrome2();
     init_busy5();
+    init_fit2();
     init_selection3();
   }
 });
@@ -60204,6 +60319,7 @@ var init_controller45 = __esm({
     init_chrome2();
     init_model7();
     init_input2();
+    init_fit2();
     MIN_ZOOM_S = 60;
     CHROME_OPTIONS = ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint", "data-kp-gantt-rest"];
     GanttControl = class extends GanttInput {
@@ -60227,6 +60343,7 @@ var init_controller45 = __esm({
         this.watchWidth();
         this.watchFonts();
         this.own(watchOptions(el16, CHROME_OPTIONS, () => this.redrawChrome()));
+        this.own(watchOptions(el16, ["data-kp-gantt-scroll"], () => this.refit()));
         c.timer = window.setInterval(() => tick4(c), GANTT_TICK_MS);
         this.own(() => window.clearInterval(c.timer));
         this.listen(c.scroll, "pointercancel", () => this.endDrag(false));
@@ -60255,11 +60372,22 @@ var init_controller45 = __esm({
         paintChrome(this.c);
         tick4(this.c);
       }
+      /** The scroll option changed (`fit` and back): the lanes are packed and the viewport measured again [gantt-fit-1101]. */
+      refit() {
+        for (const lane of this.c.lanes) {
+          lane.rows = 1;
+          lane.bars = [];
+        }
+        this.c.held = null;
+        this.c.tickKey = "";
+        this.redrawChrome();
+      }
       /** A web font that arrives after the first measure changes every width: the labels are measured again. */
       watchFonts() {
         const fonts = this.host.ownerDocument.fonts;
         const refit = () => {
           this.c.labels.clear();
+          if (isFit(this.c) && this.c.runs.length) paint9(this.c);
           tick4(this.c);
         };
         fonts?.addEventListener?.("loadingdone", refit);
@@ -61468,7 +61596,7 @@ function edges(el16, track) {
   el16.toggleAttribute("data-kp-uptime-before", track.scrollLeft > 1);
   el16.toggleAttribute("data-kp-uptime-after", track.scrollLeft < max - 1);
 }
-var init_fit2 = __esm({
+var init_fit3 = __esm({
   "js/uptime/fit.js"() {
     "use strict";
     init_strings();
@@ -61759,7 +61887,7 @@ var init_draw10 = __esm({
     init_state_plate();
     init_constants27();
     init_figures();
-    init_fit2();
+    init_fit3();
     init_group4();
     init_helpers4();
     init_state19();
@@ -61955,7 +62083,7 @@ var init_controller48 = __esm({
     "use strict";
     init_constants27();
     init_draw10();
-    init_fit2();
+    init_fit3();
     init_group4();
     init_info();
     init_state19();
@@ -73102,17 +73230,17 @@ var init_input3 = __esm({
         const s2 = getStrings();
         const picked = new Set(pickedValues(m));
         const close = nearOf2(m, typed);
-        const free = close.filter((item) => !picked.has(item.value) && !item.el.hasAttribute("aria-disabled"));
-        if (free[0]) {
+        const free2 = close.filter((item) => !picked.has(item.value) && !item.el.hasAttribute("aria-disabled"));
+        if (free2[0]) {
           event.preventDefault();
           if (near2 === "select") {
-            pick(m, free[0].value, "typed");
-            sayAfter(m, s2.usualTookClosest(typed, free[0].label));
+            pick(m, free2[0].value, "typed");
+            sayAfter(m, s2.usualTookClosest(typed, free2[0].label));
           } else {
             event.stopImmediatePropagation();
             m.handle.open();
             m.input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
-            sayAfter(m, s2.usualAsk(free[0].label));
+            sayAfter(m, s2.usualAsk(free2[0].label));
           }
           return true;
         }
@@ -77586,7 +77714,7 @@ function cssAutosizeSupported() {
   return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
 }
 var px3, WRAP_PROPS, TWIN_STYLE, TWINS;
-var init_fit3 = __esm({
+var init_fit4 = __esm({
   "js/autosize/fit.js"() {
     "use strict";
     init_constants35();
@@ -77857,7 +77985,7 @@ var init_measure2 = __esm({
   "js/autosize/measure.js"() {
     "use strict";
     init_constants35();
-    init_fit3();
+    init_fit4();
   }
 });
 
@@ -77966,7 +78094,7 @@ var init_controller70 = __esm({
     init_constants35();
     init_counter();
     init_draft();
-    init_fit3();
+    init_fit4();
     init_hooks();
     init_measure2();
     init_status();
@@ -78192,7 +78320,7 @@ var init_autosize = __esm({
   "js/autosize.js"() {
     "use strict";
     init_constants35();
-    init_fit3();
+    init_fit4();
     init_api23();
   }
 });

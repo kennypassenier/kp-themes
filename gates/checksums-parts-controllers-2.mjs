@@ -168,6 +168,7 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/gantt/chrome.js',
     'js/gantt/constants.js',
     'js/gantt/controller.js',
+    'js/gantt/fit.js',
     'js/gantt/input.js',
     'js/gantt/labels.js',
     'js/gantt/model.js',

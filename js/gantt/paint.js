@@ -7,6 +7,7 @@ import { MARK_GAP_PX, RUN_GAP_PX } from './labels.js';
 import { fillLaneLabel, paintPoints } from './points.js';
 import { paintChrome, paintKinds, paintZones } from './chrome.js';
 import { drawBusy, paintGhosts } from './busy.js';
+import { isFit, packFit } from './fit.js';
 import { refresh, syncTabStops, visible } from './selection.js';
 /** @typedef {import('./constants.js').GanttBar} GanttBar */
 /** @typedef {import('./constants.js').GanttLane} GanttLane */
@@ -96,17 +97,22 @@ export function paint(c) {
         marksOf.set(point.lane, list);
     }
     const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
+    // A fitted timeline packs a bar with its label, and measures the words on bars already in the page [gantt-fit-1101].
+    const fit = isFit(c);
+    const unmeasured = fit && c.el.isConnected && [...c.bars.values()].some((bar) => !bar.isConnected);
     const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
     /** @type {GanttLaneModel[]} */
     const lanes = [];
     for (const [id, lane] of laneById) {
         const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
-        const packed = packRows(
-            bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach) })),
-            before,
-            pad,
-            marksOf.get(id) ?? [],
-        );
+        const packed = fit
+            ? packFit(c, bars, marksOf.get(id) ?? [], minBar)
+            : packRows(
+                  bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach) })),
+                  before,
+                  pad,
+                  marksOf.get(id) ?? [],
+              );
         let model = old.get(id);
         if (!model) {
             const label = make(doc, 'div', 'kp-gantt__lane');
@@ -120,7 +126,7 @@ export function paint(c) {
         // Rows never fewer while the window stays the same. A lane with a run still open reserves one spare row: the next start in it
         // overlaps that run, so the frame already has the room and does not grow when the start comes.
         const spare = bars.some((b) => b.e == null) ? 1 : 0;
-        model.rows = Math.max(model.rows, packed.count + spare);
+        model.rows = fit ? packed.count : Math.max(model.rows, packed.count + spare); // fitted: as tall as the rows it uses
         for (const b of bars) b.row = packed.rows.get(b.run.id) ?? 0;
         model.bars = bars;
         lanes.push(model);
@@ -198,10 +204,13 @@ export function paint(c) {
     c.plate.dataset.kpState = plateKind ?? '';
     paintGhosts(c);
     c.busy?.place();
+    if (fit) c.held = null;
     holdHeight(c);
     visible(c);
     refresh(c, nowMs);
     syncTabStops(c);
+    // New bars were packed before they were in the page, with words not yet measurable: once more, now they are.
+    if (unmeasured) paint(c);
 }
 /**
  * The scrolling viewport keeps the height it first had with data: a start that needs more rows than the lanes reserved scrolls

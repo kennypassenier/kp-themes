@@ -81,6 +81,7 @@
         "run-timeline/a-running-bars-planned.css",
         "run-timeline/narrow-timeline-keeps-readable.css",
         "run-timeline/a-lanes-name-as-a-link-and-a.css",
+        "run-timeline/fits-its-width.css",
         "pipeline.css",
         "task-row.css",
         "board.css",

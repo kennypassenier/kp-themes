@@ -8,6 +8,8 @@ export declare class GanttControl extends GanttInput {
     connect(): void;
     /** The toolbar, the legend and the hint changed: draw them again. */
     redrawChrome(): void;
+    /** The scroll option changed (`fit` and back): the lanes are packed and the viewport measured again [gantt-fit-1101]. */
+    refit(): void;
     /** A web font that arrives after the first measure changes every width: the labels are measured again. */
     watchFonts(): void;
     /** Another plot width packs the rows and measures the lanes again. */

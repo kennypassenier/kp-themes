@@ -180,7 +180,7 @@ Dialogs that leave the way they came, and boxes that ease to a new size. 22 file
 
 ## js/gantt.js → js/gantt/
 
-The run timeline. 16 files.
+The run timeline. 17 files.
 
 | File           | Does                                                                            |
 | -------------- | ------------------------------------------------------------------------------- |
@@ -192,6 +192,7 @@ The run timeline. 16 files.
 | `chrome.js`    | Zones, the legend and the chrome around the plot.                               |
 | `constants.js` | The attribute names, events and fixed sizes of the run timeline.                |
 | `controller.js` | GanttControl: one timeline built, kept live, answering its bars and toolbar.   |
+| `fit.js`       | Fit to width: rows packed with their labels, every label whole.                 |
 | `input.js`     | GanttInput: the keys and the brush of one timeline.                             |
 | `labels.js`    | Places each bar's label inside, beside or outside its bar.                      |
 | `model.js`     | The model of one timeline and the moves of its window (fresh window, live).     |
