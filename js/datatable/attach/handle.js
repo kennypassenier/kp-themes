@@ -141,6 +141,7 @@ export class TableHandle {
         const lost = inBody === null && focusMemo !== null && !focusMemo.element.isConnected && (active === null || active === document.body);
         const memo = inBody !== null ? selection.toggleMemo(inBody) : lost ? focusMemo : null;
         const held = inBody ?? (lost && focusMemo !== null ? focusMemo.element : null);
+        this.t.tracks.release();
         this.readRows();
         this.t.groups.collectGroups();
         this.t.sync.syncColumns();

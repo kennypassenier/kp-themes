@@ -69,6 +69,7 @@
         "datatable/row-reorder-column-drag.css",
         "datatable/a-column-that-cannot-be.css",
         "datatable/filters-popover.css",
+        "datatable/row-actions.css",
         "forms.css",
         "small-patterns/base.css",
         "small-patterns/input-mode-typed-box.css",

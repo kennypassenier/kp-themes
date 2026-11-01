@@ -47915,6 +47915,159 @@ var init_groups2 = __esm({
   }
 });
 
+// js/datatable/attach/column-tracks.js
+var TableColumnTracks;
+var init_column_tracks = __esm({
+  "js/datatable/attach/column-tracks.js"() {
+    "use strict";
+    TableColumnTracks = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.held = false;
+        this.heldWidth = 0;
+        t.own(() => this.release());
+        t.own(() => this.watch.disconnect());
+        this.watch = new ResizeObserver(() => {
+          if (this.held && Math.abs(this.t.wrap.clientWidth - this.heldWidth) >= 1) this.release();
+        });
+        this.watch.observe(t.wrap);
+      }
+      /** Hold the columns where they stand, before rows leave or come back. A table with no group row has nothing to fold. */
+      hold() {
+        const { table, columns: columns2, groups } = this.t;
+        if (groups.groups.size === 0) return;
+        if (this.held || table.getBoundingClientRect().width === 0) return;
+        const widths2 = columns2.headers.map((header) => header.getBoundingClientRect().width);
+        columns2.headers.forEach((header, at) => header.style.setProperty("inline-size", `${widths2[at]}px`));
+        table.style.setProperty("table-layout", "fixed");
+        this.held = true;
+        this.heldWidth = this.t.wrap.clientWidth;
+      }
+      /** Let the columns size themselves again. */
+      release() {
+        if (!this.held) return;
+        for (const header of this.t.columns.headers) header.style.removeProperty("inline-size");
+        this.t.table.style.removeProperty("table-layout");
+        this.held = false;
+        this.heldWidth = 0;
+      }
+    };
+  }
+});
+
+// js/datatable/attach/row-actions.js
+var GROUP2, PRIMARY, DESTRUCTIVE, MORE_GLYPH, ITEM_CLASS, ITEM_DESTRUCTIVE, TableRowActions;
+var init_row_actions = __esm({
+  "js/datatable/attach/row-actions.js"() {
+    "use strict";
+    init_menu_button();
+    GROUP2 = ".kp-table__actions";
+    PRIMARY = "[data-kp-row-primary]";
+    DESTRUCTIVE = ".kp-button--destructive";
+    MORE_GLYPH = "\u22EF";
+    ITEM_CLASS = "kp-menu__item";
+    ITEM_DESTRUCTIVE = "kp-menu__item--destructive";
+    TableRowActions = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.done = /* @__PURE__ */ new WeakSet();
+        this.memory = /* @__PURE__ */ new WeakMap();
+      }
+      /** Whether the table asked for the menu form. */
+      get wanted() {
+        return this.t.wrap.dataset.kpRowActions === "menu";
+      }
+      /** Fold the actions of every row that has not been folded yet; rows the page adds later are folded when they are first drawn. */
+      sync() {
+        if (!this.wanted) return;
+        for (const row2 of this.t.model.all) {
+          for (
+            const group of
+            /** @type {HTMLElement[]} */
+            [...row2.querySelectorAll(GROUP2)]
+          ) {
+            if (this.done.has(group)) continue;
+            this.done.add(group);
+            this.fold(group);
+          }
+        }
+      }
+      /** The one that stays: the page's mark, else the first that is not destructive, else the first. @param {HTMLElement[]} items */
+      primaryOf(items) {
+        return items.find((item) => item.matches(PRIMARY)) ?? items.find((item) => !item.matches(DESTRUCTIVE)) ?? items[0];
+      }
+      /** @param {HTMLElement} group */
+      fold(group) {
+        const items = (
+          /** @type {HTMLElement[]} */
+          [...group.children].filter((child) => child.matches("button, a"))
+        );
+        if (items.length < 2) return;
+        const primary = this.primaryOf(items);
+        const rest = items.filter((item) => item !== primary);
+        const wrapper = this.buildMenu(rest);
+        group.classList.add("kp-table__actions--menu");
+        group.append(wrapper);
+        const detach = attachMenuButtons(group);
+        this.t.identity.undo.push(() => {
+          detach();
+          this.unfold(group, wrapper, rest, primary);
+        });
+      }
+      /** The menu button with its menu; every action moves in as an entry. @param {HTMLElement[]} rest */
+      buildMenu(rest) {
+        const { identity } = this.t;
+        const wrapper = identity.make("div", "kp-menu-button kp-table__more");
+        wrapper.dataset.kpMenuButton = "";
+        const button6 = (
+          /** @type {HTMLButtonElement} */
+          identity.make("button", "kp-button kp-button--sm kp-table__more-button")
+        );
+        button6.type = "button";
+        button6.setAttribute("aria-label", identity.s0.tableRowMenu);
+        button6.textContent = MORE_GLYPH;
+        const menu = identity.make("div", "kp-menu");
+        menu.setAttribute("role", "menu");
+        menu.setAttribute("aria-label", identity.s0.tableRowMenu);
+        menu.hidden = true;
+        for (const item of rest) this.toEntry(item, menu);
+        wrapper.append(button6, menu);
+        return wrapper;
+      }
+      /** One action becomes a menu entry; what it was is kept so the detach can give it back. @param {HTMLElement} item @param {HTMLElement} menu */
+      toEntry(item, menu) {
+        const was = { className: item.className, role: item.getAttribute("role"), tabindex: item.getAttribute("tabindex"), destructive: item.matches(DESTRUCTIVE) };
+        this.memory.set(item, was);
+        item.className = was.destructive ? `${ITEM_CLASS} ${ITEM_DESTRUCTIVE}` : ITEM_CLASS;
+        item.setAttribute("role", "menuitem");
+        item.setAttribute("tabindex", "-1");
+        menu.append(item);
+      }
+      /** Put every action back in its group, in its own order, as the page wrote it. @param {HTMLElement} group @param {HTMLElement} wrapper @param {HTMLElement[]} rest @param {HTMLElement} primary */
+      unfold(group, wrapper, rest, primary) {
+        for (const item of rest) {
+          const was = this.memory.get(item);
+          if (was === void 0) continue;
+          item.className = was.className;
+          for (
+            const [name, value] of
+            /** @type {const} */
+            [["role", was.role], ["tabindex", was.tabindex]]
+          ) {
+            if (value === null) item.removeAttribute(name);
+            else item.setAttribute(name, value);
+          }
+          primary.after(item);
+        }
+        wrapper.remove();
+        group.classList.remove("kp-table__actions--menu");
+      }
+    };
+  }
+});
+
 // js/datatable/attach/sync-columns.js
 var TableSyncColumns;
 var init_sync_columns = __esm({
@@ -48242,6 +48395,7 @@ var init_render2 = __esm({
       render() {
         const { controls, model } = this.t;
         this.t.sync.labelCells();
+        this.t.rowActions.sync();
         const count2 = controls.serverMode ? this.t.busy.total || 0 : model.shownRows.length;
         const pages = Math.max(1, Math.ceil(count2 / controls.size));
         model.page = Math.min(model.page, pages - 1);
@@ -49369,6 +49523,7 @@ var init_expand = __esm({
       /** @param {string} key @param {boolean} fold */
       setFolded(key, fold2) {
         if (fold2 === this.t.groups.folded.has(key)) return;
+        this.t.tracks.hold();
         const going = fold2 ? this.t.model.pageRows.filter((row2) => this.t.groups.groupOf(row2) === key && !row2.hidden) : [];
         if (fold2) this.t.groups.folded.add(key);
         else {
@@ -50309,6 +50464,7 @@ var init_handle2 = __esm({
         const lost = inBody === null && focusMemo !== null && !focusMemo.element.isConnected && (active === null || active === document.body);
         const memo = inBody !== null ? selection.toggleMemo(inBody) : lost ? focusMemo : null;
         const held2 = inBody ?? (lost && focusMemo !== null ? focusMemo.element : null);
+        this.t.tracks.release();
         this.readRows();
         this.t.groups.collectGroups();
         this.t.sync.syncColumns();
@@ -50551,6 +50707,8 @@ var init_controller38 = __esm({
     init_layout_setup();
     init_reorder();
     init_groups2();
+    init_column_tracks();
+    init_row_actions();
     init_sync5();
     init_render2();
     init_pills();
@@ -50597,6 +50755,8 @@ var init_controller38 = __esm({
         this.layoutSetup = UNMADE;
         this.reorder = UNMADE;
         this.groups = UNMADE;
+        this.tracks = UNMADE;
+        this.rowActions = UNMADE;
         this.sync = UNMADE;
         this.render = UNMADE;
         this.pills = UNMADE;
@@ -50633,6 +50793,8 @@ var init_controller38 = __esm({
         this.layoutSetup = new TableLayoutSetup(this);
         this.reorder = new TableReorder(this);
         this.groups = new TableGroups(this);
+        this.tracks = new TableColumnTracks(this);
+        this.rowActions = new TableRowActions(this);
         this.sync = new TableSync(this);
         this.render = new TableRender(this);
         this.pills = new TablePills(this);

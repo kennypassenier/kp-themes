@@ -33,6 +33,7 @@ export class TableRender {
     render() {
         const { controls, model } = this.t;
         this.t.sync.labelCells();
+        this.t.rowActions.sync();
         const count = controls.serverMode ? this.t.busy.total || 0 : model.shownRows.length;
         const pages = Math.max(1, Math.ceil(count / controls.size));
         model.page = Math.min(model.page, pages - 1);

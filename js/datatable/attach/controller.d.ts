@@ -11,6 +11,8 @@ import { TableSortSetup } from './sort-setup.js';
 import { TableLayoutSetup } from './layout-setup.js';
 import { TableReorder } from './reorder.js';
 import { TableGroups } from './groups.js';
+import { TableColumnTracks } from './column-tracks.js';
+import { TableRowActions } from './row-actions.js';
 import { TableSync } from './sync.js';
 import { TableRender } from './render.js';
 import { TablePills } from './pills.js';
@@ -53,6 +55,8 @@ export declare class DataTableControl extends Controller {
     /** @type {TableLayoutSetup} */ layoutSetup: TableLayoutSetup;
     /** @type {TableReorder} */ reorder: TableReorder;
     /** @type {TableGroups} */ groups: TableGroups;
+    /** @type {TableColumnTracks} */ tracks: TableColumnTracks;
+    /** @type {TableRowActions} */ rowActions: TableRowActions;
     /** @type {TableSync} */ sync: TableSync;
     /** @type {TableRender} */ render: TableRender;
     /** @type {TablePills} */ pills: TablePills;

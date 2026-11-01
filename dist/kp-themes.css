@@ -12771,6 +12771,26 @@
     .kp-datatable__range:has(> .kp-datatable__bound > .kp-datepicker) {
         flex-wrap: nowrap;
     }
+    /* `data-kp-row-actions="menu"` on a table (js/datatable/attach/row-actions.js) [ux-1101, table-rows]: the primary action keeps the
+     * button's own width and the menu button sits after it, square; in a card the primary fills the row beside the menu button, so a
+     * phone shows one button and one menu button where it showed a stack of small ones. The menu is the package's `.kp-menu`, opened
+     * in the top layer by the menu button, so a short table never clips it. */
+    .kp-table__actions--menu {
+        grid-auto-flow: column;
+        grid-auto-columns: auto;
+        grid-template-columns: minmax(var(--kp-actions-button, 5rem), 1fr) auto;
+        align-items: stretch;
+    }
+
+    .kp-table__actions--menu > .kp-table__more {
+        display: flex;
+    }
+
+    .kp-table__more-button {
+        min-inline-size: var(--kp-control-height-sm, 2rem);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        line-height: 1;
+    }
     /* --- Forms [TH38] ---------------------------------------------------- */
 
     /* A radio group laid out in a row rather than a column. The fieldset is
