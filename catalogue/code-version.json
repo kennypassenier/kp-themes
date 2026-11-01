@@ -137,7 +137,7 @@
         },
         "js/week.js": { "digest": "a89db1a5005a4421", "when": "[data-kp-week]" },
         "js/weekdays.js": { "digest": "a99ff03f02d217ed", "when": "[data-kp-weekdays]" },
-        "js/wheel.js": { "digest": "364615d2c0977987", "when": "[data-kp-wheel]" },
+        "js/wheel.js": { "digest": "92673603737bb857", "when": "[data-kp-wheel]" },
         "js/wizard.js": { "digest": "30df34a5ed6a9d70", "when": "[data-kp-wizard]" }
     },
     "themes": {
@@ -9816,7 +9816,7 @@
         "||||.kp-notices__tools": "87f456fef269941a",
         "||||.kp-notices__trigger": "1d58eb6ce9da54df",
         "||||.kp-numeric": "a44a70bd8a1f80c5",
-        "||||.kp-ops": "e9d3fdc1d875e3ea",
+        "||||.kp-ops": "d49cd5be307b67ad",
         "||||.kp-ops[data-kp-density='compact']": "6d6ec5abd6eb87e3",
         "||||.kp-ops[data-kp-ops-cards='12']": "13135f87ad29e37a",
         "||||.kp-ops[data-kp-ops-cards='3']": "357df4400c15e68e",

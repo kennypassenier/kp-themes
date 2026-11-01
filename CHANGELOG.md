@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Fixed: `.kp-ops` makes its content 80vw wide, not its border box** [medicine-1101 20]. `--kp-ops-width` counted the padding, so a 1280 px page column was 976 px (76%); the padding now comes on top. An app that added the padding to the knob itself (Medicine Cabinet's app.css) drops that sum.
+- **Fixed: a long wheel name without a space breaks in two with a hyphen** [kitchen-1101 18]. "Kippenwaterzooi" was drawn whole at the smallest size; it now breaks at a soft hyphen the page puts in, else at the syllable boundary nearest the middle ("Kippenwa-terzooi"), never inside ch/gh/ph/sh/th. Measured on a 360 px phone: 9.1 px → 12.9 px.
 - **Fixed: a low graph keeps the top node's name whole** [kyu-1101]. Under `data-kp-graph-height` 360 px the ring left 26 px over its top node and the name was cut to "s…" (kyu, 200–340 px); the ring now keeps 40 px over its top node. Measured with kyu's two-node hub at 200, 260, 300 and 340 px: "s…" → "smoke / reader1". Heights from 360 px up lay out as before.
 - **Fixed: a popover on the top layer follows its button down a long page** [kitchen-1101, chassis-rs gap 23]. `.kp-popover` was `position: absolute`, which on the top layer is placed in the initial containing block, so a popover under a button scrolled 1226 px down sat 714 px above it. `.kp-popover[popover]` is now `position: fixed` with `position-try-fallbacks: flip-block, flip-inline`, so it also opens above a button near the bottom edge.
 - **Added (opt-in): a labelled theme-menu trigger, `themeMenuMarkup({ trigger: 'label' })`** [kitchen-1101, chassis-rs gap 24]. A settings row gets "Formal ▾" instead of the palette icon; a pick keeps its name and accessible name current.

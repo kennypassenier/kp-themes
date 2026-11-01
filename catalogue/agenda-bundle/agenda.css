@@ -26952,12 +26952,15 @@
         display: flex;
         flex-direction: column;
         gap: var(--kp-ops-gap);
+        --_ops-pad-inline: var(--kp-ops-pad-inline, clamp(var(--kp-space-md, 1rem), 3vw, var(--kp-space-xl, 2rem)));
         box-sizing: border-box;
         inline-size: 100%;
-        max-inline-size: var(--kp-ops-width, max(80vw, 64rem));
+        /* The width is the content's, not the border box's: 80vw of content beside its padding, as the page rule asks.
+         * Counted with the padding, a 1280 px page column was 976 px, 76% [medicine-1101 20]. 'full' (none) makes the sum
+         * invalid, which leaves no maximum. */
+        max-inline-size: calc(var(--kp-ops-width, max(80vw, 64rem)) + 2 * var(--_ops-pad-inline));
         margin-inline: auto;
-        padding: var(--kp-ops-pad-block, var(--kp-space-xl, 2rem))
-            var(--kp-ops-pad-inline, clamp(var(--kp-space-md, 1rem), 3vw, var(--kp-space-xl, 2rem)));
+        padding: var(--kp-ops-pad-block, var(--kp-space-xl, 2rem)) var(--_ops-pad-inline);
     }
 
     .kp-ops[data-kp-ops-width='full'] {

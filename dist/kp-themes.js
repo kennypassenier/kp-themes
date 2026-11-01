@@ -38026,6 +38026,19 @@ function drawDisc(root, measure) {
     group.append(text);
   });
 }
+function hyphenHalves(text) {
+  const soft = text.indexOf("\xAD");
+  if (soft > 0) return [`${text.slice(0, soft)}-`, text.slice(soft + 1).replaceAll("\xAD", "")];
+  if (text.length < 8) return null;
+  const vowel = (c) => /[aeiouyàáâäèéêëìíîïòóôöùúûü]/i.test(c);
+  let best = -1;
+  for (let i = 3; i <= text.length - 3; i += 1) {
+    const starts = !vowel(text[i]) && vowel(text[i + 1] ?? "") && (vowel(text[i - 1]) || vowel(text[i - 2]));
+    if (!starts || text[i].toLowerCase() === "h" && !vowel(text[i - 1])) continue;
+    if (best < 0 || Math.abs(i - text.length / 2) < Math.abs(best - text.length / 2)) best = i;
+  }
+  return best < 0 ? null : [`${text.slice(0, best)}-`, text.slice(best)];
+}
 function fitLabel(group, names, half, measure) {
   const sin = Math.max(1e-4, Math.sin(half));
   const mid = (LABEL_IN + LABEL_OUT) / 2;
@@ -38043,7 +38056,7 @@ function fitLabel(group, names, half, measure) {
   };
   const halves = (text) => {
     const spaces = [...text.matchAll(/ /g)].map((m) => m.index ?? 0);
-    if (!spaces.length) return null;
+    if (!spaces.length) return hyphenHalves(text);
     const at = spaces.reduce((best2, i) => Math.abs(i - text.length / 2) < Math.abs(best2 - text.length / 2) ? i : best2);
     return [text.slice(0, at).trim(), text.slice(at + 1).trim()];
   };
