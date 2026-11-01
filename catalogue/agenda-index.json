@@ -474,6 +474,28 @@
             "fingerprint": "83f012d2600f0685",
             "update": null
         },
+        "research/ux-fixes-1101/demo.html": {
+            "facts": {
+                "id": "ux-fixes-1101",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Kenny’s review of the apps (kyu, Almanac, homelab, HTTPSwitchboard, Medicine Cabinet, Kitchen) found faults in the package; you approved the fixes. Each section shows one visible change on the app’s own shape, and where it replaces something the earlier look stays beside it as “before”. Formal only (the names, counts, dates and times are mock). 8 sections, 8 pairs.",
+                "sections": [
+                    { "item": "filters", "themes": null, "topic": "tables", "mode": null },
+                    { "item": "states", "themes": null, "topic": "tables", "mode": null },
+                    { "item": "row-actions", "themes": null, "topic": "tables", "mode": null },
+                    { "item": "required", "themes": null, "topic": "fields", "mode": null },
+                    { "item": "action-list", "themes": null, "topic": "lists", "mode": null },
+                    { "item": "list-head", "themes": null, "topic": "lists", "mode": null },
+                    { "item": "disabled-reason", "themes": null, "topic": "disabled-reason", "mode": null },
+                    { "item": "uptime", "themes": null, "topic": "uptime", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"ux-fixes-1101-07903800-69ff-495f-b49e-64d9bed5497f\",\"received\":[]}\n        "
+            },
+            "fingerprint": "23407d8d79e3f73a",
+            "update": null
+        },
         "research/habits-1101/demo.html": {
             "facts": {
                 "id": "habits-1101",

@@ -1,0 +1,62 @@
+/* research/ux-fixes-1101: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    container: pg-stage / inline-size;
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+/* A caption over one of two components that stand one above the other. */
+.pg-label {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    font-size: var(--kp-text-sm, 0.875rem);
+    color: var(--muted-foreground);
+}
+
+/* The line under the filters table, which must not move when the panel opens. */
+.pg-under {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* What the page heard or measured: one line high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+}
+
+/* A section that answers a phone's width draws its components in the narrow stage. */
+.pg-component > :is(ul, div) {
+    min-inline-size: 0;
+}

@@ -27,7 +27,7 @@ let counter = 0;
 const isOff = (el) => el.matches(':disabled') || el.getAttribute('aria-disabled') === 'true';
 
 /** The attributes of the control that change what the wrapper and the tooltip say. */
-const WATCHED = ['disabled', 'aria-disabled', 'data-kp-disabled-reason', 'data-kp-action'];
+const WATCHED = ['disabled', 'aria-disabled', 'data-kp-disabled-reason', 'data-kp-action', 'data-kp-reason-line'];
 
 /** One control with a reason: wrapped in an anchor with a tooltip, kept in step with its attributes, and unwrapped on destroy. */
 class DisabledReasonController extends Controller {
@@ -75,6 +75,13 @@ class DisabledReasonController extends Controller {
         observer.observe(control, { attributes: true, attributeFilter: WATCHED });
     }
 
+    /** `data-kp-reason-line="always"` on the control prints the reason under it on every pointer, not only a coarse one; the wrapper wears it for the stylesheet. */
+    mirrorLine() {
+        const line = this.host.getAttribute('data-kp-reason-line');
+        if (line === null) this.anchor.removeAttribute('data-kp-reason-line');
+        else this.anchor.setAttribute('data-kp-reason-line', line);
+    }
+
     /** The role the control plays in a column of buttons, worn by the wrapper that stands in the row in its place. */
     mirrorRole() {
         const role = this.host.getAttribute('data-kp-action');
@@ -88,6 +95,7 @@ class DisabledReasonController extends Controller {
         const control = this.host;
         const { anchor, tip } = this;
         this.mirrorRole();
+        this.mirrorLine();
         const text = control.getAttribute('data-kp-disabled-reason') ?? '';
         const shown = text !== '' && isOff(control);
         tip.textContent = shown ? text : '';

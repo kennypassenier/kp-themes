@@ -35,7 +35,7 @@ export const disabledReasonDescriptor = {
             { name: 'follows the attribute', what: 'Change or remove the sentence and the tooltip changes or goes; a control that comes back to life loses it.' },
             { name: 'aria-disabled', what: 'A control disabled with `aria-disabled="true"` carries a reason the same way.' },
             { name: 'in a row of actions', what: 'The wrapper wears the control’s `data-kp-action`, so an off button keeps its column in a `.kp-row-actions`.' },
-            { name: 'on a coarse pointer', what: 'A tooltip cannot be reached by touch, so under `(pointer: coarse)` the reason is printed under the control as a plain line (`.kp-reason__line`, which the script keeps beside the tooltip); a fine pointer keeps the tooltip alone. The tooltip stays the control’s accessible description either way.' },
+            { name: 'on a coarse pointer', what: 'A tooltip cannot be reached by touch, so under `(pointer: coarse)` the reason is printed under the control as a plain line (`.kp-reason__line`, which the script keeps beside the tooltip); a fine pointer keeps the tooltip alone unless the control says `data-kp-reason-line="always"`, which prints the line on every pointer. The tooltip stays the control’s accessible description either way.' },
         ],
         accessibility: [
             'Built in — the reason is the control’s `aria-describedby` while it is off, so a screen reader hears it with the control.',

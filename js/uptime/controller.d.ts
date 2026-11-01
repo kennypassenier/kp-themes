@@ -20,7 +20,7 @@ export declare class UptimeControl extends UptimeInfo {
     cellOf(event: Event): HTMLElement | null;
     /**
      * On a coarse pointer a cell is 11 px wide and a finger is not: a tap on the strip's row, between cells or beside one, goes to the
-     * cell nearest to it along the row [ux-1101, uptime-touch].
+     * cell nearest to it along the row [ux-1101, uptime-touch]. `data-kp-uptime-row-tap` on the strip asks for the same on any pointer.
      * @param {MouseEvent} event @returns {HTMLElement | null}
      */
     nearestCell(event: MouseEvent): HTMLElement | null;

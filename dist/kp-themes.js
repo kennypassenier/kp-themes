@@ -6610,7 +6610,7 @@ var init_reason = __esm({
     DISABLED_REASON = "[data-kp-disabled-reason]";
     counter = 0;
     isOff = (el16) => el16.matches(":disabled") || el16.getAttribute("aria-disabled") === "true";
-    WATCHED2 = ["disabled", "aria-disabled", "data-kp-disabled-reason", "data-kp-action"];
+    WATCHED2 = ["disabled", "aria-disabled", "data-kp-disabled-reason", "data-kp-action", "data-kp-reason-line"];
     DisabledReasonController = class extends Controller {
       /**
        * @param {HTMLElement} host
@@ -6655,6 +6655,12 @@ var init_reason = __esm({
         const observer = this.observe(new MutationObserver(() => this.sync()));
         observer.observe(control, { attributes: true, attributeFilter: WATCHED2 });
       }
+      /** `data-kp-reason-line="always"` on the control prints the reason under it on every pointer, not only a coarse one; the wrapper wears it for the stylesheet. */
+      mirrorLine() {
+        const line = this.host.getAttribute("data-kp-reason-line");
+        if (line === null) this.anchor.removeAttribute("data-kp-reason-line");
+        else this.anchor.setAttribute("data-kp-reason-line", line);
+      }
       /** The role the control plays in a column of buttons, worn by the wrapper that stands in the row in its place. */
       mirrorRole() {
         const role = this.host.getAttribute("data-kp-action");
@@ -6667,6 +6673,7 @@ var init_reason = __esm({
         const control = this.host;
         const { anchor, tip } = this;
         this.mirrorRole();
+        this.mirrorLine();
         const text = control.getAttribute("data-kp-disabled-reason") ?? "";
         const shown5 = text !== "" && isOff(control);
         tip.textContent = shown5 ? text : "";
@@ -62544,12 +62551,12 @@ var init_controller48 = __esm({
       }
       /**
        * On a coarse pointer a cell is 11 px wide and a finger is not: a tap on the strip's row, between cells or beside one, goes to the
-       * cell nearest to it along the row [ux-1101, uptime-touch].
+       * cell nearest to it along the row [ux-1101, uptime-touch]. `data-kp-uptime-row-tap` on the strip asks for the same on any pointer.
        * @param {MouseEvent} event @returns {HTMLElement | null}
        */
       nearestCell(event) {
         const target = event.target instanceof Element ? event.target : null;
-        if (!coarsePointer() || target === null || this.panel?.contains(target) || target.closest(TRACK) === null) return null;
+        if (!(coarsePointer() || this.host.hasAttribute("data-kp-uptime-row-tap")) || target === null || this.panel?.contains(target) || target.closest(TRACK) === null) return null;
         const cells = (
           /** @type {HTMLElement[]} */
           [...this.host.querySelectorAll(`${TRACK} > ${CELL}:not([hidden])`)]

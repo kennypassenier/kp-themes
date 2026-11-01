@@ -454,6 +454,7 @@ setUptime(strip, { label: <span class="kp-code__string">'Watering'</span>, perio
                             <tr><td><code>data-kp-uptime-group</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-uptime-label</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-uptime-open</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-uptime-row-tap</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-uptime-state</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-uptime-tip</code></td><td>written</td></tr>
                     </tbody></table></div>
@@ -520,7 +521,7 @@ setUptime(strip, { label: <span class="kp-code__string">'Watering'</span>, perio
                             <tr><td><code>data-kp-uptime-attached</code></td><td>Set by the script once the strip is wired.</td></tr>
                             <tr><td><code>groups</code></td><td>Strips that load together are a group with one busy card over the group: `data-kp-uptime-group` on the box that holds them (`off` opts out), or two or more strips that are direct children of one parent (marked `data-kp-uptime-group=&quot;auto&quot;`).</td></tr>
                             <tr><td><code>empty and failed</code></td><td>The state plate over the strip’s footprint. A failure has a Retry (`kp-uptime-retry`); `error` or `message` is the heading, `text` and `art` are optional.</td></tr>
-                            <tr><td><code>on a coarse pointer</code></td><td>“Hover card only” (no `data-kp-uptime-open`) does not apply when the primary pointer is a finger: a tap on the strip’s row opens the quick info of the cell nearest the finger (its period, figures and `details`, the per-hour list), as `data-kp-uptime-open=&quot;info&quot;` does everywhere. A cell is a few pixels wide, so a tap between cells goes to the nearest.</td></tr>
+                            <tr><td><code>on a coarse pointer</code></td><td>“Hover card only” (no `data-kp-uptime-open`) does not apply when the primary pointer is a finger: a tap on the strip’s row opens the quick info of the cell nearest the finger (its period, figures and `details`, the per-hour list), as `data-kp-uptime-open=&quot;info&quot;` does everywhere. A cell is a few pixels wide, so a tap between cells goes to the nearest; `data-kp-uptime-row-tap` on the strip asks for that on any pointer.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
