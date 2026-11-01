@@ -24,7 +24,8 @@ export function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, lo
     const width = g.box.clientWidth;
     g.drawnWidth = width;
     const W = Math.max(280, width || 800);
-    let H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
+    // A height the page gives wins over the one from the width: a hub with three nodes needs no 420 px [kyu-1101 graph-height].
+    let H = o.height ?? (W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6))));
     // Names beside the ring at a phone width [graph-1020]: the placement by angle is the approved look, and when two groups (a node and
     // its name) touch, the picture is drawn again with more room: taller first, then the ring turned a quarter step at a time.
     const roomy = SIDE_ROOM[attempt] ?? SIDE_ROOM[SIDE_ROOM.length - 1];

@@ -54,6 +54,7 @@ export type GraphOptions = {
     detail: boolean;
     ring: number | null;
     node: number | null;
+    height: number | null;
 };
 /**
  * @typedef {{ id: string, label: string, kind?: string, hue?: number, colour?: string, radius?: number, weight?: number | null,
@@ -73,7 +74,7 @@ export type GraphOptions = {
  * (an element inside the details panel) and the graph.
  * @typedef {{ id: string, node: GraphNode, slot: HTMLElement, host: HTMLElement, key?: string }} GraphDetailInfo
  * @typedef {{ labels: 'beside' | 'below', chrome: 'outside' | 'inside', colour: 'theme' | 'fixed', direction: 'none' | 'arrows',
- *   zoom: boolean, detail: boolean, ring: number | null, node: number | null }} GraphOptions
+ *   zoom: boolean, detail: boolean, ring: number | null, node: number | null, height: number | null }} GraphOptions
  */
 /**
  * The graph's options as its attributes say them; anything missing or unreadable is the approved look.

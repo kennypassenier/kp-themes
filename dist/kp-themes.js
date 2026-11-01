@@ -83161,7 +83161,8 @@ var init_constants38 = __esm({
       "data-kp-zoom",
       "data-kp-detail",
       "data-kp-ring-radius",
-      "data-kp-node-radius"
+      "data-kp-node-radius",
+      "data-kp-graph-height"
     ];
   }
 });
@@ -83182,7 +83183,8 @@ function graphOptionsOf(host) {
     zoom: flag("data-kp-zoom"),
     detail: flag("data-kp-detail"),
     ring: num3("data-kp-ring-radius", 0.15, 0.48),
-    node: num3("data-kp-node-radius", 6, 40)
+    node: num3("data-kp-node-radius", 6, 40),
+    height: num3("data-kp-graph-height", 200, 1200)
   };
 }
 function setGraphOptions(el16, options) {
@@ -83194,7 +83196,8 @@ function setGraphOptions(el16, options) {
     zoom: "data-kp-zoom",
     detail: "data-kp-detail",
     ring: "data-kp-ring-radius",
-    node: "data-kp-node-radius"
+    node: "data-kp-node-radius",
+    height: "data-kp-graph-height"
   };
   for (const [key, value] of Object.entries(options)) {
     const name = names[key];
@@ -83899,7 +83902,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   const width = g.box.clientWidth;
   g.drawnWidth = width;
   const W = Math.max(280, width || 800);
-  let H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
+  let H = o.height ?? (W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6))));
   const roomy = SIDE_ROOM[attempt] ?? SIDE_ROOM[SIDE_ROOM.length - 1];
   if (o.labels !== "below" && W < 600) H = Math.round(H * roomy.height);
   const hadFocus = g.svg.contains(doc.activeElement) ? g.focus : null;

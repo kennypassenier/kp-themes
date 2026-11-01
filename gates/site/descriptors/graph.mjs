@@ -46,6 +46,7 @@ export const graphDescriptor = {
             { name: 'data-kp-zoom', what: 'Option, off by default. Wheel or pinch zooms about the pointer, a drag on the background moves the picture, `+`, `-`, `0` and Shift with the arrows work from a node, and Zoom in, Zoom out and Reset view stand inside the picture (`graphZoom(el, \'in\' | \'out\' | \'reset\')`). `data-kp-zoomed` marks a view that is not the first one and `data-kp-panning` a drag; a button or key eases on the theme’s own time and curve (see the knobs), and not at all under reduced motion.' },
             { name: 'data-kp-detail', what: 'Option, off by default. A picked node opens a details panel inside the picture (`.kp-graph__detail`). The page fills it through the `detail` option of `attachGraphs()` or the `kp-graph-detail` event (`detail.slot`), else it shows the node’s description. Esc closes it first and keeps the picks; `graphDetail(el, id)` opens or closes it from the page.' },
             { name: 'data-kp-ring-radius', what: 'Option. The ring as a share of the picture (0.36 by default), from 0.15 to 0.48.' },
+            { name: 'data-kp-graph-height', what: 'Option. The drawing’s height in px (200 to 1200) in place of the one from its width (420 to 560, 480 on a phone): a small network needs less. The ring shrinks with it; names beside a crowded ring on a phone may still take more room.' },
             { name: 'data-kp-node-radius', what: 'Option. The base node radius in px (14 by default); a weight scales from it and a node’s own `radius` wins.' },
         ],
         accessibility: [
