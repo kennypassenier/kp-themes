@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="ux-parts-1101" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Seven parts from the app review</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>Seven parts from the app review</h1>
+                <p class="cat-intro">
+                    Seven things the app review of 2026-11-01 found missing in the package, built as you answered: three new parts (the popover form,
+                    the date navigation, Delete with Undo), the three-way chip&rsquo;s state as a word, and three options whose default you set here
+                    (chips on whole tracks, the empty plate without lines, the refresh control without its own line). Every option shows the approved
+                    look and the new one under each other; the approved look stays the default until you choose. Formal only, on the apps&rsquo; own
+                    data (Medicine Cabinet, Kitchen, kyu, Almanac; names, counts and days are mock). 7 sections, 7 pairs.
+                </p>
+                <p>Each section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a phone&rsquo;s 390 px.</p>
+            </header>
+
+        <section id="chips-narrow" data-review-item="chips-narrow" data-review-topic="segmented" data-review-topic-title="Filter chips" data-review-components="chips-narrow" data-review-title="Filter chips: whole tracks, and a menu when narrow" data-review-choices='[{"id":"fit","label":"The default look of a chip group","default":"now","options":[{"value":"now","label":"Flow (now)"},{"value":"new","label":"Whole tracks, a menu when narrow"}]}]' aria-labelledby="h-chips-narrow">
+            <div class="pg-asked"><p><b>What is asked</b> (chips-narrow, Medicine Cabinet): Medicine Cabinet&rsquo;s chips wrapped raggedly (one chip alone on a second line) and, on a phone, scrolled sideways with &ldquo;Switched off&rdquo; cut. <code>data-kp-segmented-fit="tracks"</code> lays the chips on equal tracks, the rows balanced, and under <code>data-kp-segmented-fold-at</code> (30rem) folds them into the package&rsquo;s menu button. You choose the default; the other stays an option.</p></div>
+            <div class="pg-intro"><h2 id="h-chips-narrow">What the Overview shows</h2><p>The cabinet&rsquo;s six filters beside its search, with their exact counts.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Now</b>: the chips flow; at full width the last chips wrap under the first with a ragged edge. <b>New</b>: every chip is as wide as &ldquo;Switched off 4&rdquo;; the rows hold 3 + 3, never 5 + 1.</li><li><b>Phone</b>: <b>Now</b> wraps into three ragged rows; <b>New</b> becomes one button, &ldquo;Show: All ▾&rdquo;. Open it: the six filters with their counts, the chosen one ticked; a pick closes it, says &ldquo;Show: Due today&rdquo; and the line under the frames names the value.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the chips are the approved pills; the menu is the package&rsquo;s plate. Check that the tracks line up from row to row and that nothing is cut.</p></div>
+            <div data-review-controls data-review-controls-for="chips-narrow-component"><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="chips-narrow-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="chips-narrow-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="chips-narrow-component" class="pg-component" data-pg-width="full">
+        <div class="pg-pair">
+            <div class="pg-frame" data-pg-frame="now" data-pg-default><p class="pg-frame__name"><span><b>Now</b>, as approved</span> <span class="kp-badge pg-frame__default">Default</span></p><div class="kp-toolbar">
+                <div class="kp-toolbar__search"><input class="kp-field__input kp-toolbar__input" type="search" aria-label="Search the cabinet" placeholder="Search the cabinet" /></div>
+                <div class="kp-toolbar__filters"><div class="kp-segmented kp-segmented--chips" id="pg-chips-now" data-kp-segmented="single" aria-label="Show"><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="true"><span class="kp-segmented__label">All</span><span class="kp-segmented__count">14</span></button><button type="button" class="kp-segmented__item" data-value="due" role="radio" aria-checked="false"><span class="kp-segmented__label">Due today</span><span class="kp-segmented__count">3</span></button><button type="button" class="kp-segmented__item" data-value="expiring" role="radio" aria-checked="false"><span class="kp-segmented__label">Expiring</span><span class="kp-segmented__count">2</span></button><button type="button" class="kp-segmented__item" data-value="low" role="radio" aria-checked="false"><span class="kp-segmented__label">Low stock</span><span class="kp-segmented__count">1</span></button><button type="button" class="kp-segmented__item" data-value="out" role="radio" aria-checked="false"><span class="kp-segmented__label">Out of stock</span><span class="kp-segmented__count">1</span></button><button type="button" class="kp-segmented__item" data-value="off" role="radio" aria-checked="false"><span class="kp-segmented__label">Switched off</span><span class="kp-segmented__count">4</span></button></div></div>
+            </div></div>
+            <div class="pg-frame" data-pg-frame="new"><p class="pg-frame__name"><span><b>New</b>, the option</span> <span class="kp-badge pg-frame__default">Default</span></p><div class="kp-toolbar">
+                <div class="kp-toolbar__search"><input class="kp-field__input kp-toolbar__input" type="search" aria-label="Search the cabinet" placeholder="Search the cabinet" /></div>
+                <div class="kp-toolbar__filters"><div class="kp-segmented kp-segmented--chips" id="pg-chips-new" data-kp-segmented="single" data-kp-segmented-fit="tracks" aria-label="Show"><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="true"><span class="kp-segmented__label">All</span><span class="kp-segmented__count">14</span></button><button type="button" class="kp-segmented__item" data-value="due" role="radio" aria-checked="false"><span class="kp-segmented__label">Due today</span><span class="kp-segmented__count">3</span></button><button type="button" class="kp-segmented__item" data-value="expiring" role="radio" aria-checked="false"><span class="kp-segmented__label">Expiring</span><span class="kp-segmented__count">2</span></button><button type="button" class="kp-segmented__item" data-value="low" role="radio" aria-checked="false"><span class="kp-segmented__label">Low stock</span><span class="kp-segmented__count">1</span></button><button type="button" class="kp-segmented__item" data-value="out" role="radio" aria-checked="false"><span class="kp-segmented__label">Out of stock</span><span class="kp-segmented__count">1</span></button><button type="button" class="kp-segmented__item" data-value="off" role="radio" aria-checked="false"><span class="kp-segmented__label">Switched off</span><span class="kp-segmented__count">4</span></button></div></div>
+            </div></div>
+        </div>
+        <p class="pg-log" id="pg-chips-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="tri-state-chip" data-review-item="tri-state-chip" data-review-topic="segmented" data-review-topic-title="Filter chips" data-review-components="tri-state-chip" data-review-title="Three-way chips: the state as a word" data-review-choices='[{"id":"look","label":"The default look of a three-way chip","default":"now","options":[{"value":"now","label":"The ring mark (now)"},{"value":"new","label":"The word"}]}]' aria-labelledby="h-tri-state-chip">
+            <div class="pg-asked"><p><b>What is asked</b> (tri-state-chip, Kitchen): Kitchen&rsquo;s wheel filters are three-way chips: once = want, twice = not, thrice = either; the review found the state hard to read from the ring. <code>data-kp-segmented-tri-look="word"</code> writes the state after the label (&ldquo;either&rdquo;, &ldquo;want&rdquo;, &ldquo;not&rdquo;). New in every three-way group: <kbd>+</kbd> wants the focused chip, <kbd>-</kbd> leaves it out, <kbd>Delete</kbd> lets go; the event carries the state.</p></div>
+            <div class="pg-intro"><h2 id="h-tri-state-chip">Filters: want, not, or either way</h2><p>The wheel&rsquo;s meal, time and ingredient filters; Chicken is wanted and Mushrooms left out.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>New</b>: each chip ends in a small word: &ldquo;EITHER&rdquo; (dashed, muted), &ldquo;WANT&rdquo; on the filled chip, &ldquo;NOT&rdquo; on red with the label struck through. A press walks either &rarr; want &rarr; not &rarr; either; the chip keeps its width; the line under each row says what is chosen; the line under the filters names the event&rsquo;s state.</li><li><b>Now</b>: the same chips with the approved ring, check and cross. <b>Phone</b>: the chips wrap; nothing is cut.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the word is a small capital tag on the approved chip. Check that the three states read at a glance and that no chip changes width on a press.</p></div>
+            <div data-review-controls data-review-controls-for="tri-state-chip-component"><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="tri-state-chip-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="tri-state-chip-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="tri-state-chip-component" class="pg-component" data-pg-width="full">
+        <div class="pg-pair">
+            <div class="pg-frame" data-pg-frame="now" data-pg-default><p class="pg-frame__name"><span><b>Now</b>, as approved</span> <span class="kp-badge pg-frame__default">Default</span></p><div class="pg-wheel" id="pg-wheel-now">
+                <div class="pg-wheel__filter">
+                    <p class="pg-wheel__name" id="pg-wheel-now-meal-l">Meal</p>
+                    <div class="kp-segmented kp-segmented--chips" id="pg-wheel-now-meal" data-kp-segmented="tri" data-kp-segmented-summary aria-labelledby="pg-wheel-now-meal-l"><button type="button" class="kp-segmented__item" data-value="breakfast"><span class="kp-segmented__label">Breakfast</span></button><button type="button" class="kp-segmented__item" data-value="lunch"><span class="kp-segmented__label">Lunch</span></button><button type="button" class="kp-segmented__item" data-value="dinner"><span class="kp-segmented__label">Dinner</span></button><button type="button" class="kp-segmented__item" data-value="snack"><span class="kp-segmented__label">Snack</span></button></div>
+                </div>
+                <div class="pg-wheel__filter">
+                    <p class="pg-wheel__name" id="pg-wheel-now-time-l">Time</p>
+                    <div class="kp-segmented kp-segmented--chips" id="pg-wheel-now-time" data-kp-segmented="tri" data-kp-segmented-summary aria-labelledby="pg-wheel-now-time-l"><button type="button" class="kp-segmented__item" data-value="under-20-min"><span class="kp-segmented__label">Under 20 min</span></button><button type="button" class="kp-segmented__item" data-value="20-to-40-min"><span class="kp-segmented__label">20 to 40 min</span></button><button type="button" class="kp-segmented__item" data-value="over-40-min"><span class="kp-segmented__label">Over 40 min</span></button></div>
+                </div>
+                <div class="pg-wheel__filter">
+                    <p class="pg-wheel__name" id="pg-wheel-now-ing-l">Ingredients</p>
+                    <div class="kp-segmented kp-segmented--chips" id="pg-wheel-now-ing" data-kp-segmented="tri" data-kp-segmented-summary aria-labelledby="pg-wheel-now-ing-l"><button type="button" class="kp-segmented__item" data-value="chicken"><span class="kp-segmented__label">Chicken</span></button><button type="button" class="kp-segmented__item" data-value="mushrooms"><span class="kp-segmented__label">Mushrooms</span></button><button type="button" class="kp-segmented__item" data-value="rice"><span class="kp-segmented__label">Rice</span></button><button type="button" class="kp-segmented__item" data-value="pasta"><span class="kp-segmented__label">Pasta</span></button><button type="button" class="kp-segmented__item" data-value="tomatoes"><span class="kp-segmented__label">Tomatoes</span></button><button type="button" class="kp-segmented__item" data-value="cheese"><span class="kp-segmented__label">Cheese</span></button><button type="button" class="kp-segmented__item" data-value="eggs"><span class="kp-segmented__label">Eggs</span></button></div>
+                </div>
+            </div></div>
+            <div class="pg-frame" data-pg-frame="new"><p class="pg-frame__name"><span><b>New</b>, the option</span> <span class="kp-badge pg-frame__default">Default</span></p><div class="pg-wheel" id="pg-wheel">
+                <div class="pg-wheel__filter">
+                    <p class="pg-wheel__name" id="pg-wheel-meal-l">Meal</p>
+                    <div class="kp-segmented kp-segmented--chips" id="pg-wheel-meal" data-kp-segmented="tri" data-kp-segmented-tri-look="word" data-kp-segmented-summary aria-labelledby="pg-wheel-meal-l"><button type="button" class="kp-segmented__item" data-value="breakfast"><span class="kp-segmented__label">Breakfast</span></button><button type="button" class="kp-segmented__item" data-value="lunch"><span class="kp-segmented__label">Lunch</span></button><button type="button" class="kp-segmented__item" data-value="dinner"><span class="kp-segmented__label">Dinner</span></button><button type="button" class="kp-segmented__item" data-value="snack"><span class="kp-segmented__label">Snack</span></button></div>
+                </div>
+                <div class="pg-wheel__filter">
+                    <p class="pg-wheel__name" id="pg-wheel-time-l">Time</p>
+                    <div class="kp-segmented kp-segmented--chips" id="pg-wheel-time" data-kp-segmented="tri" data-kp-segmented-tri-look="word" data-kp-segmented-summary aria-labelledby="pg-wheel-time-l"><button type="button" class="kp-segmented__item" data-value="under-20-min"><span class="kp-segmented__label">Under 20 min</span></button><button type="button" class="kp-segmented__item" data-value="20-to-40-min"><span class="kp-segmented__label">20 to 40 min</span></button><button type="button" class="kp-segmented__item" data-value="over-40-min"><span class="kp-segmented__label">Over 40 min</span></button></div>
+                </div>
+                <div class="pg-wheel__filter">
+                    <p class="pg-wheel__name" id="pg-wheel-ing-l">Ingredients</p>
+                    <div class="kp-segmented kp-segmented--chips" id="pg-wheel-ing" data-kp-segmented="tri" data-kp-segmented-tri-look="word" data-kp-segmented-summary aria-labelledby="pg-wheel-ing-l"><button type="button" class="kp-segmented__item" data-value="chicken"><span class="kp-segmented__label">Chicken</span></button><button type="button" class="kp-segmented__item" data-value="mushrooms"><span class="kp-segmented__label">Mushrooms</span></button><button type="button" class="kp-segmented__item" data-value="rice"><span class="kp-segmented__label">Rice</span></button><button type="button" class="kp-segmented__item" data-value="pasta"><span class="kp-segmented__label">Pasta</span></button><button type="button" class="kp-segmented__item" data-value="tomatoes"><span class="kp-segmented__label">Tomatoes</span></button><button type="button" class="kp-segmented__item" data-value="cheese"><span class="kp-segmented__label">Cheese</span></button><button type="button" class="kp-segmented__item" data-value="eggs"><span class="kp-segmented__label">Eggs</span></button></div>
+                </div>
+            </div></div>
+        </div>
+        <p class="pg-log" id="pg-wheel-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="popover-form" data-review-item="popover-form" data-review-topic="popover-form" data-review-topic-title="Popover form" data-review-components="popover-form" data-review-title="Popover form: Add stock without a dialog" aria-labelledby="h-popover-form">
+            <div class="pg-asked"><p><b>What is asked</b> (popover-form, Medicine Cabinet): Medicine Cabinet&rsquo;s &ldquo;Add stock&rdquo; opened a modal holding one number. <code>data-kp-popover-form</code> hangs a small form under its button, on the menu&rsquo;s plate: one field and Add, Enter accepts, Escape or a press outside closes it, and the page&rsquo;s save can refuse with its own words.</p></div>
+            <div class="pg-intro"><h2 id="h-popover-form">The cabinet</h2><p>Three medicines and their stock; &ldquo;Open the first form&rdquo; shows Ibuprofen&rsquo;s form open.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>The form hangs under &ldquo;Add stock&rdquo; with &ldquo;Boxes to add&rdquo;, the box size, the number selected and Add. Type 3 and Enter: the form closes, the focus is back on the button, the stock reads &ldquo;5 boxes&rdquo; and the line names the event. 30 says why it is refused (20 at most) and stays open.</li><li><b>Save fails</b>: Add waits, then &ldquo;The cabinet did not answer; nothing was added.&rdquo; under the row, the form still open with your number. <b>Phone</b>: the form stays on the screen under its button.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the form is the menu&rsquo;s paper plate with the package&rsquo;s field and primary button. Check the field and Add on one line and that the problem line does not push the form around.</p></div>
+            <div data-review-controls data-review-controls-for="popover-form-component"><div role="group" aria-label="The save"><button type="button" class="kp-button kp-button--sm" data-pg="save" data-value="ok" data-target="pg-cabinet" aria-pressed="true">Saves</button><button type="button" class="kp-button kp-button--sm" data-pg="save" data-value="fail" data-target="pg-cabinet" aria-pressed="false">Fails</button></div><div role="group" aria-label="Open"><button type="button" class="kp-button kp-button--sm" data-pg="open" data-value="first" data-target="pg-cabinet" aria-pressed="false">Open the first form</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="popover-form-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="popover-form-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="popover-form-component" class="pg-component" data-pg-width="full">
+        <div class="kp-formgrid" data-kp-formgrid-lines="lines" id="pg-cabinet">
+                <div class="kp-formgrid__row">
+                    <p class="kp-formgrid__label">Ibuprofen 400 mg</p>
+                    <div class="kp-formgrid__control kp-formgrid__fill"><span class="kp-badge" id="pg-stock-ibuprofen" data-pg-boxes="2">2 boxes</span></div>
+                    <p class="kp-formgrid__value">Expires 14/03/2027</p>
+                    <div class="kp-formgrid__actions"><div class="kp-popover-form" data-kp-popover-form id="pg-add-ibuprofen" data-pg-name="Ibuprofen 400 mg">
+                        <button type="button" class="kp-button kp-button--sm">Add stock</button>
+                        <form class="kp-menu kp-popover-form__panel" aria-label="Add stock to Ibuprofen 400 mg">
+                            <label class="kp-popover-form__label" for="pg-add-ibuprofen-n">Boxes to add</label>
+                            <p class="kp-popover-form__hint">boxes of 20</p>
+                            <div class="kp-popover-form__row"><input class="kp-field__input" id="pg-add-ibuprofen-n" name="boxes" type="number" inputmode="numeric" min="1" max="20" step="1" value="1" required /><button type="submit" class="kp-button kp-button--primary">Add</button></div>
+                        </form>
+                    </div></div>
+                </div>
+                <div class="kp-formgrid__row">
+                    <p class="kp-formgrid__label">Paracetamol 500 mg</p>
+                    <div class="kp-formgrid__control kp-formgrid__fill"><span class="kp-badge" id="pg-stock-paracetamol" data-pg-boxes="5">5 boxes</span></div>
+                    <p class="kp-formgrid__value">Expires 02/09/2027</p>
+                    <div class="kp-formgrid__actions"><div class="kp-popover-form" data-kp-popover-form id="pg-add-paracetamol" data-pg-name="Paracetamol 500 mg">
+                        <button type="button" class="kp-button kp-button--sm">Add stock</button>
+                        <form class="kp-menu kp-popover-form__panel" aria-label="Add stock to Paracetamol 500 mg">
+                            <label class="kp-popover-form__label" for="pg-add-paracetamol-n">Boxes to add</label>
+                            <p class="kp-popover-form__hint">boxes of 16</p>
+                            <div class="kp-popover-form__row"><input class="kp-field__input" id="pg-add-paracetamol-n" name="boxes" type="number" inputmode="numeric" min="1" max="20" step="1" value="1" required /><button type="submit" class="kp-button kp-button--primary">Add</button></div>
+                        </form>
+                    </div></div>
+                </div>
+                <div class="kp-formgrid__row">
+                    <p class="kp-formgrid__label">Cetirizine 10 mg</p>
+                    <div class="kp-formgrid__control kp-formgrid__fill"><span class="kp-badge kp-badge--warning" id="pg-stock-cetirizine" data-pg-boxes="0">0 boxes</span></div>
+                    <p class="kp-formgrid__value">Expires 30/11/2026</p>
+                    <div class="kp-formgrid__actions"><div class="kp-popover-form" data-kp-popover-form id="pg-add-cetirizine" data-pg-name="Cetirizine 10 mg">
+                        <button type="button" class="kp-button kp-button--sm">Add stock</button>
+                        <form class="kp-menu kp-popover-form__panel" aria-label="Add stock to Cetirizine 10 mg">
+                            <label class="kp-popover-form__label" for="pg-add-cetirizine-n">Boxes to add</label>
+                            <p class="kp-popover-form__hint">boxes of 7</p>
+                            <div class="kp-popover-form__row"><input class="kp-field__input" id="pg-add-cetirizine-n" name="boxes" type="number" inputmode="numeric" min="1" max="20" step="1" value="1" required /><button type="submit" class="kp-button kp-button--primary">Add</button></div>
+                        </form>
+                    </div></div>
+                </div>
+            </div>
+        <p class="pg-log" id="pg-cabinet-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="empty-ghost-lines" data-review-item="empty-ghost-lines" data-review-topic="empty" data-review-topic-title="The empty plate" data-review-components="empty-ghost-lines" data-review-title="Empty plate: without the ruled lines" data-review-choices='[{"id":"lines","label":"The default empty plate","default":"now","options":[{"value":"now","label":"With the ruled lines (now)"},{"value":"new","label":"Without them"}]}]' aria-labelledby="h-empty-ghost-lines">
+            <div class="pg-asked"><p><b>What is asked</b> (empty-ghost-lines, kyu): kyu read formal&rsquo;s three ruled lines under every empty message as a skeleton still loading. <code>data-kp-empty-lines="off"</code> on the plate or any element round it (the page&rsquo;s html for all) leaves them out. You choose the default.</p></div>
+            <div class="pg-intro"><h2 id="h-empty-ghost-lines">Dead letters</h2><p>kyu&rsquo;s dead-letter table on a good day: nothing failed.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Now</b>: &ldquo;No dead letters&rdquo; centred on the plate, three grey ruled lines at its foot. <b>New</b>: the same plate and words, no lines; the double rule along the top stays.</li><li>Both plates fill the same footprint. <b>Phone</b>: the words wrap, still centred.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the ruled paper plate. Check that the plate without lines still reads as formal and as finished, not as loading.</p></div>
+            <div data-review-controls data-review-controls-for="empty-ghost-lines-component"><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="empty-ghost-lines-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="empty-ghost-lines-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="empty-ghost-lines-component" class="pg-component" data-pg-width="full">
+        <div class="pg-pair">
+            <div class="pg-frame" data-pg-frame="now" data-pg-default><p class="pg-frame__name"><span><b>Now</b>, as approved</span> <span class="kp-badge pg-frame__default">Default</span></p><div class="kp-datatable" id="pg-dead-now" data-kp-datatable data-kp-page-size="25" data-kp-page-sizes="none">
+                <div class="kp-table-wrap"><table class="kp-table"><caption>Dead letters</caption>
+                <thead><tr><th scope="col" data-kp-sort="text">Topic</th><th scope="col" data-kp-sort="text">Message</th><th scope="col" data-kp-sort="text">Failed at</th><th scope="col" data-kp-sort="number">Tries</th></tr></thead>
+                <tbody></tbody></table></div>
+                <div class="kp-empty" data-kp-datatable-empty hidden><p class="kp-empty__title">No dead letters</p><p class="kp-empty__body">Every message reached its subscriber.</p></div>
+            </div></div>
+            <div class="pg-frame" data-pg-frame="new"><p class="pg-frame__name"><span><b>New</b>, the option</span> <span class="kp-badge pg-frame__default">Default</span></p><div data-kp-empty-lines="off"><div class="kp-datatable" id="pg-dead-new" data-kp-datatable data-kp-page-size="25" data-kp-page-sizes="none">
+                <div class="kp-table-wrap"><table class="kp-table"><caption>Dead letters</caption>
+                <thead><tr><th scope="col" data-kp-sort="text">Topic</th><th scope="col" data-kp-sort="text">Message</th><th scope="col" data-kp-sort="text">Failed at</th><th scope="col" data-kp-sort="number">Tries</th></tr></thead>
+                <tbody></tbody></table></div>
+                <div class="kp-empty" data-kp-datatable-empty hidden><p class="kp-empty__title">No dead letters</p><p class="kp-empty__body">Every message reached its subscriber.</p></div>
+            </div></div></div>
+        </div>
+            </div>
+        </section>
+
+        <section id="auto-refresh-form" data-review-item="auto-refresh-form" data-review-topic="refresh" data-review-topic-title="Auto-refresh" data-review-components="auto-refresh-form" data-review-title="Auto-refresh: one control, no second freshness line" data-review-choices='[{"id":"form","label":"The default refresh control","default":"now","options":[{"value":"now","label":"Segments and its own line (now)"},{"value":"new","label":"Menu, no own line"}]}]' aria-labelledby="h-auto-refresh-form">
+            <div class="pg-asked"><p><b>What is asked</b> (auto-refresh-form, kyu): kyu&rsquo;s refresh bar printed &ldquo;not updated yet&rdquo; beside the header&rsquo;s own &ldquo;Updated 2 min ago&rdquo;. <code>data-kp-refresh-line="off"</code> leaves the bar&rsquo;s line out, and with the menu look the control is one button and Refresh now. You choose the default.</p></div>
+            <div class="pg-intro"><h2 id="h-auto-refresh-form">Topics</h2><p>kyu&rsquo;s Topics header with its refresh control.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Now</b>: the segmented bar, &ldquo;not updated yet&rdquo; and Refresh now at the far end, under a header that already says &ldquo;Updated 2 min ago&rdquo;. <b>New</b>: &ldquo;Every 30 s ▾&rdquo; with Refresh now beside it; one freshness line on the page, the header&rsquo;s.</li><li>Open the menu: the choices with the current one ticked. <b>Phone</b>: both fit; nothing scrolls sideways.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s menu button and small button. Check that the page says how fresh it is once.</p></div>
+            <div data-review-controls data-review-controls-for="auto-refresh-form-component"><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="auto-refresh-form-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="auto-refresh-form-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="auto-refresh-form-component" class="pg-component" data-pg-width="full">
+        <div class="pg-pair">
+            <div class="pg-frame" data-pg-frame="now" data-pg-default><p class="pg-frame__name"><span><b>Now</b>, as approved</span> <span class="kp-badge pg-frame__default">Default</span></p><header class="kp-page-header">
+                <div class="kp-page-header__inner">
+                    <div><h3 class="kp-page-header__title">Topics</h3><p class="kp-page-header__updated">Updated 2 min ago</p><p class="kp-page-header__description">Eleven topics on the hub, their subscribers and what waits in each.</p></div>
+                </div>
+            </header>
+            <div class="kp-refresh" id="pg-refresh-now" data-kp-refresh="30" data-kp-refresh-choices="0,15,30,60,300"></div></div>
+            <div class="pg-frame" data-pg-frame="new"><p class="pg-frame__name"><span><b>New</b>, the option</span> <span class="kp-badge pg-frame__default">Default</span></p><header class="kp-page-header">
+                <div class="kp-page-header__inner">
+                    <div><h3 class="kp-page-header__title">Topics</h3><p class="kp-page-header__updated">Updated 2 min ago</p><p class="kp-page-header__description">Eleven topics on the hub, their subscribers and what waits in each.</p></div>
+                </div>
+            </header>
+            <div class="kp-refresh" id="pg-refresh-new" data-kp-refresh="30" data-kp-refresh-choices="0,15,30,60,300" data-kp-look="menu" data-kp-refresh-line="off"></div></div>
+        </div>
+            </div>
+        </section>
+
+        <section id="date-nav" data-review-item="date-nav" data-review-topic="date-nav" data-review-topic-title="Date navigation" data-review-components="date-nav" data-review-title="Date navigation: one part for the month and the week" aria-labelledby="h-date-nav">
+            <div class="pg-asked"><p><b>What is asked</b> (date-nav, Almanac): Almanac&rsquo;s Status had a month navigation (Prev / Next / Today in three widths) and a week navigation (&lsaquo; Today &rsaquo;) in two styles. <code>data-kp-date-nav</code> (month, week, day) is one part: the range shown, then Previous, Today and Next on three equal tracks; it drives the calendar and the week through <code>data-kp-date-nav-for</code>.</p></div>
+            <div class="pg-intro"><h2 id="h-date-nav">Status</h2><p>The month&rsquo;s deliveries and the week&rsquo;s syncs; today is Sunday 01/11/2026. The days and runs are mock.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Both navigations read the same way: &ldquo;November 2026 current&rdquo; and &ldquo;Week 44 · 26/10 to 01/11/2026 current&rdquo;, then three buttons of one width. Next moves the calendar to December (the line names the event), Previous moves the week to week 43; Today comes back. In a navigation, PageUp and PageDown step and Home goes to today.</li><li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> are the calendar&rsquo;s and the week&rsquo;s own states; the navigations stay. <b>Phone</b>: the buttons go under the label, same widths.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s small buttons under a plain label. Check the three buttons share one width in both, and that nothing moves when the label grows.</p></div>
+            <div data-review-controls data-review-controls-for="date-nav-component"><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="ready" data-target="date-nav-component" aria-pressed="true">Ready</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="loading" data-target="date-nav-component" aria-pressed="false">Loading</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="empty" data-target="date-nav-component" aria-pressed="false">Empty</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="error" data-target="date-nav-component" aria-pressed="false">Failed</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="date-nav-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="date-nav-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="date-nav-component" class="pg-component" data-pg-width="full">
+        <div class="pg-status">
+                <section class="pg-status__block" aria-labelledby="pg-month-h">
+                    <h3 id="pg-month-h">Deliveries this month</h3>
+                    <nav class="kp-date-nav" id="pg-month-nav" data-kp-date-nav="month" data-kp-week-starts-on="1" data-kp-date-nav-today="2026-11-01" data-kp-date-nav-for="pg-month" aria-label="Month shown"></nav>
+                    <div class="kp-calendar" id="pg-month" data-kp-calendar data-kp-week-starts-on="1" data-kp-calendar-nav="off" data-kp-calendar-month="2026-11" aria-label="Deliveries per day"></div>
+                </section>
+                <section class="pg-status__block" aria-labelledby="pg-week-h">
+                    <h3 id="pg-week-h">Syncs this week</h3>
+                    <nav class="kp-date-nav" id="pg-week-nav" data-kp-date-nav="week" data-kp-week-starts-on="1" data-kp-date-nav-today="2026-11-01" data-kp-date-nav-for="pg-week" aria-label="Week shown"></nav>
+                    <section class="kp-week" id="pg-week" data-kp-week data-kp-week-starts-on="1" data-kp-week-start="2026-10-26" aria-label="Syncs in the week shown"></section>
+                </section>
+            </div>
+        <p class="pg-log" id="pg-dates-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="row-undo-delete" data-review-item="row-undo-delete" data-review-topic="undo" data-review-topic-title="Undo" data-review-components="row-undo-delete" data-review-title="Delete with Undo: a row action for tables and lists" aria-labelledby="h-row-undo-delete">
+            <div class="pg-asked"><p><b>What is asked</b> (row-undo-delete, Medicine Cabinet): The Undo toast is the right answer to a delete that can be taken back, yet apps reached for a confirm. <code>data-kp-row-delete</code> on a row&rsquo;s button deletes the row with the toast: the row goes at once, Undo brings it back, and the page hears <code>kp-row-delete-commit</code> when the window closes.</p></div>
+            <div class="pg-intro"><h2 id="h-row-undo-delete">Medicines in the cabinet</h2><p>Five medicines, each with Delete.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Delete on Ibuprofen: its row goes at once, the table counts four, the focus is on Paracetamol&rsquo;s Delete, and the toast says &ldquo;Ibuprofen 400 mg deleted&rdquo; with its clock. Undo: the row is back where it stood with the focus on its Delete; the line names <code>kp-row-delete-undo</code>. Leave it: after the window the line names <code>kp-row-delete-commit</code>.</li><li><b>Save fails</b>: after the window the row comes back and the toast says it was not done. <b>Phone</b>: the table turns to cards; Delete stays in each.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s table, button and Undo toast. Check that nothing else in the table moves when a row goes and comes back.</p></div>
+            <div data-review-controls data-review-controls-for="row-undo-delete-component"><div role="group" aria-label="The delete"><button type="button" class="kp-button kp-button--sm" data-pg="commit" data-value="ok" data-target="pg-stock" aria-pressed="true">Saves</button><button type="button" class="kp-button kp-button--sm" data-pg="commit" data-value="fail" data-target="pg-stock" aria-pressed="false">Fails</button></div><div role="group" aria-label="Rows"><button type="button" class="kp-button kp-button--sm" data-pg="rows" data-value="reset" data-target="pg-stock" aria-pressed="false">All five again</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="row-undo-delete-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="row-undo-delete-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="row-undo-delete-component" class="pg-component" data-pg-width="full">
+        <div class="kp-datatable" id="pg-stock" data-kp-datatable data-kp-page-size="25" data-kp-page-sizes="none" data-kp-cards data-kp-cards-at="28rem">
+                <div class="kp-table-wrap"><table class="kp-table"><caption>Medicines in the cabinet</caption>
+                <thead><tr><th scope="col" data-kp-sort="text">Medicine</th><th scope="col" data-kp-sort="text">In stock</th><th scope="col" data-kp-sort="text">Expires</th><th scope="col"><span class="kp-sr-only">Actions</span></th></tr></thead>
+                <tbody><tr data-kp-row-key="ibuprofen"><td>Ibuprofen 400 mg</td><td>2 boxes</td><td>14/03/2027</td><td><button type="button" class="kp-button kp-button--sm" data-kp-row-delete="Ibuprofen 400 mg">Delete</button></td></tr><tr data-kp-row-key="paracetamol"><td>Paracetamol 500 mg</td><td>5 boxes</td><td>02/09/2027</td><td><button type="button" class="kp-button kp-button--sm" data-kp-row-delete="Paracetamol 500 mg">Delete</button></td></tr><tr data-kp-row-key="cetirizine"><td>Cetirizine 10 mg</td><td>0 boxes</td><td>30/11/2026</td><td><button type="button" class="kp-button kp-button--sm" data-kp-row-delete="Cetirizine 10 mg">Delete</button></td></tr><tr data-kp-row-key="omeprazole"><td>Omeprazole 20 mg</td><td>1 box</td><td>11/06/2027</td><td><button type="button" class="kp-button kp-button--sm" data-kp-row-delete="Omeprazole 20 mg">Delete</button></td></tr><tr data-kp-row-key="vitamin-d"><td>Vitamin D 25 µg</td><td>3 boxes</td><td>01/01/2028</td><td><button type="button" class="kp-button kp-button--sm" data-kp-row-delete="Vitamin D 25 µg">Delete</button></td></tr></tbody></table></div>
+                <div class="kp-empty" data-kp-datatable-empty hidden><p class="kp-empty__title">The cabinet is empty</p><p class="kp-empty__body">Add a medicine to start tracking it.</p></div>
+            </div>
+        <p class="pg-log" id="pg-stock-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"ux-parts-1101-e994c521-37e0-4c56-b12b-ed4d536f4d1e","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="./demo-more.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
