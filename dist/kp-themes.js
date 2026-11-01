@@ -39471,13 +39471,14 @@ var init_dashboard = __esm({
 });
 
 // js/sidenav/constants.js
-var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles3, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, REFUSE_FALLBACK_MS, REFUSE_STILL_MS, REFUSE_TRAVEL, HOVER_DELAY_MS, RESIZE_STEP, RESIZE_SHIFT_STEPS, RESIZE_MIN_WIDTH, RESIZE_MAX_WIDTH;
+var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_GROUP_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles3, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, REFUSE_FALLBACK_MS, REFUSE_STILL_MS, REFUSE_TRAVEL, HOVER_DELAY_MS, RESIZE_STEP, RESIZE_SHIFT_STEPS, RESIZE_MIN_WIDTH, RESIZE_MAX_WIDTH;
 var init_constants18 = __esm({
   "js/sidenav/constants.js"() {
     "use strict";
     SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
     SIDENAV_SLIM_EVENT = "kp-sidenav-slim";
     SIDENAV_MODE_EVENT = "kp-sidenav-mode";
+    SIDENAV_GROUP_EVENT = "kp-sidenav-group";
     SIDENAV_PREVENTED_EVENT = "kp-sidenav-prevented";
     SIDENAV_OWNED = "[data-kp-sidenav-owner]";
     REFUSE_MIN_MS = 120;
@@ -40709,6 +40710,7 @@ var init_controls = __esm({
     "use strict";
     init_remember();
     init_helpers2();
+    init_constants18();
     init_options4();
     init_flyout();
     SidenavControls = class extends SidenavFlyout {
@@ -40765,11 +40767,21 @@ var init_controls = __esm({
           for (const other of this.panel.querySelectorAll(".kp-sidenav__category[data-kp-sidenav-expanded]")) {
             other.removeAttribute(OPTIONS3.expanded);
             other.querySelector(".kp-sidenav__category-toggle")?.setAttribute("aria-expanded", "false");
+            this.tellGroup(other, false, "accordion");
           }
         }
         category.toggleAttribute(OPTIONS3.expanded, !expanded);
         toggle2.setAttribute("aria-expanded", String(!expanded));
         this.saveGroups();
+        this.tellGroup(category, !expanded, event instanceof MouseEvent && event.detail === 0 ? "keyboard" : "pointer");
+      }
+      /**
+       * Say a group folded or unfolded: `kp-sidenav-group` on the category, bubbling, with the id the remembered state uses.
+       * @param {Element} category @param {boolean} expanded @param {'pointer' | 'keyboard' | 'accordion'} source
+       */
+      tellGroup(category, expanded, source) {
+        const id = sidenavGroups(this.panel).find((entry) => entry.group === category)?.id;
+        category.dispatchEvent(new CustomEvent(SIDENAV_GROUP_EVENT, { bubbles: true, detail: { id, expanded, source } }));
       }
       /**
        * The toggler a click landed on, when it is this panel's and not one a consumer wires.
@@ -41321,6 +41333,7 @@ var init_attach9 = __esm({
 var sidenav_exports = {};
 __export(sidenav_exports, {
   OPTIONS: () => OPTIONS3,
+  SIDENAV_GROUP_EVENT: () => SIDENAV_GROUP_EVENT,
   SIDENAV_LAUNCHER: () => SIDENAV_LAUNCHER,
   SIDENAV_MODE_EVENT: () => SIDENAV_MODE_EVENT,
   SIDENAV_OWNED: () => SIDENAV_OWNED,
@@ -91680,6 +91693,7 @@ export {
   SHORTCUT_EVENT,
   SHORTCUT_HINT_PLACES,
   SHORTCUT_PENDING_EVENT,
+  SIDENAV_GROUP_EVENT,
   SIDENAV_LAUNCHER,
   SIDENAV_MODE_EVENT,
   SIDENAV_OWNED,

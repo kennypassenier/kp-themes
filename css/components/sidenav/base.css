@@ -378,6 +378,24 @@
         rotate: 45deg;
     }
 
+    /* A heading with one action beside its toggle (`.kp-sidenav__category-action`, after the toggle): the toggle and the action share
+       the first row, the submenu takes the full second row. The action stays when the group is folded [habits-1101]. */
+    .kp-sidenav__category:has(> .kp-sidenav__category-action) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .kp-sidenav__category:has(> .kp-sidenav__category-action) > .kp-sidenav__submenu {
+        grid-column: 1 / -1;
+    }
+
+    .kp-sidenav__category-action {
+        display: flex;
+        align-items: center;
+        padding-inline-end: var(--kp-sidenav-list-pad, 0.4rem);
+    }
+
     .kp-sidenav__submenu {
         display: grid;
         grid-template-rows: 0fr;

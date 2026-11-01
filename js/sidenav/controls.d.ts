@@ -19,6 +19,11 @@ export declare class SidenavControls extends SidenavFlyout {
      */
     onCategory(event: Event): void;
     /**
+     * Say a group folded or unfolded: `kp-sidenav-group` on the category, bubbling, with the id the remembered state uses.
+     * @param {Element} category @param {boolean} expanded @param {'pointer' | 'keyboard' | 'accordion'} source
+     */
+    tellGroup(category: Element, expanded: boolean, source: 'pointer' | 'keyboard' | 'accordion'): void;
+    /**
      * The toggler a click landed on, when it is this panel's and not one a consumer wires.
      * @param {Event} event
      * @param {string} selector
