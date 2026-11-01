@@ -23,6 +23,8 @@ export declare class SecretControl extends SecretBase {
         value: HTMLElement;
         reveal: HTMLButtonElement;
         copy: HTMLButtonElement | null;
+        clock: HTMLElement;
+        unbox: () => void;
     };
     /** @param {HTMLElement} host @param {SecretOptions} [options] */
     constructor(host: HTMLElement, options?: SecretOptions);

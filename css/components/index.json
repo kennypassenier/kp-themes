@@ -73,6 +73,7 @@
         "forms.css",
         "small-patterns/base.css",
         "small-patterns/input-mode-typed-box.css",
+        "small-patterns/secret-clock.css",
         "step-list/base.css",
         "step-list/step-process-stands-at.css",
         "week-agenda/base.css",
@@ -393,6 +394,9 @@
     },
     {
       "file": "touch-target.css"
+    },
+    {
+      "file": "touch-hit-area.css"
     },
     {
       "file": "plain-card.css"

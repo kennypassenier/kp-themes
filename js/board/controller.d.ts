@@ -1,10 +1,10 @@
-import { BoardLanes } from './lanes.js';
+import { BoardMoves } from './move.js';
 export type BoardState = 'loading' | 'ready' | 'empty' | 'error';
 /** @typedef {'loading' | 'ready' | 'empty' | 'error'} BoardState */
-export declare class Board extends BoardLanes {
+export declare class Board extends BoardMoves {
     tabs: HTMLDivElement;
     plate: HTMLDivElement;
-    /** The lane a narrow board with tabs shows. */
+    /** The lane a narrow board's switcher shows. */
     selected: string;
     /** @type {BoardState} */
     state: BoardState;
@@ -21,15 +21,16 @@ export declare class Board extends BoardLanes {
     markDrawn(): void;
     /** Lanes the page added to the board after it was attached join the track, its tabs, its group and its counts. */
     adopt(): void;
-    /** Whether the board is narrow now, and whether its lanes are tabs. */
+    /** Whether the board is narrow now, and whether it shows one lane under the switcher (anything but `scroll`, the default). */
     tabbed(): boolean;
-    /** The narrow layout: with tabs only the chosen lane shows (a tab panel); otherwise every lane, in the track. */
+    /** The narrow layout: under the switcher only the chosen lane shows (a tab panel); otherwise every lane, in the track. */
     layout(): void;
-    /** One tab per lane: its name and its count on the tab's own count badge. */
+    /** One button per lane in the switcher: its name over its exact count (with the limit), on the tab's own count badge. */
     drawTabs(): void;
     markTabs(): void;
     countTabs(): void;
-    /** Show a lane of a narrow board with tabs. @param {string} key @param {'pointer' | 'keyboard' | 'move' | 'page'} source */
+    focusSwitcher(): void;
+    /** Show a lane of a narrow board under its switcher. @param {string} key @param {'pointer' | 'keyboard' | 'move' | 'page'} source */
     select(key: string, source: 'pointer' | 'keyboard' | 'move' | 'page'): void;
     /** A card sent to a lane that is not shown: the board shows that lane, so the card and its focus stay in sight. @param {CustomEvent} event */
     follow(event: CustomEvent): void;

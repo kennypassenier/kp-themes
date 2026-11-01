@@ -10,11 +10,15 @@
  * @property {string} boardOver  The word on a lane's plate that holds more than its limit (js/board.js) [habits-1101]
  * @property {(lane: string, count: number, limit: number) => string} boardOverSaid  What is said when a lane goes over its limit (js/board.js) [habits-1101]
  * @property {string} boardLaneEmpty  The line in a lane with no cards, where one can be dropped (js/board.js) [habits-1101]
- * @property {string} boardLanes  The name of the row of lane tabs on a narrow board (js/board.js) [habits-1101]
+ * @property {string} boardLanes  The name of the switcher over a narrow board, a button per lane (js/board.js) [habits-1101]
  * @property {string} boardLoading  The words on a board's loading card (js/board.js) [habits-1101]
  * @property {string} boardEmpty  The sentence over a board with no lanes, when the page gives none (js/board.js) [habits-1101]
  * @property {(reason: string) => string} boardFailed  The sentence over a board that could not be read (js/board.js) [habits-1101]
  * @property {string} boardRetry  Its Try again button (js/board.js) [habits-1101]
+ * @property {(lane: string, count: number, limit: number, over: boolean) => string} boardTabLabel  A lane's button in a narrow board's switcher, as a screen reader hears it (js/board.js) [uxtouch1101]
+ * @property {string} boardMoveTo  The heading of the lanes a card's menu can send it to (js/board.js) [uxtouch1101]
+ * @property {(count: number, limit: number) => string} boardMoveHint  The line under a lane in that menu: what it holds now (js/board.js) [uxtouch1101]
+ * @property {(name: string, lane: string, count: number, limit: number) => string} boardMovedSaid  What is said when a card was sent to another lane from its menu (js/board.js) [uxtouch1101]
  * @property {string} contextMenuLabel  The name of a context menu whose element gives none (js/context-menu.js) [habits-1101]
  * @property {string} mdToolbar  The name of the Markdown editor's toolbar (js/markdown-editor.js) [habits-1101]
  * @property {string} mdBold  Its bold button (js/markdown-editor.js) [habits-1101]
@@ -42,12 +46,20 @@ export const BOARD_MENU_MARKDOWN_STRINGS = {
     boardCountLabel: (count, limit) => (limit > 0 ? `${count} of at most ${limit}` : String(count)),
     boardOver: 'Over the limit',
     boardOverSaid: (lane, count, limit) => `${lane} holds ${count}, more than its limit of ${limit}`,
-    boardLaneEmpty: 'Nothing here yet. Drag a card here.',
+    boardLaneEmpty: 'Nothing here yet. Drag a card here, or send one with Move to in its menu.',
     boardLanes: 'Lanes',
     boardLoading: 'Reading the board',
     boardEmpty: 'Nothing on the board yet.',
     boardFailed: (reason) => (reason ? `Could not read the board: ${reason}` : 'Could not read the board.'),
     boardRetry: 'Try again',
+    boardTabLabel: (lane, count, limit, over) => `${lane}, ${limit > 0 ? `${count} of at most ${limit}` : count === 1 ? '1 card' : `${count} cards`}${over ? ', over the limit' : ''}`,
+    boardMoveTo: 'Move to',
+    boardMoveHint: (count, limit) => {
+        const cards = count === 1 ? '1 card' : `${count} cards`;
+        if (limit <= 0) return `${cards} now`;
+        return count > limit ? `${count} / ${limit} now, over its limit` : count === limit ? `${count} / ${limit} now, at its limit` : `${count} / ${limit} now`;
+    },
+    boardMovedSaid: (name, lane, count, limit) => `${name} moved to ${lane}, which now holds ${limit > 0 ? `${count} of at most ${limit}` : count}`,
     contextMenuLabel: 'Actions',
     mdToolbar: 'Formatting',
     mdBold: 'Bold',

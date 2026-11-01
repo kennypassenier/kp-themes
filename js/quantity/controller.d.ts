@@ -18,6 +18,12 @@ export declare class QuantityControl extends Controller {
     stepButton(event: Event): HTMLElement | null;
     /** One step of a button. @param {HTMLElement} b @returns {boolean} whether the value moved */
     stepOnce(b: HTMLElement): boolean;
+    /**
+     * A press in the number's box beside the number (its padding, the unit) puts the caret in the number, as the box's text cursor
+     * promises: the whole box, a fingertip high, is the number's target [uxtouch1101; the number alone is a few characters wide].
+     * @param {PointerEvent} event
+     */
+    focusFromField(event: PointerEvent): void;
     /** A pointer went down on a button: step now, and again while it is held, slowly first and then faster. @param {PointerEvent} event */
     down(event: PointerEvent): void;
     /** @param {MouseEvent} event */

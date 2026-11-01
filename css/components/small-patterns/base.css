@@ -134,9 +134,10 @@
     }
 
     /* Secret field [kpadopt4] -----------------------------------------------
- * `.kp-secret[data-kp-secret]` (js/patterns.js): a masked value, Reveal and
- * Copy, and one line under them for the countdown, the reason a field is off
- * or why it could not be read. The value box has the control height and the
+ * `.kp-secret[data-kp-secret]` (js/patterns.js): a masked value (with the
+ * countdown inside its box since uxtouch1101, secret-clock.css), Reveal and
+ * Copy, and one line under them for the reason a field is off or why it
+ * could not be read. The value box has the control height and the
  * row's width whatever it holds, and the line under it always keeps its
  * room, so showing, hiding, loading or failing moves nothing. A long value
  * stays on one line and scrolls inside its box (a fade at the end says there

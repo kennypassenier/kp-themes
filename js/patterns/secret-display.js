@@ -39,6 +39,7 @@ export class SecretControl extends SecretBase {
         this.own(() => {
             this.ticket += 1;
             value.textContent = this.mask;
+            this.parts.unbox();
             for (const part of this.built) part.remove();
             delete field.dataset.kpSecretState;
             secrets.delete(field);

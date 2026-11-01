@@ -4,9 +4,10 @@
  * count), so every register paints it as its own; the cards are the page's, in a reorder list the lanes share. Wide, the lanes
  * stand side by side at one width (at least --kp-board-lane-min, 15rem), as tall as the tallest, so a short lane is still a long
  * drop target; more lanes than fit scroll sideways inside the board's box. Narrow (under 40rem of the board's own width,
- * `data-kp-board-narrow-now`, written by the script), a lane takes 85% of the box and snaps (`scroll`), or one lane shows under
- * a row of tabs (`tabs`). Knobs: --kp-board-gap (0.75rem), --kp-board-lane-min (15rem), --kp-board-lane-narrow (85%),
- * --kp-board-min (16rem, the board's least height), --kp-board-drop-min (6rem, the least height of a lane's list). */
+ * `data-kp-board-narrow-now`, written by the script), one lane shows under a switcher (`data-kp-board-switch`, the default
+ * since uxtouch1101), or a lane takes 85% of the box and snaps (`scroll`). Knobs: --kp-board-gap (0.75rem), --kp-board-lane-min
+ * (15rem), --kp-board-lane-narrow (85%), --kp-board-min (16rem, the board's least height), --kp-board-drop-min (6rem, the least
+ * height of a lane's list), --kp-board-switch-min (5rem, the least width of a lane's button in the switcher). */
     .kp-board {
         position: relative;
         display: grid;
@@ -39,7 +40,7 @@
         scroll-snap-align: start;
     }
 
-    .kp-board[data-kp-board-narrow-now][data-kp-board-narrow='tabs'] > .kp-board__track {
+    .kp-board[data-kp-board-switch] > .kp-board__track {
         grid-auto-columns: minmax(0, 1fr);
         scroll-snap-type: none;
     }
@@ -84,9 +85,32 @@
         pointer-events: none;
     }
 
+    /* The switcher [uxtouch1101]: a button per lane, its name over its exact count, on whole tracks that wrap onto a second row
+       rather than scroll (four lanes stand in one row at 390 px). Each button is the package's tab, so a register paints it as its
+       own; the count is the tab's own count badge. */
+    .kp-board__tabs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-board-switch-min, 5rem)), 1fr));
+    }
+
     .kp-board__tab {
-        display: inline-flex;
+        display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        text-align: center;
+    }
+
+    .kp-board__tab-name {
+        max-inline-size: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .kp-board__tab > .kp-tab__count {
+        margin-inline-start: 0;
     }
 
     /* An empty or failed board: the package's state plate over the whole board, the lanes held still under it. */

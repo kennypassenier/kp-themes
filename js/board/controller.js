@@ -1,22 +1,23 @@
-// One wired board: its frame, the narrow layout (lanes that scroll sideways in the board's own box, or tabs), the lane tabs and
-// their keys, and the board's states (the busy card over the lanes; the package's plate over the whole board).
+// One wired board: its frame, the narrow layout (one lane under a switcher of every lane with its exact count, or lanes that
+// scroll sideways in the board's own box), the switcher and its keys, and the board's states (the busy card over the lanes; the
+// package's plate over the whole board). "Move to" in the cards' menus is js/board/move.js.
 
 import { openBusyCard } from '../busy-card.js';
 import { hostStatePlate } from '../state-plate.js';
 import { attachStructure } from '../structure.js';
-import { BoardLanes } from './lanes.js';
-import { BOARD_LANE_EVENT, BOARD_RETRY_EVENT, FALLBACK_REM_PX, NARROW_REM, itemsOf, make } from './values.js';
+import { BoardMoves } from './move.js';
+import { BOARD_LANE_EVENT, BOARD_RETRY_EVENT, FALLBACK_REM_PX, NARROW_REM, itemsOf, limitOf, make } from './values.js';
 
 /** @typedef {'loading' | 'ready' | 'empty' | 'error'} BoardState */
 
-export class Board extends BoardLanes {
+export class Board extends BoardMoves {
     /** @param {HTMLElement} el @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
     constructor(el, options = {}) {
         super(el, options);
         const doc = el.ownerDocument;
         this.tabs = make(doc, 'div', 'kp-tabs__list kp-board__tabs');
         this.plate = make(doc, 'div', 'kp-board__plate');
-        /** The lane a narrow board with tabs shows. */
+        /** The lane a narrow board's switcher shows. */
         this.selected = '';
         /** @type {BoardState} */
         this.state = 'ready';
@@ -49,6 +50,7 @@ export class Board extends BoardLanes {
         this.listen(this.tabs, 'click', (event) => this.onTab(event));
         this.listen(this.tabs, 'keydown', (event) => this.onTabKey(/** @type {KeyboardEvent} */ (event)));
         this.listen(el, 'pointermove', (event) => this.springTab(event));
+        this.wireMoves();
         view?.requestAnimationFrame(() => this.markDrawn());
         this.own(() => this.busy?.remove());
     }
@@ -67,15 +69,17 @@ export class Board extends BoardLanes {
         this.layout();
     }
 
-    /** Whether the board is narrow now, and whether its lanes are tabs. */
+    /** Whether the board is narrow now, and whether it shows one lane under the switcher (anything but `scroll`, the default). */
     tabbed() {
         const rem = Number.parseFloat(getComputedStyle(this.host.ownerDocument.documentElement).fontSize) || FALLBACK_REM_PX;
         const narrow = this.host.clientWidth > 0 && this.host.clientWidth < NARROW_REM * rem;
+        const tabs = narrow && this.host.dataset.kpBoardNarrow !== 'scroll';
         this.host.toggleAttribute('data-kp-board-narrow-now', narrow);
-        return narrow && this.host.dataset.kpBoardNarrow === 'tabs';
+        this.host.toggleAttribute('data-kp-board-switch', tabs);
+        return tabs;
     }
 
-    /** The narrow layout: with tabs only the chosen lane shows (a tab panel); otherwise every lane, in the track. */
+    /** The narrow layout: under the switcher only the chosen lane shows (a tab panel); otherwise every lane, in the track. */
     layout() {
         const tabs = this.tabbed();
         this.tabs.hidden = !tabs;
@@ -86,7 +90,7 @@ export class Board extends BoardLanes {
         }
     }
 
-    /** One tab per lane: its name and its count on the tab's own count badge. */
+    /** One button per lane in the switcher: its name over its exact count (with the limit), on the tab's own count badge. */
     drawTabs() {
         const doc = this.host.ownerDocument;
         this.tabs.replaceChildren(
@@ -115,13 +119,27 @@ export class Board extends BoardLanes {
     countTabs() {
         for (const lane of this.lanes) {
             const list = Board.listOf(lane);
-            const badge = this.tabs.querySelector(`[data-kp-board-tab="${CSS.escape(Board.keyOf(lane))}"] .kp-tab__count`);
-            const text = String(list ? itemsOf(list).length : 0);
-            if (badge && badge.textContent !== text) badge.textContent = text;
+            const tab = this.tabs.querySelector(`[data-kp-board-tab="${CSS.escape(Board.keyOf(lane))}"]`);
+            const badge = tab?.querySelector('.kp-tab__count');
+            if (!tab || !badge) continue;
+            const n = list ? itemsOf(list).length : 0;
+            const limit = limitOf(lane);
+            const over = limit > 0 && n > limit;
+            // Written only when it changes: the board's observer hears its own writes.
+            const text = limit > 0 ? `${n} / ${limit}` : String(n);
+            if (badge.textContent !== text) badge.textContent = text;
+            badge.classList.toggle('kp-badge--destructive', over);
+            const label = this.strings.boardTabLabel(lane.dataset.kpBoardLabel ?? Board.keyOf(lane), n, limit, over);
+            if (tab.getAttribute('aria-label') !== label) tab.setAttribute('aria-label', label);
         }
     }
 
-    /** Show a lane of a narrow board with tabs. @param {string} key @param {'pointer' | 'keyboard' | 'move' | 'page'} source */
+    focusSwitcher() {
+        const tab = /** @type {HTMLElement | null} */ (this.tabs.querySelector('[aria-selected="true"]'));
+        if (tab && !this.tabs.hidden) tab.focus();
+    }
+
+    /** Show a lane of a narrow board under its switcher. @param {string} key @param {'pointer' | 'keyboard' | 'move' | 'page'} source */
     select(key, source) {
         if (key === this.selected || !this.lanes.some((lane) => Board.keyOf(lane) === key)) return;
         this.selected = key;
@@ -133,7 +151,8 @@ export class Board extends BoardLanes {
     /** A card sent to a lane that is not shown: the board shows that lane, so the card and its focus stay in sight. @param {CustomEvent} event */
     follow(event) {
         const { fromList, toList } = event.detail ?? {};
-        if (typeof toList === 'string' && fromList !== toList) this.select(toList, 'move');
+        // A move from the card's menu keeps the lane the reader works in; the switcher's count says where the card went.
+        if (typeof toList === 'string' && fromList !== toList && !this.menuMove) this.select(toList, 'move');
     }
 
     /** @param {Event} event */

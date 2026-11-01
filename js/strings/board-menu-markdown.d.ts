@@ -28,7 +28,7 @@ export type BoardMenuMarkdownStrings = {
      */
     boardLaneEmpty: string;
     /**
-     * The name of the row of lane tabs on a narrow board (js/board.js) [habits-1101]
+     * The name of the switcher over a narrow board, a button per lane (js/board.js) [habits-1101]
      */
     boardLanes: string;
     /**
@@ -47,6 +47,22 @@ export type BoardMenuMarkdownStrings = {
      * Its Try again button (js/board.js) [habits-1101]
      */
     boardRetry: string;
+    /**
+     * A lane's button in a narrow board's switcher, as a screen reader hears it (js/board.js) [uxtouch1101]
+     */
+    boardTabLabel: (lane: string, count: number, limit: number, over: boolean) => string;
+    /**
+     * The heading of the lanes a card's menu can send it to (js/board.js) [uxtouch1101]
+     */
+    boardMoveTo: string;
+    /**
+     * The line under a lane in that menu: what it holds now (js/board.js) [uxtouch1101]
+     */
+    boardMoveHint: (count: number, limit: number) => string;
+    /**
+     * What is said when a card was sent to another lane from its menu (js/board.js) [uxtouch1101]
+     */
+    boardMovedSaid: (name: string, lane: string, count: number, limit: number) => string;
     /**
      * The name of a context menu whose element gives none (js/context-menu.js) [habits-1101]
      */
@@ -125,11 +141,15 @@ export type BoardMenuMarkdownStrings = {
  * @property {string} boardOver  The word on a lane's plate that holds more than its limit (js/board.js) [habits-1101]
  * @property {(lane: string, count: number, limit: number) => string} boardOverSaid  What is said when a lane goes over its limit (js/board.js) [habits-1101]
  * @property {string} boardLaneEmpty  The line in a lane with no cards, where one can be dropped (js/board.js) [habits-1101]
- * @property {string} boardLanes  The name of the row of lane tabs on a narrow board (js/board.js) [habits-1101]
+ * @property {string} boardLanes  The name of the switcher over a narrow board, a button per lane (js/board.js) [habits-1101]
  * @property {string} boardLoading  The words on a board's loading card (js/board.js) [habits-1101]
  * @property {string} boardEmpty  The sentence over a board with no lanes, when the page gives none (js/board.js) [habits-1101]
  * @property {(reason: string) => string} boardFailed  The sentence over a board that could not be read (js/board.js) [habits-1101]
  * @property {string} boardRetry  Its Try again button (js/board.js) [habits-1101]
+ * @property {(lane: string, count: number, limit: number, over: boolean) => string} boardTabLabel  A lane's button in a narrow board's switcher, as a screen reader hears it (js/board.js) [uxtouch1101]
+ * @property {string} boardMoveTo  The heading of the lanes a card's menu can send it to (js/board.js) [uxtouch1101]
+ * @property {(count: number, limit: number) => string} boardMoveHint  The line under a lane in that menu: what it holds now (js/board.js) [uxtouch1101]
+ * @property {(name: string, lane: string, count: number, limit: number) => string} boardMovedSaid  What is said when a card was sent to another lane from its menu (js/board.js) [uxtouch1101]
  * @property {string} contextMenuLabel  The name of a context menu whose element gives none (js/context-menu.js) [habits-1101]
  * @property {string} mdToolbar  The name of the Markdown editor's toolbar (js/markdown-editor.js) [habits-1101]
  * @property {string} mdBold  Its bold button (js/markdown-editor.js) [habits-1101]

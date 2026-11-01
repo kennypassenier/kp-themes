@@ -31,19 +31,19 @@ export function shell(page) {
     const up = '../'.repeat(page.depth);
     const nav = page.nav
         .map(
-            (section) => `                    <div class="sc-nav__group">
-                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">${section.group}</h2>
-                        <ul class="sc-nav__list">
+            (section) => `                        <div class="sc-nav__group">
+                            <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">${section.group}</h2>
+                            <ul class="sc-nav__list">
 ${section.links
     .map(
         (link) =>
-            `                            <li><a class="sc-nav__link" href="${up}${link.href}"${
+            `                                <li><a class="sc-nav__link" href="${up}${link.href}"${
                 link.href === page.current ? ' aria-current="page"' : ''
             }>${link.label}</a></li>`,
     )
     .join('\n')}
-                        </ul>
-                    </div>`,
+                            </ul>
+                        </div>`,
         )
         .join('\n');
 
@@ -88,11 +88,18 @@ ${noFlashSnippet()}
         <!-- The theme switcher, fixed in the top right corner of every page
              (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
         <div class="sc-theme-switch">${themeMenuMarkup({ id: 'sc-theme-menu', label: 'Choose a theme' })}</div>
+        <!-- On a phone the navigation folds behind this menu button, as .kp-sidenav does for apps [uxtouch1101]: the
+             navigation is an over panel under 40rem (data-kp-sidenav-over-below) and stands beside the page above it. -->
+        <div class="kp-sidenav__launcher sc-nav__launcher">
+            <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="sc-nav"></button>
+        </div>
         <div class="kp-sidebar">
-            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
-                <a class="sc-brand kp-fw-bold" href="${up}site/index.html">kp-themes</a>
-                <div class="sc-nav__sections kp-stack">
+            <nav class="kp-sidebar__aside kp-sidenav sc-nav" id="sc-nav" aria-label="Documentation" data-kp-sidenav-over-below data-kp-sidenav-opener="launcher" data-kp-sidenav-backdrop="false">
+                <div class="kp-sidenav__scroll sc-nav__scroll">
+                    <a class="sc-brand kp-fw-bold" href="${up}site/index.html">kp-themes</a>
+                    <div class="sc-nav__sections kp-stack">
 ${nav}
+                    </div>
                 </div>
             </nav>
             <main class="kp-sidebar__main" id="main">

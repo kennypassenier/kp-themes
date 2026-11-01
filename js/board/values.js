@@ -6,9 +6,11 @@ export const BOARD = '[data-kp-board]';
 export const LANE = '[data-kp-board-lane]';
 /** Fired on the board, bubbling, when Try again is pressed on its failed plate. */
 export const BOARD_RETRY_EVENT = 'kp-board-retry';
-/** Fired on the board, bubbling, when a narrow board with tabs shows another lane: `{ lane, source }`. */
+/** Fired on the board, bubbling, when a narrow board's switcher shows another lane: `{ lane, source }`. */
 export const BOARD_LANE_EVENT = 'kp-board-lane';
-/** Under this many rem of its own width a board is narrow: its lanes scroll sideways in its box, or turn to tabs. */
+/** What a "Move to" entry of a card's menu reports as its value, before the lane's key [uxtouch1101]. */
+export const MOVE_PREFIX = 'kp-board-move:';
+/** Under this many rem of its own width a board is narrow: one lane under a switcher (default), or the lanes scroll sideways. */
 export const NARROW_REM = 40;
 /** The root font size when the document gives none it can read [px]. */
 export const FALLBACK_REM_PX = 16;

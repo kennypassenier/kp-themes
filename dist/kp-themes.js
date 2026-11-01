@@ -2703,12 +2703,20 @@ var init_board_menu_markdown = __esm({
       boardCountLabel: (count2, limit) => limit > 0 ? `${count2} of at most ${limit}` : String(count2),
       boardOver: "Over the limit",
       boardOverSaid: (lane, count2, limit) => `${lane} holds ${count2}, more than its limit of ${limit}`,
-      boardLaneEmpty: "Nothing here yet. Drag a card here.",
+      boardLaneEmpty: "Nothing here yet. Drag a card here, or send one with Move to in its menu.",
       boardLanes: "Lanes",
       boardLoading: "Reading the board",
       boardEmpty: "Nothing on the board yet.",
       boardFailed: (reason) => reason ? `Could not read the board: ${reason}` : "Could not read the board.",
       boardRetry: "Try again",
+      boardTabLabel: (lane, count2, limit, over) => `${lane}, ${limit > 0 ? `${count2} of at most ${limit}` : count2 === 1 ? "1 card" : `${count2} cards`}${over ? ", over the limit" : ""}`,
+      boardMoveTo: "Move to",
+      boardMoveHint: (count2, limit) => {
+        const cards = count2 === 1 ? "1 card" : `${count2} cards`;
+        if (limit <= 0) return `${cards} now`;
+        return count2 > limit ? `${count2} / ${limit} now, over its limit` : count2 === limit ? `${count2} / ${limit} now, at its limit` : `${count2} / ${limit} now`;
+      },
+      boardMovedSaid: (name, lane, count2, limit) => `${name} moved to ${lane}, which now holds ${limit > 0 ? `${count2} of at most ${limit}` : count2}`,
       contextMenuLabel: "Actions",
       mdToolbar: "Formatting",
       mdBold: "Bold",
@@ -26194,18 +26202,40 @@ function actionsOf(field2, before, built) {
   }
   return actions;
 }
+function boxOf2(field2, value) {
+  const doc = field2.ownerDocument;
+  let box = (
+    /** @type {HTMLElement | null} */
+    value.closest(".kp-secret__box")
+  );
+  const made6 = box === null;
+  if (!box) {
+    box = make7(doc, "span", "kp-secret__box");
+    value.before(box);
+    box.append(value);
+  }
+  const clock4 = make7(doc, "span", "kp-secret__clock");
+  clock4.setAttribute("aria-hidden", "true");
+  box.append(clock4);
+  const unbox = () => {
+    clock4.remove();
+    if (made6 && box?.isConnected) box.replaceWith(value);
+  };
+  return { box, clock: clock4, unbox };
+}
 function buildDisplay(field2, s2, built) {
   const doc = field2.ownerDocument;
   let value = (
     /** @type {HTMLElement | null} */
-    field2.querySelector(":scope > .kp-secret__value")
+    field2.querySelector(":scope > .kp-secret__value, :scope > .kp-secret__box > .kp-secret__value")
   );
   if (!value) {
     value = make7(doc, "code", "kp-secret__value");
     field2.prepend(value);
     built.push(value);
   }
-  const actions = actionsOf(field2, value, built);
+  const { box, clock: clock4, unbox } = boxOf2(field2, value);
+  const actions = actionsOf(field2, box, built);
   let reveal = (
     /** @type {HTMLButtonElement | null} */
     actions.querySelector("[data-kp-secret-reveal]")
@@ -26231,7 +26261,8 @@ function buildDisplay(field2, s2, built) {
     actions.append(copy3);
     built.push(copy3);
   }
-  const parts2 = { value, reveal, copy: copy3, ...buildLine2(field2, built) };
+  const parts2 = { value, reveal, copy: copy3, clock: clock4, unbox, ...buildLine2(field2, built) };
+  box.append(parts2.drain);
   value.id ||= `kp-secret-${randomId()}`;
   reveal.setAttribute("aria-controls", value.id);
   return parts2;
@@ -26334,12 +26365,14 @@ function writeLine(c) {
   if (why !== void 0) {
     c.host.dataset.kpSecretState = "disabled";
     parts2.words.textContent = why;
-  } else if (c.state === "loading") {
+  } else if (c.state !== "error") parts2.words.textContent = "";
+  if (why === void 0 && c.state === "loading") {
     const spinner2 = make7(c.doc, "span", "kp-spinner kp-secret__spinner");
     spinner2.setAttribute("aria-hidden", "true");
-    parts2.words.replaceChildren(spinner2, c.doc.createTextNode(s2.secretReading));
-  } else if (c.state === "shown") parts2.words.textContent = c.seconds === 0 ? s2.secretStaysShown : c.paused ? s2.secretPaused : s2.secretHidesIn(c.left);
-  else if (c.state !== "error") parts2.words.textContent = "";
+    parts2.clock.replaceChildren(spinner2, c.doc.createTextNode(s2.secretReading));
+  } else if (why === void 0 && c.state === "shown") parts2.clock.textContent = c.seconds === 0 ? s2.secretStaysShown : c.paused ? s2.secretPaused : s2.secretHidesIn(c.left);
+  else parts2.clock.textContent = "";
+  c.host.style.setProperty("--kp-secret-clock", `${parts2.clock.textContent ? parts2.clock.offsetWidth : 0}px`);
 }
 var init_secret_paint = __esm({
   "js/patterns/secret-paint.js"() {
@@ -26382,6 +26415,7 @@ var init_secret_display = __esm({
         this.own(() => {
           this.ticket += 1;
           value.textContent = this.mask;
+          this.parts.unbox();
           for (const part7 of this.built) part7.remove();
           delete field2.dataset.kpSecretState;
           secrets.delete(field2);
@@ -42691,8 +42725,22 @@ var init_controller36 = __esm({
         const by = Number(b.getAttribute("data-kp-quantity-by")) || 0;
         return change(this.host, getQuantity(this.host) + by * rulesOf(this.host).step, "button");
       }
+      /**
+       * A press in the number's box beside the number (its padding, the unit) puts the caret in the number, as the box's text cursor
+       * promises: the whole box, a fingertip high, is the number's target [uxtouch1101; the number alone is a few characters wide].
+       * @param {PointerEvent} event
+       */
+      focusFromField(event) {
+        const field2 = event.target instanceof Element ? event.target.closest(".kp-quantity__field") : null;
+        const input = inputOf(this.host);
+        if (!field2 || !input || event.target === input || isDisabled(this.host) || !this.host.contains(field2)) return;
+        event.preventDefault();
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
       /** A pointer went down on a button: step now, and again while it is held, slowly first and then faster. @param {PointerEvent} event */
       down(event) {
+        this.focusFromField(event);
         const b = this.stepButton(event);
         if (!b || event.button !== 0 || isDisabled(this.host)) return;
         this.press(b);
@@ -62618,7 +62666,7 @@ var init_pipeline = __esm({
 });
 
 // js/board/values.js
-var BOARD, LANE, BOARD_RETRY_EVENT, BOARD_LANE_EVENT, NARROW_REM, FALLBACK_REM_PX2, make20, itemsOf3, limitOf;
+var BOARD, LANE, BOARD_RETRY_EVENT, BOARD_LANE_EVENT, MOVE_PREFIX, NARROW_REM, FALLBACK_REM_PX2, make20, itemsOf3, limitOf;
 var init_values29 = __esm({
   "js/board/values.js"() {
     "use strict";
@@ -62626,6 +62674,7 @@ var init_values29 = __esm({
     LANE = "[data-kp-board-lane]";
     BOARD_RETRY_EVENT = "kp-board-retry";
     BOARD_LANE_EVENT = "kp-board-lane";
+    MOVE_PREFIX = "kp-board-move:";
     NARROW_REM = 40;
     FALLBACK_REM_PX2 = 16;
     make20 = (doc, tag, className, text) => {
@@ -62758,6 +62807,128 @@ var init_lanes4 = __esm({
   }
 });
 
+// js/board/move.js
+var isMoveGroup, BoardMoves;
+var init_move = __esm({
+  "js/board/move.js"() {
+    "use strict";
+    init_controller();
+    init_constants6();
+    init_model();
+    init_open();
+    init_reorder2();
+    init_lanes4();
+    init_values29();
+    isMoveGroup = (group) => group.items.length > 0 && group.items.every((item) => item.value?.startsWith(MOVE_PREFIX));
+    BoardMoves = class extends BoardLanes {
+      /** @param {HTMLElement} el @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.menuMove = false;
+      }
+      /** Listen for picks in the cards' menus; called from the board's connect(). */
+      wireMoves() {
+        this.listen(this.host, MENU_SELECT_EVENT, (event) => this.onMovePick(
+          /** @type {CustomEvent} */
+          event
+        ));
+      }
+      count() {
+        super.count();
+        this.syncMenus();
+      }
+      /** The lane that holds a card. @param {Element} card @returns {HTMLElement | undefined} */
+      laneOf(card) {
+        return this.lanes.find((lane) => lane.contains(card));
+      }
+      /**
+       * The "Move to" group for a card: every other lane with what it holds now; null when there is nowhere to go.
+       * @param {HTMLElement} card @returns {MenuGroup | null}
+       */
+      moveGroup(card) {
+        const home = this.laneOf(card);
+        const items = this.lanes.filter((lane) => lane !== home).map((lane) => {
+          const list = BoardLanes.listOf(lane);
+          const key = BoardLanes.keyOf(lane);
+          return { label: lane.dataset.kpBoardLabel ?? key, hint: this.strings.boardMoveHint(list ? itemsOf3(list).length : 0, limitOf(lane)), value: `${MOVE_PREFIX}${key}` };
+        });
+        return items.length > 0 ? { group: this.strings.boardMoveTo, items } : null;
+      }
+      /** Every card's own menu gets the group in front of the page's entries (a menu that shows the same is skipped by setMenu). */
+      syncMenus() {
+        if (this.host.dataset.kpBoardMove === "off") return;
+        for (const lane of this.lanes) {
+          const list = BoardLanes.listOf(lane);
+          for (const card of list ? itemsOf3(list) : []) {
+            const wrapper = (
+              /** @type {HTMLElement | null} */
+              card.querySelector("[data-kp-menu-button]")
+            );
+            const own = wrapper ? filled.get(wrapper) : void 0;
+            if (!wrapper || !Array.isArray(own)) continue;
+            const group = this.moveGroup(
+              /** @type {HTMLElement} */
+              card
+            );
+            setMenu(wrapper, [...group ? [group] : [], ...own.filter((g) => !isMoveGroup(g))]);
+          }
+        }
+      }
+      /** A pick of a "Move to" entry, from a card's ⋯ menu or its context menu. @param {CustomEvent} event */
+      onMovePick(event) {
+        const value = String(event.detail?.value ?? "");
+        if (!value.startsWith(MOVE_PREFIX)) return;
+        const from = event.detail?.context instanceof Element ? event.detail.context : event.target;
+        const card = from instanceof Element ? (
+          /** @type {HTMLElement | null} */
+          from.closest("[data-kp-item]")
+        ) : null;
+        if (card && this.host.contains(card)) this.move(card, value.slice(MOVE_PREFIX.length));
+      }
+      /**
+       * Send a card to the end of a lane, said in words; the reorder list reports it as `kp-reorder` with `fromList` / `toList`.
+       * @param {HTMLElement} card @param {string} key the lane's key @returns {boolean} whether it moved
+       */
+      move(card, key) {
+        const lane = this.lanes.find((one) => BoardLanes.keyOf(one) === key);
+        const list = lane ? BoardLanes.listOf(lane) : null;
+        const control = list ? controllerOf(list, ReorderControl) : void 0;
+        const source = card.parentElement;
+        if (!lane || !list || !control || source === list) return false;
+        const at = source ? itemsOf3(source).indexOf(card) : -1;
+        this.menuMove = true;
+        try {
+          control.receive(card, list.children.length);
+        } finally {
+          this.menuMove = false;
+        }
+        this.count();
+        const n = itemsOf3(list).length;
+        const limit = limitOf(lane);
+        const label2 = lane.dataset.kpBoardLabel ?? key;
+        const moved = this.strings.boardMovedSaid(ReorderControl.nameOf(card), label2, n, limit);
+        this.live.textContent = limit > 0 && n > limit ? `${moved}. ${this.strings.boardOverSaid(label2, n, limit)}` : moved;
+        queueMicrotask(() => this.refocus(card, source, at));
+        return true;
+      }
+      /**
+       * The focus after a menu move: the card itself where it can be seen, else the card that took its place, the one before it,
+       * or the lane's button in the switcher.
+       * @param {HTMLElement} card @param {HTMLElement | null} source @param {number} at
+       */
+      refocus(card, source, at) {
+        const target = card.closest("[hidden]") === null ? card : source ? itemsOf3(source)[at] ?? itemsOf3(source)[at - 1] : void 0;
+        const focusable2 = target?.querySelector("[data-kp-menu-button] > button, [data-kp-handle], button, a[href]");
+        if (focusable2 instanceof HTMLElement) focusable2.focus();
+        else this.focusSwitcher();
+      }
+      /** The switcher's button of the lane shown; the board controller draws the switcher. */
+      focusSwitcher() {
+      }
+    };
+  }
+});
+
 // js/board/controller.js
 var Board;
 var init_controller50 = __esm({
@@ -62766,9 +62937,9 @@ var init_controller50 = __esm({
     init_busy_card();
     init_state_plate();
     init_structure();
-    init_lanes4();
+    init_move();
     init_values29();
-    Board = class _Board extends BoardLanes {
+    Board = class _Board extends BoardMoves {
       /** @param {HTMLElement} el @param {{ strings?: Partial<import('../strings.js').Strings> }} [options] */
       constructor(el16, options = {}) {
         super(el16, options);
@@ -62809,6 +62980,7 @@ var init_controller50 = __esm({
           event
         ));
         this.listen(el16, "pointermove", (event) => this.springTab(event));
+        this.wireMoves();
         view?.requestAnimationFrame(() => this.markDrawn());
         this.own(() => this.busy?.remove());
       }
@@ -62824,14 +62996,16 @@ var init_controller50 = __esm({
         this.count();
         this.layout();
       }
-      /** Whether the board is narrow now, and whether its lanes are tabs. */
+      /** Whether the board is narrow now, and whether it shows one lane under the switcher (anything but `scroll`, the default). */
       tabbed() {
         const rem = Number.parseFloat(getComputedStyle(this.host.ownerDocument.documentElement).fontSize) || FALLBACK_REM_PX2;
         const narrow = this.host.clientWidth > 0 && this.host.clientWidth < NARROW_REM * rem;
+        const tabs = narrow && this.host.dataset.kpBoardNarrow !== "scroll";
         this.host.toggleAttribute("data-kp-board-narrow-now", narrow);
-        return narrow && this.host.dataset.kpBoardNarrow === "tabs";
+        this.host.toggleAttribute("data-kp-board-switch", tabs);
+        return tabs;
       }
-      /** The narrow layout: with tabs only the chosen lane shows (a tab panel); otherwise every lane, in the track. */
+      /** The narrow layout: under the switcher only the chosen lane shows (a tab panel); otherwise every lane, in the track. */
       layout() {
         const tabs = this.tabbed();
         this.tabs.hidden = !tabs;
@@ -62841,7 +63015,7 @@ var init_controller50 = __esm({
           else lane.removeAttribute("role");
         }
       }
-      /** One tab per lane: its name and its count on the tab's own count badge. */
+      /** One button per lane in the switcher: its name over its exact count (with the limit), on the tab's own count badge. */
       drawTabs() {
         const doc = this.host.ownerDocument;
         this.tabs.replaceChildren(
@@ -62872,12 +63046,27 @@ var init_controller50 = __esm({
       countTabs() {
         for (const lane of this.lanes) {
           const list = _Board.listOf(lane);
-          const badge = this.tabs.querySelector(`[data-kp-board-tab="${CSS.escape(_Board.keyOf(lane))}"] .kp-tab__count`);
-          const text = String(list ? itemsOf3(list).length : 0);
-          if (badge && badge.textContent !== text) badge.textContent = text;
+          const tab = this.tabs.querySelector(`[data-kp-board-tab="${CSS.escape(_Board.keyOf(lane))}"]`);
+          const badge = tab?.querySelector(".kp-tab__count");
+          if (!tab || !badge) continue;
+          const n = list ? itemsOf3(list).length : 0;
+          const limit = limitOf(lane);
+          const over = limit > 0 && n > limit;
+          const text = limit > 0 ? `${n} / ${limit}` : String(n);
+          if (badge.textContent !== text) badge.textContent = text;
+          badge.classList.toggle("kp-badge--destructive", over);
+          const label2 = this.strings.boardTabLabel(lane.dataset.kpBoardLabel ?? _Board.keyOf(lane), n, limit, over);
+          if (tab.getAttribute("aria-label") !== label2) tab.setAttribute("aria-label", label2);
         }
       }
-      /** Show a lane of a narrow board with tabs. @param {string} key @param {'pointer' | 'keyboard' | 'move' | 'page'} source */
+      focusSwitcher() {
+        const tab = (
+          /** @type {HTMLElement | null} */
+          this.tabs.querySelector('[aria-selected="true"]')
+        );
+        if (tab && !this.tabs.hidden) tab.focus();
+      }
+      /** Show a lane of a narrow board under its switcher. @param {string} key @param {'pointer' | 'keyboard' | 'move' | 'page'} source */
       select(key, source) {
         if (key === this.selected || !this.lanes.some((lane) => _Board.keyOf(lane) === key)) return;
         this.selected = key;
@@ -62888,7 +63077,7 @@ var init_controller50 = __esm({
       /** A card sent to a lane that is not shown: the board shows that lane, so the card and its focus stay in sight. @param {CustomEvent} event */
       follow(event) {
         const { fromList, toList } = event.detail ?? {};
-        if (typeof toList === "string" && fromList !== toList) this.select(toList, "move");
+        if (typeof toList === "string" && fromList !== toList && !this.menuMove) this.select(toList, "move");
       }
       /** @param {Event} event */
       onTab(event) {
@@ -62975,8 +63164,11 @@ var board_exports = {};
 __export(board_exports, {
   BOARD: () => BOARD,
   BOARD_LANE_EVENT: () => BOARD_LANE_EVENT,
+  BOARD_MOVE_PREFIX: () => MOVE_PREFIX,
   BOARD_RETRY_EVENT: () => BOARD_RETRY_EVENT,
   attachBoards: () => attachBoards,
+  boardMoveGroup: () => boardMoveGroup,
+  moveBoardCard: () => moveBoardCard,
   recountBoard: () => recountBoard,
   setBoardState: () => setBoardState,
   showBoardLane: () => showBoardLane
@@ -62992,6 +63184,12 @@ function showBoardLane(el16, lane) {
 }
 function recountBoard(el16) {
   controllerOf(el16, Board)?.count();
+}
+function boardMoveGroup(el16, card) {
+  return controllerOf(el16, Board)?.moveGroup(card) ?? null;
+}
+function moveBoardCard(el16, card, lane) {
+  return controllerOf(el16, Board)?.move(card, lane) ?? false;
 }
 var init_board2 = __esm({
   "js/board.js"() {
@@ -86334,7 +86532,7 @@ function kindOf3(el16) {
   }
   return "";
 }
-function boxOf2(el16) {
+function boxOf3(el16) {
   const W = el16.clientWidth;
   const H = el16.clientHeight;
   const foot = el16.offsetHeight - el16.clientTop;
@@ -86384,7 +86582,7 @@ function plate(el16, { W, foot, rtl, at }) {
   return { html, q };
 }
 function caterpillar(el16, kind) {
-  const box = boxOf2(el16);
+  const box = boxOf3(el16);
   if (kind === "spinner") return spinner();
   if (kind === "row") return row(el16, box);
   if (kind === "day") return day(el16, box);
@@ -95151,6 +95349,7 @@ export {
   BEFORE_THEME_EVENT,
   BOARD,
   BOARD_LANE_EVENT,
+  MOVE_PREFIX as BOARD_MOVE_PREFIX,
   BOARD_RETRY_EVENT,
   BOOT_PROGRESS,
   BULLETS,
@@ -96027,6 +96226,7 @@ export {
   balanceTracks,
   barcell_exports as barcellExports,
   board_exports as boardExports,
+  boardMoveGroup,
   boundText,
   buildAlarm,
   buildJobLine,
@@ -96309,6 +96509,7 @@ export {
   motionAllowed,
   motion_exports as motionExports,
   motionWatchCount,
+  moveBoardCard,
   nameOf6 as nameOf,
   nav_fold_exports as navFoldExports,
   nearNames,

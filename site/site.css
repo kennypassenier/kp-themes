@@ -69,6 +69,47 @@
         color: var(--primary);
     }
 
+    /* The navigation is a .kp-sidenav [uxtouch1101]: on a phone (under 40rem, `data-kp-sidenav-narrow`) it folds behind the
+       menu button in the top corner and opens over the page, with the panel's own slide, Escape and focus return; wider it is
+       the plain column it always was, so the panel's ground, edge, width and the launcher's room stay off there. */
+    .sc-nav.kp-sidenav:not([data-kp-sidenav-narrow]) {
+        display: block;
+        inline-size: auto;
+        flex-shrink: 1;
+        padding: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    .sc-nav:not([data-kp-sidenav-narrow]) > .sc-nav__scroll {
+        overflow: visible;
+    }
+
+    .sc-nav[data-kp-sidenav-narrow] > .sc-nav__scroll {
+        padding: var(--kp-space-md, 1rem);
+    }
+
+    /* A launcher is a page's way in at every width; this site's is only for a phone, where the column cannot stand beside the
+       page (the module marks the panel narrow there). */
+    body:not(:has(.sc-nav[data-kp-sidenav-narrow])) .sc-nav__launcher {
+        display: none;
+    }
+
+    /* On a phone the menu button and the theme switch share the first row; the page starts under them. */
+    .kp-sidebar:has(> .sc-nav[data-kp-sidenav-narrow]) .sc-measure {
+        padding-block-start: calc(2 * var(--kp-space-sm, 0.5rem) + var(--kp-touch-target, 2.75rem));
+    }
+
+    /* A finger's row per link in the opened panel, under a coarse pointer. */
+    @media (pointer: coarse) {
+        .sc-nav[data-kp-sidenav-narrow] .sc-nav__link {
+            display: flex;
+            align-items: center;
+            min-block-size: var(--kp-touch-target, 2.75rem);
+        }
+    }
+
     .sc-swatches {
         list-style: none;
         margin: 0;

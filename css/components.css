@@ -10019,9 +10019,10 @@
     }
 
     /* Secret field [kpadopt4] -----------------------------------------------
- * `.kp-secret[data-kp-secret]` (js/patterns.js): a masked value, Reveal and
- * Copy, and one line under them for the countdown, the reason a field is off
- * or why it could not be read. The value box has the control height and the
+ * `.kp-secret[data-kp-secret]` (js/patterns.js): a masked value (with the
+ * countdown inside its box since uxtouch1101, secret-clock.css), Reveal and
+ * Copy, and one line under them for the reason a field is off or why it
+ * could not be read. The value box has the control height and the
  * row's width whatever it holds, and the line under it always keeps its
  * room, so showing, hiding, loading or failing moves nothing. A long value
  * stays on one line and scrolls inside its box (a fade at the end says there
@@ -10263,6 +10264,70 @@
         font-variant-numeric: tabular-nums;
     }
 
+    /* The value's box [uxtouch1101; kyu review 2026-11-01: Reveal grew the field and pushed everything under it 61 px]. A display
+     * field's value stands in `.kp-secret__box` with the clock (the countdown, "Reading…") at its end edge and the drain along its
+     * foot, so showing a value writes inside the field: the field keeps one height in every state and nothing under it moves. The
+     * value keeps the clock's room free at its end while the clock speaks (`--kp-secret-clock`, measured by the script). The box is
+     * the row's flex item, in the value's place; the value fills it and keeps every theme's paint. Knob: --kp-secret-clock-gap
+     * (the sm step, between the value's text and the clock). */
+    .kp-secret__box {
+        position: relative;
+        display: grid;
+        flex: 1 1 var(--kp-secret-min, 16rem);
+        min-inline-size: 0;
+    }
+
+    .kp-secret__box > .kp-secret__value {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-secret:is([data-kp-secret-state='shown'], [data-kp-secret-state='loading']) .kp-secret__box > .kp-secret__value {
+        padding-inline-end: calc(var(--kp-secret-clock, 0px) + 2 * var(--kp-secret-clock-gap, var(--kp-space-sm, 0.5rem)));
+    }
+
+    .kp-secret__clock {
+        grid-area: 1 / 1;
+        z-index: 1;
+        align-self: center;
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-end: var(--kp-secret-clock-gap, var(--kp-space-sm, 0.5rem));
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.25rem;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-secret__clock:empty {
+        display: none;
+    }
+
+    /* The drain runs along the box's foot, inside its border, rather than over the line under the buttons. */
+    .kp-secret__box > .kp-secret__drain {
+        position: absolute;
+        inset-inline: 1px;
+        inset-block-end: 1px;
+        z-index: 1;
+    }
+
+    /* A wrapping value keeps its lines of room as its height, not as its least height: a value longer than that scrolls inside the
+     * box instead of growing the field when it is shown. */
+    .kp-secret[data-kp-secret-wrap='wrap'] .kp-secret__value {
+        block-size: calc(var(--kp-secret-lines, 2) * 1.5em + 2 * var(--kp-space-xs, 0.25rem) + 2px);
+        min-block-size: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .kp-secret[data-kp-secret-wrap='wrap'] .kp-secret__clock {
+        align-self: end;
+        margin-block-end: var(--kp-space-xs, 0.25rem);
+    }
     /* --- Step list: the steps of one run, live ----------------------------
  * The list of a process in flight (an update, an import, a deploy): each
  * step is waiting, running, done, failed or skipped, and the page changes it
@@ -12977,9 +13042,10 @@
  * count), so every register paints it as its own; the cards are the page's, in a reorder list the lanes share. Wide, the lanes
  * stand side by side at one width (at least --kp-board-lane-min, 15rem), as tall as the tallest, so a short lane is still a long
  * drop target; more lanes than fit scroll sideways inside the board's box. Narrow (under 40rem of the board's own width,
- * `data-kp-board-narrow-now`, written by the script), a lane takes 85% of the box and snaps (`scroll`), or one lane shows under
- * a row of tabs (`tabs`). Knobs: --kp-board-gap (0.75rem), --kp-board-lane-min (15rem), --kp-board-lane-narrow (85%),
- * --kp-board-min (16rem, the board's least height), --kp-board-drop-min (6rem, the least height of a lane's list). */
+ * `data-kp-board-narrow-now`, written by the script), one lane shows under a switcher (`data-kp-board-switch`, the default
+ * since uxtouch1101), or a lane takes 85% of the box and snaps (`scroll`). Knobs: --kp-board-gap (0.75rem), --kp-board-lane-min
+ * (15rem), --kp-board-lane-narrow (85%), --kp-board-min (16rem, the board's least height), --kp-board-drop-min (6rem, the least
+ * height of a lane's list), --kp-board-switch-min (5rem, the least width of a lane's button in the switcher). */
     .kp-board {
         position: relative;
         display: grid;
@@ -13012,7 +13078,7 @@
         scroll-snap-align: start;
     }
 
-    .kp-board[data-kp-board-narrow-now][data-kp-board-narrow='tabs'] > .kp-board__track {
+    .kp-board[data-kp-board-switch] > .kp-board__track {
         grid-auto-columns: minmax(0, 1fr);
         scroll-snap-type: none;
     }
@@ -13057,9 +13123,32 @@
         pointer-events: none;
     }
 
+    /* The switcher [uxtouch1101]: a button per lane, its name over its exact count, on whole tracks that wrap onto a second row
+       rather than scroll (four lanes stand in one row at 390 px). Each button is the package's tab, so a register paints it as its
+       own; the count is the tab's own count badge. */
+    .kp-board__tabs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-board-switch-min, 5rem)), 1fr));
+    }
+
     .kp-board__tab {
-        display: inline-flex;
+        display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        text-align: center;
+    }
+
+    .kp-board__tab-name {
+        max-inline-size: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .kp-board__tab > .kp-tab__count {
+        margin-inline-start: 0;
     }
 
     /* An empty or failed board: the package's state plate over the whole board, the lanes held still under it. */
@@ -34921,21 +35010,171 @@
      * WCAG 2.5.5 / Apple HIG ask 44 px for a finger. The 36 px default, the 28 px small button and the 28 px tool-row buttons
      * (code, JSON field, command copy) are right for a mouse and stay as they are under a fine pointer; only a coarse pointer
      * (a phone, a tablet) lifts the box. The floor sits on the button itself (min-block-size / min-inline-size), so layout
-     * follows: tool rows come out one height, and a register's own paint is untouched. `html` in front outweighs the
+     * follows: tool rows come out one height, and a register's own paint is untouched. The bar's search trigger joins them
+     * [uxtouch1101]; every other small part gets an invisible hit area instead (touch-hit-area.css). `html` in front outweighs the
      * registers' `[data-theme] .kp-button--sm` without !important. Knob: --kp-touch-target (2.75rem). */
     @media (pointer: coarse) {
-        html :is(.kp-button, .kp-icon-button, .kp-nav__toggle, .kp-sidenav__toggle):is(*, .kp-button--sm, .kp-button--lg) {
+        html :is(.kp-button, .kp-icon-button, .kp-nav__toggle, .kp-sidenav__toggle, .kp-nav__search-trigger):is(*, .kp-button--sm, .kp-button--lg) {
             min-block-size: var(--kp-touch-target, 2.75rem);
             min-inline-size: var(--kp-touch-target, 2.75rem);
         }
 
-        html .kp-icon-button {
+        html .kp-icon-button,
+        html .kp-sidenav__launcher > :is(button, .kp-icon-button) {
             inline-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
             block-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
         }
     }
 }
 
+@layer kp.components {
+    /* --- Touch hit areas: every small interactive part is a fingertip wide under a coarse pointer [uxtouch1101] ---
+     * The app reviews (2026-11-01) counted 57 to 340 targets under 44 px per page on a phone: segmented items and chips 28-30 px,
+     * the switch 24, check boxes and radios 18, quantity numbers 24, inputs and selects 36, the time field's toggle 36 wide,
+     * uptime cells 11 by 25, table and list name links 20-24, the dialog's ✕. touch-target.css lifts buttons by their box; these
+     * parts keep their look exactly and get a larger hit area instead: an invisible `::after` centred on the part, at least
+     * --kp-touch-target (2.75rem, 44 px) each way, which takes the pointer for its part (a pseudo-element's press is its element's).
+     * A check box or a radio takes it on its label (a label holding the box, or the label after it), reaching back over the box;
+     * the switch takes it on its track. Inputs and selects are the exception: a field cannot carry a pseudo-element, so it stands
+     * at the target's height (not inside a sentence, where it is a word of the line). Uptime cells grow only in height: a cell
+     * 11 px wide shares its row with its neighbours, and a tap on the row opens the nearest one (js/uptime-strip.js); their strip,
+     * which clips, gives the room back by a padding its negative margin takes away, so nothing around it moves, and stands over
+     * the strip's title so a press just above a cell is the cell's.
+     *
+     * Applies under `(pointer: coarse)`, and under `data-kp-touch` on any element (a kiosk whose touch screen reports a mouse, a
+     * demo of the touch layout). Knobs: --kp-touch-target (2.75rem); --kp-touch-hit-paint (transparent) and
+     * --kp-touch-hit-outline (none) draw the areas, for checking a layout by eye; --kp-touch-check-gap (0.5rem) is the gap between
+     * a check box and the label after it. */
+    @media (pointer: coarse) {
+        html :is(.kp-uptime__cell, .kp-datatable__edit, label:has(> .kp-field__check), .kp-field__check + label),
+        html :is(.kp-table, .kp-datatable) :is(td, th[scope='row']) a[href],
+        html :is(.kp-listrow__name a[href], a.kp-listrow__name) {
+            position: relative;
+        }
+
+        html :is(.kp-segmented__item, .kp-switch__input, .kp-time__toggle, .kp-dialog__close, .kp-datatable__edit)::after,
+        html :is(.kp-table, .kp-datatable) :is(td, th[scope='row']) a[href]::after,
+        html :is(.kp-listrow__name a[href], a.kp-listrow__name)::after {
+            content: '';
+            position: absolute;
+            inset: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        html label:has(> .kp-field__check)::after {
+            content: '';
+            position: absolute;
+            inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+            inset-inline: calc((1.15rem - var(--kp-touch-target, 2.75rem)) / 2) 0;
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        html .kp-field__check + label::after {
+            content: '';
+            position: absolute;
+            inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+            inset-inline: calc((1.15rem - var(--kp-touch-target, 2.75rem)) / 2 - 1.15rem - var(--kp-touch-check-gap, 0.5rem)) 0;
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        html .kp-uptime__cell::after {
+            content: '';
+            position: absolute;
+            inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+            inset-inline: 0;
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        html :is(.kp-field__input, .kp-combobox__input, .kp-datatable__search):not(textarea, [type='range'], [type='color'], .kp-sentence *, .kp-time--inline *) {
+            min-block-size: var(--kp-touch-target, 2.75rem);
+        }
+
+        html .kp-quantity__input {
+            align-self: stretch;
+        }
+
+        html .kp-uptime__track {
+            position: relative;
+            z-index: 1;
+            padding-block: 0.75rem;
+            margin-block: -0.75rem;
+        }
+    }
+
+    /* The same under `data-kp-touch`, for a page that knows it is touched whatever the pointer says. */
+    [data-kp-touch] :is(.kp-uptime__cell, .kp-datatable__edit, label:has(> .kp-field__check), .kp-field__check + label),
+    [data-kp-touch] :is(.kp-table, .kp-datatable) :is(td, th[scope='row']) a[href],
+    [data-kp-touch] :is(.kp-listrow__name a[href], a.kp-listrow__name) {
+        position: relative;
+    }
+
+    [data-kp-touch] :is(.kp-segmented__item, .kp-switch__input, .kp-time__toggle, .kp-dialog__close, .kp-datatable__edit)::after,
+    [data-kp-touch] :is(.kp-table, .kp-datatable) :is(td, th[scope='row']) a[href]::after,
+    [data-kp-touch] :is(.kp-listrow__name a[href], a.kp-listrow__name)::after {
+        content: '';
+        position: absolute;
+        inset: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    [data-kp-touch] label:has(> .kp-field__check)::after {
+        content: '';
+        position: absolute;
+        inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+        inset-inline: calc((1.15rem - var(--kp-touch-target, 2.75rem)) / 2) 0;
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    [data-kp-touch] .kp-field__check + label::after {
+        content: '';
+        position: absolute;
+        inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+        inset-inline: calc((1.15rem - var(--kp-touch-target, 2.75rem)) / 2 - 1.15rem - var(--kp-touch-check-gap, 0.5rem)) 0;
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    [data-kp-touch] .kp-uptime__cell::after {
+        content: '';
+        position: absolute;
+        inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+        inset-inline: 0;
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    [data-kp-touch] :is(.kp-field__input, .kp-combobox__input, .kp-datatable__search):not(textarea, [type='range'], [type='color'], .kp-sentence *, .kp-time--inline *) {
+        min-block-size: var(--kp-touch-target, 2.75rem);
+    }
+
+    [data-kp-touch] .kp-quantity__input {
+        align-self: stretch;
+    }
+
+    [data-kp-touch] .kp-uptime__track {
+        position: relative;
+        z-index: 1;
+        padding-block: 0.75rem;
+        margin-block: -0.75rem;
+    }
+
+    /* The buttons' own floor (touch-target.css) follows `data-kp-touch` too, the bar's search trigger with them. */
+    [data-kp-touch] :is(.kp-button, .kp-icon-button, .kp-nav__toggle, .kp-sidenav__toggle, .kp-nav__search-trigger):is(*, .kp-button--sm, .kp-button--lg) {
+        min-block-size: var(--kp-touch-target, 2.75rem);
+        min-inline-size: var(--kp-touch-target, 2.75rem);
+    }
+
+    [data-kp-touch] .kp-icon-button {
+        inline-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
+        block-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
+    }
+}
 @layer kp.layout {
     /* --- Plain card: a state host without its own frame [wish-1120, homelab 90] ---
      * A `.kp-card[data-kp-state]` is a framed card, so one inside a section card drew a card in a card. With

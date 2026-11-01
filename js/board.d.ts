@@ -1,4 +1,4 @@
-export { BOARD, BOARD_LANE_EVENT, BOARD_RETRY_EVENT } from './board/values.js';
+export { BOARD, BOARD_LANE_EVENT, BOARD_RETRY_EVENT, MOVE_PREFIX as BOARD_MOVE_PREFIX } from './board/values.js';
 export type BoardState = 'loading' | 'ready' | 'empty' | 'error';
 export type BoardOptions = {
     strings?: Partial<import('./strings.js').Strings>;
@@ -21,7 +21,7 @@ export declare function attachBoards(root?: ParentNode, options?: BoardOptions):
  */
 export declare function setBoardState(el: Element, state: BoardState, words?: string): void;
 /**
- * Show a lane of a narrow board with tabs (on a wide board every lane shows already).
+ * Show a lane of a narrow board under its switcher (on a wide board every lane shows already).
  * @param {Element} el
  * @param {string} lane the lane's key
  */
@@ -31,3 +31,19 @@ export declare function showBoardLane(el: Element, lane: string): void;
  * @param {Element} el
  */
 export declare function recountBoard(el: Element): void;
+/**
+ * The "Move to" group for a card of the board, for a page that builds the card's menu itself (setContextMenu with a function):
+ * one entry per other lane, its value `kp-board-move:<lane>`; a pick of it anywhere in the board moves the card.
+ * @param {Element} el the board
+ * @param {HTMLElement} card
+ * @returns {import('./menu-button.js').MenuGroup | null} null when there is no other lane
+ */
+export declare function boardMoveGroup(el: Element, card: HTMLElement): import('./menu-button.js').MenuGroup | null;
+/**
+ * Send a card to the end of a lane, as a "Move to" pick does.
+ * @param {Element} el the board
+ * @param {HTMLElement} card
+ * @param {string} lane the lane's key
+ * @returns {boolean} whether it moved
+ */
+export declare function moveBoardCard(el: Element, card: HTMLElement, lane: string): boolean;

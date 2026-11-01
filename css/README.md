@@ -184,7 +184,7 @@ concatenates that file into `css/themes.css`.
 | `showing-data.css`              | Showing data                                                                     |
 | `sidenav/`                      | Side navigation (5 parts)                                                        |
 | `slider/`                       | Slider (2 parts)                                                                 |
-| `small-patterns/`               | The small patterns (2 parts)                                                     |
+| `small-patterns/`               | The small patterns (3 parts)                                                     |
 | `snooze-picker.css`             | Snooze picker                                                                    |
 | `state-plate.css`               | The plate an empty or failed area is drawn with                                  |
 | `state-plates-last-layer.css`   | State plates in the last layer                                                   |
@@ -204,6 +204,7 @@ concatenates that file into `css/themes.css`.
 | `toast.css`                     | Toast                                                                            |
 | `toggle-button.css`             | Toggle button                                                                    |
 | `touch-target.css`              | Touch target                                                                     |
+| `touch-hit-area.css`            | Touch hit areas                                                                  |
 | `transfer.css`                  | A transfer with its speed and the time left                                      |
 | `tree-reorder-split.css`        | Tree, reorder and split pane                                                     |
 | `typed-confirmation.css`        | Typed confirmation                                                               |

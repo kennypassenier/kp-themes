@@ -3,8 +3,8 @@ export type Strings = import('../strings.js').Strings;
 /** @param {Document} doc @param {string} tag @param {string} className */
 export declare const make: (doc: Document, tag: string, className: string) => HTMLElement;
 /**
- * The line under the buttons (the countdown, the reason a field is off, or why it could not be read) with its words and drain,
- * and the polite region a screen reader hears. The line always has its height, so nothing moves when it fills.
+ * The line under the buttons (the reason a field is off, why it could not be read; in the input mode also the countdown) with its
+ * words, the drain (a display field moves it into its value's box) and the polite region a screen reader hears. The line always has its height, so nothing moves when it fills.
  * @param {HTMLElement} field
  * @param {Element[]} built collects the parts made here, for detach
  */
@@ -26,6 +26,8 @@ export declare function buildDisplay(field: HTMLElement, s: Strings, built: Elem
     value: HTMLElement;
     reveal: HTMLButtonElement;
     copy: HTMLButtonElement | null;
+    clock: HTMLElement;
+    unbox: () => void;
 };
 /**
  * An input field's parts: the entry and its input, Reveal, Paste and Copy (each off with `="false"`), and the line the input is

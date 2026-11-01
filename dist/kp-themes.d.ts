@@ -162,7 +162,7 @@ export { NEEDS, READY_ATTRIBUTE, attachAll } from '../js/auto.js';
 export { AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, attachAutosize, autosize, cssAutosizeSupported, fitTextarea, lineHeightOf, refreshAutosize, setAutosizeState } from '../js/autosize.js';
 export { AVAILABILITY, AVAILABILITY_ANSWERS, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_EVENT, AVAILABILITY_REFUSED_MS, AVAILABILITY_RETRY_EVENT, AVAILABILITY_UNDO_MS, AVAILABILITY_UNIT_EVENT, attachAvailability, availabilityAnswers, availabilityBest, availabilityDays, availabilityRange, setAvailability, setAvailabilityAnswer } from '../js/availability.js';
 export { BAR_CELL, SORT_VALUE_ATTRIBUTE, attachBarCells, setBarCell } from '../js/barcell.js';
-export { BOARD, BOARD_LANE_EVENT, BOARD_RETRY_EVENT, attachBoards, recountBoard, setBoardState, showBoardLane } from '../js/board.js';
+export { BOARD, BOARD_LANE_EVENT, BOARD_MOVE_PREFIX, BOARD_RETRY_EVENT, attachBoards, boardMoveGroup, moveBoardCard, recountBoard, setBoardState, showBoardLane } from '../js/board.js';
 export { BULLETS, BULLETS_PICK_EVENT, BULLETS_RETRY_EVENT, attachBullets, bulletTone, setBullets } from '../js/bullets.js';
 export { BUSY_CARD, openBusyCard, scrollersAround, seenAcross } from '../js/busy-card.js';
 export { CALENDAR, CALENDAR_MONTH_EVENT, CALENDAR_PICK_EVENT, CALENDAR_RETRY_EVENT, attachCalendars, calendarMonth, calendarSelect, dayKey, formatDayKey, monthCells, setCalendarCaption, setCalendarDays, setCalendarLegend, setCalendarState, shiftDay, shiftMonth } from '../js/calendar.js';
