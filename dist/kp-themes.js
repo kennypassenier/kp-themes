@@ -15392,6 +15392,41 @@ function writeTri(item, state12) {
     item.append(word);
   }
   word.textContent = `, ${triWords(item)[state12]}`;
+  writeTag(item);
+}
+function tagWords(item) {
+  const strings = getStrings();
+  const words3 = { any: strings.triTagAny, include: strings.triTagInclude, exclude: strings.triTagExclude };
+  const raw = item.parentElement?.closest(SEGMENTED)?.getAttribute("data-kp-segmented-tags");
+  if (!raw) return words3;
+  try {
+    const own = JSON.parse(raw);
+    for (const state12 of TRI_STATES) if (typeof own?.[state12] === "string") words3[state12] = own[state12];
+  } catch (error) {
+    console.warn("kp-segmented: data-kp-segmented-tags is not JSON; the dictionary words stay", error);
+  }
+  return words3;
+}
+function writeTag(item) {
+  let tag = item.querySelector(":scope > .kp-segmented__tag");
+  if (!tag) {
+    tag = document.createElement("span");
+    tag.className = "kp-segmented__tag";
+    tag.setAttribute("aria-hidden", "true");
+    const label2 = item.querySelector(":scope > .kp-segmented__label");
+    if (label2) label2.after(tag);
+    else item.append(tag);
+  }
+  const words3 = tagWords(item);
+  tag.replaceChildren(
+    ...TRI_STATES.map((one) => {
+      const part7 = document.createElement("span");
+      part7.dataset.state = one;
+      part7.textContent = words3[one];
+      return part7;
+    })
+  );
+  item.setAttribute("aria-keyshortcuts", "+ - Delete");
 }
 function paintTri(group) {
   const { include, exclude } = getSegmentedTri(group);
@@ -16112,6 +16147,7 @@ var init_group = __esm({
           })
         );
         this.own(watchOptions(group, [FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE], () => fitGroup(group)));
+        this.own(watchOptions(group, ["data-kp-segmented-tags"], () => this.refresh()));
         this.own(() => dropFold(group));
         if (group.hasAttribute(LINK_ATTRIBUTE)) {
           const link2 = attachOne(group, SegmentedLink);
@@ -16288,7 +16324,7 @@ function attachSegmented(root = document) {
   controller.connect();
   return () => controller.destroy();
 }
-var SegmentedRoot;
+var DIRECT_KEYS, SegmentedRoot;
 var init_root = __esm({
   "js/segmented/root.js"() {
     "use strict";
@@ -16300,6 +16336,7 @@ var init_root = __esm({
     init_actions2();
     init_keys4();
     init_roving();
+    DIRECT_KEYS = { "+": "include", "=": "include", "-": "exclude" };
     SegmentedRoot = class extends Controller {
       /** @param {ParentNode} root */
       constructor(root) {
@@ -16377,6 +16414,14 @@ var init_root = __esm({
           event.preventDefault();
           enhance(group);
           if (!groupDisabled(group) && !itemDisabled(item)) turnTri(group, item, "any");
+          return;
+        }
+        const direct = isTri(group) && !isAll(item) ? DIRECT_KEYS[event.key] : void 0;
+        if (direct) {
+          HANDLED.add(event);
+          event.preventDefault();
+          enhance(group);
+          if (!groupDisabled(group) && !itemDisabled(item)) turnTri(group, item, direct);
           return;
         }
         const to = targetIndex(event, group, at, items.length);

@@ -53,6 +53,8 @@ export class SegmentedGroup extends Controller {
         // never made: the chips and the field did not follow each other, which is what Kenny found.)
         // Chips on tracks and their fold [ux-1101] are read again when their attributes change; the fold goes with the group.
         this.own(watchOptions(group, [FIT_ATTRIBUTE, FOLD_AT_ATTRIBUTE], () => fitGroup(group)));
+        // A three-way group's own visible words are written again when they change [ux-1101].
+        this.own(watchOptions(group, ['data-kp-segmented-tags'], () => this.refresh()));
         this.own(() => dropFold(group));
         if (group.hasAttribute(LINK_ATTRIBUTE)) {
             const link = attachOne(group, SegmentedLink);

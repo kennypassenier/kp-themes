@@ -53,6 +53,12 @@
 // "any":"not answered"}'`: what a screen reader hears after a chip and what a
 // press announces (the usual picker's Not today, js/usual-picker.js).
 //
+// The three-way state as a word [ux-1101]: `data-kp-segmented-tri-look="word"` (`mark`, the default, is the approved ring)
+// puts the state after the label as a small word, "want", "not" or "either" (`data-kp-segmented-tags='{"include":"with",
+// "exclude":"without","any":"either"}'`, else the dictionary's `triTag…`), the three stacked in one cell so a chip never
+// changes width; the look switches at runtime. In every three-way group `+` (or `=`) wants the focused chip and `-` leaves it
+// out at once, beside Space / Enter (the cycle) and Delete (let go); the chips name these keys in `aria-keyshortcuts`.
+//
 // Chips on whole tracks [ux-1101]: `data-kp-segmented-fit="tracks"` on a chip group (`flow`, the default, is the approved
 // wrap) lays the chips on equal tracks as wide as the widest chip, the rows balanced so no chip stands alone on a second
 // line (7 chips that fit 6 across lie as 4 + 3). Under `data-kp-segmented-fold-at` (default `30rem`; `none` never folds) a

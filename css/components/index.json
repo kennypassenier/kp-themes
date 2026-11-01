@@ -114,6 +114,7 @@
         "drawer-tour/tours-card-js-tour.css",
         "segmented-toolbar/base.css",
         "segmented-toolbar/three-way-chip-either.css",
+        "segmented-toolbar/three-way-words.css",
         "segmented-toolbar/chips-on-tracks.css",
         "segmented-toolbar/the-filters-that-are-on-one.css",
         "action-tiles.css",

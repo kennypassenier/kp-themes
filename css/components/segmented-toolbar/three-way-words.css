@@ -1,0 +1,59 @@
+/* @part: segmented-toolbar: The three-way chip's state as a word */
+    /* The three-way chip's state as a word [ux-1101]: `data-kp-segmented-tri-look="word"` on a `data-kp-segmented="tri"` group.
+ * The mark (`mark`, the default look) gives way to a small word after the label, "want", "not" or "either"
+ * (`data-kp-segmented-tags`, else the dictionary), so the state reads at a glance and the next press is guessable. The three
+ * words stand stacked in one cell and only the chip's own is drawn: a chip is as wide as its longest word in every state and
+ * nothing moves on a press. The chip keeps the approved paint of its state (filled while wanted, struck through on the
+ * destructive edge while left out). Knob: --kp-tri-tag-size (0.72em). */
+    .kp-segmented__tag {
+        display: none;
+    }
+
+    .kp-segmented[data-kp-segmented-tri-look='word'] > .kp-segmented__item > .kp-segmented__mark {
+        display: none;
+    }
+
+    .kp-segmented[data-kp-segmented='tri'][data-kp-segmented-tri-look='word'] > .kp-segmented__item:not([data-kp-segmented-all]) {
+        padding-inline: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem)) var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-segmented[data-kp-segmented-tri-look='word'] > .kp-segmented__item > .kp-segmented__tag {
+        display: inline-grid;
+        flex: none;
+        padding: 0.1em 0.55em;
+        border: 1px solid color-mix(in oklab, currentColor 45%, transparent);
+        border-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        font-size: var(--kp-tri-tag-size, 0.72em);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        line-height: 1.4;
+        text-transform: uppercase;
+    }
+
+    .kp-segmented__tag > span {
+        grid-area: 1 / 1;
+        text-align: center;
+        visibility: hidden;
+    }
+
+    .kp-segmented__item:not([data-kp-segmented-tri]) > .kp-segmented__tag > [data-state='any'],
+    .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__tag > [data-state='include'],
+    .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__tag > [data-state='exclude'] {
+        visibility: visible;
+    }
+
+    .kp-segmented[data-kp-segmented-tri-look='word'] > .kp-segmented__item:not([data-kp-segmented-tri]) > .kp-segmented__tag {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-segmented[data-kp-segmented-tri-look='word'] > .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__tag {
+        border-color: currentColor;
+    }
+
+    .kp-segmented[data-kp-segmented-tri-look='word'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__tag {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
