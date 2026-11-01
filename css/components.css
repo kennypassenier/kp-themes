@@ -17378,6 +17378,8 @@
     .kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-cols] {
         display: grid;
         grid-template-columns: repeat(var(--kp-seg-cols, 1), minmax(0, var(--kp-seg-track, max-content)));
+        /* The track look's column flow (.kp-segmented) would add a column per chip: the chips fill rows here. */
+        grid-auto-flow: row;
         justify-content: start;
         align-items: stretch;
     }
