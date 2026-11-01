@@ -1,0 +1,207 @@
+/* @part: console: An interactive console */
+    /* --- An interactive console [kpadopt6] --------------------------------
+ *
+ * A body of blocks, one per command (the command in the mono face, its status with a glyph and a word, its output in
+ * the package's code block, a refusal in the alert's what / why / what now), and under it the prompt bar: an optional
+ * select, the prompt glyph, the line and Run. The body never shrinks below `--kp-console-min` (about twelve lines), so
+ * empty, loading, failed and full all stand in one height. On a phone the select goes above the prompt, Run takes its
+ * own line and the bar sticks to the foot of the screen with the safe-area inset. */
+    .kp-console {
+        --kp-console-min: 18rem;
+        container: kp-console / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        inline-size: 100%;
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-console__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-console__body {
+        position: relative;
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-console-min);
+        block-size: var(--kp-console-height, 26rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: var(--muted);
+    }
+
+    .kp-console__body:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-console__plate {
+        box-sizing: border-box;
+        min-block-size: calc(var(--kp-console-height, 26rem) - 2 * var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-console__block {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) / 1.5);
+        background: var(--card);
+    }
+
+    .kp-console__block-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-console__command {
+        grid-column: 1;
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+        background: none;
+        padding: 0;
+    }
+
+    .kp-console__command-prompt {
+        flex: none;
+        color: var(--muted-foreground);
+        user-select: none;
+    }
+
+    .kp-console__status {
+        grid-column: 2;
+        grid-row: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        white-space: nowrap;
+    }
+
+    .kp-console__glyph {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+    }
+
+    .kp-console__glyph > .kp-spinner {
+        --kp-spinner-size: 0.875rem;
+    }
+
+    .kp-console__status[data-kp-status='ok'] {
+        color: var(--success-foreground, var(--foreground));
+    }
+
+    .kp-console__status[data-kp-status='ok'] .kp-console__glyph::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-console__status[data-kp-status='fail'] {
+        color: var(--destructive);
+    }
+
+    .kp-console__status[data-kp-status='fail'] .kp-console__glyph::before {
+        content: '×';
+        font-weight: 700;
+    }
+
+    .kp-console__status[data-kp-status='stop'] {
+        color: var(--muted-foreground);
+    }
+
+    .kp-console__status[data-kp-status='stop'] .kp-console__glyph::before {
+        content: '■';
+        font-size: 0.7rem;
+    }
+
+    .kp-console__status[data-kp-status='lost'] {
+        color: var(--warning-foreground, var(--foreground));
+    }
+
+    .kp-console__status[data-kp-status='lost'] .kp-console__glyph::before {
+        content: var(--kp-glyph-alert, '?');
+        font-weight: 700;
+    }
+
+    /* Six fixed places: each tool has its own column in every block and state, so one that does not apply leaves a gap
+       instead of letting the others slide along. */
+    .kp-console__tools {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(6, max-content);
+        justify-content: start;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-console__tool[data-kp-console-off] {
+        visibility: hidden;
+    }
+
+    .kp-console__tool[data-kp-console-tool='copy-command'] {
+        grid-column: 1;
+    }
+    .kp-console__tool[data-kp-console-tool='copy-output'] {
+        grid-column: 2;
+    }
+    .kp-console__tool[data-kp-console-tool='again'] {
+        grid-column: 3;
+    }
+    .kp-console__tool[data-kp-console-tool='recheck'] {
+        grid-column: 4;
+    }
+    .kp-console__tool[data-kp-console-tool='cancel'] {
+        grid-column: 5;
+    }
+    .kp-console__tool[data-kp-console-tool='collapse'] {
+        grid-column: 6;
+    }
+
+    .kp-console__problem {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+    }
+
+    .kp-console__problem[hidden],
+    .kp-console__output[hidden] {
+        display: none;
+    }
+
+    .kp-console__nooutput {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-console__block[data-kp-collapsed] .kp-console__tools {
+        margin-block-end: 0;
+    }
+
+    .kp-console__earlier {
+        display: grid;
+        justify-items: start;
+    }
+

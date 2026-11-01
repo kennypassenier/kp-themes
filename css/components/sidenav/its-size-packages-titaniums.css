@@ -1,0 +1,241 @@
+/* @part: sidenav: Its size is the package's : titanium's 14px, on the */
+    .kp-sidenav__title {
+        margin: 0;
+        /* Its size is the package's [scope-88]: titanium's 14px, on the
+           running line height; a register keeps its face, case and spacing. */
+        padding-block: 0;
+        font-size: var(--kp-sidenav-title-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
+        font-weight: 600;
+    }
+
+    /* The list scrolls, the header and footer do not. A long navigation in
+       a short window is the normal case, not the edge one. */
+    .kp-sidenav__scroll {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        /* Never sideways [Kenny, 2026-09-11]. A narrow panel measured 140px
+           of content in a 127px box and the count after a long label sat two
+           pixels past the edge, reachable only by scrolling. A navigation you
+           have to scroll sideways is a navigation you cannot read. */
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+    }
+
+    .kp-sidenav__list {
+        list-style: none;
+        margin: 0;
+        padding: var(--kp-sidenav-list-pad, 0.4rem);
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-sidenav-gap, 0.1rem);
+    }
+
+    .kp-sidenav__link,
+    .kp-sidenav__category-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        /* Its width INCLUDING its padding. The package sets no global
+           box-sizing, so `inline-size: 100%` on a padded row made every row
+           19px wider than the list that held it — which is where the
+           sideways scroll came from. */
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-inline-size: 0;
+        /* The row's block padding, type size and line height are the
+           package's in every theme [scope-87], titanium's values; a
+           register keeps its inline padding (gates/box-metrics.test.mjs). */
+        padding: var(--kp-sidenav-item-pad, var(--kp-sidenav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0.6rem);
+        font: inherit;
+        font-size: var(--kp-sidenav-link-size, var(--kp-font-size-sm, 0.875rem));
+        line-height: var(--kp-line-height, 1.5);
+        text-align: start;
+        text-decoration: none;
+        color: inherit;
+        background: none;
+        border: none;
+        border-radius: var(--radius, 0);
+        cursor: pointer;
+    }
+
+    .kp-sidenav__link:hover,
+    .kp-sidenav__category-toggle:hover {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    /* The current page is marked by more than colour [DI4], the same way
+       the top bar marks it: aria-current is what a screen reader reads and
+       what every theme hangs its own mark on. */
+    .kp-sidenav__link[aria-current='page'] {
+        background: var(--muted);
+        font-weight: 600;
+    }
+
+    .kp-sidenav__icon {
+        flex: 0 0 auto;
+        display: inline-flex;
+        inline-size: var(--kp-sidenav-icon-size, 1.25rem);
+        justify-content: center;
+    }
+
+    .kp-sidenav__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-sidenav__badge {
+        margin-inline-start: auto;
+        /* The label gives way, the count does not: a number cut in half is
+           worse than a name cut in half, because a name still reads. */
+        flex-shrink: 0;
+        font-size: var(--kp-font-size-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-sidenav__divider {
+        block-size: 1px;
+        margin: var(--kp-sidenav-gap, 0.4rem) 0;
+        background: var(--border);
+        border: none;
+    }
+
+    .kp-sidenav__footer {
+        padding: var(--kp-sidenav-pad, 0.75rem);
+        border-block-start: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    /* A category and its submenu. The open height is a grid track rather
+       than a measured pixel value, so the package animates it without
+       JavaScript having to know how tall the list is. */
+    .kp-sidenav__category-toggle::after {
+        content: '';
+        margin-inline-start: auto;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-inline-end: 1px solid currentcolor;
+        border-block-end: 1px solid currentcolor;
+        rotate: -45deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__category-toggle::after {
+            transition: rotate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+    }
+
+    .kp-sidenav__category-toggle[aria-expanded='true']::after {
+        rotate: 45deg;
+    }
+
+    /* A heading with one action beside its toggle (`.kp-sidenav__category-action`, after the toggle): the toggle and the action share
+       the first row, the submenu takes the full second row. The action stays when the group is folded [habits-1101]. */
+    .kp-sidenav__category:has(> .kp-sidenav__category-action) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .kp-sidenav__category:has(> .kp-sidenav__category-action) > .kp-sidenav__submenu {
+        grid-column: 1 / -1;
+    }
+
+    .kp-sidenav__category-action {
+        display: flex;
+        align-items: center;
+        padding-inline-end: var(--kp-sidenav-list-pad, 0.4rem);
+    }
+
+    .kp-sidenav__submenu {
+        display: grid;
+        grid-template-rows: 0fr;
+    }
+
+    .kp-sidenav__submenu > * {
+        overflow: hidden;
+        min-block-size: 0;
+        /* A zero track does not go below its child's own padding, so a
+           closed submenu measured 12.8px — the list's padding — and sat
+           there as a visible sliver. The inline inset stays; the block
+           inset comes from the items. */
+        padding-block: 0;
+    }
+
+    .kp-sidenav__category[data-kp-sidenav-expanded] > .kp-sidenav__submenu {
+        grid-template-rows: 1fr;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__submenu {
+            transition: grid-template-rows var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+
+        /* A group folding shut is its unfolding played backwards, as the
+           rail's collapse is (above). */
+        .kp-sidenav__category:not([data-kp-sidenav-expanded]) > .kp-sidenav__submenu,
+        .kp-sidenav__category-toggle[aria-expanded='false']::after {
+            transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
+        }
+    }
+
+    .kp-sidenav__submenu .kp-sidenav__link {
+        padding-inline-start: var(--kp-sidenav-submenu-indent, 2.1rem);
+    }
+
+    /* A submenu item says so before its name (Kenny, 2026-09-20: "zodat het
+       extra duidelijk is wat nu juist een hoofdmenuitem en een submenuitem
+       is"). The mark stands in the name's own line, right before its first
+       letter, so it is before the word in every theme whatever inline
+       padding a register gave the row — pastel's submenu row starts its text
+       12.8px in where formal's starts 33.6px, and a mark measured from the
+       row's edge fell on top of the word in one and before it in the other.
+       In the line rather than over it, because the name clips what overflows
+       it for the ellipsis, and an absolutely placed mark was clipped away
+       with it. Every submenu name in a theme takes the same mark, so they
+       still begin at one point [fix-64].
+
+       Which mark is the register's answer — a glyph through the knob, or a
+       shape it draws itself the way nostromo lights the dot its rows already
+       carry. Empty by default, so a consumer's own theme shows none. */
+    .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
+        content: var(--kp-sidenav-submenu-mark, '');
+        margin-inline-end: var(--kp-sidenav-submenu-mark-gap, 0.45em);
+        color: var(--kp-sidenav-submenu-mark-ink, var(--muted-foreground));
+    }
+
+    /* The backdrop is a dimming, not a tint: the same value the dialog
+       uses, for the same reason. */
+    .kp-sidenav__backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: calc(var(--kp-sidenav-layer, 60) - 1);
+        background: rgb(0 0 0 / 0.5);
+    }
+
+    /* It arrives with the panel instead of appearing on top of it. A
+       backdrop that snaps to full while the panel is still sliding is what
+       makes the whole movement read as jerky. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__backdrop {
+            /* A literal duration, unlike the panel's. The flash check has to
+               read this number to know the fade cannot strobe, and a chain of
+               fallbacks reads as zero to it — which is the worst case it then
+               has to assume. One fade from nothing to half-dark has nothing
+               worth tuning anyway. */
+            animation: kp-sidenav-backdrop 220ms var(--kp-sidenav-ease, var(--fx-ease, ease)) both;
+        }
+    }
+
+    @keyframes kp-sidenav-backdrop {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+

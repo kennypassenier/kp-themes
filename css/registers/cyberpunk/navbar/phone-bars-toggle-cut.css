@@ -1,0 +1,165 @@
+/* @part: navbar: The phone bar's toggle is a cut control: its split edge follows the cu */
+    /* The phone bar's toggle is a cut control: its split edge follows the cut (a ring between the
+       cut and the cut moved in, as on a button) and the cut is drawn with its own line. */
+    [data-theme='cyberpunk'] .kp-nav__toggle {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-ct: 0px;
+        --kp-cp-cb: var(--kp-cp-notch-sm);
+        --kp-cp-grid-a: 0;
+        --kp-cp-ring: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--kp-cp-ct)) 0,
+            100% var(--kp-cp-ct),
+            100% calc(100% - var(--kp-cp-cb)),
+            calc(100% - var(--kp-cp-cb)) 100%,
+            0 100%,
+            0 0,
+            0 var(--kp-cp-d),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d))) var(--kp-cp-d),
+            calc(100% - var(--kp-cp-d)) max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d)),
+            calc(100% - var(--kp-cp-d)) calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))) calc(100% - var(--kp-cp-d)),
+            0 calc(100% - var(--kp-cp-d)),
+            0 var(--kp-cp-d)
+        );
+        position: relative;
+        isolation: isolate;
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image:
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(135deg, transparent calc(50% - 1px), var(--border-strong) calc(50% - 1px)),
+            repeating-linear-gradient(to bottom, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        background-size:
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            var(--kp-cp-notch-sm) var(--kp-cp-notch-sm),
+            100% 100%,
+            100% 100%;
+        background-position:
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right bottom,
+            0 0,
+            0 0;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: linear-gradient(0deg, var(--destructive) 0 var(--kp-cp-d), var(--accent) var(--kp-cp-d));
+        clip-path: var(--kp-cp-ring);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:hover {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:active {
+        --kp-cp-grid-a: 0.6;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button), .kp-nav__toggle) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__link:hover,
+                .kp-nav__links > li:hover > .kp-nav__link,
+                .kp-nav__brand:hover,
+                .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true']),
+                .kp-nav__toggle:hover
+            ) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button), .kp-nav__toggle):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__link:hover,
+                .kp-nav__links > li:hover > .kp-nav__link,
+                .kp-nav__brand:hover,
+                .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true']),
+                .kp-nav__toggle:hover
+            ):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+    }
+

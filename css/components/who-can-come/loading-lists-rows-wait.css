@@ -1,0 +1,166 @@
+/* @part: who-can-come: Loading: the list's rows wait (answers hidden, geometry kept) under th */
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-saving] {
+        --kp-heat-fill: var(--muted);
+        cursor: progress;
+    }
+
+    .kp-availability__face > .kp-spinner {
+        --kp-spinner-size: 1.125rem;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-refused] {
+        --kp-heat-fill: var(--destructive);
+        outline: 2px solid var(--destructive);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-star] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__row--summary .kp-heat__cell {
+        color: var(--foreground);
+    }
+
+    .kp-availability__grid:not([data-kp-availability-fill]) .kp-heat__cell[data-kp-share]::before {
+        display: none;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='ok'],
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='warn'],
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='bad'] {
+        color: var(--foreground);
+    }
+
+    .kp-availability__legend-glyph {
+        inline-size: 1ch;
+        font-weight: 700;
+    }
+
+    .kp-availability__best-swatch {
+        display: inline-block;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border: 2px solid var(--primary);
+        border-radius: 2px;
+    }
+
+    .kp-availability__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-button-height, 2.25rem);
+    }
+
+    .kp-availability__why {
+        margin: 0;
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-availability__menu {
+        position: absolute;
+        z-index: 5;
+        min-inline-size: 9rem;
+        position-area: none;
+    }
+
+    .kp-availability__menu-item[aria-checked='true'] {
+        font-weight: 700;
+    }
+
+    .kp-availability__columns {
+        display: none;
+    }
+
+    .kp-availability__columns--waiting :is(.kp-availability__column-sum, .kp-availability__column-answers, .kp-availability__column-value) {
+        visibility: hidden;
+    }
+
+    .kp-availability__busy {
+        display: none;
+    }
+
+    @container kp-availability (max-width: 34rem) {
+        .kp-availability {
+            --kp-availability-label: 6rem;
+        }
+
+        .kp-availability[data-kp-availability-narrow='by-column'] .kp-availability__grid {
+            display: none;
+        }
+
+        .kp-availability[data-kp-availability-narrow='by-column'] .kp-availability__columns {
+            display: grid;
+            gap: var(--kp-space-md, 0.75rem);
+        }
+
+        /* Loading: the list's rows wait (answers hidden, geometry kept) under the theme's busy card. */
+        .kp-availability__busy {
+            display: grid;
+        }
+
+        .kp-availability__foot .kp-availability__choose {
+            inline-size: 100%;
+            min-block-size: 2.75rem;
+        }
+    }
+
+    .kp-availability__column {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-availability__column-head {
+        margin: 0;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-availability__column-sum {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-availability__column-list {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-availability__column-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: 2.75rem;
+    }
+
+    /* The row that carries answers puts them under the name, so the name keeps the whole line. */
+    .kp-availability__column-row:has(> .kp-availability__column-answers) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-availability__column-answers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-availability__pick {
+        min-block-size: 2.75rem;
+    }
+
+    .kp-availability__pick[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.12);
+    }

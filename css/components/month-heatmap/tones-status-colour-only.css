@@ -1,0 +1,205 @@
+/* @part: month-heatmap: Tones: a status colour is only ever text on its own plate. A night */
+    .kp-calendar__day[hidden] {
+        display: none;
+    }
+
+    .kp-calendar__num {
+        font-weight: 600;
+    }
+
+    .kp-calendar__count {
+        font-size: 0.7em;
+        white-space: nowrap;
+    }
+
+    /* Tones: a status colour is only ever text on its own plate. A night
+ * with nothing done is told by its red plate and its words; its count
+ * reads like every other day's. */
+    .kp-calendar__day[data-kp-tone='ok'],
+    .kp-calendar__swatch[data-kp-tone='ok'] {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='warn'],
+    .kp-calendar__swatch[data-kp-tone='warn'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='bad'],
+    .kp-calendar__swatch[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='muted'],
+    .kp-calendar__swatch[data-kp-tone='muted'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-calendar__day:is([data-kp-tone='future'], [data-kp-tone='before']),
+    .kp-calendar__swatch:is([data-kp-tone='future'], [data-kp-tone='before']) {
+        border-style: dashed;
+        border-color: var(--muted-foreground);
+        color: var(--muted-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='none'] {
+        border-color: var(--border);
+        color: var(--muted-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+        cursor: progress;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-calendar__day[data-kp-tone='loading'] {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+    }
+
+    /* Loading with a spinner instead of the pulse [fault 2026-10-05]:
+ * `.kp-calendar--busy-days` puts the theme's `.kp-spinner` in every
+ * loading day, on the count's line; `.kp-calendar--busy-whole` puts one,
+ * on a card, over the middle of the grid while the whole grid loads
+ * (setCalendarState 'loading'), and a day's own spinner in a day that
+ * loads on its own. Both lie over what is there (absolute, or in the
+ * grid's own grid area), so no day and no calendar changes size; the
+ * spinners stop under reduced motion as every `.kp-spinner` does. Knobs:
+ * --kp-calendar-spinner (0.75rem, a day's) and --kp-calendar-busy-spinner
+ * (2.5rem, the whole's). */
+    .kp-calendar__day-busy,
+    .kp-calendar__busy {
+        display: none;
+        pointer-events: none;
+    }
+
+    :is(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'] {
+        position: relative;
+        animation: none;
+    }
+
+    :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+        .kp-calendar__day[data-kp-tone='loading']
+        > .kp-calendar__day-busy {
+        --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0.125rem;
+        display: flex;
+        justify-content: center;
+        line-height: 0;
+    }
+
+    .kp-calendar--busy-whole > :is(.kp-calendar__grid, .kp-calendar__busy) {
+        grid-area: 3 / 1;
+    }
+
+    .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+        z-index: 1;
+        display: grid;
+        place-self: center;
+        place-items: center;
+        padding: var(--kp-space-md, 1rem);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        box-shadow: 0 0 0 1px var(--border);
+        line-height: 0;
+    }
+
+    .kp-calendar__busy-text {
+        display: block;
+        font-size: 0.875rem;
+        line-height: var(--kp-line-height, 1.4);
+        color: var(--card-foreground, var(--foreground));
+        text-align: center;
+        margin-block-end: 0.5rem;
+    }
+
+    /* Both come in with an opacity fade on the theme's own timing. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-calendar__day-busy,
+        .kp-calendar__busy {
+            transition: opacity var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+
+        @starting-style {
+            .kp-calendar__day-busy,
+            .kp-calendar__busy {
+                opacity: 0;
+            }
+        }
+    }
+
+    /* Today: an inner ring in the day's own ink, the text colour of its
+ * plate [fix-98] (the page's text read 1.29:1 on Shade (light)'s amber
+ * plate, 1.45:1 in Shade (dark), 2.50:1 in nostromo). Picked: an outer ring
+ * in the primary colour. The focus: the house ring, further out. */
+    .kp-calendar__day[data-kp-today] {
+        box-shadow: inset 0 0 0 2px currentColor;
+    }
+
+    td[aria-selected='true'] > .kp-calendar__day {
+        outline: 3px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-calendar__day:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+    }
+
+    td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        outline: 3px solid var(--ring);
+    }
+
+    /* The days of the neighbouring months: their numbers, quiet and inert,
+ * so every week reads full. */
+    .kp-calendar__pad {
+        display: none;
+    }
+
+    .kp-calendar__grid td[data-kp-pad] > .kp-calendar__pad {
+        display: grid;
+        place-items: center;
+        block-size: 100%;
+        color: var(--muted-foreground);
+        font-size: var(--kp-calendar-cell-font, clamp(0.85rem, 1.4vw, 1.15rem));
+        opacity: 0.75;
+    }
+
+    .kp-calendar__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-calendar__legend[hidden] {
+        display: none;
+    }
+
+    .kp-calendar__legend > li {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-calendar__swatch {
+        box-sizing: border-box;
+        inline-size: 1rem;
+        block-size: 1rem;
+        border: 2px solid transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+

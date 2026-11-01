@@ -10,32 +10,43 @@
         "state-word.css",
         "page-shell.css",
         "page-header/base.css",
-        "button.css",
+        "page-header/footer-columns-heading-its.css",
+        "button/base.css",
+        "button/fx-lift-how-far.css",
         "badge.css",
         "card.css",
         "tiles.css",
         "key-figures.css",
         "meter.css",
         "key-figure-columns.css",
-        "key-figure-trend.css",
+        "key-figure-trend/base.css",
+        "key-figure-trend/narrow-tile-corner-says.css",
         "time-chart.css",
         "annotations/base.css",
+        "annotations/pinned-it-takes-pointer.css",
         "annotations/a-source-not-shown-is-struck.css",
         "alert.css",
         "graph/base.css",
+        "graph/what-pointer-click-keys.css",
         "graph/a-view-is-one-transform.css",
         "freshness-line.css",
         "attention-band.css",
-        "form-field.css",
+        "form-field/base.css",
+        "form-field/disabled-read-only-two.css",
         "switch.css",
         "table.css",
-        "action-columns.css",
+        "action-columns/base.css",
+        "action-columns/align-pkg-1019-action.css",
         "navbar/base.css",
+        "navbar/bar-that-folds-what.css",
         "navbar/a-dropdown-under-a-link.css",
+        "navbar/dropdowns-mega-menus-links.css",
         "media.css",
         "back-to-top.css",
         "sidenav/base.css",
+        "sidenav/its-size-packages-titaniums.css",
         "sidenav/the-control-that-opens-it-it.css",
+        "sidenav/while-it-held-text.css",
         "entrance-reverse.css",
         "grow-shrink.css",
         "dialog.css",
@@ -45,39 +56,56 @@
         "tabs.css",
         "breadcrumb-pagination.css",
         "log.css",
-        "progress-spinner-skeleton.css",
+        "progress-spinner-skeleton/base.css",
+        "progress-spinner-skeleton/sizes-one-number-each.css",
         "theme-menu.css",
         "combobox.css",
-        "command-palette.css",
+        "command-palette/base.css",
+        "command-palette/command-that-link-looks.css",
         "datatable/base.css",
+        "datatable/room-next-digit-99.css",
         "datatable/a-header-that-stays-whenever.css",
+        "datatable/row-reorder-column-drag.css",
         "datatable/a-column-that-cannot-be.css",
         "forms.css",
-        "small-patterns.css",
-        "step-list.css",
+        "small-patterns/base.css",
+        "small-patterns/input-mode-typed-box.css",
+        "step-list/base.css",
+        "step-list/step-process-stands-at.css",
         "week-agenda/base.css",
+        "week-agenda/align-pkg-1019-week.css",
         "week-agenda/week.css",
         "run-timeline/base.css",
+        "run-timeline/lanes-name-never-cut.css",
         "run-timeline/a-running-bars-planned.css",
+        "run-timeline/narrow-timeline-keeps-readable.css",
         "run-timeline/a-lanes-name-as-a-link-and-a.css",
         "pipeline.css",
-        "diff.css",
+        "diff/base.css",
+        "diff/diff-inside-file-has.css",
         "tree-reorder-split.css",
         "date-picker.css",
         "upload-wizard.css",
         "colour-picker.css",
         "movable-grid.css",
         "alarm/base.css",
+        "alarm/caret-at-end-line.css",
         "alarm/rules.css",
-        "month-heatmap.css",
-        "heat-grid.css",
-        "matrix.css",
+        "month-heatmap/base.css",
+        "month-heatmap/tones-status-colour-only.css",
+        "heat-grid/base.css",
+        "heat-grid/summary-row-cell-track.css",
+        "matrix/base.css",
+        "matrix/as-heat-grid-no.css",
         "bar-cell.css",
-        "tabbar.css",
+        "tabbar/base.css",
+        "tabbar/mark-line-along-bars.css",
         "running-job-button.css",
         "menu-button.css",
-        "drawer-tour.css",
+        "drawer-tour/base.css",
+        "drawer-tour/tours-card-js-tour.css",
         "segmented-toolbar/base.css",
+        "segmented-toolbar/three-way-chip-either.css",
         "segmented-toolbar/the-filters-that-are-on-one.css",
         "action-tiles.css",
         "status-rows.css",
@@ -86,9 +114,12 @@
         "checklist-sink.css",
         "kitchen-timers.css",
         "focus-steps.css",
-        "parallel-tracks.css",
-        "wheel.css",
-        "uptime-strip.css",
+        "parallel-tracks/base.css",
+        "parallel-tracks/mark-before-words-hollow.css",
+        "wheel/base.css",
+        "wheel/hub-still-round-disc.css",
+        "uptime-strip/base.css",
+        "uptime-strip/pointed-or-focused-cell.css",
         "typed-confirmation.css",
         "command-block.css",
         "visual-timer.css",
@@ -99,8 +130,10 @@
         "snooze-picker.css",
         "dated-option-picker.css",
         "sentence-form.css",
-        "slider.css",
-        "unsaved-bar.css",
+        "slider/base.css",
+        "slider/bubble-over-thumb-while.css",
+        "unsaved-bar/base.css",
+        "unsaved-bar/at-foot-screen-themes.css",
         "compare-slider.css"
       ],
       "close": "}\n\n"
@@ -110,7 +143,8 @@
       "files": [
         "calm-mode.css",
         "lede.css",
-        "problem-alert.css",
+        "problem-alert/base.css",
+        "problem-alert/align-pkg-1019-problems.css",
         "shortcut-engine.css",
         "disabled-reason.css",
         "flash-button.css"
@@ -127,7 +161,12 @@
       "file": "ops-page.css"
     },
     {
-      "file": "auto-refresh.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "auto-refresh/base.css",
+        "auto-refresh/menu-hangs-from-buttons.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "file": "connection-banner.css"
@@ -139,7 +178,12 @@
       "file": "question-card.css"
     },
     {
-      "file": "notification-centre.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "notification-centre/base.css",
+        "notification-centre/two-fixed-slots-mark.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "file": "layout/base.css"
@@ -160,29 +204,45 @@
       "file": "layout/the-side-navigation-chooses.css"
     },
     {
-      "file": "passkey-list.css"
+      "open": "/* ====================================================================\n * People [kpadopt5-people]: the list of ways to sign in and the\n * conversation in bubbles. (The avatar extends .kp-idmark, and the chart\n * annotations extend .kp-chart, where those are.)\n *\n *   .kp-passkeys      passkeys, magic links, passwords and tokens, one row\n *                     each, with Rename and Remove (chassis `passkeys.html`,\n *                     JobTracker `Account.jsx`)\n *   .kp-thread        messages as bubbles, in on the start side, out on the\n *                     end side, system lines centred (JobTracker\n *                     `Correspondence.jsx`)\n *\n * Behaviour: js/passkeys.js and js/thread.js. Drawn from the tokens alone\n * until each register answers them (gates/register-pending.json).\n * ==================================================================== */\n@layer kp.components {\n",
+      "files": [
+        "passkey-list/base.css",
+        "passkey-list/apps-own-slot-beside.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "conversation.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "conversation/base.css",
+        "conversation/day-divider-system-line.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "open": "/* ====================================================================\n * Data pieces every app drew itself [kpadopt4-data]: the identity mark,\n * the share bar, the bullet list, the key-value grid and the form rows,\n * the code block, and the page header's heading line.\n *\n *   .kp-idmark / .kp-idmark-group      a small identity chip made from a name\n *                                  (JobTracker `Mark`, homelab `stackMark`)\n *   .kp-stackbar                   one bar split into the parts of a whole,\n *                                  with its legend (homelab `hk-stack-bar`)\n *   .kp-bullets                    rows of a value against a threshold\n *                                  (JobTracker's follow-up clock)\n *   .kp-kv                         a read-only key-value grid (hl-kv, cf-kv,\n *                                  mp-kv, jt-kv, chassis' status `dl`)\n *   .kp-formrows / .kp-formrow     label | control | aside rows (jt-row,\n *                                  homelab `st-set`)\n *   .kp-code                       a payload or code block (kyu `snippet`)\n *   .kp-page-header__heading       a mark, the title, a badge and the\n *                                  freshness line on one line\n *\n * Behaviour: js/mark.js, js/stackbar.js, js/bullets.js, js/code.js and\n * js/tick.js. Drawn from the tokens alone until each register answers them\n * (gates/register-pending.json).\n * ==================================================================== */\n@layer kp.components {\n",
       "files": [
         "identity-mark.css",
         "avatar.css",
-        "share-bar.css",
+        "share-bar/base.css",
+        "share-bar/align-pkg-1019-stackbar.css",
         "bullet-rows.css",
         "key-value-grid.css",
         "form-rows.css",
         "form-grid/base.css",
+        "form-grid/row-with-button-on.css",
         "form-grid/a-json-field-is-a-size.css",
-        "code-block.css",
+        "form-grid/on-narrow-grid-under.css",
+        "form-grid/stacked-whatever-width-same.css",
+        "code-block/base.css",
+        "code-block/toml-shell-text-tables.css",
         "new-lines-pill.css",
         "json-box.css",
         "request-inspector.css",
         "page-header/the-page-headers-heading-line.css",
         "ticking-number.css",
-        "rating.css",
+        "rating/base.css",
+        "rating/lit-share-star-fill.css",
         "quote-card.css",
         "calm-status.css",
         "calm-tones.css",
@@ -207,25 +267,50 @@
       "file": "viewer.css"
     },
     {
-      "file": "gallery.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "gallery/base.css",
+        "gallery/waiting-tile-has-final.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "used-by.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "used-by/base.css",
+        "used-by/phones-list-every-source.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "file": "who-brings.css"
     },
     {
-      "file": "who-can-come.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "who-can-come/base.css",
+        "who-can-come/loading-lists-rows-wait.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "file": "qr-link.css"
     },
     {
-      "file": "time-field.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "time-field/base.css",
+        "time-field/sentence-underline-look-sentences.css"
+      ],
+      "close": "}\n\n"
     },
     {
-      "file": "console.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "console/base.css",
+        "console/one-grid-bar-contexts.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "file": "toggle-button.css"
@@ -246,7 +331,12 @@
       "file": "connection-path.css"
     },
     {
-      "file": "entity-card.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "entity-card/base.css",
+        "entity-card/columns-equal-minmax-0.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "file": "state-plates-last-layer.css"
@@ -264,13 +354,19 @@
       "file": "layout/one-state-plate-for-every.css"
     },
     {
-      "file": "log-viewer.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "log-viewer/base.css",
+        "log-viewer/no-wrap-one-line.css"
+      ],
+      "close": "}\n\n"
     },
     {
       "open": "/* The find's mark and the stage's plate keep their place in the last layer: a register gives `.kp-alert` and `.kp-empty` a\n * position of its own (pastel's printed pass) and beats the absolute placement in kp.components, which would put the plate\n * back in the flow under the lines [gap-log-viewer]. */\n@layer kp.layout {\n",
       "files": [
         "layout-base.css",
         "activity-feed/base.css",
+        "activity-feed/row-that-failed-or.css",
         "activity-feed/the-foot-load-earlier-the.css"
       ],
       "close": "}\n\n"
@@ -303,7 +399,12 @@
       "file": "quiet-hours.css"
     },
     {
-      "file": "sequencer.css"
+      "open": "@layer kp.components {\n",
+      "files": [
+        "sequencer/base.css",
+        "sequencer/join-items-that-run.css"
+      ],
+      "close": "}\n"
     },
     {
       "file": "list-row.css"

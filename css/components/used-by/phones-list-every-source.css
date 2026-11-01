@@ -1,0 +1,179 @@
+/* @part: used-by: The phone's list: every source a card, its users as chips (links when  */
+    .kp-uses__card {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: flex-start;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: 3.5rem;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-matrix--lines[data-kp-density='compact'] .kp-uses__card {
+        min-block-size: 2.5rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-uses__card:hover {
+        border-color: var(--border-strong);
+    }
+
+    .kp-uses__card[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .kp-uses__card.kp-skeleton {
+        block-size: 4.25rem;
+        border-color: transparent;
+    }
+
+    .kp-uses__node:has(> .kp-uses__open) .kp-uses__card {
+        padding-inline-end: 2.75rem;
+    }
+
+    .kp-uses__text {
+        display: grid;
+        gap: 2px;
+        min-inline-size: 0;
+    }
+
+    .kp-uses__label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__sub,
+    .kp-uses__count {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__count {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uses__open {
+        position: absolute;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        display: grid;
+        place-items: center;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+        opacity: 0.6;
+    }
+
+    .kp-uses__node:hover .kp-uses__open,
+    .kp-uses__node:focus-within .kp-uses__open {
+        opacity: 1;
+    }
+
+    .kp-uses__node[data-kp-ghost] .kp-uses__card,
+    .kp-uses__group[data-kp-ghost] {
+        border-style: dashed;
+        background: transparent;
+        opacity: 0.75;
+    }
+
+    .kp-uses__node[data-kp-tone='bad'] .kp-uses__card {
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    .kp-uses__node[data-kp-tone='warn'] .kp-uses__card {
+        border-inline-start: 3px solid var(--warning);
+    }
+
+    .kp-uses__node[data-kp-tone='ok'] .kp-uses__card {
+        border-inline-start: 3px solid var(--success);
+    }
+
+    .kp-uses__state {
+        display: grid;
+        min-block-size: var(--kp-uses-min, 18rem);
+    }
+
+    .kp-uses__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* The phone's list: every source a card, its users as chips (links when they have one). */
+    .kp-uses__list {
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__group {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-uses__group-head {
+        display: grid;
+        gap: 2px;
+        margin: 0;
+    }
+
+    .kp-uses__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__chip {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        padding: 0 var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__chip[data-kp-tone] {
+        border-color: var(--kp-uses-tag-tone);
+    }
+
+    .kp-uses__chip-tag {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-uses__chip-link {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        margin-inline: calc(-1 * var(--kp-space-md, 0.75rem));
+        padding-inline: var(--kp-space-md, 0.75rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+    }
+    /* kpadopt6-media:uses:end */

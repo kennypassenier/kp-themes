@@ -1,0 +1,124 @@
+/* @part: passkey-list: The app's own slot beside the badges : what it holds keeps to the badg */
+    /* The app's own slot beside the badges [homelab gap 39]: what it holds keeps to the badge column. */
+    .kp-passkeys__extra {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-inline-size: 100%;
+    }
+
+    .kp-passkeys__action {
+        min-inline-size: var(--kp-passkeys-action-min, 5.5rem);
+        white-space: nowrap;
+    }
+
+    /* The `note` look: where Remove would stand, the reason in the button's own footprint. */
+    .kp-passkeys__only {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: var(--kp-passkeys-action-min, 5.5rem);
+        padding: 0.25rem 0.75rem;
+        border: 1px dashed var(--border-strong, var(--border));
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-passkeys__action[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    .kp-passkeys__rename-input {
+        inline-size: 100%;
+        box-sizing: border-box;
+    }
+
+    .kp-passkeys__action .kp-spinner,
+    .kp-thread__status .kp-spinner {
+        --kp-spinner-size: 0.875rem;
+        margin-inline-end: 0.375rem;
+    }
+
+    .kp-passkeys__insecure-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* Loading: the rows' own geometry as waiting blocks. */
+    .kp-passkeys__row--wait {
+        pointer-events: none;
+    }
+
+    .kp-passkeys__wait-line {
+        block-size: 1rem;
+        inline-size: 70%;
+    }
+
+    .kp-passkeys__wait-line--short {
+        inline-size: 45%;
+    }
+
+    .kp-passkeys__way.kp-skeleton {
+        border-color: transparent;
+    }
+
+    /* Nothing yet, or failed: the package's empty state over the list's whole footprint. */
+    .kp-passkeys__note {
+        box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-passkeys-state-min, 14rem);
+        margin: 0;
+        text-align: center;
+    }
+
+    .kp-passkeys__note > :is(.kp-passkeys__note-title, .kp-passkeys__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-passkeys__note-title {
+        font-size: calc(var(--kp-text-md, 1rem) * 1.25);
+    }
+
+    .kp-passkeys__note > .kp-passkeys__note-button {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A phone: each row a card, the buttons the full width under it. */
+    @container kp-passkeys (max-width: 36rem) {
+        .kp-passkeys__list {
+            grid-template-columns: [way] auto [what] minmax(0, 1fr);
+        }
+
+        .kp-passkeys__row {
+            row-gap: var(--kp-space-sm, 0.5rem);
+        }
+
+        .kp-passkeys__flags {
+            grid-column: what;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .kp-passkeys__flags:empty {
+            display: none;
+        }
+
+        .kp-passkeys__actions {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+        }
+
+        .kp-passkeys__action {
+            inline-size: 100%;
+            min-block-size: 2.5rem;
+        }
+    }

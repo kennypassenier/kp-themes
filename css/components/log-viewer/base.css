@@ -1,0 +1,179 @@
+/* @part: log-viewer: A live log viewer */
+    /* --- A live log viewer [gap-log-viewer] ------------------------------
+ *
+ * The existing `.kp-log` (the four-column grid, the severity word, the source's own hue) inside a frame with a bar over it and
+ * a foot under it. The log keeps one height (`--kp-logviewer-height`, never below `--kp-logviewer-min`), so loading, empty,
+ * failed, filtered and full all stand in one box and the bar and the foot do not move. The states are laid over the whole
+ * stage. Knobs: --kp-logviewer-height, --kp-logviewer-min.
+ *
+ * Columns [fix-64]: the grid is the log's own; when the time column or the source column is off it leaves the grid
+ * (`display: none` on a cell would shift the cells after it), so the track list is restated for the four combinations.
+ * No wrap keeps each message on one line and scrolls the log sideways; the time cell is sticky then, so the clock stays
+ * beside the line it belongs to. */
+    .kp-logviewer {
+        --kp-logviewer-min: 16rem;
+        container: kp-logviewer / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        /* Auto, not 100% [wish-1120, homelab 117]: a block fills its container minus its own margin, where 100% plus a
+         * margin ran past the box; stretch keeps it full width in a grid or a flex column too. */
+        inline-size: auto;
+        align-self: stretch;
+        justify-self: stretch;
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-logviewer__bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-logviewer__bar[hidden],
+    .kp-logviewer__search[hidden],
+    .kp-logviewer__tools[hidden] {
+        display: none;
+    }
+
+    .kp-logviewer__search {
+        display: grid;
+        grid-template-columns: minmax(8rem, 1fr) auto auto auto auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__find {
+        min-inline-size: 0;
+    }
+
+    .kp-logviewer__matches {
+        min-inline-size: 7.5em;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    .kp-logviewer__tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__tools > [hidden],
+    .kp-logviewer__search > [hidden] {
+        display: none;
+    }
+
+    /* The follow button holds the room of its longer word, so Pause and Resume do not move the tools after it. */
+    .kp-logviewer__follow {
+        min-inline-size: 6.5em;
+    }
+
+    .kp-logviewer__level-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-logviewer__level-label {
+        padding-inline-start: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-logviewer__level {
+        inline-size: auto;
+    }
+
+    .kp-logviewer__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-logviewer__log {
+        position: relative;
+        box-sizing: border-box;
+        min-block-size: var(--kp-logviewer-min);
+        block-size: var(--kp-logviewer-height, 26rem);
+        align-content: start;
+        gap: 0;
+        padding: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        border: 0;
+        border-radius: 0;
+        scroll-padding-block: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-logviewer__log:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-logviewer__log .kp-log__line[hidden] {
+        display: none;
+    }
+
+    .kp-logviewer__log .kp-log__line > * {
+        padding-block: 0.0625rem;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__log .kp-log__line > :first-child {
+        padding-inline-start: var(--kp-space-md, 0.75rem);
+    }
+
+    /* The columns. */
+    .kp-logviewer[data-kp-log-time='off'] .kp-log__time,
+    .kp-logviewer[data-kp-log-nosource] .kp-log__source {
+        display: none;
+    }
+
+    .kp-logviewer[data-kp-log-time='off'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto auto minmax(0, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    /* The level is the colour: a plate on the word (the log's own, now on the word inside the level cell) and the same tone,
+     * faint, behind the whole line, so a warning or an error is found by the eye while scrolling; the word stays the carrier
+     * [DI4]. The cell keeps the row's tint, so the line is one band with no stripe where the level column is. */
+    .kp-logviewer__log .kp-log__line[data-kp-severity='warning'] > * {
+        background: hsl(from var(--warning) h s l / 0.12);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='error'] > *,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] > * {
+        background: hsl(from var(--destructive) h s l / 0.14);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity] > .kp-log__level {
+        border-radius: 0;
+        color: var(--kp-log-level-ink, var(--muted-foreground));
+        font-weight: inherit;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='info'] > .kp-log__level,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='notice'] > .kp-log__level {
+        color: var(--foreground);
+    }
+
+    .kp-log__word {
+        padding-inline: 0.4em;
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+    }
+

@@ -1,0 +1,185 @@
+/* @part: log-viewer: No wrap: one line per message, the log scrolls sideways, the clock sta */
+    .kp-logviewer__log .kp-log__line[data-kp-severity='warning'] .kp-log__word {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='error'] .kp-log__word,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] .kp-log__word {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] .kp-log__message {
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line:hover > * {
+        background: var(--muted);
+    }
+
+    /* No wrap: one line per message, the log scrolls sideways, the clock stays. */
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-logviewer__log {
+        grid-template-columns: auto auto auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-time='off'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__message {
+        overflow-wrap: normal;
+        white-space: pre;
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__time {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        background: var(--card);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__line:hover > .kp-log__time {
+        background: var(--muted);
+    }
+
+    /* The divider for the lines that came while the tab was away takes the whole row. */
+    .kp-logviewer__log > .kp-newpill__since {
+        grid-column: 1 / -1;
+    }
+
+    /* The find: a match is a mark with a weight as well as a ground, the current one is the filled plate with a rule round it. */
+    .kp-log__match {
+        padding-inline: 0.125em;
+        border-radius: calc(var(--radius, 0.5rem) / 4);
+        background: hsl(from var(--primary) h s l / 0.3);
+        color: inherit;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-log__match[data-kp-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+        text-decoration: none;
+    }
+
+    /* The foot: the count on the left, what the cap pushed out beside it. */
+    .kp-logviewer__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: 2.25rem;
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-logviewer__foot [hidden] {
+        display: none;
+    }
+
+    /* The states fill the whole stage; the lines already read stay in the buffer and are out of sight until the log answers. */
+    .kp-logviewer__plate {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        z-index: 3;
+    }
+
+    .kp-logviewer[data-kp-log-plate='loading'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='error'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='empty'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='nomatch'] .kp-logviewer__log {
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    .kp-logviewer[data-kp-log-plate='loading'] .kp-newpill,
+    .kp-logviewer[data-kp-log-plate='error'] .kp-newpill {
+        display: none;
+    }
+
+    .kp-logviewer__step {
+        min-inline-size: 2.5rem;
+    }
+
+    /* A narrow viewer: the search box takes its own row, then the count with the two arrows; the tools stand in two columns, so
+     * the buttons share one width and the rows line up. */
+    @container kp-logviewer (max-width: 40rem) {
+        .kp-logviewer__find {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__search {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+        }
+
+        .kp-logviewer__matches {
+            text-align: start;
+        }
+
+        .kp-logviewer__search > [data-kp-logviewer-only] {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__tools {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .kp-logviewer__tools > *,
+        .kp-logviewer__tools .kp-button {
+            inline-size: 100%;
+        }
+
+        .kp-logviewer__time {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__level-wrap {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            margin-inline-start: 0;
+        }
+    }
+
+    /* A very narrow viewer (about 17rem, a phone with a margin) [wish-1120, homelab fault 15]: the time, source and level cells
+     * size to their words and left the message a sliver, so the lines ran to the edge. The three stay on the line's first row and
+     * the message takes the whole row under them, with the line's own padding on both sides. Not when the log does not wrap
+     * (it scrolls sideways there, as it always did). */
+    @container kp-logviewer (max-width: 20rem) {
+        .kp-logviewer:not([data-kp-log-wrap='off']) .kp-logviewer__log {
+            grid-template-columns: auto auto minmax(0, 1fr);
+        }
+
+        .kp-logviewer:not([data-kp-log-wrap='off'])[data-kp-log-time='off'] .kp-logviewer__log,
+        .kp-logviewer:not([data-kp-log-wrap='off'])[data-kp-log-nosource] .kp-logviewer__log {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-logviewer:not([data-kp-log-wrap='off'])[data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-logviewer:not([data-kp-log-wrap='off']) .kp-logviewer__log .kp-log__message {
+            grid-column: 1 / -1;
+            padding-inline-start: var(--kp-space-md, 0.75rem);
+        }
+    }

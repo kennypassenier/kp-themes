@@ -1,0 +1,156 @@
+/* @part: meter: while loading: option 1 */
+    /* ── while loading: option 1 ── */
+
+    /* Measuring is the anodising bath (G10): the whole groove carries the
+       oxide film, the heat-tinted groove's own source, drifting start → end. */
+    [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        inset-block: 1px;
+        inset-inline: 0;
+        background: var(--kp-sig-ti-oxide);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-titanium-meter-grow-o 300ms var(--kp-sig-ti-ease) backwards;
+            transition: inline-size 300ms var(--kp-sig-ti-ease);
+            transform-origin: 0 50%;
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-titanium-meter-jolt-o 160ms var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-titanium-meter-jolt-w 160ms var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-titanium-meter-jolt-d 160ms var(--kp-sig-ti-ease);
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▸';
+    }
+
+    [data-theme='titanium'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='titanium'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-meter__mark {
+            transition:
+                inset-inline-start 300ms var(--kp-sig-ti-ease),
+                rotate 300ms var(--kp-sig-ti-ease);
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-grow-o {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-jolt-d {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-jolt-o {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-jolt-w {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+

@@ -1,0 +1,153 @@
+/* @part: uptime-strip: Uptime strip */
+    /* --- Uptime strip: one cell per period, in exact figures [kpadopt4-ideas] ---
+ * `.kp-uptime[data-kp-uptime]` (js/uptime.js). A title and the window's summary on one line, a thin strip of cells
+ * (one per day or hour, oldest first) that never wraps, and the first and the latest period's names under it. A cell
+ * is toned with the heat grid's own fills and patterns, so a state is never told by colour alone: degraded is ruled,
+ * down is striped, a period without data is an empty frame. The summary is the figures only (the share cut to one
+ * decimal, the incidents counted); an empty strip says so in muted ink and a failed one carries the page's sentence on
+ * the destructive plate, in the same slot. Loading draws the cells as the theme's skeleton with the data table's busy
+ * card over them. Every state keeps the same footprint, and an empty strip before its script ran keeps it too.
+ * Knobs [KT6]: --kp-uptime-height (1.75rem, the strip), --kp-uptime-cell-min (4px, a cell's least width; fewer cells
+ * show below it), --kp-uptime-gap (2px), --kp-uptime-cell-radius (1px), --kp-uptime-up, --kp-uptime-degraded,
+ * --kp-uptime-down (the fills), --kp-uptime-lift (the pointed cell's growth, 0.1875rem). */
+    .kp-uptime {
+        --kp-uptime-up: color-mix(in oklab, var(--success-foreground) 70%, var(--card));
+        --kp-uptime-degraded: color-mix(in oklab, var(--warning-foreground) 78%, var(--card));
+        --kp-uptime-down: var(--destructive);
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto var(--kp-uptime-height, 1.75rem) auto;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    /* Before the script draws it, the strip already takes the room it will have. */
+    .kp-uptime:empty {
+        min-block-size: calc(var(--kp-uptime-height, 1.75rem) + 2lh + 2 * var(--kp-space-xs, 0.25rem));
+    }
+
+    /* An empty or failed strip is the state plate over the whole footprint (js/state-plate.js, held by js/footprint.js): one row,
+     * not the head, the strip and the axis [kyu-plates-1019]. */
+    .kp-uptime:is([data-kp-state='empty'], [data-kp-state='error']) {
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    .kp-uptime > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* One line whatever it holds: a theme's waiting line (formal rules a 1.5rem ledger line) stands inside it. */
+    .kp-uptime__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-md, 1rem);
+        block-size: max(1lh, 1.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-uptime__title {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    .kp-uptime__summary {
+        display: inline-flex;
+        flex: none;
+        align-items: baseline;
+        min-block-size: 1lh;
+        gap: 0.375em;
+        margin-inline-start: auto;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-uptime__percent {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    /* The page's sentence on the destructive plate, on the summary's one line: a sentence longer than the room left
+     * beside the title ends in an ellipsis and is whole in its tooltip, so keep it short. */
+    .kp-uptime__summary[data-kp-tone='error'] {
+        display: block;
+        flex: 0 1 auto;
+        max-inline-size: 80%;
+        min-inline-size: 0;
+        overflow: hidden;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        text-overflow: ellipsis;
+    }
+
+    .kp-uptime__summary[data-kp-tone='loading'] {
+        align-items: center;
+    }
+
+    .kp-uptime__summary-skeleton {
+        inline-size: 8.5rem;
+        block-size: 0.75em;
+    }
+
+    /* The strip: as many columns as cells are shown, each at least --kp-uptime-cell-min wide; with
+     * `data-kp-uptime-fit="scroll"` every cell keeps that width and the strip scrolls sideways instead. */
+    .kp-uptime__track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(var(--kp-uptime-cell-min, 4px), 1fr);
+        column-gap: var(--kp-uptime-gap, 2px);
+        align-items: end;
+        block-size: var(--kp-uptime-height, 1.75rem);
+        min-inline-size: 0;
+        overflow: hidden;
+    }
+
+    .kp-uptime[data-kp-uptime-fit='scroll'] .kp-uptime__track {
+        grid-auto-columns: max(var(--kp-uptime-cell-min, 4px), 6px);
+        overflow-x: auto;
+        scrollbar-width: thin;
+        padding-block-start: var(--kp-uptime-lift, 0.1875rem);
+    }
+
+    /* A scrolling strip fades the edge it has more periods behind. */
+    .kp-uptime[data-kp-uptime-before] .kp-uptime__track {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-uptime[data-kp-uptime-after] .kp-uptime__track {
+        mask-image: linear-gradient(to left, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-uptime[data-kp-uptime-before][data-kp-uptime-after] .kp-uptime__track {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 1.5rem calc(100% - 1.5rem), transparent);
+    }
+
+    .kp-uptime__cell {
+        --kp-uptime-fill: var(--muted);
+        --kp-uptime-pattern: none;
+        appearance: none;
+        box-sizing: border-box;
+        display: block;
+        min-inline-size: 0;
+        block-size: calc(100% - var(--kp-uptime-lift, 0.1875rem));
+        margin: 0;
+        padding: 0;
+        border: 1px solid transparent;
+        border-radius: var(--kp-uptime-cell-radius, 1px);
+        background-color: var(--kp-uptime-fill);
+        background-image: var(--kp-uptime-pattern);
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        transition: block-size var(--fx-duration, 160ms) var(--fx-ease, ease-out);
+    }
+

@@ -1,0 +1,205 @@
+/* @part: heat-grid: Heat grid */
+    /* --- Heat grid [kpadopt2-grids] ----------------------------------------- */
+
+    /* Rows x many columns of small cells, each toned by a state (ok, warn,
+ * bad, muted, future, before, none: the month heatmap's words) or by a
+ * value (`data-kp-tone="level"` with `--kp-heat-level` 0 to 1). A label
+ * column on the start side (the label is a button that toggles when the
+ * grid is `data-kp-heat-toggle`), the column axis above (or below,
+ * `axis: 'end'`), an optional summary row whose cells fill from the bottom
+ * by `--kp-heat-share`, a legend (`.kp-heat__legend`), a picked column
+ * (`data-kp-picked`) and hover detail through the hover card. js/heat.js
+ * writes and wires it; the markup is complete without the script.
+ *
+ * Every row is a subgrid of the label column and the cell columns, so the
+ * labels and the cells line up in every state, a loading grid keeps the
+ * same footprint (the cells are the theme's own `.kp-skeleton--block`), and
+ * a state is never told by colour alone: a bad cell is striped, a warn
+ * cell ruled, a future cell dashed, a cell before the record hatched.
+ * Knobs: --kp-heat-cols (set by the script), --kp-heat-label (8rem, at most
+ * a quarter of the grid on a narrow page), --kp-heat-gap-x (0.75rem),
+ * --kp-heat-gap-y (6px), --kp-heat-cell-gap (3px), --kp-heat-cell-edge (1px, a cell's frame),
+ * --kp-heat-cell-ink (the frame's colour), --kp-heat-cell-lift (a shadow),
+ * --kp-heat-cell-hover (the hover transform), --kp-heat-cell-height
+ * (22px), --kp-heat-summary-height (30px), --kp-heat-cell-radius,
+ * --kp-heat-state-height (6rem, the empty and failed states), and the
+ * fills --kp-heat-ok, --kp-heat-warn, --kp-heat-bad, --kp-heat-level-ink. */
+    :is(.kp-heat, .kp-heat__legend, .kp-heat__swatch) {
+        --kp-heat-ok: color-mix(in oklab, var(--success-foreground) 70%, var(--card));
+        --kp-heat-warn: color-mix(in oklab, var(--warning-foreground) 78%, var(--card));
+        --kp-heat-bad: var(--destructive);
+        --kp-heat-level-ink: var(--primary);
+    }
+
+    .kp-heat {
+        display: grid;
+        grid-template-columns: minmax(min-content, clamp(4.5rem, 26%, var(--kp-heat-label, 8rem))) minmax(0, 1fr);
+        column-gap: var(--kp-heat-gap-x, 0.75rem);
+        row-gap: var(--kp-heat-gap-y, 6px);
+        align-content: start;
+        align-items: center;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-block-size: var(--kp-heat-cell-height, 22px);
+    }
+
+    .kp-heat__cells {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-heat-cols, 30), minmax(0, 1fr));
+        gap: var(--kp-heat-cell-gap, 3px);
+        min-inline-size: 0;
+    }
+
+    .kp-heat__label {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 500;
+    }
+
+    .kp-heat__label-button {
+        appearance: none;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: calc(100% + 12px);
+        min-inline-size: 0;
+        margin-inline: -6px;
+        padding: 2px 6px;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-heat__label-button:hover {
+        background: color-mix(in oklab, var(--muted) 70%, transparent);
+    }
+
+    .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .kp-heat__label-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    /* A label is never cut with an ellipsis and never broken inside a word [heat-deplist-1019]: a long name wraps onto a
+     * second line at its spaces (the row grows to hold it), and the label column is at least as wide as the longest
+     * word of any label (the cells give way), whatever the page's width. */
+    .kp-heat__label-text {
+        min-inline-size: min-content;
+        overflow-wrap: normal;
+        word-break: normal;
+        white-space: normal;
+    }
+
+    .kp-heat__label-text--muted {
+        color: var(--muted-foreground);
+    }
+
+    .kp-heat__mark {
+        flex: none;
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    .kp-heat__label-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-heat__sep {
+        grid-column: 1 / -1;
+        margin-block: 4px;
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* The column axis: one name per few columns; the others keep their header cell (a screen reader still has every
+ * header) but draw no text, so there is nothing for the eye or a measuring script to find under a neighbour's name
+ * [heat-deplist-1019]. The script writes a minor header's name into its aria-label and leaves the cell empty; a page's own
+ * markup with the text in it is given no size here. */
+    .kp-heat__col {
+        display: flex;
+        justify-content: center;
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-heat__col:last-child:not([data-kp-minor]) {
+        justify-content: flex-end;
+    }
+
+    .kp-heat .kp-heat__col[data-kp-minor] {
+        overflow: hidden;
+        font-size: 0;
+        user-select: none;
+    }
+
+    /* On a phone every second name goes: thirty columns are 8 px each there. */
+    @media (max-width: 40rem) {
+        .kp-heat .kp-heat__col:not([data-kp-minor], [data-kp-picked], :last-child):nth-child(6n + 4) {
+            overflow: hidden;
+            font-size: 0;
+            user-select: none;
+        }
+    }
+
+    .kp-heat .kp-heat__col[data-kp-picked] {
+        color: var(--foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 700;
+    }
+
+    .kp-heat__cell,
+    .kp-heat__swatch {
+        --kp-heat-fill: var(--muted);
+        --kp-heat-pattern: none;
+        box-sizing: border-box;
+        border: var(--kp-heat-cell-edge, 1px) solid var(--kp-heat-cell-ink, transparent);
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        box-shadow: var(--kp-heat-cell-lift, none);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell {
+        position: relative;
+        display: block;
+        min-inline-size: 0;
+        block-size: var(--kp-heat-cell-height, 22px);
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .kp-heat__swatch {
+        display: inline-block;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        vertical-align: -0.125rem;
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='ok'] {
+        --kp-heat-fill: var(--kp-heat-ok);
+    }
+

@@ -1,0 +1,132 @@
+/* @part: drawer-tour: The tour's card (js/tour.js): a non-modal dialog beside its target, */
+    .kp-help kbd {
+        display: inline-block;
+        min-inline-size: 1.5em;
+        padding: 0 0.3125rem;
+        border: 1px solid var(--border-strong);
+        border-block-end-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font: 600 var(--kp-text-xs, 0.75rem) / 1.5 var(--theme-font-mono, ui-monospace, monospace);
+        text-align: center;
+    }
+
+    /* The tour's card (js/tour.js): a non-modal dialog beside its target,
+ * 12px from it and 16px inside the window's edges. Knob: --kp-tour-width
+ * (min(22rem, 100vw - 2rem); on a phone the window's width less the two
+ * 16px gutters). */
+    .kp-tour {
+        /* `!important`: a register's update mark sets `position: relative` on what it rings (lesson 5), and on a step the
+         * card carries that mark, so it dropped into the flow of its host for the update's length, pushed the page down by
+         * its own height and jumped back (Kenny, 2026-10-13: a flash on the step to the last card, and a card that
+         * "suddenly teleports to another part of the screen"). The card is fixed in every state. */
+        position: fixed !important;
+        z-index: 60;
+        inset: auto;
+        box-sizing: border-box;
+        inline-size: var(--kp-tour-width, min(22rem, 100vw - 2rem));
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+        transition:
+            left var(--fx-duration, 200ms) var(--fx-ease, ease),
+            top var(--fx-duration, 200ms) var(--fx-ease, ease);
+    }
+
+    /* On a phone the card takes the width, less the gutters. */
+    @media (max-width: 30rem) {
+        .kp-tour {
+            inline-size: var(--kp-tour-width, calc(100vw - 2rem));
+        }
+    }
+
+    .kp-tour__title {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-tour__text {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    .kp-tour__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-md, 1rem);
+    }
+
+    .kp-tour__count {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-tour__buttons {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-tour__buttons > [hidden] {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-tour[open] {
+            animation: kp-tour-in 160ms ease-out;
+        }
+    }
+
+    @keyframes kp-tour-in {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* The part the tour talks about: a ring in the focus colour, and the rest
+ * of the page dimmed around it, so the eye goes straight to it. */
+    /* `z-index` does nothing on a part that is not positioned (a plain block in
+ * normal flow), and the dim is the part's box-shadow: a later sibling with a
+ * ground painted over it, so the page was not dimmed below the target. A part
+ * with no position of its own is made `relative`. Zero specificity, so any rule
+ * that positions a part (a sticky header, an absolute drawer, every register)
+ * keeps what it says. */
+    :where([data-kp-tour-target]) {
+        position: relative;
+    }
+
+    [data-kp-tour-target] {
+        z-index: 55;
+        outline: 3px solid var(--ring);
+        outline-offset: 3px;
+        box-shadow: var(--kp-tour-dim, 0 0 0 100vmax hsl(from var(--background) h s l / 0.72));
+        transition:
+            outline 250ms ease,
+            box-shadow 350ms ease;
+    }
+
+    body:has(.kp-tour[data-kp-reversing]) [data-kp-tour-target] {
+        /* A theme whose dim grows out of the target (forest) takes it back
+         * the same way: `--kp-tour-dim-close` names the shadow it fades to. */
+        box-shadow: var(--kp-tour-dim-close, 0 0 0 100vmax transparent) !important;
+        outline-color: transparent !important;
+        transition:
+            box-shadow var(--kp-tour-dim-time, var(--kp-sig-fo-time, 1000ms))
+                var(--kp-tour-dim-close-ease, var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in))) var(--kp-tour-dim-close-delay, 0s),
+            outline-color var(--kp-tour-dim-time, var(--kp-sig-fo-time, 1000ms))
+                var(--kp-tour-dim-close-ease, var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in))) var(--kp-tour-dim-close-delay, 0s) !important;
+    }
+

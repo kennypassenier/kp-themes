@@ -1,0 +1,164 @@
+/* @part: wheel: The hub is a still, round disc in every theme and every state [cook-10 */
+    /* The hub is a still, round disc in every theme and every state [cook-1017; Kenny 2026-10-17 17:48: "bij hover bij de
+       spin knop komt er een vierkant kader rond, dat mag in geen enkele spinner, er moet geen hover animatie zijn en er
+       mogen geen vierkante kaders rond dit ronde element komen, in geen enkel thema"]. Hover, press and focus never
+       animate it, never change its shape, size or place, and never draw a square or rectangle round it: no clip-path, no
+       mask, no outline (but the keyboard's own round ring), no register plate on its pseudo-elements. A colour may
+       answer instantly. Important, as the registers are a later layer; each register keeps its own colours and its own
+       round decoration of the hub. */
+    .kp-wheel__spin.kp-button,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible),
+    .kp-wheel__spin.kp-button::before,
+    .kp-wheel__spin.kp-button::after,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible)::before,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible)::after {
+        transition: none !important;
+        animation: none !important;
+        scale: none !important;
+        rotate: none !important;
+        transform: none !important;
+        clip-path: none !important;
+        mask: none !important;
+    }
+
+    .kp-wheel__spin.kp-button:not(:focus-visible) {
+        outline: none !important;
+    }
+
+    /* Its shadow is the same at rest, pointed at, pressed and focused: --kp-wheel-hub-shadow is the register's rest
+       shadow (the collar round the disc by default), so no state paints a larger or another frame. */
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        box-shadow: var(--kp-wheel-hub-shadow, 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card)) !important;
+    }
+
+    /* Keyboard focus: a round ring that follows the disc, outside the card-coloured collar. */
+    .kp-wheel__spin.kp-button:focus-visible {
+        outline: 3px solid var(--focus-ring, currentColor) !important;
+        outline-offset: calc(var(--kp-wheel-hub-ring, 4px) + 1px) !important;
+        border-radius: 50% !important;
+    }
+
+    .kp-wheel__spin[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    /* The outcome: a caption and the name in two reserved lines. */
+    .kp-wheel__result {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: 100%;
+        text-align: center;
+    }
+
+    .kp-wheel__caption {
+        max-inline-size: 100%;
+        margin: 0;
+        min-block-size: 1lh;
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* Two lines of the outcome's size, always: the name, or a sentence (empty, failed) in the reading size. */
+    .kp-wheel__outcome {
+        display: -webkit-box;
+        box-sizing: border-box;
+        block-size: calc(2.5 * var(--kp-wheel-outcome, 1.5rem));
+        margin: 0;
+        overflow: hidden;
+        font-family: var(--kp-wheel-font, var(--theme-font-display, inherit));
+        font-size: var(--kp-wheel-outcome, 1.5rem);
+        font-weight: 600;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .kp-wheel__outcome[data-kp-wheel-note] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        font-family: inherit;
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 400;
+    }
+
+    .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* --- A wheel for a page of its own: kiosk, resting choices, answer card [hover-wheel-1019] ----------------
+ * `data-kp-wheel-kiosk` removes the hub's button: the wheel (and the answer) is the one control, a plain tap spins, and
+ * the stage carries the focus ring. A `resting` item stays on the disc faded with a dashed edge and an italic name.
+ * `data-kp-wheel-answer` turns the result into a bordered card with a reserved line for the item's `tag`. Knobs:
+ * --kp-wheel-resting (opacity of a resting segment, 0.5), --kp-wheel-answer-pad (the card's padding, 0.75rem). */
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__spin {
+        display: none;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] :is(.kp-wheel__stage, .kp-wheel__result) {
+        cursor: pointer;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__stage {
+        border-radius: 50%;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__stage:focus-visible {
+        outline: 2px solid var(--ring, var(--primary));
+        outline-offset: 4px;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__stage[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-wheel__segment[data-kp-wheel-resting] {
+        opacity: var(--kp-wheel-resting, 0.5);
+        stroke-dasharray: 3 2;
+    }
+
+    .kp-wheel__segment[data-kp-wheel-resting][data-kp-wheel-other] {
+        opacity: calc(var(--kp-wheel-resting, 0.5) * var(--kp-wheel-other, 0.45));
+    }
+
+    .kp-wheel__label[data-kp-wheel-resting] {
+        font-style: italic;
+        opacity: var(--kp-wheel-resting, 0.5);
+    }
+
+    /* The tag is only there in the answer card; without it the result keeps the two lines it always had. */
+    .kp-wheel__tag {
+        display: none;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-wheel[data-kp-wheel-answer] .kp-wheel__result {
+        box-sizing: border-box;
+        padding: var(--kp-wheel-answer-pad, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, inherit);
+    }
+
+    .kp-wheel[data-kp-wheel-answer] .kp-wheel__tag {
+        display: block;
+        max-inline-size: 100%;
+        min-block-size: 1lh;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+

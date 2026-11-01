@@ -1,0 +1,157 @@
+/* @part: share-bar: align-pkg-1019:stackbar:start */
+    /* align-pkg-1019:stackbar:start
+     * A legend is one grid [gapviz-1019; homelab 53]: swatch, label and value are three tracks of the legend, every row is a
+     * subgrid of them, so the labels all end and the values all start on one edge whatever the digits and the unit are (the
+     * value track is as wide as the widest value, max-content), with no script and no measuring. Each row used to be a grid of
+     * its own, which put the value of every row on its own x. A label is never cut with an ellipsis [R4]: it wraps at its
+     * spaces (a word is never broken), and the swatch and the value stand on its first line, a band 1.5 rem high. */
+    .kp-stackbar__item {
+        align-items: start;
+        min-block-size: 0;
+    }
+
+    .kp-stackbar__item > :is(.kp-stackbar__label, .kp-stackbar__value) {
+        line-height: 1.5rem;
+    }
+
+    .kp-stackbar__item > .kp-stackbar__swatch {
+        margin-block-start: 0.375rem;
+    }
+
+    .kp-stackbar__item > .kp-stackbar__label {
+        overflow: visible;
+        overflow-wrap: normal;
+        word-break: normal;
+        text-overflow: clip;
+        white-space: normal;
+    }
+
+    .kp-stackbar__item > .kp-stackbar__wait-line {
+        align-self: center;
+    }
+    /* align-pkg-1019:stackbar:end */
+
+    /* stackbar-refresh-1019:stackbar-picked:start
+     * A picked part [homelab 61; N18]. setStackbar(el, { picked: [keys] }) presses parts the way a chart's filter does: the part is
+     * a toggle button (`aria-pressed`) and part and legend row carry `data-kp-stackbar-picked`. Not colour alone: the bar part
+     * takes a heavier ring than the hover's (4 px of foreground past a 2 px card gap, against 3 px), and its legend row a 3 px
+     * rule on its start edge and a heavier label, over the same muted ground a lit row has. Knob --kp-stackbar-picked-ring (4px). */
+    .kp-stackbar__seg[aria-pressed] {
+        cursor: pointer;
+    }
+
+    .kp-stackbar__seg[data-kp-stackbar-picked] {
+        z-index: 2;
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card),
+            0 0 0 2px var(--card),
+            0 0 0 var(--kp-stackbar-picked-ring, 4px) var(--foreground);
+    }
+
+    .kp-stackbar__item[data-kp-stackbar-picked] {
+        background: var(--muted);
+        box-shadow: inset 3px 0 0 var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-stackbar__item[data-kp-stackbar-picked]:dir(rtl) {
+        box-shadow: inset -3px 0 0 var(--foreground);
+    }
+    /* stackbar-refresh-1019:stackbar-picked:end */
+
+    .kp-stackbar__value {
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-stackbar__item[data-kp-stackbar-over] .kp-stackbar__value {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* Loading: the bar is the meter's own loading picture at the bar's size
+     * (each theme's way a bar waits); the legend keeps its rows. */
+    .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
+        background: transparent;
+    }
+
+    .kp-stackbar__bar > .kp-meter.kp-stackbar__wait {
+        flex: 1;
+        block-size: 100%;
+        min-block-size: 0;
+        margin: 0;
+        border-radius: inherit;
+    }
+
+    .kp-stackbar__item > .kp-stackbar__wait-line {
+        grid-column: 2 / -1;
+    }
+
+    /* A waiting line one text line high, whatever a theme draws as its
+     * skeleton (formal rules a line under a taller box): the box is clipped to
+     * the line and the drawing sits on its foot, so a waiting row is exactly
+     * as tall as the row it stands for. */
+    .kp-stackbar__wait-line,
+    .kp-bullets__wait,
+    .kp-kv__wait {
+        display: flex;
+        align-items: flex-end;
+        block-size: 1lh;
+        min-inline-size: 0;
+        overflow: hidden;
+    }
+
+    /* A zero-width character gives the box a text baseline on the line, so a
+     * row aligned on baselines stands where it stands with the value in it. */
+    :is(.kp-stackbar__wait-line, .kp-bullets__wait, .kp-kv__wait)::before {
+        content: '\200b';
+        inline-size: 0;
+    }
+
+    :is(.kp-stackbar__wait-line, .kp-bullets__wait, .kp-kv__wait) > :is(.kp-skeleton) {
+        flex: 1 1 auto;
+        margin: 0;
+        --kp-skeleton-height: 0.75em;
+    }
+
+    /* Not read, or failed: one calm note over the bar's and the legend's whole
+     * footprint, the height they had (the script writes it; a bar never drawn
+     * takes --kp-stackbar-state-min), in the empty state's dashed frame with
+     * the theme's empty-state title; the sentence and a normal-size Retry side
+     * by side, centred, so the note fits a footprint only a few lines high
+     * (Kenny, 2026-10-16). A bar without a legend keeps its track, its words
+     * in its hover card. */
+    .kp-stackbar__note {
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-stackbar-state-min, 4rem);
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        text-align: center;
+    }
+
+    .kp-stackbar__note > .kp-stackbar__note-title {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    @media (forced-colors: active) {
+        .kp-stackbar__seg,
+        .kp-stackbar__swatch {
+            forced-color-adjust: none;
+            border: 1px solid CanvasText;
+        }
+    }
+

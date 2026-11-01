@@ -1,0 +1,156 @@
+/* @part: rating: The lit share of the star: the fill is cut from its end edge, so a hal */
+    .kp-rating__full path {
+        fill: currentColor;
+        stroke: currentColor;
+        stroke-width: var(--kp-rating-stroke, 1.5);
+        stroke-linejoin: round;
+    }
+
+    /* The lit share of the star: the fill is cut from its end edge, so a half star is the start half. */
+    .kp-rating__full {
+        clip-path: inset(0 calc((1 - var(--kp-rating-fill, 0)) * 100%) 0 0);
+    }
+
+    .kp-rating__star[data-kp-lit] .kp-rating__empty path {
+        stroke: var(--kp-rating-ink);
+    }
+
+    /* A star about to be set under the pointer is lighter than a set one. */
+    .kp-rating[data-kp-previewing] .kp-rating__full {
+        opacity: 0.55;
+    }
+
+    .kp-rating__row:dir(rtl) .kp-rating__full {
+        clip-path: inset(0 0 0 calc((1 - var(--kp-rating-fill, 0)) * 100%));
+    }
+
+    .kp-rating__caption {
+        min-block-size: 1lh;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-rating--display .kp-rating__caption {
+        min-block-size: 0;
+        color: var(--foreground);
+        white-space: nowrap;
+    }
+
+    .kp-rating__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Clear is for a pointer; a touch screen has the star pressed again, and a keyboard Backspace. */
+    @media (hover: none), (pointer: coarse) {
+        .kp-rating__clear {
+            display: none;
+        }
+    }
+
+    .kp-rating__reason,
+    .kp-rating__flash {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-rating__reason {
+        color: var(--muted-foreground);
+    }
+
+    .kp-rating__flash {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-rating[data-kp-disabled] .kp-rating__star {
+        opacity: 0.55;
+    }
+
+    .kp-rating[data-kp-rating-busy] .kp-rating__row {
+        cursor: progress;
+    }
+
+    /* Loading: the stars stay at full size as dashed outlines that breathe, so nothing moves when the value arrives. */
+    .kp-rating[data-kp-state='loading'] .kp-rating__empty path {
+        stroke-dasharray: 2.5 2.5;
+    }
+
+    .kp-rating[data-kp-state='loading'] .kp-rating__full {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-rating[data-kp-state='loading'] .kp-rating__glyph {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+
+        .kp-rating__star[data-kp-popped] .kp-rating__glyph {
+            animation: kp-rating-pop 220ms var(--fx-ease, ease-out);
+        }
+
+        @keyframes kp-rating-pop {
+            0% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.22);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+
+    /* Failed to read: the stars' place is one plate of the same size, the words centred and a normal-size Retry. */
+    /* The failed plate covers the rating's whole box, not the body's: an input is as wide as its row (100%) while its body is only as
+     * wide as the stars, so the plate was a patch the width of the stars [t56-statefix-1018]. */
+    .kp-rating[data-kp-state='error'] {
+        position: relative;
+    }
+
+    .kp-rating[data-kp-state='error'] :is(.kp-rating__row, .kp-rating__foot) {
+        visibility: hidden;
+    }
+
+    .kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-rating__failure-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* A phone-wide box: five 56 px stars fill the width evenly, the words under them, nothing needs hover. */
+    @container kp-rating (max-width: 25rem) {
+        .kp-rating--input .kp-rating__body {
+            inline-size: 100%;
+        }
+
+        .kp-rating--input .kp-rating__row {
+            inline-size: 100%;
+            max-inline-size: calc(var(--kp-rating-max, 5) * 3.5rem);
+        }
+
+        .kp-rating--input .kp-rating__star {
+            flex: 1 1 0;
+            inline-size: auto;
+            block-size: 3.5rem;
+            min-inline-size: 0;
+        }
+    }
+

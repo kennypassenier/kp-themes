@@ -1,0 +1,149 @@
+/* @part: conversation: Conversation thread */
+    /* --- Conversation thread ------------------------------------------- */
+
+    /* Bubbles on two sides, scrolling inside a box that keeps its height in every state. Knobs: --kp-thread-height
+     * (the tallest the box grows, 32rem), --kp-thread-min (the least, 16rem), --kp-thread-bubble (the widest a
+     * bubble gets, 40rem; 85 % of a phone), --kp-thread-gap. */
+    .kp-thread {
+        container: kp-thread / inline-size;
+        position: relative;
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-thread__scroll {
+        box-sizing: border-box;
+        min-block-size: var(--kp-thread-min, 16rem);
+        max-block-size: var(--kp-thread-height, 32rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-thread__scroll:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-thread__list {
+        display: grid;
+        gap: var(--kp-thread-gap, var(--kp-space-xs, 0.25rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-thread__item {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-thread__item[data-kp-first='true'] {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-thread__item[data-kp-dir='out'] {
+        flex-direction: row-reverse;
+    }
+
+    .kp-thread__avatar {
+        flex: none;
+        inline-size: 1.5rem;
+        min-block-size: 1.5rem;
+    }
+
+    .kp-thread__bubble {
+        box-sizing: border-box;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        max-inline-size: min(100%, var(--kp-thread-bubble, 40rem));
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        overflow-wrap: anywhere;
+    }
+
+    /* Your side: a wash of the primary colour (the default), the primary colour itself (`filled`), or the same
+     * plate as theirs (`plain`, the answer sits on the end side of the row and that is all). */
+    .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+    }
+
+    .kp-thread[data-kp-thread-bubble='filled'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .kp-thread[data-kp-thread-bubble='plain'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--border);
+        background: var(--card);
+    }
+
+    .kp-thread__item[data-kp-dir='in'][data-kp-first='true'] > .kp-thread__bubble {
+        border-start-start-radius: 0.1875rem;
+    }
+
+    .kp-thread__item[data-kp-dir='out'][data-kp-first='true'] > .kp-thread__bubble {
+        border-start-end-radius: 0.1875rem;
+    }
+
+    .kp-thread__bubble[data-kp-status='sending'] {
+        opacity: 0.65;
+    }
+
+    .kp-thread__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0 var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-thread__sender {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 650;
+    }
+
+    .kp-thread__time {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        opacity: 0.8;
+    }
+
+    .kp-thread__text {
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+
+    /* A long message shows its first lines and fades out; "Show all N lines" is under it. */
+    .kp-thread__text[data-kp-fold='folded'] {
+        max-block-size: calc(var(--kp-thread-fold-lines, 3) * 1lh);
+        overflow: hidden;
+        mask-image: linear-gradient(to bottom, CanvasText calc(100% - 1.25lh), transparent);
+    }
+
+    .kp-thread__bubble .kp-button--ghost {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .kp-thread__fold {
+        justify-self: start;
+    }
+
+    .kp-thread__attachments {
+        margin: 0;
+    }
+

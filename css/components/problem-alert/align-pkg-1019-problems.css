@@ -1,0 +1,188 @@
+/* @part: problem-alert: align-pkg-1019:problems:end */
+    @container kp-problems (width > 34rem) {
+        .kp-problems:has(> .kp-problem > .kp-alert__actions) > .kp-problem:not(.kp-problem--list) {
+            display: grid;
+            grid-template-columns: subgrid;
+            align-items: start;
+        }
+
+        .kp-problems > .kp-problem > .kp-alert__actions {
+            grid-column: 3;
+        }
+
+        .kp-problems > .kp-problem > .kp-alert__close {
+            grid-column: -2 / -1;
+            margin-inline-start: 0;
+        }
+    }
+    /* align-pkg-1019:problems:end */
+
+    /* field-problems-1019:problems-subgrid:start
+     * data-kp-subgrid makes the list no container (a container cannot be a subgrid), so `@container kp-problems`
+     * above never matched and each fix took the width of its own words (108 px apart between "Run the backup now"
+     * and "Share"). The rows are subgrids of the list's tracks here at every width, and fold with the form grid
+     * around the list (36rem), as the rest of data-kp-subgrid does. */
+    .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) > .kp-problem:not(.kp-problem--list) {
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: start;
+    }
+
+    /* A list placed straight in a form grid spans all its tracks; it took the first track's width. */
+    .kp-formgrid > .kp-problems,
+    .kp-formgrid__group > .kp-problems {
+        grid-column: 1 / -1;
+    }
+
+    .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+        grid-column: 3;
+    }
+
+    .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__close {
+        grid-column: -2 / -1;
+        margin-inline-start: 0;
+    }
+
+    /* The fold follows the nearest size container (the form grid, a card, the page), or the screen where there is none
+       [gapform-1019; HTTPSwitchboard 28]: it listened to `@container kp-formgrid` only, so a list outside a form grid never
+       folded. Folded, an item is icon | words | the cross, the cross's track shared by every item so all words end on one
+       edge, and the fix runs under them on the full width; the cross stays on the words' line [HTTPSwitchboard 29]:
+       js/problems.js appends it after the fix, and a fix on a line of its own pushed it onto a third. */
+    @container (max-width: 36rem) {
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions):has(> .kp-problem > .kp-alert__close) {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+            grid-column: 1 / -1;
+            grid-row: 2;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__close {
+            grid-column: -2 / -1;
+            grid-row: 1;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions > * {
+            flex: 1 1 auto;
+        }
+    }
+
+    @media (max-width: 40rem) {
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions):has(> .kp-problem > .kp-alert__close) {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+            grid-column: 1 / -1;
+            grid-row: 2;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__close {
+            grid-column: -2 / -1;
+            grid-row: 1;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions > * {
+            flex: 1 1 auto;
+        }
+    }
+    /* field-problems-1019:problems-subgrid:end */
+
+    /* hsbwish-1020:subgrid-rows:start [HTTPSwitchboard gap 25]
+     * `data-kp-subgrid="rows"` also hands the band (or the problem list) the ROWS of the page grid it stands in: the host
+     * spans as many parent rows as it has items and is a subgrid of them, so item N stands on one row with whatever the
+     * page puts beside it (alert N next to band item N), at the height of the taller, without a script. The count is read
+     * from the items for up to eight; `--kp-subgrid-rows` sets it where there are more (or a page wants another). The
+     * columns stay the band's own three tracks (icon | words | actions) and the narrow fold above is unchanged: a folded
+     * item is taller inside its row. Plain `data-kp-subgrid` is untouched. */
+    .kp-attention[data-kp-subgrid='rows'],
+    .kp-problems[data-kp-subgrid='rows'] {
+        grid-row: span var(--kp-subgrid-rows, var(--kp-subgrid-count, 1));
+        grid-template-rows: subgrid;
+        row-gap: normal;
+    }
+
+    .kp-attention[data-kp-subgrid='rows'] > .kp-attention__item,
+    .kp-problems[data-kp-subgrid='rows'] > .kp-problem {
+        align-self: stretch;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(2)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(2)) {
+        --kp-subgrid-count: 2;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(3)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(3)) {
+        --kp-subgrid-count: 3;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(4)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(4)) {
+        --kp-subgrid-count: 4;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(5)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(5)) {
+        --kp-subgrid-count: 5;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(6)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(6)) {
+        --kp-subgrid-count: 6;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(7)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(7)) {
+        --kp-subgrid-count: 7;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(8)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(8)) {
+        --kp-subgrid-count: 8;
+    }
+    /* hsbwish-1020:subgrid-rows:end */
+
+    .kp-problems__more {
+        justify-self: start;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    @container kp-problems (max-width: 34rem) {
+        .kp-problem {
+            flex-wrap: wrap;
+        }
+
+        .kp-problem > .kp-alert__actions {
+            flex: 1 0 100%;
+            /* The cross stays on the words' line [gapform-1019; HTTPSwitchboard 29]. */
+            order: 2;
+        }
+
+        .kp-problem > .kp-alert__close {
+            order: 1;
+        }
+
+        .kp-problem > .kp-alert__actions > * {
+            flex: 1 1 auto;
+        }
+
+        .kp-alert__item {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-alert__item > .kp-alert__actions {
+            grid-column: 1;
+            grid-row: auto;
+        }
+    }
+

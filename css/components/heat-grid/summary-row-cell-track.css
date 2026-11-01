@@ -1,0 +1,203 @@
+/* @part: heat-grid: The summary row: the cell is a track and the tone fills it from the */
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='warn'] {
+        --kp-heat-fill: var(--kp-heat-warn);
+        --kp-heat-pattern: repeating-linear-gradient(0deg, color-mix(in oklab, var(--card) 55%, transparent) 0 1px, transparent 1px 4px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='bad'] {
+        --kp-heat-fill: var(--kp-heat-bad);
+        --kp-heat-pattern: repeating-linear-gradient(135deg, color-mix(in oklab, var(--card) 38%, transparent) 0 2px, transparent 2px 5px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='future'] {
+        --kp-heat-fill: transparent;
+        border-style: dashed;
+        border-color: var(--muted-foreground);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='before'] {
+        --kp-heat-fill: transparent;
+        --kp-heat-pattern: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='none'] {
+        --kp-heat-fill: transparent;
+        border-color: var(--border);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='level'] {
+        --kp-heat-fill: color-mix(in oklab, var(--kp-heat-level-ink) calc(var(--kp-heat-level, 0) * 100%), var(--muted));
+    }
+
+    /* The summary row: the cell is a track and the tone fills it from the
+ * bottom by the share (a night in which four of five stacks were backed up). */
+    .kp-heat__row--summary {
+        min-block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__row--summary .kp-heat__cell {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__cell[data-kp-share] {
+        overflow: hidden;
+        background-color: var(--muted);
+        background-image: none;
+    }
+
+    .kp-heat__cell[data-kp-share]::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        block-size: calc(var(--kp-heat-share, 0) * 100%);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted']) {
+        background-color: transparent;
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted'])::before {
+        display: none;
+    }
+
+    /* Hover, focus, the picked column. The cell grows a little on the block
+ * axis only, so no neighbour moves. */
+    .kp-heat__cell[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-heat__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+
+    .kp-heat__cell[data-kp-picked] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-heat__cell[data-kp-picked]:focus-visible {
+        outline-color: var(--ring);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-heat__cell {
+            transition: transform var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-heat__cell:hover:not([aria-disabled='true'], .kp-skeleton) {
+            transform: var(--kp-heat-cell-hover, scaleY(1.15));
+        }
+    }
+
+    /* Loading keeps the footprint: the cells are the theme's skeleton block
+ * at the cell's own size, without the gap a skeleton keeps from the one
+ * before it (`.kp-skeleton + .kp-skeleton`), so a loading row is exactly as
+ * tall as its ready row. */
+    .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-cell-height, 22px);
+        margin-block: 0;
+        cursor: progress;
+    }
+
+    .kp-heat__row--summary .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__state {
+        grid-column: 1 / -1;
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-heat__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    /* Loading: js/heat.js lays the data table's own loading card (js/busy-card.js) centred over the cells of a
+ * loading heat grid or matrix [Kenny, 2026-10-16: "zoals bij een table waar het icoon in het midden van de matrix
+ * staat en lijkt te laden"]; the axis, the headers and the names stay beside it, the waiting cells keep the shape. */
+    .kp-heat:has(> .kp-datatable__busy-card) {
+        position: relative;
+    }
+
+    /* The busy card of any data area (js/busy-card.js) measures the area it covers: its panel never grows wider than
+ * the area (the words wrap), and over a short one (a heat grid of three rows) it lies flat, the spinner beside the
+ * words, as the busy table's panel does in a narrow table, so the card is never cut by the area it stands in. */
+    .kp-datatable__busy-card {
+        container: kp-busy-card / size;
+    }
+
+    .kp-datatable__busy-card > .kp-datatable__busy-panel {
+        box-sizing: border-box;
+        max-inline-size: calc(100% - 2 * var(--kp-space-sm, 0.5rem));
+    }
+
+    @container kp-busy-card (max-height: 7.5rem) {
+        .kp-datatable__busy-card > .kp-datatable__busy-panel {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            gap: 0 var(--kp-space-md, 1rem);
+            padding-inline: var(--kp-space-md, 1rem);
+            text-align: start;
+        }
+
+        .kp-datatable__busy-card > .kp-datatable__busy-panel > .kp-spinner {
+            --kp-spinner-size: var(--kp-busy-overlay-spinner-narrow, 1.75rem);
+        }
+
+        .kp-datatable__busy-card > .kp-datatable__busy-panel > .kp-datatable__busy-words {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+    /* The legend, under the grid: a swatch and its words, wrapping by whole
+ * entries. `.kp-heat__ramp` is a value scale, less to more. */
+    .kp-heat__legend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-heat__legend > li {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-heat__legend > li:is([data-kp-end], .kp-heat__legend-end) {
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__legend > li:is([data-kp-end], .kp-heat__legend-end) > .kp-keys {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        justify-content: flex-end;
+    }
+
+    .kp-heat__ramp {
+        display: inline-flex;
+        gap: 2px;
+    }
+

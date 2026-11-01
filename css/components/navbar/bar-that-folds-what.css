@@ -1,0 +1,241 @@
+/* @part: navbar: A bar that folds what does not fit behind a More menu . */
+    /* A bar that folds what does not fit behind a More menu [kpadopt-nav].
+ *
+ * Opt-in by `data-kp-nav-fold` on the nav (js/nav-fold.js). The list takes
+ * the room the brand and the end slots leave and never wraps: it is
+ * `flex: 1 1 0`, so what it holds cannot change how wide it is, nor the bar
+ * how tall. Before the script has fitted the bar the overflow is clipped, not
+ * wrapped, so the bar is one row before and after (no layout shift); after,
+ * the items that do not fit are `data-kp-nav-folded`: out of the flow, invisible,
+ * out of the focus order, but still laid out at their own width, so the next
+ * fit can measure them. The More item is a kp menu button whose button is a bar
+ * link, so every register that dresses a link dresses it; it is out of the
+ * flow in the same way while nothing is folded. The selectors lead with
+ * `:where()` so the bar's own phone toggle (its container query, above) wins
+ * where it is shown, and the script stands down there.
+ * Knob: --kp-nav-more-dot (0.5rem), the dot that tells a counter is behind
+ * the button. */
+    /* One row: a bar that folds never wraps its brand, list, job and search onto a second line; the list is what gives. */
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) {
+        flex-wrap: nowrap;
+    }
+
+    /* The list is the one that gives, but never below the More button while something is folded (the script writes
+     * --kp-nav-fold-more): the brand gives way first, to an ellipsis, so the folded links stay reachable. The job and the
+     * search keep their size. */
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links {
+        position: relative;
+        flex: 1 1 0;
+        min-inline-size: var(--kp-nav-fold-more, 0px);
+        flex-wrap: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__brand {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search {
+        flex: none;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search .kp-button {
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]):not([data-kp-nav-fold-ready]) > .kp-nav__links {
+        overflow-x: clip;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li {
+        flex: none;
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li[data-kp-nav-folded],
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > [data-kp-nav-more][data-kp-nav-idle] {
+        /* !important: a register that dresses the list items (cyberpunk's `position: relative` on every one) sits in a
+         * later layer and would put a folded item, and the idle More, back in the flow; it would push the More button
+         * out of the bar. An important declaration of this layer beats every normal one of a later layer. */
+        position: absolute !important;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: max-content;
+        visibility: hidden !important;
+        pointer-events: none;
+    }
+
+    /* The More item is a list item like the others: its menu button hangs from
+     * the button, in the bar's own column. */
+    .kp-nav__more > .kp-menu-button {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* The menu hangs from the button's start edge, as a menu under a link of a bar does; the script moves it back in
+     * only where that would leave the window (menuPlacement). Not the menu button's default, its end edge. */
+    .kp-nav__more > .kp-menu-button > .kp-menu {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+    }
+
+    .kp-nav__more-button {
+        position: relative;
+        margin: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        cursor: pointer;
+    }
+
+    .kp-nav__more-button[aria-current='true'] {
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+
+    .kp-nav__more-dot {
+        /* Inline-block, not a flex item: a register that makes its links blocks makes this button one. */
+        display: inline-block;
+        vertical-align: middle;
+        margin-inline-start: 0.4em;
+        inline-size: var(--kp-nav-more-dot, 0.5rem);
+        block-size: var(--kp-nav-more-dot, 0.5rem);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--destructive);
+        flex: none;
+    }
+
+    .kp-nav__more-dot[hidden] {
+        display: none;
+    }
+
+    /* A separator between two groups of links [kpadopt3]: `<li class="kp-nav__sep" aria-hidden="true">`, a hairline as
+     * tall as a link, in the list's own gap. Never a target and never focused. In a folding bar (js/nav-fold.js) it stands
+     * only between two shown links and becomes the More menu's own `.kp-menu__separator`; in the phone's open list it is
+     * a rule across the list. Knobs: --kp-nav-sep-colour (--border-strong), --kp-nav-sep-inset (the room above and below
+     * it, 0.25rem). */
+    .kp-nav__sep {
+        flex: none;
+        align-self: stretch;
+        box-sizing: border-box;
+        inline-size: 0;
+        min-block-size: 1em;
+        margin-block: var(--kp-nav-sep-inset, 0.25rem);
+        padding: 0;
+        border-inline-start: 1px solid var(--kp-nav-sep-colour, var(--border-strong));
+        list-style: none;
+        pointer-events: none;
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            min-block-size: 0;
+            block-size: 0;
+            margin-block: var(--kp-nav-sep-inset, 0.25rem);
+            border-inline-start: 0;
+            border-block-start: 1px solid var(--kp-nav-sep-colour, var(--border-strong));
+        }
+    }
+
+    /* The bar's own toggle shown: the bar collapses as it always did. */
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links {
+            overflow: visible;
+            flex-wrap: wrap;
+        }
+
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > li {
+            white-space: normal;
+        }
+
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > [data-kp-nav-more] {
+            display: none;
+        }
+    }
+
+    /* The command palette's trigger in the bar [scope-48]. A hotkey alone is
+ * a secret, so the bar keeps a visible door to the palette at its end:
+ * a slot that pushes itself to the far edge, holding a button that reads
+ * as a quiet search box — a word in the muted ink and the key beside it —
+ * rather than as one more loud action. The button is an ordinary
+ * `data-kp-palette-open` opener; js/palette.js fills its empty
+ * `<kbd data-kp-palette-keys>` with ⌘K or Ctrl K. Every register answers
+ * the slot (gates/check-register-coverage.mjs, REQUIRED_PARTS). */
+    .kp-nav__search {
+        display: flex;
+        align-items: center;
+        margin-inline-start: auto;
+    }
+
+    .kp-nav__search-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        /* Never wider than the bar it sits in: a narrow bar gives the
+     * row to the brand and the toggle rather than to an empty box. */
+        min-inline-size: min(var(--kp-nav-search-min, 10rem), 100%);
+        /* As tall as a bar link and in its type size [scope-87], whatever
+     * border the register draws: a border-box floor of one line and the
+     * link's two block paddings, the label centred in it. */
+        box-sizing: border-box;
+        min-block-size: calc(1lh + 2 * var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2)));
+        padding: 0 0.5rem 0 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+        /* One line: squeezed on grotesk's bar, the key hint broke into
+     * "Ctrl" over "K" inside its own chip [scope-80]. */
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+        border-color: var(--border-strong);
+    }
+
+    /* The key sits at the button's far end, the way it sits at a palette
+ * row's end. Empty until the module fills it, and then out of the way. */
+    .kp-nav__search-trigger .kp-palette__keys:empty {
+        display: none;
+    }
+
+    /* The current page is marked by more than colour: aria-current is what a
+ * screen reader announces, and the underline is what everyone else
+ * sees [DI4]. */
+    /* A bar link's size is the package's in every theme [scope-87, option B
+ * of research/uniform-size/]: its type size, line height and block
+ * padding are titanium's, the median theme's [scope-82]. A register keeps
+ * its inline padding, colour, border, face, case, letter spacing and
+ * ornaments; gates/box-metrics.test.mjs refuses the rest. The size is
+ * titanium's 0.94rem taken to 15px: at 15.04px the line box fell between
+ * two layout units, and the bar's measured height and the scroll offset
+ * written from it no longer read the same (tests/nav-sticky.spec.mjs). The call to
+ * action, `.kp-nav__link--cta`, is a bar link and takes the same [scope-88]. The links sit in
+ * a column item (below), so the padding holds its room even where a
+ * register leaves the link inline. */
+    /* The default block padding makes a one-line link exactly
+     * --kp-control-height tall, so a link and a button in one bar row
+     * share a height (chassis-rs: 38.5px links beside 36px buttons). */
+    .kp-nav__link {
+        padding-block: var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2));
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    .kp-nav__link[aria-current='page'] {
+        font-weight: 600;
+        text-decoration-thickness: 2px;
+    }
+

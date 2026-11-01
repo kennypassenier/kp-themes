@@ -1,0 +1,153 @@
+/* @part: conversation: A day divider and a system line. */
+    .kp-thread__attachment {
+        max-inline-size: 100%;
+        min-inline-size: 0;
+        color: var(--foreground);
+    }
+
+    .kp-thread__file {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__file[href] {
+        color: inherit;
+        text-underline-offset: 3px;
+    }
+
+    .kp-thread__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-thread__foot:not(:has(*)) {
+        display: none;
+    }
+
+    .kp-thread__tools {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-thread__status {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-thread__status--failed {
+        padding: 0.125rem 0.5rem;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* A day divider and a system line. */
+    .kp-thread__day {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        margin-block: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-thread__day::before,
+    .kp-thread__day::after {
+        content: '';
+        flex: 1;
+        border-block-start: 1px solid var(--border-strong, var(--border));
+    }
+
+    .kp-thread__system {
+        flex: 1;
+        margin: var(--kp-space-xs, 0.25rem) 0;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__system > .kp-thread__time {
+        margin-inline-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Jump to newest: over the box's foot, in the middle, on a plate of its own. */
+    .kp-thread__jump {
+        position: absolute;
+        inset-block-end: var(--kp-space-md, 0.75rem);
+        inset-inline: 0;
+        inline-size: max-content;
+        margin-inline: auto;
+        z-index: 1;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.25rem 1rem color-mix(in oklab, var(--foreground) 20%, transparent);
+    }
+
+    .kp-thread__jump[hidden] {
+        display: none;
+    }
+
+    /* Loading: a waiting bubble on each side. */
+    .kp-thread__item--wait {
+        pointer-events: none;
+    }
+
+    .kp-thread__item--wait > .kp-thread__bubble {
+        inline-size: min(70%, 26rem);
+        border-color: transparent;
+        background: transparent;
+    }
+
+    .kp-thread__item--wait[data-kp-dir='out'] > .kp-thread__bubble {
+        inline-size: min(55%, 20rem);
+    }
+
+    .kp-thread__wait-line {
+        block-size: 1rem;
+    }
+
+    /* Nothing yet, or failed: the package's empty state over the box's whole footprint. */
+    .kp-thread__note {
+        box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-thread-state-min, var(--kp-thread-min, 16rem));
+        margin: 0;
+        text-align: center;
+    }
+
+    .kp-thread__note > :is(.kp-thread__note-title, .kp-thread__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__note-title {
+        font-size: calc(var(--kp-text-md, 1rem) * 1.25);
+    }
+
+    .kp-thread__note > .kp-thread__note-button {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-thread (max-width: 30rem) {
+        .kp-thread__bubble {
+            max-inline-size: 85%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-thread__scroll {
+            scroll-behavior: auto;
+        }
+    }

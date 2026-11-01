@@ -6,6 +6,7 @@
       "files": [
         "tokens.css",
         "base/register.css",
+        "base/divider-horizon-magenta-line.css",
         "navbar/register.css",
         "button/register.css",
         "form-field/register.css",

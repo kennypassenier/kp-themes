@@ -1,0 +1,129 @@
+/* @part: passkey-list: Passkey list */
+    /* --- Passkey list --------------------------------------------------- */
+
+    /* One row per way in on a grid the rows share, so the icons, the names, the badges and the two buttons begin
+     * in the same column from row to row (fix-64); the badge column is as wide as the widest badge and no wider.
+     * Knobs: --kp-passkeys-gap, --kp-passkeys-row-min (the height a row is counted at for the least list, 5rem),
+     * --kp-passkeys-state-min (14rem), --kp-passkeys-action-min (5.5rem). */
+    .kp-passkeys {
+        container: kp-passkeys / inline-size;
+        position: relative;
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-passkeys__list {
+        display: grid;
+        grid-template-columns: [way] auto [what] minmax(0, 1fr) [flags] max-content [actions] max-content;
+        align-content: start;
+        gap: var(--kp-passkeys-gap, var(--kp-space-sm, 0.5rem)) 0;
+        min-block-size: calc(var(--kp-passkeys-row-min, 5rem) * 2 + var(--kp-passkeys-gap, var(--kp-space-sm, 0.5rem)));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-passkeys__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        column-gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: var(--kp-passkeys-row-min, 5rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-passkeys__row[data-kp-current] {
+        border-color: var(--border-strong, var(--border));
+    }
+
+    .kp-passkeys__row[aria-busy='true'] > :not(.kp-passkeys__actions) {
+        opacity: 0.7;
+    }
+
+    .kp-passkeys__way {
+        display: grid;
+        place-items: center;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        box-sizing: border-box;
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-passkeys__glyph {
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+    }
+
+    .kp-passkeys__what {
+        display: grid;
+        gap: 0.125rem;
+        min-inline-size: 0;
+    }
+
+    .kp-passkeys__label {
+        margin: 0;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-passkeys__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 var(--kp-space-md, 0.75rem);
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-passkeys__when {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* The reason a button is off, the server's refusal: on a plate of its own, so the words keep their air. */
+    .kp-passkeys__hint {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding: 0.25rem 0.5rem;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: var(--muted);
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-passkeys__hint[hidden] {
+        display: none;
+    }
+
+    .kp-passkeys__hint[data-kp-tone='warning'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-passkeys__hint[data-kp-tone='error'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-passkeys__flags {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-passkeys__actions {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+

@@ -1,0 +1,210 @@
+/* @part: sequencer: A join: items that run alongside start together, so it is a line at th */
+    .kp-sequencer__item:focus-visible {
+        z-index: 3;
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-sequencer__item[aria-pressed='true'] {
+        z-index: 1;
+        outline: 2px solid var(--foreground);
+        outline-offset: 1px;
+    }
+
+    .kp-sequencer__item[data-kp-grabbed] {
+        z-index: 3;
+        outline: 2px dashed var(--foreground);
+        outline-offset: 2px;
+    }
+
+    .kp-sequencer__item[data-kp-dragging] {
+        z-index: 3;
+        cursor: grabbing;
+        outline: 2px solid var(--foreground);
+        outline-offset: 1px;
+        filter: drop-shadow(0 0.25rem 0.375rem hsl(from var(--foreground) h s l / 0.28));
+    }
+
+    .kp-sequencer__item[data-kp-refused] {
+        outline: 2px dashed var(--destructive);
+        outline-offset: 1px;
+        opacity: 0.75;
+    }
+
+    .kp-sequencer__handle {
+        position: absolute;
+        inset-block: 0;
+        inline-size: min(var(--kp-sequencer-handle, 0.625rem), 34%);
+        cursor: ew-resize;
+        touch-action: none;
+    }
+
+    .kp-sequencer__handle[data-edge='start'] {
+        inset-inline-start: 0;
+    }
+
+    .kp-sequencer__handle[data-edge='end'] {
+        inset-inline-end: 0;
+    }
+
+    .kp-sequencer__handle::after {
+        content: '';
+        position: absolute;
+        inset-block: 25%;
+        inset-inline-start: calc(50% - 1px);
+        inline-size: 2px;
+        border-radius: 1px;
+        background: currentColor;
+        opacity: 0;
+    }
+
+    .kp-sequencer__item:is(:hover, :focus-visible, [data-kp-dragging], [data-kp-grabbed]) .kp-sequencer__handle::after {
+        opacity: 0.55;
+    }
+
+    .kp-sequencer__item[data-kp-locked] .kp-sequencer__handle,
+    .kp-sequencer[data-kp-sequencer-editable='off'] .kp-sequencer__handle {
+        display: none;
+    }
+
+    @media (pointer: coarse) {
+        .kp-sequencer {
+            --kp-sequencer-handle: 1rem;
+        }
+    }
+
+    /* A join: items that run alongside start together, so it is a line at their shared start from one bar's middle to the other's, with
+     * a dot at each end (the shape, not a colour, says "joined"). */
+    .kp-sequencer__join {
+        position: absolute;
+        z-index: 2;
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 60) * 100%);
+        inset-block-start: var(--kp-tl-top, 0px);
+        inline-size: 0;
+        block-size: var(--kp-tl-height, 0px);
+        margin-inline-start: -1px;
+        border-inline-start: 2px dotted var(--primary);
+        pointer-events: none;
+    }
+
+    .kp-sequencer__join::before,
+    .kp-sequencer__join::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: -0.3125rem;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    .kp-sequencer__join::before {
+        inset-block-start: -0.25rem;
+    }
+
+    .kp-sequencer__join::after {
+        inset-block-end: -0.25rem;
+    }
+
+    .kp-sequencer__end {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 60) * 100%);
+        inline-size: 0;
+        border-inline-start: 2px dashed var(--muted-foreground);
+    }
+
+    .kp-sequencer__guide {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 60) * 100%);
+        inline-size: 0;
+        border-inline-start: 1px solid var(--primary);
+    }
+
+    /* The chip that follows a drag: beside the bar's end (before its start near the window's end), on the bar's lane. */
+    .kp-sequencer__readout {
+        position: absolute;
+        z-index: 3;
+        inset-block-start: calc(var(--kp-tl-top, 0px) + var(--kp-gantt-pad));
+        inset-inline-start: calc((var(--kp-g-e, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 60) * 100% + 0.5rem);
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0.125rem 0.5rem;
+        border: 1px solid var(--border-strong, var(--border));
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--foreground));
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: var(--kp-gantt-bar, 1.125rem);
+        white-space: nowrap;
+    }
+
+    .kp-sequencer__readout[data-kp-flip] {
+        inset-inline-start: auto;
+        inset-inline-end: calc(100% - (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 60) * 100% + 0.5rem);
+    }
+
+    .kp-sequencer__readout[data-kp-refused] {
+        border-style: dashed;
+        border-color: var(--destructive);
+    }
+
+    /* A timeline being read or empty draws no bars, joins or lines under its card or plate. */
+    .kp-sequencer:is([data-kp-state='loading'], [data-kp-leaving]) :is(.kp-sequencer__items, .kp-sequencer__plot),
+    .kp-gantt__frame:has(> .kp-gantt__plate:not([hidden])) .kp-sequencer__items {
+        visibility: hidden;
+    }
+
+    .kp-sequencer__selection {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-block-size: 2.75rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-sequencer__selection[data-kp-mode='linking'] {
+        border-style: dashed;
+        border-color: var(--primary);
+    }
+
+    .kp-sequencer__selected {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-sequencer__selection[data-kp-mode='none'] .kp-sequencer__selected {
+        color: var(--muted-foreground);
+    }
+
+    .kp-sequencer__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-gantt (max-width: 32rem) {
+        .kp-sequencer__bar,
+        .kp-sequencer__selection {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-sequencer__total {
+            text-align: start;
+        }
+
+        .kp-sequencer__actions {
+            justify-content: flex-start;
+        }
+    }

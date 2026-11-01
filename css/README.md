@@ -51,15 +51,15 @@ concatenates that file into `css/themes.css`.
 | ------------------------------- | -------------------------------------------------------------------------------- |
 | `accordion.css`                 | Accordion                                                                        |
 | `ack-gate/`                     | Acknowledge gate (2 parts)                                                       |
-| `action-columns.css`            | Action columns                                                                   |
+| `action-columns/`               | Action columns (2 parts)                                                         |
 | `action-tiles.css`              | Action tiles, status rows, facet list                                            |
-| `activity-feed/`                | The activity feed (2 parts)                                                      |
-| `alarm/`                        | Alarm (2 parts)                                                                  |
+| `activity-feed/`                | The activity feed (3 parts)                                                      |
+| `alarm/`                        | Alarm (3 parts)                                                                  |
 | `alert.css`                     | Alert                                                                            |
 | `anchors/`                      | Link anchors on headings and rows (2 parts)                                      |
-| `annotations/`                  | Annotations (2 parts)                                                            |
+| `annotations/`                  | Annotations (3 parts)                                                            |
 | `attention-band.css`            | Attention band                                                                   |
-| `auto-refresh.css`              | The automatic refresh chooser                                                    |
+| `auto-refresh/`                 | The automatic refresh chooser (2 parts)                                          |
 | `autogrow-textarea.css`         | A text box that grows with its text                                              |
 | `avatar.css`                    | Avatar                                                                           |
 | `back-to-top.css`               | Back to top                                                                      |
@@ -67,99 +67,99 @@ concatenates that file into `css/themes.css`.
 | `bar-cell.css`                  | A value with a bar, in a table cell                                              |
 | `breadcrumb-pagination.css`     | Breadcrumb and pagination                                                        |
 | `bullet-rows.css`               | Bullet rows                                                                      |
-| `button.css`                    | Button                                                                           |
+| `button/`                       | Button (2 parts)                                                                 |
 | `calm-mode.css`                 | Calm mode                                                                        |
 | `calm-status.css`               | The calm vocabulary of the status list, and the today card                       |
 | `calm-tones.css`                | Calm tones for the calendar, the heat grid and the uptime strip                  |
 | `card.css`                      | Card                                                                             |
 | `checklist-sink.css`            | A checklist whose ticked items sink                                              |
-| `code-block.css`                | Code block                                                                       |
+| `code-block/`                   | Code block (2 parts)                                                             |
 | `code-field.css`                | Code field                                                                       |
 | `colour-picker.css`             | Colour picker                                                                    |
 | `combobox.css`                  | Combobox and tag input                                                           |
 | `command-block.css`             | Command block                                                                    |
-| `command-palette.css`           | Command palette and shortcut sheet                                               |
+| `command-palette/`              | Command palette and shortcut sheet (2 parts)                                     |
 | `compare-slider.css`            | Compare slider                                                                   |
 | `connection-banner.css`         | The connection banner                                                            |
 | `connection-path.css`           | Path of a connection                                                             |
-| `console.css`                   | An interactive console                                                           |
-| `conversation.css`              | Conversation thread                                                              |
+| `console/`                      | An interactive console (2 parts)                                                 |
+| `conversation/`                 | Conversation thread (2 parts)                                                    |
 | `countdown.css`                 | Countdown                                                                        |
-| `datatable/`                    | DataTable (3 parts)                                                              |
+| `datatable/`                    | DataTable (5 parts)                                                              |
 | `date-picker.css`               | Date picker                                                                      |
 | `dated-option-picker.css`       | Dated option picker                                                              |
 | `dependency-list.css`           | Dependency list                                                                  |
 | `dialog.css`                    | Dialog                                                                           |
-| `diff.css`                      | A diff of several files                                                          |
+| `diff/`                         | A diff of several files (2 parts)                                                |
 | `disabled-reason.css`           | A disabled control says why                                                      |
 | `document-page.css`             | The page that means "a document"                                                 |
-| `drawer-tour.css`               | Drawer, help and the tour                                                        |
-| `entity-card.css`               | Entity card                                                                      |
+| `drawer-tour/`                  | Drawer, help and the tour (2 parts)                                              |
+| `entity-card/`                  | Entity card (2 parts)                                                            |
 | `entrance-reverse.css`          | An entrance played backwards                                                     |
 | `facet-list.css`                | Facet list                                                                       |
 | `flash-button.css`              | The flash button                                                                 |
 | `focus-steps.css`               | One step at a time                                                               |
-| `form-field.css`                | Form field                                                                       |
-| `form-grid/`                    | Form grid (3 parts)                                                              |
+| `form-field/`                   | Form field (2 parts)                                                             |
+| `form-grid/`                    | Form grid (6 parts)                                                              |
 | `form-rows.css`                 | Form rows                                                                        |
 | `forms.css`                     | Forms                                                                            |
 | `freshness-line.css`            | Freshness line                                                                   |
-| `gallery.css`                   | A grid of pictures that open large                                               |
-| `graph/`                        | Network graph (2 parts)                                                          |
+| `gallery/`                      | A grid of pictures that open large (2 parts)                                     |
+| `graph/`                        | Network graph (3 parts)                                                          |
 | `grow-shrink.css`               | Growing and shrinking                                                            |
-| `heat-grid.css`                 | Heat grid                                                                        |
+| `heat-grid/`                    | Heat grid (2 parts)                                                              |
 | `heat-paging.css`               | Heat paging bar                                                                  |
 | `identity-mark.css`             | Identity mark                                                                    |
 | `intro.css`                     | opening comment, knobs and base                                                  |
 | `job-line.css`                  | Job line                                                                         |
 | `json-box.css`                  | The JSON box                                                                     |
 | `key-figure-columns.css`        | Key-figure strip on allowed column counts                                        |
-| `key-figure-trend.css`          | A key figure with its 24-hour trend                                              |
+| `key-figure-trend/`             | A key figure with its 24-hour trend (2 parts)                                    |
 | `key-figures.css`               | Key figures                                                                      |
 | `key-value-grid.css`            | Key-value grid                                                                   |
 | `kitchen-timers.css`            | Kitchen timers                                                                   |
 | `layout/`                       | The tour's dim is the target's box-shadow, and a register that gives t (9 parts) |
 | `layout-base.css`               | opening of the layout block                                                      |
 | `lede.css`                      | The lede                                                                         |
-| `log-viewer.css`                | A live log viewer                                                                |
+| `log-viewer/`                   | A live log viewer (2 parts)                                                      |
 | `log.css`                       | Log                                                                              |
 | `master-detail.css`             | Master and detail                                                                |
-| `matrix.css`                    | Matrix                                                                           |
+| `matrix/`                       | Matrix (2 parts)                                                                 |
 | `media.css`                     | Media                                                                            |
 | `menu-button.css`               | Menu button with a rich menu                                                     |
 | `meter.css`                     | Meter with a mark                                                                |
-| `month-heatmap.css`             | Month heatmap                                                                    |
+| `month-heatmap/`                | Month heatmap (2 parts)                                                          |
 | `movable-grid.css`              | Movable grid layout                                                              |
-| `navbar/`                       | Navigation bar (2 parts)                                                         |
+| `navbar/`                       | Navigation bar (4 parts)                                                         |
 | `new-lines-pill.css`            | The "N new lines" pill                                                           |
 | `next-times.css`                | Next times                                                                       |
-| `notification-centre.css`       | The notification centre                                                          |
+| `notification-centre/`          | The notification centre (2 parts)                                                |
 | `on-this-page.css`              | On this page                                                                     |
 | `one-question.css`              | Answering one question per screen                                                |
 | `ops-page.css`                  | The operations page                                                              |
-| `page-header/`                  | Page header (2 parts)                                                            |
+| `page-header/`                  | Page header (3 parts)                                                            |
 | `page-shell.css`                | The page's shell                                                                 |
 | `palette-any-order.css`         | Palette that finds words in any order                                            |
-| `parallel-tracks.css`           | Parallel tracks                                                                  |
-| `passkey-list.css`              | Passkey list                                                                     |
+| `parallel-tracks/`              | Parallel tracks (2 parts)                                                        |
+| `passkey-list/`                 | Passkey list (2 parts)                                                           |
 | `pipeline.css`                  | Pipeline                                                                         |
 | `plain-card.css`                | Plain card                                                                       |
 | `popover.css`                   | Dropdown and tooltip, on the popover layer                                       |
-| `problem-alert.css`             | The problem alert                                                                |
-| `progress-spinner-skeleton.css` | Progress, spinner, skeleton                                                      |
+| `problem-alert/`                | The problem alert (2 parts)                                                      |
+| `progress-spinner-skeleton/`    | Progress, spinner, skeleton (2 parts)                                            |
 | `qr-link.css`                   | A link as a QR code                                                              |
 | `quantity.css`                  | A quantity with minus and plus                                                   |
 | `question-card.css`             | The question card                                                                |
 | `quiet-hours.css`               | Quiet hours                                                                      |
 | `quote-card.css`                | The quote card                                                                   |
 | `range-picker.css`              | Range picker                                                                     |
-| `rating.css`                    | The star rating                                                                  |
+| `rating/`                       | The star rating (2 parts)                                                        |
 | `request-inspector.css`         | The request inspector                                                            |
-| `run-timeline/`                 | Run timeline (3 parts)                                                           |
+| `run-timeline/`                 | Run timeline (5 parts)                                                           |
 | `running-job-button.css`        | A running-job button                                                             |
-| `segmented-toolbar/`            | Segmented control, filter chips, list toolbar, key line (2 parts)                |
+| `segmented-toolbar/`            | Segmented control, filter chips, list toolbar, key line (3 parts)                |
 | `sentence-form.css`             | Sentence form                                                                    |
-| `sequencer.css`                 | The editable timeline                                                            |
+| `sequencer/`                    | The editable timeline (2 parts)                                                  |
 | `accept-follows.css`            | The line that says why a quantity-following button is off                        |
 | `segmented-link.css`            | Chips tied to a field                                                            |
 | `attention-more.css`            | The attention band's cap                                                         |
@@ -170,20 +170,20 @@ concatenates that file into `css/themes.css`.
 | `page-header-updated.css`       | The page header's updated line                                                   |
 | `quantity-fill.css`             | A quantity that fills its cell                                                   |
 | `row-editor.css`                | The repeating row editor                                                         |
-| `share-bar.css`                 | Share bar                                                                        |
+| `share-bar/`                    | Share bar (2 parts)                                                              |
 | `shortcut-engine.css`           | The shortcut engine's parts                                                      |
 | `showing-data.css`              | Showing data                                                                     |
-| `sidenav/`                      | Side navigation (3 parts)                                                        |
-| `slider.css`                    | Slider                                                                           |
-| `small-patterns.css`            | The small patterns                                                               |
+| `sidenav/`                      | Side navigation (5 parts)                                                        |
+| `slider/`                       | Slider (2 parts)                                                                 |
+| `small-patterns/`               | The small patterns (2 parts)                                                     |
 | `snooze-picker.css`             | Snooze picker                                                                    |
 | `state-plate.css`               | The plate an empty or failed area is drawn with                                  |
 | `state-plates-last-layer.css`   | State plates in the last layer                                                   |
 | `state-word.css`                | A state word that keeps its width                                                |
 | `status-rows.css`               | Status rows                                                                      |
-| `step-list.css`                 | Step list                                                                        |
+| `step-list/`                    | Step list (2 parts)                                                              |
 | `switch.css`                    | Switch                                                                           |
-| `tabbar.css`                    | Bottom tab bar                                                                   |
+| `tabbar/`                       | Bottom tab bar (2 parts)                                                         |
 | `table.css`                     | Table                                                                            |
 | `tabs.css`                      | Tabs                                                                             |
 | `theme-menu.css`                | The theme menu                                                                   |
@@ -191,7 +191,7 @@ concatenates that file into `css/themes.css`.
 | `ticking-number.css`            | A number that ticks to its new value                                             |
 | `tiles.css`                     | Tiles of one height                                                              |
 | `time-chart.css`                | Time chart                                                                       |
-| `time-field.css`                | A field for a time of day                                                        |
+| `time-field/`                   | A field for a time of day (2 parts)                                              |
 | `toast.css`                     | Toast                                                                            |
 | `toggle-button.css`             | Toggle button                                                                    |
 | `touch-target.css`              | Touch target                                                                     |
@@ -199,19 +199,19 @@ concatenates that file into `css/themes.css`.
 | `tree-reorder-split.css`        | Tree, reorder and split pane                                                     |
 | `typed-confirmation.css`        | Typed confirmation                                                               |
 | `typed-tile-name.css`           | The typed part of a tile's name                                                  |
-| `unsaved-bar.css`               | Unsaved-changes bar                                                              |
+| `unsaved-bar/`                  | Unsaved-changes bar (2 parts)                                                    |
 | `upload-wizard.css`             | Upload and wizard                                                                |
-| `uptime-strip.css`              | Uptime strip                                                                     |
-| `used-by.css`                   | "Used by"                                                                        |
+| `uptime-strip/`                 | Uptime strip (2 parts)                                                           |
+| `used-by/`                      | "Used by" (2 parts)                                                              |
 | `usual-picker.css`              | A picker with the usual on top                                                   |
 | `version-jump.css`              | Version jump chip                                                                |
 | `viewer.css`                    | The viewer shell                                                                 |
 | `visual-timer.css`              | Visual timer                                                                     |
-| `week-agenda/`                  | Week agenda (2 parts)                                                            |
+| `week-agenda/`                  | Week agenda (3 parts)                                                            |
 | `weekday-picker.css`            | Weekday picker                                                                   |
-| `wheel.css`                     | A wheel that picks                                                               |
+| `wheel/`                        | A wheel that picks (2 parts)                                                     |
 | `who-brings.css`                | Who brings it                                                                    |
-| `who-can-come.css`              | Who can come                                                                     |
+| `who-can-come/`                 | Who can come (2 parts)                                                           |
 
 ## css/registers/
 
@@ -254,7 +254,7 @@ Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert.css`, `ba
 
 Theme-wide: `base.css`, `motion/`, `properties.css`, `signature.css`, `tokens/`.
 
-Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert/`, `badge.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `combobox.css`, `command-block.css`, `compare-slider.css`, `conversation.css`, `datatable/`, `dialog/`, `facet-list.css`, `focus-steps.css`, `form-field/`, `forms.css`, `gallery.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `kitchen-timers.css`, `menu-button.css`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `progress-spinner-skeleton/`, `quote-card.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `state-word/`, `status-rows.css`, `step-list.css`, `switch.css`, `tabbar.css`, `tabs.css`, `time-field.css`, `toast.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`.
+Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert/`, `badge.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `combobox.css`, `command-block.css`, `compare-slider.css`, `conversation.css`, `datatable/`, `dialog/`, `facet-list.css`, `focus-steps.css`, `form-field/`, `forms.css`, `gallery.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `kitchen-timers.css`, `menu-button.css`, `meter/`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `progress-spinner-skeleton/`, `quote-card.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `state-word/`, `status-rows.css`, `step-list.css`, `switch.css`, `tabbar.css`, `tabs.css`, `time-field.css`, `toast.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`.
 
 ### deco
 
@@ -266,7 +266,7 @@ Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bu
 
 Theme-wide: `base.css`, `motion/`, `properties.css`, `tokens/`.
 
-Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert.css`, `auto-refresh.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `combobox/`, `compare-slider.css`, `datatable.css`, `dialog.css`, `drawer-tour/`, `facet-list.css`, `form-field/`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `kitchen-timers.css`, `menu-button/`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover.css`, `progress-spinner-skeleton/`, `question-card.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `showing-data.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `state-word.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `tiles.css`, `time-chart/`, `toast/`, `tree-reorder-split/`, `typed-confirmation.css`, `upload-wizard/`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `weekday-picker.css`, `wheel.css`.
+Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert.css`, `auto-refresh.css`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `combobox/`, `compare-slider.css`, `datatable.css`, `dialog.css`, `drawer-tour/`, `facet-list.css`, `form-field/`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-figures/`, `kitchen-timers.css`, `menu-button/`, `meter/`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover.css`, `progress-spinner-skeleton/`, `question-card.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `showing-data.css`, `sidenav/`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `state-word.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `tiles.css`, `time-chart/`, `toast/`, `tree-reorder-split/`, `typed-confirmation.css`, `upload-wizard/`, `uptime-strip.css`, `usual-picker.css`, `visual-timer.css`, `weekday-picker.css`, `wheel.css`.
 
 ### formal
 
@@ -290,7 +290,7 @@ Components: `action-columns.css`, `action-tiles.css`, `alarm/`, `alert.css`, `au
 
 Theme-wide: `base.css`, `motion/`, `properties.css`, `tokens/`.
 
-Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block.css`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `conversation.css`, `countdown.css`, `dialog/`, `facet-list.css`, `focus-steps.css`, `form-field/`, `form-grid.css`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-value-grid.css`, `kitchen-timers.css`, `meter.css`, `month-heatmap.css`, `navbar/`, `page-header/`, `pipeline.css`, `popover.css`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `state-plate.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `toast/`, `tree-reorder-split.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `wheel.css`.
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block.css`, `command-block.css`, `command-palette.css`, `compare-slider.css`, `conversation.css`, `countdown.css`, `dialog/`, `facet-list.css`, `focus-steps.css`, `form-field/`, `form-grid.css`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-value-grid.css`, `kitchen-timers.css`, `meter/`, `month-heatmap.css`, `navbar/`, `page-header/`, `pipeline.css`, `popover.css`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar.css`, `sidenav/`, `small-patterns/`, `state-plate.css`, `status-rows/`, `step-list.css`, `switch.css`, `tabbar.css`, `toast/`, `tree-reorder-split.css`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `wheel.css`.
 
 ### synthwave
 
@@ -302,4 +302,4 @@ Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `at
 
 Theme-wide: `base/`, `motion/`, `properties.css`, `tokens/`.
 
-Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `command-palette.css`, `compare-slider.css`, `countdown.css`, `datatable/`, `dialog/`, `focus-steps.css`, `form-field/`, `form-grid/`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-value-grid/`, `kitchen-timers.css`, `meter.css`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover/`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar/`, `sidenav.css`, `slider.css`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `status-rows.css`, `step-list.css`, `switch.css`, `tabbar.css`, `table/`, `tabs.css`, `time-field.css`, `toast/`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`.
+Components: `action-columns.css`, `action-tiles.css`, `alarm.css`, `alert/`, `bullet-rows.css`, `button/`, `card/`, `checklist-sink.css`, `code-block/`, `command-palette.css`, `compare-slider.css`, `countdown.css`, `datatable/`, `dialog/`, `focus-steps.css`, `form-field/`, `form-grid/`, `forms.css`, `graph/`, `heat-grid.css`, `identity-mark.css`, `key-value-grid/`, `kitchen-timers.css`, `meter/`, `month-heatmap/`, `navbar/`, `page-header/`, `pipeline.css`, `popover/`, `progress-spinner-skeleton/`, `quantity.css`, `range-picker.css`, `request-inspector.css`, `run-timeline/`, `segmented-toolbar/`, `share-bar/`, `sidenav.css`, `slider.css`, `small-patterns/`, `snooze-picker.css`, `state-plate.css`, `status-rows.css`, `step-list.css`, `switch.css`, `tabbar.css`, `table/`, `tabs.css`, `time-field.css`, `toast/`, `typed-confirmation.css`, `upload-wizard.css`, `uptime-strip.css`, `visual-timer.css`, `week-agenda.css`, `weekday-picker.css`, `wheel.css`.

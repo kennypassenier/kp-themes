@@ -1,0 +1,150 @@
+/* @part: rating: The star rating */
+    /* --- The star rating [kpadopt6] -------------------------------------------
+ * `.kp-rating[data-kp-rating]` (js/rating.js): a row of stars that is a radio group, and the same row read only. One accent
+ * colour, never red or green; an unrated row is outlined and says so in words. Whole stars (Kenny, 2026-10-17: five whole
+ * stars), 44 px to touch in an input, 56 px each and filling the width on a phone (the input measures its own width, so a
+ * phone-wide box answers like a phone). Knobs [KT6]: --kp-rating-star (the glyph, 1.75rem), --kp-rating-hit (the touch
+ * square, 2.75rem), --kp-rating-ink (the lit star, the accent), --kp-rating-empty (the outline), --kp-rating-stroke (its
+ * width, 1.5), --kp-rating-gap (between stars). The words keep their line, so a value arriving moves nothing. */
+    .kp-rating {
+        --kp-rating-ink: var(--primary);
+        --kp-rating-empty: var(--muted-foreground);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-rating--input {
+        container: kp-rating / inline-size;
+        display: block;
+        inline-size: 100%;
+    }
+
+    .kp-rating--display {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .kp-rating__body {
+        display: grid;
+        justify-items: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    /* The input is as wide as its row of stars (and no narrower than its longest word): words wrap under the row. */
+    .kp-rating--input .kp-rating__body {
+        inline-size: min-content;
+    }
+
+    .kp-rating--display .kp-rating__body {
+        grid-auto-flow: column;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-rating--sm {
+        --kp-rating-star: 1rem;
+        --kp-rating-hit: 2rem;
+    }
+
+    .kp-rating--lg {
+        --kp-rating-star: 2.25rem;
+        --kp-rating-hit: 3.5rem;
+    }
+
+    /* The words and Clear share one line, kept in every state, so a rating arriving or going moves nothing under it. */
+    .kp-rating__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-rating--input .kp-rating__foot {
+        min-block-size: 2rem;
+    }
+
+    .kp-rating--display .kp-rating__foot {
+        inline-size: auto;
+    }
+
+    .kp-rating__clear[data-kp-off] {
+        visibility: hidden;
+    }
+
+    .kp-rating__row {
+        display: flex;
+        gap: var(--kp-rating-gap, 0);
+    }
+
+    .kp-rating__row[hidden],
+    .kp-rating__foot[hidden],
+    .kp-rating__failure[hidden],
+    .kp-rating__flash[hidden],
+    .kp-rating__reason[hidden],
+    .kp-rating__actions[hidden],
+    .kp-rating__actions > [hidden] {
+        display: none;
+    }
+
+    .kp-rating__row:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-rating__star {
+        display: grid;
+        place-items: center;
+        flex: none;
+        inline-size: var(--kp-rating-hit, 2.75rem);
+        block-size: var(--kp-rating-hit, 2.75rem);
+        color: var(--kp-rating-ink);
+        cursor: pointer;
+    }
+
+    .kp-rating--display .kp-rating__star {
+        inline-size: var(--kp-rating-star, 1.25rem);
+        block-size: var(--kp-rating-star, 1.25rem);
+        cursor: default;
+    }
+
+    .kp-rating--display.kp-rating--md {
+        --kp-rating-star: 1.25rem;
+    }
+
+    .kp-rating__star:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-rating__star[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-rating__glyph {
+        position: relative;
+        display: grid;
+        inline-size: var(--kp-rating-star, 1.75rem);
+        block-size: var(--kp-rating-star, 1.75rem);
+        pointer-events: none;
+    }
+
+    .kp-rating__glyph > svg {
+        grid-area: 1 / 1;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-rating__empty path {
+        fill: none;
+        stroke: var(--kp-rating-empty);
+        stroke-width: var(--kp-rating-stroke, 1.5);
+        stroke-linejoin: round;
+    }
+

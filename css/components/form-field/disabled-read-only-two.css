@@ -1,0 +1,131 @@
+/* @part: form-field: Disabled and read-only are two promises and look like two . */
+    /* Disabled and read-only are two promises and look like two [gap-11].
+ * Disabled cannot be used: it fades and refuses the pointer. Read-only can
+ * be focused, selected and copied but not changed: it keeps full ink, so
+ * the value stays a value, and loses the editable look — a dashed
+ * boundary on the muted ground, a record rather than a box to type in.
+ * All three painted the same, and a reviewer typed into the read-only
+ * field and thought the page had frozen. `[readonly]` rather than
+ * `:read-only`, which also matches every <select>. */
+    .kp-field__input:disabled {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    .kp-field__input--multiline {
+        min-height: 5.5rem;
+        /* Several lines, so a text box and not a one-line control: it keeps
+     * block padding and the running text's line height [scope-80]. */
+        padding-block: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        line-height: var(--kp-line-height, 1.5);
+        /* Vertical only: a textarea dragged wider than its column breaks the
+     * layout it sits in, and nobody needs it. */
+        resize: vertical;
+    }
+
+    /* The box comes before its label, because that is the order it is read in
+ * and the order it is clicked in. The label's words sit on the box's centre,
+ * not on its baseline [scope-92]: a checkbox's baseline is its bottom edge,
+ * so baseline alignment put the words at the height of the box's bottom in
+ * every theme; and a register that draws its own box (appearance: none, a
+ * grid whose only child is the ::before tick) has no baseline until the
+ * tick exists, so the words rose by 2 to 6px when the box was ticked
+ * (cyberpunk, dark, brutalism, retro, titanium). Centring reads no
+ * baseline, so the state cannot move the words. */
+    .kp-field--check {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .kp-field--check .kp-field__label {
+        font-weight: 400;
+        /* Beside the box, and wrapping there: at its max-content width a long
+     * label went down to a line of its own, under the box, in every theme
+     * whose face is wide (cyberpunk, brutalism, deco, nostromo) [scope-92]. */
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+
+    .kp-field--check .kp-field__help,
+    .kp-field--check .kp-field__error {
+        /* Under both, not beside the label: an error squeezed into the gap
+     * next to a checkbox wraps to one word per line at 320 px [DI11]. */
+        flex-basis: 100%;
+    }
+
+    /* A radio group is a group: fieldset and legend, so the question is read
+ * before the answers rather than once per answer. */
+    .kp-fieldset {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-fieldset > legend {
+        padding: 0;
+    }
+
+    /* The same centre as a checkbox field's, for the same two reasons
+ * [scope-92]. */
+    .kp-field__option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: var(--kp-field-option-size, 0.875rem);
+    }
+
+    .kp-field__check {
+        /* 1.15rem rather than the browser default 13 px: the box is the
+     * target, and a target under 24 px fails WCAG 2.5.8 for anyone whose
+     * hands are not steady. The label is clickable too, which is what
+     * actually makes the target big enough. */
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        /* A knob: the browser paints the check and the radio dot in this
+     * colour, and a theme whose primary is its ink (brutalism, mono) gets
+     * a check that looks like an unchecked box. Those themes set it in
+     * css/_rules.css [KT8]. */
+        accent-color: var(--kp-control-accent, var(--primary));
+        flex: none;
+    }
+
+    /* The browser's margin on a radio is 3px above and none below, so a
+ * centred radio's box sat 1.5px above its words [scope-92]. Beside its
+ * words the control carries no margin across the line; the gap holds the
+ * two apart. A register that sets its own margin still wins. */
+    .kp-field--check > .kp-field__check,
+    .kp-field__option > .kp-field__check {
+        margin-block: 0;
+    }
+
+    /* The error text carries the message [DI4]; this only makes the control
+ * itself findable when the summary sends someone to it. A checkbox has no
+ * border to colour, so it is an outline. The child combinator keeps it on
+ * the checkbox that IS the field: the radios inside an invalid group were
+ * framed one by one, a square frame around every round control, which
+ * read as several wrong answers rather than one [gap-11]. */
+    .kp-field--invalid > .kp-field__check {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: 2px;
+    }
+
+    /* An invalid radio group is one wrong answer, so it carries one mark:
+ * an outline around the whole group, legend and options together
+ * [gap-11]. An outline rather than a border, because a register that
+ * frames its fieldsets sets the border in a later layer and would
+ * silently take the mark away. Either spelling counts: the attribute on
+ * the group, or the group inside an invalid field. */
+    .kp-fieldset[aria-invalid='true'],
+    .kp-field--invalid > .kp-fieldset {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: var(--kp-fieldset-invalid-offset, 0.375rem);
+    }
+

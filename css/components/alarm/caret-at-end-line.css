@@ -1,0 +1,229 @@
+/* @part: alarm: A caret at the end of the line: one character cell. A part a register */
+    .kp-alarm__char::before,
+    .kp-alarm__char::after {
+        content: none;
+    }
+
+    .kp-alarm__detail {
+        max-inline-size: 60ch;
+        margin: 0;
+        color: var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        font-family: var(--theme-font-mono, monospace);
+        font-size: clamp(0.85rem, 1.9cqi, 1.35rem);
+        line-height: 1.45;
+        text-wrap: pretty;
+    }
+
+    /* A caret at the end of the line: one character cell. A part a register
+     * opts into with display: inline-block [scope-98]. */
+    .kp-alarm__detail::after {
+        content: '';
+        display: none;
+        inline-size: 0.6em;
+        block-size: 1.05em;
+        margin-inline-start: 0.2em;
+        vertical-align: text-bottom;
+        background: currentColor;
+    }
+
+    .kp-alarm__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem 1rem;
+        margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+        font-size: 0.8rem;
+    }
+
+    .kp-alarm__hint {
+        font-family: var(--theme-font-mono, monospace);
+        letter-spacing: 0.08em;
+    }
+
+    /* The one way out: a .kp-button, so the register keeps its button's
+     * shape (a notch, a radius, a bevel); the paint is the alarm's, and every
+     * register restates it, because each repaints its buttons in the later
+     * layer. */
+    .kp-alarm__ack {
+        min-inline-size: 14rem;
+        border: 2px solid var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        background: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+        color: var(--kp-alarm-on-ink, hsl(from var(--destructive) h s 6%));
+        font-family: var(--theme-font-mono, monospace);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__ack:is(:hover, :focus-visible) {
+        background: var(--kp-alarm-on-ink, hsl(from var(--destructive) h s 6%));
+        color: var(--kp-alarm-ink, hsl(from var(--destructive) h s max(l, 60)));
+    }
+
+    .kp-alarm :is(.kp-alarm__ack, .kp-alarm__keep):focus-visible {
+        outline: 3px solid var(--kp-alarm-soft, hsl(from var(--destructive) h calc(s * 0.4) 86));
+        outline-offset: 4px;
+    }
+
+    .kp-alarm__countdown {
+        display: grid;
+        gap: 0.5rem;
+        justify-items: center;
+        inline-size: min(100%, 36rem);
+        margin-block-start: clamp(0.5rem, 2cqi, 1.5rem);
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .kp-alarm__track {
+        display: block;
+        inline-size: 100%;
+        block-size: 0.375rem;
+        background: color-mix(in srgb, currentColor 22%, transparent);
+    }
+
+    /* The bar reads as time running out: it shrinks towards the start. Under
+     * reduced motion it steps a whole second at a time. */
+    .kp-alarm__fill {
+        display: block;
+        block-size: 100%;
+        background: currentColor;
+        transform: scaleX(var(--kp-alarm-left-step, 1));
+        transform-origin: left center;
+    }
+
+    .kp-alarm__keep {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+    }
+
+    .kp-alarm:not([data-kp-alarm-mode='auto']) .kp-alarm__countdown,
+    .kp-alarm[data-kp-alarm-mode='auto'] .kp-alarm__actions {
+        display: none;
+    }
+
+    /* Motion, only when the reader has not asked for less, and never on a
+     * held-open frame marked still. The default arrives whole [scope-98]; the
+     * budget per one-second window (WCAG 2.3.1 allows three flashes; each
+     * keyframe has its row in TIMINGS in js/effects.js):
+     *   kp-alarm-ground-in    the plate, 0 -> 1, once
+     *   kp-alarm-settle       the panel, 0 -> 1 with a rise and a scale, once
+     *   kp-alarm-arrive       the headline, whole, 0 -> 1 from a larger size, once
+     *   kp-alarm-detail-in    the reason, 0 -> 1, once
+     *   kp-alarm-pulse        one half-cycle of the glow per 1.4 s
+     * The glitch keyframes below (jitter, slice-in, slice,
+     * decode-letter, decode-noise, caret, march, sweep) run only where a
+     * register names them. Under reduced motion nothing runs: the words are
+     * there at once, and the drama is the plate, the glow at full strength,
+     * the frame and the size. The rendered frames are measured in
+     * tests/alarm.spec.mjs. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-alarm-ground-in 240ms ease-out both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still'])::after {
+            animation: kp-alarm-pulse 1400ms ease-in-out infinite alternate;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-alarm-settle 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title {
+            animation: kp-alarm-arrive 480ms 120ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            animation: kp-alarm-detail-in 300ms 360ms ease-out both;
+        }
+
+        .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__fill {
+            transform: scaleX(var(--kp-alarm-left, 1));
+            transition: transform 100ms linear;
+        }
+    }
+
+    @keyframes kp-alarm-settle {
+        0% {
+            opacity: 0;
+            translate: 0 1.25rem;
+            scale: 0.98;
+        }
+        100% {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-alarm-arrive {
+        0% {
+            opacity: 0;
+            scale: 1.06;
+        }
+        100% {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-alarm-ground-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-pulse {
+        0% {
+            opacity: 0.4;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-jitter {
+        0%,
+        94% {
+            opacity: 1;
+            translate: 0 0;
+        }
+        95% {
+            opacity: 0.6;
+            translate: -0.03em 0;
+        }
+        97% {
+            opacity: 1;
+            translate: 0.02em 0;
+        }
+        99% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-alarm-slice-in {
+        0% {
+            clip-path: inset(10% 0 72% 0);
+        }
+        20% {
+            clip-path: inset(62% 0 22% 0);
+        }
+        40% {
+            clip-path: inset(34% 0 52% 0);
+        }
+        60% {
+            clip-path: inset(80% 0 6% 0);
+        }
+        80%,
+        100% {
+            clip-path: inset(50% 0 50% 0);
+        }
+    }
+

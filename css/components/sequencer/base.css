@@ -1,0 +1,210 @@
+/* @part: sequencer: The editable timeline */
+    /* --- The editable timeline [timeline-1029] (js/sequencer.js) ---
+     * The host is `.kp-gantt`: its frame, axis, lanes, rules, line for now, plate and busy card are the run timeline's own, and a bar is
+     * `.kp-gantt__run` (state ok, a series per lane), so every register that dresses the gantt dresses this too. What is its own: the
+     * bars stand in ONE layer over the lanes (so a bar that changes lane is never taken out of the document under the pointer), the
+     * handles at a bar's two edges, the joins between items that run alongside, the line where the plan ends, the guide an edge
+     * snaps to, the chip that follows a drag and the selection line. A state is never colour alone: the picked-up bar is dashed, the
+     * dragged one solid and raised, a refused one dashed and faded, a join is a line with a dot at each end.
+     * Knobs [KT6]: `--kp-sequencer-label-width` (8rem, the lane names; 5.5rem in a box under 32rem), `--kp-sequencer-min-width` (26rem, the
+     * plot at zoom 1 is never narrower: the frame scrolls sideways instead), `--kp-sequencer-handle` (0.625rem, the grip at a bar's edge;
+     * 1rem for a finger). */
+    .kp-sequencer {
+        --kp-gantt-row: 2.75rem;
+        --kp-gantt-bar: 2.25rem;
+        position: relative;
+    }
+
+    /* The frame is never shorter than the state plate needs, loaded or not, so loading, empty and failed are as tall as the plan. */
+    .kp-sequencer .kp-gantt__frame {
+        min-block-size: var(--kp-sequencer-floor, var(--kp-stateplate-floor, 12rem));
+    }
+
+    .kp-sequencer__bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: 2rem;
+    }
+
+    .kp-sequencer__bar[hidden],
+    .kp-sequencer__hint[hidden],
+    .kp-sequencer__selection[hidden],
+    .kp-sequencer__actions > [hidden],
+    .kp-sequencer__guide[hidden],
+    .kp-sequencer__readout[hidden],
+    .kp-sequencer__end[hidden] {
+        display: none;
+    }
+
+    .kp-sequencer__zoom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-sequencer__zoom > .kp-button[aria-disabled='true'] {
+        opacity: 0.5;
+        cursor: default;
+    }
+
+    .kp-sequencer__zoomvalue {
+        min-inline-size: 4ch;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-sequencer__total {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        text-align: end;
+    }
+
+    /* The plot is as wide as the box at zoom 1 (and never under --kp-sequencer-min-width), times the zoom; wider than the box, the frame
+     * scrolls sideways and the lane names stay at the start edge. A finger pans along both axes, so the page still scrolls over it. */
+    .kp-sequencer .kp-gantt__scroll {
+        max-block-size: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: none;
+        touch-action: pan-x pan-y;
+    }
+
+    .kp-sequencer__body {
+        --kp-sequencer-label: var(--kp-sequencer-label-width, 8rem);
+        inline-size: max-content;
+        min-inline-size: 100%;
+        grid-template-columns: var(--kp-sequencer-label) calc(var(--kp-tl-zoom, 1) * max(var(--kp-sequencer-min-width, 26rem), 100cqi - var(--kp-sequencer-label) - 2px));
+    }
+
+    @container kp-gantt (max-width: 32rem) {
+        .kp-sequencer__body {
+            --kp-sequencer-label: min(var(--kp-sequencer-label-width, 8rem), 5.5rem);
+        }
+    }
+
+    .kp-sequencer :is(.kp-gantt__lane, .kp-gantt__corner) {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 4;
+        background: var(--card);
+    }
+
+    .kp-sequencer .kp-gantt__corner {
+        z-index: 5;
+        min-inline-size: 0;
+    }
+
+    .kp-sequencer .kp-gantt__lines,
+    .kp-sequencer__plot {
+        position: relative;
+        inset-block-start: auto;
+        block-size: auto;
+        align-self: stretch;
+    }
+
+    .kp-sequencer__plot {
+        z-index: 2;
+    }
+
+    .kp-sequencer__items {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: relative;
+        z-index: 1;
+        min-inline-size: 0;
+        pointer-events: none;
+    }
+
+    .kp-sequencer__measure,
+    .kp-sequencer__probe {
+        position: absolute;
+        inset: 0 auto auto 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .kp-sequencer__measure {
+        display: block;
+        box-sizing: border-box;
+        overflow: hidden;
+        font-size: 0.6875rem;
+        line-height: 1.15;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    .kp-sequencer__ruler {
+        display: inline-block;
+        overflow: visible;
+        white-space: nowrap;
+        line-height: var(--kp-gantt-bar, 2.25rem);
+    }
+
+    /* A name wraps inside its bar (two lines are what the bar is tall for) before it goes outside; it is never cut. */
+    .kp-sequencer__item > .kp-gantt__label {
+        display: grid;
+        align-content: center;
+        box-sizing: border-box;
+        block-size: 100%;
+        line-height: 1.15;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    .kp-sequencer__probe {
+        inline-size: var(--kp-gantt-pad);
+        block-size: var(--kp-gantt-row, 1.75rem);
+    }
+
+    .kp-sequencer .kp-gantt__run.kp-sequencer__item,
+    .kp-sequencer .kp-gantt__outside.kp-sequencer__outside {
+        inset-block-start: calc(
+            var(--kp-tl-top, 0px) + var(--kp-gantt-pad) + var(--kp-tl-line, 0) * var(--kp-gantt-row, 1.75rem) +
+                (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) / 2
+        );
+    }
+
+    .kp-sequencer .kp-gantt__run.kp-sequencer__item {
+        pointer-events: auto;
+        touch-action: none;
+        cursor: grab;
+        user-select: none;
+        overflow: hidden;
+    }
+
+    .kp-sequencer[data-kp-sequencer-editable='off'] .kp-gantt__run.kp-sequencer__item {
+        cursor: pointer;
+    }
+
+    .kp-sequencer__item[data-kp-locked] {
+        cursor: not-allowed;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sequencer .kp-gantt__run.kp-sequencer__item,
+        .kp-sequencer .kp-gantt__outside.kp-sequencer__outside {
+            transition:
+                inset-inline-start var(--fx-duration, 150ms) var(--fx-ease, ease),
+                inline-size var(--fx-duration, 150ms) var(--fx-ease, ease),
+                inset-block-start var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+
+        .kp-sequencer .kp-gantt__run.kp-sequencer__item[data-kp-dragging] {
+            transition: none;
+        }
+
+        .kp-sequencer__join {
+            transition:
+                inset-inline-start var(--fx-duration, 150ms) var(--fx-ease, ease),
+                inset-block-start var(--fx-duration, 150ms) var(--fx-ease, ease),
+                block-size var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+

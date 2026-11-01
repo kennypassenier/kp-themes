@@ -1,0 +1,155 @@
+/* @part: unsaved-bar: At the foot of the screen: the theme's raised plate, centred. */
+    /* At the foot of the screen: the theme's raised plate, centred. */
+    .kp-unsaved[data-kp-docked] > .kp-unsaved__bar {
+        position: fixed;
+        z-index: var(--kp-z-sticky, 40);
+        inset-inline: 0;
+        inset-block-end: max(var(--kp-unsaved-dock-offset, var(--kp-space-md, 1rem)), env(safe-area-inset-bottom, 0px));
+        box-sizing: border-box;
+        inline-size: min(var(--kp-unsaved-dock-width, 40rem), calc(100vw - 1rem));
+        margin-inline: auto;
+        justify-content: space-between;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--foreground));
+        box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    .kp-unsaved[data-kp-docked='container'] > .kp-unsaved__bar {
+        position: absolute;
+    }
+
+    /* What was refused: an alert under the bar in the header, over it at the foot. */
+    .kp-unsaved__problem {
+        position: absolute;
+        z-index: calc(var(--kp-z-sticky, 40) + 1);
+        inset-block-start: calc(100% + var(--kp-space-sm, 0.5rem));
+        inset-inline-end: 0;
+        inline-size: min(26rem, calc(100vw - 1rem));
+    }
+
+    .kp-unsaved[data-kp-docked] > .kp-unsaved__problem {
+        position: fixed;
+        inset-block: auto calc(var(--kp-unsaved-dock-offset, var(--kp-space-md, 1rem)) + 4.5rem);
+        inset-inline: 0;
+        inline-size: min(var(--kp-unsaved-dock-width, 40rem), calc(100vw - 1rem));
+        margin-inline: auto;
+    }
+
+    .kp-unsaved[data-kp-docked='container'] > .kp-unsaved__problem {
+        position: absolute;
+    }
+
+    .kp-unsaved__alert {
+        align-items: flex-start;
+    }
+
+    .kp-unsaved__alert-title {
+        display: block;
+    }
+
+    .kp-unsaved__alert-list {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding-inline-start: 1.25rem;
+        overflow-wrap: anywhere;
+    }
+
+    /* The list of changes, on the popover plate. */
+    .kp-popover.kp-unsaved__panel {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-unsaved-panel-width, 26rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        overflow: visible;
+    }
+
+    .kp-unsaved__panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-unsaved__panel-title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-unsaved__entries {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-block-size: 18rem;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        list-style: none;
+    }
+
+    .kp-unsaved__entry {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        row-gap: 0.125rem;
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-unsaved__entry:first-child {
+        border-block-start: 0;
+    }
+
+    .kp-unsaved__jump {
+        grid-column: 1;
+        justify-self: start;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-align: start;
+        text-decoration: underline dotted;
+        text-underline-offset: 0.2em;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-unsaved__jump:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-unsaved__diff {
+        grid-column: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-unsaved__was {
+        color: var(--muted-foreground);
+    }
+
+    .kp-unsaved__arrow {
+        color: var(--muted-foreground);
+    }
+
+    .kp-unsaved__now {
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .kp-unsaved__revert {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+

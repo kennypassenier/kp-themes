@@ -1,0 +1,216 @@
+/* @part: action-columns: align-pkg-1019:action-lead:end */
+    .kp-action-list--lead > li > .kp-action-list__lead {
+        align-items: center;
+        min-block-size: var(--kp-action-list-band);
+    }
+
+    .kp-action-list--lead > li > .kp-action-list__main > .kp-action-list__title {
+        padding-block-start: calc((var(--kp-action-list-band) - 1lh) / 2);
+    }
+
+    .kp-action-list--lead > li > .kp-row-actions {
+        align-self: start;
+        min-block-size: var(--kp-action-list-band);
+    }
+    /* align-pkg-1019:action-lead:end */
+
+    .kp-action-list__main {
+        display: grid;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+    }
+
+    .kp-action-list__title {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-action-list__text {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-action-list__meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-action-list__meta > * {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* A dot after each part of the meta line that a plain part follows, kept
+     * with the part before it, so a line that wraps never starts with a dot;
+     * silent to a reader. Badges stand apart by their own plate. */
+    .kp-action-list__meta > :not(.kp-badge):has(+ :not(.kp-badge))::after {
+        content: '·' / '';
+        margin-inline-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The lead parts: an appointment's moment, the day over the hour. */
+    .kp-action-list__when {
+        display: grid;
+        justify-items: center;
+        line-height: 1.25;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-action-list__when > :first-child {
+        font-weight: 600;
+    }
+
+    .kp-action-list__when > :last-child:not(:first-child) {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* A payload under the row, folded: the bare accordion item. */
+    .kp-action-list__more > summary {
+        inline-size: fit-content;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        cursor: pointer;
+    }
+
+    .kp-action-list__more > summary:hover {
+        color: var(--foreground);
+    }
+
+    .kp-action-list__payload {
+        box-sizing: border-box;
+        max-block-size: var(--kp-action-list-payload-max, 16rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+        overflow: auto;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-xs, 0.75rem);
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    /* A heading row across the list. */
+    .kp-action-list > li.kp-action-list__group {
+        display: block;
+        padding-block: var(--kp-space-md, 1rem) var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-action-list__group > :is(h2, h3, h4, h5, h6) {
+        margin: 0;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+    }
+
+    /* The row's state: a bar along the start edge (reserved by every row),
+     * a quieter ink for what is over. */
+    .kp-action-list--lead > li[data-kp-state='new'] {
+        border-inline-start-color: var(--primary);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='active'] {
+        border-inline-start-color: var(--info-foreground);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='warn'] {
+        border-inline-start-color: var(--warning-foreground);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='failed'] {
+        border-inline-start-color: var(--destructive);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='next'] {
+        border-inline-start-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) var(--kp-action-list-next-wash, 6%), transparent);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead {
+        color: var(--primary);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead .kp-action-list__when > :last-child {
+        color: inherit;
+    }
+
+    .kp-action-list--lead > li:is([data-kp-state='done'], [data-kp-state='past']) :is(.kp-action-list__lead, .kp-action-list__title) {
+        color: var(--muted-foreground);
+    }
+
+    .kp-action-list--lead > li:is([data-kp-state='done'], [data-kp-state='past']) .kp-action-list__title {
+        font-weight: 500;
+    }
+
+    /* A row at work (setRowBusy, js/actions.js): its buttons say no to a
+     * press, and the pressed one shows the theme's spinner in place of its
+     * words, which keep their room, so no column moves. */
+    .kp-row-actions > [data-kp-busy] {
+        position: relative;
+    }
+
+    .kp-row-actions > [data-kp-busy] > :not(.kp-button__busy) {
+        flex: none;
+        visibility: hidden;
+    }
+
+    /* The spinner's own box, laid over the words; the spinner in it is the
+     * theme's, as the register draws it. */
+    .kp-button__busy {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+    }
+
+    .kp-button__busy > .kp-spinner {
+        --kp-spinner-size: 1em;
+    }
+
+    .kp-action-list > li[aria-busy='true'] .kp-row-actions > [aria-disabled='true'] {
+        cursor: progress;
+    }
+
+    /* Rows the keyboard moves through (attachRowKeys): the focused row
+     * wears the ring. */
+    [data-kp-row-keys] > li:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+    }
+
+    /* On a narrow list the rows stay subgrids of the list, so the lead column
+     * is still one width for every row; the words take the rest of the row
+     * and the buttons go under both. */
+    @container kp-action-list (max-width: 30rem) {
+        .kp-action-list--lead > li {
+            grid-template-columns: subgrid;
+        }
+
+        .kp-action-list--lead > li > .kp-action-list__lead {
+            grid-row: 1;
+        }
+
+        .kp-action-list--lead > li > .kp-action-list__main {
+            grid-column: 2 / -1;
+        }
+
+        .kp-action-list.kp-action-list--lead > li > .kp-row-actions {
+            grid-column: 1 / -1;
+        }
+    }
+

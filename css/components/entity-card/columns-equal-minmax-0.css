@@ -1,0 +1,193 @@
+/* @part: entity-card: The columns are equal (`minmax(0, 1fr)`), */
+    /* [entity-actions-equal-1019] The columns are equal (`minmax(0, 1fr)`),
+ * so the same action is one width on every card; `min-content` let a track
+ * grow with its words ("Recheck this profile" against "Try a translation")
+ * and the columns of one card differ from the next's (http-switchboard 33).
+ * A button whose longest word does not fit its column goes into "More" for
+ * the whole grid (fitActions in js/entity-card.js), as one that ran past the
+ * card's edge did. */
+    .kp-entity__actions {
+        display: grid !important;
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+        padding-block-start: var(--kp-entity-actions-gap, var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-entity__actions > :is(.kp-button, .kp-menu-button, .kp-reason),
+    .kp-entity__tick,
+    .kp-entity__star,
+    .kp-entity__description > .kp-entity__retry,
+    .kp-entity__more-flags {
+        position: relative;
+        z-index: 1;
+    }
+
+    .kp-entity__actions .kp-button,
+    .kp-entity__actions .kp-menu-button {
+        inline-size: 100%;
+    }
+
+    .kp-entity__actions .kp-button {
+        overflow-wrap: normal;
+    }
+
+    /* A long label wraps onto a second line in its button, so every button of
+ * the row takes the row's height, and the buttons of the row stay level
+ * [entity-actions-equal-1019]. */
+    .kp-entity__actions > :is(.kp-button, .kp-menu-button) {
+        align-self: stretch;
+    }
+
+    .kp-entity__actions > .kp-menu-button {
+        display: grid;
+    }
+
+    .kp-entity__actions > .kp-entity__retry {
+        grid-column: 1 / -1;
+    }
+
+    .kp-entity__bone {
+        display: block;
+        inline-size: 70%;
+        block-size: 1rem;
+    }
+
+    .kp-card--ghost {
+        pointer-events: none;
+    }
+
+    /* --- The trend row: a line over the meters' columns --- */
+    .kp-entity__trend-line {
+        display: flex;
+        align-items: center;
+        min-inline-size: 0;
+    }
+
+    .kp-entity__trend-line > .kp-entity__none {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-entity__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: calc(var(--kp-entity-row, 1.5rem) - 0.25rem);
+        overflow: visible;
+        color: var(--kp-entity-spark, var(--chart-1));
+    }
+
+    .kp-entity__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-entity__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    /* --- The favourite star: a small square toggle at the end of the identity row, above the card's link --- */
+    .kp-card--entity .kp-button.kp-entity__star[data-kp-toggle] {
+        flex: none;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        min-block-size: 0;
+        padding: 0 !important;
+        color: var(--muted-foreground);
+    }
+
+    .kp-card--entity .kp-button.kp-entity__star[data-kp-toggle][aria-pressed='true'] {
+        color: var(--kp-toggle-on-ink, var(--background)) !important;
+    }
+
+    .kp-entity__star-glyph {
+        inline-size: 1.0625rem;
+        block-size: 1.0625rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.75;
+        stroke-linejoin: round;
+    }
+
+    .kp-entity__star[aria-pressed='true'] .kp-entity__star-glyph {
+        fill: currentColor;
+    }
+
+    /* --- The tile: four rows, one link over all of them --- */
+    .kp-entity-grid[data-kp-entity-kind='tile'] {
+        --kp-entity-min: 16rem;
+    }
+
+    .kp-card--entity[data-kp-entity-tile][data-kp-entity-tile] {
+        grid-template-rows: minmax(1.75rem, auto) auto minmax(var(--kp-entity-tile-body, 2.75rem), 1fr);
+        grid-auto-rows: auto;
+        align-content: stretch;
+    }
+
+    .kp-card--entity[data-kp-entity-tile]:has(a.kp-entity__name):hover {
+        border-color: var(--ring);
+    }
+
+    .kp-card--entity[data-kp-entity-tile]:has(a.kp-entity__name:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-card--entity[data-kp-entity-tile] a.kp-entity__name:focus-visible {
+        outline: none;
+    }
+
+    .kp-entity__external {
+        flex: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__tile-state {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-card--entity > .kp-entity__description,
+    .kp-card--entity > .kp-entity__lines {
+        align-items: flex-start;
+    }
+
+    .kp-entity__description {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__description > .kp-entity__retry {
+        flex: none;
+    }
+
+    .kp-entity__description:has(> .kp-entity__retry) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .kp-entity__tile-failed {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-card--entity > .kp-entity__lines {
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: 1lh;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-card--entity > .kp-entity__lines[hidden] {
+        display: none !important;
+    }
+
+    .kp-entity__line {
+        overflow-wrap: anywhere;
+    }

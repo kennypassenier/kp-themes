@@ -1,0 +1,131 @@
+/* @part: meter: signature layer; also menu-button */
+    [data-theme='dark'] .kp-menu__item--destructive {
+        color: var(--destructive);
+        box-shadow: inset 2px 0 0 var(--destructive);
+    }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1, while
+       loading 2 (round 4), how the share arrives 3 (round 4), when the tone
+       changes 3, the mark past the end 3]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise.
+       Redrawn on the grammar [Kenny, 2026-10-09]: loading is the comet, the
+       share is laid by the pass, a tone is the film gone coral. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='dark']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='dark']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='dark']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='dark']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── dark · the machined channel ──────────────────────────────── */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.625rem;
+        --kp-sig-meter-cut: 3px;
+        --kp-sig-meter-halo: var(--kp-meter-halo, var(--card));
+        border-radius: 0;
+        background:
+            linear-gradient(
+                    135deg,
+                    var(--kp-sig-meter-halo) 0 calc(50% - 0.7px),
+                    var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent 0
+                )
+                0 0 / var(--kp-sig-meter-cut) var(--kp-sig-meter-cut) no-repeat,
+            linear-gradient(
+                    -45deg,
+                    var(--kp-sig-meter-halo) 0 calc(50% - 0.7px),
+                    var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent 0
+                )
+                100% 100% / var(--kp-sig-meter-cut) var(--kp-sig-meter-cut) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) var(--kp-sig-meter-cut) 0 / calc(100% - var(--kp-sig-meter-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / calc(100% - var(--kp-sig-meter-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 var(--kp-sig-meter-cut) / 1px calc(100% - var(--kp-sig-meter-cut)) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px calc(100% - var(--kp-sig-meter-cut)) no-repeat,
+            var(--muted);
+    }
+
+    /* Bright machined metal, the oxide film along its top edge laid along
+       the whole scale. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset: 1px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 2px));
+        border-radius: 0;
+        background:
+            var(--kp-sig-dk-meter-film, linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4))) 0 0 /
+                calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 2px no-repeat,
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(
+            calc(var(--kp-sig-meter-cut) - 1px) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-meter-cut) + 1px),
+            calc(100% - var(--kp-sig-meter-cut) + 1px) 100%,
+            0 100%,
+            0 calc(var(--kp-sig-meter-cut) - 1px)
+        );
+    }
+

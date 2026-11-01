@@ -1,0 +1,190 @@
+/* @part: problem-alert: The problem alert */
+    /* --- The problem alert [kpadopt5] ---
+ * What is wrong, why, and what to do now, plus the fix. The parts are typography inside the theme's own alert plate:
+ * `.kp-alert__what` (the line the eye reads first), `__why`, `__remedy` (with `__remedy-label`, "What now", and a
+ * command in `__command` with its Copy), `__actions` (the fix, beside the text; under it on a narrow container). A
+ * container of several, `.kp-problems` (js/problems.js), takes no room when it holds none, lays them in one column
+ * worst first and, as `list` or from five folded, holds them in one alert (`__summary`, `__list`, `__item`). On a
+ * container, `data-kp-problem-layout="inline"` runs the three parts into one paragraph. A problem in the container wears
+ * the attention band's soft tint (`--kp-problem-tint`, 8 %) with the tone of its severity. Knobs [KT6]:
+ * `--kp-problem-gap` (--kp-space-sm), `--kp-problem-tint`, `--kp-problem-icon` (1.75rem). */
+    .kp-problems {
+        container: kp-problems / inline-size;
+        display: grid;
+        /* An inline-size container has no intrinsic width: in a start-aligned grid cell or a flex item it collapsed to a
+         * few pixels (round 1 of kpadopt5-basics). It always takes the width of the place it stands in. */
+        inline-size: 100%;
+        min-inline-size: 0;
+        gap: var(--kp-problem-gap, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-problems:not(:has(> *)) {
+        display: none;
+    }
+
+    /* The parts written straight in the alert (no `__body`) are the lines of one message: each takes a line of its own, as in the body.
+       As flex children of the row they stood side by side, each as wide as its words allowed, and broke per letter in a narrow
+       column [CHA 12]. */
+    .kp-alert:has(> :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy)) {
+        flex-wrap: wrap;
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-alert > :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy) {
+        flex: 1 1 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-alert__body {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-alert__what,
+    .kp-alert__why,
+    .kp-alert__remedy,
+    .kp-alert__summary {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-alert__what,
+    .kp-alert__summary {
+        font-weight: 600;
+    }
+
+    .kp-alert__remedy-label {
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+    }
+
+    .kp-alert__actions {
+        display: flex;
+        flex: none;
+        flex-wrap: wrap;
+        align-items: center;
+        align-self: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-alert__command {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-alert__code {
+        padding: 0.25rem var(--kp-space-sm, 0.5rem);
+        border-radius: var(--radius, 0.5rem);
+        background: color-mix(in oklab, currentColor 10%, transparent);
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        /* A command that does not fit on one line balances over its lines, so the break lands between words and not after the
+         * "--" of a flag [t56-words-1018]. */
+        text-wrap: balance;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-problem {
+        align-items: flex-start;
+    }
+
+    .kp-problem > .kp-alert__icon {
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-problem-icon, 1.75rem);
+        block-size: var(--kp-problem-icon, 1.75rem);
+        border-radius: 50%;
+        background: var(--kp-problem-tone, currentColor);
+        color: var(--kp-problem-on-tone, var(--background));
+        font-weight: 700;
+    }
+
+    .kp-problem > .kp-alert__body {
+        flex: 1 1 0;
+    }
+
+    .kp-problem > .kp-alert__actions {
+        align-self: center;
+    }
+
+    .kp-problems > .kp-problem {
+        border-color: color-mix(in oklab, var(--kp-problem-tone) 45%, var(--border));
+        background: color-mix(in oklab, var(--kp-problem-tone) var(--kp-problem-tint, 8%), var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-problem[data-kp-severity='critical'] {
+        --kp-problem-tone: var(--destructive);
+        --kp-problem-on-tone: var(--destructive-foreground);
+    }
+
+    .kp-problem[data-kp-severity='warning'] {
+        --kp-problem-tone: var(--warning-foreground);
+        --kp-problem-on-tone: var(--warning);
+    }
+
+    .kp-problem[data-kp-severity='info'] {
+        --kp-problem-tone: var(--info-foreground);
+        --kp-problem-on-tone: var(--info);
+    }
+
+    .kp-problems[data-kp-problem-layout='inline'] .kp-alert__body {
+        display: block;
+    }
+
+    .kp-problems[data-kp-problem-layout='inline'] :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy) {
+        display: inline;
+        margin-inline-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-alert__list {
+        display: grid;
+        gap: 0;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-alert__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding-block: var(--kp-space-sm, 0.5rem);
+        box-shadow: inset 0 1px 0 color-mix(in oklab, currentColor 18%, transparent);
+    }
+
+    .kp-alert__item[hidden] {
+        display: none;
+    }
+
+    .kp-alert__item > :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy) {
+        grid-column: 1;
+    }
+
+    .kp-alert__item > .kp-alert__actions {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+    }
+
+    /* align-pkg-1019:problems:start
+     * Alerts stacked in one container share their columns (icon, text, fix, close), so every alert's text ends on one
+     * edge and every fix starts on one edge: the alert's flex row gave each fix the width of its own button, and the text
+     * ended 56 px apart between "Run the backup now" and "Restart Alloy" (measure-align, homelab settings problems).
+     * Only where the alerts stand in rows (a container wider than 34rem; narrower they fold, the fix under the text) and
+     * only when some alert has a fix; the folded list alert keeps its own row. */
+    .kp-problems:has(> .kp-problem > .kp-alert__actions) {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .kp-problems:has(> .kp-problem > .kp-alert__actions):has(> .kp-problem > .kp-alert__close) {
+        grid-template-columns: auto minmax(0, 1fr) auto auto;
+    }
+
+    .kp-problems:has(> .kp-problem > .kp-alert__actions) > .kp-problem {
+        grid-column: 1 / -1;
+    }
+

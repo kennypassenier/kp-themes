@@ -1,0 +1,175 @@
+/* @part: slider: The bubble over a thumb, while it is dragged or has the focus. */
+    .kp-slider__tick {
+        position: absolute;
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at));
+        translate: -50% 0;
+        display: grid;
+        justify-items: center;
+        gap: 0.125rem;
+    }
+
+    .kp-slider__tick::before {
+        content: '';
+        inline-size: 1px;
+        block-size: 0.375rem;
+        background: var(--border-strong);
+    }
+
+    .kp-slider__tick-label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* The bubble over a thumb, while it is dragged or has the focus. */
+    .kp-slider__bubble {
+        position: absolute;
+        inset-block-end: calc(100% - 0.375rem);
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-0, 0));
+        translate: -50% 0;
+        box-sizing: border-box;
+        padding: 0.125rem 0.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--foreground));
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    .kp-slider__bubble[data-kp-thumb='1'] {
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-1, 1));
+    }
+
+    /* Where the number is shown is an option (`data-kp-slider-value`, stamped as `data-kp-slider-show`): the bubble only for
+     * `bubble` and `both`, the box only for `field` and `both`. The default is the box; the bubble is off [kpadopt5-r2]. */
+    .kp-slider:not([data-kp-slider-show='bubble'], [data-kp-slider-show='both']) .kp-slider__bubble,
+    .kp-slider:is([data-kp-slider-show='bubble'], [data-kp-slider-show='none']) .kp-slider__fields {
+        display: none;
+    }
+
+    .kp-slider[data-kp-dragging] .kp-slider__bubble,
+    .kp-slider:has(.kp-slider__input:focus-visible) .kp-slider__bubble {
+        visibility: visible;
+    }
+
+    /* The value box: a small field with the number, the unit after it; the width is the longest value's, so it never moves. */
+    .kp-slider__fields {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        block-size: var(--kp-slider-thumb);
+    }
+
+    .kp-slider__field-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-slider__field {
+        box-sizing: content-box;
+        inline-size: calc(var(--kp-slider-field-ch, 4) * 1ch);
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-slider__field[readonly] {
+        text-align: center;
+    }
+
+    .kp-slider__field[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    .kp-slider__unit,
+    .kp-slider__dash {
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-slider__why {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-slider__why[hidden] {
+        display: none;
+    }
+
+    .kp-slider__reason {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-slider__skeleton {
+        position: absolute;
+        inset: 0;
+        display: block;
+    }
+
+    .kp-slider__skeleton[hidden] {
+        display: none;
+    }
+
+    .kp-slider__bar {
+        --kp-skeleton-block: 100%;
+        block-size: 100%;
+        min-block-size: 0;
+    }
+
+    /* A vertical slider: the track stands up, the box goes under it. */
+    .kp-slider[data-kp-vertical] {
+        justify-items: start;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__body {
+        grid-template-columns: auto;
+        justify-items: start;
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__track {
+        inline-size: var(--kp-slider-thumb);
+        block-size: var(--kp-slider-length, 10rem);
+        margin: 0;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__input {
+        writing-mode: vertical-lr;
+        direction: rtl;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__rail {
+        inset-inline: auto;
+        inset-block: calc(var(--kp-slider-thumb) / 2);
+        inset-inline-start: 50%;
+        inline-size: var(--kp-slider-rail);
+        block-size: auto;
+        translate: -50% 0;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__fill {
+        inset-block: auto;
+        inset-inline: 0;
+        inset-block-end: calc(var(--kp-slider-from) * 100%);
+        block-size: calc((var(--kp-slider-to) - var(--kp-slider-from)) * 100%);
+        inline-size: auto;
+    }
+
+    @container kp-slider (max-width: 26rem) {
+        .kp-slider__body {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-slider__fields {
+            block-size: auto;
+            justify-content: flex-end;
+        }
+    }
+

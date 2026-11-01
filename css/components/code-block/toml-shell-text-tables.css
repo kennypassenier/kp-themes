@@ -1,0 +1,174 @@
+/* @part: code-block: TOML and shell text : tables and keywords, quoted text, numbers and fl */
+    /* TOML and shell text [wish-1028]: tables and keywords, quoted text, numbers and flags, comments, variables. */
+    .kp-code__section {
+        color: var(--kp-code-key, var(--primary));
+        font-weight: 700;
+    }
+
+    .kp-code__string {
+        color: inherit;
+    }
+
+    .kp-code__value,
+    .kp-code__var {
+        color: var(--kp-code-value, var(--info-foreground));
+    }
+
+    .kp-code__var {
+        font-style: italic;
+    }
+
+    .kp-code__comment {
+        color: var(--muted-foreground);
+        font-style: italic;
+    }
+
+    .kp-code__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-code__foot[hidden] {
+        display: none;
+    }
+
+    /* Empty, binary, failed: one sentence in the body's place, at its height. */
+    .kp-code__note {
+        box-sizing: border-box;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: calc(var(--kp-code-min-lines, 3) * 1.6em + 2 * var(--kp-space-md, 0.75rem));
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-code[data-kp-state='error'] .kp-code__note {
+        color: var(--foreground);
+    }
+
+    /* Empty and failed are the package plate in the body's place; the block is held at its loaded height (js/footprint.js) and the
+     * plate fills what the head leaves [states-check-1019]. */
+    .kp-code:is([data-kp-state='empty'], [data-kp-state='error']):not(.kp-code--cell) {
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .kp-code__plate {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+    }
+
+    @container kp-code (max-width: 30rem) {
+        .kp-code__head {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-code__tools {
+            justify-content: flex-start;
+            padding-block-end: 0.125rem;
+        }
+    }
+
+    /* --- The code block as a table cell [kpadopt5] ------------------------- */
+
+    /* `.kp-code--cell` (js/code.js): a payload in a table row. The words wrap, so
+     * a row never scrolls sideways; three lines show (`--kp-code-max-lines`), the
+     * fade says there is more, and the tools sit in a slim line under the text
+     * (Pretty and Raw for JSON, Copy), the title left out. Empty and binary are
+     * one muted line. The cell takes the width its column gives it, so folding
+     * and opening move nothing beside it. */
+    .kp-code--cell {
+        display: flex;
+        flex-direction: column;
+        inline-size: 100%;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-code--cell .kp-code__body {
+        order: 1;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-block-size: 0;
+        font-size: var(--kp-code-size, var(--kp-text-xs, 0.75rem));
+    }
+
+    .kp-code--cell .kp-code__foot {
+        order: 2;
+        padding-block: 0.125rem;
+    }
+
+    .kp-code--cell .kp-code__head {
+        order: 3;
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 0.125rem var(--kp-space-xs, 0.25rem) 0.125rem var(--kp-space-sm, 0.5rem);
+        border-block-end: 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-code--cell .kp-code__title {
+        display: none;
+    }
+
+    .kp-code--cell .kp-code__tools {
+        flex-wrap: wrap;
+    }
+
+    .kp-code--cell .kp-code__note--line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-block-size: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        background: transparent;
+        text-align: start;
+    }
+
+    .kp-code--cell:is([data-kp-state='empty'], [data-kp-state='binary'], [data-kp-state='loading']) .kp-code__head {
+        display: none;
+    }
+
+    @container kp-code (max-width: 24rem) {
+        .kp-code--cell .kp-code__head {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .kp-code__skeleton {
+        padding: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+    }
+
+    /* A cell that loads holds room for the busy card's panel [states-two-1019]. */
+    .kp-code--cell[data-kp-state='loading'] {
+        position: relative;
+    }
+
+    .kp-code--cell[data-kp-state='loading'] .kp-code__skeleton {
+        min-block-size: 6rem;
+    }
+
+    .kp-code__skeleton > .kp-skeleton {
+        display: block;
+        inline-size: 70%;
+        block-size: 1em;
+    }
+
+    .kp-code__dialog {
+        inline-size: min(60rem, calc(100vw - 2rem));
+    }
+

@@ -1,0 +1,165 @@
+/* @part: wheel: A wheel that picks */
+    /* --- A wheel that picks [kpadopt4] ------------------------------------
+ *
+ * A round wheel of soft segments in the theme's five chart colours, a still
+ * pointer at the top, the theme's primary button in the middle, and under it
+ * the outcome in two reserved lines, so nothing below moves when it is said.
+ * The wheel is square and keeps its size in every state (`--kp-wheel-size`);
+ * it turns on `--kp-wheel-ease` (js/wheel.js), a long even settle, never an
+ * overshoot. The chosen segment is filled deeper and the others step back. */
+    .kp-wheel {
+        display: grid;
+        /* One track that may shrink: an implicit auto track took the min-content of a long answer and widened the wheel [KIT22 14]. */
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-size, min(24rem, 100%));
+        max-inline-size: 100%;
+    }
+
+    .kp-wheel__stage {
+        position: relative;
+        inline-size: 100%;
+        aspect-ratio: 1;
+        /* The disc turns as a square: its corners, turned, are outside the circle and widened the page (394 px box on a 390 px phone,
+           up to 90 px measured). Clipped at the stage with room left for the pointer above it [KIT22 17]. */
+        overflow: clip;
+        overflow-clip-margin: 0.5rem;
+    }
+
+    /* The disc turns as a square: round and out of the pointer's way, so its corners never cover what stands beside it. */
+    /* An opaque plate under the hub, so a dimmed Spin never shows the segments through it. */
+    .kp-wheel__stage::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-hub, 30%);
+        min-inline-size: 4.5rem;
+        aspect-ratio: 1;
+        translate: -50% -50%;
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
+    }
+
+    .kp-wheel__disc {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .kp-wheel__face {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-wheel__segment {
+        --kp-wheel-tone: var(--chart-1);
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint, 30%), var(--card));
+        stroke: var(--card);
+        stroke-width: 1.2;
+    }
+
+    .kp-wheel__segment[data-tone='2'] {
+        --kp-wheel-tone: var(--chart-2);
+    }
+
+    .kp-wheel__segment[data-tone='3'] {
+        --kp-wheel-tone: var(--chart-3);
+    }
+
+    .kp-wheel__segment[data-tone='4'] {
+        --kp-wheel-tone: var(--chart-4);
+    }
+
+    .kp-wheel__segment[data-tone='5'] {
+        --kp-wheel-tone: var(--chart-5);
+    }
+
+    .kp-wheel__segment[data-kp-wheel-chosen] {
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint-chosen, 62%), var(--card));
+    }
+
+    .kp-wheel__segment[data-kp-wheel-other] {
+        opacity: var(--kp-wheel-other, 0.45);
+    }
+
+    .kp-wheel__label {
+        fill: var(--foreground);
+        font-family: inherit;
+        font-weight: 500;
+        pointer-events: none;
+    }
+
+    .kp-wheel__label[data-kp-wheel-chosen] {
+        font-weight: 700;
+    }
+
+    .kp-wheel__rim {
+        fill: none;
+        stroke: var(--border-strong);
+        stroke-width: 1.5;
+    }
+
+    .kp-wheel__ghost {
+        fill: var(--muted);
+        stroke: var(--border-strong);
+        stroke-width: 1;
+        stroke-dasharray: 4 3;
+    }
+
+    .kp-wheel__pointer {
+        position: absolute;
+        inset-block-start: -1.5%;
+        left: 50%;
+        inline-size: 9%;
+        translate: -50% 0;
+        fill: var(--kp-wheel-pointer, var(--primary));
+        stroke: var(--card);
+        stroke-width: 1.5;
+        stroke-linejoin: round;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .kp-wheel__spin.kp-button {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        box-sizing: border-box;
+        /* Centred by its insets and auto margins, never by a `translate`: the button's own hover and press lift
+           (`.kp-button:hover { translate: 0 -lift }`, and every register's) would replace the centring and throw the
+           hub half its size off the disc's middle [cook-1017; Kenny: "bij hover glitched de spin knop"]. */
+        inset: 0;
+        margin: auto;
+        inline-size: max(var(--kp-wheel-hub, 30%), 4.5rem);
+        block-size: max(var(--kp-wheel-hub, 30%), 4.5rem);
+        padding: 0;
+        /* Round in every theme: a register's button corner (kp.register) would square the hub off and lay its corners
+           over the labels. The register keeps every other part of its button. */
+        border-radius: 50% !important;
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 700;
+    }
+
+    /* The hub does not move in any theme: not on hover, not on focus, not pressed (a register's lift or press `translate`
+       would take it off the disc's middle). Its colours, ring and shadow answer instead. Important, as the registers are
+       a later layer. */
+    .kp-wheel__spin.kp-button {
+        translate: none !important;
+        /* Likewise its position: six registers give every button `position: relative` (cyberpunk, blueprint, brutalism,
+           deco, nostromo, synthwave), which drops the hub out of the disc's centring and into the stage's flow corner
+           [cook-1017; Kenny: "de spin knop staat niet op zijn plaats"]. */
+        position: absolute !important;
+    }
+

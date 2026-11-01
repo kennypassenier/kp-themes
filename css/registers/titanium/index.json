@@ -58,10 +58,12 @@
         "datatable/signature.css",
         "popover/signature-2.css",
         "motion/signature-3.css",
+        "motion/side-navigation-alarm-cut.css",
         "navbar/signature-3.css",
         "month-heatmap/signature-2.css",
         "motion/signature-4.css",
-        "meter.css",
+        "meter/base.css",
+        "meter/while-loading-option-1.css",
         "datatable/signature-2.css"
       ],
       "close": "}\n\n"

@@ -1,0 +1,218 @@
+/* @part: month-heatmap: Month heatmap */
+    /* --- Month heatmap [scope-143] ---------------------------------------- */
+
+    /* A month as a grid of days, each day a plate in the colour of its state
+ * (all done, partly done, nothing done, nothing to do, still to come, before
+ * anything was kept) with its count under the number. Always six weeks
+ * tall, so the page does not jump from month to month; the neighbouring
+ * months' days show their numbers, quiet and inert. js/calendar.js builds
+ * it into `section.kp-calendar[data-kp-calendar]`. Beside it, the page's
+ * own detail of the picked day (`.kp-calendar-layout`); under it on a
+ * narrow page. Knobs: --kp-calendar-aside (16rem, the detail's width),
+ * --kp-calendar-gap (6px, between days), --kp-calendar-cell-height
+ * (3.25rem), --kp-calendar-cell-font (clamp(0.85rem, 1.4vw, 1.15rem)),
+ * --kp-calendar-title-size (1.125rem) and --kp-calendar-nav-fit (20.5rem,
+ * the nav's width below which the title takes a row of its own). */
+    .kp-calendar-layout {
+        container: kp-calendar-layout / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-calendar-aside, 16rem);
+        align-items: start;
+        gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    @container kp-calendar-layout (max-width: 45rem) {
+        .kp-calendar-layout > * {
+            grid-column: 1 / -1;
+        }
+    }
+
+    /* The rows sit at the top [fix-98]: a calendar stretched taller than its
+ * content (a grid cell, a set height) kept its rows `normal`, and the extra
+ * height went into the nav's row and the table's weekday row (18 px grew
+ * to 48 px). The busy dim of layout.css is off [fix-98]: dimmed to 0.7, a
+ * loading day's figure read 2.65:1 to 4.81:1; the loading look already says
+ * the month is busy (the menu's loading plate does the same). */
+    .kp-calendar {
+        --kp-busy-opacity: 1;
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    /* The nav: ‹ Prev, the month's title, Next ›, Today, every one a label on
+ * one line [fix-98]. The title was free to wrap and squeezed the buttons:
+ * in a 334 px calendar it took up to six lines in nostromo, five in
+ * synthwave, four in brutalism, and a button up to four, so the calendar's
+ * height changed with the month. Under a 334 px nav the title steps down
+ * with the nav's width (5.4cqi, towards the theme's --kp-text-sm). Where
+ * the four still do not fit, the title takes a row of its own over the
+ * three buttons, the same row in every month: below --kp-calendar-nav-fit
+ * (20.5rem, which holds formal's widest month in English); a register
+ * whose type is wider sets its own, measured with its widest month. The
+ * nav is a container so its children can compare the two (100cqi). */
+    .kp-calendar__nav {
+        container: kp-calendar-nav / inline-size;
+        display: grid;
+        /* max-content, not auto: an auto track let the grid squeeze "Prev" and "Today" in a nav a few pixels narrower than
+         * its title, and their words ran out of the plate by 2 to 3 px [t56-words-1018]. justify-content: start never
+         * stretched them, so a roomy nav is laid out as before. */
+        grid-template-columns: repeat(4, max-content);
+        justify-content: start;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-calendar__nav > * {
+        white-space: nowrap;
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-prev] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: 1;
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-next] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: calc(3 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-today] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: calc(4 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+    }
+
+    .kp-calendar__title {
+        grid-row: 1;
+        grid-column: calc(2 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi))) / span
+            calc(1 + 2 * max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        margin: 0;
+        font-size: clamp(var(--kp-text-sm, 0.8125rem), 5.4cqi, var(--kp-calendar-title-size, 1.125rem));
+        text-align: center;
+    }
+
+    /* The nav on the days' tracks [gapform-1019; almanac 21]: `data-kp-calendar-nav="spread"` on the calendar lays the nav
+       on seven tracks with the days' own gap, so every button edge is a day's edge. Wide (the nav at least
+       --kp-calendar-nav-spread-fit, 40rem, where one day holds a button's word): Prev over the first day, the month's
+       title centred over the middle three, Next and Today over the last two. Narrower: the title on a row of its own, Prev
+       over the first two days, Next over the middle three, Today over the last two. "start" (the default) is the nav
+       above. Read by CSS alone, so a change at run time re-lays the nav at once. */
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        justify-content: stretch;
+        column-gap: var(--kp-calendar-gap, 6px);
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > * {
+        justify-self: stretch;
+        min-inline-size: 0;
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > .kp-calendar__title {
+        grid-row: 1;
+        grid-column: calc(3 - 2 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi))) / span
+            calc(3 + 4 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > [data-kp-calendar-prev] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+        grid-column: 1 / span calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > [data-kp-calendar-next] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+        grid-column: calc(6 - 3 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi))) / span
+            calc(1 + 2 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > [data-kp-calendar-today] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+        grid-column: calc(7 - max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi))) / span
+            calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+    }
+
+    .kp-calendar__state {
+        min-block-size: 1.5em;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-calendar__state[data-kp-state='error']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        border-radius: 50%;
+        background: var(--destructive);
+    }
+
+    /* The outer spacing reaches past the calendar's edges, so the days line
+ * up with the title and the legend, and the table's box still ends at the
+ * calendar's own edge, so a pane that scrolls (overflow: auto, 334 px)
+ * gets no sideways scrollbar from it [scope-143]. The box is moved two
+ * gaps toward the start with `translate` (Firefox counts the unshifted box
+ * of a relative `inset`, 346 px in a 334 px pane, brutalism 352), and its
+ * rows are moved one gap back, so the days stay where they were. Not a
+ * negative margin: Firefox resolves a table's percentage width against its
+ * box less the margins, so `-gap` margins made the grid 2 × gap wider than
+ * asked and pushed a page at 390 px sideways (Chromium did not). A
+ * translation is physical, so a right-to-left page mirrors both. */
+    .kp-calendar__grid {
+        position: relative;
+        translate: calc(var(--kp-calendar-gap, 6px) * -2) 0;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: var(--kp-calendar-gap, 6px);
+        inline-size: calc(100% + 2 * var(--kp-calendar-gap, 6px));
+    }
+
+    .kp-calendar__grid :is(thead, tbody) {
+        translate: var(--kp-calendar-gap, 6px) 0;
+    }
+
+    .kp-calendar__grid:dir(rtl) {
+        translate: calc(var(--kp-calendar-gap, 6px) * 2) 0;
+    }
+
+    .kp-calendar__grid:dir(rtl) :is(thead, tbody) {
+        translate: calc(var(--kp-calendar-gap, 6px) * -1) 0;
+    }
+
+    .kp-calendar__grid th {
+        padding: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .kp-calendar__grid td {
+        position: relative;
+        padding: 0;
+        block-size: var(--kp-calendar-cell-height, 3.25rem);
+        vertical-align: top;
+    }
+
+    .kp-calendar__day {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        align-items: center;
+        justify-items: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        padding: 0.125rem;
+        border: 2px solid transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-size: var(--kp-calendar-cell-font, clamp(0.85rem, 1.4vw, 1.15rem));
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+        cursor: pointer;
+    }
+

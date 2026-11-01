@@ -1,0 +1,191 @@
+/* @part: code-block: Code block */
+    /* --- Code block ----------------------------------------------------- */
+
+    /* A payload, a request or a snippet: a head with its title, what it is
+     * (language, size) and its tools (Pretty and Raw for JSON, Wrap, Copy),
+     * and the text in the mono face under it, scrolling sideways unless
+     * wrapped. Long text folds to --kp-code-max-lines with a "Show all" under
+     * it. js/code.js. Knobs: --kp-code-max-lines (written from
+     * data-kp-code-max), --kp-code-bg (the muted ground), --kp-code-key (the
+     * colour of a JSON key), --kp-code-size. */
+    .kp-code {
+        container: kp-code / inline-size;
+        position: relative;
+        display: grid;
+        margin: 0;
+        min-inline-size: 0;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--kp-code-bg, var(--card));
+        color: var(--card-foreground);
+    }
+
+    /* A code in a stage with spare height gives it to the code under the head, not to every auto row: the two auto rows
+       shared it, and the head stretched (136 px on a 420 px stage, 205 px with no title) [http-switchboard 41]. */
+    .kp-code:has(> .kp-code__head) {
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .kp-code__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border-block-end: 1px solid var(--border);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-code__heading {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-code__title {
+        font-weight: 600;
+    }
+
+    .kp-code__meta {
+        white-space: nowrap;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-code__tools {
+        display: flex;
+        /* The tools wrap onto a second line when the box is narrower than they are (a phone-wide inspector): each button keeps
+         * its label on one line, and none runs out of the box [t56-words-1018]. */
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-code__tools > :is(.kp-button) {
+        white-space: nowrap;
+    }
+
+    /* Every tool row has one height [align-grid-1019; HTTPSwitchboard gap 23]: the code block's Wrap and Copy were 36 px
+     * while the JSON field's tools and a command's Copy were 28 px, so two tool rows on one page could not share a line.
+     * All three take the small button's box, --kp-tools-height (the small button's height). */
+    :is(.kp-code__tools, .kp-jsonfield__tools, .kp-command__copy-slot) > :is(.kp-button),
+    .kp-command__head > .kp-command__reveal {
+        min-height: var(
+            --kp-tools-height,
+            var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))))
+        );
+        padding: var(--kp-button-padding-block-sm, max(0px, min(var(--kp-space-xs, 0.25rem), (1.75rem - 1lh) / 2 - 3px)))
+            var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-button-text-sm, var(--kp-text-sm, 0.8125rem));
+        /* A button reads in the page's own face, not in the block's: a register that sets the code block in its mono face
+           drew the code block's Copy 5.7 px narrower than the command's Copy, and the two are one role [alignrest-1019]. */
+        font-family: var(--theme-font-body, inherit);
+    }
+
+    .kp-code__body {
+        position: relative;
+        box-sizing: border-box;
+        margin: 0;
+        min-block-size: calc(var(--kp-code-min-lines, 1) * 1.6em + 2 * var(--kp-space-md, 0.75rem));
+        padding: var(--kp-space-md, 0.75rem);
+        overflow: auto;
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+        background: var(--muted);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-code-size, var(--kp-text-sm, 0.8125rem));
+        line-height: 1.6;
+        tab-size: 4;
+        white-space: pre;
+        overscroll-behavior-inline: contain;
+    }
+
+    /* The code scrolls sideways, not the body: the body is the plate and keeps its padding on both sides, so a long
+     * line runs out of sight 0.75rem short of the plate's edge instead of touching it (text never touches an edge). */
+    .kp-code__body > :is(code) {
+        display: block;
+        min-inline-size: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        font: inherit;
+        overscroll-behavior-inline: contain;
+    }
+
+    .kp-code[data-kp-code-wrap] .kp-code__body {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-code[data-kp-code-wrap] .kp-code__body > :is(code) {
+        overflow: visible;
+    }
+
+    /* Folded: the box stops at the line count and a fade says there is more. */
+    .kp-code[data-kp-code-folded] .kp-code__body {
+        max-block-size: calc(var(--kp-code-max-lines, 12) * 1.6em + var(--kp-space-md, 0.75rem));
+        overflow: hidden;
+        mask-image: linear-gradient(to bottom, black calc(100% - 2.5em), transparent);
+    }
+
+    /* Line numbers (`data-kp-code-lines`): a gutter as wide as the last
+     * number, outside the text, so a copy or a selection never takes them. */
+    .kp-code__line {
+        display: block;
+    }
+
+    .kp-code[data-kp-code-lines] .kp-code__body > :is(code) {
+        counter-reset: kp-code-line;
+    }
+
+    .kp-code[data-kp-code-lines] .kp-code__line {
+        display: grid;
+        grid-template-columns: calc(var(--kp-code-gutter, 2) * 1ch) minmax(0, 1fr);
+        column-gap: 1.25ch;
+    }
+
+    .kp-code[data-kp-code-lines] .kp-code__line::before {
+        content: counter(kp-code-line);
+        counter-increment: kp-code-line;
+        color: var(--muted-foreground);
+        text-align: end;
+        user-select: none;
+    }
+
+    /* A button word that keeps the width of its longest word ("Copy",
+     * "Copied", "Blocked"), so nothing beside it moves. */
+    .kp-code__word {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kp-code__word::after {
+        content: attr(data-kp-code-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-code__key {
+        color: var(--kp-code-key, var(--primary));
+    }
+
+    /* A cell folds by lines: the ones past the fold are not drawn, so what is cut is never half a line. */
+    .kp-code--cell[data-kp-code-folded] .kp-code__line[data-kp-code-beyond] {
+        display: none;
+    }
+
+    .kp-code--cell[data-kp-code-folded] .kp-code__body {
+        max-block-size: none;
+        overflow: visible;
+        mask-image: none;
+    }
+
+    .kp-code__punct {
+        color: var(--muted-foreground);
+    }
+

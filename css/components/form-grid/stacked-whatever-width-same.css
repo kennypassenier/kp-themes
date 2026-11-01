@@ -1,0 +1,28 @@
+/* @part: form-grid: Stacked whatever the width: the same reading order, by the attribute. */
+    /* Stacked whatever the width: the same reading order, by the attribute. */
+    .kp-formgrid[data-kp-formgrid-stack='always'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always']
+        :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form, .kp-refresh, .kp-refresh__bar) {
+        grid-column: 1 / -1;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] :is(.kp-formgrid__group, fieldset) > :is(legend, .kp-formgrid__heading),
+    .kp-formgrid[data-kp-formgrid-stack='always'] :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-refresh, .kp-refresh__bar) > *,
+    .kp-formgrid[data-kp-formgrid-stack='always'] :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row) > [data-kp-formgrid-span] {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] .kp-formgrid__actions {
+        justify-content: flex-start;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] .kp-formgrid__actions > :only-child {
+        flex: 0 0 auto;
+    }
+

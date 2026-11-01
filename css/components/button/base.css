@@ -1,0 +1,157 @@
+/* @part: button: Button */
+    /* --- Button [TH1] ---------------------------------------------------- */
+
+    .kp-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        /* The height is the package's, in every theme [scope-80, option E of
+     * research/uniform-size/]: a border-box floor on --kp-control-height,
+     * one line height, the label centred in what is left. A register
+     * keeps its inline padding, type, border and paint;
+     * gates/box-metrics.test.mjs refuses a register that restates any of
+     * the box's block metrics. min-height, not height: forced text spacing
+     * must make this taller rather than clip the label [DI11]. The floor
+     * follows the density mode down with --kp-control-height [TH105].
+     *
+     * The block padding is only what a label that wraps needs to keep off
+     * the border, and never enough to lift a one-line button past the
+     * floor: a quarter rem, or less where the floor has no room for it —
+     * half of what the floor leaves around one line (`1lh`), less a
+     * border of up to 3px. Option E's own mock had none, and a
+     * two-line label touched its frame in brutalism, titanium and phantom. */
+        box-sizing: border-box;
+        min-height: var(--kp-control-height, 2.25rem);
+        padding: var(--kp-control-padding-block, max(0px, min(var(--kp-space-xs, 0.25rem), (var(--kp-control-height, 2.25rem) - 1lh) / 2 - 3px)))
+            0.875rem;
+        border: 1px solid transparent;
+        border-radius: var(--radius, 0.5rem);
+        font: inherit;
+        line-height: var(--kp-control-line-height, 1.25);
+        cursor: pointer;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        border-color: var(--border-strong);
+        /* --fx-shadow-offset is a hard, unblurred shadow the control casts
+     * down and right — brutalism's signature [TH85]. 0px everywhere else,
+     * which paints nothing: the knob is the only theme-shaped thing here. */
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
+    /* The theme's typeface on every other control the package draws
+       [fix-28, scope-83]. A browser's own stylesheet gives a button, a
+       checkbox, a range and a file input the SYSTEM font, not the page's:
+       Kenny's FireDragon read his desktop's Fira Sans on these, Playwright's
+       Firefox the generic sans-serif, and 39 of his 158 verdict hashes of
+       2026-09-14 differed from the tools' for that reason alone. The family
+       only, not the `font` shorthand: the size stays what each control
+       measured before, so no glyph and no box moves in any theme.
+       tests/control-font.spec.mjs forces a distinctive default and finds
+       every control on the review pages that still shows it. */
+    .kp-icon-button,
+    .kp-nav__toggle,
+    .kp-sidenav__toggle,
+    .kp-field__check,
+    .kp-switch__input,
+    .kp-colorpicker input,
+    input[type='file']:has(+ .kp-upload__zone) {
+        font-family: inherit;
+    }
+
+    /* Two surfaces a theme may paint on, and nothing else [scope-16,
+       scope-17, Kenny 2026-09-12]. Both approved concept demos of round
+       seven put an oxide film along the control's edge AND a small reading
+       above it, which is one surface more than a button's two
+       pseudo-elements can carry — the spectral instrument already spends
+       both on its brackets.
+
+       Out of flow, so neither can move the control; `inset: 0` so the edge
+       has the whole box to work with; and invisible until a register gives
+       them something. Twenty-four themes never notice they are there,
+       which is the same bargain `.kp-button__label` already makes. */
+    /* The control is the containing block for both, which is what makes
+       "out of flow" mean "inside this button" rather than "somewhere on
+       the page". Without it the edge measured 1280px wide — the viewport —
+       on the first run of tests/button-surfaces.spec.mjs. */
+    .kp-button {
+        position: relative;
+    }
+
+    .kp-button__edge,
+    .kp-button__readout {
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .kp-button__edge {
+        inset: 0;
+    }
+
+    .kp-button__readout {
+        inset-block-end: 100%;
+        inset-inline-start: 0;
+        white-space: nowrap;
+        opacity: 0;
+    }
+
+    /* The button's own label, in its own element [S49, A7]: a theme that
+       skews the button (phantom's demo does) sets the label upright
+       again on this, and every other theme never notices it is there. */
+    .kp-button__label {
+        display: inline-flex;
+        align-items: center;
+        gap: inherit;
+    }
+
+    /* A marked accelerator letter stays in its label's text run [scope-57].
+       In a flex row every child is an item and the row's gap goes between
+       items, so `<span data-kp-key>S</span>ave` read "S ave" — half a rem
+       inside a word, in every theme — and the space in "Save as" collapsed
+       at the item's edge. A label that marks a letter is laid out as text
+       instead: one line box, the letter an inline box inside it (retro still
+       underlines it), centred both ways as the flex row was. An icon beside
+       such a label floats to its own side with the row's gap as its margin;
+       the float also swallows the markup's whitespace at the line's start,
+       so the gap is exactly the one an unmarked button has. */
+    .kp-button:has(> [data-kp-key]),
+    .kp-button__label:has(> [data-kp-key]) {
+        display: inline-block;
+        align-content: center;
+        text-align: center;
+    }
+
+    :is(.kp-button, .kp-button__label):has(> [data-kp-key])
+        > :not([data-kp-key], .kp-button__edge, .kp-button__readout, .kp-button__label):has(~ [data-kp-key]) {
+        float: inline-start;
+        margin-inline-end: 0.5rem;
+    }
+
+    :is(.kp-button, .kp-button__label):has(> [data-kp-key])
+        > [data-kp-key]
+        ~ :not([data-kp-key], .kp-button__edge, .kp-button__readout, .kp-button__label) {
+        float: inline-end;
+        margin-inline-start: 0.5rem;
+    }
+
+    /* The focus ring composed with the offset shadow, not instead of it
+ * [AR30, DI2].
+ *
+ * The focus indicator is two parts: an outline in --focus-ring-contrast
+ * and an inner ring in --focus-ring (css/_rules.css, `:focus-visible`, in
+ * @layer kp.base). The rule above sets box-shadow in @layer kp.components
+ * for the brutalist offset, and a later layer wins whatever the
+ * specificity — so on every button in every theme the inner half read
+ * `0px 0px 0px 0px`, which paints nothing. Half a ring is exactly what
+ * DI2's two-part design exists to prevent.
+ *
+ * Restated here with both layers, the ring first so it is not buried
+ * under the offset. --kp-focus-ring-inner-width is the same knob the
+ * global rule reads, so the two halves cannot drift apart [KT6].
+ */
+    .kp-button:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+

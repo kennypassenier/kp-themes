@@ -1,0 +1,142 @@
+/* @part: button: --fx-lift is how far a control rises under the cursor. Many themes */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-button {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+
+        /* --fx-lift is how far a control rises under the cursor. Many themes
+     * answer 0px, which is not an oversight: formal, for one, does not
+     * move things, it only changes its colour. */
+        .kp-button:hover:not(:disabled) {
+            translate: 0 calc(-1 * var(--fx-lift, 0px));
+        }
+    }
+
+    .kp-button:hover:not(:disabled) {
+        background: var(--secondary-hover);
+    }
+
+    .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    .kp-button:disabled {
+        background: var(--secondary-disabled);
+        cursor: not-allowed;
+        /* DI8 is Kenny's recorded decision that a disabled control may fall
+     * below the contrast floor, with GOV.UK's counter-case beside it.
+     * The cursor and the aria state carry the meaning as well. */
+    }
+
+    .kp-button--primary {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--primary);
+    }
+
+    .kp-button--primary:hover:not(:disabled) {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    .kp-button--primary:disabled {
+        background: var(--primary-disabled);
+        border-color: var(--primary-disabled);
+    }
+
+    .kp-button--destructive {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    .kp-button--destructive:hover:not(:disabled) {
+        background: var(--destructive-hover);
+        border-color: var(--destructive-hover);
+    }
+
+    .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    .kp-button--destructive:disabled {
+        background: var(--destructive-disabled);
+        border-color: var(--destructive-disabled);
+    }
+
+    .kp-button--ghost {
+        background: transparent;
+        color: var(--foreground);
+        border-color: transparent;
+    }
+
+    /* A ghost or icon button in the bar wears the bar's ink, not the page's [fix-77].
+ * The bar has its own plate in several registers (cyberpunk's yellow,
+ * nostromo's sidebar), and the page's ink on it read 1.2:1 and 1:1 in the
+ * homelab dashboard's bar; the bar's own colour is the ink every register
+ * already gates against that plate. */
+    .kp-nav :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* And its hover is a veil of that ink, not the page's highlight: a
+       page-coloured plate under the bar's ink read 1.12:1 in nostromo
+       [fix-82]. --kp-nav-ink names the ink when a register wants another
+       than the bar's own colour. */
+    .kp-nav :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: hsl(from var(--kp-nav-ink, currentColor) h s l / 0.12);
+        color: inherit;
+    }
+
+    .kp-button--ghost:hover:not(:disabled) {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        color: inherit;
+    }
+
+    /* The size scale [TH111, T15].
+ *
+ * Modifier classes rather than a data- attribute, frozen as T15: the
+ * button already carries four modifiers and a fifth axis through a
+ * second mechanism would make it the one component mixing both styles.
+ *
+ * Three steps, each a knob over the scale rather than a literal
+ * [KT6]: the height derives from --kp-control-height, the padding from
+ * the spacing scale, and the type from the text scale. Retuning a scale
+ * moves all three; retuning one knob moves one step.
+ *
+ * The unmodified button is the middle step and keeps `font: inherit`,
+ * so a consumer who sets a type size on a region still gets a button
+ * that matches the text around it.
+ *
+ * The 1.75rem inside max() is a literal for the same reason
+ * css/_density.css writes one: 28px at a 16px root is above the 24px
+ * WCAG 2.5.8 asks of a pointer target, and the small button may not
+ * fall through that floor however the scale is tuned. Under compact
+ * density it sits ON the floor, which is the floor doing its job.
+ */
+    .kp-button--sm {
+        min-height: var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        padding: var(--kp-button-padding-block-sm, max(0px, min(var(--kp-space-xs, 0.25rem), (1.75rem - 1lh) / 2 - 3px)))
+            var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-button-text-sm, var(--kp-text-sm, 0.8125rem));
+    }
+
+    .kp-button--lg {
+        min-height: var(--kp-button-height-lg, calc(var(--kp-control-height, 2.25rem) + var(--kp-space-sm, 0.5rem)));
+        padding: var(
+                --kp-button-padding-block-lg,
+                var(--kp-control-padding-block, max(0px, min(var(--kp-space-xs, 0.25rem), (var(--kp-control-height, 2.25rem) - 1lh) / 2 - 3px)))
+            )
+            var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem));
+        font-size: var(--kp-button-text-lg, calc(var(--kp-text-md, 1rem) * 1.125));
+    }
+

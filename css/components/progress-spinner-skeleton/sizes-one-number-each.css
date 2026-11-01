@@ -1,0 +1,167 @@
+/* @part: progress-spinner-skeleton: The sizes: one number each, set on the bar (which states its own, so */
+    /* The sizes: one number each, set on the bar (which states its own, so
+ * an ancestor's never leaks into a small bar) and read by the row around
+ * it, so the reading and the gap grow with the track. A group takes the
+ * gaps of the largest size it holds and gives no size to its rows. */
+    .kp-progressbar--md,
+    .kp-progress__wrap:has(> .kp-progressbar--md) {
+        --kp-progressbar-scale: 1.5;
+        --kp-progressbar-text: var(--kp-text-md, 1rem);
+    }
+
+    .kp-progressbar--lg,
+    .kp-progress__wrap:has(> .kp-progressbar--lg) {
+        --kp-progressbar-scale: 2;
+        --kp-progressbar-text: calc(var(--kp-text-md, 1rem) * 1.125);
+    }
+
+    .kp-progress-group:has(.kp-progressbar--md) {
+        --kp-progress-group-scale: 1.5;
+    }
+
+    .kp-progress-group:has(.kp-progressbar--lg) {
+        --kp-progress-group-scale: 2;
+    }
+
+    /* The fill spans the track and is clipped to the value, so a pattern in
+ * it never stretches and nothing is laid out again as the value moves:
+ * only clip-path and transform change [compositor-only motion]. */
+    .kp-progressbar__fill {
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+    }
+
+    /* The head rides on the fill's leading edge; a register gives it a shape
+ * or leaves it empty. 100cqi is the track's width, the track being the
+ * inline-size container. */
+    .kp-progressbar__head {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        transform: translateX(calc(var(--kp-value) * 100cqi));
+    }
+
+    /* Busy, standing still: diagonal stripes in the accent across the whole
+ * track, so a reader who asked for less motion sees "working" and never a
+ * share that is not there [gap-11 — a still fill at 30% would read as 30%
+ * done]. Without that preference the guard below turns it into the sweep. */
+    .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        clip-path: none;
+        background-color: transparent;
+        background-image: linear-gradient(-45deg, var(--primary) 25%, transparent 25% 50%, var(--primary) 50% 75%, transparent 75%);
+        background-size: var(--kp-progressbar-height) var(--kp-progressbar-height);
+    }
+
+    .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-progressbar__fill {
+            transition: clip-path var(--kp-progressbar-duration, 240ms) var(--kp-progressbar-ease, ease-out);
+        }
+
+        .kp-progressbar__head {
+            transition: transform var(--kp-progressbar-duration, 240ms) var(--kp-progressbar-ease, ease-out);
+        }
+
+        /* A solid band a third of the track wide, sweeping across it: a
+     * transform only, so it runs on the compositor. */
+        .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline-end: auto;
+            inline-size: 30%;
+            background: var(--primary);
+            animation: kp-progressbar-sweep 1400ms ease-in-out infinite;
+        }
+    }
+
+    @keyframes kp-progressbar-sweep {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(340%);
+        }
+    }
+
+    /* A register draws its own motion inside the bar, and a reader who asked
+ * for less of it gets none, whichever register drew it: every animation
+ * inside the bar ends on its first frame and nothing transitions. The
+ * `!important` is what reaches into kp.register from this earlier layer
+ * (an important declaration in an earlier layer wins over every later
+ * one), and it is the research round's own rule, kept as approved. */
+    @media (prefers-reduced-motion: reduce) {
+        .kp-progressbar *,
+        .kp-progressbar *::before,
+        .kp-progressbar *::after {
+            animation-duration: 0s !important;
+            animation-iteration-count: 1 !important;
+            transition: none !important;
+        }
+    }
+
+    .kp-spinner {
+        display: inline-block;
+        inline-size: var(--kp-spinner-size, 1.25rem);
+        block-size: var(--kp-spinner-size, 1.25rem);
+        /* The track is the head at a quarter of its alpha, not --border-strong:
+     * in brutalism both were black and nothing visibly turned. Same hue,
+     * different weight, in every theme by construction [KT8]. */
+        border: 2px solid hsl(from var(--primary) h s l / 0.25);
+        border-block-start-color: var(--primary);
+        border-radius: 50%;
+    }
+
+    .kp-skeleton {
+        display: block;
+        block-size: var(--kp-skeleton-height, 1rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+    }
+
+    /* After the base rule, so the shape's own size wins at equal specificity:
+ * a block is as tall as it says and a circle is as tall as it is wide. */
+    .kp-skeleton--block {
+        block-size: var(--kp-skeleton-block, 6rem);
+    }
+
+    .kp-skeleton--circle {
+        block-size: auto;
+    }
+
+    /* Both of these move, so both are guarded: DI7 is not a preference to
+ * honour where convenient. A spinner that keeps spinning for someone who
+ * asked for stillness is the exact complaint the setting exists for.
+ * Neither animation opposes its own direction, so neither approaches the
+ * three-flashes threshold of DI5 — check-motion.mjs measures that. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-spinner {
+            animation: kp-spin var(--kp-spinner-duration, 900ms) linear infinite;
+        }
+
+        .kp-skeleton {
+            /* A literal, not a knob: the pulse changes luminance and DI5 pins it
+     * above the flash threshold [KT6]. */
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+    }
+
+    @keyframes kp-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+    }
+

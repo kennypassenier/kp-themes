@@ -1,0 +1,249 @@
+/* @part: datatable: The room of the next digit: "99 selected" and "100 selected" take the  */
+    .kp-selection[data-kp-placement='sticky-top'] {
+        position: sticky;
+        inset-block-start: var(--kp-selection-top, 0);
+        z-index: var(--kp-z-sticky, 20);
+    }
+
+    .kp-selection[data-kp-placement='floating-bottom'] {
+        position: fixed;
+        inset-inline: var(--kp-space-md, 0.75rem);
+        inset-block-end: calc(var(--kp-space-md, 1rem) + var(--kp-tabbar-height, 0px));
+        z-index: var(--kp-z-toast, 90);
+        display: flex;
+        justify-content: center;
+        min-block-size: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+
+    .kp-selection[data-kp-placement='floating-bottom'] > .kp-selection__panel {
+        inline-size: min(100%, var(--kp-selection-max, 64rem));
+        pointer-events: auto;
+    }
+
+    .kp-selection__panel {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto auto;
+        grid-template-areas:
+            'count names actions clear'
+            'offer offer offer offer'
+            'result result result result';
+        align-items: center;
+        column-gap: var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-selection-height, 3.5rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-inline-start: 3px solid var(--primary);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--card-foreground));
+        clip-path: inset(0 0 0 0);
+        visibility: visible;
+        transition:
+            clip-path var(--kp-rule-time, 400ms) var(--kp-rule-ease, linear),
+            visibility 0s;
+    }
+
+    .kp-selection[data-kp-selection-state='empty'] > .kp-selection__panel {
+        clip-path: inset(0 100% 0 0);
+        visibility: hidden;
+        transition:
+            clip-path var(--kp-rule-time, 400ms) var(--kp-rule-ease, linear),
+            visibility 0s linear var(--kp-rule-time, 400ms);
+    }
+
+    [dir='rtl'] .kp-selection[data-kp-selection-state='empty'] > .kp-selection__panel {
+        clip-path: inset(0 0 0 100%);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-selection__panel,
+        .kp-selection[data-kp-selection-state='empty'] > .kp-selection__panel {
+            transition: none;
+        }
+    }
+
+    .kp-selection__count {
+        grid-area: count;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        /* The room of the next digit: "99 selected" and "100 selected" take the same place. */
+        min-inline-size: calc(var(--kp-selection-digits, 2) * 1ch + 9ch);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-selection__busy {
+        font-weight: 400;
+    }
+
+    /* "3 of 7 done" beside the busy words [wish-1120, homelab 112]: the same muted weight, tabular so it does not shimmer. */
+    .kp-selection__progress {
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-selection__names {
+        grid-area: names;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 0.4em;
+        min-inline-size: 0;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-selection__names[hidden] {
+        display: none;
+    }
+
+    .kp-selection__more {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+        cursor: pointer;
+    }
+
+    .kp-selection__offer,
+    .kp-selection__result {
+        margin: 0;
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-selection__offer {
+        grid-area: offer;
+    }
+
+    .kp-selection__result {
+        grid-area: result;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-selection__offer[hidden],
+    .kp-selection__result[hidden] {
+        display: none;
+    }
+
+    .kp-selection__result[data-kp-selection-result='refused'] {
+        color: var(--destructive);
+    }
+
+    .kp-selection__actions {
+        grid-area: actions;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-selection__clear {
+        grid-area: clear;
+        white-space: nowrap;
+    }
+
+    .kp-selection__toggle {
+        display: none;
+        grid-area: actions;
+    }
+
+    .kp-selection [data-kp-selection-off] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* A row that refused an action: a rule on its start edge and the reason in words. */
+    [data-kp-refused] > :first-child,
+    tr[data-kp-refused] > :first-child {
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    .kp-selection__refusal {
+        display: block;
+        color: var(--destructive);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* A narrow bar: the count, "Actions" and untick; the names fold to the count. The count never keeps a width the
+     * buttons beside it need (it wraps instead), so no theme's wide capitals or word set can run it under "Actions". */
+    @container kp-selection (max-width: 40rem) {
+        .kp-selection__panel {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            grid-template-areas:
+                'count toggle clear'
+                'actions actions actions'
+                'offer offer offer'
+                'result result result';
+        }
+
+        .kp-selection__count {
+            min-inline-size: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .kp-selection__names {
+            display: none;
+        }
+
+        .kp-selection__toggle {
+            display: inline-flex;
+            grid-area: toggle;
+        }
+
+        .kp-selection__actions {
+            display: none;
+            padding-block-start: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-selection[data-kp-selection-open] .kp-selection__actions {
+            display: flex;
+        }
+    }
+
+    /* A phone-width bar (a container under 30rem): the count has a row of its own above "Actions" and untick, whatever the
+     * theme's button width or the page's words (measured at 390 px: brutalism and synthwave ran 20 and 24 px under "Actions"). */
+    @container kp-selection (max-width: 30rem) {
+        .kp-selection__panel {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                'count count count'
+                'toggle . clear'
+                'actions actions actions'
+                'offer offer offer'
+                'result result result';
+        }
+    }
+
+    .kp-datatable__loading {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The card layout's sort control is for the card layout only: in the
+ * table shape the headers sort, and a second control would be a second
+ * way to say the same thing [gap-13]. */
+    .kp-datatable__card-sort {
+        display: none;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A refresh keeps the old rows, dimmed, so the page does not jump; a
+ * first load has no rows and shows the loading slot instead. */
+    .kp-datatable[aria-busy='true'] .kp-table tbody {
+        opacity: var(--kp-datatable-busy-opacity, 0.55);
+    }
+

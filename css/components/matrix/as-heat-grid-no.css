@@ -1,0 +1,158 @@
+/* @part: matrix: As in the heat grid: no skeleton-to-skeleton gap, so a loading row is  */
+    .kp-matrix__cell {
+        appearance: none;
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        min-inline-size: var(--kp-matrix-cell-min, 3.5rem);
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        margin: 0;
+        padding: 2px;
+        border: 2px solid transparent;
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+        text-align: center;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-matrix__cell[data-kp-glyph]::before {
+        content: attr(data-kp-glyph);
+        font-size: 1.25em;
+        font-weight: 700;
+    }
+
+    .kp-matrix__cell[data-kp-tone='ok'] {
+        background: var(--success);
+        color: var(--success-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='warn'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='muted'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border);
+        background: transparent;
+        cursor: default;
+    }
+
+    .kp-matrix__cell[data-kp-tone='none'] {
+        border-color: var(--border-strong);
+    }
+
+    .kp-matrix__cell[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-matrix__cell[data-kp-mark] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix[data-kp-lit] .kp-matrix__cell:not([data-kp-hot], [data-kp-mark], [data-kp-inert]) {
+        opacity: var(--kp-matrix-dim, 0.4);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-matrix__cell {
+            transition:
+                transform var(--fx-duration, 110ms) var(--fx-ease, ease),
+                opacity var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true']) {
+            transform: var(--kp-matrix-cell-hover, scale(1.05));
+        }
+    }
+
+    /* As in the heat grid: no skeleton-to-skeleton gap, so a loading row is as tall as its ready row. */
+    .kp-matrix__cell.kp-skeleton {
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        block-size: auto;
+        margin-block: 0;
+        cursor: progress;
+    }
+
+    .kp-matrix__col--skeleton,
+    .kp-matrix__row--skeleton {
+        block-size: 1rem;
+        align-self: center;
+    }
+
+    .kp-matrix__state {
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The legend under a matrix is the heat grid's. A matrix swatch shows the
+ * cell's plate. */
+    .kp-heat__swatch--plate {
+        inline-size: 1rem;
+        block-size: 1rem;
+        border-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='ok'] {
+        background: var(--success);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='warn'] {
+        background: var(--warning);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='bad'] {
+        background: var(--destructive);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='muted'] {
+        background: var(--muted);
+    }
+
+    .kp-heat__swatch--plate:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        background: transparent;
+    }
+
+    .kp-heat__swatch--plate[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--card);
+    }
+
