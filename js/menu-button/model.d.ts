@@ -4,6 +4,8 @@ export type MenuState = import('./types.js').MenuState;
 /** @typedef {import('./types.js').MenuState} MenuState */
 /** @type {WeakMap<Element, MenuState>} */
 export declare const menus: WeakMap<Element, MenuState>;
+/** The entries a page last gave each menu button with setMenu(), so a context menu can show the same [habits-1101]. @type {WeakMap<Element, MenuGroup[]>} */
+export declare const filled: WeakMap<Element, MenuGroup[]>;
 /** @param {string} prefix */
 export declare const nextId: (prefix: string) => string;
 /** @param {Element} host @returns {string | undefined} */

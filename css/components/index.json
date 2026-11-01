@@ -102,6 +102,7 @@
         "tabbar/mark-line-along-bars.css",
         "running-job-button.css",
         "menu-button.css",
+        "context-menu.css",
         "drawer-tour/base.css",
         "drawer-tour/tours-card-js-tour.css",
         "segmented-toolbar/base.css",

@@ -15784,6 +15784,34 @@
         z-index: 20;
     }
 
+    /* --- Context menu [habits-1101] -----------------------------------------
+ * The menu js/context-menu.js opens at the pointer: the menu button's own `.kp-menu--rich` plate, hung from an invisible button
+ * that stands where the menu was asked for, so every register paints it as it paints the menu button's menu. Its top start corner
+ * is at the point; the script moves it to the other side or over the point where it would leave the screen. */
+    .kp-menu-button.kp-context-menu {
+        position: fixed;
+        z-index: 40;
+        inline-size: 0;
+        block-size: 0;
+        max-inline-size: none;
+    }
+
+    .kp-context-menu__anchor {
+        position: absolute;
+        inset: 0;
+        inline-size: 0;
+        block-size: 0;
+        padding: 0;
+        border: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .kp-menu-button.kp-context-menu > .kp-menu {
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+    }
     /* --- Drawer, help and the tour [scope-143] ----------------------------- */
 
     /* A drawer: a head (the title, the close button, one sentence), a body

@@ -448,6 +448,10 @@
             "types": "./js/checklist.d.ts",
             "default": "./js/checklist.js"
         },
+        "./js/context-menu": {
+            "types": "./js/context-menu.d.ts",
+            "default": "./js/context-menu.js"
+        },
         "./js/row-pick": {
             "types": "./js/row-pick.d.ts",
             "default": "./js/row-pick.js"

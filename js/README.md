@@ -547,6 +547,16 @@ The menu button with its rich menu. 12 files.
 | `state.js`     | The counter the menu button parts share to give each menu its own id.                      |
 | `types.js`     | The types of the menu button: items, groups, options, state and placement.                 |
 
+## js/context-menu.js → js/context-menu/
+
+The context menu: a right click, a long press or Shift+F10 opens a kp menu at the pointer [habits-1101]. 3 files.
+
+| File            | Does                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| `anchor.js`     | ContextAnchor: the one menu of a document, the menu button's own, put at the point while open.    |
+| `controller.js` | ContextMenuRoot: the right click, the long press, the keys, and which entries an element shows.   |
+| `values.js`     | The selector, attributes, events and timings of the context menu.                                 |
+
 ## js/diff.js → js/diff/
 
 The diff view with file headers, folded context and changed words. 13 files.

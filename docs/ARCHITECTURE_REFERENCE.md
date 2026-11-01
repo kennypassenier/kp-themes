@@ -138,6 +138,7 @@ js/command.js              one command to run, with its terminal, privilege and 
 js/compare.js              two versions stacked with a draggable divider between them
 js/connection.js           the connection banner: offline and reconnecting, apart from stale data
 js/console.js              a prompt and, per command, a block saying whether it runs, succeeded or failed
+js/context-menu.js         a right click, a long press or Shift+F10 opens a kp menu at the pointer [habits-1101]
 js/logviewer.js            a live log in a capped buffer: find, wrap, time column, level, copy, download
 js/diff.js                 a diff of several files: a header per file, folded unchanged lines, the changed words, and its states
 js/countdown.js            a named timer in digits, with Start, Pause, Reset and a minute more

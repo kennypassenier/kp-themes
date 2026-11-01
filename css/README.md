@@ -127,6 +127,7 @@ concatenates that file into `css/themes.css`.
 | `matrix/`                       | Matrix (2 parts)                                                                 |
 | `media.css`                     | Media                                                                            |
 | `menu-button.css`               | Menu button with a rich menu                                                     |
+| `context-menu.css`              | Context menu [habits-1101]                                                       |
 | `meter.css`                     | Meter with a mark                                                                |
 | `month-heatmap/`                | Month heatmap (2 parts)                                                          |
 | `movable-grid.css`              | Movable grid layout                                                              |

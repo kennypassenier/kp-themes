@@ -42,6 +42,8 @@ export const DASHBOARD_NEEDS = [
     },
     // The menu button with its rich menu [scope-143]: every other action, grouped.
     { name: 'menu-button', when: '[data-kp-menu-button]', load: () => import('../menu-button.js'), attach: (m, root) => [m.attachMenuButtons(root)] },
+    // The context menu [habits-1101]: a right click, a long press or Shift+F10 on a marked element opens a kp menu there.
+    { name: 'context-menu', when: '[data-kp-context-menu]', load: () => import('../context-menu.js'), attach: (m, root) => [m.attachContextMenus(root)] },
     // The segmented control, the list toolbar and the inline key line [kpadopt-controls].
     { name: 'segmented', when: '[data-kp-segmented]', load: () => import('../segmented.js'), attach: (m, root) => [m.attachSegmented(root)] },
     // Action tiles, status rows and the facet list [kpadopt2-tiles].

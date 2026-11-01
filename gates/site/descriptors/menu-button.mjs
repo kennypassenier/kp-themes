@@ -5,9 +5,9 @@ export const menuButtonDescriptor = {
         id: 'menu-button',
         title: 'Menu button',
         group: 'Navigation',
-        classes: ['kp-menu-button'],
+        classes: ['kp-menu-button', 'kp-context-menu'],
         exports: [],
-        aliases: ['menu-open', 'menu-close', 'menu-select', 'menu-empty', 'value', 'reason', 'loading'],
+        aliases: ['menu-open', 'menu-close', 'menu-select', 'menu-empty', 'value', 'reason', 'loading', 'context-menu', 'context-menu-label', 'context-press', 'context-menu-open'],
         intro: 'A button that opens every other action of a page or a thing, grouped under small muted capitals, each entry its label over a one-line hint. It is the package’s `.kp-menu` with `.kp-menu__item` entries, made rich (`.kp-menu--rich`) and wired by js/menu-button.js: the keys of a menu, a fill that waits while the menu is open, and an action that cannot be used now that stays in the list and says why.',
         whenToUse:
             'For the rare actions on a page or a record, behind a “More ▾” at the end of its header, when each needs a word of explanation. Not for the one or two actions used every day, which are buttons; not for navigation, which reads better as links; and not for a plain list of short commands, which the dropdown menu does with less.',
@@ -49,6 +49,10 @@ export const menuButtonDescriptor = {
         variants: [
             { name: '--kp-menu-anchor-x', what: 'Written by `js/menu-button.js` on the open menu: the button’s centre in pixels from the menu’s left edge, kept 14 px inside it, and not written when the menu hangs above its button. Every theme receives it; only deco reads it, to start its inlay under the button.' },
             { name: '.kp-menu-button', what: 'The wrapper, `[data-kp-menu-button]`: a button, then its `[role="menu"]`. The menu hangs under the button at its end edge.' },
+            { name: 'data-kp-context-menu', what: 'The context menu [habits-1101] (js/context-menu.js): any element so marked opens a kp menu at the pointer on a right click, on a long press on touch (`LONG_PRESS_MS`) and on Shift+F10 or the context-menu key, with the menu button’s plate, keys, placement and `kp-menu-select` (its detail adds `context`, the element). Its entries come from `setContextMenu(el, groups)` (or a function of the element, read on open); the value `inner` shows the entries of the element’s own menu button, and an id those of that menu button, and the pick is then reported on that button’s wrapper. Shift with a right click keeps the browser’s menu. `attachContextMenus(root)` listens for every marked element under the root; `openContextMenu(el, { x, y })` opens it from the page.' },
+            { name: 'data-kp-context-menu-label', what: 'The context menu’s name for a screen reader; “Actions” when absent.' },
+            { name: 'data-kp-context-press', what: '`on` or `off`: whether a long press opens the context menu. By default it does, except inside row picking (`data-kp-row-pick`), whose long press starts selection mode.' },
+            { name: 'kp-context-menu-open', what: 'Fired on the element when its context menu opened: `{ x, y, source }`, `source` being `pointer`, `touch` or `keyboard`.' },
             { name: '.kp-menu--rich', what: 'The menu itself, a `.kp-menu`: wide enough for a label over a hint, and past its maximum height it scrolls inside itself.' },
             { name: '.kp-menu__group, __heading', what: 'A group of entries and its heading in small muted capitals, which names the `role="group"`. A menu of one entry, or a nameless group, has no heading.' },
             { name: '.kp-menu__label, __hint', what: 'An entry’s label over its one-line hint; every label and every hint start at one edge.' },

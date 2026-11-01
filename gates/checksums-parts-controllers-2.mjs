@@ -311,4 +311,7 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/row-pick/core.js',
     'js/row-pick/rows.js',
     'js/structure/reorder-group.js',
+    'js/context-menu/anchor.js',
+    'js/context-menu/controller.js',
+    'js/context-menu/values.js',
 ];
