@@ -31100,7 +31100,7 @@ function readSources(memory) {
   }
   return { items: [...items.values()], known: known4, shown: shown5, shownTicked };
 }
-var SELECTION, BOX, SELECTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_MATCHING_EVENT, SELECTION_ACTION_EVENT, SELECTION_NAMES, SELECTION_SAY_MS, make9, labelOf5, rowOf4, keyOf2, shownRow;
+var SELECTION, BOX, SELECTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_MATCHING_EVENT, SELECTION_ACTION_EVENT, SELECTION_LIFT_PROPERTY, SELECTION_NAMES, SELECTION_SAY_MS, make9, labelOf5, rowOf4, keyOf2, shownRow;
 var init_model2 = __esm({
   "js/selection-bar/model.js"() {
     "use strict";
@@ -31110,6 +31110,7 @@ var init_model2 = __esm({
     SELECTION_CLEAR_EVENT = "kp-selection-clear";
     SELECTION_MATCHING_EVENT = "kp-selection-matching";
     SELECTION_ACTION_EVENT = "kp-selection-action";
+    SELECTION_LIFT_PROPERTY = "--kp-selection-lift";
     SELECTION_NAMES = 6;
     SELECTION_SAY_MS = 350;
     make9 = (doc, className, tag = "div") => {
@@ -31383,6 +31384,31 @@ var init_draw5 = __esm({
   }
 });
 
+// js/selection-bar/lift.js
+function publishLift(bar) {
+  const { host, doc } = bar;
+  const view = doc.defaultView;
+  const panel = host.querySelector(":scope > .kp-selection__panel");
+  if (!view || !panel || host.getAttribute("data-kp-placement") !== "floating-bottom") return;
+  const root = doc.documentElement;
+  const publish = () => {
+    const shown5 = host.getAttribute("data-kp-selection-state") !== "empty";
+    const lift = shown5 ? Math.max(0, view.innerHeight - panel.getBoundingClientRect().top) : 0;
+    root.style.setProperty(SELECTION_LIFT_PROPERTY, `${Math.round(lift)}px`);
+  };
+  if (typeof ResizeObserver !== "undefined") bar.observe(new ResizeObserver(publish)).observe(panel);
+  bar.observe(new view.MutationObserver(publish)).observe(host, { attributes: true, attributeFilter: ["data-kp-selection-state"] });
+  bar.listen(view, "resize", publish);
+  bar.own(() => root.style.removeProperty(SELECTION_LIFT_PROPERTY));
+  publish();
+}
+var init_lift = __esm({
+  "js/selection-bar/lift.js"() {
+    "use strict";
+    init_model2();
+  }
+});
+
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
 var init_controller21 = __esm({
@@ -31392,6 +31418,7 @@ var init_controller21 = __esm({
     init_row_select();
     init_strings();
     init_draw5();
+    init_lift();
     init_model2();
     UNDO_MS2 = 6e3;
     OPTIONS = ["data-kp-selection-names", "data-kp-selection-max", "data-kp-select-matching"];
@@ -31445,6 +31472,7 @@ var init_controller21 = __esm({
           event
         ));
         sync(bar, this.memory);
+        publishLift(this);
       }
       onOptions() {
         this.memory.matchingTotal = Number(this.host.getAttribute("data-kp-select-matching")) || 0;

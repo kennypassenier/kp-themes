@@ -6822,8 +6822,9 @@
 
     .kp-toasts {
         position: fixed;
-        /* Above a bottom tab bar when the page has one (js/tabbar.js). */
-        inset-block-end: calc(1rem + var(--kp-tabbar-height, 0px));
+        /* Above a bottom tab bar when the page has one (js/tabbar.js), and above a floating selection bar that shows a
+         * selection (js/selection-bar.js publishes `--kp-selection-lift`, the bar's distance from the window's foot). */
+        inset-block-end: max(calc(1rem + var(--kp-tabbar-height, 0px)), calc(var(--kp-selection-lift, 0px) + var(--kp-space-md, 0.75rem)));
         inset-inline-end: 1rem;
         display: flex;
         flex-direction: column;
@@ -8748,7 +8749,8 @@
         font-size: var(--kp-text-xs, 0.75rem);
     }
 
-    /* A narrow bar: the count, "Actions" and untick; the names fold to the count. */
+    /* A narrow bar: the count, "Actions" and untick; the names fold to the count. The count never keeps a width the
+     * buttons beside it need (it wraps instead), so no theme's wide capitals or word set can run it under "Actions". */
     @container kp-selection (max-width: 40rem) {
         .kp-selection__panel {
             grid-template-columns: minmax(0, 1fr) auto auto;
@@ -8757,6 +8759,11 @@
                 'actions actions actions'
                 'offer offer offer'
                 'result result result';
+        }
+
+        .kp-selection__count {
+            min-inline-size: 0;
+            overflow-wrap: anywhere;
         }
 
         .kp-selection__names {
@@ -8775,6 +8782,20 @@
 
         .kp-selection[data-kp-selection-open] .kp-selection__actions {
             display: flex;
+        }
+    }
+
+    /* A phone-width bar (a container under 30rem): the count has a row of its own above "Actions" and untick, whatever the
+     * theme's button width or the page's words (measured at 390 px: brutalism and synthwave ran 20 and 24 px under "Actions"). */
+    @container kp-selection (max-width: 30rem) {
+        .kp-selection__panel {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                'count count count'
+                'toggle . clear'
+                'actions actions actions'
+                'offer offer offer'
+                'result result result';
         }
     }
 

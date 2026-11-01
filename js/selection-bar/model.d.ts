@@ -10,6 +10,8 @@ export declare const SELECTION_CLEAR_EVENT = "kp-selection-clear";
 export declare const SELECTION_MATCHING_EVENT = "kp-selection-matching";
 /** Fired on the bar, cancelable, when a button marked `data-kp-selection-action` is pressed: `{ action, button, keys, items, matching, undoMs }`. */
 export declare const SELECTION_ACTION_EVENT = "kp-selection-action";
+/** The property a floating bar publishes on the root for the toasts: its distance from the window's foot while it shows a selection. */
+export declare const SELECTION_LIFT_PROPERTY = "--kp-selection-lift";
 /** The names shown before "+N more". */
 export declare const SELECTION_NAMES = 6;
 /** How long the bar waits for a burst of ticks before it says the count [ms]. */

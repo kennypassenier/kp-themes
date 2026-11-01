@@ -305,4 +305,5 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/week/upcoming.js',
     'js/question-card/batch.js',
     'js/command/secret.js',
+    'js/selection-bar/lift.js',
 ];

@@ -3,8 +3,9 @@
 
     .kp-toasts {
         position: fixed;
-        /* Above a bottom tab bar when the page has one (js/tabbar.js). */
-        inset-block-end: calc(1rem + var(--kp-tabbar-height, 0px));
+        /* Above a bottom tab bar when the page has one (js/tabbar.js), and above a floating selection bar that shows a
+         * selection (js/selection-bar.js publishes `--kp-selection-lift`, the bar's distance from the window's foot). */
+        inset-block-end: max(calc(1rem + var(--kp-tabbar-height, 0px)), calc(var(--kp-selection-lift, 0px) + var(--kp-space-md, 0.75rem)));
         inset-inline-end: 1rem;
         display: flex;
         flex-direction: column;

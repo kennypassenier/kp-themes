@@ -920,13 +920,14 @@ The snooze picker, as a SnoozePicker controller. 4 files.
 
 ## js/selection-bar.js → js/selection-bar/
 
-The selection bar over a list's ticked rows, as a SelectionBar controller. 4 files.
+The selection bar over a list's ticked rows, as a SelectionBar controller. 5 files.
 
 | File            | Does                                                                                       |
 | --------------- | ------------------------------------------------------------------------------------------ |
 | `api.js`        | Feed the bar by hand, read it, busy and progress, the result and the rules.               |
 | `controller.js` | SelectionBar: the memory, the sources and their redraws, the options, buttons and Esc.     |
 | `draw.js`       | Parts, the count, names, offer and actions drawn from the memory; saying, unticking, sync. |
+| `lift.js`       | `--kp-selection-lift`: the room a floating bar takes, for the toasts above it.             |
 | `model.js`      | Selector, events, numbers, the memory's shape, and reading the rows a bar serves.          |
 
 ## js/request-inspector.js → js/request-inspector/
