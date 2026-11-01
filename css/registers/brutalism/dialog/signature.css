@@ -3,11 +3,16 @@
         background: var(--accent);
     }
 
-    [data-theme='brutalism'] .kp-dialog {
-        /* The drop starts 2.5 rem up-left of the footprint: on a narrow
-           screen the dialog leaves that much room on both sides, so no
-           frame of the drop is outside the window. */
+    /* The drop starts 2.5 rem up-left of the footprint: on a narrow
+       screen the dialog leaves that much room on both sides, so no
+       frame of the drop is outside the window. An edge drawer is not
+       dropped and keeps its own width: capped, it stood 80 px off a
+       390 px phone's edge [habits-1101 theme-sweep]. */
+    [data-theme='brutalism'] .kp-dialog:not(.kp-drawer) {
         max-inline-size: var(--kp-dialog-max-width, min(32rem, calc(100vw - 2 * var(--kp-sig-br-h-slab))));
+    }
+
+    [data-theme='brutalism'] .kp-dialog {
         /* js/motion.js measures the theme's time on an unopened probe and
            takes a close as two thirds of what it reads: the unopened dialog
            runs one and a half drops, the open one a drop, which is also its

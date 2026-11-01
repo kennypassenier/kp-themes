@@ -113,6 +113,8 @@ try {
         }
     }
     for (const name of onDisk) {
+        // The bundle's types are written by gates/generate-bundle.mjs and checked there [homelab-1101 bundle-types].
+        if (name === 'dist/kp-themes.d.ts') continue;
         if (!fresh.includes(name)) {
             failed++;
             console.error(`${name} is on disk and belongs to no source.`);

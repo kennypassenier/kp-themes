@@ -683,7 +683,7 @@
         "./fonts/*": "./fonts/*",
         "./dist/css/min": "./dist/kp-themes.min.css",
         "./dist/js/min": {
-            "types": "./js/auto.d.ts",
+            "types": "./dist/kp-themes.d.ts",
             "default": "./dist/kp-themes.min.js"
         },
         "./dist/css/*": "./dist/css/*"

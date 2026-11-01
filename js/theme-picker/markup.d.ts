@@ -31,10 +31,13 @@ export declare function themeOptionsMarkup({ themes, labels, grouped, groupLabel
  * pass one when there are two menus. Everything a person reads is
  * escaped; the icon is trusted markup you pass.
  *
- * @param {{ id?: string, label?: string, icon?: string, themes?: readonly import('../theme-registry.js').ThemeRecord[], labels?: Partial<Record<string, string>>, grouped?: boolean, groupLabels?: { light?: string, dark?: string }, className?: string }} [options]
+ * `trigger: 'label'` draws a labelled button that names the theme worn ("Formal ▾", `current` or the root's theme) and keeps
+ * that name on a pick, for a settings row [kitchen-1101, chassis-rs gap 24]; the default is the icon button.
+ *
+ * @param {{ id?: string, label?: string, icon?: string, themes?: readonly import('../theme-registry.js').ThemeRecord[], labels?: Partial<Record<string, string>>, grouped?: boolean, groupLabels?: { light?: string, dark?: string }, className?: string, trigger?: 'icon' | 'label', current?: string }} [options]
  * @returns {string}
  */
-export declare function themeMenuMarkup({ id, label, icon, themes, labels, grouped, groupLabels, className, }?: {
+export declare function themeMenuMarkup({ id, label, icon, themes, labels, grouped, groupLabels, className, trigger, current, }?: {
     id?: string;
     label?: string;
     icon?: string;
@@ -46,4 +49,6 @@ export declare function themeMenuMarkup({ id, label, icon, themes, labels, group
         dark?: string;
     };
     className?: string;
+    trigger?: 'icon' | 'label';
+    current?: string;
 }): string;

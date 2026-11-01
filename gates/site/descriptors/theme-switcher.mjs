@@ -63,6 +63,7 @@ export const themeSwitcherDescriptor = {
             { name: '.kp-swatch', what: 'The two-colour disc beside an option. It wears the theme it names, so it shows that theme’s live colours rather than a copy.' },
             { name: '.kp-theme-group', what: 'One labelled group of options — light above dark. Flat, the groups become two rows; in a menu they become two sections with a rule between them.' },
             { name: '.kp-theme-menu', what: 'The wrapper of the icon button and its list. The React switcher positions its own list under the button; the framework-free menu is a popover.' },
+            { name: "themeMenuMarkup({ trigger: 'label' })", what: 'A labelled button that names the theme worn ("Formal ▾", from `current` or the root’s theme) instead of the icon, for a settings row; a pick renames it and its accessible name ("Theme: Formal"). The default stays the icon button.' },
             { name: '.kp-theme-option__label / __check', what: 'The parts of one option in the React channel: the name, and the check that marks the current theme.' },
             { name: 'selected', what: 'The current theme is marked twice — a border and a check mark flat, weight and a check in a menu — because colour alone is not a carrier.' },
             { name: 'storage refused', what: 'When the browser will not store the choice the status line says so out loud instead of leaving a picker that looks broken on the next load.' },

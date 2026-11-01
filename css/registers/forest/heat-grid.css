@@ -13,6 +13,13 @@
         outline-offset: 2px;
         z-index: 1;
     }
+    /* The resting dashed outline is transparent and outranked the shared focus ring, so a focused day showed nothing
+     * [habits-1101 theme-sweep]: focus draws the ring, solid, as the other themes do. */
+    [data-theme='forest'] :is(.kp-heat__cell, .kp-matrix__cell):focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        z-index: 1;
+    }
     [data-theme='forest'] .kp-heat__cell:active:not(.kp-skeleton, [aria-disabled='true'], :focus-visible),
     [data-theme='forest'] .kp-matrix__cell:active:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton, :focus-visible) {
         outline-style: solid;

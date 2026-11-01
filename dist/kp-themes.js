@@ -17596,6 +17596,14 @@ var init_preview2 = __esm({
 });
 
 // js/theme-picker/controller.js
+function nameTrigger(picker, theme) {
+  const trigger = picker.closest(".kp-theme-menu")?.querySelector('[data-kp-theme-trigger="label"]');
+  const name = picker.querySelector(`[data-kp-theme="${CSS.escape(theme)}"]`)?.textContent?.trim();
+  if (!(trigger instanceof HTMLElement) || !name) return;
+  const current2 = trigger.querySelector(".kp-theme-menu__current");
+  if (current2) current2.textContent = name;
+  trigger.setAttribute("aria-label", `${trigger.dataset.kpThemeLabel ?? ""}: ${name}`);
+}
 var ThemePicker;
 var init_controller6 = __esm({
   "js/theme-picker/controller.js"() {
@@ -17654,6 +17662,7 @@ var init_controller6 = __esm({
           status ?? picker.parentNode ?? document,
           !stored
         );
+        nameTrigger(picker, chosen);
         picker.dispatchEvent(new CustomEvent(PICK_EVENT, { bubbles: true, detail: { theme: chosen, stored } }));
         const popover = closePopover ? picker.closest("[popover]") : null;
         if (popover && popover.matches(":popover-open")) popover.hidePopover();
@@ -17703,12 +17712,23 @@ function themeMenuMarkup({
   labels,
   grouped,
   groupLabels,
-  className = ""
+  className = "",
+  trigger = "icon",
+  current: current2
 } = {}) {
   const safeId = escapeHtml(id);
   const safeLabel = escapeHtml(label2);
   const classes = `kp-theme-menu ${escapeHtml(className)}`.trim();
-  return `<span class="${classes}"><button type="button" class="kp-icon-button" popovertarget="${safeId}" aria-label="${safeLabel}" style="anchor-name: --${safeId}">` + icon + `</button><div popover="auto" id="${safeId}" class="kp-popover" style="position-anchor: --${safeId}"><ul class="kp-menu" data-kp-theme-picker aria-label="${safeLabel}">${themeOptionsMarkup({ themes, labels, grouped, groupLabels })}</ul></div></span>`;
+  return `<span class="${classes}">` + (trigger === "label" ? labelTrigger(safeId, label2, current2, themes, labels) : iconTrigger(safeId, safeLabel, icon)) + `<div popover="auto" id="${safeId}" class="kp-popover" style="position-anchor: --${safeId}"><ul class="kp-menu" data-kp-theme-picker aria-label="${safeLabel}">${themeOptionsMarkup({ themes, labels, grouped, groupLabels })}</ul></div></span>`;
+}
+function iconTrigger(safeId, safeLabel, icon) {
+  return `<button type="button" class="kp-icon-button" popovertarget="${safeId}" aria-label="${safeLabel}" style="anchor-name: --${safeId}">${icon}</button>`;
+}
+function labelTrigger(safeId, label2, current2, themes = THEMES, labels = {}) {
+  const worn = current2 ?? (typeof document === "undefined" ? void 0 : document.documentElement.dataset.theme);
+  const record = themes.find((t) => t.name === worn) ?? themes[0];
+  const name = record ? labels[record.name] ?? record.label : "";
+  return `<button type="button" class="kp-button" data-kp-theme-trigger="label" data-kp-theme-label="${escapeHtml(label2)}" popovertarget="${safeId}" aria-label="${escapeHtml(`${label2}: ${name}`)}" style="anchor-name: --${safeId}"><span class="kp-theme-menu__current">${escapeHtml(name)}</span><span aria-hidden="true">\u25BE</span></button>`;
 }
 var THEME_MENU_ICON;
 var init_markup = __esm({
@@ -49039,9 +49059,10 @@ var init_opening = __esm({
        * @param {HTMLElement} el
        */
       refocusAfterClose(el16) {
-        void this.closing.then(() => {
+        const back = () => {
           if (!this.wanted && el16.isConnected) el16.focus();
-        });
+        };
+        void this.closing.then(back, back);
       }
       /** @param {boolean} next */
       setOpen(next2) {
@@ -53739,6 +53760,14 @@ var init_shared = __esm({
 });
 
 // js/structure/reorder.js
+function restoreOrder(list, original) {
+  const children = [...list.children];
+  if (children.length === original.length && children.every((child, i) => child === original[i])) return;
+  const focused2 = list.ownerDocument.activeElement;
+  const held2 = focused2 instanceof HTMLElement && list.contains(focused2) ? focused2 : null;
+  list.replaceChildren(...original);
+  if (held2?.isConnected && list.ownerDocument.activeElement !== held2) held2.focus({ preventScroll: true });
+}
 var handleAt, ReorderControl;
 var init_reorder2 = __esm({
   "js/structure/reorder.js"() {
@@ -53773,7 +53802,7 @@ var init_reorder2 = __esm({
         this.mountLive();
         this.own(() => {
           this.endDrag?.();
-          if (groupOf2(list) === null) list.replaceChildren(...this.original);
+          if (groupOf2(list) === null) restoreOrder(list, this.original);
           if (this.madeLive) this.live?.remove();
           delete list.dataset.kpReorderAttached;
         });

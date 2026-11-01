@@ -944,10 +944,12 @@
                             <tr><td><code>data-kp-theme-attached</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-theme-from-query</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-theme-group</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-theme-label</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-theme-picker</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-theme-preview</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-theme-preview-target</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-theme-status</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-theme-trigger</code></td><td>selector</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -1027,6 +1029,7 @@
                             <tr><td><code>.kp-swatch</code></td><td>The two-colour disc beside an option. It wears the theme it names, so it shows that theme’s live colours rather than a copy.</td></tr>
                             <tr><td><code>.kp-theme-group</code></td><td>One labelled group of options — light above dark. Flat, the groups become two rows; in a menu they become two sections with a rule between them.</td></tr>
                             <tr><td><code>.kp-theme-menu</code></td><td>The wrapper of the icon button and its list. The React switcher positions its own list under the button; the framework-free menu is a popover.</td></tr>
+                            <tr><td><code>themeMenuMarkup({ trigger: 'label' })</code></td><td>A labelled button that names the theme worn (&quot;Formal ▾&quot;, from `current` or the root’s theme) instead of the icon, for a settings row; a pick renames it and its accessible name (&quot;Theme: Formal&quot;). The default stays the icon button.</td></tr>
                             <tr><td><code>.kp-theme-option__label / __check</code></td><td>The parts of one option in the React channel: the name, and the check that marks the current theme.</td></tr>
                             <tr><td><code>selected</code></td><td>The current theme is marked twice — a border and a check mark flat, weight and a check in a menu — because colour alone is not a carrier.</td></tr>
                             <tr><td><code>storage refused</code></td><td>When the browser will not store the choice the status line says so out loud instead of leaving a picker that looks broken on the next load.</td></tr>

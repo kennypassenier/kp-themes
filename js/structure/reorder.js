@@ -11,6 +11,20 @@ import { DEFAULTS, REORDER_EVENT } from './shared.js';
 /** @param {EventTarget | null} target */
 const handleAt = (target) => /** @type {HTMLElement | null} */ (/** @type {HTMLElement} */ (target).closest('[data-kp-handle]'));
 
+/**
+ * Put the items back in the order attach found them, moving only what moved, and keep the focus where it was:
+ * moving a node that holds the focus drops it to <body> without a blur [habits-1101 focus-after-detach].
+ * @param {HTMLElement} list @param {readonly Element[]} original
+ */
+function restoreOrder(list, original) {
+    const children = [...list.children];
+    if (children.length === original.length && children.every((child, i) => child === original[i])) return;
+    const focused = list.ownerDocument.activeElement;
+    const held = focused instanceof HTMLElement && list.contains(focused) ? focused : null;
+    list.replaceChildren(...original);
+    if (held?.isConnected && list.ownerDocument.activeElement !== held) held.focus({ preventScroll: true });
+}
+
 export class ReorderControl extends Controller {
     /** Whether the element is already wired: it carries the mark connect() stamps. @param {HTMLElement} element */
     static isAttached(element) {
@@ -39,7 +53,7 @@ export class ReorderControl extends Controller {
         this.own(() => {
             this.endDrag?.();
             // A list that shares its items gives none back: they may stand in another list now, which keeps them.
-            if (groupOf(list) === null) list.replaceChildren(...this.original);
+            if (groupOf(list) === null) restoreOrder(list, this.original);
             if (this.madeLive) this.live?.remove();
             delete list.dataset.kpReorderAttached;
         });

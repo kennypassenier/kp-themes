@@ -10272,6 +10272,15 @@
         margin-block-start: 0.25rem;
     }
 
+    /* On the top layer the plate is fixed, not absolute: an absolute one is placed in the initial containing block,
+     * and position-area pinned a popover under a button scrolled 1226 px down to that block's bottom edge, 714 px above
+     * its button [kitchen-1101, chassis-rs gap 23]. Fixed follows the button; the fallbacks open it above a button near
+     * the bottom edge, or toward the start near the end edge. */
+    .kp-popover[popover] {
+        position: fixed;
+        position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    }
+
     .kp-menu {
         display: flex;
         flex-direction: column;
