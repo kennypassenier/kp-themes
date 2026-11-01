@@ -59786,6 +59786,8 @@ function paint9(c) {
     if (before2 && before2 !== run.state) c.announcer.textContent = s2.ganttAnnounce(run.label, stateWord3(c, run.state));
     c.states.set(run.id, run.state);
     const item = { run, s: rel(c, startMs), e: endRaw == null ? null : rel(c, Math.max(endRaw, startMs)), bar, row: 0 };
+    const plannedMs = run.state === "running" && run.plannedEnd != null ? toMs2(run.plannedEnd) : Number.NaN;
+    if (Number.isFinite(plannedMs)) HELD.set(item, rel(c, Math.max(plannedMs, nowMs, startMs)));
     byLane.get(run.lane)?.push(item);
   }
   for (const [id, bar] of c.bars)
@@ -59830,7 +59832,10 @@ function paint9(c) {
   for (const [id, lane] of laneById) {
     const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
     const packed = fit2 ? packFit(c, bars, marksOf.get(id) ?? [], minBar) : packRows(
-      bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach3) })),
+      bars.map((b) => {
+        const e = b.e ?? HELD.get(b) ?? null;
+        return { id: b.run.id, s: b.s, e: e == null ? null : Math.max(e, b.s + reach3) };
+      }),
       before,
       pad2,
       marksOf.get(id) ?? []
@@ -59845,7 +59850,8 @@ function paint9(c) {
     model.lane = lane;
     fillLaneLabel(c, model.label, lane);
     model.track.setAttribute("aria-label", lane.label);
-    const spare = bars.some((b) => b.e == null) ? 1 : 0;
+    const spareOn = c.el.getAttribute("data-kp-gantt-spare") !== "off";
+    const spare = spareOn && bars.some((b) => b.e == null && !HELD.has(b)) ? 1 : 0;
     model.rows = fit2 ? packed.count : Math.max(model.rows, packed.count + spare);
     for (const b of bars) b.row = packed.rows.get(b.run.id) ?? 0;
     model.bars = bars;
@@ -59948,6 +59954,7 @@ function viewHeight(c) {
   }
   return fit2 > c.axis.offsetHeight ? fit2 : natural;
 }
+var HELD;
 var init_paint9 = __esm({
   "js/gantt/paint.js"() {
     "use strict";
@@ -59961,6 +59968,7 @@ var init_paint9 = __esm({
     init_busy5();
     init_fit2();
     init_selection3();
+    HELD = /* @__PURE__ */ new WeakMap();
   }
 });
 

@@ -2,10 +2,6 @@ export type GanttBar = import('./constants.js').GanttBar;
 export type GanttLane = import('./constants.js').GanttLane;
 export type GanttLaneModel = import('./constants.js').GanttLaneModel;
 export type GanttModel = import('./constants.js').GanttModel;
-/** @typedef {import('./constants.js').GanttBar} GanttBar */
-/** @typedef {import('./constants.js').GanttLane} GanttLane */
-/** @typedef {import('./constants.js').GanttLaneModel} GanttLaneModel */
-/** @typedef {import('./constants.js').GanttModel} GanttModel */
 /** Everything the timeline shows, from the model. @param {GanttModel} c */
 export declare function paint(c: GanttModel): void;
 /**
