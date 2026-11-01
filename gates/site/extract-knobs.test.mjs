@@ -219,11 +219,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [habits-1101]: the task row reads --kp-task-row-icon and --kp-task-row-gap: 1158 + 2 = 1160.
     // Re-pinned 2026-11-01 [gantt-fit-1101]: a fitted run timeline places a label by its own start, --kp-g-label-at, read through var(): 1160 + 1 = 1161.
     // Re-pinned 2026-11-01 [ux-1101]: the filter popover's width (--kp-datatable-filters-width), read through var(): 1161 + 1 = 1162.
-    // Re-pinned 2026-11-01 [ux-1101]: chips on whole tracks write and read --kp-seg-cols and --kp-seg-track; AR21 counts one more: 1160 + 1 = 1161.
-    // Re-pinned 2026-11-01 [ux-1101]: the three-way chip's word look reads --kp-tri-tag-size: 1161 + 1 = 1162.
-    // Re-pinned 2026-11-01 [ux-1101]: the popover form reads --kp-popover-form-min and -max: 1162 + 2 = 1164.
-    // Re-pinned 2026-11-01 [ux-1101]: the date navigation reads --kp-date-nav-gap: 1164 + 1 = 1165.
-    assert.equal(result.expected, 1165, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-11-01 [ux-1101]: chips on whole tracks write and read --kp-seg-cols and --kp-seg-track; AR21 counts one more: 1162 + 1 = 1163.
+    // Re-pinned 2026-11-01 [ux-1101]: the three-way chip's word look reads --kp-tri-tag-size: 1163 + 1 = 1164.
+    // Re-pinned 2026-11-01 [ux-1101]: the popover form reads --kp-popover-form-min and -max: 1164 + 2 = 1166.
+    // Re-pinned 2026-11-01 [ux-1101]: the date navigation reads --kp-date-nav-gap: 1166 + 1 = 1167.
+    assert.equal(result.expected, 1167, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -322,11 +322,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [habits-1101]: the task row's two are read through var(): 1148 + 2 = 1150.
     // Re-pinned 2026-11-01 [gantt-fit-1101]: --kp-g-label-at is read through var(): 1150 + 1 = 1151.
     // Re-pinned 2026-11-01 [ux-1101]: --kp-datatable-filters-width is read through var(): 1151 + 1 = 1152.
-    // Re-pinned 2026-11-01 [ux-1101]: chips on whole tracks read one more through var(): 1150 + 1 = 1151.
-    // Re-pinned 2026-11-01 [ux-1101]: --kp-tri-tag-size is read through var(): 1151 + 1 = 1152.
-    // Re-pinned 2026-11-01 [ux-1101]: the popover form's two are read through var(): 1152 + 2 = 1154.
-    // Re-pinned 2026-11-01 [ux-1101]: --kp-date-nav-gap is read through var(): 1154 + 1 = 1155.
-    assert.equal(result.readCount, 1155);
+    // Re-pinned 2026-11-01 [ux-1101]: chips on whole tracks read one more through var(): 1152 + 1 = 1153.
+    // Re-pinned 2026-11-01 [ux-1101]: --kp-tri-tag-size is read through var(): 1153 + 1 = 1154.
+    // Re-pinned 2026-11-01 [ux-1101]: the popover form's two are read through var(): 1154 + 2 = 1156.
+    // Re-pinned 2026-11-01 [ux-1101]: --kp-date-nav-gap is read through var(): 1156 + 1 = 1157.
+    assert.equal(result.readCount, 1157);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
