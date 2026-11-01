@@ -452,6 +452,10 @@
             "types": "./js/board.d.ts",
             "default": "./js/board.js"
         },
+        "./js/markdown-editor": {
+            "types": "./js/markdown-editor.d.ts",
+            "default": "./js/markdown-editor.js"
+        },
         "./js/context-menu": {
             "types": "./js/context-menu.d.ts",
             "default": "./js/context-menu.js"

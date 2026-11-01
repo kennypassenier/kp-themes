@@ -105,6 +105,7 @@
         "running-job-button.css",
         "menu-button.css",
         "context-menu.css",
+        "markdown-editor.css",
         "drawer-tour/base.css",
         "drawer-tour/tours-card-js-tour.css",
         "segmented-toolbar/base.css",

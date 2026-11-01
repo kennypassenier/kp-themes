@@ -2,6 +2,7 @@
     "//": "Roots a register does not reach yet [TH124, AR37]. The gate refuses an entry once every register covers it, so nothing can sit here after the work is done.",
     "cat-chip": "the categorical chip [habits-1101]: its colours are the theme's own --kp-cat tokens; demoed in formal only, each register answers it once it is judged in that theme",
     "cat-dot": "the categorical dot [habits-1101]: its colour is the theme's own --kp-cat token; demoed in formal only, each register answers it once it is judged in that theme",
+    "md-editor": "the Markdown editor [habits-1101]: its tools are the package's ghost buttons, its tabs the package's tabs, its text a kp field and its preview the reader, which every register already paints; demoed in formal only, each register answers its frame once it is judged in that theme",
     "board": "the board [habits-1101]: its lanes are the pipeline's lane parts, which every register already paints; demoed in formal only, each register answers the board's own track, tabs and empty line once it is judged in that theme",
     "context-menu": "the context menu's invisible anchor [habits-1101]; its plate is the menu button's .kp-menu--rich, which every register already paints; demoed in formal only, each register answers it once it is judged in that theme",
     "action-list": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",

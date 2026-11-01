@@ -3,6 +3,8 @@ export declare const MOD_CAP = ".kp-kbd[data-kp-key=\"mod\"]";
 /** A line of shortcuts. */
 export declare const KEYS = ".kp-keys";
 export type KeyPair = [string | readonly string[], string];
+/** Whether the modifier key is ⌘ here rather than Ctrl, for a part that names its own shortcuts (the Markdown editor) [habits-1101]. */
+export declare const isMacPlatform: () => boolean;
 /**
  * Write a line of shortcuts into `el`, replacing what it held. The element
  * becomes a `.kp-keys` group named "Keyboard shortcuts" unless it already has

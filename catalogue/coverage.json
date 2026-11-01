@@ -55,6 +55,7 @@
         "kp-pipeline",
         "kp-context-menu",
         "kp-board",
+        "kp-md-editor",
         "kp-cat-chip",
         "kp-cat-dot",
         "kp-problem",

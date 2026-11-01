@@ -317,4 +317,8 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/board/controller.js',
     'js/board/lanes.js',
     'js/board/values.js',
+    'js/markdown/tasks.js',
+    'js/markdown-editor/controller.js',
+    'js/markdown-editor/edits.js',
+    'js/markdown-editor/toolbar.js',
 ];

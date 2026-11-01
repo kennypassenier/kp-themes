@@ -19461,6 +19461,145 @@
         inset-inline-start: 0;
         inset-inline-end: auto;
     }
+    /* --- Markdown editor [habits-1101] ----------------------------------------
+ * `.kp-md-editor[data-kp-md-editor]` (js/markdown-editor.js): the page's text area under a toolbar of the package's small ghost
+ * buttons, and the reader's preview beside it on one row as tall as the text (the preview scrolls inside it), or behind Write /
+ * Preview tabs when the editor is narrow (`data-kp-md-tabbed`, written by the script). Knobs: --kp-md-editor-gap (0.5rem),
+ * --kp-md-editor-min (12rem, the least height of the text and the preview). */
+    .kp-md-editor {
+        display: grid;
+        gap: var(--kp-md-editor-gap, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-md-editor__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-md-editor__toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Square tools of one size, the picture centred: a row of equals, whatever the glyph. */
+    .kp-md-editor__tool {
+        inline-size: var(--kp-control-height-sm, 2rem);
+        min-inline-size: var(--kp-control-height-sm, 2rem);
+        padding-inline: 0;
+        justify-content: center;
+    }
+
+    .kp-md-editor__glyph {
+        font-size: var(--kp-text-md, 1rem);
+        line-height: 1;
+    }
+
+    .kp-md-editor__glyph--bold {
+        font-weight: 800;
+    }
+
+    .kp-md-editor__glyph--italic {
+        font-style: italic;
+        font-family: var(--theme-font-display, serif);
+    }
+
+    .kp-md-editor__glyph--heading {
+        font-weight: 700;
+        font-family: var(--theme-font-display, inherit);
+    }
+
+    .kp-md-editor__icon {
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+    }
+
+    .kp-md-editor__tabs {
+        border-block-end: 0;
+    }
+
+    .kp-md-editor__tabs[hidden] {
+        display: none;
+    }
+
+    .kp-md-editor__body {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--kp-md-editor-gap, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-md-editor[data-kp-md-tabbed] > .kp-md-editor__body,
+    .kp-md-editor[data-kp-md-preview='off'] > .kp-md-editor__body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-md-editor__text {
+        min-block-size: var(--kp-md-editor-min, 12rem);
+        resize: vertical;
+    }
+
+    .kp-md-editor__text[hidden],
+    .kp-md-editor__preview[hidden] {
+        display: none;
+    }
+
+    /* The preview takes the row the text sets and scrolls inside it: a long preview never makes the text area grow. */
+    .kp-md-editor__preview {
+        box-sizing: border-box;
+        block-size: 0;
+        min-block-size: 100%;
+        overflow: auto;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-md-editor[data-kp-md-tabbed] .kp-md-editor__preview {
+        block-size: auto;
+        min-block-size: var(--kp-md-editor-min, 12rem);
+    }
+
+    .kp-md-editor__preview:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-md-editor__empty {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    /* A task in the reader (`tasks: 'show'` or `'toggle'`): the box in the marker's place, the words beside it on one edge. */
+    .kp-markdown li.kp-markdown__task {
+        list-style: none;
+        margin-inline-start: -1.5em;
+    }
+
+    .kp-markdown__check {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-sm, 0.5rem);
+        cursor: pointer;
+    }
+
+    .kp-markdown__check > .kp-field__check {
+        flex: none;
+        align-self: center;
+        margin: 0;
+    }
+
+    .kp-markdown__check:has(> :checked) > span {
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
     /* --- Drawer, help and the tour [scope-143] ----------------------------- */
 
     /* A drawer: a head (the title, the close button, one sentence), a body

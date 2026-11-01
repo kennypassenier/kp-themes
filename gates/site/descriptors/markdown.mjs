@@ -5,9 +5,9 @@ export const markdownDescriptor = {
         id: 'markdown',
         title: 'Markdown notes',
         group: 'Content',
-        classes: ['kp-markdown'],
+        classes: ['kp-markdown', 'kp-md-editor'],
         exports: [],
-        aliases: [],
+        aliases: ['md-editor', 'md-preview', 'md-headings', 'md-tabbed', 'md-tool', 'md-view', 'md-line', 'markdown-task'],
         intro: 'Release notes or a changelog written in markdown, drawn safely: the page builds the headings, lists, links, code and quotes as DOM, node by node, so nothing in the text is ever parsed as HTML. It is what the acknowledge gate shows its notes with.',
         whenToUse: 'Text that comes from somebody else’s repository. For prose you write yourself use the page’s own markup.',
         examples: [
@@ -26,6 +26,9 @@ document.getElementById('doc-markdown').replaceChildren(markdownFragment(documen
             },
         ],
         variants: [
+            { name: 'tasks', what: 'The reader’s option for task lists [habits-1101]: `markdownFragment(doc, text, { tasks: \'toggle\' })` draws `- [ ] item` and `- [x] item` as a checkbox with the item’s words (`.kp-markdown__task`); a tick fires `kp-markdown-task` `{ line, checked, text }` on the box (`data-kp-md-line`, the source line from 0) and `toggleTaskLine(text, line, checked)` gives the text with it written in. `show` draws the box disabled; `off` (default) leaves them text, as before.' },
+            { name: 'data-kp-md-editor', what: 'The Markdown editor [habits-1101] (js/markdown-editor.js, `attachMarkdownEditors`): the page’s text area with a toolbar (bold, italic, heading, bulleted list, checklist, link; one tab stop) above it, Mod+B, Mod+I and Mod+K, Enter that continues a list (and ends it on an empty item), every edit one undo step, and the reader’s preview with ticking boxes. The page saves on the text area’s own `input`.' },
+            { name: 'data-kp-md-preview', what: '`side` (default): the preview beside the text when the editor is at least 48rem wide, behind Write / Preview tabs when narrower (`data-kp-md-tabbed`); `tabs`: always tabs; `off`: no preview. `data-kp-md-headings` is the level a `#` takes in it (3). `showMarkdownView(el, view)` and `refreshMarkdownPreview(el)` for the page.' },
             { name: 'the script', what: '`markdownFragment(doc, text, { headings, limit })` builds the fragment; `safeHref(href)` says whether an address may be a link (http, https, mailto, or no scheme); `MARKDOWN_LIMIT` (40 000) is the default cut.' },
             { name: 'kp-markdown__cut', what: 'The line after notes that were cut for length.' },
         ],

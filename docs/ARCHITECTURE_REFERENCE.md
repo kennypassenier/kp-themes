@@ -207,6 +207,7 @@ js/quiet-hours.js         quiet hours: from, to, days and the severities that br
 js/page-contents.js        an on-this-page contents list with scroll-spy
 js/code-field.js          a text box that knows its line and column in a config file, with the page-found error on its line
 js/markdown.js             a small, safe markdown reader: release notes as DOM, never as HTML
+js/markdown-editor.js      a Markdown field: toolbar, shortcuts, list continuation, a preview with ticking boxes [habits-1101]
 js/undo-toast.js           a toast with Undo and a visible clock
 js/unsaved.js              the unsaved-changes bar, with Save and Discard
 js/uptime.js               one thin strip of cells, one per period, toned by how the service did

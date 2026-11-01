@@ -8,6 +8,10 @@ export type ListLevel = {
 export declare class MarkdownReader {
     doc: Document;
     limit: number;
+    /** Whether `- [ ]` items are drawn as checkboxes: `off` (text, as approved), `show` or `toggle`. */
+    tasks: "off" | "show" | "toggle";
+    /** The source line of this text's first line. */
+    offset: number;
     out: DocumentFragment;
     /** Whether the text was cut at the limit. */
     cut: boolean;
@@ -22,8 +26,9 @@ export declare class MarkdownReader {
      * @param {Document} doc
      * @param {string} text
      * @param {MarkdownOptions} [options]
+     * @param {number} [offset] the source line this text starts at (a quote's lines are read by a reader of their own)
      */
-    constructor(doc: Document, text: string, { headings, limit }?: MarkdownOptions);
+    constructor(doc: Document, text: string, { headings, limit, tasks }?: MarkdownOptions, offset?: number);
     /** @returns {DocumentFragment} */
     read(): DocumentFragment;
     /** Offer a line to each block in turn; what none takes belongs to the paragraph. @param {string} line */

@@ -178,6 +178,7 @@ export const FILES = [
     'js/page-contents.js',
     'js/code-field.js',
     'js/markdown.js',
+    'js/markdown-editor.js',
     'js/connection.js',
     'js/auto-refresh.js',
     'js/master-detail.js',

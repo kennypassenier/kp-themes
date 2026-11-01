@@ -1880,13 +1880,24 @@ Which half is behind: the stylesheet's and the script's own words about themselv
 
 ## js/markdown.js → js/markdown/
 
-The safe markdown reader for release notes: the limit, the heading levels and the patterns, the inline forms, and the block reader (a MarkdownReader per text). 3 files.
+The safe markdown reader for release notes: the limit, the heading levels and the patterns, the inline forms, and the block reader (a MarkdownReader per text), with its task lists. 4 files.
 
 | File        | Does                                                                                                                                      |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `inline.js` | The inline parts of one line: code, bold, italic, links and autolinks, appended to a parent; the rest is text.                            |
 | `reader.js` | The block reader: a MarkdownReader walks the lines of one text and builds the DOM of paragraphs, headings, lists, quotes, code and rules. |
+| `tasks.js`  | Task lists [habits-1101]: `- [ ]` drawn as a checkbox, the tick reported, and the source line a tick edits.                                   |
 | `values.js` | The limit, the heading levels and the patterns of the markdown reader.                                                                    |
+
+## js/markdown-editor.js → js/markdown-editor/
+
+The Markdown editor: a toolbar, shortcuts, list continuation and a preview round the page's text area [habits-1101]. 3 files.
+
+| File            | Does                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| `controller.js` | MarkdownEditor: the frame, the layout (side by side or tabs), the keys, one-step edits and the preview. |
+| `edits.js`      | The text edits, pure: wrap, line prefixes, a link, list continuation, a line's range.                  |
+| `toolbar.js`    | The toolbar: six tools as small ghost buttons, one tab stop, each named with its shortcut.             |
 
 ## js/toolbar.js → js/toolbar/
 
