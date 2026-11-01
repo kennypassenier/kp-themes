@@ -1,5 +1,7 @@
 # research/ux-fixes-1101: eight UX fixes from the app reviews
 
+**Decided (2026-11-01 23:22):** Kenny approved all eight pairs (formal) in round 1. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kenny's review of the apps (`~/Projects/ux-review/kp-themes.md`, `kp-themes-components.md`, 2026-11-01) found faults in the package, and he
 approved nine fixes. This page shows the eight that change what a reader sees, one section each, formal only, on the apps' own shapes (kyu's
 Topics, Medicine Cabinet's rows, http-switchboard's uptime rows; the names, counts, dates and times are mock):

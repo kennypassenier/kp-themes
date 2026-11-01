@@ -1,5 +1,7 @@
 # research/gantt-fit-1101: the run timeline fits its width
 
+**Decided (2026-11-01 23:22):** Kenny approved the one pair (formal) in round 1. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kenny chose on 2026-11-01 ("Passend maken") to make Kitchen's read-only cook timeline fit a phone instead of scrolling sideways. Under
 32rem the run timeline keeps `--kp-gantt-min-width` and scrolls inside its frame (the default since wish-1028); on Kitchen's cook page at
 390 px that hid the later bars and their labels past the frame's edge and kept a spare row under a lane with a running step. Built as the
