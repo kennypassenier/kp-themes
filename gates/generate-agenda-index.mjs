@@ -4,9 +4,10 @@
 //
 //   demos    per research demo the Agenda lists (pages.js "Research to look at", not in rework): the facts of its
 //            markup (progress.js factsOf, read here by gates/html-facts.mjs), its fingerprint (progress.js
-//            fingerprintOf, the same function over the same texts) and its update.json as loadUpdate reads it.
+//            fingerprintOf, the same function over the same texts) and its update as loadUpdate reads it (the review
+//            database's demo_updates, gates/db/).
 //            A demo the scanner cannot read exactly is left out, and the Agenda reads that one live.
-//   decided  per archived demo, its decided.json as waiting.js readDecided reads it.
+//   decided  per archived demo, its decision (the review database's demo_decided) as waiting.js readDecided reads it.
 //   pixels   the pixel checks that can reopen a pair (judgements.js pixelsReopened): the run's commit and time and
 //            the checks whose state is reopened or unstable. A carried check never reopens anything.
 //   blocks   per catalogue block its verdict key, its hash, the theme it fixes for itself and its title (open-pairs.js
@@ -24,6 +25,7 @@ import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import * as prettier from 'prettier';
 import { factsFromHtml } from './html-facts.mjs';
+import { loadDemoFacts, loadPixelChecks, reading } from './db/index.mjs';
 // The browser's own modules, imported by address as the other gates import pages.js (check-verdicts.mjs), so the type
 // check of gates/ does not take them in.
 /** @type {{ PAGES: { group: string, pages: { href: string, label: string, rework?: string }[] }[], COMPONENT_PAGES: { href: string, label: string }[] }} */
@@ -49,29 +51,25 @@ const pathOf = (href) => {
     return url.origin === new URL(SITE).origin ? decodeURIComponent(url.pathname.slice(1)) : null;
 };
 
-/** loadUpdate's reading of a demo's update.json. @param {string} path */
-function updateOf(path) {
-    const raw = text(path);
-    if (raw === null) return null;
-    try {
-        const data = JSON.parse(raw);
-        const update = Number(data?.update);
-        if (!update) return null;
-        return { update, picks: data.picks || {}, questions: data.questions || {} };
-    } catch {
-        return null;
-    }
+/** What the review database holds beside the demos and the pixel checks, read once per run. */
+const stored = reading((db) => ({ updates: loadDemoFacts(db, 'update'), decisions: loadDemoFacts(db, 'decided'), pixels: loadPixelChecks(db) }));
+
+/** The demo folder under research/ a page address sits in ("kpadopt-nav"), or null. @param {string} href */
+const folderOf = (href) => /^research\/(.+)\/$/.exec(pathOf(new URL('.', new URL(href, SITE)).href) ?? '')?.[1] ?? null;
+
+/** loadUpdate's reading of a demo's update. @param {string} href the demo page */
+function updateOf(href) {
+    const data = stored.updates[folderOf(href) ?? ''];
+    const update = Number(data?.update);
+    if (!update) return null;
+    return { update, picks: data.picks || {}, questions: data.questions || {} };
 }
 
-/** readDecided's reading of an archived demo's decided.json. @param {string} path */
-function decidedOf(path) {
-    const raw = text(path);
-    if (raw === null) return '';
-    try {
-        return String(JSON.parse(raw)?.decided || 'Decided; see its decided.json.');
-    } catch {
-        return '';
-    }
+/** readDecided's reading of an archived demo's decision. @param {string} href the demo page */
+function decidedOf(href) {
+    const data = stored.decisions[folderOf(href) ?? ''];
+    if (!data) return '';
+    return String(data.decided || 'Decided; see its record in catalogue/review-demos.json.');
 }
 
 /** One demo's entry, or null when the scanner does not read it exactly (the Agenda then reads it live). */
@@ -91,22 +89,15 @@ async function demoEntry(/** @type {string} */ href) {
     return {
         facts: read.facts,
         fingerprint: await fingerprintFrom(html, /** @type {string[]} */ (files)),
-        update: updateOf(/** @type {string} */ (pathOf(new URL('update.json', page).href))),
+        update: updateOf(href),
     };
 }
 
 /** The pixel checks that can reopen a pair, as judgements.js reads them. */
 function pixelsOf() {
-    const raw = text('catalogue/pixel-checks.json');
     /** @type {{ commit?: string, checked?: string, checks: Record<string, any> }} */
     const out = { checks: {} };
-    if (raw === null) return out;
-    let data;
-    try {
-        data = JSON.parse(raw);
-    } catch {
-        return out;
-    }
+    const data = stored.pixels;
     if (!data || typeof data.checks !== 'object') return out;
     if (data.commit !== undefined) out.commit = data.commit;
     if (data.checked !== undefined) out.checked = data.checked;
@@ -179,7 +170,7 @@ export async function agendaIndex(previous, { browser }) {
     /** @type {Record<string, string>} */
     const decided = {};
     for (const page of archived)
-        decided[page.href] = decidedOf(/** @type {string} */ (pathOf(new URL('decided.json', new URL(page.href, SITE)).href)));
+        decided[page.href] = decidedOf(page.href);
     const inputs = blockInputs();
     let blocks = previous?.blocks?.inputs === inputs ? previous.blocks : null;
     if (!blocks && browser) blocks = { inputs, ...(await readBlocksInFirefox()) };

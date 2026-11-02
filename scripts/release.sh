@@ -69,13 +69,14 @@ fi
 # [scope-138]; a run with nothing changed takes seconds.
 # Kenny, 2026-10-08 (form approval-gate): with the approval gate waived
 # for a release, the photographs that feed it are skipped too; a pair left
-# open is photographed on every run and would rewrite pixel-checks.json.
+# open is photographed on every run and would rewrite the pixel checks
+# (the review database, data/kp-themes.sqlite) [db-1102].
 if [ "${KP_RELEASE_SKIP_APPROVALS:-0}" = 1 ]; then
   echo "· approvals not enforced for this release (KP_RELEASE_SKIP_APPROVALS), screenshot check skipped"
 elif [ "$dry" != 1 ] || [ "${PIXELS:-1}" = 1 ]; then
   node gates/verdicts.mjs pixels
-  test -z "$(git status --porcelain -- catalogue/verdicts.json catalogue/pixel-checks.json)" || {
-    echo "refusing: the screenshot check changed catalogue/verdicts.json or pixel-checks.json; commit them (and review what came back) first" >&2
+  test -z "$(git status --porcelain -- data/kp-themes.sqlite catalogue/review-data.json catalogue/review-pixels.json)" || {
+    echo "refusing: the screenshot check changed the review database (data/kp-themes.sqlite) and its export; commit them (and review what came back) first" >&2
     exit 1
   }
 fi

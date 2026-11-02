@@ -990,7 +990,7 @@ export function measureDriven([i, state, name, readyH, maxHold, busySel, ownSel,
 
 /**
  * A read of the page's data: a fetch or XHR that is not a file of the page itself or of the review kit (the kit reads its
- * update.json, the verdicts and the Agenda index; a demo reads its own sample modules).
+ * generated review export in catalogue/ and the Agenda index; a demo reads its own sample modules).
  * @param {import('playwright-core').Request} r
  */
 export function isDataRead(r) {

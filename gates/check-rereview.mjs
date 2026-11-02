@@ -4,8 +4,8 @@
 // Round 3 of research/kpadopt-nav reopened three sections in all 16 themes and still showed the approved
 // tab bar, and round 2 of three demos did the same, because nothing refused it.
 //
-// Every research demo can record Kenny's verdicts in `research/<topic>/VERDICTS.json`
-// (documented in research/_review/README.md):
+// Every research demo can record Kenny's verdicts in the review database (data/kp-themes.sqlite, written with
+// `node gates/verdicts.mjs round`, documented in research/_review/README.md); the record reads:
 //
 //   { "demo": "<topic>",
 //     "rounds": [ { "round": "1", "allJudged": true|false,
@@ -24,6 +24,7 @@
 //
 // Run: node gates/check-rereview.mjs
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { loadDemoVerdicts, openDatabase, verdictDemos } from './db/index.mjs';
 import { fileURLToPath } from 'node:url';
 import { THEMES } from '../js/theme-registry.js';
 
@@ -74,7 +75,7 @@ export function latestVerdicts(verdicts, offered) {
  * What is wrong with a demo page next to its verdicts.
  * @param {string} topic
  * @param {string} html the demo page
- * @param {any} verdicts the parsed VERDICTS.json
+ * @param {any} verdicts the demo's verdict record (gates/db/demo-store.mjs)
  * @param {boolean} archived whether catalogue/pages.js files the demo under "Archived research"
  * @returns {string[]}
  */
@@ -83,7 +84,7 @@ export function rereviewFaults(topic, html, verdicts, archived) {
     const offered = offeredPairs(html);
     for (const r of verdicts.reopened ?? []) {
         if (!r.item || !r.theme || !String(r.reason ?? '').trim()) {
-            faults.push(`research/${topic}/VERDICTS.json: a reopened pair needs item, theme and a written reason`);
+            faults.push(`research/${topic} (verdict record): a reopened pair needs item, theme and a written reason`);
         }
     }
     // The page's round lists the page rounds Claude has recorded (the review kit drops their answers, progress.js).
@@ -92,7 +93,7 @@ export function rereviewFaults(topic, html, verdicts, archived) {
     const recorded = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))].sort();
     if (declared.join('|') !== recorded.join('|')) {
         faults.push(
-            `research/${topic}: the page's data-review-round "received" [${declared.join(', ')}] must equal the "page" ids of the rounds in VERDICTS.json [${recorded.join(', ')}], ` +
+            `research/${topic}: the page's data-review-round "received" [${declared.join(', ')}] must equal the "page" ids of the recorded rounds [${recorded.join(', ')}] (node gates/verdicts.mjs received --demo ${topic}), ` +
                 `or the review kit carries an answer Claude already received as "not copied yet"`,
         );
     }
@@ -123,12 +124,12 @@ export function rereviewFaults(topic, html, verdicts, archived) {
     const open = offered.filter((p) => latest.get(`${p.theme}|${p.item}`) !== 'approved' || reopened.has(`${p.theme}|${p.item}`));
     if (approvedOffered.length && !open.length) {
         faults.push(
-            `research/${topic}: every pair is approved, so the demo is Decided: add its decided.json and README "**Decided (" line and file it under "Archived research" in catalogue/pages.js; do not offer it again`,
+            `research/${topic}: every pair is approved, so the demo is Decided: record it (node gates/verdicts.mjs decide --demo ${topic} --decided "…"), add its README "**Decided (" line and file it under "Archived research" in catalogue/pages.js; do not offer it again`,
         );
     } else if (approvedOffered.length) {
         faults.push(
             `research/${topic}: a re-review shows only the pairs Kenny has not approved, but the page still offers ${approvedOffered.length} approved pair(s). ` +
-                `Remove those sections, or restrict them with data-review-themes, or list a pair under "reopened" in VERDICTS.json with the reason the component changed:\n    ` +
+                `Remove those sections, or restrict them with data-review-themes, or reopen a pair with the reason the component changed (node gates/verdicts.mjs reopen --demo ${topic} --pair "item:theme:why"):\n    ` +
                 approvedOffered.map((p) => `${p.item} · ${p.theme}`).join('\n    '),
         );
     }
@@ -146,25 +147,27 @@ function main() {
     const archived = archivedTopics(readFileSync(path('catalogue/pages.js'), 'utf8'));
     const faults = [];
     let checked = 0;
-    for (const topic of readdirSync(path('research'))) {
-        const file = `research/${topic}/VERDICTS.json`;
-        if (!existsSync(path(file))) {
-            // A demo with no verdicts yet asks every pair it offers.
+    const db = openDatabase();
+    try {
+        // A record whose demo is gone (the folder deleted, the record left behind) is a fault of its own.
+        for (const demo of verdictDemos(db))
+            if (!existsSync(path(`research/${demo}/demo.html`))) faults.push(`research/${demo}: a verdict record and no demo.html`);
+        for (const topic of readdirSync(path('research'))) {
+            const verdicts = loadDemoVerdicts(db, topic);
             const page = `research/${topic}/demo.html`;
-            const asked = existsSync(path(page)) && !archived.has(topic) ? offeredPairs(readFileSync(path(page), 'utf8')).length : 0;
-            if (asked > MAX_PAIRS)
-                faults.push(
-                    `research/${topic}: the review asks ${asked} pairs, more than ${MAX_PAIRS}; split it into one demo per group of components`,
-                );
-            continue;
+            if (!verdicts) {
+                // A demo with no verdicts yet asks every pair it offers.
+                const asked = existsSync(path(page)) && !archived.has(topic) ? offeredPairs(readFileSync(path(page), 'utf8')).length : 0;
+                if (asked > MAX_PAIRS)
+                    faults.push(`research/${topic}: the review asks ${asked} pairs, more than ${MAX_PAIRS}; split it into one demo per group of components`);
+                continue;
+            }
+            if (!existsSync(path(page))) continue;
+            checked++;
+            faults.push(...rereviewFaults(topic, readFileSync(path(page), 'utf8'), verdicts, archived.has(topic)));
         }
-        checked++;
-        const demo = `research/${topic}/demo.html`;
-        if (!existsSync(path(demo))) {
-            faults.push(`${file}: no ${demo} beside it`);
-            continue;
-        }
-        faults.push(...rereviewFaults(topic, readFileSync(path(demo), 'utf8'), JSON.parse(readFileSync(path(file), 'utf8')), archived.has(topic)));
+    } finally {
+        db.close();
     }
     if (faults.length) {
         console.error(

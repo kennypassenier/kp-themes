@@ -11,6 +11,7 @@
 // covers moved since, in which case the release will photograph again.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import { DB_FILE, EXPORTS, loadPixelChecks, loadRegister, reading } from './db/index.mjs';
 
 const version = process.argv[2];
 /** @param {...string} args */
@@ -47,8 +48,10 @@ try {
 // catalogue and research pages alike (the release script refuses on both),
 // unless a verdict was recorded after it (catalogue/judgements.js reads a
 // reopening only while the verdict is the one the check compared against).
-const checks = JSON.parse(readFileSync('catalogue/pixel-checks.json', 'utf8'));
-const verdicts = JSON.parse(readFileSync('catalogue/verdicts.json', 'utf8')).verdicts ?? {};
+const { checks, verdicts } = reading((db) => ({
+    checks: loadPixelChecks(db) ?? { commit: 'HEAD', checks: {} },
+    verdicts: /** @type {Record<string, any>} */ (loadRegister(db).verdicts ?? {}),
+}));
 /** @type {string[]} */
 const open = [];
 for (const [key, themes] of Object.entries(checks.checks ?? {})) {
@@ -66,7 +69,7 @@ if (open.length) refusals.push(`${open.length} pair(s) the last screenshot check
 // will photograph again, and may find more.
 const moved = git('diff', '--name-only', `${checks.commit}..HEAD`, '--', 'css', 'js', 'catalogue', 'research/theme-portraits')
     .split('\n')
-    .filter((path) => path && !/^catalogue\/(verdicts|pixel-checks|hashes-now)\.json$/.test(path));
+    .filter((path) => path && path !== DB_FILE && !/** @type {string[]} */ (Object.values(EXPORTS)).includes(path));
 if (moved.length)
     refusals.push(
         `${moved.length} file(s) the screenshot check reads moved since it ran at ${checks.commit.slice(0, 12)}: the release photographs again (${moved.slice(0, 5).join(', ')}${moved.length > 5 ? ', …' : ''})`,

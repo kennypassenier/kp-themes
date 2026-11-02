@@ -7,7 +7,7 @@
 // twenty, and always exits 0 — the work that earns an approval must be able to
 // commit.
 //
-// A pair counts as approved when `catalogue/verdicts.json` holds a verdict
+// A pair counts as approved when the verdict register (the review database, data/kp-themes.sqlite) holds a verdict
 // `approved` for that block in that theme, in any engine. A pair is open when
 // the verdict is `rejected`, or when there is no verdict at all: a block Kenny
 // has never seen in that theme is as unreleasable as one he turned down.
@@ -17,19 +17,19 @@
 // release would ship — "anders kan een release met jouw regel toch iets
 // bevatten dat jij in deze vorm nooit zag". The block hash needs a browser,
 // so it is measured on its own (`node gates/verdicts.mjs snapshot`) into
-// `catalogue/hashes-now.json`; this reads that file, counts a pair open when
+// the database's hash readings; this reads them, counts a pair open when
 // its reading no longer matches the verdict's hash, and says at which commit
 // the readings were taken — an advice that names its own age rather than one
 // that spends minutes in a browser at every run.
 //
 // Research demos are left out: they are Kenny's to look at, not part of the
 // package a release ships.
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { approvedEntries, knownBlocks, pairsOf } from './check-verdicts.mjs';
-import { SNAPSHOT } from './verdicts.mjs';
+import { DB_FILE, loadHashReadings, loadPixelChecks, loadRegister, reading } from './db/index.mjs';
 
 /** The directories a block's look is made of: markup, registers, scripts, tokens. */
 export const SOURCES = ['catalogue', 'css', 'js', 'themes'];
@@ -56,10 +56,10 @@ const root = new URL('../', import.meta.url);
  * reading is left to stand.
  * @param {Map<string, { component: boolean, theme?: string }>} known every block a verdict can name
  * @param {string[]} themes the themes in their order
- * @param {any} register the parsed catalogue/verdicts.json
- * @param {any} [snapshot] the parsed catalogue/hashes-now.json
+ * @param {any} register the verdict register (the review database's verdicts)
+ * @param {any} [snapshot] the hash readings (the review database's hash_readings)
  * @param {(commit: string) => boolean} [comparable] is this verdict's commit at or before the snapshot's
- * @param {any} [pixels] the parsed catalogue/pixel-checks.json [scope-138]
+ * @param {any} [pixels] the pixel checks (the review database's pixel_checks) [scope-138]
  */
 export function openPairs(known, themes, register, snapshot, comparable = () => true, pixels = null) {
     const verdicts = register?.verdicts ?? {};
@@ -149,7 +149,7 @@ function movedSince(commit, at) {
         const committed = git(['diff', '--name-only', commit, '--', ...SOURCES]);
         const uncommitted = git(['status', '--porcelain', '--', ...SOURCES]).replace(/^.{3}/gm, '');
         // The readings themselves are not a block's look.
-        return [...new Set([...committed.split('\n'), ...uncommitted.split('\n')].filter(Boolean))].filter((path) => path !== SNAPSHOT);
+        return [...new Set([...committed.split('\n'), ...uncommitted.split('\n')].filter(Boolean))].filter((path) => path !== DB_FILE);
     } catch {
         return [];
     }
@@ -158,13 +158,11 @@ function movedSince(commit, at) {
 async function main() {
     const known = await knownBlocks();
     const themes = /** @type {string[]} */ (JSON.parse(readFileSync(new URL('themes/order.json', root), 'utf8')));
-    const register = JSON.parse(readFileSync(new URL('catalogue/verdicts.json', root), 'utf8'));
-    const file = new URL(SNAPSHOT, root);
-    const read = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
+    const { register, read, pixels } = reading((db) => ({ register: loadRegister(db), read: loadHashReadings(db), pixels: loadPixelChecks(db) }));
     // A reading taken under another recipe says nothing about these hashes.
-    const snapshot = read && read.hashVersion === register.hashVersion ? read : null;
-    const pixelFile = new URL('catalogue/pixel-checks.json', root);
-    const pixels = existsSync(pixelFile) ? JSON.parse(readFileSync(pixelFile, 'utf8')) : null;
+    const snapshot = /** @type {{ hashVersion: number, commit: string, taken: string, readings: Record<string, any> } | null} */ (
+        read && read.hashVersion === register.hashVersion ? read : null
+    );
     const { open, approved, pairs } = openPairs(
         known,
         themes,

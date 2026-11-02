@@ -54,7 +54,11 @@ function saveNested(db, { table, columns, fields }, metaFields, nested) {
 const PIXELS = { table: 'pixel_checks', columns: ['state', 'from_commit', 'shot'], fields: CHECK };
 const READINGS = { table: 'hash_readings', columns: ['hash', 'ratio'], fields: READING };
 
-/** The pixel checks, or null when none were ever written. @param {Db} db */
+/**
+ * The pixel checks, or null when none were ever written.
+ * @param {Db} db
+ * @returns {{ checks: Record<string, any>, [key: string]: any } | null}
+ */
 export function loadPixelChecks(db) {
     const head = meta.get(db, 'pixel_checks');
     if (!Object.keys(head).length) return null;
@@ -67,7 +71,11 @@ export function savePixelChecks(db, { checks, ...head }) {
     saveNested(db, PIXELS, head, checks);
 }
 
-/** The hash readings, or null when none were taken. @param {Db} db */
+/**
+ * The hash readings, or null when none were taken.
+ * @param {Db} db
+ * @returns {{ readings: Record<string, any>, [key: string]: any } | null}
+ */
 export function loadHashReadings(db) {
     const head = meta.get(db, 'hash_readings');
     if (!Object.keys(head).length) return null;
