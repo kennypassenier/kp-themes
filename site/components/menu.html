@@ -553,6 +553,8 @@ Row actions
                             <tr><td><code>--kp-popover-form-pair-second</code></td><td><code>8.5rem</code></td></tr>
                             <tr><td><code>--kp-popover-form-pair-width</code></td><td><code>min(24rem, 100vw - 2rem)</code></td></tr>
                             <tr><td><code>--kp-popover-max-height</code></td><td><code>min(80vh, 40rem)</code></td></tr>
+                            <tr><td><code>--kp-popover-panel-max-width</code></td><td><code>22rem</code></td></tr>
+                            <tr><td><code>--kp-popover-panel-padding</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
                             <tr><td><code>--kp-range-panel-width</code></td><td><code>24rem</code></td></tr>
                             <tr><td><code>--kp-snooze-panel-width</code></td><td><code>22rem</code></td></tr>
@@ -580,6 +582,8 @@ Row actions
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>.kp-popover</code></td><td>The floating surface: its own ground, a boundary, a maximum height it scrolls inside, and a position taken from its anchor.</td></tr>
+                            <tr><td><code>.kp-popover--panel</code></td><td>A popover that holds content rather than a list [medicine-1102]: room inside (the spacing scale’s md, a knob) so a sentence or a field never touches the border, its own width up to 22rem (a knob), and centred under its button when neither side has room.</td></tr>
+                            <tr><td><code>.kp-popover--end</code></td><td>The plate’s end edge on the button’s end edge, opening toward the start [medicine-1102], for a button at the end of a row; the start edge stays the default, and a top-layer popover still flips when its side has no room.</td></tr>
                             <tr><td><code>.kp-menu</code></td><td>The column of entries. It never wraps into a second column, whatever height it is given.</td></tr>
                             <tr><td><code>.kp-menu__item</code></td><td>One entry: a real button that fills the row and wears no button chrome.</td></tr>
                             <tr><td><code>.kp-menu__item--destructive</code></td><td>An entry in the destructive colour. It still needs a confirmation or an undo behind it.</td></tr>

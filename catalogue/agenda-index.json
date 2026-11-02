@@ -494,6 +494,22 @@
             "fingerprint": "ce0153ffcb13c539",
             "update": null
         },
+        "research/medgaps-1102/demo.html": {
+            "facts": {
+                "id": "medgaps-1102",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Two options built from Medicine Cabinet’s gaps of 01/11/2026: its “Add stock” popover with room inside and its edge under the button, and its medicines table, whose refresh no longer takes the row you are typing in. Both are opt-in; the third gap (the tab bar’s More drawer that stayed full-screen) was a fault, fixed without a new look, so it has no section. Formal only (names, counts and stock are mock). 2 sections, 2 pairs.",
+                "sections": [
+                    { "item": "popover-panel", "themes": null, "topic": "popover", "mode": null },
+                    { "item": "keep-focused-row", "themes": null, "topic": "datatable", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"medgaps-1102-f717889d-8587-4703-893d-bd93b62a5296\",\"received\":[]}\n        "
+            },
+            "fingerprint": "aa8d7ff5a46ce939",
+            "update": null
+        },
         "research/parts-forms-1102/demo.html": {
             "facts": {
                 "id": "parts-forms-1102",

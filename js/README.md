@@ -52,6 +52,7 @@ The data table: sorting, filtering, paging, cards, detail rows, reorder, editing
 | `attach/handle.js`        | TableHandle: the handle a page gets back, the rows watch and the wiring again for a changed option.       |
 | `attach/handlers.js`      | TableHandlers: the search, scope, density, sort, page size and column controls.                           |
 | `attach/identity.js`      | TableIdentity: the table's id, its undo list and the arrival mark.                                        |
+| `attach/keep-focus.js`    | TableKeepFocus: `data-kp-keep-focused-row`, the focused row kept in place of its fresh copy on a refresh. |
 | `attach/layout-setup.js`  | TableLayoutSetup: the grid readout, the failed and empty plates, the cover box and the page-size select.  |
 | `attach/model.js`         | TableModel: the view state: rows, page, query, scope, filters, sorts and busy flags.                      |
 | `attach/pills.js`         | TablePills: the filter pills and the add menu.                                                            |

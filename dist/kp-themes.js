@@ -10844,7 +10844,7 @@ var init_selectors = __esm({
 });
 
 // js/datatable/events.js
-var VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, REORDER_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS;
+var VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, REORDER_EVENT, ROW_KEPT_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS;
 var init_events = __esm({
   "js/datatable/events.js"() {
     "use strict";
@@ -10858,6 +10858,7 @@ var init_events = __esm({
     EDIT_EVENT = "kp-datatable-edit";
     GROUP_EVENT = "kp-datatable-group";
     REORDER_EVENT = "kp-datatable-reorder";
+    ROW_KEPT_EVENT = "kp-datatable-row-kept";
     PAGE_SIZE = 25;
     PAGE_SIZES = Object.freeze([10, 25, 50, 100]);
     SERVER_DEBOUNCE_MS = 300;
@@ -26553,9 +26554,11 @@ var init_controller14 = __esm({
       }
       connect() {
         if (!this.view) return;
+        this.wired = /* @__PURE__ */ new WeakSet();
         this.publishHeight();
         this.fitLabels();
         this.wireDialogs();
+        this.watchDialogs();
       }
       /** The labels tighten before any is cut (js/tabbar/fit.js): measured on a resize, a redraw of the tabs and the fonts' arrival. */
       fitLabels() {
@@ -26581,16 +26584,30 @@ var init_controller14 = __esm({
         publish2();
         this.own(() => root.style.removeProperty(TABBAR_HEIGHT_PROPERTY));
       }
-      /** A tab that opens a dialog: say so, and follow the dialog. */
+      /** A tab that opens a dialog: say so, and follow the dialog. A tab already wired is left as it is. */
       wireDialogs() {
         for (const el16 of this.host.querySelectorAll(".kp-tabbar__tab[data-kp-dialog]")) {
           const tab = (
             /** @type {HTMLElement} */
             el16
           );
+          if (this.wired.has(tab)) continue;
           const dialog = this.doc.getElementById(tab.dataset.kpDialog ?? "");
-          if (dialog instanceof HTMLDialogElement) new TabbarDialog(this, tab, dialog).connect();
+          if (!(dialog instanceof HTMLDialogElement)) continue;
+          this.wired.add(tab);
+          new TabbarDialog(this, tab, dialog).connect();
         }
+      }
+      /**
+       * A More tab drawn after the bar was wired is wired too [medicine-1102, Medicine Cabinet gap 29]. The bundle wires every bar
+       * on the page when it loads, so an app that draws its tabs afterwards found its later attachTabbars() call a no-op: the
+       * drawer was the whole window on a phone and did not close on a link the app routes in place. A redraw of the bar wires the
+       * new tab; a press on a tab whose drawer arrived after the tab wires it before the drawer opens (capture, ahead of the
+       * page's own data-kp-dialog wiring).
+       */
+      watchDialogs() {
+        this.observe(new this.view.MutationObserver(() => this.wireDialogs())).observe(this.host, { childList: true, subtree: true });
+        this.listen(this.host, "click", () => this.wireDialogs(), { capture: true });
       }
     };
   }
@@ -56699,6 +56716,105 @@ var init_selection2 = __esm({
   }
 });
 
+// js/datatable/attach/keep-focus.js
+var KEEP_FOCUSED_ROW, FOCUSABLE3, TableKeepFocus;
+var init_keep_focus = __esm({
+  "js/datatable/attach/keep-focus.js"() {
+    "use strict";
+    init_events();
+    KEEP_FOCUSED_ROW = "data-kp-keep-focused-row";
+    FOCUSABLE3 = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])';
+    TableKeepFocus = class {
+      /** @param {DataTableControl} t */
+      constructor(t) {
+        this.t = t;
+        this.memo = null;
+        const { body, identity } = t;
+        const focusIn = (event) => this.onFocusIn(event);
+        const focusOut = (event) => this.onFocusOut(event);
+        body.addEventListener("focusin", focusIn);
+        body.addEventListener("focusout", focusOut);
+        identity.undo.push(() => {
+          body.removeEventListener("focusin", focusIn);
+          body.removeEventListener("focusout", focusOut);
+          this.memo = null;
+        });
+      }
+      /** Whether this table keeps the focused row, read now. */
+      wanted() {
+        return this.t.wrap.hasAttribute(KEEP_FOCUSED_ROW);
+      }
+      /** Note the row the focus went into, when it is one of the table's rows and has a key. @param {FocusEvent} event */
+      onFocusIn(event) {
+        const { model, columns: columns2, body } = this.t;
+        const element = event.target instanceof HTMLElement ? event.target : null;
+        const row2 = (
+          /** @type {HTMLTableRowElement | null} */
+          element?.closest("tr") ?? null
+        );
+        const key = row2 !== null && row2.parentElement === body && model.isRow(row2) ? columns2.keyOf(row2) : "";
+        const cell = element?.closest("td, th");
+        this.memo = element !== null && row2 !== null && key !== "" ? { row: row2, element, key, at: model.pageRows.indexOf(row2), cell: cell instanceof HTMLTableCellElement ? cell.cellIndex : 0 } : null;
+      }
+      /**
+       * The reader moving the focus on forgets the row; a row the page took out keeps it. Checked after the event, because an engine
+       * that fires focusout while it removes the row fires it with the row still in the page.
+       * @param {FocusEvent} event
+       */
+      onFocusOut(event) {
+        const memo = this.memo;
+        if (memo === null || event.target !== memo.element) return;
+        queueMicrotask(() => {
+          if (this.memo === memo && memo.element.isConnected && document.activeElement !== memo.element) this.memo = null;
+        });
+      }
+      /**
+       * Before the rows are read again: put the focused row back in the place of its fresh copy. Returns the control to give the
+       * focus back to, the neighbour's slot when the row left the data, or null when there is nothing to keep.
+       * @returns {{ element: HTMLElement } | { neighbour: { at: number, cell: number } } | null}
+       */
+      restore() {
+        const memo = this.memo;
+        if (memo === null || !this.wanted() || memo.row.isConnected) return null;
+        const active = document.activeElement;
+        if (active !== null && active !== document.body && active !== memo.element) return this.forget();
+        const { body, model, columns: columns2, wrap: wrap2 } = this.t;
+        const fresh = [...body.rows].find((row2) => model.isRow(row2) && columns2.keyOf(row2) === memo.key);
+        if (fresh === void 0) {
+          this.memo = null;
+          return { neighbour: { at: memo.at, cell: memo.cell } };
+        }
+        fresh.replaceWith(memo.row);
+        const first = model.rendered.indexOf(memo.row);
+        if (first >= 0) model.rendered.splice(first, 1);
+        wrap2.dispatchEvent(new CustomEvent(ROW_KEPT_EVENT, { bubbles: true, detail: { key: memo.key, row: memo.row, fresh } }));
+        return { element: memo.element };
+      }
+      /** @returns {null} */
+      forget() {
+        this.memo = null;
+        return null;
+      }
+      /**
+       * The focused row left the data: the focus goes to the same cell of the row now in its place on the page (the last row when
+       * it was the last), so it stays in the table instead of falling to <body>.
+       * @param {{ at: number, cell: number }} slot
+       */
+      focusNeighbour(slot) {
+        const rows2 = this.t.model.pageRows.filter((row3) => !row3.hidden);
+        if (rows2.length === 0 || slot.at < 0) return;
+        const row2 = rows2[Math.min(slot.at, rows2.length - 1)];
+        const cell = row2.cells[slot.cell] ?? null;
+        const target = (
+          /** @type {HTMLElement | null} */
+          cell?.querySelector(FOCUSABLE3) ?? row2.querySelector(FOCUSABLE3)
+        );
+        target?.focus({ preventScroll: true });
+      }
+    };
+  }
+});
+
 // js/datatable/attach/edit-field.js
 var TableEditField;
 var init_edit_field = __esm({
@@ -57461,13 +57577,15 @@ var init_handle2 = __esm({
        * @param {{ keepPage?: boolean }} [options]
        */
       refresh(options) {
-        const { selection, body } = this.t;
+        const { selection, body, keepFocus } = this.t;
+        const kept = keepFocus.restore();
         const active = document.activeElement;
         const inBody = active instanceof HTMLElement && body.contains(active) ? active : null;
         const focusMemo = selection.focusMemo;
         const lost = inBody === null && focusMemo !== null && !focusMemo.element.isConnected && (active === null || active === document.body);
         const memo = inBody !== null ? selection.toggleMemo(inBody) : lost ? focusMemo : null;
-        const held2 = inBody ?? (lost && focusMemo !== null ? focusMemo.element : null);
+        const keptElement = kept !== null && "element" in kept ? kept.element : null;
+        const held2 = inBody ?? keptElement ?? (lost && focusMemo !== null ? focusMemo.element : null);
         this.t.tracks.release();
         this.readRows();
         this.t.groups.collectGroups();
@@ -57475,6 +57593,7 @@ var init_handle2 = __esm({
         this.t.apply.refreshChoices();
         this.t.apply.applyFilter({ keepPage: options?.keepPage === true });
         if (held2 !== null && document.activeElement !== held2) this.focusBack(held2, memo);
+        else if (held2 === null && kept !== null && "neighbour" in kept) keepFocus.focusNeighbour(kept.neighbour);
       }
       /** The rows as the body holds them now: held rows hidden, gone rows forgotten, new rows prepared, their built details dropped. */
       readRows() {
@@ -57722,6 +57841,7 @@ var init_controller50 = __esm({
     init_handlers();
     init_expand();
     init_selection2();
+    init_keep_focus();
     init_edit();
     init_wrap_click();
     init_wire();
@@ -57770,6 +57890,7 @@ var init_controller50 = __esm({
         this.handlers = UNMADE;
         this.expand = UNMADE;
         this.selection = UNMADE;
+        this.keepFocus = UNMADE;
         this.edit = UNMADE;
         this.wrapClick = UNMADE;
         this.wire = UNMADE;
@@ -57808,6 +57929,7 @@ var init_controller50 = __esm({
         this.handlers = new TableHandlers(this);
         this.expand = new TableExpand(this);
         this.selection = new TableSelection(this);
+        this.keepFocus = new TableKeepFocus(this);
         this.edit = new TableEdit(this);
         this.wrapClick = new TableWrapClick(this);
         this.wire = new TableWire(this);
@@ -58039,6 +58161,7 @@ __export(datatable_exports, {
   REORDER_EVENT: () => REORDER_EVENT,
   REQUEST_EVENT: () => REQUEST_EVENT,
   RETRY_EVENT: () => RETRY_EVENT,
+  ROW_KEPT_EVENT: () => ROW_KEPT_EVENT,
   SELECT_EVENT: () => SELECT_EVENT,
   SERVER_DEBOUNCE_MS: () => SERVER_DEBOUNCE_MS,
   SORT_EVENT: () => SORT_EVENT,
@@ -88214,7 +88337,7 @@ function removeEditorRow(host, row2) {
     RowEditor
   )?.remove(row2);
 }
-var ROWS2, FOCUSABLE3, RowEditor;
+var ROWS2, FOCUSABLE4, RowEditor;
 var init_row_editor = __esm({
   "js/row-editor.js"() {
     "use strict";
@@ -88224,7 +88347,7 @@ var init_row_editor = __esm({
     init_state_plate();
     init_track2();
     ROWS2 = "[data-kp-rows]";
-    FOCUSABLE3 = 'input:not([type="hidden"]):not(:disabled), button:not(:disabled), select:not(:disabled), [tabindex="0"]';
+    FOCUSABLE4 = 'input:not([type="hidden"]):not(:disabled), button:not(:disabled), select:not(:disabled), [tabindex="0"]';
     RowEditor = class extends Controller {
       /** @param {HTMLElement} host */
       constructor(host) {
@@ -88313,7 +88436,7 @@ var init_row_editor = __esm({
         const index = this.rows().length;
         this.sync();
         this.emit("kp-rows-add", row2, index);
-        row2.querySelector(FOCUSABLE3)?.focus();
+        row2.querySelector(FOCUSABLE4)?.focus();
         this.say(getStrings().rowsAdded(this.units[0], index, index));
         return row2;
       }
@@ -88329,7 +88452,7 @@ var init_row_editor = __esm({
         this.sync();
         this.emit("kp-rows-remove", row2, at + 1);
         const next2 = left[Math.min(at, left.length - 1)];
-        const focus = next2?.querySelector(FOCUSABLE3) ?? this.host.querySelector("[data-kp-rows-add]");
+        const focus = next2?.querySelector(FOCUSABLE4) ?? this.host.querySelector("[data-kp-rows-add]");
         focus?.focus();
         this.say(getStrings().rowsRemoved(this.units[0], at + 1, left.length));
       }
@@ -101663,6 +101786,7 @@ export {
   ROW_COMMIT_EVENT,
   ROW_DELETE,
   ROW_DELETE_EVENT,
+  ROW_KEPT_EVENT,
   ROW_KEYS,
   ROW_PICK,
   ROW_SELECT,

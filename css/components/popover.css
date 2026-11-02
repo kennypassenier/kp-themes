@@ -30,6 +30,29 @@
         position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
     }
 
+    /* A popover that holds content rather than a list [medicine-1102, Medicine Cabinet gap 25]: a sentence, a field and its
+     * button, a short note. The plain plate's 0.25rem suits a menu, whose items carry their own padding; text put straight on
+     * it sat 5 px from the border. The panel gives it the dialog's breathing room, a knob like every measure here. */
+    .kp-popover--panel {
+        /* Its own width, up to the knob, so an anchor area too narrow for it is a fallback to the other side, not a squeeze. */
+        width: max-content;
+        max-inline-size: min(var(--kp-popover-panel-max-width, 22rem), calc(100vw - 1rem));
+        padding: var(--kp-popover-panel-padding, var(--kp-space-md, 0.75rem));
+    }
+
+    /* The end edge: the plate lines up with its button's end edge and opens toward the start, for a button at the end of a
+     * row or a toolbar (the start edge stays the default). A top-layer popover still flips to the start edge when the start
+     * side has no room. */
+    .kp-popover--end {
+        position-area: block-end span-inline-start;
+    }
+
+    /* A panel that fits beside its button on neither side (a middle button on a phone) is centred under it, kept on the
+     * screen, as the tooltip's last fallbacks do (below). */
+    .kp-popover--panel[popover] {
+        position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline, --kp-tooltip-below, --kp-tooltip-above;
+    }
+
     .kp-menu {
         display: flex;
         flex-direction: column;

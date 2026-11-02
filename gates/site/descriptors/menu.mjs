@@ -29,6 +29,8 @@ export const menuDescriptor = {
         ],
         variants: [
             { name: '.kp-popover', what: 'The floating surface: its own ground, a boundary, a maximum height it scrolls inside, and a position taken from its anchor.' },
+            { name: '.kp-popover--panel', what: 'A popover that holds content rather than a list [medicine-1102]: room inside (the spacing scale’s md, a knob) so a sentence or a field never touches the border, its own width up to 22rem (a knob), and centred under its button when neither side has room.' },
+            { name: '.kp-popover--end', what: 'The plate’s end edge on the button’s end edge, opening toward the start [medicine-1102], for a button at the end of a row; the start edge stays the default, and a top-layer popover still flips when its side has no room.' },
             { name: '.kp-menu', what: 'The column of entries. It never wraps into a second column, whatever height it is given.' },
             { name: '.kp-menu__item', what: 'One entry: a real button that fills the row and wears no button chrome.' },
             { name: '.kp-menu__item--destructive', what: 'An entry in the destructive colour. It still needs a confirmation or an undo behind it.' },

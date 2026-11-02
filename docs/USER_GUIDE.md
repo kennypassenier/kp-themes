@@ -1398,6 +1398,24 @@ the description: the primary first, on a line of its own at the full width,
 the others beside each other under it. That order is visual only; the tab
 order stays yours. No script.
 
+A popover that holds content rather than a menu (a sentence, a field and its
+button) takes `kp-popover--panel` [medicine-1102]: room inside
+(`--kp-popover-panel-padding`, `--kp-space-md`, so its text stands 13 px
+from the border instead of 5) and its own width, up to
+`--kp-popover-panel-max-width` (22rem, never wider than the window less
+1rem); one that fits beside its button on neither side is centred under it.
+`kp-popover--end` lines the plate's end edge up with the button's end edge
+and opens toward the start, for a button at the end of a row or a toolbar;
+the start edge stays the default, and a top-layer popover still flips when
+its side has no room. For a small form that accepts a value (Enter, a busy
+button, a problem line), the popover form (`data-kp-popover-form`) is the
+whole part.
+
+```html
+<button type="button" class="kp-button" popovertarget="add-stock" style="anchor-name: --add-stock">Add stock</button>
+<div popover="auto" id="add-stock" class="kp-popover kp-popover--panel kp-popover--end" role="dialog" aria-label="Add stock to Ibuprofen 400 mg" style="position-anchor: --add-stock">…</div>
+```
+
 ### The attention band
 
 One alert per problem, worst first, each with the action that fixes it, as a
@@ -3483,6 +3501,25 @@ the `data-kp-grid` keyboard grid, or a row you gave a `tabindex`) opens the
 row, or folds the group, as a click does; a control in the row keeps its
 own keys. After `refresh()` the toggle that held the focus keeps it, and
 when you replaced its row, the new row's toggle with the same key takes it.
+
+A table whose rows hold fields (a stock count, a note) can keep the row the
+reader is typing in when the page redraws its rows [medicine-1102]:
+`data-kp-keep-focused-row` on the wrapper. When the body's rows are swapped
+for fresh ones (by the page, or before a `refresh()`), the row that holds the
+focus stays in place of its fresh copy with the same key
+(`data-kp-row-key`): its field, what was typed, the caret and the focus.
+`kp-datatable-row-kept` (`ROW_KEPT_EVENT`) `{ key, row, fresh }` says which
+fresh row was set aside; the next refresh after the focus left the row draws
+it fresh, so save a field on `change`. A row whose key left the data goes, and
+the focus moves to the same cell of the row now in its place. Off by default
+(the fresh row wins), read at every refresh. It keeps rows the table holds:
+a page that throws the whole table away and builds a new one keeps nothing,
+so redraw the rows of the `tbody` instead.
+
+```html
+<div class="kp-datatable" data-kp-datatable data-kp-keep-focused-row>…
+    <tr data-kp-row-key="paracetamol"><td>Paracetamol 500 mg</td><td><input class="kp-field__input" aria-label="Stock of Paracetamol 500 mg" value="30" /></td></tr>
+```
 
 `decorate(part, info)`, an attach option, is called with every toggle the
 table builds, each time it builds one (rows added and refreshed later

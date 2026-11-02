@@ -101,6 +101,7 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/datatable/attach/handle.js',
     'js/datatable/attach/handlers.js',
     'js/datatable/attach/identity.js',
+    'js/datatable/attach/keep-focus.js',
     'js/datatable/attach/layout-setup.js',
     'js/datatable/attach/model.js',
     'js/datatable/attach/pills.js',

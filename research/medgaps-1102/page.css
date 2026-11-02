@@ -1,0 +1,123 @@
+/* research/medgaps-1102: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-changed,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    container: pg-stage / inline-size;
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+.pg-component > *,
+.pg-stack > * {
+    min-inline-size: 0;
+}
+
+/* One part of a section: its pieces under each other on one rhythm. */
+.pg-stack {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+/* What the page heard: one line high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+}
+
+/* Medicine Cabinet's stock list: one grid, the name on the large track, what is left and Add stock in columns that run across
+ * the rows, so every Add stock stands at the same end edge. */
+.pg-stock__rows {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    column-gap: var(--kp-space-lg, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pg-stock__row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+    padding: var(--kp-space-sm, 0.5rem);
+}
+
+.pg-stock__row + .pg-stock__row {
+    border-block-start: 1px solid var(--border);
+}
+
+.pg-stock__left {
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+/* On a phone the name keeps its line: what is left goes under it, Add stock stands beside both, still in one column. */
+@container pg-stage (inline-size < 30rem) {
+    .pg-stock__rows {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .pg-stock__left {
+        grid-row: 2;
+    }
+
+    .pg-stock__open {
+        grid-row: 1 / span 2;
+        grid-column: 2;
+    }
+}
+
+/* The form inside the popover: the sentence over the field's label, the field and Add on one line. */
+.pg-stock__form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    align-items: end;
+    margin: 0;
+}
+
+.pg-stock__title {
+    grid-column: 1 / -1;
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    font-weight: 600;
+}
+
+.pg-stock__form .kp-field__label {
+    grid-column: 1 / -1;
+}
+
+/* The stock field in a table cell fills its column. */
+.pg-meds__stock {
+    inline-size: 100%;
+    max-inline-size: 8rem;
+    text-align: end;
+}

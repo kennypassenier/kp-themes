@@ -12,6 +12,8 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- medicine-1102 (2026-11-02), site/components/menu.html: `.kp-popover--panel` (`--kp-popover-panel-padding`, `--kp-popover-panel-max-width`, the centred fallback) and `.kp-popover--end`, with an example of a stock form under a button at a row's end; demo section popover-panel.
+- medicine-1102 (2026-11-02), site/components/datatable.html: `data-kp-keep-focused-row` and `kp-datatable-row-kept` (`ROW_KEPT_EVENT`), with an example of a field per row and a refresh; demo section keep-focused-row.
 - parts-1102 (2026-11-02), a page of its own for `js/dayline.js` (now a row on site/components/week.html): `.kp-dayline[data-kp-dayline]`, `data-kp-start-hour`, `data-kp-step`, `data-kp-dayline-hours`, `-now`, `-source`, `-for`, `setDaylineItems` with `{ allDay }`, `setDaylineState`, `kp-dayline-change`, `-open`, `-drop`, `-retry`, the knobs `--kp-dayline-hour`, `-height`, `-gutter`, `-handle`; demo research/parts-habits-1102 section dayline.
 - parts-1102, site/components/task-row.html: the swipe row (`js/swipe.js`): `data-kp-swipe`, `-start`, `-end`, `-pointers`, `-off`, `-key`, `-ignore`, `kp-swipe`, with the row's ⋯ menu carrying the same actions; and the settled row (`js/settled.js`): `data-kp-settled`, `data-kp-settled-list`, `settleRow`, `clearSettled`, `kp-settled`, `--kp-settled-fade`; demo sections swipe-row and settled-row.
 - parts-1102, site/components/keys.html: the chord form of `setKeys` (`{ chord: true }`, `.kp-keys__caps--chord`, `.kp-keys__then`, `keysThen`); demo section chord-keys.

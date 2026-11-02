@@ -1,5 +1,5 @@
 export { GROUP_ROW, DETAIL, HELD_ROW } from './datatable/selectors.js';
-export { VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, REORDER_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, } from './datatable/events.js';
+export { VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, REORDER_EVENT, ROW_KEPT_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, } from './datatable/events.js';
 export { compare, compareByOrder, nextSorts } from './datatable/sort.js';
 export { filterActive, boundText, filterPillLabel, readFilterBounds, matchesFilter, filterPills } from './datatable/filter.js';
 export { syncFixedColumns, watchScrolled, attachGrid } from './datatable/grid.js';

@@ -7579,6 +7579,7 @@ data-cat-server
                             <tr><td><code>kp-datatable-edit</code></td><td>Fired, cancelable, when an edited value is about to be saved (EditDetail); `preventDefault()` refuses it.</td></tr>
                             <tr><td><code>kp-datatable-group</code></td><td>Fired when a group row folds or unfolds [J2]: `{ key, row, open, members, folded }`; `members` are the group's rows, `folded` every folded key.</td></tr>
                             <tr><td><code>kp-datatable-reorder</code></td><td>Fired on the table when a row was moved by its handle: `{ order, key, from, to }` (the row keys in the new order, the moved row's key, its old and new place, counted from 0) [wish-1120, homelab 93].</td></tr>
+                            <tr><td><code>kp-datatable-row-kept</code></td><td>Fired on the wrapper of a `data-kp-keep-focused-row` table when the row that holds the focus was kept in place of its fresh copy [medicine-1102]: `{ key, row, fresh }`, the row's key, the kept row and the fresh row set aside.</td></tr>
                             <tr><td><code>kp-row-open</code></td><td>Fired on a row when Enter is pressed on the row itself, the event js/actions.js' row keys fire too: `{ row }`.</td></tr>
                     </tbody></table></div>
                 </section>
@@ -7672,6 +7673,7 @@ data-cat-server
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-keep-focused-row</code></td><td>A refresh keeps the row that holds the focus [medicine-1102]: when the body’s rows are swapped for fresh ones, the focused row stays in place of its fresh copy with the same key, with its field, what was typed, the caret and the focus, and `kp-datatable-row-kept` `{ key, row, fresh }` names the fresh row set aside. A row whose key left the data goes and the focus moves to the same cell of the row in its place. Off by default.</td></tr>
                             <tr><td><code>tr data-kp-row-label</code></td><td>The name a row goes by in what the table says [forms-1102]: an edit (“Every day: English name changed …”), Undo, the editor’s name, the reorder handle and its move, and the row toggle. Separate from `data-kp-row-key`, so a table keyed by an id never reads the id out; without it the table says what it said before.</td></tr>
                             <tr><td><code>data-kp-sort-multi=&quot;click&quot;</code></td><td>A plain press on a header (Enter, Space) adds a sort key and Shift + click sorts on that column alone; without a value, Shift + click adds the key as it always did. `multiSort: 'click'` is the same in script.</td></tr>
                             <tr><td><code>td data-kp-sort-value</code></td><td>The value a cell sorts and range- or date-filters by in place of its text: a bar cell’s share, a size’s bytes.</td></tr>

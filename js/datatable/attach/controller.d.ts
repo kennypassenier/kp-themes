@@ -22,6 +22,7 @@ import { TableServer } from './server.js';
 import { TableHandlers } from './handlers.js';
 import { TableExpand } from './expand.js';
 import { TableSelection } from './selection.js';
+import { TableKeepFocus } from './keep-focus.js';
 import { TableEdit } from './edit.js';
 import { TableWrapClick } from './wrap-click.js';
 import { TableWire } from './wire.js';
@@ -66,6 +67,7 @@ export declare class DataTableControl extends Controller {
     /** @type {TableHandlers} */ handlers: TableHandlers;
     /** @type {TableExpand} */ expand: TableExpand;
     /** @type {TableSelection} */ selection: TableSelection;
+    /** @type {TableKeepFocus} */ keepFocus: TableKeepFocus;
     /** @type {TableEdit} */ edit: TableEdit;
     /** @type {TableWrapClick} */ wrapClick: TableWrapClick;
     /** @type {TableWire} */ wire: TableWire;

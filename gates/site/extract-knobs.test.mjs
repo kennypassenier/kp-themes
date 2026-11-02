@@ -238,7 +238,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // --kp-seg-rename-w (written): 1210 + 4 = 1214.
     // Re-pinned 2026-11-02 [parts-1102 r2l]: a follower wheel's waiting disc, --kp-wheel-waiting: 1214 + 1 = 1215.
     // Re-pinned 2026-11-02 [kyugaps-1102]: the folding selection bar reads --kp-selection-clip-margin through var(): 1214 + 1 = 1215.
-    assert.equal(result.expected, 1216, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-11-02 [medicine-1102]: the popover panel's --kp-popover-panel-padding and --kp-popover-panel-max-width, read
+    // through var(): 1214 + 2 = 1216.
+    assert.equal(result.expected, 1218, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -350,7 +352,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-02 [forms-1102]: the four add row and rename knobs are read through var(): 1200 + 4 = 1204.
     // Re-pinned 2026-11-02 [parts-1102 r2l]: --kp-wheel-waiting is read through var(): 1204 + 1 = 1205.
     // Re-pinned 2026-11-02 [kyugaps-1102]: --kp-selection-clip-margin is read through var(): 1204 + 1 = 1205.
-    assert.equal(result.readCount, 1206);
+    // Re-pinned 2026-11-02 [medicine-1102]: the popover panel's two are read through var(): 1204 + 2 = 1206.
+    assert.equal(result.readCount, 1208);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
