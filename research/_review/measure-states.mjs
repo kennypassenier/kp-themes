@@ -692,7 +692,8 @@ export function inspectWiring([only, comps, busySel, ownSel, plateSel]) {
         );
     }
     // An empty box the page built itself: .kp-empty without the plate, and not a part a component drew (kp-<component>__…).
-    for (const el of section.querySelectorAll('.kp-empty:not(.kp-stateplate):not([data-kp-datatable-empty])')) {
+    // The one-line plate a small card asks for (`data-kp-empty="compact"`, parts-1102, approved 2026-11-02) is the package's own.
+    for (const el of section.querySelectorAll('.kp-empty:not(.kp-stateplate):not([data-kp-datatable-empty]):not([data-kp-empty="compact"])')) {
         if (!shown(el)) continue;
         if ([...el.classList].some((c) => /^kp-[a-z-]+__/.test(c))) continue;
         res.push(

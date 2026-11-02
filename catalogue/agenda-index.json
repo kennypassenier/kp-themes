@@ -499,6 +499,28 @@
             },
             "fingerprint": "cf75c04c6c345a83",
             "update": null
+        },
+        "research/parts-layout-1102/demo.html": {
+            "facts": {
+                "id": "parts-layout-1102",
+                "themes": "formal",
+                "ask": null,
+                "askText": "What you approved on 02/11/2026 at 00:41, built and opt-in: four layout options that Almanac wrote page CSS for (two of them already existed and are checked here), the More menu of a bar that Kitchen and Medicine Cabinet built by hand, the snooze popover and the small card’s empty line that Homelab asked for, and Kitchen’s two wheels that spin together. Formal only, on the apps’ own data (names and counts are mock). 8 sections, 8 pairs.",
+                "sections": [
+                    { "item": "cards-tracks", "themes": null, "topic": "layout-wishes", "mode": null },
+                    { "item": "calendar-spread", "themes": null, "topic": "layout-wishes", "mode": null },
+                    { "item": "header-equal", "themes": null, "topic": "layout-wishes", "mode": null },
+                    { "item": "attention-formgrid", "themes": null, "topic": "layout-wishes", "mode": null },
+                    { "item": "nav-more", "themes": null, "topic": "nav-more", "mode": null },
+                    { "item": "snooze-popover", "themes": null, "topic": "popover-form", "mode": null },
+                    { "item": "card-empty", "themes": null, "topic": "empty", "mode": null },
+                    { "item": "coupled-wheels", "themes": null, "topic": "wheel", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113\",\"received\":[]}\n        "
+            },
+            "fingerprint": "66b2ca22b4c8d926",
+            "update": null
         }
     },
     "decided": {
