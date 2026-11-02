@@ -35,6 +35,8 @@ export const DIST_FILES = [
     'dist/css/synthwave-register.min.css.map',
     'dist/css/themes.min.css',
     'dist/css/themes.min.css.map',
+    'dist/css/titanium-register.min.css',
+    'dist/css/titanium-register.min.css.map',
     'dist/css/utilities.min.css',
     'dist/css/utilities.min.css.map',
     'dist/kp-themes-base.min.css',

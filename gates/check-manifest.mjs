@@ -64,7 +64,7 @@
 //
 // Usage: node gates/check-manifest.mjs
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 import { FILES } from './checksums.mjs';
@@ -196,6 +196,28 @@ export function references(source) {
 }
 
 /**
+ * Paths that occur more than once in a list.
+ * @param {string[]} files
+ * @returns {string[]}
+ */
+export function duplicatesIn(files) {
+    return [...new Set(files.filter((f, i) => files.indexOf(f) !== i))];
+}
+
+/**
+ * The dist register files (twin and map) of every theme under themes/ that
+ * the list lacks. A directory counts as a theme when it holds tokens.json.
+ * @param {string[]} files
+ * @returns {string[]}
+ */
+export function missingRegisters(files) {
+    const themes = readdirSync(new URL('../themes/', import.meta.url), { withFileTypes: true })
+        .filter((e) => e.isDirectory() && existsSync(new URL(`../themes/${e.name}/tokens.json`, import.meta.url)))
+        .map((e) => e.name);
+    return themes.flatMap((t) => [`dist/css/${t}-register.min.css`, `dist/css/${t}-register.min.css.map`]).filter((p) => !files.includes(p));
+}
+
+/**
  * Resolve `.` and `..` in a repo-relative path, without touching disk.
  * @param {string} path
  * @returns {string}
@@ -226,6 +248,18 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
 
     let failed = 0;
+    // A path listed twice (the sub-lists are spread into FILES) writes two
+    // SHA256SUMS lines for one file [sums-1102].
+    for (const path of duplicatesIn(FILES)) {
+        failed++;
+        console.error(`${path} is listed more than once in FILES (gates/checksums*.mjs) — keep one entry.`);
+    }
+    // Every theme ships a lazily loadable register: a theme with no dist
+    // entry would be missing from SHA256SUMS [sums-1102].
+    for (const path of missingRegisters(FILES)) {
+        failed++;
+        console.error(`${path} is the minified register of a theme under themes/ and is not in FILES — add it (and its .map) to gates/checksums-dist.mjs.`);
+    }
     for (const path of expected) {
         if (!FILES.includes(path)) {
             failed++;

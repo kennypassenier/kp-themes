@@ -689,6 +689,7 @@
         "./css/synthwave-register/min": "./dist/css/synthwave-register.min.css",
         "./css/brutalism-register": "./css/brutalism-register.css",
         "./css/titanium-register": "./css/titanium-register.css",
+        "./css/titanium-register/min": "./dist/css/titanium-register.min.css",
         "./css/brutalism-register/min": "./dist/css/brutalism-register.min.css",
         "./css/pastel-register": "./css/pastel-register.css",
         "./css/pastel-register/min": "./dist/css/pastel-register.min.css",
