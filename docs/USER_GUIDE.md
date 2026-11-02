@@ -1023,7 +1023,7 @@ role leaves its column empty.
 
 The list is a grid and every row a subgrid of it, so the browser sizes each
 column to its widest button, with nothing to redo when a font arrives or the
-theme changes. By position from the end it needs no script, up to four
+theme changes. By position from the end it needs no script, up to six
 buttons. Where the rows' buttons differ, name them by role with
 `data-kp-action="<role>"`: `attachActionColumns(root)` (`js/actions.js`)
 writes each button's column. A table cannot be a subgrid, so in a table the
@@ -4998,7 +4998,8 @@ the warning tone, past `bad` the destructive one. Loading lays the data table's 
 </div>
 ```
 
-The label column is as wide as the longest label; `--stack` and `--columns` for the grid, `--top`, `--wide`,
+The label column is as wide as the longest label; `--stack` and `--columns` for the grid, `--center` for values centred on a label
+that wraps to two lines (default: label and value on one baseline), `--top`, `--wide`,
 `data-kp-changed`, `data-kp-state="error"` and `data-kp-locked` for a row. Under 36rem a form row reads top to bottom.
 Cells stand on the row's first baseline and a control takes the width of its kind (a field the track, a short control one
 step). To line a form up with a key-value panel and its buttons, put them in one `.kp-formgrid` (see "Forms, settings,

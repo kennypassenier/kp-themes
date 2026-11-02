@@ -7477,7 +7477,7 @@
  * button box a subgrid of the row. The browser sizes every column to its
  * widest button: no measuring, nothing to redo when a font arrives or the
  * theme changes. By position from the end it needs no script at all (up to
- * four buttons); with named roles (`data-kp-action` on a button)
+ * six buttons); with named roles (`data-kp-action` on a button)
  * attachActionColumns() writes each button's column and the list's count.
  *
  * A table cannot be a subgrid, so there the script measures each role's
@@ -7503,6 +7503,14 @@
 
     .kp-action-list:has(> li > .kp-row-actions > :nth-child(4)) {
         --kp-action-count: 4;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(5)) {
+        --kp-action-count: 5;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(6)) {
+        --kp-action-count: 6;
     }
 
     .kp-action-list > li {
@@ -7550,6 +7558,14 @@
 
     .kp-action-list .kp-row-actions > :nth-last-child(4) {
         --kp-action-col: -5 / -4;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(5) {
+        --kp-action-col: -6 / -5;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(6) {
+        --kp-action-col: -7 / -6;
     }
 
     /* A button fills its column, its label centred: one role, one width. */
@@ -30695,7 +30711,7 @@
      * `dt` and a `dd`. The label column is as wide as the longest label and no
      * wider (fix-64), up to --kp-kv-label-max (45 %); a longer label wraps.
      * The value takes the rest and breaks rather than widening the page.
-     * `--lines` rules a line between rows, `--stack` puts each label over
+     * `--lines` rules a line between rows, `--center` centres a value on a label that wraps, `--stack` puts each label over
      * its value, `--columns` lays two lists of rows side by side where the
      * box is wide. Values reuse the package: `.kp-id` (mono), `.kp-copyable`,
      * `.kp-badge`, `.kp-ago`, `.kp-skeleton` while loading. */
@@ -30735,6 +30751,19 @@
     .kp-kv__row:has(> dt > :is(code, small)) > dd {
         align-self: stretch;
         align-content: start;
+    }
+
+    /* `--center` [kux-1102; Kitchen: a label of two lines hung 17-20 px under its value]: the value is centred on the label's
+       block. The label stands at the row's top; the value's cell fills the row's height and centres its lines in it, so a
+       value shorter than its label sits on the label's middle and a taller value still starts on the label's first line.
+       Opt-in: the default keeps label and value on one baseline, which a one-line row needs to the pixel. */
+    .kp-kv--center > .kp-kv__row > dt {
+        align-self: start;
+    }
+
+    .kp-kv--center > .kp-kv__row > dd {
+        align-self: stretch;
+        align-content: center;
     }
 
     .kp-kv__row > :is(dd) {

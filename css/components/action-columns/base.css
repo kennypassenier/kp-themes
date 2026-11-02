@@ -9,7 +9,7 @@
  * button box a subgrid of the row. The browser sizes every column to its
  * widest button: no measuring, nothing to redo when a font arrives or the
  * theme changes. By position from the end it needs no script at all (up to
- * four buttons); with named roles (`data-kp-action` on a button)
+ * six buttons); with named roles (`data-kp-action` on a button)
  * attachActionColumns() writes each button's column and the list's count.
  *
  * A table cannot be a subgrid, so there the script measures each role's
@@ -35,6 +35,14 @@
 
     .kp-action-list:has(> li > .kp-row-actions > :nth-child(4)) {
         --kp-action-count: 4;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(5)) {
+        --kp-action-count: 5;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(6)) {
+        --kp-action-count: 6;
     }
 
     .kp-action-list > li {
@@ -82,6 +90,14 @@
 
     .kp-action-list .kp-row-actions > :nth-last-child(4) {
         --kp-action-col: -5 / -4;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(5) {
+        --kp-action-col: -6 / -5;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(6) {
+        --kp-action-col: -7 / -6;
     }
 
     /* A button fills its column, its label centred: one role, one width. */
