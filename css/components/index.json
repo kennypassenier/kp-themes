@@ -414,6 +414,9 @@
       "file": "touch-hit-room.css"
     },
     {
+      "file": "touch-hit-small.css"
+    },
+    {
       "file": "plain-card.css"
     },
     {

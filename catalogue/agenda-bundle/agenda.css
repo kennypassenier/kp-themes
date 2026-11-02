@@ -39980,6 +39980,68 @@
         }
     }
 }
+@layer kp.components {
+    /* --- Touch hit areas for three parts the first two parts left small [habits-1102] ---
+     * Habits (2026-11-02) still kept its own floors for a tag's remove button (20 px), the nav brand (30 px) and a reorder
+     * list's handle (25 by 30 px). Each gets an invisible `::after` centred on the part and at least --kp-touch-target each way
+     * (never smaller than the part itself), as touch-hit-area.css does: the look and the layout stay exactly as they are,
+     * and under a mouse nothing changes. The remove button's area stops at the pill's end edge, because a tag input stands
+     * beside the tag and a press there is the input's. The same knobs: --kp-touch-target, --kp-touch-hit-paint,
+     * --kp-touch-hit-outline. Applies under `(pointer: coarse)` and under `data-kp-touch`.
+     * Not here, because they change the layout under touch and wait on the open "touch-dense" decision: the stacked
+     * switches (their rows sit 35 px apart), a one-line growing textarea (a field cannot carry a pseudo-element, so it needs
+     * a taller box) and a calendar that keeps 44 px columns in a narrow card. */
+    @media (pointer: coarse) {
+        /* A tag's remove button, the bar's brand and a reorder list's handle: the look stays, the finger gets the area. */
+        html :is(.kp-tag__remove, .kp-nav__brand, .kp-reorder [data-kp-handle]) {
+            position: relative;
+        }
+
+        html :is(.kp-tag__remove, .kp-nav__brand, .kp-reorder [data-kp-handle])::after {
+            content: '';
+            position: absolute;
+            /* Half a pixel of slack: a 43.5 px box would otherwise round to 43 px of hit area. */
+            inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+            inset-inline: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        /* A tag sits at the end of its pill and a tag input stands beside it: the area stops at the button's end edge and takes its width from the text before it. */
+        html .kp-tag__remove.kp-tag__remove::after {
+            inset-inline: min(0px, calc(100% - var(--kp-touch-target, 2.75rem) - 0.5px)) 0;
+        }
+
+        html :is(.kp-tag__remove:disabled, .kp-reorder [data-kp-handle]:disabled)::after {
+            content: none;
+        }
+    }
+
+    /* The same under `data-kp-touch`. */
+    /* A tag's remove button, the bar's brand and a reorder list's handle: the look stays, the finger gets the area. */
+    [data-kp-touch] :is(.kp-tag__remove, .kp-nav__brand, .kp-reorder [data-kp-handle]) {
+        position: relative;
+    }
+
+    [data-kp-touch] :is(.kp-tag__remove, .kp-nav__brand, .kp-reorder [data-kp-handle])::after {
+        content: '';
+        position: absolute;
+        /* Half a pixel of slack: a 43.5 px box would otherwise round to 43 px of hit area. */
+        inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+        inset-inline: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    /* A tag sits at the end of its pill and a tag input stands beside it: the area stops at the button's end edge and takes its width from the text before it. */
+    [data-kp-touch] .kp-tag__remove.kp-tag__remove::after {
+        inset-inline: min(0px, calc(100% - var(--kp-touch-target, 2.75rem) - 0.5px)) 0;
+    }
+
+    [data-kp-touch] :is(.kp-tag__remove:disabled, .kp-reorder [data-kp-handle]:disabled)::after {
+        content: none;
+    }
+}
 @layer kp.layout {
     /* --- Plain card: a state host without its own frame [wish-1120, homelab 90] ---
      * A `.kp-card[data-kp-state]` is a framed card, so one inside a section card drew a card in a card. With

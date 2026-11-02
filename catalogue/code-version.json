@@ -137,7 +137,7 @@
         "js/toggle.js": { "digest": "51e547f7c4a417b9", "when": "[data-kp-toggle]" },
         "js/toolbar.js": { "digest": "a89e8b2c4fc81573", "when": "[data-kp-toolbar]" },
         "js/transfer.js": { "digest": "299493b3bb8d006d", "when": "[data-kp-transfer]" },
-        "js/unsaved.js": { "digest": "dcdd09a718e76f2f", "when": "[data-kp-unsaved]" },
+        "js/unsaved.js": { "digest": "451f496ed4e90eed", "when": "[data-kp-unsaved]" },
         "js/upload.js": { "digest": "baad2c21b9a42867", "when": "[data-kp-upload]" },
         "js/uptime.js": { "digest": "b4ce907c9a414a93", "when": "[data-kp-uptime]" },
         "js/usual-picker.js": { "digest": "6ef2ad616d96e7ea", "when": "[data-kp-usual]" },
@@ -7946,11 +7946,13 @@
         "||@media (pointer: coarse)||.kp-swatches": "547e54590cb8b530",
         "||@media (pointer: coarse)||.kp-switch": "9f3d7170940ca207",
         "||@media (pointer: coarse)||.kp-switch))": "0e66eb0165e94d28",
+        "||@media (pointer: coarse)||.kp-tag__remove.kp-tag__remove": "92810255e8f165ed",
         "||@media (pointer: coarse)||.kp-task-row": "d739ca5939f34003",
         "||@media (pointer: coarse)||.kp-timers": "0646e0188f92ecde",
         "||@media (pointer: coarse)||.kp-uptime__cell": "b199afc7bdfe2a7a",
         "||@media (pointer: coarse)||.kp-uptime__track": "53096c761aa9ded0",
         "||@media (pointer: coarse)||[aria-disabled='true'])": "3edb5cbbb4da9386",
+        "||@media (pointer: coarse)||[data-kp-handle])": "cf989cac266fbd7e",
         "||@media (pointer: coarse)||[data-kp-item].kp-task-row": "d739ca5939f34003",
         "||@media (pointer: coarse)||a.kp-listrow__name)": "9797369aad5a0db8",
         "||@media (pointer: coarse)||a[href]": "9797369aad5a0db8",
@@ -10828,6 +10830,7 @@
         "||||.kp-tag-list": "f25592c152797042",
         "||||.kp-tag[data-kp-usual-flash]": "e8110872596ede43",
         "||||.kp-tag__remove": "d5de62141f28685e",
+        "||||.kp-tag__remove.kp-tag__remove": "5df0f570ed4e20a8",
         "||||.kp-task-list": "79ea6a0bac20e9f2",
         "||||.kp-task-row": "9cfa0a7743841ef4",
         "||||.kp-task-row-visible": "75165107a7072961",
@@ -11386,6 +11389,7 @@
         "||||[data-kp-ghost])": "2dcc8ab06c152a16",
         "||||[data-kp-gliding='column']": "6c1525df455b36a6",
         "||||[data-kp-handle]": "da76852cc1ba95d5",
+        "||||[data-kp-handle])": "0728339a28383177",
         "||||[data-kp-inert])": "ade9be9e4a8edc71",
         "||||[data-kp-item]": "48f5f1a2bddc02fb",
         "||||[data-kp-item].kp-task-row": "9cfa0a7743841ef4",
@@ -11797,7 +11801,7 @@
             ]
         },
         "data": {
-            "modules": "2729941390751f5f",
+            "modules": "013e297e9c580889",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",
@@ -13032,7 +13036,7 @@
             ]
         },
         "feedback": {
-            "modules": "62a253a494238c57",
+            "modules": "70bd2b91f7b02bac",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14224,7 +14228,7 @@
             ]
         },
         "navigation": {
-            "modules": "221aed19c0bc33ce",
+            "modules": "c0ded82aa4cba9e5",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14458,7 +14462,7 @@
             ]
         },
         "overlays": {
-            "modules": "c2095799a96e6abc",
+            "modules": "e9a833fdc69b9e0b",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14582,6 +14586,7 @@
                 "kp-contract-violation",
                 "kp-dialog",
                 "kp-dialog-close-request",
+                "kp-dialog-guard-leave",
                 "kp-dialog-open",
                 "kp-drawer",
                 "kp-help",

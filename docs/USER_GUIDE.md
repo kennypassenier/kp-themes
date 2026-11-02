@@ -457,9 +457,10 @@ Under a coarse pointer (a phone, a tablet), or inside any element with
 part takes a hit area a fingertip wide, `--kp-touch-target` (2.75rem,
 44 px) each way, without changing its look: buttons grow their box
 (`touch-target.css`); segmented items, chips, switches, the labels of
-check boxes and radios, calendar days, uptime cells and a few in-table
-controls get an invisible `::after` instead (`touch-hit-area.css`,
-`touch-hit-room.css`). Under a mouse nothing changes, to the pixel.
+check boxes and radios, calendar days, uptime cells, a tag's remove
+button, the nav brand, a reorder handle and a few in-table controls get an
+invisible `::after` instead (`touch-hit-area.css`, `touch-hit-room.css`,
+`touch-hit-small.css`). Under a mouse nothing changes, to the pixel.
 
 Two neighbours never take each other's press. Where the gap between them is
 known the area stops at its middle (calendar days, `--kp-calendar-gap`;
@@ -532,7 +533,11 @@ dialog or on any element round it (`<html>` for the whole page)
   answer it saved some other way, `markDialogSaved(dialog)`. Each change of
   `dialogChanged(dialog)` is yours to read. `closeDialog()` fires the
   cancelable `kp-dialog-close-request` (`{ returnValue }`) first, which is
-  how the guard holds it.
+  how the guard holds it. A reload, a closed tab and the Back button are
+  held too while the form is changed [habits-1102]: the browser's own
+  prompt for the first two, the same "Discard your changes?" for Back
+  (Discard replays the move). The cancelable `kp-dialog-guard-leave`
+  (`{ dialog, delta }`, on the dialog) lets a router ask itself.
 
 Both channels also say whether an overlay's box scrolls: `attachScrollbars`
 (in `attachAll`, and inside the React `Dialog`, `DropdownMenu` and

@@ -214,6 +214,7 @@ concatenates that file into `css/themes.css`.
 | `touch-target.css`              | Touch target                                                                     |
 | `touch-hit-area.css`            | Touch hit areas                                                                  |
 | `touch-hit-room.css`            | Touch hit areas: room and neighbours                                             |
+| `touch-hit-small.css`           | Touch hit areas: tag remove, brand, reorder handle                               |
 | `transfer.css`                  | A transfer with its speed and the time left                                      |
 | `tree-reorder-split.css`        | Tree, reorder and split pane                                                     |
 | `typed-confirmation.css`        | Typed confirmation                                                               |

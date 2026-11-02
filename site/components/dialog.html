@@ -2174,6 +2174,7 @@ Delete incident
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-dialog-close-request</code></td><td>Dispatched on a dialog, cancelable, before closeDialog() closes it: `{ returnValue }`; the close guard (js/overlays/dialog-guard.js) cancels it to ask first [uxdialogs1101].</td></tr>
                             <tr><td><code>kp-dialog-open</code></td><td>Dispatched on the dialog, bubbling, when a wired trigger opened it: `{ trigger, modal }`.</td></tr>
+                            <tr><td><code>kp-dialog-guard-leave</code></td><td>The event a page can cancel to answer a history move itself.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">

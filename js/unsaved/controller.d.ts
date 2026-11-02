@@ -52,6 +52,8 @@ export declare class UnsavedController extends Controller {
     /** Whether the page is saving, and how many changes it was sent. */
     saving: boolean;
     savedCount: number;
+    /** Set while a batch of values is written back (Discard, Undo): each write still marks its row, the bar paints once at the end [habits-1102]. */
+    quiet: boolean;
     /** The count last painted; -1 before the first paint, so the first paint raises no event. */
     lastCount: number;
     announceTimer: number;

@@ -5998,6 +5998,60 @@ var init_values2 = __esm({
   }
 });
 
+// js/overlays/dialog-leave.js
+function attachDialogLeave(held2, ask2) {
+  let lastDelta = -1;
+  let undoing = false;
+  let replaying = false;
+  const onUnload = (event) => {
+    if (!held2()) return;
+    event.preventDefault();
+    event.returnValue = "";
+  };
+  const onEntry = (event) => {
+    const from = (
+      /** @type {{ from?: { index: number } }} */
+      event.from
+    );
+    const now = window.navigation?.currentEntry;
+    if (!undoing && !replaying && from && now) lastDelta = now.index - from.index;
+  };
+  const onPop = (event) => {
+    if (undoing) {
+      undoing = false;
+      event.stopImmediatePropagation();
+      return;
+    }
+    const dialog = replaying ? null : held2();
+    replaying = false;
+    if (!dialog) return;
+    const delta = lastDelta || -1;
+    if (!dialog.dispatchEvent(new CustomEvent(DIALOG_LEAVE_EVENT, { bubbles: true, cancelable: true, detail: { dialog, delta } }))) return;
+    event.stopImmediatePropagation();
+    undoing = true;
+    window.history.go(-delta);
+    ask2(dialog, () => {
+      replaying = true;
+      window.history.go(delta);
+    });
+  };
+  window.addEventListener("beforeunload", onUnload);
+  window.addEventListener("popstate", onPop, true);
+  window.navigation?.addEventListener("currententrychange", onEntry);
+  return () => {
+    window.removeEventListener("beforeunload", onUnload);
+    window.removeEventListener("popstate", onPop, true);
+    window.navigation?.removeEventListener("currententrychange", onEntry);
+  };
+}
+var DIALOG_LEAVE_EVENT;
+var init_dialog_leave = __esm({
+  "js/overlays/dialog-leave.js"() {
+    "use strict";
+    DIALOG_LEAVE_EVENT = "kp-dialog-guard-leave";
+  }
+});
+
 // js/overlays/dialog-guard.js
 function valueOf(control) {
   if (control instanceof HTMLSelectElement && control.multiple) return [...control.selectedOptions].map((o) => o.value).join("\n");
@@ -6102,16 +6156,28 @@ function onClose(event) {
   const dialog = event.target;
   if (dialog instanceof HTMLDialogElement && dialog.matches(DIALOG_GUARD)) forgetDialogEdits(dialog);
 }
+function heldDialog() {
+  for (const dialog of document.querySelectorAll(DIALOG_GUARD)) {
+    if (dialog instanceof HTMLDialogElement && dialog.open && !released.has(dialog) && dialogChanged(dialog)) return dialog;
+  }
+  return null;
+}
 function attachDialogGuards() {
-  if (attached++ === 0) for (const [type, listener] of LISTENERS) window.addEventListener(type, listener, true);
+  if (attached++ === 0) {
+    for (const [type, listener] of LISTENERS) window.addEventListener(type, listener, true);
+    stopLeave = attachDialogLeave(heldDialog, (dialog, go) => void whenDialogFree(dialog, go));
+  }
   let done = false;
   return () => {
     if (done) return;
     done = true;
-    if (--attached === 0) for (const [type, listener] of LISTENERS) window.removeEventListener(type, listener, true);
+    if (--attached > 0) return;
+    for (const [type, listener] of LISTENERS) window.removeEventListener(type, listener, true);
+    stopLeave?.();
+    stopLeave = null;
   };
 }
-var DIALOG_GUARD, FIELDS2, WAYS_OUT, before, asking, released, LISTENERS, attached;
+var DIALOG_GUARD, FIELDS2, WAYS_OUT, before, asking, released, LISTENERS, attached, stopLeave;
 var init_dialog_guard = __esm({
   "js/overlays/dialog-guard.js"() {
     "use strict";
@@ -6120,6 +6186,7 @@ var init_dialog_guard = __esm({
     init_values2();
     init_widgets();
     init_constants2();
+    init_dialog_leave();
     DIALOG_GUARD = 'dialog[data-kp-dialog-guard]:not([data-kp-dialog-guard="off"])';
     FIELDS2 = 'input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="file"]), select, textarea, [role="switch"], [role="checkbox"], [role="radio"], [contenteditable="true"]';
     WAYS_OUT = /* @__PURE__ */ new Set(["", "cancel"]);
@@ -6136,6 +6203,7 @@ var init_dialog_guard = __esm({
       ["close", onClose]
     ];
     attached = 0;
+    stopLeave = null;
   }
 });
 
@@ -82585,21 +82653,32 @@ function revertOne(ctl, ch) {
   if (ctl.tracker.changes().length === 0) (chip.hidden ? save2 : chip).focus();
   else list.querySelector("button")?.focus();
 }
+function quietly(ctl, write2) {
+  ctl.quiet = true;
+  try {
+    write2();
+  } finally {
+    ctl.quiet = false;
+  }
+  paintBar(ctl);
+}
 function discardChanges(ctl) {
   if (ctl.saving) return;
   const before2 = ctl.tracker.changes();
   if (before2.length === 0) return;
   ctl.undoStack = [];
-  for (const ch of before2) {
-    for (const c of ctl.tracker.controlsOf(ch.row)) {
-      const was = ctl.tracker.baseline.get(c);
-      if (was !== void 0 && readValue(c) !== was) {
-        ctl.undoStack.push({ control: c, value: readValue(c) });
-        writeValue(c, was);
-        fire(c);
+  quietly(ctl, () => {
+    for (const ch of before2) {
+      for (const c of ctl.tracker.controlsOf(ch.row)) {
+        const was = ctl.tracker.baseline.get(c);
+        if (was !== void 0 && readValue(c) !== was) {
+          ctl.undoStack.push({ control: c, value: readValue(c) });
+          writeValue(c, was);
+          fire(c);
+        }
       }
     }
-  }
+  });
   clearProblem(ctl);
   paintBar(ctl);
   ctl.el.dispatchEvent(new CustomEvent(UNSAVED_DISCARD_EVENT, { bubbles: true, detail: { changes: before2 } }));
@@ -82614,10 +82693,12 @@ function offerUndo(ctl, count4) {
     action: {
       label: s2.unsavedUndo,
       onClick: () => {
-        for (const r of restoreIt) {
-          writeValue(r.control, r.value);
-          fire(r.control);
-        }
+        quietly(ctl, () => {
+          for (const r of restoreIt) {
+            writeValue(r.control, r.value);
+            fire(r.control);
+          }
+        });
         paintBar(ctl);
         ctl.el.dispatchEvent(new CustomEvent(UNSAVED_UNDO_EVENT, { bubbles: true, detail: { changes: ctl.tracker.changes() } }));
         ctl.live.textContent = s2.unsavedRestoredUndo(ctl.tracker.changes().length);
@@ -83231,6 +83312,7 @@ var init_controller79 = __esm({
         this.guard = new LeaveGuard(this);
         this.saving = false;
         this.savedCount = 0;
+        this.quiet = false;
         this.lastCount = -1;
         this.announceTimer = 0;
         this.undoStack = [];
@@ -83334,7 +83416,7 @@ var init_controller79 = __esm({
         const c = this.tracker.controlFor(event.target);
         if (!c) return;
         this.tracker.track(c);
-        this.paint();
+        if (!this.quiet) this.paint();
       }
       /** @param {KeyboardEvent} event */
       onKey(event) {
