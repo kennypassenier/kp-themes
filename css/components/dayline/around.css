@@ -100,3 +100,45 @@
         box-sizing: border-box;
         margin: 0;
     }
+
+    /* A source beside the day [parts-1102 r2]: grabbed by any pointer, so no text selection or callout gets in the way; lifted (held
+     * or carried), it stays in its list quiet under the theme's ring, and its copy follows the pointer in the top layer on the
+     * theme's card with the ring and the theme's offset shadow, a little see-through so the hour under it still reads. */
+    [data-kp-dayline-movable] {
+        -webkit-touch-callout: none;
+        user-select: none;
+        cursor: grab;
+    }
+
+    [data-kp-dayline-movable][data-kp-lifted] {
+        opacity: 0.55;
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-dayline__ghost {
+        position: fixed;
+        inset: 0 auto auto 0;
+        z-index: 2147483000;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow:
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong),
+            0 0 0 2px var(--ring);
+        opacity: 0.92;
+        pointer-events: none;
+        cursor: grabbing;
+        will-change: translate;
+    }
+
+    .kp-dayline__ghost > * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }

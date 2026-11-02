@@ -428,19 +428,19 @@
     --chart-3: hsl(80, 30%, 38%);
     --chart-4: hsl(15, 55%, 45%);
     --chart-5: hsl(220, 15%, 55%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(5, 39%, 49%);
-    --kp-cat-2: hsl(28, 96%, 27%);
-    --kp-cat-3: hsl(41, 92%, 30%);
-    --kp-cat-4: hsl(76, 97%, 18%);
-    --kp-cat-5: hsl(138, 49%, 33%);
-    --kp-cat-6: hsl(173, 93%, 19%);
-    --kp-cat-7: hsl(188, 93%, 28%);
-    --kp-cat-8: hsl(212, 68%, 34%);
-    --kp-cat-9: hsl(235, 37%, 55%);
-    --kp-cat-10: hsl(270, 36%, 40%);
-    --kp-cat-11: hsl(328, 43%, 37%);
-    --kp-cat-12: hsl(214, 17%, 26%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(2, 42%, 50%);
+    --kp-cat-2: hsl(18, 67%, 30%);
+    --kp-cat-3: hsl(46, 84%, 29%);
+    --kp-cat-4: hsl(104, 99%, 13%);
+    --kp-cat-5: hsl(137, 76%, 29%);
+    --kp-cat-6: hsl(170, 65%, 23%);
+    --kp-cat-7: hsl(194, 96%, 32%);
+    --kp-cat-8: hsl(221, 54%, 38%);
+    --kp-cat-9: hsl(252, 41%, 56%);
+    --kp-cat-10: hsl(278, 63%, 29%);
+    --kp-cat-11: hsl(316, 41%, 38%);
+    --kp-cat-12: hsl(223, 21%, 24%);
     --kp-cat-ink: hsl(40, 25%, 97%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(218, 45%, 35%);
@@ -574,19 +574,19 @@
     --chart-3: hsl(318, 92%, 66%);
     --chart-4: hsl(78, 88%, 60%);
     --chart-5: hsl(200, 22%, 93%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(5, 60%, 63%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(358, 58%, 65%);
     --kp-cat-2: hsl(23, 94%, 69%);
-    --kp-cat-3: hsl(40, 76%, 42%);
-    --kp-cat-4: hsl(81, 44%, 57%);
-    --kp-cat-5: hsl(136, 38%, 46%);
-    --kp-cat-6: hsl(173, 69%, 47%);
-    --kp-cat-7: hsl(188, 86%, 38%);
-    --kp-cat-8: hsl(214, 100%, 76%);
-    --kp-cat-9: hsl(235, 61%, 69%);
-    --kp-cat-10: hsl(268, 95%, 82%);
-    --kp-cat-11: hsl(331, 90%, 79%);
-    --kp-cat-12: hsl(214, 32%, 83%);
+    --kp-cat-3: hsl(41, 75%, 42%);
+    --kp-cat-4: hsl(75, 44%, 55%);
+    --kp-cat-5: hsl(125, 33%, 48%);
+    --kp-cat-6: hsl(173, 66%, 48%);
+    --kp-cat-7: hsl(188, 75%, 40%);
+    --kp-cat-8: hsl(213, 96%, 75%);
+    --kp-cat-9: hsl(249, 46%, 62%);
+    --kp-cat-10: hsl(271, 76%, 74%);
+    --kp-cat-11: hsl(319, 97%, 82%);
+    --kp-cat-12: hsl(210, 33%, 84%);
     --kp-cat-ink: hsl(220, 16%, 5%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(188, 96%, 62%);
@@ -718,19 +718,19 @@
     --chart-3: hsl(353, 84%, 62%);
     --chart-4: hsl(263, 100%, 70%);
     --chart-5: hsl(50, 12%, 82%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(4, 100%, 69%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(7, 100%, 65%);
     --kp-cat-2: hsl(23, 100%, 73%);
-    --kp-cat-3: hsl(42, 97%, 41%);
-    --kp-cat-4: hsl(76, 73%, 47%);
-    --kp-cat-5: hsl(147, 99%, 35%);
-    --kp-cat-6: hsl(174, 98%, 42%);
-    --kp-cat-7: hsl(187, 99%, 38%);
-    --kp-cat-8: hsl(214, 99%, 78%);
-    --kp-cat-9: hsl(236, 100%, 77%);
-    --kp-cat-10: hsl(268, 99%, 84%);
-    --kp-cat-11: hsl(331, 99%, 82%);
-    --kp-cat-12: hsl(214, 31%, 86%);
+    --kp-cat-3: hsl(42, 89%, 42%);
+    --kp-cat-4: hsl(64, 96%, 40%);
+    --kp-cat-5: hsl(109, 50%, 45%);
+    --kp-cat-6: hsl(174, 87%, 45%);
+    --kp-cat-7: hsl(187, 98%, 38%);
+    --kp-cat-8: hsl(211, 86%, 75%);
+    --kp-cat-9: hsl(251, 76%, 74%);
+    --kp-cat-10: hsl(281, 99%, 83%);
+    --kp-cat-11: hsl(329, 57%, 68%);
+    --kp-cat-12: hsl(221, 28%, 87%);
     --kp-cat-ink: hsl(270, 9%, 4%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(56, 98%, 51%);
@@ -858,19 +858,19 @@
     --chart-3: hsl(48, 98%, 68%);
     --chart-4: hsl(258, 100%, 72%);
     --chart-5: hsl(260, 100%, 91%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(4, 78%, 63%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(1, 74%, 64%);
     --kp-cat-2: hsl(24, 100%, 65%);
-    --kp-cat-3: hsl(41, 91%, 39%);
-    --kp-cat-4: hsl(78, 61%, 46%);
-    --kp-cat-5: hsl(145, 84%, 35%);
-    --kp-cat-6: hsl(174, 99%, 39%);
-    --kp-cat-7: hsl(188, 92%, 36%);
-    --kp-cat-8: hsl(214, 100%, 73%);
-    --kp-cat-9: hsl(237, 88%, 73%);
+    --kp-cat-3: hsl(44, 84%, 39%);
+    --kp-cat-4: hsl(77, 61%, 46%);
+    --kp-cat-5: hsl(142, 84%, 35%);
+    --kp-cat-6: hsl(174, 89%, 41%);
+    --kp-cat-7: hsl(186, 87%, 35%);
+    --kp-cat-8: hsl(210, 96%, 70%);
+    --kp-cat-9: hsl(242, 74%, 71%);
     --kp-cat-10: hsl(268, 100%, 80%);
-    --kp-cat-11: hsl(330, 100%, 77%);
-    --kp-cat-12: hsl(214, 44%, 81%);
+    --kp-cat-11: hsl(326, 97%, 72%);
+    --kp-cat-12: hsl(219, 41%, 82%);
     --kp-cat-ink: hsl(263, 89%, 7%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(341, 100%, 64%);
@@ -998,19 +998,19 @@
     --chart-3: hsl(210, 60%, 55%);
     --chart-4: hsl(41, 100%, 36%);
     --chart-5: hsl(270, 50%, 60%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(5, 39%, 49%);
-    --kp-cat-2: hsl(28, 95%, 27%);
-    --kp-cat-3: hsl(41, 92%, 30%);
-    --kp-cat-4: hsl(75, 97%, 18%);
-    --kp-cat-5: hsl(138, 49%, 33%);
-    --kp-cat-6: hsl(173, 97%, 19%);
-    --kp-cat-7: hsl(188, 93%, 28%);
-    --kp-cat-8: hsl(213, 66%, 35%);
-    --kp-cat-9: hsl(235, 37%, 55%);
-    --kp-cat-10: hsl(270, 35%, 41%);
-    --kp-cat-11: hsl(328, 42%, 38%);
-    --kp-cat-12: hsl(214, 19%, 27%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(359, 45%, 51%);
+    --kp-cat-2: hsl(20, 84%, 29%);
+    --kp-cat-3: hsl(42, 90%, 30%);
+    --kp-cat-4: hsl(100, 97%, 13%);
+    --kp-cat-5: hsl(94, 86%, 27%);
+    --kp-cat-6: hsl(160, 49%, 26%);
+    --kp-cat-7: hsl(194, 93%, 32%);
+    --kp-cat-8: hsl(214, 78%, 34%);
+    --kp-cat-9: hsl(249, 43%, 57%);
+    --kp-cat-10: hsl(274, 64%, 30%);
+    --kp-cat-11: hsl(316, 38%, 37%);
+    --kp-cat-12: hsl(224, 21%, 25%);
     --kp-cat-ink: hsl(285, 45%, 97%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(330, 55%, 52%);
@@ -1141,19 +1141,19 @@
     --chart-3: hsl(200, 50%, 42%);
     --chart-4: hsl(88, 35%, 38%);
     --chart-5: hsl(35, 25%, 45%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(6, 34%, 48%);
-    --kp-cat-2: hsl(25, 72%, 28%);
-    --kp-cat-3: hsl(39, 66%, 33%);
-    --kp-cat-4: hsl(77, 76%, 19%);
-    --kp-cat-5: hsl(135, 36%, 35%);
-    --kp-cat-6: hsl(173, 89%, 19%);
-    --kp-cat-7: hsl(188, 90%, 28%);
-    --kp-cat-8: hsl(213, 56%, 34%);
-    --kp-cat-9: hsl(234, 29%, 52%);
-    --kp-cat-10: hsl(269, 31%, 38%);
-    --kp-cat-11: hsl(329, 36%, 36%);
-    --kp-cat-12: hsl(214, 14%, 25%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(14, 50%, 46%);
+    --kp-cat-2: hsl(19, 100%, 23%);
+    --kp-cat-3: hsl(44, 90%, 24%);
+    --kp-cat-4: hsl(103, 100%, 13%);
+    --kp-cat-5: hsl(116, 41%, 35%);
+    --kp-cat-6: hsl(172, 77%, 21%);
+    --kp-cat-7: hsl(193, 95%, 31%);
+    --kp-cat-8: hsl(216, 60%, 35%);
+    --kp-cat-9: hsl(252, 34%, 53%);
+    --kp-cat-10: hsl(284, 48%, 30%);
+    --kp-cat-11: hsl(330, 43%, 40%);
+    --kp-cat-12: hsl(222, 18%, 23%);
     --kp-cat-ink: hsl(42, 32%, 95%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(158, 42%, 32%);
@@ -1284,19 +1284,19 @@
     --chart-3: hsl(160, 55%, 55%);
     --chart-4: hsl(280, 60%, 70%);
     --chart-5: hsl(2, 70%, 66%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(6, 50%, 60%);
-    --kp-cat-2: hsl(23, 84%, 68%);
-    --kp-cat-3: hsl(39, 67%, 42%);
-    --kp-cat-4: hsl(81, 40%, 57%);
-    --kp-cat-5: hsl(135, 36%, 44%);
-    --kp-cat-6: hsl(172, 55%, 50%);
-    --kp-cat-7: hsl(187, 100%, 34%);
-    --kp-cat-8: hsl(214, 97%, 74%);
-    --kp-cat-9: hsl(234, 50%, 65%);
-    --kp-cat-10: hsl(268, 78%, 79%);
-    --kp-cat-11: hsl(331, 76%, 77%);
-    --kp-cat-12: hsl(214, 23%, 81%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(355, 54%, 62%);
+    --kp-cat-2: hsl(16, 91%, 72%);
+    --kp-cat-3: hsl(39, 72%, 41%);
+    --kp-cat-4: hsl(70, 46%, 51%);
+    --kp-cat-5: hsl(110, 32%, 44%);
+    --kp-cat-6: hsl(168, 54%, 51%);
+    --kp-cat-7: hsl(187, 78%, 38%);
+    --kp-cat-8: hsl(208, 91%, 71%);
+    --kp-cat-9: hsl(236, 45%, 63%);
+    --kp-cat-10: hsl(265, 95%, 78%);
+    --kp-cat-11: hsl(318, 99%, 83%);
+    --kp-cat-12: hsl(207, 26%, 82%);
     --kp-cat-ink: hsl(215, 65%, 12%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(190, 80%, 62%);
@@ -1427,19 +1427,19 @@
     --chart-3: hsl(45, 70%, 55%);
     --chart-4: hsl(95, 40%, 52%);
     --chart-5: hsl(320, 40%, 62%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(6, 53%, 62%);
-    --kp-cat-2: hsl(23, 89%, 70%);
-    --kp-cat-3: hsl(39, 63%, 44%);
-    --kp-cat-4: hsl(81, 42%, 59%);
-    --kp-cat-5: hsl(135, 34%, 46%);
-    --kp-cat-6: hsl(172, 57%, 52%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(355, 56%, 64%);
+    --kp-cat-2: hsl(23, 96%, 70%);
+    --kp-cat-3: hsl(39, 64%, 44%);
+    --kp-cat-4: hsl(70, 42%, 57%);
+    --kp-cat-5: hsl(125, 35%, 45%);
+    --kp-cat-6: hsl(171, 66%, 49%);
     --kp-cat-7: hsl(187, 95%, 36%);
-    --kp-cat-8: hsl(214, 99%, 76%);
-    --kp-cat-9: hsl(234, 53%, 67%);
-    --kp-cat-10: hsl(268, 86%, 81%);
-    --kp-cat-11: hsl(331, 83%, 79%);
-    --kp-cat-12: hsl(214, 26%, 83%);
+    --kp-cat-8: hsl(206, 87%, 70%);
+    --kp-cat-9: hsl(243, 40%, 64%);
+    --kp-cat-10: hsl(264, 96%, 79%);
+    --kp-cat-11: hsl(332, 98%, 81%);
+    --kp-cat-12: hsl(215, 25%, 83%);
     --kp-cat-ink: hsl(20, 14%, 10%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(28, 85%, 58%);
@@ -1570,19 +1570,19 @@
     --chart-3: hsl(255, 60%, 52%);
     --chart-4: hsl(205, 90%, 36%);
     --chart-5: hsl(140, 60%, 28%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(1, 67%, 51%);
-    --kp-cat-2: hsl(28, 95%, 27%);
-    --kp-cat-3: hsl(41, 93%, 31%);
-    --kp-cat-4: hsl(76, 97%, 18%);
-    --kp-cat-5: hsl(146, 94%, 27%);
-    --kp-cat-6: hsl(173, 96%, 19%);
-    --kp-cat-7: hsl(188, 97%, 28%);
-    --kp-cat-8: hsl(210, 99%, 32%);
-    --kp-cat-9: hsl(240, 75%, 64%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(2, 68%, 50%);
+    --kp-cat-2: hsl(21, 77%, 29%);
+    --kp-cat-3: hsl(35, 93%, 34%);
+    --kp-cat-4: hsl(62, 93%, 20%);
+    --kp-cat-5: hsl(120, 98%, 27%);
+    --kp-cat-6: hsl(180, 98%, 19%);
+    --kp-cat-7: hsl(195, 83%, 35%);
+    --kp-cat-8: hsl(218, 66%, 38%);
+    --kp-cat-9: hsl(236, 75%, 62%);
     --kp-cat-10: hsl(273, 60%, 44%);
-    --kp-cat-11: hsl(321, 96%, 33%);
-    --kp-cat-12: hsl(0, 0%, 26%);
+    --kp-cat-11: hsl(318, 94%, 33%);
+    --kp-cat-12: hsl(165, 0%, 22%);
     --kp-cat-ink: hsl(50, 100%, 97%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(45, 100%, 29%);
@@ -1714,19 +1714,19 @@
     --chart-3: hsl(210, 70%, 60%);
     --chart-4: hsl(355, 75%, 60%);
     --chart-5: hsl(40, 45%, 72%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(6, 51%, 60%);
-    --kp-cat-2: hsl(23, 85%, 69%);
-    --kp-cat-3: hsl(39, 66%, 43%);
-    --kp-cat-4: hsl(81, 40%, 57%);
-    --kp-cat-5: hsl(135, 35%, 45%);
-    --kp-cat-6: hsl(172, 56%, 51%);
-    --kp-cat-7: hsl(188, 93%, 35%);
-    --kp-cat-8: hsl(214, 99%, 75%);
-    --kp-cat-9: hsl(234, 51%, 66%);
-    --kp-cat-10: hsl(268, 80%, 80%);
-    --kp-cat-11: hsl(331, 78%, 77%);
-    --kp-cat-12: hsl(214, 30%, 82%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(2, 51%, 62%);
+    --kp-cat-2: hsl(18, 90%, 72%);
+    --kp-cat-3: hsl(45, 89%, 36%);
+    --kp-cat-4: hsl(66, 43%, 54%);
+    --kp-cat-5: hsl(127, 35%, 45%);
+    --kp-cat-6: hsl(169, 55%, 53%);
+    --kp-cat-7: hsl(188, 81%, 37%);
+    --kp-cat-8: hsl(206, 93%, 69%);
+    --kp-cat-9: hsl(248, 38%, 61%);
+    --kp-cat-10: hsl(258, 96%, 78%);
+    --kp-cat-11: hsl(315, 84%, 80%);
+    --kp-cat-12: hsl(216, 29%, 82%);
     --kp-cat-ink: hsl(200, 25%, 8%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(43, 65%, 55%);
@@ -1857,19 +1857,19 @@
     --chart-3: hsl(38, 60%, 35%);
     --chart-4: hsl(140, 35%, 30%);
     --chart-5: hsl(205, 45%, 35%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(4, 48%, 38%);
-    --kp-cat-2: hsl(27, 97%, 19%);
-    --kp-cat-3: hsl(41, 97%, 23%);
-    --kp-cat-4: hsl(76, 100%, 12%);
-    --kp-cat-5: hsl(145, 97%, 20%);
-    --kp-cat-6: hsl(173, 94%, 13%);
-    --kp-cat-7: hsl(188, 91%, 22%);
-    --kp-cat-8: hsl(211, 98%, 23%);
-    --kp-cat-9: hsl(237, 35%, 44%);
-    --kp-cat-10: hsl(271, 47%, 30%);
-    --kp-cat-11: hsl(326, 59%, 26%);
-    --kp-cat-12: hsl(214, 21%, 16%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]; on this ground amber, green and cyan read 3.5 to 3.7:1, below WCAG AA for text, the price of twelve that stay apart. */
+    --kp-cat-1: hsl(358, 57%, 38%);
+    --kp-cat-2: hsl(23, 85%, 20%);
+    --kp-cat-3: hsl(36, 92%, 30%);
+    --kp-cat-4: hsl(61, 92%, 17%);
+    --kp-cat-5: hsl(132, 97%, 24%);
+    --kp-cat-6: hsl(181, 100%, 15%);
+    --kp-cat-7: hsl(185, 88%, 25%);
+    --kp-cat-8: hsl(217, 89%, 26%);
+    --kp-cat-9: hsl(241, 33%, 45%);
+    --kp-cat-10: hsl(281, 72%, 25%);
+    --kp-cat-11: hsl(312, 57%, 33%);
+    --kp-cat-12: hsl(219, 19%, 16%);
     --kp-cat-ink: hsl(38, 28%, 78%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(17, 74%, 36%);
@@ -2006,19 +2006,19 @@
     --chart-3: hsl(186, 78%, 58%);
     --chart-4: hsl(12, 88%, 62%);
     --chart-5: hsl(212, 16%, 87%);
-    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue. */
-    --kp-cat-1: hsl(6, 43%, 61%);
-    --kp-cat-2: hsl(23, 75%, 71%);
-    --kp-cat-3: hsl(37, 46%, 47%);
-    --kp-cat-4: hsl(82, 36%, 61%);
-    --kp-cat-5: hsl(134, 26%, 48%);
-    --kp-cat-6: hsl(171, 48%, 58%);
-    --kp-cat-7: hsl(189, 62%, 42%);
-    --kp-cat-8: hsl(214, 85%, 75%);
-    --kp-cat-9: hsl(234, 42%, 65%);
-    --kp-cat-10: hsl(267, 65%, 80%);
-    --kp-cat-11: hsl(332, 66%, 78%);
-    --kp-cat-12: hsl(214, 25%, 83%);
+    /* Categorical colours [habits-1101]: twelve for a project or a tag (red, orange, amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each read as ink on the ground and as a fill under --kp-cat-ink; neighbours differ in lightness as well as hue, and every pair stands at least 12 apart in OKLab (×100) [parts-1102 r2]. */
+    --kp-cat-1: hsl(359, 53%, 67%);
+    --kp-cat-2: hsl(23, 88%, 73%);
+    --kp-cat-3: hsl(37, 72%, 40%);
+    --kp-cat-4: hsl(74, 38%, 57%);
+    --kp-cat-5: hsl(102, 34%, 45%);
+    --kp-cat-6: hsl(170, 67%, 58%);
+    --kp-cat-7: hsl(187, 92%, 36%);
+    --kp-cat-8: hsl(208, 82%, 72%);
+    --kp-cat-9: hsl(244, 34%, 61%);
+    --kp-cat-10: hsl(279, 55%, 72%);
+    --kp-cat-11: hsl(320, 100%, 85%);
+    --kp-cat-12: hsl(213, 48%, 91%);
     --kp-cat-ink: hsl(216, 16%, 10%);
     /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
     --code-keyword: hsl(214, 84%, 62%);
@@ -4421,7 +4421,7 @@
     /* --- Categorical colours [habits-1101] ----------------------------------
  * Twelve colours a page gives a project, a tag or a series by name, from the theme: `--kp-cat-1` … `--kp-cat-12` (red, orange,
  * amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each readable as ink on the ground and as a fill under
- * `--kp-cat-ink`. `data-kp-cat="1"` … `"12"` on any element sets `--kp-cat` to that colour for it and what it holds, so a part
+ * `--kp-cat-ink` (nostromo's amber, green and cyan at about 3.5:1), every pair at least 12 apart in OKLab ×100 [parts-1102 r2]. `data-kp-cat="1"` … `"12"` on any element sets `--kp-cat` to that colour for it and what it holds, so a part
  * paints with `var(--kp-cat)`. Two parts use it: `.kp-cat-dot`, a small round mark beside a name, and `.kp-cat-chip`, a filled
  * label (a tag) with the ink on it. */
     [data-kp-cat='1'] {
@@ -16895,8 +16895,16 @@
         text-align: start;
     }
 
+    /* The whole block moves [parts-1102 r2]: a mouse grabs its body (a press without moving still opens it), a finger holds it
+     * still first; no text selection or callout gets in the way. */
     button.kp-dayline__body {
-        cursor: pointer;
+        cursor: grab;
+        -webkit-touch-callout: none;
+        user-select: none;
+    }
+
+    .kp-dayline__item[data-kp-dragging] button.kp-dayline__body {
+        cursor: grabbing;
     }
 
     button.kp-dayline__body:focus-visible {
@@ -17023,6 +17031,48 @@
         block-size: 100%;
         box-sizing: border-box;
         margin: 0;
+    }
+
+    /* A source beside the day [parts-1102 r2]: grabbed by any pointer, so no text selection or callout gets in the way; lifted (held
+     * or carried), it stays in its list quiet under the theme's ring, and its copy follows the pointer in the top layer on the
+     * theme's card with the ring and the theme's offset shadow, a little see-through so the hour under it still reads. */
+    [data-kp-dayline-movable] {
+        -webkit-touch-callout: none;
+        user-select: none;
+        cursor: grab;
+    }
+
+    [data-kp-dayline-movable][data-kp-lifted] {
+        opacity: 0.55;
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-dayline__ghost {
+        position: fixed;
+        inset: 0 auto auto 0;
+        z-index: 2147483000;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow:
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong),
+            0 0 0 2px var(--ring);
+        opacity: 0.92;
+        pointer-events: none;
+        cursor: grabbing;
+        will-change: translate;
+    }
+
+    .kp-dayline__ghost > * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
     }
     /* --- Swipe row [parts-1102] ---------------------------------------------------------------------------------------------
  * A row of a `[data-kp-swipe]` list (js/swipe.js) while a finger slides it: its parts follow (--kp-swipe-x) and the room they

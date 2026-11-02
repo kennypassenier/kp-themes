@@ -969,7 +969,7 @@
     /* --- Categorical colours [habits-1101] ----------------------------------
  * Twelve colours a page gives a project, a tag or a series by name, from the theme: `--kp-cat-1` … `--kp-cat-12` (red, orange,
  * amber, lime, green, teal, cyan, blue, indigo, violet, pink, slate), each readable as ink on the ground and as a fill under
- * `--kp-cat-ink`. `data-kp-cat="1"` … `"12"` on any element sets `--kp-cat` to that colour for it and what it holds, so a part
+ * `--kp-cat-ink` (nostromo's amber, green and cyan at about 3.5:1), every pair at least 12 apart in OKLab ×100 [parts-1102 r2]. `data-kp-cat="1"` … `"12"` on any element sets `--kp-cat` to that colour for it and what it holds, so a part
  * paints with `var(--kp-cat)`. Two parts use it: `.kp-cat-dot`, a small round mark beside a name, and `.kp-cat-chip`, a filled
  * label (a tag) with the ink on it. */
     [data-kp-cat='1'] {
@@ -13443,8 +13443,16 @@
         text-align: start;
     }
 
+    /* The whole block moves [parts-1102 r2]: a mouse grabs its body (a press without moving still opens it), a finger holds it
+     * still first; no text selection or callout gets in the way. */
     button.kp-dayline__body {
-        cursor: pointer;
+        cursor: grab;
+        -webkit-touch-callout: none;
+        user-select: none;
+    }
+
+    .kp-dayline__item[data-kp-dragging] button.kp-dayline__body {
+        cursor: grabbing;
     }
 
     button.kp-dayline__body:focus-visible {
@@ -13571,6 +13579,48 @@
         block-size: 100%;
         box-sizing: border-box;
         margin: 0;
+    }
+
+    /* A source beside the day [parts-1102 r2]: grabbed by any pointer, so no text selection or callout gets in the way; lifted (held
+     * or carried), it stays in its list quiet under the theme's ring, and its copy follows the pointer in the top layer on the
+     * theme's card with the ring and the theme's offset shadow, a little see-through so the hour under it still reads. */
+    [data-kp-dayline-movable] {
+        -webkit-touch-callout: none;
+        user-select: none;
+        cursor: grab;
+    }
+
+    [data-kp-dayline-movable][data-kp-lifted] {
+        opacity: 0.55;
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-dayline__ghost {
+        position: fixed;
+        inset: 0 auto auto 0;
+        z-index: 2147483000;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow:
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong),
+            0 0 0 2px var(--ring);
+        opacity: 0.92;
+        pointer-events: none;
+        cursor: grabbing;
+        will-change: translate;
+    }
+
+    .kp-dayline__ghost > * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
     }
     /* --- Swipe row [parts-1102] ---------------------------------------------------------------------------------------------
  * A row of a `[data-kp-swipe]` list (js/swipe.js) while a finger slides it: its parts follow (--kp-swipe-x) and the room they

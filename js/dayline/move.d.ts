@@ -1,6 +1,18 @@
 export type Placed = import('./constants.js').Placed;
 export type MoveHost = {
     grid: HTMLElement;
+    /**
+     * the box the hours scroll in
+     */
+    scroll: HTMLElement;
+    /**
+     * how long a finger holds a block still before it lifts
+     */
+    holdMs: () => number;
+    /**
+     * a finger lifted a block: said, so it is known the next move drags it
+     */
+    lifted: (p: Placed) => void;
     rowsTotal: () => number;
     /**
      * rows in an hour
@@ -41,8 +53,8 @@ export declare class KeyWalk {
     stop(): void;
 }
 /**
- * One drag from a press on a handle: the block follows the pointer in whole rows until it is let go (a change) or Escape is
- * pressed (put back). Returns nothing; its listeners go with the drag.
+ * One drag from a press on a block: it follows the pointer in whole rows (the box's own scroll counted) until it is let go (a
+ * change) or put back (Escape, a cancelled pointer). Returns nothing; its listeners go with the drag.
  * @param {PointerEvent} down @param {MoveHost} host
  */
 export declare function dragFrom(down: PointerEvent, host: MoveHost): void;

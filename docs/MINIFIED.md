@@ -18,7 +18,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 261.1 kB | 140.2 kB | 46% |
 | `css/brutalism-register.css` | 254.4 kB | 144.7 kB | 43% |
-| `css/components.css` | 1334.9 kB | 651.9 kB | 51% |
+| `css/components.css` | 1336.7 kB | 652.6 kB | 51% |
 | `css/cyberpunk-register.css` | 321.3 kB | 185.6 kB | 42% |
 | `css/dark-register.css` | 229.9 kB | 114.7 kB | 50% |
 | `css/deco-register.css` | 259.1 kB | 149.9 kB | 42% |
@@ -30,15 +30,15 @@ the selectors and their order are identical, which is what
 | `css/pastel-register.css` | 241.0 kB | 127.5 kB | 47% |
 | `css/solstice-register.css` | 191.5 kB | 113.2 kB | 41% |
 | `css/synthwave-register.css` | 255.0 kB | 140.1 kB | 45% |
-| `css/themes.css` | 140.2 kB | 87.0 kB | 38% |
+| `css/themes.css` | 141.2 kB | 87.1 kB | 38% |
 | `css/titanium-register.css` | 221.5 kB | 121.1 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 4419.4 kB | 2347.6 kB | 47% |
-| `dist/kp-themes-base.css` | 1513.4 kB | 757.8 kB | 50% |
-| `dist/kp-themes.js` | 3945.9 kB | 2091.3 kB | 47% |
+| `dist/kp-themes.css` | 4422.2 kB | 2348.4 kB | 47% |
+| `dist/kp-themes-base.css` | 1516.2 kB | 758.6 kB | 50% |
+| `dist/kp-themes.js` | 3955.7 kB | 2096.5 kB | 47% |
 
-The loose stylesheets together weigh **4472.6 kB** authored and
-**2379.4 kB** minified, 47% less. A page loading one theme's
+The loose stylesheets together weigh **4475.4 kB** authored and
+**2380.2 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 **The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without
@@ -48,11 +48,11 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 
 | Entry | Files it loads before it runs | Minified |
 | ----- | ----------------------------: | -------: |
-| `dist/js/auto.js` | 20 | 266.7 kB |
-| `dist/js/lazy-register.js` | 6 | 85.9 kB |
-| `dist/js/core.js` | 4 | 81.1 kB |
-| `dist/js/index.js` | 169 | 2034.1 kB |
-| the whole folder | 313 | 2152.6 kB |
+| `dist/js/auto.js` | 20 | 267.0 kB |
+| `dist/js/lazy-register.js` | 6 | 86.2 kB |
+| `dist/js/core.js` | 4 | 81.3 kB |
+| `dist/js/index.js` | 169 | 2039.1 kB |
+| the whole folder | 313 | 2157.5 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

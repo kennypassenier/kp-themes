@@ -53,6 +53,7 @@ if (day && untimed) {
                 const li = row(task, { handle: false });
                 li.dataset.kpDaylineSource = task.key;
                 li.dataset.kpDaylineFor = 'pg-day';
+                li.dataset.kpDaylineLabel = task.title;
                 return li;
             }),
         );

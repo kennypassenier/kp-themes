@@ -48,7 +48,7 @@ const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 
 // A round id is never reused: once Kenny's answer to it is recorded (it is in `received`), the next page gets a new one.
 const roundId = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) && !received.includes(current) ? current : `${ID}-${randomUUID()}`;
 
-const title = 'Five parts for the Habits app: the day, the swipe, chords, settled rows and swatches';
+const title = 'Habits parts, round 2: blocks you drag, and twelve colours that stay apart';
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="${THEMES.join(',')}">
     <head>
@@ -85,11 +85,12 @@ const page = `<!doctype html>
             <header class="pg-head">
                 <h1>${escapeHtml(title)}</h1>
                 <p class="cat-intro">
-                    The five parts you approved for Kenny&rsquo;s Habits todo app, built: Today&rsquo;s timeline as one day from top to
-                    bottom, a row a finger swipes for Done or Tomorrow, a key line that can say &ldquo;O then T&rdquo;, a row that stays
-                    where it was once its task left, and a colour picker of twelve swatches. Every one is opt-in: without it everything is
-                    exactly as you approved it. Formal only, on the app&rsquo;s own shapes and words (the titles, times, projects and
-                    events are mock). ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
+                    Round 2 of the five Habits parts. You approved the swipe row, the chord keys and the settled row; they have left
+                    this page. Two come back: the day timeline, whose blocks you asked to drag by themselves (now the whole block moves,
+                    and the tasks beside the day drop in by mouse, pen or finger), and the swatch picker, whose colours were the
+                    theme&rsquo;s already but too much alike (now every pair in all twelve themes stands clearly apart, with a row per
+                    theme to judge it). Formal only, on the app&rsquo;s own shapes and words (the titles, times, projects and events are
+                    mock). ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
                 </p>
                 <p>Each section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a phone&rsquo;s 390 px.</p>
             </header>

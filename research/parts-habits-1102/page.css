@@ -117,3 +117,73 @@
     min-block-size: 2lh;
     overflow-wrap: anywhere;
 }
+
+/* The twelve colours in every theme: one plate per theme on that theme's own ground (the wrapper carries data-theme, so the tokens
+ * are that theme's), its name in a column of its own, then twelve equal cells, a large dot over its name; six to a row on a phone. */
+.pg-catrows {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-catrows__list {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pg-catrow {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.pg-catrow__name {
+    margin: 0;
+    font-weight: 600;
+}
+
+.pg-catrow__cells {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pg-catrow__cell {
+    display: grid;
+    justify-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.pg-catrow__dot {
+    --kp-cat-dot: 1.75rem;
+}
+
+.pg-catrow__label {
+    font-size: var(--kp-text-xs, 0.75rem);
+    color: var(--muted-foreground);
+}
+
+@container pg-stage (max-width: 48rem) {
+    .pg-catrow {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .pg-catrow__cells {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+}

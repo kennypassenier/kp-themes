@@ -518,18 +518,15 @@
                 "id": "parts-habits-1102",
                 "themes": "formal",
                 "ask": null,
-                "askText": "The five parts you approved for Kenny’s Habits todo app, built: Today’s timeline as one day from top to bottom, a row a finger swipes for Done or Tomorrow, a key line that can say “O then T”, a row that stays where it was once its task left, and a colour picker of twelve swatches. Every one is opt-in: without it everything is exactly as you approved it. Formal only, on the app’s own shapes and words (the titles, times, projects and events are mock). 5 sections, 5 pairs.",
+                "askText": "Round 2 of the five Habits parts. You approved the swipe row, the chord keys and the settled row; they have left this page. Two come back: the day timeline, whose blocks you asked to drag by themselves (now the whole block moves, and the tasks beside the day drop in by mouse, pen or finger), and the swatch picker, whose colours were the theme’s already but too much alike (now every pair in all twelve themes stands clearly apart, with a row per theme to judge it). Formal only, on the app’s own shapes and words (the titles, times, projects and events are mock). 2 sections, 2 pairs.",
                 "sections": [
                     { "item": "dayline", "themes": null, "topic": "dayline", "mode": null },
-                    { "item": "swipe-row", "themes": null, "topic": "swipe", "mode": null },
-                    { "item": "chord-keys", "themes": null, "topic": "keys", "mode": null },
-                    { "item": "settled-row", "themes": null, "topic": "settled", "mode": null },
                     { "item": "swatch-picker", "themes": null, "topic": "swatches", "mode": null }
                 ],
                 "extra": null,
-                "round": "\n            {\"round\":\"parts-habits-1102-f2341460-0182-4af6-8161-1eabf5de1613\",\"received\":[]}\n        "
+                "round": "\n            {\"round\":\"parts-habits-1102-b74571de-ebc2-4417-8ebc-253d13e9ea7b\",\"received\":[\"parts-habits-1102-f2341460-0182-4af6-8161-1eabf5de1613\"]}\n        "
             },
-            "fingerprint": "cf75c04c6c345a83",
+            "fingerprint": "e283107e3b7e072f",
             "update": null
         },
         "research/parts-layout-1102/demo.html": {

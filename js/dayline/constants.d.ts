@@ -12,6 +12,10 @@ export declare const NOW_ATTRIBUTE = "data-kp-dayline-now";
 export declare const SOURCE_ATTRIBUTE = "data-kp-dayline-source";
 /** On a source: the id of the one day timeline it may be dropped on; any day timeline when absent. */
 export declare const SOURCE_FOR_ATTRIBUTE = "data-kp-dayline-for";
+/** On a source: the words said when it lands ("Pay the energy bill planned at 15:00"); without it the time alone is said. */
+export declare const SOURCE_LABEL_ATTRIBUTE = "data-kp-dayline-label";
+/** How long a finger holds a block or a source still before it lifts and follows, a time (`500ms`, `0.4s`; default 500 ms). */
+export declare const HOLD_ATTRIBUTE = "data-kp-dayline-hold";
 /** Fired on the day timeline, bubbling, when a person moved an item: `{ id, start, from, source }`, times as `HH:MM`. */
 export declare const DAYLINE_CHANGE_EVENT = "kp-dayline-change";
 /** Fired on the day timeline, bubbling, when an item's body is pressed: `{ id, source }`. */
@@ -20,8 +24,6 @@ export declare const DAYLINE_OPEN_EVENT = "kp-dayline-open";
 export declare const DAYLINE_DROP_EVENT = "kp-dayline-drop";
 /** Fired on the day timeline, bubbling, when Try again is pressed on its failed plate. */
 export declare const DAYLINE_RETRY_EVENT = "kp-dayline-retry";
-/** The data type a source carries while it is dragged. */
-export declare const DRAG_TYPE = "application/x-kp-dayline";
 /** Minutes in a day. */
 export declare const DAY_MINUTES = 1440;
 /** The step when the markup names none or a bad one [minutes]. */
@@ -34,8 +36,15 @@ export declare const NOW_TICK_MS = 60000;
 export declare const NOW_VIEW_SHARE = 0.25;
 /** A keyboard walk is one change once the keys rest this long [ms]. */
 export declare const SETTLE_MS = 700;
-/** Pixels a press on the handle travels before it is a drag. */
+/** Pixels a mouse or pen press (on a handle, a block or a source) travels before it is a drag; less is a plain press. */
 export declare const DRAG_THRESHOLD_PX = 4;
+/** Pixels a finger may wander while it holds still; more before the hold is up is a scroll, never a drag (the context menu's). */
+export declare const TOUCH_SLOP_PX = 10;
+/** The band at the top and bottom of the box where a held item scrolls the hours [px], and the fastest scroll [px per frame]. */
+export declare const EDGE_BAND_PX = 40;
+export declare const EDGE_SPEED_PX = 14;
+/** Where a press on a source stays the control's own (typing, a check box, a menu, a handle) and starts no drag. */
+export declare const SOURCE_OWN_PRESS = "input, textarea, select, label, [contenteditable=\"\"], [contenteditable=\"true\"], [data-kp-handle], [aria-haspopup]";
 export type DaylineItem = {
     id: string;
     label: string;

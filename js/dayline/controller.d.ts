@@ -46,6 +46,8 @@ export declare class DaylineControl extends Controller {
         rowsTotal: number;
         total: number;
     };
+    /** How long a finger holds a block or a source still before it lifts [ms]. */
+    holdMs(): number;
     /** @param {number} row */
     clockOfRow(row: number): string;
     /** What a move needs from this day. @returns {import('./move.js').MoveHost} */

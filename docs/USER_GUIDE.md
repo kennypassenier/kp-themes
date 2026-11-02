@@ -4892,6 +4892,30 @@ Copy (its word keeps one width), line numbers outside the text, a fold with "Sho
 **The page header's heading line.** `.kp-page-header__heading` holds a `.kp-page-header__lead` (a mark) and a
 `.kp-page-header__line` with the title, a badge and the freshness line (`.kp-ago.kp-page-header__meta`).
 
+## The day timeline's drags [parts-1102 r2]
+
+A day timeline (`.kp-dayline[data-kp-dayline]`, js/dayline.js) moves a whole block, not only its ⠿ handle. A mouse or a pen
+drags a block's body once it travels 4 px, so a press that does not travel still fires `kp-dayline-open`; a finger holds the
+body still and then drags it, so a swipe over the day still scrolls the day and the page; the handle drags at once for every
+pointer, and ↑ ↓ on it walk the block (Shift: an hour). Held near the box's top or bottom, the hours scroll under the block. A
+read-only block never moves. A finished move fires `kp-dayline-change { id, start, from, source }`.
+
+A task in a list beside the day is marked `data-kp-dayline-source="<id>"` (and `data-kp-dayline-for="<day id>"` when the page
+has more than one day, `data-kp-dayline-label="<words>"` for what is said when it lands). It is picked up the same way, by
+mouse, pen or finger; its check box, its menu button and its fields keep their own presses. A copy follows the pointer in the
+top layer, the dashed band says "Starts 15:00" over the hour it would land on, and the drop fires `kp-dayline-drop { id, start }`.
+The page plans the task and calls `setDaylineItems` again. A long press on a block or a source lifts it, so a context menu on
+the same row opens on a right click, Shift+F10 or its ⋯ button instead.
+
+| Option | What | Default |
+| --- | --- | --- |
+| `data-kp-dayline-hold` | how long a finger holds a block or a source still before it lifts, a time in any unit (`400ms`, `0.5s`), 0 to 2 s | 500 ms, the package's long press |
+| `data-kp-dayline-label` | on a source: the words said when it lands | the time alone |
+
+The twelve categorical colours a swatch picker, a project dot or a tag paints with (`--kp-cat-1` … `--kp-cat-12`) are the
+active theme's tokens, so a theme switch repaints them at once. Since parts-1102 r2 every pair in every theme stands at least
+12 apart in OKLab (×100); nostromo's amber, green and cyan read about 3.5:1 on its pale ground, below WCAG AA for text.
+
 ## Two surfaces a theme may paint on a button [scope-16, scope-17]
 
 Every button carries an empty `.kp-button__edge`, out of flow and inert

@@ -1,0 +1,119 @@
+/* research/parts-habits-1102: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own
+ * frame. Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    container: pg-stage / inline-size;
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+/* Today's timeline: 12 columns, the day on 8 and the tasks without a time on 4, both cards one height; one column on a phone. */
+.pg-plan {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+    min-inline-size: 0;
+}
+
+.pg-plan__day {
+    grid-column: span 8;
+}
+
+.pg-plan__side {
+    grid-column: span 4;
+    align-content: start;
+}
+
+.pg-plan > .kp-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-plan__day {
+    grid-template-rows: auto 1fr;
+}
+
+@container pg-stage (max-width: 48rem) {
+    .pg-plan > .kp-card {
+        grid-column: 1 / -1;
+    }
+}
+
+/* The tasks without a time keep their own height; the card's room under them stays empty. */
+#pg-untimed {
+    align-content: start;
+}
+
+.pg-card-title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.pg-card-lede {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+/* The overdue banner: its title and sentence over the key line. */
+.pg-overdue {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.pg-overdue > p {
+    margin: 0;
+}
+
+/* The project editor: the form grid on the card; the preview is the project's dot and tag as a row shows them. */
+.pg-preview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem);
+    margin: 0;
+    min-block-size: var(--kp-control-height, 2.25rem);
+}
+
+.pg-project {
+    min-inline-size: 0;
+}
+
+/* What the page heard: two lines high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-lg, 1.5rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 2lh;
+    overflow-wrap: anywhere;
+}

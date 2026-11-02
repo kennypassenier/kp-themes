@@ -15,6 +15,12 @@ export declare function intIn(text: string | null, min: number, max: number, fal
 /** The step: a divisor of 60 between 5 and 60, else the default. @param {string | null} text */
 export declare function stepOf(text: string | null): number;
 /**
+ * The hold time, read as a time in any unit (`350ms`, `0.4s`, `350` as milliseconds, `0.01m`), from 0 (a finger lifts at once:
+ * a page whose day does not scroll) to 2 s; anything else is the package's long press, 500 ms.
+ * @param {string | null} text
+ */
+export declare function holdOf(text: string | null): number;
+/**
  * Place every timed item on the grid of `rowsTotal` rows of `step` minutes, and give the items that overlap their lanes.
  * @param {readonly DaylineItem[]} items @param {{ startHour: number, step: number, rowsTotal: number }} grid
  * @returns {Placed[]}

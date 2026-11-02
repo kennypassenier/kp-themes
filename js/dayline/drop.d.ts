@@ -1,12 +1,15 @@
 export type DropHost = {
     host: HTMLElement;
     grid: HTMLElement;
+    scroll: HTMLElement;
     marker: HTMLElement;
     rowsTotal: () => number;
+    holdMs: () => number;
     clockOfRow: (row: number) => string;
     strings: () => import('../strings.js').Strings;
+    say: (text: string) => void;
 };
-/** Make every source in the document that may land here draggable. @param {HTMLElement} host */
+/** Mark every source in the document that may land here, so a touch on it can hold its scroll back. @param {HTMLElement} host */
 export declare function markSources(host: HTMLElement): void;
 /**
  * Wire the drops of one day timeline; returns what undoes it.

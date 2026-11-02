@@ -117,8 +117,16 @@
         text-align: start;
     }
 
+    /* The whole block moves [parts-1102 r2]: a mouse grabs its body (a press without moving still opens it), a finger holds it
+     * still first; no text selection or callout gets in the way. */
     button.kp-dayline__body {
-        cursor: pointer;
+        cursor: grab;
+        -webkit-touch-callout: none;
+        user-select: none;
+    }
+
+    .kp-dayline__item[data-kp-dragging] button.kp-dayline__body {
+        cursor: grabbing;
     }
 
     button.kp-dayline__body:focus-visible {

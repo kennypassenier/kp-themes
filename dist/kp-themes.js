@@ -2797,6 +2797,9 @@ var init_ux_parts = __esm({
       daylineFixed: "fixed",
       daylineDone: "done",
       daylineDropAt: (time) => `Starts ${time}`,
+      daylineBodyHint: "Press to open; drag up or down to move (on a touch screen: hold, then drag)",
+      daylineLifted: (label2) => label2 ? `Picked up ${label2}: drag it to an hour and let go` : "Picked up: drag it to an hour and let go",
+      daylineDropped: (label2, time) => label2 ? `${label2} planned at ${time}` : `Planned at ${time}`,
       daylineLoading: "Reading the day\u2026",
       daylineEmpty: "Nothing has a time yet",
       daylineEmptyText: "Items with a start time stand here, as long as they take.",
@@ -10075,8 +10078,8 @@ var init_sync = __esm({
       syncTargets() {
         for (const target of targetsOf(this.host)) {
           this.guardTarget(target);
-          const holding = siblingsOf(this.host).some(open);
-          if (holding) this.hold(target);
+          const holding2 = siblingsOf(this.host).some(open);
+          if (holding2) this.hold(target);
           else if (target.getAttribute("data-kp-ack-held") !== null) this.release(target);
         }
       }
@@ -26739,7 +26742,7 @@ var init_values16 = __esm({
     INNER = "inner";
     ANCHOR_CLASS = "kp-context-menu";
     NO_CHILD = "input, textarea, select, img, ul, ol, dl, table, thead, tbody, tfoot, tr, [data-kp-reorder]";
-    OWN_PRESS = 'input, textarea, select, [contenteditable=""], [contenteditable="true"], [data-kp-handle]';
+    OWN_PRESS = 'input, textarea, select, [contenteditable=""], [contenteditable="true"], [data-kp-handle], [data-kp-dayline-movable], .kp-dayline__item';
     PRESS_SLOP_PX = 10;
     KEY_ECHO_MS = 400;
     KEY_INSET_PX = 16;
@@ -29254,7 +29257,7 @@ var init_date_nav = __esm({
 });
 
 // js/dayline/constants.js
-var DAYLINE, START_ATTRIBUTE, STEP_ATTRIBUTE, HOURS_ATTRIBUTE, NOW_ATTRIBUTE, SOURCE_ATTRIBUTE, SOURCE_FOR_ATTRIBUTE, DAYLINE_CHANGE_EVENT, DAYLINE_OPEN_EVENT, DAYLINE_DROP_EVENT, DAYLINE_RETRY_EVENT, DRAG_TYPE, DAY_MINUTES, DEFAULT_STEP2, MIN_DRAWN_MINUTES, NOW_TICK_MS, NOW_VIEW_SHARE, SETTLE_MS, DRAG_THRESHOLD_PX;
+var DAYLINE, START_ATTRIBUTE, STEP_ATTRIBUTE, HOURS_ATTRIBUTE, NOW_ATTRIBUTE, SOURCE_ATTRIBUTE, SOURCE_FOR_ATTRIBUTE, SOURCE_LABEL_ATTRIBUTE, HOLD_ATTRIBUTE, DAYLINE_CHANGE_EVENT, DAYLINE_OPEN_EVENT, DAYLINE_DROP_EVENT, DAYLINE_RETRY_EVENT, DAY_MINUTES, DEFAULT_STEP2, MIN_DRAWN_MINUTES, NOW_TICK_MS, NOW_VIEW_SHARE, SETTLE_MS, DRAG_THRESHOLD_PX, TOUCH_SLOP_PX, EDGE_BAND_PX, EDGE_SPEED_PX, SOURCE_OWN_PRESS;
 var init_constants17 = __esm({
   "js/dayline/constants.js"() {
     "use strict";
@@ -29265,11 +29268,12 @@ var init_constants17 = __esm({
     NOW_ATTRIBUTE = "data-kp-dayline-now";
     SOURCE_ATTRIBUTE = "data-kp-dayline-source";
     SOURCE_FOR_ATTRIBUTE = "data-kp-dayline-for";
+    SOURCE_LABEL_ATTRIBUTE = "data-kp-dayline-label";
+    HOLD_ATTRIBUTE = "data-kp-dayline-hold";
     DAYLINE_CHANGE_EVENT = "kp-dayline-change";
     DAYLINE_OPEN_EVENT = "kp-dayline-open";
     DAYLINE_DROP_EVENT = "kp-dayline-drop";
     DAYLINE_RETRY_EVENT = "kp-dayline-retry";
-    DRAG_TYPE = "application/x-kp-dayline";
     DAY_MINUTES = 1440;
     DEFAULT_STEP2 = 15;
     MIN_DRAWN_MINUTES = 30;
@@ -29277,67 +29281,334 @@ var init_constants17 = __esm({
     NOW_VIEW_SHARE = 0.25;
     SETTLE_MS = 700;
     DRAG_THRESHOLD_PX = 4;
+    TOUCH_SLOP_PX = 10;
+    EDGE_BAND_PX = 40;
+    EDGE_SPEED_PX = 14;
+    SOURCE_OWN_PRESS = 'input, textarea, select, label, [contenteditable=""], [contenteditable="true"], [data-kp-handle], [aria-haspopup]';
+  }
+});
+
+// js/dayline/edge-scroll.js
+function edgeScroller(box, onScroll) {
+  const win = box.ownerDocument.defaultView;
+  let y = null;
+  let frame3 = 0;
+  const speed = () => {
+    if (y === null) return 0;
+    const r = box.getBoundingClientRect();
+    if (y < r.top + EDGE_BAND_PX) return -EDGE_SPEED_PX * Math.min(1, (r.top + EDGE_BAND_PX - y) / EDGE_BAND_PX);
+    if (y > r.bottom - EDGE_BAND_PX) return EDGE_SPEED_PX * Math.min(1, (y - (r.bottom - EDGE_BAND_PX)) / EDGE_BAND_PX);
+    return 0;
+  };
+  const tick6 = () => {
+    frame3 = 0;
+    const by = Math.round(speed());
+    if (!by) return;
+    const before2 = box.scrollTop;
+    box.scrollTop = before2 + by;
+    if (box.scrollTop !== before2) onScroll();
+    frame3 = win?.requestAnimationFrame(tick6) ?? 0;
+  };
+  return {
+    at(clientY) {
+      y = clientY;
+      if (!frame3 && speed()) frame3 = win?.requestAnimationFrame(tick6) ?? 0;
+    },
+    stop() {
+      y = null;
+      if (frame3) win?.cancelAnimationFrame(frame3);
+      frame3 = 0;
+    }
+  };
+}
+var init_edge_scroll = __esm({
+  "js/dayline/edge-scroll.js"() {
+    "use strict";
+    init_constants17();
+  }
+});
+
+// js/dayline/press.js
+function holdScroll(el16) {
+  const stop = (e) => {
+    if (holding && e.cancelable) e.preventDefault();
+  };
+  el16.addEventListener("touchmove", stop, { passive: false });
+  return () => el16.removeEventListener("touchmove", stop);
+}
+function swallowClick(doc) {
+  const win = doc.defaultView;
+  if (!win) return;
+  const eat = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    done();
+  };
+  const done = () => {
+    win.removeEventListener("click", eat, true);
+    win.removeEventListener("pointerdown", done, true);
+  };
+  win.addEventListener("click", eat, true);
+  win.addEventListener("pointerdown", done, true);
+  setTimeout(done, 400);
+}
+function followPress(down, h2) {
+  const doc = (
+    /** @type {Document} */
+    /** @type {Node} */
+    down.target.ownerDocument
+  );
+  const finger = down.pointerType === "touch";
+  let phase = "pending";
+  let timer = (
+    /** @type {ReturnType<typeof setTimeout> | undefined} */
+    void 0
+  );
+  const off = () => {
+    clearTimeout(timer);
+    holding = false;
+    doc.removeEventListener("pointermove", onMove2);
+    doc.removeEventListener("pointerup", onUp2);
+    doc.removeEventListener("pointercancel", onCancel3);
+    doc.removeEventListener("keydown", onKey5, true);
+    doc.removeEventListener("contextmenu", onMenu, true);
+  };
+  const begin2 = (e) => {
+    if (!h2.start(e)) return void off();
+    phase = "dragging";
+    holding = finger;
+    try {
+      h2.capture.setPointerCapture(down.pointerId);
+    } catch {
+    }
+    h2.move(e);
+  };
+  const onMove2 = (e) => {
+    if (e.pointerId !== down.pointerId) return;
+    const travel = Math.hypot(e.clientX - down.clientX, e.clientY - down.clientY);
+    if (phase === "dragging") return void h2.move(e);
+    if (phase === "lifted") return void begin2(e);
+    const waits = finger && h2.mode === "hold";
+    if (waits && travel > TOUCH_SLOP_PX) return void off();
+    if (!waits && travel >= DRAG_THRESHOLD_PX) begin2(e);
+  };
+  const onUp2 = (e) => {
+    if (e.pointerId !== down.pointerId) return;
+    const was = phase;
+    off();
+    if (was === "dragging") h2.end("drop", e);
+    else if (was === "lifted") h2.end("back", e);
+    if (was !== "pending") swallowClick(doc);
+  };
+  const onCancel3 = (e) => {
+    if (e.pointerId !== down.pointerId) return;
+    const was = phase;
+    off();
+    if (was !== "pending") h2.end("back", null);
+  };
+  const onKey5 = (e) => {
+    if (e.key !== "Escape" || phase === "pending") return;
+    e.preventDefault();
+    e.stopPropagation();
+    off();
+    h2.end("back", null);
+    swallowClick(doc);
+  };
+  const onMenu = (e) => {
+    if (!finger) return;
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  doc.addEventListener("pointermove", onMove2);
+  doc.addEventListener("pointerup", onUp2);
+  doc.addEventListener("pointercancel", onCancel3);
+  doc.addEventListener("keydown", onKey5, true);
+  doc.addEventListener("contextmenu", onMenu, true);
+  if (finger && h2.mode === "hold") {
+    timer = setTimeout(() => {
+      if (phase !== "pending") return;
+      phase = "lifted";
+      holding = true;
+      h2.lift?.();
+    }, h2.holdMs);
+  }
+}
+var holding;
+var init_press = __esm({
+  "js/dayline/press.js"() {
+    "use strict";
+    init_constants17();
+    holding = false;
+  }
+});
+
+// js/dayline/ghost.js
+function liftCopy(source, home, down) {
+  const doc = source.ownerDocument;
+  const box = source.getBoundingClientRect();
+  const grab = { x: down.clientX - box.left, y: down.clientY - box.top };
+  const ghost = doc.createElement("div");
+  ghost.className = "kp-dayline__ghost";
+  ghost.setAttribute("aria-hidden", "true");
+  ghost.inert = true;
+  ghost.style.inlineSize = `${box.width}px`;
+  const list = (
+    /** @type {HTMLElement} */
+    source.parentElement?.cloneNode(false) ?? doc.createElement("div")
+  );
+  const clone = (
+    /** @type {HTMLElement} */
+    source.cloneNode(true)
+  );
+  for (const el16 of [list, clone, ...clone.querySelectorAll("[id]")]) el16.removeAttribute("id");
+  for (const name of ["data-kp-dayline-source", "data-kp-lifted", "aria-labelledby", "aria-describedby"]) list.removeAttribute(name);
+  clone.removeAttribute("data-kp-lifted");
+  list.append(clone);
+  ghost.append(list);
+  const top = typeof ghost.showPopover === "function";
+  if (top) ghost.popover = "manual";
+  home.append(ghost);
+  if (top) ghost.showPopover();
+  const follow5 = (e) => {
+    ghost.style.translate = `${Math.round(e.clientX - grab.x)}px ${Math.round(e.clientY - grab.y)}px`;
+  };
+  follow5(down);
+  return {
+    follow: follow5,
+    remove: () => ghost.remove()
+  };
+}
+var init_ghost2 = __esm({
+  "js/dayline/ghost.js"() {
+    "use strict";
   }
 });
 
 // js/dayline/drop.js
 function markSources(host) {
   for (const source of host.ownerDocument.querySelectorAll(`[${SOURCE_ATTRIBUTE}]`)) {
-    if (mayDrop(source, host)) source.setAttribute("draggable", "true");
+    source.setAttribute("data-kp-dayline-movable", "");
+    if (!HELD.has(source)) {
+      HELD.add(source);
+      holdScroll(source);
+    }
   }
 }
-function rowAt(event, d) {
+function rowAt(y, d) {
   const box = d.grid.getBoundingClientRect();
-  const share = (event.clientY - box.top) / Math.max(1, box.height);
+  const share = (y - box.top) / Math.max(1, box.height);
   return Math.min(d.rowsTotal() - 1, Math.max(0, Math.floor(share * d.rowsTotal())));
+}
+function dayAt(days, source, x, y) {
+  for (const d of days) {
+    const r = d.scroll.getBoundingClientRect();
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom && takes(source, d)) return d;
+  }
+  return null;
+}
+function dragSource(down, source, days) {
+  const first = [...days].find((d) => takes(source, d));
+  if (!first) return;
+  let over = null;
+  let at = { x: down.clientX, y: down.clientY };
+  let copy3 = null;
+  let edge = null;
+  const mark2 = () => {
+    for (const d of days) if (d !== over) d.marker.hidden = true;
+    if (!over) return;
+    const row2 = rowAt(at.y, over);
+    over.marker.hidden = false;
+    over.marker.style.gridRow = `${row2 + 1} / span 1`;
+    over.marker.textContent = over.strings().daylineDropAt(over.clockOfRow(row2));
+  };
+  const clear2 = () => {
+    edge?.stop();
+    copy3?.remove();
+    delete source.dataset.kpLifted;
+    for (const d of days) d.marker.hidden = true;
+  };
+  followPress(down, {
+    mode: "hold",
+    holdMs: first.holdMs(),
+    capture: source,
+    lift: () => {
+      source.dataset.kpLifted = "";
+      first.say(first.strings().daylineLifted(source.getAttribute(SOURCE_LABEL_ATTRIBUTE) ?? ""));
+    },
+    start: () => {
+      source.dataset.kpLifted = "";
+      source.ownerDocument.getSelection()?.removeAllRanges();
+      copy3 = liftCopy(source, first.host, down);
+      return true;
+    },
+    move: (e) => {
+      at = { x: e.clientX, y: e.clientY };
+      copy3?.follow(e);
+      const next2 = dayAt(days, source, at.x, at.y);
+      if (next2 !== over) {
+        edge?.stop();
+        over = next2;
+        edge = over ? edgeScroller(over.scroll, mark2) : null;
+      }
+      edge?.at(at.y);
+      mark2();
+    },
+    end: (how) => {
+      const d = over;
+      clear2();
+      if (how !== "drop" || !d) return;
+      const id = source.getAttribute(SOURCE_ATTRIBUTE) ?? "";
+      const start = d.clockOfRow(rowAt(at.y, d));
+      if (!id) return;
+      d.say(d.strings().daylineDropped(source.getAttribute(SOURCE_LABEL_ATTRIBUTE) ?? "", start));
+      d.host.dispatchEvent(new CustomEvent(DAYLINE_DROP_EVENT, { bubbles: true, detail: { id, start } }));
+    }
+  });
 }
 function wireDrop(d) {
   const doc = d.host.ownerDocument;
-  const start = (e) => {
-    const source = e.target instanceof Element ? e.target.closest(`[${SOURCE_ATTRIBUTE}]`) : null;
-    if (!source || !e.dataTransfer || !mayDrop(source, d.host)) return;
-    e.dataTransfer.setData(DRAG_TYPE, source.getAttribute(SOURCE_ATTRIBUTE) ?? "");
-    e.dataTransfer.effectAllowed = "move";
-  };
-  const over = (e) => {
-    if (!carries2(e)) return;
-    e.preventDefault();
-    const row2 = rowAt(e, d);
-    d.marker.hidden = false;
-    d.marker.style.gridRow = `${row2 + 1} / span 1`;
-    d.marker.textContent = d.strings().daylineDropAt(d.clockOfRow(row2));
-  };
-  const leave2 = (e) => {
-    if (!(e.relatedTarget instanceof Node && d.grid.contains(e.relatedTarget))) d.marker.hidden = true;
-  };
-  const drop = (e) => {
-    if (!carries2(e)) return;
-    e.preventDefault();
-    d.marker.hidden = true;
-    const id = e.dataTransfer?.getData(DRAG_TYPE) ?? "";
-    if (id) d.host.dispatchEvent(new CustomEvent(DAYLINE_DROP_EVENT, { bubbles: true, detail: { id, start: d.clockOfRow(rowAt(e, d)) } }));
-  };
-  doc.addEventListener("dragstart", start);
-  d.grid.addEventListener("dragover", over);
-  d.grid.addEventListener("dragleave", leave2);
-  d.grid.addEventListener("drop", drop);
+  let shared = PER_DOCUMENT.get(doc);
+  if (!shared) {
+    const days = /* @__PURE__ */ new Set();
+    const press2 = (e) => {
+      const el16 = e.target instanceof Element ? e.target : null;
+      const source = (
+        /** @type {HTMLElement | null} */
+        el16?.closest(`[${SOURCE_ATTRIBUTE}]`) ?? null
+      );
+      if (!source || e.pointerType === "mouse" && e.button !== 0 || !e.isPrimary) return;
+      const own = el16?.closest(SOURCE_OWN_PRESS);
+      if (own && own !== source && source.contains(own)) return;
+      dragSource(e, source, days);
+    };
+    doc.addEventListener("pointerdown", press2);
+    shared = { days, off: () => doc.removeEventListener("pointerdown", press2) };
+    PER_DOCUMENT.set(doc, shared);
+  }
+  shared.days.add(d);
+  const mine = shared;
   return () => {
-    doc.removeEventListener("dragstart", start);
-    d.grid.removeEventListener("dragover", over);
-    d.grid.removeEventListener("dragleave", leave2);
-    d.grid.removeEventListener("drop", drop);
+    mine.days.delete(d);
+    if (mine.days.size) return;
+    mine.off();
+    PER_DOCUMENT.delete(doc);
   };
 }
-var mayDrop, carries2;
+var PER_DOCUMENT, HELD, takes;
 var init_drop = __esm({
   "js/dayline/drop.js"() {
     "use strict";
     init_constants17();
-    mayDrop = (source, host) => {
+    init_edge_scroll();
+    init_press();
+    init_ghost2();
+    PER_DOCUMENT = /* @__PURE__ */ new WeakMap();
+    HELD = /* @__PURE__ */ new WeakSet();
+    takes = (source, d) => {
       const only = source.getAttribute(SOURCE_FOR_ATTRIBUTE);
-      return !only || only === host.id;
+      const state12 = d.host.dataset.kpState;
+      return (!only || only === d.host.id) && state12 !== "loading" && state12 !== "error" && d.host.isConnected;
     };
-    carries2 = (event) => [...event.dataTransfer?.types ?? []].includes(DRAG_TYPE);
   }
 });
 
@@ -29360,6 +29631,13 @@ function intIn(text, min, max, fallback2) {
 function stepOf2(text) {
   const n = intIn(text, 5, 60, DEFAULT_STEP2);
   return 60 % n === 0 ? n : DEFAULT_STEP2;
+}
+function holdOf(text) {
+  const m = /^\s*(\d+(?:\.\d+)?)\s*(ms|s|m)?\s*$/i.exec(text ?? "");
+  if (!m) return LONG_PRESS_MS;
+  const unit2 = (m[2] ?? "ms").toLowerCase();
+  const ms = Number(m[1]) * (unit2 === "m" ? 6e4 : unit2 === "s" ? 1e3 : 1);
+  return ms <= HOLD_MAX_MS ? Math.round(ms) : LONG_PRESS_MS;
 }
 function placeItems2(items2, { startHour, step, rowsTotal }) {
   const minRows = Math.max(1, Math.ceil(MIN_DRAWN_MINUTES / step));
@@ -29400,13 +29678,15 @@ function packLanes(placed) {
   if (cluster.length) close();
   return placed;
 }
-var dayMinute, clockAt;
+var dayMinute, clockAt, HOLD_MAX_MS;
 var init_layout2 = __esm({
   "js/dayline/layout.js"() {
     "use strict";
+    init_rows();
     init_constants17();
     dayMinute = (clock4, startHour) => ((clock4 - startHour * 60) % DAY_MINUTES + DAY_MINUTES) % DAY_MINUTES;
     clockAt = (minute, startHour) => clockOf(startHour * 60 + minute);
+    HOLD_MAX_MS = 2e3;
   }
 });
 
@@ -29420,54 +29700,66 @@ function placedOf(target, host) {
     handle
   ) } : null;
 }
-function dragFrom(down, host) {
-  const hit = placedOf(down.target, host);
-  if (!hit || down.button !== 0) return;
-  down.preventDefault();
-  const { p, handle } = hit;
-  const rowPx = host.grid.getBoundingClientRect().height / host.rowsTotal();
+function grabbed(target, host) {
+  const el16 = target instanceof Element ? target : null;
   const block = (
-    /** @type {HTMLElement} */
-    handle.closest(".kp-dayline__item")
+    /** @type {HTMLElement | null} */
+    el16?.closest(".kp-dayline__item:not([data-kp-readonly])") ?? null
   );
+  const id = block?.getAttribute("data-kp-dayline-id");
+  const p = id == null ? void 0 : host.placed(id);
+  return p && block ? { p, block, onHandle: el16?.closest(".kp-dayline__handle") != null } : null;
+}
+function dragFrom(down, host) {
+  const hit = grabbed(down.target, host);
+  if (!hit || down.pointerType === "mouse" && down.button !== 0) return;
+  if (hit.onHandle) down.preventDefault();
+  const { p, block } = hit;
+  const rowPx = host.grid.getBoundingClientRect().height / host.rowsTotal();
+  const top = host.scroll.scrollTop;
   let row2 = p.row;
-  let moved = false;
-  handle.setPointerCapture?.(down.pointerId);
-  block.dataset.kpDragging = "";
-  const onMove2 = (e) => {
-    const dy = e.clientY - down.clientY;
-    if (!moved && Math.abs(dy) < DRAG_THRESHOLD_PX) return;
-    moved = true;
+  let lastY = down.clientY;
+  const place5 = () => {
+    const dy = lastY - down.clientY + (host.scroll.scrollTop - top);
     const next2 = clampRow(p.row + Math.round(dy / rowPx), p.rows, host.rowsTotal());
     if (next2 !== row2) host.show(p, row2 = next2);
   };
-  const end = (how) => {
-    handle.removeEventListener("pointermove", onMove2);
-    handle.removeEventListener("pointerup", onUp2);
-    handle.removeEventListener("pointercancel", onCancel3);
-    handle.ownerDocument.removeEventListener("keydown", onKey5, true);
+  const edge = edgeScroller(host.scroll, place5);
+  const stop = () => {
+    edge.stop();
     delete block.dataset.kpDragging;
-    if (how === "commit" && moved && row2 !== p.row) host.commit(p, row2, "pointer");
-    else if (moved) host.putBack(p);
   };
-  const onUp2 = () => end("commit");
-  const onCancel3 = () => end("back");
-  const onKey5 = (e) => {
-    if (e.key !== "Escape") return;
-    e.preventDefault();
-    e.stopPropagation();
-    end("back");
-  };
-  handle.addEventListener("pointermove", onMove2);
-  handle.addEventListener("pointerup", onUp2);
-  handle.addEventListener("pointercancel", onCancel3);
-  handle.ownerDocument.addEventListener("keydown", onKey5, true);
+  followPress(down, {
+    mode: hit.onHandle ? "now" : "hold",
+    holdMs: host.holdMs(),
+    capture: block,
+    lift: () => {
+      block.dataset.kpDragging = "";
+      host.lifted(p);
+    },
+    start: () => {
+      block.dataset.kpDragging = "";
+      return true;
+    },
+    move: (e) => {
+      lastY = e.clientY;
+      edge.at(e.clientY);
+      place5();
+    },
+    end: (how) => {
+      stop();
+      if (how === "drop" && row2 !== p.row) host.commit(p, row2, "pointer");
+      else host.putBack(p);
+    }
+  });
 }
 var clampRow, KeyWalk;
 var init_move = __esm({
   "js/dayline/move.js"() {
     "use strict";
     init_constants17();
+    init_edge_scroll();
+    init_press();
     clampRow = (row2, rows2, total) => Math.min(total - rows2, Math.max(0, row2));
     KeyWalk = class {
       /** @param {MoveHost} host */
@@ -29578,7 +29870,8 @@ function buildBlock(doc, p, startHour, s2) {
   const label2 = make7(doc, "span", "kp-dayline__label", item.label);
   const body = make7(doc, item.readonly ? "div" : "button", "kp-dayline__body");
   if (body instanceof HTMLButtonElement) body.type = "button";
-  body.title = `${item.label}, ${spanOf(p, startHour)}`;
+  body.title = item.readonly ? `${item.label}, ${spanOf(p, startHour)}` : `${item.label}, ${spanOf(p, startHour)}
+${s2.daylineBodyHint}`;
   body.append(time, label2);
   block.append(item.readonly ? fixedMark(doc) : handleOf(doc, item, s2), body);
   return block;
@@ -29690,6 +29983,7 @@ var init_controller19 = __esm({
     init_drop();
     init_layout2();
     init_move();
+    init_press();
     init_render();
     init_states();
     DaylineControl = class extends Controller {
@@ -29717,6 +30011,7 @@ var init_controller19 = __esm({
           e,
           this.mover()
         ));
+        this.own(holdScroll(p.grid));
         this.listen(p.grid, "keydown", (e) => this.walk.onKey(
           /** @type {KeyboardEvent} */
           e
@@ -29725,14 +30020,26 @@ var init_controller19 = __esm({
           /** @type {MouseEvent} */
           e
         ));
-        this.own(watchOptions(host, [START_ATTRIBUTE, STEP_ATTRIBUTE, HOURS_ATTRIBUTE, NOW_ATTRIBUTE], () => this.draw()));
+        this.own(watchOptions(host, [START_ATTRIBUTE, STEP_ATTRIBUTE, HOURS_ATTRIBUTE, NOW_ATTRIBUTE, HOLD_ATTRIBUTE], () => this.draw()));
         const tick6 = setInterval(() => this.paintNow(), NOW_TICK_MS);
         this.own(() => clearInterval(tick6));
         this.own(() => this.walk.stop());
         this.observe(new ResizeObserver(() => this.reveal())).observe(p.scroll);
         this.observe(new IntersectionObserver((entries2) => entries2.some((e) => e.isIntersecting) && this.reveal())).observe(p.scroll);
         for (const type of ["wheel", "touchstart", "pointerdown", "keydown"]) this.listen(p.scroll, type, () => this.touched = true, { passive: true });
-        this.own(wireDrop({ host, grid: p.grid, marker: p.drop, rowsTotal: () => this.grid().rowsTotal, clockOfRow: (row2) => this.clockOfRow(row2), strings: getStrings }));
+        this.own(
+          wireDrop({
+            host,
+            grid: p.grid,
+            scroll: p.scroll,
+            marker: p.drop,
+            rowsTotal: () => this.grid().rowsTotal,
+            holdMs: () => this.holdMs(),
+            clockOfRow: (row2) => this.clockOfRow(row2),
+            strings: getStrings,
+            say: (text) => this.say(text)
+          })
+        );
         this.draw();
       }
       /** The grid as the markup asks for it now. */
@@ -29743,6 +30050,10 @@ var init_controller19 = __esm({
         const perHour = 60 / step;
         return { startHour, step, hours, perHour, rowsTotal: hours * perHour, total: hours * 60 };
       }
+      /** How long a finger holds a block or a source still before it lifts [ms]. */
+      holdMs() {
+        return holdOf(this.host.getAttribute(HOLD_ATTRIBUTE));
+      }
       /** @param {number} row */
       clockOfRow(row2) {
         const g = this.grid();
@@ -29752,6 +30063,9 @@ var init_controller19 = __esm({
       mover() {
         return {
           grid: this.parts.grid,
+          scroll: this.parts.scroll,
+          holdMs: () => this.holdMs(),
+          lifted: (p) => this.say(getStrings().daylineLifted(p.item.label)),
           rowsTotal: () => this.grid().rowsTotal,
           perHour: () => this.grid().perHour,
           placed: (id) => this.placed.get(id),
@@ -65232,7 +65546,7 @@ function paint9(c) {
     c.states.set(run.id, run.state);
     const item = { run, s: rel(c, startMs), e: endRaw == null ? null : rel(c, Math.max(endRaw, startMs)), bar, row: 0 };
     const plannedMs = run.state === "running" && run.plannedEnd != null ? toMs2(run.plannedEnd) : Number.NaN;
-    if (Number.isFinite(plannedMs)) HELD.set(item, rel(c, Math.max(plannedMs, nowMs, startMs)));
+    if (Number.isFinite(plannedMs)) HELD2.set(item, rel(c, Math.max(plannedMs, nowMs, startMs)));
     byLane.get(run.lane)?.push(item);
   }
   for (const [id, bar] of c.bars)
@@ -65278,7 +65592,7 @@ function paint9(c) {
     const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
     const packed = fit2 ? packFit(c, bars, marksOf.get(id) ?? [], minBar) : packRows(
       bars.map((b) => {
-        const e = b.e ?? HELD.get(b) ?? null;
+        const e = b.e ?? HELD2.get(b) ?? null;
         return { id: b.run.id, s: b.s, e: e == null ? null : Math.max(e, b.s + reach3) };
       }),
       before2,
@@ -65296,7 +65610,7 @@ function paint9(c) {
     fillLaneLabel(c, model.label, lane);
     model.track.setAttribute("aria-label", lane.label);
     const spareOn = c.el.getAttribute("data-kp-gantt-spare") !== "off";
-    const spare = spareOn && bars.some((b) => b.e == null && !HELD.has(b)) ? 1 : 0;
+    const spare = spareOn && bars.some((b) => b.e == null && !HELD2.has(b)) ? 1 : 0;
     model.rows = fit2 ? packed.count : Math.max(model.rows, packed.count + spare);
     for (const b of bars) b.row = packed.rows.get(b.run.id) ?? 0;
     model.bars = bars;
@@ -65400,7 +65714,7 @@ function viewHeight(c) {
   }
   return fit2 > c.axis.offsetHeight ? fit2 : natural;
 }
-var HELD;
+var HELD2;
 var init_paint9 = __esm({
   "js/gantt/paint.js"() {
     "use strict";
@@ -65414,7 +65728,7 @@ var init_paint9 = __esm({
     init_busy5();
     init_fit4();
     init_selection3();
-    HELD = /* @__PURE__ */ new WeakMap();
+    HELD2 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -86921,7 +87235,7 @@ function snoozeWords(el16) {
   if (until) own.snoozeUntil = (moment) => until.replace("{when}", moment);
   return { ...getStrings(), ...set, ...own };
 }
-function dayAt(now, days, at, zone) {
+function dayAt2(now, days, at, zone) {
   const w = wallTime(now, zone);
   const d = new Date(Date.UTC(w.year, w.month - 1, w.day + days));
   return zonedTime(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), at.hour, at.minute, zone);
@@ -86958,9 +87272,9 @@ function snoozeChoices({
   for (const key of choices) {
     if (key === "pick") continue;
     if (key === "tonight") add(key, s2.snoozeTonight(at(pm)), zonedTime(w.year, w.month, w.day, pm.hour, pm.minute, zone), true);
-    else if (key === "tomorrow") add(key, s2.snoozeTomorrow(at(am)), dayAt(now, 1, am, zone), true);
-    else if (key === "monday") add(key, s2.snoozeMonday(at(am)), dayAt(now, (1 - weekday2 + 7) % 7 || 7, am, zone), true);
-    else if (key === "next-week") add(key, s2.snoozeNextWeek(at(am)), dayAt(now, 7, am, zone), true);
+    else if (key === "tomorrow") add(key, s2.snoozeTomorrow(at(am)), dayAt2(now, 1, am, zone), true);
+    else if (key === "monday") add(key, s2.snoozeMonday(at(am)), dayAt2(now, (1 - weekday2 + 7) % 7 || 7, am, zone), true);
+    else if (key === "next-week") add(key, s2.snoozeNextWeek(at(am)), dayAt2(now, 7, am, zone), true);
     else if (presetMs(key) > 0) add(key, s2.snoozeIn(key), now + presetMs(key));
   }
   if (choices.includes("pick")) out.push({ key: "pick", label: s2.snoozePick, at: null, hint: "", moment: "" });
@@ -87200,7 +87514,7 @@ var init_panel4 = __esm({
         if (!panel.hidden) return;
         stopClose(panel);
         const now = this.now();
-        const base = this.last !== null && this.last > now ? this.last : dayAt(now, 1, clock2(this.morning, "09:00"), this.zone) ?? now + DAY_MS5;
+        const base = this.last !== null && this.last > now ? this.last : dayAt2(now, 1, clock2(this.morning, "09:00"), this.zone) ?? now + DAY_MS5;
         const w = wallTime(base, this.zone);
         datePicker(picker)?.set(`${w.year}-${two7(w.month)}-${two7(w.day)}`);
         time.value = `${two7(w.hour)}:${two7(w.minute)}`;
@@ -87487,7 +87801,7 @@ __export(snooze_exports, {
   SNOOZE_END_EVENT: () => SNOOZE_END_EVENT,
   SNOOZE_EVENT: () => SNOOZE_EVENT,
   attachSnoozes: () => attachSnoozes,
-  dayAt: () => dayAt,
+  dayAt: () => dayAt2,
   openSnoozePanel: () => openSnoozePanel,
   registerSnoozeWords: () => registerSnoozeWords,
   setSnoozeBusy: () => setSnoozeBusy,
@@ -98558,6 +98872,9 @@ var init_ux_parts2 = __esm({
       daylineFixed: "vast",
       daylineDone: "klaar",
       daylineDropAt: (time) => `Begint om ${time}`,
+      daylineBodyHint: "Druk om te openen; sleep omhoog of omlaag om te verplaatsen (op een aanraakscherm: vasthouden, dan slepen)",
+      daylineLifted: (label2) => label2 ? `${label2} opgepakt: sleep het naar een uur en laat los` : "Opgepakt: sleep het naar een uur en laat los",
+      daylineDropped: (label2, time) => label2 ? `${label2} gepland om ${time}` : `Gepland om ${time}`,
       daylineLoading: "De dag wordt gelezen\u2026",
       daylineEmpty: "Nog niets heeft een tijd",
       daylineEmptyText: "Items met een starttijd staan hier, zo lang als ze duren.",
@@ -101770,7 +102087,7 @@ export {
   dated_options_exports as datedOptionsExports,
   datedValue,
   datepicker_exports as datepickerExports,
-  dayAt,
+  dayAt2 as dayAt,
   dayKey,
   dayLabel,
   dayNames,

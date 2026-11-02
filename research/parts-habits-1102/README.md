@@ -16,5 +16,11 @@ and the tasks without a time, Today's list, the overdue banner, the Inbox and th
 (`data-kp-dayline-now`); the swipe section sets `data-kp-swipe-pointers="any"` so a mouse can show what a finger does. Titles, times,
 projects and events are mock. Only the day timeline loads data, so only it carries Loading, Empty and Failed.
 
+**Round 2** (2026-11-02, after Kenny's verdict of 01:12: 3 of 5 approved) shows only the two he sent back. `dayline`: the whole
+block drags (body by mouse/pen after 4 px, a finger after a 500 ms hold; a plain press still opens), the tasks beside it drop in by
+pointer, a finger included (js/dayline/press.js, edge-scroll.js, ghost.js). `swatch-picker`: the colours were already the theme's
+`--kp-cat-N`; every theme's twelve were re-spread so the closest pair (OKLab ×100) went from 7.2–11.5 to 12.0–13.1, and the
+section shows a row per theme (wrappers with `data-theme`, which scopes the tokens). Round 1's page is in `_previous/`.
+
 **Generated** by `node research/parts-habits-1102/build.mjs` (edit the builder, sections.mjs, data.js or the demo scripts, never the page).
 measure-gaps (formal, 1280 and 390) and check-kit print clear.

@@ -1,6 +1,16 @@
 // research/parts-habits-1102: the five sections of the review page, each written once: what is asked, the heading and one sentence,
 // what to expect, what to look at, the controls and the component's slot. demo.js and demo-more.js fill the slots with the Habits
-// app's own shapes and words.
+// app's own shapes and words. Round 2 shows only the two Kenny sent back on 2026-11-02 01:12 (the day timeline and the swatch
+// picker); the three he approved (swipe-row, chord-keys, settled-row) leave the page.
+
+/** The twelve themes in the picker's order, for the swatch picker's row per theme. */
+const THEME_ORDER = ['formal', 'dark', 'cyberpunk', 'synthwave', 'pastel', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'nostromo', 'titanium'];
+/** The twelve colour names, in kp's order. */
+const CAT_NAMES = ['Red', 'Orange', 'Amber', 'Lime', 'Green', 'Teal', 'Cyan', 'Blue', 'Indigo', 'Violet', 'Pink', 'Slate'];
+/** One theme's twelve categorical colours on its own ground: the wrapper carries the theme, so the tokens are that theme's. */
+const themeRow = (theme) => `<li class="pg-catrow" data-theme="${theme}"><p class="pg-catrow__name">${theme[0].toUpperCase()}${theme.slice(1)}</p><ul class="pg-catrow__cells" aria-label="The twelve colours of ${theme}">${CAT_NAMES.map(
+    (name, i) => `<li class="pg-catrow__cell" data-kp-cat="${i + 1}"><span class="kp-cat-dot pg-catrow__dot" aria-hidden="true"></span><span class="pg-catrow__label">${name}</span></li>`,
+).join('')}</ul></li>`;
 
 /** A control group: `name` is the group's data-pg name, `buttons` are [value, words, pressed?]. */
 export const group = (label, name, buttons, target = '') =>
@@ -16,7 +26,7 @@ const width = (target) => group('Width', 'width', [['full', 'Full width', true],
 /** A line under a component that says what the page heard, two lines high whether it says something or not. */
 const log = (id) => `<p class="pg-log" id="${id}" role="status" aria-live="polite"></p>`;
 
-export const SECTIONS = [
+const ALL_SECTIONS = [
     {
         id: 'dayline',
         title: 'Day timeline: Today from top to bottom',
@@ -27,10 +37,11 @@ export const SECTIONS = [
         h2: 'Today, Monday 2 November',
         intro: 'The day from 06:00 with the tasks that have a time, the calendar&rsquo;s events among them, and beside it the tasks without a time.',
         expected: [
-            '<b>Ready</b>: the box opens at about 08:00, the now line at 10:40 a quarter down with &ldquo;Now 10:40&rdquo; on the hours. &ldquo;Write the quarterly report&rdquo; (09:00, 90 min, amber edge) and the dashed &ldquo;Dentist&rdquo; (10:00, no handle) stand side by side where they overlap; &ldquo;Morning pages&rdquo; is struck through. The strip above says &ldquo;All day&rdquo; with two dashed plates. Drag a ⠿ handle down: the block steps in quarter hours, its time follows, and on release the line under the day says <code>kp-dayline-change</code>; ↑ ↓ on a handle do the same (Shift: an hour), Escape puts it back.',
-            'Drag &ldquo;Pay the energy bill&rdquo; from the list onto 15:00: a dashed band says &ldquo;Starts 15:00&rdquo;; let go and it becomes a 30-minute block there and leaves the list. <b>Loading</b>: the busy card over the hours. <b>Empty</b> and <b>Failed</b>: the package&rsquo;s plate over the whole box (Failed with Try again). <b>Phone</b>: the list goes under the day.',
+            '<b>Round 2</b>: you asked whether the blocks themselves could be dragged. They can now, in the package: press a block anywhere on its body and drag it up or down (a press without moving still opens it, the line says <code>kp-dayline-open</code>); on a touch screen hold the block still for half a second, it lifts with a ring, then drag (a quick swipe still scrolls the day and the page). The tasks without a time are picked up the same way, by mouse, pen or finger: a copy follows the pointer and the dashed &ldquo;Starts 15:00&rdquo; band shows where it lands. Held near the top or bottom of the box, the hours scroll under it.',
+            '<b>Ready</b>: the box opens at about 08:00, the now line at 10:40 a quarter down with &ldquo;Now 10:40&rdquo; on the hours. &ldquo;Write the quarterly report&rdquo; (09:00, 90 min, amber edge) and the dashed &ldquo;Dentist&rdquo; (10:00, no handle) stand side by side where they overlap; &ldquo;Morning pages&rdquo; is struck through. The strip above says &ldquo;All day&rdquo; with two dashed plates. Drag a block by its body or its ⠿ handle: it steps in quarter hours, its time follows, and on release the line under the day says <code>kp-dayline-change</code>; ↑ ↓ on a handle do the same (Shift: an hour), Escape during a drag puts it back. The dashed events never move.',
+            'Drag &ldquo;Pay the energy bill&rdquo; from the list (its title or its free space; its check box stays a check box) onto 15:00: a dashed band says &ldquo;Starts 15:00&rdquo;; let go and it becomes a 30-minute block there and leaves the list; let go outside the day and nothing happens. <b>Loading</b>: the busy card over the hours. <b>Empty</b> and <b>Failed</b>: the package&rsquo;s plate over the whole box (Failed with Try again). <b>Phone</b>: the list goes under the day.',
         ],
-        look: 'Formal: the blocks are the card stock with a coloured edge, the events the muted plate with a dashed rule, the now line navy. Check that a clash reads at a glance, that every time and title can be read, and that nothing scrolls the page sideways.',
+        look: 'Formal: the blocks are the card stock with a coloured edge, the events the muted plate with a dashed rule, the now line navy; a block in hand wears formal&rsquo;s ring, the carried copy the card with the ring and formal&rsquo;s offset shadow. Check that dragging a block or a task feels direct, that a plain press still opens, and that nothing scrolls the page sideways.',
         controls: group('State', 'state', [['ready', 'Ready', true], ['loading', 'Loading'], ['empty', 'Empty'], ['error', 'Failed']], 'pg-day') + width('dayline-component'),
         component: `<div class="pg-plan">
                 <section class="kp-card pg-plan__day" aria-labelledby="pg-day-h"><h3 class="pg-card-title" id="pg-day-h">Timeline</h3><section class="kp-dayline" id="pg-day" data-kp-dayline data-kp-start-hour="6" data-kp-step="15" data-kp-dayline-now="10:40" aria-label="Today, Monday 2 November"></section></section>
@@ -102,10 +113,12 @@ export const SECTIONS = [
         h2: 'Edit the project',
         intro: 'The project&rsquo;s name and its colour, with the project&rsquo;s dot and tag as a task row will show them.',
         expected: [
+            '<b>Round 2</b>: the colours were already the active theme&rsquo;s (each swatch paints <code>var(--kp-cat-N)</code>, so a theme switch repaints it at once); they were too close. Measured in OKLab (×100), the closest pair per theme went from 7.2 to 11.5 to between 12.0 and 13.1, every pair in every theme now at least 12 apart: each colour kept its hue family and its theme&rsquo;s chroma, and moved in lightness and a little in hue. The rows under the editor show each theme&rsquo;s twelve on its own ground.',
             'Twelve round swatches in two rows of six, Blue pressed with a ✓ and a ring, &ldquo;Blue&rdquo; under the grid. Press Teal: the ✓ moves, the name says Teal, the project&rsquo;s dot and its tag below turn teal and the line says <code>kp-swatch-change teal</code>. Tab into the grid: one stop; ← → walk a row, ↑ ↓ change rows, Enter picks.',
-            '<b>Name off</b>: the line under the grid goes; the swatches keep their names for a screen reader and as a tooltip. <b>Phone</b>: the same two rows of six.',
+            '<b>Name off</b>: the line under the grid goes; the swatches keep their names for a screen reader and as a tooltip. <b>Phone</b>: the same two rows of six; the theme rows wrap to two rows of six.',
+            '<b>Every theme</b>: twelve rows, formal to titanium, each on its own ground with its twelve colours and their names. No two in a row should look alike. Nostromo&rsquo;s amber, green and cyan read about 3.5:1 on its pale ground, below AA for text: the price of twelve that stay apart there.',
         ],
-        look: 'Formal: formal&rsquo;s own twelve inks, the ring in the page&rsquo;s ink. Check that the current swatch is plain at a glance, also on the pale ones.',
+        look: 'Formal: formal&rsquo;s own twelve inks, the ring in the page&rsquo;s ink. Check that the current swatch is plain at a glance, and that in every theme row each of the twelve can be told from the others at a glance.',
         controls: group('Name under the grid', 'swatch-name', [['on', 'On (default)', true], ['off', 'Off']], 'pg-swatches') + width('swatch-picker-component'),
         component: `<div class="kp-card pg-project">
                 <div class="kp-formgrid">
@@ -113,6 +126,11 @@ export const SECTIONS = [
                     <div class="kp-formgrid__row"><span class="kp-formgrid__label" id="pg-swatches-l">Colour</span><div class="kp-formgrid__control"><div class="kp-swatches" id="pg-swatches" data-kp-swatches aria-labelledby="pg-swatches-l"></div></div></div>
                     <div class="kp-formgrid__row"><span class="kp-formgrid__label" id="pg-preview-l">Looks like</span><div class="kp-formgrid__control"><p class="pg-preview" id="pg-preview" aria-labelledby="pg-preview-l"></p></div></div>
                 </div>
-            </div>${log('pg-swatches-log')}`,
+            </div>${log('pg-swatches-log')}
+            <section class="pg-catrows" aria-labelledby="pg-catrows-h"><h3 class="pg-card-title" id="pg-catrows-h">The twelve colours in every theme</h3><ul class="pg-catrows__list">${THEME_ORDER.map(themeRow).join('')}</ul></section>`,
     },
 ];
+
+/** Round 2: only the sections Kenny did not approve in round 1 (research/parts-habits-1102/VERDICTS.json). */
+const ROUND_2 = new Set(['dayline', 'swatch-picker']);
+export const SECTIONS = ALL_SECTIONS.filter((section) => ROUND_2.has(section.id));
