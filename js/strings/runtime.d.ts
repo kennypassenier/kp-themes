@@ -1,4 +1,5 @@
 export type Strings = import('./types.js').Strings;
+export type DictionarySource = Partial<Strings> | (() => Promise<Partial<Strings>>);
 /**
  * Replace some or all of the strings, for the framework-free channel and
  * for anything that reads them outside React.
@@ -11,6 +12,29 @@ export type Strings = import('./types.js').Strings;
  * @returns {Strings} the merged result
  */
 export declare function setStrings(next: Partial<Strings>): Strings;
+/**
+ * Register a dictionary for a language [habits-1101]. Its words sit between
+ * the English and the app's own `setStrings()`; a key it leaves out stays
+ * English. The source is the words, or a function that loads them, so a
+ * page that never speaks the language never downloads them.
+ *
+ * @param {string} tag a language tag, `nl` (matches `nl`, `nl-BE`, `nl-NL`) or a whole one
+ * @param {DictionarySource} source
+ * @returns {Promise<void>} settles once the strings follow the page again
+ */
+export declare function registerDictionary(tag: string, source: DictionarySource): Promise<void>;
+/**
+ * Choose the language yourself, over the root's `data-kp-lang` and `lang`;
+ * `null` hands the choice back to the root.
+ *
+ * @param {string | null} tag
+ * @returns {Promise<void>} settles once the strings speak it
+ */
+export declare function setLanguage(tag: string | null): Promise<void>;
+/** @returns {string} the language the strings speak now, a registered tag or `en` */
+export declare function getLanguage(): string;
+/** @returns {Promise<void>} settles once the strings speak the language the page asks for */
+export declare function languageReady(): Promise<void>;
 /**
  * The words the stylesheets draw themselves, as custom properties
  * [scope-143]. A keyframe cannot read this module, so the word a busy

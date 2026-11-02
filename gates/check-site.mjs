@@ -151,7 +151,12 @@ function main() {
     // it on <html> once the modules a page needed have attached [scope-115]. It
     // belongs to the entry, not to a component, and is documented where the entry
     // is — README.md and MIGRATION.md.
-    const ATTRIBUTES_OWNED_ELSEWHERE = new Set(['data-kp-diagnostic', 'data-kp-side', 'data-kp-status', 'data-kp-auto-ready']);
+    //
+    // `data-kp-lang` too: a page sets it on <html> to choose the language of kp's
+    // own words, and js/strings/runtime.js reads it there [habits-1101]. It
+    // belongs to the dictionary, not to a component, and is documented with it
+    // in docs/USER_GUIDE.md ("kp's own words, in English or Dutch").
+    const ATTRIBUTES_OWNED_ELSEWHERE = new Set(['data-kp-diagnostic', 'data-kp-side', 'data-kp-status', 'data-kp-auto-ready', 'data-kp-lang']);
 
     // The layout layer has a page of its own — site/layout.html, generated
     // from the comments and knobs of css/layout.css rather than from a

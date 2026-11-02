@@ -637,6 +637,10 @@
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"
         },
+        "./js/strings-nl": {
+            "types": "./js/strings-nl.d.ts",
+            "default": "./js/strings-nl.js"
+        },
         "./js/diagnostics": {
             "types": "./js/diagnostics.d.ts",
             "default": "./js/diagnostics.js"

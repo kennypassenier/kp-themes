@@ -265,6 +265,48 @@ there. A hand-kept set of dark theme names is exactly what two consumers
 got wrong — kyu believed in four, kp-soft in three — before this package
 generated it.
 
+## kp's own words, in English or Dutch [habits-1101]
+
+Every word a kp part writes itself (Undo on an undo toast, On and Off beside a switch, Cancel in a confirmation, the
+calendar's Previous and Next) comes from one dictionary in English. Since 12.2.0 kp also ships the Dutch, and a page
+whose root says so speaks it without a single `setStrings()`:
+
+```html
+<html lang="nl">
+    <!-- or nl-BE, nl-NL; data-kp-lang="nl" overrides lang for kp alone -->
+</html>
+```
+
+`js/auto.js` (and the bundle) registers the Dutch as a loader, so an English page never downloads it. The order, from
+weakest to strongest:
+
+1. the English, for any key the Dutch does not have yet;
+2. the dictionary of the page's language: `setLanguage()` if you called it, else `data-kp-lang` on `<html>`, else its
+   `lang`, matched whole (`nl-be`) and then by its first part (`nl`);
+3. your own `setStrings()`, which always wins and survives a change of language.
+
+A change of `lang` or `data-kp-lang` on `<html>` is followed at once (a `MutationObserver` on the root), and
+`document` hears `kp-strings-change` with `detail.language`. Words a part has already drawn stay as they are; what is
+drawn next (a toast, a confirmation, a redraw) speaks the new language.
+
+```js
+import { setLanguage, getLanguage, languageReady, registerDictionary } from '@kp-soft/themes/js/strings';
+import { NL_STRINGS } from '@kp-soft/themes/js/strings-nl';
+
+await setLanguage('nl'); // choose it yourself, over the root's attributes
+await setLanguage(null); // hand the choice back to <html>
+getLanguage(); // 'nl', or 'en' when no dictionary matches
+
+// Without js/auto.js (a React app on the loose modules), register the Dutch yourself:
+registerDictionary('nl', NL_STRINGS);
+await languageReady();
+```
+
+`registerDictionary(tag, words)` takes any language: the words, or a function that returns a promise of them. Six
+console messages meant for a developer stay English on purpose (`NL_KEPT_ENGLISH`); `gates/strings-nl.test.mjs` lists
+every English key the Dutch does not have yet and fails on a Dutch value of the wrong shape (a string where the English
+is a function).
+
 ## Components [TH1-TH7]
 
 Same classes in both channels. In React:

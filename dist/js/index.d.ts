@@ -118,6 +118,7 @@ export * as stackbarExports from '../../js/stackbar.js';
 export * as statePlateExports from '../../js/state-plate.js';
 export * as statusrowExports from '../../js/statusrow.js';
 export * as steplistExports from '../../js/steplist.js';
+export * as stringsNlExports from '../../js/strings-nl.js';
 export * as stringsExports from '../../js/strings.js';
 export * as structureExports from '../../js/structure.js';
 export * as tabbarExports from '../../js/tabbar.js';
@@ -267,7 +268,8 @@ export { STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT, attachStackbars, s
 export { hostStatePlate, statePlate } from '../../js/state-plate.js';
 export { CALM_STATUS_STATES, STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_RETRY_EVENT, STATUS_STATES, STATUS_UNDO_EVENT, attachStatusLists, buildStatusList, countStatus, setStatus, setTodayState, settleToday } from '../../js/statusrow.js';
 export { STEPLIST_EVENT, STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from '../../js/steplist.js';
-export { DEFAULT_STRINGS, applyStringProperties, getStrings, resolveStrings, setStrings, stringProperties } from '../../js/strings.js';
+export { NL_STRINGS } from '../../js/strings-nl.js';
+export { DEFAULT_STRINGS, applyStringProperties, getLanguage, getStrings, languageReady, registerDictionary, resolveStrings, setLanguage, setStrings, stringProperties } from '../../js/strings.js';
 export { SPLIT_EVENT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, attachStructure, structure, visibleItems } from '../../js/structure.js';
 export { TAB, TABBAR, TABBAR_HEIGHT_PROPERTY, TAB_COUNT_EVENT, TAB_COUNT_TONES, attachTabCounts, attachTabbars, drawTabCount, setTabCount, setTabbarBadge, setTabbarBusy, setTabbarCurrent } from '../../js/tabbar.js';
 export { OPT_OUT, WRAP_SELECTOR, attachTableRegions } from '../../js/tables.js';

@@ -33,6 +33,7 @@ js/no-flash.js       the snippet for <head>: before the stylesheet, or below
 js/lazy-register.js  the active theme's register, fetched at runtime (opt-in)
 js/remember.js       the one memory: what a reader chose, put back
 js/strings.js        every user-visible string, English by default [KT5]
+js/strings-nl.js     the Dutch dictionary, registered by js/auto.js for a page whose root says nl [habits-1101]
 js/locale.js         the page's own locale, never a hard-coded one
 js/theme-picker.js   framework-free picker    ─┐ pure: importing one
 js/components.js     contracts; sticky, menus   │ attaches nothing. Only

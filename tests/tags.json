@@ -516,6 +516,8 @@
         { "path": "js/theme-registry.js", "tags": ["@sweep", "@component:picker"], "why": "generated from every theme's tokens" },
         { "path": "js/strings.js", "all": "the dictionary every component and many specs read" },
         { "path": "js/strings/*.js", "all": "the dictionary every component and many specs read" },
+        { "path": "js/strings-nl.js", "tags": ["@component:bundle", "@sweep"], "why": "the Dutch dictionary; only a page whose root says nl reads it, and the bundle carries it [habits-1101]" },
+        { "path": "js/strings/nl/*.js", "tags": ["@component:bundle", "@sweep"], "why": "the Dutch dictionary; only a page whose root says nl reads it, and the bundle carries it [habits-1101]" },
         { "path": "js/auto.js", "all": "attaches every module on every fixture page" },
         { "path": "js/auto/*.js", "all": "attaches every module on every fixture page" },
         { "path": "js/controller.js", "all": "the controller base every component class extends [closure-pattern B]" },

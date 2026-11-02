@@ -217,7 +217,8 @@ export { COLUMNS, LAYOUT_EVENT, attachGrids, layoutOf } from './js/gridlayout.js
 export { ColorPicker, GridLayout } from './components/canvas.jsx';
 export { StringsProvider, useStrings } from './hooks/use-strings.jsx';
 export { useControllable } from './hooks/use-controllable.js';
-export { DEFAULT_STRINGS, getStrings, resolveStrings, setStrings } from './js/strings.js';
+export { DEFAULT_STRINGS, getStrings, resolveStrings, setStrings, registerDictionary, setLanguage, getLanguage, languageReady } from './js/strings.js';
+export { NL_STRINGS } from './js/strings-nl.js';
 export type Strings = import('./js/strings.js').Strings;
 /** @typedef {import('./js/strings.js').Strings} Strings */
 export { contrast, formatHsl, hsl, hslToRgb, luminance, meets, parseHsl, rgbToHsl, tokenColour } from './js/contrast.js';

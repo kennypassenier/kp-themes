@@ -157,6 +157,7 @@ export const JS_FILES = [
     'js/remember.js',
     'js/sidenav.js',
     'js/strings.js',
+    'js/strings-nl.js',
     'js/structure.js',
     'js/tables.js',
     'js/theme-core.js',
