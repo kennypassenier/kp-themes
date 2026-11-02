@@ -461,19 +461,6 @@
             "fingerprint": "83f012d2600f0685",
             "update": null
         },
-        "research/ux-dialogs-1101/demo.html": {
-            "facts": {
-                "id": "ux-dialogs-1101",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 2 of the dialogs from the app review: the drawer beside its list, which you sent back because each row’s Edit broke into “E / d / it” on a phone. A button in a table cell now keeps its label on one line. The other seven sections are approved and leave this page. Formal only.",
-                "sections": [{ "item": "drawer-beside", "themes": null, "topic": "drawer", "mode": null }],
-                "extra": null,
-                "round": "\n            {\"round\":\"ux-dialogs-1101-ecc8217b-94f5-4981-be81-c165f3296e31\",\"received\":[\"ux-dialogs-1101-787e6d76-4423-4fec-a45c-ac2a1eece18a\"]}\n        "
-            },
-            "fingerprint": "3c183cef4b386df0",
-            "update": null
-        },
         "research/habits-1101/demo.html": {
             "facts": {
                 "id": "habits-1101",
@@ -496,6 +483,7 @@
         }
     },
     "decided": {
+        "research/ux-dialogs-1101/demo.html": "2026-11-02 00:25 UTC, Kenny: drawer-beside approved in formal in round 2 (research/ux-dialogs-1101/VERDICTS.json)",
         "research/ux-touch-1101/demo.html": "2026-11-02 00:03 UTC, Kenny: docs-nav approved in formal in round 2 (research/ux-touch-1101/VERDICTS.json)",
         "research/ux-parts-1101/demo.html": "2026-11-01 23:40 UTC, Kenny: both remaining pairs approved in formal in round 2 (research/ux-parts-1101/VERDICTS.json)",
         "research/ux-fixes-1101/demo.html": "2026-11-01 23:22, Kenny: all eight pairs approved in formal (research/ux-fixes-1101/VERDICTS.json)",

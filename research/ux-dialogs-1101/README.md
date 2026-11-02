@@ -1,5 +1,7 @@
 # research/ux-dialogs-1101: dialogs, drawers and confirmations from the app review
 
+**Decided (2026-11-02 00:25 UTC):** Kenny approved drawer-beside (formal) in round 2, with the Edit label on one line, so all eight sections are decided. Recorded in `VERDICTS.json`; the page is not offered again.
+
 The app review of 2026-11-01 (`~/Projects/ux-review/kp-themes.md` and `kp-themes-components.md`) found eight things in the
 package's dialogs, drawers and confirmations. Kenny's answers (2026-11-01) and where each is shown [uxdialogs1101]:
 
