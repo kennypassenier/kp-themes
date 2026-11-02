@@ -242,192 +242,6 @@ var init_dates = __esm({
   }
 });
 
-// js/locale/calendar.js
-function isEnglish(resolved) {
-  try {
-    return new Intl.Locale(resolved).language === "en";
-  } catch {
-    return true;
-  }
-}
-function fromIntl(resolved, english, options, date, count4) {
-  if (english) return null;
-  try {
-    const format = new Intl.DateTimeFormat(resolved, options);
-    return Array.from({ length: count4 }, (_, i) => format.format(date(i)));
-  } catch {
-    return null;
-  }
-}
-function calendarNames(dictionary, defaults, locale) {
-  const resolved = resolveLocale(locale);
-  const english = isEnglish(resolved);
-  const intl = (options, date, count4) => fromIntl(resolved, english, options, date, count4);
-  const ownMonths = same(dictionary.months, defaults.months);
-  const months = (ownMonths ? intl({ month: "long" }, (i) => new Date(PROBE_YEAR, i, 1), MONTHS_IN_YEAR) : null) ?? dictionary.months;
-  const shortDefaults = defaults.monthsShort;
-  const ownShort = shortDefaults !== void 0 && same(dictionary.monthsShort ?? shortDefaults, shortDefaults);
-  const monthsShort = !ownShort ? dictionary.monthsShort ?? months : !ownMonths ? dictionary.months : intl({ month: "short" }, (i) => new Date(PROBE_YEAR, i, 1), MONTHS_IN_YEAR) ?? shortDefaults ?? months;
-  const sundayFirst = SUNDAY_FIRST.map((i) => dictionary.weekdays[i] ?? "");
-  const weekdays2 = (same(dictionary.weekdays, defaults.weekdays) ? intl({ weekday: "short" }, (i) => new Date(PROBE_YEAR, 0, SUNDAY_PROBE + i), DAYS_IN_WEEK) : null) ?? sundayFirst;
-  return { months, monthsShort, weekdays: weekdays2 };
-}
-var same, SUNDAY_FIRST, PROBE_YEAR, SUNDAY_PROBE, MONTHS_IN_YEAR, DAYS_IN_WEEK;
-var init_calendar = __esm({
-  "js/locale/calendar.js"() {
-    "use strict";
-    init_resolve();
-    same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
-    SUNDAY_FIRST = [6, 0, 1, 2, 3, 4, 5];
-    PROBE_YEAR = 2001;
-    SUNDAY_PROBE = 7;
-    MONTHS_IN_YEAR = 12;
-    DAYS_IN_WEEK = 7;
-  }
-});
-
-// js/locale/numbers.js
-function formatBytes(bytes, locale, { base = 1e3, units = BYTE_UNITS } = {}) {
-  let value = bytes;
-  let unit2 = 0;
-  while (value >= base && unit2 < units.length - 1) {
-    value /= base;
-    unit2 += 1;
-  }
-  const digits = unit2 === 0 ? 0 : 1;
-  return `${new Intl.NumberFormat(resolveLocale(locale), { maximumFractionDigits: digits, minimumFractionDigits: 0 }).format(value)} ${units[unit2]}`;
-}
-function escape(s2) {
-  return s2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-function parseNumber(text, locale) {
-  const parts2 = new Intl.NumberFormat(resolveLocale(locale)).formatToParts(1234.5);
-  const decimal = parts2.find((p) => p.type === "decimal")?.value ?? ".";
-  const group = parts2.find((p) => p.type === "group")?.value ?? ",";
-  const cleaned = text.replace(new RegExp(`[${escape(group)}\\s${NUMBER_SPACES}]`, "g"), "").replace(decimal, ".").replace(/[^\d.+-]/g, "");
-  return Number.parseFloat(cleaned);
-}
-var BYTE_UNITS, NUMBER_SPACES;
-var init_numbers = __esm({
-  "js/locale/numbers.js"() {
-    "use strict";
-    init_resolve();
-    BYTE_UNITS = ["B", "kB", "MB", "GB", "TB"];
-    NUMBER_SPACES = "\xA0\u202F";
-  }
-});
-
-// js/locale.js
-var init_locale = __esm({
-  "js/locale.js"() {
-    "use strict";
-    init_resolve();
-    init_dates();
-    init_calendar();
-    init_numbers();
-  }
-});
-
-// js/quantity/math.js
-function decimalsOf(step) {
-  const text = String(step);
-  const at = text.indexOf(".");
-  return at < 0 ? 0 : text.length - at - 1;
-}
-function rulesOf(root) {
-  const step = Math.abs(numberAt(root, "data-kp-quantity-step", 1)) || 1;
-  return {
-    min: numberAt(root, "data-kp-quantity-min", -Infinity),
-    max: numberAt(root, "data-kp-quantity-max", Infinity),
-    step,
-    decimals: decimalsOf(step),
-    locale: resolveLocale(root.getAttribute("data-kp-quantity-locale") ?? void 0, root)
-  };
-}
-function formatQuantity(value, rules) {
-  return new Intl.NumberFormat(rules.locale, {
-    useGrouping: false,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: rules.decimals
-  }).format(value);
-}
-function parseQuantity(text) {
-  let t = text.replace(/[\s  ]/g, "").replace(/^\+/, "").replace(/^−/, "-");
-  if (t === "") return NaN;
-  const comma = t.lastIndexOf(",");
-  const point2 = t.lastIndexOf(".");
-  if (comma >= 0 && point2 >= 0) {
-    const mark2 = comma > point2 ? "," : ".";
-    const group = mark2 === "," ? "." : ",";
-    t = t.split(group).join("").replace(mark2, ".");
-  } else if (comma >= 0) {
-    t = t.replace(",", ".");
-  }
-  if (!/^-?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
-  return Number(t);
-}
-function settleQuantity(value, rules) {
-  const base = Number.isFinite(rules.min) ? rules.min : 0;
-  const steps2 = Math.round((value - base) / rules.step);
-  let settled = base + steps2 * rules.step;
-  settled = Math.min(rules.max, Math.max(rules.min, settled));
-  const factor = 10 ** rules.decimals;
-  return Math.round(settled * factor) / factor;
-}
-var numberAt;
-var init_math = __esm({
-  "js/quantity/math.js"() {
-    "use strict";
-    init_locale();
-    numberAt = (root, name, fallback2) => {
-      const raw = root.getAttribute(name);
-      const value = raw === null || raw.trim() === "" ? NaN : Number(raw);
-      return Number.isFinite(value) ? value : fallback2;
-    };
-  }
-});
-
-// js/quantity/read.js
-function getQuantity(root) {
-  const kept = root.getAttribute("data-kp-quantity-value");
-  if (kept !== null && kept !== "") return Number(kept);
-  const input = inputOf(root);
-  const read2 = input ? parseQuantity(input.value) : NaN;
-  const rules = rulesOf(root);
-  return settleQuantity(Number.isFinite(read2) ? read2 : Number.isFinite(rules.min) ? rules.min : 0, rules);
-}
-var inputOf, isDisabled, unitFor;
-var init_read = __esm({
-  "js/quantity/read.js"() {
-    "use strict";
-    init_math();
-    inputOf = (root) => (
-      /** @type {HTMLInputElement | null} */
-      root.querySelector(".kp-quantity__input")
-    );
-    isDisabled = (root) => root.hasAttribute("data-kp-quantity-disabled");
-    unitFor = (root, value) => {
-      const one = root.getAttribute("data-kp-quantity-unit-one");
-      return value === 1 && one ? one : root.getAttribute("data-kp-quantity-unit") ?? "";
-    };
-  }
-});
-
-// js/quantity/values.js
-var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, HOLD_SLOW_REPEATS, PAGE_STEPS;
-var init_values = __esm({
-  "js/quantity/values.js"() {
-    "use strict";
-    QUANTITY = "[data-kp-quantity]";
-    QUANTITY_EVENT = "kp-quantity-change";
-    HOLD_DELAY = 450;
-    HOLD_SLOW = 160;
-    HOLD_FAST = 70;
-    HOLD_SLOW_REPEATS = 6;
-    PAGE_STEPS = 10;
-  }
-});
-
 // js/strings/toggle-palette-ack.js
 var TOGGLE_PALETTE_ACK_STRINGS;
 var init_toggle_palette_ack = __esm({
@@ -2997,6 +2811,9 @@ function stringProperties(strings = current) {
 function applyStringProperties(root, strings = current) {
   for (const [name, value] of Object.entries(stringProperties(strings))) root.style.setProperty(name, value);
 }
+function getLanguageDictionary() {
+  return published ?? {};
+}
 function getStrings() {
   return current;
 }
@@ -3022,12 +2839,203 @@ var init_runtime = __esm({
   }
 });
 
+// js/locale/calendar.js
+function isEnglish(resolved) {
+  try {
+    return new Intl.Locale(resolved).language === "en";
+  } catch {
+    return true;
+  }
+}
+function fromIntl(resolved, english, options, date, count4) {
+  if (english) return null;
+  try {
+    const format = new Intl.DateTimeFormat(resolved, options);
+    return Array.from({ length: count4 }, (_, i) => format.format(date(i)));
+  } catch {
+    return null;
+  }
+}
+function calendarNames(dictionary, defaults, locale, language2 = getLanguageDictionary()) {
+  const resolved = resolveLocale(locale);
+  const english = isEnglish(resolved);
+  const intl = (options, date, count4) => fromIntl(resolved, english, options, date, count4);
+  const isStock = (names, base, lang) => same(names, base) || lang !== void 0 && same(names, lang);
+  const stockMonths = isStock(dictionary.months, defaults.months, language2.months);
+  const pick2 = (key, stock = isStock(dictionary[key], defaults[key], language2[key])) => english && stock ? defaults[key] : dictionary[key];
+  const months = (stockMonths ? intl({ month: "long" }, (i) => new Date(PROBE_YEAR, i, 1), MONTHS_IN_YEAR) : null) ?? pick2("months");
+  const shortDefaults = defaults.monthsShort;
+  const stockShort = shortDefaults !== void 0 && isStock(dictionary.monthsShort ?? shortDefaults, shortDefaults, language2.monthsShort);
+  const monthsShort = !stockShort ? dictionary.monthsShort ?? months : !stockMonths ? dictionary.months : intl({ month: "short" }, (i) => new Date(PROBE_YEAR, i, 1), MONTHS_IN_YEAR) ?? shortDefaults ?? months;
+  const stockWeekdays = isStock(dictionary.weekdays, defaults.weekdays, language2.weekdays);
+  const sundayFirst = SUNDAY_FIRST.map((i) => pick2("weekdays", stockWeekdays)[i] ?? "");
+  const weekdays2 = (stockWeekdays ? intl({ weekday: "short" }, (i) => new Date(PROBE_YEAR, 0, SUNDAY_PROBE + i), DAYS_IN_WEEK) : null) ?? sundayFirst;
+  return { months, monthsShort, weekdays: weekdays2 };
+}
+var same, SUNDAY_FIRST, PROBE_YEAR, SUNDAY_PROBE, MONTHS_IN_YEAR, DAYS_IN_WEEK;
+var init_calendar = __esm({
+  "js/locale/calendar.js"() {
+    "use strict";
+    init_resolve();
+    init_runtime();
+    same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+    SUNDAY_FIRST = [6, 0, 1, 2, 3, 4, 5];
+    PROBE_YEAR = 2001;
+    SUNDAY_PROBE = 7;
+    MONTHS_IN_YEAR = 12;
+    DAYS_IN_WEEK = 7;
+  }
+});
+
+// js/locale/numbers.js
+function formatBytes(bytes, locale, { base = 1e3, units = BYTE_UNITS } = {}) {
+  let value = bytes;
+  let unit2 = 0;
+  while (value >= base && unit2 < units.length - 1) {
+    value /= base;
+    unit2 += 1;
+  }
+  const digits = unit2 === 0 ? 0 : 1;
+  return `${new Intl.NumberFormat(resolveLocale(locale), { maximumFractionDigits: digits, minimumFractionDigits: 0 }).format(value)} ${units[unit2]}`;
+}
+function escape(s2) {
+  return s2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function parseNumber(text, locale) {
+  const parts2 = new Intl.NumberFormat(resolveLocale(locale)).formatToParts(1234.5);
+  const decimal = parts2.find((p) => p.type === "decimal")?.value ?? ".";
+  const group = parts2.find((p) => p.type === "group")?.value ?? ",";
+  const cleaned = text.replace(new RegExp(`[${escape(group)}\\s${NUMBER_SPACES}]`, "g"), "").replace(decimal, ".").replace(/[^\d.+-]/g, "");
+  return Number.parseFloat(cleaned);
+}
+var BYTE_UNITS, NUMBER_SPACES;
+var init_numbers = __esm({
+  "js/locale/numbers.js"() {
+    "use strict";
+    init_resolve();
+    BYTE_UNITS = ["B", "kB", "MB", "GB", "TB"];
+    NUMBER_SPACES = "\xA0\u202F";
+  }
+});
+
+// js/locale.js
+var init_locale = __esm({
+  "js/locale.js"() {
+    "use strict";
+    init_resolve();
+    init_dates();
+    init_calendar();
+    init_numbers();
+  }
+});
+
+// js/quantity/math.js
+function decimalsOf(step) {
+  const text = String(step);
+  const at = text.indexOf(".");
+  return at < 0 ? 0 : text.length - at - 1;
+}
+function rulesOf(root) {
+  const step = Math.abs(numberAt(root, "data-kp-quantity-step", 1)) || 1;
+  return {
+    min: numberAt(root, "data-kp-quantity-min", -Infinity),
+    max: numberAt(root, "data-kp-quantity-max", Infinity),
+    step,
+    decimals: decimalsOf(step),
+    locale: resolveLocale(root.getAttribute("data-kp-quantity-locale") ?? void 0, root)
+  };
+}
+function formatQuantity(value, rules) {
+  return new Intl.NumberFormat(rules.locale, {
+    useGrouping: false,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: rules.decimals
+  }).format(value);
+}
+function parseQuantity(text) {
+  let t = text.replace(/[\s  ]/g, "").replace(/^\+/, "").replace(/^−/, "-");
+  if (t === "") return NaN;
+  const comma = t.lastIndexOf(",");
+  const point2 = t.lastIndexOf(".");
+  if (comma >= 0 && point2 >= 0) {
+    const mark2 = comma > point2 ? "," : ".";
+    const group = mark2 === "," ? "." : ",";
+    t = t.split(group).join("").replace(mark2, ".");
+  } else if (comma >= 0) {
+    t = t.replace(",", ".");
+  }
+  if (!/^-?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
+  return Number(t);
+}
+function settleQuantity(value, rules) {
+  const base = Number.isFinite(rules.min) ? rules.min : 0;
+  const steps2 = Math.round((value - base) / rules.step);
+  let settled = base + steps2 * rules.step;
+  settled = Math.min(rules.max, Math.max(rules.min, settled));
+  const factor = 10 ** rules.decimals;
+  return Math.round(settled * factor) / factor;
+}
+var numberAt;
+var init_math = __esm({
+  "js/quantity/math.js"() {
+    "use strict";
+    init_locale();
+    numberAt = (root, name, fallback2) => {
+      const raw = root.getAttribute(name);
+      const value = raw === null || raw.trim() === "" ? NaN : Number(raw);
+      return Number.isFinite(value) ? value : fallback2;
+    };
+  }
+});
+
+// js/quantity/read.js
+function getQuantity(root) {
+  const kept = root.getAttribute("data-kp-quantity-value");
+  if (kept !== null && kept !== "") return Number(kept);
+  const input = inputOf(root);
+  const read2 = input ? parseQuantity(input.value) : NaN;
+  const rules = rulesOf(root);
+  return settleQuantity(Number.isFinite(read2) ? read2 : Number.isFinite(rules.min) ? rules.min : 0, rules);
+}
+var inputOf, isDisabled, unitFor;
+var init_read = __esm({
+  "js/quantity/read.js"() {
+    "use strict";
+    init_math();
+    inputOf = (root) => (
+      /** @type {HTMLInputElement | null} */
+      root.querySelector(".kp-quantity__input")
+    );
+    isDisabled = (root) => root.hasAttribute("data-kp-quantity-disabled");
+    unitFor = (root, value) => {
+      const one = root.getAttribute("data-kp-quantity-unit-one");
+      return value === 1 && one ? one : root.getAttribute("data-kp-quantity-unit") ?? "";
+    };
+  }
+});
+
+// js/quantity/values.js
+var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, HOLD_SLOW_REPEATS, PAGE_STEPS;
+var init_values = __esm({
+  "js/quantity/values.js"() {
+    "use strict";
+    QUANTITY = "[data-kp-quantity]";
+    QUANTITY_EVENT = "kp-quantity-change";
+    HOLD_DELAY = 450;
+    HOLD_SLOW = 160;
+    HOLD_FAST = 70;
+    HOLD_SLOW_REPEATS = 6;
+    PAGE_STEPS = 10;
+  }
+});
+
 // js/strings.js
 var strings_exports = {};
 __export(strings_exports, {
   DEFAULT_STRINGS: () => DEFAULT_STRINGS,
   applyStringProperties: () => applyStringProperties,
   getLanguage: () => getLanguage,
+  getLanguageDictionary: () => getLanguageDictionary,
   getStrings: () => getStrings,
   languageReady: () => languageReady,
   registerDictionary: () => registerDictionary,
@@ -55708,7 +55716,7 @@ var init_render3 = __esm({
       /** The pager: the page-size choice, Back, the page and Next. @param {HTMLElement} pager @param {ReturnType<typeof getStrings>} s @param {number} pages @param {number} count */
       writePager(pager, s2, pages, count4) {
         const { model } = this.t;
-        pager.hidden = !this.pagerUseful(pages, count4);
+        if (model.state !== "loading") pager.hidden = !this.pagerUseful(pages, count4);
         pager.textContent = "";
         if (this.t.layoutSetup.sizeLabel !== null) pager.append(this.t.layoutSetup.sizeLabel);
         pager.append(this.pagerButton(s2.previous, model.page > 0, () => model.page -= 1, "back"));
@@ -103123,6 +103131,7 @@ export {
   getDateNav,
   getFacetValues,
   getLanguage,
+  getLanguageDictionary,
   getQuantity,
   getSegmentedTri,
   getSegmentedValues,

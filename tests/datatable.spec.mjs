@@ -8,11 +8,17 @@
 
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
-import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { DEFAULT_STRINGS as EN } from '../js/strings.js';
+import { NL_STRINGS } from '../js/strings-nl.js';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
+
+// The page speaks Dutch since 12.2.0 (CHANGELOG, "kp speaks Dutch on a Dutch page" [habits-1101 nl]): the
+// framework-free table says Dutch words; the React fixture mounts without the dictionary and keeps the English.
+const NL = { ...EN, ...NL_STRINGS };
+const wordsOf = (/** @type {{ name: string }} */ channel) => (channel.name === 'React' ? EN : NL);
 
 const CHANNELS = [
     { name: 'framework-free', table: '[data-test="plain-datatable"]' },
@@ -20,6 +26,7 @@ const CHANNELS = [
 ];
 
 for (const channel of CHANNELS) {
+    const S = wordsOf(channel);
     test.describe(`datatable — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('a number column sorts as numbers, not as text [TH37]', async ({ page }) => {
             await page.goto(URL);
@@ -161,6 +168,7 @@ const ready = async (page, table) => {
 };
 
 for (const channel of FEATURE_CHANNELS) {
+    const S = EN; // tests/fixtures/datatable.html is lang="en"
     test.describe(`datatable features — ${channel.name}`, { tag: ['@component:datatable'] }, () => {
         test('select-all ticks the rows on this page and no others, and its name says so [gap-13]', async ({ page }) => {
             // Before: the framework-free header box ticked all 30 filtered rows, page two included, and had no name of its own.
@@ -251,6 +259,13 @@ for (const channel of FEATURE_CHANNELS) {
             await expect(pill).toContainText(label);
             await pill.getByRole('button', { name: S.tableRemoveFilter(label) }).click();
             await expect(table.locator('tbody tr:visible')).toHaveCount(25);
+            // Pressing the pill is a press outside the popover, which closes it [ux-1101, table-filters:
+            // CHANGELOG "the data table's Filters open as a popover"]; a closed panel has no role to find, so reopen it.
+            // The React table keeps its inline panel, which stays open.
+            if (channel.key === 'plain') {
+                await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+                await toggle.click();
+            }
             await expect(closed).not.toBeChecked();
             await expect(table.locator('[data-kp-datatable-pills]')).toBeHidden();
         });
@@ -283,15 +298,24 @@ for (const channel of FEATURE_CHANNELS) {
             const table = page.locator(channel.table);
             await ready(page, table);
             await table.locator('[data-kp-datatable-filter-toggle]').click();
-            await table.getByLabel(S.tableFilterFrom('Hours')).fill('10');
-            await table.getByLabel(S.tableFilterTo('Hours')).fill('20');
+            // Every bound has its own visible label under the column's fieldset [ux-1101, table-filters]: "Min" / "Max", "From" / "To".
+            // The React table keeps the old names, "Hours, from" and "Hours, to".
+            const bound = (/** @type {string} */ column, /** @type {'from' | 'to'} */ which) =>
+                channel.key === 'plain'
+                    ? table.getByRole('group', { name: column }).locator(`[data-kp-filter-bound="${which}"]`)
+                    : table.getByLabel(which === 'from' ? S.tableFilterFrom(column) : S.tableFilterTo(column));
+            await bound('Hours', 'from').fill('10');
+            await bound('Hours', 'to').fill('20');
             await expect(table.locator('tbody tr:visible')).toHaveCount(6);
             expect((await columnTexts(table, 'Hours')).map(Number).every((h) => h >= 10 && h <= 20)).toBe(true);
             await expect(table.locator('[data-kp-datatable-pills] .kp-tag')).toContainText(S.tableFilterRange('Hours', '10', '20'));
             await table.locator('[data-kp-datatable-pills]').getByRole('button', { name: S.tableClearFilters }).click();
             await expect(table.locator('tbody tr:visible')).toHaveCount(25);
-            await table.getByLabel(S.tableFilterFrom('Opened')).fill('2026-08-10');
-            await table.getByLabel(S.tableFilterTo('Opened')).fill('2026-08-12');
+            // Pressing "Clear filters" in the pill bar is a press outside the popover and closed it [ux-1101, table-filters].
+            if (channel.key === 'plain' && (await table.locator('[data-kp-datatable-filter-toggle]').getAttribute('aria-expanded')) === 'false')
+                await table.locator('[data-kp-datatable-filter-toggle]').click();
+            await bound('Opened', 'from').fill('2026-08-10');
+            await bound('Opened', 'to').fill('2026-08-12');
             await expect(table.locator('tbody tr:visible')).toHaveCount(3);
             expect(await columnTexts(table, 'Opened')).toEqual(['2026-08-10', '2026-08-11', '2026-08-12']);
         });
@@ -457,6 +481,7 @@ const wearSettled = async (page, theme) => {
 };
 
 for (const channel of FEATURE_CHANNELS) {
+    const S = EN; // tests/fixtures/datatable.html is lang="en"
     test.describe(`datatable review notes — ${channel.name}`, { tag: ['@component:datatable', '@component:datepicker'] }, () => {
         test(
             "the date filter's calendar button is the date picker's own: its classes, its glyph, its name [Kenny's note 1]",
@@ -495,7 +520,9 @@ for (const channel of FEATURE_CHANNELS) {
                 await table.locator('[data-kp-datatable-filter-toggle]').click();
                 const opened = table.getByRole('group', { name: 'Opened' });
                 const picker = opened.locator('.kp-datepicker').nth(1);
-                await table.getByLabel(S.tableFilterTo('Opened'), { exact: true }).fill('2026-08-01');
+                // The framework-free bound is named by its visible "To" label under the Opened fieldset [ux-1101, table-filters]; React keeps "Opened, to".
+                const toField = channel.key === 'plain' ? opened.locator('[data-kp-filter-bound="to"]') : table.getByLabel(S.tableFilterTo('Opened'), { exact: true });
+                await toField.fill('2026-08-01');
                 const lost = [];
                 for (const container of ['kp-card', 'kp-alert']) {
                     // The filter's own fieldset wears the container: its box ends under the field, so the calendar hangs outside it.
@@ -824,8 +851,11 @@ test.describe('datatable — a group folds as its open played backwards', { tag:
             expect(fold.heights.length).toBe(open.heights.length);
             const apart = fold.heights.map((h, k) => Math.abs(h - open.heights[open.heights.length - 1 - k]));
             expect(Math.max(...apart), `fold ${fold.heights.join(', ')} | open ${open.heights.join(', ')}`).toBeLessThanOrEqual(1);
-            // It ends where the open began, and never below it.
-            expect(Math.abs(/** @type {number} */ (fold.settled) - open.heights[0])).toBeLessThan(0.5);
+            // It ends where the open began, and never below it. The open's first sample is 0.37 ms into a glide that
+            // starts steeply (formal's curve moves 1.6 px per ms over a 120 px, 400 ms glide), so it already stands
+            // up to 0.7 px above the rest height: the tolerance is the one the frame comparison above uses, 1 px
+            // [rel-1220 triage; measured settled 400.5, open[0] 401.12 in formal, 0.5 in cyberpunk].
+            expect(Math.abs(/** @type {number} */ (fold.settled) - open.heights[0])).toBeLessThanOrEqual(1);
             expect(Math.min(...fold.heights)).toBeGreaterThanOrEqual(open.heights[0] - 0.5);
             expect(errors).toEqual([]);
         });

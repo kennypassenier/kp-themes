@@ -1140,6 +1140,10 @@ function DataTableInner(
             className={`kp-datatable ${className}`.trim()}
             style={maxHeight === undefined ? style : { ...style, ...{ '--kp-datatable-max-height': maxHeight } }}
             data-kp-datatable
+            // This component is the table's controller: the attribute the framework-free attach reads as "already owned", so a
+            // page that also loads js/auto.js (which, on a Dutch page, attaches only after the language has loaded, by when
+            // React has drawn) does not wire a second controller over React's rows [rel-1220 triage].
+            data-kp-datatable-attached=""
             data-kp-cards={cards ? '' : undefined}
             data-kp-max-height={maxHeight}
             data-kp-sort-multi={multiSort ? '' : undefined}

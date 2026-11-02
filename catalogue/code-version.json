@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "7d38ba8746545d3d",
+    "base": "da263f414847e4d2",
     "modules": {
         "js/accept-follows.js": { "digest": "0fdf861ed688c68e", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
@@ -10779,7 +10779,7 @@
         "||||.kp-swatches__grid": "2d4191bb3308d6e2",
         "||||.kp-swatches__name": "6258d5a7f12290c6",
         "||||.kp-swatches__name[hidden]": "4b44cf3e59a167ab",
-        "||||.kp-swatches__swatch": "4e4e5648930217eb",
+        "||||.kp-swatches__swatch": "2e97ad9fe1657d65",
         "||||.kp-swatches__swatch-visible": "d95dc1e00dd8e2ae",
         "||||.kp-swatches__swatch[aria-pressed='true']": "e03a99cbe8591622",
         "||||.kp-swipe__plate": "a60868f9059e8bb6",
@@ -11744,7 +11744,7 @@
             ]
         },
         "combobox": {
-            "modules": "36e3fc3d66cded53",
+            "modules": "af18eacd7a9b29c7",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arrive-max",
@@ -11753,6 +11753,7 @@
                 "data-kp-close-on-blur",
                 "data-kp-closing",
                 "data-kp-combobox",
+                "data-kp-combobox-attached",
                 "data-kp-combobox-empty",
                 "data-kp-combobox-status",
                 "data-kp-creatable",
@@ -12820,7 +12821,7 @@
             ]
         },
         "datatable": {
-            "modules": "42a98cf47836d739",
+            "modules": "c4c41daac1571015",
             "families": [
                 "data-kp-align",
                 "data-kp-arrive",
@@ -12847,6 +12848,7 @@
                 "data-kp-datatable-actions",
                 "data-kp-datatable-add-filter",
                 "data-kp-datatable-add-menu",
+                "data-kp-datatable-attached",
                 "data-kp-datatable-card-sort",
                 "data-kp-datatable-clear",
                 "data-kp-datatable-clear-selection",
@@ -13001,7 +13003,7 @@
             ]
         },
         "datepicker": {
-            "modules": "14253e3badfbdab1",
+            "modules": "d4672e40d70509a0",
             "families": [
                 "data-kp-align",
                 "data-kp-close-on-select",
@@ -13466,7 +13468,7 @@
             ]
         },
         "field": {
-            "modules": "f0dc391c0e6ee6b4",
+            "modules": "6b946671ba790e52",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-min",
@@ -13496,6 +13498,7 @@
                 "data-kp-code-words",
                 "data-kp-code-wrap",
                 "data-kp-combobox",
+                "data-kp-combobox-attached",
                 "data-kp-combobox-empty",
                 "data-kp-combobox-status",
                 "data-kp-commit",
@@ -15127,7 +15130,7 @@
             ]
         },
         "structure": {
-            "modules": "f6214905e65e61cd",
+            "modules": "7a3db1d1a334f19b",
             "families": [
                 "data-kp-anchor",
                 "data-kp-anchor-copy",
@@ -15325,7 +15328,7 @@
             ]
         },
         "upload": {
-            "modules": "b0d41c0ee229fd8f",
+            "modules": "0198746edb889f9f",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arrive-max",

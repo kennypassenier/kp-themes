@@ -6,8 +6,15 @@
 
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { NL_STRINGS } from '../js/strings-nl.js';
 
 const URL = '/tests/fixtures/components.html';
+
+
+// The page speaks Dutch since 12.2.0 (CHANGELOG, "kp speaks Dutch on a Dutch page" [habits-1101 nl]): the
+// framework-free parts say Dutch words; the React fixture mounts without the dictionary and keeps the English.
+const NL = { ...S, ...NL_STRINGS };
+const wordsOf = (/** @type {{ name: string }} */ channel) => (channel.name === 'React' ? S : NL);
 
 const CHANNELS = [
     { name: 'framework-free', tile: '[data-test="tile-cpu"]' },
@@ -68,10 +75,10 @@ for (const channel of CHANNELS) {
             // sight can arrange. Drill: with the description line removed
             // from place(), the framework-free case goes red on the first
             // assertion.
-            await saysWhereItIs(tile, S.tileLabel('CPU', 1, 1, 2, 1));
+            await saysWhereItIs(tile, wordsOf(channel).tileLabel('CPU', 1, 1, 2, 1));
             await tile.focus();
             await tile.press('ArrowRight');
-            await saysWhereItIs(tile, S.tileLabel('CPU', 2, 1, 2, 1));
+            await saysWhereItIs(tile, wordsOf(channel).tileLabel('CPU', 2, 1, 2, 1));
         });
 
         test('the whole layout is handed to the consumer [TH56]', async ({ page }) => {

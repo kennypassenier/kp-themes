@@ -282,7 +282,7 @@ export { hostStatePlate, statePlate } from '../js/state-plate.js';
 export { CALM_STATUS_STATES, STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_RETRY_EVENT, STATUS_STATES, STATUS_UNDO_EVENT, attachStatusLists, buildStatusList, countStatus, setStatus, setTodayState, settleToday } from '../js/statusrow.js';
 export { STEPLIST_EVENT, STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from '../js/steplist.js';
 export { NL_STRINGS } from '../js/strings-nl.js';
-export { DEFAULT_STRINGS, applyStringProperties, getLanguage, getStrings, languageReady, registerDictionary, resolveStrings, setLanguage, setStrings, stringProperties } from '../js/strings.js';
+export { DEFAULT_STRINGS, applyStringProperties, getLanguage, getLanguageDictionary, getStrings, languageReady, registerDictionary, resolveStrings, setLanguage, setStrings, stringProperties } from '../js/strings.js';
 export { SPLIT_EVENT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, attachStructure, structure, visibleItems } from '../js/structure.js';
 export { SWATCHES, SWATCH_CHANGE_EVENT, attachSwatches, getSwatchValue, setSwatches } from '../js/swatches.js';
 export { SWIPE, SWIPE_EVENT, attachSwipes } from '../js/swipe.js';

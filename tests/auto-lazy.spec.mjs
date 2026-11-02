@@ -53,7 +53,15 @@ const EXTRA = NEEDS.flatMap((need) => {
     if (!names.length) throw new Error(`NEEDS entry ${need.name}: its attach() calls nothing as m.name(root)`);
     return names.filter((name) => !new RegExp(`\\b${name}\\b`).test(EAGER_6_1_0)).map((name) => [from, name]);
 });
-const EAGER = EAGER_6_1_0.replace(/^/, EXTRA.map(([from, name], i) => `import { ${name} as extra${i} } from '${from}';\n`).join('')).replace(
+// The eager entry gets what js/auto.js does about language since 12.2.0 ("kp speaks Dutch on a Dutch page" [habits-1101 nl]): it
+// registers kp's Dutch and attaches once the language has settled, or a Dutch page would be compared English against Dutch
+// [rel-1220 triage]. Both swaps are guarded below.
+const EAGER_LANGUAGE = EAGER_6_1_0.replace(
+    'const start = () => attachAll();',
+    "const start = () => languageReady().then(() => attachAll());\nregisterDictionary('nl', () => import('./strings-nl.js').then((module) => module.NL_STRINGS));",
+);
+if (EAGER_LANGUAGE === EAGER_6_1_0) throw new Error('the eager entry no longer starts with `const start = () => attachAll();`');
+const EAGER = `import { languageReady, registerDictionary } from './strings/runtime.js';\n${EAGER_LANGUAGE}`.replace(/^/, EXTRA.map(([from, name], i) => `import { ${name} as extra${i} } from '${from}';\n`).join('')).replace(
     '        attachGrids(root),\n    ];',
     `        attachGrids(root),\n${EXTRA.map((_, i) => `        extra${i}(root),\n`).join('')}    ];`,
 );
@@ -301,8 +309,13 @@ for (const path of PAGES) {
             // written when it does: the two pages are read seconds apart (the catalogue composes for
             // 15 s), so one can be past the line and the other not. That is time, not a missing `when`
             // [release-1120].
+            // The week grid's now line names the minute it was drawn in (`aria-label=now, 14:14`), and the two
+            // pages are read a few seconds apart, so across a minute change the clock differs, not the markup
+            // [rel-1220 triage].
             const withoutClock = (/** @type {string[]} */ lines) =>
-                lines.filter((line) => !line.includes('data-kp-ago-voice')).map((line) => line.replace(/ data-kp-stale=(?=\s|$)/, ''));
+                lines
+                    .filter((line) => !line.includes('data-kp-ago-voice'))
+                    .map((line) => line.replace(/ data-kp-stale=(?=\s|$)/, '').replace(/(aria-label=now, )\d{1,2}:\d{2}/, '$1HH:MM'));
             const eagerLines = withoutClock(withoutCard(whole));
             const lazyLines = withoutClock(withoutCard(lazy));
 
