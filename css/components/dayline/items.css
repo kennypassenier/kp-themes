@@ -1,0 +1,147 @@
+/* @part: dayline: The blocks of a day timeline */
+    /* A block stands on its rows and in its lane: the items that overlap share the track's width. Its first column is the
+     * handle (a read-only item keeps the column empty, so the words line up), then the time over the label. The edge on the
+     * start side is the item's tone; a read-only item is dashed on the muted plate, a done one quiet and struck through. */
+    .kp-dayline__item {
+        --kp-dayline-tone: var(--primary);
+        position: relative;
+        z-index: 1;
+        grid-column: 2;
+        justify-self: start;
+        display: grid;
+        grid-template-columns: var(--kp-dayline-handle, 1.75rem) minmax(0, 1fr);
+        align-items: start;
+        box-sizing: border-box;
+        inline-size: calc(100% / var(--kp-dayline-lanes, 1) - 2px);
+        margin-block: 1px;
+        margin-inline-start: calc(100% * var(--kp-dayline-lane, 0) / var(--kp-dayline-lanes, 1));
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-inline-start: 3px solid var(--kp-dayline-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    @media (pointer: coarse) {
+        .kp-dayline__item {
+            --kp-dayline-handle: var(--kp-touch-target, 2.75rem);
+        }
+    }
+
+    .kp-dayline__item[data-kp-tone='success'] {
+        --kp-dayline-tone: var(--success);
+    }
+
+    .kp-dayline__item[data-kp-tone='warning'] {
+        --kp-dayline-tone: var(--warning);
+    }
+
+    .kp-dayline__item[data-kp-tone='destructive'] {
+        --kp-dayline-tone: var(--destructive);
+    }
+
+    .kp-dayline__item[data-kp-tone='info'] {
+        --kp-dayline-tone: var(--info);
+    }
+
+    .kp-dayline__item[data-kp-tone='muted'] {
+        --kp-dayline-tone: var(--muted-foreground);
+    }
+
+    .kp-dayline__item[data-kp-tone='cat'] {
+        --kp-dayline-tone: var(--kp-cat, var(--primary));
+    }
+
+    .kp-dayline__item[data-kp-readonly] {
+        border-style: dashed;
+        border-inline-start-style: dashed;
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-dayline__item[data-kp-done] > .kp-dayline__body {
+        opacity: 0.6;
+    }
+
+    .kp-dayline__item[data-kp-done] .kp-dayline__label {
+        text-decoration: line-through;
+    }
+
+    /* Hovered or focused, a block whose words need more room than its rows grows down over what follows, so its label is read
+     * whole; at rest it shows what its rows hold (its whole label is its name and its body's title). */
+    .kp-dayline__item:is(:hover, :focus-within):not([data-kp-dragging]) {
+        z-index: 4;
+        align-self: start;
+        min-block-size: calc(100% - 2px);
+        box-shadow: 0 0 0 1px var(--ring);
+    }
+
+    .kp-dayline__item[data-kp-dragging] {
+        z-index: 4;
+        box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    .kp-dayline__handle.kp-icon-button {
+        inline-size: var(--kp-dayline-handle, 1.75rem);
+        block-size: var(--kp-dayline-handle, 1.75rem);
+        min-inline-size: 0;
+        min-block-size: 0;
+        padding: 0;
+        cursor: grab;
+        touch-action: none;
+    }
+
+    .kp-dayline__item[data-kp-dragging] .kp-dayline__handle {
+        cursor: grabbing;
+    }
+
+    .kp-dayline__fixed {
+        block-size: 100%;
+    }
+
+    /* The body: a plain button that takes the block's height, the time over the label. */
+    .kp-dayline__body {
+        display: grid;
+        align-content: start;
+        gap: 0 var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        block-size: 100%;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem);
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+    }
+
+    button.kp-dayline__body {
+        cursor: pointer;
+    }
+
+    button.kp-dayline__body:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    /* A short block puts its time and label on one line. */
+    .kp-dayline__item[data-kp-short] > .kp-dayline__body {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: baseline;
+    }
+
+    .kp-dayline__time {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-dayline__label {
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }

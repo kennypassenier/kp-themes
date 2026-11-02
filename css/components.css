@@ -13043,6 +13043,605 @@
         display: none;
     }
 
+    /* --- Day timeline [parts-1102] ---------------------------------------------------------------------------------------
+ * `.kp-dayline` (js/dayline.js): one day from top to bottom. The all-day strip above, then a box that scrolls inside a fixed
+ * height (--kp-dayline-height), so a page never grows with the hours. Inside the box a grid of two tracks: the hours' gutter
+ * (--kp-dayline-gutter) and the blocks' track, on one row per step, an hour being --kp-dayline-hour tall (taller under a coarse
+ * pointer, so a finger can hold a handle). The ruled hours lie behind the blocks; the now line crosses both tracks with its time
+ * on the gutter. Tokens only; every register paints it with its own card, border, radius and ink. */
+    .kp-dayline {
+        --kp-dayline-row: calc(var(--kp-dayline-hour, 4.5rem) / var(--kp-dayline-per-hour, 4));
+        container: kp-dayline / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    @media (pointer: coarse) {
+        .kp-dayline {
+            --kp-dayline-hour: 6rem;
+        }
+    }
+
+    /* A narrow day (a phone) gives the blocks more of its width: a slimmer gutter. */
+    @container kp-dayline (max-width: 30rem) {
+        .kp-dayline__grid,
+        .kp-dayline__allday {
+            --kp-dayline-gutter: 3.25rem;
+        }
+
+        .kp-dayline__hour,
+        .kp-dayline__allday-name {
+            padding-inline: var(--kp-space-xs, 0.25rem);
+        }
+    }
+
+    .kp-dayline__frame {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-dayline__scroll {
+        block-size: var(--kp-dayline-height, clamp(22rem, 62vh, 40rem));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+    }
+
+    .kp-dayline__scroll:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-dayline__grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: var(--kp-dayline-gutter, 4.5rem) minmax(0, 1fr);
+        grid-template-rows: repeat(var(--kp-dayline-rows, 96), var(--kp-dayline-row));
+        padding-block: var(--kp-space-md, 0.75rem);
+        padding-inline-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* An hour rule on every hour's first row, a fainter one at the half hour, drawn once behind the blocks. */
+    .kp-dayline__lines {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        background:
+            repeating-linear-gradient(to bottom, var(--border) 0 1px, transparent 1px var(--kp-dayline-hour, 4.5rem)),
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0 calc(var(--kp-dayline-hour, 4.5rem) / 2),
+                color-mix(in srgb, var(--border) 45%, transparent) calc(var(--kp-dayline-hour, 4.5rem) / 2) calc(var(--kp-dayline-hour, 4.5rem) / 2 + 1px),
+                transparent calc(var(--kp-dayline-hour, 4.5rem) / 2 + 1px) var(--kp-dayline-hour, 4.5rem)
+            );
+    }
+
+    .kp-dayline__hour {
+        grid-column: 1;
+        align-self: start;
+        translate: 0 -50%;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        text-align: end;
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+        color: var(--muted-foreground);
+    }
+
+    /* The now line across the blocks, its time on the gutter on the primary plate. */
+    .kp-dayline__now {
+        position: relative;
+        z-index: 3;
+        grid-column: 1 / -1;
+        grid-row: 1 / -1;
+        pointer-events: none;
+    }
+
+    .kp-dayline__now[hidden] {
+        display: none;
+    }
+
+    .kp-dayline__now::before {
+        content: '';
+        position: absolute;
+        inset-inline: var(--kp-dayline-gutter, 4.5rem) 0;
+        inset-block-start: calc(var(--kp-dayline-now, 0) * 100%);
+        border-block-start: 2px solid var(--primary);
+    }
+
+    .kp-dayline__now-label {
+        position: absolute;
+        inset-inline-start: var(--kp-space-xs, 0.25rem);
+        inset-block-start: calc(var(--kp-dayline-now, 0) * 100%);
+        translate: 0 -50%;
+        padding: 0.0625rem var(--kp-space-xs, 0.25rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+    /* A block stands on its rows and in its lane: the items that overlap share the track's width. Its first column is the
+     * handle (a read-only item keeps the column empty, so the words line up), then the time over the label. The edge on the
+     * start side is the item's tone; a read-only item is dashed on the muted plate, a done one quiet and struck through. */
+    .kp-dayline__item {
+        --kp-dayline-tone: var(--primary);
+        position: relative;
+        z-index: 1;
+        grid-column: 2;
+        justify-self: start;
+        display: grid;
+        grid-template-columns: var(--kp-dayline-handle, 1.75rem) minmax(0, 1fr);
+        align-items: start;
+        box-sizing: border-box;
+        inline-size: calc(100% / var(--kp-dayline-lanes, 1) - 2px);
+        margin-block: 1px;
+        margin-inline-start: calc(100% * var(--kp-dayline-lane, 0) / var(--kp-dayline-lanes, 1));
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-inline-start: 3px solid var(--kp-dayline-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    @media (pointer: coarse) {
+        .kp-dayline__item {
+            --kp-dayline-handle: var(--kp-touch-target, 2.75rem);
+        }
+    }
+
+    .kp-dayline__item[data-kp-tone='success'] {
+        --kp-dayline-tone: var(--success);
+    }
+
+    .kp-dayline__item[data-kp-tone='warning'] {
+        --kp-dayline-tone: var(--warning);
+    }
+
+    .kp-dayline__item[data-kp-tone='destructive'] {
+        --kp-dayline-tone: var(--destructive);
+    }
+
+    .kp-dayline__item[data-kp-tone='info'] {
+        --kp-dayline-tone: var(--info);
+    }
+
+    .kp-dayline__item[data-kp-tone='muted'] {
+        --kp-dayline-tone: var(--muted-foreground);
+    }
+
+    .kp-dayline__item[data-kp-tone='cat'] {
+        --kp-dayline-tone: var(--kp-cat, var(--primary));
+    }
+
+    .kp-dayline__item[data-kp-readonly] {
+        border-style: dashed;
+        border-inline-start-style: dashed;
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-dayline__item[data-kp-done] > .kp-dayline__body {
+        opacity: 0.6;
+    }
+
+    .kp-dayline__item[data-kp-done] .kp-dayline__label {
+        text-decoration: line-through;
+    }
+
+    /* Hovered or focused, a block whose words need more room than its rows grows down over what follows, so its label is read
+     * whole; at rest it shows what its rows hold (its whole label is its name and its body's title). */
+    .kp-dayline__item:is(:hover, :focus-within):not([data-kp-dragging]) {
+        z-index: 4;
+        align-self: start;
+        min-block-size: calc(100% - 2px);
+        box-shadow: 0 0 0 1px var(--ring);
+    }
+
+    .kp-dayline__item[data-kp-dragging] {
+        z-index: 4;
+        box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    .kp-dayline__handle.kp-icon-button {
+        inline-size: var(--kp-dayline-handle, 1.75rem);
+        block-size: var(--kp-dayline-handle, 1.75rem);
+        min-inline-size: 0;
+        min-block-size: 0;
+        padding: 0;
+        cursor: grab;
+        touch-action: none;
+    }
+
+    .kp-dayline__item[data-kp-dragging] .kp-dayline__handle {
+        cursor: grabbing;
+    }
+
+    .kp-dayline__fixed {
+        block-size: 100%;
+    }
+
+    /* The body: a plain button that takes the block's height, the time over the label. */
+    .kp-dayline__body {
+        display: grid;
+        align-content: start;
+        gap: 0 var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        block-size: 100%;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem);
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+    }
+
+    button.kp-dayline__body {
+        cursor: pointer;
+    }
+
+    button.kp-dayline__body:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    /* A short block puts its time and label on one line. */
+    .kp-dayline__item[data-kp-short] > .kp-dayline__body {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: baseline;
+    }
+
+    .kp-dayline__time {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-dayline__label {
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+    /* The all-day strip: its name in the gutter's width, then the items as plates that wrap onto rows; a read-only plate dashed.
+     * It takes no room while the page gives none. */
+    .kp-dayline__allday {
+        display: grid;
+        grid-template-columns: var(--kp-dayline-gutter, 4.5rem) minmax(0, 1fr);
+        align-items: start;
+        min-inline-size: 0;
+    }
+
+    .kp-dayline__allday[hidden] {
+        display: none;
+    }
+
+    .kp-dayline__allday-name {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        text-align: end;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-dayline__allday-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        min-inline-size: 0;
+    }
+
+    .kp-dayline__allday-item {
+        --kp-dayline-tone: var(--primary);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-inline-start: 3px solid var(--kp-dayline-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dayline__allday-item[data-kp-tone='cat'] {
+        --kp-dayline-tone: var(--kp-cat, var(--primary));
+    }
+
+    .kp-dayline__allday-item[data-kp-tone='muted'],
+    .kp-dayline__allday-item[data-kp-readonly] {
+        --kp-dayline-tone: var(--muted-foreground);
+        border-style: dashed;
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-dayline__allday-none {
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    /* Where an item held over the hours would start: a dashed band on its row with the time. */
+    .kp-dayline__drop {
+        z-index: 2;
+        grid-column: 2;
+        align-self: start;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border: 1px dashed var(--ring);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--accent);
+        color: var(--accent-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        pointer-events: none;
+    }
+
+    .kp-dayline__drop[hidden] {
+        display: none;
+    }
+
+    /* The package's plate over the whole box: an empty day lets presses and drops through to the hours, a failed one does not. */
+    .kp-dayline__plate {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        padding: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-dayline__plate[hidden] {
+        display: none;
+    }
+
+    .kp-dayline__plate[data-kp-state='empty'] {
+        pointer-events: none;
+    }
+
+    .kp-dayline__plate > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+        margin: 0;
+    }
+    /* --- Swipe row [parts-1102] ---------------------------------------------------------------------------------------------
+ * A row of a `[data-kp-swipe]` list (js/swipe.js) while a finger slides it: its parts follow (--kp-swipe-x) and the room they
+ * leave is the action's plate in its tone (`--success` with `--success-foreground`, and so on), its words at the edge the parts
+ * left, cut to the plate so they never show through the row. Armed past the threshold, the words go bold and the plate's inner
+ * edge takes a rule in the words' ink. The row's own frame stays put. The slide home runs on the theme's own motion
+ * (--fx-duration, --fx-ease: formal's eased glide, brutalism's hard step, titanium's milled curve), none under reduced motion.
+ * On a coarse pointer the rows leave the vertical move to the page's scroll. Tokens only. */
+    @media (pointer: coarse) {
+        [data-kp-swipe]:not([data-kp-swipe='off']) > * {
+            touch-action: pan-y;
+        }
+    }
+
+    [data-kp-swipe] > [data-kp-swiping],
+    [data-kp-swipe] > [data-kp-swipe-settling] {
+        --kp-swipe-plate: var(--primary);
+        --kp-swipe-ink: var(--primary-foreground);
+        position: relative;
+        overflow: hidden;
+        user-select: none;
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-settling] {
+        transition: --kp-swipe-x var(--fx-duration, 180ms) var(--fx-ease, ease-out);
+    }
+
+    [data-kp-swipe] > :is([data-kp-swiping], [data-kp-swipe-settling]) > :not(.kp-swipe__plate) {
+        translate: var(--kp-swipe-x, 0px) 0;
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='success'] {
+        --kp-swipe-plate: var(--success);
+        --kp-swipe-ink: var(--success-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='info'] {
+        --kp-swipe-plate: var(--info);
+        --kp-swipe-ink: var(--info-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='warning'] {
+        --kp-swipe-plate: var(--warning);
+        --kp-swipe-ink: var(--warning-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='destructive'] {
+        --kp-swipe-plate: var(--destructive);
+        --kp-swipe-ink: var(--destructive-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='none'] {
+        --kp-swipe-plate: var(--muted);
+        --kp-swipe-ink: var(--muted-foreground);
+    }
+
+    /* The plate: as wide as the room the parts left, on the side they left. */
+    .kp-swipe__plate {
+        position: absolute;
+        inset-block: 0;
+        z-index: 0;
+        display: grid;
+        align-items: center;
+        box-sizing: border-box;
+        inline-size: max(0px, var(--kp-swipe-x, 0px));
+        overflow: hidden;
+        background: var(--kp-swipe-plate);
+        color: var(--kp-swipe-ink);
+        pointer-events: none;
+    }
+
+    [data-kp-swipe-side='right'] > .kp-swipe__plate {
+        left: 0;
+        justify-items: start;
+    }
+
+    [data-kp-swipe-side='left'] > .kp-swipe__plate {
+        right: 0;
+        justify-items: end;
+        inline-size: max(0px, calc(-1 * var(--kp-swipe-x, 0px)));
+    }
+
+    .kp-swipe__words {
+        padding-inline: var(--kp-space-md, 0.75rem);
+        white-space: nowrap;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 500;
+    }
+
+    [data-kp-swipe-armed] > .kp-swipe__plate > .kp-swipe__words {
+        font-weight: 700;
+    }
+
+    [data-kp-swipe-side='right'][data-kp-swipe-armed] > .kp-swipe__plate {
+        box-shadow: inset -3px 0 0 var(--kp-swipe-ink);
+    }
+
+    [data-kp-swipe-side='left'][data-kp-swipe-armed] > .kp-swipe__plate {
+        box-shadow: inset 3px 0 0 var(--kp-swipe-ink);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-kp-swipe] > [data-kp-swipe-settling] {
+            transition: none;
+        }
+    }
+    /* --- Settled row [parts-1102] -----------------------------------------------------------------------------------------
+ * A row of a list whose item left while the page is open (js/settled.js): it keeps its place and the height it had
+ * (--kp-settled-height, measured when it settled), its frame turns dashed and its ground clear, its parts fade
+ * (--kp-settled-fade) and its title is struck through, and where the item went stands at its end on the muted plate, over the
+ * faded actions, so the row reads as finished at a glance and never as a row to press. Nothing in it answers a press. Tokens only;
+ * every register paints it with its own border and ink. */
+    [data-kp-settled] {
+        position: relative;
+        min-block-size: var(--kp-settled-height, auto);
+        border-style: dashed;
+        background: transparent;
+        box-shadow: none;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    [data-kp-settled] > :not(.kp-settled__word) {
+        opacity: var(--kp-settled-fade, 0.45);
+    }
+
+    [data-kp-settled] :is(.kp-task-row__title, .kp-checklist__label) {
+        text-decoration: line-through;
+    }
+
+    .kp-settled__word,
+    [data-kp-settled]:not(:has(> .kp-settled__word))::after {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        display: grid;
+        align-content: center;
+        max-inline-size: 60%;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        border-inline-start: 1px dashed var(--border);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    [data-kp-settled]:not(:has(> .kp-settled__word))::after {
+        content: attr(data-kp-settled);
+    }
+    /* --- Swatch picker [parts-1102] ---------------------------------------------------------------------------------------
+ * `.kp-swatches` (js/swatches.js): the theme's categorical colours as a grid of round toggle buttons, at most
+ * --kp-swatches-columns to a row (fewer when the picker is narrower), each --kp-swatch-size (2.25rem; the touch target under a
+ * coarse pointer). A swatch is its colour edge to edge with a hairline in the ground's border so a pale one still shows; hovered it
+ * shows a thin ring; the current one wears the ground's ring round it and a check in the categorical ink (--kp-cat-ink); the focus
+ * ring is the theme's. The current colour's name stands under the grid. Tokens only. */
+    .kp-swatches {
+        --kp-swatch-size: 2.25rem;
+        --kp-swatches-gap: var(--kp-space-sm, 0.5rem);
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        justify-items: start;
+        min-inline-size: 0;
+    }
+
+    @media (pointer: coarse) {
+        .kp-swatches {
+            --kp-swatch-size: var(--kp-touch-target, 2.75rem);
+        }
+    }
+
+    .kp-swatches__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, var(--kp-swatch-size));
+        gap: var(--kp-swatches-gap);
+        box-sizing: border-box;
+        inline-size: min(100%, calc(var(--kp-swatches-columns, 6) * (var(--kp-swatch-size) + var(--kp-swatches-gap)) - var(--kp-swatches-gap) + 9px));
+        padding: 4px;
+        margin: -4px;
+    }
+
+    .kp-swatches__swatch {
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-swatch-size);
+        block-size: var(--kp-swatch-size);
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: var(--kp-swatch, var(--muted));
+        color: var(--kp-cat-ink, var(--background));
+        cursor: pointer;
+        transition: box-shadow var(--fx-duration, 160ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-swatches__swatch:hover {
+        box-shadow: 0 0 0 2px var(--background), 0 0 0 3px var(--muted-foreground);
+    }
+
+    .kp-swatches__swatch[aria-pressed='true'] {
+        box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--foreground);
+    }
+
+    .kp-swatches__swatch[aria-pressed='true']::after {
+        content: var(--kp-glyph-check, '✓');
+        font-size: calc(var(--kp-swatch-size) * 0.45);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-swatches__swatch:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 4px;
+    }
+
+    .kp-swatches__name {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-swatches__name[hidden] {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-swatches__swatch {
+            transition: none;
+        }
+    }
     /* --- Board: lanes of cards a person moves between [habits-1101] ----------
  * `section.kp-board[data-kp-board]` (js/board.js). Each lane is the pipeline's lane (`.kp-pipeline__lane`, its head, name and
  * count), so every register paints it as its own; the cards are the page's, in a reorder list the lanes share. Wide, the lanes
@@ -17799,6 +18398,18 @@
         display: inline-flex;
         align-items: center;
         gap: var(--kp-keys-caps-gap, 0.125rem);
+    }
+
+    /* A chord, keys one after the other [parts-1102]: the caps a little apart, the dictionary's "then" between them in the
+       line's own small muted words, so "O then T" never reads as O and T pressed together. */
+    .kp-keys__caps--chord {
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-keys__then {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-style: italic;
+        color: var(--muted-foreground);
     }
 
     /* --- Action tiles, status rows, facet list [kpadopt2-tiles] ---------------

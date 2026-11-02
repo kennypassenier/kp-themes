@@ -5,8 +5,8 @@ export const weekDescriptor = {
         id: 'week',
         title: 'Week agenda',
         group: 'Data',
-        classes: ['kp-week'],
-        aliases: ['past', 'overflow', 'today'],
+        classes: ['kp-week', 'kp-dayline'],
+        aliases: ['past', 'overflow', 'today', 'dayline', 'start-hour', 'step', 'dayline-hours', 'dayline-now', 'dayline-source', 'dayline-for', 'dayline-id', 'dayline-change', 'dayline-open', 'dayline-drop', 'dayline-retry', 'readonly', 'short', 'dragging', 'cat'],
         exports: [],
         intro: 'Seven day columns with the items of the week placed at their time of day: a nightly backup at 02:00, a host round at 03:30. `attachWeeks(root)` in js/week.js fills `section.kp-week[data-kp-week]` with the head of each day, an hour axis and one pill per item; the page gives the items (`setWeekEvents`) and the state of the whole (`setWeekState`). `data-kp-week-start` is the first day (`YYYY-MM-DD`, else today), `data-kp-week-days` how many columns, `data-kp-week-nav` adds the week buttons. A pill has a series colour (1 to 5) and a state: `next` is ringed, `off` and `skipped` muted and struck through, `reference` dashed and not a button. A column holds as many pills as fit; the rest fold into a `+N` menu button (`data-kp-overflow` marks the folded ones). Below 40rem the columns become rows and every item is shown. A line across today’s column is now; items already past carry `data-kp-past`.',
         whenToUse:
@@ -76,6 +76,7 @@ setWeekEvents(agenda, events);
         ],
         variants: [
             { name: 'data-kp-week', what: 'Marks the agenda; `attachWeeks` fills it.' },
+            { name: '.kp-dayline[data-kp-dayline]', what: 'The day timeline [parts-1102] (js/dayline.js): one day from top to bottom, `data-kp-start-hour` (0) down to the same hour the next morning (`data-kp-dayline-hours`, 24), one row per `data-kp-step` minutes (15). `setDaylineItems(el, [{ id, label, start: "HH:MM", minutes, tone, done, readonly, allDay }], { allDay })` draws each item as a block as long as it takes, side by side in lanes where items overlap, with a now line (`attachDaylines(root, { now })`, or `data-kp-dayline-now="HH:MM"`). A read-only item is dashed and quiet, without a handle, and shares the lanes so a clash shows; all-day items stand in a strip above the hours. Moves by the ⠿ handle, dragged or ↑ ↓ (Shift: an hour), Escape puts back: `kp-dayline-change { id, start, from, source }`; a press on a block: `kp-dayline-open { id, source }`; an element marked `data-kp-dayline-source="<id>"` dropped on an hour: `kp-dayline-drop { id, start }`. States: `setDaylineState(el, state, title, { text })` with `loading`, `empty` or `error`, `kp-dayline-retry`.' },
             { name: 'data-kp-week-start', what: 'The first day, `YYYY-MM-DD`; without it, today in the time zone.' },
             { name: 'data-kp-week-days', what: 'How many day columns the range has (7).' },
             { name: 'data-kp-week-nav', what: 'Adds the row of week buttons: previous, today and next (`data-kp-week-prev`, `data-kp-week-today`, `data-kp-week-next` mark them); a press sends the new range to the page.' },

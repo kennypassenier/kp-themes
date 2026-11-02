@@ -1,0 +1,3 @@
+/* @kp-soft/themes v12.1.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
+import{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o}from"./chunk-RDE3Y2JS.js";import"./chunk-E4MKDUEI.js";import"./chunk-XXZYWEQF.js";import"./chunk-Q2GKOMQU.js";import"./chunk-ZEDDJMPA.js";import"./chunk-DHDW2OCK.js";import"./chunk-5TWXYHNW.js";import"./chunk-3Z4KKGO5.js";import"./chunk-3AELJMJN.js";import"./chunk-OHFUIDCK.js";import"./chunk-OG6L4GK2.js";export{a as MASTER_DETAIL,i as PANE_ASIDE_FOLD_AT,g as PANE_ASIDE_WIDTH,d as PANE_CLOSE_EVENT,h as PANE_FOLD_AT,c as PANE_OPEN_EVENT,e as PANE_RETRY_EVENT,b as PANE_SELECT_EVENT,f as PANE_WIDTHS,o as attachMasterDetails,n as closePane,j as masterDetail,m as openPane,l as selectPane,k as setPaneState};
+//# sourceMappingURL=chunk-6JHKZIKU.js.map

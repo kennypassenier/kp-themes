@@ -1,0 +1,83 @@
+/* @part: swatches: Swatch picker */
+    /* --- Swatch picker [parts-1102] ---------------------------------------------------------------------------------------
+ * `.kp-swatches` (js/swatches.js): the theme's categorical colours as a grid of round toggle buttons, at most
+ * --kp-swatches-columns to a row (fewer when the picker is narrower), each --kp-swatch-size (2.25rem; the touch target under a
+ * coarse pointer). A swatch is its colour edge to edge with a hairline in the ground's border so a pale one still shows; hovered it
+ * shows a thin ring; the current one wears the ground's ring round it and a check in the categorical ink (--kp-cat-ink); the focus
+ * ring is the theme's. The current colour's name stands under the grid. Tokens only. */
+    .kp-swatches {
+        --kp-swatch-size: 2.25rem;
+        --kp-swatches-gap: var(--kp-space-sm, 0.5rem);
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        justify-items: start;
+        min-inline-size: 0;
+    }
+
+    @media (pointer: coarse) {
+        .kp-swatches {
+            --kp-swatch-size: var(--kp-touch-target, 2.75rem);
+        }
+    }
+
+    .kp-swatches__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, var(--kp-swatch-size));
+        gap: var(--kp-swatches-gap);
+        box-sizing: border-box;
+        inline-size: min(100%, calc(var(--kp-swatches-columns, 6) * (var(--kp-swatch-size) + var(--kp-swatches-gap)) - var(--kp-swatches-gap) + 9px));
+        padding: 4px;
+        margin: -4px;
+    }
+
+    .kp-swatches__swatch {
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-swatch-size);
+        block-size: var(--kp-swatch-size);
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: var(--kp-swatch, var(--muted));
+        color: var(--kp-cat-ink, var(--background));
+        cursor: pointer;
+        transition: box-shadow var(--fx-duration, 160ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-swatches__swatch:hover {
+        box-shadow: 0 0 0 2px var(--background), 0 0 0 3px var(--muted-foreground);
+    }
+
+    .kp-swatches__swatch[aria-pressed='true'] {
+        box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--foreground);
+    }
+
+    .kp-swatches__swatch[aria-pressed='true']::after {
+        content: var(--kp-glyph-check, '✓');
+        font-size: calc(var(--kp-swatch-size) * 0.45);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-swatches__swatch:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 4px;
+    }
+
+    .kp-swatches__name {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-swatches__name[hidden] {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-swatches__swatch {
+            transition: none;
+        }
+    }

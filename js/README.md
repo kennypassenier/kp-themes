@@ -616,6 +616,49 @@ The row deleted with Undo: held out at once, the Undo toast, put back or committ
 | `controller.js` | RowUndoRoot: the delegated press on a `[data-kp-row-delete]` control under the root.                           |
 | `delete.js`     | deleteRowWithUndo: hold the row out, move the focus, the toast, Undo puts it back, the commit lets it leave.     |
 
+## js/dayline.js → js/dayline/
+
+The day timeline: one day from top to bottom, blocks as long as they take, lanes, a now line, moves and drops [parts-1102]. 7 files.
+
+| File            | Does                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| `constants.js`  | The selectors, attribute names, events, fixed numbers and shapes of the day timeline.                 |
+| `controller.js` | DaylineControl: the grid, the blocks, the all-day strip, the now line, the moves' outcome and the say. |
+| `drop.js`       | Dropping an element from a list beside the day onto an hour: the marker and `kp-dayline-drop`.         |
+| `layout.js`     | The arithmetic: clock words, a time's minute in the day, and the lanes of items that overlap.          |
+| `move.js`       | Moving a block by its handle: the pointer drag and the keyboard walk, in steps.                        |
+| `render.js`     | Building the frame, the hours, a block, the all-day plates and the now line.                           |
+| `states.js`     | Loading (the busy card), empty and failed (the package's plate) over the hours.                        |
+
+## js/swipe.js → js/swipe/
+
+The swipe row: a list row a finger slides sideways to reveal an action's plate and run it [parts-1102]. 4 files.
+
+| File            | Does                                                                                         |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| `constants.js`  | The selectors, attribute names, event and fixed numbers of the swipe row.                    |
+| `controller.js` | SwipeControl: the delegated pointer listeners on a list, the actions it names, the event.     |
+| `gesture.js`    | One swipe: the lock, the follow, the threshold and its haptic tick, the lift.                |
+| `plate.js`      | The plate the moving row reveals, and the slide home in the theme's own time and curve.      |
+
+## js/settled.js → js/settled/
+
+The settled row: a row whose item left the list keeps its place, quiet and inert, saying where it went [parts-1102]. 2 files.
+
+| File            | Does                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------- |
+| `constants.js`  | The attribute, selectors and event of the settled row.                                |
+| `controller.js` | SettledList: dresses and undresses the rows of a list as their attribute changes.     |
+
+## js/swatches.js → js/swatches/
+
+The swatch picker: the theme's twelve categorical colours as a grid of toggle swatches [parts-1102]. 2 files.
+
+| File            | Does                                                                                           |
+| --------------- | ---------------------------------------------------------------------------------------------- |
+| `constants.js`  | The selectors, attributes, event and shape of the swatch picker.                               |
+| `controller.js` | SwatchesControl: the swatches, the arrow keys over the grid, the current one and the pick.     |
+
 ## js/diff.js → js/diff/
 
 The diff view with file headers, folded context and changed words. 13 files.

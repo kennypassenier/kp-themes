@@ -43,6 +43,7 @@ setKeys(document.getElementById('doc-keys-set'), [
             { name: '.kp-kbd', what: 'One key cap: a small raised plate with the key’s text, in the page’s mono face.' },
             { name: '.kp-keys--end', what: 'The line sits at the end of its row instead of the start.' },
             { name: '.kp-keys__caps', what: 'Keys pressed together, kept side by side and never wrapped apart.' },
+            { name: '.kp-keys__caps--chord', what: 'A chord [parts-1102], keys one after the other: `setKeys(el, [[[\'O\', \'T\'], \'open the overdue tasks\', { chord: true }]])` draws the caps a little apart with the dictionary’s “then” between them (`.kp-keys__then`, `keysThen`), as the shortcut sheet shows `g t`.' },
         ],
         accessibility: [
             'Built in — the line is a named group, and each cap is real text, so a screen reader reads “slash, search”.',

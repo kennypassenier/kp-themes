@@ -5,9 +5,9 @@ export const colorpickerDescriptor = {
         id: 'colorpicker',
         title: 'Colour picker',
         group: 'Forms',
-        classes: ['kp-colorpicker'],
+        classes: ['kp-colorpicker', 'kp-swatches'],
         exports: ['ColorPicker'],
-        aliases: ['color', 'swatch', 'against', 'channel', 'follow', 'contrast-ok'],
+        aliases: ['color', 'swatch', 'against', 'channel', 'follow', 'contrast-ok', 'swatches', 'swatches-columns', 'swatches-name', 'swatch-change', 'value'],
         intro: 'Three labelled sliders, a swatch, and the number that makes this one different: the WCAG contrast ratio of the chosen colour against the current theme’s own background, measured with the same function the contrast gate uses.',
         whenToUse:
             'Where somebody picks a colour that text or a boundary will later have to survive on — a status colour, a label, a theme of their own. Not as a general colour wheel: three sliders are exact and operable from the keyboard, but they are slower than a canvas for browsing. Not for choosing from a fixed set either; that is a row of swatch buttons.',
@@ -31,6 +31,7 @@ export const colorpickerDescriptor = {
             },
         ],
         variants: [
+            { name: '.kp-swatches[data-kp-swatches]', what: 'The swatch picker [parts-1102] (js/swatches.js): `setSwatches(el, [{ value, label, colour }], current)` draws the theme’s twelve categorical colours (`colour` 1 to 12, the theme’s categorical colour of that number, the swatch’s place by default; other text is any CSS colour) as round toggle buttons, `data-kp-swatches-columns` (6) to a row, fewer when narrower; the current one pressed with a check, its name under the grid (`data-kp-swatches-name="off"` leaves it out). One tab stop, ← → ↑ ↓ Home End walk it; a pick fires `kp-swatch-change { value, label, source }`. 44 px under a coarse pointer. `getSwatchValue(el)` reads it.' },
             { name: '.kp-colorpicker__channel', what: 'One label and its slider. The wrapper contributes nothing to the box tree, so the three pairs line up as one grid.' },
             { name: '.kp-colorpicker__swatch', what: 'The chosen colour, with a boundary — a pale swatch on a pale card is otherwise an invisible square.' },
             { name: '.kp-colorpicker__value', what: 'The colour in numbers, in the mono face, so it can be read back and copied.' },

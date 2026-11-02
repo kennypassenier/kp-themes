@@ -172,6 +172,10 @@ js/path-trace.js           the path of one connection: hops, each allowed or ref
 js/pipeline.js             where each item stands, one lane per stage
 js/popover-form.js         a small form anchored to its button: one field and accept, light dismiss [ux-1101]
 js/date-nav.js             one date navigation: the range shown, previous, today and next, month, week or day [ux-1101]
+js/dayline.js              one day from top to bottom: blocks as long as they take, lanes, a now line, moves and drops [parts-1102]
+js/swipe.js                a list row a finger swipes sideways to reveal and run an action, touch only [parts-1102]
+js/settled.js              a row whose item left the list keeps its place, quiet and inert, saying where it went [parts-1102]
+js/swatches.js             the theme's twelve categorical colours as a grid of toggle swatches [parts-1102]
 js/row-undo.js             a row's Delete with Undo: held out, the Undo toast, put back or committed [ux-1101]
 js/task-row.js             a task as a row: check, title, facts, fixed action columns, from the package's parts [habits-1101]
 js/board.js                lanes of the page's cards that move between lanes, a count and a limit per lane [habits-1101]

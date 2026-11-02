@@ -17,9 +17,9 @@ export const taskRowDescriptor = {
     id: 'task-row',
     title: 'Task row',
     group: 'Data',
-    classes: ['kp-task-row', 'kp-task-list'],
+    classes: ['kp-task-row', 'kp-task-list', 'kp-swipe', 'kp-settled'],
     exports: [],
-    aliases: ['done', 'priority', 'task-toggle', 'task-open'],
+    aliases: ['done', 'priority', 'task-toggle', 'task-open', 'swipe', 'swipe-start', 'swipe-end', 'swipe-pointers', 'swipe-off', 'swipe-key', 'swipe-ignore', 'swiping', 'settled', 'settled-list'],
     intro: 'A list row for a thing to do [habits-1101]: a check for done, the title, a line of facts under it and the row’s actions in fixed columns, built from the package’s parts (the reorder handle, the field’s check box, badges, categorical dots and chips, icon buttons and the menu button). Every row of a list keeps one grid, so the handles, the boxes, the titles and each action stand in one column from top to bottom.',
     whenToUse:
         'For any list of things a person finishes: tasks, steps, errands. The rows move in their list and between lists (a reorder group), are picked without boxes (row picking) and open their actions on a right click (the context menu). For a list of things that each hold a stepper or a switch, use the list rows; for data to sort, the data table.',
@@ -40,6 +40,8 @@ ${row('t2', 'Call the plumber', '<span class="kp-task-row__fact kp-task-row__fac
         { name: 'kp-task-toggle / kp-task-open', what: 'Fired on the row: `{ key, done }` when its box is ticked or unticked, `{ key, source }` when its title is pressed.' },
         { name: 'data-kp-priority', what: '`high` or `medium`: an edge inside the border in the destructive or the warning colour.' },
         { name: 'data-kp-done', what: 'A done row: the title muted and struck through.' },
+        { name: 'data-kp-swipe', what: 'The swipe row [parts-1102] (js/swipe.js), on the list: a finger that slides a row sideways moves its parts and shows the action’s plate in its tone with its words; `data-kp-swipe-start="done:Done:success"` is revealed swiping toward the end (right), `data-kp-swipe-end="tomorrow:Tomorrow:info"` the other way (`key:Words:tone`). Past the threshold (35 % of the row, at most 140 px) the plate arms and a phone ticks; let go there and the row fires `kp-swipe { key, action, row }`; it slides home in the theme’s own time and curve, at once under reduced motion. Touch only unless `data-kp-swipe-pointers="any"`; locks after 12 px sideways, rows take `touch-action: pan-y` on a coarse pointer; the check box, handle, icon and menu buttons keep their own press (`data-kp-swipe-ignore` marks more); `data-kp-swipe="off"` or a row’s `data-kp-swipe-off` stops it. A swipe is a shortcut: the row’s ⋯ menu carries the same actions for a keyboard, a mouse and a screen reader.' },
+        { name: 'data-kp-settled', what: 'The settled row [parts-1102] (js/settled.js), on a row of a reorder list, checklist or task list (`data-kp-settled-list` for any other) whose item left while the page is open: its value is where it went (“Deleted”, “Moved to Work”). The row keeps its place and height, goes quiet (dashed, faded, struck through) and inert, shows the word at its end, is said once and fires `kp-settled { key, word }`, until the list is left: `clearSettled(list)` takes the settled rows out, `settleRow(row, word)` sets it, removing the attribute gives the row back.' },
         { name: 'data-kp-picked', what: 'Written by row picking (`data-kp-row-pick` on the list): the row is ringed and tinted.' },
     ],
     accessibility: [

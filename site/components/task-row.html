@@ -326,6 +326,22 @@
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-done</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-priority</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-settled</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-settled-list</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-settled-status</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-swipe</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-swipe-armed</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swipe-end</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swipe-ignore</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-swipe-key</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-swipe-off</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swipe-pointers</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swipe-settling</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swipe-side</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swipe-start</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swipe-status</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-swipe-tone</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-swiping</code></td><td>written, read</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -339,6 +355,8 @@
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-settled</code></td><td>Fired on the row, bubbling, when it settles: `{ key, word }`.</td></tr>
+                            <tr><td><code>kp-swipe</code></td><td>Fired on the row, bubbling, when a swipe let go past the threshold: `{ key, action, row }`.</td></tr>
                             <tr><td><code>kp-task-toggle</code></td><td>Fired on the row, bubbling, when its box is ticked or unticked: `{ key, done }`.</td></tr>
                             <tr><td><code>kp-task-open</code></td><td>Fired on the row, bubbling, when its title is pressed: `{ key, source }`.</td></tr>
                     </tbody></table></div>
@@ -347,10 +365,17 @@
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-settled-fade</code></td><td><code>0.45</code></td></tr>
+                            <tr><td><code>--kp-settled-height</code></td><td><code>auto</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-swipe-ink</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-swipe-plate</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-swipe-x</code></td><td><code>0px</code></td></tr>
                             <tr><td><code>--kp-task-row-gap</code></td><td><code>var(--kp-space-xs, 0.25rem)</code></td></tr>
                             <tr><td><code>--kp-task-row-icon</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                     </tbody></table></div>
                 </section>
@@ -369,6 +394,8 @@
                             <tr><td><code>kp-task-toggle / kp-task-open</code></td><td>Fired on the row: `{ key, done }` when its box is ticked or unticked, `{ key, source }` when its title is pressed.</td></tr>
                             <tr><td><code>data-kp-priority</code></td><td>`high` or `medium`: an edge inside the border in the destructive or the warning colour.</td></tr>
                             <tr><td><code>data-kp-done</code></td><td>A done row: the title muted and struck through.</td></tr>
+                            <tr><td><code>data-kp-swipe</code></td><td>The swipe row [parts-1102] (js/swipe.js), on the list: a finger that slides a row sideways moves its parts and shows the action’s plate in its tone with its words; `data-kp-swipe-start=&quot;done:Done:success&quot;` is revealed swiping toward the end (right), `data-kp-swipe-end=&quot;tomorrow:Tomorrow:info&quot;` the other way (`key:Words:tone`). Past the threshold (35 % of the row, at most 140 px) the plate arms and a phone ticks; let go there and the row fires `kp-swipe { key, action, row }`; it slides home in the theme’s own time and curve, at once under reduced motion. Touch only unless `data-kp-swipe-pointers=&quot;any&quot;`; locks after 12 px sideways, rows take `touch-action: pan-y` on a coarse pointer; the check box, handle, icon and menu buttons keep their own press (`data-kp-swipe-ignore` marks more); `data-kp-swipe=&quot;off&quot;` or a row’s `data-kp-swipe-off` stops it. A swipe is a shortcut: the row’s ⋯ menu carries the same actions for a keyboard, a mouse and a screen reader.</td></tr>
+                            <tr><td><code>data-kp-settled</code></td><td>The settled row [parts-1102] (js/settled.js), on a row of a reorder list, checklist or task list (`data-kp-settled-list` for any other) whose item left while the page is open: its value is where it went (“Deleted”, “Moved to Work”). The row keeps its place and height, goes quiet (dashed, faded, struck through) and inert, shows the word at its end, is said once and fires `kp-settled { key, word }`, until the list is left: `clearSettled(list)` takes the settled rows out, `settleRow(row, word)` sets it, removing the attribute gives the row back.</td></tr>
                             <tr><td><code>data-kp-picked</code></td><td>Written by row picking (`data-kp-row-pick` on the list): the row is ringed and tinted.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>

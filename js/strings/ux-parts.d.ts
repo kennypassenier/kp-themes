@@ -95,6 +95,98 @@ export type UxPartsStrings = {
      * The toast's line after Undo, "Ibuprofen 400 is back" [ux-1101]
      */
     rowRestored: (name: string) => string;
+    /**
+     * The word between the caps of a chord in a line of shortcuts, "O then T" (js/keys.js) [parts-1102]
+     */
+    keysThen: string;
+    /**
+     * The name of a day timeline when the page gives none (js/dayline.js) [parts-1102]
+     */
+    daylineLabel: string;
+    /**
+     * The name over the all-day strip above the hours [parts-1102]
+     */
+    daylineAllDay: string;
+    /**
+     * What the all-day strip says while it holds nothing [parts-1102]
+     */
+    daylineAllDayNone: string;
+    /**
+     * The now line's label, "Now 10:42" [parts-1102]
+     */
+    daylineNow: (time: string) => string;
+    /**
+     * The name of an item's move handle, "Move Morning run" [parts-1102]
+     */
+    daylineHandle: (label: string) => string;
+    /**
+     * The handle's title: how it moves [parts-1102]
+     */
+    daylineHandleHint: string;
+    /**
+     * What is said after a step, "Morning run moved to 09:15" [parts-1102]
+     */
+    daylineMoved: (label: string, time: string) => string;
+    /**
+     * What is said when a move is put back, "Morning run stays at 09:00" [parts-1102]
+     */
+    daylineKept: (label: string, time: string) => string;
+    /**
+     * Said after a read-only item's time: it cannot be moved [parts-1102]
+     */
+    daylineFixed: string;
+    /**
+     * Said after a done item's time [parts-1102]
+     */
+    daylineDone: string;
+    /**
+     * The marker while an item from a list is held over the hours, "Starts 14:30" [parts-1102]
+     */
+    daylineDropAt: (time: string) => string;
+    /**
+     * The words on a day timeline's loading card [parts-1102]
+     */
+    daylineLoading: string;
+    /**
+     * The heading over a day with no item, when the page gives none [parts-1102]
+     */
+    daylineEmpty: string;
+    /**
+     * The sentence under it [parts-1102]
+     */
+    daylineEmptyText: string;
+    /**
+     * The heading over a day that could not be read [parts-1102]
+     */
+    daylineFailed: string;
+    /**
+     * Its Try again button [parts-1102]
+     */
+    daylineRetry: string;
+    /**
+     * What is said when a row settles, "Buy milk: Deleted" (js/settled.js) [parts-1102]
+     */
+    settledSaid: (name: string, word: string) => string;
+    /**
+     * The name of a settled row that has none [parts-1102]
+     */
+    settledNameless: string;
+    /**
+     * What is said after a swipe ran its action, "Buy milk: Done" (js/swipe.js) [parts-1102]
+     */
+    swipeSaid: (name: string, action: string) => string;
+    /**
+     * The name of a swatch picker when the page gives none (js/swatches.js) [parts-1102]
+     */
+    swatchesLabel: string;
+    /**
+     * The line under the swatches naming the current one, "Teal" [parts-1102]
+     */
+    swatchesChosen: (label: string) => string;
+    /**
+     * That line while no swatch is current [parts-1102]
+     */
+    swatchesNone: string;
 };
 /**
  * @typedef {object} UxPartsStrings
@@ -121,6 +213,29 @@ export type UxPartsStrings = {
  * @property {(name: string) => string} rowDeleted  The Undo toast's line after a row was deleted, "Ibuprofen 400 deleted" [ux-1101]
  * @property {string} rowDeletedNameless  The same line for a row with no name [ux-1101]
  * @property {(name: string) => string} rowRestored  The toast's line after Undo, "Ibuprofen 400 is back" [ux-1101]
+ * @property {string} keysThen  The word between the caps of a chord in a line of shortcuts, "O then T" (js/keys.js) [parts-1102]
+ * @property {string} daylineLabel  The name of a day timeline when the page gives none (js/dayline.js) [parts-1102]
+ * @property {string} daylineAllDay  The name over the all-day strip above the hours [parts-1102]
+ * @property {string} daylineAllDayNone  What the all-day strip says while it holds nothing [parts-1102]
+ * @property {(time: string) => string} daylineNow  The now line's label, "Now 10:42" [parts-1102]
+ * @property {(label: string) => string} daylineHandle  The name of an item's move handle, "Move Morning run" [parts-1102]
+ * @property {string} daylineHandleHint  The handle's title: how it moves [parts-1102]
+ * @property {(label: string, time: string) => string} daylineMoved  What is said after a step, "Morning run moved to 09:15" [parts-1102]
+ * @property {(label: string, time: string) => string} daylineKept  What is said when a move is put back, "Morning run stays at 09:00" [parts-1102]
+ * @property {string} daylineFixed  Said after a read-only item's time: it cannot be moved [parts-1102]
+ * @property {string} daylineDone  Said after a done item's time [parts-1102]
+ * @property {(time: string) => string} daylineDropAt  The marker while an item from a list is held over the hours, "Starts 14:30" [parts-1102]
+ * @property {string} daylineLoading  The words on a day timeline's loading card [parts-1102]
+ * @property {string} daylineEmpty  The heading over a day with no item, when the page gives none [parts-1102]
+ * @property {string} daylineEmptyText  The sentence under it [parts-1102]
+ * @property {string} daylineFailed  The heading over a day that could not be read [parts-1102]
+ * @property {string} daylineRetry  Its Try again button [parts-1102]
+ * @property {(name: string, word: string) => string} settledSaid  What is said when a row settles, "Buy milk: Deleted" (js/settled.js) [parts-1102]
+ * @property {string} settledNameless  The name of a settled row that has none [parts-1102]
+ * @property {(name: string, action: string) => string} swipeSaid  What is said after a swipe ran its action, "Buy milk: Done" (js/swipe.js) [parts-1102]
+ * @property {string} swatchesLabel  The name of a swatch picker when the page gives none (js/swatches.js) [parts-1102]
+ * @property {(label: string) => string} swatchesChosen  The line under the swatches naming the current one, "Teal" [parts-1102]
+ * @property {string} swatchesNone  That line while no swatch is current [parts-1102]
  */
 /** @type {UxPartsStrings} */
 export declare const UX_PARTS_STRINGS: UxPartsStrings;

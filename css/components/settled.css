@@ -1,0 +1,45 @@
+/* @part: settled: Settled row */
+    /* --- Settled row [parts-1102] -----------------------------------------------------------------------------------------
+ * A row of a list whose item left while the page is open (js/settled.js): it keeps its place and the height it had
+ * (--kp-settled-height, measured when it settled), its frame turns dashed and its ground clear, its parts fade
+ * (--kp-settled-fade) and its title is struck through, and where the item went stands at its end on the muted plate, over the
+ * faded actions, so the row reads as finished at a glance and never as a row to press. Nothing in it answers a press. Tokens only;
+ * every register paints it with its own border and ink. */
+    [data-kp-settled] {
+        position: relative;
+        min-block-size: var(--kp-settled-height, auto);
+        border-style: dashed;
+        background: transparent;
+        box-shadow: none;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    [data-kp-settled] > :not(.kp-settled__word) {
+        opacity: var(--kp-settled-fade, 0.45);
+    }
+
+    [data-kp-settled] :is(.kp-task-row__title, .kp-checklist__label) {
+        text-decoration: line-through;
+    }
+
+    .kp-settled__word,
+    [data-kp-settled]:not(:has(> .kp-settled__word))::after {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        display: grid;
+        align-content: center;
+        max-inline-size: 60%;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        border-inline-start: 1px dashed var(--border);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    [data-kp-settled]:not(:has(> .kp-settled__word))::after {
+        content: attr(data-kp-settled);
+    }

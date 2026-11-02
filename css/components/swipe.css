@@ -1,0 +1,106 @@
+/* @part: swipe: Swipe row */
+    /* --- Swipe row [parts-1102] ---------------------------------------------------------------------------------------------
+ * A row of a `[data-kp-swipe]` list (js/swipe.js) while a finger slides it: its parts follow (--kp-swipe-x) and the room they
+ * leave is the action's plate in its tone (`--success` with `--success-foreground`, and so on), its words at the edge the parts
+ * left, cut to the plate so they never show through the row. Armed past the threshold, the words go bold and the plate's inner
+ * edge takes a rule in the words' ink. The row's own frame stays put. The slide home runs on the theme's own motion
+ * (--fx-duration, --fx-ease: formal's eased glide, brutalism's hard step, titanium's milled curve), none under reduced motion.
+ * On a coarse pointer the rows leave the vertical move to the page's scroll. Tokens only. */
+    @media (pointer: coarse) {
+        [data-kp-swipe]:not([data-kp-swipe='off']) > * {
+            touch-action: pan-y;
+        }
+    }
+
+    [data-kp-swipe] > [data-kp-swiping],
+    [data-kp-swipe] > [data-kp-swipe-settling] {
+        --kp-swipe-plate: var(--primary);
+        --kp-swipe-ink: var(--primary-foreground);
+        position: relative;
+        overflow: hidden;
+        user-select: none;
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-settling] {
+        transition: --kp-swipe-x var(--fx-duration, 180ms) var(--fx-ease, ease-out);
+    }
+
+    [data-kp-swipe] > :is([data-kp-swiping], [data-kp-swipe-settling]) > :not(.kp-swipe__plate) {
+        translate: var(--kp-swipe-x, 0px) 0;
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='success'] {
+        --kp-swipe-plate: var(--success);
+        --kp-swipe-ink: var(--success-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='info'] {
+        --kp-swipe-plate: var(--info);
+        --kp-swipe-ink: var(--info-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='warning'] {
+        --kp-swipe-plate: var(--warning);
+        --kp-swipe-ink: var(--warning-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='destructive'] {
+        --kp-swipe-plate: var(--destructive);
+        --kp-swipe-ink: var(--destructive-foreground);
+    }
+
+    [data-kp-swipe] > [data-kp-swipe-tone='none'] {
+        --kp-swipe-plate: var(--muted);
+        --kp-swipe-ink: var(--muted-foreground);
+    }
+
+    /* The plate: as wide as the room the parts left, on the side they left. */
+    .kp-swipe__plate {
+        position: absolute;
+        inset-block: 0;
+        z-index: 0;
+        display: grid;
+        align-items: center;
+        box-sizing: border-box;
+        inline-size: max(0px, var(--kp-swipe-x, 0px));
+        overflow: hidden;
+        background: var(--kp-swipe-plate);
+        color: var(--kp-swipe-ink);
+        pointer-events: none;
+    }
+
+    [data-kp-swipe-side='right'] > .kp-swipe__plate {
+        left: 0;
+        justify-items: start;
+    }
+
+    [data-kp-swipe-side='left'] > .kp-swipe__plate {
+        right: 0;
+        justify-items: end;
+        inline-size: max(0px, calc(-1 * var(--kp-swipe-x, 0px)));
+    }
+
+    .kp-swipe__words {
+        padding-inline: var(--kp-space-md, 0.75rem);
+        white-space: nowrap;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 500;
+    }
+
+    [data-kp-swipe-armed] > .kp-swipe__plate > .kp-swipe__words {
+        font-weight: 700;
+    }
+
+    [data-kp-swipe-side='right'][data-kp-swipe-armed] > .kp-swipe__plate {
+        box-shadow: inset -3px 0 0 var(--kp-swipe-ink);
+    }
+
+    [data-kp-swipe-side='left'][data-kp-swipe-armed] > .kp-swipe__plate {
+        box-shadow: inset 3px 0 0 var(--kp-swipe-ink);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-kp-swipe] > [data-kp-swipe-settling] {
+            transition: none;
+        }
+    }

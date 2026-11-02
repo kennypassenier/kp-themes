@@ -151,6 +151,10 @@ concatenates that file into `css/themes.css`.
 | `task-row.css`                  | Task row [habits-1101]                                                           |
 | `popover-form.css`              | Popover form [ux-1101]                                                           |
 | `date-nav.css`                  | Date navigation [ux-1101]                                                        |
+| `dayline/`                      | Day timeline: frame and hours, blocks, all-day strip and states [parts-1102]     |
+| `swipe.css`                     | Swipe row [parts-1102]                                                           |
+| `settled.css`                   | Settled row [parts-1102]                                                         |
+| `swatches.css`                  | Swatch picker [parts-1102]                                                       |
 | `markdown-editor.css`           | Markdown editor and task lists [habits-1101]                                     |
 | `plain-card.css`                | Plain card                                                                       |
 | `popover.css`                   | Dropdown and tooltip, on the popover layer                                       |

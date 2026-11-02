@@ -1,0 +1,122 @@
+/* @part: dayline: Day timeline */
+    /* --- Day timeline [parts-1102] ---------------------------------------------------------------------------------------
+ * `.kp-dayline` (js/dayline.js): one day from top to bottom. The all-day strip above, then a box that scrolls inside a fixed
+ * height (--kp-dayline-height), so a page never grows with the hours. Inside the box a grid of two tracks: the hours' gutter
+ * (--kp-dayline-gutter) and the blocks' track, on one row per step, an hour being --kp-dayline-hour tall (taller under a coarse
+ * pointer, so a finger can hold a handle). The ruled hours lie behind the blocks; the now line crosses both tracks with its time
+ * on the gutter. Tokens only; every register paints it with its own card, border, radius and ink. */
+    .kp-dayline {
+        --kp-dayline-row: calc(var(--kp-dayline-hour, 4.5rem) / var(--kp-dayline-per-hour, 4));
+        container: kp-dayline / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    @media (pointer: coarse) {
+        .kp-dayline {
+            --kp-dayline-hour: 6rem;
+        }
+    }
+
+    /* A narrow day (a phone) gives the blocks more of its width: a slimmer gutter. */
+    @container kp-dayline (max-width: 30rem) {
+        .kp-dayline__grid,
+        .kp-dayline__allday {
+            --kp-dayline-gutter: 3.25rem;
+        }
+
+        .kp-dayline__hour,
+        .kp-dayline__allday-name {
+            padding-inline: var(--kp-space-xs, 0.25rem);
+        }
+    }
+
+    .kp-dayline__frame {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-dayline__scroll {
+        block-size: var(--kp-dayline-height, clamp(22rem, 62vh, 40rem));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+    }
+
+    .kp-dayline__scroll:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-dayline__grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: var(--kp-dayline-gutter, 4.5rem) minmax(0, 1fr);
+        grid-template-rows: repeat(var(--kp-dayline-rows, 96), var(--kp-dayline-row));
+        padding-block: var(--kp-space-md, 0.75rem);
+        padding-inline-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* An hour rule on every hour's first row, a fainter one at the half hour, drawn once behind the blocks. */
+    .kp-dayline__lines {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        background:
+            repeating-linear-gradient(to bottom, var(--border) 0 1px, transparent 1px var(--kp-dayline-hour, 4.5rem)),
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0 calc(var(--kp-dayline-hour, 4.5rem) / 2),
+                color-mix(in srgb, var(--border) 45%, transparent) calc(var(--kp-dayline-hour, 4.5rem) / 2) calc(var(--kp-dayline-hour, 4.5rem) / 2 + 1px),
+                transparent calc(var(--kp-dayline-hour, 4.5rem) / 2 + 1px) var(--kp-dayline-hour, 4.5rem)
+            );
+    }
+
+    .kp-dayline__hour {
+        grid-column: 1;
+        align-self: start;
+        translate: 0 -50%;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        text-align: end;
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+        color: var(--muted-foreground);
+    }
+
+    /* The now line across the blocks, its time on the gutter on the primary plate. */
+    .kp-dayline__now {
+        position: relative;
+        z-index: 3;
+        grid-column: 1 / -1;
+        grid-row: 1 / -1;
+        pointer-events: none;
+    }
+
+    .kp-dayline__now[hidden] {
+        display: none;
+    }
+
+    .kp-dayline__now::before {
+        content: '';
+        position: absolute;
+        inset-inline: var(--kp-dayline-gutter, 4.5rem) 0;
+        inset-block-start: calc(var(--kp-dayline-now, 0) * 100%);
+        border-block-start: 2px solid var(--primary);
+    }
+
+    .kp-dayline__now-label {
+        position: absolute;
+        inset-inline-start: var(--kp-space-xs, 0.25rem);
+        inset-block-start: calc(var(--kp-dayline-now, 0) * 100%);
+        translate: 0 -50%;
+        padding: 0.0625rem var(--kp-space-xs, 0.25rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }

@@ -2,7 +2,9 @@
 export declare const MOD_CAP = ".kp-kbd[data-kp-key=\"mod\"]";
 /** A line of shortcuts. */
 export declare const KEYS = ".kp-keys";
-export type KeyPair = [string | readonly string[], string];
+export type KeyPair = [string | readonly string[], string] | [string | readonly string[], string, {
+    chord?: boolean;
+}];
 /** Whether the modifier key is ⌘ here rather than Ctrl, for a part that names its own shortcuts (the Markdown editor) [habits-1101]. */
 export declare const isMacPlatform: () => boolean;
 /**

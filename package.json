@@ -473,6 +473,22 @@
             "types": "./js/date-nav.d.ts",
             "default": "./js/date-nav.js"
         },
+        "./js/dayline": {
+            "types": "./js/dayline.d.ts",
+            "default": "./js/dayline.js"
+        },
+        "./js/swipe": {
+            "types": "./js/swipe.d.ts",
+            "default": "./js/swipe.js"
+        },
+        "./js/settled": {
+            "types": "./js/settled.d.ts",
+            "default": "./js/settled.js"
+        },
+        "./js/swatches": {
+            "types": "./js/swatches.d.ts",
+            "default": "./js/swatches.js"
+        },
         "./js/row-undo": {
             "types": "./js/row-undo.d.ts",
             "default": "./js/row-undo.js"

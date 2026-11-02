@@ -158,4 +158,10 @@ export const REQUIRED_MORE = [
         self: true,
         why: 'A help card measures its own width and puts each word over its meaning when narrow; the query reaches only its own lists [scope-143].',
     },
+    {
+        container: 'kp-dayline',
+        class: 'kp-dayline',
+        self: true,
+        why: 'The day timeline measures its own width and gives its blocks more room on a phone (a slimmer hour gutter); the query reaches only its grid, its hours and its all-day strip [parts-1102].',
+    },
 ];

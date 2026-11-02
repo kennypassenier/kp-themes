@@ -196,3 +196,15 @@
         gap: var(--kp-keys-caps-gap, 0.125rem);
     }
 
+    /* A chord, keys one after the other [parts-1102]: the caps a little apart, the dictionary's "then" between them in the
+       line's own small muted words, so "O then T" never reads as O and T pressed together. */
+    .kp-keys__caps--chord {
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-keys__then {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-style: italic;
+        color: var(--muted-foreground);
+    }
+

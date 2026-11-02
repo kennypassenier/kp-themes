@@ -224,6 +224,15 @@ export const STATE_COMPONENTS = [
         drive: (m, el, state) => m.setWeekState(el, state, state === 'empty' ? 'Nothing planned' : state === 'error' ? 'Could not read it' : ''),
     },
     {
+        name: 'day timeline',
+        kind: 'timeline',
+        host: '[data-kp-dayline]',
+        module: 'dayline.js',
+        wire: "setDaylineState(el, 'loading' | 'empty' | 'error', title, { text }); setDaylineItems(el, []) is empty too",
+        states: ['loading', 'empty', 'error'],
+        drive: (m, el, state) => m.setDaylineState(el, state, state === 'empty' ? 'Nothing planned' : state === 'error' ? 'Could not read it' : ''),
+    },
+    {
         name: 'uptime strip',
         kind: 'strip',
         host: '[data-kp-uptime]',

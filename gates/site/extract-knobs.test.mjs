@@ -229,7 +229,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // through var(): 1169 + 6 = 1175.
     // Re-pinned 2026-11-02 [habits-1101 theme-sweep]: this round's --kp-heat-from, --kp-heat-to, --kp-tabbar-tight-tracking and --kp-tabbar-small-size: 1175 + 4 = 1179.
     // Re-pinned 2026-11-01 [uxdialogs1101]: the dialog options and the drawer beside read --kp-dialog-scrim, --kp-drawer-narrow, -wide, -room, -shadow and -z: 1179 + 6 = 1185.
-    assert.equal(result.expected, 1185, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-11-02 [parts-1102]: the day timeline (--kp-dayline-row, -hour, -per-hour, -height, -rows, -gutter, -now, -tone,
+    // -handle, -lane, -lanes), the swipe row (--kp-swipe-plate, -ink, -x), the settled row (--kp-settled-height, -fade) and the swatch
+    // picker (--kp-swatch-size, --kp-swatch, --kp-swatches-gap, -columns): 1185 + 20 = 1205.
+    assert.equal(result.expected, 1205, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -336,7 +339,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-01 [uxtouch1101]: the board's switcher, the secret's clock (two) and the touch hit areas (three) are read through var(): 1159 + 6 = 1165.
     // Re-pinned 2026-11-02 [habits-1101 theme-sweep]: this round's four are read through var(): 1165 + 4 = 1169.
     // Re-pinned 2026-11-01 [uxdialogs1101]: the dialog options' and the beside drawer's six are read through var(): 1169 + 6 = 1175.
-    assert.equal(result.readCount, 1175);
+    // Re-pinned 2026-11-02 [parts-1102]: the five parts' twenty are read through var(): 1175 + 20 = 1195.
+    assert.equal(result.readCount, 1195);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

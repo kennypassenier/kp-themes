@@ -480,6 +480,25 @@
             },
             "fingerprint": "ce0153ffcb13c539",
             "update": null
+        },
+        "research/parts-habits-1102/demo.html": {
+            "facts": {
+                "id": "parts-habits-1102",
+                "themes": "formal",
+                "ask": null,
+                "askText": "The five parts you approved for Kenny’s Habits todo app, built: Today’s timeline as one day from top to bottom, a row a finger swipes for Done or Tomorrow, a key line that can say “O then T”, a row that stays where it was once its task left, and a colour picker of twelve swatches. Every one is opt-in: without it everything is exactly as you approved it. Formal only, on the app’s own shapes and words (the titles, times, projects and events are mock). 5 sections, 5 pairs.",
+                "sections": [
+                    { "item": "dayline", "themes": null, "topic": "dayline", "mode": null },
+                    { "item": "swipe-row", "themes": null, "topic": "swipe", "mode": null },
+                    { "item": "chord-keys", "themes": null, "topic": "keys", "mode": null },
+                    { "item": "settled-row", "themes": null, "topic": "settled", "mode": null },
+                    { "item": "swatch-picker", "themes": null, "topic": "swatches", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"parts-habits-1102-f2341460-0182-4af6-8161-1eabf5de1613\",\"received\":[]}\n        "
+            },
+            "fingerprint": "cf75c04c6c345a83",
+            "update": null
         }
     },
     "decided": {

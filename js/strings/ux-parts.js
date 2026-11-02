@@ -1,5 +1,6 @@
 // The words of the parts the app review of 2026-11-01 asked for [ux-1101]: the folded chip menu, the three-way chip's
-// visible words, the popover form, the date navigation and the row deleted with Undo.
+// visible words, the popover form, the date navigation and the row deleted with Undo; and the five parts the Habits todo app
+// asked for on 2026-11-01 [parts-1102]: the day timeline, the swipe row, chord keys, the settled row and the swatch picker.
 
 /**
  * @typedef {object} UxPartsStrings
@@ -26,6 +27,29 @@
  * @property {(name: string) => string} rowDeleted  The Undo toast's line after a row was deleted, "Ibuprofen 400 deleted" [ux-1101]
  * @property {string} rowDeletedNameless  The same line for a row with no name [ux-1101]
  * @property {(name: string) => string} rowRestored  The toast's line after Undo, "Ibuprofen 400 is back" [ux-1101]
+ * @property {string} keysThen  The word between the caps of a chord in a line of shortcuts, "O then T" (js/keys.js) [parts-1102]
+ * @property {string} daylineLabel  The name of a day timeline when the page gives none (js/dayline.js) [parts-1102]
+ * @property {string} daylineAllDay  The name over the all-day strip above the hours [parts-1102]
+ * @property {string} daylineAllDayNone  What the all-day strip says while it holds nothing [parts-1102]
+ * @property {(time: string) => string} daylineNow  The now line's label, "Now 10:42" [parts-1102]
+ * @property {(label: string) => string} daylineHandle  The name of an item's move handle, "Move Morning run" [parts-1102]
+ * @property {string} daylineHandleHint  The handle's title: how it moves [parts-1102]
+ * @property {(label: string, time: string) => string} daylineMoved  What is said after a step, "Morning run moved to 09:15" [parts-1102]
+ * @property {(label: string, time: string) => string} daylineKept  What is said when a move is put back, "Morning run stays at 09:00" [parts-1102]
+ * @property {string} daylineFixed  Said after a read-only item's time: it cannot be moved [parts-1102]
+ * @property {string} daylineDone  Said after a done item's time [parts-1102]
+ * @property {(time: string) => string} daylineDropAt  The marker while an item from a list is held over the hours, "Starts 14:30" [parts-1102]
+ * @property {string} daylineLoading  The words on a day timeline's loading card [parts-1102]
+ * @property {string} daylineEmpty  The heading over a day with no item, when the page gives none [parts-1102]
+ * @property {string} daylineEmptyText  The sentence under it [parts-1102]
+ * @property {string} daylineFailed  The heading over a day that could not be read [parts-1102]
+ * @property {string} daylineRetry  Its Try again button [parts-1102]
+ * @property {(name: string, word: string) => string} settledSaid  What is said when a row settles, "Buy milk: Deleted" (js/settled.js) [parts-1102]
+ * @property {string} settledNameless  The name of a settled row that has none [parts-1102]
+ * @property {(name: string, action: string) => string} swipeSaid  What is said after a swipe ran its action, "Buy milk: Done" (js/swipe.js) [parts-1102]
+ * @property {string} swatchesLabel  The name of a swatch picker when the page gives none (js/swatches.js) [parts-1102]
+ * @property {(label: string) => string} swatchesChosen  The line under the swatches naming the current one, "Teal" [parts-1102]
+ * @property {string} swatchesNone  That line while no swatch is current [parts-1102]
  */
 
 /** @type {UxPartsStrings} */
@@ -53,4 +77,27 @@ export const UX_PARTS_STRINGS = {
     rowDeleted: (name) => `${name} deleted`,
     rowDeletedNameless: 'Row deleted',
     rowRestored: (name) => `${name} is back`,
+    keysThen: 'then',
+    daylineLabel: 'Day timeline',
+    daylineAllDay: 'All day',
+    daylineAllDayNone: 'Nothing all day',
+    daylineNow: (time) => `Now ${time}`,
+    daylineHandle: (label) => `Move ${label}`,
+    daylineHandleHint: 'Drag up or down, or press ↑ and ↓ (Shift: an hour); Escape puts it back',
+    daylineMoved: (label, time) => `${label} moved to ${time}`,
+    daylineKept: (label, time) => `${label} stays at ${time}`,
+    daylineFixed: 'fixed',
+    daylineDone: 'done',
+    daylineDropAt: (time) => `Starts ${time}`,
+    daylineLoading: 'Reading the day…',
+    daylineEmpty: 'Nothing has a time yet',
+    daylineEmptyText: 'Items with a start time stand here, as long as they take.',
+    daylineFailed: 'The day could not be read',
+    daylineRetry: 'Try again',
+    settledSaid: (name, word) => `${name}: ${word}`,
+    settledNameless: 'Item',
+    swipeSaid: (name, action) => `${name}: ${action}`,
+    swatchesLabel: 'Colour',
+    swatchesChosen: (label) => label,
+    swatchesNone: 'No colour',
 };

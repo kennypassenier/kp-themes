@@ -1,0 +1,102 @@
+/* @part: dayline: The all-day strip, the drop marker and the plate of a day timeline */
+    /* The all-day strip: its name in the gutter's width, then the items as plates that wrap onto rows; a read-only plate dashed.
+     * It takes no room while the page gives none. */
+    .kp-dayline__allday {
+        display: grid;
+        grid-template-columns: var(--kp-dayline-gutter, 4.5rem) minmax(0, 1fr);
+        align-items: start;
+        min-inline-size: 0;
+    }
+
+    .kp-dayline__allday[hidden] {
+        display: none;
+    }
+
+    .kp-dayline__allday-name {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        text-align: end;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-dayline__allday-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        min-inline-size: 0;
+    }
+
+    .kp-dayline__allday-item {
+        --kp-dayline-tone: var(--primary);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-inline-start: 3px solid var(--kp-dayline-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dayline__allday-item[data-kp-tone='cat'] {
+        --kp-dayline-tone: var(--kp-cat, var(--primary));
+    }
+
+    .kp-dayline__allday-item[data-kp-tone='muted'],
+    .kp-dayline__allday-item[data-kp-readonly] {
+        --kp-dayline-tone: var(--muted-foreground);
+        border-style: dashed;
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-dayline__allday-none {
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    /* Where an item held over the hours would start: a dashed band on its row with the time. */
+    .kp-dayline__drop {
+        z-index: 2;
+        grid-column: 2;
+        align-self: start;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border: 1px dashed var(--ring);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--accent);
+        color: var(--accent-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        pointer-events: none;
+    }
+
+    .kp-dayline__drop[hidden] {
+        display: none;
+    }
+
+    /* The package's plate over the whole box: an empty day lets presses and drops through to the hours, a failed one does not. */
+    .kp-dayline__plate {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        padding: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-dayline__plate[hidden] {
+        display: none;
+    }
+
+    .kp-dayline__plate[data-kp-state='empty'] {
+        pointer-events: none;
+    }
+
+    .kp-dayline__plate > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+        margin: 0;
+    }
