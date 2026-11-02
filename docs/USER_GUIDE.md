@@ -480,6 +480,28 @@ together than 44 px (a date picker's days, heat cells, a column of radios)
 keep the room their layout has. `--kp-touch-hit-paint` and
 `--kp-touch-hit-outline` draw the areas, for checking a layout by eye.
 
+#### Known limit: dense parts stay under 44 px [touchdense-1102]
+
+Kenny decided on 2026-11-02 ("Zo laten") that parts whose targets sit closer than 44 px apart keep their layout on a
+touch screen: a larger hit area would land in the neighbour's, and growing them would change the approved look. Measured
+at 390 px with a touch pointer on the 161 `site/components` pages, 1096 targets stay under 44 px. The largest groups:
+
+| Part | Targets | Spacing |
+| --- | ---: | --- |
+| Date picker days | 129 | 34 px apart |
+| Heat grid cells | 132 | dense; a tap on the row opens its days instead |
+| Combobox options | 47 | 36 px apart |
+| Side navigation links | 47 | stacked rows |
+| Navigation bar links | 43 | in a row |
+| Menu items | 29 | stacked rows |
+| Weekday chips | 25 | 40 px apart |
+| Radios in a column | 10 | 21 px apart |
+| Switches stacked in one wrapper | 9 | 30 to 36 px apart |
+
+Also left as they are: the one-line growing textarea (25 px high; a textarea carries no pseudo-element) and the narrow
+calendar's day cells (their hit area already reaches 44 px wide through `touch-hit-room.css`). An app that needs more room
+gives the rows its own spacing.
+
 ## Overlays [TH35]
 
 ```jsx
