@@ -23,11 +23,13 @@ export declare function demote(tooltip: HTMLElement): void;
 export declare const onTopLayer: (tooltip: HTMLElement) => boolean;
 /**
  * Put a promoted tooltip on the top layer (after its `hidden` was cleared). A tooltip that cannot be shown there (it left
- * the document between the timer and now, or the browser refuses) is said in the console and drawn in the anchor's layer
- * instead, so the reason is never lost.
+ * the document between the timer and now, or the browser refuses) is said in the console and hidden again: it stays a
+ * promoted popover, so the next hover tries the top layer once more, and it can never stay on screen drawn in the anchor's
+ * layer with the control believing it is closed [ovfix-1102 #1].
  *
  * @param {HTMLElement} tooltip
+ * @returns {boolean} whether the tooltip is on the top layer now (a tooltip that was not promoted is not, and is left as it is)
  */
-export declare function showLayer(tooltip: HTMLElement): void;
+export declare function showLayer(tooltip: HTMLElement): boolean;
 /** Take a promoted tooltip off the top layer (it stays a popover, closed). @param {HTMLElement} tooltip */
 export declare function hideLayer(tooltip: HTMLElement): void;

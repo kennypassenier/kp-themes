@@ -4783,13 +4783,13 @@ var init_side = __esm({
 });
 
 // js/top-layer/raise.js
-function raiseOverlay(element, place5) {
+function raiseOverlay(element, place5, { anchor } = {}) {
   if (typeof element.showPopover !== "function" || !element.isConnected) {
     place5(element);
     return () => {
     };
   }
-  const raise = new OverlayRaise(element, { place: place5 });
+  const raise = new OverlayRaise(element, { place: place5, anchor });
   try {
     raise.connect();
   } catch (error) {
@@ -4829,11 +4829,13 @@ var init_raise = __esm({
     OverlayRaise = class extends Controller {
       /**
        * @param {HTMLElement} host the overlay, already visible (not `hidden`)
-       * @param {{ place: (element: HTMLElement) => void }} options place puts it in window coordinates
+       * @param {{ place: (element: HTMLElement) => void, anchor?: Element }} options place puts it in window coordinates;
+       *   anchor is the control the overlay hangs on: the overlay is lowered by itself when that control leaves the document
        */
       constructor(host, options) {
         super(host, options);
         this.place = options.place;
+        this.anchor = options.anchor ?? null;
       }
       connect() {
         const element = this.host;
@@ -4850,10 +4852,12 @@ var init_raise = __esm({
         this.listen(window, "scroll", follow5, { capture: true, passive: true });
         this.listen(window, "resize", follow5);
         if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(follow5)).observe(element);
+        if (this.anchor) this.listen(element, "toggle", follow5);
       }
       follow() {
         if (this.destroyed) return;
         const element = this.host;
+        if (this.anchor && !this.anchor.isConnected) return this.destroy();
         if (element.isConnected && !element.hidden && !element.matches(":popover-open")) element.showPopover();
         this.place(element);
       }
@@ -7768,7 +7772,10 @@ function arriveMaxOf(el16, fallback2) {
 }
 function arriveBudget(fallback2) {
   const left = /* @__PURE__ */ new Map();
+  const counted2 = /* @__PURE__ */ new WeakSet();
   return (el16) => {
+    if (!el16.isConnected || counted2.has(el16)) return false;
+    counted2.add(el16);
     const region = el16.closest(`[${ARRIVE_MAX_ATTRIBUTE}]`);
     const rest = left.get(region) ?? arriveMaxOf(el16, fallback2);
     left.set(region, rest - 1);
@@ -8785,13 +8792,15 @@ function demote(tooltip) {
   tooltip.removeAttribute(TOOLTIP_LAYER_ATTR);
 }
 function showLayer(tooltip) {
-  if (!tooltip.hasAttribute(TOOLTIP_LAYER_ATTR) || tooltip.matches(":popover-open")) return;
+  if (!tooltip.hasAttribute(TOOLTIP_LAYER_ATTR)) return false;
+  if (tooltip.matches(":popover-open")) return true;
   try {
     tooltip.showPopover();
+    return true;
   } catch (error) {
-    console.warn("kp-themes tooltip: could not put the tooltip on the top layer; it is drawn in its anchor instead.", tooltip, error);
-    tooltip.removeAttribute("popover");
-    tooltip.removeAttribute(TOOLTIP_LAYER_ATTR);
+    console.warn("kp-themes tooltip: could not put the tooltip on the top layer; it stays hidden and the next hover tries again.", tooltip, error);
+    tooltip.hidden = true;
+    return false;
   }
 }
 function hideLayer(tooltip) {
@@ -8919,7 +8928,7 @@ var init_tooltips = __esm({
         } else if (this.going || this.shown() === open4) return;
         else if (open4) {
           tooltip.hidden = false;
-          showLayer(tooltip);
+          if (this.promoted && !showLayer(tooltip)) return;
         } else this.leave();
         this.host.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open: open4, tooltip } }));
       }
@@ -17950,7 +17959,7 @@ function raiseMenu(s2, view) {
     menu.style.setProperty("right", "auto");
     menu.style.setProperty("bottom", "auto");
     menu.style.setProperty("width", `${box.width}px`);
-  });
+  }, { anchor: s2.button });
 }
 function lowerMenu(s2) {
   s2.lower?.();
@@ -43130,26 +43139,39 @@ function followStart(follower) {
   if (raw) warnOnce(`start:${raw}`, `${WHEEL_FOLLOWS_START}="${raw}" is not one of ${WHEEL_FOLLOW_STARTS.join(", ")}; "press" is used.`);
   return "press";
 }
-function leaderOf(follower) {
+function leaderOf(follower, quiet = false) {
   const id = follower.getAttribute(WHEEL_FOLLOWS)?.trim();
   if (!id) return null;
   const leader = follower.ownerDocument.getElementById(id);
   if (leader instanceof HTMLElement && leader !== follower && leader.matches("[data-kp-wheel]")) return leader;
-  warnOnce(`leader:${id}`, `${WHEEL_FOLLOWS}="${id}" names no other wheel on this page; the follower stays locked until it does.`);
+  if (!quiet) warnOnce(`leader:${id}`, `${WHEEL_FOLLOWS}="${id}" names no other wheel on this page; the follower stays locked until it does.`);
   return null;
 }
 function mustWait(follower) {
   if (!follower.getAttribute(WHEEL_FOLLOWS)?.trim() || followStart(follower) === "together") return false;
   const leader = leaderOf(follower);
+  if (!leader && orphans.get(follower) === follower.getAttribute(WHEEL_FOLLOWS)?.trim()) return false;
   return !leader || stateOf(leader).spinning || !leader.hasAttribute("data-kp-wheel-won");
 }
 function clearOutcome(follower) {
   if (stateOf(follower).spinning) {
-    follower.addEventListener(WHEEL_RESULT_EVENT, () => follower.hasAttribute(WHEEL_LOCKED) && clearOutcome(follower), { once: true });
+    if (pendingClear.has(follower)) return;
+    const clear2 = () => {
+      cancelClear(follower);
+      if (follower.hasAttribute(WHEEL_LOCKED)) clearOutcome(follower);
+    };
+    pendingClear.set(follower, clear2);
+    follower.addEventListener(WHEEL_RESULT_EVENT, clear2);
     return;
   }
   follower.removeAttribute("data-kp-wheel-won");
   follower.removeAttribute(WHEEL_LEADER_WON);
+}
+function cancelClear(follower) {
+  const clear2 = pendingClear.get(follower);
+  if (!clear2) return;
+  follower.removeEventListener(WHEEL_RESULT_EVENT, clear2);
+  pendingClear.delete(follower);
 }
 function describeLock(root, locked, controls) {
   const outcome = part(root, "outcome");
@@ -43164,29 +43186,42 @@ function describeLock(root, locked, controls) {
 function syncFollower(follower) {
   const lock = mustWait(follower);
   const was = follower.hasAttribute(WHEEL_LOCKED);
-  if (lock && !was) clearOutcome(follower);
+  if (lock && !was) {
+    pendingStart.delete(follower);
+    clearOutcome(follower);
+  }
+  if (!lock) cancelClear(follower);
+  if (!lock && !leaderOf(follower, true) && orphans.has(follower)) follower.removeAttribute(WHEEL_LEADER_WON);
   follower.toggleAttribute(WHEEL_LOCKED, lock);
   if (!follower.getAttribute(WHEEL_FOLLOWS)?.trim() || followStart(follower) === "together") follower.removeAttribute(WHEEL_LEADER_WON);
   paint5(follower);
   describeLock(follower, lock, [part(follower, "spin"), part(follower, "stage")]);
 }
-async function onLeaderResult(follower, leader, detail) {
+async function onLeaderResult(follower, leader, detail, start) {
   if (followStart(follower) === "together") return;
   follower.setAttribute(WHEEL_LEADER_WON, detail.item.id);
   syncFollower(follower);
   const waits = [];
   const waitUntil = (promise) => void waits.push(Promise.resolve(promise));
+  const ticket = {};
+  pendingStart.set(follower, ticket);
   follower.dispatchEvent(new CustomEvent(WHEEL_LEADER_RESULT_EVENT, { bubbles: true, detail: { leader, ...detail, waitUntil } }));
-  if (followStart(follower) !== "auto") return;
+  if (followStart(follower) !== "auto") {
+    pendingStart.delete(follower);
+    return;
+  }
   try {
     await Promise.all(waits);
   } catch (error) {
     console.error("kp-wheel: the follower did not start by itself, a waitUntil() promise of kp-wheel-leader-result failed; it waits for a press.", error);
+    if (pendingStart.get(follower) === ticket) pendingStart.delete(follower);
     return;
   }
-  if (follower.isConnected && follower.getAttribute(WHEEL_LEADER_WON) === detail.item.id) void spinWheel(follower);
+  if (pendingStart.get(follower) !== ticket) return;
+  pendingStart.delete(follower);
+  if (follower.isConnected && follower.getAttribute(WHEEL_LEADER_WON) === detail.item.id) void start(follower);
 }
-function followLeader(follower) {
+function followLeader(follower, { start = spinWheel } = {}) {
   const doc = follower.ownerDocument;
   const isLeader = (target) => target instanceof HTMLElement && target !== follower && target.id !== "" && target.id === follower.getAttribute(WHEEL_FOLLOWS)?.trim();
   const onSpin = (event) => {
@@ -43196,7 +43231,7 @@ function followLeader(follower) {
       /** @type {CustomEvent<{ duration?: number }>} */
       event.detail ?? {}
     );
-    void spinWheel(follower, { duration: duration2 });
+    void start(follower, { duration: duration2 });
   };
   const onResult = (event) => {
     if (!isLeader(event.target) || !follower.isConnected) return;
@@ -43205,17 +43240,31 @@ function followLeader(follower) {
       /** @type {HTMLElement} */
       event.target,
       /** @type {CustomEvent} */
-      event.detail
+      event.detail,
+      start
     );
   };
   doc.addEventListener(WHEEL_SPIN_EVENT, onSpin);
   doc.addEventListener(WHEEL_RESULT_EVENT, onResult);
+  let known4 = leaderOf(follower, true);
+  const leaderMoved = () => {
+    const now = leaderOf(follower, true);
+    if (now === known4) return false;
+    if (known4 && !known4.isConnected && !now) orphans.set(follower, known4.id);
+    else orphans.delete(follower);
+    known4 = now;
+    return true;
+  };
   const watch2 = new MutationObserver((records) => {
-    if (records.some((r) => r.target === follower || isLeader(r.target))) syncFollower(follower);
+    const moved = leaderMoved();
+    if (moved || records.some((r) => r.target === follower || isLeader(r.target))) syncFollower(follower);
   });
-  watch2.observe(doc.documentElement, { subtree: true, attributes: true, attributeFilter: ["data-kp-wheel-won", WHEEL_FOLLOWS, WHEEL_FOLLOWS_START, WHEEL_FOLLOWS_REASON] });
+  watch2.observe(doc.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ["id", "data-kp-wheel-won", WHEEL_FOLLOWS, WHEEL_FOLLOWS_START, WHEEL_FOLLOWS_REASON] });
   syncFollower(follower);
   return () => {
+    cancelClear(follower);
+    pendingStart.delete(follower);
+    orphans.delete(follower);
     doc.removeEventListener(WHEEL_SPIN_EVENT, onSpin);
     doc.removeEventListener(WHEEL_RESULT_EVENT, onResult);
     watch2.disconnect();
@@ -43223,7 +43272,7 @@ function followLeader(follower) {
     describeLock(follower, false, [part(follower, "spin"), part(follower, "stage")]);
   };
 }
-var WHEEL_FOLLOWS, WHEEL_FOLLOWS_START, WHEEL_LEADER_WON, WHEEL_LEADER_RESULT_EVENT, WHEEL_FOLLOW_STARTS, warned3, warnOnce, outcomeIds;
+var WHEEL_FOLLOWS, WHEEL_FOLLOWS_START, WHEEL_LEADER_WON, WHEEL_LEADER_RESULT_EVENT, WHEEL_FOLLOW_STARTS, warned3, warnOnce, orphans, pendingClear, pendingStart, outcomeIds;
 var init_follow = __esm({
   "js/wheel/follow.js"() {
     "use strict";
@@ -43242,6 +43291,9 @@ var init_follow = __esm({
       warned3.add(key);
       console.warn(`kp-wheel: ${text}`);
     };
+    orphans = /* @__PURE__ */ new WeakMap();
+    pendingClear = /* @__PURE__ */ new WeakMap();
+    pendingStart = /* @__PURE__ */ new WeakMap();
     outcomeIds = 0;
   }
 });

@@ -1,3 +1,4 @@
+import { spinWheel } from './spin.js';
 import { WHEEL_FOLLOWS_REASON, WHEEL_LOCKED } from './state.js';
 export { WHEEL_FOLLOWS_REASON, WHEEL_LOCKED };
 /** The attribute that names the leader. */
@@ -18,6 +19,9 @@ export declare function syncFollower(follower: HTMLElement): void;
 /**
  * Follow the leader the follower names: the leader's spin, result and new choices, and the follower's own attributes.
  * @param {HTMLElement} follower
+ * @param {{ start?: typeof spinWheel }} [options] `start` is what spins the follower (spinWheel; a test counts the starts with its own)
  * @returns {() => void} stop following
  */
-export declare function followLeader(follower: HTMLElement): () => void;
+export declare function followLeader(follower: HTMLElement, { start }?: {
+    start?: typeof spinWheel;
+}): () => void;

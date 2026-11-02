@@ -2571,7 +2571,11 @@ gets its choice in `data-kp-wheel-leader-won` and in `kp-wheel-leader-result`: g
 | `data-kp-wheel-follows-reason` | the dictionary's `wheelLocked` | The line a locked follower shows.                                                                                                                                                                                 |
 
 A new spin of the first wheel, or new choices for it, locks the follower again and clears its answer. Every attribute is
-live. To decide everything yourself, leave `data-kp-wheel-follows` off and drive both wheels: listen for the first wheel's
+live, and so is the first wheel: one added to the page after the follower (or already standing on an outcome when it is
+found) is picked up. If the first wheel is **removed** from the page, the follower is unlocked (nothing is left to wait
+for), its `data-kp-wheel-leader-won` is cleared and an `auto` follower does not start; a wheel added later with that id
+becomes the first wheel again and locks the follower from then on. A follower that names an id no wheel ever had stays
+locked. An `auto` follower starts once per result, however often the first wheel lands on the same choice meanwhile. To decide everything yourself, leave `data-kp-wheel-follows` off and drive both wheels: listen for the first wheel's
 `kp-wheel-result` and call `spinWheel(second)` when your app is ready; `spinWheel` resolves with the outcome, or null when the
 wheel cannot spin (a locked follower included).
 

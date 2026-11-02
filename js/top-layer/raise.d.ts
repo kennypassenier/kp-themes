@@ -3,9 +3,12 @@
  *
  * @param {HTMLElement} element the overlay, already visible (not `hidden`)
  * @param {(element: HTMLElement) => void} place puts it in window coordinates; called now and on every scroll and resize
+ * @param {{ anchor?: Element }} [options] `anchor`: the control it hangs on; when that leaves the document the overlay is lowered by itself
  * @returns {() => void} lower — takes it out of the top layer, stops following, and removes what raising wrote
  */
-export declare function raiseOverlay(element: HTMLElement, place: (element: HTMLElement) => void): () => void;
+export declare function raiseOverlay(element: HTMLElement, place: (element: HTMLElement) => void, { anchor }?: {
+    anchor?: Element;
+}): () => void;
 /**
  * Raise an overlay exactly where it was drawn: the spot and the width it
  * had in its container a moment ago, held against `anchor` while it is

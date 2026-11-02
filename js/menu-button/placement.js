@@ -116,7 +116,7 @@ export function raiseMenu(s, view) {
         menu.style.setProperty('right', 'auto');
         menu.style.setProperty('bottom', 'auto');
         menu.style.setProperty('width', `${box.width}px`);
-    });
+    }, { anchor: s.button });
 }
 
 /** @param {MenuState} s */
