@@ -5,7 +5,7 @@
 // made in one shows in all of them.
 //
 // Every verdict is per block, per theme and per browser engine (engine.js,
-// detected, never asked), and counts from the register (verdicts.json) as
+// detected, never asked), and counts from the register (review-data.json) as
 // well as from this browser's storage (judgements.js).
 //
 // Keys: a component block is `slug--block` for its verdicts and page
@@ -46,7 +46,7 @@ import { mountReviewDialog } from './review-dialog.js';
 
 /* ------------------------------------------------------------ review notes */
 
-// While a block is rejected in a theme, catalogue/review-notes.json can say
+// While a block is rejected in a theme, the review notes (review-data.json) can say
 // why and what changed to answer it (Kenny, 2026-09-14: a temporary text that
 // goes once he approves, so the blocks' own explanations do not fill up with
 // addendums). The note sits in the judging panel, outside the component under
@@ -58,7 +58,7 @@ import { mountReviewDialog } from './review-dialog.js';
 
 /** @type {Record<string, Record<string, { rejected: string, change: string, commit?: string, given: string }>>} */
 let reviewNotes = {};
-/** Resolves once catalogue/review-notes.json is read (or found missing); never rejects. */
+/** Resolves once the review notes are read (or found missing); never rejects. */
 const notesReady = readReviewNotes().then((data) => {
     if (data) reviewNotes = data;
 });

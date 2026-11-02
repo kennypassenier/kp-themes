@@ -107,6 +107,7 @@ import { FRAME_KEYS, mountKeys } from './rv-keys.js'; // [kit-keys] key legend, 
 import { mountProgress } from './rv-progress.js'; // [kit-strip-1018] remaining line + resume
 import * as flow from './flow.js'; // kit-flow hook: what follows the last open step, and the reason chips
 import { attachReasons } from './reasons.js'; // kit-flow hook
+import { demoFacts } from '../../catalogue/review-data.js'; // [db-1102] the demo's decision from the review database's export
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -547,17 +548,17 @@ function embed(aspect) {
 
     /**
      * The decided picks shown, whatever the demo itself ticks by default: the
-     * demo's `decided.json` (one per character demo, the preview's key per
-     * theme and aspect). A key that is one of the aspect's options is played
+     * demo's decision (catalogue/review-demos.json, one per character demo, the
+     * preview's key per theme and aspect). A key that is one of the aspect's options is played
      * the way the dialog plays a tick, a `review:choice` on the demo's
      * section, so its words follow; any other key (a later round's own key)
      * is written on the preview's `data-<prefix>-<aspect>` itself.
      */
     const applyDecided = async () => {
         try {
-            const response = await fetch(new URL('decided.json', location.href));
-            if (!response.ok) return;
-            const picks = (await response.json()).picks?.[root.getAttribute('data-theme') || 'formal'] || {};
+            const { decided } = await demoFacts(location.href);
+            if (!decided) return;
+            const picks = decided.picks?.[root.getAttribute('data-theme') || 'formal'] || {};
             const section = /** @type {HTMLElement | null} */ (document.querySelector('[data-review-item]'));
             /** @type {{ id: string, options: { value: string }[] }[]} */
             const choices = JSON.parse(section?.getAttribute('data-review-choices') || '[]');
@@ -675,14 +676,14 @@ const lookFor = (section, theme) => section.querySelector(`[data-review-look] [d
 // picks one option or "None of these" with a note; the theme's verdict
 // follows from all its aspects (approved, or not approved with the notes).
 /**
- * The demo's update, from `update.json` beside it (progress.js, loadUpdate):
+ * The demo's update, from the review database's export (progress.js, loadUpdate):
  * the picks Kenny approved, which the dialog takes as answered and no longer
  * walks, and the questions the update reopens, each with his comment and the
  * session's reply (Kenny, 2026-10-07: "bij een update enkel zien wat er nog
  * beoordeeld moet worden").
  */
-const UPDATE = await loadUpdate(new URL('update.json', location.href));
-/** A question settled by an earlier verdict: picked in update.json and not asked again. */
+const UPDATE = await loadUpdate(location.href);
+/** A question settled by an earlier verdict: picked in the demo's update and not asked again. */
 const lockedFor = (theme, id) => Boolean(UPDATE?.picks?.[theme]?.[id]) && !UPDATE?.questions?.[theme]?.[id];
 const ASPECT_MODE = items.length > 0 && items.every((item) => item.section.dataset.reviewMode === 'aspects');
 const plainFixed = (theme, choice) => (typeof choice.fixed === 'object' && choice.fixed ? Boolean(choice.fixed[theme]) : Boolean(choice.fixed));

@@ -14,6 +14,7 @@ import { mountJudging } from './judging.js';
 import { PAGES } from './pages.js';
 import { fingerprintOf, loadUpdate, progressOf, shapeFromFacts, shapeOf, storedFor } from '../research/_review/progress.js';
 import { indexedDecided, indexedDemo } from './agenda-index.js';
+import { demoFacts } from './review-data.js';
 
 const ROOT = new URL('../', import.meta.url);
 
@@ -82,7 +83,7 @@ export async function readDemo(href) {
     const fetchUrl = new URL(url);
     fetchUrl.searchParams.set('_', String(Date.now()));
     // The update note is asked for beside the page, not after it: one round trip less before the row is known.
-    const update = loadUpdate(new URL('update.json', url));
+    const update = loadUpdate(url);
     const response = await fetch(fetchUrl.href, { cache: 'no-cache' });
     if (!response.ok) throw new Error(String(response.status));
     const html = await response.text();
@@ -92,19 +93,13 @@ export async function readDemo(href) {
     return shape;
 }
 
-/** An archived demo's decision, from the decided.json beside it; '' without one. */
+/** An archived demo's decision, from the review database's export (review-demos.json); '' without one. */
 export async function readDecided(href) {
     const known = await indexedDecided(href);
     if (known !== undefined) return known;
-    try {
-        const url = new URL('decided.json', new URL(href, ROOT));
-        url.searchParams.set('_', String(Date.now()));
-        const response = await fetch(url.href, { cache: 'no-cache' });
-        if (response.ok) return String((await response.json())?.decided || 'Decided; see its decided.json.');
-    } catch {
-        // No decision file.
-    }
-    return '';
+    const { decided } = await demoFacts(new URL(href, ROOT));
+    if (!decided) return '';
+    return String(decided.decided || 'Decided; see its record in catalogue/review-demos.json.');
 }
 
 /**

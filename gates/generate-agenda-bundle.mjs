@@ -14,7 +14,7 @@
 //                  sit relative to the catalogue's own sheets decides nothing.
 //
 // import.meta.url is rewritten per source file to the address of that source file, so every
-// `new URL('./verdicts.json', import.meta.url)` still reads the file beside the module it is written in, not one beside
+// `new URL('./review-data.json', import.meta.url)` still reads the file beside the module it is written in, not one beside
 // the bundle.
 //
 //   node gates/generate-agenda-bundle.mjs           write catalogue/agenda-bundle/

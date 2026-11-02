@@ -14,6 +14,7 @@
 // should speak, theme by theme.
 import { THEMES } from '../../js/theme-registry.js';
 import { SIGNATURES } from './signatures.js';
+import { demoFacts } from '../../catalogue/review-data.js';
 
 /** The character demos, in the order they were built, with the name a card shows. */
 const COMPONENTS = [
@@ -147,17 +148,10 @@ const membersOf = (family) => [
 /** Whether a theme's register draws this option at all (a signature may be limited to some). */
 const drawnIn = (/** @type {Member} */ member, /** @type {string} */ t) => !member.signature?.themes || member.signature.themes.includes(t);
 
-/** Each demo's decided picks, key per aspect per theme (research/character-<c>/decided.json). */
+/** Each demo's decided picks, key per aspect per theme (the review database's export, catalogue/review-demos.json). */
 const decided = Object.fromEntries(
     await Promise.all(
-        COMPONENTS.map(async ({ id }) => {
-            try {
-                const response = await fetch(`../character-${id}/decided.json`);
-                return [id, response.ok ? (await response.json()).picks || {} : {}];
-            } catch {
-                return [id, {}];
-            }
-        }),
+        COMPONENTS.map(async ({ id }) => [id, (await demoFacts(new URL(`../character-${id}/demo.html`, location.href))).decided?.picks || {}]),
     ),
 );
 const keyOf = (/** @type {string} */ component, /** @type {string} */ aspect, /** @type {string} */ t) => decided[component]?.[t]?.[aspect] ?? '';

@@ -4,7 +4,7 @@ import { ENTRY_FIELDS, VERDICTS } from './verdicts-shared.mjs';
 
 /**
  * Everything wrong with a register, one line each.
- * @param {any} register the parsed catalogue/verdicts.json
+ * @param {any} register the verdict register (the review database, gates/db/)
  * @param {{ hashVersion: number, known: Set<string> | Map<string, unknown>, themes: string[], commitExists?: (sha: string) => boolean }} context
  * @returns {string[]}
  */
@@ -89,7 +89,7 @@ export const NOTE_FIELDS = ['change', 'commit', 'given', 'rejected'];
 
 /**
  * Everything wrong with the review notes, one line each.
- * @param {any} notes the parsed catalogue/review-notes.json
+ * @param {any} notes the review notes (the review database, gates/db/)
  * @param {{ known: Set<string> | Map<string, unknown>, themes: string[] }} context
  * @returns {string[]}
  */
@@ -171,7 +171,7 @@ export function approvedEntries(engines) {
  * never judged. It says nothing about whether a block has changed since:
  * that needs a browser and lives in gates/advice-approvals.mjs. This is the
  * half a gate can read, and the half Kenny's rule is about [fix-62].
- * @param {any} register the parsed catalogue/verdicts.json
+ * @param {any} register the verdict register (the review database, gates/db/)
  * @param {Map<string, { component: boolean, theme?: string }>} known
  * @param {string[]} themes
  * @returns {{ key: string, theme: string, state: 'rejected' | 'never judged' }[]}

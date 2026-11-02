@@ -9,6 +9,7 @@
 // (`data-review-round`) reopens its rejected and named pairs. Here that
 // reopening is only read, never written: the demo writes it when it opens.
 import { THEMES } from '../../js/theme-registry.js';
+import { demoFacts } from '../../catalogue/review-data.js';
 
 /** Where review.js keeps a demo's verdicts, notes and picks (localStorage). */
 export const storeKey = (demo) => `kp-demo-review:${demo}`;
@@ -156,7 +157,10 @@ export function storedFor(id) {
 
 /**
  * A demo's update, the one convention a theme session fills in when it
- * republishes a demo after Kenny's verdict: `update.json` beside demo.html,
+ * republishes a demo after Kenny's verdict: its update record in the review
+ * database (data/kp-themes.sqlite, written by
+ * research/_coherence/tools/merge-update.mjs), read here from the generated
+ * catalogue/review-demos.json,
  *
  *     { "update": 1,
  *       "picks": { "<theme>": { "<question>": "<option key>" } },
@@ -164,20 +168,14 @@ export function storedFor(id) {
  *
  * The next update raises the number and lists only what it opens again.
  * Null when the demo has none.
- * @param {string | URL} url
+ * @param {string | URL} page the demo page's address
  * @returns {Promise<DemoUpdate | null>}
  */
-export async function loadUpdate(url) {
-    try {
-        const response = await fetch(url, { cache: 'no-cache' });
-        if (!response.ok) return null;
-        const data = await response.json();
-        const update = Number(data?.update);
-        if (!update) return null;
-        return { update, picks: data.picks || {}, questions: data.questions || {} };
-    } catch {
-        return null;
-    }
+export async function loadUpdate(page) {
+    const data = (await demoFacts(page)).update;
+    const update = Number(data?.update);
+    if (!update) return null;
+    return { update, picks: data?.picks || {}, questions: data?.questions || {} };
 }
 
 /*

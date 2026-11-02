@@ -1,10 +1,13 @@
 // What a reviewer decided about a block, per theme and per browser engine,
 // and what the block looked like at that moment. Two places hold verdicts:
 //
-//   catalogue/verdicts.json  the register, committed: every verdict Kenny
-//                            gave that a prompt brought into the repository.
-//                            It is kept for good (Kenny, 2026-09-13: "dit mag
-//                            nooit veranderen door een change").
+//   the register             every verdict Kenny gave that a prompt brought
+//                            into the repository, in the review database
+//                            (data/kp-themes.sqlite) and read here from its
+//                            generated export, catalogue/review-data.json
+//                            (review-data.js). It is kept for good (Kenny,
+//                            2026-09-13: "dit mag nooit veranderen door een
+//                            change").
 //   browser storage          the scratch pad: what was judged in this browser
 //                            and not yet recorded.
 //
@@ -20,6 +23,7 @@
 import { ENGINE } from './engine.js';
 import { EARLIER_VERSIONS, HASH_VERSION } from './block-hash.js';
 import { newer } from './verdict-age.js';
+import { readExport } from './review-data.js';
 
 export const JUDGEMENTS_KEY = 'kp-catalogue-judgements:v3';
 const LEGACY_V2 = 'kp-catalogue-judgements:v2';
@@ -123,7 +127,7 @@ export function restoreVerdict(key, theme, previous, engine = ENGINE) {
 /** @type {{ checks: Record<string, Record<string, Record<string, { state: string, from: string }>>> }} */
 let pixelChecks = { checks: {} };
 /**
- * Resolves once catalogue/pixel-checks.json is read (or found missing) [scope-138]:
+ * Resolves once the pixel checks (catalogue/review-pixels.json) are read (or found missing) [scope-138]:
  * since version 10 the hash is the markup alone, and what CSS and scripts do
  * to a block is judged by its pixels, `node gates/verdicts.mjs pixels`.
  */
@@ -139,11 +143,8 @@ export const pixelChecksReady = (async () => {
                 return pixelChecks;
             }
         }
-        const response = await fetch(new URL('./pixel-checks.json', import.meta.url), { cache: 'no-cache' });
-        if (response.ok) {
-            const data = await response.json();
-            if (data && typeof data.checks === 'object') pixelChecks = data;
-        }
+        const data = await readExport('pixels');
+        if (data && typeof data.checks === 'object') pixelChecks = /** @type {typeof pixelChecks} */ (data);
     } catch {
         /* no pixel checks yet: the markup decides alone */
     }
@@ -168,16 +169,14 @@ export const pixelsReopened = (
 /** @type {Promise<Record<string, any> | null> | null} */
 let notesRead = null;
 /**
- * catalogue/review-notes.json, fetched once for every module that wants it (judging.js and open-pairs.js both did, and
+ * The review notes (catalogue/review-data.json), fetched once for every module that wants it (judging.js and open-pairs.js both did, and
  * the Agenda loads both): the notes, or null when the file is missing or is not an object. Never rejects.
  * @returns {Promise<Record<string, any> | null>}
  */
 export function readReviewNotes() {
     notesRead ??= (async () => {
         try {
-            const response = await fetch(new URL('./review-notes.json', import.meta.url), { cache: 'no-cache' });
-            if (!response.ok) return null;
-            const data = await response.json();
+            const data = (await readExport('data'))?.notes;
             return data && typeof data === 'object' && !Array.isArray(data) ? data : null;
         } catch {
             return null;
@@ -189,16 +188,15 @@ export function readReviewNotes() {
 /* ------------------------------------------------------------ the register */
 
 let register = { hashVersion: HASH_VERSION, verdicts: {} };
-/** Resolves once catalogue/verdicts.json is read (or found missing); never rejects. */
+/** Resolves once the register (catalogue/review-data.json) is read (or found missing); never rejects. */
 export const registerReady = (async () => {
     try {
-        const response = await fetch(new URL('./verdicts.json', import.meta.url), { cache: 'no-cache' });
-        if (!response.ok) return register;
-        const data = await response.json();
-        if (data && typeof data.verdicts === 'object') register = data;
+        const data = await readExport('data');
+        if (!data) return register;
+        if (typeof data.verdicts === 'object') register = { hashVersion: data.hashVersion, verdicts: data.verdicts };
         if (register.hashVersion !== HASH_VERSION) {
             console.warn(
-                `catalogue/verdicts.json holds hash version ${register.hashVersion}, the pages read ${HASH_VERSION}: run node gates/verdicts.mjs rehash`,
+                `catalogue/review-data.json holds hash version ${register.hashVersion}, the pages read ${HASH_VERSION}: run node gates/verdicts.mjs rehash`,
             );
         }
     } catch {

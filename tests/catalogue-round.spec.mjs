@@ -25,7 +25,7 @@ test.describe.configure({ timeout: 120_000 });
 const ENGINES_IN_REGISTER = new Set(
     Object.values(
         /** @type {Record<string, Record<string, Record<string, unknown>>>} */ (
-            JSON.parse(readFileSync(new URL('../catalogue/verdicts.json', import.meta.url), 'utf8')).verdicts
+            JSON.parse(readFileSync(new URL('../catalogue/review-data.json', import.meta.url), 'utf8')).verdicts
         ),
     ).flatMap((themes) => Object.values(themes).flatMap((engines) => Object.keys(engines))),
 );

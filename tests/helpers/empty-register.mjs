@@ -1,4 +1,4 @@
-// A verdict register of the test's own, in place of catalogue/verdicts.json.
+// A verdict register of the test's own, in place of the review database's export (catalogue/review-data.json).
 //
 // A catalogue page hides a block that is already judged, and the register in
 // the repository fills up as Kenny judges; a test that reads a block must not
@@ -9,7 +9,7 @@ import { HASH_VERSION } from '../../catalogue/block-hash.js';
 
 /**
  * Serve `verdicts` as the register for every page of the context, and
- * `notes` as its review notes (catalogue/review-notes.json): a note brings a
+ * `notes` as its review notes (the same file): a note brings a
  * judged block back to the page, so the committed ones must not decide a
  * test either.
  *
@@ -18,8 +18,7 @@ import { HASH_VERSION } from '../../catalogue/block-hash.js';
  * @param {Record<string, unknown>} [notes] default none
  */
 export async function useRegister(context, verdicts = {}, notes = {}) {
-    await context.route('**/catalogue/verdicts.json', (route) => route.fulfill({ json: { hashVersion: HASH_VERSION, verdicts } }));
-    await context.route('**/catalogue/review-notes.json', (route) => route.fulfill({ json: notes }));
+    await context.route('**/catalogue/review-data.json', (route) => route.fulfill({ json: { hashVersion: HASH_VERSION, verdicts, notes } }));
 }
 
 /**

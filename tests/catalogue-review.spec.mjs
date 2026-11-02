@@ -20,7 +20,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { HASH_VERSION } from '../catalogue/block-hash.js';
-// A register of the test's own in place of catalogue/verdicts.json, so the
+// A register of the test's own in place of catalogue/review-data.json, so the
 // verdicts recorded in the repository do not decide what these tests can press.
 import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
 import { CHECKING, waitForJudging } from './helpers/catalogue.mjs';
@@ -479,7 +479,8 @@ test(
 // switch. The review page hid every component whose blocks were all judged in
 // the register before the first reading, and read those blocks inside a
 // display:none component.
-const REGISTER = JSON.parse(readFileSync(new URL('../catalogue/verdicts.json', import.meta.url), 'utf8'));
+// The register as the pages read it: the review database's generated export.
+const REGISTER = JSON.parse(readFileSync(new URL('../catalogue/review-data.json', import.meta.url), 'utf8'));
 
 /** The register's verdicts for one theme and engine: block key -> verdict. */
 const registerVerdicts = (theme, engine) =>

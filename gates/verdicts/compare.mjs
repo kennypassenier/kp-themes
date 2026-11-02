@@ -127,7 +127,7 @@ export async function compareAgainstBrowser(args) {
     // worktree), which separates "the browser read it differently" from
     // "the block changed since".
     const atRecorded = args.includes('--at-recorded');
-    // --register <file>: another register than catalogue/verdicts.json (a copy to try a change on).
+    // --register <file>: a register kept as a JSON file instead of the database (a copy to try a change on).
     const entries = entriesAt(readRegister(option('--register')), commit);
     const known = await knownBlocks(ROOT);
     /** @type {Map<string, { hash: string }>} */

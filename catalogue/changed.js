@@ -97,7 +97,7 @@ function mountHub() {
     const paintArchived = (entry) => {
         const ask = /** @type {HTMLElement} */ (entry.row.querySelector('[data-cat-hub-ask]'));
         const badge = /** @type {HTMLElement} */ (entry.row.querySelector('[data-cat-hub-state]'));
-        ask.textContent = entry.decided || 'Archived without a decision file: set aside, or decided before decided.json existed.';
+        ask.textContent = entry.decided || 'Archived without a decision: set aside, or decided before decisions were recorded.';
         badge.textContent = entry.decided ? 'Decided' : 'Archived';
         badge.className = entry.decided ? 'kp-badge kp-badge--success' : 'kp-badge';
     };

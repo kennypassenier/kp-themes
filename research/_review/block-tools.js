@@ -21,6 +21,8 @@
 //   visible. The search repeats while the section changes, since a demo may build its parts late.
 // - With neither, the whole bar is `hidden` and takes no space.
 
+import { demoFacts } from '../../catalogue/review-data.js';
+
 /** The package's openers, most specific first. */
 const OPENERS = [
     '[data-review-replay]',
@@ -39,9 +41,9 @@ function previousOf() {
     previousInfo ??= (async () => {
         try {
             const base = new URL('_previous/', location.href);
-            const response = await fetch(new URL('previous.json', base), { cache: 'no-cache' });
-            if (!response.ok) return null;
-            const data = await response.json();
+            // The record of the frozen copy is in the review database's export (catalogue/review-demos.json).
+            const data = (await demoFacts(location.href)).previous;
+            if (!data) return null;
             const topic = location.pathname.replace(/\/[^/]*$/, '').replace(/^.*\//, '');
             return { round: String(data.round || ''), base: new URL(`research/${topic}/${location.pathname.replace(/^.*\//, '')}`, base) };
         } catch {

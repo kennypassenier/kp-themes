@@ -17,12 +17,12 @@ const KEY = 'table--datatable';
 const THEME = 'dark';
 
 async function readState(page, { registerCommit }) {
-    await page.route('**/catalogue/verdicts.json', async (route) => {
+    await page.route('**/catalogue/review-data.json', async (route) => {
         const { HASH_VERSION } = await import('../catalogue/block-hash.js');
         const entry = { verdict: 'approved', hash: 'h1', commit: registerCommit, given: '2026-09-28' };
-        await route.fulfill({ json: { hashVersion: HASH_VERSION, verdicts: { [KEY]: { [THEME]: { firefox: entry, chromium: entry } } } } });
+        await route.fulfill({ json: { hashVersion: HASH_VERSION, verdicts: { [KEY]: { [THEME]: { firefox: entry, chromium: entry } } }, notes: {} } });
     });
-    await page.route('**/catalogue/pixel-checks.json', async (route) => {
+    await page.route('**/catalogue/review-pixels.json', async (route) => {
         const check = { state: 'reopened', from: 'c0ffee' };
         await route.fulfill({
             json: { commit: 'head', checked: '2026-09-29T07:51:00.000Z', checks: { [KEY]: { [THEME]: { firefox: check, chromium: check } } } },

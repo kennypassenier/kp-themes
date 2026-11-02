@@ -431,7 +431,7 @@ function archivedView(/** @type {{ page: import('./pages.js').Page, decided: str
         about:
             decided === undefined
                 ? 'Reading its decision…'
-                : decided || 'Archived without a decision file: set aside, or decided before decided.json existed.',
+                : decided || 'Archived without a decision: set aside, or decided before decisions were recorded.',
         after: [],
         before: [],
         affects: '',

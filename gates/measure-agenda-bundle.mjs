@@ -106,7 +106,7 @@ async function visitOnce(old, scenario) {
     const page = await context.newPage();
     const from = old ? oldServer : server;
     const url = `${from.base}catalogue/agenda.html`;
-    if (scenario.register) await page.route('**/catalogue/verdicts.json', (route) => route.fulfill({ json: { hashVersion: 10, verdicts: {} } }));
+    if (scenario.register) await page.route('**/catalogue/review-data.json', (route) => route.fulfill({ json: { hashVersion: 10, verdicts: {}, notes: {} } }));
     /** @type {[string, number][]} */
     const requests = [];
     page.on('response', async (response) => {

@@ -20,6 +20,7 @@
 import { ASPECTS, STORY, TITLE, THEME, LABEL } from './aspects.js';
 import { decorate as decorateA } from './pairs-a.js';
 import { decorate as decorateB } from './pairs-b.js';
+import { demoFacts } from '../../catalogue/review-data.js';
 
 /**
  * The recommended option's index: the one marked `rec`, else the first; -1
@@ -579,13 +580,12 @@ for (const scene of section.querySelectorAll('.pa-scene[data-pa-loading], .pa-sc
     rekeyed.observe(scene, { attributeFilter: ['data-pa-loading', 'data-pa-spinner'] });
 }
 
-// Update 1 (update.json beside this page, the review kit's convention): the
+// Update 1 (the demo's update record, catalogue/review-demos.json, the review kit's convention): the
 // questions Kenny approved are answered there and the dialog no longer walks
 // them; on the page each such row says it is decided and marks the option he
 // picked, so only the reopened questions read as open.
-fetch(new URL('update.json', location.href), { cache: 'no-cache' })
-    .then((response) => (response.ok ? response.json() : null))
-    .then((update) => {
+demoFacts(location.href)
+    .then(({ update }) => {
         const picks = update?.picks?.[THEME] || {};
         const asked = update?.questions?.[THEME] || {};
         for (const a of ASPECTS) {
