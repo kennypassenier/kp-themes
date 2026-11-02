@@ -11,11 +11,16 @@
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { NL_STRINGS } from '../js/strings-nl.js';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
+// The page speaks Dutch since 12.2.0 (CHANGELOG, "kp speaks Dutch on a Dutch page" [habits-1101 nl]), so the
+// framework-free channel says Dutch words; the React fixture mounts without the dictionary and keeps the English.
+const NL = { ...S, ...NL_STRINGS };
+const wordsOf = (/** @type {{ name: string }} */ channel) => (channel.name === 'React' ? S : NL);
 /** @type {{name: string, box: string, input: string, tags: string, tagsInput: string}[]} */
 const CHANNELS = [
     {
@@ -78,7 +83,7 @@ for (const channel of CHANNELS) {
             await expect(box.locator('.kp-combobox__option:visible')).toHaveCount(1);
             // A sighted user watches the list shrink; this is how everyone
             // else finds out.
-            await expect(box.locator('[data-kp-combobox-status]')).toHaveText(S.oneResult);
+            await expect(box.locator('[data-kp-combobox-status]')).toHaveText(wordsOf(channel).oneResult);
         });
 
         test('Escape closes the list without choosing [TH39]', async ({ page }) => {
@@ -115,7 +120,7 @@ for (const channel of CHANNELS) {
             // A row of identical × buttons is useless without a name.
             const label = await remove.getAttribute('aria-label');
             // The name is the option's, wrapped by whatever the dictionary says.
-            expect(label).toBe(S.removeNamed('Urgent'));
+            expect(label).toBe(wordsOf(channel).removeNamed('Urgent'));
         });
 
         test('Backspace in an empty field leaves the last tag by default [TH41, note 2 of 2026-09-13]', async ({ page }) => {

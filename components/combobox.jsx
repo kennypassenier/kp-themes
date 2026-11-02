@@ -280,6 +280,9 @@ function ComboboxInner(
             style={style}
             ref={boxRef}
             data-kp-combobox
+            // React draws and wires this box; the framework-free wiring (js/combobox/attach.js skips an attached box) must not
+            // add a second tag list and a second set of listeners when js/auto.js attaches after the mount [habits-1101].
+            data-kp-combobox-attached=""
             data-kp-tags={tags ? '' : undefined}
             onBlur={(event) => {
                 if (closeOnBlur && !event.currentTarget.contains(event.relatedTarget)) setOpen(false);

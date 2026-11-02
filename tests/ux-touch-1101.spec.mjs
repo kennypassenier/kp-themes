@@ -43,7 +43,7 @@ test('a narrow board shows one lane under a switcher and moves a card from its m
     await expect(board.locator('.kp-board__tab .kp-tab__count')).toHaveText(['1', '2 / 1']);
     await expect(board.locator('.kp-board__tab .kp-badge--destructive')).toHaveCount(1);
     await expect(board.locator('[data-kp-board-lane="inbox"]')).toBeVisible();
-    await expect(board.locator('.kp-board__live')).toContainText('moved to Doing');
+    await expect(board.locator('.kp-board__live')).toContainText('verplaatst naar Doing');
 });
 
 test('a revealed secret field moves nothing under it [uxtouch1101]', { tag: ['@component:data'] }, async ({ page }) => {
@@ -60,10 +60,12 @@ test('a revealed secret field moves nothing under it [uxtouch1101]', { tag: ['@c
             attachPatterns(document);
         });
         const under = page.locator('#ux-under');
-        const before = (await under.boundingBox())?.y ?? 0;
+        // Measured on the page, not the window: pressing a Reveal scrolls it into view, which moves every box in the window [triage rel-1220].
+        const pageY = () => under.evaluate((el) => el.getBoundingClientRect().y + window.scrollY);
+        const before = await pageY();
         for (const reveal of await page.locator('#ux-secrets [data-kp-secret-reveal]').all()) await reveal.click();
-        await expect(page.locator('#ux-secrets .kp-secret__clock').first()).toContainText('Hides in');
-        expect(Math.abs(((await under.boundingBox())?.y ?? 0) - before)).toBeLessThan(0.5);
+        await expect(page.locator('#ux-secrets .kp-secret__clock').first()).toContainText('Verbergt over');
+        expect(Math.abs((await pageY()) - before)).toBeLessThan(0.5);
     }
 });
 
@@ -86,10 +88,14 @@ test('under data-kp-touch a small part takes a 44 px hit area and keeps its look
         });
     const plain = await area('#ux-touch .kp-segmented__item');
     await page.locator('#ux-touch').evaluate((el) => el.setAttribute('data-kp-touch', ''));
-    for (const selector of ['#ux-touch .kp-segmented__item', '#ux-touch .kp-switch__input']) {
+    // A switch takes its hit area on its label, not on its input (CHANGELOG, "a switch takes its area on its label" [touch2-1102]).
+    for (const selector of ['#ux-touch .kp-segmented__item', '#ux-touch .kp-switch']) {
         const touched = await area(selector);
         expect(touched.h).toBeGreaterThanOrEqual(43.5);
-        expect(touched.w).toBeGreaterThanOrEqual(43.5);
+        // A segment in a track stops at half the gap to its neighbour so it never takes their press (CHANGELOG, "segments in a track
+        // stop at half --kp-seg-gap" [touch2-1102]): its area is as wide as the item plus that half gap each side, not 44 px.
+        if (selector.endsWith('.kp-switch')) expect(touched.w).toBeGreaterThanOrEqual(43.5);
+        else expect(touched.w).toBeGreaterThanOrEqual(plain.w);
     }
     // The look stays: the item's own box is the height it was.
     expect((await area('#ux-touch .kp-segmented__item')).box).toBeCloseTo(plain.box, 1);

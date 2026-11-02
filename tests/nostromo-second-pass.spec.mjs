@@ -58,8 +58,11 @@ for (const channel of TABLE_CHANNELS) {
             const opened = table.getByRole('group', { name: 'Opened' });
             await expect(opened.locator('input[type="date"]')).toHaveCount(0);
             await expect(opened.locator('.kp-datepicker[data-kp-datepicker]')).toHaveCount(2);
-            const from = table.getByLabel(S.tableFilterFrom('Opened'), { exact: true });
-            const to = table.getByLabel(S.tableFilterTo('Opened'), { exact: true });
+            // The framework-free filter names each bound with a visible "From" / "To" label since [ux-1101] (CHANGELOG Unreleased:
+            // "the data table's Filters open as a popover with a label on every input"); the React channel names them "Opened, from" / "Opened, to".
+            const plain = channel.name === 'framework-free';
+            const from = table.getByLabel(plain ? S.tableFilterFromLabel : S.tableFilterFrom('Opened'), { exact: true });
+            const to = table.getByLabel(plain ? S.tableFilterToLabel : S.tableFilterTo('Opened'), { exact: true });
             await expect(from).toHaveAttribute('data-kp-date-input');
             await expect(to).toHaveAttribute('data-kp-date-input');
 

@@ -5,11 +5,14 @@
 // errors, and moving focus to them.
 
 import { test, expect } from '@playwright/test';
-import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { DEFAULT_STRINGS as EN } from '../js/strings.js';
+import { NL } from './helpers/dutch-words.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
+// The page is lang="nl": framework-free parts speak Dutch since 12.2.0 (CHANGELOG, habits-1101 nl); the React mount keeps English.
+const wordsOf = (/** @type {string} */ name) => (name === 'React' ? EN : NL);
 // Driven in both channels [AR7]: the framework-free half attaches to a
 // form a server wrote, the React half renders one. The assertions are the
 // same because the contract is.
@@ -41,7 +44,7 @@ for (const channel of CHANNELS) {
 
             const summary = form.locator('[data-kp-form-summary]');
             await expect(summary).toBeVisible();
-            await expect(summary).toContainText(S.formSummaryMany(2));
+            await expect(summary).toContainText(wordsOf(channel.name).formSummaryMany(2));
             // Rendered is not enough: a message above the fold is invisible to
             // someone whose focus is at the bottom of a long form, which is
             // exactly where the submit button is.
@@ -215,7 +218,7 @@ for (const channel of RICH) {
             const summary = form.locator('[data-kp-form-summary]');
             // Four questions, five controls: two radios are one question.
             // Drill: with the deduplication removed this reads five.
-            await expect(summary).toContainText(S.formSummaryMany(4));
+            await expect(summary).toContainText(wordsOf(channel.name).formSummaryMany(4));
             await expect(summary.locator('a')).toHaveCount(4);
         });
 

@@ -10,6 +10,7 @@
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { NL_STRINGS } from '../js/strings-nl.js';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
@@ -18,6 +19,10 @@ const URL = '/tests/fixtures/components.html';
 const MONTHS = Array.from({ length: 12 }, (_, i) => new Intl.DateTimeFormat('nl', { month: 'long' }).format(new Date(2026, i, 1)));
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
+// The page speaks Dutch since 12.2.0 (CHANGELOG, "kp speaks Dutch on a Dutch page" [habits-1101 nl]), so the
+// framework-free pickers say Dutch words; the React fixture mounts without the dictionary and keeps the English.
+const NL = { ...S, ...NL_STRINGS };
+const wordsOf = (/** @type {{ name: string }} */ channel) => (channel.name === 'React' ? S : NL);
 const CHANNELS = [
     {
         name: 'framework-free',
@@ -66,24 +71,25 @@ async function addPlainLimits(page) {
 }
 
 for (const channel of CHANNELS) {
+    const T = wordsOf(channel);
     test.describe(`date picker month and year grids — ${channel.name}`, { tag: ['@component:datepicker'] }, () => {
         test('the month title opens the twelve months of its year, the shown month marked and focused [scope-89]', async ({ page }) => {
             const panel = await openAt(page, channel, '13-09-2026');
             const title = panel.locator('.kp-datepicker__title');
             await expect(title).toHaveRole('button');
             // Its name says what it opens, and still holds what it shows.
-            await expect(title).toHaveAttribute('aria-label', S.chooseMonth(S.monthTitle(MONTHS[8], 2026)));
+            await expect(title).toHaveAttribute('aria-label', T.chooseMonth(T.monthTitle(MONTHS[8], 2026)));
             await title.click();
 
             const grid = panel.locator('[data-kp-view="months"]');
             await expect(grid).toHaveAttribute('role', 'grid');
-            await expect(grid).toHaveAttribute('aria-label', S.monthGrid(2026));
+            await expect(grid).toHaveAttribute('aria-label', T.monthGrid(2026));
             // The short names on the cells, where "September" ran out of a third of the grid; the full name as the cell's name.
             const short = await page.evaluate(() =>
                 Array.from({ length: 12 }, (_, i) => new Intl.DateTimeFormat('nl', { month: 'short' }).format(new Date(2001, i, 1))),
             );
             await expect(grid.locator('[data-kp-month]')).toHaveText(short);
-            await expect(grid.locator('[data-kp-month="2026-03"]')).toHaveAttribute('aria-label', S.monthTitle(MONTHS[2], 2026));
+            await expect(grid.locator('[data-kp-month="2026-03"]')).toHaveAttribute('aria-label', T.monthTitle(MONTHS[2], 2026));
             await expect(panel.locator('[data-kp-day]')).toHaveCount(0);
             const september = grid.locator('[data-kp-month="2026-09"]');
             await expect(september).toHaveAttribute('aria-selected', 'true');
@@ -91,16 +97,16 @@ for (const channel of CHANNELS) {
             await expect(grid.locator('[tabindex="0"]')).toHaveCount(1);
             // The month cells are day cells to every register.
             await expect(september).toHaveClass(/\bkp-datepicker__day\b/);
-            await expect(panel.locator('[aria-live]')).toHaveText(S.monthGrid(2026));
+            await expect(panel.locator('[aria-live]')).toHaveText(T.monthGrid(2026));
 
             await expect(title).toHaveText('2026');
-            await expect(title).toHaveAttribute('aria-label', S.chooseYear(2026));
+            await expect(title).toHaveAttribute('aria-label', T.chooseYear(2026));
             // Previous and next move by a year here.
-            await panel.getByRole('button', { name: S.nextYear, exact: true }).click();
+            await panel.getByRole('button', { name: T.nextYear, exact: true }).click();
             await expect(title).toHaveText('2027');
             await expect(grid.locator('[data-kp-month]').first()).toHaveAttribute('data-kp-month', '2027-01');
-            await panel.getByRole('button', { name: S.previousYear, exact: true }).click();
-            await panel.getByRole('button', { name: S.previousYear, exact: true }).click();
+            await panel.getByRole('button', { name: T.previousYear, exact: true }).click();
+            await panel.getByRole('button', { name: T.previousYear, exact: true }).click();
             await expect(title).toHaveText('2025');
         });
 
@@ -115,17 +121,17 @@ for (const channel of CHANNELS) {
             const years = await grid.locator('[data-kp-year]').evaluateAll((cells) => cells.map((c) => Number(c.getAttribute('data-kp-year'))));
             expect(years).toContain(2026);
             expect(years).toEqual(Array.from({ length: 12 }, (_, i) => years[0] + i));
-            await expect(grid).toHaveAttribute('aria-label', S.yearGrid(years[0], years[11]));
+            await expect(grid).toHaveAttribute('aria-label', T.yearGrid(years[0], years[11]));
             await expect(grid.locator('[data-kp-year="2026"]')).toBeFocused();
             await expect(grid.locator('[data-kp-year="2026"]')).toHaveAttribute('aria-selected', 'true');
-            await expect(title).toHaveText(S.yearRange(years[0], years[11]));
-            await expect(panel.locator('[aria-live]')).toHaveText(S.yearGrid(years[0], years[11]));
+            await expect(title).toHaveText(T.yearRange(years[0], years[11]));
+            await expect(panel.locator('[aria-live]')).toHaveText(T.yearGrid(years[0], years[11]));
 
             // Twelve years a step.
-            await panel.getByRole('button', { name: S.nextYears, exact: true }).click();
+            await panel.getByRole('button', { name: T.nextYears, exact: true }).click();
             await expect(grid.locator('[data-kp-year]').first()).toHaveAttribute('data-kp-year', String(years[0] + 12));
-            await panel.getByRole('button', { name: S.previousYears, exact: true }).click();
-            await panel.getByRole('button', { name: S.previousYears, exact: true }).click();
+            await panel.getByRole('button', { name: T.previousYears, exact: true }).click();
+            await panel.getByRole('button', { name: T.previousYears, exact: true }).click();
             await expect(grid.locator('[data-kp-year]').first()).toHaveAttribute('data-kp-year', String(years[0] - 12));
             await grid.locator(`[data-kp-year="${years[0] - 12 + 3}"]`).click();
 
@@ -135,7 +141,7 @@ for (const channel of CHANNELS) {
             await panel.locator(`[data-kp-month="${chosenYear}-03"]`).click();
 
             await expect(panel.locator('[data-kp-view="days"]')).toBeVisible();
-            await expect(title).toHaveText(S.monthTitle(MONTHS[2], chosenYear));
+            await expect(title).toHaveText(T.monthTitle(MONTHS[2], chosenYear));
             await expect(panel.locator(`[data-kp-day="${chosenYear}-03-13"]`)).toBeFocused();
             await expect(panel.locator('[data-kp-day][tabindex="0"]')).toHaveCount(1);
             // Choosing a month moved the calendar, not the value.
@@ -171,7 +177,7 @@ for (const channel of CHANNELS) {
             // Escape from the months: back to the days that were showing.
             await page.keyboard.press('Escape');
             await expect(panel).toBeVisible();
-            await expect(title).toHaveText(S.monthTitle(MONTHS[8], 2026));
+            await expect(title).toHaveText(T.monthTitle(MONTHS[8], 2026));
             await expect(panel.locator('[data-kp-day="2026-09-13"]')).toBeFocused();
 
             // Space on the title, twice, reaches the years.
@@ -233,7 +239,7 @@ for (const channel of CHANNELS) {
             await panel.locator('[data-kp-month="2026-01"]').press('Enter');
             await expect(panel.locator('[data-kp-view="months"]')).toBeVisible();
 
-            await panel.getByRole('button', { name: S.nextYear, exact: true }).click();
+            await panel.getByRole('button', { name: T.nextYear, exact: true }).click();
             // max 10 June 2027.
             for (const m of ['01', '06']) await expect(panel.locator(`[data-kp-month="2027-${m}"]`)).not.toHaveAttribute('aria-disabled', /.*/);
             for (const m of ['07', '12']) await expect(panel.locator(`[data-kp-month="2027-${m}"]`)).toHaveAttribute('aria-disabled', 'true');
@@ -271,7 +277,7 @@ test('choosing a month fires the month event once, with the month it shows [scop
     });
     const title = panel.locator('.kp-datepicker__title');
     await title.click();
-    await panel.getByRole('button', { name: S.nextYear, exact: true }).click();
+    await panel.getByRole('button', { name: NL.nextYear, exact: true }).click();
     await panel.locator('[data-kp-month="2027-02"]').click();
     expect(await page.evaluate(() => window.kpMonths)).toEqual([{ year: 2027, month: 1 }]);
 });

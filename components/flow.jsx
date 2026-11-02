@@ -610,7 +610,9 @@ function UploadInner(
     };
 
     return (
-        <div ref={inner} className={`kp-upload ${className}`.trim()} style={style} data-kp-upload {...rest}>
+        // React draws and wires this upload: js/auto.js attaches after the mount (once the page's dictionary is in) and must skip it,
+        // or a second, option-less controller adds its own row per file [rel-1220].
+        <div ref={inner} className={`kp-upload ${className}`.trim()} style={style} data-kp-upload data-kp-upload-attached="" {...rest}>
             <input
                 ref={input}
                 id={id}

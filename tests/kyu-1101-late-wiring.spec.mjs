@@ -11,10 +11,12 @@ test('a menu button in a row drawn after attachMenuButtons still opens [kyu-1101
         const { attachMenuButtons } = await import('/js/menu-button.js');
         document.body.insertAdjacentHTML('beforeend', '<table><tbody id="kyu-rows"></tbody></table>');
         attachMenuButtons(document);
-        // The table redraws its rows: new nodes, never seen by the first call.
+        // The table redraws its rows: new nodes, never seen by the first call. The menu is `hidden` as an app's redrawn row
+        // has it: an unwired, visible menu stretches the page below the button, and wiring it (which hides it) on pointerdown
+        // shrinks the page under a click that has not finished, so the click lands on the body [triage rel-1220].
         document.getElementById('kyu-rows').innerHTML =
             '<tr><td><div class="kp-menu-button" data-kp-menu-button><button type="button" class="kp-button">More</button>' +
-            '<div class="kp-menu" role="menu"><button class="kp-menu__item" role="menuitem">One</button></div></div></td></tr>';
+            '<div class="kp-menu" role="menu" hidden><button class="kp-menu__item" role="menuitem">One</button></div></div></td></tr>';
     });
     const button = page.locator('#kyu-rows [data-kp-menu-button] > button');
     await button.click();
@@ -40,7 +42,10 @@ test('the form summary follows the messages the fields show now [kyu-1101]', { t
     // A second, different error: the page's own validity, as a JSON check sets it.
     await page.locator('#kyu-x').fill('{');
     await page.evaluate(() => document.getElementById('kyu-x').setCustomValidity('Not valid JSON'));
-    await page.locator('#kyu-form button').click();
+    // Submitted from the field with Enter, not with a click on the button: a click leaves the field first, its message appears
+    // at that blur (this markup reserves no room for it) and moves the button from under the pointer before the click ends,
+    // so no submit happens [triage rel-1220].
+    await page.locator('#kyu-x').press('Enter');
     await expect(summary).toContainText('Not valid JSON');
     // Fixing the field without a submit takes it out of the summary.
     await page.evaluate(() => document.getElementById('kyu-x').setCustomValidity(''));

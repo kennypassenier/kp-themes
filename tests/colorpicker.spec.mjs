@@ -6,9 +6,14 @@
 // read it is how the unreadable colours got in.
 
 import { test, expect } from '@playwright/test';
-import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { NL } from './helpers/dutch-words.mjs';
 
 const URL = '/tests/fixtures/components.html';
+
+// The fixture page is lang="nl", so both pickers speak Dutch since 12.2.0 (CHANGELOG, habits-1101 nl); the React one draws
+// again when the dictionary arrives (hooks/use-strings.jsx follows kp-strings-change) [rel-1220].
+/** @param {string} _name */
+const wordsOf = (_name) => ({ passes: new RegExp(NL.contrastPasses), fails: new RegExp(NL.contrastFails), ratio: /:1 tegen --background/ });
 
 const CHANNELS = [
     {
@@ -38,9 +43,9 @@ for (const channel of CHANNELS) {
             const report = page.locator(channel.report);
             // A bare 4.31 means nothing to anyone who does not know the thresholds
             // by heart, so the words are part of the contract.
-            await expect(report).toContainText(`:1 ${S.contrastReport('', '--background', '').split(':1 ')[1].split(' —')[0]}`);
-            expect([S.contrastPasses, S.contrastFails].some((v) => (report ? true : false))).toBe(true);
-            await expect(report).toContainText(new RegExp(`${S.contrastPasses}|${S.contrastFails}`));
+            const words = wordsOf(channel.name);
+            await expect(report).toContainText(words.ratio);
+            await expect(report).toContainText(new RegExp(`${words.passes.source}|${words.fails.source}`));
         });
 
         test('moving a slider changes the measurement [TH57]', async ({ page }) => {
@@ -54,8 +59,9 @@ for (const channel of CHANNELS) {
             expect(dark).not.toBe(light);
             // On formal's near-white background, a very dark colour reads and a
             // very light one does not. That is the whole point of the number.
-            expect(dark).toContain(S.contrastPasses);
-            expect(light).toContain(S.contrastFails);
+            const words = wordsOf(channel.name);
+            expect(dark).toMatch(words.passes);
+            expect(light).toMatch(words.fails);
         });
 
         test('the value is emitted as an authored hsl() string [TH57]', async ({ page }) => {
@@ -75,7 +81,7 @@ for (const channel of CHANNELS) {
             });
             // A picker that quietly stops measuring looks exactly like one saying
             // the colour is fine.
-            await expect(page.locator(channel.report)).toContainText(S.contrastMissing('--niet-bestaand'));
+            await expect(page.locator(channel.report)).toContainText(NL.contrastMissing('--niet-bestaand'));
         });
     });
 }

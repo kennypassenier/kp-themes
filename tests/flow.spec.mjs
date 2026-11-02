@@ -2,11 +2,14 @@
 
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
-import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { DEFAULT_STRINGS as EN } from '../js/strings.js';
+import { NL } from './helpers/dutch-words.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
 const URL = '/tests/fixtures/components.html';
+// The page is lang="nl": framework-free parts speak Dutch since 12.2.0 (CHANGELOG, habits-1101 nl); the React mount keeps English.
+const wordsOf = (/** @type {string} */ name) => (name === 'React' ? EN : NL);
 
 // Both channels [AR7].
 const CHANNELS = [
@@ -62,7 +65,7 @@ for (const channel of CHANNELS) {
             // A list that says WHICH file is wrong is the whole point of a list;
             // one message about "some files" sends people hunting.
             await expect(row).toHaveAttribute('data-state', 'error');
-            await expect(row.locator('.kp-upload__message')).toContainText(S.uploadTooLarge('1 kB'));
+            await expect(row.locator('.kp-upload__message')).toContainText(wordsOf(channel.name).uploadTooLarge('1 kB'));
         });
 
         test('every file row names what its remove button removes [TH44]', async ({ page }) => {
@@ -72,7 +75,7 @@ for (const channel of CHANNELS) {
                 mimeType: 'text/plain',
                 buffer: Buffer.from('hallo'),
             });
-            await expect(page.getByRole('button', { name: S.removeNamed('notitie.txt') })).toBeVisible();
+            await expect(page.getByRole('button', { name: wordsOf(channel.name).removeNamed('notitie.txt') })).toBeVisible();
         });
 
         test('the same file can be chosen twice [TH44]', async ({ page }) => {
@@ -88,7 +91,7 @@ for (const channel of CHANNELS) {
 
         test('the wizard says which step you are on [TH48]', { tag: ['@component:structure'] }, async ({ page }) => {
             await page.goto(URL);
-            await expect(page.locator(channel.status)).toHaveText(S.wizardStep(1, 2));
+            await expect(page.locator(channel.status)).toHaveText(wordsOf(channel.name).wizardStep(1, 2));
             // The attribute that exists for exactly this and is almost never used.
             await expect(page.locator(channel.label0)).toHaveAttribute('aria-current', 'step');
             await expect(page.locator(channel.label1)).not.toHaveAttribute('aria-current', 'step');
@@ -98,7 +101,7 @@ for (const channel of CHANNELS) {
             test.skip(!channel.validates, 'the React fixture mounts a wizard without a required field');
             await page.goto(URL);
             await page.locator(channel.next).click();
-            await expect(page.locator(channel.status)).toHaveText(S.wizardStep(1, 2));
+            await expect(page.locator(channel.status)).toHaveText(wordsOf(channel.name).wizardStep(1, 2));
             await expect(page.locator(channel.naam)).toBeFocused();
         });
 
@@ -106,12 +109,12 @@ for (const channel of CHANNELS) {
             await page.goto(URL);
             if (channel.naam !== null) await page.locator(channel.naam).fill('Kenny');
             await page.locator(channel.next).click();
-            await expect(page.locator(channel.status)).toHaveText(S.wizardStep(2, 2));
+            await expect(page.locator(channel.status)).toHaveText(wordsOf(channel.name).wizardStep(2, 2));
             await expect(page.locator(channel.label0)).toHaveAttribute('data-state', 'done');
             // Focus follows, or a keyboard user presses Next and stays where they
             // were with no idea anything moved.
             await expect(page.locator(channel.step1)).toBeFocused();
-            await expect(page.locator(channel.next)).toHaveText(S.finish);
+            await expect(page.locator(channel.next)).toHaveText(wordsOf(channel.name).finish);
         });
     });
 }

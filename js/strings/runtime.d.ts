@@ -56,6 +56,8 @@ export declare function stringProperties(strings?: Strings): Record<string, stri
  * @param {Strings} [strings]
  */
 export declare function applyStringProperties(root: HTMLElement, strings?: Strings): void;
+/** @returns {Partial<Strings>} the dictionary of the language in use, without the app's own words; empty for English [habits-1101] */
+export declare function getLanguageDictionary(): Partial<Strings>;
 /** @returns {Strings} the strings as they stand */
 export declare function getStrings(): Strings;
 /**

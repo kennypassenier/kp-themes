@@ -24,10 +24,15 @@ export type NameSet = {
  *
  * @param {NameSet} dictionary the strings in force; weekdays Monday first
  * @param {NameSet} defaults the package's own dictionary, to tell a consumer's names from it
+ * A page in Dutch makes the dictionary Dutch without a consumer saying so
+ * [habits-1101]; names that are the language dictionary's own are not a
+ * consumer's words, so an English picker on that page still reads English.
+ *
  * @param {string | undefined} [locale]
+ * @param {Partial<NameSet>} [language] the dictionary of the page's language, to tell it from a consumer's names
  * @returns {{ months: string[], monthsShort: string[], weekdays: string[] }} weekdays Sunday first, the way Date#getDay counts
  */
-export declare function calendarNames(dictionary: NameSet, defaults: NameSet, locale?: string | undefined): {
+export declare function calendarNames(dictionary: NameSet, defaults: NameSet, locale?: string | undefined, language?: Partial<NameSet>): {
     months: string[];
     monthsShort: string[];
     weekdays: string[];

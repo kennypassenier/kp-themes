@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_STRINGS, getStrings, resolveStrings } from '../js/strings.js';
 
 // The React side of the string dictionary [KT5].
@@ -36,10 +36,27 @@ export function StringsProvider({ value, children }) {
  */
 export function useStrings(overrides) {
     const fromProvider = useContext(StringsContext);
+    const version = useStringsVersion();
     return useMemo(() => {
         const base = resolveStrings(fromProvider ?? undefined);
         return overrides === undefined ? base : { ...base, ...overrides };
-    }, [fromProvider, overrides]);
+    }, [fromProvider, overrides, version]);
+}
+
+/**
+ * A counter that moves on every `kp-strings-change`, so a component drawn before the page's dictionary
+ * loaded (or before a language switch) draws again in the words now in force [rel-1220].
+ *
+ * @returns {number}
+ */
+function useStringsVersion() {
+    const [version, setVersion] = useState(0);
+    useEffect(() => {
+        const bump = () => setVersion((v) => v + 1);
+        document.addEventListener('kp-strings-change', bump);
+        return () => document.removeEventListener('kp-strings-change', bump);
+    }, []);
+    return version;
 }
 
 export { DEFAULT_STRINGS, getStrings };

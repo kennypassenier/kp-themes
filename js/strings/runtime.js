@@ -267,6 +267,11 @@ export function applyStringProperties(root, strings = current) {
     for (const [name, value] of Object.entries(stringProperties(strings))) root.style.setProperty(name, value);
 }
 
+/** @returns {Partial<Strings>} the dictionary of the language in use, without the app's own words; empty for English [habits-1101] */
+export function getLanguageDictionary() {
+    return published ?? {};
+}
+
 /** @returns {Strings} the strings as they stand */
 export function getStrings() {
     return current;
