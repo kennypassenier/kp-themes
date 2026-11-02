@@ -15,4 +15,3 @@ import{a as m,b as l,c as u}from"./chunk-OT3HTDSZ.js";import{a as $}from"./chunk
     if (${JSON.stringify(a).replace(/</g,"\\u003c")}.indexOf(n) < 0) n = ${e(c)};
     document.write('<link rel="stylesheet" href="' + ${e(p(E))} + n + ${e(p(T))} + '" data-kp-register="' + n + '" blocking="render">');
 })();`}var x=f();function _({key:t=u,attribute:r=i,root:o}={}){if(typeof document>"u")return null;try{let n=localStorage.getItem(t);return n?((o??document.documentElement).setAttribute(r,n),n):null}catch{return null}}export{i as a,s as b,d as c,f as d,x as e,_ as f,y as g};
-//# sourceMappingURL=chunk-LHKFVL33.js.map

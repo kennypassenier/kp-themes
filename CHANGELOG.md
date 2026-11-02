@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Changed: source maps are opt-in, and no shipped file names a map the release does not ship** [maps-1102]. The split bundle (350 `dist/js/*.js` files plus one more entry) and the minified stylesheets ended with a `sourceMappingURL` comment, but the release (`SHA256SUMS`, the consumer tarball) shipped none of those maps, so devtools got 404s (measured on origin/main with `git grep -l sourceMappingURL`: 374 files with the comment (351 in dist/js, 22 stylesheets, the bundle), 1 map that ships, `dist/kp-themes.min.js.map`). The maps are still generated as external files, now without the comment, and listed in their own group (`MAP_FILES`, written to `SHA256SUMS.maps` by `node gates/checksums.mjs --maps --write`) that is not in the default list. After: 0 default-shipped files carry the comment without their map; `dist/kp-themes.min.js` keeps its comment and its map. A Firefox load through `dist/js/auto.js`: failed map requests 0.
+
 ## 12.2.0 — 2026-11-02
 
 Released on Kenny's go (2026-11-02 14:05: "uitbrengen"), after every demo of the cycle was approved. Release suite (Firefox, 1932 tests): 1870 passed, 58 failed, 4 skipped in 25 min 36 s; the 58 were fixed (22 package faults, the rest tests that predated approved changes) and rerun: 222 passed in 2 min 14 s.

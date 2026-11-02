@@ -67,7 +67,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import process from 'node:process';
-import { FILES } from './checksums.mjs';
+import { FILES, MAP_FILES } from './checksums.mjs';
 
 /**
  * Every file under a directory, recursively, as repository-relative paths.
@@ -214,7 +214,7 @@ export function missingRegisters(files) {
     const themes = readdirSync(new URL('../themes/', import.meta.url), { withFileTypes: true })
         .filter((e) => e.isDirectory() && existsSync(new URL(`../themes/${e.name}/tokens.json`, import.meta.url)))
         .map((e) => e.name);
-    return themes.flatMap((t) => [`dist/css/${t}-register.min.css`, `dist/css/${t}-register.min.css.map`]).filter((p) => !files.includes(p));
+    return themes.flatMap((t) => [`dist/css/${t}-register.min.css`, `dist/css/${t}-register.min.css.map`]).filter((p) => !(p.endsWith('.map') ? MAP_FILES : files).includes(p));
 }
 
 /**
@@ -258,7 +258,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // entry would be missing from SHA256SUMS [sums-1102].
     for (const path of missingRegisters(FILES)) {
         failed++;
-        console.error(`${path} is the minified register of a theme under themes/ and is not in FILES — add it (and its .map) to gates/checksums-dist.mjs.`);
+        console.error(`${path} is the minified register of a theme under themes/ and is not in FILES — add it to DIST_FILES and its .map to DIST_MAP_FILES in gates/checksums-dist.mjs.`);
     }
     for (const path of expected) {
         if (!FILES.includes(path)) {

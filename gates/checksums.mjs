@@ -12,12 +12,13 @@
 // Usage:
 //   node gates/checksums.mjs           print the file
 //   node gates/checksums.mjs --write   write SHA256SUMS
+//   node gates/checksums.mjs --maps [--write]   the opt-in source maps: SHA256SUMS.maps [maps-1102]
 
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
-import { DIST_FILES } from './checksums-dist.mjs';
-import { SPLIT_FILES } from './checksums-split.mjs';
+import { DIST_FILES, DIST_MAP_FILES } from './checksums-dist.mjs';
+import { SPLIT_FILES, SPLIT_MAP_FILES } from './checksums-split.mjs';
 import { JS_FILES } from './checksums-js.mjs';
 import { PART_FILES } from './checksums-parts.mjs';
 import { CONTROLLER_PART_FILES } from './checksums-parts-controllers.mjs';
@@ -77,6 +78,12 @@ export const FILES = [
 ];
 
 /**
+ * The source maps a consumer can opt into [maps-1102]: no shipped file but dist/kp-themes.min.js names one, so they
+ * are not in FILES and not in SHA256SUMS. They are listed in SHA256SUMS.maps, which a vendoring script can add on purpose.
+ */
+export const MAP_FILES = [...DIST_MAP_FILES, ...SPLIT_MAP_FILES];
+
+/**
  * @returns {string[]} the paths under fonts/ a consumer copies, in a stable order
  */
 export function fontFiles() {
@@ -94,9 +101,9 @@ export function fontFiles() {
     return out;
 }
 
-export function checksums() {
+export function checksums(files = FILES) {
     return (
-        FILES.map((f) => {
+        files.map((f) => {
             const bytes = readFileSync(new URL(`../${f}`, import.meta.url));
             return `${createHash('sha256').update(bytes).digest('hex')}  ${f}`;
         }).join('\n') + '\n'
@@ -104,10 +111,13 @@ export function checksums() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-    const text = checksums();
+    const maps = process.argv.includes('--maps');
+    const list = maps ? MAP_FILES : FILES;
+    const name = maps ? 'SHA256SUMS.maps' : 'SHA256SUMS';
+    const text = checksums(list);
     if (process.argv.includes('--write')) {
-        writeFileSync(new URL('../SHA256SUMS', import.meta.url), text);
-        console.log(`wrote SHA256SUMS for ${FILES.length} files.`);
+        writeFileSync(new URL(`../${name}`, import.meta.url), text);
+        console.log(`wrote ${name} for ${list.length} files.`);
     } else {
         process.stdout.write(text);
     }

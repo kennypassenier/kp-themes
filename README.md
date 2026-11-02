@@ -367,6 +367,17 @@ is deleted from `dist/js/`: deploy the whole folder at once, and keep the
 previous release's chunks on the server for as long as pages from before the
 deploy may still be open, or an `import()` from such a page gets a 404.
 
+**Source maps are opt-in** [maps-1102]. Only `dist/kp-themes.min.js` names its
+map (`dist/kp-themes.min.js.map` ships beside it). The files in `dist/js/` and
+the minified stylesheets carry no `sourceMappingURL`, so devtools makes no
+request that would 404. The maps are still generated, committed and checksummed,
+in a group of their own: `SHA256SUMS.maps` (`node gates/checksums.mjs --maps
+--write`; `MAP_FILES` in `gates/checksums.mjs`) lists `dist/js/*.map` and
+`dist/css/*.min.css.map`, and a vendoring script adds that list on purpose. A
+consumer who wants them serves a map next to its file and either appends the
+comment (`//# sourceMappingURL=auto.js.map`, `/*# sourceMappingURL=x.min.css.map */`)
+or points devtools at it with "Add source map".
+
 ## The entry points worth naming
 
 Not all of them: `package.json` exports 181 paths, because every register,
