@@ -41,7 +41,7 @@
         "media": "media, grid layout, marquee: catalogue/media.html",
         "page": "skip link, footer, command palette, theme menu: catalogue/page.html",
         "page-effects": "the effects module and what registers do with it: catalogue/page-effects.html, js/effects.js, fx/",
-        "catalogue": "the catalogue shell, judging and verdicts: catalogue/*.js, catalogue/verdicts.json",
+        "catalogue": "the catalogue shell, judging and verdicts: catalogue/*.js, catalogue/review-*.json (the review database's export)",
         "picker": "theme selection: the picker, theme-core, the registry, no-flash, lazy registers, diagnostics",
         "layout": "the layout layer: css/layout.css",
         "utilities": "the utility API: css/utilities.css",

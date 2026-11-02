@@ -42,6 +42,8 @@ A re-review round shows only the pairs Kenny has not approved; approved sections
 
 Everything Kenny expects from a demo and its rounds is one list, [research/_review/DEMO_RULES.md](research/_review/DEMO_RULES.md): every brief for a demo or a round links it, and Claude walks its chapter "Before a round goes on the Agenda" before every push of a round.
 
+**All recorded data lives in one database** (Kenny, 2026-11-02: "ALLE info gaat vanaf nu in databases, geen aparte .json bestanden meer"): the verdict register, review notes, pixel checks, hash readings, the open round and every demo's rounds, decision, update and previous version are in `data/kp-themes.sqlite`, read and written only through `gates/db/` [db-1102]. Record with `node gates/verdicts.mjs record | note | round | decide | reopen | bundle`, never by writing a JSON file; the review site reads the generated `catalogue/review-*.json` (`node gates/generate-review-data.mjs`, a gate). Run `npm run db:git-setup` once per clone for git's row-by-row diff and merge of the file. Details: research/_review/README.md, "Where the verdicts are kept".
+
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
 `npm run gates`. Two that shape every turn: a released theme never

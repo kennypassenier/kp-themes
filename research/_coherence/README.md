@@ -33,13 +33,13 @@ run only at a release (Kenny, 2026-09-30) and no release is part of this round.
   corners, surface, warning, live update, loading, busy progress bar, spinner,
   leaving/arriving, buttons in composites, hover, focus, press, voice/type,
   motifs), several visibly different options each, one recommended, all
-  following from the anchor; (3) update rounds via `research/<demo>/update.json`
+  following from the anchor; (3) update rounds via the demo's update record (research/_coherence/tools/merge-update.mjs writes it into the review database)
   in the SAME demo (his comment verbatim + the reply), the page's
   `data-review-round` bumped (`2026-10-08-r2` …), "To judge" reads
   "Update N · THEME" (the `rework:` flag in catalogue/pages.js hides the demo
   from To judge until the new round is in; remove the flag with the new round);
   level up clearly on a rejection (5–10 new options if he is unconvinced);
-  (4) apply: decided.json, CHARACTER.md §0, README status, archive the demo
+  (4) apply: the decision (`node gates/verdicts.mjs decide`), CHARACTER.md §0, README status, archive the demo
   (move it to 'Archived research' in catalogue/pages.js with a comment line; the
   README needs a `**Decided (` line at line start for check:catalogue), apply
   to `css/THEME-register.css` and the `research/character-*` variants, check

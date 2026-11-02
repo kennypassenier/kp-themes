@@ -153,8 +153,8 @@ the demo's entry in `catalogue/pages.js` with `rework: '<why>'`; "To judge"
 leaves it out until the flag is removed with the new round.
 
 The Agenda reads every demo on it from one generated file, `catalogue/agenda-index.json` (each demo's sections,
-fingerprint and `update.json`, the archived demos' decisions, the pixel checks that reopen and the catalogue blocks),
-instead of about 250 files. A change to a demo, its `update.json`, its `decided.json`, `catalogue/pages.js` or a
+fingerprint and update, the archived demos' decisions, the pixel checks that reopen and the catalogue blocks),
+instead of about 250 files. A change to a demo, its update, its decision, `catalogue/pages.js` or a
 component page is committed with the index regenerated: `node gates/generate-agenda-index.mjs` (Firefox starts only
 when the blocks moved). The commit gate refuses a stale index; a demo the index does not hold is read live.
 
@@ -172,8 +172,8 @@ carries the round it was given in and a fingerprint of the demo's page and
 of the scripts and sheets in its own folder (`progress.js`, `fingerprintOf`).
 A verdict of this round on other files is open again, in the dialog and in
 "To judge", which then calls the demo updated. Under Decided, "To judge" also
-lists every demo in "Archived research", with the decision its `decided.json`
-records.
+lists every demo in "Archived research", with the decision recorded for it
+(see "Where the verdicts are kept" below).
 
 ## Keep the round Kenny judged: the previous version
 
@@ -190,9 +190,10 @@ node research/_review/snapshot.mjs <topic> --from <commit-of-the-judged-round>
 ```
 
 It writes `research/<topic>/_previous/`: the demo's own folder, every stylesheet of `css/` and the modules the demo
-imports, as they stood then, plus `previous.json` (`round`, `commit`). The review kit and the catalogue shell are left
-out of the copy, so it never reads or writes verdicts; the fonts come from the live `fonts/`. Commit the folder with the
-new round. One snapshot per demo (about 4.5 MB): the next round's run replaces it, and archiving the demo removes it.
+imports, as they stood then; the record of the copy (`round`, `from`, `commit`, `made`) goes into the review database.
+The review kit and the catalogue shell are left
+out of the copy, so it never reads or writes verdicts; the fonts come from the live `fonts/`. Commit the folder, the
+database and `catalogue/review-demos.json` (the script regenerates it) with the new round. One snapshot per demo (about 4.5 MB): the next round's run replaces it, and archiving the demo removes it.
 Without a snapshot, or for a section new in this round, the button is not shown (Kenny, 2026-10-18 00:28: the bar shows only what is relevant).
 
 ## Key helpers: legend, focus, undo, rejected so far, bulk
@@ -287,7 +288,7 @@ of the new one until it is copied.
 Kenny, 2026-10-13: "toon je geen al goedgekeurde elementen meer en wis je de vorige commentaar". On the demo page a section
 whose every pair is approved is hidden behind one line ("N approved section(s) hidden"); add `?review=all` to the address to
 see them again. When a round, an update or a republished demo opens a question again, his earlier words are wiped: the
-dialog says only that the question is open again and, with an `update.json`, the session's answer; the comment is not
+dialog says only that the question is open again and, with an update, the session's answer; the comment is not
 repeated. The first round, before anything is approved, shows the whole page.
 
 ## Bundling the demos of one project
@@ -295,15 +296,28 @@ repeated. The first round, before anything is approved, shows the whole page.
 Kenny, 2026-10-19 02:38: demos that come from the same project are bundled into one review page of at most 25 items (sections x
 themes), which makes the process smoother. The page is generated from the source demos (see research/gap-round-1/build.mjs, modelled on
 research/kpadopt56/build-parts.mjs: each source's sections in a wrapper with its page class, one script and one stylesheet per source).
-A source demo that stays only as the source says `"bundledInto": "<topic>"` in its VERDICTS.json; gates/check-catalogue.mjs then does not
-ask for its own Agenda entry.
+A source demo that stays only as the source is recorded as bundled (`node gates/verdicts.mjs bundle --demo <source> --into <topic>`);
+gates/check-catalogue.mjs then does not ask for its own Agenda entry.
 
 ## A re-review shows only the open pairs, and the verdicts are recorded
 
 Kenny, 2026-10-13 and again 2026-10-16: a re-review round shows ONLY the pairs (section × theme) he has not approved yet.
 Approved sections and themes leave the demo (the page, not just the dialog), old comments are wiped (a reopened pair does
-that by itself), because approved items only confuse him. To keep a page honest the verdicts are recorded beside the demo in
-`research/<topic>/VERDICTS.json`, one file per demo, per round, per section, per theme:
+that by itself), because approved items only confuse him. To keep a page honest the verdicts are recorded, per demo,
+per round, per section, per theme, in the review database (see "Where the verdicts are kept" below), with
+`node gates/verdicts.mjs round`:
+
+```sh
+# round 1: two pairs judged, one approved and one not, with Kenny's words verbatim
+node gates/verdicts.mjs round --demo my-topic --page <page round id> \
+    --approved keys:formal --not-approved "toolbar:formal:Kenny's words" --comment "his general comment"
+# round 2: every pair of the page judged; only the listed ones were not approved
+node gates/verdicts.mjs round --demo my-topic --page <page round id> --all-judged
+# a pair offered again because the component itself was redrawn after the approval
+node gates/verdicts.mjs reopen --demo my-topic --pair "toolbar:formal:the component itself was redrawn after the approval"
+```
+
+The record reads, as `node gates/review-db.mjs export --to <dir>` writes it out:
 
 ```json
 {
@@ -321,27 +335,51 @@ that by itself), because approved items only confuse him. To keep a page honest 
 }
 ```
 
-A round with `"allJudged": true` approved every pair of the page that is not in its `notApproved`; otherwise only the pairs in
-`approved` were judged. The latest round that names a pair wins. The session that receives Kenny's answer adds the round
+A round with `--all-judged` approved every pair of the page that is not in its `--not-approved`; otherwise only the pairs in
+`--approved` were judged. The latest round that names a pair wins. The session that receives Kenny's answer records the round
 before it touches the demo. To re-review: delete the approved sections from the page, give the others
 `data-review-themes` naming only their open themes, and name the redrawn pairs in the round's `reopen`.
 
 **Received rounds are not carried.** The demo's answer is kept in the browser until Kenny copies it, and carried into a
 round that reopens questions; the Agenda then says it has not been copied. An answer Claude already received (Kenny
 delivered it through a form, so the kit never saw a Copy press) must not come back (Kenny, 2026-10-16: a fresh round starts
-empty). When recording a round in `VERDICTS.json`, add `"page": "<id of the page round that answer was given on>"`, and list
-the same ids in the new page round's script: `{ "round": "r4", "received": ["r3"], "reopen": [...] }`. The kit stores the
+empty). When recording a round, pass `--page <id of the page round that answer was given on>`, and list
+the same ids in the new page round's script: `{ "round": "r4", "received": ["r3"], "reopen": [...] }`
+(`node gates/verdicts.mjs received --demo <topic>` prints them; a build script gets them from
+`research/_review/verdicts-record.mjs`). The kit stores the
 page round id with every answer; on the demo page and on the Agenda it deletes an answer (or carried words) of a received
 round. An answer stored without a round id belongs to the round before the current one, so it is dropped as soon as
 `received` is non-empty. An answer of a round not listed stays and is still counted as not copied. The gate below refuses a
-page whose `received` differs from the `page` ids in `VERDICTS.json`. An answer of the page's own round is never dropped,
+page whose `received` differs from the recorded `--page` ids. An answer of the page's own round is never dropped,
 even when that round is listed as received, and every drop is said on the Agenda and kept in the journal (see "Every
 verdict is kept until Kenny pastes it").
 
-`gates/check-rereview.mjs` (in `npm run gates`) refuses a demo with a `VERDICTS.json` whose page still offers a pair whose
-latest verdict is approved, and names the pairs. The only way past is a `reopened` entry with a written `reason` (the
-component changed after the approval). A demo whose every pair is approved is Decided instead: `decided.json`, the README's
+`gates/check-rereview.mjs` (in `npm run gates`) refuses a demo with recorded verdicts whose page still offers a pair whose
+latest verdict is approved, and names the pairs. The only way past is a reopened pair with a written reason (the
+component changed after the approval). A demo whose every pair is approved is Decided instead:
+`node gates/verdicts.mjs decide --demo <topic> --decided "<date>, Kenny: <what he decided>"`, the README's
 "**Decided (" line and a place under "Archived research" in `catalogue/pages.js`; it is not offered again.
+
+## Where the verdicts are kept
+
+Kenny, 2026-11-02: "ALLE info gaat vanaf nu in databases, geen aparte .json bestanden meer". Everything this kit and the
+catalogue record lives in one SQLite file, `data/kp-themes.sqlite`, read and written only through `gates/db/` (Node's
+built-in `node:sqlite`): the verdict register, the review notes, the pixel checks, the hash readings, the open round, and
+per demo its rounds, its decision, its update and the record of its previous version. Nobody edits a JSON file for any
+of it, and `gates/check-rereview.mjs` refuses a `VERDICTS.json`, `decided.json`, `update.json` or `_previous/previous.json`
+beside a demo (`node gates/review-db.mjs adopt` moves one from an older branch into the database).
+
+- **Write** with the commands: `node gates/verdicts.mjs record | note | round | decide | reopen | bundle`,
+  `node research/_review/snapshot.mjs`, `node gates/check-round.mjs --open | --close`. Each runs in one transaction.
+- **The browser** cannot open SQLite, so `node gates/generate-review-data.mjs` writes three generated files from it:
+  `catalogue/review-data.json` (register and notes), `catalogue/review-pixels.json` (pixel checks) and
+  `catalogue/review-demos.json` (decision, update and previous version per demo folder); `catalogue/review-data.js` reads
+  them. The commands that change what the browser reads regenerate them; the gate refuses a stale one. Commit the
+  database and the exports together.
+- **Look at it**: `node gates/review-db.mjs counts`, or `export --to <dir>` for every store in its old JSON shape;
+  `git diff` and `git log -p` show the database row by row once `npm run db:git-setup` has wired git's text view.
+- **Parallel worktrees**: `npm run db:git-setup` also wires a merge driver, so a rebase merges two sessions' rows; a row
+  both changed stops the rebase with both versions named. After a merge, regenerate the exports and the Agenda index.
 
 ## Every verdict is kept until Kenny pastes it
 
@@ -383,8 +421,9 @@ received. One line per fault, exit code 1 on any. About a minute for a twelve-st
 
 ## An update after a verdict
 
-When a session republishes a demo after Kenny's verdict, it writes
-`update.json` beside `demo.html`:
+When a session republishes a demo after Kenny's verdict, it records an
+update for the demo in the review database (research/_coherence/tools/merge-update.mjs does it for a character demo;
+`catalogue/review-demos.json` carries it to the page):
 
 ```json
 {

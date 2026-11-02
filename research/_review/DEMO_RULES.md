@@ -103,7 +103,7 @@ checked by looking, in Firefox, in the review dialog.
 - New demos are listed under "Research to look at" in catalogue/pages.js; the Agenda is the start page. [2026-10-13; 2026-10-17 project memory] by hand: the entry exists.
 - Only the current round's questions are counted: counters count what this round asks. [2026-10-17 project memory] by hand: compare the head count with the pairs.
 - A second round shows only the unapproved pairs (section by theme); approved sections and themes leave the page, they are not just hidden. [2026-10-13 "toon je geen al goedgekeurde elementen meer"; rereview-1016] gate: gates/check-rereview.mjs
-- The first round is the only time everything shows. [2026-10-13] by hand: compare with VERDICTS.json.
+- The first round is the only time everything shows. [2026-10-13] by hand: compare with the recorded rounds (`node gates/review-db.mjs export --to <dir>`, the demo's VERDICTS.json there).
 - Rejected rows stay visible with their comment until a new round reopens them. [tabbar-facts-1016 2026-10-16] by hand: reload after a "Not approved".
 - A new round starts with no old answers: the kit resets its own stored state and Kenny clears nothing by hand. [2026-10-04 review-kit-rereview; 2026-10-16 received rounds] gate: gates/check-rereview.mjs
 - Run `snapshot.mjs <topic>` before changing a demo, so "Previous version" shows the round he judged. [2026-10-13 "onmisbaar"] script: research/_review/snapshot.mjs
@@ -135,7 +135,7 @@ checked by looking, in Firefox, in the review dialog.
 
 - `node research/_review/measure-gaps.mjs <port> <page> <themes> 1280,390` prints clear in every theme the round asks; also click each section into its states and measure those by hand. [2026-10-17 text-edge-1017] script: research/_review/measure-gaps.mjs
 - `node research/_review/check-kit.mjs <port> <page>` prints clear on every page, including the dialog's layout at 1920x965, 1280x800 and 390x844. [2026-10-17 lost-answer-1017; 2026-10-18 15:15, 16:27] script: research/_review/check-kit.mjs
-- `npm run gates` is green, including the re-review check against VERDICTS.json. [rereview-1016] gate: gates/check-rereview.mjs
+- `npm run gates` is green, including the re-review check against the recorded verdicts. [rereview-1016] gate: gates/check-rereview.mjs
 - Every raised surface in the section is opened in the review dialog and measured (`measure-plate.mjs`). [2026-10-16 "het geopende menu heeft geen achtergrond"] script: research/_review/measure-plate.mjs
 - The round holds a real decision, complete, with all its options; do not send a demo with nothing to decide. [2026-10-04 "waarom geef je die demo? daar is niks op te beslissen"] by hand: the sections hold something to judge; its option sets only set a default (see chapter 7).
 - The builder has looked at every option set side by side at the dialog's size, and the reply names the measured difference per pair. [fix-117 2026-10-06] by hand: the reply lists the numbers.
@@ -150,7 +150,7 @@ checked by looking, in Firefox, in the review dialog.
 ## 9. After Kenny's answer
 
 - The end of the review goes straight back to the Agenda: no in-between window, no copy step, no choice. [2026-10-16 11:17, 11:42 "no copy button"] by hand: approve the last pair.
-- Record his answer in `research/<topic>/VERDICTS.json` before touching the demo, and list the received round in the new round's `received`. [rereview-1016; 2026-10-16] gate: gates/check-rereview.mjs
+- Record his answer with `node gates/verdicts.mjs round --demo <topic> --page <round id> …` before touching the demo (the review database; never a JSON file, Kenny 2026-11-02), and list the received round in the new round's `received`. [rereview-1016; 2026-10-16; db-1102] gate: gates/check-rereview.mjs
 - Approved items are never re-checked, re-measured or swept; a fix touches only what was rejected, plus a guard so it cannot return. [2026-10-16 05:51 "ik wil niet dat je mijn beslissingen ondermijnt"] by hand: the diff touches only the rejected section.
 - A fault found in approved work is put to Kenny; he decides, nobody fixes it silently. [2026-10-16 05:51 project memory] by hand: record a finding, ask.
 - A rejection returns far better, at world-class top-5 level, never a variation of the rejected ideas; a repeat rejection goes to the strongest model. [2026-10-06 23:09 "je moet zelf weten dat je veel beter moet doen"] by hand: compare with the rejected set.

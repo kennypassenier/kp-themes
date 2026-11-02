@@ -28,8 +28,9 @@ not.
 
 ## How a verdict reaches the register
 
-Kijken's verdicts are kept in the repository, in `catalogue/verdicts.json`,
-for good: a change to the tooling must never undo one (Kenny, 2026-09-13,
+Kijken's verdicts are kept in the repository, in the review database
+`data/kp-themes.sqlite` (table `verdicts`, since 2026-11-02; until then
+`catalogue/verdicts.json`), for good: a change to the tooling must never undo one (Kenny, 2026-09-13,
 form item verdict-ledger). A verdict belongs to a block, a theme and a
 browser engine — `firefox` for Gecko (Firefox, FireDragon), `chromium` for
 Blink (Chrome, Chromium, Edge) — which the page detects on its own; a block
@@ -173,7 +174,7 @@ before every stage, so a block that moved because another was added above it,
 or a tooltip placed against the window, does not read as changed; the page's own sticky chrome (the review bar with its count of blocks left) is hidden, since a stage taller than the window was photographed with it on top. Equal
 pixels carry the approval to HEAD; different pixels, a block that is gone,
 or a photograph that did not repeat bring the pair back to Kenny.
-`catalogue/pixel-checks.json` records each outcome, the review page and
+The review database's `pixel_checks` records each outcome, the review page and
 `npm run advice` count a reopened or unstable pair as open, and a second run
 at the same HEAD compares only what did not carry. It runs locally, never in
 a workflow (Kenny, 2026-09-29). Since 2026-09-30 it photographs only what can
@@ -287,7 +288,7 @@ node gates/verdicts.mjs snapshot
 
 measures every judged component pair in the working tree, each at the
 engine and the device pixel ratio its verdict was read at, and writes
-`catalogue/hashes-now.json`. The advice reads that file, prints the commit
+the readings into the review database (`hash_readings`). The advice reads them, prints the commit
 the readings were taken at, and says how many files under `catalogue/`,
 `css/`, `js/` and `themes/` moved since — so the number always names its
 own age. Nothing here refuses: the snapshot is a file, not a gate, and the
@@ -303,7 +304,7 @@ checkout counts the same number.
 When Kenny rejects a block with a note and Claude proposes a change, the
 answer does not go into the block's "Look at:" text, which says what every
 theme must show (Kenny, 2026-09-14; under hash version 2 that text was also
-part of the hash and sent all 22 themes back, which version 3 no longer does). It goes into `catalogue/review-notes.json`, per block and
+part of the hash and sent all 22 themes back, which version 3 no longer does). It goes into the review database (`review_notes`), per block and
 theme, written with `node gates/verdicts.mjs note <block> <theme>
 --rejected "<his note, verbatim>" --change "<what changed and why>"`. The
 judging panel shows it in that theme only, as a "Rejected — what changed"
