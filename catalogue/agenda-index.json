@@ -481,6 +481,25 @@
             "fingerprint": "ce0153ffcb13c539",
             "update": null
         },
+        "research/parts-forms-1102/demo.html": {
+            "facts": {
+                "id": "parts-forms-1102",
+                "themes": "formal",
+                "ask": null,
+                "askText": "The five parts you approved on 02/11/2026 at 00:41, built on the apps' own shapes: chips that filter a data table with exact counts (Almanac), an add row under a table's columns and as one line of a form (Kitchen, Medicine Cabinet), the unsaved bar counting chips, times and days (Medicine Cabinet), a chip with its own menu and rename (Medicine Cabinet), and a note per next time with the tries left on a timeline lane (Almanac). Every part is opt-in. Formal only (names, counts and values are mock). 5 sections, 5 pairs.",
+                "sections": [
+                    { "item": "chip-filter", "themes": null, "topic": "chip-filter", "mode": null },
+                    { "item": "add-row", "themes": null, "topic": "add-row", "mode": null },
+                    { "item": "unsaved-adapter", "themes": null, "topic": "unsaved-adapter", "mode": null },
+                    { "item": "segmented-menu", "themes": null, "topic": "segmented-menu", "mode": null },
+                    { "item": "run-notes", "themes": null, "topic": "run-notes", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"parts-forms-1102-2da45ee3-3a55-4e11-b944-0f6037d5132a\",\"received\":[]}\n        "
+            },
+            "fingerprint": "8215f36dcfd5096a",
+            "update": null
+        },
         "research/parts-habits-1102/demo.html": {
             "facts": {
                 "id": "parts-habits-1102",

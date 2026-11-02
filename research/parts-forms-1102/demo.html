@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="parts-forms-1102" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Form parts: chip filter, add row, unsaved counts, chip menus, run notes</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>Form parts: chip filter, add row, unsaved counts, chip menus, run notes</h1>
+                <p class="cat-intro">
+                    The five parts you approved on 02/11/2026 at 00:41, built on the apps' own shapes: chips that filter a data table with exact
+                    counts (Almanac), an add row under a table's columns and as one line of a form (Kitchen, Medicine Cabinet), the unsaved bar
+                    counting chips, times and days (Medicine Cabinet), a chip with its own menu and rename (Medicine Cabinet), and a note per
+                    next time with the tries left on a timeline lane (Almanac). Every part is opt-in. Formal only (names, counts and values are
+                    mock). 5 sections, 5 pairs.
+                </p>
+                <p>Each section says under <b>Expected</b> what you should see and what each control does.</p>
+            </header>
+
+        <section id="chip-filter" data-review-item="chip-filter" data-review-topic="chip-filter" data-review-topic-title="The chip filter" data-review-components="chip-filter" data-review-title="Chips that filter a data table, each with its exact count" aria-labelledby="h-chip-filter">
+            <header class="pg-intro"><h2 id="h-chip-filter">Almanac, deliveries of the last day</h2><p>Twelve deliveries to the family calendars. The chips were not written by the page: they are made from the Status column, with All first.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your approval of 02/11/2026 00:41, chip-filter (Almanac gap 11)): Almanac wired its status chips to the table by hand and mirrored the table back into them. The chips now name the table and its column (<code>data-kp-filter-for</code>, <code>data-kp-filter-column</code>); the package filters, counts and keeps both in step.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Four chips: <b>All 12 · Delivered 7 · Retrying 3 · Failed 2</b>. Press <b>Failed</b>: the table shows its two rows and the line above it says so; All brings every row back.</li><li><b>Rows</b>: &ldquo;Two more failures&rdquo; adds two rows: Failed reads 4 and All 14 at once; &ldquo;One delivered&rdquo; turns a retry into Delivered: Retrying 2, Delivered 8. A chosen chip keeps filtering while the counts move.</li><li><b>Mode</b>: &ldquo;Several at once&rdquo; makes it a toggle group (Failed and Retrying together); the table follows.</li><li>Phone: the chips wrap on whole words, the table turns into cards, the counts stay.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that every count is the exact number of rows it would show, that the counts follow a change at once, and that the chosen chip and the table never disagree.</p></div>
+            <div data-review-controls data-review-controls-for="chip-filter-component"><div role="group" aria-label="Rows"><button type="button" class="kp-button kp-button--sm" data-pg="delivery-rows" data-value="base" data-target="chip-filter-component" aria-pressed="true">As loaded</button><button type="button" class="kp-button kp-button--sm" data-pg="delivery-rows" data-value="more" data-target="chip-filter-component" aria-pressed="false">Two more failures</button><button type="button" class="kp-button kp-button--sm" data-pg="delivery-rows" data-value="delivered" data-target="chip-filter-component" aria-pressed="false">One delivered</button></div><div role="group" aria-label="Mode"><button type="button" class="kp-button kp-button--sm" data-pg="delivery-mode" data-value="single" data-target="chip-filter-component" aria-pressed="true">One at a time</button><button type="button" class="kp-button kp-button--sm" data-pg="delivery-mode" data-value="multi" data-target="chip-filter-component" aria-pressed="false">Several at once</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="chip-filter-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="chip-filter-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="chip-filter-component" class="pg-component" data-pg-width="full">
+        <div class="pg-stack">
+                <div class="kp-segmented kp-segmented--chips" id="pg-delivery-chips" data-kp-segmented="single" aria-label="Show deliveries" data-kp-filter-for="pg-deliveries" data-kp-filter-column="status"></div>
+                <div class="kp-datatable" id="pg-deliveries" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-kp-filter-ui="none">
+                    <div class="kp-datatable__bar"><p class="kp-datatable__status" data-kp-datatable-status role="status"></p></div>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">Deliveries of the last day</caption>
+                            <thead><tr><th scope="col" data-kp-sort="text" data-kp-field="event">Event</th><th scope="col" data-kp-sort="text" data-kp-field="status" data-kp-filter="choice" data-kp-filter-options="Delivered,Retrying,Failed">Status</th><th scope="col" data-kp-sort="text" data-kp-field="calendar">Calendar</th><th scope="col" data-kp-sort="date" data-kp-field="at">Sent</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="kp-empty" data-kp-datatable-empty hidden></div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section id="add-row" data-review-item="add-row" data-review-topic="add-row" data-review-topic-title="The add row" data-review-components="add-row" data-review-title="An add row: under the table’s columns, or one line in a form" aria-labelledby="h-add-row">
+            <header class="pg-intro"><h2 id="h-add-row">Kitchen, what I ate today; Medicine Cabinet, forms</h2><p>Type a dish and press Enter. The page answers after a short wait, so the busy Add shows. The second part is a line in a form grid.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your approval of 02/11/2026 00:41, add-row (Kitchen’s inline add row and row label; Medicine Cabinet gap 30)): Kitchen typed new meals in a grid of its own above the table whose columns did not follow the table&rsquo;s; Medicine Cabinet laid a name, a unit and Add on a grid by hand. Both are the add row now (<code>data-kp-addrow</code>), on the kit form. A field&rsquo;s error has an icon and a role, and a row can be named apart from its key (<code>data-kp-row-label</code>).</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Table</b>: the Dish, Meal and Portions fields stand exactly under their columns, Add under the last (actions) column. Enter with a dish adds it to the table, empties the row and puts the cursor back in Dish.</li><li>Add with Dish empty: the summary above the row names the field, the field says why with a round &ldquo;!&rdquo; before the words.</li><li><b>Page answers &ldquo;Refuses&rdquo;</b>: the line under the row says &ldquo;You already logged Pasta pesto for dinner.&rdquo;; what you typed stays.</li><li><b>Row label</b>: press a Portions value and change it: the line under the table names the dish (&ldquo;Pasta pesto&rdquo;), not the row&rsquo;s id.</li><li><b>Forms line</b>: name and unit side by side with Add; a refusal stands under them. Phone: the table&rsquo;s add row becomes a card with labels, Add the full width.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that each field starts on its column&rsquo;s edge at full width, that the busy Add and the refusal look like the kit form&rsquo;s, and that the line never names an id.</p></div>
+            <div data-review-controls data-review-controls-for="add-row-component"><div role="group" aria-label="Page answers"><button type="button" class="kp-button kp-button--sm" data-pg="meal-answer" data-value="adds" data-target="add-row-component" aria-pressed="true">Adds</button><button type="button" class="kp-button kp-button--sm" data-pg="meal-answer" data-value="refuses" data-target="add-row-component" aria-pressed="false">Refuses</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="add-row-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="add-row-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="add-row-component" class="pg-component" data-pg-width="full">
+        <div class="pg-stack">
+                <form class="kp-addrow" id="pg-meal-add" data-kp-addrow data-kp-addrow-for="pg-meals" data-kp-form novalidate aria-label="Add what you ate">
+                    <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                    <div class="kp-addrow__cells">
+                        <div class="kp-field kp-addrow__cell" data-kp-addrow-column="dish"><label class="kp-field__label" for="pg-new-dish">Dish</label><input class="kp-field__input" id="pg-new-dish" name="dish" required placeholder="What did you eat?" autocomplete="off" /><span class="kp-field__error" data-kp-field-error hidden></span></div>
+                        <div class="kp-field kp-addrow__cell" data-kp-addrow-column="meal"><label class="kp-field__label" for="pg-new-meal">Meal</label><select class="kp-field__input" id="pg-new-meal" name="meal"><option>Breakfast</option><option>Lunch</option><option selected>Dinner</option><option>Snack</option></select><span class="kp-field__error" data-kp-field-error hidden></span></div>
+                        <div class="kp-field kp-addrow__cell" data-kp-addrow-column="portions"><label class="kp-field__label" for="pg-new-portions">Portions</label><input class="kp-field__input" id="pg-new-portions" name="portions" type="number" min="1" max="9" step="1" value="1" required /><span class="kp-field__error" data-kp-field-error hidden></span></div>
+                        <div class="kp-addrow__submit"><button type="submit" class="kp-button kp-button--primary" data-kp-submit data-kp-busy="Adding…">Add</button></div>
+                    </div>
+                </form>
+                <div class="kp-datatable" id="pg-meals" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-kp-filter-ui="none">
+                    <div class="kp-datatable__bar"><p class="kp-datatable__status" data-kp-datatable-status role="status"></p></div>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">What I ate today</caption>
+                            <thead><tr><th scope="col" data-kp-sort="text" data-kp-field="dish">Dish</th><th scope="col" data-kp-sort="text" data-kp-field="meal">Meal</th><th scope="col" data-kp-sort="number" data-kp-field="portions" data-kp-edit="number">Portions</th><th scope="col" data-kp-field="actions"><span class="kp-sr-only">Actions</span></th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="kp-empty" data-kp-datatable-empty hidden></div>
+                </div>
+                <p class="pg-log" id="pg-meal-log" role="status" aria-live="polite"></p>
+            </div><div class="kp-formgrid pg-forms" aria-label="Forms of medicine">
+                <div class="kp-formgrid__row"><span class="kp-formgrid__label">Forms</span><div class="kp-formgrid__control"><ul class="kp-tag-list" id="pg-forms-list" aria-label="Forms you use"><li class="kp-tag">Tablet · tablets</li><li class="kp-tag">Capsule · capsules</li><li class="kp-tag">Drops · ml</li></ul></div></div>
+                <form class="kp-addrow kp-addrow--line" id="pg-form-add" data-kp-addrow data-kp-form novalidate aria-label="Add a form">
+                    <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                    <div class="kp-formgrid__row">
+                        <span class="kp-formgrid__label">New form</span>
+                        <div class="kp-formgrid__control kp-addrow__fields">
+                            <div class="kp-field"><label class="kp-field__label" for="pg-form-name">Name</label><input class="kp-field__input" id="pg-form-name" name="name" required placeholder="Name, e.g. Sachet" autocomplete="off" /><span class="kp-field__error" data-kp-field-error hidden></span></div>
+                            <div class="kp-field"><label class="kp-field__label" for="pg-form-unit">Unit</label><input class="kp-field__input" id="pg-form-unit" name="unit" required placeholder="Unit, e.g. sachets" autocomplete="off" /><span class="kp-field__error" data-kp-field-error hidden></span></div>
+                        </div>
+                        <div class="kp-formgrid__actions"><button type="submit" class="kp-button kp-button--primary" data-kp-submit data-kp-busy="Adding…">Add</button></div>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </section>
+
+        <section id="unsaved-adapter" data-review-item="unsaved-adapter" data-review-topic="unsaved-adapter" data-review-topic-title="Unsaved changes" data-review-components="unsaved-adapter" data-review-title="The unsaved bar counts chips, row editors and weekday pickers" aria-labelledby="h-unsaved-adapter">
+            <header class="pg-intro"><h2 id="h-unsaved-adapter">Medicine Cabinet, Ibuprofen 400</h2><p>No mirror fields: the form&rsquo;s chips, its times (a row editor) and their days are counted by the bar in the header.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your approval of 02/11/2026 00:41, unsaved-adapter (Medicine Cabinet gap 24)): Medicine Cabinet kept hidden mirror fields so the unsaved bar would see its chips, its times and its days. A control now says what it holds in <code>data-kp-track-value</code>; the package&rsquo;s chips, row editor and weekday picker keep it themselves, and Discard and Undo write it back. Leaving can hand the link to an app&rsquo;s router.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Press <b>Capsule</b>: the bar says &ldquo;1 change&rdquo;; its list reads &ldquo;Form · Tablet → Capsule&rdquo;. Press Tablet again: back to no changes.</li><li>Add a time or change a day: &ldquo;When to take it&rdquo; counts as one change, whatever you changed in it.</li><li><b>Discard</b>: the chips, the days and the rows go back as they were (an added time leaves); <b>Undo</b> in the toast brings your changes back.</li><li>With a change, press <b>Back to the cabinet</b>: the package asks; Leave hands the link to the app&rsquo;s router (the line under the form says so) instead of loading a page.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that each custom control counts as one change with readable words in the list, and that Discard and Undo put every control back exactly.</p></div>
+            <div data-review-controls data-review-controls-for="unsaved-adapter-component"><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="unsaved-adapter-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="unsaved-adapter-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="unsaved-adapter-component" class="pg-component" data-pg-width="full">
+        <div class="pg-stack" id="pg-med">
+                <header class="kp-page-header">
+                    <div class="kp-page-header__inner">
+                        <div class="kp-page-header__text">
+                            <h3 class="kp-page-header__title">Ibuprofen 400</h3>
+                            <p class="kp-page-header__description">Change the form, the days or the times: the bar counts each of them as one change.</p>
+                        </div>
+                        <div class="kp-page-header__actions">
+                            <div class="kp-unsaved" data-kp-unsaved id="pg-med-bar" data-kp-unsaved-for="#pg-med-form" data-kp-name="pg-med" data-kp-dock="container" data-kp-placement="header" data-kp-keep="off" data-kp-warn-leave="app" data-kp-undo-ms="8000"></div>
+                        </div>
+                    </div>
+                </header>
+                <form class="kp-formgrid" id="pg-med-form" action="#" aria-label="Ibuprofen 400">
+                    <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="pg-med-name">Name</label><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><input class="kp-field__input" id="pg-med-name" name="name" value="Ibuprofen 400" /></div></div>
+                    <div class="kp-formgrid__row" data-kp-name="Form"><span class="kp-formgrid__label">Form</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-segmented kp-segmented--block" data-kp-segmented="single" data-kp-track-value aria-label="Form"><button type="button" class="kp-segmented__item" data-value="tablet" aria-checked="true">Tablet</button><button type="button" class="kp-segmented__item" data-value="capsule">Capsule</button><button type="button" class="kp-segmented__item" data-value="drops">Drops</button></div></div></div>
+                    <div class="kp-formgrid__row" data-kp-name="When to take it"><span class="kp-formgrid__label">When to take it</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide">
+                        <div class="kp-rows" id="pg-med-rows" data-kp-rows data-kp-track-value data-kp-rows-min="1" data-kp-rows-max="4" data-kp-rows-unit="time,times" aria-label="When to take it">
+                            <ol class="kp-rows__list" data-kp-rows-list><li class="kp-rows__row"><div class="kp-rows__cell" data-label="Time"><div class="kp-time" data-kp-time data-kp-name="pg-at-a" data-kp-value="08:00" data-kp-label="Time" data-kp-time-step="5"></div></div>
+<div class="kp-rows__cell" data-label="Days"><div class="kp-weekdays" data-kp-weekdays data-kp-track-value data-kp-value="1,2,3,4,5" data-kp-presets="false" data-kp-summary="false" aria-label="Days"></div></div></li><li class="kp-rows__row"><div class="kp-rows__cell" data-label="Time"><div class="kp-time" data-kp-time data-kp-name="pg-at-b" data-kp-value="20:00" data-kp-label="Time" data-kp-time-step="5"></div></div>
+<div class="kp-rows__cell" data-label="Days"><div class="kp-weekdays" data-kp-weekdays data-kp-track-value data-kp-value="0,1,2,3,4,5,6" data-kp-presets="false" data-kp-summary="false" aria-label="Days"></div></div></li></ol>
+                            <template data-kp-rows-template><li class="kp-rows__row"><div class="kp-rows__cell" data-label="Time"><div class="kp-time" data-kp-time data-kp-name="pg-at-{n}" data-kp-value="12:00" data-kp-label="Time" data-kp-time-step="5"></div></div>
+<div class="kp-rows__cell" data-label="Days"><div class="kp-weekdays" data-kp-weekdays data-kp-track-value data-kp-value="0,1,2,3,4,5,6" data-kp-presets="false" data-kp-summary="false" aria-label="Days"></div></div></li></template>
+                        </div>
+                    </div></div>
+                </form>
+                <p class="pg-links"><a href="?view=cabinet" id="pg-med-leave">Back to the cabinet</a></p>
+                <p class="pg-log" id="pg-med-log" role="status" aria-live="polite"></p>
+            </div>
+            </div>
+        </section>
+
+        <section id="segmented-menu" data-review-item="segmented-menu" data-review-topic="segmented-menu" data-review-topic-title="Chip menus" data-review-components="segmented-menu" data-review-title="A chip with its own menu, renamed in place" aria-labelledby="h-segmented-menu">
+            <header class="pg-intro"><h2 id="h-segmented-menu">Medicine Cabinet, categories</h2><p>Each category but All has its ⋯ menu with Rename and Delete.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your approval of 02/11/2026 00:41, segmented-menu (Medicine Cabinet gap 23)): Medicine Cabinet&rsquo;s category chips each filter and each need a ⋯ menu; the app laid chip and menu side by side by hand. A chip now takes a menu right after it, and Rename turns the chip into a field.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Each chip and its ⋯ read as one pill split by a hair line; choosing a chip works as before.</li><li>Open a chip&rsquo;s ⋯ and pick <b>Rename</b> (or press F2 on the chip): the chip becomes a field as wide as it was, its name selected. Enter saves, Escape cancels; the focus comes back to the chip.</li><li><b>Page answers &ldquo;Refuses&rdquo;</b>: Enter says &ldquo;A category called … already exists.&rdquo; under the field, which stays open; nothing around it moves.</li><li>Tab reaches the chosen chip, then its ⋯, then leaves the group; Shift+F10 on a chip opens its menu.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that chip and menu read as one control, that the field sits exactly where the chip stood, and that a refusal is plain without shifting the other chips.</p></div>
+            <div data-review-controls data-review-controls-for="segmented-menu-component"><div role="group" aria-label="Page answers"><button type="button" class="kp-button kp-button--sm" data-pg="cat-answer" data-value="accepts" data-target="segmented-menu-component" aria-pressed="true">Accepts</button><button type="button" class="kp-button kp-button--sm" data-pg="cat-answer" data-value="refuses" data-target="segmented-menu-component" aria-pressed="false">Refuses</button></div><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="cat-state" data-value="rest" data-target="segmented-menu-component" aria-pressed="true">At rest</button><button type="button" class="kp-button kp-button--sm" data-pg="cat-state" data-value="menu" data-target="segmented-menu-component" aria-pressed="false">Menu open</button><button type="button" class="kp-button kp-button--sm" data-pg="cat-state" data-value="rename" data-target="segmented-menu-component" aria-pressed="false">Renaming</button><button type="button" class="kp-button kp-button--sm" data-pg="cat-state" data-value="refused" data-target="segmented-menu-component" aria-pressed="false">Refused</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="segmented-menu-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="segmented-menu-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="segmented-menu-component" class="pg-component" data-pg-width="full">
+        <div class="pg-stack">
+                <div class="kp-segmented kp-segmented--chips" id="pg-cats" data-kp-segmented="single" aria-label="Category">
+                    <button type="button" class="kp-segmented__item" data-value="all" aria-checked="true"><span class="kp-segmented__label">All</span><span class="kp-segmented__count">14</span></button>
+                    <button type="button" class="kp-segmented__item" data-value="pain" aria-checked="false"><span class="kp-segmented__label">Pain</span><span class="kp-segmented__count">4</span></button><div class="kp-menu-button kp-segmented__menu" data-kp-menu-button><button type="button" class="kp-icon-button">⋯</button><div class="kp-menu" role="menu" aria-label="Actions for Pain"><button type="button" class="kp-menu__item" role="menuitem" data-kp-segmented-rename>Rename</button><button type="button" class="kp-menu__item" role="menuitem" data-kp-value="delete">Delete</button></div></div>
+                    <button type="button" class="kp-segmented__item" data-value="fever" aria-checked="false"><span class="kp-segmented__label">Fever</span><span class="kp-segmented__count">3</span></button><div class="kp-menu-button kp-segmented__menu" data-kp-menu-button><button type="button" class="kp-icon-button">⋯</button><div class="kp-menu" role="menu" aria-label="Actions for Fever"><button type="button" class="kp-menu__item" role="menuitem" data-kp-segmented-rename>Rename</button><button type="button" class="kp-menu__item" role="menuitem" data-kp-value="delete">Delete</button></div></div>
+                    <button type="button" class="kp-segmented__item" data-value="allergy" aria-checked="false"><span class="kp-segmented__label">Allergy</span><span class="kp-segmented__count">2</span></button><div class="kp-menu-button kp-segmented__menu" data-kp-menu-button><button type="button" class="kp-icon-button">⋯</button><div class="kp-menu" role="menu" aria-label="Actions for Allergy"><button type="button" class="kp-menu__item" role="menuitem" data-kp-segmented-rename>Rename</button><button type="button" class="kp-menu__item" role="menuitem" data-kp-value="delete">Delete</button></div></div>
+                    <button type="button" class="kp-segmented__item" data-value="stomach" aria-checked="false"><span class="kp-segmented__label">Stomach</span><span class="kp-segmented__count">5</span></button><div class="kp-menu-button kp-segmented__menu" data-kp-menu-button><button type="button" class="kp-icon-button">⋯</button><div class="kp-menu" role="menu" aria-label="Actions for Stomach"><button type="button" class="kp-menu__item" role="menuitem" data-kp-segmented-rename>Rename</button><button type="button" class="kp-menu__item" role="menuitem" data-kp-value="delete">Delete</button></div></div>
+                </div>
+                <p class="pg-log" id="pg-cats-log" role="status" aria-live="polite"></p>
+            </div>
+            </div>
+        </section>
+
+        <section id="run-notes" data-review-item="run-notes" data-review-topic="run-notes" data-review-topic-title="Run notes" data-review-components="run-notes" data-review-title="A note per next time, and the tries left on a timeline lane" aria-labelledby="h-run-notes">
+            <header class="pg-intro"><h2 id="h-run-notes">Almanac, a delivery that failed</h2><p>The next three tries of one failed delivery, then the last six hours of deliveries, one lane per calendar.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (your approval of 02/11/2026 00:41, run-notes (Almanac gaps 4 and 6)): Almanac had no place to say &ldquo;1 try left&rdquo;: the next times carried only a conflict mark, and a timeline lane only its name. A row now takes a free note (<code>{ at, note }</code>) and a lane its tries left (<code>tries</code>).</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Next tries: each row has its time, how far away it is and a note in plain words, &ldquo;2 tries left&rdquo;, &ldquo;1 try left&rdquo;, &ldquo;Last try&rdquo;, in one column.</li><li>Timeline: each lane&rsquo;s name ends with a mark: <b>Huishouden</b> &ldquo;2 tries left&rdquo; (plain), <b>School</b> &ldquo;1 try left&rdquo; (warning), <b>Sport</b> &ldquo;No tries left&rdquo; (red); <b>Werk</b> has none.</li><li><b>Notes</b>: &ldquo;Off&rdquo; gives the approved list (three columns, no note column) and lanes without marks.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that the notes line up in one column, that each mark reads at a glance beside its lane name, and that a long lane name wraps before its mark is pushed out.</p></div>
+            <div data-review-controls data-review-controls-for="run-notes-component"><div role="group" aria-label="Notes"><button type="button" class="kp-button kp-button--sm" data-pg="run-notes" data-value="on" data-target="run-notes-component" aria-pressed="true">On</button><button type="button" class="kp-button kp-button--sm" data-pg="run-notes" data-value="off" data-target="run-notes-component" aria-pressed="false">Off</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="run-notes-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="run-notes-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="run-notes-component" class="pg-component" data-pg-width="full">
+        <div class="pg-stack">
+                <div class="kp-runs" id="pg-runs" data-kp-runs data-kp-runs-count="3" data-kp-runs-title="Next tries of “Dentist, Thursday”" data-kp-now="2026-11-02T09:00:00+01:00"></div>
+                <div class="kp-gantt" id="pg-gantt" role="region" data-kp-gantt data-kp-gantt-toolbar="off" data-kp-gantt-hint="off" data-kp-gantt-range="6h" aria-label="Deliveries of the last 6 hours"></div>
+            </div>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"parts-forms-1102-2da45ee3-3a55-4e11-b944-0f6037d5132a","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
