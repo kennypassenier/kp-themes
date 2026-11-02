@@ -27,6 +27,7 @@ export const CONTROLLER_PART_FILES_1B = [
     'js/menu-button/model.js',
     'js/menu-button/open.js',
     'js/menu-button/placement.js',
+    'js/menu-button/stacking.js',
     'js/menu-button/state.js',
     'js/nav-fold/controller.js',
     'js/nav-fold/core.js',

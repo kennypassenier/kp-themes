@@ -13,6 +13,8 @@ export declare class TabbarDialog {
      */
     constructor(bar: TabbarController, tab: HTMLElement, dialog: HTMLDialogElement);
     connect(): void;
+    /** The tab the bar drew anew takes over this wiring; the old tab left the bar and gets its marks taken back. @param {HTMLElement} tab */
+    retarget(tab: HTMLElement): void;
     /** Take the marks this tab and its dialog got off again. */
     release(): void;
     /** The tab says whether the dialog is open, and reads as current while the dialog holds the current page. */

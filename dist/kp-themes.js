@@ -17901,6 +17901,25 @@ var init_keys4 = __esm({
   }
 });
 
+// js/menu-button/stacking.js
+function formsStackingContext(style, parent) {
+  if (style.position === "sticky" || style.position === "fixed") return true;
+  if (style.zIndex !== "auto" && (style.position !== "static" || /flex|grid/.test(parent?.display ?? ""))) return true;
+  if (style.transform !== "none" || style.translate !== "none" || style.rotate !== "none" || style.scale !== "none") return true;
+  if (style.filter !== "none" || style.backdropFilter !== "none" || style.perspective !== "none") return true;
+  if (style.clipPath !== "none" || (style.maskImage ?? "none") !== "none") return true;
+  if (Number(style.opacity) < 1 || style.isolation === "isolate" || style.mixBlendMode !== "normal") return true;
+  return CONTEXT_CONTAIN.test(style.contain) || CONTEXT_WILL_CHANGE.test(style.willChange);
+}
+var CONTEXT_WILL_CHANGE, CONTEXT_CONTAIN;
+var init_stacking = __esm({
+  "js/menu-button/stacking.js"() {
+    "use strict";
+    CONTEXT_WILL_CHANGE = /(^|,\s*)(transform|opacity|filter|backdrop-filter|perspective|clip-path|mask|mask-image|isolation|mix-blend-mode|translate|rotate|scale|offset-path)(\s*,|$)/;
+    CONTEXT_CONTAIN = /\b(paint|layout|strict|content)\b/;
+  }
+});
+
 // js/menu-button/placement.js
 function menuPlacement({ button: button6, menu, height, gap, room }) {
   const width = menu.right - menu.left;
@@ -17942,9 +17961,7 @@ function clipped(wrapper, view) {
 function layered(wrapper, view) {
   const top = view.document.body;
   for (let el16 = wrapper.parentElement; el16 && el16 !== top; el16 = el16.parentElement) {
-    const style = view.getComputedStyle(el16);
-    if (style.position === "sticky" || style.position === "fixed") return true;
-    if (style.position !== "static" && style.zIndex !== "auto") return true;
+    if (formsStackingContext(view.getComputedStyle(el16), el16.parentElement ? view.getComputedStyle(el16.parentElement) : null)) return true;
   }
   return false;
 }
@@ -18027,6 +18044,7 @@ var init_placement = __esm({
     "use strict";
     init_top_layer();
     init_constants10();
+    init_stacking();
     PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size", "--kp-menu-anchor-x"];
     ANCHOR_EDGE = 14;
   }
@@ -26508,6 +26526,16 @@ var init_dialog = __esm({
         bar.observe(new MutationObserver(() => this.sync())).observe(dialog, { attributes: true, attributeFilter: ["open", "aria-current"], subtree: true });
         bar.listen(dialog, "close", () => this.sync());
       }
+      /** The tab the bar drew anew takes over this wiring; the old tab left the bar and gets its marks taken back. @param {HTMLElement} tab */
+      retarget(tab) {
+        this.release();
+        this.tab = tab;
+        this.marked = false;
+        tab.setAttribute("aria-haspopup", "dialog");
+        tab.setAttribute("aria-controls", this.dialog.id);
+        this.dialog.setAttribute("data-kp-tabbar-drawer", "");
+        this.sync();
+      }
       /** Take the marks this tab and its dialog got off again. */
       release() {
         const { tab, dialog } = this;
@@ -26596,7 +26624,7 @@ var init_controller14 = __esm({
       }
       connect() {
         if (!this.view) return;
-        this.wired = /* @__PURE__ */ new WeakSet();
+        this.wired = /* @__PURE__ */ new WeakMap();
         this.publishHeight();
         this.fitLabels();
         this.wireDialogs();
@@ -26626,18 +26654,25 @@ var init_controller14 = __esm({
         publish2();
         this.own(() => root.style.removeProperty(TABBAR_HEIGHT_PROPERTY));
       }
-      /** A tab that opens a dialog: say so, and follow the dialog. A tab already wired is left as it is. */
+      /**
+       * A tab that opens a dialog: say so, and follow the dialog. The wiring is keyed on the dialog: a redraw that replaces the
+       * tab but keeps the dialog hands the one wiring to the new tab (no second click handler, observer or close timer), and a
+       * tab already wired is left as it is.
+       */
       wireDialogs() {
         for (const el16 of this.host.querySelectorAll(".kp-tabbar__tab[data-kp-dialog]")) {
           const tab = (
             /** @type {HTMLElement} */
             el16
           );
-          if (this.wired.has(tab)) continue;
           const dialog = this.doc.getElementById(tab.dataset.kpDialog ?? "");
           if (!(dialog instanceof HTMLDialogElement)) continue;
-          this.wired.add(tab);
-          new TabbarDialog(this, tab, dialog).connect();
+          const wiring = this.wired.get(dialog);
+          if (wiring === void 0) {
+            const fresh = new TabbarDialog(this, tab, dialog);
+            this.wired.set(dialog, fresh);
+            fresh.connect();
+          } else if (wiring.tab !== tab && !this.host.contains(wiring.tab)) wiring.retarget(tab);
         }
       }
       /**
@@ -56885,6 +56920,7 @@ var init_keep_focus = __esm({
   "js/datatable/attach/keep-focus.js"() {
     "use strict";
     init_events();
+    init_selectors();
     KEEP_FOCUSED_ROW = "data-kp-keep-focused-row";
     FOCUSABLE3 = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])';
     TableKeepFocus = class {
@@ -56907,17 +56943,37 @@ var init_keep_focus = __esm({
       wanted() {
         return this.t.wrap.hasAttribute(KEEP_FOCUSED_ROW);
       }
+      /** The row the focus is in, or for a focus in an expanded detail row, the row that owns the detail. @param {Element | null} from */
+      ownerOf(from) {
+        const { model, body } = this.t;
+        let row2 = (
+          /** @type {HTMLTableRowElement | null} */
+          from?.closest("tr") ?? null
+        );
+        if (row2 === null || row2.parentElement !== body) return { row: null, detail: false };
+        if (model.isRow(row2)) return { row: row2, detail: false };
+        if (!row2.matches(DETAIL)) return { row: null, detail: false };
+        while (row2 !== null && !model.isRow(row2)) row2 = /** @type {HTMLTableRowElement | null} */
+        row2.previousElementSibling;
+        return { row: row2, detail: row2 !== null };
+      }
+      /** The rows of the body that carry `key`, in body order. @param {string} key */
+      twins(key) {
+        const { body, model, columns: columns2 } = this.t;
+        return [...body.rows].filter((row2) => model.isRow(row2) && columns2.keyOf(row2) === key);
+      }
+      /** Where a row stands among the rows the page shows now. @param {HTMLTableRowElement} row */
+      slotOf(row2) {
+        return this.t.model.pageRows.filter((r) => !r.hidden || r === row2).indexOf(row2);
+      }
       /** Note the row the focus went into, when it is one of the table's rows and has a key. @param {FocusEvent} event */
       onFocusIn(event) {
-        const { model, columns: columns2, body } = this.t;
+        const { columns: columns2 } = this.t;
         const element = event.target instanceof HTMLElement ? event.target : null;
-        const row2 = (
-          /** @type {HTMLTableRowElement | null} */
-          element?.closest("tr") ?? null
-        );
-        const key = row2 !== null && row2.parentElement === body && model.isRow(row2) ? columns2.keyOf(row2) : "";
+        const { row: row2, detail } = this.ownerOf(element);
+        const key = row2 !== null ? columns2.keyOf(row2) : "";
         const cell = element?.closest("td, th");
-        this.memo = element !== null && row2 !== null && key !== "" ? { row: row2, element, key, at: model.pageRows.indexOf(row2), cell: cell instanceof HTMLTableCellElement ? cell.cellIndex : 0 } : null;
+        this.memo = element !== null && row2 !== null && key !== "" ? { row: row2, element, key, twin: this.twins(key).indexOf(row2), detail, at: this.slotOf(row2), cell: !detail && cell instanceof HTMLTableCellElement ? cell.cellIndex : 0 } : null;
       }
       /**
        * The reader moving the focus on forgets the row; a row the page took out keeps it. Checked after the event, because an engine
@@ -56934,18 +56990,20 @@ var init_keep_focus = __esm({
       /**
        * Before the rows are read again: put the focused row back in the place of its fresh copy. Returns the control to give the
        * focus back to, the neighbour's slot when the row left the data, or null when there is nothing to keep.
-       * @returns {{ element: HTMLElement } | { neighbour: { at: number, cell: number } } | null}
+       * @returns {{ element: HTMLElement } | { neighbour: { at: number, cell: number, key: string } } | null}
        */
       restore() {
         const memo = this.memo;
         if (memo === null || !this.wanted() || memo.row.isConnected) return null;
         const active = document.activeElement;
         if (active !== null && active !== document.body && active !== memo.element) return this.forget();
-        const { body, model, columns: columns2, wrap: wrap2 } = this.t;
-        const fresh = [...body.rows].find((row2) => model.isRow(row2) && columns2.keyOf(row2) === memo.key);
-        if (fresh === void 0) {
+        const { model, wrap: wrap2 } = this.t;
+        const at = model.pageRows.includes(memo.row) ? this.slotOf(memo.row) : memo.at;
+        const twins = this.twins(memo.key);
+        const fresh = twins[Math.min(memo.twin, twins.length - 1)];
+        if (fresh === void 0 || memo.detail) {
           this.memo = null;
-          return { neighbour: { at: memo.at, cell: memo.cell } };
+          return { neighbour: { at, cell: memo.cell, key: fresh === void 0 ? "" : memo.key } };
         }
         fresh.replaceWith(memo.row);
         const first = model.rendered.indexOf(memo.row);
@@ -56961,12 +57019,13 @@ var init_keep_focus = __esm({
       /**
        * The focused row left the data: the focus goes to the same cell of the row now in its place on the page (the last row when
        * it was the last), so it stays in the table instead of falling to <body>.
-       * @param {{ at: number, cell: number }} slot
+       * @param {{ at: number, cell: number, key: string }} slot `key` is set when the row is still in the data and only its detail went
        */
       focusNeighbour(slot) {
-        const rows2 = this.t.model.pageRows.filter((row3) => !row3.hidden);
+        const { model, columns: columns2 } = this.t;
+        const rows2 = model.pageRows.filter((row3) => !row3.hidden);
         if (rows2.length === 0 || slot.at < 0) return;
-        const row2 = rows2[Math.min(slot.at, rows2.length - 1)];
+        const row2 = (slot.key !== "" ? rows2.find((r) => columns2.keyOf(r) === slot.key) : void 0) ?? rows2[Math.min(slot.at, rows2.length - 1)];
         const cell = row2.cells[slot.cell] ?? null;
         const target = (
           /** @type {HTMLElement | null} */

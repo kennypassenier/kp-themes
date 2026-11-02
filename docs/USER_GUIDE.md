@@ -3563,7 +3563,14 @@ it fresh, so save a field on `change`. A row whose key left the data goes, and
 the focus moves to the same cell of the row now in its place. Off by default
 (the fresh row wins), read at every refresh. It keeps rows the table holds:
 a page that throws the whole table away and builds a new one keeps nothing,
-so redraw the rows of the `tbody` instead.
+so redraw the rows of the `tbody` instead. Rows that share a key are told
+apart by their place among them (the second row with the key keeps the second
+fresh one's place), and a sort or filter between the focus and the refresh is
+read again, so the neighbour that gets the focus is the one at the row's place
+on the page now [ovfix2-1102]. A focus inside an expanded detail row is
+remembered by its owner row: the refresh draws the details again, so the focus
+goes to the first control of the fresh owner row instead of falling to
+`<body>`.
 
 ```html
 <div class="kp-datatable" data-kp-datatable data-kp-keep-focused-row>…
