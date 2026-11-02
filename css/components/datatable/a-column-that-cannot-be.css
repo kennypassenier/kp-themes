@@ -198,6 +198,12 @@
             justify-self: stretch;
         }
 
+        /* A long token in a card line (a payload, a hub URL: one word, no space) breaks where the track ends instead of running past
+         * the card's edge [codewrap-1102, kyu's dead letters]. Table layout is untouched: this is only inside the card container. */
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td :is(code, kbd, samp, .kp-code) {
+            overflow-wrap: anywhere;
+        }
+
         /* Several controls in one cell: the label above, the controls in a row. */
         :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:has(> * + *) {
             display: flex;
