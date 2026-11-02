@@ -39513,16 +39513,18 @@
      * parts keep their look exactly and get a larger hit area instead: an invisible `::after` centred on the part, at least
      * --kp-touch-target (2.75rem, 44 px) each way, which takes the pointer for its part (a pseudo-element's press is its element's).
      * A check box or a radio takes it on its label (a label holding the box, or the label after it), reaching back over the box;
-     * the switch takes it on its track. Inputs and selects are the exception: a field cannot carry a pseudo-element, so it stands
+     * the switch takes it on its label (touch-hit-room.css), or on its track when it has none. Inputs and selects are the exception: a field cannot carry a pseudo-element, so it stands
      * at the target's height (not inside a sentence, where it is a word of the line). Uptime cells grow only in height: a cell
      * 11 px wide shares its row with its neighbours, and a tap on the row opens the nearest one (js/uptime-strip.js); their strip,
      * which clips, gives the room back by a padding its negative margin takes away, so nothing around it moves, and stands over
-     * the strip's title so a press just above a cell is the cell's.
+     * the strip's title so a press just above a cell is the cell's. A register whose strip is painted (a framed track) cannot
+     * grow it unseen and sets --kp-uptime-touch-room (0.75rem) to 0px [touch2-1102: nostromo and titanium pad their track, and
+     * the room's negative margin alone lifted their strip 12 px on a phone].
      *
      * Applies under `(pointer: coarse)`, and under `data-kp-touch` on any element (a kiosk whose touch screen reports a mouse, a
      * demo of the touch layout). Knobs: --kp-touch-target (2.75rem); --kp-touch-hit-paint (transparent) and
      * --kp-touch-hit-outline (none) draw the areas, for checking a layout by eye; --kp-touch-check-gap (0.5rem) is the gap between
-     * a check box and the label after it. */
+     * a check box and the label after it. Room for a scrolling strip, calendar days and a group's neighbours: touch-hit-room.css. */
     @media (pointer: coarse) {
         html :is(.kp-uptime__cell, .kp-datatable__edit, label:has(> .kp-field__check), .kp-field__check + label),
         html :is(.kp-table, .kp-datatable) :is(td, th[scope='row']) a[href],
@@ -39530,7 +39532,7 @@
             position: relative;
         }
 
-        html :is(.kp-segmented__item, .kp-switch__input, .kp-time__toggle, .kp-dialog__close, .kp-datatable__edit)::after,
+        html :is(.kp-segmented__item, .kp-switch__input:not(.kp-switch > *), .kp-time__toggle, .kp-dialog__close, .kp-datatable__edit)::after,
         html :is(.kp-table, .kp-datatable) :is(td, th[scope='row']) a[href]::after,
         html :is(.kp-listrow__name a[href], a.kp-listrow__name)::after {
             content: '';
@@ -39578,8 +39580,8 @@
         html .kp-uptime__track {
             position: relative;
             z-index: 1;
-            padding-block: 0.75rem;
-            margin-block: -0.75rem;
+            padding-block: var(--kp-uptime-touch-room, 0.75rem);
+            margin-block: calc(-1 * var(--kp-uptime-touch-room, 0.75rem));
         }
     }
 
@@ -39590,7 +39592,7 @@
         position: relative;
     }
 
-    [data-kp-touch] :is(.kp-segmented__item, .kp-switch__input, .kp-time__toggle, .kp-dialog__close, .kp-datatable__edit)::after,
+    [data-kp-touch] :is(.kp-segmented__item, .kp-switch__input:not(.kp-switch > *), .kp-time__toggle, .kp-dialog__close, .kp-datatable__edit)::after,
     [data-kp-touch] :is(.kp-table, .kp-datatable) :is(td, th[scope='row']) a[href]::after,
     [data-kp-touch] :is(.kp-listrow__name a[href], a.kp-listrow__name)::after {
         content: '';
@@ -39638,8 +39640,8 @@
     [data-kp-touch] .kp-uptime__track {
         position: relative;
         z-index: 1;
-        padding-block: 0.75rem;
-        margin-block: -0.75rem;
+        padding-block: var(--kp-uptime-touch-room, 0.75rem);
+        margin-block: calc(-1 * var(--kp-uptime-touch-room, 0.75rem));
     }
 
     /* The buttons' own floor (touch-target.css) follows `data-kp-touch` too, the bar's search trigger with them. */
@@ -39651,6 +39653,186 @@
     [data-kp-touch] .kp-icon-button {
         inline-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
         block-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
+    }
+}
+@layer kp.components {
+    /* --- Touch hit areas, room and neighbours [touch2-1102] ---
+     * touch-hit-area.css gives each small part an invisible area a fingertip wide. Measured on the 161 component pages at 390 px
+     * with a coarse pointer (2026-11-02), three things still cut it short or let it take a neighbour's press, and this part
+     * answers each without moving anything a mouse sees:
+     *   - Room. Calendar days (40 px wide) had none: they get an area that reaches half the gap to the next day in both
+     *     directions (--kp-calendar-gap), so two days meet in the middle. A scrolling strip clips what reaches past it: the
+     *     scrolling uptime strip kept its lift and lost the room (its own rule was stronger), and a row of chips that scrolls in
+     *     a narrow toolbar gives the room back by a padding its negative margin takes away, as the uptime strip does
+     *     (--kp-touch-chips-room, 0.5rem; a register whose chip row is painted sets it to 0px).
+     *   - Neighbours. Two areas that overlap belong to the later one, which took presses on the earlier part itself: a radio
+     *     in a column of options 21 px apart answered for the option above it, and a chip in a wrapped row took the bottom of
+     *     the chip above. Where the gap is known it is split (calendar days; segments in a track reach no further sideways than
+     *     half --kp-seg-gap; options in a column of check boxes, which meet, keep their area inside their own row). Where it
+     *     depends on how the chips wrap or how a radio group lays out, the group stands its visible parts over every hit area
+     *     in it: the group (a row of chips, a radio group, whatever holds a switch) is isolated and the areas sit at z-index -1
+     *     under its parts, so a press on a part is always that part's and an area only takes the empty room around it (two
+     *     switches 30 px apart: the lower one's area took the bottom 4 px of the upper one's track).
+     * Applies under `(pointer: coarse)` and under `data-kp-touch`, as touch-hit-area.css does. */
+    @media (pointer: coarse) {
+        /* Calendar days: a fingertip wide, split at the middle of the gap between two days. */
+        html .kp-calendar__day:not([data-kp-tone='loading'])::after {
+            content: '';
+            position: absolute;
+            inset: max(min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2)), calc(var(--kp-calendar-gap, 6px) / -2));
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        /* A segment in a track reaches no further sideways than the middle of the gap to the next segment. */
+        html .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item::after {
+            inset-inline: max(min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2)), calc(var(--kp-seg-gap, 0.125rem) / -2));
+        }
+
+        /* Chips, the options of a radio group and switches: every visible part stands over every hit area in its group. */
+        html :is(.kp-segmented--chips, .kp-fieldset:has(> label.kp-field__option), :has(> .kp-switch ~ .kp-switch)) {
+            isolation: isolate;
+        }
+
+        html .kp-segmented--chips > .kp-segmented__item:not(:focus-visible) {
+            z-index: auto;
+        }
+
+        html .kp-segmented--chips > .kp-segmented__item::after,
+        html .kp-fieldset > label.kp-field__option::after,
+        html :has(> .kp-switch ~ .kp-switch) > .kp-switch::after {
+            z-index: -1;
+        }
+
+        /* A switch takes its area on its label, which holds the track and the words: a form control draws its own pseudo-element
+         * in its own layer, so an area on the track could not stand
+         * under a neighbouring track. The area is centred on the track, which stands on the label's first line. */
+        html .kp-switch {
+            position: relative;
+        }
+
+        html .kp-switch::after {
+            content: '';
+            position: absolute;
+            inset-block: min(0px, calc((var(--kp-switch-height, 1.5rem) - var(--kp-touch-target, 2.75rem)) / 2)) min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+            inset-inline: min(0px, calc((var(--kp-switch-width, 2.5rem) - var(--kp-touch-target, 2.75rem)) / 2)) min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        /* A part that is off takes no press, so it claims no room from its neighbours either (a dimmed switch is a layer of its
+         * own, and its area stood over the switch above it). */
+        html :is(.kp-switch:has(> :disabled), label:has(> .kp-field__check:disabled), .kp-field__check:disabled + label)::after,
+        html :is(.kp-segmented__item, .kp-calendar__day):is(:disabled, [aria-disabled='true'])::after {
+            content: none;
+        }
+
+        /* Options stacked in a column (a check box before its label) meet: no room between them to share. */
+        html .kp-fieldset:not([data-kp-layout]) > .kp-field__option:has(+ .kp-field__option) > .kp-field__check + label::after {
+            inset-block-end: 0;
+        }
+
+        html .kp-fieldset:not([data-kp-layout]) > .kp-field__option + .kp-field__option > .kp-field__check + label::after {
+            inset-block-start: 0;
+        }
+
+        /* A scrolling uptime strip keeps its lift on top of the room. */
+        html .kp-uptime[data-kp-uptime-fit='scroll'] .kp-uptime__track {
+            padding-block-start: calc(var(--kp-uptime-touch-room, 0.75rem) + var(--kp-uptime-lift, 0.1875rem));
+        }
+
+        /* A row of chips that scrolls clips what reaches past it: it gets the room back as the uptime strip does. */
+        html .kp-toolbar--stacked .kp-segmented--chips {
+            padding-block: var(--kp-touch-chips-room, 0.5rem);
+            margin-block: calc(-1 * var(--kp-touch-chips-room, 0.5rem));
+        }
+
+        @media (max-width: 48rem) {
+            html .kp-toolbar .kp-segmented--chips {
+                padding-block: var(--kp-touch-chips-room, 0.5rem);
+                margin-block: calc(-1 * var(--kp-touch-chips-room, 0.5rem));
+            }
+        }
+    }
+
+    /* The same under `data-kp-touch`. */
+    /* Calendar days: a fingertip wide, split at the middle of the gap between two days. */
+    [data-kp-touch] .kp-calendar__day:not([data-kp-tone='loading'])::after {
+        content: '';
+        position: absolute;
+        inset: max(min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2)), calc(var(--kp-calendar-gap, 6px) / -2));
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    /* A segment in a track reaches no further sideways than the middle of the gap to the next segment. */
+    [data-kp-touch] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item::after {
+        inset-inline: max(min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2)), calc(var(--kp-seg-gap, 0.125rem) / -2));
+    }
+
+    /* Chips, the options of a radio group and switches: every visible part stands over every hit area in its group. */
+    [data-kp-touch] :is(.kp-segmented--chips, .kp-fieldset:has(> label.kp-field__option), :has(> .kp-switch ~ .kp-switch)) {
+        isolation: isolate;
+    }
+
+    [data-kp-touch] .kp-segmented--chips > .kp-segmented__item:not(:focus-visible) {
+        z-index: auto;
+    }
+
+    [data-kp-touch] .kp-segmented--chips > .kp-segmented__item::after,
+    [data-kp-touch] .kp-fieldset > label.kp-field__option::after,
+    [data-kp-touch] :has(> .kp-switch ~ .kp-switch) > .kp-switch::after {
+        z-index: -1;
+    }
+
+    /* A switch takes its area on its label, which holds the track and the words: a form control draws its own pseudo-element
+     * in its own layer, so an area on the track could not stand
+     * under a neighbouring track. The area is centred on the track, which stands on the label's first line. */
+    [data-kp-touch] .kp-switch {
+        position: relative;
+    }
+
+    [data-kp-touch] .kp-switch::after {
+        content: '';
+        position: absolute;
+        inset-block: min(0px, calc((var(--kp-switch-height, 1.5rem) - var(--kp-touch-target, 2.75rem)) / 2)) min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+        inset-inline: min(0px, calc((var(--kp-switch-width, 2.5rem) - var(--kp-touch-target, 2.75rem)) / 2)) min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    /* A part that is off takes no press, so it claims no room from its neighbours either (a dimmed switch is a layer of its
+     * own, and its area stood over the switch above it). */
+    [data-kp-touch] :is(.kp-switch:has(> :disabled), label:has(> .kp-field__check:disabled), .kp-field__check:disabled + label)::after,
+    [data-kp-touch] :is(.kp-segmented__item, .kp-calendar__day):is(:disabled, [aria-disabled='true'])::after {
+        content: none;
+    }
+
+    /* Options stacked in a column (a check box before its label) meet: no room between them to share. */
+    [data-kp-touch] .kp-fieldset:not([data-kp-layout]) > .kp-field__option:has(+ .kp-field__option) > .kp-field__check + label::after {
+        inset-block-end: 0;
+    }
+
+    [data-kp-touch] .kp-fieldset:not([data-kp-layout]) > .kp-field__option + .kp-field__option > .kp-field__check + label::after {
+        inset-block-start: 0;
+    }
+
+    /* A scrolling uptime strip keeps its lift on top of the room. */
+    [data-kp-touch] .kp-uptime[data-kp-uptime-fit='scroll'] .kp-uptime__track {
+        padding-block-start: calc(var(--kp-uptime-touch-room, 0.75rem) + var(--kp-uptime-lift, 0.1875rem));
+    }
+
+    /* A row of chips that scrolls clips what reaches past it: it gets the room back as the uptime strip does. */
+    [data-kp-touch] .kp-toolbar--stacked .kp-segmented--chips {
+        padding-block: var(--kp-touch-chips-room, 0.5rem);
+        margin-block: calc(-1 * var(--kp-touch-chips-room, 0.5rem));
+    }
+
+    @media (max-width: 48rem) {
+        [data-kp-touch] .kp-toolbar .kp-segmented--chips {
+            padding-block: var(--kp-touch-chips-room, 0.5rem);
+            margin-block: calc(-1 * var(--kp-touch-chips-room, 0.5rem));
+        }
     }
 }
 @layer kp.layout {

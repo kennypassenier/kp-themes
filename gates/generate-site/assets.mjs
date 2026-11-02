@@ -2,6 +2,7 @@
 
 import { highlightCss } from '../site/highlight.mjs';
 import { SWATCH_TOKENS } from './config.mjs';
+import { siteTouchCss } from './touch-css.mjs';
 
 /** The module that opens a framed example's window (see frameOf). */
 export function framesJs() {
@@ -269,7 +270,7 @@ export function siteCss() {
        chip: the site holds itself to the same bar it asks of the example
        pages (TH109). */
 ${SWATCH_TOKENS.map((t) => `    .sc-swatch__chip[data-sc-swatch='${t}'] {\n        background: var(--${t});\n    }`).join('\n\n')}
-}
+${siteTouchCss()}}
 
 ${highlightCss()}`;
 }

@@ -253,6 +253,25 @@
     .sc-swatch__chip[data-sc-swatch='border'] {
         background: var(--border);
     }
+
+    /* Touch room for the examples [touch2-1102]: the stage gives back the card's padding to the hit areas inside it, and the
+       "Markup" disclosure under each example is a fingertip tall. Coarse pointer only; a mouse sees the same page. */
+    @media (pointer: coarse) {
+        .sc-example__stage {
+            padding-inline: 1rem;
+            margin-inline: -1rem;
+        }
+
+        .sc-example__code > summary {
+            position: relative;
+        }
+
+        .sc-example__code > summary::after {
+            content: '';
+            position: absolute;
+            inset: -0.625rem 0;
+        }
+    }
 }
 
 .kp-code__keyword {

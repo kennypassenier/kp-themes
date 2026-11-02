@@ -450,6 +450,35 @@ somewhere a screen reader and a keyboard both find it.
 Seven pale plates are one plate to a reader who cannot tell those colours
 apart, so a semantic badge with no words is refused the same way.
 
+### On a touch screen [uxtouch1101, touch2-1102]
+
+Under a coarse pointer (a phone, a tablet), or inside any element with
+`data-kp-touch` (a kiosk whose touch screen reports a mouse), every small
+part takes a hit area a fingertip wide, `--kp-touch-target` (2.75rem,
+44 px) each way, without changing its look: buttons grow their box
+(`touch-target.css`); segmented items, chips, switches, the labels of
+check boxes and radios, calendar days, uptime cells and a few in-table
+controls get an invisible `::after` instead (`touch-hit-area.css`,
+`touch-hit-room.css`). Under a mouse nothing changes, to the pixel.
+
+Two neighbours never take each other's press. Where the gap between them is
+known the area stops at its middle (calendar days, `--kp-calendar-gap`;
+segments in a track, `--kp-seg-gap`; check boxes in a column). In a row of
+chips, a radio group and a set of switches that share a parent, every
+visible part stands over every hit area in the group, so a press on a part
+is that part's and an area only takes the room around it. A part that is
+disabled claims no room.
+
+A box that scrolls clips what reaches past it. The uptime strip and a row of
+chips that scrolls in a narrow toolbar give the room back by a padding their
+negative margin takes away, so nothing moves; a register whose strip or row
+is painted cannot grow it unseen and turns that off:
+`--kp-uptime-touch-room` (0.75rem) and `--kp-touch-chips-room` (0.5rem), set
+to `0px`. A segmented track that scrolls, a scrolling table, and parts closer
+together than 44 px (a date picker's days, heat cells, a column of radios)
+keep the room their layout has. `--kp-touch-hit-paint` and
+`--kp-touch-hit-outline` draw the areas, for checking a layout by eye.
+
 ## Overlays [TH35]
 
 ```jsx

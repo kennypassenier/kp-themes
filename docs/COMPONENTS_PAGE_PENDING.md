@@ -80,6 +80,7 @@ each line its example and its option row, and empties the list.
 - ux-1101, site/components/list.html: the column head `.kp-listrow--head` (the rows drop their switch word while the list is wider than 40rem); site/components/attention.html and problems.html: the sentence on the band or the Problems list; site/components/menu-button.html: row actions behind a menu.
 - tip-1102, site/components/tooltip.html and disabled-reason.html: `data-kp-tooltip-layer` (`top` default: the tooltip on the top layer, never cut by a table, card or dialog; `inline` keeps the old layer), with a live example of a reason inside a data table's card.
 - kyugaps-1102 (2026-11-02), site/components/selection.html: `data-kp-selection-room` (`hold` default, `fold`: an empty bar takes no room and opens with the first tick); and the sentence that a tour card on a part taller than the window lies over it inside the window.
+- touch2-1102 (2026-11-02), site/components/uptime.html and toolbar.html: the knobs `--kp-uptime-touch-room` (0.75rem) and `--kp-touch-chips-room` (0.5rem) a register with a painted strip or chip row sets to `0px`; calendar.html, switch.html, field.html: a sentence that calendar days, switches and radio groups split or guard their touch areas (no option).
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's

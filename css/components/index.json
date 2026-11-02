@@ -410,6 +410,9 @@
       "file": "touch-hit-area.css"
     },
     {
+      "file": "touch-hit-room.css"
+    },
+    {
       "file": "plain-card.css"
     },
     {

@@ -4741,6 +4741,8 @@
         box-shadow: var(--kp-tool-edge);
     }
     [data-theme='titanium'] .kp-uptime__track {
+        /* A painted track cannot grow unseen for a finger: no touch room [touch2-1102]. */
+        --kp-uptime-touch-room: 0px;
         --kp-sig-ti-c: 5px;
         box-sizing: border-box;
         padding: 2px;
