@@ -1,4 +1,4 @@
-import{a as m,b as l,c as u}from"./chunk-JJ7X5DNT.js";import{a as $}from"./chunk-4C666HHU.js";var y={};$(y,{EFFECTS_ATTRIBUTE:()=>s,NO_FLASH_SNIPPET:()=>x,REGISTER_PATTERN_DEFAULT:()=>d,THEME_ATTRIBUTE:()=>i,applyStoredTheme:()=>_,noFlashSnippet:()=>f});var i="data-theme",s="data-kp-effects";function e(t){return JSON.stringify(t).replace(/</g,"\\u003c")}var d="/css/{theme}-register.css",p=t=>t.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");function f({key:t=u,attribute:r=i,effects:o=!1,register:n=!1}={}){if(n)return A({key:t,attribute:r,effects:o,...n===!0?{}:n});let c=o?`
+import{a as m,b as l,c as u}from"./chunk-OT3HTDSZ.js";import{a as $}from"./chunk-4C666HHU.js";var y={};$(y,{EFFECTS_ATTRIBUTE:()=>s,NO_FLASH_SNIPPET:()=>x,REGISTER_PATTERN_DEFAULT:()=>d,THEME_ATTRIBUTE:()=>i,applyStoredTheme:()=>_,noFlashSnippet:()=>f});var i="data-theme",s="data-kp-effects";function e(t){return JSON.stringify(t).replace(/</g,"\\u003c")}var d="/css/{theme}-register.css",p=t=>t.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");function f({key:t=u,attribute:r=i,effects:o=!1,register:n=!1}={}){if(n)return A({key:t,attribute:r,effects:o,...n===!0?{}:n});let c=o?`
         document.documentElement.setAttribute(${e(s)}, '');`:"";return`(function () {
     try {
         var t = localStorage.getItem(${e(t)});
@@ -15,4 +15,4 @@ import{a as m,b as l,c as u}from"./chunk-JJ7X5DNT.js";import{a as $}from"./chunk
     if (${JSON.stringify(a).replace(/</g,"\\u003c")}.indexOf(n) < 0) n = ${e(c)};
     document.write('<link rel="stylesheet" href="' + ${e(p(E))} + n + ${e(p(T))} + '" data-kp-register="' + n + '" blocking="render">');
 })();`}var x=f();function _({key:t=u,attribute:r=i,root:o}={}){if(typeof document>"u")return null;try{let n=localStorage.getItem(t);return n?((o??document.documentElement).setAttribute(r,n),n):null}catch{return null}}export{i as a,s as b,d as c,f as d,x as e,_ as f,y as g};
-//# sourceMappingURL=chunk-7Z332XZN.js.map
+//# sourceMappingURL=chunk-LHKFVL33.js.map

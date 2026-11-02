@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 12.2.0 — 2026-11-02
+
+Released on Kenny's go (2026-11-02 14:05: "uitbrengen"), after every demo of the cycle was approved. Release suite (Firefox, 1932 tests): 1870 passed, 58 failed, 4 skipped in 25 min 36 s; the 58 were fixed (22 package faults, the rest tests that predated approved changes) and rerun: 222 passed in 2 min 14 s.
 
 - **Fixed: React parts are no longer wired a second time on a Dutch page** [rel-1220 triage]. Since `js/auto.js` waits for the Dutch dictionary, it attached after React had drawn and put a framework-free controller on React's own DataTable, Combobox and Upload (a second tag list, a second pager, a `waiting` row beside an error). They now carry `data-kp-*-attached`, which the attach code already skips. Found by the 12.2.0 release suite.
 - **Fixed: React parts redraw in the words now in force** [rel-1220]. `useStrings` follows `kp-strings-change`, so a part drawn before the page's dictionary loaded (or before a language switch) draws again in that language instead of keeping English.
