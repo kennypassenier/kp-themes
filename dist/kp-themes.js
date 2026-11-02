@@ -54605,9 +54605,10 @@ var init_layout_setup = __esm({
         this.coverSizes = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
           if (this.coverBox.hasAttribute("data-kp-state-covered")) return;
           const height = this.coverBox.getBoundingClientRect().height;
-          if (height > 0 && this.t.model.state === "ready" && this.t.model.all.length > 0) this.heldHeight = height;
+          if (height > 0 && this.t.model.state === "ready" && this.t.model.all.length > 0) this.heldHeight = height + this.leavingHeight();
         }) : null;
         this.coverSizes?.observe(this.coverBox);
+        for (const bar of this.leaving()) this.coverSizes?.observe(bar);
         this.t.identity.undo.push(() => {
           this.coverSizes?.disconnect();
           this.coverBox.removeAttribute("data-kp-state-covered");
@@ -54617,6 +54618,27 @@ var init_layout_setup = __esm({
         this.sizeLabel = null;
         this.sizeSelect = null;
         if (this.t.controls.pager !== null && this.t.controls.sizes.length > 0) this.makeSizeSelect();
+      }
+      /** What leaves while a plate covers the rows: the count line and pager bar and the sort summary (css one-state-plate-for-every.css). */
+      leaving() {
+        const wrap2 = this.t.wrap;
+        return [
+          ...wrap2.querySelectorAll(":scope > .kp-datatable__bar:not(:has([data-kp-datatable-search]))"),
+          ...wrap2.querySelectorAll("[data-kp-datatable-sort-summary]")
+        ].filter((el16) => el16.querySelector(":scope > [data-kp-datatable-status], :scope > [data-kp-datatable-pager]") !== null || el16.matches("[data-kp-datatable-sort-summary]"));
+      }
+      /**
+       * The height of what leaves, with the gap each one took, so the plate that stands in the rows' place also takes theirs and the
+       * table stays as high as it was loaded [med37-1102, medicine-cabinet 37].
+       */
+      leavingHeight() {
+        const gap = parseFloat(getComputedStyle(this.t.wrap).rowGap) || 0;
+        let sum = 0;
+        for (const el16 of this.leaving()) {
+          const h2 = el16.getBoundingClientRect().height;
+          if (h2 > 0) sum += h2 + gap;
+        }
+        return sum;
       }
       /** The grid's position line (#keyboard), under the table. */
       makeGridReadout() {
@@ -54739,7 +54761,7 @@ var init_layout_setup = __esm({
         for (const slot of [this.t.controls.failedSlot, this.t.controls.empty]) {
           if (slot === null) continue;
           const mine = slot === this.t.controls.failedSlot && failedNow || slot === this.t.controls.empty && emptyNow;
-          if (mine && this.heldHeight > 0) slot.style.setProperty("--kp-datatable-held", `${Math.round(this.heldHeight)}px`);
+          if (mine && this.heldHeight > 0) slot.style.setProperty("--kp-datatable-held", `${Number(this.heldHeight.toFixed(2))}px`);
           else slot.style.removeProperty("--kp-datatable-held");
         }
       }

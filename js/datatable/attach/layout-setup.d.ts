@@ -15,6 +15,13 @@ export declare class TableLayoutSetup {
     sizeSelect: HTMLSelectElement | null;
     /** @param {DataTableControl} t */
     constructor(t: DataTableControl);
+    /** What leaves while a plate covers the rows: the count line and pager bar and the sort summary (css one-state-plate-for-every.css). */
+    leaving(): Element[];
+    /**
+     * The height of what leaves, with the gap each one took, so the plate that stands in the rows' place also takes theirs and the
+     * table stays as high as it was loaded [med37-1102, medicine-cabinet 37].
+     */
+    leavingHeight(): number;
     /** The grid's position line (#keyboard), under the table. */
     makeGridReadout(): void;
     /** A failed slot for any table that wrote none, else the page's slot dressed as the package's failed plate. */
