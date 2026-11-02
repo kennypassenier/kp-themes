@@ -1,4 +1,11 @@
 {
     "demo": "kyugaps-1102",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "kyugaps-1102-fc306a6b-803f-4bdd-ad6e-b69038a45157",
+            "allJudged": true,
+            "comment": "Kenny, 2026-11-02 12:26 UTC: 2 of 2 judged, 2 approved (formal), defaults kept."
+        }
+    ]
 }

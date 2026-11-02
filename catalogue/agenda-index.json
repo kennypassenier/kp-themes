@@ -1,19 +1,6 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
-        "research/tip-1102/demo.html": {
-            "facts": {
-                "id": "tip-1102",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Kitchen found the reason of a disabled Delete cut at the edge of its table’s card on a phone. The reason’s tooltip now stands above the page, so nothing round the button can cut it. One section, formal only.",
-                "sections": [{ "item": "reason-in-table", "themes": null, "topic": "reason", "mode": null }],
-                "extra": null,
-                "round": "\n            {\"round\":\"tip-1102-9859ed3b-e29e-4a47-b0f3-fc52cf80737e\",\"received\":[]}\n        "
-            },
-            "fingerprint": "3e6b46f222a24199",
-            "update": null
-        },
         "research/graph-1020/demo.html": {
             "facts": {
                 "id": "graph-1020",
@@ -493,102 +480,16 @@
             },
             "fingerprint": "ce0153ffcb13c539",
             "update": null
-        },
-        "research/medgaps-1102/demo.html": {
-            "facts": {
-                "id": "medgaps-1102",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Two options built from Medicine Cabinet’s gaps of 01/11/2026: its “Add stock” popover with room inside and its edge under the button, and its medicines table, whose refresh no longer takes the row you are typing in. Both are opt-in; the third gap (the tab bar’s More drawer that stayed full-screen) was a fault, fixed without a new look, so it has no section. Formal only (names, counts and stock are mock). 2 sections, 2 pairs.",
-                "sections": [
-                    { "item": "popover-panel", "themes": null, "topic": "popover", "mode": null },
-                    { "item": "keep-focused-row", "themes": null, "topic": "datatable", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\"round\":\"medgaps-1102-f717889d-8587-4703-893d-bd93b62a5296\",\"received\":[]}\n        "
-            },
-            "fingerprint": "aa8d7ff5a46ce939",
-            "update": null
-        },
-        "research/heatstates-1102/demo.html": {
-            "facts": {
-                "id": "heatstates-1102",
-                "themes": "formal",
-                "ask": null,
-                "askText": "The Habits app’s gap of 01/11/2026: on a phone the Counters history’s cells are too small to tap one by one, so a tap on a row now opens that row’s days. Beside it, a loading heat grid no longer stands taller than the loaded one. Formal only. 2 sections, 2 pairs.",
-                "sections": [
-                    { "item": "heat-days", "themes": null, "topic": "heat", "mode": null },
-                    { "item": "heat-states", "themes": null, "topic": "heat", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\"round\":\"heatstates-1102-1587a62c-3e6f-41ba-ba6c-a34f49c24f2f\",\"received\":[]}\n        "
-            },
-            "fingerprint": "7134fb68bf83bdbd",
-            "update": null
-        },
-        "research/parts-forms-1102/demo.html": {
-            "facts": {
-                "id": "parts-forms-1102",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 2 of the form parts: the chip with its own menu (Medicine Cabinet), which you sent back because the open menu shrank to an empty strip as soon as you hovered or did anything. The menu's height cap went below zero in a short window; it now keeps room for the menu's rows, so the menu opens whole under its ⋯ and closes only when you pick, press Escape or press outside it. The other four parts are approved and leave this page. Formal only (names and counts are mock). 1 section, 1 pair.",
-                "sections": [{ "item": "segmented-menu", "themes": null, "topic": "segmented-menu", "mode": null }],
-                "extra": null,
-                "round": "\n            {\"round\":\"parts-forms-1102-f763902a-8c3e-47ba-8e2b-6821f359e149\",\"received\":[\"parts-forms-1102-2da45ee3-3a55-4e11-b944-0f6037d5132a\"]}\n        "
-            },
-            "fingerprint": "56a6a4f6e1d4fbed",
-            "update": null
-        },
-        "research/parts-habits-1102/demo.html": {
-            "facts": {
-                "id": "parts-habits-1102",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 2 of the five Habits parts. You approved the swipe row, the chord keys and the settled row; they have left this page. Two come back: the day timeline, whose blocks you asked to drag by themselves (now the whole block moves, and the tasks beside the day drop in by mouse, pen or finger), and the swatch picker, whose colours were the theme’s already but too much alike (now every pair in all twelve themes stands clearly apart, with a row per theme to judge it). Formal only, on the app’s own shapes and words (the titles, times, projects and events are mock). 2 sections, 2 pairs.",
-                "sections": [
-                    { "item": "dayline", "themes": null, "topic": "dayline", "mode": null },
-                    { "item": "swatch-picker", "themes": null, "topic": "swatches", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\"round\":\"parts-habits-1102-b74571de-ebc2-4417-8ebc-253d13e9ea7b\",\"received\":[\"parts-habits-1102-f2341460-0182-4af6-8161-1eabf5de1613\"]}\n        "
-            },
-            "fingerprint": "e283107e3b7e072f",
-            "update": null
-        },
-        "research/parts-layout-1102/demo.html": {
-            "facts": {
-                "id": "parts-layout-1102",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 2 of the layout options and new parts from the apps: the two you sent back. Kitchen’s More menu now opens above the second bar at full width, and the side dish wheel no longer turns with the main course: it waits, locked, until the main course has stopped, and the app decides whether it then waits for a press (the default) or starts by itself. The other six sections are approved and leave this page. Formal only, on the apps’ own data (names are mock). 2 sections, 2 pairs.",
-                "sections": [
-                    { "item": "nav-more", "themes": null, "topic": "nav-more", "mode": null },
-                    { "item": "coupled-wheels", "themes": null, "topic": "wheel", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\"round\":\"parts-layout-1102-08fe97e7-f958-4fb8-8e13-4d7201090b4d\",\"received\":[\"parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113\"]}\n        "
-            },
-            "fingerprint": "5eacebed10679adf",
-            "update": null
-        },
-        "research/kyugaps-1102/demo.html": {
-            "facts": {
-                "id": "kyugaps-1102",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Two things kyu ran into on its topic page. The selection bar kept an empty band above the dead letters while nothing was ticked: a new option folds it away, and you pick which is the default. The tour card on a part taller than the window stood out of reach above it: it now stays in the window, nothing to choose. Formal only.",
-                "sections": [
-                    { "item": "selection-room", "themes": null, "topic": "selection", "mode": null },
-                    { "item": "tour-tall", "themes": null, "topic": "tour", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\"round\":\"kyugaps-1102-fc306a6b-803f-4bdd-ad6e-b69038a45157\",\"received\":[]}\n        "
-            },
-            "fingerprint": "f4b5a5c22f07e993",
-            "update": null
         }
     },
     "decided": {
+        "research/tip-1102/demo.html": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/tip-1102/VERDICTS.json)",
+        "research/parts-layout-1102/demo.html": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/parts-layout-1102/VERDICTS.json)",
+        "research/parts-habits-1102/demo.html": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/parts-habits-1102/VERDICTS.json)",
+        "research/parts-forms-1102/demo.html": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/parts-forms-1102/VERDICTS.json)",
+        "research/medgaps-1102/demo.html": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/medgaps-1102/VERDICTS.json)",
+        "research/kyugaps-1102/demo.html": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/kyugaps-1102/VERDICTS.json)",
+        "research/heatstates-1102/demo.html": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/heatstates-1102/VERDICTS.json)",
         "research/ux-dialogs-1101/demo.html": "2026-11-02 00:25 UTC, Kenny: drawer-beside approved in formal in round 2 (research/ux-dialogs-1101/VERDICTS.json)",
         "research/ux-touch-1101/demo.html": "2026-11-02 00:03 UTC, Kenny: docs-nav approved in formal in round 2 (research/ux-touch-1101/VERDICTS.json)",
         "research/ux-parts-1101/demo.html": "2026-11-01 23:40 UTC, Kenny: both remaining pairs approved in formal in round 2 (research/ux-parts-1101/VERDICTS.json)",

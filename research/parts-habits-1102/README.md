@@ -1,5 +1,7 @@
 # research/parts-habits-1102: five parts for the Habits todo app
 
+**Decided (2026-11-02 12:26 UTC):** Kenny approved this demo in formal. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kenny approved five new parts on 2026-11-02 00:41 from the Habits todo app's requests of 01/11/2026 (`~/Projects/kp-gaps/habits.md`),
 each opt-in and built from the package's own parts:
 

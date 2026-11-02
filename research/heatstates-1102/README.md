@@ -1,5 +1,7 @@
 # research/heatstates-1102: the heat grid on a phone, and its loading footprint
 
+**Decided (2026-11-02 12:26 UTC):** Kenny approved this demo in formal. Recorded in `VERDICTS.json`; the page is not offered again.
+
 One review page, formal only, one section per visible change of batch `heatstates-1102` (02/11/2026):
 
 | Section       | Asked by                                                     | Change                                                                                  | Controls                       |

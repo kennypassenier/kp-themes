@@ -1,5 +1,7 @@
 # research/medgaps-1102: Medicine Cabinet's popover and table gaps
 
+**Decided (2026-11-02 12:26 UTC):** Kenny approved this demo in formal. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Built from Medicine Cabinet's gaps of 01/11/2026 (`~/Projects/kp-gaps/medicine-cabinet.md`, iteration 3) [medicine-1102]. One
 review page, formal only, one section per visible change, on the app's own shapes (names, counts and stock are mock):
 

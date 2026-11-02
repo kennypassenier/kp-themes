@@ -1,5 +1,7 @@
 # research/parts-layout-1102: layout options and four new parts from the apps
 
+**Decided (2026-11-02 12:26 UTC):** Kenny approved this demo in formal. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kenny approved these parts and options on 2026-11-02 00:41 (opt-in, default off, formal first). One review page, formal only,
 eight sections on the apps' own data (names and counts are mock), each shown with its states and its option switched live:
 

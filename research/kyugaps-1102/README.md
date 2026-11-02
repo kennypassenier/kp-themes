@@ -1,5 +1,7 @@
 # research/kyugaps-1102: kyu's selection bar room and the tour on a tall part
 
+**Decided (2026-11-02 12:26 UTC):** Kenny approved this demo in formal with the defaults kept. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Two of kyu's package gaps (`~/Projects/kp-gaps/kyu.md`) with a visible result, shown on kyu's own topic page (its dead
 letters card: the selection bar over the table, columns Died, Subscription, Tries, Why it died, Payload, Actions)
 [kyugaps-1102]. Gap 19 (a sticky end column in the data table) was already in the package (`data-kp-fixed-end`, 11.1.0)

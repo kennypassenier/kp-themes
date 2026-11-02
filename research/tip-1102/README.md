@@ -1,5 +1,7 @@
 # research/tip-1102: the reason of a disabled button, whole inside a table
 
+**Decided (2026-11-02 12:26 UTC):** Kenny approved this demo in formal. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Kitchen's gap (`~/Projects/kp-gaps/kitchen.md`, 01/11/2026, disabled reason): the reason of a disabled Delete was cut inside a
 data table at 390 px in the card layout ("IN GEBRUIK DOOR 1 GERECHT EN 2 RECE…" cut at the card's edge) [tip-1102, kitchen-1101].
 
