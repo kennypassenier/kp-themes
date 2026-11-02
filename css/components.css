@@ -15542,7 +15542,11 @@
     .kp-calendar-layout {
         container: kp-calendar-layout / inline-size;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) var(--kp-calendar-aside, 16rem);
+        /* The aside's track may shrink [almanac-1102, almanac gap 14]: a fixed track wider than a phone
+         * (--kp-calendar-aside: 30rem) stayed 480 px once both parts stacked, and the page scrolled 122 px
+         * sideways. A track with a max fills to its width before the 1fr track takes any room, so the
+         * side-by-side layout is unchanged. */
+        grid-template-columns: minmax(0, 1fr) minmax(0, var(--kp-calendar-aside, 16rem));
         align-items: start;
         gap: var(--kp-space-lg, 1.5rem);
     }
