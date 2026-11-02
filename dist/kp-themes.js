@@ -21061,6 +21061,8 @@ var init_controller9 = __esm({
         );
         if (popover) this.listen(popover, "toggle", (event) => this.onToggle(event));
         markSelection(picker, initializeTheme(currentTheme()));
+        this.own(onThemeChange((theme) => nameTrigger(picker, theme)));
+        nameTrigger(picker, currentTheme());
         this.own(() => this.stopPreview());
       }
       /** A press on an option: end the look, apply the theme, store it, say so, and close an enclosing menu. @param {Event} event */

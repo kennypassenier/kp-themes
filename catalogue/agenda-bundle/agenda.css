@@ -10393,6 +10393,8 @@
     .kp-popover--panel {
         /* Its own width, up to the knob, so an anchor area too narrow for it is a fallback to the other side, not a squeeze. */
         width: max-content;
+        /* The cap is for the whole plate, padding and border included [k420-1102]. */
+        box-sizing: border-box;
         max-inline-size: min(var(--kp-popover-panel-max-width, 22rem), calc(100vw - 1rem));
         padding: var(--kp-popover-panel-padding, var(--kp-space-md, 0.75rem));
     }

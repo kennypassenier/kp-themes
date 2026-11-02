@@ -10113,7 +10113,7 @@
         "||||.kp-platforms": "b722995fc0b30d0c",
         "||||.kp-popover": "dd952ba01b234313",
         "||||.kp-popover--end": "eae8b719e94a17a4",
-        "||||.kp-popover--panel": "40ba006956267106",
+        "||||.kp-popover--panel": "635df58b5e559342",
         "||||.kp-popover--panel[popover]": "5c321635e9e15a95",
         "||||.kp-popover-form": "d849b55976594095",
         "||||.kp-popover-form__accept": "49d17bd1a9670409",
@@ -15008,7 +15008,7 @@
             ]
         },
         "picker": {
-            "modules": "c2b9b80912954cea",
+            "modules": "c1910a3466fb942b",
             "families": [
                 "data-kp-add",
                 "data-kp-all",
