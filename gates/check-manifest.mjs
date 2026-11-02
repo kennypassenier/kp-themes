@@ -183,6 +183,10 @@ export function references(source) {
     // the comments are blanked first.
     const code = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
     for (const match of code.matchAll(/\bimport\(\s*'(\.[^']+)'\s*\)/g)) out.push(match[1]);
+    // esbuild's output (dist/js/, the split bundle [load-1102]) writes double quotes and has no comments to blank; read
+    // raw, because blanking `//` to the end of a minified line could take every import after it with it.
+    for (const match of source.matchAll(/(?:\bfrom|\bimport)\s*"(\.[^"]+)"/g)) out.push(match[1]);
+    for (const match of source.matchAll(/\bimport\(\s*"(\.[^"]+)"\s*\)/g)) out.push(match[1]);
     for (const match of source.matchAll(/url\(\s*['"]?(\.[^'")]+)['"]?\s*\)/g)) out.push(match[1]);
     // A minified file names its source map the same way a stylesheet
     // names a font: the consumer who copies one copies the other, or the

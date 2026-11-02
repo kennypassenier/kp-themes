@@ -37,6 +37,8 @@ export const DIST_FILES = [
     'dist/css/themes.min.css.map',
     'dist/css/utilities.min.css',
     'dist/css/utilities.min.css.map',
+    'dist/kp-themes-base.min.css',
+    'dist/kp-themes-base.min.css.map',
     'dist/kp-themes.min.css',
     'dist/kp-themes.min.css.map',
     'dist/kp-themes.min.js',

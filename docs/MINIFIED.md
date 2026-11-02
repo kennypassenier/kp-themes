@@ -34,11 +34,27 @@ the selectors and their order are identical, which is what
 | `css/titanium-register.css` | 221.1 kB | 120.9 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
 | `dist/kp-themes.css` | 4369.6 kB | 2322.5 kB | 47% |
+| `dist/kp-themes-base.css` | 1468.2 kB | 735.2 kB | 50% |
 | `dist/kp-themes.js` | 3727.0 kB | 1954.4 kB | 48% |
 
 The loose stylesheets together weigh **4422.7 kB** authored and
 **2354.3 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
+
+**The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without
+its twelve registers, plus the fonts: link it, and let `js/lazy-register.js` fetch the active
+theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same modules as
+`dist/kp-themes.min.js`, split by esbuild into two entries and shared chunks:
+
+| Entry | Files it loads before it runs | Minified |
+| ----- | ----------------------------: | -------: |
+| `dist/js/auto.js` | 19 | 259.1 kB |
+| `dist/js/lazy-register.js` | 6 | 83.4 kB |
+| `dist/js/core.js` | 4 | 78.5 kB |
+| `dist/js/index.js` | 153 | 1896.2 kB |
+| the whole folder | 289 | 2007.8 kB |
+
+`auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a
 seventh of its size. That number is not in this table on purpose — it

@@ -113,8 +113,9 @@ try {
         }
     }
     for (const name of onDisk) {
-        // The bundle's types are written by gates/generate-bundle.mjs and checked there [homelab-1101 bundle-types].
-        if (name === 'dist/kp-themes.d.ts') continue;
+        // The bundle's types, and the split bundle's, are written by gates/generate-bundle.mjs and checked there
+        // [homelab-1101 bundle-types, load-1102].
+        if (name === 'dist/kp-themes.d.ts' || name.startsWith('dist/js/')) continue;
         if (!fresh.includes(name)) {
             failed++;
             console.error(`${name} is on disk and belongs to no source.`);

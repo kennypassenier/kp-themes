@@ -317,6 +317,41 @@ Two things work differently on such a page, and both are contracts:
 Neither is more supported than the other. If you are not counting bytes,
 take the bundle: it is the one that cannot go wrong.
 
+**The base and the split bundle — the frugal route from `dist/`** [load-1102].
+The same pattern without the loose files: `dist/kp-themes-base.min.css`
+is the bundle without its twelve registers, plus the fonts (117 kB gzip,
+89 kB brotli, against 344 kB and 217 kB for `dist/kp-themes.min.css`), and
+`dist/js/` is the module bundle split into chunks, so `auto.js` loads its
+core (13 files, 65 kB gzip) and fetches a widget's chunk only when the page
+has that widget.
+
+```html
+<link rel="stylesheet" href="/kp/dist/kp-themes-base.min.css" />
+<script>
+    /* the output of noFlashSnippet({ register: { pattern: '/kp/dist/css/{theme}-register.min.css' } }) */
+</script>
+<script type="module">
+    import { attachLazyRegisters } from '/kp/dist/js/lazy-register.js';
+    attachLazyRegisters({ pattern: '/kp/dist/css/{theme}-register.min.css' });
+</script>
+<script type="module" src="/kp/dist/js/auto.js"></script>
+```
+
+The snippet writes the active theme's register below the base before the
+first paint, which is what keeps the page from flashing; a server that
+already knows the theme (a cookie) can do the same with a plain
+`<link rel="stylesheet">` to that register, or start it early with
+`<link rel="preload" as="style" href="/kp/dist/css/formal-register.min.css" />`
+above it. Both contracts above hold unchanged. Import from
+`dist/js/core.js` (`applyTheme`) and `dist/js/lazy-register.js` rather
+than `dist/js/index.js` on such a page: they share `auto.js`'s chunks,
+while `index.js` re-exports every module, and a browser fetches every
+chunk an import names. Measured on a page with a datatable and a dialog
+(Firefox, 2026-11-02): 135 kB gzip of JavaScript in 43 files against
+576 kB for `dist/kp-themes.min.js`, and 131 kB of CSS against 345 kB.
+Serve `dist/js/chunk-*.js` with a long cache: their names carry a
+content hash.
+
 ## The entry points worth naming
 
 Not all of them: `package.json` exports 181 paths, because every register,
@@ -353,6 +388,11 @@ for.
 | `@kp-soft/themes/css/<theme>-register`   | one theme's own expression, opt-in, 25 of them         |
 | `@kp-soft/themes/css/fonts`              | the `@font-face` block for the shipped families        |
 | `@kp-soft/themes/dist/css/min`           | the minified bundle (`docs/MINIFIED.md` has the sizes) |
+| `@kp-soft/themes/dist/css/base`          | the minified bundle without its registers, plus fonts  |
+| `@kp-soft/themes/dist/js/auto`           | the split bundle's boot: core now, widgets on demand   |
+| `@kp-soft/themes/dist/js/index`          | the split bundle with every name `dist/js` exports     |
+| `@kp-soft/themes/dist/js/core`           | the split bundle's theme state (`applyTheme`)          |
+| `@kp-soft/themes/dist/js/lazy-register`  | the split bundle's `attachLazyRegisters`               |
 
 ## Consume the JavaScript
 

@@ -17,6 +17,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 import { DIST_FILES } from './checksums-dist.mjs';
+import { SPLIT_FILES } from './checksums-split.mjs';
 import { JS_FILES } from './checksums-js.mjs';
 import { PART_FILES } from './checksums-parts.mjs';
 import { CONTROLLER_PART_FILES } from './checksums-parts-controllers.mjs';
@@ -59,6 +60,8 @@ export const FILES = [
     'dist/kp-themes.css',
     'dist/kp-themes.js',
     ...DIST_FILES,
+    // The split bundle in dist/js/, generated with it [load-1102].
+    ...SPLIT_FILES,
     ...JS_FILES,
     // The shipped fonts [T19, AR39]: every file under fonts/ that
     // fonts/families.json names — the faces, each family's LICENSE, the

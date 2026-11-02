@@ -50,13 +50,14 @@
 //
 // Since scope-76 the check runs inside `npm run check:min`.
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import process from 'node:process';
 import * as esbuild from 'esbuild';
 import { aliases, declaredNames } from './bundle-names.mjs';
 import { stylesheets } from './stylesheets.mjs';
+import { SPLIT_DIR, splitFiles, splitManifest, splitTypes, staleSplitFiles } from './bundle-split.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const OUT = join(ROOT, 'dist');
@@ -185,30 +186,41 @@ function types() {
     );
 }
 
+// The split bundle in dist/js/ beside the single file, and its manifest list (gates/bundle-split.mjs) [load-1102].
+const entry = entrySource(declarations((module) => readFileSync(join(ROOT, module.slice(2)), 'utf8')));
+const split = [...(await splitFiles({ root: ROOT, version, entry })), ...splitTypes(version, entry)];
 const files = [
     { name: 'kp-themes.css', content: css() },
     { name: 'kp-themes.js', content: await js() },
     { name: 'kp-themes.d.ts', content: types() },
+    ...split,
+    { name: '../gates/checksums-split.mjs', content: splitManifest(split) },
 ];
+const stale = staleSplitFiles(ROOT, split);
 
 if (process.argv.includes('--check')) {
-    let stale = 0;
+    let drift = 0;
     for (const file of files) {
         const path = join(OUT, file.name);
         const current = existsSync(path) ? readFileSync(path, 'utf8') : '';
         if (current !== file.content) {
-            stale++;
+            drift++;
             console.error(`dist/${file.name} does not match its sources.`);
         }
     }
-    if (stale > 0) {
+    for (const name of stale) {
+        drift++;
+        console.error(`dist/${name} is no longer part of the split bundle.`);
+    }
+    if (drift > 0) {
         console.error('Run `npm run generate:bundle` and commit the result.');
         process.exit(1);
     }
-    console.log(`Bundle: dist/kp-themes.css (${STYLESHEETS.length} stylesheets), dist/kp-themes.js and dist/kp-themes.d.ts match their sources.`);
+    console.log(`Bundle: dist/kp-themes.css (${STYLESHEETS.length} stylesheets), dist/kp-themes.js, dist/kp-themes.d.ts and dist/${SPLIT_DIR}/ (${split.length} files) match their sources.`);
     process.exit(0);
 }
 
-mkdirSync(OUT, { recursive: true });
+mkdirSync(join(OUT, SPLIT_DIR), { recursive: true });
+for (const name of stale) rmSync(join(OUT, name));
 for (const file of files) writeFileSync(join(OUT, file.name), file.content);
-console.log(`Wrote dist/kp-themes.css, dist/kp-themes.js and dist/kp-themes.d.ts.`);
+console.log(`Wrote dist/kp-themes.css, dist/kp-themes.js, dist/kp-themes.d.ts and dist/${SPLIT_DIR}/ (${split.length} files, ${stale.length} stale removed).`);

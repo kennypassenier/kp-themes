@@ -11,7 +11,8 @@
     },
     "sideEffects": [
         "*.css",
-        "./js/auto.js"
+        "./js/auto.js",
+        "./dist/js/auto.js"
     ],
     "exports": {
         ".": {
@@ -685,6 +686,23 @@
         "./dist/js/min": {
             "types": "./dist/kp-themes.d.ts",
             "default": "./dist/kp-themes.min.js"
+        },
+        "./dist/css/base": "./dist/kp-themes-base.min.css",
+        "./dist/js/auto": {
+            "types": "./dist/js/auto.d.ts",
+            "default": "./dist/js/auto.js"
+        },
+        "./dist/js/lazy-register": {
+            "types": "./dist/js/lazy-register.d.ts",
+            "default": "./dist/js/lazy-register.js"
+        },
+        "./dist/js/core": {
+            "types": "./dist/js/core.d.ts",
+            "default": "./dist/js/core.js"
+        },
+        "./dist/js/index": {
+            "types": "./dist/js/index.d.ts",
+            "default": "./dist/js/index.js"
         },
         "./dist/css/*": "./dist/css/*"
     },

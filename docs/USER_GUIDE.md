@@ -4344,6 +4344,20 @@ arriving.
 If you serve your own files, take the bundle. If bytes over the wire are
 the constraint, take the link. README.md has both snippets.
 
+**The same split from `dist/`** [load-1102]. Link
+`dist/kp-themes-base.min.css` (everything but the registers, fonts
+included), put the no-flash snippet with
+`register: { pattern: '/kp/dist/css/{theme}-register.min.css' }` below it
+so the active register is in the document before the first paint, call
+`attachLazyRegisters` from `dist/js/lazy-register.js` with the same
+pattern, and boot with `<script type="module" src="/kp/dist/js/auto.js">`.
+A server that knows the theme can preload its register
+(`<link rel="preload" as="style">`) to start it sooner. For code of your
+own, import from `dist/js/core.js` and `dist/js/lazy-register.js`, which
+share `auto.js`'s chunks; `dist/js/index.js` has every name the old bundle
+has, and loads every chunk to give them. README.md has the snippet and the
+measured bytes.
+
 **Taking the files.** A release attaches `consumer.tar`: everything the
 checksum manifest names except the fonts (they ship as `fonts.tar`) and
 the source maps. It carries `SHA256SUMS` itself, so:
@@ -4366,6 +4380,10 @@ module declares, flat. So `attachThemePickers`, `enforceContracts`,
 straight out of it. Two names are namespace-only — `OPEN_EVENT` and
 `MATCHERS` — because combobox, datepicker and palette each declare their
 own, and a flat one would silently be somebody else's.
+
+`dist/js/index.js` exports the same names from the split bundle
+[load-1102]; `dist/js/auto.js` boots like `js/auto.js` and fetches a
+widget's chunk only when the page carries that widget.
 
 ## Knowing where a reveal is [TF2]
 
