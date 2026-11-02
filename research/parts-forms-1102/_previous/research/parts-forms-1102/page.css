@@ -1,0 +1,58 @@
+/* research/parts-forms-1102: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-changed,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    container: pg-stage / inline-size;
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+.pg-component > *,
+.pg-stack > * {
+    min-inline-size: 0;
+}
+
+/* One part of a section: its pieces under each other on one rhythm. */
+.pg-stack {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+/* What the page heard: one line high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+}
+
+.pg-links {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+}

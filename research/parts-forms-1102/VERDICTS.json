@@ -1,4 +1,18 @@
 {
     "demo": "parts-forms-1102",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "parts-forms-1102-2da45ee3-3a55-4e11-b944-0f6037d5132a",
+            "allJudged": true,
+            "comment": "Kenny, 2026-11-02 01:12 UTC: 5 of 5 judged, 4 approved, 1 not approved (formal), defaults kept. Approved: chip-filter, add-row, unsaved-adapter, run-notes.",
+            "notApproved": [
+                {
+                    "item": "segmented-menu",
+                    "theme": "formal",
+                    "note": "something is wgoing wrong, when the menu opens, and I hover or try to do anything, it seems to close again. right now I see a menu without items in them, just the shell, it's got a bit of width but only a sliver of height"
+                }
+            ]
+        }
+    ]
 }

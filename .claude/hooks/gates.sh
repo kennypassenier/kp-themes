@@ -132,6 +132,8 @@ gate rereview node gates/check-rereview.mjs || exit 1
 
 # anything raised (menu, popover, hover card, drawer) keeps an opaque plate in every theme [states-1017]
 gate raised-plate node gates/check-raised-plate.mjs || exit 1
+# a raised surface's height cap that follows the window keeps a floor, never a shell [forms-1102 r2]
+gate raised-cap node gates/check-raised-cap.mjs || exit 1
 
 # the busy card's loading card over any data area is wired and styled in every theme [KT7]
 gate busy-card node gates/check-busy-card.mjs || exit 1

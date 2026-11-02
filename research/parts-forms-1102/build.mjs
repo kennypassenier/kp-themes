@@ -49,7 +49,7 @@ const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 
 // A round id is never reused: once Kenny's answer to it is recorded (it is in `received`), the next page gets a new one.
 const roundId = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) && !received.includes(current) ? current : `${ID}-${randomUUID()}`;
 
-const title = 'Form parts: chip filter, add row, unsaved counts, chip menus, run notes';
+const title = 'The chip menu, round 2: the menu opens whole and stays open';
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="${THEMES.join(',')}">
     <head>
@@ -86,11 +86,11 @@ const page = `<!doctype html>
             <header class="pg-head">
                 <h1>${escapeHtml(title)}</h1>
                 <p class="cat-intro">
-                    The five parts you approved on 02/11/2026 at 00:41, built on the apps' own shapes: chips that filter a data table with exact
-                    counts (Almanac), an add row under a table's columns and as one line of a form (Kitchen, Medicine Cabinet), the unsaved bar
-                    counting chips, times and days (Medicine Cabinet), a chip with its own menu and rename (Medicine Cabinet), and a note per
-                    next time with the tries left on a timeline lane (Almanac). Every part is opt-in. Formal only (names, counts and values are
-                    mock). ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
+                    Round 2 of the form parts: the chip with its own menu (Medicine Cabinet), which you sent back because the open menu shrank to an
+                    empty strip as soon as you hovered or did anything. The menu's height cap went below zero in a short window; it now keeps room
+                    for the menu's rows, so the menu opens whole under its ⋯ and closes only when you pick, press Escape or press outside it. The
+                    other four parts are approved and leave this page. Formal only (names and counts are mock). ${SECTIONS.length} section,
+                    ${SECTIONS.length * THEMES.length} pair.
                 </p>
                 <p>Each section says under <b>Expected</b> what you should see and what each control does.</p>
             </header>

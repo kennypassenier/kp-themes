@@ -13,8 +13,11 @@
  * menuPlacement()): to the button's start edge, over the button, or
  * scrolling inside itself, clear of a bar stuck over the screen's edge. Knobs: --kp-menu-rich-min
  * (19rem) and --kp-menu-rich-max (min(26rem, 100vw - 2rem)), the menu's
- * width; --kp-menu-max-height (calc(100dvh - 12rem)), past which it
- * scrolls inside itself. */
+ * width; --kp-menu-max-height (calc(100dvh - 12rem), never under min(16rem, 100dvh - 1rem)), past which it
+ * scrolls inside itself. The floor keeps a menu whole in a short window: in a frame 177 px tall (a review lane, an
+ * embed, a phone on its side) calc(100dvh - 12rem) went below zero and the open menu was its border and padding
+ * alone, a 10 px shell (Kenny, 2026-11-02, the chip menu "a menu without items ... only a sliver of height"). The
+ * script then fits it in the room it really has (menuPlacement) [forms-1102 r2]. */
     /* The wrapper hugs its button, also as a grid or flex item that would stretch it: the menu is placed against the
        wrapper's end, so a wrapper stretched over a whole grid column put the menu 1174 px from its button (Kenny,
        2026-10-18 19:08: "menu opent niet aan de more knop"). */
@@ -40,7 +43,7 @@
         inset-block-start: calc(100% + var(--kp-space-xs, 0.25rem));
         inset-inline-end: 0;
         box-sizing: border-box;
-        max-block-size: var(--kp-menu-max-height, calc(100dvh - 12rem));
+        max-block-size: var(--kp-menu-max-height, max(calc(100dvh - 12rem), min(16rem, calc(100dvh - 1rem))));
         overflow-y: auto;
         overscroll-behavior: contain;
         padding: var(--kp-space-xs, 0.25rem);

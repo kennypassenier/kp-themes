@@ -96,7 +96,12 @@ cats?.addEventListener('kp-segmented-rename', (event) => {
     const refuses = pressed('cat-answer', 'segmented-menu-component', 'accepts') === 'refuses';
     d.waitUntil(later(refuses ? `A category called ${d.label} already exists.` : null));
 });
-cats?.addEventListener('kp-segmented-renamed', (event) => say('pg-cats-log', `kp-segmented-renamed: ${/** @type {CustomEvent} */ (event).detail.label}.`));
+cats?.addEventListener('kp-segmented-renamed', (event) => {
+    const { value, label } = /** @type {CustomEvent} */ (event).detail;
+    // The app renames the category in its cabinet too; the cell keeps its key, so the chip still filters it.
+    for (const cell of document.querySelectorAll(`#pg-cabinet td[data-pg-category="${CSS.escape(value)}"]`)) cell.textContent = label;
+    say('pg-cats-log', `kp-segmented-renamed: ${label}.`);
+});
 cats?.addEventListener('kp-menu-select', (event) => {
     const value = String(/** @type {CustomEvent} */ (event).detail?.value ?? '');
     if (value === 'delete') say('pg-cats-log', 'Picked Delete (the app’s own entry; the page would ask and act).');

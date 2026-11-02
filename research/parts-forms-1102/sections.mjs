@@ -1,10 +1,10 @@
-// research/parts-forms-1102: the five sections of the review page, one per part Kenny approved on 02/11/2026 00:41, in the order the
-// review walks them.
+// research/parts-forms-1102: the sections of the review page, one per part Kenny approved on 02/11/2026 00:41, in the order the
+// review walks them; round 2 keeps only the one he sent back.
 import { categories, deliveries, formsLine, group, meals, medicineForm, retries, width } from './markup.mjs';
 
 const ITEM = 'your approval of 02/11/2026 00:41';
 
-export const SECTIONS = [
+const ALL_SECTIONS = [
     {
         id: 'chip-filter',
         title: 'Chips that filter a data table, each with its exact count',
@@ -78,10 +78,11 @@ export const SECTIONS = [
         asked:
             'Medicine Cabinet&rsquo;s category chips each filter and each need a ⋯ menu; the app laid chip and menu side by side by hand. A chip now takes a menu right after it, and Rename turns the chip into a field.',
         h2: 'Medicine Cabinet, categories',
-        intro: 'Each category but All has its ⋯ menu with Rename and Delete.',
+        intro: 'Each category but All has its ⋯ menu with Rename and Delete; under them, the fourteen medicines they filter.',
         expected: [
-            'Each chip and its ⋯ read as one pill split by a hair line; choosing a chip works as before.',
-            'Open a chip&rsquo;s ⋯ and pick <b>Rename</b> (or press F2 on the chip): the chip becomes a field as wide as it was, its name selected. Enter saves, Escape cancels; the focus comes back to the chip.',
+            '<b>Round 2</b>: in the review window the open menu shrank to an empty 10 px strip as soon as the window got shorter (you saw it as closing on hover). The menu capped its height at the window&rsquo;s height less 12rem, which is below zero in a window 177 px tall. That cap now never goes under the menu&rsquo;s own rows, so the menu opens whole under its ⋯ and stays whole while you hover or walk it with the arrows (measured in Firefox at 1280 and 390 px: 2 entries, 73 px tall after opening, after hovering each entry and after the arrow key; Rename closes it and gives the field). Every package menu gets the same floor; in a normal window nothing changes. New in this round: the cabinet the chips filter stands under them, so you see a pick and a rename land.',
+            'Each chip and its ⋯ read as one pill split by a hair line; choosing a chip filters the cabinet (Allergy: its two medicines), the counts are the package&rsquo;s.',
+            'Open a chip&rsquo;s ⋯ and pick <b>Rename</b> (or press F2 on the chip): the chip becomes a field as wide as it was, its name selected. Enter saves, Escape cancels; the focus comes back to the chip. A saved name also shows in the cabinet&rsquo;s Category column, and the chip keeps filtering.',
             '<b>Page answers &ldquo;Refuses&rdquo;</b>: Enter says &ldquo;A category called … already exists.&rdquo; under the field, which stays open; nothing around it moves.',
             'Tab reaches the chosen chip, then its ⋯, then leaves the group; Shift+F10 on a chip opens its menu.',
         ],
@@ -112,3 +113,6 @@ export const SECTIONS = [
         component: retries(),
     },
 ];
+
+// Round 2 (Kenny, 2026-11-02 01:12 UTC): only the section he sent back; the four approved ones leave the page (DEMO_RULES ch. 6).
+export const SECTIONS = ALL_SECTIONS.filter((section) => section.id === 'segmented-menu');

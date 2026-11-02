@@ -115,13 +115,29 @@ const menu = (name) => `<div class="kp-menu-button kp-segmented__menu" data-kp-m
 const chip = ([value, label, count, on]) =>
     `<button type="button" class="kp-segmented__item" data-value="${value}" aria-checked="${on ? 'true' : 'false'}"><span class="kp-segmented__label">${label}</span><span class="kp-segmented__count">${count}</span></button>`;
 
-/** The category chips, each but All with its ⋯ menu. */
+/** Medicine Cabinet's cabinet: [name, category key, category words, doses left]. Fourteen, as the chips count them. */
+const MEDICINES = [
+    ['Paracetamol 500', 'pain', 'Pain', 18], ['Ibuprofen 400', 'pain', 'Pain', 9], ['Naproxen 220', 'pain', 'Pain', 12], ['Diclofenac gel', 'pain', 'Pain', 1],
+    ['Fever strips', 'fever', 'Fever', 6], ['Paracetamol syrup', 'fever', 'Fever', 2], ['Electrolyte sachets', 'fever', 'Fever', 10],
+    ['Cetirizine 10', 'allergy', 'Allergy', 21], ['Nasal spray', 'allergy', 'Allergy', 1],
+    ['Omeprazole 20', 'stomach', 'Stomach', 14], ['Antacid tablets', 'stomach', 'Stomach', 24], ['Loperamide 2', 'stomach', 'Stomach', 6], ['Oral rehydration salts', 'stomach', 'Stomach', 8], ['Simethicone 80', 'stomach', 'Stomach', 16],
+];
+const medicineRow = ([name, key, words, left], i) =>
+    `<tr data-kp-row-key="m${i}"><td data-label="Medicine">${name}</td><td data-label="Category" data-kp-filter-value="${key}" data-pg-category="${key}">${words}</td><td data-label="Doses left">${left}</td></tr>`;
+
+/** The category chips, each but All with its ⋯ menu, over the cabinet they filter (the chips' own words, counted by the package). */
 export const categories = () => `<div class="pg-stack">
-                <div class="kp-segmented kp-segmented--chips" id="pg-cats" data-kp-segmented="single" aria-label="Category">
-                    ${chip(['all', 'All', 14, true])}
+                <div class="kp-segmented kp-segmented--chips" id="pg-cats" data-kp-segmented="single" aria-label="Category" data-kp-filter-for="pg-cabinet" data-kp-filter-column="category">
+                    <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-checked="true"><span class="kp-segmented__label">All</span><span class="kp-segmented__count">14</span></button>
                     ${[['pain', 'Pain', 4], ['fever', 'Fever', 3], ['allergy', 'Allergy', 2], ['stomach', 'Stomach', 5]].map((c) => chip(c) + menu(`Actions for ${c[1]}`)).join('\n                    ')}
                 </div>
                 ${log('pg-cats-log')}
+                ${table(
+                    'pg-cabinet',
+                    'The medicine cabinet',
+                    '<th scope="col" data-kp-sort="text" data-kp-field="medicine">Medicine</th><th scope="col" data-kp-sort="text" data-kp-field="category" data-kp-filter="choice">Category</th><th scope="col" data-kp-sort="number" data-kp-field="left">Doses left</th>',
+                    MEDICINES.map(medicineRow).join(''),
+                )}
             </div>`;
 
 // ---------------------------------------------------------------- 5 · run notes and tries left (Almanac's retries)

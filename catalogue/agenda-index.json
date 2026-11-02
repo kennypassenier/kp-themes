@@ -515,18 +515,12 @@
                 "id": "parts-forms-1102",
                 "themes": "formal",
                 "ask": null,
-                "askText": "The five parts you approved on 02/11/2026 at 00:41, built on the apps' own shapes: chips that filter a data table with exact counts (Almanac), an add row under a table's columns and as one line of a form (Kitchen, Medicine Cabinet), the unsaved bar counting chips, times and days (Medicine Cabinet), a chip with its own menu and rename (Medicine Cabinet), and a note per next time with the tries left on a timeline lane (Almanac). Every part is opt-in. Formal only (names, counts and values are mock). 5 sections, 5 pairs.",
-                "sections": [
-                    { "item": "chip-filter", "themes": null, "topic": "chip-filter", "mode": null },
-                    { "item": "add-row", "themes": null, "topic": "add-row", "mode": null },
-                    { "item": "unsaved-adapter", "themes": null, "topic": "unsaved-adapter", "mode": null },
-                    { "item": "segmented-menu", "themes": null, "topic": "segmented-menu", "mode": null },
-                    { "item": "run-notes", "themes": null, "topic": "run-notes", "mode": null }
-                ],
+                "askText": "Round 2 of the form parts: the chip with its own menu (Medicine Cabinet), which you sent back because the open menu shrank to an empty strip as soon as you hovered or did anything. The menu's height cap went below zero in a short window; it now keeps room for the menu's rows, so the menu opens whole under its ⋯ and closes only when you pick, press Escape or press outside it. The other four parts are approved and leave this page. Formal only (names and counts are mock). 1 section, 1 pair.",
+                "sections": [{ "item": "segmented-menu", "themes": null, "topic": "segmented-menu", "mode": null }],
                 "extra": null,
-                "round": "\n            {\"round\":\"parts-forms-1102-2da45ee3-3a55-4e11-b944-0f6037d5132a\",\"received\":[]}\n        "
+                "round": "\n            {\"round\":\"parts-forms-1102-f763902a-8c3e-47ba-8e2b-6821f359e149\",\"received\":[\"parts-forms-1102-2da45ee3-3a55-4e11-b944-0f6037d5132a\"]}\n        "
             },
-            "fingerprint": "8215f36dcfd5096a",
+            "fingerprint": "56a6a4f6e1d4fbed",
             "update": null
         },
         "research/parts-habits-1102/demo.html": {

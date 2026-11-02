@@ -1973,7 +1973,10 @@ markup, in the shape `setMenu` writes (the block `menu-button` in
 
 Knobs: `--kp-menu-rich-min` (19rem) and `--kp-menu-rich-max`
 (`min(26rem, 100vw - 2rem)`), the menu's width; `--kp-menu-max-height`
-(`calc(100dvh - 12rem)`), past which it scrolls inside itself.
+(`calc(100dvh - 12rem)`, never under `min(16rem, 100dvh - 1rem)`), past which it scrolls inside itself. The floor
+keeps the menu whole in a short window (an iframe, an embed, a phone on its side), where the plain cap went below zero
+and left only the menu's border and padding; a cap of your own on a raised surface needs the same floor
+(`node gates/check-raised-cap.mjs`).
 
 The script writes one property on the open menu, `--kp-menu-anchor-x`: where
 the button's centre falls across the menu, in px from its left edge (kept 14 px
