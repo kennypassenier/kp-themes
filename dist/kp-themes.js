@@ -611,7 +611,7 @@ var init_alert_status_idmark = __esm({
       statusRetry: "Retry",
       statusRetryLabel: (label2) => `Retry ${label2}`,
       statusAnnounce: (label2, state12, detail) => detail ? `${label2}: ${state12}, ${detail}` : `${label2}: ${state12}`,
-      statusAnnounceMany: (count4, failed) => failed ? `${count4} updated, ${failed} failed` : `${count4} updated`,
+      statusAnnounceMany: (count4, failed2) => failed2 ? `${count4} updated, ${failed2} failed` : `${count4} updated`,
       // A facet list's "only" button and its announcements (js/facets.js).
       facetOnly: "only",
       facetOnlyLabel: (label2) => `Show only ${label2}`,
@@ -2900,41 +2900,60 @@ function setStrings(next2) {
   return publish();
 }
 function publish() {
-  const source = dictionaries.get(language);
-  const dictionary = typeof source === "object" ? source : {};
-  current = Object.freeze({ ...DEFAULT_STRINGS, ...dictionary, ...fromApp });
+  current = Object.freeze({ ...DEFAULT_STRINGS, ...published, ...fromApp });
   if (typeof document !== "undefined") applyStringProperties(document.documentElement, current);
   return current;
 }
 function wantedLanguage() {
   const root = typeof document === "undefined" ? null : document.documentElement;
-  const asked = (chosen ?? root?.getAttribute("data-kp-lang") ?? root?.getAttribute("lang") ?? "en").trim().toLowerCase();
-  if (dictionaries.has(asked)) return asked;
-  const primary = asked.split("-")[0] ?? "";
-  return dictionaries.has(primary) ? primary : "en";
+  const asked = [chosen, root?.getAttribute("data-kp-lang"), root?.getAttribute("lang")].map(normaliseTag).find((tag) => tag !== "") ?? "en";
+  const parts2 = asked.split("-");
+  while (parts2.length > 0) {
+    const tag = parts2.join("-");
+    if (dictionaries.has(tag)) return tag;
+    parts2.pop();
+  }
+  return "en";
 }
-function follow() {
+function load(tag, source) {
+  const running = loading.get(tag);
+  if (running?.source === source) return running.promise;
+  const promise = Promise.resolve().then(source).then((loaded) => {
+    if (dictionaries.get(tag) === source) dictionaries.set(tag, Object.freeze({ ...loaded }));
+  }).catch((error) => {
+    failed.set(tag, source);
+    console.error(`kp-themes: the "${tag}" dictionary could not be loaded; the strings stay in English.`, error);
+  }).finally(() => {
+    if (loading.get(tag)?.source === source) loading.delete(tag);
+  });
+  loading.set(tag, { source, promise });
+  return promise;
+}
+function settle(wanted, source) {
+  const dictionary = typeof source === "object" ? source : void 0;
+  const moved = wanted !== language;
+  if (!moved && dictionary === published) return;
+  const swapped = dictionary !== published;
+  language = wanted;
+  published = dictionary;
+  publish();
+  if (moved || swapped) announce();
+}
+function follow(retry = true) {
   const wanted = wantedLanguage();
   const source = dictionaries.get(wanted);
-  if (typeof source !== "function") {
-    const moved = wanted !== language;
-    language = wanted;
-    publish();
-    if (moved) announce();
+  if (typeof source === "function" && retry && failed.get(wanted) === source) failed.delete(wanted);
+  if (typeof source !== "function" || failed.get(wanted) === source) {
+    settle(typeof source === "function" ? "en" : wanted, typeof source === "function" ? void 0 : source);
     ready = Promise.resolve();
     return ready;
   }
-  ready = source().then(
-    (loaded) => {
-      dictionaries.set(wanted, Object.freeze({ ...loaded }));
-      if (wantedLanguage() === wanted) follow();
-    },
-    (error) => {
-      dictionaries.delete(wanted);
-      console.error(`kp-themes: the "${wanted}" dictionary could not be loaded; the strings stay in English.`, error);
-      follow();
-    }
-  );
+  ready = load(wanted, source).then(() => wantedLanguage() === wanted ? follow(false) : void 0).catch((error) => {
+    failed.set(wanted, source);
+    if (dictionaries.get(wanted) !== source) dictionaries.set(wanted, source);
+    console.error(`kp-themes: the "${wanted}" dictionary could not be applied; the strings stay in English.`, error);
+    return follow(false);
+  });
   return ready;
 }
 function announce() {
@@ -2947,12 +2966,12 @@ function watchRoot() {
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ["lang", "data-kp-lang"] });
 }
 function registerDictionary(tag, source) {
-  dictionaries.set(tag.trim().toLowerCase(), typeof source === "function" ? source : Object.freeze({ ...source }));
+  dictionaries.set(normaliseTag(tag), typeof source === "function" ? source : Object.freeze({ ...source }));
   watchRoot();
   return follow();
 }
 function setLanguage(tag) {
-  chosen = tag === null ? null : tag.trim();
+  chosen = tag === null ? null : String(tag);
   watchRoot();
   return follow();
 }
@@ -2982,7 +3001,7 @@ function getStrings() {
 function resolveStrings(overrides) {
   return overrides === void 0 ? current : { ...current, ...overrides };
 }
-var current, fromApp, dictionaries, chosen, language, ready, observer, CIPHER;
+var current, fromApp, dictionaries, loading, failed, published, chosen, language, ready, observer, normaliseTag, CIPHER;
 var init_runtime = __esm({
   "js/strings/runtime.js"() {
     "use strict";
@@ -2990,10 +3009,13 @@ var init_runtime = __esm({
     current = DEFAULT_STRINGS;
     fromApp = {};
     dictionaries = /* @__PURE__ */ new Map();
+    loading = /* @__PURE__ */ new Map();
+    failed = /* @__PURE__ */ new Map();
     chosen = null;
     language = "en";
     ready = Promise.resolve();
     observer = null;
+    normaliseTag = (tag) => String(tag ?? "").trim().toLowerCase().replace(/_/g, "-");
     CIPHER = "#&$?%@/";
   }
 });
@@ -4902,11 +4924,11 @@ function say(doc, text) {
     if (region) region.textContent = text;
   }, 30);
 }
-function setCalm(on, { doc = document, scope, loading, remember: remember3 = true, announce: announce8 = true } = {}) {
+function setCalm(on, { doc = document, scope, loading: loading2, remember: remember3 = true, announce: announce8 = true } = {}) {
   const root = doc.documentElement;
   const was = root.hasAttribute(CALM_ATTRIBUTE);
   if (scope !== void 0) root.setAttribute("data-kp-calm-scope", scope);
-  if (loading !== void 0) root.setAttribute("data-kp-calm-loading", loading);
+  if (loading2 !== void 0) root.setAttribute("data-kp-calm-loading", loading2);
   if (on) root.setAttribute(CALM_ATTRIBUTE, "");
   else root.removeAttribute(CALM_ATTRIBUTE);
   if (remember3) {
@@ -4917,7 +4939,7 @@ function setCalm(on, { doc = document, scope, loading, remember: remember3 = tru
     }
   }
   syncSwitches(doc);
-  if (was === on && scope === void 0 && loading === void 0) return;
+  if (was === on && scope === void 0 && loading2 === void 0) return;
   if (announce8 && was !== on) say(doc, on ? getStrings().calmOn : getStrings().calmOff);
   root.dispatchEvent(
     new CustomEvent(CALM_EVENT, {
@@ -5378,8 +5400,8 @@ var init_field = __esm({
         zone.hidden = z === "";
         zone.textContent = z ? s2.timeZoneNote(z) : "";
         root.classList.toggle("kp-time--inline", attr(root, "look", "field") === "inline");
-        const loading = root.getAttribute("data-kp-state") === "loading";
-        const off = root.hasAttribute("disabled") || root.hasAttribute("data-kp-disabled") || loading;
+        const loading2 = root.getAttribute("data-kp-state") === "loading";
+        const off = root.hasAttribute("disabled") || root.hasAttribute("data-kp-disabled") || loading2;
         input.disabled = off;
         const toggle2 = (
           /** @type {HTMLButtonElement} */
@@ -5390,9 +5412,9 @@ var init_field = __esm({
         toggle2.hidden = noPopup;
         input.toggleAttribute("required", root.hasAttribute("data-kp-time-required"));
         const reason = root.getAttribute("data-kp-disabled-reason");
-        if (off && reason && !loading) input.setAttribute("data-kp-disabled-reason", reason);
+        if (off && reason && !loading2) input.setAttribute("data-kp-disabled-reason", reason);
         else input.removeAttribute("data-kp-disabled-reason");
-        root.toggleAttribute("aria-busy", loading);
+        root.toggleAttribute("aria-busy", loading2);
       }
     };
   }
@@ -6546,17 +6568,17 @@ function playEntranceBackwards(el16) {
       (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
       a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
     );
-    const settle4 = (waited) => {
+    const settle5 = (waited) => {
       if (own.__kpReversing === void 0) return;
       void Promise.all(waited.map(ended)).then(() => {
         if (own.__kpReversing === void 0) return;
         const next2 = running();
-        if (next2.length > 0) return settle4(next2);
+        if (next2.length > 0) return settle5(next2);
         delete own.__kpReversing;
         resolve(true);
       });
     };
-    settle4(plays);
+    settle5(plays);
   });
 }
 function stopReversing(el16) {
@@ -20793,10 +20815,10 @@ var init_values12 = __esm({
 });
 
 // js/theme-picker/marks.js
-function showSaveState(root, failed) {
+function showSaveState(root, failed2) {
   for (const el16 of root.querySelectorAll(STATUS3)) {
-    el16.textContent = failed ? saveFailedText() : "";
-    el16.hidden = !failed;
+    el16.textContent = failed2 ? saveFailedText() : "";
+    el16.hidden = !failed2;
   }
 }
 function markSelection(root, theme) {
@@ -21771,13 +21793,13 @@ function meterText(value, mark2 = null, { unit: unit2 = "%", label: label2, mark
   if (mark2 != null && Number.isFinite(mark2)) text += `; ${share(mark2)} ${markLabel}`.trimEnd();
   return text;
 }
-function setMeter(el16, { value = null, mark: mark2 = null, tone = null, label: label2, markLabel = "", loading = false }) {
-  const parts2 = meterParts(loading ? null : value, loading ? null : mark2);
+function setMeter(el16, { value = null, mark: mark2 = null, tone = null, label: label2, markLabel = "", loading: loading2 = false }) {
+  const parts2 = meterParts(loading2 ? null : value, loading2 ? null : mark2);
   el16.setAttribute("role", "meter");
   el16.setAttribute("aria-valuemin", "0");
   el16.setAttribute("aria-valuemax", String(FULL_PERCENT));
-  el16.toggleAttribute("data-kp-loading", loading);
-  if (loading) el16.setAttribute("aria-busy", "true");
+  el16.toggleAttribute("data-kp-loading", loading2);
+  if (loading2) el16.setAttribute("aria-busy", "true");
   else el16.removeAttribute("aria-busy");
   el16.style.setProperty("--kp-value", parts2.measured ? String(Math.max(
     0,
@@ -21787,7 +21809,7 @@ function setMeter(el16, { value = null, mark: mark2 = null, tone = null, label: 
   el16.toggleAttribute("data-kp-over", parts2.over);
   if (parts2.now != null) el16.setAttribute("aria-valuenow", String(parts2.now));
   else el16.removeAttribute("aria-valuenow");
-  el16.setAttribute("aria-valuetext", loading ? getStrings().meterMeasuring : meterText(value, mark2, { label: label2, markLabel }));
+  el16.setAttribute("aria-valuetext", loading2 ? getStrings().meterMeasuring : meterText(value, mark2, { label: label2, markLabel }));
   if (tone) el16.setAttribute("data-kp-tone", tone);
   else el16.removeAttribute("data-kp-tone");
   let tick6 = (
@@ -24622,9 +24644,9 @@ var init_draw3 = __esm({
         const H = chartHeight(host, data);
         this.drawnWindow = "";
         this.drawnFor = this.drawnKey();
-        const loading = host.hasAttribute("data-kp-chart-loading");
-        ui.plot.setAttribute("aria-busy", String(loading));
-        if (loading) {
+        const loading2 = host.hasAttribute("data-kp-chart-loading");
+        ui.plot.setAttribute("aria-busy", String(loading2));
+        if (loading2) {
           this.skeletonLegend();
           return this.drawState("loading", H);
         }
@@ -30887,7 +30909,7 @@ var init_secret_api = __esm({
 });
 
 // js/patterns/secret-read.js
-function readSecret(field2, purpose, load, s2) {
+function readSecret(field2, purpose, load2, s2) {
   return new Promise((resolve, reject) => {
     let answered2 = false;
     const respond = (v) => {
@@ -30903,8 +30925,8 @@ function readSecret(field2, purpose, load, s2) {
     const event = new CustomEvent(SECRET_REQUEST_EVENT, { bubbles: true, cancelable: true, detail: { respond, fail, purpose } });
     field2.dispatchEvent(event);
     if (event.defaultPrevented) return;
-    if (load) {
-      Promise.resolve().then(() => load(field2, purpose)).then(respond, fail);
+    if (load2) {
+      Promise.resolve().then(() => load2(field2, purpose)).then(respond, fail);
       return;
     }
     const inline2 = field2.dataset.kpSecretValue;
@@ -31060,7 +31082,7 @@ var init_secret_base = __esm({
        * @param {string} name what the announcement calls the field
        * @param {(idle: string) => void} settle puts the button's own words back: the ones it had before the copy
        */
-      async copyOut(copy3, read2, name, settle4) {
+      async copyOut(copy3, read2, name, settle5) {
         let text = "";
         try {
           text = await read2();
@@ -31078,7 +31100,7 @@ var init_secret_base = __esm({
         copy3.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
         this.say(this.s.copiedAnnouncement(name));
         window.clearTimeout(this.copiedTimer);
-        this.copiedTimer = window.setTimeout(() => settle4(this.copyIdle), this.copiedMs);
+        this.copiedTimer = window.setTimeout(() => settle5(this.copyIdle), this.copiedMs);
         this.scheduleClear(text);
       }
       /** Empty the clipboard again some seconds after a copy [wish-1120, homelab 108]. @param {string} secret */
@@ -31728,7 +31750,7 @@ var init_secret_input = __esm({
 });
 
 // js/patterns/secrets.js
-function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfterMs = CLEAR_AFTER_MS } = {}) {
+function attachSecrets(root = document, { load: load2, copiedMs = COPIED_MS, clearAfterMs = CLEAR_AFTER_MS } = {}) {
   const fields = (
     /** @type {HTMLElement[]} */
     [
@@ -31737,7 +31759,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     ]
   );
   const made6 = fields.filter((field2) => !secrets.has(field2)).map(
-    (field2) => field2.dataset.kpSecretMode === "input" ? attachOne(field2, SecretInputControl, { copiedMs, clearAfterMs }) : attachOne(field2, SecretControl, { copiedMs, clearAfterMs, ...load ? { load } : {} })
+    (field2) => field2.dataset.kpSecretMode === "input" ? attachOne(field2, SecretInputControl, { copiedMs, clearAfterMs }) : attachOne(field2, SecretControl, { copiedMs, clearAfterMs, ...load2 ? { load: load2 } : {} })
   );
   return () => {
     for (const control of made6.splice(0)) control?.destroy();
@@ -31804,7 +31826,7 @@ var init_undo = __esm({
         const detail = { target, button: button6, key, restore: restore2 };
         const action = { settled: false, timer: 0, cancel: () => {
         } };
-        const settle4 = () => {
+        const settle5 = () => {
           if (action.settled) return false;
           action.settled = true;
           this.inFlight.delete(action.cancel);
@@ -31812,18 +31834,18 @@ var init_undo = __esm({
           return true;
         };
         const message = this.offer(() => {
-          if (!settle4()) return;
+          if (!settle5()) return;
           restore2();
           message.dismiss();
           target.dispatchEvent(new CustomEvent(UNDO_EVENT, { bubbles: true, detail }));
         });
         action.timer = window.setTimeout(() => {
-          if (!settle4()) return;
+          if (!settle5()) return;
           delete target.dataset.kpUndoPending;
           target.dispatchEvent(new CustomEvent(COMMIT_EVENT, { bubbles: true, detail }));
         }, this.ms);
         action.cancel = () => {
-          if (!settle4()) return;
+          if (!settle5()) return;
           restore2();
           message.dismiss();
         };
@@ -33308,12 +33330,12 @@ var init_sync2 = __esm({
         const opts = options ?? this.given ?? {};
         if (options) this.given = options;
         this.leaveFocus(parts2, state12, previous);
-        const loading = state12 === "loading";
-        parts2.data.toggleAttribute("inert", loading);
-        if (loading) parts2.data.setAttribute("aria-busy", "true");
+        const loading2 = state12 === "loading";
+        parts2.data.toggleAttribute("inert", loading2);
+        if (loading2) parts2.data.setAttribute("aria-busy", "true");
         else parts2.data.removeAttribute("aria-busy");
         this.showNote(parts2.note, state12, previous, options, opts);
-        this.syncBusy(parts2.stage, loading, opts);
+        this.syncBusy(parts2.stage, loading2, opts);
         this.drawn = true;
         this.state = state12;
         if (announce8 && previous !== void 0 && previous !== state12)
@@ -33353,11 +33375,11 @@ var init_sync2 = __esm({
         }
       }
       /** A loading card gets the busy card over its stage; leaving the state takes it out. @param {HTMLElement} stage @param {boolean} loading @param {CardStateOptions} opts */
-      syncBusy(stage, loading, opts) {
-        if (loading && !this.busy) {
+      syncBusy(stage, loading2, opts) {
+        if (loading2 && !this.busy) {
           const words3 = opts.words ?? this.card.getAttribute("data-kp-loading-words") ?? getStrings().cardLoading;
           this.busy = openBusyCard(stage, { words: words3, area: () => [stage], className: "kp-card__busy", arrive: this.drawn });
-        } else if (!loading && this.busy) {
+        } else if (!loading2 && this.busy) {
           const busy = this.busy;
           this.busy = void 0;
           void busy.close();
@@ -34461,18 +34483,18 @@ function paintPhoto(el16, name, src) {
   img.decoding = "async";
   img.draggable = false;
   img.loading = el16.getAttribute("data-kp-idmark-loading") === "eager" ? "eager" : "lazy";
-  const settle4 = (state12) => {
+  const settle5 = (state12) => {
     if (ASKED2.get(el16) !== src) return;
     if (state12 === "failed") img.remove();
     el16.setAttribute("data-kp-photo", state12);
     el16.dispatchEvent(new CustomEvent("kp-idmark-photo", { bubbles: true, detail: { state: state12, src } }));
   };
-  img.addEventListener("load", () => settle4("loaded"));
-  img.addEventListener("error", () => settle4("failed"));
+  img.addEventListener("load", () => settle5("loaded"));
+  img.addEventListener("error", () => settle5("failed"));
   el16.setAttribute("data-kp-photo", "loading");
   img.src = src;
   el16.prepend(img);
-  if (img.complete && img.naturalWidth > 0) settle4("loaded");
+  if (img.complete && img.naturalWidth > 0) settle5("loaded");
 }
 function decorateAvatar(el16, name) {
   const src = (el16.getAttribute("data-kp-idmark-src") ?? "").trim();
@@ -35961,25 +35983,25 @@ function noteButton(doc, look, text) {
   button6.textContent = text;
   return button6;
 }
-function stateNote(doc, spec, failed, height) {
+function stateNote(doc, spec, failed2, height) {
   const strings = getStrings();
   const note2 = make9(doc, "kp-empty kp-passkeys__note", "div");
   if (height > 0) note2.style.minBlockSize = `${height}px`;
-  if (failed) note2.setAttribute("data-kp-tone", "error");
-  note2.setAttribute("role", failed ? "alert" : "status");
+  if (failed2) note2.setAttribute("data-kp-tone", "error");
+  note2.setAttribute("role", failed2 ? "alert" : "status");
   const title = make9(doc, "kp-empty__title kp-passkeys__note-title", "p");
-  title.textContent = failed ? spec.message ?? strings.passkeysError : spec.emptyTitle ?? strings.passkeysEmptyTitle;
+  title.textContent = failed2 ? spec.message ?? strings.passkeysError : spec.emptyTitle ?? strings.passkeysEmptyTitle;
   note2.append(title);
-  if (!failed) {
+  if (!failed2) {
     const text = make9(doc, "kp-empty__body kp-passkeys__note-text", "p");
     text.textContent = spec.emptyText ?? strings.passkeysEmptyText;
     note2.append(text);
   }
-  if (failed && spec.retry !== false) {
+  if (failed2 && spec.retry !== false) {
     const retry = noteButton(doc, "", strings.passkeysRetry);
     retry.setAttribute("data-kp-passkeys-retry", "");
     note2.append(retry);
-  } else if (!failed && spec.register !== false) {
+  } else if (!failed2 && spec.register !== false) {
     const register = noteButton(doc, "kp-button--primary ", strings.passkeysRegister);
     register.setAttribute("data-kp-passkeys-register", "");
     note2.append(register);
@@ -36050,14 +36072,14 @@ function drawLoading(c, spec) {
   });
   c.drawn = true;
 }
-function drawNote(c, failed) {
+function drawNote(c, failed2) {
   const el16 = c.host;
   const doc = el16.ownerDocument;
-  el16.setAttribute("data-kp-state", failed ? "error" : "empty");
+  el16.setAttribute("data-kp-state", failed2 ? "error" : "empty");
   const was = el16.querySelector(":scope > :is(.kp-passkeys__list, .kp-passkeys__note)")?.getBoundingClientRect().height ?? 0;
   c.height = Math.max(was, c.height);
   const refocus = el16.querySelector(":scope > .kp-passkeys__note")?.contains(doc.activeElement) ?? false;
-  const note2 = stateNote(doc, c.spec, failed, c.height);
+  const note2 = stateNote(doc, c.spec, failed2, c.height);
   el16.replaceChildren(...insecureNote(doc, c.spec), note2, announcer(doc, c));
   if (refocus) {
     el16.tabIndex = -1;
@@ -36740,33 +36762,33 @@ var init_view = __esm({
         this.drawMessages();
       }
       /** The empty or failed note, at the height the thread had. @param {boolean} failed @param {boolean} refocus */
-      drawNote(failed, refocus) {
+      drawNote(failed2, refocus) {
         const el16 = this.host;
         const doc = el16.ownerDocument;
         const strings = getStrings();
         const spec = this.spec;
-        el16.setAttribute("data-kp-state", failed ? "error" : "empty");
+        el16.setAttribute("data-kp-state", failed2 ? "error" : "empty");
         const was = el16.querySelector(":scope > :is(.kp-thread__scroll, .kp-thread__note)")?.getBoundingClientRect().height ?? 0;
         this.height = Math.max(was, this.height);
         const note2 = make10(doc, "kp-empty kp-thread__note", "div");
         if (this.height > 0) note2.style.minBlockSize = `${this.height}px`;
-        if (failed) note2.setAttribute("data-kp-tone", "error");
-        note2.setAttribute("role", failed ? "alert" : "status");
+        if (failed2) note2.setAttribute("data-kp-tone", "error");
+        note2.setAttribute("role", failed2 ? "alert" : "status");
         const title = make10(doc, "kp-empty__title kp-thread__note-title", "p");
-        title.textContent = failed ? spec.message ?? strings.threadError : spec.emptyTitle ?? strings.threadEmptyTitle;
+        title.textContent = failed2 ? spec.message ?? strings.threadError : spec.emptyTitle ?? strings.threadEmptyTitle;
         note2.append(title);
-        if (!failed && (spec.emptyText ?? strings.threadEmptyText)) {
+        if (!failed2 && (spec.emptyText ?? strings.threadEmptyText)) {
           const text = make10(doc, "kp-empty__body kp-thread__note-text", "p");
           text.textContent = spec.emptyText ?? strings.threadEmptyText;
           note2.append(text);
         }
-        if (failed && spec.retry !== false) {
+        if (failed2 && spec.retry !== false) {
           const retry = make10(doc, "kp-button kp-thread__note-button", "button");
           retry.setAttribute("type", "button");
           retry.setAttribute("data-kp-thread-retry", "");
           retry.textContent = strings.threadRetry;
           note2.append(retry);
-        } else if (!failed && spec.add !== false) {
+        } else if (!failed2 && spec.add !== false) {
           const add = make10(doc, "kp-button kp-button--primary kp-thread__note-button", "button");
           add.setAttribute("type", "button");
           add.setAttribute("data-kp-thread-add", "");
@@ -37227,8 +37249,8 @@ var init_core5 = __esm({
        */
       drawNote(c) {
         const { bar, strings, spec } = c;
-        const failed = c.state === "error";
-        const words3 = spec.message ?? (failed ? strings.stackbarError : strings.stackbarEmpty);
+        const failed2 = c.state === "error";
+        const words3 = spec.message ?? (failed2 ? strings.stackbarError : strings.stackbarEmpty);
         if (!c.noted) {
           bar.setAttribute("role", "img");
           bar.setAttribute("aria-label", words3);
@@ -37239,11 +37261,11 @@ var init_core5 = __esm({
         const refocus = this.host.querySelector(":scope > .kp-stackbar__note")?.contains(this.doc.activeElement) ?? false;
         const note2 = this.make("kp-stackbar__note", "div");
         if (this.height > 0) note2.style.minBlockSize = `${this.height}px`;
-        note2.setAttribute("role", failed ? "alert" : "status");
+        note2.setAttribute("role", failed2 ? "alert" : "status");
         const said = this.make("kp-empty__title kp-stackbar__note-title", "p");
         said.textContent = words3;
         note2.append(said);
-        if (failed && spec.retry !== false) {
+        if (failed2 && spec.retry !== false) {
           const retry = this.make("kp-button kp-stackbar__retry", "button");
           retry.setAttribute("type", "button");
           retry.setAttribute("data-kp-stackbar-retry", "");
@@ -37519,16 +37541,16 @@ var init_stackbar = __esm({
 });
 
 // js/bullets/note.js
-function buildNote2(doc, spec, strings, failed, height) {
+function buildNote2(doc, spec, strings, failed2, height) {
   const note2 = statePlate(doc, {
-    kind: failed ? "error" : "empty",
-    title: failed ? spec.message ?? strings.bulletsError : spec.emptyTitle ?? strings.bulletsEmpty,
-    ...failed ? { text: strings.stateFailedText } : spec.emptyText ? { text: spec.emptyText } : {},
-    ...failed && spec.retry !== false ? { actionLabel: strings.bulletsRetry, actionAttribute: "data-kp-bullets-retry" } : {}
+    kind: failed2 ? "error" : "empty",
+    title: failed2 ? spec.message ?? strings.bulletsError : spec.emptyTitle ?? strings.bulletsEmpty,
+    ...failed2 ? { text: strings.stateFailedText } : spec.emptyText ? { text: spec.emptyText } : {},
+    ...failed2 && spec.retry !== false ? { actionLabel: strings.bulletsRetry, actionAttribute: "data-kp-bullets-retry" } : {}
   });
   note2.classList.add("kp-bullets__note");
   if (height > 0) note2.style.minBlockSize = `${height}px`;
-  if (failed) note2.setAttribute("data-kp-tone", "error");
+  if (failed2) note2.setAttribute("data-kp-tone", "error");
   note2.querySelector(".kp-stateplate__title")?.classList.add("kp-bullets__note-title");
   note2.querySelector(".kp-stateplate__text")?.classList.add("kp-bullets__note-text");
   note2.querySelector(".kp-stateplate__action")?.classList.add("kp-bullets__retry");
@@ -37793,13 +37815,13 @@ var init_controller32 = __esm({
         else this.drawRows(spec, rows2, focusedKey);
       }
       /** @param {BulletsSpec} spec @param {boolean} failed */
-      drawNote(spec, failed) {
+      drawNote(spec, failed2) {
         const el16 = this.host;
-        el16.setAttribute("data-kp-state", failed ? "error" : "empty");
+        el16.setAttribute("data-kp-state", failed2 ? "error" : "empty");
         const was = el16.querySelector(":scope > :is(.kp-bullets__list, .kp-bullets__note)")?.getBoundingClientRect().height ?? 0;
         this.height = Math.max(was, this.height);
         const refocus = el16.querySelector(":scope > .kp-bullets__note")?.contains(this.doc.activeElement) ?? false;
-        el16.replaceChildren(buildNote2(this.doc, spec, getStrings(), failed, this.height));
+        el16.replaceChildren(buildNote2(this.doc, spec, getStrings(), failed2, this.height));
         if (refocus) {
           el16.tabIndex = -1;
           el16.focus({ preventScroll: true });
@@ -41775,8 +41797,8 @@ function drawRequest(el16, memory, request3, index, slot) {
   const options = memory.options;
   const key = keyOf7(request3, slot);
   const tone = toneOf(request3.status);
-  const failed = request3.status === void 0 || request3.status >= 400;
-  const defaultOpen = options.open === "first" ? index === 0 : options.open === "failed" ? failed : false;
+  const failed2 = request3.status === void 0 || request3.status >= 400;
+  const defaultOpen = options.open === "first" ? index === 0 : options.open === "failed" ? failed2 : false;
   const open4 = memory.opened.has(key) || defaultOpen && !memory.closed.has(key);
   const item = (
     /** @type {HTMLDetailsElement} */
@@ -42941,7 +42963,7 @@ function getWheelResult(root) {
   const item = stateOf(root).items.find((i) => i.id === won);
   return item ? { ...item } : null;
 }
-function planSpin(root, land, random, settle4) {
+function planSpin(root, land, random, settle5) {
   const state12 = stateOf(root);
   const short = reduced4();
   const attr16 = (name) => {
@@ -42959,7 +42981,7 @@ function planSpin(root, land, random, settle4) {
   const to = from + turns * 360 + rest;
   const mean = ((least + most) / 2 + 0.5) * 360;
   const own = short ? base : base * Math.min(1.4, Math.max(0.6, (to - from) / mean));
-  return { from, to, duration: settle4 !== void 0 && Number.isFinite(settle4) ? Math.max(0, settle4) : own, short };
+  return { from, to, duration: settle5 !== void 0 && Number.isFinite(settle5) ? Math.max(0, settle5) : own, short };
 }
 async function turnDisc(root, { from, to, duration: duration2, short }) {
   const disc = part(root, "disc");
@@ -42993,9 +43015,9 @@ async function spinWheel(root, { random = Math.random, duration: duration2 } = {
   const detail = { item: { ...item }, index, turns: (plan.to - plan.from) / 360, duration: plan.duration };
   root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail }));
   await turnDisc(root, plan);
-  return settle(root, item, index, plan.to);
+  return settle2(root, item, index, plan.to);
 }
-function settle(root, item, index, to) {
+function settle2(root, item, index, to) {
   const state12 = stateOf(root);
   state12.angle = to % 360;
   part(root, "disc").style.rotate = `${state12.angle}deg`;
@@ -43325,11 +43347,11 @@ function setIndeterminate(el16, on) {
   }
 }
 function clearFailure(el16) {
-  const failed = FAILED2.get(el16);
-  if (!failed) return;
+  const failed2 = FAILED2.get(el16);
+  if (!failed2) return;
   FAILED2.delete(el16);
-  failed.plate.remove();
-  failed.row.hidden = false;
+  failed2.plate.remove();
+  failed2.row.hidden = false;
   el16.removeAttribute("data-kp-state");
   el16.removeAttribute("aria-valuetext");
 }
@@ -45729,17 +45751,17 @@ function sync2(list) {
   const empty = part3(list, "empty");
   const strings = getStrings();
   const error = list.getAttribute("data-kp-timers-error");
-  const loading = list.hasAttribute("aria-busy");
+  const loading2 = list.hasAttribute("aria-busy");
   const shown6 = list.getAttribute("data-kp-state");
   if (shown6 === null || shown6 === "ready" || shown6 === "empty") {
     if (timers.size === 0) list.setAttribute("data-kp-state", "empty");
     else if (shown6 === "empty") list.setAttribute("data-kp-state", "ready");
   }
   const title = error ?? list.getAttribute("data-kp-timers-empty") ?? strings.timerEmpty;
-  const plateKey = loading ? "loading" : `${error !== null ? "error" : "empty"}|${title}`;
+  const plateKey = loading2 ? "loading" : `${error !== null ? "error" : "empty"}|${title}`;
   if (PLATE.get(empty) !== plateKey) {
     PLATE.set(empty, plateKey);
-    if (loading) {
+    if (loading2) {
       empty.replaceChildren();
       empty.classList.remove("kp-alert", "kp-alert--destructive", "kp-empty", "kp-stateplate", "kp-stateplate--error", "kp-stateplate--empty");
     } else hostStatePlate(list, { kind: error !== null ? "error" : "empty", title, retryEvent: TIMERS_RETRY_EVENT, into: empty });
@@ -51176,7 +51198,7 @@ function rankCommands2(f, options, want, mode2) {
   const context2 = dialog.dataset.kpContext ?? null;
   const recentN = Number(dialog.dataset.kpRecent) || 0;
   const recent = recentN > 0 ? f.readRecent().slice(0, recentN) : [];
-  const failed = f.state === "error";
+  const failed2 = f.state === "error";
   const items2 = options.map((option) => {
     clearMarks2(f.doc, option);
     if (!option.querySelector(":scope > .kp-palette__label")) wrapLabel(f.doc, option);
@@ -51190,8 +51212,8 @@ function rankCommands2(f, options, want, mode2) {
   const startSet = items2.some((it) => it.featured || it.inContext || it.recency >= 0);
   for (const it of items2) {
     let show = it.base >= 0;
-    if (failed && !it.option.hasAttribute("data-kp-static")) show = false;
-    if (show && want.length === 0 && startSet && !failed) show = it.featured || it.inContext || it.recency >= 0;
+    if (failed2 && !it.option.hasAttribute("data-kp-static")) show = false;
+    if (show && want.length === 0 && startSet && !failed2) show = it.featured || it.inContext || it.recency >= 0;
     if (!show) it.score = -1;
   }
   return { items: items2, startSet };
@@ -60306,9 +60328,9 @@ var init_constants34 = __esm({
 });
 
 // js/heat/card.js
-function waitForCard(el16, spec, loading, draw6) {
+function waitForCard(el16, spec, loading2, draw6) {
   const waiting2 = WAITING.get(el16);
-  if (loading) {
+  if (loading2) {
     if (waiting2) {
       WAITING.delete(el16);
       waiting2.card.remove();
@@ -60331,11 +60353,11 @@ function waitForCard(el16, spec, loading, draw6) {
   });
   return true;
 }
-function syncCard(el16, loading, words3, area, className) {
+function syncCard(el16, loading2, words3, area, className) {
   const first = !DRAWN3.has(el16);
   markDrawn(el16);
   const card = CARDS.get(el16);
-  if (!loading) {
+  if (!loading2) {
     if (card) {
       CARDS.delete(el16);
       card.remove();
@@ -60419,7 +60441,7 @@ function drawStatePlate(el16, spec, state12) {
   markDrawn(el16);
   el16.replaceChildren(note2);
 }
-function drawAxis(doc, columns2, { every, picked, loading }) {
+function drawAxis(doc, columns2, { every, picked, loading: loading2 }) {
   const column = (key, text, minor) => {
     const head = make16(doc, "span", "kp-heat__col", { role: "columnheader", "data-col-key": key });
     const isPicked = picked != null && key === picked;
@@ -60436,7 +60458,7 @@ function drawAxis(doc, columns2, { every, picked, loading }) {
   const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
   const before2 = open4[open4.length - 2];
   if (every > 1 && before2 !== void 0 && before2 === open4[open4.length - 1] - 1) named.delete(before2);
-  const made6 = columns2.map((c, i) => column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i)));
+  const made6 = columns2.map((c, i) => column(c.key, loading2 && !c.label ? "" : c.label, c.minor ?? !named.has(i)));
   placeAxis(made6);
   heads.append(...made6);
   axis.append(heads);
@@ -60741,12 +60763,12 @@ function setHeat(el16, spec, options) {
   if (spec.paging === false) removeHeatPaging(el16);
   else if (spec.paging) setHeatPaging(el16, spec.paging);
   const state12 = spec.state ?? "ready";
-  const loading = state12 === "loading";
+  const loading2 = state12 === "loading";
   if (spec.legend !== void 0) {
     if (spec.legend === false) removeLegend(el16);
     else setHeatLegend(el16, spec.legend, { keys: spec.legendKeys });
   } else syncCalmLegend(el16);
-  if (waitForCard(el16, spec, loading, setHeat)) return;
+  if (waitForCard(el16, spec, loading2, setHeat)) return;
   const every = Math.max(1, spec.every ?? 3);
   const toggle2 = spec.toggle ?? el16.hasAttribute("data-kp-heat-toggle");
   const pressedKeys = LIT.get(el16) ?? /* @__PURE__ */ new Set();
@@ -60760,9 +60782,9 @@ function setHeat(el16, spec, options) {
   ) } : null;
   let columns2 = spec.columns ?? [];
   let rows2 = spec.rows ?? [];
-  if (loading && columns2.length === 0 && spec.skeleton)
+  if (loading2 && columns2.length === 0 && spec.skeleton)
     columns2 = Array.from({ length: spec.skeleton.columns }, (_, i) => ({ key: String(i), label: "" }));
-  if (loading && rows2.length === 0 && spec.skeleton)
+  if (loading2 && rows2.length === 0 && spec.skeleton)
     rows2 = Array.from({ length: spec.skeleton.rows }, (_, i) => ({ key: `row-${i}`, label: "", cells: [] }));
   const picked = spec.picked ?? el16.getAttribute("data-kp-heat-picked");
   el16.classList.add("kp-heat");
@@ -60770,8 +60792,8 @@ function setHeat(el16, spec, options) {
   el16.setAttribute("role", "grid");
   if (spec.label && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", spec.label);
   el16.setAttribute("data-kp-state", state12);
-  el16.toggleAttribute("aria-busy", loading);
-  if (loading) el16.setAttribute("aria-busy", "true");
+  el16.toggleAttribute("aria-busy", loading2);
+  if (loading2) el16.setAttribute("aria-busy", "true");
   el16.style.setProperty("--kp-heat-cols", String(Math.max(1, columns2.length)));
   if (picked == null) el16.removeAttribute("data-kp-heat-picked");
   else el16.setAttribute("data-kp-heat-picked", picked);
@@ -60779,14 +60801,14 @@ function setHeat(el16, spec, options) {
     drawStatePlate(el16, spec, state12);
     return;
   }
-  const axis = drawAxis(doc, columns2, { every, picked, loading });
+  const axis = drawAxis(doc, columns2, { every, picked, loading: loading2 });
   let r = -1;
   const rowNode = (row2, summary2) => {
     r += 1;
     const node = make16(doc, "div", `kp-heat__row${summary2 ? " kp-heat__row--summary" : ""}`, { role: "row", "data-row-key": row2.key });
     const label2 = make16(doc, "div", "kp-heat__label", { role: "rowheader" });
     if (summary2) label2.classList.add("kp-heat__label--summary");
-    if (loading && !row2.label) {
+    if (loading2 && !row2.label) {
       label2.append(make16(doc, "span", "kp-heat__label-skeleton kp-skeleton", { "aria-hidden": "true" }));
     } else {
       const inner = toggle2 && !summary2 ? make16(doc, "button", "kp-heat__label-button", {
@@ -60809,7 +60831,7 @@ function setHeat(el16, spec, options) {
     const cells = make16(doc, "div", "kp-heat__cells", { role: "none" });
     columns2.forEach((col, c) => {
       const cell = row2.cells[c];
-      if (loading || cell?.tone === "loading") {
+      if (loading2 || cell?.tone === "loading") {
         cells.append(
           make16(doc, "span", "kp-heat__cell kp-skeleton kp-skeleton--block", {
             role: "gridcell",
@@ -60867,7 +60889,7 @@ function setHeat(el16, spec, options) {
   if (spec.legend === void 0) syncCalmLegend(el16);
   syncCard(
     el16,
-    loading,
+    loading2,
     s2.heatLoading,
     () => heatArea(el16),
     "kp-heat__busy"
@@ -61251,15 +61273,15 @@ function readOptions2(el16) {
 }
 function readModel(el16, spec, memory) {
   const state12 = spec.state ?? "ready";
-  const loading = state12 === "loading";
+  const loading2 = state12 === "loading";
   const options = readOptions2(el16);
-  let sources = columnNodes(spec.rows, loading, "s", spec.skeleton);
-  const users = columnNodes(spec.columns, loading, "u", spec.skeleton);
+  let sources = columnNodes(spec.rows, loading2, "s", spec.skeleton);
+  const users = columnNodes(spec.columns, loading2, "u", spec.skeleton);
   const plate2 = state12 === "empty" || state12 === "error";
-  const { uses, usedBy, lines: lineInfo } = loading || plate2 ? { uses: /* @__PURE__ */ new Map(), usedBy: /* @__PURE__ */ new Map(), lines: /* @__PURE__ */ new Map() } : usesRelation({ rows: sources, columns: users, cell: spec.cell });
+  const { uses, usedBy, lines: lineInfo } = loading2 || plate2 ? { uses: /* @__PURE__ */ new Map(), usedBy: /* @__PURE__ */ new Map(), lines: /* @__PURE__ */ new Map() } : usesRelation({ rows: sources, columns: users, cell: spec.cell });
   if (options.hideEmpty) sources = sources.filter((s2) => (uses.get(s2.key)?.length ?? 0) > 0);
   const byKey = new Map([...sources, ...users].map((n) => [n.key, n]));
-  return { el: el16, doc: el16.ownerDocument, strings: getStrings(), spec, state: state12, loading, ...options, memory, sources, users, uses, usedBy, lineInfo, byKey };
+  return { el: el16, doc: el16.ownerDocument, strings: getStrings(), spec, state: state12, loading: loading2, ...options, memory, sources, users, uses, usedBy, lineInfo, byKey };
 }
 function namesOf(m, keys, self, kind) {
   return keys.map((k) => {
@@ -61276,9 +61298,9 @@ var init_model5 = __esm({
     init_dom8();
     init_relation();
     SKELETON_NODES = 4;
-    columnNodes = (given2, loading, prefix, count4) => {
+    columnNodes = (given2, loading2, prefix, count4) => {
       const nodes = [...given2 ?? []];
-      if (loading && nodes.length === 0) return Array.from({ length: count4 ?? SKELETON_NODES }, (_, i) => ({ key: `${prefix}${i}`, label: "" }));
+      if (loading2 && nodes.length === 0) return Array.from({ length: count4 ?? SKELETON_NODES }, (_, i) => ({ key: `${prefix}${i}`, label: "" }));
       return nodes;
     };
   }
@@ -61923,17 +61945,17 @@ function setMatrix(el16, spec) {
   const doc = el16.ownerDocument;
   const s2 = getStrings();
   const state12 = spec.state ?? "ready";
-  const loading = state12 === "loading";
+  const loading2 = state12 === "loading";
   const view = spec.view ?? el16.getAttribute("data-kp-view") ?? rememberedView(el16) ?? "grid";
   if (spec.view) rememberView(el16, spec.view);
   if (view === "lines") {
-    if (waitForCard(el16, spec, loading, setMatrix)) return;
+    if (waitForCard(el16, spec, loading2, setMatrix)) return;
     drawUsesMap(el16, spec, { replaceKeepingCard, syncCard, markDrawn });
     return;
   }
   if (el16.classList.contains("kp-matrix--lines")) leaveUsesMap(el16);
   el16.setAttribute("data-kp-view", "grid");
-  if (waitForCard(el16, spec, loading, setMatrix)) return;
+  if (waitForCard(el16, spec, loading2, setMatrix)) return;
   const hadFocus = el16.contains(doc.activeElement) && doc.activeElement?.matches(MATRIX_CELL);
   const focusAt = hadFocus ? { r: Number(
     /** @type {HTMLElement} */
@@ -61944,15 +61966,15 @@ function setMatrix(el16, spec) {
   ) } : null;
   let rows2 = spec.rows ?? [];
   let columns2 = spec.columns ?? [];
-  if (loading && rows2.length === 0 && spec.skeleton) rows2 = Array.from({ length: spec.skeleton }, (_, i) => ({ key: `r${i}`, label: "" }));
-  if (loading && columns2.length === 0 && spec.skeleton) columns2 = Array.from({ length: spec.skeleton }, (_, i) => ({ key: `c${i}`, label: "" }));
+  if (loading2 && rows2.length === 0 && spec.skeleton) rows2 = Array.from({ length: spec.skeleton }, (_, i) => ({ key: `r${i}`, label: "" }));
+  if (loading2 && columns2.length === 0 && spec.skeleton) columns2 = Array.from({ length: spec.skeleton }, (_, i) => ({ key: `c${i}`, label: "" }));
   const lit = new Set(spec.lit ?? LIT.get(el16) ?? []);
   LIT.set(el16, lit);
   const picked = spec.picked === void 0 ? parsePick(el16) : spec.picked;
   el16.classList.add("kp-matrix");
   el16.setAttribute("data-kp-matrix", "");
   el16.setAttribute("data-kp-state", state12);
-  if (loading) el16.setAttribute("aria-busy", "true");
+  if (loading2) el16.setAttribute("aria-busy", "true");
   else el16.removeAttribute("aria-busy");
   el16.toggleAttribute("data-kp-lit", lit.size > 0);
   let grid2 = (
@@ -61982,7 +62004,7 @@ function setMatrix(el16, spec) {
   }
   if (grid2.parentElement !== el16) replaceKeepingCard(el16, [grid2]);
   const header = (item, kind) => {
-    if (loading && !item.label)
+    if (loading2 && !item.label)
       return make16(doc, "span", `kp-matrix__${kind} kp-matrix__${kind}--skeleton kp-skeleton`, { "aria-hidden": "true" });
     const node = make16(doc, "button", `kp-matrix__${kind}`, {
       type: "button",
@@ -62010,7 +62032,7 @@ function setMatrix(el16, spec) {
     const node = make16(doc, "div", "kp-matrix__line", { role: "row" });
     node.append(header(row2, "row"));
     columns2.forEach((col, c) => {
-      if (loading) {
+      if (loading2) {
         node.append(
           make16(doc, "span", "kp-matrix__cell kp-skeleton kp-skeleton--block", {
             role: "gridcell",
@@ -62067,7 +62089,7 @@ function setMatrix(el16, spec) {
     body.push(node);
   });
   grid2.replaceChildren(...body);
-  syncCard(el16, loading, s2.heatLoading, () => matrixArea(el16), "kp-matrix__busy");
+  syncCard(el16, loading2, s2.heatLoading, () => matrixArea(el16), "kp-matrix__busy");
   markHot(el16);
   placeStop(el16, MATRIX_CELL, focusAt ?? (picked ? findStop(el16, picked) : STOPS2.get(el16)));
   if (focusAt) el16.querySelector(`${MATRIX_CELL}[tabindex="0"]`)?.focus({ preventScroll: true });
@@ -62365,19 +62387,19 @@ function sortText(sortValue, measured2) {
   if (sortValue === void 0) return measured2 === null ? "" : String(Math.round(measured2 * SORT_SCALE) / SORT_TENTHS);
   return sortValue === null ? "" : String(sortValue);
 }
-function setBarCell(el16, { value = null, text, tone, warnAt = WARN_AT, badAt = BAD_AT, sortValue, mark: mark2 = null, label: label2, markLabel, loading = false }) {
+function setBarCell(el16, { value = null, text, tone, warnAt = WARN_AT, badAt = BAD_AT, sortValue, mark: mark2 = null, label: label2, markLabel, loading: loading2 = false }) {
   el16.classList.add("kp-bar-cell");
   const meter = partOf(el16, "kp-meter", "prepend");
   const number = partOf(el16, "kp-bar-cell__value", "append");
-  const measured2 = value != null && Number.isFinite(value) && !loading ? value : null;
-  setMeter(meter, { value: measured2, mark: mark2, tone: tone === void 0 ? autoTone(measured2, warnAt, badAt) : tone, label: label2, markLabel, loading });
-  if (loading) {
+  const measured2 = value != null && Number.isFinite(value) && !loading2 ? value : null;
+  setMeter(meter, { value: measured2, mark: mark2, tone: tone === void 0 ? autoTone(measured2, warnAt, badAt) : tone, label: label2, markLabel, loading: loading2 });
+  if (loading2) {
     const ghost = el16.ownerDocument.createElement("span");
     ghost.className = "kp-skeleton kp-bar-cell__ghost";
     ghost.setAttribute("aria-hidden", "true");
     number.replaceChildren(ghost);
   } else number.textContent = text ?? (measured2 === null ? "" : `${Math.round(measured2 * PERCENT4)}%`);
-  el16.toggleAttribute("data-kp-loading", loading);
+  el16.toggleAttribute("data-kp-loading", loading2);
   const holder = el16.closest("td, th");
   if (holder) holder.setAttribute(SORT_VALUE_ATTRIBUTE, sortText(sortValue, measured2));
 }
@@ -62872,7 +62894,7 @@ function sequencerLink(items2, id, partnerId, options = {}) {
       /** @type {SequencerItem} */
       by.get(r).start + delta
     );
-  const verdict = settle2(list, delta === 0 ? [] : riders, options.overlap ?? "refuse");
+  const verdict = settle3(list, delta === 0 ? [] : riders, options.overlap ?? "refuse");
   if (!verdict.ok) return fail(verdict.reason, verdict.blocker);
   return { ok: true, items: list, changed: changedIds(items2, list), pushed: verdict.pushed, reason: null, blocker: null };
 }
@@ -62991,7 +63013,7 @@ function followersOf(items2, id) {
   }
   return out;
 }
-function settle2(list, movedIds, policy) {
+function settle3(list, movedIds, policy) {
   if (policy === "allow") return { ok: true, pushed: [] };
   const first = new Set(movedIds);
   const movers = new Set(first);
@@ -63106,7 +63128,7 @@ function sequencerPlan(items2, edit, options = {}) {
     }
     moved = new Set(group);
   }
-  const verdict = settle2(list, moved, o.overlap);
+  const verdict = settle3(list, moved, o.overlap);
   if (!verdict.ok) return fail(verdict.reason, verdict.blocker);
   return { ok: true, items: list, changed: changedIds(items2, list), pushed: verdict.pushed, reason: null, blocker: null };
 }
@@ -66837,7 +66859,7 @@ var init_lanes3 = __esm({
       /** A lane, made from scratch on every paint (its cards are kept by id). @param {import('./core.js').PipelineLane} lane @param {import('./core.js').PipelineCard[]} cards @param {number} total */
       laneNode(lane, cards2, total) {
         const doc = this.host.ownerDocument;
-        const loading = this.loading();
+        const loading2 = this.loading();
         const node = make20(doc, "section", `kp-pipeline__lane${lane.closed ? " kp-pipeline__lane--closed" : ""}`);
         node.setAttribute("role", "listitem");
         node.dataset.kpLane = lane.key;
@@ -66848,13 +66870,13 @@ var init_lanes3 = __esm({
         node.append(this.laneHead(lane, cards2.length, id));
         if (this.host.dataset.kpPipelineShare !== "false" && !lane.closed) {
           const share = make20(doc, "p", "kp-pipeline__share");
-          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards2.length / total * PERCENT5));
+          share.textContent = loading2 || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards2.length / total * PERCENT5));
           node.append(share);
         }
         const list = make20(doc, "div", "kp-pipeline__cards");
         list.setAttribute("role", "list");
         list.setAttribute("aria-labelledby", id);
-        if (loading) list.append(...this.ghosts(lane.closed === true));
+        if (loading2) list.append(...this.ghosts(lane.closed === true));
         else if (cards2.length === 0) list.append(make20(doc, "p", "kp-pipeline__none", this.strings.pipelineNone));
         else this.fillCards(lane, cards2, list);
         node.append(list);
@@ -67824,18 +67846,18 @@ function joinGroupCard(el16, host, words3, first) {
     group = void 0;
   }
   if (!group) {
-    const loading = /* @__PURE__ */ new Set();
+    const loading2 = /* @__PURE__ */ new Set();
     const card = openBusyCard(
       /** @type {HTMLElement} */
       host,
       {
         words: words3,
-        area: () => [...loading].filter((strip) => strip.isConnected),
+        area: () => [...loading2].filter((strip) => strip.isConnected),
         className: "kp-uptime__busy kp-uptime__busy--group",
         arrive: !first
       }
     );
-    group = { card, loading, closing: false };
+    group = { card, loading: loading2, closing: false };
     GROUPS2.set(host, group);
   }
   group.loading.add(el16);
@@ -67896,12 +67918,12 @@ var init_helpers4 = __esm({
 // js/uptime/draw.js
 function setUptime(el16, spec) {
   SPECS.set(el16, spec);
-  const loading = spec.state === "loading";
+  const loading2 = spec.state === "loading";
   const waiting2 = WAITING2.get(el16);
-  if (loading && waiting2) {
+  if (loading2 && waiting2) {
     WAITING2.delete(el16);
     waiting2.card.remove();
-  } else if (!loading) {
+  } else if (!loading2) {
     if (waiting2) {
       waiting2.spec = spec;
       return;
@@ -67935,11 +67957,11 @@ function draw5(el16, spec) {
   const s2 = getStrings();
   const periods = spec.periods ?? [];
   const state12 = spec.state ?? (periods.length === 0 ? "empty" : "ready");
-  const loading = state12 === "loading";
-  const failed = state12 === "error";
+  const loading2 = state12 === "loading";
+  const failed2 = state12 === "error";
   const label2 = spec.label ?? el16.dataset.kpUptimeLabel ?? "";
-  const count4 = periods.length > 0 && !loading ? periods.length : spec.count ?? countOf2(el16);
-  const figures = uptimeFigures(loading || failed ? [] : periods);
+  const count4 = periods.length > 0 && !loading2 ? periods.length : spec.count ?? countOf2(el16);
+  const figures = uptimeFigures(loading2 || failed2 ? [] : periods);
   const focusedKey = el16.contains(el16.ownerDocument.activeElement) ? (
     /** @type {HTMLElement} */
     el16.ownerDocument.activeElement.dataset.kpKey
@@ -67949,13 +67971,13 @@ function draw5(el16, spec) {
   el16.classList.add("kp-uptime");
   el16.dataset.kpUptimeState = state12;
   el16.setAttribute("data-kp-state", state12);
-  if (loading) el16.setAttribute("aria-busy", "true");
+  if (loading2) el16.setAttribute("aria-busy", "true");
   else el16.removeAttribute("aria-busy");
-  if (state12 === "empty" || failed) {
+  if (state12 === "empty" || failed2) {
     const keepLayer = CARDS2.get(el16)?.layer;
     const plate2 = hostStatePlate(el16, {
-      kind: failed ? "error" : "empty",
-      title: failed ? spec.error ?? spec.message ?? s2.uptimeError : spec.message ?? s2.uptimeEmpty,
+      kind: failed2 ? "error" : "empty",
+      title: failed2 ? spec.error ?? spec.message ?? s2.uptimeError : spec.message ?? s2.uptimeEmpty,
       ...spec.text ? { text: spec.text } : {},
       art: spec.art,
       retryEvent: UPTIME_RETRY_EVENT
@@ -67970,7 +67992,7 @@ function draw5(el16, spec) {
   const summary2 = make22(el16, "span", "kp-uptime__summary");
   summary2.setAttribute("role", "status");
   let said = "";
-  if (loading) {
+  if (loading2) {
     summary2.dataset.kpTone = "loading";
     const wait = make22(el16, "span", "kp-skeleton kp-uptime__summary-skeleton");
     wait.setAttribute("aria-hidden", "true");
@@ -67979,7 +68001,7 @@ function draw5(el16, spec) {
     const hidden2 = make22(el16, "span", "kp-sr-only");
     hidden2.textContent = said;
     summary2.append(hidden2);
-  } else if (failed) {
+  } else if (failed2) {
     summary2.dataset.kpTone = "error";
     said = spec.error ?? s2.uptimeError;
     summary2.textContent = said;
@@ -68011,14 +68033,14 @@ function draw5(el16, spec) {
   track2.setAttribute("aria-label", label2 ? s2.uptimeTrack(label2, said) : said);
   const cells = [];
   for (let i = 0; i < count4; i++) {
-    const period = loading || failed ? null : periods[i] ?? null;
+    const period = loading2 || failed2 ? null : periods[i] ?? null;
     const link2 = Boolean(period?.href) && !info;
     const cell = make22(
       el16,
-      loading ? "span" : link2 ? "a" : "button",
-      loading ? "kp-uptime__cell kp-skeleton kp-skeleton--block" : "kp-uptime__cell"
+      loading2 ? "span" : link2 ? "a" : "button",
+      loading2 ? "kp-uptime__cell kp-skeleton kp-skeleton--block" : "kp-uptime__cell"
     );
-    if (loading) {
+    if (loading2) {
       cell.setAttribute("aria-hidden", "true");
     } else {
       const tone = toneFor(el16, period && UPTIME_STATES.includes(period.state) ? period.state : "none");
@@ -68059,7 +68081,7 @@ function draw5(el16, spec) {
   if (keep && keep.parentElement === el16) keep.before(head, track2, axis);
   else el16.append(head, track2, axis);
   fit(el16);
-  if (!loading) {
+  if (!loading2) {
     const roving2 = cells.find((c) => c.dataset.kpKey === focusedKey && !c.hidden) ?? [...cells].reverse().find((c) => !c.hidden) ?? null;
     if (roving2) roving2.tabIndex = 0;
     if (focusedKey !== void 0 && roving2?.dataset.kpKey === focusedKey) roving2.focus({ preventScroll: true });
@@ -68071,7 +68093,7 @@ function draw5(el16, spec) {
     else DRAWN4.add(el16);
   }
   const card = CARDS2.get(el16);
-  if (loading) {
+  if (loading2) {
     const host = groupHost(el16);
     if (card && !host) card.place();
     else if (host) CARDS2.set(el16, joinGroupCard(el16, host, s2.uptimeLoading, first));
@@ -69959,8 +69981,8 @@ var init_load = __esm({
             /** @type {HTMLElement} */
             img.closest(".kp-compare__pane")
           );
-          const failed = !this.held && img.complete && img.naturalWidth === 0;
-          if (failed && !this.notes.some((n) => n.parentElement === pane)) this.noteFailed(pane);
+          const failed2 = !this.held && img.complete && img.naturalWidth === 0;
+          if (failed2 && !this.notes.some((n) => n.parentElement === pane)) this.noteFailed(pane);
         }
       }
       /** A failed image says so over its pane, with a normal-size Retry that loads it again. @param {HTMLElement} pane */
@@ -70965,7 +70987,7 @@ var init_faces = __esm({
 });
 
 // js/flash/outcome.js
-async function settle3(button6, work) {
+async function settle4(button6, work) {
   const s2 = getStrings();
   try {
     const answer2 = await work();
@@ -71068,7 +71090,7 @@ var init_run3 = __esm({
       async run(work, options = {}) {
         if (this.running) return null;
         this.begin(options);
-        const outcome = await settle3(this.host, work);
+        const outcome = await settle4(this.host, work);
         this.showOutcome(outcome, options);
         return outcome;
       }
@@ -71361,17 +71383,17 @@ var init_detail_state = __esm({
         const wide = next2 === "error" && !own || next2 === "empty" && !root.querySelector('[data-kp-pane="list"] [data-kp-pane-key]');
         root.toggleAttribute("data-kp-state-wide", wide);
         for (const pane of root.querySelectorAll(':scope > [data-kp-pane="list"], :scope > [data-kp-pane="aside"]')) pane.toggleAttribute("inert", wide);
-        const loading = next2 === "loading";
-        this.body.toggleAttribute("inert", loading || next2 === "empty" || next2 === "error" && !own);
-        if (loading) this.body.setAttribute("aria-busy", "true");
+        const loading2 = next2 === "loading";
+        this.body.toggleAttribute("inert", loading2 || next2 === "empty" || next2 === "error" && !own);
+        if (loading2) this.body.setAttribute("aria-busy", "true");
         else this.body.removeAttribute("aria-busy");
       }
       /** The busy card: laid when loading starts, closed when it ends. @param {boolean} loading @param {import('./constants.js').PaneStateOptions} options */
-      paintBusy(loading, options) {
-        if (loading) this.busyWords = options.words ?? getStrings().paneLoading;
-        if (loading && !this.busy) {
+      paintBusy(loading2, options) {
+        if (loading2) this.busyWords = options.words ?? getStrings().paneLoading;
+        if (loading2 && !this.busy) {
           this.busy = this.layBusy(this.drawn);
-        } else if (!loading && this.busy) {
+        } else if (!loading2 && this.busy) {
           const card = this.busy;
           this.busy = null;
           this.busyAt = null;
@@ -75663,13 +75685,13 @@ function dayHeading(c, day2) {
   const heading = make27(doc, "div", "kp-feed__day");
   heading.setAttribute("role", "heading");
   heading.setAttribute("aria-level", String(options.level));
-  const failed = day2.rows.filter((row2) => row2.state === "failed").length;
+  const failed2 = day2.rows.filter((row2) => row2.state === "failed").length;
   const word = make27(doc, "span", "kp-feed__day-word", dayWord(c, day2.at, day2.key));
   const date = make27(doc, "time", "kp-feed__day-date", agoMoment(day2.at, c.zone).slice(0, MOMENT_DATE_LENGTH));
   date.setAttribute("datetime", new Date(day2.at).toISOString());
   heading.append(word, date, make27(doc, "span", "kp-feed__day-rule"));
   if (optionAttr(c.host, "summary") !== "off") {
-    const summary2 = `${counted(day2.rows.length, options.unit)} \xB7 ${failed ? t.feedFailed(failed) : t.feedAllOk}`;
+    const summary2 = `${counted(day2.rows.length, options.unit)} \xB7 ${failed2 ? t.feedFailed(failed2) : t.feedAllOk}`;
     heading.append(make27(doc, "span", "kp-feed__day-summary", summary2));
   }
   return heading;
@@ -84509,9 +84531,9 @@ var init_run5 = __esm({
         viewer.setContent();
         viewer.setState("loading");
         this.setFrame(null);
-        const load = this.beginLoad();
-        load.timer = window.setTimeout(() => this.fail(load, url, "timeout", this.strings.previewTimeout), PREVIEW_TIMEOUT_MS);
-        void this.settle(load, url, page);
+        const load2 = this.beginLoad();
+        load2.timer = window.setTimeout(() => this.fail(load2, url, "timeout", this.strings.previewTimeout), PREVIEW_TIMEOUT_MS);
+        void this.settle(load2, url, page);
       }
       /**
        * The load failed: say so, unless a later load made this one stale.
@@ -84520,9 +84542,9 @@ var init_run5 = __esm({
        * @param {string} reason
        * @param {string} message
        */
-      fail(load, url, reason, message) {
-        if (!load.live) return;
-        load.stop();
+      fail(load2, url, reason, message) {
+        if (!load2.live) return;
+        load2.stop();
         this.viewer.setContent();
         this.viewer.setState("error", { message, retry: () => this.load() });
         this.doc.dispatchEvent(new CustomEvent("kp-preview-failed", { bubbles: true, detail: { url, reason } }));
@@ -84533,10 +84555,10 @@ var init_run5 = __esm({
        * @param {string} url
        * @param {number} page
        */
-      async settle(load, url, page) {
-        const contentType = await this.probe(load, url);
-        if (contentType === null || !load.live) return;
-        this.show(load, url, page, contentType);
+      async settle(load2, url, page) {
+        const contentType = await this.probe(load2, url);
+        if (contentType === null || !load2.live) return;
+        this.show(load2, url, page, contentType);
       }
       /**
        * What the server says about the file: a missing one is said before a frame shows an error page.
@@ -84544,14 +84566,14 @@ var init_run5 = __esm({
        * @param {string} url
        * @returns {Promise<string | null>} the Content-Type ('' when unknown), or null when there is nothing left to show
        */
-      async probe(load, url) {
+      async probe(load2, url) {
         const strings = this.strings;
         let contentType = "";
         try {
           const head = await fetch(url, { method: "HEAD" });
-          if (!load.live) return null;
+          if (!load2.live) return null;
           if (!head.ok) {
-            this.fail(load, url, `status-${head.status}`, head.status === 404 ? strings.previewGone : strings.previewServer(head.status));
+            this.fail(load2, url, `status-${head.status}`, head.status === 404 ? strings.previewGone : strings.previewServer(head.status));
             return null;
           }
           contentType = head.headers.get("content-type") ?? "";
@@ -84576,49 +84598,49 @@ var init_run5 = __esm({
        * @param {number} page
        * @param {string} contentType
        */
-      show(load, url, page, contentType) {
+      show(load2, url, page, contentType) {
         const { viewer, preview, strings } = this;
         const wanted = preview.type && preview.type !== "auto" ? preview.type : previewTypeOf(url, contentType);
         if (wanted === "pdf" && (preview.engine === "none" || /** @type {any} */
         navigator.pdfViewerEnabled === false)) {
-          load.stop();
+          load2.stop();
           viewer.setDesc("");
           viewer.setState("unsupported", { message: strings.previewNoPdf });
           return;
         }
         viewer.setDesc(wanted === "pdf" ? strings.previewShownByBrowser : "");
         if (wanted === "image") {
-          viewer.setContent(this.imageFor(load, url));
+          viewer.setContent(this.imageFor(load2, url));
           return;
         }
-        const frame3 = this.frameFor(load, url, page, wanted);
+        const frame3 = this.frameFor(load2, url, page, wanted);
         this.setFrame(frame3);
         viewer.setContent(frame3);
       }
       /** @param {PreviewLoad} load @param {string} url */
-      imageFor(load, url) {
+      imageFor(load2, url) {
         const img = this.doc.createElement("img");
         img.className = "kp-docpreview__image";
         img.alt = this.viewer.dialog.querySelector(".kp-viewer__title")?.textContent ?? "";
         img.addEventListener("load", () => {
-          if (!load.live) return;
-          load.stop();
+          if (!load2.live) return;
+          load2.stop();
           this.viewer.setState("ready");
         });
-        img.addEventListener("error", () => this.fail(load, url, "image", this.strings.previewImage));
+        img.addEventListener("error", () => this.fail(load2, url, "image", this.strings.previewImage));
         img.src = url;
         return img;
       }
       /** @param {PreviewLoad} load @param {string} url @param {number} page @param {'pdf' | 'image' | 'text'} wanted */
-      frameFor(load, url, page, wanted) {
+      frameFor(load2, url, page, wanted) {
         const frame3 = this.doc.createElement("iframe");
         frame3.className = "kp-docpreview__frame";
         frame3.title = this.viewer.dialog.querySelector(".kp-viewer__title")?.textContent ?? "";
         const sandbox = this.preview.sandbox ?? (wanted === "text" ? "strict" : "off");
         if (sandbox === "strict") frame3.setAttribute("sandbox", "");
         frame3.addEventListener("load", () => {
-          if (!load.live) return;
-          load.stop();
+          if (!load2.live) return;
+          load2.stop();
           this.viewer.setState("ready");
         });
         frame3.src = wanted === "pdf" && page > 1 ? `${url}#page=${page}` : url;
@@ -84904,7 +84926,7 @@ function addSkeletonCells(gallery, grid2) {
     grid2.append(cell);
   }
 }
-function buildGrid(gallery, loading) {
+function buildGrid(gallery, loading2) {
   const { el: el16, spec, items: items2 } = gallery;
   const doc = el16.ownerDocument;
   const grid2 = make34(doc, "ul", "kp-gallery__grid");
@@ -84918,8 +84940,8 @@ function buildGrid(gallery, loading) {
     el16.removeAttribute("data-kp-grid-fixed");
   }
   grid2.setAttribute("data-kp-tile-shape", attr9(el16, "data-kp-tile-shape", "square"));
-  if (spec.add && !loading) grid2.append(addCell(gallery));
-  if (loading) addSkeletonCells(gallery, grid2);
+  if (spec.add && !loading2) grid2.append(addCell(gallery));
+  if (loading2) addSkeletonCells(gallery, grid2);
   else for (const item of items2) grid2.append(tileFor(gallery, item));
   return grid2;
 }
@@ -85464,11 +85486,11 @@ var init_gallery = __esm({
         const el16 = this.el;
         this.remember(spec);
         const state12 = this.spec.state ?? (this.items.length === 0 ? "empty" : "ready");
-        const loading = state12 === "loading";
+        const loading2 = state12 === "loading";
         el16.classList.add("kp-gallery");
         el16.setAttribute("data-kp-gallery", "");
         el16.setAttribute("data-kp-state", state12);
-        el16.toggleAttribute("aria-busy", loading);
+        el16.toggleAttribute("aria-busy", loading2);
         if (this.spec.label && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", this.spec.label);
         if (!el16.hasAttribute("role")) el16.setAttribute("role", "region");
         const keep = this.card?.layer;
@@ -85483,15 +85505,15 @@ var init_gallery = __esm({
           el16.append(...body);
           return;
         }
-        const grid2 = buildGrid(this, loading);
+        const grid2 = buildGrid(this, loading2);
         body.push(grid2, fileInput(el16.ownerDocument, el16));
         el16.prepend(...body);
-        this.syncCard(loading, grid2);
+        this.syncCard(loading2, grid2);
       }
       /** The card covers the whole gallery, not the strip of skeleton lines the grid is while it loads [t56-statefix-1018, S10]. @param {boolean} loading @param {HTMLElement} [grid] */
-      syncCard(loading, grid2) {
+      syncCard(loading2, grid2) {
         const el16 = this.el;
-        if (loading && grid2) {
+        if (loading2 && grid2) {
           if (!this.card)
             this.card = openBusyCard(el16, { words: getStrings().galleryLoading, area: () => [el16], className: "kp-gallery__busy", arrive: false });
           else if (this.card.layer.parentElement !== el16) el16.append(this.card.layer);
@@ -85942,12 +85964,12 @@ var init_core26 = __esm({
       }
       /** `loading` shows the skeleton and switches the slider off. @param {'ready' | 'loading'} state */
       setState(state12) {
-        const loading = state12 === "loading";
-        this.skeleton.hidden = !loading;
-        this.host.toggleAttribute("aria-busy", loading);
-        if (loading) this.host.dataset.kpState = "loading";
+        const loading2 = state12 === "loading";
+        this.skeleton.hidden = !loading2;
+        this.host.toggleAttribute("aria-busy", loading2);
+        if (loading2) this.host.dataset.kpState = "loading";
         else delete this.host.dataset.kpState;
-        for (const control of [...this.inputs, ...this.boxes]) control.disabled = loading || this.o.disabledByPage;
+        for (const control of [...this.inputs, ...this.boxes]) control.disabled = loading2 || this.o.disabledByPage;
       }
       /** Replace the values from a script, without the event. @param {readonly number[]} next */
       setValues(next2) {
@@ -87496,18 +87518,18 @@ var init_note4 = __esm({
         note2.hidden = state12 !== "empty" && state12 !== "error";
         note2.removeAttribute("role");
         if (state12 !== "empty" && state12 !== "error") return;
-        const failed = state12 === "error";
+        const failed2 = state12 === "error";
         const plate2 = statePlate(this.doc, {
-          kind: failed ? "error" : "empty",
-          title: failed ? given2.title ?? s2.runsFailed : given2.reason ?? s2.runsEmpty,
-          ...failed ? { text: given2.text ?? s2.stateFailedText, actionLabel: s2.runsRetry, actionAttribute: "data-kp-runs-retry" } : {}
+          kind: failed2 ? "error" : "empty",
+          title: failed2 ? given2.title ?? s2.runsFailed : given2.reason ?? s2.runsEmpty,
+          ...failed2 ? { text: given2.text ?? s2.stateFailedText, actionLabel: s2.runsRetry, actionAttribute: "data-kp-runs-retry" } : {}
         });
-        plate2.classList.add(failed ? "kp-runs__failure" : "kp-runs__empty");
-        plate2.querySelector(".kp-stateplate__title")?.classList.add(failed ? "kp-runs__failure-title" : "kp-runs__empty-title");
+        plate2.classList.add(failed2 ? "kp-runs__failure" : "kp-runs__empty");
+        plate2.querySelector(".kp-stateplate__title")?.classList.add(failed2 ? "kp-runs__failure-title" : "kp-runs__empty-title");
         plate2.querySelector(".kp-stateplate__text")?.classList.add("kp-runs__failure-text");
         plate2.querySelector(".kp-stateplate__action")?.classList.add("kp-runs__retry");
         note2.append(plate2);
-        note2.setAttribute("role", failed ? "alert" : "status");
+        note2.setAttribute("role", failed2 ? "alert" : "status");
       }
     };
   }
@@ -89508,12 +89530,12 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   g.box.style.setProperty("--kp-graph-h", `${H}px`);
   g.svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   g.svg.setAttribute("height", String(H));
-  const loading = g.state === "loading";
-  g.note.textContent = loading ? g.words || g.strings.graphLoading : "";
-  g.note.hidden = !loading;
+  const loading2 = g.state === "loading";
+  g.note.textContent = loading2 ? g.words || g.strings.graphLoading : "";
+  g.note.hidden = !loading2;
   g.plate.replaceChildren();
-  g.plate.hidden = loading || g.state === "ready";
-  if (loading) g.svg.append(ghostOf2(doc, g.data, W, H, layoutOptions, base));
+  g.plate.hidden = loading2 || g.state === "ready";
+  if (loading2) g.svg.append(ghostOf2(doc, g.data, W, H, layoutOptions, base));
   else if (!g.plate.hidden)
     g.plate.append(
       hostStatePlate(g.el, {
@@ -90857,7 +90879,7 @@ function decorate(list) {
   const countMode = attr10(list, "count", "both");
   const gapSort = attr10(list, "gap-sort", "keep") === "top";
   const byId = new Map(items2.map((i) => [i.id, i]));
-  const loading = list.hasAttribute("aria-busy");
+  const loading2 = list.hasAttribute("aria-busy");
   for (
     const row2 of
     /** @type {NodeListOf<HTMLElement>} */
@@ -91006,7 +91028,7 @@ function decorate(list) {
         }
         if (b) {
           b.textContent = text;
-          b.disabled = gaps === 0 || loading || flag === "take-all" && (!st.viewer || list.hasAttribute("data-kp-claim-disabled"));
+          b.disabled = gaps === 0 || loading2 || flag === "take-all" && (!st.viewer || list.hasAttribute("data-kp-claim-disabled"));
           if (b.disabled && gaps === 0) b.setAttribute("data-kp-disabled-reason", s2.claimNothingOpen);
           else if (b.disabled && flag === "take-all") b.setAttribute("data-kp-disabled-reason", s2.claimNoViewer);
           else b.removeAttribute("data-kp-disabled-reason");
@@ -91019,7 +91041,7 @@ function decorate(list) {
     body.querySelector(":scope > .kp-claim__none")
   );
   const emptyList = items2.length === 0;
-  const wantNote = !loading && !emptyList && shown6 === 0 && !list.hasAttribute("data-kp-checklist-error");
+  const wantNote = !loading2 && !emptyList && shown6 === 0 && !list.hasAttribute("data-kp-checklist-error");
   if (wantNote) {
     const gapsFilter = st.filter === "gaps";
     const key = `${st.filter}`;
@@ -91037,7 +91059,7 @@ function decorate(list) {
       body.append(note2);
     }
   } else note2?.remove();
-  if (loading) list.setAttribute("data-kp-claim-loading", "");
+  if (loading2) list.setAttribute("data-kp-claim-loading", "");
   else list.removeAttribute("data-kp-claim-loading");
 }
 var init_decorate = __esm({
@@ -91954,10 +91976,10 @@ function render4(root) {
     body.prepend(grid2);
     attachHeats(root);
   }
-  const loading = state12 === "loading";
+  const loading2 = state12 === "loading";
   const total = people2.length;
   const heat = {
-    state: loading ? "loading" : "ready",
+    state: loading2 ? "loading" : "ready",
     label: root.getAttribute("aria-label") ?? s2.availabilityGroup,
     every: 1,
     columns: columns2.map((c) => ({ key: c.key, label: c.label, minor: false })),
@@ -91973,7 +91995,7 @@ function render4(root) {
       cells: columns2.map((c) => ({ tone: toneOf3(st.set.answers[p.id]?.[c.key]), label: wordOf(st.set.answers[p.id]?.[c.key]) }))
     }))
   };
-  if (loading) {
+  if (loading2) {
     heat.rows = people2.map((p) => ({ key: p.id, label: p.mine ? s2.availabilityYou(p.name) : p.name, cells: [] }));
     if (heat.summary) heat.summary.cells = [];
   }
@@ -91994,7 +92016,7 @@ function render4(root) {
     if ((attr11(root, "locked", "") || "").split(/[\s,]+/).includes(key)) head_.setAttribute("data-kp-availability-closed", "");
     else head_.removeAttribute("data-kp-availability-closed");
   }
-  if (!loading) {
+  if (!loading2) {
     for (
       const cell of
       /** @type {NodeListOf<HTMLElement>} */
@@ -92010,10 +92032,10 @@ function render4(root) {
   paintSummary(root);
   root.toggleAttribute("data-kp-availability-nobody", total > 0 && people2.every((p) => Object.keys(st.set.answers[p.id] ?? {}).length === 0));
   const byColumn = attr11(root, "narrow", "scroll") === "by-column";
-  if (byColumn) body.append(columnsList(root, people2, loading));
-  syncListCard(root, body, loading && byColumn);
+  if (byColumn) body.append(columnsList(root, people2, loading2));
+  syncListCard(root, body, loading2 && byColumn);
   requestAnimationFrame(() => {
-    if (!grid2 || !grid2.isConnected || loading) return;
+    if (!grid2 || !grid2.isConnected || loading2) return;
     const list = (
       /** @type {HTMLElement | null} */
       body.querySelector(":scope > .kp-availability__columns")
@@ -97086,8 +97108,8 @@ var init_loader = __esm({
         return Object.assign(detach, { ready: this.ready, modules: this.modules });
       }
       /** @param {Need} need @param {Promise<any>} loading @param {WeakSet<Element>} asked the elements it attaches against */
-      attachOnce(need, loading, asked) {
-        return loading.then((module) => {
+      attachOnce(need, loading2, asked) {
+        return loading2.then((module) => {
           if (this.detached) return;
           this.detaches.push(...drawing(this.root, this.drawn, () => asOf(this.root, asked, () => need.attach(module, this.root))));
         });
@@ -97116,8 +97138,8 @@ var init_loader = __esm({
         );
         return Promise.all(
           late.map((need) => {
-            const loading = this.prefetched.get(need);
-            if (loading) return this.attachOnce(need, loading, asked);
+            const loading2 = this.prefetched.get(need);
+            if (loading2) return this.attachOnce(need, loading2, asked);
             if (!askedFor(need.when)) return void 0;
             this.modules.push(need.name);
             return this.attachOnce(need, need.load(), asked);
@@ -97189,7 +97211,7 @@ var init_alert_status_idmark2 = __esm({
       statusRetry: "Opnieuw proberen",
       statusRetryLabel: (label2) => `${label2} opnieuw proberen`,
       statusAnnounce: (label2, state12, detail) => detail ? `${label2}: ${state12}, ${detail}` : `${label2}: ${state12}`,
-      statusAnnounceMany: (count4, failed) => failed ? `${count4} bijgewerkt, ${failed} mislukt` : `${count4} bijgewerkt`,
+      statusAnnounceMany: (count4, failed2) => failed2 ? `${count4} bijgewerkt, ${failed2} mislukt` : `${count4} bijgewerkt`,
       facetOnly: "alleen",
       facetOnlyLabel: (label2) => `Alleen ${label2} tonen`,
       facetAll: "Alles",
@@ -98145,8 +98167,9 @@ var init_quantity_checklist_focus2 = __esm({
     "use strict";
     verbLast = (head, verb) => {
       const before2 = String(head).trim();
-      const line = before2 === "" ? String(verb) : `${before2} ${String(verb).toLowerCase()}`;
-      return line.charAt(0).toUpperCase() + line.slice(1);
+      const word = String(verb);
+      if (before2 === "") return word.charAt(0).toUpperCase() + word.slice(1);
+      return `${before2} ${word.charAt(0).toLowerCase()}${word.slice(1)}`;
     };
     NL_QUANTITY_CHECKLIST_FOCUS = {
       quantityLess: (label2) => label2 ? `${label2}, minder` : "Minder",
@@ -99567,6 +99590,7 @@ init_loader();
 init_calm();
 init_runtime();
 init_needs();
+var LANGUAGE_WAIT_MS = 3e3;
 var READY_ATTRIBUTE = "data-kp-auto-ready";
 function attachAll2(root = document) {
   return new AutoLoader(root).start();
@@ -99583,8 +99607,18 @@ if (typeof document !== "undefined") {
     } catch {
     }
   }
+  const waitForLanguage = () => new Promise((resolve) => {
+    const timer = setTimeout(() => {
+      console.warn(`kp-themes: the language did not settle within ${LANGUAGE_WAIT_MS} ms; attaching with the strings as they stand.`);
+      resolve();
+    }, LANGUAGE_WAIT_MS);
+    languageReady().catch((error) => console.error("kp-themes: the language failed to settle; attaching with the strings as they stand.", error)).then(() => {
+      clearTimeout(timer);
+      resolve();
+    });
+  });
   const start = () => {
-    void languageReady().then(attachEverything);
+    void waitForLanguage().then(attachEverything);
   };
   const attachEverything = () => {
     const attached2 = attachAll2();
@@ -99947,10 +99981,10 @@ function ensureRegister(theme, { pattern = REGISTER_PATTERN, doc = document } = 
   const href = registerHref(theme, { pattern, doc });
   const known4 = loads.get(href);
   if (known4) return known4;
-  const load = new RegisterLoad(theme, href, doc, registerLink(theme, { pattern, doc }));
-  const promise = load.start();
+  const load2 = new RegisterLoad(theme, href, doc, registerLink(theme, { pattern, doc }));
+  const promise = load2.start();
   loads.set(href, promise);
-  load.insert();
+  load2.insert();
   return promise;
 }
 
