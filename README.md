@@ -349,6 +349,16 @@ while `index.js` re-exports every module, and a browser fetches every
 chunk an import names. Measured on a page with a datatable and a dialog
 (Firefox, 2026-11-02): 135 kB gzip of JavaScript in 43 files against
 576 kB for `dist/kp-themes.min.js`, and 131 kB of CSS against 345 kB.
+Every `js/<name>` export has the same entry under `dist/js/<name>.js`,
+with its types and a `./dist/js/<name>` export: `overlays.js` (`toast`,
+`attachDialogs`), `menu-button.js` (`setMenu`), `shortcuts.js`
+(`registerShortcuts`), `picker.js` (`attachThemePickers`), `core.js`
+(`applyTheme`), and so on. The list is derived from the export map, so a new
+component gets its entry on the next `npm run generate:bundle`. All entries
+share one set of chunks and so one state: a theme chosen in the picker is the
+theme `core.js` reports. Measured in Firefox (2026-11-02), a page importing
+`toast`, `setMenu`, `registerShortcuts` and `applyTheme` from their entries
+fetches 27 files, 85 kB gzip, where `index.js` fetches 181 files, 739 kB.
 Serve `dist/js/chunk-*.js` with a long cache: their names carry a
 content hash.
 
@@ -393,6 +403,7 @@ for.
 | `@kp-soft/themes/dist/js/index`          | the split bundle with every name `dist/js` exports     |
 | `@kp-soft/themes/dist/js/core`           | the split bundle's theme state (`applyTheme`)          |
 | `@kp-soft/themes/dist/js/lazy-register`  | the split bundle's `attachLazyRegisters`               |
+| `@kp-soft/themes/dist/js/<name>`         | the split bundle's entry for each `js/<name>` export   |
 
 ## Consume the JavaScript
 

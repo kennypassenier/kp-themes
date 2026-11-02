@@ -165,7 +165,7 @@ register rather than the whole bundle carries only that register's row.
 **The base and the split bundle** [load-1102]. \`dist/kp-themes-base.min.css\` is the bundle without
 its twelve registers, plus the fonts: link it, and let \`js/lazy-register.js\` fetch the active
 theme's \`dist/css/<theme>-register.min.css\` beside it. \`dist/js/\` is the same modules as
-\`dist/kp-themes.min.js\`, split by esbuild into two entries and shared chunks:
+\`dist/kp-themes.min.js\`, split by esbuild into one entry per \`js/<name>\` export of package.json (the same name under \`dist/js/\`) and shared chunks:
 
 | Entry | Files it loads before it runs | Minified |
 | ----- | ----------------------------: | -------: |

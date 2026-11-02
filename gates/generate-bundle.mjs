@@ -57,6 +57,7 @@ import process from 'node:process';
 import * as esbuild from 'esbuild';
 import { aliases, declaredNames } from './bundle-names.mjs';
 import { stylesheets } from './stylesheets.mjs';
+import { exportsAreCurrent, packageTextWithEntries } from './bundle-entries.mjs';
 import { SPLIT_DIR, splitFiles, splitManifest, splitTypes, staleSplitFiles } from './bundle-split.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -188,7 +189,7 @@ function types() {
 
 // The split bundle in dist/js/ beside the single file, and its manifest list (gates/bundle-split.mjs) [load-1102].
 const entry = entrySource(declarations((module) => readFileSync(join(ROOT, module.slice(2)), 'utf8')));
-const split = [...(await splitFiles({ root: ROOT, version, entry })), ...splitTypes(version, entry)];
+const split = [...(await splitFiles({ root: ROOT, version, entry })), ...splitTypes(version, entry, ROOT)];
 const files = [
     { name: 'kp-themes.css', content: css() },
     { name: 'kp-themes.js', content: await js() },
@@ -212,6 +213,10 @@ if (process.argv.includes('--check')) {
         drift++;
         console.error(`dist/${name} is no longer part of the split bundle.`);
     }
+    if (!exportsAreCurrent(ROOT)) {
+        drift++;
+        console.error('package.json does not export every entry of dist/js/ (gates/bundle-entries.mjs).');
+    }
     if (drift > 0) {
         console.error('Run `npm run generate:bundle` and commit the result.');
         process.exit(1);
@@ -220,6 +225,7 @@ if (process.argv.includes('--check')) {
     process.exit(0);
 }
 
+writeFileSync(join(ROOT, 'package.json'), packageTextWithEntries(ROOT));
 mkdirSync(join(OUT, SPLIT_DIR), { recursive: true });
 for (const name of stale) rmSync(join(OUT, name));
 for (const file of files) writeFileSync(join(OUT, file.name), file.content);

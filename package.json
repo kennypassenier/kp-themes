@@ -725,17 +725,637 @@
             "default": "./dist/kp-themes.min.js"
         },
         "./dist/css/base": "./dist/kp-themes-base.min.css",
+        "./dist/js/accept-follows": {
+            "types": "./dist/js/accept-follows.d.ts",
+            "default": "./dist/js/accept-follows.js"
+        },
+        "./dist/js/ack-gate": {
+            "types": "./dist/js/ack-gate.d.ts",
+            "default": "./dist/js/ack-gate.js"
+        },
+        "./dist/js/action-tiles": {
+            "types": "./dist/js/action-tiles.d.ts",
+            "default": "./dist/js/action-tiles.js"
+        },
+        "./dist/js/actions": {
+            "types": "./dist/js/actions.d.ts",
+            "default": "./dist/js/actions.js"
+        },
+        "./dist/js/add-row": {
+            "types": "./dist/js/add-row.d.ts",
+            "default": "./dist/js/add-row.js"
+        },
+        "./dist/js/alarm": {
+            "types": "./dist/js/alarm.d.ts",
+            "default": "./dist/js/alarm.js"
+        },
+        "./dist/js/anchors": {
+            "types": "./dist/js/anchors.d.ts",
+            "default": "./dist/js/anchors.js"
+        },
+        "./dist/js/art": {
+            "types": "./dist/js/art.d.ts",
+            "default": "./dist/js/art.js"
+        },
+        "./dist/js/attention": {
+            "types": "./dist/js/attention.d.ts",
+            "default": "./dist/js/attention.js"
+        },
         "./dist/js/auto": {
             "types": "./dist/js/auto.d.ts",
             "default": "./dist/js/auto.js"
+        },
+        "./dist/js/auto-refresh": {
+            "types": "./dist/js/auto-refresh.d.ts",
+            "default": "./dist/js/auto-refresh.js"
+        },
+        "./dist/js/autosize": {
+            "types": "./dist/js/autosize.d.ts",
+            "default": "./dist/js/autosize.js"
+        },
+        "./dist/js/availability": {
+            "types": "./dist/js/availability.d.ts",
+            "default": "./dist/js/availability.js"
+        },
+        "./dist/js/barcell": {
+            "types": "./dist/js/barcell.d.ts",
+            "default": "./dist/js/barcell.js"
+        },
+        "./dist/js/board": {
+            "types": "./dist/js/board.d.ts",
+            "default": "./dist/js/board.js"
+        },
+        "./dist/js/bullets": {
+            "types": "./dist/js/bullets.d.ts",
+            "default": "./dist/js/bullets.js"
+        },
+        "./dist/js/busy-card": {
+            "types": "./dist/js/busy-card.d.ts",
+            "default": "./dist/js/busy-card.js"
+        },
+        "./dist/js/calendar": {
+            "types": "./dist/js/calendar.d.ts",
+            "default": "./dist/js/calendar.js"
+        },
+        "./dist/js/calm": {
+            "types": "./dist/js/calm.d.ts",
+            "default": "./dist/js/calm.js"
+        },
+        "./dist/js/calm-tones": {
+            "types": "./dist/js/calm-tones.d.ts",
+            "default": "./dist/js/calm-tones.js"
+        },
+        "./dist/js/card-state": {
+            "types": "./dist/js/card-state.d.ts",
+            "default": "./dist/js/card-state.js"
+        },
+        "./dist/js/chart": {
+            "types": "./dist/js/chart.d.ts",
+            "default": "./dist/js/chart.js"
+        },
+        "./dist/js/checklist": {
+            "types": "./dist/js/checklist.d.ts",
+            "default": "./dist/js/checklist.js"
+        },
+        "./dist/js/chip-filter": {
+            "types": "./dist/js/chip-filter.d.ts",
+            "default": "./dist/js/chip-filter.js"
+        },
+        "./dist/js/claim": {
+            "types": "./dist/js/claim.d.ts",
+            "default": "./dist/js/claim.js"
+        },
+        "./dist/js/code": {
+            "types": "./dist/js/code.d.ts",
+            "default": "./dist/js/code.js"
+        },
+        "./dist/js/code-field": {
+            "types": "./dist/js/code-field.d.ts",
+            "default": "./dist/js/code-field.js"
+        },
+        "./dist/js/colorpicker": {
+            "types": "./dist/js/colorpicker.d.ts",
+            "default": "./dist/js/colorpicker.js"
+        },
+        "./dist/js/combobox": {
+            "types": "./dist/js/combobox.d.ts",
+            "default": "./dist/js/combobox.js"
+        },
+        "./dist/js/command": {
+            "types": "./dist/js/command.d.ts",
+            "default": "./dist/js/command.js"
+        },
+        "./dist/js/compare": {
+            "types": "./dist/js/compare.d.ts",
+            "default": "./dist/js/compare.js"
+        },
+        "./dist/js/components": {
+            "types": "./dist/js/components.d.ts",
+            "default": "./dist/js/components.js"
+        },
+        "./dist/js/connection": {
+            "types": "./dist/js/connection.d.ts",
+            "default": "./dist/js/connection.js"
+        },
+        "./dist/js/console": {
+            "types": "./dist/js/console.d.ts",
+            "default": "./dist/js/console.js"
+        },
+        "./dist/js/context-menu": {
+            "types": "./dist/js/context-menu.d.ts",
+            "default": "./dist/js/context-menu.js"
+        },
+        "./dist/js/contrast": {
+            "types": "./dist/js/contrast.d.ts",
+            "default": "./dist/js/contrast.js"
+        },
+        "./dist/js/core": {
+            "types": "./dist/js/core.d.ts",
+            "default": "./dist/js/core.js"
+        },
+        "./dist/js/countdown": {
+            "types": "./dist/js/countdown.d.ts",
+            "default": "./dist/js/countdown.js"
+        },
+        "./dist/js/datatable": {
+            "types": "./dist/js/datatable.d.ts",
+            "default": "./dist/js/datatable.js"
+        },
+        "./dist/js/date-nav": {
+            "types": "./dist/js/date-nav.d.ts",
+            "default": "./dist/js/date-nav.js"
+        },
+        "./dist/js/dated-options": {
+            "types": "./dist/js/dated-options.d.ts",
+            "default": "./dist/js/dated-options.js"
+        },
+        "./dist/js/datepicker": {
+            "types": "./dist/js/datepicker.d.ts",
+            "default": "./dist/js/datepicker.js"
+        },
+        "./dist/js/dayline": {
+            "types": "./dist/js/dayline.d.ts",
+            "default": "./dist/js/dayline.js"
+        },
+        "./dist/js/deplist": {
+            "types": "./dist/js/deplist.d.ts",
+            "default": "./dist/js/deplist.js"
+        },
+        "./dist/js/diagnostics": {
+            "types": "./dist/js/diagnostics.d.ts",
+            "default": "./dist/js/diagnostics.js"
+        },
+        "./dist/js/diff": {
+            "types": "./dist/js/diff.d.ts",
+            "default": "./dist/js/diff.js"
+        },
+        "./dist/js/docpreview": {
+            "types": "./dist/js/docpreview.d.ts",
+            "default": "./dist/js/docpreview.js"
+        },
+        "./dist/js/effects": {
+            "types": "./dist/js/effects.d.ts",
+            "default": "./dist/js/effects.js"
+        },
+        "./dist/js/entity-card": {
+            "types": "./dist/js/entity-card.d.ts",
+            "default": "./dist/js/entity-card.js"
+        },
+        "./dist/js/facets": {
+            "types": "./dist/js/facets.d.ts",
+            "default": "./dist/js/facets.js"
+        },
+        "./dist/js/feed": {
+            "types": "./dist/js/feed.d.ts",
+            "default": "./dist/js/feed.js"
+        },
+        "./dist/js/flash": {
+            "types": "./dist/js/flash.d.ts",
+            "default": "./dist/js/flash.js"
+        },
+        "./dist/js/focus-steps": {
+            "types": "./dist/js/focus-steps.d.ts",
+            "default": "./dist/js/focus-steps.js"
+        },
+        "./dist/js/footprint": {
+            "types": "./dist/js/footprint.d.ts",
+            "default": "./dist/js/footprint.js"
+        },
+        "./dist/js/forms": {
+            "types": "./dist/js/forms.d.ts",
+            "default": "./dist/js/forms.js"
+        },
+        "./dist/js/freshness": {
+            "types": "./dist/js/freshness.d.ts",
+            "default": "./dist/js/freshness.js"
+        },
+        "./dist/js/gallery": {
+            "types": "./dist/js/gallery.d.ts",
+            "default": "./dist/js/gallery.js"
+        },
+        "./dist/js/gantt": {
+            "types": "./dist/js/gantt.d.ts",
+            "default": "./dist/js/gantt.js"
+        },
+        "./dist/js/graph": {
+            "types": "./dist/js/graph.d.ts",
+            "default": "./dist/js/graph.js"
+        },
+        "./dist/js/gridlayout": {
+            "types": "./dist/js/gridlayout.d.ts",
+            "default": "./dist/js/gridlayout.js"
+        },
+        "./dist/js/heat": {
+            "types": "./dist/js/heat.d.ts",
+            "default": "./dist/js/heat.js"
+        },
+        "./dist/js/hovercard": {
+            "types": "./dist/js/hovercard.d.ts",
+            "default": "./dist/js/hovercard.js"
+        },
+        "./dist/js/idmark": {
+            "types": "./dist/js/idmark.d.ts",
+            "default": "./dist/js/idmark.js"
+        },
+        "./dist/js/intent": {
+            "types": "./dist/js/intent.d.ts",
+            "default": "./dist/js/intent.js"
+        },
+        "./dist/js/job-line": {
+            "types": "./dist/js/job-line.d.ts",
+            "default": "./dist/js/job-line.js"
+        },
+        "./dist/js/json-field": {
+            "types": "./dist/js/json-field.d.ts",
+            "default": "./dist/js/json-field.js"
+        },
+        "./dist/js/keys": {
+            "types": "./dist/js/keys.d.ts",
+            "default": "./dist/js/keys.js"
+        },
+        "./dist/js/kpi": {
+            "types": "./dist/js/kpi.d.ts",
+            "default": "./dist/js/kpi.js"
         },
         "./dist/js/lazy-register": {
             "types": "./dist/js/lazy-register.d.ts",
             "default": "./dist/js/lazy-register.js"
         },
-        "./dist/js/core": {
-            "types": "./dist/js/core.d.ts",
-            "default": "./dist/js/core.js"
+        "./dist/js/lede": {
+            "types": "./dist/js/lede.d.ts",
+            "default": "./dist/js/lede.js"
+        },
+        "./dist/js/listbox": {
+            "types": "./dist/js/listbox.d.ts",
+            "default": "./dist/js/listbox.js"
+        },
+        "./dist/js/live-options": {
+            "types": "./dist/js/live-options.d.ts",
+            "default": "./dist/js/live-options.js"
+        },
+        "./dist/js/loading-pieces": {
+            "types": "./dist/js/loading-pieces.d.ts",
+            "default": "./dist/js/loading-pieces.js"
+        },
+        "./dist/js/log": {
+            "types": "./dist/js/log.d.ts",
+            "default": "./dist/js/log.js"
+        },
+        "./dist/js/logviewer": {
+            "types": "./dist/js/logviewer.d.ts",
+            "default": "./dist/js/logviewer.js"
+        },
+        "./dist/js/markdown": {
+            "types": "./dist/js/markdown.d.ts",
+            "default": "./dist/js/markdown.js"
+        },
+        "./dist/js/markdown-editor": {
+            "types": "./dist/js/markdown-editor.d.ts",
+            "default": "./dist/js/markdown-editor.js"
+        },
+        "./dist/js/master-detail": {
+            "types": "./dist/js/master-detail.d.ts",
+            "default": "./dist/js/master-detail.js"
+        },
+        "./dist/js/menu-button": {
+            "types": "./dist/js/menu-button.d.ts",
+            "default": "./dist/js/menu-button.js"
+        },
+        "./dist/js/motion": {
+            "types": "./dist/js/motion.d.ts",
+            "default": "./dist/js/motion.js"
+        },
+        "./dist/js/nav-fold": {
+            "types": "./dist/js/nav-fold.d.ts",
+            "default": "./dist/js/nav-fold.js"
+        },
+        "./dist/js/newpill": {
+            "types": "./dist/js/newpill.d.ts",
+            "default": "./dist/js/newpill.js"
+        },
+        "./dist/js/no-flash": {
+            "types": "./dist/js/no-flash.d.ts",
+            "default": "./dist/js/no-flash.js"
+        },
+        "./dist/js/notices": {
+            "types": "./dist/js/notices.d.ts",
+            "default": "./dist/js/notices.js"
+        },
+        "./dist/js/overlays": {
+            "types": "./dist/js/overlays.d.ts",
+            "default": "./dist/js/overlays.js"
+        },
+        "./dist/js/page-contents": {
+            "types": "./dist/js/page-contents.d.ts",
+            "default": "./dist/js/page-contents.js"
+        },
+        "./dist/js/palette": {
+            "types": "./dist/js/palette.d.ts",
+            "default": "./dist/js/palette.js"
+        },
+        "./dist/js/passkeys": {
+            "types": "./dist/js/passkeys.d.ts",
+            "default": "./dist/js/passkeys.js"
+        },
+        "./dist/js/path-trace": {
+            "types": "./dist/js/path-trace.d.ts",
+            "default": "./dist/js/path-trace.js"
+        },
+        "./dist/js/patterns": {
+            "types": "./dist/js/patterns.d.ts",
+            "default": "./dist/js/patterns.js"
+        },
+        "./dist/js/picker": {
+            "types": "./dist/js/picker.d.ts",
+            "default": "./dist/js/picker.js"
+        },
+        "./dist/js/pipeline": {
+            "types": "./dist/js/pipeline.d.ts",
+            "default": "./dist/js/pipeline.js"
+        },
+        "./dist/js/popover-form": {
+            "types": "./dist/js/popover-form.d.ts",
+            "default": "./dist/js/popover-form.js"
+        },
+        "./dist/js/print": {
+            "types": "./dist/js/print.d.ts",
+            "default": "./dist/js/print.js"
+        },
+        "./dist/js/problems": {
+            "types": "./dist/js/problems.d.ts",
+            "default": "./dist/js/problems.js"
+        },
+        "./dist/js/progressbar": {
+            "types": "./dist/js/progressbar.d.ts",
+            "default": "./dist/js/progressbar.js"
+        },
+        "./dist/js/qr": {
+            "types": "./dist/js/qr.d.ts",
+            "default": "./dist/js/qr.js"
+        },
+        "./dist/js/quantity": {
+            "types": "./dist/js/quantity.d.ts",
+            "default": "./dist/js/quantity.js"
+        },
+        "./dist/js/question-card": {
+            "types": "./dist/js/question-card.d.ts",
+            "default": "./dist/js/question-card.js"
+        },
+        "./dist/js/quiet-hours": {
+            "types": "./dist/js/quiet-hours.d.ts",
+            "default": "./dist/js/quiet-hours.js"
+        },
+        "./dist/js/quote": {
+            "types": "./dist/js/quote.d.ts",
+            "default": "./dist/js/quote.js"
+        },
+        "./dist/js/range": {
+            "types": "./dist/js/range.d.ts",
+            "default": "./dist/js/range.js"
+        },
+        "./dist/js/rating": {
+            "types": "./dist/js/rating.d.ts",
+            "default": "./dist/js/rating.js"
+        },
+        "./dist/js/reason": {
+            "types": "./dist/js/reason.d.ts",
+            "default": "./dist/js/reason.js"
+        },
+        "./dist/js/registry": {
+            "types": "./dist/js/registry.d.ts",
+            "default": "./dist/js/registry.js"
+        },
+        "./dist/js/remember": {
+            "types": "./dist/js/remember.d.ts",
+            "default": "./dist/js/remember.js"
+        },
+        "./dist/js/request-inspector": {
+            "types": "./dist/js/request-inspector.d.ts",
+            "default": "./dist/js/request-inspector.js"
+        },
+        "./dist/js/row-editor": {
+            "types": "./dist/js/row-editor.d.ts",
+            "default": "./dist/js/row-editor.js"
+        },
+        "./dist/js/row-pick": {
+            "types": "./dist/js/row-pick.d.ts",
+            "default": "./dist/js/row-pick.js"
+        },
+        "./dist/js/row-select": {
+            "types": "./dist/js/row-select.d.ts",
+            "default": "./dist/js/row-select.js"
+        },
+        "./dist/js/row-undo": {
+            "types": "./dist/js/row-undo.d.ts",
+            "default": "./dist/js/row-undo.js"
+        },
+        "./dist/js/runs": {
+            "types": "./dist/js/runs.d.ts",
+            "default": "./dist/js/runs.js"
+        },
+        "./dist/js/segmented": {
+            "types": "./dist/js/segmented.d.ts",
+            "default": "./dist/js/segmented.js"
+        },
+        "./dist/js/segmented-menu": {
+            "types": "./dist/js/segmented-menu.d.ts",
+            "default": "./dist/js/segmented-menu.js"
+        },
+        "./dist/js/selection-bar": {
+            "types": "./dist/js/selection-bar.d.ts",
+            "default": "./dist/js/selection-bar.js"
+        },
+        "./dist/js/sentence": {
+            "types": "./dist/js/sentence.d.ts",
+            "default": "./dist/js/sentence.js"
+        },
+        "./dist/js/sequencer": {
+            "types": "./dist/js/sequencer.d.ts",
+            "default": "./dist/js/sequencer.js"
+        },
+        "./dist/js/settled": {
+            "types": "./dist/js/settled.d.ts",
+            "default": "./dist/js/settled.js"
+        },
+        "./dist/js/shortcuts": {
+            "types": "./dist/js/shortcuts.d.ts",
+            "default": "./dist/js/shortcuts.js"
+        },
+        "./dist/js/sidenav": {
+            "types": "./dist/js/sidenav.d.ts",
+            "default": "./dist/js/sidenav.js"
+        },
+        "./dist/js/slider": {
+            "types": "./dist/js/slider.d.ts",
+            "default": "./dist/js/slider.js"
+        },
+        "./dist/js/snooze": {
+            "types": "./dist/js/snooze.d.ts",
+            "default": "./dist/js/snooze.js"
+        },
+        "./dist/js/stackbar": {
+            "types": "./dist/js/stackbar.d.ts",
+            "default": "./dist/js/stackbar.js"
+        },
+        "./dist/js/state-plate": {
+            "types": "./dist/js/state-plate.d.ts",
+            "default": "./dist/js/state-plate.js"
+        },
+        "./dist/js/statusrow": {
+            "types": "./dist/js/statusrow.d.ts",
+            "default": "./dist/js/statusrow.js"
+        },
+        "./dist/js/steplist": {
+            "types": "./dist/js/steplist.d.ts",
+            "default": "./dist/js/steplist.js"
+        },
+        "./dist/js/strings": {
+            "types": "./dist/js/strings.d.ts",
+            "default": "./dist/js/strings.js"
+        },
+        "./dist/js/strings-nl": {
+            "types": "./dist/js/strings-nl.d.ts",
+            "default": "./dist/js/strings-nl.js"
+        },
+        "./dist/js/structure": {
+            "types": "./dist/js/structure.d.ts",
+            "default": "./dist/js/structure.js"
+        },
+        "./dist/js/swatches": {
+            "types": "./dist/js/swatches.d.ts",
+            "default": "./dist/js/swatches.js"
+        },
+        "./dist/js/swipe": {
+            "types": "./dist/js/swipe.d.ts",
+            "default": "./dist/js/swipe.js"
+        },
+        "./dist/js/tabbar": {
+            "types": "./dist/js/tabbar.d.ts",
+            "default": "./dist/js/tabbar.js"
+        },
+        "./dist/js/tables": {
+            "types": "./dist/js/tables.d.ts",
+            "default": "./dist/js/tables.js"
+        },
+        "./dist/js/task-row": {
+            "types": "./dist/js/task-row.d.ts",
+            "default": "./dist/js/task-row.js"
+        },
+        "./dist/js/thread": {
+            "types": "./dist/js/thread.d.ts",
+            "default": "./dist/js/thread.js"
+        },
+        "./dist/js/tick": {
+            "types": "./dist/js/tick.d.ts",
+            "default": "./dist/js/tick.js"
+        },
+        "./dist/js/tiles": {
+            "types": "./dist/js/tiles.d.ts",
+            "default": "./dist/js/tiles.js"
+        },
+        "./dist/js/timefield": {
+            "types": "./dist/js/timefield.d.ts",
+            "default": "./dist/js/timefield.js"
+        },
+        "./dist/js/timer": {
+            "types": "./dist/js/timer.d.ts",
+            "default": "./dist/js/timer.js"
+        },
+        "./dist/js/timer-disc": {
+            "types": "./dist/js/timer-disc.d.ts",
+            "default": "./dist/js/timer-disc.js"
+        },
+        "./dist/js/toggle": {
+            "types": "./dist/js/toggle.d.ts",
+            "default": "./dist/js/toggle.js"
+        },
+        "./dist/js/toolbar": {
+            "types": "./dist/js/toolbar.d.ts",
+            "default": "./dist/js/toolbar.js"
+        },
+        "./dist/js/tour": {
+            "types": "./dist/js/tour.d.ts",
+            "default": "./dist/js/tour.js"
+        },
+        "./dist/js/track-value": {
+            "types": "./dist/js/track-value.d.ts",
+            "default": "./dist/js/track-value.js"
+        },
+        "./dist/js/transfer": {
+            "types": "./dist/js/transfer.d.ts",
+            "default": "./dist/js/transfer.js"
+        },
+        "./dist/js/undo-toast": {
+            "types": "./dist/js/undo-toast.d.ts",
+            "default": "./dist/js/undo-toast.js"
+        },
+        "./dist/js/unsaved": {
+            "types": "./dist/js/unsaved.d.ts",
+            "default": "./dist/js/unsaved.js"
+        },
+        "./dist/js/update": {
+            "types": "./dist/js/update.d.ts",
+            "default": "./dist/js/update.js"
+        },
+        "./dist/js/upload": {
+            "types": "./dist/js/upload.d.ts",
+            "default": "./dist/js/upload.js"
+        },
+        "./dist/js/uptime": {
+            "types": "./dist/js/uptime.d.ts",
+            "default": "./dist/js/uptime.js"
+        },
+        "./dist/js/uses-map": {
+            "types": "./dist/js/uses-map.d.ts",
+            "default": "./dist/js/uses-map.js"
+        },
+        "./dist/js/usual-picker": {
+            "types": "./dist/js/usual-picker.d.ts",
+            "default": "./dist/js/usual-picker.js"
+        },
+        "./dist/js/version-delta": {
+            "types": "./dist/js/version-delta.d.ts",
+            "default": "./dist/js/version-delta.js"
+        },
+        "./dist/js/viewer": {
+            "types": "./dist/js/viewer.d.ts",
+            "default": "./dist/js/viewer.js"
+        },
+        "./dist/js/week": {
+            "types": "./dist/js/week.d.ts",
+            "default": "./dist/js/week.js"
+        },
+        "./dist/js/weekdays": {
+            "types": "./dist/js/weekdays.d.ts",
+            "default": "./dist/js/weekdays.js"
+        },
+        "./dist/js/wheel": {
+            "types": "./dist/js/wheel.d.ts",
+            "default": "./dist/js/wheel.js"
+        },
+        "./dist/js/wizard": {
+            "types": "./dist/js/wizard.d.ts",
+            "default": "./dist/js/wizard.js"
         },
         "./dist/js/index": {
             "types": "./dist/js/index.d.ts",

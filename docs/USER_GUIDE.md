@@ -4503,8 +4503,9 @@ so the active register is in the document before the first paint, call
 pattern, and boot with `<script type="module" src="/kp/dist/js/auto.js">`.
 A server that knows the theme can preload its register
 (`<link rel="preload" as="style">`) to start it sooner. For code of your
-own, import from `dist/js/core.js` and `dist/js/lazy-register.js`, which
-share `auto.js`'s chunks; `dist/js/index.js` has every name the old bundle
+own, import from the entry of the component (`dist/js/core.js`,
+`dist/js/lazy-register.js`, `dist/js/overlays.js`, `dist/js/menu-button.js`:
+one per `js/<name>` export, same name), which share `auto.js`'s chunks; `dist/js/index.js` has every name the old bundle
 has, and loads every chunk to give them. README.md has the snippet and the
 measured bytes.
 
