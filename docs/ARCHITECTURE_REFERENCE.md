@@ -177,6 +177,10 @@ js/swipe.js                a list row a finger swipes sideways to reveal and run
 js/settled.js              a row whose item left the list keeps its place, quiet and inert, saying where it went [parts-1102]
 js/swatches.js             the theme's twelve categorical colours as a grid of toggle swatches [parts-1102]
 js/row-undo.js             a row's Delete with Undo: held out, the Undo toast, put back or committed [ux-1101]
+js/track-value.js          the tracked value of a custom control, which the unsaved bar counts and writes back [forms-1102]
+js/chip-filter.js          a chip group that filters a data table by one column, each chip with its exact count [forms-1102]
+js/add-row.js              the add row of a data table or a form grid: a new line typed and added with Enter [forms-1102]
+js/segmented-menu.js       a chip's own ⋯ menu in a chip group, and the chip renamed in place [forms-1102]
 js/task-row.js             a task as a row: check, title, facts, fixed action columns, from the package's parts [habits-1101]
 js/board.js                lanes of the page's cards that move between lanes, a count and a limit per lane [habits-1101]
 js/print.js                the words a printed list needs, and a Print button

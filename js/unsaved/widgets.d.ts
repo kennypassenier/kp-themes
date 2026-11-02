@@ -1,5 +1,5 @@
-/** Every composite field the bar tracks as one value. */
-export declare const WIDGET = "[data-kp-quantity], [data-kp-time], [data-kp-combobox][data-kp-tags]";
+/** Every composite field the bar tracks as one value; a control with `data-kp-track-value` too [forms-1102, js/track-value.js]. */
+export declare const WIDGET = "[data-kp-quantity], [data-kp-time], [data-kp-combobox][data-kp-tags], [data-kp-track-value]";
 /** The events those fields fire when a person changes them (a plain combobox's choice is in `kp-combobox-change` too). */
 export declare const WIDGET_EVENTS: string[];
 /** Whether an element is one of the composite fields. @param {Element} el */

@@ -3,6 +3,7 @@ export { runsRelative, zoneOffset, runMoment, clockShift } from './runs/time.js'
 export type RunInput = number | string | Date | {
     at: number | string | Date;
     conflict?: string;
+    note?: string;
 };
 export type Run = {
     /**
@@ -10,6 +11,10 @@ export type Run = {
      */
     at: number;
     conflict?: string;
+    /**
+     * the app's own words on the row, "1 try left" [forms-1102]
+     */
+    note?: string;
 };
 export type RunsState = 'ready' | 'empty' | 'loading' | 'error';
 export type RunsOptions = {
@@ -37,10 +42,11 @@ export type RunsHandle = {
     state: () => RunsState;
 };
 /**
- * @typedef {number | string | Date | { at: number | string | Date, conflict?: string }} RunInput
+ * @typedef {number | string | Date | { at: number | string | Date, conflict?: string, note?: string }} RunInput
  * @typedef {object} Run
  * @property {number} at ms
  * @property {string} [conflict]
+ * @property {string} [note]  the app's own words on the row, "1 try left" [forms-1102]
  * @typedef {'ready' | 'empty' | 'loading' | 'error'} RunsState
  * @typedef {object} RunsOptions
  * @property {string} [reason] the sentence an empty list shows ("Pick a time")

@@ -1,0 +1,32 @@
+/* @part: parts-forms: A field's error with its icon */
+@layer kp.components {
+    /* --- The error icon [forms-1102] ---
+     * A field's message (`.kp-field__error`) is text in the destructive ink; showError gives it `role="status"`, so it is said
+     * once as it appears. With `data-kp-error-icon` on the message or any element round it (`<html>` for the whole app), and in
+     * every add row, the message starts with a round "!" mark in the same ink, the words on a hanging indent beside it, so a
+     * second line starts under the first word, never under the mark. The mark is a status plate (--destructive with its
+     * --destructive-foreground), hidden from a screen reader (an empty alternative text): the message itself says what is wrong. */
+    :is([data-kp-error-icon], .kp-addrow) .kp-field__error:not([hidden]),
+    .kp-field__error[data-kp-error-icon]:not([hidden]) {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: var(--kp-space-xs, 0.25rem);
+        align-items: start;
+    }
+
+    :is([data-kp-error-icon], .kp-addrow) .kp-field__error:not([hidden])::before,
+    .kp-field__error[data-kp-error-icon]:not([hidden])::before {
+        content: '!' / '';
+        display: grid;
+        place-items: center;
+        inline-size: 1.125em;
+        block-size: 1.125em;
+        margin-block-start: calc((1lh - 1.125em) / 2);
+        border-radius: 50%;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-size: 0.875em;
+        font-weight: 700;
+        line-height: 1;
+    }
+}

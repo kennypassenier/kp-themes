@@ -5,9 +5,9 @@ export const formDescriptor = {
         id: 'form',
         title: 'Form',
         group: 'Forms',
-        classes: ['kp-form'],
+        classes: ['kp-form', 'kp-addrow'],
         exports: ['Form', 'FormField'],
-        aliases: ['field', 'submit', 'busy', 'focus-summary', 'validate-on', 'revalidate-on'],
+        aliases: ['field', 'submit', 'busy', 'focus-summary', 'validate-on', 'revalidate-on', 'addrow', 'addrow-for', 'addrow-column', 'addrow-submit-column', 'addrow-stacked', 'addrow-refusal', 'addrow-add', 'addrow-added', 'error-icon'],
         intro: 'A form that makes the browser’s own validation reachable: the messages the browser already found are put where a screen reader will read them, gathered into a summary at the top, and the first one takes focus when a submit fails.',
         whenToUse:
             'For anything the reader fills in and sends. Not for a single filter or search box — that is one field and needs no summary. Not as a validation engine either: the rules stay the browser’s, so a field validates by declaring what it is rather than by a rule written twice, once here and once on the server.',
@@ -35,6 +35,8 @@ export const formDescriptor = {
             },
         ],
         variants: [
+            { name: '.kp-field__error: role and icon', what: 'showError gives the message `role="status"` (unless it has one), so it is said once as it appears [forms-1102]. With `data-kp-error-icon` on the message or an element round it (`<html>` for an app), and in every add row, it starts with a round “!” on the destructive plate, the words on a hanging indent.' },
+            { name: 'data-kp-addrow', what: 'The add row [forms-1102] (js/add-row.js): a kit form that adds one line. Over a data table (`data-kp-addrow-for`) each `.kp-addrow__cell` stands under the column `data-kp-addrow-column` names, the Add button (`.kp-addrow__submit`) under `data-kp-addrow-submit-column` or the last free column; under the table’s cards it stacks (`data-kp-addrow-stacked`). In a form grid `.kp-addrow--line` is one line: name and unit in the control track, Add in the actions track, the refusal under them. `kp-addrow-add` `{ values, data, waitUntil }`, then `kp-addrow-added`; a refusal is said in `[data-kp-addrow-refusal]`.' },
             { name: '.kp-form', what: 'The column: fields stacked with one distance between them.' },
             { name: '.kp-form__summary', what: 'The error summary. It is a focus target rather than a banner, because a message that appears above the fold is invisible to someone whose focus is at the bottom.' },
             { name: '.kp-form__summary-title', what: 'The line that says what the summary is, in words, above the list of failing fields.' },

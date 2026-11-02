@@ -250,11 +250,12 @@ Rows picked without select boxes (Ctrl/Cmd+click, Shift+click, a long press on t
 
 ## js/row-editor.js → js/row-editor/
 
-The repeating row editor: the RowEditor controller over `[data-kp-rows]`, its head row, add and remove, min and max with the reason said, the empty plate, and `addEditorRow`, `removeEditorRow` and `editorRowsOf` [mc-1030]. The controller stays in `js/row-editor.js`; 1 part file.
+The repeating row editor: the RowEditor controller over `[data-kp-rows]`, its head row, add and remove, min and max with the reason said, the empty plate, and `addEditorRow`, `removeEditorRow` and `editorRowsOf` [mc-1030]. The controller stays in `js/row-editor.js`; 2 part files.
 
 | File     | Does                                                                                                                  |
 | -------- | --------------------------------------------------------------------------------------------------------------------- |
 | `dom.js` | The DOM pieces: the head row, the add button and status line, the row numbering, the count-driven buttons, the voice. |
+| `track.js` | The rows as one tracked value for the unsaved bar, and the rows put back from one [forms-1102]. |
 
 ## js/sequencer.js → js/sequencer/
 
@@ -659,6 +660,36 @@ The swatch picker: the theme's twelve categorical colours as a grid of toggle sw
 | --------------- | ---------------------------------------------------------------------------------------------- |
 | `constants.js`  | The selectors, attributes, event and shape of the swatch picker.                               |
 | `controller.js` | SwatchesControl: the swatches, the arrow keys over the grid, the current one and the pick.     |
+## js/chip-filter.js → js/chip-filter/
+
+The chip filter: a chip group that filters a data table by one column, with an exact count on every chip and All [forms-1102]. 3 files.
+
+| File            | Does                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| `constants.js`  | The selector, attribute names and event of the chip filter.                                            |
+| `controller.js` | ChipFilter: a press filters the table, the table's filter lights the chips, the rows are counted again. |
+| `counts.js`     | Pure: the values a column holds, how many rows hold each, and the chips a column asks for.             |
+
+## js/add-row.js → js/add-row/
+
+The add row of a data table (fields under the columns, stacked under the cards) or of a form grid (one line) [forms-1102]. 4 files.
+
+| File            | Does                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `constants.js`  | The selectors, attribute names and events of the add row.                                                    |
+| `controller.js` | AddRow: lays the row out under its table's columns or as a line, and hands a valid line to the page.         |
+| `layout.js`     | Where the fields stand: one track per table column, the Add button's column, or stacked.                      |
+| `submit.js`     | The valid line: `kp-addrow-add` with `waitUntil`, the row emptied for the next line, or the refusal said.     |
+
+## js/segmented-menu.js → js/segmented-menu/
+
+A chip with its own ⋯ menu in a chip group, and the chip renamed in place [forms-1102]. 3 files.
+
+| File            | Does                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| `constants.js`  | The selectors, attributes and event of a chip's menu and its rename.                                   |
+| `controller.js` | ChipMenu: the menu's tab stop beside its chip, ContextMenu and F2 on the chip, the Rename entry.        |
+| `rename.js`     | ChipRename: the chip becomes a field; Enter saves (the page may refuse), Escape cancels.               |
 
 ## js/diff.js → js/diff/
 
@@ -842,7 +873,7 @@ The date picker: a typed field with a calendar panel of days, months and years, 
 
 ## js/segmented.js → js/segmented/
 
-The segmented control and the filter chips: single, single-or-none, multi and three-way groups, with the plate under the chosen segment. 17 files.
+The segmented control and the filter chips: single, single-or-none, multi and three-way groups, with the plate under the chosen segment. 18 files.
 
 | File           | Does                                                                                                                           |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -862,6 +893,7 @@ The segmented control and the filter chips: single, single-or-none, multi and th
 | `root.js`      | Attaches the segmented groups under a root: delegated click, key and focus handling, and groups that arrive later.             |
 | `roving.js`    | The roving tab stop: one item of the group is in the tab order, the others are reached by the arrows.                          |
 | `state.js`     | What outlives one group controller: the roving tab stop of each group, and the events already handled.                         |
+| `track.js`     | A chip group's tracked value [forms-1102]: `data-kp-track-value` kept in step with the values on, and a written-back value painted. |
 | `tri.js`       | The three-way look [kpadopt4]: a chip's state and its spoken word, the Clear all item, the summary line and the status region. |
 
 ## js/code.js → js/code/
@@ -954,10 +986,11 @@ The star rating: a radio row of stars to set or a display row to read, with half
 
 ## js/unsaved.js → js/unsaved/
 
-The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Undo, lists the changes and warns before the page is left. 13 files.
+The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Undo, lists the changes and warns before the page is left. 14 files.
 
 | File            | Does                                                                                                                         |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `baseline.js`   | The saved values the bar compares with; a tracked control keeps its own in `data-kp-track-default` [forms-1102].             |
 | `actions.js`    | What the bar's buttons do: jump to a change, revert one, discard with Undo, save, and take the page's answer to Save.        |
 | `changes.js`    | Tracks what is changed: the baseline of every control, the rows marked `data-kp-changed`, and the list of changes.           |
 | `config.js`     | The unsaved bar's names, fixed numbers, page-wide storage choice and the settings one bar reads from its markup.             |
@@ -970,7 +1003,7 @@ The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Und
 | `parts.js`      | Builds the bar's elements, the list entries and the refusal alert; no behaviour, only structure and classes.                 |
 | `state.js`      | The counter that gives each bar without an id its own.                                                                       |
 | `values.js`     | What a form control holds: reading the live value, the markup's value, and putting a value back.                             |
-| `widgets.js`    | The package's own composite fields (quantity, time field, tag input), each tracked as one value.                             |
+| `widgets.js`    | The package's own composite fields (quantity, time field, tag input) and any `data-kp-track-value` control, each one value.   |
 
 ## js/anchors.js → js/anchors/
 

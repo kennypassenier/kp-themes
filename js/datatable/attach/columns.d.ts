@@ -42,6 +42,12 @@ export declare class TableColumns {
      * @param {HTMLTableRowElement} row @param {number} at
      */
     choiceText(row: HTMLTableRowElement, at: number): string;
+    /**
+     * The name a row goes by in what the table says (an edit, a move) [forms-1102]: its `data-kp-row-label`, separate from the
+     * key, so a table keyed by an id never reads the id out; `fallback` (what the table said before) when it has none.
+     * @param {HTMLTableRowElement} row @param {string} fallback
+     */
+    nameOf(row: HTMLTableRowElement, fallback: string): string;
     /** @param {HTMLTableRowElement} row */
     keyOf(row: HTMLTableRowElement): string;
 }

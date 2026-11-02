@@ -86,6 +86,7 @@ export const OWN = {
 
 /** Modules whose loading is not a data area's. @type {Record<string, string>} */
 export const NOT_DATA = {
+    'js/segmented-menu.js': "a renamed chip's field says it is busy (aria-busy) while the page answers; a field is not a data area [forms-1102]",
     'js/quiet-hours.js': "a form control's own bars in its place (like the time field and the sentence form's fields); not a data area [wish-1120]",
     'js/page-contents.js': "a navigation list's three skeleton bars in its own footprint (the side list is navigation chrome beside the data, like the tab bar); not a data area [wish-1120]",
     'js/timefield.js': "a field's own skeleton at its final width (like the sentence form's fields); a field is not a data area",

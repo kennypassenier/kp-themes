@@ -47,6 +47,7 @@ export const datatableDescriptor = {
             'For a table a reader will interrogate — hundreds of rows, a search box, a sort on one column or several, a choice of columns, rows that open, values edited in place, arrow keys between cells. Not for thousands without a server behind it: there is no virtualisation, and export is the app’s, from the rows the table hands over. Not for a handful of rows either, where a search box over six lines is furniture.',
         examples: [...DATATABLE_EXAMPLES, ...DATATABLE_EXAMPLES_2, actionsColumnExample],
         variants: [
+            { name: 'tr data-kp-row-label', what: 'The name a row goes by in what the table says [forms-1102]: an edit (“Every day: English name changed …”), Undo, the editor’s name, the reorder handle and its move, and the row toggle. Separate from `data-kp-row-key`, so a table keyed by an id never reads the id out; without it the table says what it said before.' },
             { name: 'data-kp-sort-multi="click"', what: 'A plain press on a header (Enter, Space) adds a sort key and Shift + click sorts on that column alone; without a value, Shift + click adds the key as it always did. `multiSort: \'click\'` is the same in script.' },
             { name: 'td data-kp-sort-value', what: 'The value a cell sorts and range- or date-filters by in place of its text: a bar cell’s share, a size’s bytes.' },
             { name: 'td data-kp-filter-value', what: 'The word a choice filter lists and matches a cell by in place of its text: a status cell with a dot and a time is filtered as “running”.' },

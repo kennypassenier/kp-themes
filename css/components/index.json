@@ -478,6 +478,21 @@
     },
     {
       "file": "form-grid/reserved-error-line.css"
+    },
+    {
+      "file": "parts-forms/next-times-notes.css"
+    },
+    {
+      "file": "parts-forms/gantt-lane-mark.css"
+    },
+    {
+      "file": "parts-forms/chip-menu.css"
+    },
+    {
+      "file": "parts-forms/field-error-icon.css"
+    },
+    {
+      "file": "parts-forms/add-row.css"
     }
   ]
 }

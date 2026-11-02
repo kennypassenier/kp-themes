@@ -617,7 +617,7 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-segmented</code></td><td>written, selector, read</td></tr>
-                            <tr><td><code>data-kp-segmented-all</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-segmented-all</code></td><td>prose, read, written</td></tr>
                             <tr><td><code>data-kp-segmented-collapse</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-segmented-cols</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-field</code></td><td>read</td></tr>
@@ -631,6 +631,8 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                             <tr><td><code>data-kp-segmented-more</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-narrow</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-overflow</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-segmented-rename</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-segmented-renaming</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-summary</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-segmented-tags</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-segmented-thumb</code></td><td>written</td></tr>
@@ -651,6 +653,7 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-segmented-rename</code></td><td>Fired, cancelable, on the group when a chip is renamed: `{ value, label, previous, item, waitUntil(promise) }`.</td></tr>
                             <tr><td><code>kp-segmented-change</code></td><td>Fired on the group when the choice changes by a person; `{ value, values, item }`.</td></tr>
                     </tbody></table></div>
                 </section>
@@ -694,6 +697,7 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                             <tr><td><code>--kp-seg-label-max</code></td><td><code>16rem</code></td></tr>
                             <tr><td><code>--kp-seg-pad</code></td><td><code>0.1875rem</code></td></tr>
                             <tr><td><code>--kp-seg-radius</code></td><td><code>var(--radius, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-seg-rename-w</code></td><td><code>8rem</code></td></tr>
                             <tr><td><code>--kp-seg-size</code></td><td><code>var(--kp-text-sm, 0.8125rem)</code></td></tr>
                             <tr><td><code>--kp-seg-thumb</code></td><td><code>var(--card)</code></td></tr>
                             <tr><td><code>--kp-seg-thumb-edge</code></td><td><code>0 0 0 1px var(--border-strong)</code></td></tr>
@@ -734,6 +738,9 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-filter-for / data-kp-filter-column</code></td><td>The chip filter [forms-1102] (js/chip-filter.js): the group names a data table (its wrapper’s id) and a column (its id or number; the header carries `data-kp-filter=&quot;choice&quot;`), and a press filters that table by the column, with no hand wiring of `handle.filter`. All is always there (one is added first when the page wrote none); each chip shows the exact count of the table’s rows that hold its value and All the total, counted again whenever the rows change; the table’s own filter lights the chips. `data-kp-filter-chips` `auto` (default when the group is empty: the chips are the column’s values) or `own`; `data-kp-filter-counts=&quot;off&quot;` for a server table whose page writes the counts.</td></tr>
+                            <tr><td><code>.kp-segmented__menu</code></td><td>A chip’s own ⋯ menu [forms-1102] (js/segmented-menu.js): a `kp-menu-button` right after its chip in a chip group; chip and ⋯ read as one pill split by a hair line. It is a tab stop only beside the chip that is; ContextMenu or Shift+F10 on the chip opens it, F2 renames. An entry with `data-kp-segmented-rename` turns the chip into a field (`data-kp-segmented-renaming` on the chip meanwhile): Enter saves through the cancelable `kp-segmented-rename` `{ value, label, previous, item, waitUntil }`, a refusal is said under the field, Escape cancels; `kp-segmented-renamed` after.</td></tr>
+                            <tr><td><code>data-kp-track-value (on a group)</code></td><td>A chip group that the unsaved-changes bar counts [forms-1102]: with the attribute on it (empty), the group keeps it as the JSON list of the values on, with the labels in `data-kp-track-text`, and paints what Discard or Undo write back.</td></tr>
                             <tr><td><code>data-kp-segmented=&quot;tri&quot;</code></td><td>The three-way chip group, used with `.kp-segmented--chips`. Each chip carries `data-kp-segmented-tri=&quot;include|exclude&quot;`, absent for either way (`TRI_ATTRIBUTE`, `TRI_STATES`), and the parts `.kp-segmented__tag` (the visible word, the default look), `.kp-segmented__mark` (the ring of `data-kp-segmented-tri-look=&quot;mark&quot;`), `__state` (the word a screen reader hears after the name, “Chicken, required”), `__summary` and `__live`.</td></tr>
                             <tr><td><code>data-kp-segmented-tri-look</code></td><td>The look of a three-way group: `word` (default since 2026-11-01) writes the state after the label as a small word, “either”, “want” or “not” (`data-kp-segmented-tags`, JSON `any` / `include` / `exclude`, else the dictionary); `mark` keeps the ring mark. Switches at runtime.</td></tr>
                             <tr><td><code>getSegmentedTri / setSegmentedTri</code></td><td>Read `{ include, exclude }`, or set both lists without an event. `SegmentedItem.state` is the state a chip is given in `setSegmentedItems`.</td></tr>

@@ -676,20 +676,26 @@ aria-label="Checked on submit only"
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-addrow</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-addrow-column</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-addrow-for</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-addrow-refusal</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-addrow-stacked</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-addrow-submit-column</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-busy</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-busy-clock</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-busy-label</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-busy-overlay</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-busy-words-held</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-field</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-field-error</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-field-error</code></td><td>prose, selector, written</td></tr>
                             <tr><td><code>data-kp-focus-summary</code></td><td>written, read</td></tr>
-                            <tr><td><code>data-kp-form</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-form</code></td><td>prose, selector</td></tr>
                             <tr><td><code>data-kp-form-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-form-native-submit</code></td><td>written, read</td></tr>
-                            <tr><td><code>data-kp-form-summary</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-form-summary</code></td><td>prose, selector</td></tr>
                             <tr><td><code>data-kp-revalidate-on</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-submit</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-submit</code></td><td>prose, selector</td></tr>
                             <tr><td><code>data-kp-submit-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-submit-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-validate-on</code></td><td>read</td></tr>
@@ -746,6 +752,8 @@ aria-label="Checked on submit only"
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-addrow-add</code></td><td>Fired, cancelable, on the row when a valid line is added: `{ values, data, waitUntil(promise) }`.</td></tr>
+                            <tr><td><code>kp-addrow-added</code></td><td>Fired on the row once the line was added and the fields were emptied: `{ values }`.</td></tr>
                             <tr><td><code>kp-form-valid</code></td><td>Fired when a form passes validation. A contract value [TH26]: the detail carries the FormData and, since KT6, a `done()` that ends the busy state. A consumer may call it, or return nothing and dispatch `DONE_EVENT` on the form themselves — same effect.</td></tr>
                             <tr><td><code>kp-form-invalid</code></td><td>Fired when a submit failed validation: `{ fields, names }`.</td></tr>
                             <tr><td><code>kp-field-validity</code></td><td>Fired on a field when its validity was checked: `{ valid, message }`.</td></tr>
@@ -755,9 +763,13 @@ aria-label="Checked on submit only"
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-addrow-gap</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-addrow-pad</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-addrow-shift</code></td><td><code>0px</code></td></tr>
                             <tr><td><code>--kp-control-accent</code></td><td><code>var(--primary)</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-control-line-height</code></td><td><code>1.25</code></td></tr>
+                            <tr><td><code>--kp-error-max-width</code></td><td><code>60ch</code></td></tr>
                             <tr><td><code>--kp-field-disabled-opacity</code></td><td><code>0.55</code></td></tr>
                             <tr><td><code>--kp-field-error-size</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-field-gap</code></td><td><code>var(--kp-space-xs)</code></td></tr>
@@ -800,6 +812,7 @@ aria-label="Checked on submit only"
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xl</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-table-cell-inline</code></td><td><code>0.625rem</code></td></tr>
                             <tr><td><code>--kp-text-lg</code></td><td><code>1.125rem</code></td></tr>
                             <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
@@ -825,6 +838,8 @@ aria-label="Checked on submit only"
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-field__error: role and icon</code></td><td>showError gives the message `role=&quot;status&quot;` (unless it has one), so it is said once as it appears [forms-1102]. With `data-kp-error-icon` on the message or an element round it (`&lt;html&gt;` for an app), and in every add row, it starts with a round “!” on the destructive plate, the words on a hanging indent.</td></tr>
+                            <tr><td><code>data-kp-addrow</code></td><td>The add row [forms-1102] (js/add-row.js): a kit form that adds one line. Over a data table (`data-kp-addrow-for`) each `.kp-addrow__cell` stands under the column `data-kp-addrow-column` names, the Add button (`.kp-addrow__submit`) under `data-kp-addrow-submit-column` or the last free column; under the table’s cards it stacks (`data-kp-addrow-stacked`). In a form grid `.kp-addrow--line` is one line: name and unit in the control track, Add in the actions track, the refusal under them. `kp-addrow-add` `{ values, data, waitUntil }`, then `kp-addrow-added`; a refusal is said in `[data-kp-addrow-refusal]`.</td></tr>
                             <tr><td><code>.kp-form</code></td><td>The column: fields stacked with one distance between them.</td></tr>
                             <tr><td><code>.kp-form__summary</code></td><td>The error summary. It is a focus target rather than a banner, because a message that appears above the fold is invisible to someone whose focus is at the bottom.</td></tr>
                             <tr><td><code>.kp-form__summary-title</code></td><td>The line that says what the summary is, in words, above the list of failing fields.</td></tr>

@@ -1,0 +1,143 @@
+/* @part: parts-forms: The add row of a data table or a form grid */
+@layer kp.components {
+    /* --- The add row [forms-1102] ---
+     * js/add-row.js. Over a data table (`data-kp-addrow-for`): a band on the card's ground with the table's border, its cells on
+     * one track per table column (the module writes the tracks from the header's widths and shifts them with the table's
+     * sideways scroll, `--kp-addrow-shift`), each cell with the table cell's inline padding so a typed word starts where the
+     * column's words start. The column headings name the fields, so the labels are for screen readers; the Add button fills
+     * its column. Under its cards (`data-kp-addrow-stacked`): one column, labels shown over their fields, the Add button the
+     * whole width, a card among the table's cards. The refusal and the kit form's summary stand under the cells.
+     * In a form grid (`.kp-addrow--line`): a block of the grid, its row a line of it; the fields share the control track as
+     * name (2fr) and unit (1fr), the Add button in the actions track, the refusal under the control and actions tracks.
+     * Knobs: --kp-addrow-gap (the sm step), --kp-addrow-pad (the sm step, top and bottom of the band). */
+    .kp-addrow:not(.kp-addrow--line) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-addrow-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        padding-block: var(--kp-addrow-pad, var(--kp-space-sm, 0.5rem));
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        overflow-x: clip;
+        overflow-clip-margin: 4px;
+    }
+
+    .kp-addrow__cells {
+        display: grid;
+        grid-auto-flow: dense;
+        align-items: start;
+        min-inline-size: 0;
+        transform: translateX(var(--kp-addrow-shift, 0px));
+    }
+
+    .kp-addrow:not([data-kp-addrow-stacked]) .kp-addrow__cells > :is(.kp-addrow__cell, .kp-addrow__submit) {
+        grid-row: 1;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        padding-inline: var(--kp-table-cell-inline, 0.625rem);
+    }
+
+    .kp-addrow:not([data-kp-addrow-stacked]) .kp-addrow__cell > .kp-field__label {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .kp-addrow__cell {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+    }
+
+    .kp-addrow__cell > .kp-field__input {
+        inline-size: 100%;
+        min-inline-size: 0;
+        box-sizing: border-box;
+    }
+
+    .kp-addrow__submit {
+        display: grid;
+    }
+
+    .kp-addrow__submit > .kp-button {
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .kp-addrow:not(.kp-addrow--line) > :is(.kp-form__summary, .kp-addrow__refusal) {
+        margin: 0;
+        padding-inline: var(--kp-table-cell-inline, 0.625rem);
+    }
+
+    .kp-addrow[data-kp-addrow-stacked]:not(.kp-addrow--line) {
+        padding: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-addrow[data-kp-addrow-stacked] .kp-addrow__cells {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-sm, 0.5rem);
+        transform: none;
+    }
+
+    .kp-addrow[data-kp-addrow-stacked]:not(.kp-addrow--line) > :is(.kp-form__summary, .kp-addrow__refusal) {
+        padding-inline: 0;
+    }
+
+    /* The line in a form grid. */
+    .kp-addrow--line .kp-addrow__fields {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        column-gap: var(--kp-addrow-gap, var(--kp-space-sm, 0.5rem));
+        align-items: start;
+    }
+
+    .kp-addrow--line .kp-addrow__fields > .kp-field {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    .kp-addrow--line .kp-addrow__fields .kp-field__input {
+        inline-size: 100%;
+        box-sizing: border-box;
+    }
+
+    .kp-addrow--line .kp-addrow__fields > .kp-field > .kp-field__label {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .kp-addrow--line > .kp-form__summary {
+        grid-column: label-start / actions-end;
+        margin: 0;
+    }
+
+    .kp-addrow--line > .kp-addrow__refusal {
+        grid-column: control-start / actions-end;
+        margin: 0;
+    }
+
+    .kp-addrow--line[data-kp-addrow-stacked] .kp-addrow__fields {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-addrow--line[data-kp-addrow-stacked] .kp-addrow__fields > .kp-field > .kp-field__label {
+        position: static;
+        inline-size: auto;
+        block-size: auto;
+        overflow: visible;
+        clip-path: none;
+        white-space: normal;
+    }
+}

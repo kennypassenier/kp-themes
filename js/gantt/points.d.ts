@@ -11,6 +11,16 @@ export type GanttPoint = import('./constants.js').GanttPoint;
  * @param {GanttModel} c @param {HTMLElement} label @param {GanttLane} lane
  */
 export declare function fillLaneLabel(c: GanttModel, label: HTMLElement, lane: GanttLane): void;
+/**
+ * A lane's end mark [forms-1102]: `tries` (a whole number) says how many tries are left ("1 try left": warning at one, danger at
+ * none), `mark` is the page's own word (muted); null without either.
+ * @param {GanttLane} lane
+ * @returns {{ text: string, tone: 'muted' | 'warning' | 'danger' } | null}
+ */
+export declare function laneEnd(lane: GanttLane): {
+    text: string;
+    tone: 'muted' | 'warning' | 'danger';
+} | null;
 /** The points as marks in their lanes, by id, in time order [kpadopt4]. @param {GanttModel} c @param {GanttLaneModel[]} lanes */
 export declare function paintPoints(c: GanttModel, lanes: GanttLaneModel[]): void;
 /**

@@ -195,6 +195,38 @@ export type UxPartsStrings = {
      * That line while no swatch is current [parts-1102]
      */
     swatchesNone: string;
+    /**
+     * The All chip a chip filter adds when the page wrote none (js/chip-filter.js) [forms-1102]
+     */
+    chipFilterAll: string;
+    /**
+     * What an add row says after the page took the line, "Added Pasta pesto"; '' when the line had no words [forms-1102]
+     */
+    addRowAdded: (name: string) => string;
+    /**
+     * An add row's refusal when the page refused without words of its own [forms-1102]
+     */
+    addRowRefused: string;
+    /**
+     * A chip's ⋯ menu button, "Actions for Pain" [forms-1102]
+     */
+    segmentedMenuFor: (chip: string) => string;
+    /**
+     * The name of the field a chip becomes, "New name for Pain" [forms-1102]
+     */
+    segmentedRenameField: (chip: string) => string;
+    /**
+     * Said when a chip is to be renamed to nothing [forms-1102]
+     */
+    segmentedRenameEmpty: string;
+    /**
+     * Said when the page refused a new name without words of its own [forms-1102]
+     */
+    segmentedRenameRefused: string;
+    /**
+     * The mark at a timeline lane's name, "1 try left", "No tries left" (js/gantt.js) [forms-1102]
+     */
+    ganttTriesLeft: (n: number) => string;
 };
 /**
  * @typedef {object} UxPartsStrings
@@ -246,6 +278,14 @@ export type UxPartsStrings = {
  * @property {string} swatchesLabel  The name of a swatch picker when the page gives none (js/swatches.js) [parts-1102]
  * @property {(label: string) => string} swatchesChosen  The line under the swatches naming the current one, "Teal" [parts-1102]
  * @property {string} swatchesNone  That line while no swatch is current [parts-1102]
+ * @property {string} chipFilterAll  The All chip a chip filter adds when the page wrote none (js/chip-filter.js) [forms-1102]
+ * @property {(name: string) => string} addRowAdded  What an add row says after the page took the line, "Added Pasta pesto"; '' when the line had no words [forms-1102]
+ * @property {string} addRowRefused  An add row's refusal when the page refused without words of its own [forms-1102]
+ * @property {(chip: string) => string} segmentedMenuFor  A chip's ⋯ menu button, "Actions for Pain" [forms-1102]
+ * @property {(chip: string) => string} segmentedRenameField  The name of the field a chip becomes, "New name for Pain" [forms-1102]
+ * @property {string} segmentedRenameEmpty  Said when a chip is to be renamed to nothing [forms-1102]
+ * @property {string} segmentedRenameRefused  Said when the page refused a new name without words of its own [forms-1102]
+ * @property {(n: number) => string} ganttTriesLeft  The mark at a timeline lane's name, "1 try left", "No tries left" (js/gantt.js) [forms-1102]
  */
 /** @type {UxPartsStrings} */
 export declare const UX_PARTS_STRINGS: UxPartsStrings;

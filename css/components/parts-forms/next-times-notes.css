@@ -1,0 +1,51 @@
+/* @part: parts-forms: Next times, a note per row */
+@layer kp.components {
+    /* --- A free note on a row of the next times [forms-1102] ---
+     * `setRuns(el, [{ at, note: '1 try left' }])` (js/runs.js): the app's own plain words on a row, in a column of their own
+     * between the distance and the marks, muted, on the row's line. The list has that column only while a row shows a note
+     * (`data-kp-runs-notes`, written by the module), so a list without notes keeps its three columns. Narrower than 26rem the
+     * note follows the distance on the second line, as the mark does. */
+    .kp-runs[data-kp-runs-notes] .kp-runs__list {
+        grid-template-columns: max-content max-content max-content minmax(0, 1fr);
+    }
+
+    .kp-runs__note {
+        grid-column: 3;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-runs[data-kp-runs-notes] .kp-runs__flag {
+        grid-column: 4;
+    }
+
+    /* Narrow: the time on the first line, then the distance and the note on two tracks every row shares, the mark under them. */
+    @container kp-runs (max-width: 26rem) {
+        .kp-runs[data-kp-runs-notes] .kp-runs__list {
+            grid-template-columns: max-content minmax(0, 1fr);
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__row:not(.kp-runs__row--wait) {
+            display: grid;
+            grid-template-columns: subgrid;
+            align-content: center;
+            row-gap: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__when,
+        .kp-runs[data-kp-runs-notes] .kp-runs__flag {
+            grid-column: 1 / -1;
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__rel {
+            grid-column: 1;
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__note {
+            grid-column: 2;
+            white-space: normal;
+        }
+    }
+}

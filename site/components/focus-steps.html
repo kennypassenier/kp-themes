@@ -544,9 +544,13 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>data-kp-track</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-track-at</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-track-attention</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-default</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-default-text</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-track-follow</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-track-key</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-track-shared</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-text</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-value</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-tracks</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-value</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-wake</code></td><td>read</td></tr>
@@ -574,6 +578,8 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>kp-focus-steps-save-retry</code></td><td>Fired on the root when Try again is pressed on the plate of answers that could not be saved.</td></tr>
                             <tr><td><code>kp-focus-steps-track</code></td><td>Fired on the root when the active track changed: `{ track, key, from, index, step, reason }`.</td></tr>
                             <tr><td><code>kp-focus-steps-track-attention</code></td><td>Fired on the root when a track asks for the person: `{ track, key, reason: 'timer' | 'ready', index }`.</td></tr>
+                            <tr><td><code>kp-track-change</code></td><td>Fired (bubbling) on a tracked control after a person changed it: `{ value, text }`.</td></tr>
+                            <tr><td><code>kp-track-write</code></td><td>Fired on a tracked control when its value is written back from outside (Discard, Revert, Undo, a kept draft): `{ value }`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">

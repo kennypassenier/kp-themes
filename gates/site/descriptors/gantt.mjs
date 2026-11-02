@@ -173,6 +173,7 @@ setGanttPoints(
             },
         ],
         variants: [
+            { name: 'lane tries / mark', what: 'A mark at the end of a lane’s name, beside the plot [forms-1102]: `tries` (a whole number) says “1 try left” on the warning badge, “No tries left” on the destructive badge, “3 tries left” on the plain badge (`ganttTriesLeft`); `mark` is the page’s own word on the plain badge. The lane carries `data-kp-gantt-marked`.' },
             { name: 'data-kp-gantt', what: 'Marks the timeline; `attachGantts` fills it.' },
             { name: 'data-kp-gantt-ranges', what: 'The range buttons, space separated: `1h 6h 24h 7d`.' },
             { name: 'data-kp-gantt-range', what: 'The range in force; it decides how much time the window shows.' },

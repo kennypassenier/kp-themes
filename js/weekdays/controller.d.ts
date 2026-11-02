@@ -11,6 +11,8 @@ export declare class WeekdayPicker extends WeekdaysCore {
         weekStartsOn?: number;
     });
     connect(): void;
+    /** Keep `data-kp-track-value` in step with the days, when the page asked for it; `announce` for a person's change. @param {boolean} announce */
+    track(announce: boolean): void;
     /** Replace the picked days, without the event. @param {readonly (number | string)[]} next */
     set(next: readonly (number | string)[]): void;
     /** @param {boolean} fire */

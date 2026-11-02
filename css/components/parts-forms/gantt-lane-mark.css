@@ -1,0 +1,38 @@
+/* @part: parts-forms: A run timeline's lane mark: tries left */
+@layer kp.components {
+    /* --- The mark at the end of a lane's name [forms-1102] ---
+     * A lane with `tries` or `mark` (js/gantt.js) carries a small badge at the end of its name, beside the plot: "1 try left"
+     * on the warning plate, "No tries left" on the destructive plate, any other count or the page's own word on the plain badge.
+     * The name keeps the start edge and wraps before the mark is pushed; the mark never wraps and stands on the lane's first
+     * row, where its bars stand. A mark is at least 6.5rem wide, so the marks of all lanes start on one edge. */
+    /* The name takes the room up to the mark, and a lane without a mark keeps the mark's room while another lane has one, so every
+       name ends on one edge and every mark starts on one; name and mark stand on one centre line. */
+    .kp-gantt__body[data-kp-gantt-marks] .kp-gantt__lane {
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-gantt__body[data-kp-gantt-marks] .kp-gantt__lane:not(.kp-gantt__ghost) > :is(span, a):first-child {
+        flex: 1 1 auto;
+    }
+
+    .kp-gantt__body[data-kp-gantt-marks] .kp-gantt__lane:not([data-kp-gantt-marked], .kp-gantt__ghost)::after {
+        content: '';
+        flex: none;
+        inline-size: 6.5rem;
+    }
+
+    .kp-gantt__lane:not(.kp-gantt__ghost) > .kp-gantt__mark {
+        display: inline-flex;
+        flex: none;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        min-inline-size: 6.5rem;
+        min-block-size: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}

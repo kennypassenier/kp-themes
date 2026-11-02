@@ -1,0 +1,71 @@
+/* @part: parts-forms: A chip with its own menu, and the chip renamed in place */
+@layer kp.components {
+    /* --- A chip's menu and rename [forms-1102] ---
+     * js/segmented-menu.js: a `.kp-segmented__menu` stands in a chip group right after its chip. The chip and its ⋯ read as one
+     * pill split by a hair line: the chip gives up its end rounding and the ⋯ carries it, on the chip's own edge and ground
+     * (--kp-chip-edge, --kp-chip-ground, --kp-chip-radius), so each theme's chip look reaches the menu. The chip's fill when it is
+     * on stays the chip's; the ⋯ keeps the card ground, a tool beside the choice. While a chip is renamed it is a field as wide
+     * as the chip was (at least 8rem), at the chip's height, and the refusal stands under it over what follows. */
+    .kp-segmented--chips:has(> .kp-segmented__menu) {
+        position: relative;
+    }
+
+    .kp-segmented--chips > .kp-segmented__item:has(+ .kp-segmented__menu) {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+    }
+
+    .kp-segmented--chips > .kp-segmented__menu {
+        display: inline-flex;
+        margin-inline-start: calc(-1 * var(--kp-chip-gap, 0.375rem));
+    }
+
+    .kp-segmented--chips > .kp-segmented__menu > .kp-icon-button {
+        box-sizing: border-box;
+        min-inline-size: 2rem;
+        inline-size: auto;
+        block-size: auto;
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--kp-chip-edge, var(--border-strong));
+        border-inline-start-color: var(--border);
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+        border-start-end-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        border-end-end-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        background: var(--kp-chip-ground, var(--card));
+        color: var(--muted-foreground);
+        line-height: 1;
+    }
+
+    .kp-segmented--chips > .kp-segmented__menu > .kp-icon-button:is(:hover, [aria-expanded='true']) {
+        color: var(--foreground);
+        background: var(--accent, var(--muted));
+    }
+
+    .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-renaming] {
+        display: none;
+    }
+
+    .kp-segmented--chips > .kp-segmented__rename {
+        box-sizing: border-box;
+        inline-size: max(8rem, var(--kp-seg-rename-w, 8rem));
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        block-size: auto;
+        padding-block: 0;
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+    }
+
+    .kp-segmented > .kp-segmented__refusal {
+        position: absolute;
+        z-index: 2;
+        max-inline-size: min(20rem, 100%);
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--destructive);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+}

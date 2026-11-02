@@ -366,6 +366,7 @@ failed.addEventListener(<span class="kp-code__string">'kp-runs-retry'</span>, ()
                             <tr><td><code>data-kp-runs-count</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-runs-more</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-runs-next</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-runs-notes</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-runs-relative</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-runs-retry</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-runs-title</code></td><td>read</td></tr>
@@ -412,6 +413,7 @@ failed.addEventListener(<span class="kp-code__string">'kp-runs-retry'</span>, ()
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>{ at, note }</code></td><td>A free note of the app’s own on a row [forms-1102], “1 try left”: plain muted words in a column of their own between the distance and the marks. The list has that column (`data-kp-runs-notes`, written) only while a row shows a note.</td></tr>
                             <tr><td><code>data-kp-runs-title</code></td><td>The heading over the list (“Next times”).</td></tr>
                             <tr><td><code>setRuns / setRunsState</code></td><td>`setRuns(el, times, { reason })` draws the rows, or the empty state with the reason when there are none; `setRunsState(el, &quot;loading&quot; | &quot;error&quot; | ...)` the other states. `runs(el)` gives the rows drawn.</td></tr>
                             <tr><td><code>runsRelative / runMoment / clockShift / zoneOffset</code></td><td>The pieces the list is made of: how far away a time is in words, a time as the list writes it, whether the clock turned between two runs and a zone’s offset at a moment.</td></tr>

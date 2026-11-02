@@ -40684,6 +40684,336 @@
         min-block-size: 1lh;
     }
 }
+@layer kp.components {
+    /* --- A free note on a row of the next times [forms-1102] ---
+     * `setRuns(el, [{ at, note: '1 try left' }])` (js/runs.js): the app's own plain words on a row, in a column of their own
+     * between the distance and the marks, muted, on the row's line. The list has that column only while a row shows a note
+     * (`data-kp-runs-notes`, written by the module), so a list without notes keeps its three columns. Narrower than 26rem the
+     * note follows the distance on the second line, as the mark does. */
+    .kp-runs[data-kp-runs-notes] .kp-runs__list {
+        grid-template-columns: max-content max-content max-content minmax(0, 1fr);
+    }
+
+    .kp-runs__note {
+        grid-column: 3;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-runs[data-kp-runs-notes] .kp-runs__flag {
+        grid-column: 4;
+    }
+
+    /* Narrow: the time on the first line, then the distance and the note on two tracks every row shares, the mark under them. */
+    @container kp-runs (max-width: 26rem) {
+        .kp-runs[data-kp-runs-notes] .kp-runs__list {
+            grid-template-columns: max-content minmax(0, 1fr);
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__row:not(.kp-runs__row--wait) {
+            display: grid;
+            grid-template-columns: subgrid;
+            align-content: center;
+            row-gap: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__when,
+        .kp-runs[data-kp-runs-notes] .kp-runs__flag {
+            grid-column: 1 / -1;
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__rel {
+            grid-column: 1;
+        }
+
+        .kp-runs[data-kp-runs-notes] .kp-runs__note {
+            grid-column: 2;
+            white-space: normal;
+        }
+    }
+}
+@layer kp.components {
+    /* --- The mark at the end of a lane's name [forms-1102] ---
+     * A lane with `tries` or `mark` (js/gantt.js) carries a small badge at the end of its name, beside the plot: "1 try left"
+     * on the warning plate, "No tries left" on the destructive plate, any other count or the page's own word on the plain badge.
+     * The name keeps the start edge and wraps before the mark is pushed; the mark never wraps and stands on the lane's first
+     * row, where its bars stand. A mark is at least 6.5rem wide, so the marks of all lanes start on one edge. */
+    /* The name takes the room up to the mark, and a lane without a mark keeps the mark's room while another lane has one, so every
+       name ends on one edge and every mark starts on one; name and mark stand on one centre line. */
+    .kp-gantt__body[data-kp-gantt-marks] .kp-gantt__lane {
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-gantt__body[data-kp-gantt-marks] .kp-gantt__lane:not(.kp-gantt__ghost) > :is(span, a):first-child {
+        flex: 1 1 auto;
+    }
+
+    .kp-gantt__body[data-kp-gantt-marks] .kp-gantt__lane:not([data-kp-gantt-marked], .kp-gantt__ghost)::after {
+        content: '';
+        flex: none;
+        inline-size: 6.5rem;
+    }
+
+    .kp-gantt__lane:not(.kp-gantt__ghost) > .kp-gantt__mark {
+        display: inline-flex;
+        flex: none;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        min-inline-size: 6.5rem;
+        min-block-size: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}
+@layer kp.components {
+    /* --- A chip's menu and rename [forms-1102] ---
+     * js/segmented-menu.js: a `.kp-segmented__menu` stands in a chip group right after its chip. The chip and its ⋯ read as one
+     * pill split by a hair line: the chip gives up its end rounding and the ⋯ carries it, on the chip's own edge and ground
+     * (--kp-chip-edge, --kp-chip-ground, --kp-chip-radius), so each theme's chip look reaches the menu. The chip's fill when it is
+     * on stays the chip's; the ⋯ keeps the card ground, a tool beside the choice. While a chip is renamed it is a field as wide
+     * as the chip was (at least 8rem), at the chip's height, and the refusal stands under it over what follows. */
+    .kp-segmented--chips:has(> .kp-segmented__menu) {
+        position: relative;
+    }
+
+    .kp-segmented--chips > .kp-segmented__item:has(+ .kp-segmented__menu) {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+    }
+
+    .kp-segmented--chips > .kp-segmented__menu {
+        display: inline-flex;
+        margin-inline-start: calc(-1 * var(--kp-chip-gap, 0.375rem));
+    }
+
+    .kp-segmented--chips > .kp-segmented__menu > .kp-icon-button {
+        box-sizing: border-box;
+        min-inline-size: 2rem;
+        inline-size: auto;
+        block-size: auto;
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--kp-chip-edge, var(--border-strong));
+        border-inline-start-color: var(--border);
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+        border-start-end-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        border-end-end-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        background: var(--kp-chip-ground, var(--card));
+        color: var(--muted-foreground);
+        line-height: 1;
+    }
+
+    .kp-segmented--chips > .kp-segmented__menu > .kp-icon-button:is(:hover, [aria-expanded='true']) {
+        color: var(--foreground);
+        background: var(--accent, var(--muted));
+    }
+
+    .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-renaming] {
+        display: none;
+    }
+
+    .kp-segmented--chips > .kp-segmented__rename {
+        box-sizing: border-box;
+        inline-size: max(8rem, var(--kp-seg-rename-w, 8rem));
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        block-size: auto;
+        padding-block: 0;
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+    }
+
+    .kp-segmented > .kp-segmented__refusal {
+        position: absolute;
+        z-index: 2;
+        max-inline-size: min(20rem, 100%);
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--destructive);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+}
+@layer kp.components {
+    /* --- The error icon [forms-1102] ---
+     * A field's message (`.kp-field__error`) is text in the destructive ink; showError gives it `role="status"`, so it is said
+     * once as it appears. With `data-kp-error-icon` on the message or any element round it (`<html>` for the whole app), and in
+     * every add row, the message starts with a round "!" mark in the same ink, the words on a hanging indent beside it, so a
+     * second line starts under the first word, never under the mark. The mark is a status plate (--destructive with its
+     * --destructive-foreground), hidden from a screen reader (an empty alternative text): the message itself says what is wrong. */
+    :is([data-kp-error-icon], .kp-addrow) .kp-field__error:not([hidden]),
+    .kp-field__error[data-kp-error-icon]:not([hidden]) {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: var(--kp-space-xs, 0.25rem);
+        align-items: start;
+    }
+
+    :is([data-kp-error-icon], .kp-addrow) .kp-field__error:not([hidden])::before,
+    .kp-field__error[data-kp-error-icon]:not([hidden])::before {
+        content: '!' / '';
+        display: grid;
+        place-items: center;
+        inline-size: 1.125em;
+        block-size: 1.125em;
+        margin-block-start: calc((1lh - 1.125em) / 2);
+        border-radius: 50%;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-size: 0.875em;
+        font-weight: 700;
+        line-height: 1;
+    }
+}
+@layer kp.components {
+    /* --- The add row [forms-1102] ---
+     * js/add-row.js. Over a data table (`data-kp-addrow-for`): a band on the card's ground with the table's border, its cells on
+     * one track per table column (the module writes the tracks from the header's widths and shifts them with the table's
+     * sideways scroll, `--kp-addrow-shift`), each cell with the table cell's inline padding so a typed word starts where the
+     * column's words start. The column headings name the fields, so the labels are for screen readers; the Add button fills
+     * its column. Under its cards (`data-kp-addrow-stacked`): one column, labels shown over their fields, the Add button the
+     * whole width, a card among the table's cards. The refusal and the kit form's summary stand under the cells.
+     * In a form grid (`.kp-addrow--line`): a block of the grid, its row a line of it; the fields share the control track as
+     * name (2fr) and unit (1fr), the Add button in the actions track, the refusal under the control and actions tracks.
+     * Knobs: --kp-addrow-gap (the sm step), --kp-addrow-pad (the sm step, top and bottom of the band). */
+    .kp-addrow:not(.kp-addrow--line) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-addrow-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        padding-block: var(--kp-addrow-pad, var(--kp-space-sm, 0.5rem));
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        overflow-x: clip;
+        overflow-clip-margin: 4px;
+    }
+
+    .kp-addrow__cells {
+        display: grid;
+        grid-auto-flow: dense;
+        align-items: start;
+        min-inline-size: 0;
+        transform: translateX(var(--kp-addrow-shift, 0px));
+    }
+
+    .kp-addrow:not([data-kp-addrow-stacked]) .kp-addrow__cells > :is(.kp-addrow__cell, .kp-addrow__submit) {
+        grid-row: 1;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        padding-inline: var(--kp-table-cell-inline, 0.625rem);
+    }
+
+    .kp-addrow:not([data-kp-addrow-stacked]) .kp-addrow__cell > .kp-field__label {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .kp-addrow__cell {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+    }
+
+    .kp-addrow__cell > .kp-field__input {
+        inline-size: 100%;
+        min-inline-size: 0;
+        box-sizing: border-box;
+    }
+
+    .kp-addrow__submit {
+        display: grid;
+    }
+
+    .kp-addrow__submit > .kp-button {
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .kp-addrow:not(.kp-addrow--line) > :is(.kp-form__summary, .kp-addrow__refusal) {
+        margin: 0;
+        padding-inline: var(--kp-table-cell-inline, 0.625rem);
+    }
+
+    .kp-addrow[data-kp-addrow-stacked]:not(.kp-addrow--line) {
+        padding: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-addrow[data-kp-addrow-stacked] .kp-addrow__cells {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-sm, 0.5rem);
+        transform: none;
+    }
+
+    .kp-addrow[data-kp-addrow-stacked]:not(.kp-addrow--line) > :is(.kp-form__summary, .kp-addrow__refusal) {
+        padding-inline: 0;
+    }
+
+    /* The line in a form grid. */
+    .kp-addrow--line .kp-addrow__fields {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        column-gap: var(--kp-addrow-gap, var(--kp-space-sm, 0.5rem));
+        align-items: start;
+    }
+
+    .kp-addrow--line .kp-addrow__fields > .kp-field {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    .kp-addrow--line .kp-addrow__fields .kp-field__input {
+        inline-size: 100%;
+        box-sizing: border-box;
+    }
+
+    .kp-addrow--line .kp-addrow__fields > .kp-field > .kp-field__label {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .kp-addrow--line > .kp-form__summary {
+        grid-column: label-start / actions-end;
+        margin: 0;
+    }
+
+    .kp-addrow--line > .kp-addrow__refusal {
+        grid-column: control-start / actions-end;
+        margin: 0;
+    }
+
+    .kp-addrow--line[data-kp-addrow-stacked] .kp-addrow__fields {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-addrow--line[data-kp-addrow-stacked] .kp-addrow__fields > .kp-field > .kp-field__label {
+        position: static;
+        inline-size: auto;
+        block-size: auto;
+        overflow: visible;
+        clip-path: none;
+        white-space: normal;
+    }
+}
 
 @layer kp.register {
     /* @kp-soft/themes — css/cyberpunk-register.css

@@ -185,6 +185,7 @@ concatenates that file into `css/themes.css`.
 | `list-row.css`                  | A list of rows with columns that continue                                        |
 | `page-header-updated.css`       | The page header's updated line                                                   |
 | `quantity-fill.css`             | A quantity that fills its cell                                                   |
+| `parts-forms/`                  | The form parts of forms-1102: add row, chip menu, error icon, run notes (5 parts) |
 | `row-editor.css`                | The repeating row editor                                                         |
 | `share-bar/`                    | Share bar (2 parts)                                                              |
 | `shortcut-engine.css`           | The shortcut engine's parts                                                      |

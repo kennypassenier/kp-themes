@@ -1,3 +1,0 @@
-/* @kp-soft/themes v12.1.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
-import{a,b,c}from"./chunk-2AZQM3DE.js";import"./chunk-3Z4KKGO5.js";import"./chunk-SOQ55AKA.js";import"./chunk-OG6L4GK2.js";export{a as SWIPE,b as SWIPE_EVENT,c as attachSwipes};
-//# sourceMappingURL=chunk-2ZCCOVA5.js.map

@@ -74,6 +74,8 @@ input.dispatchEvent(new Event('input', { bubbles: true }));
             },
         ],
         variants: [
+            { name: 'data-kp-track-value / -text / -default', what: 'A custom control the bar counts [forms-1102] (js/track-value.js): what it holds, the same in words for the list, and the saved value. The control calls `setTrackValue(el, value, { text })` after a person changed it (`kp-track-change`), and repaints on `kp-track-write` `{ value }` (`onTrackWrite`) when Discard, Revert or Undo write a value back. The package’s chip group, weekday picker and row editor keep it themselves once the page puts the empty attribute on them; a control inside a tracked one counts with it.' },
+            { name: 'kp-unsaved-leave and an app router', what: 'The event carries `{ href, link, route }` [forms-1102]. A history-API app either cancels it, asks its own question and calls `router.go(detail.href)`, or keeps the package’s question and hands its router over with `detail.route((href) => router.go(href))`, which Leave then calls instead of loading the page.' },
             { name: 'data-kp-placement', what: '`header+sticky` (default), `header` or `sticky-bottom`.' },
             { name: 'data-kp-dock', what: '`viewport` (default) or `container`, with `data-kp-scroll-root`.' },
             { name: 'data-kp-track', what: '`auto` (default) marks the rows as they are edited; `app` leaves it to the page.' },

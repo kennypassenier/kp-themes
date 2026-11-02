@@ -31,8 +31,8 @@ export declare class RowEditor extends Controller {
     add(): HTMLElement | null;
     /** Take a row away; the focus goes to the row now in its place, else to the add button. @param {HTMLElement} row */
     remove(row: HTMLElement): void;
-    /** Attach the package's controls inside a new row, as the boot attached the first rows'. @param {HTMLElement} row */
-    wire(row: HTMLElement): void;
+    /** Attach the package's controls inside a new row, as the boot attached the first rows'. @param {HTMLElement} row @returns {Promise<void>} */
+    wire(row: HTMLElement): Promise<void>;
     /** Write what depends on the count: the remove buttons, the add button, the plate and the line under the rows. */
     sync(): void;
     /** The package's empty plate while no row is held, in the room the rows had. @param {boolean} empty */

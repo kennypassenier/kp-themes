@@ -584,6 +584,8 @@ setGanttPoints(
                             <tr><td><code>data-kp-gantt-id</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-gantt-legend</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-gantt-live</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-gantt-marked</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-gantt-marks</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-gantt-points</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-gantt-range</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-gantt-ranges</code></td><td>read</td></tr>
@@ -687,6 +689,7 @@ setGanttPoints(
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>lane tries / mark</code></td><td>A mark at the end of a lane’s name, beside the plot [forms-1102]: `tries` (a whole number) says “1 try left” on the warning badge, “No tries left” on the destructive badge, “3 tries left” on the plain badge (`ganttTriesLeft`); `mark` is the page’s own word on the plain badge. The lane carries `data-kp-gantt-marked`.</td></tr>
                             <tr><td><code>data-kp-gantt</code></td><td>Marks the timeline; `attachGantts` fills it.</td></tr>
                             <tr><td><code>data-kp-gantt-ranges</code></td><td>The range buttons, space separated: `1h 6h 24h 7d`.</td></tr>
                             <tr><td><code>data-kp-gantt-range</code></td><td>The range in force; it decides how much time the window shows.</td></tr>

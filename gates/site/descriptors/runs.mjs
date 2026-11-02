@@ -57,6 +57,7 @@ failed.addEventListener('kp-runs-retry', () => {
             },
         ],
         variants: [
+            { name: '{ at, note }', what: 'A free note of the app’s own on a row [forms-1102], “1 try left”: plain muted words in a column of their own between the distance and the marks. The list has that column (`data-kp-runs-notes`, written) only while a row shows a note.' },
             { name: 'data-kp-runs-title', what: 'The heading over the list (“Next times”).' },
             { name: 'setRuns / setRunsState', what: '`setRuns(el, times, { reason })` draws the rows, or the empty state with the reason when there are none; `setRunsState(el, "loading" | "error" | ...)` the other states. `runs(el)` gives the rows drawn.' },
             { name: 'runsRelative / runMoment / clockShift / zoneOffset', what: 'The pieces the list is made of: how far away a time is in words, a time as the list writes it, whether the clock turned between two runs and a zone’s offset at a moment.' },

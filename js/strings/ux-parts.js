@@ -1,6 +1,8 @@
 // The words of the parts the app review of 2026-11-01 asked for [ux-1101]: the folded chip menu, the three-way chip's
-// visible words, the popover form, the date navigation and the row deleted with Undo; and the five parts the Habits todo app
-// asked for on 2026-11-01 [parts-1102]: the day timeline, the swipe row, chord keys, the settled row and the swatch picker.
+// visible words, the popover form, the date navigation and the row deleted with Undo; the five parts the Habits todo app
+// asked for on 2026-11-01 [parts-1102]: the day timeline, the swipe row, chord keys, the settled row and the swatch picker;
+// and the form parts of 2026-11-02 [forms-1102]: the chip filter, the add row, the chip's menu and rename, and the tries
+// left on a timeline lane.
 
 /**
  * @typedef {object} UxPartsStrings
@@ -52,6 +54,14 @@
  * @property {string} swatchesLabel  The name of a swatch picker when the page gives none (js/swatches.js) [parts-1102]
  * @property {(label: string) => string} swatchesChosen  The line under the swatches naming the current one, "Teal" [parts-1102]
  * @property {string} swatchesNone  That line while no swatch is current [parts-1102]
+ * @property {string} chipFilterAll  The All chip a chip filter adds when the page wrote none (js/chip-filter.js) [forms-1102]
+ * @property {(name: string) => string} addRowAdded  What an add row says after the page took the line, "Added Pasta pesto"; '' when the line had no words [forms-1102]
+ * @property {string} addRowRefused  An add row's refusal when the page refused without words of its own [forms-1102]
+ * @property {(chip: string) => string} segmentedMenuFor  A chip's ⋯ menu button, "Actions for Pain" [forms-1102]
+ * @property {(chip: string) => string} segmentedRenameField  The name of the field a chip becomes, "New name for Pain" [forms-1102]
+ * @property {string} segmentedRenameEmpty  Said when a chip is to be renamed to nothing [forms-1102]
+ * @property {string} segmentedRenameRefused  Said when the page refused a new name without words of its own [forms-1102]
+ * @property {(n: number) => string} ganttTriesLeft  The mark at a timeline lane's name, "1 try left", "No tries left" (js/gantt.js) [forms-1102]
  */
 
 /** @type {UxPartsStrings} */
@@ -104,4 +114,12 @@ export const UX_PARTS_STRINGS = {
     swatchesLabel: 'Colour',
     swatchesChosen: (label) => label,
     swatchesNone: 'No colour',
+    chipFilterAll: 'All',
+    addRowAdded: (name) => (name ? `Added ${name}` : 'Added'),
+    addRowRefused: 'This line could not be added.',
+    segmentedMenuFor: (chip) => `Actions for ${chip}`,
+    segmentedRenameField: (chip) => `New name for ${chip}`,
+    segmentedRenameEmpty: 'A name is needed.',
+    segmentedRenameRefused: 'This name cannot be used.',
+    ganttTriesLeft: (n) => (n === 0 ? 'No tries left' : n === 1 ? '1 try left' : `${n} tries left`),
 };

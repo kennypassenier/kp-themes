@@ -401,9 +401,13 @@ input.dispatchEvent(<span class="kp-code__keyword">new</span> Event(<span class=
                             <tr><td><code>data-kp-track</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-track-at</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-track-attention</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-default</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-default-text</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-track-follow</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-track-key</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-track-shared</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-text</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-value</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-unsaved</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-unsaved-attached</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-unsaved-for</code></td><td>read</td></tr>
@@ -424,11 +428,13 @@ input.dispatchEvent(<span class="kp-code__keyword">new</span> Event(<span class=
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-track-change</code></td><td>Fired (bubbling) on a tracked control after a person changed it: `{ value, text }`.</td></tr>
+                            <tr><td><code>kp-track-write</code></td><td>Fired on a tracked control when its value is written back from outside (Discard, Revert, Undo, a kept draft): `{ value }`.</td></tr>
                             <tr><td><code>kp-unsaved-change</code></td><td>Fired on the bar when the count changes: `{ count, changes }`.</td></tr>
                             <tr><td><code>kp-unsaved-save</code></td><td>Fired on the bar, bubbling and cancelable, when Save is pressed: `{ changes }`.</td></tr>
                             <tr><td><code>kp-unsaved-discard</code></td><td>Fired on the bar when the changes were discarded: `{ changes }`; and `kp-unsaved-undo` when they were put back.</td></tr>
                             <tr><td><code>kp-unsaved-undo</code></td><td>Fired on the bar when a discard is undone: `{ changes }`.</td></tr>
-                            <tr><td><code>kp-unsaved-leave</code></td><td>Fired on the bar, bubbling and cancelable, when a link would leave a page with unsaved changes: `{ href }`.</td></tr>
+                            <tr><td><code>kp-unsaved-leave</code></td><td>Fired on the bar, bubbling and cancelable, when a link would leave a page with unsaved changes: `{ href, link, route(fn) }`; `route` hands Leave to an app router [forms-1102].</td></tr>
                             <tr><td><code>kp-unsaved-revert</code></td><td>Fired on the bar, bubbling and cancelable, when one change is reverted: `{ key, row }`.</td></tr>
                     </tbody></table></div>
                 </section>
@@ -461,6 +467,8 @@ input.dispatchEvent(<span class="kp-code__keyword">new</span> Event(<span class=
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-track-value / -text / -default</code></td><td>A custom control the bar counts [forms-1102] (js/track-value.js): what it holds, the same in words for the list, and the saved value. The control calls `setTrackValue(el, value, { text })` after a person changed it (`kp-track-change`), and repaints on `kp-track-write` `{ value }` (`onTrackWrite`) when Discard, Revert or Undo write a value back. The package’s chip group, weekday picker and row editor keep it themselves once the page puts the empty attribute on them; a control inside a tracked one counts with it.</td></tr>
+                            <tr><td><code>kp-unsaved-leave and an app router</code></td><td>The event carries `{ href, link, route }` [forms-1102]. A history-API app either cancels it, asks its own question and calls `router.go(detail.href)`, or keeps the package’s question and hands its router over with `detail.route((href) =&gt; router.go(href))`, which Leave then calls instead of loading the page.</td></tr>
                             <tr><td><code>data-kp-placement</code></td><td>`header+sticky` (default), `header` or `sticky-bottom`.</td></tr>
                             <tr><td><code>data-kp-dock</code></td><td>`viewport` (default) or `container`, with `data-kp-scroll-root`.</td></tr>
                             <tr><td><code>data-kp-track</code></td><td>`auto` (default) marks the rows as they are edited; `app` leaves it to the page.</td></tr>

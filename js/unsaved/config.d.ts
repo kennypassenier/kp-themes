@@ -44,7 +44,7 @@ export declare const UNSAVED_SAVE_EVENT = "kp-unsaved-save";
 export declare const UNSAVED_DISCARD_EVENT = "kp-unsaved-discard";
 /** Fired on the bar when a discard is undone: `{ changes }`. */
 export declare const UNSAVED_UNDO_EVENT = "kp-unsaved-undo";
-/** Fired on the bar, bubbling and cancelable, when a link would leave a page with unsaved changes: `{ href }`. */
+/** Fired on the bar, bubbling and cancelable, when a link would leave a page with unsaved changes: `{ href, link, route(fn) }`; `route` hands Leave to an app router [forms-1102]. */
 export declare const UNSAVED_LEAVE_EVENT = "kp-unsaved-leave";
 /** Fired on the bar, bubbling and cancelable, when one change is reverted: `{ key, row }`. */
 export declare const UNSAVED_REVERT_EVENT = "kp-unsaved-revert";
