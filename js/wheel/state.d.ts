@@ -3,6 +3,10 @@ export type WheelItem = import('../wheel.js').WheelItem;
 export declare const WHEEL = "[data-kp-wheel]";
 export declare const WHEEL_SPIN_EVENT = "kp-wheel-spin";
 export declare const WHEEL_RESULT_EVENT = "kp-wheel-result";
+/** Set on a follower while it waits for its leader's outcome (js/wheel/follow.js) [parts-1102 r2l]. */
+export declare const WHEEL_LOCKED = "data-kp-wheel-locked";
+/** The line a locked follower shows, else the dictionary's `wheelLocked` [parts-1102 r2l]. */
+export declare const WHEEL_FOLLOWS_REASON = "data-kp-wheel-follows-reason";
 export type WheelState = {
     items: WheelItem[];
     /**

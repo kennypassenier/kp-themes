@@ -534,21 +534,15 @@
                 "id": "parts-layout-1102",
                 "themes": "formal",
                 "ask": null,
-                "askText": "What you approved on 02/11/2026 at 00:41, built and opt-in: four layout options that Almanac wrote page CSS for (two of them already existed and are checked here), the More menu of a bar that Kitchen and Medicine Cabinet built by hand, the snooze popover and the small card’s empty line that Homelab asked for, and Kitchen’s two wheels that spin together. Formal only, on the apps’ own data (names and counts are mock). 8 sections, 8 pairs.",
+                "askText": "Round 2 of the layout options and new parts from the apps: the two you sent back. Kitchen’s More menu now opens above the second bar at full width, and the side dish wheel no longer turns with the main course: it waits, locked, until the main course has stopped, and the app decides whether it then waits for a press (the default) or starts by itself. The other six sections are approved and leave this page. Formal only, on the apps’ own data (names are mock). 2 sections, 2 pairs.",
                 "sections": [
-                    { "item": "cards-tracks", "themes": null, "topic": "layout-wishes", "mode": null },
-                    { "item": "calendar-spread", "themes": null, "topic": "layout-wishes", "mode": null },
-                    { "item": "header-equal", "themes": null, "topic": "layout-wishes", "mode": null },
-                    { "item": "attention-formgrid", "themes": null, "topic": "layout-wishes", "mode": null },
                     { "item": "nav-more", "themes": null, "topic": "nav-more", "mode": null },
-                    { "item": "snooze-popover", "themes": null, "topic": "popover-form", "mode": null },
-                    { "item": "card-empty", "themes": null, "topic": "empty", "mode": null },
                     { "item": "coupled-wheels", "themes": null, "topic": "wheel", "mode": null }
                 ],
                 "extra": null,
-                "round": "\n            {\"round\":\"parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113\",\"received\":[]}\n        "
+                "round": "\n            {\"round\":\"parts-layout-1102-08fe97e7-f958-4fb8-8e13-4d7201090b4d\",\"received\":[\"parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113\"]}\n        "
             },
-            "fingerprint": "66b2ca22b4c8d926",
+            "fingerprint": "5eacebed10679adf",
             "update": null
         }
     },

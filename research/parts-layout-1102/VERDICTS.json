@@ -1,4 +1,23 @@
 {
     "demo": "parts-layout-1102",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113",
+            "allJudged": true,
+            "comment": "Kenny, 2026-11-02 01:12 UTC: 8 of 8 judged, 6 approved, 2 not approved (formal). Approved: cards-tracks, calendar-spread, header-equal, attention-formgrid, snooze-popover, card-empty.",
+            "notApproved": [
+                {
+                    "item": "nav-more",
+                    "theme": "formal",
+                    "note": "When I click \"More\" in the first navbar, the second navbar stays on top, not sure if that's intended? only on full width"
+                },
+                {
+                    "item": "coupled-wheels",
+                    "theme": "formal",
+                    "note": "The app should determine this behaviour, for instance, the side dish wheel can't spin yet in the Kitchen app, because we don't know what the outcome of the main wheel is before it stops. I don't want the sidedish wheel to spoil the main wheel outcome"
+                }
+            ]
+        }
+    ]
 }

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Layout options and four new parts from the apps</title>
+        <title>The More menu and the coupled wheels, round 2</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -32,122 +32,21 @@
 
         <main id="main" class="cat-main pg-page">
             <header class="pg-head">
-                <h1>Layout options and four new parts from the apps</h1>
+                <h1>The More menu and the coupled wheels, round 2</h1>
                 <p class="cat-intro">
-                    What you approved on 02/11/2026 at 00:41, built and opt-in: four layout options that Almanac wrote page CSS for (two
-                    of them already existed and are checked here), the More menu of a bar that Kitchen and Medicine Cabinet built by hand,
-                    the snooze popover and the small card&rsquo;s empty line that Homelab asked for, and Kitchen&rsquo;s two wheels that spin
-                    together. Formal only, on the apps&rsquo; own data (names and counts are mock). 8 sections, 8 pairs.
+                    Round 2 of the layout options and new parts from the apps: the two you sent back. Kitchen&rsquo;s More menu now opens above
+                    the second bar at full width, and the side dish wheel no longer turns with the main course: it waits, locked, until the
+                    main course has stopped, and the app decides whether it then waits for a press (the default) or starts by itself. The
+                    other six sections are approved and leave this page. Formal only, on the apps&rsquo; own data (names are mock).
+                    2 sections, 2 pairs.
                 </p>
                 <p>Each section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a phone&rsquo;s 390 px.</p>
             </header>
 
-        <section id="cards-tracks" data-review-item="cards-tracks" data-review-topic="layout-wishes" data-review-topic-title="Layout options" data-review-components="cards-tracks" data-review-title="Table cards on a phone: label and value on two tracks" aria-labelledby="h-cards-tracks">
-            <div class="pg-asked"><p><b>What is asked</b> (layout-wishes, Almanac 21): Almanac wrote page CSS to line up the label and the value in every card of a table on a phone. The track layout (<code>data-kp-cards</code>: each card two tracks, label | value, every cell a subgrid) is already the package&rsquo;s card look since datatable-r5-1019; <code>data-kp-cards="spread"</code> keeps the earlier look. Checked here on Almanac&rsquo;s Calendars, nothing new to build.</p></div>
-            <div class="pg-intro"><h2 id="h-cards-tracks">Calendars</h2><p>The four calendars Almanac delivers from, with their last sync.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Full width</b>: a table. <b>Phone, 390 px</b>: each row is a card. <b>Tracks</b>: every value of a card starts on one edge, after the longest label (&ldquo;Last sync&rdquo;), and that edge is the same in every card. <b>Spread</b>: each value is pushed to the card&rsquo;s right edge</li><li>Sync now stands on the card&rsquo;s start edge in every card. Nothing is cut and nothing scrolls sideways.</li></ul></div>
-            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s table and cards. Check that the values of one card share one edge, and that every card has the same edge.</p></div>
-            <div data-review-controls data-review-controls-for="cards-tracks-component"><div role="group" aria-label="Option"><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="" data-target="cards-tracks-component" aria-pressed="true">Tracks (the default)</button><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="spread" data-target="cards-tracks-component" aria-pressed="false">Spread, the earlier look</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="cards-tracks-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="cards-tracks-component" aria-pressed="false">Phone, 390 px</button></div></div>
-            <div id="cards-tracks-component" class="pg-component" data-pg-width="full">
-        <div class="kp-datatable" id="pg-cards" data-kp-datatable data-kp-cards="" data-pg-attr="data-kp-cards" data-kp-page-size="25" data-kp-page-sizes="none">
-                <div class="kp-table-wrap"><table class="kp-table"><caption>Calendars</caption>
-                <thead><tr><th scope="col" data-kp-sort="text">Calendar</th><th scope="col" data-kp-sort="text">Source</th><th scope="col" data-kp-sort="text">Last sync</th><th scope="col" data-kp-sort="number" class="kp-text-end">Events</th><th scope="col" data-kp-col="actions"><span class="kp-sr-only">Actions</span></th></tr></thead>
-                <tbody><tr>
-                    <td data-label="Calendar"><strong>Family</strong></td>
-                    <td data-label="Source">Google Calendar</td>
-                    <td data-label="Last sync">02/11/2026 06:00</td>
-                    <td data-label="Events" class="kp-text-end">214</td>
-                    <td data-kp-col="actions"><button type="button" class="kp-button kp-button--sm">Sync now</button></td>
-                </tr><tr>
-                    <td data-label="Calendar"><strong>School</strong></td>
-                    <td data-label="Source">ICS feed</td>
-                    <td data-label="Last sync">02/11/2026 07:30</td>
-                    <td data-label="Events" class="kp-text-end">38</td>
-                    <td data-kp-col="actions"><button type="button" class="kp-button kp-button--sm">Sync now</button></td>
-                </tr><tr>
-                    <td data-label="Calendar"><strong>Football club</strong></td>
-                    <td data-label="Source">ICS feed</td>
-                    <td data-label="Last sync">01/11/2026 18:00</td>
-                    <td data-label="Events" class="kp-text-end">12</td>
-                    <td data-kp-col="actions"><button type="button" class="kp-button kp-button--sm">Sync now</button></td>
-                </tr><tr>
-                    <td data-label="Calendar"><strong>Bin collection</strong></td>
-                    <td data-label="Source">City of Ghent feed</td>
-                    <td data-label="Last sync">28/10/2026 06:00</td>
-                    <td data-label="Events" class="kp-text-end">52</td>
-                    <td data-kp-col="actions"><button type="button" class="kp-button kp-button--sm">Sync now</button></td>
-                </tr></tbody></table></div>
-                <div class="kp-empty" data-kp-datatable-empty hidden><p class="kp-empty__title">No calendars yet</p><p class="kp-empty__body">Add a calendar to start the deliveries.</p></div>
-            </div>
-            </div>
-        </section>
-
-        <section id="calendar-spread" data-review-item="calendar-spread" data-review-topic="layout-wishes" data-review-topic-title="Layout options" data-review-components="calendar-spread" data-review-title="Calendar navigation on the days&rsquo; seven tracks" aria-labelledby="h-calendar-spread">
-            <div class="pg-asked"><p><b>What is asked</b> (layout-wishes, Almanac 21): Almanac wanted the month&rsquo;s Previous, title, Next and Today on the days&rsquo; own columns. <code>data-kp-calendar-nav="spread"</code> exists (gapform-1019); checked here on Almanac&rsquo;s deliveries month.</p></div>
-            <div class="pg-intro"><h2 id="h-calendar-spread">Deliveries per day</h2><p>How many of Almanac&rsquo;s nine deliveries arrived each day of October 2026.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Spread</b> at full width: Previous over Monday, the month centred over Wednesday to Friday, Next over Saturday and Today over Sunday; every button edge is a day&rsquo;s edge. <b>Phone</b>: the month on a row of its own, the three buttons over two, three and two days. <b>Default</b>: the four in a run from the start edge.</li><li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> are the calendar&rsquo;s own states; the navigation stays where it is.</li></ul></div>
-            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s calendar. Check that the buttons line up with the day columns under them.</p></div>
-            <div data-review-controls data-review-controls-for="calendar-spread-component"><div role="group" aria-label="Option"><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="spread" data-target="calendar-spread-component" aria-pressed="true">Spread</button><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="start" data-target="calendar-spread-component" aria-pressed="false">Start (the default)</button></div><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="cal" data-value="ready" data-target="calendar-spread-component" aria-pressed="true">Ready</button><button type="button" class="kp-button kp-button--sm" data-pg="cal" data-value="loading" data-target="calendar-spread-component" aria-pressed="false">Loading</button><button type="button" class="kp-button kp-button--sm" data-pg="cal" data-value="empty" data-target="calendar-spread-component" aria-pressed="false">Empty</button><button type="button" class="kp-button kp-button--sm" data-pg="cal" data-value="error" data-target="calendar-spread-component" aria-pressed="false">Failed</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="calendar-spread-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="calendar-spread-component" aria-pressed="false">Phone, 390 px</button></div></div>
-            <div id="calendar-spread-component" class="pg-component" data-pg-width="full">
-        <section class="kp-calendar" id="pg-month" data-kp-calendar data-kp-week-starts-on="1" data-kp-calendar-month="2026-10" data-kp-calendar-nav="spread" data-pg-attr="data-kp-calendar-nav" aria-label="Deliveries per day"></section>
-            </div>
-        </section>
-
-        <section id="header-equal" data-review-item="header-equal" data-review-topic="layout-wishes" data-review-topic-title="Layout options" data-review-components="header-equal" data-review-title="Page header on a phone: two actions on two equal tracks" aria-labelledby="h-header-equal">
-            <div class="pg-asked"><p><b>What is asked</b> (layout-wishes, Almanac 21): On a phone the header&rsquo;s two actions stood as a wide primary and a short secondary. <code>data-kp-header-actions="equal"</code> on <code>.kp-page-header</code> puts two actions on two equal tracks at phone width. New, off by default.</p></div>
-            <div class="pg-intro"><h2 id="h-header-equal">Medicines</h2><p>Medicine Cabinet&rsquo;s Medicines header with Add medicine and Import a list.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Full width</b>: the actions beside the title, either way. <b>Phone</b>, <b>Equal tracks</b>: Add medicine and Import a list are one width and fill the row together; <b>Auto</b>: the two stand under each other, full width, in the 340 px of this stage</li><li>The words stay whole; a long label wraps inside its button, never mid-word.</li></ul></div>
-            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s header and buttons. Check at 390 px that the two buttons are exactly one width.</p></div>
-            <div data-review-controls data-review-controls-for="header-equal-component"><div role="group" aria-label="Option"><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="equal" data-target="header-equal-component" aria-pressed="true">Equal tracks</button><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="auto" data-target="header-equal-component" aria-pressed="false">Auto (the default)</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="header-equal-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="header-equal-component" aria-pressed="false">Phone, 390 px</button></div></div>
-            <div id="header-equal-component" class="pg-component" data-pg-width="full">
-        <header class="kp-page-header" data-kp-header-actions="equal" data-pg-attr="data-kp-header-actions">
-                <div class="kp-page-header__inner">
-                    <div><h3 class="kp-page-header__title">Medicines</h3><p class="kp-page-header__description">Fourteen medicines in the cabinet: what is due today and what runs low.</p></div>
-                    <div class="kp-page-header__actions"><button type="button" class="kp-button kp-button--primary">Add medicine</button><button type="button" class="kp-button">Import a list</button></div>
-                </div>
-            </header>
-            </div>
-        </section>
-
-        <section id="attention-formgrid" data-review-item="attention-formgrid" data-review-topic="layout-wishes" data-review-topic-title="Layout options" data-review-components="attention-formgrid" data-review-title="The attention band on a form grid&rsquo;s tracks" aria-labelledby="h-attention-formgrid">
-            <div class="pg-asked"><p><b>What is asked</b> (layout-wishes, Almanac 21): Almanac placed the attention band between its Settings rows by hand. With <code>data-kp-subgrid</code> on <code>.kp-attention</code> inside a <code>.kp-formgrid</code> the band takes the grid&rsquo;s tracks (gapform-1019): the mark in the label column, the words on the controls&rsquo; edge, the fix in the actions column. Checked here; nothing new to build.</p></div>
-            <div class="pg-intro"><h2 id="h-attention-formgrid">Settings</h2><p>Almanac&rsquo;s Google account and school feed, and the two problems between them.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>On the grid&rsquo;s tracks</b>: the words of both problems start where the fields start, the marks stand in the label column, and Sign in again and Test the feed stand in the column of Sign out and Test. <b>A band of its own</b>: the band spans the grid with tracks of its own (before this round it fell into the label column and broke after every word)</li><li><b>No problems</b>: the band takes no room and the rows close up. <b>Phone</b>: the fix goes under the words, full width.</li></ul></div>
-            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s band and form grid. Check that the band&rsquo;s words and buttons continue the grid&rsquo;s columns.</p></div>
-            <div data-review-controls data-review-controls-for="attention-formgrid-component"><div role="group" aria-label="Option"><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="" data-target="attention-formgrid-component" aria-pressed="true">On the grid&rsquo;s tracks</button><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="off" data-target="attention-formgrid-component" aria-pressed="false">A band of its own (the default)</button></div><div role="group" aria-label="Problems"><button type="button" class="kp-button kp-button--sm" data-pg="band" data-value="two" data-target="attention-formgrid-component" aria-pressed="true">Two problems</button><button type="button" class="kp-button kp-button--sm" data-pg="band" data-value="none" data-target="attention-formgrid-component" aria-pressed="false">No problems</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="attention-formgrid-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="attention-formgrid-component" aria-pressed="false">Phone, 390 px</button></div></div>
-            <div id="attention-formgrid-component" class="pg-component" data-pg-width="full">
-        <div class="kp-formgrid" id="pg-settings">
-                <div class="kp-formgrid__row">
-                    <label class="kp-formgrid__label" for="pg-settings-account">Google account</label>
-                    <div class="kp-formgrid__control"><input class="kp-field__input" id="pg-settings-account" value="family.calendar@example.org" readonly /></div>
-                    <p class="kp-formgrid__value">Signed out</p>
-                    <div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--sm">Sign out</button></div>
-                </div>
-                <div class="kp-attention" data-pg-band data-pg-attr="data-kp-subgrid" data-kp-subgrid aria-label="Needs you">
-                    <div class="kp-alert kp-attention__item" role="alert" data-kp-severity="critical">
-                        <span class="kp-attention__icon" aria-hidden="true">!</span>
-                        <div class="kp-attention__text"><strong><span class="kp-sr-only">Critical: </span>The Google sign-in has expired</strong><span>Family has not synced since 31/10/2026 06:00.</span></div>
-                        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Sign in again</button></div>
-                    </div><div class="kp-alert kp-attention__item" role="alert" data-kp-severity="warning">
-                        <span class="kp-attention__icon" aria-hidden="true">!</span>
-                        <div class="kp-attention__text"><strong><span class="kp-sr-only">Warning: </span>The school feed answers slowly</strong><span>Its last three syncs took more than 40 s.</span></div>
-                        <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Test the feed</button></div>
-                    </div>
-                </div>
-                <div class="kp-formgrid__row">
-                    <label class="kp-formgrid__label" for="pg-settings-feed">School feed</label>
-                    <div class="kp-formgrid__control"><input class="kp-field__input" id="pg-settings-feed" value="https://school.example.org/calendar.ics" /></div>
-                    <p class="kp-formgrid__value">every hour</p>
-                    <div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--sm">Test</button></div>
-                </div>
-            </div>
-            </div>
-        </section>
-
         <section id="nav-more" data-review-item="nav-more" data-review-topic="nav-more" data-review-topic-title="Nav: the More menu" data-review-components="nav-more" data-review-title="Links that always sit behind More, and a menu that is one of the bar&rsquo;s links" aria-labelledby="h-nav-more">
-            <div class="pg-asked"><p><b>What is asked</b> (nav-more, Kitchen (chassis-rs 25) and Medicine Cabinet 28): Kitchen built its own More item for six pages that always live there; Medicine Cabinet dressed a menu button as a bar link by hand. <code>data-kp-nav-more</code> on a list item pins it behind the folding bar&rsquo;s More whatever the width (a value names its group, <code>data-kp-nav-hint</code> its hint); a <code>.kp-menu-button</code> in <code>.kp-nav__links</code> is now a documented bar link with a rich menu.</p></div>
-            <div class="pg-intro"><h2 id="h-nav-more">Kitchen and Medicine Cabinet</h2><p>Kitchen&rsquo;s bar: five daily places and More. Medicine Cabinet&rsquo;s bar: Stock opens a menu.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Kitchen shows Today, Week, Shopping list 7, Recipes, Pantry and More, at every width where the bar is a row. More opens Wheel, Timers, Freezer stock and Saved menus, each with its hint, then &ldquo;SETTINGS&rdquo; over Household and Settings. <b>Current: Timers</b>: More reads as the current link and Timers is marked in the menu. A pick moves the current page; the line names it.</li><li>Medicine Cabinet&rsquo;s Stock is a bar link with a caret; it opens the rich menu under it. <b>Phone</b>: both bars fold into their toggle; Kitchen&rsquo;s open list holds all eleven links.</li></ul></div>
+            <header class="pg-intro"><h2 id="h-nav-more">Kitchen and Medicine Cabinet</h2><p>Kitchen&rsquo;s bar: five daily places and More. Medicine Cabinet&rsquo;s bar: Stock opens a menu.</p></header>
+            <div class="pg-changed pg-asked"><p><b>What is asked</b> (nav-more, Kitchen (chassis-rs 25) and Medicine Cabinet 28): Kitchen built its own More item for six pages that always live there; Medicine Cabinet dressed a menu button as a bar link by hand. <code>data-kp-nav-more</code> on a list item pins it behind the folding bar&rsquo;s More whatever the width (a value names its group, <code>data-kp-nav-hint</code> its hint); a <code>.kp-menu-button</code> in <code>.kp-nav__links</code> is now a documented bar link with a rich menu.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Changed since round 1</b>: At full width the More menu opened under Medicine Cabinet&rsquo;s bar, which painted over Wheel and Timers. Every bar is a layer of its own (<code>z-index: 30</code>), so the later bar won whatever the menu&rsquo;s own z-index. A menu button&rsquo;s menu inside such a layer (a positioned box with a z-index, or a sticky or fixed one) now opens on the top layer, like the date picker and the time list: above every bar and sticky element, on any page. Measured at 1280 px: 4 of 6 entries reachable before, 6 of 6 now.</li><li><b>Open More</b> at full width: the whole menu lies over Medicine Cabinet&rsquo;s bar, every entry can be pressed, and it still hangs under More. The same for Stock.</li><li>Kitchen shows Today, Week, Shopping list 7, Recipes, Pantry and More, at every width where the bar is a row. More opens Wheel, Timers, Freezer stock and Saved menus, each with its hint, then &ldquo;SETTINGS&rdquo; over Household and Settings. <b>Current: Timers</b>: More reads as the current link and Timers is marked in the menu. A pick moves the current page; the line names it.</li><li>Medicine Cabinet&rsquo;s Stock is a bar link with a caret; it opens the rich menu under it. <b>Phone</b>: both bars fold into their toggle; Kitchen&rsquo;s open list holds all eleven links.</li></ul></div>
             <div data-review-look><p data-for="formal">Formal: the bar&rsquo;s links and the menu&rsquo;s plate. Check that More and Stock look like the other links and that the menus hang under them.</p></div>
             <div data-review-controls data-review-controls-for="nav-more-component"><div role="group" aria-label="Current page"><button type="button" class="kp-button kp-button--sm" data-pg="page" data-value="today" data-target="pg-kitchen-nav" aria-pressed="true">Today</button><button type="button" class="kp-button kp-button--sm" data-pg="page" data-value="timers" data-target="pg-kitchen-nav" aria-pressed="false">Timers</button></div><div role="group" aria-label="Open"><button type="button" class="kp-button kp-button--sm" data-pg="navopen" data-value="more" data-target="nav-more-component" aria-pressed="false">Open More</button><button type="button" class="kp-button kp-button--sm" data-pg="navopen" data-value="stock" data-target="nav-more-component" aria-pressed="false">Open Stock</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="nav-more-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="nav-more-component" aria-pressed="false">Phone, 390 px</button></div></div>
             <div id="nav-more-component" class="pg-component" data-pg-width="full">
@@ -174,118 +73,23 @@
             </div>
         </section>
 
-        <section id="snooze-popover" data-review-item="snooze-popover" data-review-topic="popover-form" data-review-topic-title="Popover form" data-review-components="snooze-popover" data-review-title="Snooze until a day and a time, in a popover form" aria-labelledby="h-snooze-popover">
-            <div class="pg-asked"><p><b>What is asked</b> (snooze-popover, Homelab): Homelab&rsquo;s &ldquo;Snooze &rarr; Pick a time&rdquo; was a menu and then the old dialog. The popover form now carries a date picker and a time field side by side: the calendar and the list of times open inside it, Escape closes them first, Enter snoozes.</p></div>
-            <div class="pg-intro"><h2 id="h-snooze-popover">Inbox</h2><p>Two alerts that need you, each with &ldquo;Snooze until&hellip;&rdquo;.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>The form hangs under its button: &ldquo;Snooze until&rdquo;, Day and Time on one line, the Brussels line, Snooze under Time and as wide. Open the calendar: it lies over the form; pick 05/11 and it closes, the form stays. Escape in the calendar or the time list closes only that; a second Escape closes the form. Enter snoozes: the badge reads &ldquo;Snoozed until 05/11/2026 09:00&rdquo;.</li><li>&ldquo;31/02&rdquo; or a day after 30/11 is refused on the problem line; <b>Save fails</b>: Snooze waits, then &ldquo;Homelab did not answer; the alert is not snoozed.&rdquo; <b>Phone</b>: the form stays on screen.</li></ul></div>
-            <div data-review-look><p data-for="formal">Formal: the menu&rsquo;s paper plate, the package&rsquo;s date picker and time field. Check that Day and Time start and end on one line and Snooze ends on the fields&rsquo; edge.</p></div>
-            <div data-review-controls data-review-controls-for="snooze-popover-component"><div role="group" aria-label="The save"><button type="button" class="kp-button kp-button--sm" data-pg="snoozesave" data-value="ok" data-target="pg-inbox" aria-pressed="true">Saves</button><button type="button" class="kp-button kp-button--sm" data-pg="snoozesave" data-value="fail" data-target="pg-inbox" aria-pressed="false">Fails</button></div><div role="group" aria-label="Open"><button type="button" class="kp-button kp-button--sm" data-pg="snoozeopen" data-value="nas" data-target="pg-inbox" aria-pressed="false">Open the first form</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="snooze-popover-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="snooze-popover-component" aria-pressed="false">Phone, 390 px</button></div></div>
-            <div id="snooze-popover-component" class="pg-component" data-pg-width="full">
-        <div class="kp-formgrid" data-kp-formgrid-lines="lines" id="pg-inbox"><div class="kp-formgrid__row">
-                    <p class="kp-formgrid__label">Backup of nas-01 failed</p>
-                    <div class="kp-formgrid__control kp-formgrid__fill"><span class="kp-badge" id="pg-alert-nas">Needs you</span></div>
-                    <p class="kp-formgrid__value">02/11/2026 03:12</p>
-                    <div class="kp-formgrid__actions"><div class="kp-popover-form" data-kp-popover-form id="pg-snooze-nas" data-pg-name="Backup of nas-01 failed">
-                        <button type="button" class="kp-button kp-button--sm">Snooze until&hellip;</button>
-                        <form class="kp-menu kp-popover-form__panel" aria-label="Snooze Backup of nas-01 failed">
-                            <p class="kp-popover-form__label">Snooze until</p>
-                            <div class="kp-popover-form__pair">
-                                <div class="kp-popover-form__field">
-                                    <label class="kp-popover-form__label" for="pg-snooze-nas-day">Day</label>
-                                    <div class="kp-datepicker" data-kp-datepicker data-kp-min="2026-11-02" data-kp-max="2026-11-30">
-                                        <input class="kp-field__input" id="pg-snooze-nas-day" name="day" type="text" inputmode="numeric" value="03/11/2026" data-kp-date-input required />
-                                        <button type="button" class="kp-icon-button" data-kp-date-open aria-label="Open the calendar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></svg></button>
-                                        <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
-                                    </div>
-                                </div>
-                                <div class="kp-popover-form__field">
-                                    <label class="kp-popover-form__label" id="pg-snooze-nas-time-l" for="pg-snooze-nas-time">Time</label>
-                                    <div data-kp-time data-kp-name="time" data-kp-value="09:00" data-kp-time-step="15" data-kp-time-id="pg-snooze-nas-time" data-kp-time-required aria-labelledby="pg-snooze-nas-time-l"></div>
-                                </div>
-                            </div>
-                            <p class="kp-popover-form__hint">Brussels time. The alert comes back to the Inbox then.</p>
-                            <p class="kp-popover-form__problem" role="alert"></p>
-                            <button type="submit" class="kp-button kp-button--primary kp-popover-form__accept">Snooze</button>
-                        </form>
-                    </div></div>
-                </div><div class="kp-formgrid__row">
-                    <p class="kp-formgrid__label">The certificate of media.home ends in 9 days</p>
-                    <div class="kp-formgrid__control kp-formgrid__fill"><span class="kp-badge" id="pg-alert-cert">Needs you</span></div>
-                    <p class="kp-formgrid__value">01/11/2026 22:40</p>
-                    <div class="kp-formgrid__actions"><div class="kp-popover-form" data-kp-popover-form id="pg-snooze-cert" data-pg-name="The certificate of media.home ends in 9 days">
-                        <button type="button" class="kp-button kp-button--sm">Snooze until&hellip;</button>
-                        <form class="kp-menu kp-popover-form__panel" aria-label="Snooze The certificate of media.home ends in 9 days">
-                            <p class="kp-popover-form__label">Snooze until</p>
-                            <div class="kp-popover-form__pair">
-                                <div class="kp-popover-form__field">
-                                    <label class="kp-popover-form__label" for="pg-snooze-cert-day">Day</label>
-                                    <div class="kp-datepicker" data-kp-datepicker data-kp-min="2026-11-02" data-kp-max="2026-11-30">
-                                        <input class="kp-field__input" id="pg-snooze-cert-day" name="day" type="text" inputmode="numeric" value="03/11/2026" data-kp-date-input required />
-                                        <button type="button" class="kp-icon-button" data-kp-date-open aria-label="Open the calendar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></svg></button>
-                                        <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
-                                    </div>
-                                </div>
-                                <div class="kp-popover-form__field">
-                                    <label class="kp-popover-form__label" id="pg-snooze-cert-time-l" for="pg-snooze-cert-time">Time</label>
-                                    <div data-kp-time data-kp-name="time" data-kp-value="09:00" data-kp-time-step="15" data-kp-time-id="pg-snooze-cert-time" data-kp-time-required aria-labelledby="pg-snooze-cert-time-l"></div>
-                                </div>
-                            </div>
-                            <p class="kp-popover-form__hint">Brussels time. The alert comes back to the Inbox then.</p>
-                            <p class="kp-popover-form__problem" role="alert"></p>
-                            <button type="submit" class="kp-button kp-button--primary kp-popover-form__accept">Snooze</button>
-                        </form>
-                    </div></div>
-                </div></div>
-        <p class="pg-log" id="pg-snooze-log" role="status" aria-live="polite"></p>
-            </div>
-        </section>
-
-        <section id="card-empty" data-review-item="card-empty" data-review-topic="empty" data-review-topic-title="The empty plate" data-review-components="card-empty" data-review-title="The one-line empty plate for a small card" aria-labelledby="h-card-empty">
-            <div class="pg-asked"><p><b>What is asked</b> (card-empty, Homelab): Homelab&rsquo;s small Overview cards drew the full empty plate (heading size, the art, the whole footprint) for &ldquo;nothing here&rdquo;. <code>data-kp-empty="compact"</code> is one line: a mark and the words, in every theme with its own mark.</p></div>
-            <div class="pg-intro"><h2 id="h-card-empty">Overview</h2><p>Three small cards: open alerts, pending updates and today&rsquo;s restarts.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Compact</b>: each card says &ldquo;&check; No open alerts&rdquo; on one line, the mark in a hairline ring, the words in the body type; the three cards stay one height. <b>The full plate</b>: the same cards with the prominent plate, its ruled lines and the heading-size words</li><li><b>With items</b>: the lists replace the plates. <b>Phone</b>: the cards stack; the line wraps under its own words, the mark stays beside them.</li></ul></div>
-            <div data-review-look><p data-for="formal">Formal: the seal mark in a hairline ring and the italic words, under the card&rsquo;s own rule. Check that the line reads as finished, not as a loading or error line.</p></div>
-            <div data-review-controls data-review-controls-for="card-empty-component"><div role="group" aria-label="Option"><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="compact" data-target="card-empty-component" aria-pressed="true">Compact</button><button type="button" class="kp-button kp-button--sm" data-pg="opt" data-value="full" data-target="card-empty-component" aria-pressed="false">The full plate (the default)</button></div><div role="group" aria-label="Cards"><button type="button" class="kp-button kp-button--sm" data-pg="cards" data-value="empty" data-target="card-empty-component" aria-pressed="true">Nothing in them</button><button type="button" class="kp-button kp-button--sm" data-pg="cards" data-value="items" data-target="card-empty-component" aria-pressed="false">With items</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="card-empty-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="card-empty-component" aria-pressed="false">Phone, 390 px</button></div></div>
-            <div id="card-empty-component" class="pg-component" data-pg-width="full">
-        <div class="pg-cards"><article class="kp-card pg-small-card" aria-labelledby="pg-card-compact-alerts">
-                    <header class="kp-card__header"><h4 class="kp-card__title" id="pg-card-compact-alerts">Open alerts</h4></header>
-                    <div class="kp-card__body">
-                        <p class="kp-empty" data-kp-empty="compact" data-pg-attr="data-kp-empty" data-pg-empty><span class="kp-empty__icon" aria-hidden="true">&check;</span><span class="kp-empty__title">No open alerts</span></p>
-                        <ul class="pg-card-list" data-pg-items hidden><li>Backup of nas-01 failed</li><li>Disk of media-02 at 91 %</li></ul>
-                    </div>
-                </article><article class="kp-card pg-small-card" aria-labelledby="pg-card-compact-updates">
-                    <header class="kp-card__header"><h4 class="kp-card__title" id="pg-card-compact-updates">Pending updates</h4></header>
-                    <div class="kp-card__body">
-                        <p class="kp-empty" data-kp-empty="compact" data-pg-attr="data-kp-empty" data-pg-empty><span class="kp-empty__icon" aria-hidden="true">&check;</span><span class="kp-empty__title">Everything is up to date</span></p>
-                        <ul class="pg-card-list" data-pg-items hidden><li>jellyfin 10.11.12</li><li>traefik 3.6.2</li><li>grafana 12.3.1</li></ul>
-                    </div>
-                </article><article class="kp-card pg-small-card" aria-labelledby="pg-card-compact-restarts">
-                    <header class="kp-card__header"><h4 class="kp-card__title" id="pg-card-compact-restarts">Restarts today</h4></header>
-                    <div class="kp-card__body">
-                        <p class="kp-empty" data-kp-empty="compact" data-pg-attr="data-kp-empty" data-pg-empty><span class="kp-empty__icon" aria-hidden="true">&check;</span><span class="kp-empty__title">Nothing restarted today</span></p>
-                        <ul class="pg-card-list" data-pg-items hidden><li>kyu at 04:10</li></ul>
-                    </div>
-                </article></div>
-            </div>
-        </section>
-
-        <section id="coupled-wheels" data-review-item="coupled-wheels" data-review-topic="wheel" data-review-topic-title="The wheel" data-review-components="coupled-wheels" data-review-title="Two wheels that spin together" aria-labelledby="h-coupled-wheels">
-            <div class="pg-asked"><p><b>What is asked</b> (coupled-wheels, Kitchen 15): Kitchen spun the side dish from the main course&rsquo;s spin event by hand. <code>data-kp-wheel-follows="&lt;id&gt;"</code> makes a wheel turn when the one it names turns, for the same time, so both settle together; each keeps its own outcome and its own events.</p></div>
-            <div class="pg-intro"><h2 id="h-coupled-wheels">What do we eat tonight</h2><p>Six main courses and five side dishes; the side dish follows the main course.</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul><li>Spin the main course: both wheels turn and stop at the same moment; each answer card shows its own pick, and the line names both <code>kp-wheel-result</code> events. Spin the side dish alone: only it turns.</li><li><b>Not coupled</b>: the side dish stands still when the main course spins. <b>Phone</b>: the wheels stack, both whole.</li></ul></div>
-            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s wheels. Check that the two settle together and that neither wheel jumps when the other ends.</p></div>
-            <div data-review-controls data-review-controls-for="coupled-wheels-component"><div role="group" aria-label="Coupling"><button type="button" class="kp-button kp-button--sm" data-pg="couple" data-value="on" data-target="pg-wheel-side" aria-pressed="true">Side dish follows</button><button type="button" class="kp-button kp-button--sm" data-pg="couple" data-value="off" data-target="pg-wheel-side" aria-pressed="false">Not coupled</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="coupled-wheels-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="coupled-wheels-component" aria-pressed="false">Phone, 390 px</button></div></div>
+        <section id="coupled-wheels" data-review-item="coupled-wheels" data-review-topic="wheel" data-review-topic-title="The wheel" data-review-components="coupled-wheels" data-review-title="The side dish waits for the main course" aria-labelledby="h-coupled-wheels">
+            <header class="pg-intro"><h2 id="h-coupled-wheels">What do we eat tonight</h2><p>Six main courses; the side dishes that fit the main course chosen.</p></header>
+            <div class="pg-changed pg-asked"><p><b>What is asked</b> (coupled-wheels, Kitchen 15): Kitchen spun the side dish from the main course&rsquo;s spin event by hand. <code>data-kp-wheel-follows="&lt;id&gt;"</code> on a wheel makes it follow the wheel it names; <code>data-kp-wheel-follows-start</code> lets the app say how.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Changed since round 1</b>: You sent back the side dish turning with the main course, because it spoiled the outcome. Now the app decides, and the default waits: the side dish is locked, its Spin dimmed and &ldquo;Spins after the main course&rdquo; where its answer goes, until the main course has stopped. Then it hears the main course&rsquo;s pick (Kitchen gives it the sides that go with it) and, by the option, waits for its own Spin (the default) or starts by itself. Spinning together stays as a third option for two picks that do not depend on each other.</li><li><b>Before the main course</b>: the side dish is dimmed, its Spin does nothing and its line says &ldquo;Spins after the main course&rdquo;. Spin the main course: the side dish stays still until the main course stops; then its disc shows only the sides that fit (Lasagne: Green salad and Bread) and the line names the pick.</li><li><b>Press</b> (the default): the side dish waits for its own Spin. <b>Auto</b>: it starts by itself right after the main course stops, never before. <b>Together</b>: the earlier behaviour, both turn and settle together. <b>Main course again</b> locks the side dish again and clears its answer. <b>Phone</b>: the wheels stack, both whole.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the package&rsquo;s wheels. Check that the side dish reads as waiting, not broken, and that it never moves before the main course has stopped.</p></div>
+            <div data-review-controls data-review-controls-for="coupled-wheels-component"><div role="group" aria-label="Option"><button type="button" class="kp-button kp-button--sm" data-pg="wheelstart" data-value="press" data-target="pg-wheel-side" aria-pressed="true">Press (the default)</button><button type="button" class="kp-button kp-button--sm" data-pg="wheelstart" data-value="auto" data-target="pg-wheel-side" aria-pressed="false">Auto</button><button type="button" class="kp-button kp-button--sm" data-pg="wheelstart" data-value="together" data-target="pg-wheel-side" aria-pressed="false">Together</button></div><div role="group" aria-label="Main course"><button type="button" class="kp-button kp-button--sm" data-pg="mainreset" data-value="reset" data-target="coupled-wheels-component" aria-pressed="false">Not chosen yet</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="coupled-wheels-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="coupled-wheels-component" aria-pressed="false">Phone, 390 px</button></div></div>
             <div id="coupled-wheels-component" class="pg-component" data-pg-width="full">
         <div class="pg-wheels">
                 <figure class="pg-wheel"><figcaption>Main course</figcaption><div class="kp-wheel" id="pg-wheel-main" data-kp-wheel data-kp-wheel-answer aria-label="Tonight&rsquo;s main course"></div></figure>
-                <figure class="pg-wheel"><figcaption>Side dish, follows the main course</figcaption><div class="kp-wheel" id="pg-wheel-side" data-kp-wheel data-kp-wheel-answer data-kp-wheel-follows="pg-wheel-main" aria-label="Tonight&rsquo;s side dish"></div></figure>
+                <figure class="pg-wheel"><figcaption>Side dish, after the main course</figcaption><div class="kp-wheel" id="pg-wheel-side" data-kp-wheel data-kp-wheel-answer data-kp-wheel-follows="pg-wheel-main" data-kp-wheel-follows-start="press" data-kp-wheel-follows-reason="Spins after the main course" aria-label="Tonight&rsquo;s side dish"></div></figure>
             </div>
         <p class="pg-log" id="pg-wheel-log" role="status" aria-live="polite"></p>
             </div>
         </section>
         </main>
         <script type="application/json" data-review-round>
-            {"round":"parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113","received":[]}
+            {"round":"parts-layout-1102-08fe97e7-f958-4fb8-8e13-4d7201090b4d","received":["parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113"]}
         </script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="./demo.js"></script>

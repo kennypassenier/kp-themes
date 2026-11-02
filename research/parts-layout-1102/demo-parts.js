@@ -6,7 +6,7 @@ import { attachNavFolds } from '../../js/nav-fold.js';
 import { attachPopoverForms, openPopoverForm } from '../../js/popover-form.js';
 import { attachWheels, setWheelItems } from '../../js/wheel.js';
 import { $, REPLY_MS, answer, on, pressed, say } from './demo.js';
-import { MAINS, SIDES, STOCK_MENU } from './data.js';
+import { MAINS, SIDES, SIDES_FOR, STOCK_MENU } from './data.js';
 
 // ---------------------------------------------------------------- 5 · nav-more (Kitchen's and Medicine Cabinet's bars)
 const kitchen = $('pg-kitchen-nav');
@@ -79,6 +79,8 @@ on('cards', (value, target) => {
 });
 
 // ---------------------------------------------------------------- 8 · coupled-wheels (Kitchen's dinner)
+// The side dish names the main course in data-kp-wheel-follows (markup-parts.mjs): the package keeps it locked until the main
+// course has stopped. Kitchen's part is only this: when the main course has chosen, give the side dish the sides that fit it.
 const main = $('pg-wheel-main');
 const side = $('pg-wheel-side');
 attachWheels(document);
@@ -86,16 +88,40 @@ if (main) setWheelItems(main, MAINS);
 if (side) setWheelItems(side, SIDES);
 /** @type {Record<string, string>} */
 const picked = {};
-for (const [wheel, name] of /** @type {[HTMLElement | null, string][]} */ ([[main, 'main course'], [side, 'side dish']])) {
-    wheel?.addEventListener('kp-wheel-spin', () => {
-        delete picked[name];
-    });
-    wheel?.addEventListener('kp-wheel-result', (event) => {
-        picked[name] = /** @type {CustomEvent<{ item: { label: string } }>} */ (event).detail.item.label;
-        say('pg-wheel-log', Object.entries(picked).map(([which, label]) => `kp-wheel-result (${which}): ${label}`).join(' · '));
-    });
-}
-on('couple', (value, target) => {
-    if (value === 'on') target?.setAttribute('data-kp-wheel-follows', 'pg-wheel-main');
-    else target?.removeAttribute('data-kp-wheel-follows');
+const tell = () => say('pg-wheel-log', Object.entries(picked).map(([which, words]) => `${which}: ${words}`).join(' · '));
+main?.addEventListener('kp-wheel-spin', () => {
+    for (const key of Object.keys(picked)) delete picked[key];
+    tell();
+});
+main?.addEventListener('kp-wheel-result', (event) => {
+    picked['kp-wheel-result (main course)'] = /** @type {CustomEvent<{ item: { label: string } }>} */ (event).detail.item.label;
+    tell();
+});
+side?.addEventListener('kp-wheel-leader-result', (event) => {
+    const { item } = /** @type {CustomEvent<{ item: { id: string, label: string } }>} */ (event).detail;
+    const fits = (SIDES_FOR[/** @type {keyof typeof SIDES_FOR} */ (item.id)] ?? []).map((id) => SIDES.find((s) => s.id === id)).filter(Boolean);
+    setWheelItems(side, /** @type {typeof SIDES} */ (fits.length > 1 ? fits : SIDES));
+    picked['kp-wheel-leader-result (side dish)'] = `${fits.length} sides fit ${item.label}`;
+    tell();
+});
+side?.addEventListener('kp-wheel-spin', () => {
+    delete picked['kp-wheel-result (side dish)'];
+    tell();
+});
+side?.addEventListener('kp-wheel-result', (event) => {
+    picked['kp-wheel-result (side dish)'] = /** @type {CustomEvent<{ item: { label: string } }>} */ (event).detail.item.label;
+    tell();
+});
+// The start mode is the app's: written live on the side dish. Together turns both over their own lists, so the side dish gets
+// every side again; press and auto narrow it once the main course has chosen.
+on('wheelstart', (value, target) => {
+    target?.setAttribute('data-kp-wheel-follows-start', value);
+    if (value === 'together' && side) setWheelItems(side, SIDES);
+});
+// The main course not chosen yet: new choices clear its outcome, and the side dish is locked again.
+on('mainreset', () => {
+    if (main) setWheelItems(main, MAINS);
+    if (side) setWheelItems(side, SIDES);
+    for (const key of Object.keys(picked)) delete picked[key];
+    tell();
 });

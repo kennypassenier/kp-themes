@@ -239,6 +239,10 @@ export type QuantityChecklistFocusStrings = {
      * Choices that could not be read, when the page gives no message [kpadopt4]
      */
     wheelFailed: string;
+    /**
+     * The line under a wheel that waits for the wheel it follows, when the page gives no reason (`data-kp-wheel-follows-reason`) [parts-1102 r2l]
+     */
+    wheelLocked: string;
 };
 /**
  * @typedef {object} QuantityChecklistFocusStrings
@@ -302,6 +306,7 @@ export type QuantityChecklistFocusStrings = {
  * @property {string} wheelEmpty  A wheel with no choices, when the page gives no sentence [kpadopt4]
  * @property {string} wheelLoading  The words under its spinner while the choices load [kpadopt4]
  * @property {string} wheelFailed  Choices that could not be read, when the page gives no message [kpadopt4]
+ * @property {string} wheelLocked  The line under a wheel that waits for the wheel it follows, when the page gives no reason (`data-kp-wheel-follows-reason`) [parts-1102 r2l]
  */
 /** @type {QuantityChecklistFocusStrings} */
 export declare const QUANTITY_CHECKLIST_FOCUS_STRINGS: QuantityChecklistFocusStrings;

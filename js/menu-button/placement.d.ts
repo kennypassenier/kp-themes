@@ -41,8 +41,9 @@ export declare function menuPlacement({ button, menu, height, gap, room }: {
 /**
  * Lift the placed menu into the top layer at the spot it was placed on,
  * kept against its button as the page scrolls (js/top-layer.js), when a
- * container would clip it. It stays the button's child, so every register
- * selector still reaches it.
+ * container would clip it or hold it in a layer that a later box can paint
+ * over. It stays the button's child, so every register selector still
+ * reaches it.
  * @param {MenuState} s
  * @param {Window} view
  */

@@ -2493,6 +2493,35 @@ a row. Exports: `setRowBusy`, `removeRow`, `attachRowKeys`, `ROW_KEYS`,
 `--kp-action-list-bar`, `--kp-action-list-pad`,
 `--kp-action-list-next-wash`, `--kp-action-list-payload-max`.
 
+### Two wheels: the second waits for the first [parts-1102 r2l]
+
+A wheel that depends on another (Kitchen's side dish on its main course) names it in `data-kp-wheel-follows`. By default it
+is locked until that wheel has stopped: its Spin is disabled and described by the reason, which stands where its answer goes
+(`data-kp-wheel-follows-reason`, else "Spins once the other wheel has chosen."), and the disc steps back
+(`--kp-wheel-waiting`, 0.55). So it can never give the first wheel's outcome away. When the first wheel settles, the follower
+gets its choice in `data-kp-wheel-leader-won` and in `kp-wheel-leader-result`: give it its choices for that outcome there.
+
+```html
+<div class="kp-wheel" id="main" data-kp-wheel aria-label="Main course"></div>
+<div class="kp-wheel" id="side" data-kp-wheel data-kp-wheel-follows="main" data-kp-wheel-follows-reason="Spins after the main course"
+     aria-label="Side dish"></div>
+<script type="module">
+    import { setWheelItems } from '@kp-soft/themes/js/wheel';
+    const side = document.getElementById('side');
+    side.addEventListener('kp-wheel-leader-result', (e) => setWheelItems(side, sidesFor(e.detail.item.id)));
+</script>
+```
+
+| Attribute                      | Default | What                                                                                                                                                                                                            |
+| ------------------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-kp-wheel-follows-start`  | `press` | `press`: once unlocked it waits for its own Spin. `auto`: it starts by itself after the first wheel's result (and after any `e.detail.waitUntil(promise)`, say a fetch of its choices), never before. `together`: not locked; it turns with the first wheel for exactly its time and both settle together, for two picks that do not depend on each other. |
+| `data-kp-wheel-follows-reason` | the dictionary's `wheelLocked` | The line a locked follower shows.                                                                                                                                                                                 |
+
+A new spin of the first wheel, or new choices for it, locks the follower again and clears its answer. Every attribute is
+live. To decide everything yourself, leave `data-kp-wheel-follows` off and drive both wheels: listen for the first wheel's
+`kp-wheel-result` and call `spinWheel(second)` when your app is ready; `spinWheel` resolves with the outcome, or null when the
+wheel cannot spin (a locked follower included).
+
 ## Seven everyday components [kpadopt4-ideas]
 
 Seven things Kenny's apps kept drawing by hand, approved as components on 2026-10-16 and demoed in formal

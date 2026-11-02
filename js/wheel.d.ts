@@ -1,6 +1,6 @@
 export { WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, pickWeighted, wheelAngles } from './wheel/state.js';
 export { setWheelItems, setWheelState, getWheelResult, spinWheel } from './wheel/spin.js';
-export { WHEEL_FOLLOWS } from './wheel/follow.js';
+export { WHEEL_FOLLOWS, WHEEL_FOLLOWS_START, WHEEL_FOLLOWS_REASON, WHEEL_FOLLOW_STARTS, WHEEL_LEADER_RESULT_EVENT, WHEEL_LEADER_WON, WHEEL_LOCKED } from './wheel/follow.js';
 export type WheelItem = {
     id: string;
     label: string;

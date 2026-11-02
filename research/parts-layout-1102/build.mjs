@@ -1,4 +1,4 @@
-// Builds research/parts-layout-1102/demo.html: the parts and options Kenny approved on 2026-11-02 00:41 (layout options from
+// Builds research/parts-layout-1102/demo.html (round 2 since 2026-11-02 01:12: only nav-more and coupled-wheels, sent back in round 1): the parts and options Kenny approved on 2026-11-02 00:41 (layout options from
 // Almanac 21, the nav's More from Kitchen and Medicine Cabinet, the snooze popover and the small-card empty plate from Homelab,
 // Kitchen's coupled wheels). Formal only, one section per part. The sections are written once in sections.mjs (their markup in
 // markup-layout.mjs and markup-parts.mjs); demo.js and demo-parts.js wire them. Names and counts are mock.
@@ -16,9 +16,9 @@ const MAX_ITEMS = 100;
 const escapeHtml = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const asSection = (s) => `        <section id="${s.id}" data-review-item="${s.id}" data-review-topic="${s.topic}" data-review-topic-title="${s.topicTitle}" data-review-components="${s.id}" data-review-title="${s.title}"${s.choices ? ` data-review-choices='${JSON.stringify(s.choices).replaceAll("'", '&#39;')}'` : ''} aria-labelledby="h-${s.id}">
-            <div class="pg-asked"><p><b>What is asked</b> (${s.item}): ${s.asked}</p></div>
-            <div class="pg-intro"><h2 id="h-${s.id}">${s.h2}</h2><p>${s.intro}</p></div>
-            <div class="pg-expected"><p><b>Expected:</b></p><ul>${s.expected.map((e) => `<li>${e}</li>`).join('')}</ul></div>
+            <header class="pg-intro"><h2 id="h-${s.id}">${s.h2}</h2><p>${s.intro}</p></header>
+            <div class="pg-changed pg-asked"><p><b>What is asked</b> (${s.item}): ${s.asked}</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul>${s.changed ? `<li><b>Changed since round 1</b>: ${s.changed}</li>` : ''}${s.expected.map((e) => `<li>${e}</li>`).join('')}</ul></div>
             <div data-review-look><p data-for="formal">${s.look}</p></div>
             <div data-review-controls data-review-controls-for="${s.id}-component">${s.controls}</div>
             <div id="${s.id}-component" class="pg-component" data-pg-width="full">
@@ -48,7 +48,7 @@ const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 
 // A round id is never reused: once Kenny's answer to it is recorded (it is in `received`), the next page gets a new one.
 const roundId = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) && !received.includes(current) ? current : `${ID}-${randomUUID()}`;
 
-const title = 'Layout options and four new parts from the apps';
+const title = 'The More menu and the coupled wheels, round 2';
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="${THEMES.join(',')}">
     <head>
@@ -85,10 +85,11 @@ const page = `<!doctype html>
             <header class="pg-head">
                 <h1>${escapeHtml(title)}</h1>
                 <p class="cat-intro">
-                    What you approved on 02/11/2026 at 00:41, built and opt-in: four layout options that Almanac wrote page CSS for (two
-                    of them already existed and are checked here), the More menu of a bar that Kitchen and Medicine Cabinet built by hand,
-                    the snooze popover and the small card&rsquo;s empty line that Homelab asked for, and Kitchen&rsquo;s two wheels that spin
-                    together. Formal only, on the apps&rsquo; own data (names and counts are mock). ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
+                    Round 2 of the layout options and new parts from the apps: the two you sent back. Kitchen&rsquo;s More menu now opens above
+                    the second bar at full width, and the side dish wheel no longer turns with the main course: it waits, locked, until the
+                    main course has stopped, and the app decides whether it then waits for a press (the default) or starts by itself. The
+                    other six sections are approved and leave this page. Formal only, on the apps&rsquo; own data (names are mock).
+                    ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
                 </p>
                 <p>Each section says under <b>Expected</b> what you should see and what each control does. The width control shows the stage at a phone&rsquo;s 390 px.</p>
             </header>

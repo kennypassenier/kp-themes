@@ -1056,7 +1056,7 @@ The decision wheel, as a WheelControl controller over a per-wheel state. 5 files
 | --------------- | ------------------------------------------------------------------------------------ |
 | `controller.js` | WheelControl: lays and draws the wheel, the Spin button, kiosk keys, live redraws.   |
 | `draw.js`       | The parts laid once, the disc with fitted labels, and the answer, button and stage. |
-| `follow.js`     | A wheel that follows another (`data-kp-wheel-follows`) spins and settles with it.   |
+| `follow.js`     | A wheel that follows another (`data-kp-wheel-follows`): locked until the leader's result, then press, auto or together. |
 | `spin.js`       | The weights' glide, the items, the state, the result and the spin.                   |
 | `state.js`      | Selector, events, the per-wheel state, geometry, the weighted pick, the angles.     |
 

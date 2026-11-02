@@ -105,8 +105,8 @@ const card = (look) => ([key, title, empty, items]) => `<article class="kp-card 
 export const overviewCards = (look) => `<div class="pg-cards">${CARDS.map(card(look)).join('')}</div>`;
 
 // ---------------------------------------------------------------- Kitchen: the main course and the side dish
-/** Kitchen's two wheels, the side dish following the main course. */
+/** Kitchen's two wheels: the side dish follows the main course and waits for its outcome (the default start, press). */
 export const kitchenWheels = `<div class="pg-wheels">
                 <figure class="pg-wheel"><figcaption>Main course</figcaption><div class="kp-wheel" id="pg-wheel-main" data-kp-wheel data-kp-wheel-answer aria-label="Tonight&rsquo;s main course"></div></figure>
-                <figure class="pg-wheel"><figcaption>Side dish, follows the main course</figcaption><div class="kp-wheel" id="pg-wheel-side" data-kp-wheel data-kp-wheel-answer data-kp-wheel-follows="pg-wheel-main" aria-label="Tonight&rsquo;s side dish"></div></figure>
+                <figure class="pg-wheel"><figcaption>Side dish, after the main course</figcaption><div class="kp-wheel" id="pg-wheel-side" data-kp-wheel data-kp-wheel-answer data-kp-wheel-follows="pg-wheel-main" data-kp-wheel-follows-start="press" data-kp-wheel-follows-reason="Spins after the main course" aria-label="Tonight&rsquo;s side dish"></div></figure>
             </div>`;

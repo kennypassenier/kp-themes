@@ -314,7 +314,7 @@ export { VERSION_COPY_EVENT, VERSION_DELTA, VERSION_LEVELS, VERSION_SORT, attach
 export { VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES, openViewer } from '../js/viewer.js';
 export { WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_RETRY_EVENT, WEEK_TICK_MS, attachWeeks, pillCapacity, setWeekEvents, setWeekLegend, setWeekStart, setWeekState, stackPills } from '../js/week.js';
 export { WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, attachWeekdays, dayNames, dayNumber, joinWords, monthSummary, setWeekdays, weekdaySummary, weekdays, weekdaysOf } from '../js/weekdays.js';
-export { WHEEL, WHEEL_FOLLOWS, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles } from '../js/wheel.js';
+export { WHEEL, WHEEL_FOLLOWS, WHEEL_FOLLOWS_REASON, WHEEL_FOLLOWS_START, WHEEL_FOLLOW_STARTS, WHEEL_LEADER_RESULT_EVENT, WHEEL_LEADER_WON, WHEEL_LOCKED, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles } from '../js/wheel.js';
 export { BEFORE_STEP_EVENT, FINISH_EVENT, STEP_EVENT, attachWizards, wizard } from '../js/wizard.js';
 export { ROW_OPEN_EVENT as ACTIONS_ROW_OPEN_EVENT } from '../js/actions.js';
 export { ROW_OPEN_EVENT as ROW_SELECT_ROW_OPEN_EVENT } from '../js/row-select.js';

@@ -91,6 +91,13 @@
         font-weight: 400;
     }
 
+    /* A follower waiting for its leader [parts-1102 r2l]: the disc steps back to the disabled look the hub's button already
+     * has, so it reads as "not yet" rather than as broken, and the reason stands where the outcome goes. Knob:
+     * --kp-wheel-waiting (the disc's opacity, 0.55). */
+    .kp-wheel[data-kp-wheel-locked]:not([data-kp-wheel-spinning]) .kp-wheel__disc {
+        opacity: var(--kp-wheel-waiting, 0.55);
+    }
+
     .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
         background: var(--destructive);
         color: var(--destructive-foreground);

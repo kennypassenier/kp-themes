@@ -1,0 +1,93 @@
+/* research/parts-layout-1102: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's
+ * own frame. Every element fills its column (Kenny's full-width rule): the page holds the whole column and each component fills its
+ * stage. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the component answers its own width, not the window's. */
+.pg-component {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    max-inline-size: 390px;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+/* What the page heard: one line high whether it says something or not, so nothing moves. */
+.pg-log {
+    margin: 0;
+    padding-inline: var(--kp-space-lg, 1.5rem);
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+    overflow-wrap: anywhere;
+}
+
+/* Two bars, one over the other, each the full width of the stage. */
+.pg-bars {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+/* Three small cards on one row of equal tracks (one height), stacked on a phone. */
+.pg-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--kp-space-md, 0.75rem);
+    container-type: inline-size;
+}
+
+.pg-small-card {
+    min-inline-size: 0;
+}
+
+.pg-card-list {
+    margin: 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+.pg-card-list[hidden] {
+    display: none;
+}
+
+/* The two wheels on two equal tracks, the leader first; stacked when the stage is narrow. */
+.pg-wheels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.pg-component[data-pg-width='phone'] .pg-wheels {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.pg-wheel {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    min-inline-size: 0;
+}
+
+.pg-wheel > figcaption {
+    font-weight: 600;
+}

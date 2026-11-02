@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "34ff0674eae9dfd1",
+    "base": "0ee0f655e3cd38cb",
     "modules": {
         "js/accept-follows.js": { "digest": "0fdf861ed688c68e", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
@@ -76,7 +76,7 @@
         "js/log.js": { "digest": "a4be314cde32f0ef", "when": "[data-kp-source]" },
         "js/logviewer.js": { "digest": "e06a7ba52573eb82", "when": "[data-kp-logviewer]" },
         "js/master-detail.js": { "digest": "a7ae68a985fea8a0", "when": "[data-kp-master-detail]" },
-        "js/menu-button.js": { "digest": "6c91005493fe4d74", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "d8414cc6c1e67ee5", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "def987d6fb47d96a",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
@@ -147,7 +147,7 @@
         },
         "js/week.js": { "digest": "a89db1a5005a4421", "when": "[data-kp-week]" },
         "js/weekdays.js": { "digest": "0d81b4e0e6a7585d", "when": "[data-kp-weekdays]" },
-        "js/wheel.js": { "digest": "738692987114112a", "when": "[data-kp-wheel]" },
+        "js/wheel.js": { "digest": "de41b71c31236b02", "when": "[data-kp-wheel]" },
         "js/wizard.js": { "digest": "30df34a5ed6a9d70", "when": "[data-kp-wizard]" }
     },
     "themes": {
@@ -9845,7 +9845,7 @@
         "||||.kp-menu__group": "b8ce4ba13bd10e9d",
         "||||.kp-menu__heading": "8fa2ae70ae323e31",
         "||||.kp-menu__hint": "8e7ea827d2f7a665",
-        "||||.kp-menu__item": "58a6438e2e7f74cf",
+        "||||.kp-menu__item": "9f8de1e4d563baa6",
         "||||.kp-menu__item--destructive": "3ac2828d057939c4",
         "||||.kp-menu__item-visible": "13098d6189a5cbd5",
         "||||.kp-menu__item[aria-disabled='true']": "6b4720fe667fbce0",
@@ -11255,7 +11255,7 @@
         "||||.kp-weekdays__why": "40a6bc64aa3c0efe",
         "||||.kp-wheel": "77d7078ab0abade8",
         "||||.kp-wheel__caption": "c9303639f2d04ec1",
-        "||||.kp-wheel__disc": "3d36e76c80c1bfe8",
+        "||||.kp-wheel__disc": "d2577c63be0a389c",
         "||||.kp-wheel__face": "3673dec1b7c63f42",
         "||||.kp-wheel__ghost": "34fabbe05e1e8323",
         "||||.kp-wheel__label": "f0d1595fd3320cdb",
@@ -12544,7 +12544,11 @@
                 "data-kp-wheel-error",
                 "data-kp-wheel-failed",
                 "data-kp-wheel-follows",
+                "data-kp-wheel-follows-reason",
+                "data-kp-wheel-follows-start",
                 "data-kp-wheel-kiosk",
+                "data-kp-wheel-leader-won",
+                "data-kp-wheel-locked",
                 "data-kp-wheel-note",
                 "data-kp-wheel-other",
                 "data-kp-wheel-reduced-ms",
@@ -12772,6 +12776,8 @@
                 "kp-week-range",
                 "kp-week-retry",
                 "kp-wheel",
+                "kp-wheel-leader-result",
+                "kp-wheel-outcome",
                 "kp-wheel-result",
                 "kp-wheel-spin"
             ]

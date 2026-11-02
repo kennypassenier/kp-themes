@@ -62,4 +62,16 @@ export const SIDES = [
     { id: 'salad', label: 'Green salad', weight: 1 },
     { id: 'mash', label: 'Mashed potatoes', short: 'Mash', weight: 1 },
     { id: 'bread', label: 'Bread', weight: 1 },
+    { id: 'naan', label: 'Naan', weight: 1 },
+    { id: 'applesauce', label: 'Apple sauce', weight: 1 },
 ];
+
+/** Which side dishes go with each main course, as Kitchen knows them: the side dish wheel gets these once the main course has chosen. */
+export const SIDES_FOR = {
+    curry: ['rice', 'naan', 'salad'],
+    lasagne: ['salad', 'bread'],
+    volauvent: ['fries', 'mash', 'bread'],
+    fish: ['mash', 'rice', 'salad'],
+    stoemp: ['salad', 'applesauce'],
+    bolognese: ['salad', 'bread'],
+};

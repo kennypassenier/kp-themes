@@ -1,3 +1,0 @@
-/* @kp-soft/themes v12.1.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
-import{a,b,c,d,e,f}from"./chunk-ESXM53V5.js";import"./chunk-P54FHAZB.js";import"./chunk-LTGAJNLK.js";import"./chunk-SQ5EBDOS.js";import"./chunk-SHDUWRXO.js";import"./chunk-PTKVLINS.js";import"./chunk-YKG3U2IW.js";import"./chunk-AS2UI4PM.js";import"./chunk-KBCFZJM7.js";import"./chunk-3Z4KKGO5.js";import"./chunk-VLZCDT6N.js";import"./chunk-OHFUIDCK.js";import"./chunk-OG6L4GK2.js";export{a as CHIP_MENU,e as ChipRename,b as RENAME_ENTRY,d as RENAME_EVENT,c as RENAMING,f as attachChipMenus};
-//# sourceMappingURL=chunk-G326J4WT.js.map

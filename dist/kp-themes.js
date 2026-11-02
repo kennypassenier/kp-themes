@@ -2061,7 +2061,8 @@ var init_quantity_checklist_focus = __esm({
       wheelOnlyOne: "Only one fits: nothing to spin",
       wheelEmpty: "Nothing fits these filters.",
       wheelLoading: "Loading the choices\u2026",
-      wheelFailed: "The choices could not be read."
+      wheelFailed: "The choices could not be read.",
+      wheelLocked: "Spins once the other wheel has chosen."
     };
   }
 });
@@ -17895,8 +17896,17 @@ function clipped(wrapper, view) {
   }
   return false;
 }
+function layered(wrapper, view) {
+  const top = view.document.body;
+  for (let el16 = wrapper.parentElement; el16 && el16 !== top; el16 = el16.parentElement) {
+    const style = view.getComputedStyle(el16);
+    if (style.position === "sticky" || style.position === "fixed") return true;
+    if (style.position !== "static" && style.zIndex !== "auto") return true;
+  }
+  return false;
+}
 function raiseMenu(s2, view) {
-  if (!clipped(s2.wrapper, view)) return;
+  if (!clipped(s2.wrapper, view) && !layered(s2.wrapper, view)) return;
   const box = layoutRect(s2.menu);
   const button6 = s2.button.getBoundingClientRect();
   const dx = box.left - button6.left;
@@ -42548,13 +42558,15 @@ function wheelAngles(weights) {
     return segment;
   });
 }
-var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el6, stateOf, part;
+var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, WHEEL_LOCKED, WHEEL_FOLLOWS_REASON, STATES, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el6, stateOf, part;
 var init_state14 = __esm({
   "js/wheel/state.js"() {
     "use strict";
     WHEEL = "[data-kp-wheel]";
     WHEEL_SPIN_EVENT = "kp-wheel-spin";
     WHEEL_RESULT_EVENT = "kp-wheel-result";
+    WHEEL_LOCKED = "data-kp-wheel-locked";
+    WHEEL_FOLLOWS_REASON = "data-kp-wheel-follows-reason";
     STATES = /* @__PURE__ */ new WeakMap();
     SVG2 = "http://www.w3.org/2000/svg";
     R = 96;
@@ -42755,7 +42767,8 @@ function paint5(root) {
   const won = root.getAttribute("data-kp-wheel-won");
   const chosen2 = won !== null ? state12.items.find((item) => item.id === won) : void 0;
   result.toggleAttribute("data-kp-wheel-failed", error !== null && !busy);
-  const note2 = busy || error !== null || !state12.items.length;
+  const locked = root.hasAttribute(WHEEL_LOCKED) && !state12.spinning;
+  const note2 = busy || error !== null || locked || !state12.items.length;
   outcome.toggleAttribute("data-kp-wheel-note", note2);
   if (busy) {
     caption.textContent = "";
@@ -42763,6 +42776,9 @@ function paint5(root) {
   } else if (error !== null) {
     caption.textContent = "";
     outcome.textContent = error;
+  } else if (locked) {
+    caption.textContent = "";
+    outcome.textContent = root.getAttribute(WHEEL_FOLLOWS_REASON)?.trim() || strings.wheelLocked;
   } else if (!state12.items.length) {
     caption.textContent = "";
     outcome.textContent = root.getAttribute("data-kp-wheel-empty") ?? strings.wheelEmpty;
@@ -42780,7 +42796,7 @@ function paint5(root) {
   tag.title = tag.textContent;
   outcome.title = outcome.textContent ?? "";
   caption.title = caption.textContent ?? "";
-  const blocked = busy || error !== null || state12.items.length < 2 || state12.spinning;
+  const blocked = busy || error !== null || locked || state12.items.length < 2 || state12.spinning;
   spin.textContent = won !== null && state12.items.length > 1 ? strings.wheelSpinAgain : strings.wheelSpin;
   if (blocked) spin.setAttribute("aria-disabled", "true");
   else spin.removeAttribute("aria-disabled");
@@ -42931,7 +42947,7 @@ async function turnDisc(root, { from, to, duration: duration2, short }) {
 async function spinWheel(root, { random = Math.random, duration: duration2 } = {}) {
   if (!(root instanceof HTMLElement)) return null;
   const state12 = stateOf(root);
-  if (state12.spinning || state12.items.length < 2 || root.hasAttribute("aria-busy") || root.hasAttribute("data-kp-wheel-error")) return null;
+  if (state12.spinning || state12.items.length < 2 || root.hasAttribute("aria-busy") || root.hasAttribute("data-kp-wheel-error") || root.hasAttribute(WHEEL_LOCKED)) return null;
   const avoid = root.getAttribute("data-kp-wheel-repeat") === "true" ? null : state12.last;
   const index = pickWeighted(state12.items, { random, avoid });
   if (index < 0) return null;
@@ -42980,28 +42996,126 @@ var init_spin = __esm({
 });
 
 // js/wheel/follow.js
+function followStart(follower) {
+  const raw = follower.getAttribute(WHEEL_FOLLOWS_START)?.trim() ?? "";
+  const known4 = WHEEL_FOLLOW_STARTS.find((mode2) => mode2 === raw);
+  if (known4) return known4;
+  if (raw) warnOnce(`start:${raw}`, `${WHEEL_FOLLOWS_START}="${raw}" is not one of ${WHEEL_FOLLOW_STARTS.join(", ")}; "press" is used.`);
+  return "press";
+}
+function leaderOf(follower) {
+  const id = follower.getAttribute(WHEEL_FOLLOWS)?.trim();
+  if (!id) return null;
+  const leader = follower.ownerDocument.getElementById(id);
+  if (leader instanceof HTMLElement && leader !== follower && leader.matches("[data-kp-wheel]")) return leader;
+  warnOnce(`leader:${id}`, `${WHEEL_FOLLOWS}="${id}" names no other wheel on this page; the follower stays locked until it does.`);
+  return null;
+}
+function mustWait(follower) {
+  if (!follower.getAttribute(WHEEL_FOLLOWS)?.trim() || followStart(follower) === "together") return false;
+  const leader = leaderOf(follower);
+  return !leader || stateOf(leader).spinning || !leader.hasAttribute("data-kp-wheel-won");
+}
+function clearOutcome(follower) {
+  if (stateOf(follower).spinning) {
+    follower.addEventListener(WHEEL_RESULT_EVENT, () => follower.hasAttribute(WHEEL_LOCKED) && clearOutcome(follower), { once: true });
+    return;
+  }
+  follower.removeAttribute("data-kp-wheel-won");
+  follower.removeAttribute(WHEEL_LEADER_WON);
+}
+function describeLock(root, locked, controls) {
+  const outcome = part(root, "outcome");
+  if (!outcome) return;
+  if (locked && !outcome.id) outcome.id = `kp-wheel-outcome-${++outcomeIds}`;
+  for (const control of controls) {
+    if (!control) continue;
+    if (locked) control.setAttribute("aria-describedby", outcome.id);
+    else if (outcome.id && control.getAttribute("aria-describedby") === outcome.id) control.removeAttribute("aria-describedby");
+  }
+}
+function syncFollower(follower) {
+  const lock = mustWait(follower);
+  const was = follower.hasAttribute(WHEEL_LOCKED);
+  if (lock && !was) clearOutcome(follower);
+  follower.toggleAttribute(WHEEL_LOCKED, lock);
+  if (!follower.getAttribute(WHEEL_FOLLOWS)?.trim() || followStart(follower) === "together") follower.removeAttribute(WHEEL_LEADER_WON);
+  paint5(follower);
+  describeLock(follower, lock, [part(follower, "spin"), part(follower, "stage")]);
+}
+async function onLeaderResult(follower, leader, detail) {
+  if (followStart(follower) === "together") return;
+  follower.setAttribute(WHEEL_LEADER_WON, detail.item.id);
+  syncFollower(follower);
+  const waits = [];
+  const waitUntil = (promise) => void waits.push(Promise.resolve(promise));
+  follower.dispatchEvent(new CustomEvent(WHEEL_LEADER_RESULT_EVENT, { bubbles: true, detail: { leader, ...detail, waitUntil } }));
+  if (followStart(follower) !== "auto") return;
+  try {
+    await Promise.all(waits);
+  } catch (error) {
+    console.error("kp-wheel: the follower did not start by itself, a waitUntil() promise of kp-wheel-leader-result failed; it waits for a press.", error);
+    return;
+  }
+  if (follower.isConnected && follower.getAttribute(WHEEL_LEADER_WON) === detail.item.id) void spinWheel(follower);
+}
 function followLeader(follower) {
   const doc = follower.ownerDocument;
+  const isLeader = (target) => target instanceof HTMLElement && target !== follower && target.id !== "" && target.id === follower.getAttribute(WHEEL_FOLLOWS)?.trim();
   const onSpin = (event) => {
-    const leader = event.target;
-    const id = follower.getAttribute(WHEEL_FOLLOWS)?.trim();
-    if (!id || !(leader instanceof HTMLElement) || leader === follower || leader.id !== id || !follower.isConnected) return;
+    if (!isLeader(event.target) || !follower.isConnected) return;
+    if (followStart(follower) !== "together") return syncFollower(follower);
     const { duration: duration2 } = (
       /** @type {CustomEvent<{ duration?: number }>} */
       event.detail ?? {}
     );
     void spinWheel(follower, { duration: duration2 });
   };
+  const onResult = (event) => {
+    if (!isLeader(event.target) || !follower.isConnected) return;
+    void onLeaderResult(
+      follower,
+      /** @type {HTMLElement} */
+      event.target,
+      /** @type {CustomEvent} */
+      event.detail
+    );
+  };
   doc.addEventListener(WHEEL_SPIN_EVENT, onSpin);
-  return () => doc.removeEventListener(WHEEL_SPIN_EVENT, onSpin);
+  doc.addEventListener(WHEEL_RESULT_EVENT, onResult);
+  const watch2 = new MutationObserver((records) => {
+    if (records.some((r) => r.target === follower || isLeader(r.target))) syncFollower(follower);
+  });
+  watch2.observe(doc.documentElement, { subtree: true, attributes: true, attributeFilter: ["data-kp-wheel-won", WHEEL_FOLLOWS, WHEEL_FOLLOWS_START, WHEEL_FOLLOWS_REASON] });
+  syncFollower(follower);
+  return () => {
+    doc.removeEventListener(WHEEL_SPIN_EVENT, onSpin);
+    doc.removeEventListener(WHEEL_RESULT_EVENT, onResult);
+    watch2.disconnect();
+    follower.removeAttribute(WHEEL_LOCKED);
+    describeLock(follower, false, [part(follower, "spin"), part(follower, "stage")]);
+  };
 }
-var WHEEL_FOLLOWS;
+var WHEEL_FOLLOWS, WHEEL_FOLLOWS_START, WHEEL_LEADER_WON, WHEEL_LEADER_RESULT_EVENT, WHEEL_FOLLOW_STARTS, warned3, warnOnce, outcomeIds;
 var init_follow = __esm({
   "js/wheel/follow.js"() {
     "use strict";
-    init_state14();
+    init_draw7();
     init_spin();
+    init_state14();
     WHEEL_FOLLOWS = "data-kp-wheel-follows";
+    WHEEL_FOLLOWS_START = "data-kp-wheel-follows-start";
+    WHEEL_LEADER_WON = "data-kp-wheel-leader-won";
+    WHEEL_LEADER_RESULT_EVENT = "kp-wheel-leader-result";
+    WHEEL_FOLLOW_STARTS = /** @type {const} */
+    ["press", "auto", "together"];
+    warned3 = /* @__PURE__ */ new Set();
+    warnOnce = (key, text) => {
+      if (warned3.has(key)) return;
+      warned3.add(key);
+      console.warn(`kp-wheel: ${text}`);
+    };
+    outcomeIds = 0;
   }
 });
 
@@ -43058,6 +43172,12 @@ var wheel_exports = {};
 __export(wheel_exports, {
   WHEEL: () => WHEEL,
   WHEEL_FOLLOWS: () => WHEEL_FOLLOWS,
+  WHEEL_FOLLOWS_REASON: () => WHEEL_FOLLOWS_REASON,
+  WHEEL_FOLLOWS_START: () => WHEEL_FOLLOWS_START,
+  WHEEL_FOLLOW_STARTS: () => WHEEL_FOLLOW_STARTS,
+  WHEEL_LEADER_RESULT_EVENT: () => WHEEL_LEADER_RESULT_EVENT,
+  WHEEL_LEADER_WON: () => WHEEL_LEADER_WON,
+  WHEEL_LOCKED: () => WHEEL_LOCKED,
   WHEEL_RESULT_EVENT: () => WHEEL_RESULT_EVENT,
   WHEEL_SPIN_EVENT: () => WHEEL_SPIN_EVENT,
   attachWheels: () => attachWheels,
@@ -97791,7 +97911,8 @@ var init_quantity_checklist_focus2 = __esm({
       wheelOnlyOne: "Er past er maar \xE9\xE9n: niets om te draaien",
       wheelEmpty: "Niets past bij deze filters.",
       wheelLoading: "De keuzes laden\u2026",
-      wheelFailed: "De keuzes konden niet gelezen worden."
+      wheelFailed: "De keuzes konden niet gelezen worden.",
+      wheelLocked: "Draait zodra het andere rad gekozen heeft."
     };
   }
 });
@@ -101782,6 +101903,12 @@ export {
   WEEK_TICK_MS,
   WHEEL,
   WHEEL_FOLLOWS,
+  WHEEL_FOLLOWS_REASON,
+  WHEEL_FOLLOWS_START,
+  WHEEL_FOLLOW_STARTS,
+  WHEEL_LEADER_RESULT_EVENT,
+  WHEEL_LEADER_WON,
+  WHEEL_LOCKED,
   WHEEL_RESULT_EVENT,
   WHEEL_SPIN_EVENT,
   WRAP_SELECTOR,

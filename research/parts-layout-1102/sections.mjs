@@ -1,6 +1,7 @@
 // research/parts-layout-1102: the eight sections of the review page, each written once: what is asked, the heading and one
 // sentence, what to expect, what to look at, the controls and the component. Kenny approved every part and option on 2026-11-02
-// 00:41 (opt-in, default off), so no section asks for a default.
+// 00:41 (opt-in, default off), so no section asks for a default. Round 1 (2026-11-02 01:12): six approved, nav-more and
+// coupled-wheels sent back; round 2 shows only those two (SECTIONS below), each saying what changed.
 
 import { group, log, option, width } from './helpers.mjs';
 import { calendarsTable, deliveriesMonth, medicinesHeader, settingsWithBand } from './markup-layout.mjs';
@@ -8,7 +9,7 @@ import { cabinetBar, inbox, kitchenBar, kitchenWheels, overviewCards } from './m
 
 const LAYOUT = { topic: 'layout-wishes', topicTitle: 'Layout options' };
 
-export const SECTIONS = [
+const ALL_SECTIONS = [
     {
         id: 'cards-tracks',
         ...LAYOUT,
@@ -82,7 +83,9 @@ export const SECTIONS = [
         asked: 'Kitchen built its own More item for six pages that always live there; Medicine Cabinet dressed a menu button as a bar link by hand. <code>data-kp-nav-more</code> on a list item pins it behind the folding bar&rsquo;s More whatever the width (a value names its group, <code>data-kp-nav-hint</code> its hint); a <code>.kp-menu-button</code> in <code>.kp-nav__links</code> is now a documented bar link with a rich menu.',
         h2: 'Kitchen and Medicine Cabinet',
         intro: 'Kitchen&rsquo;s bar: five daily places and More. Medicine Cabinet&rsquo;s bar: Stock opens a menu.',
+        changed: 'At full width the More menu opened under Medicine Cabinet&rsquo;s bar, which painted over Wheel and Timers. Every bar is a layer of its own (<code>z-index: 30</code>), so the later bar won whatever the menu&rsquo;s own z-index. A menu button&rsquo;s menu inside such a layer (a positioned box with a z-index, or a sticky or fixed one) now opens on the top layer, like the date picker and the time list: above every bar and sticky element, on any page. Measured at 1280 px: 4 of 6 entries reachable before, 6 of 6 now.',
         expected: [
+            '<b>Open More</b> at full width: the whole menu lies over Medicine Cabinet&rsquo;s bar, every entry can be pressed, and it still hangs under More. The same for Stock.',
             'Kitchen shows Today, Week, Shopping list 7, Recipes, Pantry and More, at every width where the bar is a row. More opens Wheel, Timers, Freezer stock and Saved menus, each with its hint, then &ldquo;SETTINGS&rdquo; over Household and Settings. <b>Current: Timers</b>: More reads as the current link and Timers is marked in the menu. A pick moves the current page; the line names it.',
             'Medicine Cabinet&rsquo;s Stock is a bar link with a caret; it opens the rich menu under it. <b>Phone</b>: both bars fold into their toggle; Kitchen&rsquo;s open list holds all eleven links.',
         ],
@@ -131,18 +134,22 @@ export const SECTIONS = [
         id: 'coupled-wheels',
         topic: 'wheel',
         topicTitle: 'The wheel',
-        title: 'Two wheels that spin together',
+        title: 'The side dish waits for the main course',
         item: 'coupled-wheels, Kitchen 15',
-        asked: 'Kitchen spun the side dish from the main course&rsquo;s spin event by hand. <code>data-kp-wheel-follows="&lt;id&gt;"</code> makes a wheel turn when the one it names turns, for the same time, so both settle together; each keeps its own outcome and its own events.',
+        asked: 'Kitchen spun the side dish from the main course&rsquo;s spin event by hand. <code>data-kp-wheel-follows="&lt;id&gt;"</code> on a wheel makes it follow the wheel it names; <code>data-kp-wheel-follows-start</code> lets the app say how.',
+        changed: 'You sent back the side dish turning with the main course, because it spoiled the outcome. Now the app decides, and the default waits: the side dish is locked, its Spin dimmed and &ldquo;Spins after the main course&rdquo; where its answer goes, until the main course has stopped. Then it hears the main course&rsquo;s pick (Kitchen gives it the sides that go with it) and, by the option, waits for its own Spin (the default) or starts by itself. Spinning together stays as a third option for two picks that do not depend on each other.',
         h2: 'What do we eat tonight',
-        intro: 'Six main courses and five side dishes; the side dish follows the main course.',
+        intro: 'Six main courses; the side dishes that fit the main course chosen.',
         expected: [
-            'Spin the main course: both wheels turn and stop at the same moment; each answer card shows its own pick, and the line names both <code>kp-wheel-result</code> events. Spin the side dish alone: only it turns.',
-            '<b>Not coupled</b>: the side dish stands still when the main course spins. <b>Phone</b>: the wheels stack, both whole.',
+            '<b>Before the main course</b>: the side dish is dimmed, its Spin does nothing and its line says &ldquo;Spins after the main course&rdquo;. Spin the main course: the side dish stays still until the main course stops; then its disc shows only the sides that fit (Lasagne: Green salad and Bread) and the line names the pick.',
+            '<b>Press</b> (the default): the side dish waits for its own Spin. <b>Auto</b>: it starts by itself right after the main course stops, never before. <b>Together</b>: the earlier behaviour, both turn and settle together. <b>Main course again</b> locks the side dish again and clears its answer. <b>Phone</b>: the wheels stack, both whole.',
         ],
-        look: 'Formal: the package&rsquo;s wheels. Check that the two settle together and that neither wheel jumps when the other ends.',
-        controls: group('Coupling', 'couple', [['on', 'Side dish follows', true], ['off', 'Not coupled']], 'pg-wheel-side') + width('coupled-wheels-component'),
+        look: 'Formal: the package&rsquo;s wheels. Check that the side dish reads as waiting, not broken, and that it never moves before the main course has stopped.',
+        controls: group('Option', 'wheelstart', [['press', 'Press (the default)', true], ['auto', 'Auto'], ['together', 'Together']], 'pg-wheel-side') + group('Main course', 'mainreset', [['reset', 'Not chosen yet']], 'coupled-wheels-component') + width('coupled-wheels-component'),
         component: `${kitchenWheels}
         ${log('pg-wheel-log')}`,
     },
 ];
+
+/** Round 2 (2026-11-02): the two sections Kenny sent back in round 1; the six he approved leave the page. */
+export const SECTIONS = ALL_SECTIONS.filter((section) => section.id === 'nav-more' || section.id === 'coupled-wheels');
