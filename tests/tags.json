@@ -57,6 +57,7 @@
         { "path": ".claude/**", "none": "agent and hook configuration" },
         { "path": ".github/**", "none": "release and pages workflows" },
         { "path": "scripts/**", "none": "the release and Pages scripts, run by hand" },
+        { "path": "data/**", "none": "the review database [db-1102]; the browser reads its generated export in catalogue/, which carries the tags" },
         { "path": ".githooks/**", "none": "the commit hook" },
         { "path": "reports/**", "none": "generated reports" },
         { "path": "**/*.d.ts", "none": "type declarations; npm run gates checks them" },

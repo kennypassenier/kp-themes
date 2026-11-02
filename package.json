@@ -1455,6 +1455,7 @@
         "check:drift": "node gates/check-drift.mjs --check",
         "drift:seen": "node gates/check-drift.mjs --seen",
         "check:round": "node gates/check-round.mjs",
+        "db:git-setup": "node gates/review-db.mjs git-setup",
         "generate:code-version": "node gates/generate-code-version.mjs",
         "generate:agenda-index": "node gates/generate-agenda-index.mjs",
         "generate:agenda-bundle": "node gates/generate-agenda-bundle.mjs",

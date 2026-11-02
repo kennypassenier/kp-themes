@@ -5,3 +5,7 @@
 windows/**/*.sh text eol=lf
 windows/**/*.ps1 text eol=crlf
 windows/**/*.reg text eol=crlf
+
+# The review database [db-1102]: binary to git, shown row by row in a diff and merged row by row on a rebase.
+# `npm run db:git-setup` points both at their scripts (gates/db/git-dump.mjs, gates/db/git-merge.mjs).
+data/kp-themes.sqlite binary diff=kp-sqlite merge=kp-sqlite

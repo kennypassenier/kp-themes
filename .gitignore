@@ -43,3 +43,8 @@ research/_coherence/out/
 
 # Kenny's go for a release; the release-tests hook passes while it exists.
 .claude/release-go
+
+# The review database's lock and journal files, present only while a writer runs [db-1102].
+data/*.sqlite-journal
+data/*.sqlite-wal
+data/*.sqlite-shm
