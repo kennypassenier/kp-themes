@@ -1,5 +1,7 @@
 # research/ux-touch-1101: the board on a phone, the secret field, touch targets and the documentation on a phone
 
+**Decided (2026-11-02 00:03 UTC):** Kenny approved docs-nav (formal) in round 2, so all four sections are decided. Recorded in `VERDICTS.json`; the page is not offered again.
+
 **Round 1** (page round `ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20`, four sections) was judged 2026-11-01 23:40 UTC: `board-phone`,
 `secret-reveal` and `touch-targets` approved, `docs-nav` not ("Wat is hier aan de hand? ik krijg een 404?", `VERDICTS.json`). Round 1 is kept in `_previous/`.
 

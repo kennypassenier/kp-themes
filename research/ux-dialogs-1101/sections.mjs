@@ -32,7 +32,7 @@ const defaultOf = (/** @type {string} */ id, /** @type {string} */ label, /** @t
 const NOW = '<b>Now</b>, as approved';
 const NEW = '<b>New</b>, the option';
 
-export const SECTIONS = [
+const ALL_SECTIONS = [
     {
         id: 'drawer-beside',
         title: 'Drawer beside the list: the list stays in sight',
@@ -43,6 +43,7 @@ export const SECTIONS = [
         h2: 'Dish categories',
         intro: 'Kitchen&rsquo;s six dish categories, with Soups open in the drawer.',
         expected: [
+            '<b>Round 2</b>: on a phone each row&rsquo;s Edit broke into &ldquo;E / d / it&rdquo;, squeezed by its column; a button in a table cell now keeps its label on one line in every theme (measured at 390 px: 28 px high, one line, in all twelve), and the column takes its width.',
             '<b>Now</b>: the drawer at the right over the whole page, the list hidden under the backdrop. <b>New</b>: no backdrop; the list stands to its left, narrower, every column whole, the Soups row marked with a grey plate and a dark edge at its start.',
             'In <b>New</b>, press Edit on Pasta: the drawer moves to Pasta and the mark goes with it. Escape (in the drawer or in the list) closes it, the mark goes and the focus is back on the row&rsquo;s Edit. <b>Phone</b>: there is no room beside anything, so the drawer opens over the page as now.',
         ],
@@ -181,3 +182,6 @@ export const SECTIONS = [
         component: pair(['now', '<b>Before</b>', frame('pg-typed-now', 'The typed confirmation with its list in the code font', 'typed', 'now', 'confirm')], ['new', '<b>After</b>', frame('pg-typed-new', 'The typed confirmation with its list in the body font', 'typed', 'new', 'confirm')], false),
     },
 ];
+
+// Round 2 (Kenny, 2026-11-02 00:03 UTC): only the section he sent back; the seven approved ones leave the page (DEMO_RULES ch. 6).
+export const SECTIONS = ALL_SECTIONS.filter((section) => section.id === 'drawer-beside');

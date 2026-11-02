@@ -466,21 +466,12 @@
                 "id": "ux-dialogs-1101",
                 "themes": "formal",
                 "ask": null,
-                "askText": "What the app review of 2026-11-01 found in the package’s dialogs, drawers and confirmations, built as you answered: the drawer beside its list and its widths, the close guard, the confirmation’s words and the typed confirmation’s list (options or changes you already decided), and three options whose default you set here (the backdrop, the dialog on a phone, a confirmation inside a dialog). Each component runs in its own small window, so a modal, a drawer and a phone’s width are real; where you choose a default, the approved look and the new one stand under each other and the approved one stays the default until you choose. Formal only, on the apps’ own data (Kitchen, Medicine Cabinet, HTTPSwitchboard, kyu; names and counts are mock). 8 sections, 8 pairs.",
-                "sections": [
-                    { "item": "drawer-beside", "themes": null, "topic": "drawer", "mode": null },
-                    { "item": "drawer-width", "themes": null, "topic": "drawer", "mode": null },
-                    { "item": "dialog-guard", "themes": null, "topic": "guard", "mode": null },
-                    { "item": "dialog-backdrop", "themes": null, "topic": "dialog", "mode": null },
-                    { "item": "dialog-phone-sheet", "themes": null, "topic": "dialog", "mode": null },
-                    { "item": "dialog-stacking", "themes": null, "topic": "dialog", "mode": null },
-                    { "item": "confirm-text", "themes": null, "topic": "confirm", "mode": null },
-                    { "item": "typed-confirm-font", "themes": null, "topic": "confirm", "mode": null }
-                ],
+                "askText": "Round 2 of the dialogs from the app review: the drawer beside its list, which you sent back because each row’s Edit broke into “E / d / it” on a phone. A button in a table cell now keeps its label on one line. The other seven sections are approved and leave this page. Formal only.",
+                "sections": [{ "item": "drawer-beside", "themes": null, "topic": "drawer", "mode": null }],
                 "extra": null,
-                "round": "\n            {\"round\":\"ux-dialogs-1101-787e6d76-4423-4fec-a45c-ac2a1eece18a\",\"received\":[]}\n        "
+                "round": "\n            {\"round\":\"ux-dialogs-1101-ecc8217b-94f5-4981-be81-c165f3296e31\",\"received\":[\"ux-dialogs-1101-787e6d76-4423-4fec-a45c-ac2a1eece18a\"]}\n        "
             },
-            "fingerprint": "5245b93b14063d36",
+            "fingerprint": "3c183cef4b386df0",
             "update": null
         },
         "research/habits-1101/demo.html": {
@@ -502,22 +493,10 @@
             },
             "fingerprint": "ce0153ffcb13c539",
             "update": null
-        },
-        "research/ux-touch-1101/demo.html": {
-            "facts": {
-                "id": "ux-touch-1101",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 2 of your answers of 01/11/2026 to the app review: the documentation on a phone, which you sent back because its window showed a 404 (the review copy had no documentation to load; the window now loads the published one). The board on a phone, the secret field and the touch hit areas are approved and leave this page. Formal only. 1 section, 1 pair.",
-                "sections": [{ "item": "docs-nav", "themes": null, "topic": "docs", "mode": null }],
-                "extra": null,
-                "round": "\n            {\"round\":\"ux-touch-1101-d012253b-db87-47db-a696-de74508208ab\",\"received\":[\"ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20\"]}\n        "
-            },
-            "fingerprint": "2d2f95d2693974f4",
-            "update": null
         }
     },
     "decided": {
+        "research/ux-touch-1101/demo.html": "2026-11-02 00:03 UTC, Kenny: docs-nav approved in formal in round 2 (research/ux-touch-1101/VERDICTS.json)",
         "research/ux-parts-1101/demo.html": "2026-11-01 23:40 UTC, Kenny: both remaining pairs approved in formal in round 2 (research/ux-parts-1101/VERDICTS.json)",
         "research/ux-fixes-1101/demo.html": "2026-11-01 23:22, Kenny: all eight pairs approved in formal (research/ux-fixes-1101/VERDICTS.json)",
         "research/gantt-fit-1101/demo.html": "2026-11-01 23:22, Kenny: the one pair approved in formal (research/gantt-fit-1101/VERDICTS.json)",

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Fixed: a button in a table cell keeps its label on one line** [uxdialogs-1101]. On a phone a narrow column squeezed Kitchen's Edit to "E / d / it", one letter group per line; `.kp-table td` buttons and icon buttons are now `white-space: nowrap`, so the column takes the button's width. Measured at 390 px in all twelve themes: 40–83 px high on 2–4 lines → 28 px on one line.
 - **Fixed: `.kp-ops` makes its content 80vw wide, not its border box** [medicine-1101 20]. `--kp-ops-width` counted the padding, so a 1280 px page column was 976 px (76%); the padding now comes on top. An app that added the padding to the knob itself (Medicine Cabinet's app.css) drops that sum.
 - **Fixed: a long wheel name without a space breaks in two with a hyphen** [kitchen-1101 18]. "Kippenwaterzooi" was drawn whole at the smallest size; it now breaks at a soft hyphen the page puts in, else at the syllable boundary nearest the middle ("Kippenwa-terzooi"), never inside ch/gh/ph/sh/th. Measured on a 360 px phone: 9.1 px → 12.9 px.
 - **Fixed: a low graph keeps the top node's name whole** [kyu-1101]. Under `data-kp-graph-height` 360 px the ring left 26 px over its top node and the name was cut to "s…" (kyu, 200–340 px); the ring now keeps 40 px over its top node. Measured with kyu's two-node hub at 200, 260, 300 and 340 px: "s…" → "smoke / reader1". Heights from 360 px up lay out as before.

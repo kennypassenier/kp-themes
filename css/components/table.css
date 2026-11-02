@@ -104,3 +104,9 @@
         background: var(--muted);
     }
 
+
+    /* A button in a cell keeps its label on one line: squeezed by its column on a phone, "Edit" broke into "E / d / it"
+     * in every theme [uxdialogs-1101 drawer-beside]. The column takes the button's width instead. */
+    .kp-table td :is(.kp-button, .kp-icon-button) {
+        white-space: nowrap;
+    }

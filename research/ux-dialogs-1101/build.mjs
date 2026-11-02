@@ -50,7 +50,7 @@ const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 
 // A round id is never reused: once Kenny's answer to it is recorded (it is in `received`), the next page gets a new one.
 const roundId = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) && !received.includes(current) ? current : `${ID}-${randomUUID()}`;
 
-const title = 'Dialogs, drawers and confirmations from the app review';
+const title = 'The drawer beside its list, round 2: Edit on one line';
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="${THEMES.join(',')}">
     <head>
@@ -87,13 +87,9 @@ const page = `<!doctype html>
             <header class="pg-head">
                 <h1>${escapeHtml(title)}</h1>
                 <p class="cat-intro">
-                    What the app review of 2026-11-01 found in the package&rsquo;s dialogs, drawers and confirmations, built as you answered: the drawer
-                    beside its list and its widths, the close guard, the confirmation&rsquo;s words and the typed confirmation&rsquo;s list (options or
-                    changes you already decided), and three options whose default you set here (the backdrop, the dialog on a phone, a confirmation
-                    inside a dialog). Each component runs in its own small window, so a modal, a drawer and a phone&rsquo;s width are real; where you
-                    choose a default, the approved look and the new one stand under each other and the approved one stays the default until you
-                    choose. Formal only, on the apps&rsquo; own data (Kitchen, Medicine Cabinet, HTTPSwitchboard, kyu; names and counts are mock).
-                    ${SECTIONS.length} sections, ${SECTIONS.length * THEMES.length} pairs.
+                    Round 2 of the dialogs from the app review: the drawer beside its list, which you sent back because each row&rsquo;s Edit broke
+                    into &ldquo;E / d / it&rdquo; on a phone. A button in a table cell now keeps its label on one line. The other seven sections are
+                    approved and leave this page. Formal only.
                 </p>
                 <p>Each section says under <b>Expected</b> what you should see and what each control does. State puts every window of the section in that state; Width shows them at a phone&rsquo;s 390 px.</p>
             </header>
